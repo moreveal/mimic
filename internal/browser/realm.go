@@ -914,6 +914,10 @@ func (r *Realm) install() error {
 		}
 		return r.val(value), nil
 	})
+	host["toggleToken"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		value, err := r.document.ToggleToken(int64(numarg(a, 0)), strarg(a, 1), strarg(a, 2), int(numarg(a, 3)))
+		return r.val(value), err
+	})
 	host["setAttribute"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		id, name, value := int64(numarg(a, 0)), strarg(a, 1), strarg(a, 2)
 		if err := r.document.SetAttribute(id, name, value); err != nil {

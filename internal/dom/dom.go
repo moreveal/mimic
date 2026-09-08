@@ -149,6 +149,59 @@ func (d *Document) SetAttribute(id int64, name, value string) error {
 	n.Attributes[strings.ToLower(name)] = value
 	return nil
 }
+
+// ToggleToken performs the existing DOMTokenList read/modify/write in one
+// canonical operation, avoiding repeated serialization of the same attribute.
+// force is -1 (toggle), 0 (remove), or 1 (add).
+func (d *Document) ToggleToken(id int64, attribute, token string, force int) (bool, error) {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	n := d.nodes[id]
+	if n == nil || n.Type != "element" {
+		return false, fmt.Errorf("element node %d does not exist", id)
+	}
+	attribute = strings.ToLower(attribute)
+	tokens := strings.FieldsFunc(n.Attributes[attribute], tokenWhitespace)
+	has := false
+	for _, item := range tokens {
+		if item == token {
+			has = true
+			break
+		}
+	}
+	add := force == 1 || (!has && force != 0)
+	if !add && !has {
+		return false, nil
+	}
+	result := make([]string, 0, len(tokens)+1)
+	seen := make(map[string]bool, len(tokens)+1)
+	for _, item := range tokens {
+		if !add && item == token {
+			continue
+		}
+		if !seen[item] {
+			seen[item] = true
+			result = append(result, item)
+		}
+	}
+	if add && !seen[token] {
+		result = append(result, token)
+	}
+	if n.Attributes == nil {
+		n.Attributes = map[string]string{}
+	}
+	n.Attributes[attribute] = strings.Join(result, " ")
+	return add, nil
+}
+
+// Match the existing JavaScript /\s/ token parser, including BOM, rather
+// than substituting Go's slightly different Unicode whitespace predicate.
+func tokenWhitespace(r rune) bool {
+	return (r >= '\t' && r <= '\r') || r == ' ' || r == 0x00a0 || r == 0x1680 ||
+		(r >= 0x2000 && r <= 0x200a) || r == 0x2028 || r == 0x2029 || r == 0x202f ||
+		r == 0x205f || r == 0x3000 || r == 0xfeff
+}
+
 func (d *Document) RemoveAttribute(id int64, name string) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()

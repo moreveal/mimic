@@ -123,3 +123,10 @@ Before disposal, after all adapter roots and contexts have been released, a V8 l
 The tradeoff is explicit: median teardown within the N=10 memory wave rises from 6.42 to 20.46 ms static and 7.54 to 26.40 ms React; static N=25 median throughput falls from 80.39 to 62.37 sessions/s in these samples. Warm execution/completion excludes teardown by the unchanged harness definition, while wave throughput includes it. There is no collection added by the benchmark: this is the production isolate lifecycle policy and its cost is included where applicable. Fast gate DOM execution is 258.06 ms, static completion 58.00 ms, React completion 109.01 ms. See `fast-gates/fast-gate-release-isolate.json` for SHA-256 and all raw rows.
 
 After repairing the zero-duration observer correctness defect, the full race-enabled correctness suite passes (browser 377.989 s, CDP 2.797 s). This validation precedes the separate classList host batching change.
+
+
+## 09: Canonical DOMTokenList toggle in one host operation
+
+Before: classList toggle repeatedly exported and parsed the same attribute via getAttribute/setAttribute; the profile attributed 51.39 ms to all attribute writes, 31.99 ms to reads, and 33-47 ms of V8 samples to domTokens. The private toggle host now performs one canonical read/modify/write under the DOM mutex. There is no stale JS value cache. Existing force behavior and whitespace/deduplication semantics are retained, with explicit Goja/V8 tests including external Go attribute mutation and Unicode whitespace.
+
+Fast gate DOM execution improves 258.06 -> 197.37 ms (-23.5%); static completion is 59.02 ms and React 111.23 ms. All six workload result gates and the full ordinary correctness suite pass (browser 62.332 s). Native attribution now shows 18,000 setAttribute calls / 25.20 ms and 12,000 toggleToken calls / 22.07 ms; the former 21,000 repeated attribute reads disappear. The next measured cost is 9,001 node creation hosts / 50.16 ms. Raw timing and source/executable hashes are in `fast-gates/fast-gate-token-toggle.json`; the diagnostic profile is `token-toggle-native-phases.json`.
