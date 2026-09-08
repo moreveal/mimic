@@ -36,7 +36,7 @@ func TestPerformanceProfile(t *testing.T) {
 		kind = "dom"
 	}
 	switch kind {
-	case "dom", "static", "cpu", "react", "wasm":
+	case "dom", "static", "cpu", "async", "react", "wasm":
 	default:
 		t.Fatal("unsupported diagnostic workload", kind)
 	}
@@ -56,6 +56,11 @@ func TestPerformanceProfile(t *testing.T) {
 		if r.URL.Path == "/workload.js" {
 			w.Header().Set("Content-Type", "application/javascript")
 			w.Write(fixture)
+			return
+		}
+		if r.URL.Path == "/worker.js" {
+			w.Header().Set("Content-Type", "text/javascript")
+			w.Write([]byte(`onmessage=e=>postMessage(e.data*2);`))
 			return
 		}
 		if r.URL.Path == "/data.json" {
