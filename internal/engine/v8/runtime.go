@@ -41,8 +41,9 @@ func (Factory) New() engine.Runtime {
 }
 
 type hostFunction struct {
-	function engine.Function
-	name     string
+	function  engine.Function
+	name      string
+	transient bool
 }
 
 type callbackContext struct {
@@ -517,6 +518,13 @@ func (a *adapter) Call(ctx context.Context, function, this engine.Value, args ..
 
 func (a *adapter) Function(function engine.Function) any { return hostFunction{function: function} }
 
+// TransientFunction borrows callback arguments for synchronous host operations.
+// The function must not retain this/args in browser state or scheduled tasks.
+// Ordinary Function preserves the existing persistent-value contract.
+func (a *adapter) TransientFunction(function engine.Function) any {
+	return hostFunction{function: function, transient: true}
+}
+
 func (a *adapter) NewPromise() engine.Promise {
 	if a.promiseFactory == nil {
 		err := errors.New("V8 promise factory is unavailable")
@@ -769,7 +777,7 @@ func (a *adapter) localCallback(value engine.Value) (gov8.Value, error) {
 		if callback == nil {
 			return gov8.Value{}, errors.New("host value escaped its V8 callback")
 		}
-		return callbackValue(callback.scope, callback.result, v.host)
+		return callbackValue(callback.scope, callback.ctx, callback.result, v.host)
 	}
 	callback := a.onCallback()
 	if callback == nil {
@@ -796,7 +804,7 @@ func (a *adapter) marshal(scope *gov8.Scope, realm *gov8.Context, value any) (go
 		return a.local(scope, engineValue)
 	}
 	if function, ok := value.(hostFunction); ok {
-		return a.makeFunction(scope, realm, function.function, function.name)
+		return a.makeFunction(scope, realm, function.function, function.name, function.transient)
 	}
 	if primitiveValue, ok, err := marshalPrimitive(scope, value); ok || err != nil {
 		return primitiveValue, err
@@ -856,7 +864,7 @@ func (a *adapter) marshal(scope *gov8.Scope, realm *gov8.Context, value any) (go
 	return script.Run(scope, nil)
 }
 
-func (a *adapter) makeFunction(scope *gov8.Scope, realm *gov8.Context, function engine.Function, name string) (gov8.Value, error) {
+func (a *adapter) makeFunction(scope *gov8.Scope, realm *gov8.Context, function engine.Function, name string, transient bool) (gov8.Value, error) {
 	if a.activeIsolate == nil {
 		return gov8.Value{}, errors.New("V8 isolate is not active")
 	}
@@ -876,9 +884,12 @@ func (a *adapter) makeFunction(scope *gov8.Scope, realm *gov8.Context, function 
 			if e != nil {
 				return
 			}
-			global, e := a.newGlobal(cs.Scope(), local)
-			if e != nil {
-				return
+			var global *gov8.Global
+			if !transient {
+				global, e = a.newGlobal(cs.Scope(), local)
+				if e != nil {
+					return
+				}
 			}
 			wrapped[i] = &runtimeValue{runtime: a, global: global, local: local, borrowed: true, callbackID: callbackID}
 		}
@@ -886,9 +897,12 @@ func (a *adapter) makeFunction(scope *gov8.Scope, realm *gov8.Context, function 
 		if e != nil {
 			return
 		}
-		thisGlobal, e := a.newGlobal(cs.Scope(), thisObject.Value)
-		if e != nil {
-			return
+		var thisGlobal *gov8.Global
+		if !transient {
+			thisGlobal, e = a.newGlobal(cs.Scope(), thisObject.Value)
+			if e != nil {
+				return
+			}
 		}
 		result, e := function(&runtimeValue{runtime: a, global: thisGlobal, local: thisObject.Value, borrowed: true, callbackID: callbackID}, wrapped)
 		if e != nil {
@@ -901,7 +915,7 @@ func (a *adapter) makeFunction(scope *gov8.Scope, realm *gov8.Context, function 
 			return
 		}
 		if wrapped, ok := result.(*runtimeValue); ok && wrapped.hostSet {
-			local, valueErr := callbackValue(cs, rv, wrapped.host)
+			local, valueErr := callbackValue(cs, realm, rv, wrapped.host)
 			if valueErr != nil {
 				exception, _ := cs.NewError(valueErr.Error())
 				_ = cs.ThrowException(exception)
@@ -971,7 +985,7 @@ func (a *adapter) marshalCallback(scope *gov8.CallbackScope, value any) (gov8.Va
 	if callback == nil {
 		return gov8.Value{}, errors.New("not in V8 callback")
 	}
-	return callbackValue(scope, callback.result, value)
+	return callbackValue(scope, callback.ctx, callback.result, value)
 	/*
 		rv := reflect.ValueOf(value)
 		if rv.Kind() == reflect.Map && rv.Type().Key().Kind() == reflect.String {
@@ -1049,7 +1063,7 @@ func exportLocalPrimitive(value gov8.Value, realm *gov8.Context) any {
 		return nil
 	}
 	if yes, _ := value.IsString(); yes {
-		result, _ := value.ToString(realm)
+		result, _ := value.StringValue()
 		return result
 	}
 	if yes, _ := value.IsBigInt(); yes {
@@ -1068,6 +1082,10 @@ func (a *adapter) string(value *runtimeValue) string {
 		return fmt.Sprint(value.host)
 	}
 	if callback := a.onCallback(); callback != nil && value.borrowed {
+		if yes, _ := value.local.IsString(); yes {
+			result, _ := value.local.StringValue()
+			return result
+		}
 		result, _ := callback.scope.ToString(value.local)
 		return result
 	}
@@ -1087,7 +1105,21 @@ func localResultString(value gov8.Value, realm *gov8.Context) string {
 	return result
 }
 
-func callbackValue(scope *gov8.CallbackScope, result gov8.ReturnValue, value any) (gov8.Value, error) {
+func callbackValue(scope *gov8.CallbackScope, realm *gov8.Context, result gov8.ReturnValue, value any) (gov8.Value, error) {
+	// DOM result lists are plain by-value records. One native JSON parse replaces
+	// one FFI call per property/array slot; arbitrary host objects keep the
+	// existing recursive conversion (not all Go values have JSON semantics).
+	if records, ok := value.([]map[string]any); ok {
+		encoded, err := json.Marshal(callbackJSONProjection(records))
+		if err == nil {
+			text, err := scope.NewString(string(encoded))
+			if err != nil {
+				return gov8.Value{}, err
+			}
+			return gov8.JSONParse(realm, scope.Scope(), text, nil)
+		}
+		// Non-finite numbers and unsupported values retain the recursive path.
+	}
 	switch value := value.(type) {
 	case nil:
 		_ = result.SetNull()
@@ -1124,7 +1156,7 @@ func callbackValue(scope *gov8.CallbackScope, result gov8.ReturnValue, value any
 			}
 			iter := rv.MapRange()
 			for iter.Next() {
-				member, err := callbackValue(scope, result, iter.Value().Interface())
+				member, err := callbackValue(scope, realm, result, iter.Value().Interface())
 				if err != nil {
 					return gov8.Value{}, err
 				}
@@ -1139,7 +1171,7 @@ func callbackValue(scope *gov8.CallbackScope, result gov8.ReturnValue, value any
 			elements := make([]gov8.Value, rv.Len())
 			for i := range elements {
 				var err error
-				elements[i], err = callbackValue(scope, result, rv.Index(i).Interface())
+				elements[i], err = callbackValue(scope, realm, result, rv.Index(i).Interface())
 				if err != nil {
 					return gov8.Value{}, err
 				}
@@ -1149,6 +1181,35 @@ func callbackValue(scope *gov8.CallbackScope, result gov8.ReturnValue, value any
 		return gov8.Value{}, fmt.Errorf("unsupported callback value %T", value)
 	}
 	return result.Get()
+}
+
+// Preserve callback marshaling semantics: nil slices/maps are empty JS
+// collections, and byte slices are numeric arrays rather than base64 strings.
+func callbackJSONProjection(value any) any {
+	if value == nil {
+		return nil
+	}
+	rv := reflect.ValueOf(value)
+	switch rv.Kind() {
+	case reflect.Map:
+		if rv.Type().Key().Kind() != reflect.String {
+			return value
+		}
+		out := make(map[string]any, rv.Len())
+		iter := rv.MapRange()
+		for iter.Next() {
+			out[iter.Key().String()] = callbackJSONProjection(iter.Value().Interface())
+		}
+		return out
+	case reflect.Slice, reflect.Array:
+		out := make([]any, rv.Len())
+		for i := range out {
+			out[i] = callbackJSONProjection(rv.Index(i).Interface())
+		}
+		return out
+	default:
+		return value
+	}
 }
 
 func exportJSON(scope *gov8.Scope, realm *gov8.Context, value gov8.Value, fallback engine.Value) any {
@@ -1205,7 +1266,7 @@ func exportCallback(value gov8.Value, callback *callbackContext) any {
 	if err != nil || !ok {
 		return nil
 	}
-	text, err := callback.scope.ToString(encoded)
+	text, err := encoded.StringValue()
 	if err != nil || text == "undefined" {
 		return nil
 	}

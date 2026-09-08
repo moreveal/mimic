@@ -108,6 +108,24 @@ func (d *Document) IsConnected(id int64) bool {
 	}
 	return false
 }
+
+// Contains follows canonical parent links without projecting ancestor records
+// through the engine boundary.
+func (d *Document) Contains(parent, child int64) bool {
+	d.mu.RLock()
+	defer d.mu.RUnlock()
+	for child != 0 {
+		if child == parent {
+			return true
+		}
+		node := d.nodes[child]
+		if node == nil {
+			return false
+		}
+		child = node.Parent
+	}
+	return false
+}
 func (d *Document) GetAttribute(id int64, name string) (string, bool) {
 	d.mu.RLock()
 	defer d.mu.RUnlock()
