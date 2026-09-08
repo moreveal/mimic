@@ -17,9 +17,12 @@ def main():
     profile.add_argument('--native', action='store_true')
     profile.add_argument('--go-cpu', action='store_true')
     parser.add_argument('--detailed', action='store_true')
+    parser.add_argument('--hosts', action='store_true', help='host timing without JS wrapper hooks or conversion timers')
     parser.add_argument('--density', action='store_true')
     parser.add_argument('--collect-v8', action='store_true', help='explicit density-only GC intervention')
     args = parser.parse_args()
+    if args.hosts and args.detailed:
+        parser.error('--hosts and --detailed are mutually exclusive')
     if args.collect_v8 and not args.density:
         parser.error('--collect-v8 requires --density')
     if not 1 <= args.iterations <= 100:
@@ -52,6 +55,7 @@ def main():
                    MIMIC_PROFILE_WHOLE_CPU=str(int(args.native)),
                    MIMIC_PROFILE_EXEC_GO_CPU=str(int(args.go_cpu)),
                    MIMIC_DIAGNOSTICS=str(int(args.detailed)),
+                   MIMIC_PROFILE_HOSTS=str(int(args.hosts)),
                    MIMIC_PROFILE_CONVERSIONS=str(int(args.detailed)),
                    MIMIC_PROFILE_V8_GC=str(int(args.collect_v8)))
         test = 'TestPerformanceDensityProfile' if args.density else 'TestPerformanceProfile'

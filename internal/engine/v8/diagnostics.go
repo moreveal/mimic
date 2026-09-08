@@ -21,19 +21,21 @@ type diagnosticCost struct {
 
 type diagnosticState struct {
 	Detailed    bool                       `json:"detailed"`
+	HostOnly    bool                       `json:"host_only,omitempty"`
 	Costs       map[string]diagnosticCost  `json:"costs"`
 	Heaps       map[string]any             `json:"heaps"`
 	CPUProfiles map[string]json.RawMessage `json:"cpu_profiles,omitempty"`
 }
 
 func newDiagnostics() *diagnosticState {
-	if os.Getenv("MIMIC_DIAGNOSTICS") != "1" {
+	hostOnly := os.Getenv("MIMIC_PROFILE_HOSTS") == "1"
+	if os.Getenv("MIMIC_DIAGNOSTICS") != "1" && !hostOnly {
 		return nil
 	}
-	return &diagnosticState{Detailed: os.Getenv("MIMIC_PROFILE_CONVERSIONS") == "1", Costs: map[string]diagnosticCost{}, Heaps: map[string]any{}}
+	return &diagnosticState{HostOnly: hostOnly, Detailed: !hostOnly && os.Getenv("MIMIC_PROFILE_CONVERSIONS") == "1", Costs: map[string]diagnosticCost{}, Heaps: map[string]any{}}
 }
 
-func (a *adapter) ProfileEnabled() bool { return a.profile != nil }
+func (a *adapter) ProfileEnabled() bool { return a.profile != nil && !a.profile.HostOnly }
 
 // ProfileWorkloadCPU spans the caller's whole task, including Promise jobs and
 // asynchronous continuations that an Eval-only native sample would miss.

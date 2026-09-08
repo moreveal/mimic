@@ -283,3 +283,29 @@ Ten held Pages, independent diagnostic (not the benchmark's RSS slope):
 V8 reported external memory is 0/480/0 bytes respectively. Used/physical heap and process RSS are overlapping measures, not additive components; mapped code, stacks, Go reservations and native allocator capacity are not fully attributed by V8 statistics. After close, ordinary 250-ms recovery RSS is 71.91/72.44/94.16 MiB. Explicit Go GC/scavenging (diagnostic only) lowers it to 63.50/67.04/71.03 MiB and ~8.4–8.5 MiB Go live heap.
 
 A separate **forced V8 collection diagnostic**, never substituted for benchmark results, lowers held ten-Page RSS from 267.04 → 145.59 MiB static, 355.09 → 154.44 MiB CPU, and 342.07 → 202.09 MiB React. Median per-Page collection costs are 5.06/6.00/7.90 ms. This proves considerable capacity/garbage is reclaimable and helps attribute CPU's footprint; it does not establish which class caused the full-fit regression. No collection was inserted into the workload or normal navigation to manufacture a smaller official memory number. Choosing an automatic reclamation policy would require a new measured latency/throughput/density trade-off, rather than treating forced-GC memory as the current product result.
+
+## DOM crossing census — 2026-09-08 (diagnostics only)
+
+No optimization or workload/harness/baseline changes. A new `profile_gate.py --hosts` mode enables existing inclusive host timers without wrapper hooks, bootstrap JS instrumentation, or conversion timers. Ten fresh DOM Pages each execute the unchanged workload once. Subtract navigation counters from execution counters; sum of named host counts equals the independent callback sequence delta in every replay: **60,060**, across 20 host names. These are JS-to-Go host invocations, not a count of all bidirectional SDK/FFI operations. All ten complete with the expected DOM result.
+
+Top ten ordered by aggregate callback time. Counts are exact per replay; mean summed time is the aggregate over ten replays divided by ten (not mean duration of one call).
+
+| Host function | Calls/replay | Summed ms/replay (mean) | Summed ms, all 10 |
+|---|---:|---:|---:|
+| setAttribute | 18,000 | 22.756 | 227.565 |
+| toggleToken | 12,000 | 20.797 | 207.967 |
+| insertPlain | 9,001 | 11.510 | 115.101 |
+| elementChildren | 6,002 | 8.898 | 88.981 |
+| queryAllWithin | 6 | 4.455 | 44.547 |
+| create | 3,001 | 3.192 | 31.916 |
+| createText | 3,000 | 2.888 | 28.884 |
+| createComment | 3,000 | 2.415 | 24.151 |
+| parentNode | 3,003 | 2.370 | 23.703 |
+| contains | 3,001 | 2.315 | 23.148 |
+
+Top ten cover 60,014 calls (99.923%). All host timers total 82.788 ms/replay. Remaining names/counts: apiAccess 31; queryWithin, textContent, query, performanceNow, getAttribute, setInnerHTML each 2; nodeChildren, storageGet, storageSet each 1. By call count, apiAccess replaces queryAllWithin in the top ten.
+
+**Timing boundary and limitations:** timers begin inside the Go callback and end on callback return; they include argument wrapping, conversions, host body, result handling and nested work. They exclude transition/dispatch before callback entry and after return to V8. These are inclusive instrumented elapsed times, not isolated transition overhead or an additive CPU decomposition. Existing Go time.Now/time.Since counters exhibit zero/quantized measurements for short operations; zero does not establish zero cost, and close rankings should not be overinterpreted. Instrumented execution median is 147.449 ms; the separate subsequent control is 156.836 ms. Their -6.0% difference is run variation, not an optimization or a negative instrumentation overhead estimate.
+
+Evidence: `dom-current/crossings-20260908/` contains both raw phase series, build/launch receipts, complete per-replay/per-type counts and times in `summary.json`, and fast-gate results. Reproduce aggregation with `tools/performance/summarize_crossings.py`. Both diagnostic launches rebuilt and verified SHA-256 immediately before execution: `995452e25e294a660d8f410da4f4f8f6da8e2b162597d342fcca25041ed57916`. Frozen fingerprint verification passed. Fast gate passes all semantic gates, prescribed warm runs, N=10/25 waves and ten-Page memory collection. That supplementary gate overlapped correctness tests, so its latency/throughput/memory numbers must not be used to claim a performance delta; the two attribution replays preceded these checks and did not overlap them.
+Correctness: go test ./internal/engine/v8 ./internal/browser passes (browser 63.030 s). Full matrix is not rerun: no production optimization milestone occurred.
