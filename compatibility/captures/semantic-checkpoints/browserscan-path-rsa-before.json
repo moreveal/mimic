@@ -1,0 +1,40 @@
+{
+  "target": "Chrome/152.0.7977.82",
+  "mimic": "Mimic/152.0.7977.82",
+  "matched": 0,
+  "total": 1,
+  "results": [
+    {
+      "name": "WebCrypto RSA-OAEP SPKI import and encrypt",
+      "match": false,
+      "chrome": {
+        "value": {
+          "tag": "[object CryptoKey]",
+          "type": "public",
+          "extractable": true,
+          "algorithm": {
+            "name": "RSA-OAEP",
+            "modulusLength": 1024,
+            "publicExponent": [
+              1,
+              0,
+              1
+            ],
+            "hash": "SHA-1"
+          },
+          "usages": [
+            "encrypt"
+          ],
+          "resultTag": "[object ArrayBuffer]",
+          "byteLength": 128
+        },
+        "error": ""
+      },
+      "mimic": {
+        "value": null,
+        "error": "Protocol error (Runtime.evaluate): promise rejected: NotSupportedError: The operation is not supported",
+        "workerTrace": []
+      }
+    }
+  ]
+}

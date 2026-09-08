@@ -1,0 +1,49 @@
+# Local builds and native artifacts
+/.build/
+/bin/
+/dist/
+*.exe
+*.dll
+*.pdb
+*.test
+*.out
+# Scratch work, diagnostics and runtime state (intentional fixtures stay visible)
+/.tmp/
+/.tmp-*
+/compatibility/.*.json
+/compatibility/.*.log
+*.log
+*.pid
+*.prof
+*.pprof
+*.trace
+/coverage/
+/snapshots/
+/runtime-state/
+# Reproducible downloads and local environments
+/compatibility/.source-cache/
+/compatibility/.chrome-for-testing/
+/compatibility/wpt/
+/.cache/
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+node_modules/
+# Credentials: never use real sessions as fixtures
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+/secrets/
+# Editor and OS metadata
+.vscode/
+.idea/
+*.swp
+*~
+.DS_Store
+Thumbs.db

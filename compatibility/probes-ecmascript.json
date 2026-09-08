@@ -1,0 +1,14 @@
+[
+  {
+    "name": "intl environment projection",
+    "expression": "(()=>({intl:typeof Intl,locale:new Intl.DateTimeFormat().resolvedOptions(),number:new Intl.NumberFormat().resolvedOptions(),collator:new Intl.Collator().resolvedOptions(),supported:Intl.DateTimeFormat.supportedLocalesOf(['ru-RU','en-US','zz-ZZ'])}))()"
+  },
+  {
+    "name": "dynamic code constructors",
+    "expression": "(()=>{const AsyncFunction=Object.getPrototypeOf(async function(){}).constructor,GeneratorFunction=Object.getPrototypeOf(function*(){}).constructor;return{eval:(0,eval)('1+2'),fn:Function('return this===globalThis')(),asyncName:AsyncFunction.name,generatorName:GeneratorFunction.name,fnText:Function.prototype.toString.call(function sample(a){return a+1})}})()"
+  },
+  {
+    "name": "error and conversion shape",
+    "expression": "(()=>{let stack='';try{null.x}catch(error){stack=String(error.stack).split('\\n').slice(0,2)};const values=[];for(const value of [undefined,null,NaN,Infinity,-0,1n])values.push({type:typeof value,string:String(value),tag:Object.prototype.toString.call(value)});return{stack,values,jsonNegZero:JSON.stringify(-0),url:String(new URL('/x?y=1','https://example.com/a'))}})()"
+  }
+]

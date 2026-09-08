@@ -1,0 +1,10 @@
+[
+  {
+    "name": "platform object own properties",
+    "expression": "new Promise(async resolve=>{const stages=[];try{const element=document.createElement('iframe');stages.push(['element',Object.getOwnPropertyNames(element).sort()]);const pc=new RTCPeerConnection();stages.push(['pc',Object.getOwnPropertyNames(pc).sort()]);const dc=pc.createDataChannel('x');stages.push(['dc',Object.getOwnPropertyNames(dc).sort()]);const offer=await pc.createOffer();stages.push(['offer',Object.getOwnPropertyNames(offer).sort()]);stages.push(['storage',Object.getOwnPropertyNames(localStorage).sort()]);pc.close();resolve({stages})}catch(error){resolve({stages,error:{name:error.name,message:error.message,stack:String(error.stack)}})}})"
+  },
+  {
+    "name": "window realm brand",
+    "expression": "({tag:Object.prototype.toString.call(window),instance:window instanceof Window,prototype:Object.getPrototypeOf(window)===Window.prototype,constructor:window.constructor===Window,self:window===globalThis})"
+  }
+]

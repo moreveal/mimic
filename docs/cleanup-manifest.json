@@ -1,0 +1,332 @@
+[
+  {
+    "path": ".tmp",
+    "files": 560,
+    "bytes": 587641379
+  },
+  {
+    "path": ".build",
+    "files": 5,
+    "bytes": 285196158
+  },
+  {
+    "path": "compatibility/.chrome-for-testing",
+    "files": 2084,
+    "bytes": 816513122
+  },
+  {
+    "path": "compatibility/.source-cache",
+    "files": 360,
+    "bytes": 2196147
+  },
+  {
+    "path": "compatibility/__pycache__",
+    "files": 11,
+    "bytes": 135158
+  },
+  {
+    "path": "tools/__pycache__",
+    "files": 2,
+    "bytes": 42936
+  },
+  {
+    "path": "compatibility/captures/browserscan-normal-2026-09-08",
+    "files": 9,
+    "bytes": 1481154
+  },
+  {
+    "path": "compatibility/generated",
+    "files": 0,
+    "bytes": 0
+  },
+  {
+    "path": "compatibility/targets",
+    "files": 0,
+    "bytes": 0
+  },
+  {
+    "path": "compatibility/browserscan_vue_error_probe.py",
+    "files": 1,
+    "bytes": 1791
+  },
+  {
+    "path": ".tmp-trace-h3.json",
+    "files": 1,
+    "bytes": 3270
+  },
+  {
+    "path": ".tmp-voxel-fetchmeta.json",
+    "files": 1,
+    "bytes": 25529
+  },
+  {
+    "path": ".tmp-voxel-gpu.json",
+    "files": 1,
+    "bytes": 13502
+  },
+  {
+    "path": ".tmp-voxel-h3.json",
+    "files": 1,
+    "bytes": 13361
+  },
+  {
+    "path": ".tmp-voxel-headers-live.json",
+    "files": 1,
+    "bytes": 16871
+  },
+  {
+    "path": ".tmp-voxel-perf-other.json",
+    "files": 1,
+    "bytes": 13343
+  },
+  {
+    "path": ".tmp-voxel.json",
+    "files": 1,
+    "bytes": 13236
+  },
+  {
+    "path": "compatibility/.browserscan-chrome-net.json",
+    "files": 1,
+    "bytes": 72821
+  },
+  {
+    "path": "compatibility/.browserscan-chrome.json",
+    "files": 1,
+    "bytes": 91543
+  },
+  {
+    "path": "compatibility/.browserscan-console.json",
+    "files": 1,
+    "bytes": 120150
+  },
+  {
+    "path": "compatibility/.browserscan-debug.json",
+    "files": 1,
+    "bytes": 58584
+  },
+  {
+    "path": "compatibility/.browserscan-mimic-diagnostic.json",
+    "files": 1,
+    "bytes": 196179
+  },
+  {
+    "path": "compatibility/.browserscan-mimic-final.json",
+    "files": 1,
+    "bytes": 308453
+  },
+  {
+    "path": "compatibility/.browserscan-mimic-final.log",
+    "files": 1,
+    "bytes": 310819
+  },
+  {
+    "path": "compatibility/.browserscan-mimic-net.json",
+    "files": 1,
+    "bytes": 190225
+  },
+  {
+    "path": "compatibility/.browserscan-mimic.json",
+    "files": 1,
+    "bytes": 135482
+  },
+  {
+    "path": "compatibility/.browserscan-payload.json",
+    "files": 1,
+    "bytes": 195520
+  },
+  {
+    "path": "compatibility/.browserscan-region.json",
+    "files": 1,
+    "bytes": 134628
+  },
+  {
+    "path": "compatibility/.browserscan-responses.json",
+    "files": 1,
+    "bytes": 139527
+  },
+  {
+    "path": "compatibility/.diff-prefo-after.json",
+    "files": 1,
+    "bytes": 33570
+  },
+  {
+    "path": "compatibility/.diff-prefo.json",
+    "files": 1,
+    "bytes": 33812
+  },
+  {
+    "path": "compatibility/.exact-api-latest.json",
+    "files": 1,
+    "bytes": 36158
+  },
+  {
+    "path": "compatibility/.exact-api.json",
+    "files": 1,
+    "bytes": 16979
+  },
+  {
+    "path": "compatibility/.exact-fp-cold.json",
+    "files": 1,
+    "bytes": 11403
+  },
+  {
+    "path": "compatibility/.exact-fp.json",
+    "files": 1,
+    "bytes": 11805
+  },
+  {
+    "path": "compatibility/.exact-headers.json",
+    "files": 1,
+    "bytes": 22073
+  },
+  {
+    "path": "compatibility/.exact-network.json",
+    "files": 1,
+    "bytes": 36211
+  },
+  {
+    "path": "compatibility/.exact-opt.json",
+    "files": 1,
+    "bytes": 13970
+  },
+  {
+    "path": "compatibility/.exact-prefo-current.json",
+    "files": 1,
+    "bytes": 3916
+  },
+  {
+    "path": "compatibility/.exact-prefo-gpu.json",
+    "files": 1,
+    "bytes": 6822
+  },
+  {
+    "path": "compatibility/.exact-prefo-latest.json",
+    "files": 1,
+    "bytes": 6833
+  },
+  {
+    "path": "compatibility/.exact-prefo-v8-next.json",
+    "files": 1,
+    "bytes": 4453
+  },
+  {
+    "path": "compatibility/.exact-reflection.json",
+    "files": 1,
+    "bytes": 3133
+  },
+  {
+    "path": "compatibility/.exact-values.json",
+    "files": 1,
+    "bytes": 17018
+  },
+  {
+    "path": "compatibility/.exact-xhr.json",
+    "files": 1,
+    "bytes": 14809
+  },
+  {
+    "path": "compatibility/.mimic-api-async.json",
+    "files": 1,
+    "bytes": 18701
+  },
+  {
+    "path": "compatibility/.mimic-api-cold.json",
+    "files": 1,
+    "bytes": 18526
+  },
+  {
+    "path": "compatibility/.mimic-api-cold126.json",
+    "files": 1,
+    "bytes": 19084
+  },
+  {
+    "path": "compatibility/.mimic-api-latest.json",
+    "files": 1,
+    "bytes": 33066
+  },
+  {
+    "path": "compatibility/.mimic-api.json",
+    "files": 1,
+    "bytes": 18641
+  },
+  {
+    "path": "compatibility/.mimic-current-src.json",
+    "files": 1,
+    "bytes": 38159
+  },
+  {
+    "path": "compatibility/.mimic-fp-fixed.json",
+    "files": 1,
+    "bytes": 11362
+  },
+  {
+    "path": "compatibility/.mimic-fp.json",
+    "files": 1,
+    "bytes": 11388
+  },
+  {
+    "path": "compatibility/.mimic-headers.json",
+    "files": 1,
+    "bytes": 18622
+  },
+  {
+    "path": "compatibility/.mimic-network.json",
+    "files": 1,
+    "bytes": 39247
+  },
+  {
+    "path": "compatibility/.mimic-opt.json",
+    "files": 1,
+    "bytes": 35787
+  },
+  {
+    "path": "compatibility/.mimic-prefo-current.json",
+    "files": 1,
+    "bytes": 3819
+  },
+  {
+    "path": "compatibility/.mimic-prefo-favicon.json",
+    "files": 1,
+    "bytes": 29993
+  },
+  {
+    "path": "compatibility/.mimic-prefo-gpu.json",
+    "files": 1,
+    "bytes": 27773
+  },
+  {
+    "path": "compatibility/.mimic-prefo-latest.json",
+    "files": 1,
+    "bytes": 28748
+  },
+  {
+    "path": "compatibility/.mimic-prefo-other.json",
+    "files": 1,
+    "bytes": 28128
+  },
+  {
+    "path": "compatibility/.mimic-prefo-v8-next.json",
+    "files": 1,
+    "bytes": 4628
+  },
+  {
+    "path": "compatibility/.mimic-reflection.json",
+    "files": 1,
+    "bytes": 1082
+  },
+  {
+    "path": "compatibility/.mimic-values.json",
+    "files": 1,
+    "bytes": 1759
+  },
+  {
+    "path": "compatibility/.mimic-xhr.json",
+    "files": 1,
+    "bytes": 16558
+  },
+  {
+    "path": "compatibility/.trace-latest.json",
+    "files": 1,
+    "bytes": 3271
+  }
+]

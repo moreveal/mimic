@@ -1,0 +1,1899 @@
+package browser
+
+import (
+	"context"
+	"crypto"
+	cryptorand "crypto/rand"
+	"crypto/rsa"
+	"crypto/sha1"
+	"crypto/sha256"
+	"crypto/sha512"
+	"crypto/x509"
+	"errors"
+	"fmt"
+	"net/http"
+	"net/url"
+	"sort"
+	"strconv"
+	"strings"
+	"sync"
+	"time"
+
+	"github.com/google/uuid"
+	"github.com/moreveal/mimic/compatibility"
+	"github.com/moreveal/mimic/internal/dom"
+	"github.com/moreveal/mimic/internal/engine"
+	"github.com/moreveal/mimic/internal/network"
+	"github.com/moreveal/mimic/internal/scheduler"
+	"github.com/moreveal/mimic/internal/trace"
+	"github.com/moreveal/mimic/internal/webapi"
+)
+
+type Realm struct {
+	ID                  string
+	agent               ExecutionAgent
+	runtime             engine.Runtime
+	scheduler           *scheduler.Scheduler
+	document            *dom.Document
+	url                 *url.URL
+	token               string
+	detached            map[int64]dom.Node
+	apiSeen             map[string]bool
+	readyState          string
+	apiTracking         bool
+	workers             map[int64]*DedicatedWorker
+	workerSeq           int64
+	childFrames         map[int64]*Frame
+	retainedFrames      map[string]*Frame
+	crossValues         map[int64]engine.Value
+	crossValueSeq       int64
+	origin              string
+	currentScript       int64
+	messageReceiver     engine.Value
+	messagePortReceiver engine.Value
+	frameLoadDispatcher engine.Value
+	performanceNotifier engine.Value
+	loadBlockers        int
+	loadRequested       bool
+	loadScheduled       bool
+	loadCompleted       bool
+	loadCallback        func(context.Context)
+	resourceContext     context.Context
+	cancelResources     context.CancelFunc
+	resourceWG          sync.WaitGroup
+}
+
+// documentURL is the URL observed by this realm. For the top-level realm it
+// follows the Page history state so pushState/replaceState immediately affect
+// referrers and relative URL resolution without mutating unrelated subsystems.
+func (r *Realm) documentURL() *url.URL {
+	if frame, ok := r.agent.(*Frame); ok && frame == r.agent.Page().Top {
+		u, err := url.Parse(r.agent.Page().URL())
+		if err == nil {
+			return u
+		}
+	}
+	copy := *r.url
+	return &copy
+}
+
+func (r *Realm) resolveDocument(raw string) (*url.URL, error) {
+	reference, err := url.Parse(raw)
+	if err != nil {
+		return nil, err
+	}
+	return r.documentURL().ResolveReference(reference), nil
+}
+
+func newRealm(p *Page, agent ExecutionAgent, d *dom.Document, u *url.URL) (*Realm, error) {
+	resourceContext, cancelResources := context.WithCancel(p.ctx.lifetime)
+	r := &Realm{ID: uuid.NewString(), agent: agent, runtime: p.ctx.browser.factory.New(), document: d, url: u, origin: originOf(u.String()), token: uuid.NewString(), detached: map[int64]dom.Node{}, apiSeen: map[string]bool{}, readyState: "loading", workers: map[int64]*DedicatedWorker{}, childFrames: map[int64]*Frame{}, retainedFrames: map[string]*Frame{}, crossValues: map[int64]engine.Value{}, resourceContext: resourceContext, cancelResources: cancelResources}
+	r.scheduler = scheduler.New(p.ClockNow(), func(ctx context.Context) error {
+		if checkpoint, ok := r.runtime.(interface{ MicrotaskCheckpointContext(context.Context) error }); ok {
+			return checkpoint.MicrotaskCheckpointContext(ctx)
+		}
+		return r.runtime.MicrotaskCheckpoint()
+	})
+	r.scheduler.SetExecutionScale(p.Environment().Time.ExecutionScale)
+	r.scheduler.SetObserver(func(t scheduler.Transition) {
+		p.trace.Add(trace.Scheduler, t.Name, map[string]any{"taskId": t.TaskID, "source": t.Source, "due": t.Due, "realm": r.ID})
+	})
+	r.runtime.SetTimeSource(r.scheduler.Now)
+	r.runtime.SetGlobalAccessObserver(func(name string, supported bool) {
+		if r.apiTracking {
+			r.recordAPIAccess("Window."+name, supported)
+		}
+	})
+	if err := r.install(); err != nil {
+		r.runtime.Close()
+		return nil, err
+	}
+	return r, nil
+}
+func (r *Realm) checkpoint(ctx context.Context) error {
+	if checkpoint, ok := r.runtime.(interface{ MicrotaskCheckpointContext(context.Context) error }); ok {
+		return checkpoint.MicrotaskCheckpointContext(ctx)
+	}
+	return r.runtime.MicrotaskCheckpoint()
+}
+
+func (r *Realm) Close() error {
+	r.cancelResources()
+	r.resourceWG.Wait()
+	for _, worker := range r.workers {
+		_ = worker.Close()
+	}
+	for _, frame := range r.childFrames {
+		if frame.Realm != nil {
+			_ = frame.Realm.Close()
+		}
+	}
+	for _, frame := range r.retainedFrames {
+		if frame.Realm != nil {
+			_ = frame.Realm.Close()
+		}
+	}
+	return r.runtime.Close()
+}
+func (r *Realm) Evaluate(ctx context.Context, source, name string) (engine.Value, error) {
+	v, err := r.runtime.Eval(ctx, source, name)
+	if err != nil {
+		r.agent.Page().trace.Add(trace.Exception, "evaluation", map[string]any{"source": name, "error": err.Error()})
+		msg := err.Error()
+		if strings.Contains(msg, "ReferenceError:") && strings.Contains(msg, " is not defined") {
+			name := strings.TrimSpace(strings.SplitN(strings.TrimPrefix(msg, "ReferenceError:"), " is not defined", 2)[0])
+			r.agent.Page().trace.Add(trace.Unsupported, name, map[string]any{"realm": r.ID})
+		}
+	}
+	return v, err
+}
+
+func (r *Realm) EvaluateModule(ctx context.Context, source, name string, loader engine.ModuleLoader) (engine.Value, error) {
+	moduleRuntime, ok := r.runtime.(engine.ModuleRuntime)
+	if !ok {
+		return nil, fmt.Errorf("JavaScript engine does not support ECMAScript modules")
+	}
+	v, err := moduleRuntime.EvalModule(ctx, source, name, loader)
+	if err != nil {
+		r.agent.Page().trace.Add(trace.Exception, "evaluation", map[string]any{"source": name, "error": err.Error(), "module": true})
+	}
+	return v, err
+}
+func (r *Realm) RunUntilIdle(ctx context.Context) error {
+	if err := r.scheduler.RunUntilIdle(ctx, 10000); err != nil {
+		return err
+	}
+	for _, frame := range r.childFrames {
+		if frame.Realm != nil {
+			if err := frame.Realm.RunUntilIdle(ctx); err != nil {
+				return err
+			}
+		}
+	}
+	return r.scheduler.RunUntilIdle(ctx, 10000)
+}
+func (r *Realm) RunReady(ctx context.Context) error {
+	if err := r.scheduler.RunReady(ctx, 10000); err != nil {
+		return err
+	}
+	for _, frame := range r.childFrames {
+		if frame.Realm != nil {
+			if err := frame.Realm.RunReady(ctx); err != nil {
+				return err
+			}
+		}
+	}
+	return r.scheduler.RunReady(ctx, 10000)
+}
+func (r *Realm) AdvanceBy(ctx context.Context, delta time.Duration) error {
+	r.scheduler.AdvanceBy(delta)
+	if err := r.scheduler.RunReady(ctx, 10000); err != nil {
+		return err
+	}
+	return r.scheduler.RunReady(ctx, 10000)
+}
+func arg(args []engine.Value, n int) any {
+	if n >= len(args) || args[n] == nil {
+		return nil
+	}
+	return args[n].Export()
+}
+func strarg(args []engine.Value, n int) string {
+	v := arg(args, n)
+	if v == nil {
+		return ""
+	}
+	return fmt.Sprint(v)
+}
+func numarg(args []engine.Value, n int) float64 {
+	switch v := arg(args, n).(type) {
+	case int64:
+		return float64(v)
+	case int32:
+		return float64(v)
+	case int:
+		return float64(v)
+	case float64:
+		return v
+	case float32:
+		return float64(v)
+	}
+	return 0
+}
+func numberValue(value any) float64 {
+	switch number := value.(type) {
+	case int:
+		return float64(number)
+	case int32:
+		return float64(number)
+	case int64:
+		return float64(number)
+	case float32:
+		return float64(number)
+	case float64:
+		return number
+	default:
+		return 0
+	}
+}
+func transportPhases(value any) map[string]float64 {
+	if timing, ok := value.(network.TransportTimingSnapshot); ok {
+		return timing.Phases
+	}
+	return nil
+}
+func transportPhase(phases map[string]float64, name string, fallback float64) float64 {
+	if value, ok := phases[name]; ok {
+		return value
+	}
+	return fallback
+}
+func performanceProtocol(value any) string {
+	protocol := strings.ToLower(fmt.Sprint(value))
+	switch {
+	case strings.Contains(protocol, "3"):
+		return "h3"
+	case strings.Contains(protocol, "2"):
+		return "h2"
+	case strings.Contains(protocol, "1.1"):
+		return "http/1.1"
+	default:
+		return ""
+	}
+}
+func (r *Realm) fn(f engine.Function) any { return r.runtime.Function(f) }
+func (r *Realm) val(v any) engine.Value   { return r.runtime.Value(v) }
+func (r *Realm) install() error {
+	p := r.agent.Page()
+	host := map[string]any{}
+	host["token"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(r.token), nil })
+	host["ready"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { r.apiTracking = true; return nil, nil })
+	host["selfFrameID"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(r.agent.ContextID()), nil })
+	host["windowRelations"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		frame, ok := r.agent.(*Frame)
+		if !ok {
+			return r.val(map[string]any{"self": r.agent.ContextID(), "parent": r.agent.ContextID(), "top": r.agent.ContextID()}), nil
+		}
+		parent := frame
+		if frame.parent != nil {
+			parent = frame.parent
+		}
+		return r.val(map[string]any{"self": frame.ID, "parent": parent.ID, "top": frame.Top().ID}), nil
+	})
+	host["frameElement"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		frame, ok := r.agent.(*Frame)
+		if !ok || frame.parent == nil || frame.parent.Realm == nil {
+			return r.val(nil), nil
+		}
+		node, ok := frame.parent.Realm.document.Get(frame.elementID)
+		if !ok {
+			return r.val(nil), nil
+		}
+		return r.val(nodeData(node)), nil
+	})
+	host["iframeWindow"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		connectedThroughShadow, _ := arg(a, 1).(bool)
+		frame, err := r.ensureChildFrame(int64(numarg(a, 0)), connectedThroughShadow)
+		if err != nil || frame == nil {
+			return r.val(nil), err
+		}
+		return r.val(frame.ID), nil
+	})
+	host["frameRelation"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		frame := p.frame(strarg(a, 0))
+		if frame == nil {
+			return r.val(nil), nil
+		}
+		switch strarg(a, 1) {
+		case "parent":
+			if frame.parent != nil {
+				return r.val(frame.parent.ID), nil
+			}
+		case "top":
+			return r.val(frame.Top().ID), nil
+		}
+		return r.val(frame.ID), nil
+	})
+	host["frameEval"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		frame := p.frame(strarg(a, 0))
+		value, err := r.evalInFrame(context.Background(), strarg(a, 0), strarg(a, 1))
+		if err != nil || frame == nil || frame.Realm == nil {
+			return nil, err
+		}
+		return r.val(frame.Realm.crossRealmValue(value)), nil
+	})
+	host["frameCall"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		frame := p.frame(strarg(a, 0))
+		if !r.canAccess(frame) {
+			return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
+		}
+		value := frame.Realm.crossValues[int64(numarg(a, 1))]
+		if value == nil {
+			return nil, fmt.Errorf("cross-realm function is no longer available")
+		}
+		raw, _ := arg(a, 2).([]any)
+		arguments := make([]engine.Value, len(raw))
+		for index := range raw {
+			arguments[index] = frame.Realm.runtime.Value(raw[index])
+		}
+		result, err := frame.Realm.runtime.Call(context.Background(), value, nil, arguments...)
+		if err != nil {
+			return nil, err
+		}
+		return r.val(frame.Realm.crossRealmValue(result)), nil
+	})
+	host["frameGet"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		frame := p.frame(strarg(a, 0))
+		if !r.canAccess(frame) {
+			return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
+		}
+		value := frame.Realm.crossValues[int64(numarg(a, 1))]
+		if value == nil {
+			return r.val(map[string]any{"__mimicCrossRealm": "undefined"}), nil
+		}
+		result := frame.Realm.runtime.GetProperty(value, strarg(a, 2))
+		return r.val(frame.Realm.crossRealmValue(result)), nil
+	})
+	host["frameGlobalGet"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		frame := p.frame(strarg(a, 0))
+		if !r.canAccess(frame) {
+			return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
+		}
+		result := frame.Realm.runtime.Get(strarg(a, 1))
+		return r.val(frame.Realm.crossRealmValue(result)), nil
+	})
+	host["framePrototype"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		frame := p.frame(strarg(a, 0))
+		if !r.canAccess(frame) {
+			return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
+		}
+		value := frame.Realm.crossValues[int64(numarg(a, 1))]
+		if value == nil {
+			return r.val(map[string]any{"__mimicCrossRealm": "null"}), nil
+		}
+		frame.Realm.runtime.Set("__mimicCrossValue", value)
+		prototype, err := frame.Realm.runtime.Eval(context.Background(), `Object.getPrototypeOf(__mimicCrossValue)`, "mimic:cross-realm-prototype")
+		if err != nil {
+			return nil, err
+		}
+		return r.val(frame.Realm.crossRealmValue(prototype)), nil
+	})
+	host["frameLocation"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		frame := p.frame(strarg(a, 0))
+		if frame == nil || frame.Realm == nil {
+			return r.val(""), nil
+		}
+		return r.val(frame.Realm.url.String()), nil
+	})
+	host["framePost"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return nil, r.postToFrame(strarg(a, 0), arg(a, 1), strarg(a, 2), stringSlice(arg(a, 3)))
+	})
+	host["navigator"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		p.trace.Add(trace.API, "Navigator", map[string]any{"realm": r.ID})
+		environment := p.Environment()
+		n := environment.Navigator()
+		brands := make([]map[string]any, 0, len(environment.Product.UserAgentBrands))
+		for _, brand := range environment.Product.UserAgentBrands {
+			brands = append(brands, map[string]any{"brand": brand.Brand, "version": brand.Version, "fullVersion": brand.FullVersion})
+		}
+		return r.val(map[string]any{"userAgent": n.UserAgent, "appVersion": strings.TrimPrefix(n.UserAgent, "Mozilla/"), "platform": n.Platform, "languages": n.Languages, "language": n.Languages[0], "hardwareConcurrency": n.HardwareConcurrency, "deviceMemory": n.DeviceMemory, "onLine": n.Online, "cookieEnabled": n.CookieEnabled, "vendor": "Google Inc.", "product": "Gecko", "appName": "Netscape", "maxTouchPoints": 0, "webdriver": false, "pdfViewerEnabled": true, "uaBrands": brands, "uaFullVersion": environment.Product.FullVersion, "architecture": "x86", "bitness": "64", "model": "", "platformVersion": environment.Platform.OSVersion}), nil
+	})
+	host["intlEnvironment"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		environment := p.Environment()
+		locale := environment.Locale.IntlLocale
+		if locale == "" && len(environment.Locale.Languages) > 0 {
+			locale = environment.Locale.Languages[0]
+		}
+		if locale == "" {
+			locale = "en-US"
+		}
+		return r.val(map[string]any{"locale": locale, "timeZone": environment.Locale.Timezone}), nil
+	})
+	host["screen"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		p.trace.Add(trace.API, "Screen", map[string]any{"realm": r.ID})
+		s := p.Environment().Screen()
+		return r.val(map[string]any{"width": s.Width, "height": s.Height, "availWidth": s.AvailWidth, "availHeight": s.AvailHeight, "colorDepth": s.ColorDepth, "pixelDepth": s.PixelDepth, "devicePixelRatio": s.DevicePixelRatio}), nil
+	})
+	host["viewport"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		w := p.Environment().Window
+		return r.val(map[string]any{"width": w.ViewportWidth, "height": w.ViewportHeight, "outerWidth": w.OuterWidth, "outerHeight": w.OuterHeight}), nil
+	})
+	host["graphics"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		g := p.Environment().Graphics
+		return r.val(map[string]any{"vendor": g.Vendor, "renderer": g.Renderer, "maxTextureSize": g.MaxTextureSize}), nil
+	})
+	host["rtcEnvironment"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		ice := p.Environment().Network.ICE
+		count := ice.HostCandidateCount
+		if count < 0 {
+			count = 0
+		}
+		offsets := append([]int(nil), ice.PortOffsets...)
+		if len(offsets) != count {
+			offsets = make([]int, count)
+			for index := range offsets {
+				offsets[index] = index * 2
+			}
+		}
+		reflexiveOffsets := append([]int(nil), ice.ReflexivePortOffsets...)
+		reflexiveCount := ice.ReflexiveCandidateCount
+		if reflexiveCount < 0 {
+			reflexiveCount = 0
+		}
+		if len(reflexiveOffsets) != reflexiveCount {
+			reflexiveOffsets = make([]int, reflexiveCount)
+			for index := range reflexiveOffsets {
+				reflexiveOffsets[index] = index * 2
+			}
+		}
+		return r.val(map[string]any{"hostCandidateCount": count, "reflexiveCandidateCount": reflexiveCount, "portOffsets": offsets, "reflexivePortOffsets": reflexiveOffsets, "publicAddress": ice.PublicAddress, "networkCost": ice.NetworkCost, "hostDelayMillis": ice.HostDelayMillis, "reflexiveDelayMillis": ice.ReflexiveDelayMillis, "endDelayMillis": ice.EndDelayMillis}), nil
+	})
+	host["gpuRequestAdapter"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		promise := r.runtime.NewPromise()
+		delay := time.Duration(p.Environment().Graphics.WebGPU.InitializationDelayMillis * float64(time.Millisecond))
+		r.scheduler.Post(scheduler.Control, delay, func(context.Context) error {
+			g := p.Environment().Graphics
+			return promise.Resolve(map[string]any{"vendor": g.WebGPU.Vendor, "architecture": g.WebGPU.Architecture, "device": g.WebGPU.Device, "description": g.WebGPU.Description, "features": g.WebGPU.Features, "maxTextureSize": g.MaxTextureSize})
+		})
+		return promise.Value, nil
+	})
+	host["performanceNow"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		return r.val(float64(r.scheduler.Now().Sub(p.PerformanceOrigin())) / float64(time.Millisecond)), nil
+	})
+	host["performanceTimeOrigin"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		return r.val(float64(p.PerformanceOrigin().UnixNano()) / float64(time.Millisecond)), nil
+	})
+	host["performanceEntries"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		requested := map[string]bool{}
+		if list, ok := arg(a, 0).([]any); ok {
+			for _, item := range list {
+				requested[fmt.Sprint(item)] = true
+			}
+		}
+		entries := []map[string]any{}
+		origin := p.PerformanceOrigin()
+		clockProfile := p.Environment().Time
+		var navigationResponseTime time.Time
+		var navigationEnd float64
+		if len(requested) == 0 || requested["navigation"] {
+			navigationID := uint32(2166136261)
+			for _, octet := range []byte(p.LoaderID()) {
+				navigationID = (navigationID ^ uint32(octet)) * 16777619
+			}
+			navigation := map[string]any{"name": p.URL(), "entryType": "navigation", "initiatorType": "navigation", "startTime": 0, "duration": 0, "fetchStart": 0, "requestStart": 0, "responseStart": 0, "responseEnd": 0, "transferSize": 0, "encodedBodySize": 0, "decodedBodySize": 0, "nextHopProtocol": "", "serverTiming": []map[string]any{}, "contentType": "", "type": "navigate", "redirectCount": 0, "activationStart": 0, "navigationId": int(navigationID%9000) + 1000}
+			for _, event := range p.Trace().Events() {
+				if event.Time.Before(origin) || event.Kind != trace.Network || event.Name != "response" || event.Data["initiator"] != network.Navigation {
+					continue
+				}
+				rawDuration := numberValue(event.Data["durationMs"])
+				phases := transportPhases(event.Data["browserVisibleTiming"])
+				if phases == nil {
+					phases = transportPhases(event.Data["transportTiming"])
+				}
+				duration := transportPhase(phases, "responseComplete", rawDuration) * clockProfile.NavigationScale
+				startTime := 0.0
+				requestStart := transportPhase(phases, "requestHeadersSent", duration/clockProfile.NavigationScale*0.25) * clockProfile.NavigationScale
+				responseStart := transportPhase(phases, "firstResponseByte", duration/clockProfile.NavigationScale*0.80) * clockProfile.NavigationScale
+				responseEnd := max(0, duration)
+				navigationResponseTime = event.Time
+				navigationEnd = responseEnd
+				navigation["fetchStart"] = startTime
+				navigation["requestStart"] = requestStart
+				navigation["responseStart"] = responseStart
+				navigation["responseEnd"] = max(0, responseEnd)
+				// NavigationTiming.duration is loadEventEnd. While a dynamically
+				// loaded script is executing after DOMContentLoaded but before load,
+				// Chrome exposes zero rather than the response duration.
+				if p.LoadEventEnded() {
+					navigation["duration"] = max(0, float64(r.scheduler.Now().Sub(origin))/float64(time.Millisecond))
+				}
+				navigation["transferSize"] = event.Data["transferSize"]
+				navigation["encodedBodySize"] = event.Data["encodedBodySize"]
+				navigation["decodedBodySize"] = event.Data["decodedBodySize"]
+				navigation["nextHopProtocol"] = performanceProtocol(event.Data["protocol"])
+				navigation["serverTiming"] = performanceServerTiming(event.Data["headers"])
+				navigation["contentType"] = fmt.Sprint(event.Data["mimeType"])
+			}
+			entries = append(entries, navigation)
+		}
+		if len(requested) == 0 || requested["visibility-state"] {
+			entries = append(entries, map[string]any{"name": "visible", "entryType": "visibility-state", "startTime": 0, "duration": 0})
+		}
+		if len(requested) == 0 || requested["resource"] {
+			if navigationResponseTime.IsZero() {
+				for _, candidate := range p.Trace().Events() {
+					if !candidate.Time.Before(origin) && candidate.Kind == trace.Network && candidate.Name == "response" && candidate.Data["initiator"] == network.Navigation {
+						navigationResponseTime = candidate.Time
+						navigationEnd = numberValue(candidate.Data["durationMs"]) * clockProfile.NavigationScale
+						break
+					}
+				}
+				if navigationResponseTime.IsZero() {
+					navigationResponseTime = origin
+				}
+			}
+			events := p.Trace().Events()
+			requestStarts := make(map[string]time.Time)
+			requestContexts := make(map[string]string)
+			for _, event := range events {
+				if event.Kind == trace.Network && event.Name == "request" && !event.Time.Before(origin) {
+					// Resource Timing is ordered by fetch start, not by response
+					// completion. Keep the first request boundary for each loader
+					// operation; redirects/restarts retain that browser operation's
+					// original start.
+					id := fmt.Sprint(event.Data["id"])
+					if owner, ok := event.Data["context"].(string); ok {
+						requestContexts[id] = owner
+					}
+					if _, exists := requestStarts[id]; !exists {
+						requestStarts[id] = event.Time
+					}
+				}
+			}
+			resourceEntries := make([]map[string]any, 0)
+			for _, event := range events {
+				resourceURL := fmt.Sprint(event.Data["url"])
+				if event.Time.Before(origin) || event.Kind != trace.Network || event.Name != "response" || event.Data["initiator"] == network.Navigation || strings.HasPrefix(resourceURL, "blob:") {
+					continue
+				}
+				owner := requestContexts[fmt.Sprint(event.Data["id"])]
+				// An iframe document fetch is a resource of its embedding
+				// document; other resources belong to their initiating context.
+				if event.Data["initiator"] == network.Iframe && owner != "" {
+					if frame := p.frame(owner); frame != nil && frame.parent != nil {
+						owner = frame.parent.ID
+					}
+				}
+				if owner != "" && owner != r.agent.ContextID() {
+					continue
+				}
+				rawDuration := numberValue(event.Data["durationMs"])
+				phases := transportPhases(event.Data["transportTiming"])
+				duration := transportPhase(phases, "responseComplete", rawDuration) * clockProfile.NetworkScale
+				startTime := max(0, navigationEnd)
+				if started, ok := requestStarts[fmt.Sprint(event.Data["id"])]; ok {
+					startTime = max(0, float64(started.Sub(origin))/float64(time.Millisecond))
+				} else {
+					// Backward-compatible fallback for synthetic traces which predate
+					// request-boundary recording.
+					between := event.Time.Sub(navigationResponseTime) - time.Duration(rawDuration*float64(time.Millisecond))
+					if between < 0 {
+						between = 0
+					}
+					startTime = max(0, navigationEnd+float64(between)/float64(time.Millisecond))
+				}
+				responseEnd := startTime + duration
+				requestStart := startTime + transportPhase(phases, "requestHeadersSent", rawDuration*0.25)*clockProfile.NetworkScale
+				responseStart := startTime + transportPhase(phases, "firstResponseByte", rawDuration*0.80)*clockProfile.NetworkScale
+				dnsStart := startTime + transportPhase(phases, "dnsStart", 0)*clockProfile.NetworkScale
+				dnsEnd := startTime + transportPhase(phases, "dnsEnd", 0)*clockProfile.NetworkScale
+				connectStart := startTime + transportPhase(phases, "tcpConnectStart", 0)*clockProfile.NetworkScale
+				connectEnd := startTime + transportPhase(phases, "tcpConnectEnd", transportPhase(phases, "requestHeadersSent", 0))*clockProfile.NetworkScale
+				secureStart := startTime + transportPhase(phases, "tlsHandshakeStart", 0)*clockProfile.NetworkScale
+				initiatorType := fmt.Sprint(event.Data["performanceInitiatorType"])
+				entry := map[string]any{"name": resourceURL, "entryType": "resource", "startTime": startTime, "duration": duration, "fetchStart": startTime, "domainLookupStart": dnsStart, "domainLookupEnd": dnsEnd, "connectStart": connectStart, "secureConnectionStart": secureStart, "connectEnd": connectEnd, "requestStart": requestStart, "responseStart": responseStart, "responseEnd": responseEnd, "initiatorType": initiatorType, "transferSize": event.Data["transferSize"], "encodedBodySize": event.Data["encodedBodySize"], "decodedBodySize": event.Data["decodedBodySize"], "nextHopProtocol": performanceProtocol(event.Data["protocol"]), "responseStatus": event.Data["status"], "serverTiming": performanceServerTiming(event.Data["headers"]), "contentType": fmt.Sprint(event.Data["mimeType"])}
+				if !resourceTimingAllowed(r.origin, resourceURL, event.Data["headers"]) {
+					for _, field := range []string{"domainLookupStart", "domainLookupEnd", "connectStart", "secureConnectionStart", "connectEnd", "requestStart", "responseStart", "transferSize", "encodedBodySize", "decodedBodySize", "responseStatus"} {
+						entry[field] = 0
+					}
+					entry["nextHopProtocol"] = ""
+					entry["serverTiming"] = []map[string]any{}
+					entry["contentType"] = ""
+				}
+				resourceEntries = append(resourceEntries, entry)
+			}
+			sort.SliceStable(resourceEntries, func(i, j int) bool {
+				return numberValue(resourceEntries[i]["startTime"]) < numberValue(resourceEntries[j]["startTime"])
+			})
+			entries = append(entries, resourceEntries...)
+		}
+		names := make([]string, 0, len(entries))
+		for _, entry := range entries {
+			names = append(names, fmt.Sprint(entry["entryType"])+":"+fmt.Sprint(entry["name"]))
+		}
+		traceCall := true
+		if len(a) > 1 {
+			if value, ok := arg(a, 1).(bool); ok {
+				traceCall = value
+			}
+		}
+		if traceCall {
+			p.trace.Add(trace.API, "Performance.getEntries", map[string]any{"types": arg(a, 0), "count": len(entries), "entries": names, "values": entries, "realm": r.ID})
+		}
+		return r.val(entries), nil
+	})
+	host["queuePerformanceObserver"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		if len(a) == 0 {
+			return nil, nil
+		}
+		callback := a[0]
+		r.scheduler.Post(scheduler.DOM, 0, func(ctx context.Context) error {
+			_, err := r.runtime.Call(ctx, callback, r.runtime.Get("window"))
+			return err
+		})
+		return nil, nil
+	})
+	host["queuePostedMessage"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		if len(a) == 0 {
+			return nil, nil
+		}
+		callback := a[0]
+		r.scheduler.Post(scheduler.PostedMessage, 0, func(ctx context.Context) error {
+			_, err := r.runtime.Call(ctx, callback, r.runtime.Get("window"))
+			return err
+		})
+		return nil, nil
+	})
+	host["newMessageChannel"] = r.fn(func(_ engine.Value, _ []engine.Value) (engine.Value, error) {
+		return r.val(p.newMessageChannel(r)), nil
+	})
+	host["messagePortPost"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return nil, p.postMessagePort(r, strarg(a, 0), arg(a, 1), stringSlice(arg(a, 2)))
+	})
+	host["messagePortClose"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		p.closeMessagePort(strarg(a, 0))
+		return nil, nil
+	})
+	host["randomBytes"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		n := int(numarg(a, 0))
+		if n < 0 || n > 65536 {
+			return nil, fmt.Errorf("Crypto.getRandomValues length must be between 0 and 65536 bytes")
+		}
+		buf := make([]byte, n)
+		if _, err := cryptorand.Read(buf); err != nil {
+			return nil, err
+		}
+		out := make([]int, n)
+		for i, b := range buf {
+			out[i] = int(b)
+		}
+		p.trace.Add(trace.API, "Crypto.getRandomValues", map[string]any{"bytes": n, "realm": r.ID})
+		return r.val(out), nil
+	})
+	host["internalRandomBytes"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		n := int(numarg(a, 0))
+		if n < 0 || n > 65536 {
+			return nil, fmt.Errorf("internal random length must be between 0 and 65536 bytes")
+		}
+		buf := make([]byte, n)
+		if _, err := cryptorand.Read(buf); err != nil {
+			return nil, err
+		}
+		out := make([]int, n)
+		for i, b := range buf {
+			out[i] = int(b)
+		}
+		return r.val(out), nil
+	})
+	host["randomUUID"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		p.trace.Add(trace.API, "Crypto.randomUUID", map[string]any{"realm": r.ID})
+		return r.val(uuid.NewString()), nil
+	})
+	host["internalRandomUUID"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		return r.val(uuid.NewString()), nil
+	})
+	host["subtleDigest"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		algorithm, input := strings.ToUpper(strings.ReplaceAll(strarg(a, 0), "_", "-")), byteSlice(arg(a, 1))
+		var digest []byte
+		switch algorithm {
+		case "SHA-1":
+			sum := sha1.Sum(input)
+			digest = sum[:]
+		case "SHA-256":
+			sum := sha256.Sum256(input)
+			digest = sum[:]
+		case "SHA-384":
+			sum := sha512.Sum384(input)
+			digest = sum[:]
+		case "SHA-512":
+			sum := sha512.Sum512(input)
+			digest = sum[:]
+		default:
+			return nil, fmt.Errorf("unsupported digest algorithm %q", algorithm)
+		}
+		out := make([]int, len(digest))
+		for i, value := range digest {
+			out[i] = int(value)
+		}
+		return r.val(out), nil
+	})
+	host["subtleImportRSAOAEP"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		der := byteSlice(arg(a, 0))
+		parsed, err := x509.ParsePKIXPublicKey(der)
+		if err != nil {
+			return nil, fmt.Errorf("invalid SPKI key: %w", err)
+		}
+		key, ok := parsed.(*rsa.PublicKey)
+		if !ok {
+			return nil, fmt.Errorf("SPKI key is not RSA")
+		}
+		exponent := key.E
+		publicExponent := []int{}
+		for shift := 24; shift >= 0; shift -= 8 {
+			value := (exponent >> shift) & 0xff
+			if value != 0 || len(publicExponent) != 0 {
+				publicExponent = append(publicExponent, value)
+			}
+		}
+		parts := make([]string, len(publicExponent))
+		for i, value := range publicExponent {
+			parts[i] = strconv.Itoa(value)
+		}
+		return r.val(strconv.Itoa(key.N.BitLen()) + "|" + strings.Join(parts, ",")), nil
+	})
+	host["subtleRSAOAEPEncrypt"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		algorithm, der, input, label := strings.ToUpper(strings.ReplaceAll(strarg(a, 0), "_", "-")), byteSlice(arg(a, 1)), byteSlice(arg(a, 2)), byteSlice(arg(a, 3))
+		parsed, err := x509.ParsePKIXPublicKey(der)
+		if err != nil {
+			return nil, fmt.Errorf("invalid SPKI key: %w", err)
+		}
+		key, ok := parsed.(*rsa.PublicKey)
+		if !ok {
+			return nil, fmt.Errorf("SPKI key is not RSA")
+		}
+		var hash crypto.Hash
+		switch algorithm {
+		case "SHA-1":
+			hash = crypto.SHA1
+		case "SHA-256":
+			hash = crypto.SHA256
+		case "SHA-384":
+			hash = crypto.SHA384
+		case "SHA-512":
+			hash = crypto.SHA512
+		default:
+			return nil, fmt.Errorf("unsupported RSA-OAEP hash %q", algorithm)
+		}
+		ciphertext, err := rsa.EncryptOAEP(hash.New(), cryptorand.Reader, key, input, label)
+		if err != nil {
+			return nil, err
+		}
+		out := make([]int, len(ciphertext))
+		for i, value := range ciphertext {
+			out[i] = int(value)
+		}
+		return r.val(out), nil
+	})
+	host["title"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(r.document.Title()), nil })
+	host["readyState"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		p.trace.Add(trace.API, "Document.readyStateValue", map[string]any{"value": r.readyState, "realm": r.ID})
+		return r.val(r.readyState), nil
+	})
+	host["currentScript"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		if r.currentScript == 0 {
+			return r.val(nil), nil
+		}
+		node, ok := r.document.Get(r.currentScript)
+		if !ok {
+			return r.val(nil), nil
+		}
+		return r.val(nodeData(node)), nil
+	})
+	host["setTitle"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		r.document.SetTitle(strarg(a, 0))
+		return nil, nil
+	})
+	host["query"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		p.trace.Add(trace.API, "Document.querySelector", map[string]any{"selector": strarg(a, 0), "realm": r.ID})
+		n, ok := r.document.Find(strarg(a, 0))
+		if !ok {
+			return r.val(nil), nil
+		}
+		return r.val(nodeData(n)), nil
+	})
+	host["queryWithin"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		selector := strarg(a, 1)
+		p.trace.Add(trace.API, "Element.querySelector", map[string]any{"nodeId": int64(numarg(a, 0)), "selector": selector, "realm": r.ID})
+		n, ok := r.document.FindWithin(int64(numarg(a, 0)), selector)
+		if !ok {
+			return r.val(nil), nil
+		}
+		return r.val(nodeData(n)), nil
+	})
+	host["queryAll"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return r.val(nodesData(r.document.FindAll(strarg(a, 0)))), nil
+	})
+	host["queryAllWithin"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return r.val(nodesData(r.document.FindAllWithin(int64(numarg(a, 0)), strarg(a, 1)))), nil
+	})
+	host["getAttribute"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		value, ok := r.document.GetAttribute(int64(numarg(a, 0)), strarg(a, 1))
+		if !ok {
+			return r.val(nil), nil
+		}
+		return r.val(value), nil
+	})
+	host["setAttribute"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		id, name, value := int64(numarg(a, 0)), strarg(a, 1), strarg(a, 2)
+		if err := r.document.SetAttribute(id, name, value); err != nil {
+			return nil, err
+		}
+		if strings.EqualFold(name, "src") {
+			if frame := r.childFrames[id]; frame != nil {
+				frame.navigationStarted = false
+				r.scheduleChildFrameNavigation(frame, id)
+			}
+		}
+		return nil, nil
+	})
+	host["removeAttribute"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return nil, r.document.RemoveAttribute(int64(numarg(a, 0)), strarg(a, 1))
+	})
+	host["elementsByTagName"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		tag := strarg(a, 0)
+		p.trace.Add(trace.API, "Document.getElementsByTagName", map[string]any{"tag": tag, "realm": r.ID})
+		nodes := r.document.FindAllByTagName(tag)
+		out := make([]map[string]any, 0, len(nodes))
+		for _, n := range nodes {
+			out = append(out, nodeData(n))
+		}
+		return r.val(out), nil
+	})
+	host["create"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		n := r.document.CreateElement(strarg(a, 0))
+		r.detached[n.ID] = n
+		return r.val(nodeData(n)), nil
+	})
+	host["createNS"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		n := r.document.CreateElementNS(strarg(a, 0), strarg(a, 1))
+		r.detached[n.ID] = n
+		return r.val(nodeData(n)), nil
+	})
+	host["createComment"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		n := r.document.CreateComment(strarg(a, 0))
+		r.detached[n.ID] = n
+		return r.val(nodeData(n)), nil
+	})
+	host["createText"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		n := r.document.CreateText(strarg(a, 0))
+		r.detached[n.ID] = n
+		return r.val(nodeData(n)), nil
+	})
+	host["append"] = r.fn(r.hostAppend)
+	host["insert"] = r.fn(r.hostInsert)
+	host["firstElementChild"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		n, ok := r.document.FirstElementChild(int64(numarg(a, 0)))
+		if !ok {
+			return r.val(nil), nil
+		}
+		return r.val(nodeData(n)), nil
+	})
+	host["firstChild"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		n, ok := r.document.FirstChild(int64(numarg(a, 0)))
+		if !ok {
+			return r.val(nil), nil
+		}
+		return r.val(nodeData(n)), nil
+	})
+	host["nodeChildren"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return r.val(nodesData(r.document.Children(int64(numarg(a, 0))))), nil
+	})
+	host["parentNode"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		n, ok := r.document.Parent(int64(numarg(a, 0)))
+		if !ok {
+			return r.val(nil), nil
+		}
+		return r.val(nodeData(n)), nil
+	})
+	host["isConnected"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return r.val(r.document.IsConnected(int64(numarg(a, 0)))), nil
+	})
+	host["sibling"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		n, ok := r.document.Sibling(int64(numarg(a, 0)), int(numarg(a, 1)))
+		if !ok {
+			return r.val(nil), nil
+		}
+		return r.val(nodeData(n)), nil
+	})
+	host["elementChildren"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return r.val(nodesData(r.document.ElementChildren(int64(numarg(a, 0))))), nil
+	})
+	host["removeNode"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		childID := int64(numarg(a, 1))
+		if err := r.document.RemoveNode(int64(numarg(a, 0)), childID); err != nil {
+			return nil, err
+		}
+		r.detachChildFrame(childID)
+		return nil, nil
+	})
+	host["prepareNodeRemoval"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return r.val(r.prepareChildFrameRemoval(int64(numarg(a, 0)))), nil
+	})
+	host["completeSynchronousLoad"] = r.fn(func(_ engine.Value, _ []engine.Value) (engine.Value, error) {
+		if r.loadCallback != nil {
+			r.loadCallback(context.Background())
+		}
+		return nil, nil
+	})
+	host["textContent"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return r.val(r.document.TextContent(int64(numarg(a, 0)))), nil
+	})
+	host["setTextContent"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return nil, r.document.SetTextContent(int64(numarg(a, 0)), strarg(a, 1))
+	})
+	host["innerHTML"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		value, err := r.document.InnerHTML(int64(numarg(a, 0)))
+		return r.val(value), err
+	})
+	host["setInnerHTML"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return nil, r.document.SetInnerHTML(int64(numarg(a, 0)), strarg(a, 1))
+	})
+	host["rect"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		viewport := p.Environment().Window
+		width, height := r.layoutBox(int64(numarg(a, 0)), float64(viewport.ViewportWidth), float64(viewport.ViewportHeight), 0)
+		return r.val(map[string]any{"x": 0, "y": 0, "top": 0, "left": 0, "right": width, "bottom": height, "width": width, "height": height}), nil
+	})
+	host["location"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(r.documentURL().String()), nil })
+	host["locationPart"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		u := r.documentURL()
+		part := strarg(a, 0)
+		switch part {
+		case "href":
+			return r.val(u.String()), nil
+		case "origin":
+			return r.val(originOf(u.String())), nil
+		case "protocol":
+			return r.val(u.Scheme + ":"), nil
+		case "host":
+			return r.val(u.Host), nil
+		case "hostname":
+			return r.val(u.Hostname()), nil
+		case "port":
+			return r.val(u.Port()), nil
+		case "pathname":
+			return r.val(u.Path), nil
+		case "search":
+			if u.RawQuery != "" {
+				return r.val("?" + u.RawQuery), nil
+			}
+		case "hash":
+			if u.Fragment != "" {
+				return r.val("#" + u.Fragment), nil
+			}
+		}
+		return r.val(""), nil
+	})
+	host["urlParts"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		base := r.documentURL()
+		if len(a) > 1 && strarg(a, 1) != "" {
+			var err error
+			base, err = url.Parse(strarg(a, 1))
+			if err != nil || !base.IsAbs() {
+				return nil, fmt.Errorf("invalid base URL")
+			}
+		}
+		u, err := base.Parse(strarg(a, 0))
+		if err != nil {
+			return nil, err
+		}
+		search, hash := "", ""
+		if u.RawQuery != "" {
+			search = "?" + u.RawQuery
+		}
+		if u.Fragment != "" {
+			hash = "#" + u.Fragment
+		}
+		origin := "null"
+		if u.Scheme == "http" || u.Scheme == "https" {
+			origin = u.Scheme + "://" + u.Host
+		}
+		return r.val(map[string]any{"href": u.String(), "origin": origin, "protocol": u.Scheme + ":", "username": usernameOf(u), "password": passwordOf(u), "host": u.Host, "hostname": u.Hostname(), "port": u.Port(), "pathname": u.EscapedPath(), "search": search, "hash": hash}), nil
+	})
+	host["setURLPart"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		u, err := url.Parse(strarg(a, 0))
+		if err != nil {
+			return nil, err
+		}
+		part, value := strarg(a, 1), strarg(a, 2)
+		switch part {
+		case "protocol":
+			u.Scheme = strings.TrimSuffix(value, ":")
+		case "username":
+			password := passwordOf(u)
+			u.User = url.UserPassword(value, password)
+		case "password":
+			u.User = url.UserPassword(usernameOf(u), value)
+		case "host":
+			u.Host = value
+		case "hostname":
+			port := u.Port()
+			u.Host = value
+			if port != "" {
+				u.Host += ":" + port
+			}
+		case "port":
+			u.Host = u.Hostname()
+			if value != "" {
+				u.Host += ":" + value
+			}
+		case "pathname":
+			u.Path, u.RawPath = value, ""
+		case "search":
+			u.RawQuery = strings.TrimPrefix(value, "?")
+		case "hash":
+			u.Fragment = strings.TrimPrefix(value, "#")
+		}
+		return r.val(u.String()), nil
+	})
+	host["setLocationPart"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		part, v := strarg(a, 0), strarg(a, 1)
+		u, _ := url.Parse(p.URL())
+		switch part {
+		case "href":
+			return nil, r.postNavigate(v)
+		case "hash":
+			u.Fragment = strings.TrimPrefix(v, "#")
+		case "search":
+			u.RawQuery = strings.TrimPrefix(v, "?")
+		case "pathname":
+			u.Path = v
+		}
+		return nil, p.historyPush(u.String(), true)
+	})
+	host["navigate"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) { return nil, r.postNavigate(strarg(a, 0)) })
+	host["historyPush"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return nil, p.historyPush(strarg(a, 0), false)
+	})
+	host["historyReplace"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return nil, p.historyPush(strarg(a, 0), true)
+	})
+	host["historyGo"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		p.historyGo(int(numarg(a, 0)))
+		return nil, nil
+	})
+	host["historyLength"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(p.historyLength()), nil })
+	host["setTimer"] = r.fn(r.hostTimer)
+	host["clearTimer"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		r.scheduler.Cancel(uint64(numarg(a, 0)))
+		return nil, nil
+	})
+	host["createWorker"] = r.fn(r.hostCreateWorker)
+	host["createObjectURL"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		raw := "blob:" + r.origin + "/" + uuid.NewString()
+		p.ctx.network.PutBlob(raw, byteSlice(arg(a, 0)), strarg(a, 1))
+		return r.val(raw), nil
+	})
+	host["revokeObjectURL"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		p.ctx.network.RevokeBlob(strarg(a, 0))
+		return nil, nil
+	})
+	host["workerPost"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		id := int64(numarg(a, 0))
+		p.trace.Add(trace.JS, "workerPostMessage", map[string]any{"worker": id, "realm": r.ID})
+		worker := r.workers[id]
+		if worker != nil {
+			worker.PostMessage(arg(a, 1))
+		}
+		return nil, nil
+	})
+	host["terminateWorker"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		id := int64(numarg(a, 0))
+		p.trace.Add(trace.JS, "workerTerminate", map[string]any{"worker": id, "realm": r.ID})
+		if worker := r.workers[id]; worker != nil {
+			_ = worker.Close()
+			delete(r.workers, id)
+		}
+		return nil, nil
+	})
+	host["fetch"] = r.fn(r.hostFetch)
+	host["xhr"] = r.fn(r.hostXHR)
+	host["console"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		p.trace.Add(trace.Console, strarg(a, 0), map[string]any{"args": arg(a, 1), "realm": r.ID})
+		return nil, nil
+	})
+	host["unsupported"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		p.trace.Add(trace.Unsupported, strarg(a, 0), map[string]any{"realm": r.ID})
+		return nil, nil
+	})
+	host["apiAccess"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		name := strarg(a, 0)
+		supported, _ := arg(a, 1).(bool)
+		r.recordAPIAccess(name, supported)
+		return nil, nil
+	})
+	host["semanticMissing"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		name := strarg(a, 0)
+		p.trace.Add(trace.SemanticMissing, name, map[string]any{"realm": r.ID})
+		return r.val(nil), nil
+	})
+	host["media"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		q := strings.ToLower(strarg(a, 0))
+		e := p.Environment()
+		match := false
+		if strings.Contains(q, "prefers-color-scheme: light") {
+			match = e.Preferences.ColorScheme == "light"
+		}
+		if strings.Contains(q, "prefers-color-scheme: dark") {
+			match = e.Preferences.ColorScheme == "dark"
+		}
+		if strings.Contains(q, "prefers-reduced-motion: reduce") {
+			match = e.Preferences.ReducedMotion
+		}
+		if strings.Contains(q, "prefers-reduced-motion: no-preference") {
+			match = !e.Preferences.ReducedMotion
+		}
+		if strings.Contains(q, "min-width") {
+			match = e.Window.ViewportWidth >= 1
+		}
+		return r.val(match), nil
+	})
+	host["documentSecurity"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		p.mu.RLock()
+		security := p.documentSecurity
+		p.mu.RUnlock()
+		return r.val(map[string]any{
+			"secureContext":       security.secureContext,
+			"crossOriginIsolated": security.crossOriginIsolated,
+			"credentialless":      security.credentialless,
+			"originAgentCluster":  security.originAgentCluster,
+		}), nil
+	})
+	host["permissionsPolicy"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		p.mu.RLock()
+		policy := p.documentSecurity.permissionsPolicy
+		p.mu.RUnlock()
+		origin := "null"
+		if documentURL := r.documentURL(); documentURL != nil && documentURL.Scheme != "" && documentURL.Host != "" {
+			origin = documentURL.Scheme + "://" + documentURL.Host
+		}
+		return r.val(map[string]any{"header": policy, "origin": origin}), nil
+	})
+	host["documentCookie"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		if !p.Environment().Network.CookiesEnabled {
+			return r.val(""), nil
+		}
+		pairs := []string{}
+		for _, c := range p.ctx.cookies.ForURL(r.documentURL()) {
+			if !c.HttpOnly {
+				pairs = append(pairs, c.Name+"="+c.Value)
+			}
+		}
+		return r.val(strings.Join(pairs, "; ")), nil
+	})
+	host["setDocumentCookie"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		if !p.Environment().Network.CookiesEnabled {
+			return nil, nil
+		}
+		h := http.Header{}
+		h.Add("Set-Cookie", strarg(a, 0))
+		p.ctx.cookies.SetFromResponse(r.documentURL(), h)
+		return nil, nil
+	})
+	addStorageHosts(r, host)
+	if err := r.runtime.Set("__mimic", host); err != nil {
+		return err
+	}
+	generated := ""
+	var exposure *compatibility.RealmExposure
+	if bundle := p.Compatibility(); bundle != nil && bundle.Surface() != nil {
+		surface := bundle.Surface()
+		generated = surface.GeneratedJavaScript
+		p.mu.RLock()
+		security := p.documentSecurity
+		p.mu.RUnlock()
+		if security.secureContext {
+			key := "window.secure.non-isolated"
+			if security.crossOriginIsolated {
+				key = "window.secure.isolated"
+			}
+			if selected, ok := surface.Exposures[key]; ok {
+				exposure = &selected
+			}
+		}
+	}
+	_, err := r.runtime.Eval(context.Background(), webapi.Surface(generated, exposure), "mimic:webapi-surface")
+	if err != nil {
+		return err
+	}
+	r.messageReceiver = r.runtime.Get("__receiveFrameMessage")
+	r.messagePortReceiver = r.runtime.Get("__receiveMessagePort")
+	r.frameLoadDispatcher = r.runtime.Get("__mimicDispatchFrameLoad")
+	r.performanceNotifier = r.runtime.Get("__mimicNotifyPerformanceObservers")
+	_, err = r.runtime.Eval(context.Background(), `delete globalThis.__mimic;delete globalThis.__mimicUnsupportedProbe;delete globalThis.__receiveFrameMessage;delete globalThis.__receiveMessagePort;delete globalThis.__mimicDispatchFrameLoad;delete globalThis.__mimicNotifyPerformanceObservers`, "mimic:hide-internals")
+	return err
+}
+
+func (r *Realm) notifyPerformanceObservers(ctx context.Context) {
+	if r.performanceNotifier == nil {
+		return
+	}
+	if _, err := r.runtime.Call(ctx, r.performanceNotifier, nil); err != nil {
+		r.agent.Page().trace.Add(trace.Error, "performanceObserverNotification", map[string]any{"realm": r.ID, "error": err.Error()})
+	}
+}
+
+func passwordOf(u *url.URL) string {
+	if u.User == nil {
+		return ""
+	}
+	password, _ := u.User.Password()
+	return password
+}
+
+func usernameOf(u *url.URL) string {
+	if u.User == nil {
+		return ""
+	}
+	return u.User.Username()
+}
+
+func nodeData(n dom.Node) map[string]any {
+	attrs := map[string]any{}
+	for k, v := range n.Attributes {
+		attrs[k] = v
+	}
+	return map[string]any{"nodeId": n.ID, "type": n.Type, "tagName": n.TagName, "namespaceURI": n.Namespace, "text": n.Text, "attributes": attrs, "parentId": n.Parent, "children": n.Children}
+}
+func nodesData(nodes []dom.Node) []map[string]any {
+	out := make([]map[string]any, 0, len(nodes))
+	for _, node := range nodes {
+		out = append(out, nodeData(node))
+	}
+	return out
+}
+func (r *Realm) SetReadyState(state string) { r.readyState = state }
+
+func (r *Realm) beginLoadBlocker(reason string) bool {
+	if r.loadCompleted || r.readyState == "complete" {
+		r.agent.Page().trace.Add(trace.Lifecycle, "loadBlockerIgnored", map[string]any{"reason": reason, "readyState": r.readyState, "realm": r.ID})
+		return false
+	}
+	r.loadBlockers++
+	r.agent.Page().trace.Add(trace.Lifecycle, "loadBlockerAdded", map[string]any{"reason": reason, "count": r.loadBlockers, "realm": r.ID})
+	return true
+}
+
+func (r *Realm) endLoadBlocker(reason string) {
+	if r.loadBlockers > 0 {
+		r.loadBlockers--
+	}
+	r.agent.Page().trace.Add(trace.Lifecycle, "loadBlockerRemoved", map[string]any{"reason": reason, "count": r.loadBlockers, "realm": r.ID})
+	r.scheduleLoadIfReady()
+}
+
+func (r *Realm) requestLoad(callback func(context.Context)) {
+	r.loadRequested = true
+	r.loadCallback = callback
+	r.scheduleLoadIfReady()
+}
+
+func (r *Realm) scheduleLoadIfReady() {
+	if !r.loadRequested || r.loadCompleted || r.loadScheduled || r.loadBlockers != 0 {
+		return
+	}
+	// Queue the load transition rather than changing readyState inside the task
+	// that removed the final blocker. Its microtask checkpoint may insert a
+	// transitive load-blocking resource before this task is selected.
+	r.loadScheduled = true
+	r.scheduler.Post(scheduler.DOM, 0, func(taskContext context.Context) error {
+		r.loadScheduled = false
+		if r.loadBlockers != 0 {
+			r.scheduleLoadIfReady()
+			return nil
+		}
+		r.readyState = "complete"
+		r.agent.Page().trace.Add(trace.Lifecycle, "readyStateComplete", map[string]any{"realm": r.ID})
+		r.loadCompleted = true
+		if _, eventErr := r.Evaluate(taskContext, `dispatchEvent(new Event('load'))`, "mimic:load"); eventErr != nil {
+			r.agent.Page().trace.Add(trace.Exception, "loadEvent", map[string]any{"url": r.documentURL().String(), "error": eventErr.Error(), "realm": r.ID})
+		}
+		if r.loadCallback != nil {
+			r.loadCallback(taskContext)
+		}
+		return nil
+	})
+}
+func (r *Realm) recordAPIAccess(name string, supported bool) {
+	key := fmt.Sprintf("%s:%t", name, supported)
+	if r.apiSeen[key] {
+		return
+	}
+	r.apiSeen[key] = true
+	p := r.agent.Page()
+	p.trace.Add(trace.API, "propertyAccess", map[string]any{"property": name, "supported": supported, "realm": r.ID})
+	if !supported {
+		p.trace.Add(trace.Unsupported, name, map[string]any{"realm": r.ID, "access": "property"})
+	}
+}
+func (r *Realm) postNavigate(raw string) error {
+	u, err := r.resolveDocument(raw)
+	if err != nil {
+		return err
+	}
+	r.scheduler.Post(scheduler.Navigation, 0, func(ctx context.Context) error { return r.agent.Page().Navigate(ctx, u.String()) })
+	return nil
+}
+func (r *Realm) hostTimer(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	if len(a) == 0 {
+		return nil, fmt.Errorf("timer callback required")
+	}
+	fn := a[0]
+	delay := time.Duration(numarg(a, 1)) * time.Millisecond
+	repeat, _ := arg(a, 2).(bool)
+	var cb func(context.Context) error
+	var id uint64
+	cb = func(ctx context.Context) error {
+		_, err := r.runtime.Call(ctx, fn, r.runtime.Get("window"))
+		if err == nil && repeat {
+			id = r.scheduler.Post(scheduler.Timer, delay, cb)
+		}
+		return err
+	}
+	id = r.scheduler.Post(scheduler.Timer, delay, cb)
+	return r.val(id), nil
+}
+func (r *Realm) hostFetch(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	promise := r.runtime.NewPromise()
+	raw, method, body := strarg(a, 0), strarg(a, 1), []byte(strarg(a, 3))
+	u, err := r.resolveDocument(raw)
+	if err != nil {
+		_ = promise.Reject(err.Error())
+		return promise.Value, nil
+	}
+	headers := headerMap(arg(a, 2))
+	request := network.Request{ContextID: r.agent.ContextID(), URL: u, Referrer: r.documentURL(), SourceURL: r.documentURL(), Method: method, Headers: headers, Body: body, Initiator: network.Fetch}
+	r.scheduler.Post(scheduler.Network, 0, func(context.Context) error {
+		if r.resourceContext.Err() != nil {
+			return nil
+		}
+		r.resourceWG.Add(1)
+		go func() {
+			defer r.resourceWG.Done()
+			res, loadErr := r.agent.Page().loader.Load(r.resourceContext, request)
+			if r.resourceContext.Err() != nil {
+				return
+			}
+			r.scheduler.Post(scheduler.Network, 0, func(ctx context.Context) error {
+				if loadErr != nil {
+					return promise.Reject(loadErr.Error())
+				}
+				r.notifyPerformanceObservers(ctx)
+				return promise.Resolve(map[string]any{"status": res.Status, "url": res.URL.String(), "headers": res.Headers, "body": string(res.Body)})
+			})
+		}()
+		return nil
+	})
+	return promise.Value, nil
+}
+func (r *Realm) hostXHR(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	if len(a) < 4 {
+		return nil, fmt.Errorf("invalid XHR")
+	}
+	callback := a[0]
+	u, err := r.resolveDocument(strarg(a, 2))
+	if err != nil {
+		return nil, err
+	}
+	headers := headerMap(arg(a, 3))
+	authorHeaderOrder := stringSlice(arg(a, 6))
+	body := []byte(strarg(a, 4))
+	if len(body) > 0 && headers.Get("Content-Type") == "" {
+		headers.Set("Content-Type", "text/plain;charset=UTF-8")
+	}
+	timeout := time.Duration(numarg(a, 5)) * time.Millisecond
+	request := network.Request{ContextID: r.agent.ContextID(), URL: u, Referrer: r.documentURL(), SourceURL: r.documentURL(), Method: strarg(a, 1), Headers: headers, AuthorHeaderOrder: authorHeaderOrder, Body: body, Initiator: network.XHR}
+	r.scheduler.Post(scheduler.Network, 0, func(context.Context) error {
+		if r.resourceContext.Err() != nil {
+			return nil
+		}
+		r.resourceWG.Add(1)
+		go func() {
+			defer r.resourceWG.Done()
+			loadContext := r.resourceContext
+			cancel := func() {}
+			if timeout > 0 {
+				loadContext, cancel = context.WithTimeout(loadContext, timeout)
+			}
+			defer cancel()
+			res, loadErr := r.agent.Page().loader.Load(loadContext, request)
+			if r.resourceContext.Err() != nil {
+				return
+			}
+			r.scheduler.Post(scheduler.Network, 0, func(ctx context.Context) error {
+				if loadErr != nil {
+					event := "error"
+					if errors.Is(loadErr, context.DeadlineExceeded) {
+						event = "timeout"
+					}
+					_, _ = r.runtime.Call(ctx, callback, nil, r.runtime.Value(map[string]any{"error": event}))
+					return nil
+				}
+				r.notifyPerformanceObservers(ctx)
+				responseHeaders := make(map[string]string, len(res.Headers))
+				for name, values := range res.Headers {
+					responseHeaders[strings.ToLower(name)] = strings.Join(values, ", ")
+				}
+				_, _ = r.runtime.Call(ctx, callback, nil, r.runtime.Value(map[string]any{"status": res.Status, "statusText": http.StatusText(res.Status), "responseURL": res.URL.String(), "responseHeaders": responseHeaders, "responseText": string(res.Body)}))
+				return nil
+			})
+		}()
+		return nil
+	})
+	return nil, nil
+}
+func (r *Realm) hostAppend(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	return r.hostInsertArgs(a, false)
+}
+func (r *Realm) hostInsert(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	return r.hostInsertArgs(a, true)
+}
+func (r *Realm) hostInsertArgs(a []engine.Value, hasBefore bool) (engine.Value, error) {
+	if len(a) < 2 {
+		return nil, nil
+	}
+	m, ok := arg(a, 1).(map[string]any)
+	if !ok {
+		return nil, nil
+	}
+	parentID := int64(numarg(a, 0))
+	childID := int64Number(m["nodeId"])
+	beforeID, callbackOffset := int64(0), 2
+	if hasBefore {
+		if before, ok := arg(a, 2).(map[string]any); ok {
+			beforeID = int64Number(before["nodeId"])
+		}
+		callbackOffset = 3
+	}
+	if err := r.document.InsertNode(parentID, childID, beforeID); err != nil {
+		return nil, err
+	}
+	delete(r.detached, childID)
+	tag := strings.ToUpper(fmt.Sprint(m["tagName"]))
+	attrs, _ := m["attributes"].(map[string]any)
+	src := fmt.Sprint(attrs["src"])
+	if tag == "LINK" {
+		src = fmt.Sprint(attrs["href"])
+	}
+	code := fmt.Sprint(m["text"])
+	nonce, _ := attrs["nonce"].(string)
+	loadCallback, errorCallback := engine.Value(nil), engine.Value(nil)
+	if len(a) > callbackOffset {
+		loadCallback = a[callbackOffset]
+	}
+	if len(a) > callbackOffset+1 {
+		errorCallback = a[callbackOffset+1]
+	}
+	fire := func(ctx context.Context, callback engine.Value) error {
+		if callback == nil || callback.String() == "undefined" {
+			return nil
+		}
+		_, err := r.runtime.Call(ctx, callback, r.runtime.Get("window"))
+		return err
+	}
+	if tag != "SCRIPT" && tag != "IMG" && tag != "LINK" {
+		if tag == "IFRAME" {
+			frame, err := r.ensureChildFrame(childID)
+			if err != nil {
+				return nil, err
+			}
+			if frame != nil && (src == "" || src == "<nil>") {
+				// Creating the browsing context and completing its navigation are
+				// enough for the initial about:blank document. A non-blank child is
+				// dispatched by navigateChildFrame after that document completes.
+				r.scheduler.Post(scheduler.DOM, 0, func(ctx context.Context) error {
+					r.agent.Page().trace.Add(trace.Lifecycle, "iframeOwnerLoad", map[string]any{"frameId": frame.ID, "elementNodeId": childID, "realm": r.ID})
+					return fire(ctx, loadCallback)
+				})
+			}
+			return nil, nil
+		}
+		return nil, nil
+	}
+	blockerReason := strings.ToLower(tag) + ":" + src
+	blocksLoad := r.beginLoadBlocker(blockerReason)
+	r.agent.Page().trace.Add(trace.DOM, "dynamicResourceInsertion", map[string]any{"tag": tag, "src": src, "attributes": attrs, "realm": r.ID})
+	// Chrome schedules low-priority image fetching behind script fetching that
+	// is queued by the same task. This keeps script execution/resource timing
+	// observable before a decorative image completion without blocking either
+	// callback outside the browser scheduler.
+	resourceSource := scheduler.DOM
+	resourceDelay := time.Duration(0)
+	if tag == "IMG" {
+		resourceSource = scheduler.ResourceLow
+		// Passive-resource fetching yields one event-loop boundary. This is a
+		// scheduling distinction, not synthetic network latency: control work and
+		// executable-resource starts made by the continuation can become ready
+		// before the passive transport is dispatched.
+		resourceDelay = time.Nanosecond
+	} else if tag == "SCRIPT" {
+		resourceSource = scheduler.ResourceScript
+	}
+	resourceTask := func(ctx context.Context, res *network.Response, loadErr error) error {
+		defer func() {
+			if blocksLoad {
+				r.endLoadBlocker(blockerReason)
+			}
+		}()
+		name := "dynamic-" + strings.ToLower(tag)
+		if src != "" && src != "<nil>" {
+			u, err := r.resolveDocument(src)
+			if err != nil {
+				return err
+			}
+			if tag == "IMG" {
+				if loadErr != nil {
+					return fire(ctx, errorCallback)
+				}
+				return fire(ctx, loadCallback)
+			}
+			if tag == "LINK" {
+				if loadErr != nil {
+					return fire(ctx, errorCallback)
+				}
+				return fire(ctx, loadCallback)
+			}
+			if loadErr != nil {
+				r.agent.Page().trace.Add(trace.Error, "dynamicScriptLoad", map[string]any{"url": u.String(), "error": loadErr.Error()})
+				return fire(ctx, errorCallback)
+			}
+			code = string(res.Body)
+			name = u.String()
+		} else if tag == "SCRIPT" && !r.agent.Page().allowsScript(nil, true, true, nonce) {
+			return nil
+		}
+		if tag == "SCRIPT" && code != "" {
+			r.agent.Page().trace.Add(trace.JS, "scriptStart", map[string]any{"url": name, "realm": r.ID, "dynamic": true})
+			r.currentScript = childID
+			_, err := r.Evaluate(ctx, code, name)
+			r.currentScript = 0
+			if err != nil {
+				r.agent.Page().trace.Add(trace.Error, "dynamicScriptExecution", map[string]any{"url": name, "error": err.Error()})
+				r.agent.Page().trace.Add(trace.JS, "scriptEnd", map[string]any{"url": name, "realm": r.ID, "dynamic": true, "error": err.Error()})
+				return fire(ctx, errorCallback)
+			}
+			r.agent.Page().trace.Add(trace.JS, "scriptEnd", map[string]any{"url": name, "realm": r.ID, "dynamic": true})
+			if err := r.checkpoint(ctx); err != nil {
+				return err
+			}
+		}
+		return fire(ctx, loadCallback)
+	}
+	if src == "" || src == "<nil>" {
+		r.scheduler.Post(scheduler.DOM, 0, func(ctx context.Context) error {
+			return resourceTask(ctx, nil, nil)
+		})
+		return nil, nil
+	}
+	u, err := r.resolveDocument(src)
+	if err != nil {
+		if blocksLoad {
+			r.endLoadBlocker(blockerReason)
+		}
+		return nil, err
+	}
+	if tag == "SCRIPT" && !r.agent.Page().allowsScript(u, false, true, nonce) {
+		if blocksLoad {
+			r.endLoadBlocker(blockerReason)
+		}
+		return nil, nil
+	}
+	initiator := network.Script
+	if tag == "IMG" {
+		initiator = network.Image
+	} else if tag == "LINK" {
+		if strings.Contains(strings.ToLower(fmt.Sprint(attrs["rel"])), "stylesheet") {
+			initiator = network.Stylesheet
+		} else {
+			initiator = network.Other
+		}
+	}
+	referrer := r.documentURL()
+	if strings.EqualFold(fmt.Sprint(attrs["referrerpolicy"]), "no-referrer") {
+		referrer = nil
+	}
+	headers := make(http.Header)
+	mode := ""
+	if crossOrigin := fmt.Sprint(attrs["crossorigin"]); crossOrigin != "" && crossOrigin != "<nil>" {
+		headers.Set("Origin", r.origin)
+		mode = "cors"
+	}
+	request := network.Request{ContextID: r.agent.ContextID(), URL: u, Referrer: referrer, SourceURL: r.documentURL(), Headers: headers, Initiator: initiator, Mode: mode}
+	r.scheduler.Post(resourceSource, resourceDelay, func(context.Context) error {
+		r.resourceWG.Add(1)
+		go func() {
+			defer r.resourceWG.Done()
+			res, loadErr := r.agent.Page().loader.Load(r.resourceContext, request)
+			if r.resourceContext.Err() != nil {
+				return
+			}
+			r.scheduler.Post(scheduler.Network, 0, func(ctx context.Context) error {
+				r.notifyPerformanceObservers(ctx)
+				return resourceTask(ctx, &res, loadErr)
+			})
+		}()
+		return nil
+	})
+	return nil, nil
+}
+func int64Number(v any) int64 {
+	switch n := v.(type) {
+	case int64:
+		return n
+	case int:
+		return int64(n)
+	case float64:
+		return int64(n)
+	}
+	return 0
+}
+
+func parseInlineStyle(value string) map[string]string {
+	result := map[string]string{}
+	for _, declaration := range strings.Split(value, ";") {
+		name, raw, ok := strings.Cut(declaration, ":")
+		if ok {
+			result[strings.ToLower(strings.TrimSpace(name))] = strings.TrimSpace(raw)
+		}
+	}
+	return result
+}
+
+func layoutDimension(cssValue, attributeValue string, viewport float64) float64 {
+	value := strings.TrimSpace(strings.ToLower(cssValue))
+	if strings.HasSuffix(value, "px") {
+		if parsed, err := strconv.ParseFloat(strings.TrimSpace(strings.TrimSuffix(value, "px")), 64); err == nil && parsed >= 0 {
+			return parsed
+		}
+	}
+	if strings.HasSuffix(value, "%") {
+		if parsed, err := strconv.ParseFloat(strings.TrimSpace(strings.TrimSuffix(value, "%")), 64); err == nil && parsed >= 0 {
+			return viewport * parsed / 100
+		}
+	}
+	if parsed, err := strconv.ParseFloat(strings.TrimSpace(attributeValue), 64); err == nil && parsed >= 0 {
+		return parsed
+	}
+	return 0
+}
+
+func (r *Realm) layoutBox(nodeID int64, containingWidth, viewportHeight float64, depth int) (float64, float64) {
+	if depth > 64 {
+		return 0, 0
+	}
+	node, ok := r.document.Get(nodeID)
+	if !ok || node.Type != "element" {
+		return 0, 0
+	}
+	style := parseInlineStyle(node.Attributes["style"])
+	if strings.EqualFold(style["display"], "none") || strings.EqualFold(style["visibility"], "hidden") {
+		return 0, 0
+	}
+	width := layoutDimension(style["width"], node.Attributes["width"], containingWidth)
+	height := layoutDimension(style["height"], node.Attributes["height"], viewportHeight)
+	block := map[string]bool{"HTML": true, "BODY": true, "DIV": true, "P": true, "H1": true, "H2": true, "H3": true, "SECTION": true, "MAIN": true, "FORM": true, "NOSCRIPT": true}
+	if width == 0 && block[node.TagName] {
+		width = containingWidth
+	}
+	if height == 0 {
+		for _, childID := range node.Children {
+			child, childOK := r.document.Get(childID)
+			if childOK {
+				position := strings.ToLower(strings.TrimSpace(parseInlineStyle(child.Attributes["style"])["position"]))
+				if position == "absolute" || position == "fixed" {
+					continue
+				}
+			}
+			_, childHeight := r.layoutBox(childID, width, viewportHeight, depth+1)
+			height += childHeight
+		}
+	}
+	if node.TagName == "HTML" || node.TagName == "BODY" {
+		if width == 0 {
+			width = containingWidth
+		}
+		if height < viewportHeight {
+			height = viewportHeight
+		}
+	}
+	return width, height
+}
+
+func performanceHeader(raw any, name string) string {
+	name = strings.ToLower(name)
+	switch headers := raw.(type) {
+	case map[string]string:
+		for key, value := range headers {
+			if strings.ToLower(key) == name {
+				return value
+			}
+		}
+	case map[string]any:
+		for key, value := range headers {
+			if strings.ToLower(key) == name {
+				return fmt.Sprint(value)
+			}
+		}
+	}
+	return ""
+}
+
+func resourceTimingAllowed(documentOrigin, resourceURL string, headers any) bool {
+	if originOf(resourceURL) == documentOrigin {
+		return true
+	}
+	for _, value := range splitHTTPList(performanceHeader(headers, "timing-allow-origin"), ',') {
+		if value == "*" || value == documentOrigin {
+			return true
+		}
+	}
+	return false
+}
+
+func splitHTTPList(value string, separator rune) []string {
+	var parts []string
+	start := 0
+	quoted := false
+	escaped := false
+	for index, character := range value {
+		if escaped {
+			escaped = false
+			continue
+		}
+		if quoted && character == '\\' {
+			escaped = true
+			continue
+		}
+		if character == '"' {
+			quoted = !quoted
+			continue
+		}
+		if character == separator && !quoted {
+			parts = append(parts, strings.TrimSpace(value[start:index]))
+			start = index + len(string(character))
+		}
+	}
+	parts = append(parts, strings.TrimSpace(value[start:]))
+	return parts
+}
+
+func unquoteHTTPValue(value string) string {
+	value = strings.TrimSpace(value)
+	if len(value) >= 2 && value[0] == '"' && value[len(value)-1] == '"' {
+		if unquoted, err := strconv.Unquote(value); err == nil {
+			return unquoted
+		}
+	}
+	return value
+}
+
+func performanceServerTiming(headers any) []map[string]any {
+	result := []map[string]any{}
+	for _, metricValue := range splitHTTPList(performanceHeader(headers, "server-timing"), ',') {
+		parts := splitHTTPList(metricValue, ';')
+		if len(parts) == 0 || parts[0] == "" {
+			continue
+		}
+		metric := map[string]any{"name": parts[0], "duration": 0.0, "description": ""}
+		for _, parameter := range parts[1:] {
+			key, value, found := strings.Cut(parameter, "=")
+			if !found {
+				continue
+			}
+			switch strings.ToLower(strings.TrimSpace(key)) {
+			case "dur":
+				if duration, err := strconv.ParseFloat(strings.TrimSpace(value), 64); err == nil {
+					metric["duration"] = duration
+				}
+			case "desc":
+				metric["description"] = unquoteHTTPValue(value)
+			}
+		}
+		result = append(result, metric)
+	}
+	return result
+}
+
+func byteSlice(value any) []byte {
+	switch values := value.(type) {
+	case []byte:
+		return append([]byte(nil), values...)
+	case []any:
+		out := make([]byte, len(values))
+		for index, value := range values {
+			out[index] = byte(numargValue(value))
+		}
+		return out
+	default:
+		return []byte(fmt.Sprint(value))
+	}
+}
+
+func stringSlice(value any) []string {
+	values, ok := value.([]any)
+	if !ok {
+		return nil
+	}
+	out := make([]string, 0, len(values))
+	for _, value := range values {
+		out = append(out, fmt.Sprint(value))
+	}
+	return out
+}
+
+func numargValue(value any) int64 {
+	switch number := value.(type) {
+	case int64:
+		return number
+	case int32:
+		return int64(number)
+	case int:
+		return int64(number)
+	case float64:
+		return int64(number)
+	case float32:
+		return int64(number)
+	default:
+		return 0
+	}
+}
+func addStorageHosts(r *Realm, h map[string]any) {
+	p := r.agent.Page()
+	origin := originOf(p.URL())
+	store := func(area string) map[string]string {
+		if area == "session" {
+			if p.sessionStorage[origin] == nil {
+				p.sessionStorage[origin] = map[string]string{}
+			}
+			return p.sessionStorage[origin]
+		}
+		return p.ctx.store(origin)
+	}
+	h["storageLength"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return r.val(len(store(strarg(a, 0)))), nil
+	})
+	h["storageKey"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		s := store(strarg(a, 0))
+		keys := make([]string, 0, len(s))
+		for k := range s {
+			keys = append(keys, k)
+		}
+		sort.Strings(keys)
+		i := int(numarg(a, 1))
+		if i < 0 || i >= len(keys) {
+			return r.val(nil), nil
+		}
+		return r.val(keys[i]), nil
+	})
+	h["storageGet"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		v, ok := store(strarg(a, 0))[strarg(a, 1)]
+		if !ok {
+			return r.val(nil), nil
+		}
+		return r.val(v), nil
+	})
+	h["storageSet"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		store(strarg(a, 0))[strarg(a, 1)] = strarg(a, 2)
+		return nil, nil
+	})
+	h["storageRemove"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		delete(store(strarg(a, 0)), strarg(a, 1))
+		return nil, nil
+	})
+	h["storageClear"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		s := store(strarg(a, 0))
+		for k := range s {
+			delete(s, k)
+		}
+		return nil, nil
+	})
+}

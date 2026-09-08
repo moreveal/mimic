@@ -1,0 +1,34 @@
+[
+  {
+    "name": "globalThis",
+    "expression": "(()=>({exists:typeof globalThis==='object',self:globalThis.globalThis===globalThis,functionThis:Function('return this')()===globalThis}))()"
+  },
+  {
+    "name": "Function",
+    "expression": "(()=>{const AsyncFunction=Object.getPrototypeOf(async function(){}).constructor,GeneratorFunction=Object.getPrototypeOf(function*(){}).constructor;return{eval:(0,eval)('20+22'),function:Function('a','return a+1')(41),asyncName:AsyncFunction.name,generatorName:GeneratorFunction.name,toString:Function.prototype.toString.call(function sample(a){return a+1})}})()"
+  },
+  {
+    "name": "Intl",
+    "expression": "(()=>({exists:typeof Intl==='object',date:new Intl.DateTimeFormat('en-US',{timeZone:'UTC',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date('2020-01-02T00:00:00Z')),number:new Intl.NumberFormat('de-DE',{minimumFractionDigits:2}).format(1234.5),plural:new Intl.PluralRules('en').select(2),canonical:Intl.getCanonicalLocales(['EN-us','ru-ru'])}))()"
+  },
+  {
+    "name": "Error.stack",
+    "expression": "(()=>{function namedFrame(){throw new TypeError('boom')}let error;try{namedFrame()}catch(e){error=e}const lines=String(error.stack).split('\\n');return{name:error.name,message:error.message,header:lines[0],hasNamedFrame:lines.some(line=>line.includes('namedFrame')),multiLine:lines.length>1}})()"
+  },
+  {
+    "name": "TypedArrays",
+    "expression": "(()=>{const buffer=new ArrayBuffer(8),view=new DataView(buffer),bytes=new Uint8Array(buffer);view.setUint32(0,0x12345678);bytes.set([9,8,7,6],4);return{arrayBuffer:Object.prototype.toString.call(buffer),byteLength:buffer.byteLength,hex:Array.from(bytes).map(x=>x.toString(16).padStart(2,'0')).join(''),slice:Array.from(bytes.slice(2,6)),bigint:typeof BigInt64Array==='function'}})()"
+  },
+  {
+    "name": "Promise",
+    "expression": "(()=>({exists:typeof Promise==='function',tag:Object.prototype.toString.call(Promise.resolve()),then:typeof Promise.prototype.then,finally:typeof Promise.prototype.finally,allSettled:typeof Promise.allSettled,withResolvers:typeof Promise.withResolvers}))()"
+  },
+  {
+    "name": "WebAssembly",
+    "expression": "(()=>{const bytes=new Uint8Array([0,97,115,109,1,0,0,0,1,5,1,96,0,1,127,3,2,1,0,7,7,1,3,114,117,110,0,0,10,6,1,4,0,65,42,11]),module=new WebAssembly.Module(bytes),instance=new WebAssembly.Instance(module);return{exists:typeof WebAssembly==='object',module:Object.prototype.toString.call(module),instance:Object.prototype.toString.call(instance),result:instance.exports.run(),validate:WebAssembly.validate(bytes)}})()"
+  },
+  {
+    "name": "synchronous execution clock",
+    "expression": "(()=>{const wall=Date.now(),start=performance.now();let value=0;for(let i=0;i<20000000;i++)value=(value+i)|0;return{performance:performance.now()-start,wall:Date.now()-wall,value}})()"
+  }
+]
