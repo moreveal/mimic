@@ -881,3 +881,32 @@ completed with 241 test/package pass events and zero failures; an additional
 targeted test rejects malformed snapshots and verifies subsequent ordinary
 runtime creation still works. That targeted test was added after the full suite
 started and has its own saved result. Production remains unchanged.
+
+## Stopped checkpoint — user request, 2026-09-09
+
+Optimization is stopped. See `checkpoint-20260909/checkpoint.md` for the commit
+ledger, validation scope, production crossing census and preserved artifacts.
+No new benchmark or performance change was started after the stop request.
+
+The final isolated snapshot experiment a19b84d now reaches actual Pages with
+source/configuration checks and live host rebinding. Three defects were caught:
+viewport values captured during exposure normalization required refreshing;
+generated bindings retained their original host and needed late dispatch; and
+a snapshotted placeholder WebAssembly object prevented V8 from installing its
+native namespace. All six frozen semantic checks then passed. Source/exposure
+mismatches fail closed; automatic fallback, arbitrary frame/security support
+and production snapshot generation/selection remain incomplete.
+
+The already-running final control fast gate completed before the stop checkpoint.
+Control -> snapshot DOM execution is 70.148 -> 69.721 ms, completion 114.515 ->
+104.874 ms. React execution regresses 36.868 -> 39.848 ms. Static N25 throughput
+falls 87.16 -> 75.78 Pages/s; marginal RSS doubles, static 24.959 -> 50.862 and
+React 29.022 -> 59.364 MiB/Page. Recovered RSS above ready baseline increases
+from 69.980 -> 316.773 MiB static and 88.246 -> 342.473 MiB React. Session
+creation also regresses, and prebuilding the snapshot excluded its creation
+cost from these timings. This is not a production-worthy general improvement.
+
+Final ordinary correctness and scoped race checks pass; exact commands and raw
+logs are preserved. Production remains 52a2aa2, with full07 DOM execution
+68.929 ms versus Chrome 30.747 ms. The requested 73.406 versus 30.326 ms is the
+verified historical milestone05/original-Chrome comparison, not the latest run.

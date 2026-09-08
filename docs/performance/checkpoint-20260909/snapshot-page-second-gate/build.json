@@ -1,0 +1,30 @@
+{
+  "command": [
+    "go",
+    "build",
+    "-o",
+    "E:\\GitHub\\mimic\\.build\\snapshot-page-second-gate\\mimic.exe",
+    "./cmd/mimic"
+  ],
+  "source": "E:\\GitHub\\mimic\\.build\\bootstrap-snapshot",
+  "revision": "ca557ca4b4b5c2f889c691e2a0080bfe6b157f9b",
+  "status": " M internal/browser/realm.go\n M internal/engine/v8/runtime.go\n M internal/webapi/snapshot.go\n?? build_snapshot_test.go\n?? internal/browser/snapshot_page_test.go\n",
+  "executable": "E:\\GitHub\\mimic\\.build\\snapshot-page-second-gate\\mimic.exe",
+  "sha256": "f3e045e26296f111abeff3610d7188d25b5a2b3ce37835c2ccad7f1cdc293f3d",
+  "harness_sha256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7",
+  "harness_files": {
+    "compare.py": "274b156ee88e67085f5e556ef79629146f5e7287ee54af844476a0c005e65a5b",
+    "report.py": "f12e393341c00e9e03748a06913fa639c1069f66dc7acb71959cffd51647f214",
+    "requirements.txt": "06e6d87d17f39a59fe7b2576545231fe65d5a1940d22e63fc2b32b6cfa12123b",
+    "run.ps1": "6c50b0a55886278de7c1e4d92b77b42bf2cfad59fa451dbaa766b0e0eae84fa6",
+    "run.py": "67718e844bce74b7757f2238716233b9d8683a17294f2b02017667b9c1e44cd3",
+    "test_harness.py": "ddb8dcf74a192d3403971833cf5e011dd8578a9acd9a060b3b265cc6d79aef2a",
+    "v8_version.go": "669a669b0545ba599edb2f7923617f154b976e7377de89d8b2e1f477bdb12f09",
+    "windows_metrics.py": "57ba1e10dfb1f1cb439a52ad5f7f5795c3ba4eef25ae22c9514ecfe115434cd5",
+    "fixtures/workload.js": "484019063e33e131756f67ab6f3076ad2c18e3959072fbae42f540455448c214",
+    "fixtures/vendor/react-dom.production.min.js": "35f4f974f4b2bcd44da73963347f8952e341f83909e4498227d4e26b98f66f0d",
+    "fixtures/vendor/REACT-LICENSE.txt": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85",
+    "fixtures/vendor/react.production.min.js": "d949f1c3687aedadcedac85261865f29b17cd273997e7f6b2bfc53b2f9d4c4dd"
+  },
+  "built_at": "2026-09-09T03:40:53.243386+04:00"
+}
