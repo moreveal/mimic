@@ -23,9 +23,10 @@ type response struct {
 type command func(*state) response
 
 type state struct {
-	isolate *gov8.Isolate
-	realms  map[uint64]*gov8.Context
-	next    uint64
+	isolate             *gov8.Isolate
+	realms              map[uint64]*gov8.Context
+	next                uint64
+	restoreThreadPolicy func() error
 }
 
 // Runtime owns one V8 isolate on a dedicated, permanently thread-affine
@@ -82,7 +83,7 @@ func (r *Runtime) loop(ready chan<- error) {
 		close(r.done)
 		return
 	}
-	s := &state{isolate: iso, realms: make(map[uint64]*gov8.Context)}
+	s := &state{isolate: iso, realms: make(map[uint64]*gov8.Context), restoreThreadPolicy: configurePageThreadPolicy()}
 	ready <- nil
 	for command := range r.commands {
 		result := command(s)
@@ -264,6 +265,12 @@ func (r *Runtime) Dispose() error {
 			// Realms, their DOM, response bodies and traces indefinitely.
 			if err := gov8.ReleaseIsolateHostState(s.isolate); err != nil && disposeErr == nil {
 				disposeErr = err
+			}
+			if s.restoreThreadPolicy != nil {
+				if err := s.restoreThreadPolicy(); err != nil && disposeErr == nil {
+					disposeErr = err
+				}
+				s.restoreThreadPolicy = nil
 			}
 			if err := s.isolate.Close(); err != nil && disposeErr == nil {
 				disposeErr = err
