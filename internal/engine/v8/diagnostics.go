@@ -54,6 +54,23 @@ func (a *adapter) recordCost(name string, start time.Time) {
 func (a *adapter) Diagnostics() (any, error) {
 	return a.owner.execute(func(s *state) response {
 		heap, err := s.isolate.GetHeapStatistics()
-		return response{value: map[string]any{"heap": heap, "host_crossings": a.callbackSeq, "persistent_handles": len(a.globals), "detail": a.profile}, err: err}
+		if err != nil {
+			return response{err: err}
+		}
+		var spaces []any
+		count, err := s.isolate.NumberOfHeapSpaces()
+		if err != nil {
+			return response{err: err}
+		}
+		for i := int64(0); i < count; i++ {
+			space, ok, err := s.isolate.GetHeapSpaceStatistics(uint64(i))
+			if err != nil {
+				return response{err: err}
+			}
+			if ok {
+				spaces = append(spaces, space)
+			}
+		}
+		return response{value: map[string]any{"heap": heap, "spaces": spaces, "host_crossings": a.callbackSeq, "persistent_handles": len(a.globals), "detail": a.profile}, err: err}
 	})
 }

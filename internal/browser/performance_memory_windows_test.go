@@ -122,12 +122,16 @@ func TestPerformanceDensityProfile(t *testing.T) {
 			}
 		}
 		if os.Getenv("MIMIC_PROFILE_V8_GC") == "1" {
+			var durations []float64
 			for _, p := range pages {
+				start := time.Now()
 				if err := p.Top.Realm.runtime.(interface{ ProfileCollect() error }).ProfileCollect(); err != nil {
 					t.Fatal(err)
 				}
+				durations = append(durations, float64(time.Since(start))/1e6)
 			}
 			sample("live_after_v8_gc")
+			records[len(records)-1]["collection_ms_per_page"] = durations
 		}
 		for _, p := range pages {
 			c.ClosePage(p.ID)
