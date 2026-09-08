@@ -49,3 +49,9 @@ Immutable source and exposure JSON are shared in a bounded Go cache. Generated m
 A compilation-byte cache experiment was discarded: pinned gov8 CreateCodeCache retries a native buffer after the read/delete API has freed it; its CompileCached also dereferences a nil Origin. No unsafe cache path or dependency replacement is included.
 
 Validation: full ordinary Go suite passed (browser 58.043s); independent initial blank regression passed. Full race and frozen benchmark results are recorded after completion. Repository publication audit currently flags a machine-local executable path in the unmodified new benchmark raw shutdown exception; raw evidence has not been rewritten to conceal that failure.
+
+## 04: One CDP event-loop pump per Page
+
+Before: 16 WebSocket debugger connections advance one Page clock by 2309.238 ms during 150.387 ms wall time (15.36x). Mutex/block profiles are retained in `.build/pump-{mutex,block}.pprof`. The session-owned timer creates both redundant work and incorrect observable time.
+
+After: Page-owned pumps shared by all connections, canceled when the target or server closes. Same probe: 150.352 ms Page time / 150.210 ms wall time (1.00x). Asynchronous navigation also holds its session binding lock, preventing a rebind from routing an ongoing navigation into another session. Ordinary and race CDP suites pass, including independent Page navigation and clock amplification regression. The full bootstrap race suite also passed; frozen benchmark evidence follows in explicitly version-verified runs.

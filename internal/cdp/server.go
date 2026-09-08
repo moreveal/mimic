@@ -26,6 +26,7 @@ import (
 type Server struct {
 	lifecycleMu       sync.Mutex
 	connections       map[*websocket.Conn]context.CancelFunc
+	pumps             map[*browser.Page]context.CancelFunc
 	closed            bool
 	workers           sync.WaitGroup
 	Browser           *browser.Browser
@@ -42,7 +43,7 @@ func New(b *browser.Browser) (*Server, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Server{Browser: b, Context: c, Page: p, navigationTimeout: 30 * time.Second, connections: make(map[*websocket.Conn]context.CancelFunc)}, nil
+	return &Server{Browser: b, Context: c, Page: p, navigationTimeout: 30 * time.Second, connections: make(map[*websocket.Conn]context.CancelFunc), pumps: make(map[*browser.Page]context.CancelFunc)}, nil
 }
 func (s *Server) SetNavigationTimeout(timeout time.Duration) {
 	if timeout > 0 {
@@ -70,6 +71,9 @@ func (s *Server) Close(ctx context.Context) error {
 	s.lifecycleMu.Lock()
 	s.closed = true
 	server := s.http
+	for _, cancel := range s.pumps {
+		cancel()
+	}
 	for conn, cancel := range s.connections {
 		cancel()
 		_ = conn.Close()
@@ -111,7 +115,7 @@ type message struct {
 	Params json.RawMessage `json:"params"`
 }
 type session struct {
-	commandMu         sync.Mutex // protects binding changes against commands and this session pump
+	commandMu         sync.Mutex // protects binding changes against commands and asynchronous navigation
 	ctx               context.Context
 	work              sync.WaitGroup
 	server            *Server
@@ -159,19 +163,15 @@ func (s *Server) ws(w http.ResponseWriter, r *http.Request) {
 	page.LockCommands()
 	ss.bindPage(page)
 	page.UnlockCommands()
-	stopPump := make(chan struct{})
 	defer func() {
 		cancel()
 		_ = conn.Close()
-		close(stopPump)
 		ss.work.Wait()
 		ss.unbindPage()
 		s.lifecycleMu.Lock()
 		delete(s.connections, conn)
 		s.lifecycleMu.Unlock()
 	}()
-	ss.work.Add(1)
-	go func() { defer ss.work.Done(); ss.pumpEventLoop(stopPump) }()
 	for {
 		var m message
 		if err := conn.ReadJSON(&m); err != nil {
@@ -204,6 +204,7 @@ func (s *session) bindPage(page *browser.Page) {
 	s.interceptor = NewControlInterceptor(s.event)
 	s.removeInterceptor = page.Loader().Use(s.interceptor)
 	s.unsub = page.Trace().Subscribe(s.traceEvent)
+	s.server.ensurePump(page)
 }
 func (s *session) unbindPage() {
 	s.bindMu.Lock()
@@ -218,33 +219,54 @@ func (s *session) unbindPage() {
 		s.interceptor.Close()
 	}
 }
-func (s *session) pumpEventLoop(stop <-chan struct{}) {
+
+// A Page owns one clock regardless of how many debugger connections observe it.
+// Its pump survives debugger disconnection and ends with the Page or server.
+func (s *Server) ensurePump(page *browser.Page) {
+	s.lifecycleMu.Lock()
+	defer s.lifecycleMu.Unlock()
+	if s.closed || s.pumps[page] != nil {
+		return
+	}
+	if live, ok := s.Context.Page(page.ID); !ok || live != page {
+		return
+	}
+	ctx, cancel := context.WithCancel(context.Background())
+	s.pumps[page] = cancel
+	s.workers.Add(1)
+	go func() { defer s.workers.Done(); s.pumpEventLoop(ctx, page) }()
+}
+func (s *Server) stopPump(page *browser.Page) {
+	s.lifecycleMu.Lock()
+	defer s.lifecycleMu.Unlock()
+	if cancel := s.pumps[page]; cancel != nil {
+		cancel()
+		delete(s.pumps, page)
+	}
+}
+func (s *Server) pumpEventLoop(lifetime context.Context, page *browser.Page) {
 	ticker := time.NewTicker(10 * time.Millisecond)
 	defer ticker.Stop()
 	last := time.Now()
 	for {
 		select {
-		case now := <-ticker.C:
-			delta := now.Sub(last)
-			s.commandMu.Lock()
-			s.bindMu.RLock()
-			page := s.page
+		case <-ticker.C:
+			delta := time.Since(last)
 			page.LockCommands()
-			ctx, cancel := context.WithTimeout(s.ctx, s.navigationTimeout)
+			if lifetime.Err() != nil {
+				page.UnlockCommands()
+				return
+			}
+			ctx, cancel := context.WithTimeout(lifetime, s.navigationTimeout)
 			err := page.AdvanceTime(ctx, delta)
 			cancel()
-			s.bindMu.RUnlock()
 			page.UnlockCommands()
-			s.commandMu.Unlock()
-			// Time spent waiting for an observable JS/CDP operation is execution
-			// cost, not idle event-loop time. The scheduler accounts for that cost
-			// with the selected Environment execution calibration; starting the
-			// next idle interval here prevents double-counting slow host engines.
+			// Exclude time spent executing or waiting for other Page turns.
 			last = time.Now()
-			if err != nil {
+			if err != nil && lifetime.Err() == nil {
 				page.Trace().Add(trace.Error, "scheduler", map[string]any{"error": err.Error(), "during": "CDP event-loop pump"})
 			}
-		case <-stop:
+		case <-lifetime.Done():
 			return
 		}
 	}
@@ -452,6 +474,7 @@ func (s *session) handleRouted(m message, route string) {
 		success := false
 		if page, ok := s.server.Context.Page(targetID); ok {
 			page.LockCommands()
+			s.server.stopPump(page)
 			success = s.server.Context.ClosePage(targetID)
 			page.UnlockCommands()
 		}
@@ -488,6 +511,8 @@ func (s *session) handleRouted(m message, route string) {
 		s.work.Add(1)
 		go func() {
 			defer s.work.Done()
+			s.commandMu.Lock()
+			defer s.commandMu.Unlock()
 			page.LockCommands()
 			defer page.UnlockCommands()
 			ctx, cancel := context.WithTimeout(s.ctx, s.navigationTimeout)
