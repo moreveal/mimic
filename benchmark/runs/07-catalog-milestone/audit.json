@@ -1,0 +1,288 @@
+{
+  "revision": "52a2aa2f8f8e53125d4e6cb5261366d99707df68",
+  "sha256": {
+    "mimic": "0f3711649ff8d3c7421f7bb87f46c169e0b617c0bc919b82e8b457421e15742c",
+    "chrome": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9"
+  },
+  "launches": 204,
+  "rows": 396,
+  "gates": 12,
+  "groups": 36,
+  "bad_rows": [],
+  "bad_gates": {},
+  "bad_waves": [],
+  "warm": {
+    "static": {
+      "mimic": {
+        "execution_ms": 1.265,
+        "completion_ms": 44.177,
+        "session_create_ms": 2.069
+      },
+      "chrome": {
+        "execution_ms": 3.618,
+        "completion_ms": 20.651,
+        "session_create_ms": 28.591
+      }
+    },
+    "cpu": {
+      "mimic": {
+        "execution_ms": 34.713,
+        "completion_ms": 77.093,
+        "session_create_ms": 2.072
+      },
+      "chrome": {
+        "execution_ms": 28.233,
+        "completion_ms": 45.326,
+        "session_create_ms": 29.495
+      }
+    },
+    "dom": {
+      "mimic": {
+        "execution_ms": 68.929,
+        "completion_ms": 111.149,
+        "session_create_ms": 11.923
+      },
+      "chrome": {
+        "execution_ms": 30.747,
+        "completion_ms": 48.129,
+        "session_create_ms": 23.555
+      }
+    },
+    "async": {
+      "mimic": {
+        "execution_ms": 49.214,
+        "completion_ms": 91.776,
+        "session_create_ms": 7.06
+      },
+      "chrome": {
+        "execution_ms": 27.544,
+        "completion_ms": 44.444,
+        "session_create_ms": 28.667
+      }
+    },
+    "react": {
+      "mimic": {
+        "execution_ms": 36.307,
+        "completion_ms": 85.881,
+        "session_create_ms": 7.192
+      },
+      "chrome": {
+        "execution_ms": 22.412,
+        "completion_ms": 41.219,
+        "session_create_ms": 30.979
+      }
+    },
+    "wasm": {
+      "mimic": {
+        "execution_ms": 9.065,
+        "completion_ms": 51.443,
+        "session_create_ms": 11.957
+      },
+      "chrome": {
+        "execution_ms": 5.165,
+        "completion_ms": 22.48,
+        "session_create_ms": 27.684
+      }
+    }
+  },
+  "previous_warm": {
+    "static": {
+      "mimic": {
+        "execution_ms": 1.401,
+        "completion_ms": 54.699
+      },
+      "chrome": {
+        "execution_ms": 5.015,
+        "completion_ms": 29.526
+      }
+    },
+    "cpu": {
+      "mimic": {
+        "execution_ms": 37.365,
+        "completion_ms": 93.8
+      },
+      "chrome": {
+        "execution_ms": 29.121,
+        "completion_ms": 53.068
+      }
+    },
+    "dom": {
+      "mimic": {
+        "execution_ms": 74.142,
+        "completion_ms": 131.286
+      },
+      "chrome": {
+        "execution_ms": 34.034,
+        "completion_ms": 60.368
+      }
+    },
+    "async": {
+      "mimic": {
+        "execution_ms": 47.495,
+        "completion_ms": 101.933
+      },
+      "chrome": {
+        "execution_ms": 30.288,
+        "completion_ms": 55.251
+      }
+    },
+    "react": {
+      "mimic": {
+        "execution_ms": 33.284,
+        "completion_ms": 96.16
+      },
+      "chrome": {
+        "execution_ms": 28.33,
+        "completion_ms": 58.233
+      }
+    },
+    "wasm": {
+      "mimic": {
+        "execution_ms": 9.416,
+        "completion_ms": 64.933
+      },
+      "chrome": {
+        "execution_ms": 5.443,
+        "completion_ms": 32.085
+      }
+    }
+  },
+  "capacity": [
+    {
+      "system": "chrome",
+      "workload": "static",
+      "n": 50,
+      "waves": 5,
+      "success_rate": 1.0,
+      "throughput": 31.46687481455266,
+      "rss_mib": 4099.40234375,
+      "recovery_mib": 1220.7421875,
+      "stop": ""
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "n": 50,
+      "waves": 5,
+      "success_rate": 1.0,
+      "throughput": 84.21225381931599,
+      "rss_mib": 1024.81640625,
+      "recovery_mib": 144.640625,
+      "stop": ""
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "n": 100,
+      "waves": 5,
+      "success_rate": 1.0,
+      "throughput": 28.63230248263967,
+      "rss_mib": 7075.75,
+      "recovery_mib": 1254.38671875,
+      "stop": ""
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "n": 100,
+      "waves": 5,
+      "success_rate": 1.0,
+      "throughput": 91.53189556136645,
+      "rss_mib": 1942.4375,
+      "recovery_mib": 186.5546875,
+      "stop": ""
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "n": 50,
+      "waves": 5,
+      "success_rate": 1.0,
+      "throughput": 25.750112891060763,
+      "rss_mib": 4983.91796875,
+      "recovery_mib": 1363.4609375,
+      "stop": ""
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "n": 50,
+      "waves": 5,
+      "success_rate": 1.0,
+      "throughput": 53.01967965386107,
+      "rss_mib": 1607.1640625,
+      "recovery_mib": 149.1328125,
+      "stop": ""
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "n": 100,
+      "waves": 5,
+      "success_rate": 1.0,
+      "throughput": 24.562463314427863,
+      "rss_mib": 8737.8203125,
+      "recovery_mib": 1411.76171875,
+      "stop": ""
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "n": 100,
+      "waves": 5,
+      "success_rate": 1.0,
+      "throughput": 52.11305894785918,
+      "rss_mib": 3056.19140625,
+      "recovery_mib": 206.99609375,
+      "stop": ""
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "n": 50,
+      "waves": 5,
+      "success_rate": 1.0,
+      "throughput": 18.684270697551348,
+      "rss_mib": 4874.6640625,
+      "recovery_mib": 1376.70703125,
+      "stop": ""
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "n": 50,
+      "waves": 5,
+      "success_rate": 1.0,
+      "throughput": 60.44737342854973,
+      "rss_mib": 1281.6328125,
+      "recovery_mib": 253.07421875,
+      "stop": ""
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "n": 100,
+      "waves": 5,
+      "success_rate": 1.0,
+      "throughput": 23.06992433622183,
+      "rss_mib": 8339.89453125,
+      "recovery_mib": 1375.90234375,
+      "stop": ""
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "n": 100,
+      "waves": 5,
+      "success_rate": 1.0,
+      "throughput": 61.256348347529816,
+      "rss_mib": 2440.046875,
+      "recovery_mib": 394.01171875,
+      "stop": ""
+    }
+  ],
+  "max_teardown_ms": {
+    "mimic": 257.95169999764767,
+    "chrome": 572.3258999933023
+  }
+}

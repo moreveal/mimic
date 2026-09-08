@@ -552,3 +552,61 @@ profile measures warm navigation at 42.28 ms, generated bootstrap ending at
 Fast-gate raw data, build receipts, profile, and validation are under `catalog/`.
 The full matrix for the catalog change is a separate run; full06 does not
 certify that change. Single-Page Chrome parity remains unachieved.
+
+## 20: Catalog full matrix and refreshed crossing counts (2026-09-09)
+
+`benchmark/runs/07-catalog-milestone` now validates production 52a2aa2.
+All 12 correctness gates, 396 cold/warm rows, and 36 concurrency groups pass,
+including five measured waves at N100 for static, CPU, and React. All 204
+launch receipts match the freshly built executable or pinned Chrome digest;
+the frozen harness fingerprint is unchanged. `audit.json` records the checks.
+
+| Warm workload | Mimic execution / completion ms | Chrome execution / completion ms |
+|---|---:|---:|
+| static | 1.265 / 44.177 | 3.618 / 20.651 |
+| CPU | 34.713 / 77.093 | 28.233 / 45.326 |
+| DOM | 68.929 / 111.149 | 30.747 / 48.129 |
+| async | 49.214 / 91.776 | 27.544 / 44.444 |
+| React | 36.307 / 85.881 | 22.412 / 41.219 |
+| wasm | 9.065 / 51.443 | 5.165 / 22.480 |
+
+Here completion is the frozen harness's navigation + workload interval;
+it excludes session creation and teardown. Against full06, Mimic completion
+falls 19.2% for static, 15.3% for DOM, and 10.7% for React. React execution
+regresses 9.1%, and async execution regresses 3.6%. Chrome also improves
+materially between cohorts, so these changes cannot all be attributed to code.
+There is still no single-Page DOM latency win over Chrome.
+
+| N100, aggregate all measured waves | Mimic Pages/s | Chrome Pages/s | Ratio | Active RSS MiB, Mimic / Chrome | Recovered RSS MiB, Mimic / Chrome |
+|---|---:|---:|---:|---:|---:|
+| static | 91.53 | 28.63 | 3.20x | 1942.4 / 7075.8 | 186.6 / 1254.4 |
+| CPU | 52.11 | 24.56 | 2.12x | 3056.2 / 8737.8 | 207.0 / 1411.8 |
+| React | 61.26 | 23.07 | 2.66x | 2440.0 / 8339.9 | 394.0 / 1375.9 |
+
+Throughput includes session creation and teardown. Maximum observed measured
+concurrency teardown is 257.95 ms for Mimic and 572.33 ms for Chrome. The
+previous 10-second tail did not recur; no causal teardown fix was made.
+Memory figures are medians across five waves; recovery is sampled after 250 ms.
+
+Fresh detailed profile counts, subtracting navigation from execution and
+excluding the first iteration and diagnostic wrapper callbacks, remain 54055
+production host calls per DOM iteration. `catalog/crossings.json` contains all
+counts and measured host-inclusive time for four warm iterations. Top ten:
+
+| Host call | Calls per iteration | Mean measured host-inclusive ms per iteration |
+|---|---:|---:|
+| setAttribute | 18000 | 7.527 |
+| toggleToken | 12000 | 8.661 |
+| insertPlain | 9001 | 5.085 |
+| parentNode | 3003 | 0.542 |
+| contains | 3001 | 0.935 |
+| create | 3001 | 1.173 |
+| createComment | 3000 | 1.313 |
+| createText | 3000 | 1.451 |
+| apiAccess | 28 | below timer resolution |
+| queryAllWithin | 6 | 4.019 |
+
+Host-inclusive counters do not include the entire V8/Go dispatch latency and
+have instrumentation overhead; do not sum them into a prediction of unprofiled
+wall time. The next ownership experiment is scoped in
+`dom-current/detached-ownership-next.md`; it is not implemented or merged.
