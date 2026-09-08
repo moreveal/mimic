@@ -55,3 +55,19 @@ Validation: full ordinary Go suite passed (browser 58.043s); independent initial
 Before: 16 WebSocket debugger connections advance one Page clock by 2309.238 ms during 150.387 ms wall time (15.36x). Mutex/block profiles are retained in `.build/pump-{mutex,block}.pprof`. The session-owned timer creates both redundant work and incorrect observable time.
 
 After: Page-owned pumps shared by all connections, canceled when the target or server closes. Same probe: 150.352 ms Page time / 150.210 ms wall time (1.00x). Asynchronous navigation also holds its session binding lock, preventing a rebind from routing an ongoing navigation into another session. Ordinary and race CDP suites pass, including independent Page navigation and clock amplification regression. The full bootstrap race suite also passed; frozen benchmark evidence follows in explicitly version-verified runs.
+
+## Verified rerun 01
+
+Source `f1a526fc134be4cc009638ee2d1206363132f68c`, executable SHA-256 `7f55ba9d2729dcf7dc439d942a8fb488b60a15c6866441485038826feb7bedb3`. Clean detached source checkout and Go module path verified before building; the exact executable was supplied with `--mimic`. Go 1.26.1 VCS discovery recognizes `.git` directories but not worktree `.git` files, so the source and output hash are verified separately. All 12 gates pass. Static N=50 throughput: 5.4072 -> 8.5934 sessions/s (+58.9%); CPU N=50: 2.9174 -> 7.9820 (+173.6%). Static N=50 RSS: 3091.7 -> 2810.2 MiB. See `benchmark/runs/01-verified-page-concurrency` and `01-verified-comparison.json`.
+
+| Warm workload | Metric | Frozen ms | Verified ms |
+|---|---|---:|---:|
+| static | session_create_ms | 118.28 | 70.45 |
+| static | execution_ms | 2.82 | 1.94 |
+| static | completion_ms | 127.51 | 73.00 |
+| dom | session_create_ms | 95.33 | 91.56 |
+| dom | execution_ms | 1560.32 | 1703.89 |
+| dom | completion_ms | 1661.46 | 1803.17 |
+| react | session_create_ms | 121.60 | 70.88 |
+| react | execution_ms | 166.03 | 96.41 |
+| react | completion_ms | 302.94 | 178.77 |
