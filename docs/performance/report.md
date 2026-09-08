@@ -147,3 +147,28 @@ Fast gate DOM execution: 197.37 -> 156.11 ms (-20.9%); static completion 58.05 m
 The final diagnostic replay records 69,503 crossings including 9,005 diagnostic wrapper hooks, versus 231,528 originally with the same hooks. Persistent handles after DOM are 10,284 including those diagnostic hooks (approximately 1,279 without them), versus over 655,000 normal retained roots originally. Go sampled allocation totals 216 MiB over three DOM replays plus bootstrap and profiling; native/FFI execution remains dominant at 55% flat Go CPU samples. These profiling numbers are attribution, not benchmark timings.
 
 The N=50 parallel creation/navigation diagnostic also collected CPU/allocation/mutex/block profiles. The principal aggregate mutex waits are initial immutable Surface OnceValue publication (~1.98 s across all waiters) and gov8 isolate construction bookkeeping (~0.78 s), not a lock held across independent Page CDP evaluations. Aggregate waits must not be read as wall-clock delay. Per-Page phase records are in `final-parallel-phases.json`; local profiles are `.build/final-parallel-*.pprof`. No isolation boundary was changed.
+
+## Milestone 03: frozen full matrix, classes 01–10
+
+Source `d69cff971c9aba22f28889ded904caff392ed8f1`; executable SHA-256 `967df4b8677f545b38ff9f5c74e7c607e0c6b7deadbc6fbceff0fda557461d68`. The external milestone wrapper built the executable and verified both executable hashes before every launch. The immutable comparator accepted harness, fixture, Chrome binary and recorded environment equality. Raw evidence: `benchmark/runs/03-architecture-milestone`; deltas: `benchmark/runs/03-architecture-comparison.json`.
+
+All twelve system/workload correctness gates pass. React N=100 was stopped during the excluded warmup for sustained system paging in both systems; it is not a successful density observation. All other recorded levels complete. This matrix predates the callback-registry teardown correction.
+
+Warm medians (20 measured samples each); ratios use the original frozen Chrome 152, not this run’s Chrome:
+
+| Workload | Mimic navigation ms / Chrome ratio | Mimic execution ms / Chrome ratio | Mimic completion ms / Chrome ratio |
+|---|---:|---:|---:|
+| static | 53.10 / 2.31× | 1.04 / 0.21× | 54.22 / 1.94× |
+| cpu | 53.53 / 2.25× | 45.38 / 1.56× | 98.79 / 1.88× |
+| dom | 54.08 / 2.41× | 153.50 / 5.06× | 207.32 / 3.88× |
+| async | 53.98 / 2.07× | 48.37 / 1.61× | 102.03 / 1.82× |
+| react | 106.17 / 4.31× | 87.83 / 3.56× | 194.87 / 3.97× |
+| wasm | 64.49 / 2.71× | 9.28 / 1.81× | 73.88 / 2.58× |
+
+DOM execution improves 1560.32 → 153.50 ms (10.17×) but remains 5.06× Chrome. Profiles attribute the remaining cost primarily to synchronous DOM host crossings/native calls; attribute mutation is the largest remaining host family. Navigation spends about 8 ms compiling and 35–49 ms installing per-isolate bootstrap; exposure/prototype normalization is its largest measured phase. These are implementation costs still eligible for optimization. Static execution is already cheaper than Chrome. CPU and Wasm need dedicated native workload profiles to separate engine work from embedder overhead; async includes timers/worker/event-loop work and requires phase attribution.
+
+React’s full warm median is worse than the short gate: execution rises from roughly 40 ms to 85–99 ms after the first few iterations, while RSS grows. A later isolated diagnostic reproduces memory growth but not the sustained doubling in execution cost; therefore memory retention alone must not be asserted to explain the timing shift. The raw slow samples remain included.
+
+Static N=50 throughput is 75.11 sessions/s versus frozen Chrome 25.93 (2.90×); CPU 32.52 versus 27.72 (1.17×); React 30.78 versus 14.50 (2.12×). Static N=100 falls to 10.28 versus Chrome 20.95 (0.49×): four measured waves have about 10 extra seconds after the workload completion window, indicating a teardown/connection-tail investigation rather than slower DOM execution. This remains unresolved.
+
+Fitted marginal RSS: static 24.47 MiB/Page versus frozen Chrome 59.46 (0.41×), CPU 26.12 versus 73.87 (0.35×), React 37.38 versus 72.27 (0.52×; current fit only through N=50). Linear-fit intercepts are 82.30/145.12/90.66 MiB respectively; these are modeled intercepts, not directly measured process readiness. Warm Page creation medians span 2.12–14.04 ms, all below the corresponding frozen Chrome 37.86–43.60 ms. Calibrated CDP readiness is 231.84 ms versus frozen Chrome 279.37 (0.83×); startup remains an optimization candidate because that advantage is modest.
