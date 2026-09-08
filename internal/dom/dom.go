@@ -462,6 +462,11 @@ func (d *Document) TextContent(id int64) string {
 		}
 		var b strings.Builder
 		for _, child := range n.Children {
+			// Descendant text content excludes comments; querying a Comment's
+			// own textContent above still returns its character data.
+			if c := d.nodes[child]; c != nil && c.Type == "comment" {
+				continue
+			}
 			b.WriteString(collect(child))
 		}
 		return b.String()
