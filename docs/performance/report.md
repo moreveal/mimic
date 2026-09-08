@@ -389,3 +389,55 @@ The measurement phase completed and saved its finished raw data. The wrapper ini
 Final host replay records exactly 54,055 calls per execution, versus 60,060 before: 6,005 fewer. Mean inclusive host timer sum is 25.754 ms; this now excludes JS-side argument packing, so it is not an additive or like-for-like estimate of total bridge CPU. Final native sampling attributes about 44.10 ms/replay to anonymous/native frames, 5.63 ms to wrap, 5.03 ms to GC, 3.12 ms to observe and 2.97 ms to Proxy get. Idle/setup (19.56 ms) is excluded. These sampled and inclusive measures overlap; the full workload wall times above establish the actual gain.
 
 The final ordinary suite passes: 222 test/subtest passes, zero failures; browser 82.879 s. V8 engine race checks pass (1.478 s). Lifecycle, Unicode, fallback, reentrancy, DOM identity, iframe/shadow insertion and dynamic trace-state regressions are included. Final raw host/native profiles, build/launch receipts, crossing census, validation summary, and both close-tail diagnostics are under `docs/performance/dom-current/packed-final/`. No production code from the earlier typed-argument experiment was merged; no C++/Rust implementation or DOM ownership migration was introduced.
+
+
+## 2026-09-09 — isolated JS-owned DOM kernel, not production migration
+
+User-authorized architecture spike is isolated in `.build/jsdom-spike`, commit
+`93c1c4a`; its portable patch, receipts and raw evidence are retained in
+`docs/performance/dom-current/jsdom-spike/`. Production code is unchanged.
+
+Fresh native profiling and the required production fast gate preceded the
+experiment. All fast-gate correctness rows passed (DOM/static/React warm x5,
+static N10/25 x3, ten-Page memory). Current control DOM execution is 117.093 ms,
+so historical 73.406 ms is not used as the experiment denominator.
+
+The kernel owns its tree in JS and retains identity within that tree. The frozen
+workload source is read verbatim and evaluated with a lexical document argument;
+no frozen source, expected output, baseline or harness file changes. Native HTML
+parsing is retained. This is an explicitly incomplete diagnostic, not an alternate
+implementation that passes the full frozen matrix. Child collections are
+snapshots; general selectors, live collection branding, events, resource steps,
+shadow DOM, complete WebIDL and API access observation are missing. Go does not
+observe JS tree mutations. Initial import/compilation is measured separately.
+
+The naive prototype was slower: 227.923 vs 112.633 ms. A fresh prototype CPU
+profile identified quadratic fragment removal (143.862 ms sampled self time)
+and repeated class token parsing (46.449 ms). Bulk fragment transfer and coherent
+token caching bring the in-process comparison to 56.162 vs 112.829 ms. All exact
+result fields and independent insertion/identity/error atomicity/attribute/token/
+Unicode/comment/HTML/query assertions pass on both variants.
+
+Final CDP diagnostic, 20 samples per variant after one warmup each, ABBA order
+within each runtime (runtime blocks are sequential):
+
+| Runtime / DOM | Execution ms | Setup ms | Navigation ms | Close ms |
+|---|---:|---:|---:|---:|
+| Mimic / current | 111.271 | 0.731 | 73.617 | 6.392 |
+| Mimic / JS kernel | 56.298 | 2.993 | 75.292 | 13.007 |
+| frozen Chrome 152 / native | 45.210 | 4.298 | 27.542 | 1.698 |
+| frozen Chrome 152 / JS kernel | 26.635 | 4.874 | 27.257 | 1.486 |
+
+This is a 1.98x kernel execution improvement inside Mimic, but still 1.25x slower
+than Chrome native DOM. Setup and teardown regress. Identical kernel code is
+2.11x slower inside Mimic than Chrome in this series; the cause is not isolated.
+Investigate runtime/embedding/scheduling before assuming DOM migration alone can
+create a strong Chrome lead. No production 2x speedup is claimed.
+
+One diagnostic ten-Page wave per variant, fresh processes, serial creation and
+execution: Mimic active RSS increase 402.82 -> 319.60 MiB; after close +250 ms,
+116.38 -> 57.92 MiB above ready baseline. Serial throughput including setup and
+teardown 4.79 -> 6.31 Pages/s. These are not concurrent-capacity or long-run leak
+results. Full matrix is deliberately not claimed for this incomplete kernel.
+All benchmark executables were rebuilt and SHA-256 verified before launch;
+frozen Chrome digest and harness fingerprint were checked and recorded.
