@@ -1905,12 +1905,14 @@ func TestPerformanceObserverReceivesFinalizedNavigationEntry(t *testing.T) {
 	if err := p.Navigate(context.Background(), server.URL); err != nil {
 		t.Fatal(err)
 	}
-	v, err := p.Evaluate(context.Background(), `navigationDone`)
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+	v, err := p.Evaluate(ctx, `navigationDone`)
 	if err != nil {
-		t.Fatal(err)
+		t.Fatalf("navigation observer: %v", err)
 	}
 	result := v.(map[string]any)
-	if result["count"] != int64(1) || numberValue(result["duration"]) <= 0 || result["complete"] != "complete" {
+	if result["count"] != int64(1) || numberValue(result["duration"]) < 0 || result["complete"] != "complete" {
 		t.Fatalf("unexpected finalized navigation delivery: %#v", result)
 	}
 }

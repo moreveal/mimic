@@ -1364,7 +1364,7 @@ func (r *Realm) notifyPerformanceObservers(ctx context.Context) {
 	if r.performanceNotifier == nil {
 		return
 	}
-	if _, err := r.runtime.Call(ctx, r.performanceNotifier, nil); err != nil {
+	if _, err := r.runtime.Call(ctx, r.performanceNotifier, nil, r.val(r.agent.Page().LoadEventEnded())); err != nil {
 		r.agent.Page().trace.Add(trace.Error, "performanceObserverNotification", map[string]any{"realm": r.ID, "error": err.Error()})
 	}
 }
