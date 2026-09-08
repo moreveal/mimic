@@ -37,6 +37,9 @@ def main():
     subprocess.run(command, cwd=args.source, check=True)
     expected = frozen.digest(args.mimic)
     fingerprint, files = frozen.harness_fingerprint()
+    baseline=json.loads((ROOT/'benchmark/results/raw.json').read_text(encoding='utf-8'))
+    if fingerprint != baseline['metadata']['harness_sha256']:
+        raise RuntimeError('Frozen harness differs from immutable baseline')
     receipt = dict(command=command, source=str(args.source),
         revision=subprocess.check_output(['git','rev-parse','HEAD'],cwd=args.source,text=True).strip(),
         status=subprocess.check_output(['git','status','--porcelain'],cwd=args.source,text=True),

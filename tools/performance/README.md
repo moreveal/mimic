@@ -17,3 +17,12 @@ Check executable mismatch handling with:
 ```
 python -m unittest discover -s tools/performance -p test_fast_gate.py
 ```
+
+
+At a substantial improvement milestone, use the full wrapper:
+
+```
+python tools/performance/full_gate.py --output benchmark/runs/UNIQUE-MILESTONE --chrome PATH-TO-PINNED-CHROME
+```
+
+It runs the unchanged full matrix. Its Runtime subclass verifies the just-built Mimic executable before every launch and also verifies the pinned Chrome executable against its initial hash; `launches.jsonl` records each check. Both wrappers reject a harness fingerprint that differs from the original baseline. The original benchmark files remain untouched.
