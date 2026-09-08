@@ -427,6 +427,7 @@
       if(!expected.has(name)){const descriptor=Object.getOwnPropertyDescriptor(globalThis,name);if(descriptor&&descriptor.configurable)delete globalThis[name]}
     }
     for(const property of properties){
+      const propertyName=property.name;
       const descriptor={enumerable:property.enumerable,configurable:property.configurable};
       const current=Object.getOwnPropertyDescriptor(globalThis,property.name);
       if(property.valueType==='accessor'){
@@ -439,7 +440,7 @@
         else if(property.name in globalThis)value=globalThis[property.name];
         else if(property.valueType==='function'){
           const functionName=property.functionName||property.name;
-          value={[functionName]:function(){return host.semanticMissing('Window.'+property.name)}}[functionName];
+          value={[functionName]:function(){return host.semanticMissing('Window.'+propertyName)}}[functionName];
         }else if(property.valueType==='boolean')value=false;
         else if(property.valueType==='number')value=0;
         else if(property.valueType==='string')value='';
@@ -456,6 +457,7 @@
       const ctor=globalThis[interfaceName],prototype=ctor&&ctor.prototype;
       if(!prototype)continue;
       for(const property of members){
+        const propertyName=property.name;
         const current=Object.getOwnPropertyDescriptor(prototype,property.name);
         if(current){
           if(current.configurable){
@@ -478,14 +480,14 @@
         if(property.valueType==='accessor'&&handwrittenInterfaceConstructors.has(ctor)&&attributeUnsafeInterfaces.has(interfaceName))continue;
         const descriptor={enumerable:property.enumerable,configurable:property.configurable};
         if(property.valueType==='accessor'){
-          descriptor.get=property.getter?function(){return host.semanticMissing(interfaceName+'.'+property.name)}:undefined;
-          descriptor.set=property.setter?function(){return host.semanticMissing(interfaceName+'.'+property.name+' setter')}:undefined;
+          descriptor.get=property.getter?function(){return host.semanticMissing(interfaceName+'.'+propertyName)}:undefined;
+          descriptor.set=property.setter?function(){return host.semanticMissing(interfaceName+'.'+propertyName+' setter')}:undefined;
         }else{
           let value;
           if(property.name==='constructor')value=ctor;
           else if(property.valueType==='function'){
             const functionName=property.functionName||property.name;
-            value={[functionName]:function(){return host.semanticMissing(interfaceName+'.'+property.name)}}[functionName];
+            value={[functionName]:function(){return host.semanticMissing(interfaceName+'.'+propertyName)}}[functionName];
             if(property.functionLength!==null&&property.functionLength!==undefined)Object.defineProperty(value,'length',{value:property.functionLength,configurable:true});
           }else if(property.valueType==='boolean')value=false;
           else if(property.valueType==='number')value=0;

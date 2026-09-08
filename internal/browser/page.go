@@ -83,7 +83,7 @@ func (p *Page) initBlank() error {
 		return err
 	}
 	u, _ := url.Parse("about:blank")
-	r, err := newRealm(p, p.Top, d, u)
+	r, err := newRealmState(p, p.Top, d, u, true)
 	if err != nil {
 		return err
 	}

@@ -26,6 +26,12 @@ func newDiagnostics() *diagnosticState {
 
 func (a *adapter) ProfileEnabled() bool { return a.profile != nil }
 
+// ProfileCollect is an explicit diagnostic intervention, never benchmark policy.
+func (a *adapter) ProfileCollect() error {
+	_, err := a.owner.execute(func(s *state) response { return response{err: s.isolate.LowMemoryNotification()} })
+	return err
+}
+
 func (a *adapter) recordCost(name string, start time.Time) {
 	if a.profile == nil {
 		return

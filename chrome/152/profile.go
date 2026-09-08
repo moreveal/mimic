@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"sync"
 
 	tls_client "github.com/bogdanfinn/tls-client"
 	"github.com/bogdanfinn/tls-client/profiles"
@@ -147,7 +148,8 @@ func NewForMode(mode state.BrowserMode) (*Bundle, error) {
 func (*Bundle) Version() compatibility.ChromeVersion {
 	return compatibility.ChromeVersion{Milestone: Milestone, Version: Version, ChromiumCommit: ChromiumCommit, ChromiumRevision: ChromiumRevision}
 }
-func (*Bundle) Surface() *compatibility.WebAPISurface {
+
+var immutableSurface = sync.OnceValue(func() *compatibility.WebAPISurface {
 	return &compatibility.WebAPISurface{
 		GeneratedJavaScript: generated.Surface,
 		Exposures: map[string]compatibility.RealmExposure{
@@ -157,7 +159,9 @@ func (*Bundle) Surface() *compatibility.WebAPISurface {
 			"worker.secure.non-isolated":   generated.SecureWorkerExposure(),
 		},
 	}
-}
+})
+
+func (*Bundle) Surface() *compatibility.WebAPISurface { return immutableSurface() }
 func (*Bundle) CDP() *compatibility.ProtocolSchema {
 	return &compatibility.ProtocolSchema{Methods: generated.ProtocolMethods(), Events: generated.ProtocolEvents()}
 }
