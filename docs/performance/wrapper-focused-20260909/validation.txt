@@ -1,0 +1,4 @@
+=== RUN   TestPerformanceProfile
+    performance_profile_test.go:221: {"done":true,"result":{"count":3000,"active":3000,"last":"node-2999","children":3,"round":"3","textLength":25897},"error":null,"js_ms":0}
+--- PASS: TestPerformanceProfile (0.34s)
+PASS

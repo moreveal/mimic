@@ -1,0 +1,22 @@
+File: browser.test.exe
+Build ID: E:\GitHub\mimic\.build\wrapper-focused-profile\browser.test.exe2026-09-09 03:56:42.5511302 +0400 +04
+Type: alloc_space
+Time: 2026-09-09 03:56:43 +04
+Showing nodes accounting for 60.83MB, 78.85% of 77.15MB total
+Showing top 15 nodes out of 187
+      flat  flat%   sum%        cum   cum%
+    9.70MB 12.57% 12.57%     9.70MB 12.57%  bytes.growSlice
+    6.96MB  9.02% 21.59%    24.45MB 31.69%  github.com/moreveal/mimic/internal/webapi.selectedCatalog
+    6.04MB  7.83% 29.42%     6.04MB  7.83%  reflect.growslice
+       5MB  6.48% 35.91%    14.65MB 19.00%  github.com/moreveal/mimic/internal/engine/v8.(*adapter).makePackedFunction.func2
+    4.50MB  5.83% 41.74%    19.65MB 25.48%  github.com/maclof/gov8.hostCallbackDispatch
+    4.02MB  5.21% 46.95%    16.72MB 21.67%  encoding/json.Marshal
+       4MB  5.18% 52.13%        4MB  5.18%  reflect.unsafe_New
+    3.50MB  4.54% 56.67%    18.10MB 23.46%  encoding/json.Unmarshal
+    3.50MB  4.54% 61.21%     3.50MB  4.54%  github.com/moreveal/mimic/internal/engine/v8.(*adapter).Value
+    3.01MB  3.91% 65.11%     3.01MB  3.91%  runtime.mallocgc
+    2.56MB  3.32% 68.43%     2.56MB  3.32%  reflect.mapassign_faststr0
+    2.52MB  3.26% 71.69%     2.52MB  3.26%  github.com/maclof/gov8.InspectorStringView.String
+       2MB  2.59% 74.28%    12.06MB 15.64%  encoding/json.mapEncoder.encode
+    1.77MB  2.29% 76.58%    31.82MB 41.24%  github.com/moreveal/mimic/internal/webapi.bootstrapFor.func1
+    1.75MB  2.27% 78.85%     1.75MB  2.27%  github.com/maclof/gov8.NewInspectorStringView8
