@@ -1,5 +1,4 @@
 File: browser.test.exe
-Build ID: C:\Users\moreveal\AppData\Local\Temp\go-build3233037068\b001\browser.test.exe2026-09-08 17:56:18.4292835 +0400 +04
 Type: alloc_space
 Time: 2026-09-08 17:56:48 +04
 Showing nodes accounting for 1228.13MB, 96.00% of 1279.31MB total

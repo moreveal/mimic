@@ -416,3 +416,45 @@ func TestCDPEventLoopAdvancesTimersInRealTime(t *testing.T) {
 		}
 	}
 }
+
+// A stalled network operation on one Page must not prevent independent Pages
+// from evaluating JavaScript. The server handler barrier proves overlap.
+func TestIndependentPageCommandsDuringNavigation(t *testing.T) {
+	entered := make(chan struct{})
+	release := make(chan struct{})
+	fixture := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		close(entered)
+		<-release
+		fmt.Fprint(w, "<html><body>done</body></html>")
+	}))
+	defer fixture.Close()
+	defer close(release)
+	s, addr := runningServer(t)
+	other, err := s.Context.NewPage()
+	if err != nil {
+		t.Fatal(err)
+	}
+	first, _, err := websocket.DefaultDialer.Dial("ws://"+addr+"/devtools/page/"+s.Page.ID, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer first.Close()
+	second, _, err := websocket.DefaultDialer.Dial("ws://"+addr+"/devtools/page/"+other.ID, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer second.Close()
+	first.WriteJSON(map[string]any{"id": 1, "method": "Page.navigate", "params": map[string]any{"url": fixture.URL}})
+	readReply(t, first, 1)
+	select {
+	case <-entered:
+	case <-time.After(5 * time.Second):
+		t.Fatal("navigation did not reach barrier")
+	}
+	second.SetReadDeadline(time.Now().Add(2 * time.Second))
+	second.WriteJSON(map[string]any{"id": 2, "method": "Runtime.evaluate", "params": map[string]any{"expression": "6*7"}})
+	reply := readReply(t, second, 2)
+	if reply["result"].(map[string]any)["result"].(map[string]any)["value"] != float64(42) {
+		t.Fatal(reply)
+	}
+}

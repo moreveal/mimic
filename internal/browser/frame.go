@@ -78,7 +78,9 @@ func (r *Realm) ensureChildFrameInternal(elementID int64, shadowConnected, sched
 	if err != nil {
 		return nil, err
 	}
+	page.ctx.mu.Lock()
 	realm.origin = r.origin
+	page.ctx.mu.Unlock()
 	realm.readyState = "complete"
 	frame.Realm = realm
 	page.mu.Lock()

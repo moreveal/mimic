@@ -1,5 +1,4 @@
 File: cdp.test.exe
-Build ID: C:\Users\moreveal\AppData\Local\Temp\go-build3111908762\b001\cdp.test.exe2026-09-08 17:57:19.538359 +0400 +04
 Type: delay
 Time: 2026-09-08 17:57:21 +04
 Showing nodes accounting for 694.68ms, 100% of 694.68ms total

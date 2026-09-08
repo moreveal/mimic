@@ -131,6 +131,12 @@ func newRealm(p *Page, agent ExecutionAgent, d *dom.Document, u *url.URL) (*Real
 		r.runtime.Close()
 		return nil, err
 	}
+	p.ctx.mu.Lock()
+	if p.ctx.permissionRealms == nil {
+		p.ctx.permissionRealms = map[*Realm]struct{}{}
+	}
+	p.ctx.permissionRealms[r] = struct{}{}
+	p.ctx.mu.Unlock()
 	return r, nil
 }
 func (r *Realm) checkpoint(ctx context.Context) error {
@@ -156,6 +162,7 @@ func (r *Realm) checkpoint(ctx context.Context) error {
 func (r *Realm) Close() error {
 	c := r.agent.Page().ctx
 	c.mu.Lock()
+	delete(c.permissionRealms, r)
 	for _, state := range c.capabilities {
 		remaining := state.locks[:0]
 		for _, lock := range state.locks {
@@ -1901,6 +1908,13 @@ func numargValue(value any) int64 {
 func addStorageHosts(r *Realm, h map[string]any) {
 	p := r.agent.Page()
 	origin := r.origin
+	storageFunction := func(fn engine.Function) engine.Function {
+		return func(this engine.Value, args []engine.Value) (engine.Value, error) {
+			p.ctx.storageMu.Lock()
+			defer p.ctx.storageMu.Unlock()
+			return fn(this, args)
+		}
+	}
 	store := func(area string) map[string]string {
 		if area == "session" {
 			if p.sessionStorage[origin] == nil {
@@ -1910,10 +1924,10 @@ func addStorageHosts(r *Realm, h map[string]any) {
 		}
 		return p.ctx.store(origin)
 	}
-	h["storageLength"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	h["storageLength"] = r.fn(storageFunction(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(len(store(strarg(a, 0)))), nil
-	})
-	h["storageKey"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	}))
+	h["storageKey"] = r.fn(storageFunction(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		s := store(strarg(a, 0))
 		keys := make([]string, 0, len(s))
 		for k := range s {
@@ -1925,27 +1939,27 @@ func addStorageHosts(r *Realm, h map[string]any) {
 			return r.val(nil), nil
 		}
 		return r.val(keys[i]), nil
-	})
-	h["storageGet"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	}))
+	h["storageGet"] = r.fn(storageFunction(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		v, ok := store(strarg(a, 0))[strarg(a, 1)]
 		if !ok {
 			return r.val(nil), nil
 		}
 		return r.val(v), nil
-	})
-	h["storageSet"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	}))
+	h["storageSet"] = r.fn(storageFunction(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		store(strarg(a, 0))[strarg(a, 1)] = strarg(a, 2)
 		return nil, nil
-	})
-	h["storageRemove"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	}))
+	h["storageRemove"] = r.fn(storageFunction(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		delete(store(strarg(a, 0)), strarg(a, 1))
 		return nil, nil
-	})
-	h["storageClear"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	}))
+	h["storageClear"] = r.fn(storageFunction(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		s := store(strarg(a, 0))
 		for k := range s {
 			delete(s, k)
 		}
 		return nil, nil
-	})
+	}))
 }
