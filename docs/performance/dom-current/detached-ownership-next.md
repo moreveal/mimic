@@ -1,8 +1,10 @@
 # Next bounded ownership experiment
 
-Status: the reserved-ID importer and host bridge are implemented in the
-detached spike; automatic JS ownership and boundary hooks are not implemented.
-No performance gain is claimed for this foundation.
+Status: the detached spike now includes a pending-node store, engine boundary
+hooks, and queued plain attributes (4a1983b). It passes the ordinary Go suite
+but does not demonstrate a multiplicative latency gain and is not merged.
+Production still uses eager Go DOM. See report section 22 and the
+`detached-ownership/` and `pending-attributes/` evidence directories.
 Production reference: catalog filter 52a2aa2. Fresh profile:
 `catalog/profile/phases.json.gz`. The earlier independent JS kernel demonstrates
 that removing host calls can help, but is not a compatible replacement DOM.
@@ -16,9 +18,15 @@ through child/parent/query lookups and insertion. Go mutations after import rema
 visible to the retained JS object. This test uses a test-only closure probe;
 normal `document.createElement` is deliberately not switched to deferred storage.
 
-Reproduction patch and validation are under `detached-bridge/`. The next code
-step is a private pending-node store plus comprehensive engine entry/exit hooks;
-the correctness conditions below still apply before measuring a complete fast path.
+The original bridge patch and validation are under `detached-bridge/`.
+The stages below have since been exercised with the pending store: host counts
+fall from 54055 to 9104 per frozen DOM iteration, but execution remains around
+the production baseline. JSON replacement, read caching, and a deliberately
+invalid observation-free bound did not produce the requested speedup.
+The next experiment needs to avoid repeatedly materializing a Go mirror merely
+to answer DOM queries: retain a JS-owned tree, implement those reads in JS, and
+synchronize for actual Go consumers. Do not skip Go visibility, observation,
+resource steps, or import costs to manufacture a latency win.
 
 The next useful experiment should keep newly created, detached, plain DOM
 subtrees in JavaScript and import their state into Go in one operation when a
