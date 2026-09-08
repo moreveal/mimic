@@ -64,6 +64,7 @@ type Realm struct {
 	resourceContext     context.Context
 	cancelResources     context.CancelFunc
 	resourceWG          sync.WaitGroup
+	nativePollQueued    bool
 }
 
 // documentURL is the URL observed by this realm. For the top-level realm it
@@ -133,10 +134,23 @@ func newRealm(p *Page, agent ExecutionAgent, d *dom.Document, u *url.URL) (*Real
 	return r, nil
 }
 func (r *Realm) checkpoint(ctx context.Context) error {
+	var err error
 	if checkpoint, ok := r.runtime.(interface{ MicrotaskCheckpointContext(context.Context) error }); ok {
-		return checkpoint.MicrotaskCheckpointContext(ctx)
+		err = checkpoint.MicrotaskCheckpointContext(ctx)
+	} else {
+		err = r.runtime.MicrotaskCheckpoint()
 	}
-	return r.runtime.MicrotaskCheckpoint()
+	if err != nil {
+		return err
+	}
+	if native, ok := r.runtime.(interface{ NativeTasksPending() bool }); ok && native.NativeTasksPending() && !r.nativePollQueued {
+		r.nativePollQueued = true
+		r.scheduler.Post(scheduler.Control, time.Millisecond, func(context.Context) error {
+			r.nativePollQueued = false
+			return nil // The scheduler performs the checkpoint after this task.
+		})
+	}
+	return nil
 }
 
 func (r *Realm) Close() error {

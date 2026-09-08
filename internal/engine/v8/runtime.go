@@ -64,6 +64,7 @@ type adapter struct {
 	modules        []*gov8.Module
 	moduleCache    map[string]*gov8.Module
 	moduleNames    map[*gov8.Module]string
+	nativePending  bool // actor-thread only; foreground/background V8 tasks
 }
 
 type runtimeValue struct {
@@ -577,9 +578,50 @@ func (a *adapter) MicrotaskCheckpoint() error {
 
 func (a *adapter) MicrotaskCheckpointContext(ctx context.Context) error {
 	_, err := a.runContext(ctx, func(s *state, _ *gov8.Context, _ *gov8.Scope) (engine.Value, error) {
-		return nil, s.isolate.PerformMicrotaskCheckpoint()
+		// Native asynchronous compilation (notably WebAssembly) posts foreground
+		// tasks outside the Promise microtask queue. Pump them without blocking,
+		// on the isolate owner, before completing the browser checkpoint.
+		pending, err := s.isolate.HasPendingBackgroundTasks()
+		if err != nil {
+			return nil, err
+		}
+		a.nativePending = pending
+		for {
+			if err := ctx.Err(); err != nil {
+				return nil, err
+			}
+			ran, err := s.isolate.PumpMessageLoop(false)
+			if err != nil {
+				return nil, err
+			}
+			if !ran {
+				break
+			}
+			a.nativePending = true
+			if err := s.isolate.PerformMicrotaskCheckpoint(); err != nil {
+				return nil, err
+			}
+		}
+		if err := s.isolate.PerformMicrotaskCheckpoint(); err != nil {
+			return nil, err
+		}
+		// A Promise reaction can itself start native asynchronous work.
+		pending, err = s.isolate.HasPendingBackgroundTasks()
+		a.nativePending = a.nativePending || pending
+		return nil, err
 	})
 	return err
+}
+
+// NativeTasksPending requests another browser task boundary while native work
+// is outstanding. No background goroutine may enter the JavaScript isolate.
+func (a *adapter) NativeTasksPending() bool {
+	var pending bool
+	_, _ = a.run(func(_ *state, _ *gov8.Context, _ *gov8.Scope) (engine.Value, error) {
+		pending = a.nativePending
+		return nil, nil
+	})
+	return pending
 }
 
 func (a *adapter) SetGlobalAccessObserver(observer func(name string, supported bool)) {

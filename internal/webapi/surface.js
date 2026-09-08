@@ -102,7 +102,7 @@
   class DocumentFragment extends Node {
     constructor(token){super(host.token());fragmentSlots.set(this,{children:[],html:''})}
     get nodeName(){return'#document-fragment'}
-    get textContent(){const state=fragmentState(this);return state.children.length?state.children.map(child=>child.textContent||'').join(''):state.html.replace(/<[^>]*>/g,'')}
+    get textContent(){const state=fragmentState(this);return state.children.length?state.children.filter(child=>child.nodeType!==8).map(child=>child.textContent||'').join(''):state.html.replace(/<[^>]*>/g,'')}
     set textContent(value){const state=fragmentState(this);for(const child of state.children)syntheticParents.delete(child);state.children=[];state.html=value==null?'':String(value)}
     get children(){return htmlCollection(()=>fragmentState(this).children.map(child=>elementSlot(child)).filter(Boolean))}
     get firstElementChild(){return fragmentState(this).children.find(child=>child instanceof Element)||null}
@@ -140,6 +140,31 @@
   def(Element.prototype,'matches',{value:function(selectors){return String(selectors).split(',').some(selector=>cssSelectorMatch(this,selector))},writable:true});
   def(Element.prototype,'webkitMatchesSelector',{value:Element.prototype.matches,writable:true});
   def(Element.prototype,'closest',{value:function(selectors){for(let element=this;element instanceof Element;element=element.parentElement)if(element.matches(selectors))return element;return null},writable:true});
+  def(Node.prototype,'ownerDocument',{get:function(){return this instanceof Document?null:document},enumerable:true});
+  // A fragment contributes its children, in order, and is empty afterwards.
+  // Keep canonical host nodes; only detach the synthetic fragment parent link.
+  const appendNode=Node.prototype.appendChild,insertNode=Node.prototype.insertBefore;
+  const prepareInsertion=(parent,node,before)=>{
+    if(!(node instanceof Node))throw new TypeError('Expected a Node');
+    if(!(parent instanceof Element)&&!fragmentSlots.has(parent))throw new DOMException('Unsupported parent node.','HierarchyRequestError');
+    if(before!=null&&before.parentNode!==parent)throw new DOMException('Reference node is not a child.','NotFoundError');
+    if(node===parent||node.contains(parent))throw new DOMException('Insertion would create a cycle.','HierarchyRequestError');
+  };
+  const detachForInsertion=(parent,node)=>{
+    const old=syntheticParents.get(node)||(fragmentSlots.has(parent)?node.parentNode:null);
+    if(old)old.removeChild(node);
+  };
+  def(Node.prototype,'appendChild',{value:function(node){
+    prepareInsertion(this,node,null);
+    if(fragmentSlots.has(node)){for(const child of Array.from(fragmentState(node).children))this.appendChild(child);return node}
+    detachForInsertion(this,node);return appendNode.call(this,node);
+  },writable:true});
+  def(Node.prototype,'insertBefore',{value:function(node,before){
+    prepareInsertion(this,node,before);
+    if(node===before)return node;
+    if(fragmentSlots.has(node)){for(const child of Array.from(fragmentState(node).children))this.insertBefore(child,before);return node}
+    detachForInsertion(this,node);return insertNode.call(this,node,before);
+  },writable:true});
   const styleCache=new WeakMap();
   const domRectSlots=new WeakMap();
   class DOMRectReadOnly { constructor(x=0,y=0,width=0,height=0){const left=Number(x),top=Number(y),w=Number(width),h=Number(height);domRectSlots.set(this,{x:left,y:top,width:w,height:h,left:Math.min(left,left+w),right:Math.max(left,left+w),top:Math.min(top,top+h),bottom:Math.max(top,top+h)})} get x(){return domRectSlots.get(this).x} get y(){return domRectSlots.get(this).y} get width(){return domRectSlots.get(this).width} get height(){return domRectSlots.get(this).height} get top(){return domRectSlots.get(this).top} get right(){return domRectSlots.get(this).right} get bottom(){return domRectSlots.get(this).bottom} get left(){return domRectSlots.get(this).left} toJSON(){return{...domRectSlots.get(this)}} static fromRect(other={}){return new DOMRectReadOnly(other.x||0,other.y||0,other.width||0,other.height||0)} }
@@ -381,6 +406,7 @@
   window.chrome={loadTimes:chromeLoadTimes,csi:chromeCSI,app:chromeApp};
   def(window,'innerWidth',{get:()=>host.viewport().width});def(window,'innerHeight',{get:()=>host.viewport().height});def(window,'outerWidth',{get:()=>host.viewport().outerWidth});def(window,'outerHeight',{get:()=>host.viewport().outerHeight});def(window,'devicePixelRatio',{get:()=>host.screen().devicePixelRatio});
   const timerHandler=(handler,args)=>typeof handler==='function'?()=>handler(...args):(()=>{const source=String(handler);return()=>eval(source)})();window.setTimeout=function setTimeout(handler,timeout=0,...args){return host.setTimer(timerHandler(handler,args),Number(timeout),false)};window.setInterval=function setInterval(handler,timeout=0,...args){return host.setTimer(timerHandler(handler,args),Number(timeout),true)};window.clearTimeout=function clearTimeout(id){return host.clearTimer(Number(id))};window.clearInterval=function clearInterval(id){return host.clearTimer(Number(id))};window.requestAnimationFrame=function requestAnimationFrame(callback){if(typeof callback!=='function')throw new TypeError('callback is not a function');return host.setTimer(()=>callback(performance.now()),16,false)};window.cancelAnimationFrame=function cancelAnimationFrame(id){return host.clearTimer(Number(id))};
+  window.postMessage=function postMessage(message,targetOrigin='/',transfer=[]){if(targetOrigin&&typeof targetOrigin==='object'){transfer=targetOrigin.transfer||[];targetOrigin=targetOrigin.targetOrigin===undefined?'/':targetOrigin.targetOrigin}return host.framePost(host.selfFrameID(),message,String(targetOrigin),takeMessagePorts(transfer))};
   window.queueMicrotask=function queueMicrotask(callback){if(typeof callback!=='function')throw new TypeError('callback is not a function');Promise.resolve().then(callback)};
   window.fetch=function fetch(input,init={}){const request=input instanceof Request?new Request(input,init):new Request(input,init);return host.fetch(request.url,request.method,Object.fromEntries(request.headers),request.body==null?'':String(request.body)).then(r=>{const response=new Response(r.body,{status:r.status,headers:r.headers});const state=responseSlots.get(response);state.url=r.url;return response})};
   window.performance=Object.create(Performance.prototype);window.Performance=Performance;window.PerformanceEntry=PerformanceEntry;window.PerformanceServerTiming=PerformanceServerTiming;window.PerformanceResourceTiming=PerformanceResourceTiming;window.PerformanceNavigationTiming=PerformanceNavigationTiming;window.PerformanceObserverEntryList=PerformanceObserverEntryList;window.PerformanceObserver=PerformanceObserver;
