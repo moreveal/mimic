@@ -629,3 +629,74 @@ an explicit test-only probe of the bridge, not a substituted workload.
 Patch and validation are in `dom-current/detached-bridge/`. Next are the private
 JS pending store and complete entry/exit, microtask, error and reentrant-host
 synchronization; benchmark only when their cost is included in normal execution.
+
+## 22: Pending DOM and attribute ownership experiments (2026-09-09)
+
+Detached spike ab5d374 enables the ordinary WebAPI creation path to stage plain
+detached nodes in JS. Unknown host operations and outer engine operations flush
+the forest; callback-local calls and property access also synchronize before
+Go resumes. The original wrappers remain canonical. The ordinary Go suite
+passes (256 test/package pass events), including added Promise, timer, module,
+throw, Unicode, reentrant host reads, and Go mutation checks. An initial Unicode
+normalization bug and missing nested-call flush were caught and fixed.
+
+An initial JSON implementation made 3001 imports because a missing parent was
+returned as 0 rather than null. Correcting that reduced imports to two, but JSON
+materialization still cost about 15.5 ms in a profiled warm iteration. A private
+length-prefixed UTF-8 stream reduced measured Go import time to about 5 ms.
+Neither serialization format changes a Web API. All frozen workloads and harness
+files are unchanged; each benchmark executable was rebuilt and hash-verified.
+
+Fresh production control -> ab5d374 fast gate:
+
+| Metric | Control | Detached spike |
+|---|---:|---:|
+| DOM execution ms | 79.197 | 74.556 |
+| DOM completion ms | 125.965 | 119.036 |
+| static completion ms | 47.964 | 47.753 |
+| React execution ms | 31.032 | 33.159 |
+| React completion ms | 85.765 | 88.148 |
+| static N10 median Pages/s | 54.84 | 53.95 |
+| static N25 median Pages/s | 70.89 | 62.84 |
+| static marginal RSS MiB/Page | 25.006 | 25.043 |
+| React marginal RSS MiB/Page | 29.185 | 28.913 |
+| static recovered RSS MiB | 74.016 | 73.055 |
+| React recovered RSS MiB | 89.762 | 88.016 |
+
+Completion excludes session creation/teardown. Their costs remain included in
+throughput; session creation is noisy and also regressed in several spike rows.
+The modest DOM delta does not justify a production ownership change. Evidence
+and patch: `dom-current/detached-ownership/`. No full-matrix result is claimed
+for this experimental branch; production remains the full07 implementation.
+
+The next experimental commit, 4a1983b, also queues ordinary attributes on nodes
+created through the private plain-node path. Resource elements stay eager.
+Attribute batches validate before writing; cached reads survive only the exact
+Go queryAll/queryAllWithin functions which have no mutation or trace callbacks.
+Other host calls, API observations, and engine boundaries invalidate the cache.
+Tests cover raw duplicate classes, writes after cached reads, canonical Go writes
+between evaluations, and queued writes on throws. The full ordinary Go suite
+passes (258 test/package pass events, zero failures).
+
+Without the read cache, 12000 toggle calls became 12000 getAttribute calls plus
+serialization; DOM execution regressed to 83.860 ms. With the cache, it is
+78.366 ms and completion 123.122 ms; React execution/completion 34.757/87.969 ms.
+N10/N25 median throughput is 54.48/73.67 Pages/s. These later short runs have
+uncontrolled workstation variation; there is no demonstrated multiplicative
+latency improvement. Four fresh warm profiles consistently count **9104** host
+crossings, down from production's **54055**, including 3003 insertPlain,
+3002 getAttribute, 3001 contains, six attribute batches and five node imports.
+Counts exclude profiling callbacks. Almost 6x fewer crossings is not 6x faster.
+
+A deliberately invalid diagnostic, 793513d, disables only DOM Proxy observation
+to bound its overhead. Execution/completion becomes 69.032/113.874 ms, still far
+from a multiplicative gain. Its observation regression test fails on both V8 and
+Goja, as expected; it must not be presented or merged as a valid optimization.
+Attribute evidence and both patches: `dom-current/pending-attributes/`.
+
+These experiments remain separate. Their result changes the next architectural
+question: avoid repeated JS/Go tree work and materialization at read-only DOM
+queries, rather than treating crossing count as the objective. A persistent
+JS-owned tree with JS queries and explicit synchronization for actual Go consumers
+is still unimplemented. It must retain the existing bindings, tracing, resources,
+Go visibility and per-Page scheduling before any Chrome lead can be claimed.
