@@ -812,3 +812,38 @@ there without its `.txt` suffix, compile it with `go test -c`, verify/log its
 SHA-256 immediately before launch, and run the test binary from the repository
 root. The saved hash receipt identifies the successful diagnostic executable.
 The frozen harness fingerprint is unchanged. No production code is promoted.
+
+The next standalone proof connects the restored surface to an actual gov8 Go
+callback, bound after restoration through a private lexical dispatch variable.
+It then deletes the temporary global binding. Ordinary localStorage.getItem and
+setItem calls reach separate Go maps in three successive isolates; all begin
+empty, return their own written value, keep sessionStorage separate, and leave
+the temporary binding unavailable. Each isolate makes six live calls including
+API observations. This verifies native dispatch after restoration, not the
+browser's real storage backend, scheduler, or concurrent Page behavior.
+
+Discarding the recorded bootstrap replies before serialization reduces the
+snapshot from 9,487,232 to 6,703,584 bytes. The final diagnostic test passes;
+restoration samples are 9.965 / 10.192 / 9.535 ms, snapshot creation 96.341 ms.
+There is still no actual Page latency or RSS result for snapshot restoration.
+The live test source, output and executable hash receipt are saved alongside
+the earlier replay proof.
+
+The source audit narrows integration requirements:
+
+| Captured state | Required treatment before exposing a restored Page |
+|---|---|
+| 410 capabilityState calls, all feature queries | Select a matching immutable feature/profile configuration; do not reuse across incompatible exposure shapes |
+| token | Rebind the private constructor guard for the new Realm |
+| intlEnvironment | Refresh the locale/time-zone object captured by Intl wrappers |
+| permissionsPolicy | Rebuild the private clause/origin slots for the existing canonical policy object |
+| documentSecurity | Match exposure and refresh values captured by security getters |
+| windowRelations | Reconstruct top/parent references, including remote WindowProxy relationships |
+| viewport/screen | Audit exposure normalization: ordinary accessors are dynamic, but normalization may capture values |
+| ready | Enable API tracking on the actual new Realm after binding, exactly once |
+
+The engine currently initializes its Promise factory and time source around a
+fresh context. Restoring a surface cannot bypass those steps or move their cost
+outside measurement. The next implementation must integrate at the engine/context
+creation boundary and finish binding before user scripts can run; replacing the
+context after Go handles or scheduler callbacks exist would invalidate them.
