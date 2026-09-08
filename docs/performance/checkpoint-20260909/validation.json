@@ -1,0 +1,122 @@
+{
+  "checkpoint-correctness": {
+    "passes": 242,
+    "failures": [],
+    "packages": [
+      {
+        "Time": "2026-09-09T03:47:22.9527023+04:00",
+        "Action": "pass",
+        "Package": "github.com/moreveal/mimic/chrome",
+        "Elapsed": 0
+      },
+      {
+        "Time": "2026-09-09T03:47:22.9527023+04:00",
+        "Action": "pass",
+        "Package": "github.com/moreveal/mimic/chrome/152",
+        "Elapsed": 0
+      },
+      {
+        "Time": "2026-09-09T03:47:25.3958531+04:00",
+        "Action": "pass",
+        "Package": "github.com/moreveal/mimic/internal/csp",
+        "Elapsed": 0
+      },
+      {
+        "Time": "2026-09-09T03:47:25.3958531+04:00",
+        "Action": "pass",
+        "Package": "github.com/moreveal/mimic/internal/engine/goja",
+        "Elapsed": 0
+      },
+      {
+        "Time": "2026-09-09T03:47:25.396396+04:00",
+        "Action": "pass",
+        "Package": "github.com/moreveal/mimic/internal/dom",
+        "Elapsed": 0.001
+      },
+      {
+        "Time": "2026-09-09T03:47:25.396396+04:00",
+        "Action": "pass",
+        "Package": "github.com/moreveal/mimic/internal/engine/quickjs",
+        "Elapsed": 0.001
+      },
+      {
+        "Time": "2026-09-09T03:47:25.3969309+04:00",
+        "Action": "pass",
+        "Package": "github.com/moreveal/mimic/internal/state",
+        "Elapsed": 0.001
+      },
+      {
+        "Time": "2026-09-09T03:47:25.3979727+04:00",
+        "Action": "pass",
+        "Package": "github.com/moreveal/mimic/internal/webapi",
+        "Elapsed": 0.002
+      },
+      {
+        "Time": "2026-09-09T03:47:25.3990048+04:00",
+        "Action": "pass",
+        "Package": "github.com/moreveal/mimic/internal/scheduler",
+        "Elapsed": 0.003
+      },
+      {
+        "Time": "2026-09-09T03:47:25.3990048+04:00",
+        "Action": "pass",
+        "Package": "github.com/moreveal/mimic/internal/network",
+        "Elapsed": 0.003
+      },
+      {
+        "Time": "2026-09-09T03:47:25.5579922+04:00",
+        "Action": "pass",
+        "Package": "github.com/moreveal/mimic/cmd/mimic",
+        "Elapsed": 0.197
+      },
+      {
+        "Time": "2026-09-09T03:47:25.7802085+04:00",
+        "Action": "pass",
+        "Package": "github.com/moreveal/mimic/internal/engine/v8",
+        "Elapsed": 0.384
+      },
+      {
+        "Time": "2026-09-09T03:47:26.2891556+04:00",
+        "Action": "pass",
+        "Package": "github.com/moreveal/mimic/internal/cdp",
+        "Elapsed": 0.893
+      },
+      {
+        "Time": "2026-09-09T03:48:36.395485+04:00",
+        "Action": "pass",
+        "Package": "github.com/moreveal/mimic/internal/browser",
+        "Elapsed": 71
+      }
+    ]
+  },
+  "checkpoint-race": {
+    "passes": 33,
+    "failures": [],
+    "packages": [
+      {
+        "Time": "2026-09-09T03:49:15.6045279+04:00",
+        "Action": "pass",
+        "Package": "github.com/moreveal/mimic/internal/engine/v8",
+        "Elapsed": 1.764
+      },
+      {
+        "Time": "2026-09-09T03:49:18.5486905+04:00",
+        "Action": "pass",
+        "Package": "github.com/moreveal/mimic/internal/cdp",
+        "Elapsed": 3.042
+      }
+    ]
+  },
+  "checkpoint-snapshot-race": {
+    "passes": 3,
+    "failures": [],
+    "packages": [
+      {
+        "Time": "2026-09-09T03:49:24.9418504+04:00",
+        "Action": "pass",
+        "Package": "github.com/moreveal/mimic/internal/browser",
+        "Elapsed": 2.649
+      }
+    ]
+  }
+}

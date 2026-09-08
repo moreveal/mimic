@@ -1,0 +1,506 @@
+diff --git a/internal/browser/realm.go b/internal/browser/realm.go
+index 85e2095..b31fedb 100644
+--- a/internal/browser/realm.go
++++ b/internal/browser/realm.go
+@@ -1385,7 +1385,17 @@ func (r *Realm) install() error {
+ 			return e
+ 		}
+ 	}
+-	_, err := r.runtime.Eval(context.Background(), source, "mimic:webapi-surface")
++	restored := false
++	var err error
++	if snapshot, ok := r.runtime.(interface{ RestoreSurface(string) (bool, error) }); ok {
++		restored, err = snapshot.RestoreSurface(source)
++		if err != nil {
++			return err
++		}
++	}
++	if !restored {
++		_, err = r.runtime.Eval(context.Background(), source, "mimic:webapi-surface")
++	}
+ 	if err != nil {
+ 		return err
+ 	}
+diff --git a/internal/browser/snapshot_page_test.go b/internal/browser/snapshot_page_test.go
+new file mode 100644
+index 0000000..d4d2f67
+--- /dev/null
++++ b/internal/browser/snapshot_page_test.go
+@@ -0,0 +1,65 @@
++package browser
++
++import (
++	"context"
++	chrome152 "github.com/moreveal/mimic/chrome/152"
++	v8engine "github.com/moreveal/mimic/internal/engine/v8"
++	"net/http"
++	"net/http/httptest"
++	"os"
++	"path/filepath"
++	"testing"
++	"time"
++)
++
++func TestSnapshotActualPage(t *testing.T) {
++	dir := os.Getenv("MIMIC_SNAPSHOT_PROOF_DIR")
++	if dir == "" {
++		t.Skip("opt-in snapshot Page proof")
++	}
++	read := func(name string) []byte {
++		t.Helper()
++		v, e := os.ReadFile(filepath.Join(dir, name))
++		if e != nil {
++			t.Fatal(e)
++		}
++		return v
++	}
++	b, e := New(v8engine.SnapshotFactory{Bytes: read("page-bootstrap.blob"), SurfaceSource: string(read("bootstrap-capture.js")), BootstrapCalls: string(read("bootstrap-capture.json"))}, chrome152.New())
++	if e != nil {
++		t.Fatal(e)
++	}
++	c := b.NewContext()
++	defer c.Close()
++	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
++		w.Header().Set("Content-Type", "text/html")
++		w.Write([]byte(`<!doctype html><html><head><title>Restored</title></head><body><div id="root">seed</div></body></html>`))
++	}))
++	defer server.Close()
++	for i := 0; i < 3; i++ {
++		p, e := c.NewPage()
++		if e != nil {
++			t.Fatal(e)
++		}
++		start := time.Now()
++		if e = p.Navigate(context.Background(), server.URL); e != nil {
++			t.Fatal(e)
++		}
++		t.Log("actual Page navigation", time.Since(start))
++		clock, e := p.Evaluate(context.Background(), `[performance.now(),performance.now(),performance.timeOrigin,Date.now()]`)
++		if e != nil {
++			t.Fatal(e)
++		}
++		t.Log("clocks", clock)
++		value, e := p.Top.Realm.runtime.Eval(context.Background(), `(()=>{const root=document.getElementById('root'),node=document.createElement('span');node.textContent='live';root.appendChild(node);return [document.title,root===document.getElementById('root'),root.textContent,window===top,window===parent].join(',')})()`, "snapshot:page-proof")
++		if e != nil {
++			t.Fatal(e)
++		}
++		if value.String() != "Restored,true,seedlive,true,true" {
++			t.Fatal(value.String())
++		}
++		if e = p.Close(); e != nil {
++			t.Fatal(e)
++		}
++	}
++}
+diff --git a/internal/browser/snapshot_react_test.go b/internal/browser/snapshot_react_test.go
+new file mode 100644
+index 0000000..5fe28cd
+--- /dev/null
++++ b/internal/browser/snapshot_react_test.go
+@@ -0,0 +1,71 @@
++package browser
++
++import (
++	"context"
++	chrome152 "github.com/moreveal/mimic/chrome/152"
++	v8engine "github.com/moreveal/mimic/internal/engine/v8"
++	"net/http"
++	"net/http/httptest"
++	"os"
++	"path/filepath"
++	"testing"
++	"time"
++)
++
++func TestSnapshotReactProof(t *testing.T) {
++	dir := os.Getenv("MIMIC_SNAPSHOT_PROOF_DIR")
++	if dir == "" {
++		t.Skip("opt-in")
++	}
++	read := func(name string) []byte {
++		v, e := os.ReadFile(filepath.Join(dir, name))
++		if e != nil {
++			t.Fatal(e)
++		}
++		return v
++	}
++	b, e := New(v8engine.SnapshotFactory{Bytes: read("page-bootstrap.blob"), SurfaceSource: string(read("bootstrap-capture.js")), BootstrapCalls: string(read("bootstrap-capture.json"))}, chrome152.New())
++	if e != nil {
++		t.Fatal(e)
++	}
++	c := b.NewContext()
++	defer c.Close()
++	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
++		if r.URL.Path != "/" {
++			data, e := os.ReadFile(filepath.Join("../../benchmark/fixtures/vendor", filepath.Base(r.URL.Path)))
++			if e != nil {
++				http.NotFound(w, r)
++				return
++			}
++			w.Header().Set("Content-Type", "text/javascript")
++			w.Write(data)
++			return
++		}
++		w.Header().Set("Content-Type", "text/html")
++		w.Write([]byte(`<!doctype html><html><head><script src="/react.production.min.js"></script><script src="/react-dom.production.min.js"></script></head><body><div id="root"></div></body></html>`))
++	}))
++	defer server.Close()
++	p, e := c.NewPage()
++	if e != nil {
++		t.Fatal(e)
++	}
++	defer p.Close()
++	if e = p.Navigate(context.Background(), server.URL); e != nil {
++		t.Fatal(e)
++	}
++	if _, e = p.Evaluate(context.Background(), `ReactDOM.createRoot(document.getElementById('root')).render(React.createElement('b',null,'react'))`); e != nil {
++		t.Fatal(e)
++	}
++	for i := 0; i < 5; i++ {
++		value, e := p.Evaluate(context.Background(), `(()=>{const s=React.__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED.Scheduler;return {text:document.getElementById('root').textContent,now:s.unstable_now(),yield:s.unstable_shouldYield(),task:s.unstable_getFirstCallbackNode()}})()`)
++		if e != nil {
++			t.Fatal(e)
++		}
++		t.Log(value)
++		if m, ok := value.(map[string]any); ok && m["text"] == "react" {
++			return
++		}
++		time.Sleep(10 * time.Millisecond)
++	}
++	t.Fatal("React did not render")
++}
+diff --git a/internal/engine/v8/runtime.go b/internal/engine/v8/runtime.go
+index 1908d08..550f649 100644
+--- a/internal/engine/v8/runtime.go
++++ b/internal/engine/v8/runtime.go
+@@ -9,6 +9,7 @@ import (
+ 	"fmt"
+ 	"math"
+ 	"os"
++	"path/filepath"
+ 	"reflect"
+ 	"sync"
+ 	"time"
+@@ -22,14 +23,47 @@ import (
+ type Factory struct{}
+ 
+ // SnapshotFactory is an opt-in experiment, not selected by the browser.
+-type SnapshotFactory struct{ Bytes []byte }
++type SnapshotFactory struct {
++	Bytes          []byte
++	SurfaceSource  string
++	BootstrapCalls string
++}
+ 
+-func (f SnapshotFactory) New() engine.Runtime { return newAdapter(f.Bytes) }
++func (f SnapshotFactory) New() engine.Runtime {
++	a := newAdapter(f.Bytes).(*adapter)
++	a.snapshotSource = f.SurfaceSource
++	a.snapshotCalls = f.BootstrapCalls
++	return a
++}
+ 
+ func (Factory) New() engine.Runtime {
++	if os.Getenv("MIMIC_EXPERIMENT_SNAPSHOT_DIR") != "" {
++		f, err := experimentSnapshot()
++		if err != nil {
++			panic(err)
++		}
++		return f.New()
++	}
+ 	return newAdapter(nil)
+ }
+ 
++var experimentSnapshot = sync.OnceValues(func() (SnapshotFactory, error) {
++	dir := os.Getenv("MIMIC_EXPERIMENT_SNAPSHOT_DIR")
++	b, e := os.ReadFile(filepath.Join(dir, "page-bootstrap.blob"))
++	if e != nil {
++		return SnapshotFactory{}, e
++	}
++	s, e := os.ReadFile(filepath.Join(dir, "bootstrap-capture.js"))
++	if e != nil {
++		return SnapshotFactory{}, e
++	}
++	c, e := os.ReadFile(filepath.Join(dir, "bootstrap-capture.json"))
++	if e != nil {
++		return SnapshotFactory{}, e
++	}
++	return SnapshotFactory{Bytes: b, SurfaceSource: string(s), BootstrapCalls: string(c)}, nil
++})
++
+ func newAdapter(snapshot []byte) engine.Runtime {
+ 	profile := newDiagnostics()
+ 	var started time.Time
+@@ -80,6 +114,8 @@ type callbackContext struct {
+ }
+ 
+ type adapter struct {
++	snapshotSource   string
++	snapshotCalls    string
+ 	profile          *diagnosticState
+ 	owner            *Runtime
+ 	realm            *Realm
+@@ -105,6 +141,27 @@ type adapter struct {
+ 	nativePending    bool               // actor-thread only; foreground/background V8 tasks
+ }
+ 
++// RestoreSurface is a guarded experimental Page integration. Mismatches fail
++// closed; automatic fallback/selection is deliberately not implemented yet.
++func (a *adapter) RestoreSurface(source string) (bool, error) {
++	if a.snapshotSource == "" {
++		return false, nil
++	}
++	if source != a.snapshotSource {
++		return false, fmt.Errorf("snapshot surface source mismatch")
++	}
++	if !json.Valid([]byte(a.snapshotCalls)) {
++		return false, fmt.Errorf("snapshot contract invalid")
++	}
++	_, err := a.Eval(context.Background(), `(()=>{const calls=`+a.snapshotCalls+`;for(const call of calls){
++ const name=call.name;if(['token','intlEnvironment','permissionsPolicy','ready','viewport','screen'].includes(name))continue;
++ const current=__mimic[name](...JSON.parse(call.args));
++ if(name==='windowRelations'){const previous=JSON.parse(call.result);for(const k of ['top','parent'])if((current[k]===current.self)!==(previous[k]===previous.self))throw Error('snapshot frame topology mismatch');if(current.top!==current.self||current.parent!==current.self)throw Error('snapshot remote frames unsupported');continue;}
++ if(JSON.stringify(current)!==call.result)throw Error('snapshot configuration mismatch: '+name);
++ }snapshotLiveHost=((live)=>(name,...args)=>live[name](...args))(__mimic);__mimicRestoreSurface(__mimic);delete globalThis.__mimicRestoreSurface;})()`, "mimic:snapshot-rebind")
++	return err == nil, err
++}
++
+ // Transient arguments cannot escape the synchronous host call. A frame stays
+ // checked out until the return value is marshalled, including nested JS calls.
+ // Clearing it prevents closed scopes and host objects from becoming roots.
+diff --git a/internal/webapi/snapshot.go b/internal/webapi/snapshot.go
+index 80fbbc1..fa0b251 100644
+--- a/internal/webapi/snapshot.go
++++ b/internal/webapi/snapshot.go
+@@ -25,6 +25,11 @@ func SnapshotSurface(source string) (string, error) {
+     Object.assign(intlEnvironment,nextIntl);
+     const replacement=new PermissionsPolicy(hostToken,nextPolicy);
+     permissionsPolicySlots.set(documentPolicy,permissionsPolicySlots.get(replacement));
++    const viewport=host.viewport(),screenState=host.screen();
++    for(const [name,value] of Object.entries({innerWidth:viewport.width,innerHeight:viewport.height,outerWidth:viewport.outerWidth,outerHeight:viewport.outerHeight,devicePixelRatio:screenState.devicePixelRatio})){
++      const descriptor=Object.getOwnPropertyDescriptor(globalThis,name);
++      if(descriptor&&'value' in descriptor)Object.defineProperty(globalThis,name,{value});
++    }
+     tracedAccesses.clear();
+     host.ready();
+   }});
+diff --git a/tools/performance/build_page_snapshot_test.go.txt b/tools/performance/build_page_snapshot_test.go.txt
+new file mode 100644
+index 0000000..e8db687
+--- /dev/null
++++ b/tools/performance/build_page_snapshot_test.go.txt
+@@ -0,0 +1,214 @@
++package snapshotprobe
++
++import (
++	"context"
++	"fmt"
++	gov8 "github.com/maclof/gov8"
++	"github.com/moreveal/mimic/internal/engine"
++	v8engine "github.com/moreveal/mimic/internal/engine/v8"
++	"github.com/moreveal/mimic/internal/webapi"
++	"os"
++	"testing"
++	"time"
++)
++
++func TestRealBootstrapSnapshotRebind(t *testing.T) {
++	initialRuntime, initErr := v8engine.NewRuntime()
++	if initErr != nil {
++		t.Fatal(initErr)
++	}
++	if err := initialRuntime.Dispose(); err != nil {
++		t.Fatal(err)
++	}
++	source, err := os.ReadFile(".build/bootstrap-capture.js")
++	if err != nil {
++		t.Fatal(err)
++	}
++	calls, err := os.ReadFile(".build/bootstrap-capture.json")
++	if err != nil {
++		t.Fatal(err)
++	}
++	eval := func(ctx *gov8.Context, scope *gov8.Scope, source string) string {
++		t.Helper()
++		script, e := ctx.Compile(scope, source, nil)
++		if e != nil {
++			t.Fatal(e)
++		}
++		defer script.Close()
++		value, e := script.Run(scope, nil)
++		if e != nil {
++			t.Fatal(e)
++		}
++		result, e := value.ToString(ctx)
++		if e != nil {
++			t.Fatal(e)
++		}
++		return result
++	}
++	creator, err := gov8.NewSnapshotCreator()
++	if err != nil {
++		t.Fatal(err)
++	}
++	ctx, err := creator.Isolate().NewContext()
++	if err != nil {
++		t.Fatal(err)
++	}
++	scope, err := creator.Isolate().NewScope()
++	if err != nil {
++		t.Fatal(err)
++	}
++	eval(ctx, scope, `let snapshotReplies=`+string(calls)+`;let snapshotIndex=0,snapshotLiveHost=null;globalThis.__mimic=new Proxy({}, {get(target,name){return (...args)=>{if(snapshotLiveHost)return snapshotLiveHost(name,...args);const next=snapshotReplies[snapshotIndex++];if(!next||next.name!==name||next.args!==JSON.stringify(args))throw Error('replay mismatch '+name+' at '+(snapshotIndex-1));return next.result===undefined?undefined:JSON.parse(next.result)}}});void 0;`)
++	start := time.Now()
++	prepared, err := webapi.SnapshotSurface(string(source))
++	if err != nil {
++		t.Fatal(err)
++	}
++	eval(ctx, scope, prepared)
++	t.Log("replayed bootstrap", time.Since(start))
++	t.Log("calls replayed", eval(ctx, scope, `snapshotIndex`))
++	eval(ctx, scope, `snapshotReplies=null;delete globalThis.WebAssembly;void 0`)
++	if err := creator.SetDefaultContext(ctx); err != nil {
++		t.Fatal(err)
++	}
++	scope.Close()
++	ctx.Close()
++	start = time.Now()
++	blob, err := creator.CreateBlob(gov8.FunctionCodeKeep)
++	if err != nil {
++		t.Fatal(err)
++	}
++	defer blob.Release()
++	if err := os.WriteFile(".build/page-bootstrap.blob", blob.Bytes(), 0600); err != nil {
++		t.Fatal(err)
++	}
++	t.Log("snapshot creation", time.Since(start), "bytes", len(blob.Bytes()))
++	for i := 0; i < 2; i++ {
++		adapter := (v8engine.SnapshotFactory{Bytes: blob.Bytes()}).New()
++		if err := adapter.Set("__adapterProbe", adapter.Function(func(_ engine.Value, _ []engine.Value) (engine.Value, error) { return adapter.Value(i), nil })); err != nil {
++			t.Fatal(err)
++		}
++		value, err := adapter.Eval(context.Background(), `[typeof Document,typeof Element,__adapterProbe()].join(',')`, "snapshot:adapter-proof")
++		if err != nil {
++			t.Fatal(err)
++		}
++		if want := fmt.Sprintf("function,function,%d", i); value.String() != want {
++			t.Fatalf("adapter %s want %s", value.String(), want)
++		}
++		promise := adapter.NewPromise()
++		if err := promise.Resolve("restored"); err != nil {
++			t.Fatal(err)
++		}
++		resolved, done, err := adapter.Await(promise.Value)
++		if err != nil || !done || resolved.String() != "restored" {
++			t.Fatalf("promise %v %v %v", resolved, done, err)
++		}
++		if err := adapter.Close(); err != nil {
++			t.Fatal(err)
++		}
++		t.Log("actual engine adapter restored, native callback and Promise passed", i)
++	}
++	for i := 0; i < 3; i++ {
++		start = time.Now()
++		iso, e := gov8.NewIsolateFromSnapshot(blob)
++		if e != nil {
++			t.Fatal(e)
++		}
++		ctx, e := iso.NewContext()
++		if e != nil {
++			t.Fatal(e)
++		}
++		scope, e := iso.NewScope()
++		if e != nil {
++			t.Fatal(e)
++		}
++		t.Log("restore isolate+context", time.Since(start))
++		t.Log("wasm", eval(ctx, scope, `typeof WebAssembly+":"+(typeof WebAssembly!=="undefined"?typeof WebAssembly.instantiate:"missing")`))
++		state := map[string]string{}
++		invocations := 0
++		readyCalls := 0
++		fn, e := iso.NewFunction(scope, ctx, func(cs *gov8.CallbackScope, args gov8.FunctionCallbackArguments, rv gov8.ReturnValue) {
++			invocations++
++			argv := make([]string, args.Length())
++			for j := range argv {
++				v, err := args.Get(j)
++				if err != nil {
++					t.Error(err)
++					return
++				}
++				argv[j], err = cs.ToString(v)
++				if err != nil {
++					t.Error(err)
++					return
++				}
++			}
++			switch argv[0] {
++			case "apiAccess":
++			case "ready":
++				readyCalls++
++			case "storageGet":
++				value, ok := state[argv[1]+":"+argv[2]]
++				if !ok {
++					rv.SetNull()
++					return
++				}
++				v, err := cs.NewString(value)
++				if err != nil {
++					t.Error(err)
++					return
++				}
++				rv.Set(v)
++			case "storageSet":
++				state[argv[1]+":"+argv[2]] = argv[3]
++			default:
++				t.Errorf("unexpected live call %v", argv)
++			}
++		}, nil)
++		if e != nil {
++			t.Fatal(e)
++		}
++		global, e := ctx.GlobalObject(scope)
++		if e != nil {
++			t.Fatal(e)
++		}
++		ok, e := global.SetByName(scope, ctx, "__snapshotBind", fn.Value)
++		if e != nil || !ok {
++			t.Fatalf("bind: %v %v", ok, e)
++		}
++		eval(ctx, scope, `snapshotLiveHost=__snapshotBind;delete globalThis.__snapshotBind;void 0`)
++		zone := "UTC"
++		locale := "en-US"
++		header := "geolocation=()"
++		if i == 1 {
++			zone = "Asia/Tokyo"
++			locale = "ja-JP"
++			header = "geolocation=*"
++		}
++		rebound := eval(ctx, scope, fmt.Sprintf(`(()=>{try{const policyBefore=document.featurePolicy;const liveHost=new Proxy({token:()=> 'new-token-%d',viewport:()=>({width:800,height:600,outerWidth:800,outerHeight:600}),screen:()=>({devicePixelRatio:1}),intlEnvironment:()=>({locale:%q,timeZone:%q}),permissionsPolicy:()=>({header:%q,origin:'https://fresh.example'})},{get(target,key){return target[key]||((...args)=>snapshotLiveHost(key,...args))}});__mimicRestoreSurface(liveHost);delete globalThis.__mimicRestoreSurface;return [policyBefore===document.featurePolicy,document.featurePolicy.allowsFeature('geolocation'),new Intl.DateTimeFormat().resolvedOptions().timeZone,new Intl.DateTimeFormat().resolvedOptions().locale,typeof __mimicRestoreSurface].join(',')}catch(e){return String(e.stack)}})()`, i, locale, zone, header))
++		allowed := "false"
++		if i == 1 {
++			allowed = "true"
++		}
++		if want := "true," + allowed + "," + zone + "," + locale + ",undefined"; rebound != want {
++			t.Fatalf("rebound got %s want %s", rebound, want)
++		}
++		if readyCalls != 1 {
++			t.Fatalf("ready calls %d", readyCalls)
++		}
++		t.Log("rebound state", rebound)
++		gotStorage := eval(ctx, scope, fmt.Sprintf(`const initial=localStorage.getItem('probe');localStorage.setItem('probe','page-%d');[initial===null,localStorage.getItem('probe'),sessionStorage.getItem('probe')===null,typeof __snapshotBind].join(',')`, i))
++		if want := fmt.Sprintf("true,page-%d,true,undefined", i); gotStorage != want {
++			t.Fatalf("storage got %s want %s", gotStorage, want)
++		}
++		if invocations < 4 {
++			t.Fatalf("missing live calls: %d", invocations)
++		}
++		t.Log("live host calls", invocations, "isolated storage", state)
++		got := eval(ctx, scope, `[typeof Document,typeof Element,typeof document,document===document,Array.prototype.map.call([1,2],x=>x*2).join(':')].join(',')`)
++		if got != "function,function,object,true,2:4" {
++			t.Fatal(got)
++		}
++		scope.Close()
++		ctx.Close()
++		iso.Close()
++	}
++}

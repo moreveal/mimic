@@ -1,0 +1,35 @@
+Main history since the crossing-census session boundary:
+c0d6705 docs: add concise performance development guidelines
+4d3396e perf: measure current DOM host crossing census without wrapper hooks
+e742a42 perf: record isolated typed-attribute experiment and gate regressions
+6844dcd perf: pack synchronous DOM calls; DOM gate 147.75 to 95.69 ms
+6277094 perf: skip impossible iframe insertion walks; DOM gate 95.69 to 79.34 ms
+0abfa05 perf: share realm observation traps; DOM gate 79.34 to 70.28 ms
+c97fc1b perf: validate 2.02x full DOM gain; retain density and teardown limits
+358dc44 perf: record isolated JS DOM spike, 1.98x kernel gain and remaining Chrome gap
+4d0f0a1 fix: preserve ECMAScript intrinsic prototypes during WebIDL bootstrap
+52a2aa2 perf: filter generated fallback bindings before Page bootstrap
+b95a6bd perf: record full intrinsics matrix, catalog gate and unresolved teardown tail
+8d651d3 docs: bound next DOM ownership experiment around canonical state and task boundaries
+01cd701 perf: validate catalog full matrix, N100 throughput and unchanged DOM crossing cost
+cc376b6 perf: record isolated canonical DOM batch bridge proof and remaining ownership work
+f84f1d6 perf: record 5.94x crossing reduction without a multiplicative latency gain
+86dcd73 docs(perf): record JS query gain, React regression and snapshot feasibility
+2036179 docs(perf): verify real bootstrap snapshot replay and record limits
+74a5095 docs(perf): verify restored bootstrap dispatch into live Go callbacks
+47441fc docs(perf): record engine snapshot restoration and realm rebinding checks
+
+Separate experimental history (not merged):
+0b4c43c experiment: typed attribute exports; replay -5.9%, fast gate inconclusive
+93c1c4a experiment: isolate JS-owned DOM kernel; measure 1.98x gain and compatibility gaps
+b631da0 experiment: isolate intrinsic guard loss and verify JS kernel Chrome parity
+9ea642a perf: filter generated fallback bindings before Page bootstrap
+b7dc510 spike: atomically materialize reserved DOM identities through the JS host bridge
+ab5d374 spike: stage detached DOM with engine boundaries and a compact import stream
+4a1983b spike: batch connected plain attributes with boundary-invalidated read caches
+793513d diagnostic only: bound DOM observation overhead, deliberately breaks trace contract
+c409137 spike: keep DOM query records in JS with observer-safe invalidation and owned imports
+6df6ba5 experiment(snapshot): capture actual bootstrap host replay for feasibility
+ca557ca experiment(snapshot): restore through engine and rebind per-realm surface state
+2d4264e experiment(v8): preserve rejected 8 MiB nursery diagnostic at stop checkpoint
+a19b84d experiment(snapshot): checkpoint guarded Page restoration and passing frozen semantics

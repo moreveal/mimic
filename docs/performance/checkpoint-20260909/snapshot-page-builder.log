@@ -1,0 +1,20 @@
+=== RUN   TestRealBootstrapSnapshotRebind
+    build_snapshot_test.go:67: replayed bootstrap 42.7178ms
+    build_snapshot_test.go:68: calls replayed 429
+    build_snapshot_test.go:82: snapshot creation 106.3102ms bytes 6711840
+    build_snapshot_test.go:106: actual engine adapter restored, native callback and Promise passed 0
+    build_snapshot_test.go:106: actual engine adapter restored, native callback and Promise passed 1
+    build_snapshot_test.go:122: restore isolate+context 9.8782ms
+    build_snapshot_test.go:122: wasm object:function
+    build_snapshot_test.go:194: rebound state true,false,UTC,en-US,undefined
+    build_snapshot_test.go:202: live host calls 10 isolated storage map[local:probe:page-0]
+    build_snapshot_test.go:122: restore isolate+context 8.3252ms
+    build_snapshot_test.go:122: wasm object:function
+    build_snapshot_test.go:194: rebound state true,true,Asia/Tokyo,ja-JP,undefined
+    build_snapshot_test.go:202: live host calls 10 isolated storage map[local:probe:page-1]
+    build_snapshot_test.go:122: restore isolate+context 9.5568ms
+    build_snapshot_test.go:122: wasm object:function
+    build_snapshot_test.go:194: rebound state true,false,UTC,en-US,undefined
+    build_snapshot_test.go:202: live host calls 10 isolated storage map[local:probe:page-2]
+--- PASS: TestRealBootstrapSnapshotRebind (0.27s)
+PASS

@@ -1,0 +1,76 @@
+{
+  "control": {
+    "latency": {
+      "dom": {
+        "session_create_ms": 1.9405999992159195,
+        "execution_ms": 70.14799999888055,
+        "completion_ms": 114.51500000111992
+      },
+      "static": {
+        "session_create_ms": 1.9410000022617169,
+        "execution_ms": 1.1448000004747882,
+        "completion_ms": 43.13209999963874
+      },
+      "react": {
+        "session_create_ms": 11.980199997196905,
+        "execution_ms": 36.86849999940023,
+        "completion_ms": 88.87849999882746
+      }
+    },
+    "throughput": {
+      "10": 57.2343994755122,
+      "25": 87.15626875116655
+    },
+    "memory": [
+      {
+        "workload": "static",
+        "marginal_rss_mib": 24.95859375,
+        "recovered_rss_mib": 69.98046875
+      },
+      {
+        "workload": "react",
+        "marginal_rss_mib": 29.022265625,
+        "recovered_rss_mib": 88.24609375
+      }
+    ],
+    "launches": 8,
+    "harness_sha256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7"
+  },
+  "snapshot": {
+    "latency": {
+      "dom": {
+        "session_create_ms": 19.650200003525242,
+        "execution_ms": 69.72089999908349,
+        "completion_ms": 104.87390000344021
+      },
+      "static": {
+        "session_create_ms": 13.934299997345079,
+        "execution_ms": 1.4548999970429577,
+        "completion_ms": 38.383999999496154
+      },
+      "react": {
+        "session_create_ms": 23.29950000421377,
+        "execution_ms": 39.847599997301586,
+        "completion_ms": 85.44139999867184
+      }
+    },
+    "throughput": {
+      "10": 55.545002005553364,
+      "25": 75.78037876192347
+    },
+    "memory": [
+      {
+        "workload": "static",
+        "marginal_rss_mib": 50.86171875,
+        "recovered_rss_mib": 316.7734375
+      },
+      {
+        "workload": "react",
+        "marginal_rss_mib": 59.3640625,
+        "recovered_rss_mib": 342.47265625
+      }
+    ],
+    "launches": 8,
+    "harness_sha256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7"
+  }
+}
