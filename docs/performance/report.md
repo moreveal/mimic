@@ -700,3 +700,67 @@ queries, rather than treating crossing count as the objective. A persistent
 JS-owned tree with JS queries and explicit synchronization for actual Go consumers
 is still unimplemented. It must retain the existing bindings, tracing, resources,
 Go visibility and per-Page scheduling before any Chrome lead can be claimed.
+
+## 23. JS query ownership experiment: measured local gain, React regression
+
+Experimental commit c409137 (based on 4a1983b) retains plain-node records within
+an evaluation, implements the existing queryAllWithin selector subset in JS,
+shares records with canonical wrappers, and transfers private decoded wire
+storage directly into Go rather than copying it again. Go remains synchronized
+at engine boundaries. This is not persistent JS ownership across evaluations.
+Unicode selector cases fall back to Go. Mutable trace observers force cache
+invalidation; filtering CDP delivery does not discard recorded trace events.
+
+The ordinary Go suite passes: 262 test/package pass events, zero failures.
+Additional checks cover selector equivalence and mutation through an aliased Go
+attribute map during a trace callback. Frozen harness and workloads are unchanged;
+build and per-launch SHA-256 verification records accompany every fast gate.
+
+Fresh sequential production control -> c409137, warm medians:
+
+| Metric | Control | Experiment |
+|---|---:|---:|
+| DOM execution ms | 88.374 | 66.800 |
+| DOM completion ms | 141.700 | 112.366 |
+| DOM session creation ms | 3.559 | 16.824 |
+| static completion ms | 54.460 | 46.367 |
+| React execution ms | 36.717 | 47.311 |
+| React completion ms | 101.671 | 107.550 |
+| React session creation ms | 3.191 | 13.929 |
+| static N10 median Pages/s | 52.70 | 51.90 |
+| static N25 median Pages/s | 59.85 | 61.10 |
+| static marginal RSS MiB/Page | 24.823 | 24.696 |
+| React marginal RSS MiB/Page | 29.763 | 30.247 |
+
+DOM execution improves 1.32x in this pair, while React execution regresses 28.9%.
+Completion excludes session creation and teardown. The noisy session creation
+regression must not be hidden by the completion metric. Earlier same-source
+measurements reached 58.561 ms DOM execution; the newer 66.800 ms result shows
+why best short-run numbers cannot establish a general win. There is no new
+Chrome measurement here; full07 Chrome DOM execution was 30.747 ms.
+
+Intermediate profiling counted 3104 real host calls, compared with the prior
+9104 and production's 54055. The later profile with wrapper diagnostics disabled
+measures about 7.8 MiB of Go execution allocation and approximately 13.9 ms of
+V8 GC self time per warm iteration. Remaining host crossings and total latency
+are different objectives. Profile overhead is excluded from fast-gate timings.
+
+A separate 8 MiB young-generation diagnostic did not demonstrate an improvement:
+DOM execution 63.037 ms versus the preceding 4 MiB run's 58.561 ms, with static
+marginal RSS rising from 24.938 to 28.660 MiB/Page and React from 29.761 to
+33.016 MiB/Page. It is not promoted. Workstation variation limits causal timing
+claims from these short sequential runs.
+
+Evidence, patch, raw memory/recovery samples, profiles and validation are in
+`dom-current/js-queries/`. This experiment remains separate from production;
+its React regression rules out promoting the whole change. No full-matrix
+improvement is claimed.
+
+A small SDK feasibility test also passed: snapshot round-trip preserves JS
+classes, WeakMap slots and canonical object identity; two restored isolates
+remain independent and can use different late-bound JS host dispatch objects.
+Source and output are saved alongside the evidence. This does not yet test
+native Go callbacks, actual Page bootstrap, scheduling, resources or speed.
+The next bounded proof is snapshotting a real bootstrap slice with per-Page
+state rebound after restore, measuring creation plus navigation together so
+moving initialization work between phases cannot count as an optimization.
