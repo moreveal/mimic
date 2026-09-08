@@ -43,16 +43,17 @@ func (b *Browser) Environment() state.Environment      { b.mu.RLock(); defer b.m
 func (b *Browser) Compatibility() compatibility.Bundle { return b.compat }
 
 type Context struct {
-	lifetime  context.Context
-	cancel    context.CancelFunc
-	mu        sync.RWMutex
-	ID        string
-	browser   *Browser
-	cookies   *network.CookieStore
-	network   *network.SessionState
-	transport network.Transport
-	storage   map[string]map[string]string
-	pages     map[string]*Page
+	lifetime     context.Context
+	cancel       context.CancelFunc
+	mu           sync.RWMutex
+	ID           string
+	browser      *Browser
+	cookies      *network.CookieStore
+	network      *network.SessionState
+	transport    network.Transport
+	storage      map[string]map[string]string
+	capabilities map[string]*originCapabilities
+	pages        map[string]*Page
 }
 
 func (c *Context) NewPage() (*Page, error) {

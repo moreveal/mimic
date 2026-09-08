@@ -37,3 +37,17 @@ After intentional upstream regeneration or exposure recapture, review semantic
 changes before refreshing artifact-hashes.json (SHA-256 of each other file in the
 generated directory, keyed by filename). The manifest is a drift detector, not a
 signature. It deliberately is not silently rewritten by `--check`.
+
+Navigator capability work retains 109 original IDL sources at the pinned commit
+in `generated/navigator-idl-sources.json`. The focused recovery command
+`python tools/refresh_navigator_idl.py` reproduces those declarations from the
+retained sources; it downloads only missing sources. Partial and mixin members
+retain their declaring source and conditions. Partial flags no longer overwrite
+the primary interface, and Blink's conditional `Exposed(Window Feature, ...)`
+syntax is parsed separately from ordinary `Exposed=Window`.
+The offline check also verifies these recovered declarations. This is a focused
+repair, not a claim that all older catalog declarations were redownloaded.
+
+`window-insecure.json` is an exact-version opaque-context exposure capture.
+The [Navigator matrix](navigator-capabilities.md) records additional secure,
+isolated and opaque observations, semantic differences and unsupported backends.

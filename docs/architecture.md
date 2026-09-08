@@ -25,6 +25,15 @@ display, graphics, locale, clock, network and permissions. JavaScript-visible
 values and request headers are derived projections. Construction validates
 cross-field invariants; mutation occurs through commands on `Page`.
 
+Environment permissions are initial defaults. Live permission decisions and
+changes, clipboard text, login state, bucket metadata and lock queues belong to
+the Context's origin capability store. PermissionStatus notifications enter each
+receiving realm through Scheduler tasks. User activation is realm state granted
+by the trusted browser input path and expires against the Scheduler clock;
+synthetic DOM events do not grant it. Machine media, keyboard and device
+capabilities remain Environment projections. See the
+[capability matrix and explicit limits](navigator-capabilities.md).
+
 Each page owns a top frame, each frame owns a realm, and each realm owns a
 separate engine instance and global object. WindowProxy is represented as the
 stable frame-facing identity which delegates to the current realm.

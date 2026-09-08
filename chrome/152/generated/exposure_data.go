@@ -21,6 +21,15 @@ var windowSecureIsolatedJSON []byte
 //go:embed worker-secure.json
 var workerSecureJSON []byte
 
+//go:embed window-insecure.json
+var windowInsecureJSON []byte
+
+var windowInsecureOnce = sync.OnceValue(func() compatibility.RealmExposure {
+	return parseWindowExposure(windowInsecureJSON)
+})
+
+func InsecureWindowExposure() compatibility.RealmExposure { return windowInsecureOnce() }
+
 func parseWindowExposure(raw []byte) compatibility.RealmExposure {
 	var capture struct {
 		Properties []compatibility.SurfaceProperty            `json:"properties"`

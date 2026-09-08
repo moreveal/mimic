@@ -2,6 +2,7 @@ package chrome152
 
 import (
 	"net/http"
+	"strings"
 
 	tls_client "github.com/bogdanfinn/tls-client"
 	"github.com/bogdanfinn/tls-client/profiles"
@@ -24,6 +25,30 @@ const (
 func environment() state.Environment {
 	environment := state.ChromeDesktopWindows(state.Product{Name: "Chrome", Version: "152.0.0.0", FullVersion: Version, UserAgentProduct: "HeadlessChrome", UserAgentBrands: []state.UserAgentBrand{{Brand: "Not?A_Brand", Version: "24", FullVersion: "24.0.0.0"}, {Brand: "Chromium", Version: "152", FullVersion: Version}}})
 	environment.Platform.Architecture = "x86_64"
+	for _, name := range strings.Fields("background-fetch background-sync accelerometer gyroscope magnetometer screen-wake-lock clipboard-write payment-handler storage-access pointer-lock") {
+		environment.Permissions[name] = "granted"
+	}
+	environment.Permissions["periodic-background-sync"] = "denied"
+	environment.Features = map[string]bool{"GenericSensorExtraClasses": false, "WebNFC": false, "SystemWakeLock": false, "SpeakerSelection": false, "WebAppInstallation": false, "ApproximateGeolocationPermission": false}
+	environment.Capabilities = state.Capabilities{
+		StorageQuotaBytes: 10 * 1024 * 1024 * 1024,
+		Devices:           state.DeviceCapabilities{Posture: "continuous"},
+		Media: state.MediaCapabilities{
+			Kinds:                []string{"audioinput", "videoinput", "audiooutput"},
+			DecodingContentTypes: []string{`video/mp4; codecs="avc1.42E01E"`},
+			SupportedConstraints: strings.Fields("aspectRatio autoGainControl brightness channelCount colorTemperature contrast deviceId displaySurface echoCancellation exposureCompensation exposureMode exposureTime facingMode focusDistance focusMode frameRate groupId height iso latency noiseSuppression pan pointsOfInterest resizeMode restrictOwnAudio sampleRate sampleSize saturation sharpness suppressLocalAudioPlayback tilt torch voiceIsolation whiteBalanceMode width zoom"),
+		},
+	}
+	environment.Capabilities.KeyboardLayout = map[string]string{
+		"Backquote": "`", "Minus": "-", "Equal": "=", "BracketLeft": "[", "BracketRight": "]",
+		"Backslash": "\\", "IntlBackslash": "\\", "Semicolon": ";", "Quote": "'", "Comma": ",", "Period": ".", "Slash": "/",
+	}
+	for letter := 'A'; letter <= 'Z'; letter++ {
+		environment.Capabilities.KeyboardLayout["Key"+string(letter)] = strings.ToLower(string(letter))
+	}
+	for digit := '0'; digit <= '9'; digit++ {
+		environment.Capabilities.KeyboardLayout["Digit"+string(digit)] = string(digit)
+	}
 	environment.Platform.OSVersion = "19.0.0"
 	environment.Hardware.LogicalProcessors = 28
 	environment.Hardware.DeviceMemoryGB = 32
@@ -96,9 +121,10 @@ func (*Bundle) Surface() *compatibility.WebAPISurface {
 	return &compatibility.WebAPISurface{
 		GeneratedJavaScript: generated.Surface,
 		Exposures: map[string]compatibility.RealmExposure{
-			"window.secure.non-isolated": generated.SecureWindowExposure(),
-			"window.secure.isolated":     generated.SecureIsolatedWindowExposure(),
-			"worker.secure.non-isolated": generated.SecureWorkerExposure(),
+			"window.insecure.non-isolated": generated.InsecureWindowExposure(),
+			"window.secure.non-isolated":   generated.SecureWindowExposure(),
+			"window.secure.isolated":       generated.SecureIsolatedWindowExposure(),
+			"worker.secure.non-isolated":   generated.SecureWorkerExposure(),
 		},
 	}
 }

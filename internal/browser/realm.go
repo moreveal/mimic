@@ -31,6 +31,9 @@ import (
 
 type Realm struct {
 	ID                  string
+	activationAt        time.Time
+	inputDispatcher     engine.Value
+	permissionNotifier  engine.Value
 	agent               ExecutionAgent
 	runtime             engine.Runtime
 	scheduler           *scheduler.Scheduler
@@ -85,6 +88,25 @@ func (r *Realm) resolveDocument(raw string) (*url.URL, error) {
 	return r.documentURL().ResolveReference(reference), nil
 }
 
+func (r *Realm) securityState() documentSecurity {
+	p := r.agent.Page()
+	p.mu.RLock()
+	security := p.documentSecurity
+	p.mu.RUnlock()
+	if frame, ok := r.agent.(*Frame); ok && frame.parent != nil {
+		if frame.parent.Realm != nil {
+			security = frame.parent.Realm.securityState()
+		}
+		if r.url.Scheme != "about" {
+			hostname := r.url.Hostname()
+			trustworthy := r.url.Scheme == "https" || hostname == "localhost" || hostname == "127.0.0.1" || hostname == "::1"
+			security.secureContext = security.secureContext && trustworthy
+			security.crossOriginIsolated = security.crossOriginIsolated && security.secureContext && frame.parent.Realm != nil && r.origin == frame.parent.Realm.origin
+		}
+	}
+	return security
+}
+
 func newRealm(p *Page, agent ExecutionAgent, d *dom.Document, u *url.URL) (*Realm, error) {
 	resourceContext, cancelResources := context.WithCancel(p.ctx.lifetime)
 	r := &Realm{ID: uuid.NewString(), agent: agent, runtime: p.ctx.browser.factory.New(), document: d, url: u, origin: originOf(u.String()), token: uuid.NewString(), detached: map[int64]dom.Node{}, apiSeen: map[string]bool{}, readyState: "loading", workers: map[int64]*DedicatedWorker{}, childFrames: map[int64]*Frame{}, retainedFrames: map[string]*Frame{}, crossValues: map[int64]engine.Value{}, resourceContext: resourceContext, cancelResources: cancelResources}
@@ -118,6 +140,18 @@ func (r *Realm) checkpoint(ctx context.Context) error {
 }
 
 func (r *Realm) Close() error {
+	c := r.agent.Page().ctx
+	c.mu.Lock()
+	for _, state := range c.capabilities {
+		remaining := state.locks[:0]
+		for _, lock := range state.locks {
+			if lock.ClientID != r.ID {
+				remaining = append(remaining, lock)
+			}
+		}
+		state.locks = remaining
+	}
+	c.mu.Unlock()
 	r.cancelResources()
 	r.resourceWG.Wait()
 	for _, worker := range r.workers {
@@ -1138,9 +1172,7 @@ func (r *Realm) install() error {
 		return r.val(match), nil
 	})
 	host["documentSecurity"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
-		p.mu.RLock()
-		security := p.documentSecurity
-		p.mu.RUnlock()
+		security := r.securityState()
 		return r.val(map[string]any{
 			"secureContext":       security.secureContext,
 			"crossOriginIsolated": security.crossOriginIsolated,
@@ -1180,6 +1212,7 @@ func (r *Realm) install() error {
 		return nil, nil
 	})
 	addStorageHosts(r, host)
+	addCapabilityHosts(r, host)
 	if err := r.runtime.Set("__mimic", host); err != nil {
 		return err
 	}
@@ -1188,9 +1221,7 @@ func (r *Realm) install() error {
 	if bundle := p.Compatibility(); bundle != nil && bundle.Surface() != nil {
 		surface := bundle.Surface()
 		generated = surface.GeneratedJavaScript
-		p.mu.RLock()
-		security := p.documentSecurity
-		p.mu.RUnlock()
+		security := r.securityState()
 		if security.secureContext {
 			key := "window.secure.non-isolated"
 			if security.crossOriginIsolated {
@@ -1199,6 +1230,8 @@ func (r *Realm) install() error {
 			if selected, ok := surface.Exposures[key]; ok {
 				exposure = &selected
 			}
+		} else if selected, ok := surface.Exposures["window.insecure.non-isolated"]; ok {
+			exposure = &selected
 		}
 	}
 	_, err := r.runtime.Eval(context.Background(), webapi.Surface(generated, exposure), "mimic:webapi-surface")
@@ -1206,6 +1239,11 @@ func (r *Realm) install() error {
 		return err
 	}
 	r.messageReceiver = r.runtime.Get("__receiveFrameMessage")
+	r.inputDispatcher = r.runtime.Get("__mimicDispatchInput")
+	r.permissionNotifier = r.runtime.Get("__mimicPermissionChanged")
+	if _, err = r.runtime.Eval(context.Background(), `delete globalThis.__mimicDispatchInput;delete globalThis.__mimicPermissionChanged`, "mimic:hide-input"); err != nil {
+		return err
+	}
 	r.messagePortReceiver = r.runtime.Get("__receiveMessagePort")
 	r.frameLoadDispatcher = r.runtime.Get("__mimicDispatchFrameLoad")
 	r.performanceNotifier = r.runtime.Get("__mimicNotifyPerformanceObservers")
@@ -1848,7 +1886,7 @@ func numargValue(value any) int64 {
 }
 func addStorageHosts(r *Realm, h map[string]any) {
 	p := r.agent.Page()
-	origin := originOf(p.URL())
+	origin := r.origin
 	store := func(area string) map[string]string {
 		if area == "session" {
 			if p.sessionStorage[origin] == nil {

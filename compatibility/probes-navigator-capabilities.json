@@ -1,0 +1,218 @@
+[
+  {
+    "name": "permissions.initial",
+    "expression": "Promise.all([\"geolocation\", \"notifications\", \"push\", \"midi\", \"camera\", \"microphone\", \"background-fetch\", \"background-sync\", \"persistent-storage\", \"ambient-light-sensor\", \"accelerometer\", \"gyroscope\", \"magnetometer\", \"screen-wake-lock\", \"nfc\", \"display-capture\", \"clipboard-read\", \"clipboard-write\", \"payment-handler\", \"idle-detection\", \"periodic-background-sync\", \"system-wake-lock\", \"storage-access\", \"window-management\", \"local-fonts\", \"top-level-storage-access\", \"captured-surface-control\", \"speaker-selection\", \"keyboard-lock\", \"pointer-lock\", \"fullscreen\", \"web-app-installation\", \"local-network-access\", \"local-network\", \"loopback-network\", \"geolocation-approximate\"].map(async name=>{try{return [name,(await navigator.permissions.query({name})).state]}catch(e){return [name,{name:e.name,message:e.message}]}})).then(Object.fromEntries)"
+  },
+  {
+    "name": "activation",
+    "expression": "({active:navigator.userActivation.isActive,sticky:navigator.userActivation.hasBeenActive,pending:navigator.scheduling.isInputPending()})"
+  },
+  {
+    "name": "geolocation.current",
+    "expression": "new Promise(resolve=>navigator.geolocation.getCurrentPosition(p=>resolve({unexpectedPosition:true}),e=>resolve({code:e.code,message:e.message})))"
+  },
+  {
+    "name": "connection",
+    "expression": "({effectiveType:navigator.connection.effectiveType,downlink:navigator.connection.downlink,rtt:navigator.connection.rtt,saveData:navigator.connection.saveData})"
+  },
+  {
+    "name": "bluetooth.available",
+    "expression": "navigator.bluetooth.getAvailability()"
+  },
+  {
+    "name": "bluetooth.devices",
+    "expression": "navigator.bluetooth.getDevices()"
+  },
+  {
+    "name": "hid.devices",
+    "expression": "navigator.hid.getDevices()"
+  },
+  {
+    "name": "usb.devices",
+    "expression": "navigator.usb.getDevices()"
+  },
+  {
+    "name": "serial.ports",
+    "expression": "navigator.serial.getPorts()"
+  },
+  {
+    "name": "posture",
+    "expression": "navigator.devicePosture.type"
+  },
+  {
+    "name": "credentials.get",
+    "expression": "navigator.credentials.get({})"
+  },
+  {
+    "name": "credentials.create",
+    "expression": "navigator.credentials.create({})"
+  },
+  {
+    "name": "credentials.prevent",
+    "expression": "navigator.credentials.preventSilentAccess()"
+  },
+  {
+    "name": "permissions.geo",
+    "expression": "navigator.permissions.query({name:'geolocation'}).then(p=>({state:p.state,name:p.name,tag:Object.prototype.toString.call(p)}))"
+  },
+  {
+    "name": "permissions.unknown",
+    "expression": "navigator.permissions.query({name:'not-a-permission'})"
+  },
+  {
+    "name": "clipboard.read",
+    "expression": "navigator.clipboard.readText()"
+  },
+  {
+    "name": "media.enumerate",
+    "expression": "navigator.mediaDevices.enumerateDevices().then(ds=>ds.map(d=>d.toJSON()))"
+  },
+  {
+    "name": "media.constraints",
+    "expression": "navigator.mediaDevices.getSupportedConstraints()"
+  },
+  {
+    "name": "media.getUserMedia",
+    "expression": "navigator.mediaDevices.getUserMedia({video:true})"
+  },
+  {
+    "name": "media.invalid",
+    "expression": "navigator.mediaDevices.getUserMedia({})"
+  },
+  {
+    "name": "media.decoding",
+    "expression": "navigator.mediaCapabilities.decodingInfo({type:'file',video:{contentType:'video/unknown',width:640,height:480,bitrate:1000,framerate:30}})"
+  },
+  {
+    "name": "media.mp4",
+    "expression": "navigator.mediaCapabilities.decodingInfo({type:'file',video:{contentType:'video/mp4; codecs=\"avc1.42E01E\"',width:640,height:480,bitrate:1000,framerate:30}})"
+  },
+  {
+    "name": "media.session",
+    "expression": "({metadata:navigator.mediaSession.metadata,playbackState:navigator.mediaSession.playbackState})"
+  },
+  {
+    "name": "presentation",
+    "expression": "({defaultRequest:navigator.presentation.defaultRequest,receiver:navigator.presentation.receiver})"
+  },
+  {
+    "name": "storage.estimate",
+    "expression": "navigator.storage.estimate()"
+  },
+  {
+    "name": "storage.persisted",
+    "expression": "navigator.storage.persisted()"
+  },
+  {
+    "name": "buckets.keys",
+    "expression": "navigator.storageBuckets.keys()"
+  },
+  {
+    "name": "locks.query",
+    "expression": "navigator.locks.query()"
+  },
+  {
+    "name": "quota.temporary",
+    "expression": "new Promise((resolve,reject)=>navigator.webkitTemporaryStorage.queryUsageAndQuota((usage,quota)=>resolve({usage,quota}),reject))"
+  },
+  {
+    "name": "quota.persistent",
+    "expression": "new Promise((resolve,reject)=>navigator.webkitPersistentStorage.queryUsageAndQuota((usage,quota)=>resolve({usage,quota}),reject))"
+  },
+  {
+    "name": "quota.identity",
+    "expression": "navigator.webkitTemporaryStorage===navigator.webkitPersistentStorage"
+  },
+  {
+    "name": "serviceWorker.controller",
+    "expression": "navigator.serviceWorker.controller"
+  },
+  {
+    "name": "serviceWorker.registrations",
+    "expression": "navigator.serviceWorker.getRegistrations()"
+  },
+  {
+    "name": "serviceWorker.registration",
+    "expression": "navigator.serviceWorker.getRegistration()"
+  },
+  {
+    "name": "xr.vr",
+    "expression": "navigator.xr.isSessionSupported('immersive-vr')"
+  },
+  {
+    "name": "xr.ar",
+    "expression": "navigator.xr.isSessionSupported('immersive-ar')"
+  },
+  {
+    "name": "xr.request",
+    "expression": "navigator.xr.requestSession('immersive-vr')"
+  },
+  {
+    "name": "overlay",
+    "expression": "({visible:navigator.windowControlsOverlay.visible,rect:navigator.windowControlsOverlay.getTitlebarAreaRect().toJSON()})"
+  },
+  {
+    "name": "keyboard.unlock",
+    "expression": "navigator.keyboard.unlock()"
+  },
+  {
+    "name": "keyboard.lock",
+    "expression": "navigator.keyboard.lock()"
+  },
+  {
+    "name": "keyboard.layout",
+    "expression": "navigator.keyboard.getLayoutMap().then(m=>Object.fromEntries(m))"
+  },
+  {
+    "name": "bluetooth.request",
+    "expression": "navigator.bluetooth.requestDevice({acceptAllDevices:true})"
+  },
+  {
+    "name": "hid.request",
+    "expression": "navigator.hid.requestDevice({filters:[]})"
+  },
+  {
+    "name": "usb.request",
+    "expression": "navigator.usb.requestDevice({filters:[]})"
+  },
+  {
+    "name": "serial.request",
+    "expression": "navigator.serial.requestPort()"
+  },
+  {
+    "name": "buckets.lifecycle",
+    "expression": "(async()=>{const b=await navigator.storageBuckets.open('capability-test');const r={name:b.name,persisted:await b.persisted(),expires:await b.expires(),tag:Object.prototype.toString.call(b)};await navigator.storageBuckets.delete('capability-test');return r})()"
+  },
+  {
+    "name": "locks.lifecycle",
+    "expression": "navigator.locks.request('capability-test',async lock=>({name:lock.name,mode:lock.mode,tag:Object.prototype.toString.call(lock)}))"
+  },
+  {
+    "name": "login.status",
+    "expression": "navigator.login.setStatus('logged-out')"
+  },
+  {
+    "name": "wakeLock.request",
+    "expression": "navigator.wakeLock.request().then(async s=>{const r={type:s.type,released:s.released,tag:Object.prototype.toString.call(s)};await s.release();return r})"
+  },
+  {
+    "name": "ink",
+    "expression": "navigator.ink.requestPresenter({presentationArea:document.body}).then(p=>({expectedImprovement:p.expectedImprovement,tag:Object.prototype.toString.call(p)}))"
+  },
+  {
+    "name": "managed",
+    "expression": "navigator.managed.getManagedConfiguration([])"
+  },
+  {
+    "name": "virtualKeyboard",
+    "expression": "({overlaysContent:navigator.virtualKeyboard.overlaysContent,rect:navigator.virtualKeyboard.boundingRect.toJSON()})"
+  },
+  {
+    "name": "protectedAudience",
+    "expression": "navigator.protectedAudience.queryFeatureSupport('unknown')"
+  },
+  {
+    "name": "permissions.all",
+    "expression": "Promise.all([\"geolocation\", \"notifications\", \"push\", \"midi\", \"camera\", \"microphone\", \"background-fetch\", \"background-sync\", \"persistent-storage\", \"ambient-light-sensor\", \"accelerometer\", \"gyroscope\", \"magnetometer\", \"screen-wake-lock\", \"nfc\", \"display-capture\", \"clipboard-read\", \"clipboard-write\", \"payment-handler\", \"idle-detection\", \"periodic-background-sync\", \"system-wake-lock\", \"storage-access\", \"window-management\", \"local-fonts\", \"top-level-storage-access\", \"captured-surface-control\", \"speaker-selection\", \"keyboard-lock\", \"pointer-lock\", \"fullscreen\", \"web-app-installation\", \"local-network-access\", \"local-network\", \"loopback-network\", \"geolocation-approximate\"].map(async name=>{try{return [name,(await navigator.permissions.query({name})).state]}catch(e){return [name,{name:e.name,message:e.message}]}})).then(Object.fromEntries)"
+  }
+]

@@ -1,0 +1,1102 @@
+[
+  {
+    "member": "vendorSub",
+    "domain": "Legacy identity",
+    "type": "DOMString",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/core/frame/navigator.idl",
+      "extended": {
+        "Exposed": "Window"
+      }
+    },
+    "memberConditions": {
+      "MeasureAs": "NavigatorVendorSub"
+    },
+    "interfaceSource": null,
+    "interfaceConditions": null,
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": true
+    }
+  },
+  {
+    "member": "productSub",
+    "domain": "Legacy identity",
+    "type": "DOMString",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/core/frame/navigator.idl",
+      "extended": {
+        "Exposed": "Window"
+      }
+    },
+    "memberConditions": {
+      "MeasureAs": "NavigatorProductSub"
+    },
+    "interfaceSource": null,
+    "interfaceConditions": null,
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": true
+    }
+  },
+  {
+    "member": "appCodeName",
+    "domain": "Legacy identity",
+    "type": "DOMString",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "NavigatorID",
+      "source": "third_party/blink/renderer/core/frame/navigator_id.idl",
+      "extended": {}
+    },
+    "memberConditions": {},
+    "interfaceSource": null,
+    "interfaceConditions": null,
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": true
+    }
+  },
+  {
+    "member": "doNotTrack",
+    "domain": "Legacy identity",
+    "type": "DOMString?",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/modules/donottrack/navigator_do_not_track.idl",
+      "extended": {
+        "ImplementedAs": "NavigatorDoNotTrack"
+      }
+    },
+    "memberConditions": {
+      "MeasureAs": "NavigatorDoNotTrack"
+    },
+    "interfaceSource": null,
+    "interfaceConditions": null,
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": true
+    }
+  },
+  {
+    "member": "userActivation",
+    "domain": "Input",
+    "type": "UserActivation",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/core/frame/navigator_user_activation.idl",
+      "extended": {
+        "ImplementedAs": "NavigatorUserActivation"
+      }
+    },
+    "memberConditions": {},
+    "interfaceSource": "third_party/blink/renderer/core/frame/user_activation.idl",
+    "interfaceConditions": {
+      "Exposed": [
+        "Window",
+        "Worker",
+        "AudioWorklet"
+      ]
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": true
+    }
+  },
+  {
+    "member": "scheduling",
+    "domain": "Input",
+    "type": "Scheduling",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/core/frame/navigator_scheduling.idl",
+      "extended": {
+        "ImplementedAs": "Scheduling"
+      }
+    },
+    "memberConditions": {},
+    "interfaceSource": "third_party/blink/renderer/core/frame/scheduling.idl",
+    "interfaceConditions": {
+      "Exposed": "Window"
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": true
+    }
+  },
+  {
+    "member": "keyboard",
+    "domain": "Input",
+    "type": "Keyboard",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/modules/keyboard/navigator_keyboard.idl",
+      "extended": {
+        "ImplementedAs": "NavigatorKeyboard"
+      }
+    },
+    "memberConditions": {
+      "SameObject": true,
+      "SecureContext": true
+    },
+    "interfaceSource": "third_party/blink/renderer/modules/keyboard/keyboard.idl",
+    "interfaceConditions": {
+      "Exposed": "Window",
+      "SecureContext": true
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": false
+    }
+  },
+  {
+    "member": "virtualKeyboard",
+    "domain": "Input",
+    "type": "VirtualKeyboard",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/modules/virtualkeyboard/navigator_virtual_keyboard.idl",
+      "extended": {
+        "ImplementedAs": "VirtualKeyboard"
+      }
+    },
+    "memberConditions": {
+      "SecureContext": true,
+      "SameObject": true
+    },
+    "interfaceSource": "third_party/blink/renderer/modules/virtualkeyboard/virtual_keyboard.idl",
+    "interfaceConditions": {
+      "Exposed": "Window",
+      "SecureContext": true
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": false
+    }
+  },
+  {
+    "member": "ink",
+    "domain": "Input",
+    "type": "Ink",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/modules/delegated_ink/navigator_ink.idl",
+      "extended": {
+        "ImplementedAs": "Ink",
+        "Exposed": "Window"
+      }
+    },
+    "memberConditions": {
+      "SameObject": true
+    },
+    "interfaceSource": "third_party/blink/renderer/modules/delegated_ink/ink.idl",
+    "interfaceConditions": {
+      "Exposed": "Window"
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": true
+    }
+  },
+  {
+    "member": "permissions",
+    "domain": "Permissions / credentials",
+    "type": "Permissions",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/modules/permissions/navigator_permissions.idl",
+      "extended": {
+        "Exposed": [
+          "Window"
+        ],
+        "ImplementedAs": "Permissions"
+      }
+    },
+    "memberConditions": {},
+    "interfaceSource": "third_party/blink/renderer/modules/permissions/permissions.idl",
+    "interfaceConditions": {
+      "Exposed": [
+        "Window",
+        "Worker"
+      ]
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": true
+    }
+  },
+  {
+    "member": "credentials",
+    "domain": "Permissions / credentials",
+    "type": "CredentialsContainer",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/modules/credentialmanagement/navigator_credentials.idl",
+      "extended": {
+        "ImplementedAs": "AuthenticationCredentialsContainer"
+      }
+    },
+    "memberConditions": {
+      "SecureContext": true,
+      "SameObject": true
+    },
+    "interfaceSource": "third_party/blink/renderer/modules/credentialmanagement/credentials_container.idl",
+    "interfaceConditions": {
+      "Exposed": "Window",
+      "SecureContext": true
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": false
+    }
+  },
+  {
+    "member": "clipboard",
+    "domain": "Permissions / credentials",
+    "type": "Clipboard",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/modules/clipboard/navigator_clipboard.idl",
+      "extended": {
+        "ImplementedAs": "Clipboard"
+      }
+    },
+    "memberConditions": {
+      "SecureContext": true,
+      "SameObject": true
+    },
+    "interfaceSource": "third_party/blink/renderer/modules/clipboard/clipboard.idl",
+    "interfaceConditions": {
+      "SecureContext": true,
+      "Exposed": "Window"
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": false
+    }
+  },
+  {
+    "member": "geolocation",
+    "domain": "Permissions / credentials",
+    "type": "Geolocation",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/core/geolocation/navigator_geolocation.idl",
+      "extended": {
+        "ImplementedAs": "Geolocation"
+      }
+    },
+    "memberConditions": {},
+    "interfaceSource": "third_party/blink/renderer/core/geolocation/geolocation.idl",
+    "interfaceConditions": {
+      "ActiveScriptWrappable": true,
+      "Exposed": "Window"
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": true
+    }
+  },
+  {
+    "member": "connection",
+    "domain": "Network / storage",
+    "type": "NetworkInformation",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "NavigatorNetworkInformation",
+      "source": "third_party/blink/renderer/modules/netinfo/navigator_network_information.idl",
+      "extended": {
+        "ImplementedAs": "NetworkInformation"
+      }
+    },
+    "memberConditions": {
+      "SameObject": true,
+      "MeasureAs": "NetInfo"
+    },
+    "interfaceSource": "third_party/blink/renderer/modules/netinfo/network_information.idl",
+    "interfaceConditions": {
+      "ActiveScriptWrappable": true,
+      "Exposed": [
+        "Window",
+        "Worker"
+      ]
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": true
+    }
+  },
+  {
+    "member": "storage",
+    "domain": "Network / storage",
+    "type": "StorageManager",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "NavigatorStorage",
+      "source": "third_party/blink/renderer/modules/quota/navigator_storage.idl",
+      "extended": {
+        "SecureContext": true,
+        "ImplementedAs": "NavigatorStorageQuota"
+      }
+    },
+    "memberConditions": {
+      "SameObject": true
+    },
+    "interfaceSource": "third_party/blink/renderer/modules/quota/storage_manager.idl",
+    "interfaceConditions": {
+      "SecureContext": true,
+      "Exposed": [
+        "Window",
+        "Worker"
+      ]
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": false
+    }
+  },
+  {
+    "member": "storageBuckets",
+    "domain": "Network / storage",
+    "type": "StorageBucketManager",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "NavigatorStorageBuckets",
+      "source": "third_party/blink/renderer/modules/buckets/navigator_storage_buckets.idl",
+      "extended": {
+        "SecureContext": true,
+        "ImplementedAs": "StorageBucketManager",
+        "RuntimeEnabled": "StorageBuckets"
+      }
+    },
+    "memberConditions": {
+      "SameObject": true
+    },
+    "interfaceSource": "third_party/blink/renderer/modules/buckets/storage_bucket_manager.idl",
+    "interfaceConditions": {
+      "Exposed": [
+        "Window",
+        "Worker"
+      ],
+      "RuntimeEnabled": "StorageBuckets",
+      "SecureContext": true
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": false
+    }
+  },
+  {
+    "member": "locks",
+    "domain": "Network / storage",
+    "type": "LockManager",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "NavigatorLocks",
+      "source": "third_party/blink/renderer/modules/locks/navigator_locks.idl",
+      "extended": {
+        "SecureContext": true,
+        "ImplementedAs": "LockManager"
+      }
+    },
+    "memberConditions": {
+      "RaisesException": true
+    },
+    "interfaceSource": "third_party/blink/renderer/modules/locks/lock_manager.idl",
+    "interfaceConditions": {
+      "SecureContext": true,
+      "Exposed": [
+        "Window",
+        "Worker",
+        "SharedStorageWorklet"
+      ],
+      "ExposureFeatures": {
+        "Window": "StableBlinkFeatures",
+        "Worker": "StableBlinkFeatures",
+        "SharedStorageWorklet": "SharedStorageWebLocks"
+      }
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": false
+    }
+  },
+  {
+    "member": "webkitTemporaryStorage",
+    "domain": "Network / storage",
+    "type": "DeprecatedStorageQuota",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/modules/quota/navigator_storage_quota.idl",
+      "extended": {
+        "ImplementedAs": "NavigatorStorageQuota"
+      }
+    },
+    "memberConditions": {
+      "MeasureAs": "PrefixedStorageQuota"
+    },
+    "interfaceSource": "third_party/blink/renderer/modules/quota/deprecated_storage_quota.idl",
+    "interfaceConditions": {
+      "LegacyNoInterfaceObject": true
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": true
+    }
+  },
+  {
+    "member": "webkitPersistentStorage",
+    "domain": "Network / storage",
+    "type": "DeprecatedStorageQuota",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/modules/quota/navigator_storage_quota.idl",
+      "extended": {
+        "ImplementedAs": "NavigatorStorageQuota"
+      }
+    },
+    "memberConditions": {
+      "MeasureAs": "PrefixedStorageQuota"
+    },
+    "interfaceSource": "third_party/blink/renderer/modules/quota/deprecated_storage_quota.idl",
+    "interfaceConditions": {
+      "LegacyNoInterfaceObject": true
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": true
+    }
+  },
+  {
+    "member": "mediaDevices",
+    "domain": "Media",
+    "type": "MediaDevices",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/modules/mediastream/navigator_user_media.idl",
+      "extended": {
+        "ImplementedAs": "MediaDevices"
+      }
+    },
+    "memberConditions": {
+      "SameObject": true,
+      "SecureContext": true
+    },
+    "interfaceSource": "third_party/blink/renderer/modules/mediastream/media_devices.idl",
+    "interfaceConditions": {
+      "Exposed": "Window",
+      "ActiveScriptWrappable": true,
+      "SecureContext": true
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": false
+    }
+  },
+  {
+    "member": "mediaCapabilities",
+    "domain": "Media",
+    "type": "MediaCapabilities",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/modules/media_capabilities/navigator_media_capabilities.idl",
+      "extended": {
+        "Exposed": "Window",
+        "ImplementedAs": "MediaCapabilities"
+      }
+    },
+    "memberConditions": {
+      "SameObject": true
+    },
+    "interfaceSource": "third_party/blink/renderer/modules/media_capabilities/media_capabilities.idl",
+    "interfaceConditions": {
+      "Exposed": [
+        "Window",
+        "Worker"
+      ]
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": true
+    }
+  },
+  {
+    "member": "mediaSession",
+    "domain": "Media",
+    "type": "MediaSession",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/modules/mediasession/navigator_media_session.idl",
+      "extended": {
+        "Exposed": [
+          "Window"
+        ],
+        "ImplementedAs": "MediaSession",
+        "RuntimeEnabled": "MediaSession"
+      }
+    },
+    "memberConditions": {
+      "SameObject": true
+    },
+    "interfaceSource": "third_party/blink/renderer/modules/mediasession/media_session.idl",
+    "interfaceConditions": {
+      "Exposed": "Window",
+      "RuntimeEnabled": "MediaSession"
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": true
+    }
+  },
+  {
+    "member": "presentation",
+    "domain": "Media",
+    "type": "Presentation",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/modules/presentation/navigator_presentation.idl",
+      "extended": {
+        "ImplementedAs": "Presentation",
+        "RuntimeEnabled": "Presentation"
+      }
+    },
+    "memberConditions": {
+      "SameObject": true,
+      "SecureContext": true
+    },
+    "interfaceSource": "third_party/blink/renderer/modules/presentation/presentation.idl",
+    "interfaceConditions": {
+      "RuntimeEnabled": "Presentation",
+      "SecureContext": true,
+      "Exposed": "Window"
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": false
+    }
+  },
+  {
+    "member": "bluetooth",
+    "domain": "Devices",
+    "type": "Bluetooth",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/modules/bluetooth/navigator_bluetooth.idl",
+      "extended": {
+        "ImplementedAs": "Bluetooth",
+        "RuntimeEnabled": "WebBluetooth",
+        "SecureContext": true
+      }
+    },
+    "memberConditions": {
+      "SameObject": true
+    },
+    "interfaceSource": "third_party/blink/renderer/modules/bluetooth/bluetooth.idl",
+    "interfaceConditions": {
+      "Exposed": "Window",
+      "RuntimeEnabled": "WebBluetooth",
+      "SecureContext": true
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": false
+    }
+  },
+  {
+    "member": "hid",
+    "domain": "Devices",
+    "type": "HID",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/modules/hid/navigator_hid.idl",
+      "extended": {
+        "ImplementedAs": "HID",
+        "RuntimeEnabled": "WebHID",
+        "SecureContext": true
+      }
+    },
+    "memberConditions": {
+      "SameObject": true
+    },
+    "interfaceSource": "third_party/blink/renderer/modules/hid/hid.idl",
+    "interfaceConditions": {
+      "Exposed": [
+        "ServiceWorker",
+        "DedicatedWorker",
+        "Window"
+      ],
+      "ExposureFeatures": {
+        "ServiceWorker": "WebHIDOnServiceWorkers",
+        "DedicatedWorker": "WebHID",
+        "Window": "WebHID"
+      },
+      "SecureContext": true
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": false
+    }
+  },
+  {
+    "member": "serial",
+    "domain": "Devices",
+    "type": "Serial",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/modules/serial/navigator_serial.idl",
+      "extended": {
+        "ImplementedAs": "Serial",
+        "RuntimeEnabled": "Serial",
+        "SecureContext": true
+      }
+    },
+    "memberConditions": {
+      "SameObject": true
+    },
+    "interfaceSource": "third_party/blink/renderer/modules/serial/serial.idl",
+    "interfaceConditions": {
+      "Exposed": [
+        "Window",
+        "DedicatedWorker"
+      ],
+      "ExposureFeatures": {
+        "Window": "Serial",
+        "DedicatedWorker": "Serial"
+      },
+      "SecureContext": true
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": false
+    }
+  },
+  {
+    "member": "usb",
+    "domain": "Devices",
+    "type": "USB",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/modules/webusb/navigator_usb.idl",
+      "extended": {
+        "Exposed": "Window",
+        "ImplementedAs": "USB",
+        "SecureContext": true
+      }
+    },
+    "memberConditions": {
+      "SameObject": true,
+      "RuntimeEnabled": "WebUSB"
+    },
+    "interfaceSource": "third_party/blink/renderer/modules/webusb/usb.idl",
+    "interfaceConditions": {
+      "Exposed": [
+        "DedicatedWorker",
+        "ServiceWorker",
+        "Window"
+      ],
+      "ExposureFeatures": {
+        "DedicatedWorker": "WebUSBOnDedicatedWorkers",
+        "ServiceWorker": "WebUSBOnServiceWorkers",
+        "Window": "WebUSB"
+      },
+      "SecureContext": true
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": false
+    }
+  },
+  {
+    "member": "devicePosture",
+    "domain": "Devices",
+    "type": "DevicePosture",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/modules/device_posture/navigator_device_posture.idl",
+      "extended": {
+        "SecureContext": true,
+        "Exposed": [
+          "Window"
+        ],
+        "SameObject": true,
+        "RuntimeEnabled": "DevicePosture",
+        "ImplementedAs": "NavigatorDevicePosture"
+      }
+    },
+    "memberConditions": {
+      "MeasureAs": "DevicePosture"
+    },
+    "interfaceSource": "third_party/blink/renderer/modules/device_posture/device_posture.idl",
+    "interfaceConditions": {
+      "Exposed": "Window",
+      "RuntimeEnabled": "DevicePosture",
+      "SecureContext": true
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": false
+    }
+  },
+  {
+    "member": "serviceWorker",
+    "domain": "Browser services",
+    "type": "ServiceWorkerContainer",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/modules/service_worker/navigator_service_worker.idl",
+      "extended": {
+        "ImplementedAs": "NavigatorServiceWorker"
+      }
+    },
+    "memberConditions": {
+      "SecureContext": true,
+      "RaisesException": true,
+      "CallWith": "ScriptState"
+    },
+    "interfaceSource": "third_party/blink/renderer/modules/service_worker/service_worker_container.idl",
+    "interfaceConditions": {
+      "Exposed": [
+        "Window",
+        "DedicatedWorker"
+      ],
+      "ExposureFeatures": {
+        "Window": "StableBlinkFeatures",
+        "DedicatedWorker": "ServiceWorkerInDedicatedWorker"
+      },
+      "SecureContext": true
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": false
+    }
+  },
+  {
+    "member": "wakeLock",
+    "domain": "Browser services",
+    "type": "WakeLock",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/modules/wake_lock/navigator_wake_lock.idl",
+      "extended": {
+        "ImplementedAs": "WakeLock",
+        "SecureContext": true
+      }
+    },
+    "memberConditions": {
+      "SameObject": true
+    },
+    "interfaceSource": "third_party/blink/renderer/modules/wake_lock/wake_lock.idl",
+    "interfaceConditions": {
+      "SecureContext": true,
+      "Exposed": [
+        "DedicatedWorker",
+        "Window"
+      ],
+      "ExposureFeatures": {
+        "DedicatedWorker": "SystemWakeLock",
+        "Window": "WakeLock"
+      }
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": false
+    }
+  },
+  {
+    "member": "windowControlsOverlay",
+    "domain": "Browser services",
+    "type": "WindowControlsOverlay",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/modules/window_controls_overlay/navigator_window_controls_overlay.idl",
+      "extended": {
+        "ImplementedAs": "WindowControlsOverlay"
+      }
+    },
+    "memberConditions": {
+      "SameObject": true
+    },
+    "interfaceSource": "third_party/blink/renderer/modules/window_controls_overlay/window_controls_overlay.idl",
+    "interfaceConditions": {
+      "Exposed": "Window"
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": true
+    }
+  },
+  {
+    "member": "xr",
+    "domain": "Browser services",
+    "type": "XRSystem",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/modules/xr/navigator_xr.idl",
+      "extended": {
+        "ImplementedAs": "XRSystem"
+      }
+    },
+    "memberConditions": {
+      "SecureContext": true,
+      "RuntimeEnabled": "WebXR",
+      "MeasureAs": "NavigatorXR",
+      "SameObject": true
+    },
+    "interfaceSource": "third_party/blink/renderer/modules/xr/xr_system.idl",
+    "interfaceConditions": {
+      "SecureContext": true,
+      "Exposed": "Window",
+      "RuntimeEnabled": "WebXR"
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": false
+    }
+  },
+  {
+    "member": "managed",
+    "domain": "Browser services",
+    "type": "NavigatorManagedData",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/modules/managed_device/navigator_managed.idl",
+      "extended": {
+        "ImplementedAs": "NavigatorManagedData",
+        "SecureContext": true
+      }
+    },
+    "memberConditions": {
+      "SameObject": true
+    },
+    "interfaceSource": "third_party/blink/renderer/modules/managed_device/navigator_managed_data.idl",
+    "interfaceConditions": {
+      "ActiveScriptWrappable": true,
+      "Exposed": "Window",
+      "SecureContext": true
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": false
+    }
+  },
+  {
+    "member": "login",
+    "domain": "Browser services",
+    "type": "NavigatorLogin",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/modules/credentialmanagement/navigator_login.idl",
+      "extended": {
+        "ImplementedAs": "NavigatorLogin"
+      }
+    },
+    "memberConditions": {
+      "SecureContext": true,
+      "RuntimeEnabled": "FedCm"
+    },
+    "interfaceSource": "third_party/blink/renderer/modules/credentialmanagement/navigator_login.idl",
+    "interfaceConditions": {
+      "Exposed": "Window",
+      "SecureContext": true,
+      "RuntimeEnabled": "FedCm"
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": false
+    }
+  },
+  {
+    "member": "protectedAudience",
+    "domain": "Privacy",
+    "type": "ProtectedAudience",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/modules/ad_auction/navigator_auction.idl",
+      "extended": {
+        "ImplementedAs": "NavigatorAuction",
+        "RuntimeEnabled": "AdInterestGroupAPI",
+        "SecureContext": true
+      }
+    },
+    "memberConditions": {
+      "SameObject": true,
+      "CallWith": "ScriptState",
+      "DeprecateAs": "Fledge"
+    },
+    "interfaceSource": "third_party/blink/renderer/modules/ad_auction/protected_audience.idl",
+    "interfaceConditions": {
+      "SecureContext": true,
+      "Exposed": "Window"
+    },
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": false
+    }
+  },
+  {
+    "member": "deprecatedRunAdAuctionEnforcesKAnonymity",
+    "domain": "Privacy",
+    "type": "boolean",
+    "navigatorExposure": {
+      "Exposed": "Window"
+    },
+    "declaringSource": {
+      "interface": "Navigator",
+      "source": "third_party/blink/renderer/modules/ad_auction/navigator_auction.idl",
+      "extended": {
+        "ImplementedAs": "NavigatorAuction",
+        "RuntimeEnabled": "AdInterestGroupAPI",
+        "SecureContext": true
+      }
+    },
+    "memberConditions": {
+      "RuntimeEnabled": "EnforceAnonymityExposure",
+      "CallWith": "ScriptState",
+      "DeprecateAs": "Fledge"
+    },
+    "interfaceSource": null,
+    "interfaceConditions": null,
+    "chromeExposed": {
+      "secure": true,
+      "isolated": true,
+      "opaque": false
+    }
+  }
+]

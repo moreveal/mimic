@@ -14,7 +14,7 @@
   "mainBranchCommit": "b7fe14017379ddffae396d944fb8b59a5896c261",
   "browserProtocolSHA256": "5d992cd69fce456512e6f16aae4468edd4e75815c21f9393e6002bcebac3e1f7",
   "jsProtocolSHA256": "d953a7f4421b6170db7e24c7454ad0a6168bdcd6481616480cd124070f92b6c8",
-  "webIDLDatabaseSHA256": "9c64234635f12737de77d4cbedaea5d2a7840f74200060b89d740476e59781d7",
+  "webIDLDatabaseSHA256": "ad2360d6d766db372d6806c1173b57e4eb91ed7b4d8e7c31894dbee933c81cb8",
   "differentialBrowser": {
     "product": "Chrome",
     "version": "152.0.7977.82",
