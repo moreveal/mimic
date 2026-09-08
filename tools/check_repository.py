@@ -3,6 +3,8 @@
 import ast
 import json
 import re
+import subprocess
+import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -50,5 +52,6 @@ if issues:
     for path, reason in issues:
         print(f'FAIL {path}: {reason}')
     raise SystemExit(1)
+subprocess.run([sys.executable, str(ROOT / 'tools' / 'check_oracle_captures.py')], check=True)
 print(f'PASS: {count} publishable files checked; no credential/local-path patterns, debris or runtime site/vendor matches')
 print('Heuristic scan only; synthetic cookie/header test data and public SPKI keys are intentional.')

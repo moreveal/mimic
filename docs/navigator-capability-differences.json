@@ -28,6 +28,16 @@
         "value": false
       }
     },
+    "serial.ports": {
+      "chrome": {
+        "value": {
+          "pending": true
+        }
+      },
+      "mimic": {
+        "value": []
+      }
+    },
     "wakeLock.request": {
       "chrome": {
         "value": {
@@ -49,7 +59,7 @@
       "chrome": {
         "value": {
           "effectiveType": "4g",
-          "downlink": 1.75,
+          "downlink": 1.7,
           "rtt": 100,
           "saveData": false
         }

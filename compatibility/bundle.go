@@ -46,6 +46,8 @@ type ProtocolSchema struct {
 }
 
 type EnvironmentProfile struct {
+	ID    string
+	Mode  state.BrowserMode
 	State state.Environment
 	// NewTransport constructs the wire implementation selected by this exact
 	// compatibility bundle. The browser core only consumes net/http's neutral
@@ -54,8 +56,26 @@ type EnvironmentProfile struct {
 }
 
 type CompatExpectations struct {
-	Platform string
-	Channel  string
+	Platform      string
+	Channel       string
+	PrimaryOracle OracleDescriptor
+	Sources       map[state.BrowserMode]OracleExpectationSource
+}
+
+type OracleDescriptor struct {
+	ChromeVersion        string
+	ChromiumRevision     int
+	V8Version            string
+	Platform             string
+	Mode                 state.BrowserMode
+	EnvironmentProfileID string
+	Authoritative        bool
+}
+
+type OracleExpectationSource struct {
+	Mode          state.BrowserMode
+	CapturePath   string
+	Authoritative bool
 }
 
 type Bundle interface {

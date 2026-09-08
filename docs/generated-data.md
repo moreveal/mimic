@@ -14,6 +14,10 @@ from the exact Chrome product checked by `capture_chrome_surface.py` and
 `capture_chrome_worker_surface.py`; they are not reconstructed from IDL. Capture
 context includes ephemeral loopback ports/Blob IDs, so recapture is semantically
 comparable but not expected to be byte-identical.
+The retained exposure inputs are authoritative headful captures and include
+mandatory mode/profile/geometry provenance. Headless exposure may be used as a
+comparison but never silently replaces these inputs; see the
+[oracle policy](oracle-policy.md).
 
 `artifact-hashes.json` covers all retained generated-directory inputs and outputs,
 including the exposure captures. Exposure JSON was normalized to LF during cleanup, with no parsed-data changes;

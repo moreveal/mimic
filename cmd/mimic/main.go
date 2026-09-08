@@ -19,6 +19,7 @@ import (
 	gojaengine "github.com/moreveal/mimic/internal/engine/goja"
 	quickjsengine "github.com/moreveal/mimic/internal/engine/quickjs"
 	v8engine "github.com/moreveal/mimic/internal/engine/v8"
+	"github.com/moreveal/mimic/internal/state"
 )
 
 func main() {
@@ -26,8 +27,9 @@ func main() {
 	milestone := flag.Int("chrome", 152, "installed Chrome compatibility milestone")
 	navigationTimeout := flag.Duration("navigation-timeout", 30*time.Second, "maximum time for one navigation execution")
 	engineName := flag.String("engine", "v8", "ECMAScript engine adapter: v8, quickjs, or goja")
+	browserMode := flag.String("browser-mode", "headful", "selected environment profile: headful or headless")
 	flag.Parse()
-	bundle, err := chrome.Get(*milestone)
+	bundle, err := chrome.GetForMode(*milestone, state.BrowserMode(*browserMode))
 	if err != nil {
 		log.Fatal(err)
 	}

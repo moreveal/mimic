@@ -63,6 +63,10 @@ The target is **Chrome 152.0.7977.82**, Chromium
 WPT identifiers are in `chrome/152/target.json`. The target V8 source revision
 and the packaged gov8 binary are separately identified; their equivalence has
 not been established by this cleanup.
+The authoritative behavioral oracle is normal **headful** Windows x64 Chrome with
+a fresh controlled profile. Headless observations are explicitly mode-scoped and
+non-authoritative until a probe is proven invariant. See
+[the oracle policy](docs/oracle-policy.md) and [the headless audit](docs/oracle-headless-audit.md).
 
 Read [architecture and invariants](docs/architecture.md),
 [compatibility limits](docs/compatibility.md), and

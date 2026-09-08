@@ -7,7 +7,7 @@
     "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
     "v8Version": "15.2.124.21",
     "platform": "windows-x64",
-    "browserMode": "headful",
+    "browserMode": "headless",
     "commandLineFeatureOverrides": [],
     "viewport": {
       "width": 1272,
@@ -31,7 +31,7 @@
       "isolated": true,
       "opaque": false
     },
-    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "environmentProfileId": "chrome-152-windows-x64-headless-controlled-v1",
     "profileFreshness": "fresh-controlled",
     "visibilityState": "visible",
     "hasFocus": true
@@ -3930,14 +3930,15 @@
       },
       "geolocation.current": {
         "value": {
-          "pending": true
+          "code": 1,
+          "message": "User denied Geolocation"
         }
       },
       "connection": {
         "value": {
           "effectiveType": "4g",
-          "downlink": 1.65,
-          "rtt": 100,
+          "downlink": 1.75,
+          "rtt": 150,
           "saveData": false
         }
       },
@@ -3985,7 +3986,7 @@
       },
       "permissions.geo": {
         "value": {
-          "state": "prompt",
+          "state": "denied",
           "name": "geolocation",
           "tag": "[object PermissionStatus]"
         }
@@ -3997,8 +3998,9 @@
         }
       },
       "clipboard.read": {
-        "value": {
-          "pending": true
+        "error": {
+          "name": "NotAllowedError",
+          "message": "Failed to execute 'readText' on 'Clipboard': Read permission denied."
         }
       },
       "media.enumerate": {
@@ -4064,8 +4066,9 @@
         }
       },
       "media.getUserMedia": {
-        "value": {
-          "pending": true
+        "error": {
+          "name": "NotAllowedError",
+          "message": "Permission denied"
         }
       },
       "media.invalid": {
@@ -4180,8 +4183,9 @@
         }
       },
       "keyboard.lock": {
-        "value": {
-          "pending": true
+        "error": {
+          "name": "InvalidStateError",
+          "message": "lock() request could not be registered."
         }
       },
       "keyboard.layout": {
@@ -4320,14 +4324,14 @@
       },
       "permissions.all": {
         "value": {
-          "geolocation": "prompt",
+          "geolocation": "denied",
           "notifications": "prompt",
           "push": {
             "name": "NotSupportedError",
             "message": "Failed to execute 'query' on 'Permissions': Push Permission without userVisibleOnly:true isn't supported yet."
           },
           "midi": "prompt",
-          "camera": "prompt",
+          "camera": "denied",
           "microphone": "prompt",
           "background-fetch": "granted",
           "background-sync": "granted",
@@ -4345,7 +4349,7 @@
             "message": "Failed to execute 'query' on 'Permissions': Web NFC is not enabled."
           },
           "display-capture": "prompt",
-          "clipboard-read": "prompt",
+          "clipboard-read": "denied",
           "clipboard-write": "granted",
           "payment-handler": "granted",
           "idle-detection": "prompt",
@@ -4366,7 +4370,7 @@
             "name": "TypeError",
             "message": "Failed to execute 'query' on 'Permissions': The Speaker Selection API is not enabled."
           },
-          "keyboard-lock": "prompt",
+          "keyboard-lock": "denied",
           "pointer-lock": "granted",
           "fullscreen": {
             "name": "TypeError",
@@ -9610,7 +9614,7 @@
       "connection": {
         "value": {
           "effectiveType": "4g",
-          "downlink": 1.7,
+          "downlink": 1.5,
           "rtt": 100,
           "saveData": false
         }

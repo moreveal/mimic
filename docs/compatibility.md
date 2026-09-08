@@ -5,6 +5,9 @@ Active target: Chrome 152.0.7977.82 Stable, Windows x64, Chromium commit
 The exact Blink trees, V8/CDP revisions, WPT tree and differential-browser
 expectation are locked together in `chrome/152/target.json`. This does not
 claim complete semantic conformance to Chrome 152.
+The differential expectation names a headful fresh controlled profile as the
+primary oracle. Headless and historical captures are mode-scoped evidence under
+the [oracle policy](oracle-policy.md), not generic version semantics.
 
 Implemented semantics are intentionally narrow: basic documents, selectors,
 events, timers, navigation state, same-page history, storage, cookies, fetch,

@@ -112,6 +112,7 @@
     },true);
     attribute('PermissionStatus','state',s=>permission(s.name));attribute('PermissionStatus','name',s=>s.name);
     attribute('PermissionStatus','onchange',s=>s.onchange||null,(s,v)=>s.onchange=typeof v==='function'?v:null);
+    const permissionPrompt=()=>new Promise(()=>{});
     for(const [name,message] of [['get','No credential type was specified in the request.'],['create',"Only exactly one of 'password', 'federated', and 'publicKey' credential types are currently supported."]])method('CredentialsContainer',name,(_s,options={})=>{
       if(options.signal?.aborted)throw options.signal.reason;
       if(name==='get'&&options.password&&options.mediation==='silent')return null;
@@ -120,7 +121,8 @@
     method('CredentialsContainer','preventSilentAccess',()=>{state('preventSilent')},true);
     method('CredentialsContainer','store',()=>{throw error('NotSupportedError','Credential storage is unavailable.')},true);
     for(const name of ['read','readText'])method('Clipboard',name,()=>{
-      if(permission('clipboard-read')!=='granted'){if(permission('clipboard-read')==='prompt')state('permissionSet','clipboard-read','denied');throw error('NotAllowedError',`Failed to execute '${name}' on 'Clipboard': Read permission denied.`)}
+      if(permission('clipboard-read')==='prompt'&&state('presentation').mode==='headful')return permissionPrompt();
+      if(permission('clipboard-read')!=='granted'){throw error('NotAllowedError',`Failed to execute '${name}' on 'Clipboard': Read permission denied.`)}
       if(name==='readText')return state('clipboard');
       throw error('NotSupportedError','Clipboard item transport is unavailable.');
     },true);
@@ -133,9 +135,9 @@
     const locate=(success,failure,options,watch)=>{
       if(typeof success!=='function')throw new TypeError('The callback provided as parameter 1 is not a function.');
       const id=++watchID;if(watch)watches.add(id);
+      if(secureContext&&permission('geolocation')==='prompt'&&state('presentation').mode==='headful')return id;
       setTimeout(()=>{if(watch&&!watches.has(id))return;if(typeof failure==='function'){
         const denied=!secureContext||permission('geolocation')!=='granted';
-        if(secureContext&&permission('geolocation')==='prompt')state('permissionSet','geolocation','denied');
         failure(create('GeolocationPositionError',{code:denied?1:2,message:!secureContext?'Only secure origins are allowed (see: https://goo.gl/Y0ZkNV).':denied?'User denied Geolocation':'Position unavailable'}));
       }},0);return id;
     };
@@ -208,9 +210,8 @@
     method('MediaDeviceInfo','toJSON',s=>({deviceId:s.deviceId,kind:s.kind,label:s.label,groupId:s.groupId}));
     method('MediaDevices','getUserMedia',(_s,constraints={})=>{
       if(!constraints.audio&&!constraints.video)throw new TypeError("Failed to execute 'getUserMedia' on 'MediaDevices': At least one of audio and video must be requested");
+      if(state('presentation').mode==='headful'&&((constraints.video&&permission('camera')==='prompt')||(constraints.audio&&permission('microphone')==='prompt')))return permissionPrompt();
       if((constraints.video&&permission('camera')!=='granted')||(constraints.audio&&permission('microphone')!=='granted')){
-        if(constraints.video&&permission('camera')==='prompt')state('permissionSet','camera','denied');
-        if(constraints.audio&&permission('microphone')==='prompt')state('permissionSet','microphone','denied');
         throw error('NotAllowedError','Permission denied');
       }
       throw error('NotFoundError','Requested device not found');
@@ -249,7 +250,10 @@
     attribute('VirtualKeyboard','overlaysContent',s=>!!s.overlaysContent,(s,v)=>s.overlaysContent=!!v);
     method('VirtualKeyboard','show',()=>{});method('VirtualKeyboard','hide',()=>{});
     method('Keyboard','unlock',()=>{});
-    method('Keyboard','lock',()=>{state('permissionSet','keyboard-lock','denied');throw error('InvalidStateError','lock() request could not be registered.')},true);
+    method('Keyboard','lock',()=>{
+      if(permission('keyboard-lock')==='prompt'&&state('presentation').mode==='headful')return permissionPrompt();
+      throw error('InvalidStateError','lock() request could not be registered.');
+    },true);
     method('Keyboard','getLayoutMap',()=>create('KeyboardLayoutMap',{map:new Map(Object.entries(state('keyboard')||{}))}),true);
     attribute('KeyboardLayoutMap','size',s=>s.map.size);
     for(const name of ['get','has','keys','values','entries'])method('KeyboardLayoutMap',name,(s,...args)=>s.map[name](...args));

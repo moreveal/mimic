@@ -102,6 +102,8 @@ func addCapabilityHosts(r *Realm, h map[string]any) {
 			return r.val(map[string]any{"vendorSub": "", "productSub": "20030107", "appCodeName": "Mozilla", "doNotTrack": dnt}), nil
 		case "activation":
 			return r.val(map[string]any{"isActive": !r.activationAt.IsZero() && r.scheduler.Now().Sub(r.activationAt) < 5*time.Second, "hasBeenActive": !r.activationAt.IsZero(), "pending": r.scheduler.HasPendingInput()}), nil
+		case "presentation":
+			return r.val(map[string]any{"mode": string(e.Presentation.Mode)}), nil
 		case "network":
 			return r.val(map[string]any{"effectiveType": e.Network.EffectiveType, "downlink": e.Network.DownlinkMbps, "rtt": e.Network.RTTMillis, "saveData": e.Network.SaveData}), nil
 		case "devices":

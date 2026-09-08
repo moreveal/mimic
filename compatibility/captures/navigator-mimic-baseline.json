@@ -1,6 +1,13 @@
 {
   "product": "Mimic/152.0.7977.82",
-  "profile": "clean headless Windows; no feature overrides",
+  "environmentSelection": {
+    "browserMode": "headless",
+    "environmentProfileId": "historical-chrome-152-windows-x64-headless-uncontrolled"
+  },
+  "comparisonOracle": {
+    "capture": "navigator-chrome152-headless.json",
+    "browserMode": "headless"
+  },
   "secure": {
     "isolated": false,
     "members": {
