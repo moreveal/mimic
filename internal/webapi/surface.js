@@ -159,15 +159,23 @@
     const old=syntheticParents.get(node)||(fragmentSlots.has(parent)?node.parentNode:null);
     if(old)old.removeChild(node);
   };
+  // Drain fragment membership once. Repeated removal from the front shifts
+  // the remaining array for every child, making one insertion quadratic.
+  const takeFragmentChildren=node=>{
+    const state=fragmentState(node),children=state.children;
+    state.children=[];state.html='';
+    for(const child of children)syntheticParents.delete(child);
+    return children;
+  };
   def(Node.prototype,'appendChild',{value:function(node){
     prepareInsertion(this,node,null);
-    if(fragmentSlots.has(node)){for(const child of Array.from(fragmentState(node).children))this.appendChild(child);return node}
+    if(fragmentSlots.has(node)){for(const child of takeFragmentChildren(node))this.appendChild(child);return node}
     detachForInsertion(this,node);return appendNode.call(this,node);
   },writable:true});
   def(Node.prototype,'insertBefore',{value:function(node,before){
     prepareInsertion(this,node,before);
     if(node===before)return node;
-    if(fragmentSlots.has(node)){for(const child of Array.from(fragmentState(node).children))this.insertBefore(child,before);return node}
+    if(fragmentSlots.has(node)){for(const child of takeFragmentChildren(node))this.insertBefore(child,before);return node}
     detachForInsertion(this,node);return insertNode.call(this,node,before);
   },writable:true});
   const styleCache=new WeakMap();
