@@ -8,3 +8,6 @@
 *.mod text eol=lf
 *.png binary
 *.jpg binary
+
+# Frozen benchmark fingerprints cover exact bytes, including line endings.
+benchmark/** -text
