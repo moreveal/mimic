@@ -945,9 +945,17 @@ func (r *Realm) install() error {
 		return r.val(out), nil
 	})
 	host["create"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		n := r.document.CreateElement(strarg(a, 0))
+		tag := strarg(a, 0)
+		n := r.document.CreateElement(tag)
 		r.detached[n.ID] = n
-		return r.val(nodeData(n)), nil
+		// ASCII case normalization is identical in Go and JavaScript. For
+		// other names preserve Go's existing Unicode normalization exactly.
+		for i := 0; i < len(tag); i++ {
+			if tag[i] >= 128 {
+				return r.val(nodeData(n)), nil
+			}
+		}
+		return r.val(n.ID), nil
 	})
 	host["createNS"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		n := r.document.CreateElementNS(strarg(a, 0), strarg(a, 1))
@@ -957,12 +965,12 @@ func (r *Realm) install() error {
 	host["createComment"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		n := r.document.CreateComment(strarg(a, 0))
 		r.detached[n.ID] = n
-		return r.val(nodeData(n)), nil
+		return r.val(n.ID), nil
 	})
 	host["createText"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		n := r.document.CreateText(strarg(a, 0))
 		r.detached[n.ID] = n
-		return r.val(nodeData(n)), nil
+		return r.val(n.ID), nil
 	})
 	host["append"] = r.fn(r.hostAppend)
 	host["insert"] = r.fn(r.hostInsert)
