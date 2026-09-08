@@ -151,7 +151,8 @@ func (*Bundle) Version() compatibility.ChromeVersion {
 
 var immutableSurface = sync.OnceValue(func() *compatibility.WebAPISurface {
 	return &compatibility.WebAPISurface{
-		GeneratedJavaScript: generated.Surface,
+		GeneratedJavaScript:  generated.Surface,
+		GeneratedCatalogJSON: generated.SurfaceCatalog,
 		Exposures: map[string]compatibility.RealmExposure{
 			"window.insecure.non-isolated": generated.InsecureWindowExposure(),
 			"window.secure.non-isolated":   generated.SecureWindowExposure(),

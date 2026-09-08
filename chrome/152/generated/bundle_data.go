@@ -6,6 +6,9 @@ import _ "embed"
 //go:embed surface.js
 var Surface string
 
+//go:embed surface-catalog.json
+var SurfaceCatalog string
+
 var protocolMethods = map[string]struct{}{
 	"Accessibility.getPartialAXTree":                   {},
 	"Animation.disable":                                {},
