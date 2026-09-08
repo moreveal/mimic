@@ -910,3 +910,18 @@ Final ordinary correctness and scoped race checks pass; exact commands and raw
 logs are preserved. Production remains 52a2aa2, with full07 DOM execution
 68.929 ms versus Chrome 30.747 ms. The requested 73.406 versus 30.326 ms is the
 verified historical milestone05/original-Chrome comparison, not the latest run.
+
+## One focused wrapper diagnostic — explicitly requested after stopping optimization
+
+Exactly one frozen DOM execution was profiled at production source 7886b13,
+using isolated diagnostic instrumentation (6cf4506), local call counters, V8 CPU
+sampling and 1024-byte allocation sampling including collected objects. No
+optimization or second diagnostic run was performed. Correctness passed.
+
+`wrapper-focused-20260909/report.md` contains the top ten wrapper operations,
+call counts, sampled self/inclusive CPU, sampled V8 allocation attribution,
+direct host crossings and explicit Go-attribution limitations. Key counts are
+24,008 wrap calls, 63,026 Proxy gets, 96,028 elementSlot reads and 66,028 API
+observation checks. Only 28 observation checks cross to Go; wrap performs zero
+nodeData calls. Total workload host calls remain 54,055. All raw artifacts,
+diagnostic patch and launch-hash receipts are preserved with the report.

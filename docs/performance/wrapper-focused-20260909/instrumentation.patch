@@ -1,0 +1,130 @@
+diff --git a/internal/browser/performance_profile_test.go b/internal/browser/performance_profile_test.go
+index 8913ff5..b8cd0d1 100644
+--- a/internal/browser/performance_profile_test.go
++++ b/internal/browser/performance_profile_test.go
+@@ -144,6 +144,9 @@ func TestPerformanceProfile(t *testing.T) {
+ 				t.Fatal(e)
+ 			}
+ 		}
++		if _, e = p.Top.Realm.runtime.Eval(ctx, `for(const k of Object.keys(__wrapperCensus))__wrapperCensus[k]=0`, "diagnostic:reset-wrapper-census"); e != nil {
++			t.Fatal(e)
++		}
+ 		var finishCPU func() (any, error)
+ 		if os.Getenv("MIMIC_PROFILE_WHOLE_CPU") == "1" && (os.Getenv("MIMIC_PROFILE_CPU_EDGES") != "1" || i < 10 || i >= iterations-10) {
+ 			finishCPU, e = p.Top.Realm.runtime.(interface {
+@@ -188,6 +191,11 @@ func TestPerformanceProfile(t *testing.T) {
+ 			}
+ 		}
+ 		sample("execute", p, execution)
++		census, e := p.Top.Realm.runtime.Eval(ctx, `JSON.stringify(__wrapperCensus)`, "diagnostic:read-wrapper-census")
++		if e != nil {
++			t.Fatal(e)
++		}
++		records[len(records)-1]["wrapper_census"] = json.RawMessage(census.String())
+ 		if cpuProfile != nil {
+ 			records[len(records)-1]["workload_cpu_profile"] = cpuProfile
+ 		}
+diff --git a/internal/engine/v8/native_profile.go b/internal/engine/v8/native_profile.go
+index c205480..3e20e86 100644
+--- a/internal/engine/v8/native_profile.go
++++ b/internal/engine/v8/native_profile.go
+@@ -37,7 +37,7 @@ func startNativeProfile(isolate *gov8.Isolate, realm *gov8.Context) (func() (jso
+ 		return nil, err
+ 	}
+ 	closeAll := func() { session.Close(); inspector.ContextDestroyed(realm); inspector.Close() }
+-	commands := []string{`{"id":1,"method":"Profiler.enable"}`, `{"id":2,"method":"Profiler.setSamplingInterval","params":{"interval":100}}`, `{"id":3,"method":"Profiler.start"}`}
++	commands := []string{`{"id":1,"method":"Profiler.enable"}`, `{"id":2,"method":"Profiler.setSamplingInterval","params":{"interval":100}}`, `{"id":3,"method":"Profiler.start"}`, `{"id":4,"method":"HeapProfiler.startSampling","params":{"samplingInterval":1024,"includeObjectsCollectedByMajorGC":true,"includeObjectsCollectedByMinorGC":true}}`}
+ 	for i, command := range commands {
+ 		if err = session.DispatchProtocolMessage(gov8.NewInspectorStringView8([]byte(command))); err != nil {
+ 			closeAll()
+@@ -53,7 +53,19 @@ func startNativeProfile(isolate *gov8.Isolate, realm *gov8.Context) (func() (jso
+ 	}
+ 	return func() (json.RawMessage, error) {
+ 		defer closeAll()
+-		err := session.DispatchProtocolMessage(gov8.NewInspectorStringView8([]byte(`{"id":4,"method":"Profiler.stop"}`)))
+-		return channel.responses[4], err
++		err := session.DispatchProtocolMessage(gov8.NewInspectorStringView8([]byte(`{"id":5,"method":"Profiler.stop"}`)))
++		if err != nil {
++			return nil, err
++		}
++		if err = session.DispatchProtocolMessage(gov8.NewInspectorStringView8([]byte(`{"id":6,"method":"HeapProfiler.stopSampling"}`))); err != nil {
++			return nil, err
++		}
++		var cpu map[string]any
++		if err = json.Unmarshal(channel.responses[5], &cpu); err != nil {
++			return nil, err
++		}
++		cpu["heap_sampling"] = channel.responses[6]
++		data, err := json.Marshal(cpu)
++		return data, err
+ 	}, nil
+ }
+diff --git a/internal/webapi/surface.js b/internal/webapi/surface.js
+index 008eb8b..f03b4d7 100644
+--- a/internal/webapi/surface.js
++++ b/internal/webapi/surface.js
+@@ -1,9 +1,11 @@
++let __wrapperCensus;
+ (function(host) {
+   'use strict';
++  const WC=__wrapperCensus={"wrap": 0, "observe": 0, "observationHandler": 0, "wrapperProxyGet": 0, "wrapperProxySet": 0, "recordAPIAccess": 0, "elementSlot": 0, "freshNodeData": 0, "freshCharacterData": 0, "nodeList": 0, "htmlCollection": 0, "qualified": 0, "wrap_nodeData_crossings": 0, "observer_apiAccess_crossings": 0};
+   const hostToken=host.token();
+   // Match the realm trace's once-per-(name,supported) contract before FFI.
+   const tracedAccesses=new Map();
+-  const recordAPIAccess=(name,supported)=>{const bit=supported?1:2,seen=tracedAccesses.get(name)||0;if(seen&bit)return;tracedAccesses.set(name,seen|bit);host.apiAccess(name,supported)};
++  const recordAPIAccess=(name,supported)=>{WC.recordAPIAccess++;const bit=supported?1:2,seen=tracedAccesses.get(name)||0;if(seen&bit)return;tracedAccesses.set(name,seen|bit);WC.observer_apiAccess_crossings++;host.apiAccess(name,supported)};
+   Object.defineProperty(globalThis,'__mimicAttributeUnsafeInterfaces',{value:new Set(['WritableStream','WritableStreamDefaultWriter','TransformStream','TransformStreamDefaultController','RTCDataChannel','RTCPeerConnection','GPUDevice','Plugin','PluginArray','MimeType','MimeTypeArray']),configurable:true});
+   const engineGlobals=new Set(Reflect.ownKeys(globalThis));
+   const nativeFunctionText=new WeakMap();
+@@ -101,7 +103,7 @@
+   const cssSlots=new WeakMap(),cssState=value=>cssSlots.get(value),cssEntries=value=>{const state=cssState(value),entries=state.computed?computedCSSDeclarations(state.element):parseCSS(state.element.getAttribute('style')||'');if(state.computed){const position=String(entries.find(x=>x.name==='position')?.value||'static').toLowerCase(),uaDisplay=inlineDisplayTags.has(state.element.tagName)?'inline':'block',display=entries.find(x=>x.name==='display');if(['absolute','fixed'].includes(position)){if(display)display.value=blockifiedDisplay(display.value);else entries.push({name:'display',value:blockifiedDisplay(uaDisplay),priority:''})}else if(!display)entries.push({name:'display',value:uaDisplay,priority:''});const defaults=[['position','static'],['visibility','visible'],['content-visibility','visible'],['opacity','1'],['transform','none'],['box-sizing','content-box'],['min-height','0px'],['padding-top','0px'],['padding-bottom','0px'],['width',state.element.offsetWidth+'px'],['height',state.element.offsetHeight+'px']];for(const [name,entryValue] of defaults)if(!entries.some(x=>x.name===name))entries.push({name,value:entryValue,priority:''})}return entries},writeCSSEntries=(value,entries)=>{const state=cssState(value);if(state.computed)throw new DOMException('These styles are computed, and therefore the CSSStyleDeclaration is read-only.','NoModificationAllowedError');state.element.setAttribute('style',serializeCSS(entries))};
+   class CSSStyleDeclaration { constructor(token,element,computed=false){if(token!==hostToken)illegal('CSSStyleDeclaration');cssSlots.set(this,{element,computed})} get length(){return cssEntries(this).length} get cssText(){return cssState(this).computed?'':serializeCSS(cssEntries(this))} set cssText(v){writeCSSEntries(this,parseCSS(String(v)))} item(i){return cssEntries(this)[Number(i)]?.name||''} getPropertyValue(name){return cssEntries(this).find(x=>x.name===cssName(name))?.value||''} getPropertyPriority(name){return cssEntries(this).find(x=>x.name===cssName(name))?.priority||''} setProperty(name,value,priority=''){name=cssName(name);priority=String(priority).toLowerCase();if(!name||(priority&&priority!=='important'))return;const entries=cssEntries(this).filter(x=>x.name!==name);if(String(value)!=='')entries.push({name,value:String(value),priority});writeCSSEntries(this,entries)} removeProperty(name){name=cssName(name);const entries=cssEntries(this),old=entries.find(x=>x.name===name)?.value||'';writeCSSEntries(this,entries.filter(x=>x.name!==name));return old} }
+   const cssDeclaration=(element,computed=false)=>{const target=new CSSStyleDeclaration(hostToken,element,computed),proxy=new Proxy(target,{get(t,p,r){if(typeof p==='string'){if(/^\d+$/.test(p))return t.item(Number(p));if(!Reflect.has(t,p))return t.getPropertyValue(p)}return Reflect.get(t,p,r)},set(t,p,v,r){if(typeof p==='string'&&!Reflect.has(t,p)){t.setProperty(p,String(v));return true}return Reflect.set(t,p,v,r)}});cssSlots.set(proxy,cssSlots.get(target));return proxy};
+-  const elementData=new WeakMap(),elementClassLists=new WeakMap(),elementShadows=new WeakMap(),syntheticParents=new WeakMap(),elementSlot=value=>elementData.get(value);
++  const elementData=new WeakMap(),elementClassLists=new WeakMap(),elementShadows=new WeakMap(),syntheticParents=new WeakMap(),elementSlot=value=>{WC.elementSlot++;return elementData.get(value)};
+   const fragmentSlots=new WeakMap(),shadowSlots=new WeakMap(),fragmentState=value=>fragmentSlots.get(value);
+   class DocumentFragment extends Node {
+     constructor(token){super(hostToken);fragmentSlots.set(this,{children:[],html:''})}
+@@ -206,15 +208,15 @@
+   class HTMLMetaElement extends HTMLElement { get httpEquiv(){return this.getAttribute('http-equiv')||''} set httpEquiv(value){this.setAttribute('http-equiv',String(value))} get content(){return this.getAttribute('content')||''} set content(value){this.setAttribute('content',String(value))} }
+   const htmlElementInterfaces={HTML:'HTMLHtmlElement',HEAD:'HTMLHeadElement',BODY:'HTMLBodyElement',DIV:'HTMLDivElement',H1:'HTMLHeadingElement',H2:'HTMLHeadingElement',H3:'HTMLHeadingElement',H4:'HTMLHeadingElement',H5:'HTMLHeadingElement',H6:'HTMLHeadingElement',P:'HTMLParagraphElement',SPAN:'HTMLSpanElement',STYLE:'HTMLStyleElement',LINK:'HTMLLinkElement',META:'HTMLMetaElement',OL:'HTMLOListElement',UL:'HTMLUListElement',LI:'HTMLLIElement',FORM:'HTMLFormElement',INPUT:'HTMLInputElement',BUTTON:'HTMLButtonElement',LABEL:'HTMLLabelElement',TABLE:'HTMLTableElement',THEAD:'HTMLTableSectionElement',TBODY:'HTMLTableSectionElement',TFOOT:'HTMLTableSectionElement',TR:'HTMLTableRowElement',TD:'HTMLTableCellElement',TH:'HTMLTableCellElement',SELECT:'HTMLSelectElement',OPTION:'HTMLOptionElement',TEXTAREA:'HTMLTextAreaElement',CANVAS:'HTMLCanvasElement'};
+   const elementWrappers=new Map();
+-  const wrap=d=>{if(typeof d==='number'){const cached=elementWrappers.get(String(d));if(cached)return cached;d=host.nodeData(d)}if(!d)return null;if(d.type==='document')return document;const key=String(d.nodeId),cached=elementWrappers.get(key);if(cached){const slot=elementSlot(cached);if(slot)Object.assign(slot,d);return cached}let element;if(d.type==='text')element=new Text(hostToken,d);else if(d.type==='comment')element=new Comment(hostToken,d);else if(d.namespaceURI==='http://www.w3.org/2000/svg')element=d.tagName==='SVG'?new SVGSVGElement(hostToken,d):new SVGElement(hostToken,d);else if(d.tagName==='SCRIPT')element=new HTMLScriptElement(hostToken,d);else if(d.tagName==='IMG')element=new HTMLImageElement(hostToken,d);else if(d.tagName==='IFRAME')element=new HTMLIFrameElement(hostToken,d);else if(d.tagName==='A')element=new HTMLAnchorElement(hostToken,d);else{const name=htmlElementInterfaces[d.tagName],ctor=name&&globalThis[name];if(typeof ctor==='function'&&ctor.prototype){element=Object.create(ctor.prototype);elementData.set(element,d)}else element=new HTMLElement(hostToken,d)}const label=d.type==='element'?'Element<'+String(d.tagName||'').toLowerCase()+'>':d.type==='comment'?'Comment':'Text';const proxy=observe(label,element);elementWrappers.set(key,proxy);return proxy};
++  const wrap=d=>{WC.wrap++;if(typeof d==='number'){const cached=elementWrappers.get(String(d));if(cached)return cached;WC.wrap_nodeData_crossings++;d=host.nodeData(d)}if(!d)return null;if(d.type==='document')return document;const key=String(d.nodeId),cached=elementWrappers.get(key);if(cached){const slot=elementSlot(cached);if(slot)Object.assign(slot,d);return cached}let element;if(d.type==='text')element=new Text(hostToken,d);else if(d.type==='comment')element=new Comment(hostToken,d);else if(d.namespaceURI==='http://www.w3.org/2000/svg')element=d.tagName==='SVG'?new SVGSVGElement(hostToken,d):new SVGElement(hostToken,d);else if(d.tagName==='SCRIPT')element=new HTMLScriptElement(hostToken,d);else if(d.tagName==='IMG')element=new HTMLImageElement(hostToken,d);else if(d.tagName==='IFRAME')element=new HTMLIFrameElement(hostToken,d);else if(d.tagName==='A')element=new HTMLAnchorElement(hostToken,d);else{const name=htmlElementInterfaces[d.tagName],ctor=name&&globalThis[name];if(typeof ctor==='function'&&ctor.prototype){element=Object.create(ctor.prototype);elementData.set(element,d)}else element=new HTMLElement(hostToken,d)}const label=d.type==='element'?'Element<'+String(d.tagName||'').toLowerCase()+'>':d.type==='comment'?'Comment':'Text';const proxy=observe(label,element);elementWrappers.set(key,proxy);return proxy};
+   globalThis.__mimicDispatchFrameLoad=nodeId=>{const element=elementWrappers.get(String(nodeId));if(element)dispatchTrusted(element,new Event('load'))};
+-  const htmlCollection=get=>new Proxy(Object.create(HTMLCollection.prototype),{get(o,p){const a=get();if(p==='length')return a.length;if(p==='item')return i=>wrap(a[Number(i)]);if(p==='namedItem')return n=>wrap(a.find(x=>(x.attributes||{}).id===String(n)||(x.attributes||{}).name===String(n)));if(p===Symbol.iterator)return function*(){for(const x of a)yield wrap(x)};if(typeof p==='string'&&/^\d+$/.test(p))return wrap(a[Number(p)]);return Reflect.get(o,p)}});
++  const htmlCollection=get=>{WC.htmlCollection++;return new Proxy(Object.create(HTMLCollection.prototype),{get(o,p){const a=get();if(p==='length')return a.length;if(p==='item')return i=>wrap(a[Number(i)]);if(p==='namedItem')return n=>wrap(a.find(x=>(x.attributes||{}).id===String(n)||(x.attributes||{}).name===String(n)));if(p===Symbol.iterator)return function*(){for(const x of a)yield wrap(x)};if(typeof p==='string'&&/^\d+$/.test(p))return wrap(a[Number(p)]);return Reflect.get(o,p)}})};
+   class HTMLCollection { constructor(){illegal('HTMLCollection')} item(){} namedItem(){} }
+-  const nodeList=data=>new Proxy(Object.create(NodeList.prototype),{get(o,p){if(p==='length')return data.length;if(p==='item')return i=>wrap(data[Number(i)]);if(p==='forEach')return (cb,thisArg)=>data.forEach((x,i)=>cb.call(thisArg,wrap(x),i,o));if(p===Symbol.iterator)return function*(){for(const x of data)yield wrap(x)};if(typeof p==='string'&&/^\d+$/.test(p))return wrap(data[Number(p)]);return Reflect.get(o,p)}});
++  const nodeList=data=>{WC.nodeList++;return new Proxy(Object.create(NodeList.prototype),{get(o,p){if(p==='length')return data.length;if(p==='item')return i=>wrap(data[Number(i)]);if(p==='forEach')return (cb,thisArg)=>data.forEach((x,i)=>cb.call(thisArg,wrap(x),i,o));if(p===Symbol.iterator)return function*(){for(const x of data)yield wrap(x)};if(typeof p==='string'&&/^\d+$/.test(p))return wrap(data[Number(p)]);return Reflect.get(o,p)}})};
+   class NodeList { constructor(){illegal('NodeList')} item(){} forEach(){} }
+   // New node shape is already known here; only canonical identity crosses back.
+-  const freshNodeData=(nodeId,type,tagName,namespaceURI,text)=>({attributes:{},children:[],namespaceURI,nodeId,parentId:0,tagName,text,type});
+-  const freshCharacterData=(id,type,text)=>wrap(/[\uD800-\uDFFF]/.test(text)?id:freshNodeData(id,type,'','',text));
++  const freshNodeData=(nodeId,type,tagName,namespaceURI,text)=>{WC.freshNodeData++;return {attributes:{},children:[],namespaceURI,nodeId,parentId:0,tagName,text,type}};
++  const freshCharacterData=(id,type,text)=>{WC.freshCharacterData++;return wrap(/[\uD800-\uDFFF]/.test(text)?id:freshNodeData(id,type,'','',text))};
+   class Document extends Node { get currentScript(){return wrap(host.currentScript())} get title(){return host.title()} set title(v){host.setTitle(String(v))} get lang(){return this.documentElement.getAttribute('lang')||''} set lang(v){this.documentElement.setAttribute('lang',String(v))} get dir(){return this.documentElement.getAttribute('dir')||''} set dir(v){this.documentElement.setAttribute('dir',String(v))} get readyState(){return host.readyState()} get visibilityState(){return'visible'} get hidden(){return false} get prerendering(){return false} get wasDiscarded(){return false} get documentElement(){return wrap(host.query('html'))} get head(){return wrap(host.query('head'))} get body(){return wrap(host.query('body'))} get location(){return loc} get URL(){return loc.href} get documentURI(){return loc.href} get cookie(){return host.documentCookie()} set cookie(v){host.setDocumentCookie(String(v))} get featurePolicy(){return documentPolicy} get permissionsPolicy(){return documentPolicy} querySelector(s){return wrap(host.query(String(s)))} querySelectorAll(s){return nodeList(host.queryAll(String(s)))} getElementById(id){return this.querySelector('#'+id)} getElementsByTagName(tag){const name=String(tag);return htmlCollection(()=>host.elementsByTagName(name))} createElement(tag){tag=String(tag);const value=host.create(tag);return wrap(typeof value==='number'?freshNodeData(value,'element',tag.toUpperCase(),'http://www.w3.org/1999/xhtml',''):value)} createElementNS(namespace,qualifiedName){return wrap(host.createNS(namespace==null?'':String(namespace),String(qualifiedName)))} createTextNode(data){data=String(data);return freshCharacterData(host.createText(data),'text',data)} createComment(data){data=String(data);return freshCharacterData(host.createComment(data),'comment',data)} createDocumentFragment(){return new DocumentFragment(hostToken)} }
+   Object.defineProperty(Document.prototype,'createNodeIterator',{value:function(root,whatToShow=0xffffffff,filter=null){if(!(root instanceof Node))throw new TypeError("Failed to execute 'createNodeIterator' on 'Document': parameter 1 is not of type 'Node'.");const nodes=[],visit=node=>{if(node instanceof Element)nodes.push(node);if(node instanceof Document){const element=node.documentElement;if(element)visit(element)}else if(node&&node.children)for(const child of Array.from(node.children))visit(child)};visit(root);const shown=Number(whatToShow)>>>0,accepted=nodes.filter(node=>{if(!(shown&1))return false;if(!filter)return true;const result=typeof filter==='function'?filter(node):filter.acceptNode(node);return Number(result)===1});let index=-1;const iterator=Object.create((globalThis.NodeIterator&&globalThis.NodeIterator.prototype)||Object.prototype);Object.defineProperties(iterator,{root:{value:root,enumerable:true},whatToShow:{value:shown,enumerable:true},filter:{value:filter,enumerable:true},referenceNode:{get:()=>accepted[Math.max(index,0)]||root,enumerable:true},pointerBeforeReferenceNode:{get:()=>index<0,enumerable:true},nextNode:{value:()=>accepted[++index]||null},previousNode:{value:()=>index>0?accepted[--index]:null},detach:{value:()=>{}}});return iterator},writable:true,enumerable:true,configurable:true});
+   Object.defineProperties(Document.prototype,{all:{get:function(){return undefined},enumerable:true,configurable:true},scripts:{get:function(){return this.getElementsByTagName('script')},enumerable:true,configurable:true},styleSheets:{get:function(){const owners=[...Array.from(this.querySelectorAll('style')),...Array.from(this.querySelectorAll('link')).filter(node=>String(node.getAttribute('rel')||'').toLowerCase().split(/\s+/).includes('stylesheet')&&node.getAttribute('href')!==null)],sheets=owners.map(ownerNode=>({ownerNode,disabled:false,href:ownerNode.localName==='link'?new URL(ownerNode.getAttribute('href'),this.URL).href:null,media:{length:0,mediaText:ownerNode.getAttribute('media')||''},cssRules:[]}));return new Proxy(Object.create((globalThis.StyleSheetList&&globalThis.StyleSheetList.prototype)||Object.prototype),{get(target,key,receiver){if(key==='length')return sheets.length;if(key==='item')return index=>sheets[Number(index)]||null;if(key===Symbol.iterator)return sheets[Symbol.iterator].bind(sheets);if(typeof key==='string'&&/^\d+$/.test(key))return sheets[Number(key)];return Reflect.get(target,key,receiver)}})},enumerable:true,configurable:true},referrer:{get:()=>'',enumerable:true,configurable:true}});
+@@ -370,16 +372,16 @@
+   // Share their code and qualified property names; still check support on every
+   // access so own properties and prototype changes retain their tracing semantics.
+   const observationHandlers=new Map();
+-  const observationHandler=name=>{
++  const observationHandler=name=>{WC.observationHandler++;
+     let handler=observationHandlers.get(name);if(handler)return handler;
+-    const names=new Map(),qualified=p=>{let value=names.get(p);if(value===undefined){value=name+'.'+p;if(names.size<128)names.set(p,value)}return value};
++    const names=new Map(),qualified=p=>{WC.qualified++;let value=names.get(p);if(value===undefined){value=name+'.'+p;if(names.size<128)names.set(p,value)}return value};
+     handler={
+-      get(t,p,r){if(typeof p==='string'&&!p.startsWith('_')&&(p!=='then'||Reflect.has(t,p))){const key=qualified(p);recordAPIAccess(key,Reflect.has(t,p)||targetAbsentProperties.has(key))}return Reflect.get(t,p,r)},
+-      set(t,p,v,r){if(typeof p==='string'&&!p.startsWith('_')){const key=qualified(p);recordAPIAccess(key,Reflect.has(t,p)||targetAbsentProperties.has(key))}return Reflect.set(t,p,v,r)}
++      get: function wrapperProxyGet(t,p,r){WC.wrapperProxyGet++;if(typeof p==='string'&&!p.startsWith('_')&&(p!=='then'||Reflect.has(t,p))){const key=qualified(p);recordAPIAccess(key,Reflect.has(t,p)||targetAbsentProperties.has(key))}return Reflect.get(t,p,r)},
++      set: function wrapperProxySet(t,p,v,r){WC.wrapperProxySet++;if(typeof p==='string'&&!p.startsWith('_')){const key=qualified(p);recordAPIAccess(key,Reflect.has(t,p)||targetAbsentProperties.has(key))}return Reflect.set(t,p,v,r)}
+     };
+     observationHandlers.set(name,handler);return handler;
+   };
+-  const observe=(name,target)=>{const proxy=new Proxy(target,observationHandler(name));if(elementData.has(target))elementData.set(proxy,elementData.get(target));if(scriptStates.has(target))scriptStates.set(proxy,scriptStates.get(target));if(elementHandlers.has(target))elementHandlers.set(proxy,elementHandlers.get(target));if(storageAreas.has(target))storageAreas.set(proxy,storageAreas.get(target));if(rtcPeerStates.has(target))rtcPeerStates.set(proxy,rtcPeerStates.get(target));if(rtcPeerPrivate.has(target))rtcPeerPrivate.set(proxy,rtcPeerPrivate.get(target));if(rtcDataStates.has(target))rtcDataStates.set(proxy,rtcDataStates.get(target));if(permissionsPolicySlots.has(target))permissionsPolicySlots.set(proxy,permissionsPolicySlots.get(target));if(trustedFactorySlots.has(target))trustedFactorySlots.set(proxy,trustedFactorySlots.get(target));return proxy};
++  const observe=(name,target)=>{WC.observe++;const proxy=new Proxy(target,observationHandler(name));if(elementData.has(target))elementData.set(proxy,elementData.get(target));if(scriptStates.has(target))scriptStates.set(proxy,scriptStates.get(target));if(elementHandlers.has(target))elementHandlers.set(proxy,elementHandlers.get(target));if(storageAreas.has(target))storageAreas.set(proxy,storageAreas.get(target));if(rtcPeerStates.has(target))rtcPeerStates.set(proxy,rtcPeerStates.get(target));if(rtcPeerPrivate.has(target))rtcPeerPrivate.set(proxy,rtcPeerPrivate.get(target));if(rtcDataStates.has(target))rtcDataStates.set(proxy,rtcDataStates.get(target));if(permissionsPolicySlots.has(target))permissionsPolicySlots.set(proxy,permissionsPolicySlots.get(target));if(trustedFactorySlots.has(target))trustedFactorySlots.set(proxy,trustedFactorySlots.get(target));return proxy};
+   const storageTarget=Object.create(Storage.prototype),sessionStorageTarget=Object.create(Storage.prototype);storageAreas.set(storageTarget,'local');storageAreas.set(sessionStorageTarget,'session');
+   const nav=observe('Navigator',Object.create(Navigator.prototype)),scr=observe('Screen',Object.create(Screen.prototype)),loc=observe('Location',Object.create(Location.prototype)),histTarget=Object.create(History.prototype),hist=observe('History',histTarget),storage=observe('Storage',storageTarget),sessionStorage=observe('Storage',sessionStorageTarget),crypto=observe('Crypto',Object.create(Crypto.prototype)),gpu=observe('GPU',Object.create(GPU.prototype)),trustedTypes=observe('TrustedTypePolicyFactory',new TrustedTypePolicyFactory(hostToken)),documentPolicy=observe('PermissionsPolicy',new PermissionsPolicy(hostToken,host.permissionsPolicy()));
+   historySlots.set(histTarget,{state:null,scrollRestoration:'auto'});historySlots.set(hist,historySlots.get(histTarget));

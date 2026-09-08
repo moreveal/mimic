@@ -1,0 +1,304 @@
+{
+  "source_commit": "7886b13",
+  "diagnostic_worktree": ".build/wrapper-census",
+  "iterations": 1,
+  "workload": "unchanged frozen DOM",
+  "execution_ms": 111.3448,
+  "rows": [
+    {
+      "operation": "wrap",
+      "calls": 24008,
+      "cpu_self_ms": 9.672,
+      "cpu_inclusive_ms": 16.981,
+      "v8_alloc_est_bytes": 3640456,
+      "v8_alloc_direct_est_bytes": 501000,
+      "allocation_samples": 1895,
+      "direct_host_crossings": 0
+    },
+    {
+      "operation": "observe",
+      "calls": 9004,
+      "cpu_self_ms": 4.754000000000001,
+      "cpu_inclusive_ms": 5.742000000000001,
+      "v8_alloc_est_bytes": 1422000,
+      "v8_alloc_direct_est_bytes": 1040,
+      "allocation_samples": 368,
+      "direct_host_crossings": 0
+    },
+    {
+      "operation": "freshCharacterData",
+      "calls": 6000,
+      "cpu_self_ms": 2.601,
+      "cpu_inclusive_ms": 14.184000000000001,
+      "v8_alloc_est_bytes": 1325120,
+      "v8_alloc_direct_est_bytes": 1323968,
+      "allocation_samples": 1194,
+      "direct_host_crossings": 0
+    },
+    {
+      "operation": "elementSlot",
+      "calls": 96028,
+      "cpu_self_ms": 2.5930000000000004,
+      "cpu_inclusive_ms": 2.5930000000000004,
+      "v8_alloc_est_bytes": 0,
+      "v8_alloc_direct_est_bytes": 0,
+      "allocation_samples": 0,
+      "direct_host_crossings": 0
+    },
+    {
+      "operation": "wrapperProxyGet",
+      "calls": 63026,
+      "cpu_self_ms": 2.0820000000000003,
+      "cpu_inclusive_ms": 7.4479999999999995,
+      "v8_alloc_est_bytes": 1230184,
+      "v8_alloc_direct_est_bytes": 5240,
+      "allocation_samples": 665,
+      "direct_host_crossings": 0
+    },
+    {
+      "operation": "freshNodeData",
+      "calls": 9001,
+      "cpu_self_ms": 1.552,
+      "cpu_inclusive_ms": 1.552,
+      "v8_alloc_est_bytes": 247672,
+      "v8_alloc_direct_est_bytes": 247672,
+      "allocation_samples": 227,
+      "direct_host_crossings": 0
+    },
+    {
+      "operation": "recordAPIAccess",
+      "calls": 66028,
+      "cpu_self_ms": 1.018,
+      "cpu_inclusive_ms": 1.018,
+      "v8_alloc_est_bytes": 4392,
+      "v8_alloc_direct_est_bytes": 0,
+      "allocation_samples": 3,
+      "direct_host_crossings": 28
+    },
+    {
+      "operation": "observationHandler",
+      "calls": 9004,
+      "cpu_self_ms": 0.988,
+      "cpu_inclusive_ms": 0.988,
+      "v8_alloc_est_bytes": 505104,
+      "v8_alloc_direct_est_bytes": 502984,
+      "allocation_samples": 480,
+      "direct_host_crossings": 0
+    },
+    {
+      "operation": "qualified",
+      "calls": 66028,
+      "cpu_self_ms": 0.532,
+      "cpu_inclusive_ms": 0.532,
+      "v8_alloc_est_bytes": 4312,
+      "v8_alloc_direct_est_bytes": 4312,
+      "allocation_samples": 4,
+      "direct_host_crossings": 0
+    },
+    {
+      "operation": "wrapperProxySet",
+      "calls": 3002,
+      "cpu_self_ms": 0.093,
+      "cpu_inclusive_ms": 2.202,
+      "v8_alloc_est_bytes": 616552,
+      "v8_alloc_direct_est_bytes": 0,
+      "allocation_samples": 584,
+      "direct_host_crossings": 0
+    },
+    {
+      "operation": "nodeList",
+      "calls": 7,
+      "cpu_self_ms": 0,
+      "cpu_inclusive_ms": 0,
+      "v8_alloc_est_bytes": 2144,
+      "v8_alloc_direct_est_bytes": 1064,
+      "allocation_samples": 2,
+      "direct_host_crossings": 0
+    },
+    {
+      "operation": "htmlCollection",
+      "calls": 0,
+      "cpu_self_ms": 0,
+      "cpu_inclusive_ms": 0,
+      "v8_alloc_est_bytes": 0,
+      "v8_alloc_direct_est_bytes": 0,
+      "allocation_samples": 0,
+      "direct_host_crossings": 0
+    }
+  ],
+  "go_phase_delta": {
+    "go_total_alloc": 31819384,
+    "go_mallocs": 606674,
+    "go_gc_cycles": 3
+  },
+  "v8_alloc_est_total": 20090224,
+  "v8_wrapper_alloc_est_total": 8997936,
+  "host_crossings": [
+    {
+      "name": "apiAccess",
+      "calls": 28,
+      "host_inclusive_ms": 0.5175
+    },
+    {
+      "name": "contains",
+      "calls": 3001,
+      "host_inclusive_ms": 0.0
+    },
+    {
+      "name": "create",
+      "calls": 3001,
+      "host_inclusive_ms": 1.0465
+    },
+    {
+      "name": "createComment",
+      "calls": 3000,
+      "host_inclusive_ms": 1.5616
+    },
+    {
+      "name": "createText",
+      "calls": 3000,
+      "host_inclusive_ms": 4.3413
+    },
+    {
+      "name": "getAttribute",
+      "calls": 2,
+      "host_inclusive_ms": 0.0
+    },
+    {
+      "name": "insertPlain",
+      "calls": 9001,
+      "host_inclusive_ms": 3.1072
+    },
+    {
+      "name": "nodeChildren",
+      "calls": 1,
+      "host_inclusive_ms": 0.0
+    },
+    {
+      "name": "parentNode",
+      "calls": 3003,
+      "host_inclusive_ms": 0.5193
+    },
+    {
+      "name": "performanceNow",
+      "calls": 2,
+      "host_inclusive_ms": 0.0
+    },
+    {
+      "name": "query",
+      "calls": 2,
+      "host_inclusive_ms": 0.0
+    },
+    {
+      "name": "queryAllWithin",
+      "calls": 6,
+      "host_inclusive_ms": 3.6537
+    },
+    {
+      "name": "queryWithin",
+      "calls": 2,
+      "host_inclusive_ms": 0.0
+    },
+    {
+      "name": "setAttribute",
+      "calls": 18000,
+      "host_inclusive_ms": 7.3613
+    },
+    {
+      "name": "setInnerHTML",
+      "calls": 2,
+      "host_inclusive_ms": 0.0
+    },
+    {
+      "name": "storageGet",
+      "calls": 1,
+      "host_inclusive_ms": 0.0
+    },
+    {
+      "name": "storageSet",
+      "calls": 1,
+      "host_inclusive_ms": 0.0
+    },
+    {
+      "name": "textContent",
+      "calls": 2,
+      "host_inclusive_ms": 0.0
+    },
+    {
+      "name": "toggleToken",
+      "calls": 12000,
+      "host_inclusive_ms": 7.944
+    }
+  ],
+  "total_host_crossings": 54055,
+  "native_other": [
+    [
+      "",
+      56.337000000000046
+    ],
+    [
+      "(idle)",
+      18.115000000000002
+    ],
+    [
+      "wrap",
+      9.672
+    ],
+    [
+      "(garbage collector)",
+      9.092
+    ],
+    [
+      "observe",
+      4.754000000000001
+    ],
+    [
+      "setAttribute",
+      3.119
+    ],
+    [
+      "value",
+      2.644
+    ],
+    [
+      "freshCharacterData",
+      2.601
+    ],
+    [
+      "elementSlot",
+      2.5930000000000004
+    ],
+    [
+      "window.__benchRun",
+      2.509
+    ],
+    [
+      "wrapperProxyGet",
+      2.0820000000000003
+    ],
+    [
+      "detachForInsertion",
+      1.7280000000000002
+    ],
+    [
+      "toggle",
+      1.602
+    ],
+    [
+      "get classList",
+      1.56
+    ],
+    [
+      "freshNodeData",
+      1.552
+    ]
+  ],
+  "sampling_interval_bytes": 1024,
+  "limitations": [
+    "Single instrumented execution; no warm median or optimization comparison.",
+    "CPU uses V8 stack sampling; inclusive rows overlap.",
+    "V8 bytes are sampling estimates including collected objects; nearest named wrapper attribution, not exact allocation counts.",
+    "Per-JS-operation Go allocation attribution is unavailable; phase Go deltas include diagnostic bookkeeping.",
+    "Direct crossings only: Proxy access may invoke host-backed getters indirectly."
+  ]
+}
