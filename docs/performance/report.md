@@ -610,3 +610,22 @@ Host-inclusive counters do not include the entire V8/Go dispatch latency and
 have instrumentation overhead; do not sum them into a prediction of unprofiled
 wall time. The next ownership experiment is scoped in
 `dom-current/detached-ownership-next.md`; it is not implemented or merged.
+
+## 21: Detached ownership bridge foundation (2026-09-09)
+
+Detached worktree `.build/detached-dom-spike`, commit b7dc510, now implements
+reserved node IDs, atomic import of a plain detached forest, and private host
+functions for the bridge. It is not merged into production. Normal WebAPI
+creation still uses the eager Go path: no speedup or full ownership migration
+is claimed. The preceding full07 matrix remains the production evidence.
+
+The DOM package tests pass, including invalid-forest atomicity, reservation
+retry, and isolation from input slice/map mutations. A browser integration test
+passes on V8 and Goja using the existing canonical WebAPI wrappers created
+before import: identity survives materialization, insertion, parent/child/query
+lookup, retained classList use, and subsequent Go attribute mutation. This is
+an explicit test-only probe of the bridge, not a substituted workload.
+
+Patch and validation are in `dom-current/detached-bridge/`. Next are the private
+JS pending store and complete entry/exit, microtask, error and reentrant-host
+synchronization; benchmark only when their cost is included in normal execution.
