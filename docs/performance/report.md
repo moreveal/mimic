@@ -847,3 +847,37 @@ fresh context. Restoring a surface cannot bypass those steps or move their cost
 outside measurement. The next implementation must integrate at the engine/context
 creation boundary and finish binding before user scripts can run; replacing the
 context after Go handles or scheduler callbacks exist would invalidate them.
+
+An experimental `SnapshotFactory` now restores the context at the V8 engine
+creation boundary, preserving the 4 MiB nursery, per-runtime isolate thread,
+explicit microtask policy and ordinary adapter Promise-factory initialization.
+Its snapshots are pure JS with an explicitly empty external-reference table;
+Go callbacks are installed only after restore. No browser selects this factory.
+
+`SnapshotSurface` adds a private restore function to the existing bootstrap. It
+rebinds the host and token, updates the captured Intl environment and policy
+slots without replacing the canonical policy object, clears API observation
+deduplication, and invokes the actual new host's ready method. Security/exposure
+and frame topology must still match; automatic selection, validation and frame
+rebinding are not implemented. The hook must be captured and deleted before
+user code runs. This API remains an experiment rather than an enabled fast path.
+
+The new standalone proof restores actual bootstrap bytes through Mimic's engine
+adapter twice; native callbacks, Promise creation/resolution and Close pass.
+Three additional direct SDK restores rebind en-US/UTC/denied geolocation,
+ja-JP/Asia-Tokyo/allowed geolocation, and en-US/UTC/denied geolocation respectively.
+Canonical featurePolicy identity is preserved, ready fires once per rebind, and
+private restore globals are removed. Ordinary storage still reaches separate Go
+maps. The initial test incorrectly used document.permissionsPolicy, which this
+captured exposure does not expose; using the existing featurePolicy surface
+corrected the test without adding a Web API.
+
+Final standalone diagnostics: snapshot 6,715,304 bytes, creation 100.987 ms,
+restore-only samples 9.433 / 8.457 / 8.429 ms. These numbers exclude rebinding
+and are not Page or frozen workload results. Reproduction source, patch, output,
+hash receipt and ordinary Go validation are saved in the same evidence folder.
+Experimental commit ca557ca contains the implementation. The ordinary suite
+completed with 241 test/package pass events and zero failures; an additional
+targeted test rejects malformed snapshots and verifies subsequent ordinary
+runtime creation still works. That targeted test was added after the full suite
+started and has its own saved result. Production remains unchanged.
