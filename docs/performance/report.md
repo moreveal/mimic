@@ -114,3 +114,12 @@ Static marginal RSS N=10: 39.40 -> 28.84 MiB/page; React: 43.08 -> 35.67. Corres
 ## Correctness gate finding: zero-duration navigation completion
 
 The earlier intermittent observer timeout reproduced in 20 isolated repetitions. Trace shows a fast local navigation with zero transport duration; the observer deduplication key used duration to distinguish initial and finalized entries, so a zero-duration completed load was indistinguishable from its initial entry. This is a lifecycle-state defect, not a reason to inflate measured time. The private observer notifier now receives explicit load-finalized state, and its navigation key includes that state. No public Web API is added. The test accepts a nonnegative duration (zero is legitimate at timer resolution), has a bounded wait, and a deterministic zero-duration finalization regression covers the failure. Twenty repetitions pass after the fix.
+
+
+## 08: Release unused V8 pages at isolate teardown
+
+Before disposal, after all adapter roots and contexts have been released, a V8 low-memory notification lets the engine reclaim empty heap pages. The measured residual RSS above readiness after ten closed Pages falls from 207.50 to 68.66 MiB (static) and 261.76 to 88.10 MiB (React). This residual includes shared process/allocator state and Go memory, not just live Page objects. Live marginal memory stays at 29.10 / 35.45 MiB per Page.
+
+The tradeoff is explicit: median teardown within the N=10 memory wave rises from 6.42 to 20.46 ms static and 7.54 to 26.40 ms React; static N=25 median throughput falls from 80.39 to 62.37 sessions/s in these samples. Warm execution/completion excludes teardown by the unchanged harness definition, while wave throughput includes it. There is no collection added by the benchmark: this is the production isolate lifecycle policy and its cost is included where applicable. Fast gate DOM execution is 258.06 ms, static completion 58.00 ms, React completion 109.01 ms. See `fast-gates/fast-gate-release-isolate.json` for SHA-256 and all raw rows.
+
+After repairing the zero-duration observer correctness defect, the full race-enabled correctness suite passes (browser 377.989 s, CDP 2.797 s). This validation precedes the separate classList host batching change.
