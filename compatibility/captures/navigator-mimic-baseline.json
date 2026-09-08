@@ -1,0 +1,3830 @@
+{
+  "product": "Mimic/152.0.7977.82",
+  "profile": "clean headless Windows; no feature overrides",
+  "secure": {
+    "isolated": false,
+    "members": {
+      "appCodeName": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get appCodeName() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "bluetooth": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get bluetooth() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "clipboard": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get clipboard() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "connection": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get connection() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "credentials": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get credentials() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "deprecatedRunAdAuctionEnforcesKAnonymity": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get deprecatedRunAdAuctionEnforcesKAnonymity() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "devicePosture": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get devicePosture() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "doNotTrack": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get doNotTrack() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "geolocation": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get geolocation() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "hid": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get hid() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "ink": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get ink() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "keyboard": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get keyboard() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "locks": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get locks() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "login": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get login() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "managed": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get managed() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "mediaCapabilities": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get mediaCapabilities() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "mediaDevices": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get mediaDevices() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "mediaSession": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get mediaSession() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "permissions": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get permissions() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "presentation": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get presentation() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "productSub": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get productSub() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "protectedAudience": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get protectedAudience() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "scheduling": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get scheduling() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "serial": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get serial() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "serviceWorker": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get serviceWorker() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "storage": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get storage() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "storageBuckets": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get storageBuckets() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "usb": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get usb() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "userActivation": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get userActivation() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "vendorSub": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get vendorSub() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "virtualKeyboard": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get virtualKeyboard() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "wakeLock": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get wakeLock() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "webkitPersistentStorage": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get webkitPersistentStorage() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "webkitTemporaryStorage": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get webkitTemporaryStorage() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "windowControlsOverlay": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get windowControlsOverlay() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "xr": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get xr() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      }
+    },
+    "secure": true,
+    "operations": {
+      "permissions.initial": {
+        "value": {
+          "accelerometer": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "ambient-light-sensor": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "background-fetch": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "background-sync": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "camera": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "captured-surface-control": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "clipboard-read": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "clipboard-write": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "display-capture": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "fullscreen": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "geolocation": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "geolocation-approximate": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "gyroscope": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "idle-detection": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "keyboard-lock": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "local-fonts": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "local-network": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "local-network-access": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "loopback-network": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "magnetometer": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "microphone": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "midi": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "nfc": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "notifications": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "payment-handler": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "periodic-background-sync": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "persistent-storage": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "pointer-lock": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "push": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "screen-wake-lock": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "speaker-selection": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "storage-access": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "system-wake-lock": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "top-level-storage-access": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "web-app-installation": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "window-management": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          }
+        }
+      },
+      "activation": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'isActive')",
+          "name": "TypeError"
+        }
+      },
+      "geolocation.current": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'getCurrentPosition')",
+          "name": "TypeError"
+        }
+      },
+      "connection": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'effectiveType')",
+          "name": "TypeError"
+        }
+      },
+      "bluetooth.available": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'getAvailability')",
+          "name": "TypeError"
+        }
+      },
+      "bluetooth.devices": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'getDevices')",
+          "name": "TypeError"
+        }
+      },
+      "hid.devices": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'getDevices')",
+          "name": "TypeError"
+        }
+      },
+      "usb.devices": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'getDevices')",
+          "name": "TypeError"
+        }
+      },
+      "serial.ports": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'getPorts')",
+          "name": "TypeError"
+        }
+      },
+      "posture": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'type')",
+          "name": "TypeError"
+        }
+      },
+      "credentials.get": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'get')",
+          "name": "TypeError"
+        }
+      },
+      "credentials.create": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'create')",
+          "name": "TypeError"
+        }
+      },
+      "credentials.prevent": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'preventSilentAccess')",
+          "name": "TypeError"
+        }
+      },
+      "permissions.geo": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'query')",
+          "name": "TypeError"
+        }
+      },
+      "permissions.unknown": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'query')",
+          "name": "TypeError"
+        }
+      },
+      "clipboard.read": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'readText')",
+          "name": "TypeError"
+        }
+      },
+      "media.enumerate": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'enumerateDevices')",
+          "name": "TypeError"
+        }
+      },
+      "media.constraints": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'getSupportedConstraints')",
+          "name": "TypeError"
+        }
+      },
+      "media.getUserMedia": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'getUserMedia')",
+          "name": "TypeError"
+        }
+      },
+      "media.invalid": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'getUserMedia')",
+          "name": "TypeError"
+        }
+      },
+      "media.decoding": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'decodingInfo')",
+          "name": "TypeError"
+        }
+      },
+      "media.mp4": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'decodingInfo')",
+          "name": "TypeError"
+        }
+      },
+      "media.session": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'metadata')",
+          "name": "TypeError"
+        }
+      },
+      "presentation": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'defaultRequest')",
+          "name": "TypeError"
+        }
+      },
+      "storage.estimate": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'estimate')",
+          "name": "TypeError"
+        }
+      },
+      "storage.persisted": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'persisted')",
+          "name": "TypeError"
+        }
+      },
+      "buckets.keys": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'keys')",
+          "name": "TypeError"
+        }
+      },
+      "locks.query": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'query')",
+          "name": "TypeError"
+        }
+      },
+      "quota.temporary": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'queryUsageAndQuota')",
+          "name": "TypeError"
+        }
+      },
+      "quota.persistent": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'queryUsageAndQuota')",
+          "name": "TypeError"
+        }
+      },
+      "quota.identity": {
+        "value": true
+      },
+      "serviceWorker.controller": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'controller')",
+          "name": "TypeError"
+        }
+      },
+      "serviceWorker.registrations": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'getRegistrations')",
+          "name": "TypeError"
+        }
+      },
+      "serviceWorker.registration": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'getRegistration')",
+          "name": "TypeError"
+        }
+      },
+      "xr.vr": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'isSessionSupported')",
+          "name": "TypeError"
+        }
+      },
+      "xr.ar": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'isSessionSupported')",
+          "name": "TypeError"
+        }
+      },
+      "xr.request": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'requestSession')",
+          "name": "TypeError"
+        }
+      },
+      "overlay": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'visible')",
+          "name": "TypeError"
+        }
+      },
+      "keyboard.unlock": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'unlock')",
+          "name": "TypeError"
+        }
+      },
+      "keyboard.lock": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'lock')",
+          "name": "TypeError"
+        }
+      },
+      "keyboard.layout": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'getLayoutMap')",
+          "name": "TypeError"
+        }
+      },
+      "bluetooth.request": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'requestDevice')",
+          "name": "TypeError"
+        }
+      },
+      "hid.request": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'requestDevice')",
+          "name": "TypeError"
+        }
+      },
+      "usb.request": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'requestDevice')",
+          "name": "TypeError"
+        }
+      },
+      "serial.request": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'requestPort')",
+          "name": "TypeError"
+        }
+      },
+      "buckets.lifecycle": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'open')",
+          "name": "TypeError"
+        }
+      },
+      "locks.lifecycle": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'request')",
+          "name": "TypeError"
+        }
+      },
+      "login.status": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'setStatus')",
+          "name": "TypeError"
+        }
+      },
+      "wakeLock.request": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'request')",
+          "name": "TypeError"
+        }
+      },
+      "ink": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'requestPresenter')",
+          "name": "TypeError"
+        }
+      },
+      "managed": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'getManagedConfiguration')",
+          "name": "TypeError"
+        }
+      },
+      "virtualKeyboard": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'overlaysContent')",
+          "name": "TypeError"
+        }
+      },
+      "protectedAudience": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'queryFeatureSupport')",
+          "name": "TypeError"
+        }
+      },
+      "permissions.all": {
+        "value": {
+          "accelerometer": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "ambient-light-sensor": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "background-fetch": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "background-sync": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "camera": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "captured-surface-control": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "clipboard-read": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "clipboard-write": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "display-capture": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "fullscreen": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "geolocation": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "geolocation-approximate": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "gyroscope": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "idle-detection": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "keyboard-lock": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "local-fonts": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "local-network": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "local-network-access": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "loopback-network": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "magnetometer": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "microphone": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "midi": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "nfc": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "notifications": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "payment-handler": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "periodic-background-sync": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "persistent-storage": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "pointer-lock": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "push": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "screen-wake-lock": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "speaker-selection": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "storage-access": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "system-wake-lock": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "top-level-storage-access": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "web-app-installation": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "window-management": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          }
+        }
+      }
+    }
+  },
+  "isolated": {
+    "isolated": true,
+    "members": {
+      "appCodeName": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get appCodeName() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "bluetooth": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get bluetooth() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "clipboard": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get clipboard() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "connection": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get connection() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "credentials": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get credentials() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "deprecatedRunAdAuctionEnforcesKAnonymity": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get deprecatedRunAdAuctionEnforcesKAnonymity() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "devicePosture": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get devicePosture() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "doNotTrack": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get doNotTrack() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "geolocation": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get geolocation() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "hid": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get hid() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "ink": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get ink() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "keyboard": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get keyboard() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "locks": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get locks() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "login": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get login() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "managed": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get managed() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "mediaCapabilities": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get mediaCapabilities() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "mediaDevices": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get mediaDevices() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "mediaSession": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get mediaSession() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "permissions": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get permissions() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "presentation": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get presentation() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "productSub": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get productSub() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "protectedAudience": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get protectedAudience() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "scheduling": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get scheduling() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "serial": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get serial() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "serviceWorker": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get serviceWorker() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "storage": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get storage() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "storageBuckets": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get storageBuckets() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "usb": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get usb() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "userActivation": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get userActivation() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "vendorSub": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get vendorSub() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "virtualKeyboard": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get virtualKeyboard() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "wakeLock": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get wakeLock() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "webkitPersistentStorage": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get webkitPersistentStorage() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "webkitTemporaryStorage": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get webkitTemporaryStorage() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "windowControlsOverlay": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get windowControlsOverlay() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "xr": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get xr() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      }
+    },
+    "secure": true,
+    "operations": {}
+  },
+  "opaque": {
+    "isolated": false,
+    "members": {
+      "appCodeName": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get appCodeName() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "bluetooth": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get bluetooth() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "clipboard": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get clipboard() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "connection": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get connection() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "credentials": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get credentials() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "deprecatedRunAdAuctionEnforcesKAnonymity": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get deprecatedRunAdAuctionEnforcesKAnonymity() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "devicePosture": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get devicePosture() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "doNotTrack": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get doNotTrack() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "geolocation": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get geolocation() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "hid": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get hid() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "ink": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get ink() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "keyboard": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get keyboard() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "locks": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get locks() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "login": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get login() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "managed": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get managed() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "mediaCapabilities": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get mediaCapabilities() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "mediaDevices": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get mediaDevices() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "mediaSession": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get mediaSession() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "permissions": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get permissions() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "presentation": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get presentation() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "productSub": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get productSub() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "protectedAudience": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get protectedAudience() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "scheduling": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get scheduling() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "serial": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get serial() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "serviceWorker": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get serviceWorker() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "storage": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get storage() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "storageBuckets": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get storageBuckets() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "usb": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get usb() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "userActivation": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get userActivation() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "vendorSub": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get vendorSub() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "virtualKeyboard": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get virtualKeyboard() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "wakeLock": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get wakeLock() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "webkitPersistentStorage": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get webkitPersistentStorage() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "webkitTemporaryStorage": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get webkitTemporaryStorage() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "windowControlsOverlay": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get windowControlsOverlay() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      },
+      "xr": {
+        "descriptor": {
+          "configurable": true,
+          "enumerable": true,
+          "get": "function get xr() { [native code] }",
+          "getterShape": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "length": 0,
+            "name": "get"
+          },
+          "set": null,
+          "setterShape": null,
+          "writable": null
+        },
+        "exposed": true,
+        "illegalReceiver": null,
+        "owner": "Navigator.prototype",
+        "type": "object",
+        "value": null
+      }
+    },
+    "secure": false,
+    "operations": {
+      "permissions.initial": {
+        "value": {
+          "accelerometer": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "ambient-light-sensor": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "background-fetch": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "background-sync": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "camera": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "captured-surface-control": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "clipboard-read": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "clipboard-write": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "display-capture": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "fullscreen": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "geolocation": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "geolocation-approximate": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "gyroscope": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "idle-detection": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "keyboard-lock": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "local-fonts": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "local-network": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "local-network-access": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "loopback-network": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "magnetometer": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "microphone": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "midi": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "nfc": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "notifications": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "payment-handler": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "periodic-background-sync": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "persistent-storage": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "pointer-lock": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "push": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "screen-wake-lock": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "speaker-selection": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "storage-access": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "system-wake-lock": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "top-level-storage-access": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "web-app-installation": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "window-management": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          }
+        }
+      },
+      "activation": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'isActive')",
+          "name": "TypeError"
+        }
+      },
+      "geolocation.current": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'getCurrentPosition')",
+          "name": "TypeError"
+        }
+      },
+      "connection": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'effectiveType')",
+          "name": "TypeError"
+        }
+      },
+      "bluetooth.available": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'getAvailability')",
+          "name": "TypeError"
+        }
+      },
+      "bluetooth.devices": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'getDevices')",
+          "name": "TypeError"
+        }
+      },
+      "hid.devices": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'getDevices')",
+          "name": "TypeError"
+        }
+      },
+      "usb.devices": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'getDevices')",
+          "name": "TypeError"
+        }
+      },
+      "serial.ports": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'getPorts')",
+          "name": "TypeError"
+        }
+      },
+      "posture": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'type')",
+          "name": "TypeError"
+        }
+      },
+      "credentials.get": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'get')",
+          "name": "TypeError"
+        }
+      },
+      "credentials.create": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'create')",
+          "name": "TypeError"
+        }
+      },
+      "credentials.prevent": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'preventSilentAccess')",
+          "name": "TypeError"
+        }
+      },
+      "permissions.geo": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'query')",
+          "name": "TypeError"
+        }
+      },
+      "permissions.unknown": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'query')",
+          "name": "TypeError"
+        }
+      },
+      "clipboard.read": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'readText')",
+          "name": "TypeError"
+        }
+      },
+      "media.enumerate": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'enumerateDevices')",
+          "name": "TypeError"
+        }
+      },
+      "media.constraints": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'getSupportedConstraints')",
+          "name": "TypeError"
+        }
+      },
+      "media.getUserMedia": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'getUserMedia')",
+          "name": "TypeError"
+        }
+      },
+      "media.invalid": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'getUserMedia')",
+          "name": "TypeError"
+        }
+      },
+      "media.decoding": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'decodingInfo')",
+          "name": "TypeError"
+        }
+      },
+      "media.mp4": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'decodingInfo')",
+          "name": "TypeError"
+        }
+      },
+      "media.session": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'metadata')",
+          "name": "TypeError"
+        }
+      },
+      "presentation": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'defaultRequest')",
+          "name": "TypeError"
+        }
+      },
+      "storage.estimate": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'estimate')",
+          "name": "TypeError"
+        }
+      },
+      "storage.persisted": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'persisted')",
+          "name": "TypeError"
+        }
+      },
+      "buckets.keys": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'keys')",
+          "name": "TypeError"
+        }
+      },
+      "locks.query": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'query')",
+          "name": "TypeError"
+        }
+      },
+      "quota.temporary": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'queryUsageAndQuota')",
+          "name": "TypeError"
+        }
+      },
+      "quota.persistent": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'queryUsageAndQuota')",
+          "name": "TypeError"
+        }
+      },
+      "quota.identity": {
+        "value": true
+      },
+      "serviceWorker.controller": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'controller')",
+          "name": "TypeError"
+        }
+      },
+      "serviceWorker.registrations": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'getRegistrations')",
+          "name": "TypeError"
+        }
+      },
+      "serviceWorker.registration": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'getRegistration')",
+          "name": "TypeError"
+        }
+      },
+      "xr.vr": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'isSessionSupported')",
+          "name": "TypeError"
+        }
+      },
+      "xr.ar": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'isSessionSupported')",
+          "name": "TypeError"
+        }
+      },
+      "xr.request": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'requestSession')",
+          "name": "TypeError"
+        }
+      },
+      "overlay": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'visible')",
+          "name": "TypeError"
+        }
+      },
+      "keyboard.unlock": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'unlock')",
+          "name": "TypeError"
+        }
+      },
+      "keyboard.lock": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'lock')",
+          "name": "TypeError"
+        }
+      },
+      "keyboard.layout": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'getLayoutMap')",
+          "name": "TypeError"
+        }
+      },
+      "bluetooth.request": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'requestDevice')",
+          "name": "TypeError"
+        }
+      },
+      "hid.request": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'requestDevice')",
+          "name": "TypeError"
+        }
+      },
+      "usb.request": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'requestDevice')",
+          "name": "TypeError"
+        }
+      },
+      "serial.request": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'requestPort')",
+          "name": "TypeError"
+        }
+      },
+      "buckets.lifecycle": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'open')",
+          "name": "TypeError"
+        }
+      },
+      "locks.lifecycle": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'request')",
+          "name": "TypeError"
+        }
+      },
+      "login.status": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'setStatus')",
+          "name": "TypeError"
+        }
+      },
+      "wakeLock.request": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'request')",
+          "name": "TypeError"
+        }
+      },
+      "ink": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'requestPresenter')",
+          "name": "TypeError"
+        }
+      },
+      "managed": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'getManagedConfiguration')",
+          "name": "TypeError"
+        }
+      },
+      "virtualKeyboard": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'overlaysContent')",
+          "name": "TypeError"
+        }
+      },
+      "protectedAudience": {
+        "error": {
+          "message": "Cannot read properties of null (reading 'queryFeatureSupport')",
+          "name": "TypeError"
+        }
+      },
+      "permissions.all": {
+        "value": {
+          "accelerometer": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "ambient-light-sensor": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "background-fetch": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "background-sync": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "camera": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "captured-surface-control": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "clipboard-read": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "clipboard-write": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "display-capture": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "fullscreen": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "geolocation": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "geolocation-approximate": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "gyroscope": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "idle-detection": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "keyboard-lock": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "local-fonts": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "local-network": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "local-network-access": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "loopback-network": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "magnetometer": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "microphone": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "midi": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "nfc": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "notifications": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "payment-handler": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "periodic-background-sync": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "persistent-storage": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "pointer-lock": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "push": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "screen-wake-lock": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "speaker-selection": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "storage-access": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "system-wake-lock": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "top-level-storage-access": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "web-app-installation": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          },
+          "window-management": {
+            "message": "Cannot read properties of null (reading 'query')",
+            "name": "TypeError"
+          }
+        }
+      }
+    }
+  },
+  "sourceRevision": "73d6b8b49d05d6c1cf27695e0c67560bac1ef0eb"
+}

@@ -51,6 +51,7 @@ type Locale struct {
 type Preferences struct {
 	ColorScheme   string
 	ReducedMotion bool
+	DoNotTrack    bool
 }
 type Time struct {
 	WallOrigin      time.Time
@@ -63,6 +64,7 @@ type Time struct {
 	NetworkScale    float64
 }
 type Network struct {
+	SaveData                bool
 	Online                  bool
 	EffectiveType           string
 	DownlinkMbps, RTTMillis float64
@@ -95,17 +97,20 @@ type ICEProfile struct {
 type Permissions map[string]string
 
 type Environment struct {
-	Product     Product
-	Platform    Platform
-	Hardware    Hardware
-	Display     Display
-	Window      Window
-	Graphics    Graphics
-	Locale      Locale
-	Preferences Preferences
-	Time        Time
-	Network     Network
-	Permissions Permissions
+	Product      Product
+	Platform     Platform
+	Hardware     Hardware
+	Display      Display
+	Window       Window
+	Graphics     Graphics
+	Locale       Locale
+	Preferences  Preferences
+	Time         Time
+	Network      Network
+	Permissions  Permissions
+	Capabilities Capabilities
+	// Explicit feature overrides restrict the bundle's captured exposure.
+	Features map[string]bool
 }
 
 func ChromeDesktopWindows(product Product) Environment {

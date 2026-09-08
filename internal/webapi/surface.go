@@ -17,6 +17,9 @@ var handwrittenSurface string
 //go:embed worker.js
 var handwrittenWorkerSurface string
 
+//go:embed capabilities.js
+var capabilitySurface string
+
 func Surface(generated string, exposure *compatibility.RealmExposure) string {
 	// Tracking starts only after both handwritten semantics and the selected
 	// bundle's generated surface have been installed. Otherwise feature
@@ -31,7 +34,7 @@ func Surface(generated string, exposure *compatibility.RealmExposure) string {
 		exposureSource = "applyTargetExposure(" + string(encoded) + ");\n"
 	}
 	semanticFixups := `Object.defineProperty(CharacterData.prototype,'nodeName',{get(){const slot=elementSlot(this);return slot&&slot.type==='comment'?'#comment':'#text'},enumerable:true,configurable:true});Object.defineProperty(DocumentFragment.prototype,'nodeName',{get(){return'#document-fragment'},enumerable:true,configurable:true});`
-	return strings.Replace(handwrittenSurface, marker, generated+"\nfinalizeBindings();\n"+exposureSource+semanticFixups+"\n"+marker, 1)
+	return strings.Replace(handwrittenSurface, marker, capabilitySurface+"\n"+generated+"\nfinalizeBindings();\n"+exposureSource+"installNavigatorCapabilities();\n"+semanticFixups+"\n"+marker, 1)
 }
 
 func WorkerSurface(generated string, exposure *compatibility.RealmExposure) string {

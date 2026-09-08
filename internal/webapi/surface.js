@@ -475,7 +475,18 @@
     const prototypeTargets=new Map();
     for(const [interfaceName,members] of Object.entries(exposure.prototypes||{})){
       const ctor=globalThis[interfaceName];
-      if(ctor&&ctor.prototype)prototypeTargets.set(ctor.prototype,new Set(members.map(member=>member.name)));
+      if(ctor&&ctor.prototype){
+        prototypeTargets.set(ctor.prototype,new Set(members.map(member=>member.name)));
+        markNative(ctor,ctor.name||interfaceName);
+        const prototypeDescriptor=Object.getOwnPropertyDescriptor(ctor,'prototype');
+        if(prototypeDescriptor&&prototypeDescriptor.writable)Object.defineProperty(ctor,'prototype',{writable:false});
+        if(!Object.prototype.hasOwnProperty.call(ctor.prototype,Symbol.toStringTag))Object.defineProperty(ctor.prototype,Symbol.toStringTag,{value:interfaceName,configurable:true});
+        for(const name of Object.getOwnPropertyNames(ctor.prototype)){
+          const d=Object.getOwnPropertyDescriptor(ctor.prototype,name);
+          if(name!=='constructor')markNative(d.value,name);
+          markNative(d.get,name,'get ');markNative(d.set,name,'set ');
+        }
+      }
     }
     for(const [prototype,expectedMembers] of prototypeTargets){
       for(const name of Object.getOwnPropertyNames(prototype)){

@@ -1,0 +1,67 @@
+{
+  "secure": {
+    "connection": {
+      "chrome": {
+        "value": {
+          "effectiveType": "4g",
+          "downlink": 1.65,
+          "rtt": 100,
+          "saveData": false
+        }
+      },
+      "mimic": {
+        "value": {
+          "downlink": 10,
+          "effectiveType": "4g",
+          "rtt": 50,
+          "saveData": false
+        }
+      }
+    },
+    "bluetooth.available": {
+      "chrome": {
+        "value": {
+          "pending": true
+        }
+      },
+      "mimic": {
+        "value": false
+      }
+    },
+    "wakeLock.request": {
+      "chrome": {
+        "value": {
+          "type": "screen",
+          "released": false,
+          "tag": "[object WakeLockSentinel]"
+        }
+      },
+      "mimic": {
+        "error": {
+          "message": "Wake Lock permission request denied",
+          "name": "NotAllowedError"
+        }
+      }
+    }
+  },
+  "opaque": {
+    "connection": {
+      "chrome": {
+        "value": {
+          "effectiveType": "4g",
+          "downlink": 1.75,
+          "rtt": 100,
+          "saveData": false
+        }
+      },
+      "mimic": {
+        "value": {
+          "downlink": 10,
+          "effectiveType": "4g",
+          "rtt": 50,
+          "saveData": false
+        }
+      }
+    }
+  }
+}

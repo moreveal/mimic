@@ -12,11 +12,12 @@ import (
 type Source string
 
 const (
-	DOM        Source = "dom"
-	Timer      Source = "timer"
-	Network    Source = "network"
-	Navigation Source = "navigation"
-	Control    Source = "control"
+	DOM             Source = "dom"
+	Timer           Source = "timer"
+	Network         Source = "network"
+	Navigation      Source = "navigation"
+	Control         Source = "control"
+	UserInteraction Source = "user-interaction"
 	// PostedMessage represents the HTML posted message task source used by
 	// MessagePort and related browser messaging primitives.
 	PostedMessage Source = "posted-message"
@@ -287,6 +288,18 @@ func (s *Scheduler) nowLocked() time.Time {
 	return s.now
 }
 func (s *Scheduler) Now() time.Time { s.mu.Lock(); defer s.mu.Unlock(); return s.nowLocked() }
+
+func (s *Scheduler) HasPendingInput() bool {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	now := s.nowLocked()
+	for _, task := range s.tasks {
+		if !task.cancelled && task.source == UserInteraction && !task.due.After(now) {
+			return true
+		}
+	}
+	return false
+}
 func (s *Scheduler) AdvanceBy(delta time.Duration) {
 	if delta <= 0 {
 		return

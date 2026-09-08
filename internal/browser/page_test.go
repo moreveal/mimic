@@ -158,6 +158,7 @@ func TestWebCryptoRSAOAEPSPKIImportAndEncrypt(t *testing.T) {
 		t.Fatal(err)
 	}
 	defer p.Close()
+	navigateCapabilityFixture(t, p)
 	value, err := p.Evaluate(context.Background(), `(async()=>{const der=Uint8Array.from(atob('MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDfK5CElVUHUMX0sCpkNSBa5EQ6QSmK0ZKt1tweJ7Q8LeuwFyXv9HeJq6Cp+naXAoewBUdP7ImRmtrADIwAqLlnbBUcTMBLlC/Mmx0lSFPZg2QLOaIhNt5ES3vwteKUplY2OHPv2NP7Ww/EvKNu8768FWLho+Dw3XI8xPUF5HwbQwIDAQAB'),c=>c.charCodeAt(0));const key=await crypto.subtle.importKey('spki',der,{name:'RSA-OAEP',hash:'SHA-1'},true,['encrypt']);const encrypted=await crypto.subtle.encrypt({name:'RSA-OAEP'},key,new TextEncoder().encode('regression'));return[Object.prototype.toString.call(key),key.type,key.extractable,key.algorithm.name,key.algorithm.modulusLength,Array.from(key.algorithm.publicExponent),key.algorithm.hash.name,key.usages,Object.prototype.toString.call(encrypted),encrypted.byteLength]})()`)
 	if err != nil {
 		t.Fatal(err)
@@ -625,6 +626,7 @@ func TestRTCInternalEntropyDoesNotCallPublicCryptoMethods(t *testing.T) {
 
 func TestWebGPUAdapterPromise(t *testing.T) {
 	p := testPage(t)
+	navigateCapabilityFixture(t, p)
 	v, err := p.Evaluate(context.Background(), `new Promise(resolve=>navigator.gpu.requestAdapter().then(a=>resolve({gpu:Object.prototype.toString.call(navigator.gpu),adapter:Object.prototype.toString.call(a),format:navigator.gpu.getPreferredCanvasFormat(),hasInfo:!!a.info})))`)
 	if err != nil {
 		t.Fatal(err)
@@ -637,6 +639,7 @@ func TestWebGPUAdapterPromise(t *testing.T) {
 
 func TestWebGPUAdapterInitializationUsesEnvironmentProfile(t *testing.T) {
 	p := testPage(t)
+	navigateCapabilityFixture(t, p)
 	v, err := p.Evaluate(context.Background(), `new Promise(resolve=>{let done=false;const finish=value=>{if(!done){done=true;resolve(value)}};navigator.gpu.requestAdapter().then(()=>finish('adapter'));setTimeout(()=>finish('timeout'),100)})`)
 	if err != nil {
 		t.Fatal(err)
@@ -655,6 +658,7 @@ func TestQuickJSEvaluateSettlesNestedPromiseReactions(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
+	navigateCapabilityFixture(t, p)
 	v, err := p.Evaluate(context.Background(), `new Promise(resolve=>navigator.gpu.requestAdapter().then(a=>resolve(Object.prototype.toString.call(a))))`)
 	if err != nil || v != "[object GPUAdapter]" {
 		t.Fatalf("QuickJS Promise reaction did not settle: value=%#v error=%v", v, err)
@@ -723,6 +727,7 @@ func TestGetElementsByTagNameCollection(t *testing.T) {
 
 func TestCryptoRandomSurface(t *testing.T) {
 	p := testPage(t)
+	navigateCapabilityFixture(t, p)
 	v, err := p.Evaluate(context.Background(), `(() => { const a=new Uint8Array(32); const same=crypto.getRandomValues(a)===a; return {same, nonzero:a.some(x=>x!==0), uuid:/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(crypto.randomUUID())} })()`)
 	if err != nil {
 		t.Fatal(err)

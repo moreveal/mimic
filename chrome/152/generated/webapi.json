@@ -20060,6 +20060,15 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "MeasureAs": "WebBluetoothGetAvailability"
+          },
+          "origin": {
+            "interface": "Bluetooth",
+            "source": "third_party/blink/renderer/modules/bluetooth/bluetooth.idl",
+            "extended": {
+              "Exposed": "Window",
+              "RuntimeEnabled": "WebBluetooth",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -20074,6 +20083,15 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "MeasureAs": "WebBluetoothGetDevices"
+          },
+          "origin": {
+            "interface": "Bluetooth",
+            "source": "third_party/blink/renderer/modules/bluetooth/bluetooth.idl",
+            "extended": {
+              "Exposed": "Window",
+              "RuntimeEnabled": "WebBluetooth",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -20096,6 +20114,15 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "MeasureAs": "WebBluetoothRequestDevice"
+          },
+          "origin": {
+            "interface": "Bluetooth",
+            "source": "third_party/blink/renderer/modules/bluetooth/bluetooth.idl",
+            "extended": {
+              "Exposed": "Window",
+              "RuntimeEnabled": "WebBluetooth",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -20119,6 +20146,15 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "MeasureAs": "WebBluetoothRequestScan"
+          },
+          "origin": {
+            "interface": "Bluetooth",
+            "source": "third_party/blink/renderer/modules/bluetooth/bluetooth.idl",
+            "extended": {
+              "Exposed": "Window",
+              "RuntimeEnabled": "WebBluetooth",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -20129,6 +20165,15 @@
           "readonly": false,
           "extended": {
             "RuntimeEnabled": "WebBluetoothScanning"
+          },
+          "origin": {
+            "interface": "Bluetooth",
+            "source": "third_party/blink/renderer/modules/bluetooth/bluetooth.idl",
+            "extended": {
+              "Exposed": "Window",
+              "RuntimeEnabled": "WebBluetooth",
+              "SecureContext": true
+            }
           }
         }
       ]
@@ -30986,6 +31031,14 @@
             "MeasureAs": "AsyncClipboardAPIRead",
             "CallWith": "ScriptState",
             "RaisesException": true
+          },
+          "origin": {
+            "interface": "Clipboard",
+            "source": "third_party/blink/renderer/modules/clipboard/clipboard.idl",
+            "extended": {
+              "SecureContext": true,
+              "Exposed": "Window"
+            }
           }
         },
         {
@@ -31008,6 +31061,14 @@
             "MeasureAs": "AsyncClipboardAPIUnsanitizedRead",
             "CallWith": "ScriptState",
             "RaisesException": true
+          },
+          "origin": {
+            "interface": "Clipboard",
+            "source": "third_party/blink/renderer/modules/clipboard/clipboard.idl",
+            "extended": {
+              "SecureContext": true,
+              "Exposed": "Window"
+            }
           }
         },
         {
@@ -31021,6 +31082,14 @@
             "MeasureAs": "AsyncClipboardAPIReadText",
             "CallWith": "ScriptState",
             "RaisesException": true
+          },
+          "origin": {
+            "interface": "Clipboard",
+            "source": "third_party/blink/renderer/modules/clipboard/clipboard.idl",
+            "extended": {
+              "SecureContext": true,
+              "Exposed": "Window"
+            }
           }
         },
         {
@@ -31043,6 +31112,14 @@
             "MeasureAs": "AsyncClipboardAPIWrite",
             "CallWith": "ScriptState",
             "RaisesException": true
+          },
+          "origin": {
+            "interface": "Clipboard",
+            "source": "third_party/blink/renderer/modules/clipboard/clipboard.idl",
+            "extended": {
+              "SecureContext": true,
+              "Exposed": "Window"
+            }
           }
         },
         {
@@ -31065,6 +31142,14 @@
             "MeasureAs": "AsyncClipboardAPIWriteText",
             "CallWith": "ScriptState",
             "RaisesException": true
+          },
+          "origin": {
+            "interface": "Clipboard",
+            "source": "third_party/blink/renderer/modules/clipboard/clipboard.idl",
+            "extended": {
+              "SecureContext": true,
+              "Exposed": "Window"
+            }
           }
         },
         {
@@ -31073,7 +31158,15 @@
           "type": "EventHandler",
           "static": false,
           "readonly": false,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "Clipboard",
+            "source": "third_party/blink/renderer/modules/clipboard/clipboard.idl",
+            "extended": {
+              "SecureContext": true,
+              "Exposed": "Window"
+            }
+          }
         }
       ]
     },
@@ -31747,6 +31840,15 @@
           "extended": {
             "CallWith": "ScriptState",
             "MeasureAs": "ContactsManagerGetProperties"
+          },
+          "origin": {
+            "interface": "ContactsManager",
+            "source": "third_party/blink/renderer/modules/contacts_picker/contacts_manager.idl",
+            "extended": {
+              "Exposed": "Window",
+              "SecureContext": true,
+              "RuntimeEnabled": "ContactsManager"
+            }
           }
         },
         {
@@ -31777,6 +31879,15 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "MeasureAs": "ContactsManagerSelect"
+          },
+          "origin": {
+            "interface": "ContactsManager",
+            "source": "third_party/blink/renderer/modules/contacts_picker/contacts_manager.idl",
+            "extended": {
+              "Exposed": "Window",
+              "SecureContext": true,
+              "RuntimeEnabled": "ContactsManager"
+            }
           }
         }
       ]
@@ -32684,6 +32795,14 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "MeasureAs": "CredentialManagerGet"
+          },
+          "origin": {
+            "interface": "CredentialsContainer",
+            "source": "third_party/blink/renderer/modules/credentialmanagement/credentials_container.idl",
+            "extended": {
+              "Exposed": "Window",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -32706,6 +32825,14 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "MeasureAs": "CredentialManagerStore"
+          },
+          "origin": {
+            "interface": "CredentialsContainer",
+            "source": "third_party/blink/renderer/modules/credentialmanagement/credentials_container.idl",
+            "extended": {
+              "Exposed": "Window",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -32728,6 +32855,14 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "MeasureAs": "CredentialManagerCreate"
+          },
+          "origin": {
+            "interface": "CredentialsContainer",
+            "source": "third_party/blink/renderer/modules/credentialmanagement/credentials_container.idl",
+            "extended": {
+              "Exposed": "Window",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -32740,6 +32875,14 @@
           "extended": {
             "CallWith": "ScriptState",
             "MeasureAs": "CredentialManagerPreventSilentAccess"
+          },
+          "origin": {
+            "interface": "CredentialsContainer",
+            "source": "third_party/blink/renderer/modules/credentialmanagement/credentials_container.idl",
+            "extended": {
+              "Exposed": "Window",
+              "SecureContext": true
+            }
           }
         }
       ]
@@ -36582,6 +36725,13 @@
           "extended": {
             "CallWith": "ScriptState",
             "RaisesException": true
+          },
+          "origin": {
+            "interface": "DelegatedInkTrailPresenter",
+            "source": "third_party/blink/renderer/modules/delegated_ink/delegated_ink_trail_presenter.idl",
+            "extended": {
+              "Exposed": "Window"
+            }
           }
         },
         {
@@ -36590,7 +36740,14 @@
           "type": "Element?",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "DelegatedInkTrailPresenter",
+            "source": "third_party/blink/renderer/modules/delegated_ink/delegated_ink_trail_presenter.idl",
+            "extended": {
+              "Exposed": "Window"
+            }
+          }
         }
       ]
     },
@@ -36631,6 +36788,13 @@
           "extended": {
             "Measure": true,
             "CallWith": "ScriptState"
+          },
+          "origin": {
+            "interface": "DeprecatedStorageQuota",
+            "source": "third_party/blink/renderer/modules/quota/deprecated_storage_quota.idl",
+            "extended": {
+              "LegacyNoInterfaceObject": true
+            }
           }
         },
         {
@@ -36668,6 +36832,13 @@
           "extended": {
             "Measure": true,
             "CallWith": "ScriptState"
+          },
+          "origin": {
+            "interface": "DeprecatedStorageQuota",
+            "source": "third_party/blink/renderer/modules/quota/deprecated_storage_quota.idl",
+            "extended": {
+              "LegacyNoInterfaceObject": true
+            }
           }
         }
       ]
@@ -37174,7 +37345,16 @@
           "type": "DevicePostureType",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "DevicePosture",
+            "source": "third_party/blink/renderer/modules/device_posture/device_posture.idl",
+            "extended": {
+              "Exposed": "Window",
+              "RuntimeEnabled": "DevicePosture",
+              "SecureContext": true
+            }
+          }
         },
         {
           "kind": "attribute",
@@ -37182,7 +37362,16 @@
           "type": "EventHandler",
           "static": false,
           "readonly": false,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "DevicePosture",
+            "source": "third_party/blink/renderer/modules/device_posture/device_posture.idl",
+            "extended": {
+              "Exposed": "Window",
+              "RuntimeEnabled": "DevicePosture",
+              "SecureContext": true
+            }
+          }
         }
       ]
     },
@@ -51992,6 +52181,17 @@
           "special": [],
           "extended": {
             "CallWith": "ScriptState"
+          },
+          "origin": {
+            "interface": "GPU",
+            "source": "third_party/blink/renderer/modules/webgpu/gpu.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "Worker"
+              ],
+              "SecureContext": true
+            }
           }
         },
         {
@@ -52001,7 +52201,18 @@
           "arguments": [],
           "static": false,
           "special": [],
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "GPU",
+            "source": "third_party/blink/renderer/modules/webgpu/gpu.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "Worker"
+              ],
+              "SecureContext": true
+            }
+          }
         },
         {
           "kind": "attribute",
@@ -52011,6 +52222,17 @@
           "readonly": true,
           "extended": {
             "SameObject": true
+          },
+          "origin": {
+            "interface": "GPU",
+            "source": "third_party/blink/renderer/modules/webgpu/gpu.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "Worker"
+              ],
+              "SecureContext": true
+            }
           }
         }
       ]
@@ -57416,6 +57638,14 @@
             "LogActivity": true,
             "MeasureAs": "GeolocationGetCurrentPosition",
             "ImplementedAs": "getCurrentPositionForBindings"
+          },
+          "origin": {
+            "interface": "Geolocation",
+            "source": "third_party/blink/renderer/core/geolocation/geolocation.idl",
+            "extended": {
+              "ActiveScriptWrappable": true,
+              "Exposed": "Window"
+            }
           }
         },
         {
@@ -57454,6 +57684,14 @@
             "LogActivity": true,
             "MeasureAs": "GeolocationWatchPosition",
             "ImplementedAs": "watchPositionForBindings"
+          },
+          "origin": {
+            "interface": "Geolocation",
+            "source": "third_party/blink/renderer/core/geolocation/geolocation.idl",
+            "extended": {
+              "ActiveScriptWrappable": true,
+              "Exposed": "Window"
+            }
           }
         },
         {
@@ -57472,7 +57710,15 @@
           ],
           "static": false,
           "special": [],
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "Geolocation",
+            "source": "third_party/blink/renderer/core/geolocation/geolocation.idl",
+            "extended": {
+              "ActiveScriptWrappable": true,
+              "Exposed": "Window"
+            }
+          }
         }
       ]
     },
@@ -57774,7 +58020,16 @@
       "parent": "EventTarget",
       "partial": false,
       "extended": {
-        "Exposed(ServiceWorker WebHIDOnServiceWorkers,\n            DedicatedWorker WebHID,\n            Window WebHID)": true,
+        "Exposed": [
+          "ServiceWorker",
+          "DedicatedWorker",
+          "Window"
+        ],
+        "ExposureFeatures": {
+          "ServiceWorker": "WebHIDOnServiceWorkers",
+          "DedicatedWorker": "WebHID",
+          "Window": "WebHID"
+        },
         "SecureContext": true
       },
       "source": "third_party/blink/renderer/modules/hid/hid.idl",
@@ -57785,7 +58040,24 @@
           "type": "EventHandler",
           "static": false,
           "readonly": false,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "HID",
+            "source": "third_party/blink/renderer/modules/hid/hid.idl",
+            "extended": {
+              "Exposed": [
+                "ServiceWorker",
+                "DedicatedWorker",
+                "Window"
+              ],
+              "ExposureFeatures": {
+                "ServiceWorker": "WebHIDOnServiceWorkers",
+                "DedicatedWorker": "WebHID",
+                "Window": "WebHID"
+              },
+              "SecureContext": true
+            }
+          }
         },
         {
           "kind": "attribute",
@@ -57793,7 +58065,24 @@
           "type": "EventHandler",
           "static": false,
           "readonly": false,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "HID",
+            "source": "third_party/blink/renderer/modules/hid/hid.idl",
+            "extended": {
+              "Exposed": [
+                "ServiceWorker",
+                "DedicatedWorker",
+                "Window"
+              ],
+              "ExposureFeatures": {
+                "ServiceWorker": "WebHIDOnServiceWorkers",
+                "DedicatedWorker": "WebHID",
+                "Window": "WebHID"
+              },
+              "SecureContext": true
+            }
+          }
         },
         {
           "kind": "operation",
@@ -57806,6 +58095,23 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "MeasureAs": "HidGetDevices"
+          },
+          "origin": {
+            "interface": "HID",
+            "source": "third_party/blink/renderer/modules/hid/hid.idl",
+            "extended": {
+              "Exposed": [
+                "ServiceWorker",
+                "DedicatedWorker",
+                "Window"
+              ],
+              "ExposureFeatures": {
+                "ServiceWorker": "WebHIDOnServiceWorkers",
+                "DedicatedWorker": "WebHID",
+                "Window": "WebHID"
+              },
+              "SecureContext": true
+            }
           }
         },
         {
@@ -57825,10 +58131,32 @@
           "static": false,
           "special": [],
           "extended": {
-            "Exposed(Window WebHID)": true,
+            "Exposed": [
+              "Window"
+            ],
+            "ExposureFeatures": {
+              "Window": "WebHID"
+            },
             "CallWith": "ScriptState",
             "RaisesException": true,
             "MeasureAs": "HidRequestDevice"
+          },
+          "origin": {
+            "interface": "HID",
+            "source": "third_party/blink/renderer/modules/hid/hid.idl",
+            "extended": {
+              "Exposed": [
+                "ServiceWorker",
+                "DedicatedWorker",
+                "Window"
+              ],
+              "ExposureFeatures": {
+                "ServiceWorker": "WebHIDOnServiceWorkers",
+                "DedicatedWorker": "WebHID",
+                "Window": "WebHID"
+              },
+              "SecureContext": true
+            }
           }
         }
       ]
@@ -74458,6 +74786,13 @@
           "extended": {
             "CallWith": "ScriptState",
             "Measure": true
+          },
+          "origin": {
+            "interface": "Ink",
+            "source": "third_party/blink/renderer/modules/delegated_ink/ink.idl",
+            "extended": {
+              "Exposed": "Window"
+            }
           }
         }
       ]
@@ -81748,6 +82083,14 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "MeasureAs": "KeyboardApiLock"
+          },
+          "origin": {
+            "interface": "Keyboard",
+            "source": "third_party/blink/renderer/modules/keyboard/keyboard.idl",
+            "extended": {
+              "Exposed": "Window",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -81760,6 +82103,14 @@
           "extended": {
             "CallWith": "ScriptState",
             "MeasureAs": "KeyboardApiUnlock"
+          },
+          "origin": {
+            "interface": "Keyboard",
+            "source": "third_party/blink/renderer/modules/keyboard/keyboard.idl",
+            "extended": {
+              "Exposed": "Window",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -81773,6 +82124,14 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "MeasureAs": "KeyboardApiGetLayoutMap"
+          },
+          "origin": {
+            "interface": "Keyboard",
+            "source": "third_party/blink/renderer/modules/keyboard/keyboard.idl",
+            "extended": {
+              "Exposed": "Window",
+              "SecureContext": true
+            }
           }
         }
       ]
@@ -83664,7 +84023,16 @@
       "partial": false,
       "extended": {
         "SecureContext": true,
-        "Exposed(Window StableBlinkFeatures, Worker StableBlinkFeatures, SharedStorageWorklet SharedStorageWebLocks)": true
+        "Exposed": [
+          "Window",
+          "Worker",
+          "SharedStorageWorklet"
+        ],
+        "ExposureFeatures": {
+          "Window": "StableBlinkFeatures",
+          "Worker": "StableBlinkFeatures",
+          "SharedStorageWorklet": "SharedStorageWebLocks"
+        }
       },
       "source": "third_party/blink/renderer/modules/locks/lock.idl",
       "members": [
@@ -83674,7 +84042,24 @@
           "type": "DOMString",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "Lock",
+            "source": "third_party/blink/renderer/modules/locks/lock.idl",
+            "extended": {
+              "SecureContext": true,
+              "Exposed": [
+                "Window",
+                "Worker",
+                "SharedStorageWorklet"
+              ],
+              "ExposureFeatures": {
+                "Window": "StableBlinkFeatures",
+                "Worker": "StableBlinkFeatures",
+                "SharedStorageWorklet": "SharedStorageWebLocks"
+              }
+            }
+          }
         },
         {
           "kind": "attribute",
@@ -83682,7 +84067,24 @@
           "type": "LockMode",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "Lock",
+            "source": "third_party/blink/renderer/modules/locks/lock.idl",
+            "extended": {
+              "SecureContext": true,
+              "Exposed": [
+                "Window",
+                "Worker",
+                "SharedStorageWorklet"
+              ],
+              "ExposureFeatures": {
+                "Window": "StableBlinkFeatures",
+                "Worker": "StableBlinkFeatures",
+                "SharedStorageWorklet": "SharedStorageWebLocks"
+              }
+            }
+          }
         }
       ]
     },
@@ -83693,7 +84095,16 @@
       "partial": false,
       "extended": {
         "SecureContext": true,
-        "Exposed(Window StableBlinkFeatures, Worker StableBlinkFeatures, SharedStorageWorklet SharedStorageWebLocks)": true
+        "Exposed": [
+          "Window",
+          "Worker",
+          "SharedStorageWorklet"
+        ],
+        "ExposureFeatures": {
+          "Window": "StableBlinkFeatures",
+          "Worker": "StableBlinkFeatures",
+          "SharedStorageWorklet": "SharedStorageWebLocks"
+        }
       },
       "source": "third_party/blink/renderer/modules/locks/lock_manager.idl",
       "members": [
@@ -83725,6 +84136,23 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "Measure": true
+          },
+          "origin": {
+            "interface": "LockManager",
+            "source": "third_party/blink/renderer/modules/locks/lock_manager.idl",
+            "extended": {
+              "SecureContext": true,
+              "Exposed": [
+                "Window",
+                "Worker",
+                "SharedStorageWorklet"
+              ],
+              "ExposureFeatures": {
+                "Window": "StableBlinkFeatures",
+                "Worker": "StableBlinkFeatures",
+                "SharedStorageWorklet": "SharedStorageWebLocks"
+              }
+            }
           }
         },
         {
@@ -83763,6 +84191,23 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "Measure": true
+          },
+          "origin": {
+            "interface": "LockManager",
+            "source": "third_party/blink/renderer/modules/locks/lock_manager.idl",
+            "extended": {
+              "SecureContext": true,
+              "Exposed": [
+                "Window",
+                "Worker",
+                "SharedStorageWorklet"
+              ],
+              "ExposureFeatures": {
+                "Window": "StableBlinkFeatures",
+                "Worker": "StableBlinkFeatures",
+                "SharedStorageWorklet": "SharedStorageWebLocks"
+              }
+            }
           }
         },
         {
@@ -83776,6 +84221,23 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "Measure": true
+          },
+          "origin": {
+            "interface": "LockManager",
+            "source": "third_party/blink/renderer/modules/locks/lock_manager.idl",
+            "extended": {
+              "SecureContext": true,
+              "Exposed": [
+                "Window",
+                "Worker",
+                "SharedStorageWorklet"
+              ],
+              "ExposureFeatures": {
+                "Window": "StableBlinkFeatures",
+                "Worker": "StableBlinkFeatures",
+                "SharedStorageWorklet": "SharedStorageWebLocks"
+              }
+            }
           }
         }
       ]
@@ -84172,6 +84634,17 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "Measure": true
+          },
+          "origin": {
+            "interface": "ML",
+            "source": "third_party/blink/renderer/modules/ml/ml.idl",
+            "extended": {
+              "RuntimeEnabled": "MachineLearningNeuralNetwork",
+              "Exposed": [
+                "Window",
+                "DedicatedWorker"
+              ]
+            }
           }
         }
       ]
@@ -89344,6 +89817,16 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "Measure": true
+          },
+          "origin": {
+            "interface": "MediaCapabilities",
+            "source": "third_party/blink/renderer/modules/media_capabilities/media_capabilities.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "Worker"
+              ]
+            }
           }
         },
         {
@@ -89366,6 +89849,16 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "Measure": true
+          },
+          "origin": {
+            "interface": "MediaCapabilities",
+            "source": "third_party/blink/renderer/modules/media_capabilities/media_capabilities.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "Worker"
+              ]
+            }
           }
         }
       ]
@@ -89387,7 +89880,15 @@
           "type": "DOMString",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "MediaDeviceInfo",
+            "source": "third_party/blink/renderer/modules/mediastream/media_device_info.idl",
+            "extended": {
+              "Exposed": "Window",
+              "SecureContext": true
+            }
+          }
         },
         {
           "kind": "attribute",
@@ -89395,7 +89896,15 @@
           "type": "MediaDeviceKind",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "MediaDeviceInfo",
+            "source": "third_party/blink/renderer/modules/mediastream/media_device_info.idl",
+            "extended": {
+              "Exposed": "Window",
+              "SecureContext": true
+            }
+          }
         },
         {
           "kind": "attribute",
@@ -89403,7 +89912,15 @@
           "type": "DOMString",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "MediaDeviceInfo",
+            "source": "third_party/blink/renderer/modules/mediastream/media_device_info.idl",
+            "extended": {
+              "Exposed": "Window",
+              "SecureContext": true
+            }
+          }
         },
         {
           "kind": "attribute",
@@ -89411,7 +89928,15 @@
           "type": "DOMString",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "MediaDeviceInfo",
+            "source": "third_party/blink/renderer/modules/mediastream/media_device_info.idl",
+            "extended": {
+              "Exposed": "Window",
+              "SecureContext": true
+            }
+          }
         },
         {
           "kind": "operation",
@@ -89423,6 +89948,14 @@
           "extended": {
             "CallWith": "ScriptState",
             "ImplementedAs": "toJSONForBinding"
+          },
+          "origin": {
+            "interface": "MediaDeviceInfo",
+            "source": "third_party/blink/renderer/modules/mediastream/media_device_info.idl",
+            "extended": {
+              "Exposed": "Window",
+              "SecureContext": true
+            }
           }
         }
       ]
@@ -89445,7 +89978,16 @@
           "type": "EventHandler",
           "static": false,
           "readonly": false,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "MediaDevices",
+            "source": "third_party/blink/renderer/modules/mediastream/media_devices.idl",
+            "extended": {
+              "Exposed": "Window",
+              "ActiveScriptWrappable": true,
+              "SecureContext": true
+            }
+          }
         },
         {
           "kind": "operation",
@@ -89458,6 +90000,15 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "MeasureAs": "MediaDevicesEnumerateDevices"
+          },
+          "origin": {
+            "interface": "MediaDevices",
+            "source": "third_party/blink/renderer/modules/mediastream/media_devices.idl",
+            "extended": {
+              "Exposed": "Window",
+              "ActiveScriptWrappable": true,
+              "SecureContext": true
+            }
           }
         },
         {
@@ -89467,7 +90018,16 @@
           "arguments": [],
           "static": false,
           "special": [],
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "MediaDevices",
+            "source": "third_party/blink/renderer/modules/mediastream/media_devices.idl",
+            "extended": {
+              "Exposed": "Window",
+              "ActiveScriptWrappable": true,
+              "SecureContext": true
+            }
+          }
         },
         {
           "kind": "operation",
@@ -89489,6 +90049,15 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "MeasureAs": "GetUserMediaPromise"
+          },
+          "origin": {
+            "interface": "MediaDevices",
+            "source": "third_party/blink/renderer/modules/mediastream/media_devices.idl",
+            "extended": {
+              "Exposed": "Window",
+              "ActiveScriptWrappable": true,
+              "SecureContext": true
+            }
           }
         },
         {
@@ -89512,6 +90081,15 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "MeasureAs": "GetDisplayMedia"
+          },
+          "origin": {
+            "interface": "MediaDevices",
+            "source": "third_party/blink/renderer/modules/mediastream/media_devices.idl",
+            "extended": {
+              "Exposed": "Window",
+              "ActiveScriptWrappable": true,
+              "SecureContext": true
+            }
           }
         },
         {
@@ -89527,6 +90105,15 @@
             "RaisesException": true,
             "MeasureAs": "GetAllScreensMedia",
             "IsolatedContext": true
+          },
+          "origin": {
+            "interface": "MediaDevices",
+            "source": "third_party/blink/renderer/modules/mediastream/media_devices.idl",
+            "extended": {
+              "Exposed": "Window",
+              "ActiveScriptWrappable": true,
+              "SecureContext": true
+            }
           }
         },
         {
@@ -89550,6 +90137,15 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "MeasureAs": "SelectAudioOutput"
+          },
+          "origin": {
+            "interface": "MediaDevices",
+            "source": "third_party/blink/renderer/modules/mediastream/media_devices.idl",
+            "extended": {
+              "Exposed": "Window",
+              "ActiveScriptWrappable": true,
+              "SecureContext": true
+            }
           }
         },
         {
@@ -89572,6 +90168,15 @@
             "RuntimeEnabled": "CaptureHandle",
             "CallWith": "ScriptState",
             "RaisesException": true
+          },
+          "origin": {
+            "interface": "MediaDevices",
+            "source": "third_party/blink/renderer/modules/mediastream/media_devices.idl",
+            "extended": {
+              "Exposed": "Window",
+              "ActiveScriptWrappable": true,
+              "SecureContext": true
+            }
           }
         },
         {
@@ -89595,6 +90200,15 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "MeasureAs": "PreferredAudioOutputDevices"
+          },
+          "origin": {
+            "interface": "MediaDevices",
+            "source": "third_party/blink/renderer/modules/mediastream/media_devices.idl",
+            "extended": {
+              "Exposed": "Window",
+              "ActiveScriptWrappable": true,
+              "SecureContext": true
+            }
           }
         }
       ]
@@ -90677,6 +91291,14 @@
           "readonly": false,
           "extended": {
             "Measure": true
+          },
+          "origin": {
+            "interface": "MediaSession",
+            "source": "third_party/blink/renderer/modules/mediasession/media_session.idl",
+            "extended": {
+              "Exposed": "Window",
+              "RuntimeEnabled": "MediaSession"
+            }
           }
         },
         {
@@ -90687,6 +91309,14 @@
           "readonly": false,
           "extended": {
             "Measure": true
+          },
+          "origin": {
+            "interface": "MediaSession",
+            "source": "third_party/blink/renderer/modules/mediasession/media_session.idl",
+            "extended": {
+              "Exposed": "Window",
+              "RuntimeEnabled": "MediaSession"
+            }
           }
         },
         {
@@ -90716,6 +91346,14 @@
           "extended": {
             "Measure": true,
             "RaisesException": true
+          },
+          "origin": {
+            "interface": "MediaSession",
+            "source": "third_party/blink/renderer/modules/mediasession/media_session.idl",
+            "extended": {
+              "Exposed": "Window",
+              "RuntimeEnabled": "MediaSession"
+            }
           }
         },
         {
@@ -90737,6 +91375,14 @@
           "extended": {
             "Measure": true,
             "RaisesException": true
+          },
+          "origin": {
+            "interface": "MediaSession",
+            "source": "third_party/blink/renderer/modules/mediasession/media_session.idl",
+            "extended": {
+              "Exposed": "Window",
+              "RuntimeEnabled": "MediaSession"
+            }
           }
         },
         {
@@ -90757,6 +91403,14 @@
           "special": [],
           "extended": {
             "Measure": true
+          },
+          "origin": {
+            "interface": "MediaSession",
+            "source": "third_party/blink/renderer/modules/mediasession/media_session.idl",
+            "extended": {
+              "Exposed": "Window",
+              "RuntimeEnabled": "MediaSession"
+            }
           }
         },
         {
@@ -90777,6 +91431,14 @@
           "special": [],
           "extended": {
             "Measure": true
+          },
+          "origin": {
+            "interface": "MediaSession",
+            "source": "third_party/blink/renderer/modules/mediasession/media_session.idl",
+            "extended": {
+              "Exposed": "Window",
+              "RuntimeEnabled": "MediaSession"
+            }
           }
         }
       ]
@@ -92469,7 +93131,16 @@
           "type": "unsigned long",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "MimeTypeArray",
+            "source": "third_party/blink/renderer/modules/plugins/mime_type_array.idl",
+            "extended": {
+              "Exposed": "Window",
+              "ImplementedAs": "DOMMimeTypeArray",
+              "LegacyUnenumerableNamedProperties": true
+            }
+          }
         },
         {
           "kind": "operation",
@@ -92489,7 +93160,16 @@
           "special": [
             "getter"
           ],
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "MimeTypeArray",
+            "source": "third_party/blink/renderer/modules/plugins/mime_type_array.idl",
+            "extended": {
+              "Exposed": "Window",
+              "ImplementedAs": "DOMMimeTypeArray",
+              "LegacyUnenumerableNamedProperties": true
+            }
+          }
         },
         {
           "kind": "operation",
@@ -92509,7 +93189,16 @@
           "special": [
             "getter"
           ],
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "MimeTypeArray",
+            "source": "third_party/blink/renderer/modules/plugins/mime_type_array.idl",
+            "extended": {
+              "Exposed": "Window",
+              "ImplementedAs": "DOMMimeTypeArray",
+              "LegacyUnenumerableNamedProperties": true
+            }
+          }
         }
       ]
     },
@@ -95261,12 +95950,7 @@
       "parent": null,
       "partial": false,
       "extended": {
-        "Exposed": "Window",
-        "ImplementedAs": "XRSystem",
-        "RuntimeEnabled": "WebShare",
-        "SameObject": true,
-        "SecureContext": true,
-        "IsolatedContext": true
+        "Exposed": "Window"
       },
       "source": "third_party/blink/renderer/core/frame/navigator.idl",
       "members": [
@@ -95278,6 +95962,13 @@
           "readonly": true,
           "extended": {
             "MeasureAs": "NavigatorVendorSub"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/core/frame/navigator.idl",
+            "extended": {
+              "Exposed": "Window"
+            }
           }
         },
         {
@@ -95288,6 +95979,13 @@
           "readonly": true,
           "extended": {
             "MeasureAs": "NavigatorProductSub"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/core/frame/navigator.idl",
+            "extended": {
+              "Exposed": "Window"
+            }
           }
         },
         {
@@ -95298,6 +95996,13 @@
           "readonly": true,
           "extended": {
             "MeasureAs": "NavigatorVendor"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/core/frame/navigator.idl",
+            "extended": {
+              "Exposed": "Window"
+            }
           }
         },
         {
@@ -95308,6 +96013,13 @@
           "readonly": true,
           "extended": {
             "MeasureAs": "NavigatorMaxTouchPoints"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/core/events/navigator_events.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorEvents"
+            }
           }
         },
         {
@@ -95318,6 +96030,17 @@
           "readonly": true,
           "extended": {
             "MeasureAs": "NavigatorCPUPerformance"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/core/frame/navigator_cpu_performance.idl",
+            "extended": {
+              "Exposed": "Window",
+              "ImplementedAs": "NavigatorCPUPerformance",
+              "RuntimeEnabled": "CpuPerformance",
+              "SameObject": true,
+              "SecureContext": true
+            }
           }
         },
         {
@@ -95326,7 +96049,14 @@
           "type": "Scheduling",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/core/frame/navigator_scheduling.idl",
+            "extended": {
+              "ImplementedAs": "Scheduling"
+            }
+          }
         },
         {
           "kind": "attribute",
@@ -95334,7 +96064,14 @@
           "type": "UserActivation",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/core/frame/navigator_user_activation.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorUserActivation"
+            }
+          }
         },
         {
           "kind": "attribute",
@@ -95342,7 +96079,14 @@
           "type": "Geolocation",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/core/geolocation/navigator_geolocation.idl",
+            "extended": {
+              "ImplementedAs": "Geolocation"
+            }
+          }
         },
         {
           "kind": "attribute",
@@ -95352,6 +96096,15 @@
           "readonly": true,
           "extended": {
             "SameObject": true
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/core/preferences/navigator_preferences.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorPreferences",
+              "RuntimeEnabled": "WebPreferences",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -95383,6 +96136,15 @@
             "Measure": true,
             "RaisesException": true,
             "DeprecateAs": "Fledge"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/ad_auction/navigator_auction.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorAuction",
+              "RuntimeEnabled": "AdInterestGroupAPI",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -95406,6 +96168,15 @@
             "Measure": true,
             "RaisesException": true,
             "DeprecateAs": "Fledge"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/ad_auction/navigator_auction.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorAuction",
+              "RuntimeEnabled": "AdInterestGroupAPI",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -95437,6 +96208,15 @@
             "Measure": true,
             "RaisesException": true,
             "DeprecateAs": "Fledge"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/ad_auction/navigator_auction.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorAuction",
+              "RuntimeEnabled": "AdInterestGroupAPI",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -95451,6 +96231,15 @@
             "Measure": true,
             "RaisesException": true,
             "DeprecateAs": "Fledge"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/ad_auction/navigator_auction.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorAuction",
+              "RuntimeEnabled": "AdInterestGroupAPI",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -95465,6 +96254,15 @@
             "Measure": true,
             "RaisesException": true,
             "DeprecateAs": "Fledge"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/ad_auction/navigator_auction.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorAuction",
+              "RuntimeEnabled": "AdInterestGroupAPI",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -95489,6 +96287,15 @@
             "Measure": true,
             "RaisesException": true,
             "DeprecateAs": "Fledge"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/ad_auction/navigator_auction.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorAuction",
+              "RuntimeEnabled": "AdInterestGroupAPI",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -95515,6 +96322,15 @@
             "Measure": true,
             "RaisesException": true,
             "DeprecateAs": "Fledge"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/ad_auction/navigator_auction.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorAuction",
+              "RuntimeEnabled": "AdInterestGroupAPI",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -95547,6 +96363,15 @@
             "Measure": true,
             "RaisesException": true,
             "DeprecateAs": "Fledge"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/ad_auction/navigator_auction.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorAuction",
+              "RuntimeEnabled": "AdInterestGroupAPI",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -95579,6 +96404,15 @@
             "Measure": true,
             "RaisesException": true,
             "DeprecateAs": "Fledge"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/ad_auction/navigator_auction.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorAuction",
+              "RuntimeEnabled": "AdInterestGroupAPI",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -95603,6 +96437,15 @@
             "Measure": true,
             "RaisesException": true,
             "DeprecateAs": "Fledge"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/ad_auction/navigator_auction.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorAuction",
+              "RuntimeEnabled": "AdInterestGroupAPI",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -95626,6 +96469,15 @@
             "CallWith": "ScriptState",
             "Measure": true,
             "RaisesException": true
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/ad_auction/navigator_auction.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorAuction",
+              "RuntimeEnabled": "AdInterestGroupAPI",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -95658,6 +96510,15 @@
             "PromiseIDLTypeMismatch": true,
             "Measure": true,
             "RaisesException": true
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/ad_auction/navigator_auction.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorAuction",
+              "RuntimeEnabled": "AdInterestGroupAPI",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -95671,6 +96532,15 @@
             "RuntimeEnabled": "FencedFrames",
             "CallWith": "ScriptState",
             "DeprecateAs": "Fledge"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/ad_auction/navigator_auction.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorAuction",
+              "RuntimeEnabled": "AdInterestGroupAPI",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -95683,6 +96553,15 @@
             "RuntimeEnabled": "EnforceAnonymityExposure",
             "CallWith": "ScriptState",
             "DeprecateAs": "Fledge"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/ad_auction/navigator_auction.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorAuction",
+              "RuntimeEnabled": "AdInterestGroupAPI",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -95695,6 +96574,15 @@
             "SameObject": true,
             "CallWith": "ScriptState",
             "DeprecateAs": "Fledge"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/ad_auction/navigator_auction.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorAuction",
+              "RuntimeEnabled": "AdInterestGroupAPI",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -95707,6 +96595,14 @@
           "extended": {
             "CallWith": "ScriptState",
             "MeasureAs": "BatteryStatusGetBattery"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/battery/navigator_battery.idl",
+            "extended": {
+              "SecureContext": true,
+              "ImplementedAs": "BatteryManager"
+            }
           }
         },
         {
@@ -95737,6 +96633,13 @@
             "CallWith": "ScriptState",
             "MeasureAs": "SendBeacon",
             "RaisesException": true
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/beacon/navigator_beacon.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorBeacon"
+            }
           }
         },
         {
@@ -95747,6 +96650,15 @@
           "readonly": true,
           "extended": {
             "SameObject": true
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/bluetooth/navigator_bluetooth.idl",
+            "extended": {
+              "ImplementedAs": "Bluetooth",
+              "RuntimeEnabled": "WebBluetooth",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -95758,6 +96670,13 @@
           "extended": {
             "SecureContext": true,
             "SameObject": true
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/clipboard/navigator_clipboard.idl",
+            "extended": {
+              "ImplementedAs": "Clipboard"
+            }
           }
         },
         {
@@ -95770,6 +96689,14 @@
             "SecureContext": true,
             "SameObject": true,
             "RuntimeEnabled": "ContactsManager"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/contacts_picker/navigator_contacts.idl",
+            "extended": {
+              "Exposed": "Window",
+              "ImplementedAs": "ContactsManager"
+            }
           }
         },
         {
@@ -95781,6 +96708,13 @@
           "extended": {
             "SecureContext": true,
             "SameObject": true
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/credentialmanagement/navigator_credentials.idl",
+            "extended": {
+              "ImplementedAs": "AuthenticationCredentialsContainer"
+            }
           }
         },
         {
@@ -95792,6 +96726,13 @@
           "extended": {
             "SecureContext": true,
             "RuntimeEnabled": "FedCm"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/credentialmanagement/navigator_login.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorLogin"
+            }
           }
         },
         {
@@ -95802,6 +96743,14 @@
           "readonly": true,
           "extended": {
             "SameObject": true
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/delegated_ink/navigator_ink.idl",
+            "extended": {
+              "ImplementedAs": "Ink",
+              "Exposed": "Window"
+            }
           }
         },
         {
@@ -95812,6 +96761,19 @@
           "readonly": true,
           "extended": {
             "MeasureAs": "DevicePosture"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/device_posture/navigator_device_posture.idl",
+            "extended": {
+              "SecureContext": true,
+              "Exposed": [
+                "Window"
+              ],
+              "SameObject": true,
+              "RuntimeEnabled": "DevicePosture",
+              "ImplementedAs": "NavigatorDevicePosture"
+            }
           }
         },
         {
@@ -95822,6 +96784,13 @@
           "readonly": true,
           "extended": {
             "MeasureAs": "NavigatorDoNotTrack"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/donottrack/navigator_do_not_track.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorDoNotTrack"
+            }
           }
         },
         {
@@ -95852,6 +96821,13 @@
             "SecureContext": true,
             "CallWith": "ScriptState",
             "RaisesException": true
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/encryptedmedia/navigator_request_media_key_system_access.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorRequestMediaKeySystemAccess"
+            }
           }
         },
         {
@@ -95864,6 +96840,13 @@
           "extended": {
             "MeasureAs": "GetGamepads",
             "RaisesException": true
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/gamepad/navigator_gamepad.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorGamepad"
+            }
           }
         },
         {
@@ -95886,6 +96869,15 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "MeasureAs": "HandwritingRecognitionCreateRecognizer"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/handwriting/navigator_handwriting_recognition_service.idl",
+            "extended": {
+              "SecureContext": true,
+              "ImplementedAs": "HandwritingRecognitionService",
+              "RuntimeEnabled": "HandwritingRecognition"
+            }
           }
         },
         {
@@ -95908,6 +96900,15 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "MeasureAs": "HandwritingRecognitionQueryRecognizer"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/handwriting/navigator_handwriting_recognition_service.idl",
+            "extended": {
+              "SecureContext": true,
+              "ImplementedAs": "HandwritingRecognitionService",
+              "RuntimeEnabled": "HandwritingRecognition"
+            }
           }
         },
         {
@@ -95918,6 +96919,15 @@
           "readonly": true,
           "extended": {
             "SameObject": true
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/hid/navigator_hid.idl",
+            "extended": {
+              "ImplementedAs": "HID",
+              "RuntimeEnabled": "WebHID",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -95932,6 +96942,14 @@
             "Measure": true,
             "SecureContext": true,
             "RaisesException": true
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/installedapp/navigator_installed_app.idl",
+            "extended": {
+              "ImplementedAs": "InstalledAppController",
+              "RuntimeEnabled": "InstalledApp"
+            }
           }
         },
         {
@@ -95943,6 +96961,13 @@
           "extended": {
             "SameObject": true,
             "SecureContext": true
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/keyboard/navigator_keyboard.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorKeyboard"
+            }
           }
         },
         {
@@ -95953,6 +96978,15 @@
           "readonly": true,
           "extended": {
             "SameObject": true
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/locked_mode/navigator_locked_mode.idl",
+            "extended": {
+              "ImplementedAs": "LockedMode",
+              "RuntimeEnabled": "LockedMode",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -95963,6 +96997,14 @@
           "readonly": true,
           "extended": {
             "SameObject": true
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/managed_device/navigator_managed.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorManagedData",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -95973,6 +97015,14 @@
           "readonly": true,
           "extended": {
             "SameObject": true
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/media_capabilities/navigator_media_capabilities.idl",
+            "extended": {
+              "Exposed": "Window",
+              "ImplementedAs": "MediaCapabilities"
+            }
           }
         },
         {
@@ -95983,6 +97033,17 @@
           "readonly": true,
           "extended": {
             "SameObject": true
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/mediasession/navigator_media_session.idl",
+            "extended": {
+              "Exposed": [
+                "Window"
+              ],
+              "ImplementedAs": "MediaSession",
+              "RuntimeEnabled": "MediaSession"
+            }
           }
         },
         {
@@ -96021,6 +97082,13 @@
             "RaisesException": true,
             "SecureContext": true,
             "MeasureAs": "GetUserMediaLegacy"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/mediastream/navigator_media_stream.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorMediaStream"
+            }
           }
         },
         {
@@ -96060,6 +97128,13 @@
             "SecureContext": true,
             "ImplementedAs": "getUserMedia",
             "MeasureAs": "GetUserMediaPrefixed"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/mediastream/navigator_media_stream.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorMediaStream"
+            }
           }
         },
         {
@@ -96071,6 +97146,13 @@
           "extended": {
             "SameObject": true,
             "SecureContext": true
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/mediastream/navigator_user_media.idl",
+            "extended": {
+              "ImplementedAs": "MediaDevices"
+            }
           }
         },
         {
@@ -96079,7 +97161,17 @@
           "type": "Permissions",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/permissions/navigator_permissions.idl",
+            "extended": {
+              "Exposed": [
+                "Window"
+              ],
+              "ImplementedAs": "Permissions"
+            }
+          }
         },
         {
           "kind": "attribute",
@@ -96090,6 +97182,14 @@
           "extended": {
             "SameObject": true,
             "SecureContext": true
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/presentation/navigator_presentation.idl",
+            "extended": {
+              "ImplementedAs": "Presentation",
+              "RuntimeEnabled": "Presentation"
+            }
           }
         },
         {
@@ -96100,6 +97200,13 @@
           "readonly": true,
           "extended": {
             "MeasureAs": "PrefixedStorageQuota"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/quota/navigator_storage_quota.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorStorageQuota"
+            }
           }
         },
         {
@@ -96110,6 +97217,13 @@
           "readonly": true,
           "extended": {
             "MeasureAs": "PrefixedStorageQuota"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/quota/navigator_storage_quota.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorStorageQuota"
+            }
           }
         },
         {
@@ -96120,6 +97234,15 @@
           "readonly": true,
           "extended": {
             "SameObject": true
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/serial/navigator_serial.idl",
+            "extended": {
+              "ImplementedAs": "Serial",
+              "RuntimeEnabled": "Serial",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -96132,6 +97255,13 @@
             "SecureContext": true,
             "RaisesException": true,
             "CallWith": "ScriptState"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/service_worker/navigator_service_worker.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorServiceWorker"
+            }
           }
         },
         {
@@ -96142,6 +97272,17 @@
           "readonly": true,
           "extended": {
             "SameObject": true
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/smart_card/navigator_smart_card.idl",
+            "extended": {
+              "Exposed": "Window",
+              "ImplementedAs": "SmartCardResourceManager",
+              "RuntimeEnabled": "SmartCard",
+              "SecureContext": true,
+              "IsolatedContext": true
+            }
           }
         },
         {
@@ -96162,7 +97303,14 @@
           ],
           "static": false,
           "special": [],
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/vibration/navigator_vibration.idl",
+            "extended": {
+              "ImplementedAs": "VibrationController"
+            }
+          }
         },
         {
           "kind": "operation",
@@ -96180,7 +97328,14 @@
           ],
           "static": false,
           "special": [],
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/vibration/navigator_vibration.idl",
+            "extended": {
+              "ImplementedAs": "VibrationController"
+            }
+          }
         },
         {
           "kind": "attribute",
@@ -96191,6 +97346,13 @@
           "extended": {
             "SecureContext": true,
             "SameObject": true
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/virtualkeyboard/navigator_virtual_keyboard.idl",
+            "extended": {
+              "ImplementedAs": "VirtualKeyboard"
+            }
           }
         },
         {
@@ -96201,6 +97363,14 @@
           "readonly": true,
           "extended": {
             "SameObject": true
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/wake_lock/navigator_wake_lock.idl",
+            "extended": {
+              "ImplementedAs": "WakeLock",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -96214,6 +97384,14 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "MeasureAs": "\"WebDXFeature::kNavigatorInstall\""
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/web_install/navigator_web_install.idl",
+            "extended": {
+              "RuntimeEnabled": "WebAppInstallation",
+              "ImplementedAs": "NavigatorWebInstall"
+            }
           }
         },
         {
@@ -96236,6 +97414,14 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "MeasureAs": "\"WebDXFeature::kNavigatorInstall\""
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/web_install/navigator_web_install.idl",
+            "extended": {
+              "RuntimeEnabled": "WebAppInstallation",
+              "ImplementedAs": "NavigatorWebInstall"
+            }
           }
         },
         {
@@ -96266,6 +97452,14 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "MeasureAs": "\"WebDXFeature::kNavigatorInstall\""
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/web_install/navigator_web_install.idl",
+            "extended": {
+              "RuntimeEnabled": "WebAppInstallation",
+              "ImplementedAs": "NavigatorWebInstall"
+            }
           }
         },
         {
@@ -96288,6 +97482,14 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "MeasureAs": "\"WebDXFeature::kNavigatorInstall\""
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/web_install/navigator_web_install.idl",
+            "extended": {
+              "RuntimeEnabled": "WebAppInstallation",
+              "ImplementedAs": "NavigatorWebInstall"
+            }
           }
         },
         {
@@ -96310,6 +97512,14 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "MeasureAs": "RequestMIDIAccess_ObscuredByFootprinting"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/webmidi/navigator_web_midi.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorWebMIDI",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -96322,6 +97532,13 @@
             "SameObject": true,
             "SecureContext": true,
             "RuntimeEnabled": "RTCDiagnosticLogging"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/webrtc/navigator_rtc.idl",
+            "extended": {
+              "ImplementedAs": "RTC"
+            }
           }
         },
         {
@@ -96344,6 +97561,14 @@
             "SecureContext": true,
             "CallWith": "ScriptState",
             "MeasureAs": "WebShareCanShare"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/webshare/navigator_share.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorShare",
+              "RuntimeEnabled": "WebShare"
+            }
           }
         },
         {
@@ -96367,6 +97592,14 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "MeasureAs": "WebShareShare"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/webshare/navigator_share.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorShare",
+              "RuntimeEnabled": "WebShare"
+            }
           }
         },
         {
@@ -96378,6 +97611,15 @@
           "extended": {
             "SameObject": true,
             "RuntimeEnabled": "WebUSB"
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/webusb/navigator_usb.idl",
+            "extended": {
+              "Exposed": "Window",
+              "ImplementedAs": "USB",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -96388,6 +97630,13 @@
           "readonly": true,
           "extended": {
             "SameObject": true
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/window_controls_overlay/navigator_window_controls_overlay.idl",
+            "extended": {
+              "ImplementedAs": "WindowControlsOverlay"
+            }
           }
         },
         {
@@ -96401,6 +97650,13 @@
             "RuntimeEnabled": "WebXR",
             "MeasureAs": "NavigatorXR",
             "SameObject": true
+          },
+          "origin": {
+            "interface": "Navigator",
+            "source": "third_party/blink/renderer/modules/xr/navigator_xr.idl",
+            "extended": {
+              "ImplementedAs": "XRSystem"
+            }
           }
         },
         {
@@ -96411,6 +97667,11 @@
           "readonly": true,
           "extended": {
             "MeasureAs": "NavigatorHardwareConcurrency"
+          },
+          "origin": {
+            "interface": "NavigatorConcurrentHardware",
+            "source": "third_party/blink/renderer/core/frame/navigator_concurrent_hardware.idl",
+            "extended": {}
           }
         },
         {
@@ -96421,6 +97682,11 @@
           "readonly": true,
           "extended": {
             "MeasureAs": "NavigatorCookieEnabled"
+          },
+          "origin": {
+            "interface": "NavigatorCookies",
+            "source": "third_party/blink/renderer/core/frame/navigator_cookies.idl",
+            "extended": {}
           }
         },
         {
@@ -96432,6 +97698,11 @@
           "extended": {
             "MeasureAs": "NavigatorDeviceMemory",
             "SecureContext": true
+          },
+          "origin": {
+            "interface": "NavigatorDeviceMemory",
+            "source": "third_party/blink/renderer/core/frame/navigator_device_memory.idl",
+            "extended": {}
           }
         },
         {
@@ -96440,7 +97711,12 @@
           "type": "DOMString",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "NavigatorID",
+            "source": "third_party/blink/renderer/core/frame/navigator_id.idl",
+            "extended": {}
+          }
         },
         {
           "kind": "attribute",
@@ -96448,7 +97724,12 @@
           "type": "DOMString",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "NavigatorID",
+            "source": "third_party/blink/renderer/core/frame/navigator_id.idl",
+            "extended": {}
+          }
         },
         {
           "kind": "attribute",
@@ -96458,6 +97739,11 @@
           "readonly": true,
           "extended": {
             "MeasureAs": "NavigatorAppVersion"
+          },
+          "origin": {
+            "interface": "NavigatorID",
+            "source": "third_party/blink/renderer/core/frame/navigator_id.idl",
+            "extended": {}
           }
         },
         {
@@ -96468,6 +97754,11 @@
           "readonly": true,
           "extended": {
             "MeasureAs": "NavigatorPlatform"
+          },
+          "origin": {
+            "interface": "NavigatorID",
+            "source": "third_party/blink/renderer/core/frame/navigator_id.idl",
+            "extended": {}
           }
         },
         {
@@ -96476,7 +97767,12 @@
           "type": "DOMString",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "NavigatorID",
+            "source": "third_party/blink/renderer/core/frame/navigator_id.idl",
+            "extended": {}
+          }
         },
         {
           "kind": "attribute",
@@ -96486,6 +97782,11 @@
           "readonly": true,
           "extended": {
             "MeasureAs": "NavigatorUserAgent"
+          },
+          "origin": {
+            "interface": "NavigatorID",
+            "source": "third_party/blink/renderer/core/frame/navigator_id.idl",
+            "extended": {}
           }
         },
         {
@@ -96496,6 +97797,11 @@
           "readonly": true,
           "extended": {
             "MeasureAs": "NavigatorLanguage"
+          },
+          "origin": {
+            "interface": "NavigatorLanguage",
+            "source": "third_party/blink/renderer/core/frame/navigator_language.idl",
+            "extended": {}
           }
         },
         {
@@ -96507,6 +97813,11 @@
           "extended": {
             "CachedAttribute": "IsLanguagesDirty",
             "MeasureAs": "NavigatorLanguages"
+          },
+          "origin": {
+            "interface": "NavigatorLanguage",
+            "source": "third_party/blink/renderer/core/frame/navigator_language.idl",
+            "extended": {}
           }
         },
         {
@@ -96515,7 +97826,12 @@
           "type": "boolean",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "NavigatorOnLine",
+            "source": "third_party/blink/renderer/core/frame/navigator_on_line.idl",
+            "extended": {}
+          }
         },
         {
           "kind": "attribute",
@@ -96523,7 +97839,12 @@
           "type": "boolean",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "NavigatorAutomationInformation",
+            "source": "third_party/blink/renderer/core/frame/navigator_automation_information.idl",
+            "extended": {}
+          }
         },
         {
           "kind": "attribute",
@@ -96533,6 +97854,11 @@
           "readonly": true,
           "extended": {
             "SecureContext": true
+          },
+          "origin": {
+            "interface": "NavigatorUA",
+            "source": "third_party/blink/renderer/core/frame/navigator_ua.idl",
+            "extended": {}
           }
         },
         {
@@ -96544,6 +97870,13 @@
           "extended": {
             "MeasureAs": "NavigatorPlugins",
             "SameObject": true
+          },
+          "origin": {
+            "interface": "NavigatorPlugins",
+            "source": "third_party/blink/renderer/modules/plugins/navigator_plugins.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorPlugins"
+            }
           }
         },
         {
@@ -96555,6 +97888,13 @@
           "extended": {
             "MeasureAs": "NavigatorMimeTypes",
             "SameObject": true
+          },
+          "origin": {
+            "interface": "NavigatorPlugins",
+            "source": "third_party/blink/renderer/modules/plugins/navigator_plugins.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorPlugins"
+            }
           }
         },
         {
@@ -96566,6 +97906,13 @@
           "special": [],
           "extended": {
             "Measure": true
+          },
+          "origin": {
+            "interface": "NavigatorPlugins",
+            "source": "third_party/blink/renderer/modules/plugins/navigator_plugins.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorPlugins"
+            }
           }
         },
         {
@@ -96576,6 +97923,13 @@
           "readonly": true,
           "extended": {
             "MeasureAs": "NavigatorPdfViewerEnabled"
+          },
+          "origin": {
+            "interface": "NavigatorPlugins",
+            "source": "third_party/blink/renderer/modules/plugins/navigator_plugins.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorPlugins"
+            }
           }
         },
         {
@@ -96598,6 +97952,13 @@
             "CallWith": "ScriptState",
             "MeasureAs": "BadgeSet",
             "RaisesException": true
+          },
+          "origin": {
+            "interface": "NavigatorBadge",
+            "source": "third_party/blink/renderer/modules/badging/navigator_badge.idl",
+            "extended": {
+              "SecureContext": true
+            }
           }
         },
         {
@@ -96611,6 +97972,13 @@
             "CallWith": "ScriptState",
             "MeasureAs": "BadgeClear",
             "RaisesException": true
+          },
+          "origin": {
+            "interface": "NavigatorBadge",
+            "source": "third_party/blink/renderer/modules/badging/navigator_badge.idl",
+            "extended": {
+              "SecureContext": true
+            }
           }
         },
         {
@@ -96621,6 +97989,15 @@
           "readonly": true,
           "extended": {
             "SameObject": true
+          },
+          "origin": {
+            "interface": "NavigatorStorageBuckets",
+            "source": "third_party/blink/renderer/modules/buckets/navigator_storage_buckets.idl",
+            "extended": {
+              "SecureContext": true,
+              "ImplementedAs": "StorageBucketManager",
+              "RuntimeEnabled": "StorageBuckets"
+            }
           }
         },
         {
@@ -96631,6 +98008,14 @@
           "readonly": true,
           "extended": {
             "Measure": true
+          },
+          "origin": {
+            "interface": "NavigatorGlobalPrivacyControl",
+            "source": "third_party/blink/renderer/modules/global_privacy_control/navigator_global_privacy_control.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorGlobalPrivacyControl",
+              "RuntimeEnabled": "GlobalPrivacyControl"
+            }
           }
         },
         {
@@ -96641,6 +98026,14 @@
           "readonly": true,
           "extended": {
             "RaisesException": true
+          },
+          "origin": {
+            "interface": "NavigatorLocks",
+            "source": "third_party/blink/renderer/modules/locks/navigator_locks.idl",
+            "extended": {
+              "SecureContext": true,
+              "ImplementedAs": "LockManager"
+            }
           }
         },
         {
@@ -96652,6 +98045,13 @@
           "extended": {
             "SameObject": true,
             "SecureContext": true
+          },
+          "origin": {
+            "interface": "NavigatorML",
+            "source": "third_party/blink/renderer/modules/ml/navigator_ml.idl",
+            "extended": {
+              "RuntimeEnabled": "MachineLearningNeuralNetwork"
+            }
           }
         },
         {
@@ -96682,6 +98082,11 @@
             "RuntimeEnabled": "NavigatorContentUtils",
             "RaisesException": true,
             "SecureContext": true
+          },
+          "origin": {
+            "interface": "NavigatorContentUtils",
+            "source": "third_party/blink/renderer/modules/navigatorcontentutils/navigator_content_utils.idl",
+            "extended": {}
           }
         },
         {
@@ -96712,6 +98117,11 @@
             "RuntimeEnabled": "NavigatorContentUtils",
             "RaisesException": true,
             "SecureContext": true
+          },
+          "origin": {
+            "interface": "NavigatorContentUtils",
+            "source": "third_party/blink/renderer/modules/navigatorcontentutils/navigator_content_utils.idl",
+            "extended": {}
           }
         },
         {
@@ -96723,6 +98133,13 @@
           "extended": {
             "SameObject": true,
             "MeasureAs": "NetInfo"
+          },
+          "origin": {
+            "interface": "NavigatorNetworkInformation",
+            "source": "third_party/blink/renderer/modules/netinfo/navigator_network_information.idl",
+            "extended": {
+              "ImplementedAs": "NetworkInformation"
+            }
           }
         },
         {
@@ -96733,6 +98150,14 @@
           "readonly": true,
           "extended": {
             "SameObject": true
+          },
+          "origin": {
+            "interface": "NavigatorStorage",
+            "source": "third_party/blink/renderer/modules/quota/navigator_storage.idl",
+            "extended": {
+              "SecureContext": true,
+              "ImplementedAs": "NavigatorStorageQuota"
+            }
           }
         },
         {
@@ -96744,6 +98169,13 @@
           "extended": {
             "SameObject": true,
             "SecureContext": true
+          },
+          "origin": {
+            "interface": "NavigatorGPU",
+            "source": "third_party/blink/renderer/modules/webgpu/navigator_gpu.idl",
+            "extended": {
+              "ImplementedAs": "GPU"
+            }
           }
         }
       ],
@@ -96846,6 +98278,15 @@
           "extended": {
             "CallWith": "ScriptState",
             "MeasureAs": "FedCmIdpSigninStatusJsApi"
+          },
+          "origin": {
+            "interface": "NavigatorLogin",
+            "source": "third_party/blink/renderer/modules/credentialmanagement/navigator_login.idl",
+            "extended": {
+              "Exposed": "Window",
+              "SecureContext": true,
+              "RuntimeEnabled": "FedCm"
+            }
           }
         },
         {
@@ -96876,6 +98317,15 @@
             "CallWith": "ScriptState",
             "MeasureAs": "FedCmIdpSigninStatusJsApi",
             "RuntimeEnabled": "FedCmLightweightMode"
+          },
+          "origin": {
+            "interface": "NavigatorLogin",
+            "source": "third_party/blink/renderer/modules/credentialmanagement/navigator_login.idl",
+            "extended": {
+              "Exposed": "Window",
+              "SecureContext": true,
+              "RuntimeEnabled": "FedCm"
+            }
           }
         }
       ]
@@ -96911,6 +98361,15 @@
           "extended": {
             "CallWith": "ScriptState",
             "RuntimeEnabled": "ManagedConfiguration"
+          },
+          "origin": {
+            "interface": "NavigatorManagedData",
+            "source": "third_party/blink/renderer/modules/managed_device/navigator_managed_data.idl",
+            "extended": {
+              "ActiveScriptWrappable": true,
+              "Exposed": "Window",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -96921,6 +98380,15 @@
           "readonly": false,
           "extended": {
             "RuntimeEnabled": "ManagedConfiguration"
+          },
+          "origin": {
+            "interface": "NavigatorManagedData",
+            "source": "third_party/blink/renderer/modules/managed_device/navigator_managed_data.idl",
+            "extended": {
+              "ActiveScriptWrappable": true,
+              "Exposed": "Window",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -96935,6 +98403,15 @@
             "RaisesException": true,
             "RuntimeEnabled": "DeviceAttributes",
             "Measure": true
+          },
+          "origin": {
+            "interface": "NavigatorManagedData",
+            "source": "third_party/blink/renderer/modules/managed_device/navigator_managed_data.idl",
+            "extended": {
+              "ActiveScriptWrappable": true,
+              "Exposed": "Window",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -96949,6 +98426,15 @@
             "RaisesException": true,
             "RuntimeEnabled": "DeviceAttributes",
             "Measure": true
+          },
+          "origin": {
+            "interface": "NavigatorManagedData",
+            "source": "third_party/blink/renderer/modules/managed_device/navigator_managed_data.idl",
+            "extended": {
+              "ActiveScriptWrappable": true,
+              "Exposed": "Window",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -96963,6 +98449,15 @@
             "RaisesException": true,
             "RuntimeEnabled": "DeviceAttributes",
             "Measure": true
+          },
+          "origin": {
+            "interface": "NavigatorManagedData",
+            "source": "third_party/blink/renderer/modules/managed_device/navigator_managed_data.idl",
+            "extended": {
+              "ActiveScriptWrappable": true,
+              "Exposed": "Window",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -96977,6 +98472,15 @@
             "RaisesException": true,
             "RuntimeEnabled": "DeviceAttributes",
             "Measure": true
+          },
+          "origin": {
+            "interface": "NavigatorManagedData",
+            "source": "third_party/blink/renderer/modules/managed_device/navigator_managed_data.idl",
+            "extended": {
+              "ActiveScriptWrappable": true,
+              "Exposed": "Window",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -96991,6 +98495,15 @@
             "RaisesException": true,
             "RuntimeEnabled": "DeviceAttributes",
             "Measure": true
+          },
+          "origin": {
+            "interface": "NavigatorManagedData",
+            "source": "third_party/blink/renderer/modules/managed_device/navigator_managed_data.idl",
+            "extended": {
+              "ActiveScriptWrappable": true,
+              "Exposed": "Window",
+              "SecureContext": true
+            }
           }
         }
       ]
@@ -97016,6 +98529,16 @@
           "readonly": true,
           "extended": {
             "MeasureAs": "NavigatorUAData_Brands"
+          },
+          "origin": {
+            "interface": "NavigatorUAData",
+            "source": "third_party/blink/renderer/core/frame/navigator_ua_data.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "Worker"
+              ]
+            }
           }
         },
         {
@@ -97026,6 +98549,16 @@
           "readonly": true,
           "extended": {
             "MeasureAs": "NavigatorUAData_Mobile"
+          },
+          "origin": {
+            "interface": "NavigatorUAData",
+            "source": "third_party/blink/renderer/core/frame/navigator_ua_data.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "Worker"
+              ]
+            }
           }
         },
         {
@@ -97036,6 +98569,16 @@
           "readonly": true,
           "extended": {
             "MeasureAs": "NavigatorUAData_Platform"
+          },
+          "origin": {
+            "interface": "NavigatorUAData",
+            "source": "third_party/blink/renderer/core/frame/navigator_ua_data.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "Worker"
+              ]
+            }
           }
         },
         {
@@ -97057,6 +98600,16 @@
           "extended": {
             "CallWith": "ScriptState",
             "MeasureAs": "NavigatorUAData_GetHighEntropyValues"
+          },
+          "origin": {
+            "interface": "NavigatorUAData",
+            "source": "third_party/blink/renderer/core/frame/navigator_ua_data.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "Worker"
+              ]
+            }
           }
         },
         {
@@ -97069,6 +98622,16 @@
           "extended": {
             "CallWith": "ScriptState",
             "MeasureAs": "NavigatorUAData_toJSON"
+          },
+          "origin": {
+            "interface": "NavigatorUAData",
+            "source": "third_party/blink/renderer/core/frame/navigator_ua_data.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "Worker"
+              ]
+            }
           }
         }
       ]
@@ -97096,6 +98659,17 @@
           "extended": {
             "RuntimeEnabled": "NetInfoDownlinkMax",
             "MeasureAs": "NetInfoType"
+          },
+          "origin": {
+            "interface": "NetworkInformation",
+            "source": "third_party/blink/renderer/modules/netinfo/network_information.idl",
+            "extended": {
+              "ActiveScriptWrappable": true,
+              "Exposed": [
+                "Window",
+                "Worker"
+              ]
+            }
           }
         },
         {
@@ -97107,6 +98681,17 @@
           "extended": {
             "RuntimeEnabled": "NetInfoDownlinkMax",
             "MeasureAs": "NetInfoDownlinkMax"
+          },
+          "origin": {
+            "interface": "NetworkInformation",
+            "source": "third_party/blink/renderer/modules/netinfo/network_information.idl",
+            "extended": {
+              "ActiveScriptWrappable": true,
+              "Exposed": [
+                "Window",
+                "Worker"
+              ]
+            }
           }
         },
         {
@@ -97117,6 +98702,17 @@
           "readonly": false,
           "extended": {
             "MeasureAs": "NetInfoOnChange"
+          },
+          "origin": {
+            "interface": "NetworkInformation",
+            "source": "third_party/blink/renderer/modules/netinfo/network_information.idl",
+            "extended": {
+              "ActiveScriptWrappable": true,
+              "Exposed": [
+                "Window",
+                "Worker"
+              ]
+            }
           }
         },
         {
@@ -97128,6 +98724,17 @@
           "extended": {
             "RuntimeEnabled": "NetInfoDownlinkMax",
             "MeasureAs": "NetInfoOnTypeChange"
+          },
+          "origin": {
+            "interface": "NetworkInformation",
+            "source": "third_party/blink/renderer/modules/netinfo/network_information.idl",
+            "extended": {
+              "ActiveScriptWrappable": true,
+              "Exposed": [
+                "Window",
+                "Worker"
+              ]
+            }
           }
         },
         {
@@ -97138,6 +98745,17 @@
           "readonly": true,
           "extended": {
             "MeasureAs": "NetInfoEffectiveType"
+          },
+          "origin": {
+            "interface": "NetworkInformation",
+            "source": "third_party/blink/renderer/modules/netinfo/network_information.idl",
+            "extended": {
+              "ActiveScriptWrappable": true,
+              "Exposed": [
+                "Window",
+                "Worker"
+              ]
+            }
           }
         },
         {
@@ -97148,6 +98766,17 @@
           "readonly": true,
           "extended": {
             "MeasureAs": "NetInfoRtt"
+          },
+          "origin": {
+            "interface": "NetworkInformation",
+            "source": "third_party/blink/renderer/modules/netinfo/network_information.idl",
+            "extended": {
+              "ActiveScriptWrappable": true,
+              "Exposed": [
+                "Window",
+                "Worker"
+              ]
+            }
           }
         },
         {
@@ -97158,6 +98787,17 @@
           "readonly": true,
           "extended": {
             "MeasureAs": "NetInfoDownlink"
+          },
+          "origin": {
+            "interface": "NetworkInformation",
+            "source": "third_party/blink/renderer/modules/netinfo/network_information.idl",
+            "extended": {
+              "ActiveScriptWrappable": true,
+              "Exposed": [
+                "Window",
+                "Worker"
+              ]
+            }
           }
         },
         {
@@ -97168,6 +98808,17 @@
           "readonly": true,
           "extended": {
             "MeasureAs": "NetInfoSaveData"
+          },
+          "origin": {
+            "interface": "NetworkInformation",
+            "source": "third_party/blink/renderer/modules/netinfo/network_information.idl",
+            "extended": {
+              "ActiveScriptWrappable": true,
+              "Exposed": [
+                "Window",
+                "Worker"
+              ]
+            }
           }
         }
       ]
@@ -109958,7 +111609,18 @@
           "type": "DOMString",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "PermissionStatus",
+            "source": "third_party/blink/renderer/modules/permissions/permission_status.idl",
+            "extended": {
+              "ActiveScriptWrappable": true,
+              "Exposed": [
+                "Window",
+                "Worker"
+              ]
+            }
+          }
         },
         {
           "kind": "attribute",
@@ -109966,7 +111628,18 @@
           "type": "PermissionState",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "PermissionStatus",
+            "source": "third_party/blink/renderer/modules/permissions/permission_status.idl",
+            "extended": {
+              "ActiveScriptWrappable": true,
+              "Exposed": [
+                "Window",
+                "Worker"
+              ]
+            }
+          }
         },
         {
           "kind": "attribute",
@@ -109974,7 +111647,18 @@
           "type": "EventHandler",
           "static": false,
           "readonly": false,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "PermissionStatus",
+            "source": "third_party/blink/renderer/modules/permissions/permission_status.idl",
+            "extended": {
+              "ActiveScriptWrappable": true,
+              "Exposed": [
+                "Window",
+                "Worker"
+              ]
+            }
+          }
         }
       ]
     },
@@ -110011,6 +111695,16 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "Measure": true
+          },
+          "origin": {
+            "interface": "Permissions",
+            "source": "third_party/blink/renderer/modules/permissions/permissions.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "Worker"
+              ]
+            }
           }
         },
         {
@@ -110034,6 +111728,16 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "Measure": true
+          },
+          "origin": {
+            "interface": "Permissions",
+            "source": "third_party/blink/renderer/modules/permissions/permissions.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "Worker"
+              ]
+            }
           }
         },
         {
@@ -110057,6 +111761,16 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "Measure": true
+          },
+          "origin": {
+            "interface": "Permissions",
+            "source": "third_party/blink/renderer/modules/permissions/permissions.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "Worker"
+              ]
+            }
           }
         },
         {
@@ -110080,6 +111794,16 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "Measure": true
+          },
+          "origin": {
+            "interface": "Permissions",
+            "source": "third_party/blink/renderer/modules/permissions/permissions.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "Worker"
+              ]
+            }
           }
         }
       ]
@@ -110467,7 +112191,16 @@
           "type": "unsigned long",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "PluginArray",
+            "source": "third_party/blink/renderer/modules/plugins/plugin_array.idl",
+            "extended": {
+              "Exposed": "Window",
+              "ImplementedAs": "DOMPluginArray",
+              "LegacyUnenumerableNamedProperties": true
+            }
+          }
         },
         {
           "kind": "operation",
@@ -110487,7 +112220,16 @@
           "special": [
             "getter"
           ],
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "PluginArray",
+            "source": "third_party/blink/renderer/modules/plugins/plugin_array.idl",
+            "extended": {
+              "Exposed": "Window",
+              "ImplementedAs": "DOMPluginArray",
+              "LegacyUnenumerableNamedProperties": true
+            }
+          }
         },
         {
           "kind": "operation",
@@ -110507,7 +112249,16 @@
           "special": [
             "getter"
           ],
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "PluginArray",
+            "source": "third_party/blink/renderer/modules/plugins/plugin_array.idl",
+            "extended": {
+              "Exposed": "Window",
+              "ImplementedAs": "DOMPluginArray",
+              "LegacyUnenumerableNamedProperties": true
+            }
+          }
         },
         {
           "kind": "operation",
@@ -110525,7 +112276,16 @@
           ],
           "static": false,
           "special": [],
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "PluginArray",
+            "source": "third_party/blink/renderer/modules/plugins/plugin_array.idl",
+            "extended": {
+              "Exposed": "Window",
+              "ImplementedAs": "DOMPluginArray",
+              "LegacyUnenumerableNamedProperties": true
+            }
+          }
         }
       ]
     },
@@ -110830,7 +112590,16 @@
           "type": "PreferenceObject",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "PreferenceManager",
+            "source": "third_party/blink/renderer/core/preferences/preference_manager.idl",
+            "extended": {
+              "Exposed": "Window",
+              "SecureContext": true,
+              "RuntimeEnabled": "WebPreferences"
+            }
+          }
         },
         {
           "kind": "attribute",
@@ -110838,7 +112607,16 @@
           "type": "PreferenceObject",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "PreferenceManager",
+            "source": "third_party/blink/renderer/core/preferences/preference_manager.idl",
+            "extended": {
+              "Exposed": "Window",
+              "SecureContext": true,
+              "RuntimeEnabled": "WebPreferences"
+            }
+          }
         },
         {
           "kind": "attribute",
@@ -110846,7 +112624,16 @@
           "type": "PreferenceObject",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "PreferenceManager",
+            "source": "third_party/blink/renderer/core/preferences/preference_manager.idl",
+            "extended": {
+              "Exposed": "Window",
+              "SecureContext": true,
+              "RuntimeEnabled": "WebPreferences"
+            }
+          }
         },
         {
           "kind": "attribute",
@@ -110854,7 +112641,16 @@
           "type": "PreferenceObject",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "PreferenceManager",
+            "source": "third_party/blink/renderer/core/preferences/preference_manager.idl",
+            "extended": {
+              "Exposed": "Window",
+              "SecureContext": true,
+              "RuntimeEnabled": "WebPreferences"
+            }
+          }
         },
         {
           "kind": "attribute",
@@ -110864,6 +112660,15 @@
           "readonly": true,
           "extended": {
             "RuntimeEnabled": "PrefersReducedData"
+          },
+          "origin": {
+            "interface": "PreferenceManager",
+            "source": "third_party/blink/renderer/core/preferences/preference_manager.idl",
+            "extended": {
+              "Exposed": "Window",
+              "SecureContext": true,
+              "RuntimeEnabled": "WebPreferences"
+            }
           }
         }
       ]
@@ -111024,6 +112829,15 @@
           "readonly": false,
           "extended": {
             "MeasureAs": "PresentationDefaultRequest"
+          },
+          "origin": {
+            "interface": "Presentation",
+            "source": "third_party/blink/renderer/modules/presentation/presentation.idl",
+            "extended": {
+              "RuntimeEnabled": "Presentation",
+              "SecureContext": true,
+              "Exposed": "Window"
+            }
           }
         },
         {
@@ -111034,6 +112848,15 @@
           "readonly": true,
           "extended": {
             "SameObject": true
+          },
+          "origin": {
+            "interface": "Presentation",
+            "source": "third_party/blink/renderer/modules/presentation/presentation.idl",
+            "extended": {
+              "RuntimeEnabled": "Presentation",
+              "SecureContext": true,
+              "Exposed": "Window"
+            }
           }
         }
       ]
@@ -112294,6 +114117,14 @@
           "special": [],
           "extended": {
             "CallWith": "ScriptState"
+          },
+          "origin": {
+            "interface": "ProtectedAudience",
+            "source": "third_party/blink/renderer/modules/ad_auction/protected_audience.idl",
+            "extended": {
+              "SecureContext": true,
+              "Exposed": "Window"
+            }
           }
         }
       ]
@@ -112941,6 +114772,15 @@
           "extended": {
             "CallWith": "ScriptState",
             "Measure": true
+          },
+          "origin": {
+            "interface": "RTC",
+            "source": "third_party/blink/renderer/modules/webrtc/rtc.idl",
+            "extended": {
+              "Exposed": "Window",
+              "SecureContext": true,
+              "RuntimeEnabled": "RTCDiagnosticLogging"
+            }
           }
         },
         {
@@ -112961,6 +114801,15 @@
           "special": [],
           "extended": {
             "CallWith": "ScriptState"
+          },
+          "origin": {
+            "interface": "RTC",
+            "source": "third_party/blink/renderer/modules/webrtc/rtc.idl",
+            "extended": {
+              "Exposed": "Window",
+              "SecureContext": true,
+              "RuntimeEnabled": "RTCDiagnosticLogging"
+            }
           }
         },
         {
@@ -112972,6 +114821,15 @@
           "special": [],
           "extended": {
             "CallWith": "ScriptState"
+          },
+          "origin": {
+            "interface": "RTC",
+            "source": "third_party/blink/renderer/modules/webrtc/rtc.idl",
+            "extended": {
+              "Exposed": "Window",
+              "SecureContext": true,
+              "RuntimeEnabled": "RTCDiagnosticLogging"
+            }
           }
         }
       ]
@@ -127913,6 +129771,13 @@
           "special": [],
           "extended": {
             "MeasureAs": "SchedulingIsInputPending"
+          },
+          "origin": {
+            "interface": "Scheduling",
+            "source": "third_party/blink/renderer/core/frame/scheduling.idl",
+            "extended": {
+              "Exposed": "Window"
+            }
           }
         }
       ]
@@ -129546,7 +131411,14 @@
       "parent": "EventTarget",
       "partial": false,
       "extended": {
-        "Exposed(Window Serial, DedicatedWorker Serial)": true,
+        "Exposed": [
+          "Window",
+          "DedicatedWorker"
+        ],
+        "ExposureFeatures": {
+          "Window": "Serial",
+          "DedicatedWorker": "Serial"
+        },
         "SecureContext": true
       },
       "source": "third_party/blink/renderer/modules/serial/serial.idl",
@@ -129557,7 +131429,22 @@
           "type": "EventHandler",
           "static": false,
           "readonly": false,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "Serial",
+            "source": "third_party/blink/renderer/modules/serial/serial.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "DedicatedWorker"
+              ],
+              "ExposureFeatures": {
+                "Window": "Serial",
+                "DedicatedWorker": "Serial"
+              },
+              "SecureContext": true
+            }
+          }
         },
         {
           "kind": "attribute",
@@ -129565,7 +131452,22 @@
           "type": "EventHandler",
           "static": false,
           "readonly": false,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "Serial",
+            "source": "third_party/blink/renderer/modules/serial/serial.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "DedicatedWorker"
+              ],
+              "ExposureFeatures": {
+                "Window": "Serial",
+                "DedicatedWorker": "Serial"
+              },
+              "SecureContext": true
+            }
+          }
         },
         {
           "kind": "operation",
@@ -129578,6 +131480,21 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "MeasureAs": "SerialGetPorts"
+          },
+          "origin": {
+            "interface": "Serial",
+            "source": "third_party/blink/renderer/modules/serial/serial.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "DedicatedWorker"
+              ],
+              "ExposureFeatures": {
+                "Window": "Serial",
+                "DedicatedWorker": "Serial"
+              },
+              "SecureContext": true
+            }
           }
         },
         {
@@ -129601,6 +131518,21 @@
             "RaisesException": true,
             "MeasureAs": "SerialRequestPort",
             "Exposed": "Window"
+          },
+          "origin": {
+            "interface": "Serial",
+            "source": "third_party/blink/renderer/modules/serial/serial.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "DedicatedWorker"
+              ],
+              "ExposureFeatures": {
+                "Window": "Serial",
+                "DedicatedWorker": "Serial"
+              },
+              "SecureContext": true
+            }
           }
         }
       ]
@@ -129872,7 +131804,14 @@
       "parent": "EventTarget",
       "partial": false,
       "extended": {
-        "Exposed(Window StableBlinkFeatures,DedicatedWorker ServiceWorkerInDedicatedWorker)": true,
+        "Exposed": [
+          "Window",
+          "DedicatedWorker"
+        ],
+        "ExposureFeatures": {
+          "Window": "StableBlinkFeatures",
+          "DedicatedWorker": "ServiceWorkerInDedicatedWorker"
+        },
         "SecureContext": true
       },
       "source": "third_party/blink/renderer/modules/service_worker/service_worker_container.idl",
@@ -129883,7 +131822,22 @@
           "type": "ServiceWorker?",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "ServiceWorkerContainer",
+            "source": "third_party/blink/renderer/modules/service_worker/service_worker_container.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "DedicatedWorker"
+              ],
+              "ExposureFeatures": {
+                "Window": "StableBlinkFeatures",
+                "DedicatedWorker": "ServiceWorkerInDedicatedWorker"
+              },
+              "SecureContext": true
+            }
+          }
         },
         {
           "kind": "attribute",
@@ -129894,6 +131848,21 @@
           "extended": {
             "CallWith": "ScriptState",
             "RaisesException": true
+          },
+          "origin": {
+            "interface": "ServiceWorkerContainer",
+            "source": "third_party/blink/renderer/modules/service_worker/service_worker_container.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "DedicatedWorker"
+              ],
+              "ExposureFeatures": {
+                "Window": "StableBlinkFeatures",
+                "DedicatedWorker": "ServiceWorkerInDedicatedWorker"
+              },
+              "SecureContext": true
+            }
           }
         },
         {
@@ -129924,6 +131893,21 @@
             "CallWith": "ScriptState",
             "ImplementedAs": "registerServiceWorker",
             "RaisesException": true
+          },
+          "origin": {
+            "interface": "ServiceWorkerContainer",
+            "source": "third_party/blink/renderer/modules/service_worker/service_worker_container.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "DedicatedWorker"
+              ],
+              "ExposureFeatures": {
+                "Window": "StableBlinkFeatures",
+                "DedicatedWorker": "ServiceWorkerInDedicatedWorker"
+              },
+              "SecureContext": true
+            }
           }
         },
         {
@@ -129944,6 +131928,21 @@
           "special": [],
           "extended": {
             "CallWith": "ScriptState"
+          },
+          "origin": {
+            "interface": "ServiceWorkerContainer",
+            "source": "third_party/blink/renderer/modules/service_worker/service_worker_container.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "DedicatedWorker"
+              ],
+              "ExposureFeatures": {
+                "Window": "StableBlinkFeatures",
+                "DedicatedWorker": "ServiceWorkerInDedicatedWorker"
+              },
+              "SecureContext": true
+            }
           }
         },
         {
@@ -129955,6 +131954,21 @@
           "special": [],
           "extended": {
             "CallWith": "ScriptState"
+          },
+          "origin": {
+            "interface": "ServiceWorkerContainer",
+            "source": "third_party/blink/renderer/modules/service_worker/service_worker_container.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "DedicatedWorker"
+              ],
+              "ExposureFeatures": {
+                "Window": "StableBlinkFeatures",
+                "DedicatedWorker": "ServiceWorkerInDedicatedWorker"
+              },
+              "SecureContext": true
+            }
           }
         },
         {
@@ -129964,7 +131978,22 @@
           "arguments": [],
           "static": false,
           "special": [],
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "ServiceWorkerContainer",
+            "source": "third_party/blink/renderer/modules/service_worker/service_worker_container.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "DedicatedWorker"
+              ],
+              "ExposureFeatures": {
+                "Window": "StableBlinkFeatures",
+                "DedicatedWorker": "ServiceWorkerInDedicatedWorker"
+              },
+              "SecureContext": true
+            }
+          }
         },
         {
           "kind": "attribute",
@@ -129972,7 +132001,22 @@
           "type": "EventHandler",
           "static": false,
           "readonly": false,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "ServiceWorkerContainer",
+            "source": "third_party/blink/renderer/modules/service_worker/service_worker_container.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "DedicatedWorker"
+              ],
+              "ExposureFeatures": {
+                "Window": "StableBlinkFeatures",
+                "DedicatedWorker": "ServiceWorkerInDedicatedWorker"
+              },
+              "SecureContext": true
+            }
+          }
         },
         {
           "kind": "attribute",
@@ -129980,7 +132024,22 @@
           "type": "EventHandler",
           "static": false,
           "readonly": false,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "ServiceWorkerContainer",
+            "source": "third_party/blink/renderer/modules/service_worker/service_worker_container.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "DedicatedWorker"
+              ],
+              "ExposureFeatures": {
+                "Window": "StableBlinkFeatures",
+                "DedicatedWorker": "ServiceWorkerInDedicatedWorker"
+              },
+              "SecureContext": true
+            }
+          }
         },
         {
           "kind": "attribute",
@@ -129988,7 +132047,22 @@
           "type": "EventHandler",
           "static": false,
           "readonly": false,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "ServiceWorkerContainer",
+            "source": "third_party/blink/renderer/modules/service_worker/service_worker_container.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "DedicatedWorker"
+              ],
+              "ExposureFeatures": {
+                "Window": "StableBlinkFeatures",
+                "DedicatedWorker": "ServiceWorkerInDedicatedWorker"
+              },
+              "SecureContext": true
+            }
+          }
         }
       ]
     },
@@ -132620,6 +134694,16 @@
             "CallWith": "ScriptState",
             "MeasureAs": "SmartCardEstablishContext",
             "RaisesException": true
+          },
+          "origin": {
+            "interface": "SmartCardResourceManager",
+            "source": "third_party/blink/renderer/modules/smart_card/smart_card_resource_manager.idl",
+            "extended": {
+              "Exposed": "Window",
+              "RuntimeEnabled": "SmartCard",
+              "SecureContext": true,
+              "IsolatedContext": true
+            }
           }
         }
       ]
@@ -134789,7 +136873,19 @@
           "type": "DOMString",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "StorageBucket",
+            "source": "third_party/blink/renderer/modules/buckets/storage_bucket.idl",
+            "extended": {
+              "RuntimeEnabled": "StorageBuckets",
+              "Exposed": [
+                "Window",
+                "Worker"
+              ],
+              "SecureContext": true
+            }
+          }
         },
         {
           "kind": "operation",
@@ -134802,6 +136898,18 @@
             "Exposed": "Window",
             "CallWith": "ScriptState",
             "Measure": true
+          },
+          "origin": {
+            "interface": "StorageBucket",
+            "source": "third_party/blink/renderer/modules/buckets/storage_bucket.idl",
+            "extended": {
+              "RuntimeEnabled": "StorageBuckets",
+              "Exposed": [
+                "Window",
+                "Worker"
+              ],
+              "SecureContext": true
+            }
           }
         },
         {
@@ -134814,6 +136922,18 @@
           "extended": {
             "CallWith": "ScriptState",
             "Measure": true
+          },
+          "origin": {
+            "interface": "StorageBucket",
+            "source": "third_party/blink/renderer/modules/buckets/storage_bucket.idl",
+            "extended": {
+              "RuntimeEnabled": "StorageBuckets",
+              "Exposed": [
+                "Window",
+                "Worker"
+              ],
+              "SecureContext": true
+            }
           }
         },
         {
@@ -134826,6 +136946,18 @@
           "extended": {
             "CallWith": "ScriptState",
             "Measure": true
+          },
+          "origin": {
+            "interface": "StorageBucket",
+            "source": "third_party/blink/renderer/modules/buckets/storage_bucket.idl",
+            "extended": {
+              "RuntimeEnabled": "StorageBuckets",
+              "Exposed": [
+                "Window",
+                "Worker"
+              ],
+              "SecureContext": true
+            }
           }
         },
         {
@@ -134839,6 +136971,18 @@
             "CallWith": "ScriptState",
             "RuntimeEnabled": "StorageBucketsDurability",
             "Measure": true
+          },
+          "origin": {
+            "interface": "StorageBucket",
+            "source": "third_party/blink/renderer/modules/buckets/storage_bucket.idl",
+            "extended": {
+              "RuntimeEnabled": "StorageBuckets",
+              "Exposed": [
+                "Window",
+                "Worker"
+              ],
+              "SecureContext": true
+            }
           }
         },
         {
@@ -134860,6 +137004,18 @@
           "extended": {
             "CallWith": "ScriptState",
             "Measure": true
+          },
+          "origin": {
+            "interface": "StorageBucket",
+            "source": "third_party/blink/renderer/modules/buckets/storage_bucket.idl",
+            "extended": {
+              "RuntimeEnabled": "StorageBuckets",
+              "Exposed": [
+                "Window",
+                "Worker"
+              ],
+              "SecureContext": true
+            }
           }
         },
         {
@@ -134872,6 +137028,18 @@
           "extended": {
             "CallWith": "ScriptState",
             "Measure": true
+          },
+          "origin": {
+            "interface": "StorageBucket",
+            "source": "third_party/blink/renderer/modules/buckets/storage_bucket.idl",
+            "extended": {
+              "RuntimeEnabled": "StorageBuckets",
+              "Exposed": [
+                "Window",
+                "Worker"
+              ],
+              "SecureContext": true
+            }
           }
         },
         {
@@ -134883,6 +137051,18 @@
           "extended": {
             "SameObject": true,
             "Measure": true
+          },
+          "origin": {
+            "interface": "StorageBucket",
+            "source": "third_party/blink/renderer/modules/buckets/storage_bucket.idl",
+            "extended": {
+              "RuntimeEnabled": "StorageBuckets",
+              "Exposed": [
+                "Window",
+                "Worker"
+              ],
+              "SecureContext": true
+            }
           }
         },
         {
@@ -134895,6 +137075,18 @@
             "SameObject": true,
             "RuntimeEnabled": "StorageBucketsLocks",
             "Measure": true
+          },
+          "origin": {
+            "interface": "StorageBucket",
+            "source": "third_party/blink/renderer/modules/buckets/storage_bucket.idl",
+            "extended": {
+              "RuntimeEnabled": "StorageBuckets",
+              "Exposed": [
+                "Window",
+                "Worker"
+              ],
+              "SecureContext": true
+            }
           }
         },
         {
@@ -134907,6 +137099,18 @@
             "SameObject": true,
             "RaisesException": true,
             "Measure": true
+          },
+          "origin": {
+            "interface": "StorageBucket",
+            "source": "third_party/blink/renderer/modules/buckets/storage_bucket.idl",
+            "extended": {
+              "RuntimeEnabled": "StorageBuckets",
+              "Exposed": [
+                "Window",
+                "Worker"
+              ],
+              "SecureContext": true
+            }
           }
         },
         {
@@ -134920,6 +137124,18 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "Measure": true
+          },
+          "origin": {
+            "interface": "StorageBucket",
+            "source": "third_party/blink/renderer/modules/buckets/storage_bucket.idl",
+            "extended": {
+              "RuntimeEnabled": "StorageBuckets",
+              "Exposed": [
+                "Window",
+                "Worker"
+              ],
+              "SecureContext": true
+            }
           }
         }
       ]
@@ -134967,6 +137183,18 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "MeasureAs": "StorageBucketsOpen"
+          },
+          "origin": {
+            "interface": "StorageBucketManager",
+            "source": "third_party/blink/renderer/modules/buckets/storage_bucket_manager.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "Worker"
+              ],
+              "RuntimeEnabled": "StorageBuckets",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -134980,6 +137208,18 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "Measure": true
+          },
+          "origin": {
+            "interface": "StorageBucketManager",
+            "source": "third_party/blink/renderer/modules/buckets/storage_bucket_manager.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "Worker"
+              ],
+              "RuntimeEnabled": "StorageBuckets",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -135003,6 +137243,18 @@
             "RaisesException": true,
             "ImplementedAs": "Delete",
             "Measure": true
+          },
+          "origin": {
+            "interface": "StorageBucketManager",
+            "source": "third_party/blink/renderer/modules/buckets/storage_bucket_manager.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "Worker"
+              ],
+              "RuntimeEnabled": "StorageBuckets",
+              "SecureContext": true
+            }
           }
         }
       ]
@@ -135167,9 +137419,7 @@
         "Exposed": [
           "Window",
           "Worker"
-        ],
-        "RuntimeEnabled": "FileSystemAccessOriginPrivate",
-        "ImplementedAs": "StorageManagerFileSystemAccess"
+        ]
       },
       "source": "third_party/blink/renderer/modules/quota/storage_manager.idl",
       "members": [
@@ -135184,6 +137434,17 @@
             "CallWith": "ScriptState",
             "MeasureAs": "PersistentStoragePersisted",
             "RaisesException": true
+          },
+          "origin": {
+            "interface": "StorageManager",
+            "source": "third_party/blink/renderer/modules/quota/storage_manager.idl",
+            "extended": {
+              "SecureContext": true,
+              "Exposed": [
+                "Window",
+                "Worker"
+              ]
+            }
           }
         },
         {
@@ -135198,6 +137459,17 @@
             "CallWith": "ScriptState",
             "MeasureAs": "PersistentStoragePersist",
             "RaisesException": true
+          },
+          "origin": {
+            "interface": "StorageManager",
+            "source": "third_party/blink/renderer/modules/quota/storage_manager.idl",
+            "extended": {
+              "SecureContext": true,
+              "Exposed": [
+                "Window",
+                "Worker"
+              ]
+            }
           }
         },
         {
@@ -135211,6 +137483,17 @@
             "CallWith": "ScriptState",
             "MeasureAs": "PersistentStorageEstimate",
             "RaisesException": true
+          },
+          "origin": {
+            "interface": "StorageManager",
+            "source": "third_party/blink/renderer/modules/quota/storage_manager.idl",
+            "extended": {
+              "SecureContext": true,
+              "Exposed": [
+                "Window",
+                "Worker"
+              ]
+            }
           }
         },
         {
@@ -135224,6 +137507,15 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "Measure": true
+          },
+          "origin": {
+            "interface": "StorageManager",
+            "source": "third_party/blink/renderer/modules/file_system_access/storage_manager_file_system_access.idl",
+            "extended": {
+              "SecureContext": true,
+              "RuntimeEnabled": "FileSystemAccessOriginPrivate",
+              "ImplementedAs": "StorageManagerFileSystemAccess"
+            }
           }
         }
       ],
@@ -141832,7 +144124,16 @@
       "parent": "EventTarget",
       "partial": false,
       "extended": {
-        "Exposed(DedicatedWorker WebUSBOnDedicatedWorkers,\n            ServiceWorker WebUSBOnServiceWorkers,\n            Window WebUSB)": true,
+        "Exposed": [
+          "DedicatedWorker",
+          "ServiceWorker",
+          "Window"
+        ],
+        "ExposureFeatures": {
+          "DedicatedWorker": "WebUSBOnDedicatedWorkers",
+          "ServiceWorker": "WebUSBOnServiceWorkers",
+          "Window": "WebUSB"
+        },
         "SecureContext": true
       },
       "source": "third_party/blink/renderer/modules/webusb/usb.idl",
@@ -141843,7 +144144,24 @@
           "type": "EventHandler",
           "static": false,
           "readonly": false,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "USB",
+            "source": "third_party/blink/renderer/modules/webusb/usb.idl",
+            "extended": {
+              "Exposed": [
+                "DedicatedWorker",
+                "ServiceWorker",
+                "Window"
+              ],
+              "ExposureFeatures": {
+                "DedicatedWorker": "WebUSBOnDedicatedWorkers",
+                "ServiceWorker": "WebUSBOnServiceWorkers",
+                "Window": "WebUSB"
+              },
+              "SecureContext": true
+            }
+          }
         },
         {
           "kind": "attribute",
@@ -141851,7 +144169,24 @@
           "type": "EventHandler",
           "static": false,
           "readonly": false,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "USB",
+            "source": "third_party/blink/renderer/modules/webusb/usb.idl",
+            "extended": {
+              "Exposed": [
+                "DedicatedWorker",
+                "ServiceWorker",
+                "Window"
+              ],
+              "ExposureFeatures": {
+                "DedicatedWorker": "WebUSBOnDedicatedWorkers",
+                "ServiceWorker": "WebUSBOnServiceWorkers",
+                "Window": "WebUSB"
+              },
+              "SecureContext": true
+            }
+          }
         },
         {
           "kind": "operation",
@@ -141864,6 +144199,23 @@
             "CallWith": "ScriptState",
             "RaisesException": true,
             "MeasureAs": "UsbGetDevices"
+          },
+          "origin": {
+            "interface": "USB",
+            "source": "third_party/blink/renderer/modules/webusb/usb.idl",
+            "extended": {
+              "Exposed": [
+                "DedicatedWorker",
+                "ServiceWorker",
+                "Window"
+              ],
+              "ExposureFeatures": {
+                "DedicatedWorker": "WebUSBOnDedicatedWorkers",
+                "ServiceWorker": "WebUSBOnServiceWorkers",
+                "Window": "WebUSB"
+              },
+              "SecureContext": true
+            }
           }
         },
         {
@@ -141887,6 +144239,23 @@
             "RaisesException": true,
             "Exposed": "Window",
             "MeasureAs": "UsbRequestDevice"
+          },
+          "origin": {
+            "interface": "USB",
+            "source": "third_party/blink/renderer/modules/webusb/usb.idl",
+            "extended": {
+              "Exposed": [
+                "DedicatedWorker",
+                "ServiceWorker",
+                "Window"
+              ],
+              "ExposureFeatures": {
+                "DedicatedWorker": "WebUSBOnDedicatedWorkers",
+                "ServiceWorker": "WebUSBOnServiceWorkers",
+                "Window": "WebUSB"
+              },
+              "SecureContext": true
+            }
           }
         }
       ]
@@ -143265,6 +145634,17 @@
           "readonly": true,
           "extended": {
             "Measure": true
+          },
+          "origin": {
+            "interface": "UserActivation",
+            "source": "third_party/blink/renderer/core/frame/user_activation.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "Worker",
+                "AudioWorklet"
+              ]
+            }
           }
         },
         {
@@ -143275,6 +145655,17 @@
           "readonly": true,
           "extended": {
             "Measure": true
+          },
+          "origin": {
+            "interface": "UserActivation",
+            "source": "third_party/blink/renderer/core/frame/user_activation.idl",
+            "extended": {
+              "Exposed": [
+                "Window",
+                "Worker",
+                "AudioWorklet"
+              ]
+            }
           }
         }
       ]
@@ -144733,6 +147124,14 @@
           "special": [],
           "extended": {
             "MeasureAs": "VirtualKeyboardShow"
+          },
+          "origin": {
+            "interface": "VirtualKeyboard",
+            "source": "third_party/blink/renderer/modules/virtualkeyboard/virtual_keyboard.idl",
+            "extended": {
+              "Exposed": "Window",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -144744,6 +147143,14 @@
           "special": [],
           "extended": {
             "MeasureAs": "VirtualKeyboardHide"
+          },
+          "origin": {
+            "interface": "VirtualKeyboard",
+            "source": "third_party/blink/renderer/modules/virtualkeyboard/virtual_keyboard.idl",
+            "extended": {
+              "Exposed": "Window",
+              "SecureContext": true
+            }
           }
         },
         {
@@ -144752,7 +147159,15 @@
           "type": "DOMRect",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "VirtualKeyboard",
+            "source": "third_party/blink/renderer/modules/virtualkeyboard/virtual_keyboard.idl",
+            "extended": {
+              "Exposed": "Window",
+              "SecureContext": true
+            }
+          }
         },
         {
           "kind": "attribute",
@@ -144760,7 +147175,15 @@
           "type": "boolean",
           "static": false,
           "readonly": false,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "VirtualKeyboard",
+            "source": "third_party/blink/renderer/modules/virtualkeyboard/virtual_keyboard.idl",
+            "extended": {
+              "Exposed": "Window",
+              "SecureContext": true
+            }
+          }
         },
         {
           "kind": "attribute",
@@ -144768,7 +147191,15 @@
           "type": "EventHandler",
           "static": false,
           "readonly": false,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "VirtualKeyboard",
+            "source": "third_party/blink/renderer/modules/virtualkeyboard/virtual_keyboard.idl",
+            "extended": {
+              "Exposed": "Window",
+              "SecureContext": true
+            }
+          }
         }
       ]
     },
@@ -144938,7 +147369,14 @@
       "partial": false,
       "extended": {
         "SecureContext": true,
-        "Exposed(DedicatedWorker SystemWakeLock, Window WakeLock)": true
+        "Exposed": [
+          "DedicatedWorker",
+          "Window"
+        ],
+        "ExposureFeatures": {
+          "DedicatedWorker": "SystemWakeLock",
+          "Window": "WakeLock"
+        }
       },
       "source": "third_party/blink/renderer/modules/wake_lock/wake_lock.idl",
       "members": [
@@ -144961,6 +147399,21 @@
           "extended": {
             "CallWith": "ScriptState",
             "RaisesException": true
+          },
+          "origin": {
+            "interface": "WakeLock",
+            "source": "third_party/blink/renderer/modules/wake_lock/wake_lock.idl",
+            "extended": {
+              "SecureContext": true,
+              "Exposed": [
+                "DedicatedWorker",
+                "Window"
+              ],
+              "ExposureFeatures": {
+                "DedicatedWorker": "SystemWakeLock",
+                "Window": "WakeLock"
+              }
+            }
           }
         }
       ]
@@ -200342,7 +202795,14 @@
           "type": "boolean",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "WindowControlsOverlay",
+            "source": "third_party/blink/renderer/modules/window_controls_overlay/window_controls_overlay.idl",
+            "extended": {
+              "Exposed": "Window"
+            }
+          }
         },
         {
           "kind": "operation",
@@ -200351,7 +202811,14 @@
           "arguments": [],
           "static": false,
           "special": [],
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "WindowControlsOverlay",
+            "source": "third_party/blink/renderer/modules/window_controls_overlay/window_controls_overlay.idl",
+            "extended": {
+              "Exposed": "Window"
+            }
+          }
         },
         {
           "kind": "attribute",
@@ -200359,7 +202826,14 @@
           "type": "EventHandler",
           "static": false,
           "readonly": false,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "WindowControlsOverlay",
+            "source": "third_party/blink/renderer/modules/window_controls_overlay/window_controls_overlay.idl",
+            "extended": {
+              "Exposed": "Window"
+            }
+          }
         }
       ]
     },
@@ -206342,7 +208816,16 @@
           "type": "EventHandler",
           "static": false,
           "readonly": false,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "XRSystem",
+            "source": "third_party/blink/renderer/modules/xr/xr_system.idl",
+            "extended": {
+              "SecureContext": true,
+              "Exposed": "Window",
+              "RuntimeEnabled": "WebXR"
+            }
+          }
         },
         {
           "kind": "operation",
@@ -206364,6 +208847,15 @@
             "CallWith": "ScriptState",
             "MeasureAs": "XRIsSessionSupported",
             "RaisesException": true
+          },
+          "origin": {
+            "interface": "XRSystem",
+            "source": "third_party/blink/renderer/modules/xr/xr_system.idl",
+            "extended": {
+              "SecureContext": true,
+              "Exposed": "Window",
+              "RuntimeEnabled": "WebXR"
+            }
           }
         },
         {
@@ -206394,6 +208886,15 @@
             "CallWith": "ScriptState",
             "MeasureAs": "XRRequestSession",
             "RaisesException": true
+          },
+          "origin": {
+            "interface": "XRSystem",
+            "source": "third_party/blink/renderer/modules/xr/xr_system.idl",
+            "extended": {
+              "SecureContext": true,
+              "Exposed": "Window",
+              "RuntimeEnabled": "WebXR"
+            }
           }
         }
       ]
@@ -213968,7 +216469,12 @@
           "type": "boolean",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "NavigatorAutomationInformation",
+            "source": "third_party/blink/renderer/core/frame/navigator_automation_information.idl",
+            "extended": {}
+          }
         }
       ]
     },
@@ -214002,6 +216508,13 @@
             "CallWith": "ScriptState",
             "MeasureAs": "BadgeSet",
             "RaisesException": true
+          },
+          "origin": {
+            "interface": "NavigatorBadge",
+            "source": "third_party/blink/renderer/modules/badging/navigator_badge.idl",
+            "extended": {
+              "SecureContext": true
+            }
           }
         },
         {
@@ -214015,6 +216528,13 @@
             "CallWith": "ScriptState",
             "MeasureAs": "BadgeClear",
             "RaisesException": true
+          },
+          "origin": {
+            "interface": "NavigatorBadge",
+            "source": "third_party/blink/renderer/modules/badging/navigator_badge.idl",
+            "extended": {
+              "SecureContext": true
+            }
           }
         }
       ]
@@ -214035,6 +216555,11 @@
           "readonly": true,
           "extended": {
             "MeasureAs": "NavigatorHardwareConcurrency"
+          },
+          "origin": {
+            "interface": "NavigatorConcurrentHardware",
+            "source": "third_party/blink/renderer/core/frame/navigator_concurrent_hardware.idl",
+            "extended": {}
           }
         }
       ]
@@ -214075,6 +216600,11 @@
             "RuntimeEnabled": "NavigatorContentUtils",
             "RaisesException": true,
             "SecureContext": true
+          },
+          "origin": {
+            "interface": "NavigatorContentUtils",
+            "source": "third_party/blink/renderer/modules/navigatorcontentutils/navigator_content_utils.idl",
+            "extended": {}
           }
         },
         {
@@ -214105,6 +216635,11 @@
             "RuntimeEnabled": "NavigatorContentUtils",
             "RaisesException": true,
             "SecureContext": true
+          },
+          "origin": {
+            "interface": "NavigatorContentUtils",
+            "source": "third_party/blink/renderer/modules/navigatorcontentutils/navigator_content_utils.idl",
+            "extended": {}
           }
         }
       ]
@@ -214125,6 +216660,11 @@
           "readonly": true,
           "extended": {
             "MeasureAs": "NavigatorCookieEnabled"
+          },
+          "origin": {
+            "interface": "NavigatorCookies",
+            "source": "third_party/blink/renderer/core/frame/navigator_cookies.idl",
+            "extended": {}
           }
         }
       ]
@@ -214146,6 +216686,11 @@
           "extended": {
             "MeasureAs": "NavigatorDeviceMemory",
             "SecureContext": true
+          },
+          "origin": {
+            "interface": "NavigatorDeviceMemory",
+            "source": "third_party/blink/renderer/core/frame/navigator_device_memory.idl",
+            "extended": {}
           }
         }
       ]
@@ -214169,6 +216714,13 @@
           "extended": {
             "SameObject": true,
             "SecureContext": true
+          },
+          "origin": {
+            "interface": "NavigatorGPU",
+            "source": "third_party/blink/renderer/modules/webgpu/navigator_gpu.idl",
+            "extended": {
+              "ImplementedAs": "GPU"
+            }
           }
         }
       ]
@@ -214192,6 +216744,14 @@
           "readonly": true,
           "extended": {
             "Measure": true
+          },
+          "origin": {
+            "interface": "NavigatorGlobalPrivacyControl",
+            "source": "third_party/blink/renderer/modules/global_privacy_control/navigator_global_privacy_control.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorGlobalPrivacyControl",
+              "RuntimeEnabled": "GlobalPrivacyControl"
+            }
           }
         }
       ]
@@ -214210,7 +216770,12 @@
           "type": "DOMString",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "NavigatorID",
+            "source": "third_party/blink/renderer/core/frame/navigator_id.idl",
+            "extended": {}
+          }
         },
         {
           "kind": "attribute",
@@ -214218,7 +216783,12 @@
           "type": "DOMString",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "NavigatorID",
+            "source": "third_party/blink/renderer/core/frame/navigator_id.idl",
+            "extended": {}
+          }
         },
         {
           "kind": "attribute",
@@ -214228,6 +216798,11 @@
           "readonly": true,
           "extended": {
             "MeasureAs": "NavigatorAppVersion"
+          },
+          "origin": {
+            "interface": "NavigatorID",
+            "source": "third_party/blink/renderer/core/frame/navigator_id.idl",
+            "extended": {}
           }
         },
         {
@@ -214238,6 +216813,11 @@
           "readonly": true,
           "extended": {
             "MeasureAs": "NavigatorPlatform"
+          },
+          "origin": {
+            "interface": "NavigatorID",
+            "source": "third_party/blink/renderer/core/frame/navigator_id.idl",
+            "extended": {}
           }
         },
         {
@@ -214246,7 +216826,12 @@
           "type": "DOMString",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "NavigatorID",
+            "source": "third_party/blink/renderer/core/frame/navigator_id.idl",
+            "extended": {}
+          }
         },
         {
           "kind": "attribute",
@@ -214256,6 +216841,11 @@
           "readonly": true,
           "extended": {
             "MeasureAs": "NavigatorUserAgent"
+          },
+          "origin": {
+            "interface": "NavigatorID",
+            "source": "third_party/blink/renderer/core/frame/navigator_id.idl",
+            "extended": {}
           }
         }
       ]
@@ -214276,6 +216866,11 @@
           "readonly": true,
           "extended": {
             "MeasureAs": "NavigatorLanguage"
+          },
+          "origin": {
+            "interface": "NavigatorLanguage",
+            "source": "third_party/blink/renderer/core/frame/navigator_language.idl",
+            "extended": {}
           }
         },
         {
@@ -214287,6 +216882,11 @@
           "extended": {
             "CachedAttribute": "IsLanguagesDirty",
             "MeasureAs": "NavigatorLanguages"
+          },
+          "origin": {
+            "interface": "NavigatorLanguage",
+            "source": "third_party/blink/renderer/core/frame/navigator_language.idl",
+            "extended": {}
           }
         }
       ]
@@ -214310,6 +216910,14 @@
           "readonly": true,
           "extended": {
             "RaisesException": true
+          },
+          "origin": {
+            "interface": "NavigatorLocks",
+            "source": "third_party/blink/renderer/modules/locks/navigator_locks.idl",
+            "extended": {
+              "SecureContext": true,
+              "ImplementedAs": "LockManager"
+            }
           }
         }
       ]
@@ -214333,6 +216941,13 @@
           "extended": {
             "SameObject": true,
             "SecureContext": true
+          },
+          "origin": {
+            "interface": "NavigatorML",
+            "source": "third_party/blink/renderer/modules/ml/navigator_ml.idl",
+            "extended": {
+              "RuntimeEnabled": "MachineLearningNeuralNetwork"
+            }
           }
         }
       ]
@@ -214356,6 +216971,13 @@
           "extended": {
             "SameObject": true,
             "MeasureAs": "NetInfo"
+          },
+          "origin": {
+            "interface": "NavigatorNetworkInformation",
+            "source": "third_party/blink/renderer/modules/netinfo/navigator_network_information.idl",
+            "extended": {
+              "ImplementedAs": "NetworkInformation"
+            }
           }
         }
       ]
@@ -214374,7 +216996,12 @@
           "type": "boolean",
           "static": false,
           "readonly": true,
-          "extended": {}
+          "extended": {},
+          "origin": {
+            "interface": "NavigatorOnLine",
+            "source": "third_party/blink/renderer/core/frame/navigator_on_line.idl",
+            "extended": {}
+          }
         }
       ]
     },
@@ -214397,6 +217024,13 @@
           "extended": {
             "MeasureAs": "NavigatorPlugins",
             "SameObject": true
+          },
+          "origin": {
+            "interface": "NavigatorPlugins",
+            "source": "third_party/blink/renderer/modules/plugins/navigator_plugins.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorPlugins"
+            }
           }
         },
         {
@@ -214408,6 +217042,13 @@
           "extended": {
             "MeasureAs": "NavigatorMimeTypes",
             "SameObject": true
+          },
+          "origin": {
+            "interface": "NavigatorPlugins",
+            "source": "third_party/blink/renderer/modules/plugins/navigator_plugins.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorPlugins"
+            }
           }
         },
         {
@@ -214419,6 +217060,13 @@
           "special": [],
           "extended": {
             "Measure": true
+          },
+          "origin": {
+            "interface": "NavigatorPlugins",
+            "source": "third_party/blink/renderer/modules/plugins/navigator_plugins.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorPlugins"
+            }
           }
         },
         {
@@ -214429,6 +217077,13 @@
           "readonly": true,
           "extended": {
             "MeasureAs": "NavigatorPdfViewerEnabled"
+          },
+          "origin": {
+            "interface": "NavigatorPlugins",
+            "source": "third_party/blink/renderer/modules/plugins/navigator_plugins.idl",
+            "extended": {
+              "ImplementedAs": "NavigatorPlugins"
+            }
           }
         }
       ]
@@ -214452,6 +217107,14 @@
           "readonly": true,
           "extended": {
             "SameObject": true
+          },
+          "origin": {
+            "interface": "NavigatorStorage",
+            "source": "third_party/blink/renderer/modules/quota/navigator_storage.idl",
+            "extended": {
+              "SecureContext": true,
+              "ImplementedAs": "NavigatorStorageQuota"
+            }
           }
         }
       ]
@@ -214476,6 +217139,15 @@
           "readonly": true,
           "extended": {
             "SameObject": true
+          },
+          "origin": {
+            "interface": "NavigatorStorageBuckets",
+            "source": "third_party/blink/renderer/modules/buckets/navigator_storage_buckets.idl",
+            "extended": {
+              "SecureContext": true,
+              "ImplementedAs": "StorageBucketManager",
+              "RuntimeEnabled": "StorageBuckets"
+            }
           }
         }
       ]
@@ -214496,6 +217168,11 @@
           "readonly": true,
           "extended": {
             "SecureContext": true
+          },
+          "origin": {
+            "interface": "NavigatorUA",
+            "source": "third_party/blink/renderer/core/frame/navigator_ua.idl",
+            "extended": {}
           }
         }
       ]

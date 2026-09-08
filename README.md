@@ -83,6 +83,10 @@ Go's default test timeout. See [the stabilization audit](docs/stabilization.md)
 for exact successful and failed runs, including the original hangs.
 The nested transport module has its own focused tests documented there.
 
+The [Navigator capability matrix](docs/navigator-capabilities.md) links exact
+Chrome captures, before/after differentials and tested semantics. Shape parity
+and intentionally unavailable service/hardware backends are reported separately.
+
 `--check` is offline: it verifies retained artifact hashes, pins and deterministic
 IDL/CDP projections. Full upstream regeneration is a separate explicit operation.
 Historical observations and small before/after captures are retained under
