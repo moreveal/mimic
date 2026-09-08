@@ -26,7 +26,7 @@ type surfaceKey struct {
 	exposure string
 }
 
-type surfaceOutput struct{ Source, ExposureJSON string }
+type surfaceOutput struct{ Source, ExposureJSON, CatalogJSON string }
 
 var surfaceSources = struct {
 	sync.Mutex
@@ -36,6 +36,17 @@ var surfaceSources = struct {
 // SurfaceFor shares only immutable source text from a compatibility bundle.
 // The bounded cache owns no Page, isolate, or mutable JavaScript object.
 func SurfaceFor(surface *compatibility.WebAPISurface, name string) (string, string) {
+	output := bootstrapFor(surface, name)
+	return output.Source, output.ExposureJSON
+}
+
+// BootstrapFor shares only immutable, selected-profile data across Pages.
+func BootstrapFor(surface *compatibility.WebAPISurface, name string) (string, string, string) {
+	output := bootstrapFor(surface, name)
+	return output.Source, output.ExposureJSON, output.CatalogJSON
+}
+
+func bootstrapFor(surface *compatibility.WebAPISurface, name string) surfaceOutput {
 	key := surfaceKey{surface, name}
 	surfaceSources.Lock()
 	build := surfaceSources.values[key]
@@ -43,21 +54,20 @@ func SurfaceFor(surface *compatibility.WebAPISurface, name string) (string, stri
 		build = sync.OnceValue(func() surfaceOutput {
 			exposure, ok := surface.Exposures[name]
 			if !ok {
-				return surfaceOutput{Source: Surface(surface.GeneratedJavaScript, nil)}
+				return surfaceOutput{Source: Surface(surface.GeneratedJavaScript, nil), CatalogJSON: surface.GeneratedCatalogJSON}
 			}
 			encoded, err := json.Marshal(exposure)
 			if err != nil {
 				panic(err)
 			}
-			return surfaceOutput{Source: composeSurface(surface.GeneratedJavaScript, "applyTargetExposure(JSON.parse(host.exposureJSON()));\n"), ExposureJSON: string(encoded)}
+			return surfaceOutput{Source: composeSurface(surface.GeneratedJavaScript, "applyTargetExposure(JSON.parse(host.exposureJSON()));\n"), ExposureJSON: string(encoded), CatalogJSON: selectedCatalog(surface.GeneratedCatalogJSON, exposure)}
 		})
 		if len(surfaceSources.values) < 8 {
 			surfaceSources.values[key] = build
 		}
 	}
 	surfaceSources.Unlock()
-	output := build()
-	return output.Source, output.ExposureJSON
+	return build()
 }
 func Surface(generated string, exposure *compatibility.RealmExposure) string {
 	return buildSurface(generated, exposure)
