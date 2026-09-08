@@ -8,6 +8,11 @@ It is not a renderer, a Chromium wrapper, or a fully compatible Chrome browser.
 Generated API names describe known shape; they do not imply implemented semantics.
 No external-site result or performance claim is a product guarantee.
 
+The [reproducible Windows benchmark](benchmark/README.md) compares the V8 backend
+with exact Chrome 152.0.7977.82 using local correctness-gated workloads, process-tree
+CPU/memory accounting and cold, warm and concurrent sessions. See its
+[measured report](benchmark/results/report.md) for results and limitations.
+
 ## Build and run
 
 The current build is **Windows amd64**, Go **1.26**, with CGO and a compatible
