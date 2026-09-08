@@ -1,0 +1,303 @@
+[
+  {
+    "go_heap": 2532600,
+    "go_sys": 12994808,
+    "go_total_alloc": 2532600,
+    "goroutines": 4,
+    "ms": 0,
+    "phase": "before"
+  },
+  {
+    "go_heap": 18511224,
+    "go_sys": 32057592,
+    "go_total_alloc": 27762720,
+    "goroutines": 5,
+    "ms": 168.8847,
+    "phase": "create",
+    "v8": {
+      "heap": {
+        "TotalHeapSize": 32129024,
+        "TotalHeapSizeExecutable": 524288,
+        "TotalPhysicalSize": 32129024,
+        "TotalAvailableSize": 1549941672,
+        "UsedHeapSize": 22121776,
+        "HeapSizeLimit": 1568669696,
+        "MallocedMemory": 262264,
+        "ExternalMemory": 0,
+        "PeakMallocedMemory": 25616776,
+        "DoesZapGarbage": false,
+        "NumberOfNativeContexts": 1,
+        "NumberOfDetachedContexts": 0,
+        "TotalGlobalHandlesSize": 40960,
+        "UsedGlobalHandlesSize": 38752,
+        "TotalAllocatedBytes": 44917928
+      },
+      "host_crossings": 426,
+      "persistent_handles": 1209
+    }
+  },
+  {
+    "go_heap": 10054288,
+    "go_sys": 45705464,
+    "go_total_alloc": 45864424,
+    "goroutines": 9,
+    "ms": 83.9715,
+    "phase": "navigate",
+    "v8": {
+      "heap": {
+        "TotalHeapSize": 38227968,
+        "TotalHeapSizeExecutable": 524288,
+        "TotalPhysicalSize": 38227968,
+        "TotalAvailableSize": 1548173568,
+        "UsedHeapSize": 21005888,
+        "HeapSizeLimit": 1568669696,
+        "MallocedMemory": 262264,
+        "ExternalMemory": 0,
+        "PeakMallocedMemory": 27910568,
+        "DoesZapGarbage": false,
+        "NumberOfNativeContexts": 1,
+        "NumberOfDetachedContexts": 0,
+        "TotalGlobalHandlesSize": 49152,
+        "UsedGlobalHandlesSize": 41312,
+        "TotalAllocatedBytes": 50985248
+      },
+      "host_crossings": 451,
+      "persistent_handles": 1289
+    }
+  },
+  {
+    "go_heap": 42281424,
+    "go_sys": 90482936,
+    "go_total_alloc": 1267027720,
+    "goroutines": 9,
+    "ms": 1190.5743,
+    "phase": "dom",
+    "v8": {
+      "heap": {
+        "TotalHeapSize": 86413312,
+        "TotalHeapSizeExecutable": 786432,
+        "TotalPhysicalSize": 86413312,
+        "TotalAvailableSize": 1542192912,
+        "UsedHeapSize": 44263456,
+        "HeapSizeLimit": 1568669696,
+        "MallocedMemory": 278576,
+        "ExternalMemory": 0,
+        "PeakMallocedMemory": 27910568,
+        "DoesZapGarbage": false,
+        "NumberOfNativeContexts": 1,
+        "NumberOfDetachedContexts": 0,
+        "TotalGlobalHandlesSize": 20979712,
+        "UsedGlobalHandlesSize": 20975360,
+        "TotalAllocatedBytes": 153528312
+      },
+      "host_crossings": 222523,
+      "persistent_handles": 655478
+    }
+  },
+  {
+    "go_heap": 46599656,
+    "go_sys": 90614008,
+    "go_total_alloc": 1277560864,
+    "goroutines": 7,
+    "ms": 45.0668,
+    "phase": "close"
+  },
+  {
+    "go_heap": 62927680,
+    "go_sys": 103196920,
+    "go_total_alloc": 1293888888,
+    "goroutines": 8,
+    "ms": 70.364,
+    "phase": "create",
+    "v8": {
+      "heap": {
+        "TotalHeapSize": 32391168,
+        "TotalHeapSizeExecutable": 524288,
+        "TotalPhysicalSize": 32391168,
+        "TotalAvailableSize": 1549938464,
+        "UsedHeapSize": 22124960,
+        "HeapSizeLimit": 1568669696,
+        "MallocedMemory": 262264,
+        "ExternalMemory": 0,
+        "PeakMallocedMemory": 25616776,
+        "DoesZapGarbage": false,
+        "NumberOfNativeContexts": 1,
+        "NumberOfDetachedContexts": 0,
+        "TotalGlobalHandlesSize": 40960,
+        "UsedGlobalHandlesSize": 38752,
+        "TotalAllocatedBytes": 46274528
+      },
+      "host_crossings": 426,
+      "persistent_handles": 1209
+    }
+  },
+  {
+    "go_heap": 29085464,
+    "go_sys": 107391224,
+    "go_total_alloc": 1311877024,
+    "goroutines": 12,
+    "ms": 78.3425,
+    "phase": "navigate",
+    "v8": {
+      "heap": {
+        "TotalHeapSize": 37965824,
+        "TotalHeapSizeExecutable": 786432,
+        "TotalPhysicalSize": 37965824,
+        "TotalAvailableSize": 1548155296,
+        "UsedHeapSize": 21024112,
+        "HeapSizeLimit": 1568669696,
+        "MallocedMemory": 262264,
+        "ExternalMemory": 0,
+        "PeakMallocedMemory": 27910568,
+        "DoesZapGarbage": false,
+        "NumberOfNativeContexts": 1,
+        "NumberOfDetachedContexts": 0,
+        "TotalGlobalHandlesSize": 49152,
+        "UsedGlobalHandlesSize": 41312,
+        "TotalAllocatedBytes": 51313312
+      },
+      "host_crossings": 451,
+      "persistent_handles": 1289
+    }
+  },
+  {
+    "go_heap": 48198920,
+    "go_sys": 107972856,
+    "go_total_alloc": 2532918312,
+    "goroutines": 12,
+    "ms": 1186.1587,
+    "phase": "dom",
+    "v8": {
+      "heap": {
+        "TotalHeapSize": 86413312,
+        "TotalHeapSizeExecutable": 786432,
+        "TotalPhysicalSize": 86413312,
+        "TotalAvailableSize": 1542190128,
+        "UsedHeapSize": 44265880,
+        "HeapSizeLimit": 1568669696,
+        "MallocedMemory": 278576,
+        "ExternalMemory": 0,
+        "PeakMallocedMemory": 27910568,
+        "DoesZapGarbage": false,
+        "NumberOfNativeContexts": 1,
+        "NumberOfDetachedContexts": 0,
+        "TotalGlobalHandlesSize": 20979712,
+        "UsedGlobalHandlesSize": 20975360,
+        "TotalAllocatedBytes": 157953064
+      },
+      "host_crossings": 222523,
+      "persistent_handles": 655478
+    }
+  },
+  {
+    "go_heap": 58721096,
+    "go_sys": 108038392,
+    "go_total_alloc": 2543440488,
+    "goroutines": 10,
+    "ms": 43.9661,
+    "phase": "close"
+  },
+  {
+    "go_heap": 18993776,
+    "go_sys": 108038392,
+    "go_total_alloc": 2559783528,
+    "goroutines": 11,
+    "ms": 70.6036,
+    "phase": "create",
+    "v8": {
+      "heap": {
+        "TotalHeapSize": 32129024,
+        "TotalHeapSizeExecutable": 524288,
+        "TotalPhysicalSize": 32129024,
+        "TotalAvailableSize": 1549876760,
+        "UsedHeapSize": 22186680,
+        "HeapSizeLimit": 1568669696,
+        "MallocedMemory": 262264,
+        "ExternalMemory": 0,
+        "PeakMallocedMemory": 25616776,
+        "DoesZapGarbage": false,
+        "NumberOfNativeContexts": 1,
+        "NumberOfDetachedContexts": 0,
+        "TotalGlobalHandlesSize": 40960,
+        "UsedGlobalHandlesSize": 38752,
+        "TotalAllocatedBytes": 44877464
+      },
+      "host_crossings": 426,
+      "persistent_handles": 1209
+    }
+  },
+  {
+    "go_heap": 19803984,
+    "go_sys": 108038392,
+    "go_total_alloc": 2577767680,
+    "goroutines": 15,
+    "ms": 78.2559,
+    "phase": "navigate",
+    "v8": {
+      "heap": {
+        "TotalHeapSize": 37703680,
+        "TotalHeapSizeExecutable": 786432,
+        "TotalPhysicalSize": 37703680,
+        "TotalAvailableSize": 1548224688,
+        "UsedHeapSize": 20954776,
+        "HeapSizeLimit": 1568669696,
+        "MallocedMemory": 262264,
+        "ExternalMemory": 0,
+        "PeakMallocedMemory": 27910568,
+        "DoesZapGarbage": false,
+        "NumberOfNativeContexts": 1,
+        "NumberOfDetachedContexts": 0,
+        "TotalGlobalHandlesSize": 49152,
+        "UsedGlobalHandlesSize": 41312,
+        "TotalAllocatedBytes": 50874816
+      },
+      "host_crossings": 451,
+      "persistent_handles": 1289
+    }
+  },
+  {
+    "go_heap": 71384664,
+    "go_sys": 108316920,
+    "go_total_alloc": 3798769736,
+    "goroutines": 15,
+    "ms": 1409.1833,
+    "phase": "dom",
+    "v8": {
+      "heap": {
+        "TotalHeapSize": 86413312,
+        "TotalHeapSizeExecutable": 786432,
+        "TotalPhysicalSize": 86413312,
+        "TotalAvailableSize": 1542251720,
+        "UsedHeapSize": 44205104,
+        "HeapSizeLimit": 1568669696,
+        "MallocedMemory": 278576,
+        "ExternalMemory": 0,
+        "PeakMallocedMemory": 27910568,
+        "DoesZapGarbage": false,
+        "NumberOfNativeContexts": 1,
+        "NumberOfDetachedContexts": 0,
+        "TotalGlobalHandlesSize": 20979712,
+        "UsedGlobalHandlesSize": 20975360,
+        "TotalAllocatedBytes": 158338328
+      },
+      "host_crossings": 222523,
+      "persistent_handles": 655478
+    }
+  },
+  {
+    "go_heap": 81906728,
+    "go_sys": 108447992,
+    "go_total_alloc": 3809291800,
+    "goroutines": 13,
+    "ms": 49.7826,
+    "phase": "close"
+  },
+  {
+    "go_heap": 18574168,
+    "go_sys": 108447992,
+    "go_total_alloc": 3809292184,
+    "goroutines": 13,
+    "ms": 0,
+    "phase": "after_gc"
+  }
+]
