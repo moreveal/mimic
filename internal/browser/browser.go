@@ -43,40 +43,54 @@ func (b *Browser) Environment() state.Environment      { b.mu.RLock(); defer b.m
 func (b *Browser) Compatibility() compatibility.Bundle { return b.compat }
 
 type Context struct {
-	lifetime     context.Context
-	cancel       context.CancelFunc
-	mu           sync.RWMutex
-	ID           string
-	browser      *Browser
-	cookies      *network.CookieStore
-	network      *network.SessionState
-	transport    network.Transport
-	storage      map[string]map[string]string
-	capabilities map[string]*originCapabilities
-	pages        map[string]*Page
+	storageMu        sync.Mutex
+	permissionRealms map[*Realm]struct{}
+	lifetime         context.Context
+	cancel           context.CancelFunc
+	mu               sync.RWMutex
+	ID               string
+	browser          *Browser
+	cookies          *network.CookieStore
+	network          *network.SessionState
+	transport        network.Transport
+	storage          map[string]map[string]string
+	capabilities     map[string]*originCapabilities
+	pages            map[string]*Page
 }
 
 func (c *Context) NewPage() (*Page, error) {
 	c.mu.Lock()
-	defer c.mu.Unlock()
+	if err := c.lifetime.Err(); err != nil {
+		c.mu.Unlock()
+		return nil, err
+	}
 	if c.transport == nil {
 		profile := c.browser.Compatibility().Environment()
 		if profile.NewTransport != nil {
 			transport, err := profile.NewTransport()
 			if err != nil {
+				c.mu.Unlock()
 				return nil, fmt.Errorf("create %s network transport: %w", c.browser.Environment().Network.WireProfile, err)
 			}
 			c.transport = transport
 		}
 	}
 	p, err := newPage(c)
+	c.mu.Unlock()
 	if err != nil {
 		return nil, err
 	}
 	if err := p.initBlank(); err != nil {
 		return nil, err
 	}
+	c.mu.Lock()
+	if err := c.lifetime.Err(); err != nil {
+		c.mu.Unlock()
+		_ = p.Close()
+		return nil, err
+	}
 	c.pages[p.ID] = p
+	c.mu.Unlock()
 	return p, nil
 }
 func (c *Context) Pages() []*Page {

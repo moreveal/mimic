@@ -1,5 +1,4 @@
 File: browser.test.exe
-Build ID: C:\Users\moreveal\AppData\Local\Temp\go-build722842328\b001\browser.test.exe2026-09-08 17:57:41.0018584 +0400 +04
 Type: cpu
 Time: 2026-09-08 17:57:41 +04
 Duration: 4.50s, Total samples = 6.58s (146.37%)

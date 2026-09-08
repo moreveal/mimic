@@ -28,6 +28,7 @@ type documentSecurity struct {
 	permissionsPolicy   string
 }
 type Page struct {
+	commandMu         sync.Mutex
 	mu                sync.RWMutex
 	ID                string
 	ctx               *Context
@@ -56,6 +57,12 @@ type Page struct {
 	loadEventEnded   bool
 	messagePorts     map[string]*messagePortState
 }
+
+// LockCommands serializes an external command and its complete event-loop turn.
+// The boundary belongs to the Page, so all CDP sessions observe the same loop.
+// Library callers must use the same boundary when sharing a Page concurrently.
+func (p *Page) LockCommands()   { p.commandMu.Lock() }
+func (p *Page) UnlockCommands() { p.commandMu.Unlock() }
 
 func newPage(c *Context) (*Page, error) {
 	environment := c.browser.Environment()

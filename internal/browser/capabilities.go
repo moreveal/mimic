@@ -72,17 +72,14 @@ func (c *Context) setPermissionLocked(origin, name, value string) {
 		return
 	}
 	s.permissions[name] = value
-	for _, p := range c.pages {
-		for _, frame := range p.frames {
-			r := frame.Realm
-			if r == nil || r.origin != origin || r.permissionNotifier == nil || r.resourceContext.Err() != nil {
-				continue
-			}
-			r.scheduler.Post(scheduler.Control, 0, func(ctx context.Context) error {
-				_, err := r.runtime.Call(ctx, r.permissionNotifier, nil, r.val(name))
-				return err
-			})
+	for r := range c.permissionRealms {
+		if r == nil || r.origin != origin || r.permissionNotifier == nil || r.resourceContext.Err() != nil {
+			continue
 		}
+		r.scheduler.Post(scheduler.Control, 0, func(ctx context.Context) error {
+			_, err := r.runtime.Call(ctx, r.permissionNotifier, nil, r.val(name))
+			return err
+		})
 	}
 }
 

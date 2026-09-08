@@ -81,8 +81,9 @@ they never own independent browser state.
   a turn, including microtasks. Worker schedulers have their own agent clock.
   Resource/Navigation Performance entries derive from loader/lifecycle records;
   user marks/measures are authored within their own realm.
-- CDP sessions share one server command mutex; protocol interception continuation
-  remains out of that mutex so a paused network request can be resumed. Library
+- CDP sessions serialize commands and complete event-loop turns per Page; independent
+  Pages run concurrently. Context registry locking excludes realm bootstrap. Protocol interception continuation
+  remains out of the Page command mutex so a paused network request can be resumed. Library
   users must serialize Page/DOM command access too; a Page is not a concurrently
   callable JavaScript engine. Worker JS may run on its separate agent, never on
   the Window runtime. Cross-agent delivery always queues a receiving-agent task.

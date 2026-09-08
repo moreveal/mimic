@@ -28,7 +28,6 @@ type Server struct {
 	connections       map[*websocket.Conn]context.CancelFunc
 	closed            bool
 	workers           sync.WaitGroup
-	opMu              sync.Mutex // all sessions share the browser command boundary
 	Browser           *browser.Browser
 	Context           *browser.Context
 	Page              *browser.Page
@@ -82,8 +81,6 @@ func (s *Server) Close(ctx context.Context) error {
 	}
 	s.Context.Cancel()
 	s.workers.Wait()
-	s.opMu.Lock()
-	defer s.opMu.Unlock()
 	_ = s.Context.Close()
 	return err
 }
@@ -95,8 +92,6 @@ func (s *Server) version(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, map[string]any{"Browser": s.Browser.String(), "Protocol-Version": "1.3", "User-Agent": s.Page.Environment().Navigator().UserAgent, "V8-Version": "virtual", "webSocketDebuggerUrl": s.base(r)})
 }
 func (s *Server) list(w http.ResponseWriter, r *http.Request) {
-	s.opMu.Lock()
-	defer s.opMu.Unlock()
 	targets := []any{}
 	for _, page := range s.Context.Pages() {
 		targets = append(targets, map[string]any{"id": page.ID, "type": "page", "title": page.Title(), "url": page.URL(), "webSocketDebuggerUrl": "ws://" + r.Host + "/devtools/page/" + page.ID})
@@ -116,6 +111,7 @@ type message struct {
 	Params json.RawMessage `json:"params"`
 }
 type session struct {
+	commandMu         sync.Mutex // protects binding changes against commands and this session pump
 	ctx               context.Context
 	work              sync.WaitGroup
 	server            *Server
@@ -160,9 +156,9 @@ func (s *Server) ws(w http.ResponseWriter, r *http.Request) {
 	s.lifecycleMu.Unlock()
 	defer s.workers.Done()
 	ss := &session{server: s, conn: conn, ctx: ctx, navigationTimeout: s.navigationTimeout}
-	s.opMu.Lock()
+	page.LockCommands()
 	ss.bindPage(page)
-	s.opMu.Unlock()
+	page.UnlockCommands()
 	stopPump := make(chan struct{})
 	defer func() {
 		cancel()
@@ -230,14 +226,16 @@ func (s *session) pumpEventLoop(stop <-chan struct{}) {
 		select {
 		case now := <-ticker.C:
 			delta := now.Sub(last)
-			s.server.opMu.Lock()
+			s.commandMu.Lock()
 			s.bindMu.RLock()
 			page := s.page
+			page.LockCommands()
 			ctx, cancel := context.WithTimeout(s.ctx, s.navigationTimeout)
 			err := page.AdvanceTime(ctx, delta)
 			cancel()
 			s.bindMu.RUnlock()
-			s.server.opMu.Unlock()
+			page.UnlockCommands()
+			s.commandMu.Unlock()
 			// Time spent waiting for an observable JS/CDP operation is execution
 			// cost, not idle event-loop time. The scheduler accounts for that cost
 			// with the selected Environment execution calibration; starting the
@@ -378,8 +376,15 @@ func (s *session) handleRouted(m message, route string) {
 	}
 	control := m.Method == "Fetch.continueRequest" || m.Method == "Fetch.continueResponse" || m.Method == "Fetch.failRequest" || m.Method == "Fetch.fulfillRequest" || m.Method == "Network.continueInterceptedRequest" || m.Method == "Mimic.getTrace"
 	if !control {
-		s.server.opMu.Lock()
-		defer s.server.opMu.Unlock()
+		s.commandMu.Lock()
+		defer s.commandMu.Unlock()
+		// Target commands operate on the registry or explicitly lock their target.
+		// Never hold the control Page while bootstrapping an independent Page.
+		if !strings.HasPrefix(m.Method, "Target.") {
+			page := s.page
+			page.LockCommands()
+			defer page.UnlockCommands()
+		}
 	}
 	var result any = map[string]any{}
 	var err error
@@ -424,7 +429,9 @@ func (s *session) handleRouted(m message, route string) {
 			break
 		}
 		if page != s.page {
+			page.LockCommands()
 			s.bindPage(page)
+			page.UnlockCommands()
 		}
 		sid := uuid.NewString()
 		s.routeMu.Lock()
@@ -442,7 +449,13 @@ func (s *session) handleRouted(m message, route string) {
 		if targetID == "" {
 			targetID = s.page.ID
 		}
-		result = map[string]any{"success": s.server.Context.ClosePage(targetID)}
+		success := false
+		if page, ok := s.server.Context.Page(targetID); ok {
+			page.LockCommands()
+			success = s.server.Context.ClosePage(targetID)
+			page.UnlockCommands()
+		}
+		result = map[string]any{"success": success}
 		s.rootEvent("Target.targetDestroyed", map[string]any{"targetId": targetID})
 	case "Page.getFrameTree":
 		result = map[string]any{"frameTree": s.frameTree(s.page.Top)}
@@ -471,15 +484,16 @@ func (s *session) handleRouted(m message, route string) {
 		navigationURL := stringValue(p["url"])
 		loaderID := s.page.ReserveNavigation()
 		result = map[string]any{"frameId": s.page.Top.ID, "loaderId": loaderID}
+		page := s.page
 		s.work.Add(1)
 		go func() {
 			defer s.work.Done()
-			s.server.opMu.Lock()
-			defer s.server.opMu.Unlock()
+			page.LockCommands()
+			defer page.UnlockCommands()
 			ctx, cancel := context.WithTimeout(s.ctx, s.navigationTimeout)
 			defer cancel()
-			if navErr := s.page.NavigateReserved(ctx, navigationURL, loaderID); navErr != nil {
-				s.page.Trace().Add(trace.Error, "navigation", map[string]any{"url": navigationURL, "error": navErr.Error()})
+			if navErr := page.NavigateReserved(ctx, navigationURL, loaderID); navErr != nil {
+				page.Trace().Add(trace.Error, "navigation", map[string]any{"url": navigationURL, "error": navErr.Error()})
 			}
 		}()
 	case "Browser.close":

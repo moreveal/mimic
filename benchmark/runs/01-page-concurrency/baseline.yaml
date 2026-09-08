@@ -1,0 +1,1092 @@
+benchmark: "baseline"
+commit: "b6e24c97e44c8ba722a954f30cb7f68eabef8c51"
+harness_commit: "04d4b3a4c95ee2363fa086fab0697ed2caa71c81"
+harness_sha256: "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7"
+date: "2026-09-08T18:06:55.459941+04:00"
+chrome: "152.0.7977.82"
+concurrency_levels:
+  - 1
+  - 5
+  - 10
+  - 25
+  - 50
+  - 100
+units:
+  memory: "MiB (summed working sets; private bytes separately)"
+  cpu: "seconds"
+  latency: "milliseconds"
+  throughput: "successful sessions/second"
+cold:
+  -
+    system: "chrome"
+    workload: "static"
+    iterations: 10
+    latency_ms:
+      n: 10
+      median: 28.47279999878083
+      p50: 28.47279999878083
+      p95: 183.2804550009311
+      p99: null
+      min: 23.566600000776816
+      max: 301.2875999993412
+      sd: 85.97522630110423
+      cv: 1.5092523870849748
+    total_cold_ms:
+      n: 10
+      median: 519.5009500002925
+      p50: 519.5009500002925
+      p95: 690.2010649995643
+      p99: null
+      min: 435.88350000209175
+      max: 775.217900001735
+      sd: 98.24033529091403
+      cv: 0.1841858730795024
+    session_creation_ms:
+      n: 10
+      median: 34.798200000295765
+      p50: 34.798200000295765
+      p95: 44.293309999738995
+      p99: null
+      min: 25.362700002006022
+      max: 45.36799999914365
+      sd: 7.289354537474846
+      cv: 0.20819042049041833
+    rss_peak_mib: 482.962890625
+    private_bytes_peak_mib: 251.576171875
+    cpu_per_session_s: 0.3984375
+  -
+    system: "mimic"
+    workload: "static"
+    iterations: 10
+    latency_ms:
+      n: 10
+      median: 81.54400000057649
+      p50: 81.54400000057649
+      p95: 84.69409000026644
+      p99: null
+      min: 79.73579999816138
+      max: 86.01160000034724
+      sd: 1.8162799678993407
+      cv: 0.02220602903326846
+    total_cold_ms:
+      n: 10
+      median: 440.5837499998597
+      p50: 440.5837499998597
+      p95: 447.35085499833076
+      p99: null
+      min: 426.5242000001308
+      max: 447.889999999461
+      sd: 7.420308810490212
+      cv: 0.016889527015945604
+    session_creation_ms:
+      n: 10
+      median: 80.97230000203126
+      p50: 80.97230000203126
+      p95: 82.19216000015876
+      p99: null
+      min: 69.12000000011176
+      max: 82.57159999993746
+      sd: 5.811596276736318
+      cv: 0.07535981920592753
+    rss_peak_mib: 169.7109375
+    private_bytes_peak_mib: 209.12109375
+    cpu_per_session_s: 0.2109375
+  -
+    system: "mimic"
+    workload: "cpu"
+    iterations: 10
+    latency_ms:
+      n: 10
+      median: 129.70019999920623
+      p50: 129.70019999920623
+      p95: 143.12180500019167
+      p99: null
+      min: 122.05309999990277
+      max: 147.60609999939334
+      sd: 7.997694004915333
+      cv: 0.06101239133660908
+    total_cold_ms:
+      n: 10
+      median: 505.44429999899876
+      p50: 505.44429999899876
+      p95: 626.1562700014108
+      p99: null
+      min: 474.31779999897117
+      max: 700.0388000014937
+      sd: 64.55206567531302
+      cv: 0.1232270842045587
+    session_creation_ms:
+      n: 10
+      median: 76.60009999926842
+      p50: 76.60009999926842
+      p95: 89.3338149997362
+      p99: null
+      min: 70.70139999996172
+      max: 90.77529999922263
+      sd: 7.095127968744924
+      cv: 0.0894420000053683
+    rss_peak_mib: 173.888671875
+    private_bytes_peak_mib: 211.9765625
+    cpu_per_session_s: 0.28125
+  -
+    system: "chrome"
+    workload: "cpu"
+    iterations: 10
+    latency_ms:
+      n: 10
+      median: 59.05064999933529
+      p50: 59.05064999933529
+      p95: 202.73257500193697
+      p99: null
+      min: 54.21629999909783
+      max: 310.5753000018012
+      sd: 79.45644174002138
+      cv: 0.9351056541389366
+    total_cold_ms:
+      n: 10
+      median: 542.7488000004814
+      p50: 542.7488000004814
+      p95: 831.6198149999763
+      p99: null
+      min: 509.06490000124904
+      max: 861.1449000018183
+      sd: 124.0579768853131
+      cv: 0.20779725933821713
+    session_creation_ms:
+      n: 10
+      median: 38.341250001394656
+      p50: 38.341250001394656
+      p95: 44.612954999865906
+      p99: null
+      min: 27.355700000043726
+      max: 44.8748999988311
+      sd: 6.242403835225434
+      cv: 0.16802344949692935
+    rss_peak_mib: 516.703125
+    private_bytes_peak_mib: 277.00390625
+    cpu_per_session_s: 0.5
+  -
+    system: "chrome"
+    workload: "dom"
+    iterations: 10
+    latency_ms:
+      n: 9
+      median: 43.42259999975795
+      p50: 43.42259999975795
+      p95: null
+      p99: null
+      min: 37.96390000206884
+      max: 84.87120000063442
+      sd: 15.652985985861111
+      cv: 0.306804520964128
+    total_cold_ms:
+      n: 10
+      median: 555.769649998183
+      p50: 555.769649998183
+      p95: 1127.6777049999505
+      p99: null
+      min: 492.34030000297935
+      max: 1379.2480000010983
+      sd: 271.4671423964296
+      cv: 0.4105835484029437
+    session_creation_ms:
+      n: 10
+      median: 36.20059999957448
+      p50: 36.20059999957448
+      p95: 323.3139549993211
+      p99: null
+      min: 26.392599997052457
+      max: 355.174000000261
+      sd: 122.09956693843938
+      cv: 1.3491207197499442
+    rss_peak_mib: 503.8984375
+    private_bytes_peak_mib: 262.841796875
+    cpu_per_session_s: 0.4140625
+  -
+    system: "mimic"
+    workload: "dom"
+    iterations: 10
+    latency_ms:
+      n: 10
+      median: 1335.0549499991757
+      p50: 1335.0549499991757
+      p95: 1434.4077649999235
+      p99: null
+      min: 1186.8226000005961
+      max: 1481.0782999993535
+      sd: 91.78604277258681
+      cv: 0.06966505214933018
+    total_cold_ms:
+      n: 10
+      median: 1775.3703500002302
+      p50: 1775.3703500002302
+      p95: 2110.9309099983875
+      p99: null
+      min: 1620.18039999748
+      max: 2173.8238999969326
+      sd: 193.05164202901693
+      cv: 0.10585864173912593
+    session_creation_ms:
+      n: 10
+      median: 83.89644999988377
+      p50: 83.89644999988377
+      p95: 96.73104000030435
+      p99: null
+      min: 75.96859999830485
+      max: 96.99510000064038
+      sd: 7.594978161967973
+      cv: 0.08887881379301048
+    rss_peak_mib: 265.130859375
+    private_bytes_peak_mib: 305.66015625
+    cpu_per_session_s: 2.28125
+  -
+    system: "mimic"
+    workload: "async"
+    iterations: 10
+    latency_ms:
+      n: 10
+      median: 205.4471999999805
+      p50: 205.4471999999805
+      p95: 220.90995499966084
+      p99: null
+      min: 191.03610000092885
+      max: 221.0044999992533
+      sd: 10.245686537976018
+      cv: 0.04966135136611886
+    total_cold_ms:
+      n: 10
+      median: 865.5079999989539
+      p50: 865.5079999989539
+      p95: 884.4971699987582
+      p99: null
+      min: 826.4462999977695
+      max: 889.949099997466
+      sd: 18.639612842639536
+      cv: 0.021631621755266756
+    session_creation_ms:
+      n: 10
+      median: 119.64219999936176
+      p50: 119.64219999936176
+      p95: 132.5475900002857
+      p99: null
+      min: 99.2236000020057
+      max: 135.70380000237492
+      sd: 10.345544257849532
+      cv: 0.0860357641944359
+    rss_peak_mib: 178.228515625
+    private_bytes_peak_mib: 218.6015625
+    cpu_per_session_s: 0.4140625
+  -
+    system: "chrome"
+    workload: "async"
+    iterations: 10
+    latency_ms:
+      n: 10
+      median: 95.6625000017084
+      p50: 95.6625000017084
+      p95: 288.07418500055036
+      p99: null
+      min: 76.58559999981662
+      max: 411.86410000227625
+      sd: 100.73840833831922
+      cv: 0.7689954247933278
+    total_cold_ms:
+      n: 10
+      median: 956.0899999996764
+      p50: 956.0899999996764
+      p95: 1158.7038849995224
+      p99: null
+      min: 789.8843999973906
+      max: 1161.9064000005892
+      sd: 141.57456708432042
+      cv: 0.14544753233972768
+    session_creation_ms:
+      n: 10
+      median: 64.55199999982142
+      p50: 64.55199999982142
+      p95: 78.08608999839635
+      p99: null
+      min: 47.475800001848256
+      max: 78.84289999856264
+      sd: 9.652337353378291
+      cv: 0.1479445946547751
+    rss_peak_mib: 519.802734375
+    private_bytes_peak_mib: 276.85546875
+    cpu_per_session_s: 0.8984375
+  -
+    system: "chrome"
+    workload: "react"
+    iterations: 10
+    latency_ms:
+      n: 9
+      median: 40.82340000240947
+      p50: 40.82340000240947
+      p95: null
+      p99: null
+      min: 38.59390000070562
+      max: 160.8440000018163
+      sd: 39.918451904263385
+      cv: 0.7304013015080444
+    total_cold_ms:
+      n: 10
+      median: 496.0885500004224
+      p50: 496.0885500004224
+      p95: 668.2871899991369
+      p99: null
+      min: 469.41639999931795
+      max: 680.732299999363
+      sd: 77.1308513602151
+      cv: 0.14744903531889927
+    session_creation_ms:
+      n: 10
+      median: 31.658449999667937
+      p50: 31.658449999667937
+      p95: 40.96097000019654
+      p99: null
+      min: 25.6002999994962
+      max: 41.8814000004204
+      sd: 5.579632075667188
+      cv: 0.1703526555609453
+    rss_peak_mib: 500.8203125
+    private_bytes_peak_mib: 267.666015625
+    cpu_per_session_s: 0.3515625
+  -
+    system: "mimic"
+    workload: "react"
+    iterations: 10
+    latency_ms:
+      n: 10
+      median: 178.0115500005195
+      p50: 178.0115500005195
+      p95: 206.57851500127435
+      p99: null
+      min: 170.1667000015732
+      max: 206.60250000219094
+      sd: 14.676401554154804
+      cv: 0.0799572001737519
+    total_cold_ms:
+      n: 10
+      median: 535.0343499994779
+      p50: 535.0343499994779
+      p95: 584.5199350007533
+      p99: null
+      min: 523.5291999997571
+      max: 596.4835000013409
+      sd: 23.219429551851665
+      cv: 0.04258324752931597
+    session_creation_ms:
+      n: 10
+      median: 70.24135000028764
+      p50: 70.24135000028764
+      p95: 84.72420500165752
+      p99: null
+      min: 67.48119999974733
+      max: 88.20950000153971
+      sd: 6.8823997697576305
+      cv: 0.09325862466462471
+    rss_peak_mib: 173.349609375
+    private_bytes_peak_mib: 214.166015625
+    cpu_per_session_s: 0.3671875
+  -
+    system: "mimic"
+    workload: "wasm"
+    iterations: 10
+    latency_ms:
+      n: 10
+      median: 89.39844999986235
+      p50: 89.39844999986235
+      p95: 95.3492800006643
+      p99: null
+      min: 85.84209999753512
+      max: 96.72159999900032
+      sd: 3.5531733440236972
+      cv: 0.03951914832397537
+    total_cold_ms:
+      n: 10
+      median: 449.6652500019991
+      p50: 449.6652500019991
+      p95: 580.7220550002965
+      p99: null
+      min: 434.24099999901955
+      max: 669.8238999997557
+      sd: 71.04124055786662
+      cv: 0.15099724683046395
+    session_creation_ms:
+      n: 10
+      median: 71.79530000030354
+      p50: 71.79530000030354
+      p95: 82.36562500042055
+      p99: null
+      min: 68.37449999875389
+      max: 84.48670000143466
+      sd: 5.684983492394259
+      cv: 0.07723011247333245
+    rss_peak_mib: 174.611328125
+    private_bytes_peak_mib: 214.484375
+    cpu_per_session_s: 0.2109375
+  -
+    system: "chrome"
+    workload: "wasm"
+    iterations: 10
+    latency_ms:
+      n: 10
+      median: 30.32214999984717
+      p50: 30.32214999984717
+      p95: 121.73725999928124
+      p99: null
+      min: 24.144400002114708
+      max: 184.09519999840995
+      sd: 48.932919294316655
+      cv: 1.0627005729077696
+    total_cold_ms:
+      n: 10
+      median: 462.5370500016288
+      p50: 462.5370500016288
+      p95: 593.2931150007789
+      p99: null
+      min: 420.4228999988118
+      max: 614.1629000012472
+      sd: 60.998902790668836
+      cv: 0.12611626853585622
+    session_creation_ms:
+      n: 10
+      median: 26.172149999183603
+      p50: 26.172149999183603
+      p95: 34.10736000041652
+      p99: null
+      min: 23.42809999754536
+      max: 34.72440000041388
+      sd: 3.8637324663689676
+      cv: 0.1421072935233323
+    rss_peak_mib: 492.74609375
+    private_bytes_peak_mib: 255.4921875
+    cpu_per_session_s: 0.3203125
+warm:
+  -
+    system: "chrome"
+    workload: "static"
+    iterations: 20
+    latency_ms:
+      n: 20
+      median: 28.499500000179978
+      p50: 28.499500000179978
+      p95: 35.91843500016694
+      p99: null
+      min: 20.909899998514447
+      max: 36.92799999771523
+      sd: 5.135532762089511
+      cv: 0.18149641655467957
+    total_cold_ms:
+      n: 0
+      median: null
+      p50: null
+      p95: null
+      p99: null
+      min: null
+      max: null
+      sd: null
+      cv: null
+    session_creation_ms:
+      n: 20
+      median: 37.25785000096948
+      p50: 37.25785000096948
+      p95: 46.17113000294921
+      p99: null
+      min: 25.8523000011337
+      max: 46.26099999950384
+      sd: 6.664255315925235
+      cv: 0.17720301228058916
+    rss_peak_mib: 1195.357421875
+    private_bytes_peak_mib: 604.314453125
+    cpu_per_session_s: 0.2109375
+  -
+    system: "mimic"
+    workload: "static"
+    iterations: 20
+    latency_ms:
+      n: 20
+      median: 90.25895000013406
+      p50: 90.25895000013406
+      p95: 183.27010000011796
+      p99: null
+      min: 75.58480000079726
+      max: 184.80909999925643
+      sd: 39.67241638715086
+      cv: 0.3536945828440709
+    total_cold_ms:
+      n: 0
+      median: null
+      p50: null
+      p95: null
+      p99: null
+      min: null
+      max: null
+      sd: null
+      cv: null
+    session_creation_ms:
+      n: 20
+      median: 85.86565000041446
+      p50: 85.86565000041446
+      p95: 174.48830499906762
+      p99: null
+      min: 66.36559999969904
+      max: 174.6973999979673
+      sd: 38.96601537898515
+      cv: 0.37216641560038993
+    rss_peak_mib: 207.939453125
+    private_bytes_peak_mib: 247.623046875
+    cpu_per_session_s: 0.21875
+  -
+    system: "mimic"
+    workload: "cpu"
+    iterations: 20
+    latency_ms:
+      n: 20
+      median: 152.8864000010799
+      p50: 152.8864000010799
+      p95: 216.18768999887834
+      p99: null
+      min: 133.2180999997945
+      max: 224.62350000205333
+      sd: 27.458603130236625
+      cv: 0.1691211824781579
+    total_cold_ms:
+      n: 0
+      median: null
+      p50: null
+      p95: null
+      p99: null
+      min: null
+      max: null
+      sd: null
+      cv: null
+    session_creation_ms:
+      n: 20
+      median: 96.57390000029409
+      p50: 96.57390000029409
+      p95: 129.64474499858625
+      p99: null
+      min: 75.87699999930919
+      max: 129.9819000014395
+      sd: 16.860090433633363
+      cv: 0.17177078822827221
+    rss_peak_mib: 209.73046875
+    private_bytes_peak_mib: 247.26953125
+    cpu_per_session_s: 0.3125
+  -
+    system: "chrome"
+    workload: "cpu"
+    iterations: 20
+    latency_ms:
+      n: 20
+      median: 65.7410500007245
+      p50: 65.7410500007245
+      p95: 80.07841000198825
+      p99: null
+      min: 53.93790000016452
+      max: 101.63789999933215
+      sd: 10.265723197963379
+      cv: 0.15012464948955795
+    total_cold_ms:
+      n: 0
+      median: null
+      p50: null
+      p95: null
+      p99: null
+      min: null
+      max: null
+      sd: null
+      cv: null
+    session_creation_ms:
+      n: 20
+      median: 42.00055000001157
+      p50: 42.00055000001157
+      p95: 56.1277050015633
+      p99: null
+      min: 33.9760999995633
+      max: 57.9156999992847
+      sd: 7.8592142694606055
+      cv: 0.1812142353069929
+    rss_peak_mib: 1419.828125
+    private_bytes_peak_mib: 777.7890625
+    cpu_per_session_s: 0.328125
+  -
+    system: "chrome"
+    workload: "dom"
+    iterations: 20
+    latency_ms:
+      n: 20
+      median: 62.08889999834355
+      p50: 62.08889999834355
+      p95: 73.55332999777602
+      p99: null
+      min: 45.88560000047437
+      max: 73.87879999805591
+      sd: 6.818903087087542
+      cv: 0.10825186684553713
+    total_cold_ms:
+      n: 0
+      median: null
+      p50: null
+      p95: null
+      p99: null
+      min: null
+      max: null
+      sd: null
+      cv: null
+    session_creation_ms:
+      n: 20
+      median: 40.404199999102275
+      p50: 40.404199999102275
+      p95: 50.652249999438936
+      p99: null
+      min: 24.14610000050743
+      max: 51.15289999957895
+      sd: 7.057778550520615
+      cv: 0.17554990533422404
+    rss_peak_mib: 1364.515625
+    private_bytes_peak_mib: 724.4921875
+    cpu_per_session_s: 0.34375
+  -
+    system: "mimic"
+    workload: "dom"
+    iterations: 20
+    latency_ms:
+      n: 20
+      median: 1341.9799999992392
+      p50: 1341.9799999992392
+      p95: 2544.3109199999526
+      p99: null
+      min: 1130.4823000027682
+      max: 2657.220699999016
+      sd: 534.5804907885802
+      cv: 0.33310940418595786
+    total_cold_ms:
+      n: 0
+      median: null
+      p50: null
+      p95: null
+      p99: null
+      min: null
+      max: null
+      sd: null
+      cv: null
+    session_creation_ms:
+      n: 20
+      median: 78.77740000003541
+      p50: 78.77740000003541
+      p95: 142.46285000062926
+      p99: null
+      min: 62.74999999732245
+      max: 145.90850000240607
+      sd: 29.387134269039574
+      cv: 0.31736938805192816
+    rss_peak_mib: 345.529296875
+    private_bytes_peak_mib: 386.01953125
+    cpu_per_session_s: 2.6953125
+  -
+    system: "mimic"
+    workload: "async"
+    iterations: 20
+    latency_ms:
+      n: 20
+      median: 281.8635000003269
+      p50: 281.8635000003269
+      p95: 324.80229999982845
+      p99: null
+      min: 262.7569999967818
+      max: 371.2021999999706
+      sd: 25.267659743992343
+      cv: 0.08673967621231883
+    total_cold_ms:
+      n: 0
+      median: null
+      p50: null
+      p95: null
+      p99: null
+      min: null
+      max: null
+      sd: null
+      cv: null
+    session_creation_ms:
+      n: 20
+      median: 174.02750000110245
+      p50: 174.02750000110245
+      p95: 202.74544000094468
+      p99: null
+      min: 129.08170000082464
+      max: 222.8824000012537
+      sd: 19.633631857404445
+      cv: 0.11346740000603624
+    rss_peak_mib: 211.345703125
+    private_bytes_peak_mib: 248.9609375
+    cpu_per_session_s: 0.5390625
+  -
+    system: "chrome"
+    workload: "async"
+    iterations: 20
+    latency_ms:
+      n: 20
+      median: 83.05484999982582
+      p50: 83.05484999982582
+      p95: 106.15841000253576
+      p99: null
+      min: 70.39199999780976
+      max: 210.69470000293222
+      sd: 30.05755702593672
+      cv: 0.3347726090085567
+    total_cold_ms:
+      n: 0
+      median: null
+      p50: null
+      p95: null
+      p99: null
+      min: null
+      max: null
+      sd: null
+      cv: null
+    session_creation_ms:
+      n: 20
+      median: 63.38140000116255
+      p50: 63.38140000116255
+      p95: 71.81672000024264
+      p99: null
+      min: 47.87239999859594
+      max: 73.07300000320538
+      sd: 6.427297566182912
+      cv: 0.10316225033905811
+    rss_peak_mib: 1251.439453125
+    private_bytes_peak_mib: 635.798828125
+    cpu_per_session_s: 0.453125
+  -
+    system: "chrome"
+    workload: "react"
+    iterations: 20
+    latency_ms:
+      n: 20
+      median: 43.10414999963541
+      p50: 43.10414999963541
+      p95: 49.34156999952393
+      p99: null
+      min: 37.47879999718862
+      max: 52.090299999690615
+      sd: 3.705632123223966
+      cv: 0.0842869736230187
+    total_cold_ms:
+      n: 0
+      median: null
+      p50: null
+      p95: null
+      p99: null
+      min: null
+      max: null
+      sd: null
+      cv: null
+    session_creation_ms:
+      n: 20
+      median: 28.910800001540338
+      p50: 28.910800001540338
+      p95: 38.48164499977429
+      p99: null
+      min: 22.069400001782924
+      max: 38.97460000007413
+      sd: 5.557696714629758
+      cv: 0.19028118556790943
+    rss_peak_mib: 1413.7421875
+    private_bytes_peak_mib: 802.02734375
+    cpu_per_session_s: 0.21875
+  -
+    system: "mimic"
+    workload: "react"
+    iterations: 20
+    latency_ms:
+      n: 20
+      median: 168.71880000144301
+      p50: 168.71880000144301
+      p95: 183.847644998059
+      p99: null
+      min: 155.9813000021677
+      max: 218.7780999993265
+      sd: 12.70258190946105
+      cv: 0.07431560629353115
+    total_cold_ms:
+      n: 0
+      median: null
+      p50: null
+      p95: null
+      p99: null
+      min: null
+      max: null
+      sd: null
+      cv: null
+    session_creation_ms:
+      n: 20
+      median: 69.42904999959865
+      p50: 69.42904999959865
+      p95: 85.65001499991922
+      p99: null
+      min: 60.65400000079535
+      max: 88.6845999993966
+      sd: 7.8716283130592375
+      cv: 0.10931657131201628
+    rss_peak_mib: 236.447265625
+    private_bytes_peak_mib: 274.203125
+    cpu_per_session_s: 0.34375
+  -
+    system: "mimic"
+    workload: "wasm"
+    iterations: 20
+    latency_ms:
+      n: 20
+      median: 91.17060000062338
+      p50: 91.17060000062338
+      p95: 115.77990499990847
+      p99: null
+      min: 83.68109999719309
+      max: 116.1960999997973
+      sd: 11.340388836649439
+      cv: 0.11814782480934322
+    total_cold_ms:
+      n: 0
+      median: null
+      p50: null
+      p95: null
+      p99: null
+      min: null
+      max: null
+      sd: null
+      cv: null
+    session_creation_ms:
+      n: 20
+      median: 79.11624999906053
+      p50: 79.11624999906053
+      p95: 95.40793000032863
+      p99: null
+      min: 67.20359999962966
+      max: 95.57190000123228
+      sd: 8.98126175144634
+      cv: 0.11142410899325496
+    rss_peak_mib: 204.841796875
+    private_bytes_peak_mib: 241.72265625
+    cpu_per_session_s: 0.234375
+  -
+    system: "chrome"
+    workload: "wasm"
+    iterations: 20
+    latency_ms:
+      n: 20
+      median: 32.990600000630366
+      p50: 32.990600000630366
+      p95: 46.78986499784514
+      p99: null
+      min: 23.156100000051083
+      max: 49.67150000084075
+      sd: 7.391369953892604
+      cv: 0.2217973131469935
+    total_cold_ms:
+      n: 0
+      median: null
+      p50: null
+      p95: null
+      p99: null
+      min: null
+      max: null
+      sd: null
+      cv: null
+    session_creation_ms:
+      n: 20
+      median: 43.42285000166157
+      p50: 43.42285000166157
+      p95: 52.99260999909166
+      p99: null
+      min: 25.72650000001886
+      max: 59.808100002555875
+      sd: 9.211450690007647
+      cv: 0.21946476161751094
+    rss_peak_mib: 1246.79296875
+    private_bytes_peak_mib: 616.927734375
+    cpu_per_session_s: 0.234375
+concurrency:
+  -
+    system: "chrome"
+    workload: "static"
+    n: 1
+    waves: 0
+    diagnostic_warmup_failure: true
+    attempts: 1
+    success_rate: 0.0
+    rss_mib: 379.359375
+    rss_per_session_mib: 379.359375
+    peak_rss_mib: 454.16015625
+    private_mib: 180.19140625
+    cpu_s: 0.46875
+    cpu_per_success_s: null
+    cpu_percent: 597.4480841664388
+    throughput: 0.0
+    p50: 47.69559999840567
+    p95: null
+    p99: null
+    min: 47.69559999840567
+    max: 47.69559999840567
+    sd: 0
+    cv: 0.0
+    recovery_mib: 517.30859375
+    active_increment_per_session_mib: -2.23046875
+    fixed_ready_mib: 376.29296875
+    stop: "memory pressure (<15% or 2 GiB available)"
+  -
+    system: "mimic"
+    workload: "static"
+    n: 1
+    waves: 1
+    diagnostic_warmup_failure: false
+    attempts: 1
+    success_rate: 1.0
+    rss_mib: 204.60546875
+    rss_per_session_mib: 204.60546875
+    peak_rss_mib: 204.60546875
+    private_mib: 244.03515625
+    cpu_s: 0.234375
+    cpu_per_success_s: 0.234375
+    cpu_percent: 151.13138161414528
+    throughput: 6.448272282203532
+    p50: 152.6905999999144
+    p95: null
+    p99: null
+    min: 152.6905999999144
+    max: 152.6905999999144
+    sd: 0
+    cv: 0.0
+    recovery_mib: 153.8828125
+    active_increment_per_session_mib: 46.78515625
+    fixed_ready_mib: 103.6640625
+    stop: "memory pressure (<15% or 2 GiB available)"
+  -
+    system: "chrome"
+    workload: "cpu"
+    n: 1
+    waves: 0
+    diagnostic_warmup_failure: true
+    attempts: 1
+    success_rate: 1.0
+    rss_mib: 449.8515625
+    rss_per_session_mib: 449.8515625
+    peak_rss_mib: 532.32421875
+    private_mib: 233.15625
+    cpu_s: 0.671875
+    cpu_per_success_s: 0.671875
+    cpu_percent: 433.61629048872646
+    throughput: 6.453823858436859
+    p50: 138.27779999701306
+    p95: null
+    p99: null
+    min: 138.27779999701306
+    max: 138.27779999701306
+    sd: 0
+    cv: 0.0
+    recovery_mib: 548.0390625
+    active_increment_per_session_mib: 76.67578125
+    fixed_ready_mib: 369.82421875
+    stop: "memory pressure (<15% or 2 GiB available)"
+  -
+    system: "mimic"
+    workload: "cpu"
+    n: 1
+    waves: 0
+    diagnostic_warmup_failure: true
+    attempts: 1
+    success_rate: 1.0
+    rss_mib: 160.640625
+    rss_per_session_mib: 160.640625
+    peak_rss_mib: 180.16015625
+    private_mib: 202.72265625
+    cpu_s: 0.265625
+    cpu_per_success_s: 0.265625
+    cpu_percent: 106.93834071171996
+    throughput: 4.025914003264751
+    p50: 245.165199998155
+    p95: null
+    p99: null
+    min: 245.165199998155
+    max: 245.165199998155
+    sd: 0
+    cv: 0.0
+    recovery_mib: 168.3359375
+    active_increment_per_session_mib: 56.3984375
+    fixed_ready_mib: 104.2421875
+    stop: "memory pressure (<15% or 2 GiB available)"
+  -
+    system: "chrome"
+    workload: "react"
+    n: 1
+    waves: 0
+    diagnostic_warmup_failure: true
+    attempts: 1
+    success_rate: 0.0
+    rss_mib: 376.875
+    rss_per_session_mib: 376.875
+    peak_rss_mib: 436.01953125
+    private_mib: 176.3359375
+    cpu_s: 0.15625
+    cpu_per_success_s: null
+    cpu_percent: 346.75987571836686
+    throughput: 0.0
+    p50: 31.84979999787174
+    p95: null
+    p99: null
+    min: 31.84979999787174
+    max: 31.84979999787174
+    sd: 0
+    cv: 0.0
+    recovery_mib: 502.1484375
+    active_increment_per_session_mib: 1.8671875
+    fixed_ready_mib: 369.83984375
+    stop: "memory pressure (<15% or 2 GiB available)"
+  -
+    system: "mimic"
+    workload: "react"
+    n: 1
+    waves: 0
+    diagnostic_warmup_failure: true
+    attempts: 1
+    success_rate: 0.0
+    rss_mib: 132.7109375
+    rss_per_session_mib: 132.7109375
+    peak_rss_mib: 133.17578125
+    private_mib: 171.0
+    cpu_s: 0.109375
+    cpu_per_success_s: null
+    cpu_percent: 130.65161559951025
+    throughput: 0.0
+    p50: 79.07619999969029
+    p95: null
+    p99: null
+    min: 79.07619999969029
+    max: 79.07619999969029
+    sd: 0
+    cv: 0.0
+    recovery_mib: 133.6875
+    active_increment_per_session_mib: 29.21484375
+    fixed_ready_mib: 103.49609375
+    stop: "memory pressure (<15% or 2 GiB available)"
+common_cdp_startup:
+  mimic:
+    n: 10
+    median: 424.60845000096015
+    p50: 424.60845000096015
+    p95: 445.4996750002465
+    p99: null
+    min: 217.5122000007832
+    max: 454.39100000294275
+    sd: 67.62401567001956
+    cv: 0.165769441171484
+  chrome:
+    n: 10
+    median: 326.8100500008586
+    p50: 326.8100500008586
+    p95: 412.1625300023879
+    p99: null
+    min: 297.9723999997077
+    max: 446.5518000033626
+    sd: 42.978132499757805
+    cv: 0.12579719533739991
