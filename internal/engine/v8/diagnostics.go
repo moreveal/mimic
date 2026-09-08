@@ -3,6 +3,7 @@
 package v8
 
 import (
+	"encoding/json"
 	"os"
 	"time"
 )
@@ -13,8 +14,9 @@ type diagnosticCost struct {
 }
 
 type diagnosticState struct {
-	Costs map[string]diagnosticCost `json:"costs"`
-	Heaps map[string]any            `json:"heaps"`
+	Costs       map[string]diagnosticCost  `json:"costs"`
+	Heaps       map[string]any             `json:"heaps"`
+	CPUProfiles map[string]json.RawMessage `json:"cpu_profiles,omitempty"`
 }
 
 func newDiagnostics() *diagnosticState {
@@ -29,6 +31,11 @@ func (a *adapter) ProfileEnabled() bool { return a.profile != nil }
 // ProfileCollect is an explicit diagnostic intervention, never benchmark policy.
 func (a *adapter) ProfileCollect() error {
 	_, err := a.owner.execute(func(s *state) response { return response{err: s.isolate.LowMemoryNotification()} })
+	return err
+}
+
+func (a *adapter) ProfileHeapSnapshot(write func([]byte) bool) error {
+	_, err := a.owner.execute(func(s *state) response { return response{err: s.isolate.TakeHeapSnapshot(write)} })
 	return err
 }
 

@@ -63,6 +63,7 @@ func TestPerformanceProfile(t *testing.T) {
 			json.Unmarshal(encoded, &snapshot)
 			record["v8"] = snapshot
 			record["dom_wrappers"] = p.Top.Realm.profileWrappers
+			record["bootstrap_phases_ms"] = p.Top.Realm.profilePhases
 		}
 		records = append(records, record)
 	}
@@ -85,6 +86,21 @@ func TestPerformanceProfile(t *testing.T) {
 			t.Fatal(e)
 		}
 		sample("dom", p, time.Since(start))
+		if i == 0 && os.Getenv("MIMIC_V8_HEAP_SNAPSHOT") == "1" {
+			snapshot, e := os.Create(filepath.Join(dir, "v8-dom.heapsnapshot"))
+			if e != nil {
+				t.Fatal(e)
+			}
+			var writeErr error
+			e = p.Top.Realm.runtime.(interface{ ProfileHeapSnapshot(func([]byte) bool) error }).ProfileHeapSnapshot(func(chunk []byte) bool {
+				_, writeErr = snapshot.Write(chunk)
+				return writeErr == nil
+			})
+			snapshot.Close()
+			if e != nil || writeErr != nil {
+				t.Fatalf("V8 snapshot: %v %v", e, writeErr)
+			}
+		}
 		result, e := p.Evaluate(context.Background(), `JSON.stringify(__bench)`)
 		if e != nil {
 			t.Fatal(e)

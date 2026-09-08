@@ -8,6 +8,7 @@ import (
 	"errors"
 	"fmt"
 	"math"
+	"os"
 	"reflect"
 	"sync"
 	"time"
@@ -120,6 +121,21 @@ func (a *adapter) Eval(ctx context.Context, source, name string) (engine.Value, 
 		return nil, err
 	}
 	return a.runContext(ctx, func(s *state, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
+		if a.profile != nil && os.Getenv("MIMIC_V8_CPU_PROFILE") == "1" && (name == "mimic:webapi-surface" || name == "__pyppeteer_evaluation_script__") {
+			finish, err := startNativeProfile(s.isolate, realm)
+			if err != nil {
+				return nil, err
+			}
+			defer func() {
+				data, err := finish()
+				if err == nil {
+					if a.profile.CPUProfiles == nil {
+						a.profile.CPUProfiles = map[string]json.RawMessage{}
+					}
+					a.profile.CPUProfiles[name] = data
+				}
+			}()
+		}
 		catcher, err := s.isolate.NewTryCatch()
 		if err != nil {
 			return nil, err
@@ -1060,11 +1076,9 @@ func (a *adapter) export(value *runtimeValue) any {
 }
 
 func exportLocalPrimitive(value gov8.Value, realm *gov8.Context) any {
-	if yes, _ := value.IsNullOrUndefined(); yes {
-		return nil
-	}
-	if yes, _ := value.IsBoolean(); yes {
-		result, _ := value.BooleanValue()
+	// DOM hosts predominantly exchange strings and numeric node identities.
+	if yes, _ := value.IsString(); yes {
+		result, _ := value.StringValue()
 		return result
 	}
 	if yes, _ := value.IsNumber(); yes {
@@ -1074,8 +1088,11 @@ func exportLocalPrimitive(value gov8.Value, realm *gov8.Context) any {
 		}
 		return nil
 	}
-	if yes, _ := value.IsString(); yes {
-		result, _ := value.StringValue()
+	if yes, _ := value.IsNullOrUndefined(); yes {
+		return nil
+	}
+	if yes, _ := value.IsBoolean(); yes {
+		result, _ := value.BooleanValue()
 		return result
 	}
 	if yes, _ := value.IsBigInt(); yes {
@@ -1121,8 +1138,20 @@ func callbackValue(scope *gov8.CallbackScope, realm *gov8.Context, result gov8.R
 	// DOM result lists are plain by-value records. One native JSON parse replaces
 	// one FFI call per property/array slot; arbitrary host objects keep the
 	// existing recursive conversion (not all Go values have JSON semantics).
-	if records, ok := value.([]map[string]any); ok {
-		encoded, err := json.Marshal(callbackJSONProjection(records))
+	var projection any
+	switch value := value.(type) {
+	case []int64:
+		if value == nil {
+			value = []int64{}
+		}
+		projection = value
+	case []map[string]any, map[string]any:
+		if callbackJSONEligible(value) {
+			projection = callbackJSONProjection(value)
+		}
+	}
+	if projection != nil {
+		encoded, err := json.Marshal(projection)
 		if err == nil {
 			text, err := scope.NewString(string(encoded))
 			if err != nil {
@@ -1197,6 +1226,37 @@ func callbackValue(scope *gov8.CallbackScope, realm *gov8.Context, result gov8.R
 
 // Preserve callback marshaling semantics: nil slices/maps are empty JS
 // collections, and byte slices are numeric arrays rather than base64 strings.
+// Do not let JSON silently serialize engine values, custom structs or marshalers
+// that the recursive engine conversion does not support.
+func callbackJSONEligible(value any) bool {
+	switch value.(type) {
+	case nil, string, bool, int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64:
+		return true
+	}
+	rv := reflect.ValueOf(value)
+	switch rv.Kind() {
+	case reflect.Map:
+		if rv.Type().Key().Kind() != reflect.String {
+			return false
+		}
+		iter := rv.MapRange()
+		for iter.Next() {
+			if !callbackJSONEligible(iter.Value().Interface()) {
+				return false
+			}
+		}
+		return true
+	case reflect.Array, reflect.Slice:
+		for i := 0; i < rv.Len(); i++ {
+			if !callbackJSONEligible(rv.Index(i).Interface()) {
+				return false
+			}
+		}
+		return true
+	}
+	return false
+}
+
 func callbackJSONProjection(value any) any {
 	if value == nil {
 		return nil

@@ -242,6 +242,37 @@ func (d *Document) findAllWithin(parent int64, selector string) []Node {
 	return out
 }
 
+// FindAllIDs snapshots membership in tree order without projecting attributes,
+// text and child arrays that an existing realm wrapper already owns.
+func (d *Document) FindAllIDs(parent int64, selector string) []int64 {
+	d.mu.RLock()
+	defer d.mu.RUnlock()
+	var roots []int64
+	if parent == 0 {
+		roots = []int64{d.root}
+	} else if n := d.nodes[parent]; n != nil {
+		roots = n.Children
+	}
+	out := make([]int64, 0)
+	var visit func(int64)
+	visit = func(id int64) {
+		n := d.nodes[id]
+		if n == nil {
+			return
+		}
+		if matchesSelector(n, selector) {
+			out = append(out, id)
+		}
+		for _, child := range n.Children {
+			visit(child)
+		}
+	}
+	for _, root := range roots {
+		visit(root)
+	}
+	return out
+}
+
 func matchesSelector(n *Node, selector string) bool {
 	selector = strings.TrimSpace(strings.Split(selector, ",")[0])
 	if n == nil || n.Type != "element" || selector == "" {
