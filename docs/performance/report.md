@@ -472,3 +472,83 @@ An earlier exploratory control and CDP run overlapped; they are not the clean
 control used here. All executable launches were freshly rebuilt and hash checked.
 Production DOM identity, synchronous Go DOM, event loops and API observation
 remain intact. No native code, runtime flag or JS DOM prototype is merged.
+
+
+Timing-boundary clarification: in that diagnostic Chrome native DOM reports
+8.6 ms on its in-page timer, versus 14.7 ms for the JS kernel. Its CDP wall times
+are 28.902 and 16.480 ms respectively. Thus the apparent kernel lead includes
+scheduling/protocol/browser work around script execution; it does not prove a
+faster DOM algorithm. Mimic's deterministic in-page timer reports zero here and
+must not be compared. Navigation + setup + execution medians are 68.714 ms for
+Mimic's kernel and 47.653 ms for Chrome native DOM: end-to-end parity is NOT
+achieved. The reproducible diagnostic additions are saved as `diagnostic.patch`
+(commit b631da0), separate from the production fix.
+
+## 19: Intrinsics full matrix and bootstrap catalog filtering (2026-09-09)
+
+The completed full matrix `benchmark/runs/06-intrinsics-milestone` tests
+4d0f0a1, before catalog filtering. All 12 gates and 396 cold/warm rows are valid;
+all 36 concurrency groups completed, including five measured waves at N100.
+Fresh executable hashes and the unchanged harness fingerprint are recorded in
+`build.json` and per-launch `launches.jsonl`. Reaching N100 depends on available
+workstation memory and is not attributed solely to the intrinsic fix.
+
+| Warm workload | Mimic execution / completion ms | Chrome execution / completion ms |
+|---|---:|---:|
+| static | 1.401 / 54.699 | 5.015 / 29.526 |
+| CPU | 37.365 / 93.800 | 29.121 / 53.068 |
+| DOM | 74.142 / 131.286 | 34.034 / 60.368 |
+| async | 47.495 / 101.933 | 30.288 / 55.251 |
+| React | 33.284 / 96.160 | 28.330 / 58.233 |
+| wasm | 9.416 / 64.933 | 5.443 / 32.085 |
+
+Against full05, Mimic CPU execution changes 50.255 -> 37.365 ms and React
+38.089 -> 33.284 ms; DOM is effectively unchanged (73.406 -> 74.142 ms).
+These are separate run cohorts with uncontrolled background applications.
+
+At N100, aggregate throughput across all five waves, including teardown, is
+29.48 vs 18.85 Pages/s for static (1.56x), 45.29 vs 14.71 for CPU (3.08x),
+and 57.82 vs 21.22 for React (2.72x), Mimic vs Chrome. Static's median-wave
+throughput suggests 3.6x but hides a 10008.74 ms teardown tail; use the aggregate
+ratio. Median active RSS is 2183.6 / 7112.1 MiB (static), 3316.2 / 8774.0
+(CPU), and 2715.9 / 8566.0 (React). Median recovered RSS after 250 ms is
+194.8 / 1257.4, 209.0 / 1432.3, and 395.7 / 1422.0 MiB respectively.
+These are process-tree measurements, not a long-run leak proof.
+
+The close diagnostic now accepts multiple waves and uses one shared observer
+instead of one timer thread per close. Three separate ten-wave, 100-Page static
+probes did not reproduce the tail (maximum individual closes 56.224, 66.60,
+and 39.703 ms). Both Python environments use Python 3.14.2 / websockets 13.1.
+Unread WebSocket events are a hypothesis, not an established cause. No
+production teardown fix is claimed. Compressed evidence is under `close-tail/`.
+
+The next production change, 52a2aa2, filters generated fallback bindings before
+bootstrap instead of constructing bindings which exposure normalization removes.
+The immutable bundle/profile cache stores only source and JSON. Ancestors,
+aliases, static members, constants, and members affecting descendant lookups
+are retained. Missing prototype capture data is not treated as an empty capture.
+Exact exposed descriptor snapshots match the original catalog; the full Go suite
+passes (241 test/package pass events, zero failures), including DOM identity.
+
+Clean fast-gate control -> catalog filter:
+
+| Metric | Control | Filter |
+|---|---:|---:|
+| DOM execution ms | 67.519 | 66.678 |
+| DOM completion ms | 118.425 | 109.859 |
+| static completion ms | 53.622 | 45.931 |
+| React execution ms | 37.684 | 34.524 |
+| React completion ms | 99.066 | 84.443 |
+| static N10 median Pages/s | 53.61 | 72.37 |
+| static N25 median Pages/s | 62.53 | 74.41 |
+| static marginal RSS MiB/Page | 26.345 | 24.836 |
+| React marginal RSS MiB/Page | 31.736 | 29.082 |
+| static recovered RSS MiB | 90.023 | 98.285 |
+| React recovered RSS MiB | 114.914 | 114.691 |
+
+The static recovered-memory sample regresses by 8.262 MiB. The fresh detailed
+profile measures warm navigation at 42.28 ms, generated bootstrap ending at
+9.15 ms, and exposure ending at 27.20 ms, versus 57.63 / 13.84 / 40.44 before.
+Fast-gate raw data, build receipts, profile, and validation are under `catalog/`.
+The full matrix for the catalog change is a separate run; full06 does not
+certify that change. Single-Page Chrome parity remains unachieved.
