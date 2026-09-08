@@ -1,0 +1,17 @@
+{
+  "sha256": {
+    "baseline.yaml": "05ab269f549f57405b1a39f6ab0b73a970ed3f8e444edc6a2d0f30c19bc69414",
+    "concurrency.csv": "16567b3de953fbcfb856a6c8a8454eb3a7040b6b6f1e225a9102e3280681ee9d",
+    "cpu.png": "85f3dc991de86b2720c92d3cecd08f764e2885190fcc991f9fdffde510db6efd",
+    "iterations.csv": "354c992bcffb1a84e111f8cbb36aeab33d6e3c338db7027ec088a8eaa0db23ec",
+    "latency.png": "f3df40f163641cef23462b7b8af1ef47e0afea8b43f54df90c8c2fa88d8fec83",
+    "marginal-rss.png": "1bed15b84956e855170b3485edda13cdced27e7954ce5c97ece5d2e0334cb813",
+    "raw.json": "8d832e4e516c3531c4707ccd5fc22c8d544ebc559ad9dba881efe8ad818b1d58",
+    "report.md": "36173a4da7721e73bcc5b5e50a2734e67b49a964ae5c01f4b7aff047d9f3f89e",
+    "summary.csv": "aaadcde3d906a7fc9c1b00593e2148f7a0d22aaa731aec30d308121ec3f165e9",
+    "summary.json": "99b4c2c8c6e9dde36dc3778ca64d7fba6b02fbf4c7a7c1c6acf8fc9f2e51b78f",
+    "throughput.png": "7e4280ca40e7bc11b592a0dfd77f49c9992e21b8348875bd723c16946da0ae68",
+    "total-rss.png": "4435d8f031a43f6294612dd1424335beb809f1ede9edbda7ce119d4d6a2483d4"
+  },
+  "harness_sha256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7"
+}
