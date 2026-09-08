@@ -764,3 +764,51 @@ native Go callbacks, actual Page bootstrap, scheduling, resources or speed.
 The next bounded proof is snapshotting a real bootstrap slice with per-Page
 state rebound after restore, measuring creation plus navigation together so
 moving initialization work between phases cannot count as an optimization.
+
+## 24. Actual bootstrap snapshot replay: feasibility, not a Page speedup
+
+A fresh production static profile (`snapshot-startup-profile`, native/hosts,
+five iterations) measures warm surface execution at 39.8–41.9 ms and compilation
+at 6.1–7.5 ms. This supports investigating bootstrap serialization independently
+of the JS query experiment and its React regression.
+
+Detached experimental commit 6df6ba5 records actual bootstrap host calls without
+changing frozen inputs. The successful one-iteration capture records 429 calls:
+410 capabilityState, eight viewport, two documentSecurity, two screen, and one
+each token, intlEnvironment, permissionsPolicy, windowRelations, catalogJSON,
+exposureJSON and ready. The first diagnostic capture failed because exposure
+normalization deleted its global recorder; keeping the recorder in a lexical
+binding fixed the diagnostic. This is not production instrumentation.
+
+A standalone SDK test replays the actual complete captured surface with these
+responses, checking host call names and argument JSON in sequence. V8 successfully
+serializes the resulting context. Observed single-process diagnostics:
+
+| Operation | Time / size |
+|---|---:|
+| Compile and execute captured bootstrap | 41.611 ms |
+| Create snapshot after bootstrap | 97.067 ms |
+| Snapshot bytes | 9,487,360 |
+| Restore fresh isolate + context, three samples | 9.665 / 9.255 / 8.869 ms |
+
+Restored contexts pass basic Document/Element availability, document identity
+and native Array behavior checks. These are deliberately narrow feasibility
+checks, not DOM or Page correctness gates. Recorded responses include a specific
+Page token, frame IDs, environment, security, permissions and capability state.
+No restored context is yet connected to a real Go host or browser event loop.
+Therefore these timings do not establish any workload or end-to-end speedup.
+
+Next implementation requirements are late-bound private Go dispatch; fresh
+per-Page token and frame relations; correct environment/security/profile state;
+one-time ready effects; scheduler and callback initialization; and measured
+snapshot build amortization, RSS, throughput and teardown. Bootstrap work moved
+to session creation must remain counted. Snapshot reuse may share immutable
+bytes, but independent Pages must never share mutable JS state or a runtime lock.
+The initial snapshot creation cost also rules out claiming a first-Page win.
+
+Evidence and reproducible test source are under `dom-current/bootstrap-snapshot/`.
+Decompress the two bootstrap-capture files into `.build/`, copy the test source
+there without its `.txt` suffix, compile it with `go test -c`, verify/log its
+SHA-256 immediately before launch, and run the test binary from the repository
+root. The saved hash receipt identifies the successful diagnostic executable.
+The frozen harness fingerprint is unchanged. No production code is promoted.
