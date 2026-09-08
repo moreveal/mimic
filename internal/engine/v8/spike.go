@@ -252,6 +252,12 @@ func (r *Runtime) Dispose() error {
 				}
 				delete(s.realms, id)
 			}
+			// All contexts and adapter roots have been released. Ask V8 to
+			// return empty heap pages before disposal transfers them to its
+			// process-wide allocator pools.
+			if err := s.isolate.LowMemoryNotification(); err != nil && disposeErr == nil {
+				disposeErr = err
+			}
 			if err := s.isolate.Close(); err != nil && disposeErr == nil {
 				disposeErr = err
 			}
