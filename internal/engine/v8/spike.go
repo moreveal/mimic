@@ -61,7 +61,10 @@ func NewRuntime() (*Runtime, error) {
 }
 
 func (r *Runtime) loop(ready chan<- error) {
-	iso, err := gov8.NewIsolate()
+	// Each Page has an independent isolate. Process-sized nursery defaults
+	// retain 16 MiB per tiny Page after bootstrap with under 2 MiB in use.
+	// Bound only the young generation; the old generation keeps V8 defaults.
+	iso, err := gov8.NewIsolateWithParams(gov8.NewCreateParams().SetMaxYoungGenerationSizeInBytes(4 << 20))
 	if err != nil {
 		ready <- err
 		close(r.done)

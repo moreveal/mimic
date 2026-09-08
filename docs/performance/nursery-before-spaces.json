@@ -1,0 +1,6230 @@
+[
+  {
+    "go_heap": 1308848,
+    "go_released": 6234112,
+    "go_sys": 12732664,
+    "goroutines": 2,
+    "isolates": null,
+    "pages": 0,
+    "phase": "before",
+    "private": 79601664,
+    "rss": 14372864,
+    "workload": "static"
+  },
+  {
+    "go_heap": 16459304,
+    "go_released": 5292032,
+    "go_sys": 32835832,
+    "goroutines": 7,
+    "isolates": [
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 34361344,
+          "TotalHeapSizeExecutable": 524288,
+          "TotalPhysicalSize": 34361344,
+          "TotalAvailableSize": 1550950808,
+          "UsedHeapSize": 17706080,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 262264,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 40960,
+          "UsedGlobalHandlesSize": 40768,
+          "TotalAllocatedBytes": 46303792
+        },
+        "host_crossings": 445,
+        "persistent_handles": 1272,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 16777216,
+            "UsedSize": 1792000,
+            "AvailableSize": 6596096,
+            "PhysicalSize": 16777216
+          },
+          {
+            "Name": "old_space",
+            "Size": 9961472,
+            "UsedSize": 8993160,
+            "AvailableSize": 967472,
+            "PhysicalSize": 9961472
+          },
+          {
+            "Name": "code_space",
+            "Size": 524288,
+            "UsedSize": 221632,
+            "AvailableSize": 302592,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 786432,
+            "UsedSize": 398696,
+            "AvailableSize": 387688,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 8388608,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 6311936,
+            "UsedSize": 6300592,
+            "AvailableSize": 0,
+            "PhysicalSize": 6311936
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      }
+    ],
+    "pages": 1,
+    "phase": "live",
+    "private": 147480576,
+    "rss": 100261888,
+    "workload": "static"
+  },
+  {
+    "go_heap": 13644248,
+    "go_released": 7471104,
+    "go_sys": 37300472,
+    "goroutines": 27,
+    "isolates": [
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 34361344,
+          "TotalHeapSizeExecutable": 524288,
+          "TotalPhysicalSize": 34361344,
+          "TotalAvailableSize": 1550950808,
+          "UsedHeapSize": 17706080,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 262264,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 40960,
+          "UsedGlobalHandlesSize": 40768,
+          "TotalAllocatedBytes": 46303792
+        },
+        "host_crossings": 445,
+        "persistent_handles": 1272,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 16777216,
+            "UsedSize": 1792000,
+            "AvailableSize": 6596096,
+            "PhysicalSize": 16777216
+          },
+          {
+            "Name": "old_space",
+            "Size": 9961472,
+            "UsedSize": 8993160,
+            "AvailableSize": 967472,
+            "PhysicalSize": 9961472
+          },
+          {
+            "Name": "code_space",
+            "Size": 524288,
+            "UsedSize": 221632,
+            "AvailableSize": 302592,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 786432,
+            "UsedSize": 398696,
+            "AvailableSize": 387688,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 8388608,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 6311936,
+            "UsedSize": 6300592,
+            "AvailableSize": 0,
+            "PhysicalSize": 6311936
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 34099200,
+          "TotalHeapSizeExecutable": 524288,
+          "TotalPhysicalSize": 34099200,
+          "TotalAvailableSize": 1550966912,
+          "UsedHeapSize": 17690064,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 262264,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 40960,
+          "UsedGlobalHandlesSize": 40768,
+          "TotalAllocatedBytes": 47355600
+        },
+        "host_crossings": 445,
+        "persistent_handles": 1272,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 16777216,
+            "UsedSize": 1781720,
+            "AvailableSize": 6606376,
+            "PhysicalSize": 16777216
+          },
+          {
+            "Name": "old_space",
+            "Size": 9699328,
+            "UsedSize": 8987264,
+            "AvailableSize": 711312,
+            "PhysicalSize": 9699328
+          },
+          {
+            "Name": "code_space",
+            "Size": 524288,
+            "UsedSize": 221632,
+            "AvailableSize": 302592,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 786432,
+            "UsedSize": 398856,
+            "AvailableSize": 387528,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 8388608,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 6311936,
+            "UsedSize": 6300592,
+            "AvailableSize": 0,
+            "PhysicalSize": 6311936
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 34623488,
+          "TotalHeapSizeExecutable": 524288,
+          "TotalPhysicalSize": 34623488,
+          "TotalAvailableSize": 1550979568,
+          "UsedHeapSize": 17677344,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 262264,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 40960,
+          "UsedGlobalHandlesSize": 40768,
+          "TotalAllocatedBytes": 45865216
+        },
+        "host_crossings": 445,
+        "persistent_handles": 1272,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 16777216,
+            "UsedSize": 1761200,
+            "AvailableSize": 6626896,
+            "PhysicalSize": 16777216
+          },
+          {
+            "Name": "old_space",
+            "Size": 10223616,
+            "UsedSize": 8995064,
+            "AvailableSize": 1227736,
+            "PhysicalSize": 10223616
+          },
+          {
+            "Name": "code_space",
+            "Size": 524288,
+            "UsedSize": 221632,
+            "AvailableSize": 302592,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 786432,
+            "UsedSize": 398856,
+            "AvailableSize": 387528,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 8388608,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 6311936,
+            "UsedSize": 6300592,
+            "AvailableSize": 0,
+            "PhysicalSize": 6311936
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 34361344,
+          "TotalHeapSizeExecutable": 524288,
+          "TotalPhysicalSize": 34361344,
+          "TotalAvailableSize": 1550991136,
+          "UsedHeapSize": 17665824,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 262264,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 40960,
+          "UsedGlobalHandlesSize": 40768,
+          "TotalAllocatedBytes": 46491496
+        },
+        "host_crossings": 445,
+        "persistent_handles": 1272,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 16777216,
+            "UsedSize": 1761200,
+            "AvailableSize": 6626896,
+            "PhysicalSize": 16777216
+          },
+          {
+            "Name": "old_space",
+            "Size": 9961472,
+            "UsedSize": 8983544,
+            "AvailableSize": 977160,
+            "PhysicalSize": 9961472
+          },
+          {
+            "Name": "code_space",
+            "Size": 524288,
+            "UsedSize": 221632,
+            "AvailableSize": 302592,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 786432,
+            "UsedSize": 398856,
+            "AvailableSize": 387528,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 8388608,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 6311936,
+            "UsedSize": 6300592,
+            "AvailableSize": 0,
+            "PhysicalSize": 6311936
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 34099200,
+          "TotalHeapSizeExecutable": 524288,
+          "TotalPhysicalSize": 34099200,
+          "TotalAvailableSize": 1550946512,
+          "UsedHeapSize": 17710424,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 262264,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 40960,
+          "UsedGlobalHandlesSize": 40768,
+          "TotalAllocatedBytes": 47166736
+        },
+        "host_crossings": 445,
+        "persistent_handles": 1272,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 16777216,
+            "UsedSize": 1812056,
+            "AvailableSize": 6576040,
+            "PhysicalSize": 16777216
+          },
+          {
+            "Name": "old_space",
+            "Size": 9699328,
+            "UsedSize": 8977288,
+            "AvailableSize": 721248,
+            "PhysicalSize": 9699328
+          },
+          {
+            "Name": "code_space",
+            "Size": 524288,
+            "UsedSize": 221632,
+            "AvailableSize": 302592,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 786432,
+            "UsedSize": 398856,
+            "AvailableSize": 387528,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 8388608,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 6311936,
+            "UsedSize": 6300592,
+            "AvailableSize": 0,
+            "PhysicalSize": 6311936
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      }
+    ],
+    "pages": 5,
+    "phase": "live",
+    "private": 299827200,
+    "rss": 242831360,
+    "workload": "static"
+  },
+  {
+    "go_heap": 17234856,
+    "go_released": 7094272,
+    "go_sys": 37562616,
+    "goroutines": 52,
+    "isolates": [
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 34361344,
+          "TotalHeapSizeExecutable": 524288,
+          "TotalPhysicalSize": 34361344,
+          "TotalAvailableSize": 1550950808,
+          "UsedHeapSize": 17706080,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 262264,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 40960,
+          "UsedGlobalHandlesSize": 40768,
+          "TotalAllocatedBytes": 46303792
+        },
+        "host_crossings": 445,
+        "persistent_handles": 1272,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 16777216,
+            "UsedSize": 1792000,
+            "AvailableSize": 6596096,
+            "PhysicalSize": 16777216
+          },
+          {
+            "Name": "old_space",
+            "Size": 9961472,
+            "UsedSize": 8993160,
+            "AvailableSize": 967472,
+            "PhysicalSize": 9961472
+          },
+          {
+            "Name": "code_space",
+            "Size": 524288,
+            "UsedSize": 221632,
+            "AvailableSize": 302592,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 786432,
+            "UsedSize": 398696,
+            "AvailableSize": 387688,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 8388608,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 6311936,
+            "UsedSize": 6300592,
+            "AvailableSize": 0,
+            "PhysicalSize": 6311936
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 34099200,
+          "TotalHeapSizeExecutable": 524288,
+          "TotalPhysicalSize": 34099200,
+          "TotalAvailableSize": 1550966912,
+          "UsedHeapSize": 17690064,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 262264,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 40960,
+          "UsedGlobalHandlesSize": 40768,
+          "TotalAllocatedBytes": 47355600
+        },
+        "host_crossings": 445,
+        "persistent_handles": 1272,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 16777216,
+            "UsedSize": 1781720,
+            "AvailableSize": 6606376,
+            "PhysicalSize": 16777216
+          },
+          {
+            "Name": "old_space",
+            "Size": 9699328,
+            "UsedSize": 8987264,
+            "AvailableSize": 711312,
+            "PhysicalSize": 9699328
+          },
+          {
+            "Name": "code_space",
+            "Size": 524288,
+            "UsedSize": 221632,
+            "AvailableSize": 302592,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 786432,
+            "UsedSize": 398856,
+            "AvailableSize": 387528,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 8388608,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 6311936,
+            "UsedSize": 6300592,
+            "AvailableSize": 0,
+            "PhysicalSize": 6311936
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 34623488,
+          "TotalHeapSizeExecutable": 524288,
+          "TotalPhysicalSize": 34623488,
+          "TotalAvailableSize": 1550979568,
+          "UsedHeapSize": 17677344,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 262264,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 40960,
+          "UsedGlobalHandlesSize": 40768,
+          "TotalAllocatedBytes": 45865216
+        },
+        "host_crossings": 445,
+        "persistent_handles": 1272,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 16777216,
+            "UsedSize": 1761200,
+            "AvailableSize": 6626896,
+            "PhysicalSize": 16777216
+          },
+          {
+            "Name": "old_space",
+            "Size": 10223616,
+            "UsedSize": 8995064,
+            "AvailableSize": 1227736,
+            "PhysicalSize": 10223616
+          },
+          {
+            "Name": "code_space",
+            "Size": 524288,
+            "UsedSize": 221632,
+            "AvailableSize": 302592,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 786432,
+            "UsedSize": 398856,
+            "AvailableSize": 387528,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 8388608,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 6311936,
+            "UsedSize": 6300592,
+            "AvailableSize": 0,
+            "PhysicalSize": 6311936
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 34361344,
+          "TotalHeapSizeExecutable": 524288,
+          "TotalPhysicalSize": 34361344,
+          "TotalAvailableSize": 1550991136,
+          "UsedHeapSize": 17665824,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 262264,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 40960,
+          "UsedGlobalHandlesSize": 40768,
+          "TotalAllocatedBytes": 46491496
+        },
+        "host_crossings": 445,
+        "persistent_handles": 1272,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 16777216,
+            "UsedSize": 1761200,
+            "AvailableSize": 6626896,
+            "PhysicalSize": 16777216
+          },
+          {
+            "Name": "old_space",
+            "Size": 9961472,
+            "UsedSize": 8983544,
+            "AvailableSize": 977160,
+            "PhysicalSize": 9961472
+          },
+          {
+            "Name": "code_space",
+            "Size": 524288,
+            "UsedSize": 221632,
+            "AvailableSize": 302592,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 786432,
+            "UsedSize": 398856,
+            "AvailableSize": 387528,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 8388608,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 6311936,
+            "UsedSize": 6300592,
+            "AvailableSize": 0,
+            "PhysicalSize": 6311936
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 34099200,
+          "TotalHeapSizeExecutable": 524288,
+          "TotalPhysicalSize": 34099200,
+          "TotalAvailableSize": 1550946512,
+          "UsedHeapSize": 17710424,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 262264,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 40960,
+          "UsedGlobalHandlesSize": 40768,
+          "TotalAllocatedBytes": 47166736
+        },
+        "host_crossings": 445,
+        "persistent_handles": 1272,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 16777216,
+            "UsedSize": 1812056,
+            "AvailableSize": 6576040,
+            "PhysicalSize": 16777216
+          },
+          {
+            "Name": "old_space",
+            "Size": 9699328,
+            "UsedSize": 8977288,
+            "AvailableSize": 721248,
+            "PhysicalSize": 9699328
+          },
+          {
+            "Name": "code_space",
+            "Size": 524288,
+            "UsedSize": 221632,
+            "AvailableSize": 302592,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 786432,
+            "UsedSize": 398856,
+            "AvailableSize": 387528,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 8388608,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 6311936,
+            "UsedSize": 6300592,
+            "AvailableSize": 0,
+            "PhysicalSize": 6311936
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 33837056,
+          "TotalHeapSizeExecutable": 524288,
+          "TotalPhysicalSize": 33837056,
+          "TotalAvailableSize": 1548413896,
+          "UsedHeapSize": 20243160,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 262264,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 40960,
+          "UsedGlobalHandlesSize": 40768,
+          "TotalAllocatedBytes": 45189640
+        },
+        "host_crossings": 445,
+        "persistent_handles": 1272,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 16777216,
+            "UsedSize": 5048232,
+            "AvailableSize": 3339864,
+            "PhysicalSize": 16777216
+          },
+          {
+            "Name": "old_space",
+            "Size": 9437184,
+            "UsedSize": 8273848,
+            "AvailableSize": 1162664,
+            "PhysicalSize": 9437184
+          },
+          {
+            "Name": "code_space",
+            "Size": 524288,
+            "UsedSize": 221632,
+            "AvailableSize": 302592,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 786432,
+            "UsedSize": 398856,
+            "AvailableSize": 387528,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 8388608,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 6311936,
+            "UsedSize": 6300592,
+            "AvailableSize": 0,
+            "PhysicalSize": 6311936
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 34361344,
+          "TotalHeapSizeExecutable": 524288,
+          "TotalPhysicalSize": 34361344,
+          "TotalAvailableSize": 1551087888,
+          "UsedHeapSize": 17568992,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 262264,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 40960,
+          "UsedGlobalHandlesSize": 40768,
+          "TotalAllocatedBytes": 46099288
+        },
+        "host_crossings": 445,
+        "persistent_handles": 1272,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 16777216,
+            "UsedSize": 1637848,
+            "AvailableSize": 6750248,
+            "PhysicalSize": 16777216
+          },
+          {
+            "Name": "old_space",
+            "Size": 9961472,
+            "UsedSize": 9010064,
+            "AvailableSize": 950560,
+            "PhysicalSize": 9961472
+          },
+          {
+            "Name": "code_space",
+            "Size": 524288,
+            "UsedSize": 221632,
+            "AvailableSize": 302592,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 786432,
+            "UsedSize": 398856,
+            "AvailableSize": 387528,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 8388608,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 6311936,
+            "UsedSize": 6300592,
+            "AvailableSize": 0,
+            "PhysicalSize": 6311936
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 34361344,
+          "TotalHeapSizeExecutable": 524288,
+          "TotalPhysicalSize": 34361344,
+          "TotalAvailableSize": 1551025056,
+          "UsedHeapSize": 17631904,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 262264,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 40960,
+          "UsedGlobalHandlesSize": 40768,
+          "TotalAllocatedBytes": 47342552
+        },
+        "host_crossings": 445,
+        "persistent_handles": 1272,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 16777216,
+            "UsedSize": 1714808,
+            "AvailableSize": 6673288,
+            "PhysicalSize": 16777216
+          },
+          {
+            "Name": "old_space",
+            "Size": 9961472,
+            "UsedSize": 8996016,
+            "AvailableSize": 964688,
+            "PhysicalSize": 9961472
+          },
+          {
+            "Name": "code_space",
+            "Size": 524288,
+            "UsedSize": 221632,
+            "AvailableSize": 302592,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 786432,
+            "UsedSize": 398856,
+            "AvailableSize": 387528,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 8388608,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 6311936,
+            "UsedSize": 6300592,
+            "AvailableSize": 0,
+            "PhysicalSize": 6311936
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 34361344,
+          "TotalHeapSizeExecutable": 524288,
+          "TotalPhysicalSize": 34361344,
+          "TotalAvailableSize": 1550955080,
+          "UsedHeapSize": 17701856,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 262264,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 40960,
+          "UsedGlobalHandlesSize": 40768,
+          "TotalAllocatedBytes": 47133928
+        },
+        "host_crossings": 445,
+        "persistent_handles": 1272,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 16777216,
+            "UsedSize": 1792000,
+            "AvailableSize": 6596096,
+            "PhysicalSize": 16777216
+          },
+          {
+            "Name": "old_space",
+            "Size": 9961472,
+            "UsedSize": 8988776,
+            "AvailableSize": 971904,
+            "PhysicalSize": 9961472
+          },
+          {
+            "Name": "code_space",
+            "Size": 524288,
+            "UsedSize": 221632,
+            "AvailableSize": 302592,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 786432,
+            "UsedSize": 398856,
+            "AvailableSize": 387528,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 8388608,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 6311936,
+            "UsedSize": 6300592,
+            "AvailableSize": 0,
+            "PhysicalSize": 6311936
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 34885632,
+          "TotalHeapSizeExecutable": 524288,
+          "TotalPhysicalSize": 34885632,
+          "TotalAvailableSize": 1550968656,
+          "UsedHeapSize": 17688272,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 262264,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 40960,
+          "UsedGlobalHandlesSize": 40768,
+          "TotalAllocatedBytes": 46316984
+        },
+        "host_crossings": 445,
+        "persistent_handles": 1272,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 16777216,
+            "UsedSize": 1781720,
+            "AvailableSize": 6606376,
+            "PhysicalSize": 16777216
+          },
+          {
+            "Name": "old_space",
+            "Size": 10485760,
+            "UsedSize": 8985472,
+            "AvailableSize": 1499488,
+            "PhysicalSize": 10485760
+          },
+          {
+            "Name": "code_space",
+            "Size": 524288,
+            "UsedSize": 221632,
+            "AvailableSize": 302592,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 786432,
+            "UsedSize": 398856,
+            "AvailableSize": 387528,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 8388608,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 6311936,
+            "UsedSize": 6300592,
+            "AvailableSize": 0,
+            "PhysicalSize": 6311936
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      }
+    ],
+    "pages": 10,
+    "phase": "live",
+    "private": 487956480,
+    "rss": 417333248,
+    "workload": "static"
+  },
+  {
+    "collection_ms_per_page": [
+      5.7072,
+      5.7409,
+      5.841,
+      5.7942,
+      6.4423,
+      6.4186,
+      5.8857,
+      9.3191,
+      6.4163,
+      6.4157
+    ],
+    "go_heap": 17291416,
+    "go_released": 7094272,
+    "go_sys": 37562616,
+    "goroutines": 52,
+    "isolates": [
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 9637888,
+          "TotalHeapSizeExecutable": 262144,
+          "TotalPhysicalSize": 9637888,
+          "TotalAvailableSize": 1562335304,
+          "UsedHeapSize": 8196064,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 147504,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 40960,
+          "UsedGlobalHandlesSize": 40768,
+          "TotalAllocatedBytes": 46303792
+        },
+        "host_crossings": 445,
+        "persistent_handles": 1272,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048512,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "old_space",
+            "Size": 5505024,
+            "UsedSize": 4440336,
+            "AvailableSize": 1059880,
+            "PhysicalSize": 5505024
+          },
+          {
+            "Name": "code_space",
+            "Size": 262144,
+            "UsedSize": 115584,
+            "AvailableSize": 146528,
+            "PhysicalSize": 262144
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 524288,
+            "UsedSize": 299816,
+            "AvailableSize": 0,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048576,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 3346432,
+            "UsedSize": 3340328,
+            "AvailableSize": 0,
+            "PhysicalSize": 3346432
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 9375744,
+          "TotalHeapSizeExecutable": 262144,
+          "TotalPhysicalSize": 9375744,
+          "TotalAvailableSize": 1562191600,
+          "UsedHeapSize": 8195776,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 147504,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 40960,
+          "UsedGlobalHandlesSize": 40768,
+          "TotalAllocatedBytes": 47355600
+        },
+        "host_crossings": 445,
+        "persistent_handles": 1272,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048512,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "old_space",
+            "Size": 5242880,
+            "UsedSize": 4440048,
+            "AvailableSize": 800560,
+            "PhysicalSize": 5242880
+          },
+          {
+            "Name": "code_space",
+            "Size": 262144,
+            "UsedSize": 115584,
+            "AvailableSize": 0,
+            "PhysicalSize": 262144
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 524288,
+            "UsedSize": 299816,
+            "AvailableSize": 0,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048576,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 3346432,
+            "UsedSize": 3340328,
+            "AvailableSize": 0,
+            "PhysicalSize": 3346432
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 9637888,
+          "TotalHeapSizeExecutable": 262144,
+          "TotalPhysicalSize": 9637888,
+          "TotalAvailableSize": 1562562880,
+          "UsedHeapSize": 8195968,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 147504,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 40960,
+          "UsedGlobalHandlesSize": 40768,
+          "TotalAllocatedBytes": 45865216
+        },
+        "host_crossings": 445,
+        "persistent_handles": 1272,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048512,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "old_space",
+            "Size": 5505024,
+            "UsedSize": 4440240,
+            "AvailableSize": 1063128,
+            "PhysicalSize": 5505024
+          },
+          {
+            "Name": "code_space",
+            "Size": 262144,
+            "UsedSize": 115584,
+            "AvailableSize": 146528,
+            "PhysicalSize": 262144
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 524288,
+            "UsedSize": 299816,
+            "AvailableSize": 224328,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048576,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 3346432,
+            "UsedSize": 3340328,
+            "AvailableSize": 0,
+            "PhysicalSize": 3346432
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 9637888,
+          "TotalHeapSizeExecutable": 262144,
+          "TotalPhysicalSize": 9637888,
+          "TotalAvailableSize": 1562191736,
+          "UsedHeapSize": 8195608,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 147504,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 40960,
+          "UsedGlobalHandlesSize": 40768,
+          "TotalAllocatedBytes": 46491496
+        },
+        "host_crossings": 445,
+        "persistent_handles": 1272,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048512,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "old_space",
+            "Size": 5505024,
+            "UsedSize": 4439880,
+            "AvailableSize": 1062840,
+            "PhysicalSize": 5505024
+          },
+          {
+            "Name": "code_space",
+            "Size": 262144,
+            "UsedSize": 115584,
+            "AvailableSize": 0,
+            "PhysicalSize": 262144
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 524288,
+            "UsedSize": 299816,
+            "AvailableSize": 0,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048576,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 3346432,
+            "UsedSize": 3340328,
+            "AvailableSize": 0,
+            "PhysicalSize": 3346432
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 9900032,
+          "TotalHeapSizeExecutable": 262144,
+          "TotalPhysicalSize": 9900032,
+          "TotalAvailableSize": 1562190032,
+          "UsedHeapSize": 8195608,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 147504,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 40960,
+          "UsedGlobalHandlesSize": 40768,
+          "TotalAllocatedBytes": 47166736
+        },
+        "host_crossings": 445,
+        "persistent_handles": 1272,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048512,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "old_space",
+            "Size": 5767168,
+            "UsedSize": 4439880,
+            "AvailableSize": 1323280,
+            "PhysicalSize": 5767168
+          },
+          {
+            "Name": "code_space",
+            "Size": 262144,
+            "UsedSize": 115584,
+            "AvailableSize": 0,
+            "PhysicalSize": 262144
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 524288,
+            "UsedSize": 299816,
+            "AvailableSize": 0,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048576,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 3346432,
+            "UsedSize": 3340328,
+            "AvailableSize": 0,
+            "PhysicalSize": 3346432
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 9637888,
+          "TotalHeapSizeExecutable": 262144,
+          "TotalPhysicalSize": 9637888,
+          "TotalAvailableSize": 1562559712,
+          "UsedHeapSize": 8195968,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 147504,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 40960,
+          "UsedGlobalHandlesSize": 40768,
+          "TotalAllocatedBytes": 45189640
+        },
+        "host_crossings": 445,
+        "persistent_handles": 1272,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048512,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "old_space",
+            "Size": 5505024,
+            "UsedSize": 4440240,
+            "AvailableSize": 1059960,
+            "PhysicalSize": 5505024
+          },
+          {
+            "Name": "code_space",
+            "Size": 262144,
+            "UsedSize": 115584,
+            "AvailableSize": 146528,
+            "PhysicalSize": 262144
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 524288,
+            "UsedSize": 299816,
+            "AvailableSize": 224328,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048576,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 3346432,
+            "UsedSize": 3340328,
+            "AvailableSize": 0,
+            "PhysicalSize": 3346432
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 9375744,
+          "TotalHeapSizeExecutable": 262144,
+          "TotalPhysicalSize": 9375744,
+          "TotalAvailableSize": 1562189472,
+          "UsedHeapSize": 8195656,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 147504,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 40960,
+          "UsedGlobalHandlesSize": 40768,
+          "TotalAllocatedBytes": 46099288
+        },
+        "host_crossings": 445,
+        "persistent_handles": 1272,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048512,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "old_space",
+            "Size": 5242880,
+            "UsedSize": 4439928,
+            "AvailableSize": 798432,
+            "PhysicalSize": 5242880
+          },
+          {
+            "Name": "code_space",
+            "Size": 262144,
+            "UsedSize": 115584,
+            "AvailableSize": 0,
+            "PhysicalSize": 262144
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 524288,
+            "UsedSize": 299816,
+            "AvailableSize": 0,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048576,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 3346432,
+            "UsedSize": 3340328,
+            "AvailableSize": 0,
+            "PhysicalSize": 3346432
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 9375744,
+          "TotalHeapSizeExecutable": 262144,
+          "TotalPhysicalSize": 9375744,
+          "TotalAvailableSize": 1562190128,
+          "UsedHeapSize": 8195656,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 147504,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 40960,
+          "UsedGlobalHandlesSize": 40768,
+          "TotalAllocatedBytes": 47342552
+        },
+        "host_crossings": 445,
+        "persistent_handles": 1272,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048512,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "old_space",
+            "Size": 5242880,
+            "UsedSize": 4439928,
+            "AvailableSize": 799088,
+            "PhysicalSize": 5242880
+          },
+          {
+            "Name": "code_space",
+            "Size": 262144,
+            "UsedSize": 115584,
+            "AvailableSize": 0,
+            "PhysicalSize": 262144
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 524288,
+            "UsedSize": 299816,
+            "AvailableSize": 0,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048576,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 3346432,
+            "UsedSize": 3340328,
+            "AvailableSize": 0,
+            "PhysicalSize": 3346432
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 9900032,
+          "TotalHeapSizeExecutable": 262144,
+          "TotalPhysicalSize": 9900032,
+          "TotalAvailableSize": 1562337680,
+          "UsedHeapSize": 8195968,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 147504,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 40960,
+          "UsedGlobalHandlesSize": 40768,
+          "TotalAllocatedBytes": 47133928
+        },
+        "host_crossings": 445,
+        "persistent_handles": 1272,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048512,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "old_space",
+            "Size": 5767168,
+            "UsedSize": 4440240,
+            "AvailableSize": 1324400,
+            "PhysicalSize": 5767168
+          },
+          {
+            "Name": "code_space",
+            "Size": 262144,
+            "UsedSize": 115584,
+            "AvailableSize": 146528,
+            "PhysicalSize": 262144
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 524288,
+            "UsedSize": 299816,
+            "AvailableSize": 0,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048576,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 3346432,
+            "UsedSize": 3340328,
+            "AvailableSize": 0,
+            "PhysicalSize": 3346432
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 9637888,
+          "TotalHeapSizeExecutable": 262144,
+          "TotalPhysicalSize": 9637888,
+          "TotalAvailableSize": 1562336264,
+          "UsedHeapSize": 8195656,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 147504,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 40960,
+          "UsedGlobalHandlesSize": 40768,
+          "TotalAllocatedBytes": 46316984
+        },
+        "host_crossings": 445,
+        "persistent_handles": 1272,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048512,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "old_space",
+            "Size": 5505024,
+            "UsedSize": 4439928,
+            "AvailableSize": 1060840,
+            "PhysicalSize": 5505024
+          },
+          {
+            "Name": "code_space",
+            "Size": 262144,
+            "UsedSize": 115584,
+            "AvailableSize": 146528,
+            "PhysicalSize": 262144
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 524288,
+            "UsedSize": 299816,
+            "AvailableSize": 0,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048576,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 3346432,
+            "UsedSize": 3340328,
+            "AvailableSize": 0,
+            "PhysicalSize": 3346432
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      }
+    ],
+    "pages": 10,
+    "phase": "live_after_v8_gc",
+    "private": 238526464,
+    "rss": 177999872,
+    "workload": "static"
+  },
+  {
+    "go_heap": 17561224,
+    "go_released": 7094272,
+    "go_sys": 37562616,
+    "goroutines": 42,
+    "isolates": null,
+    "pages": 0,
+    "phase": "closed_immediate",
+    "private": 175673344,
+    "rss": 123133952,
+    "workload": "static"
+  },
+  {
+    "go_heap": 17562656,
+    "go_released": 7094272,
+    "go_sys": 37562616,
+    "goroutines": 42,
+    "isolates": null,
+    "pages": 0,
+    "phase": "closed_250ms",
+    "private": 175673344,
+    "rss": 123133952,
+    "workload": "static"
+  },
+  {
+    "go_heap": 10783776,
+    "go_released": 7028736,
+    "go_sys": 37587192,
+    "goroutines": 42,
+    "isolates": null,
+    "pages": 0,
+    "phase": "closed_go_gc",
+    "private": 175763456,
+    "rss": 123219968,
+    "workload": "static"
+  },
+  {
+    "go_heap": 10593640,
+    "go_released": 13811712,
+    "go_sys": 37603576,
+    "goroutines": 42,
+    "isolates": null,
+    "pages": 0,
+    "phase": "closed_scavenged",
+    "private": 168996864,
+    "rss": 116580352,
+    "workload": "static"
+  },
+  {
+    "go_heap": 10674576,
+    "go_released": 13762560,
+    "go_sys": 37603576,
+    "goroutines": 2,
+    "isolates": null,
+    "pages": 0,
+    "phase": "before",
+    "private": 169127936,
+    "rss": 116674560,
+    "workload": "react"
+  },
+  {
+    "go_heap": 14545352,
+    "go_released": 5201920,
+    "go_sys": 37603576,
+    "goroutines": 7,
+    "isolates": [
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 33882112,
+          "TotalHeapSizeExecutable": 786432,
+          "TotalPhysicalSize": 33882112,
+          "TotalAvailableSize": 1572130768,
+          "UsedHeapSize": 13284408,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 278576,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 6128928,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 188416,
+          "UsedGlobalHandlesSize": 180608,
+          "TotalAllocatedBytes": 80678128
+        },
+        "host_crossings": 6774,
+        "persistent_handles": 5642,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 16777216,
+            "UsedSize": 1417648,
+            "AvailableSize": 15358544,
+            "PhysicalSize": 16777216
+          },
+          {
+            "Name": "old_space",
+            "Size": 10747904,
+            "UsedSize": 6339440,
+            "AvailableSize": 4392312,
+            "PhysicalSize": 10747904
+          },
+          {
+            "Name": "code_space",
+            "Size": 786432,
+            "UsedSize": 442688,
+            "AvailableSize": 343648,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 1048576,
+            "UsedSize": 576904,
+            "AvailableSize": 471464,
+            "PhysicalSize": 1048576
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 16777216,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 4521984,
+            "UsedSize": 4507728,
+            "AvailableSize": 0,
+            "PhysicalSize": 4521984
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      }
+    ],
+    "pages": 1,
+    "phase": "live",
+    "private": 188084224,
+    "rss": 139149312,
+    "workload": "react"
+  },
+  {
+    "go_heap": 19052056,
+    "go_released": 4898816,
+    "go_sys": 46713080,
+    "goroutines": 27,
+    "isolates": [
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 33882112,
+          "TotalHeapSizeExecutable": 786432,
+          "TotalPhysicalSize": 33882112,
+          "TotalAvailableSize": 1572130768,
+          "UsedHeapSize": 13284408,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 278576,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 6128928,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 188416,
+          "UsedGlobalHandlesSize": 180608,
+          "TotalAllocatedBytes": 80678128
+        },
+        "host_crossings": 6774,
+        "persistent_handles": 5642,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 16777216,
+            "UsedSize": 1417648,
+            "AvailableSize": 15358544,
+            "PhysicalSize": 16777216
+          },
+          {
+            "Name": "old_space",
+            "Size": 10747904,
+            "UsedSize": 6339440,
+            "AvailableSize": 4392312,
+            "PhysicalSize": 10747904
+          },
+          {
+            "Name": "code_space",
+            "Size": 786432,
+            "UsedSize": 442688,
+            "AvailableSize": 343648,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 1048576,
+            "UsedSize": 576904,
+            "AvailableSize": 471464,
+            "PhysicalSize": 1048576
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 16777216,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 4521984,
+            "UsedSize": 4507728,
+            "AvailableSize": 0,
+            "PhysicalSize": 4521984
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 36241408,
+          "TotalHeapSizeExecutable": 1048576,
+          "TotalPhysicalSize": 36241408,
+          "TotalAvailableSize": 1567345616,
+          "UsedHeapSize": 12247152,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 278576,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 188416,
+          "UsedGlobalHandlesSize": 180256,
+          "TotalAllocatedBytes": 86410736
+        },
+        "host_crossings": 6771,
+        "persistent_handles": 5631,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 19660800,
+            "UsedSize": 14944,
+            "AvailableSize": 16761248,
+            "PhysicalSize": 19660800
+          },
+          {
+            "Name": "old_space",
+            "Size": 9699328,
+            "UsedSize": 6779488,
+            "AvailableSize": 858320,
+            "PhysicalSize": 9699328
+          },
+          {
+            "Name": "code_space",
+            "Size": 1048576,
+            "UsedSize": 396992,
+            "AvailableSize": 260384,
+            "PhysicalSize": 1048576
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 1310720,
+            "UsedSize": 548000,
+            "AvailableSize": 260160,
+            "PhysicalSize": 1310720
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 16777216,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 4521984,
+            "UsedSize": 4507728,
+            "AvailableSize": 0,
+            "PhysicalSize": 4521984
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 34144256,
+          "TotalHeapSizeExecutable": 786432,
+          "TotalPhysicalSize": 34144256,
+          "TotalAvailableSize": 1572140136,
+          "UsedHeapSize": 13276824,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 278576,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 188416,
+          "UsedGlobalHandlesSize": 180256,
+          "TotalAllocatedBytes": 84089984
+        },
+        "host_crossings": 6771,
+        "persistent_handles": 5631,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 16777216,
+            "UsedSize": 1414264,
+            "AvailableSize": 15361928,
+            "PhysicalSize": 16777216
+          },
+          {
+            "Name": "old_space",
+            "Size": 11010048,
+            "UsedSize": 6340528,
+            "AvailableSize": 4655168,
+            "PhysicalSize": 11010048
+          },
+          {
+            "Name": "code_space",
+            "Size": 786432,
+            "UsedSize": 438528,
+            "AvailableSize": 347808,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 1048576,
+            "UsedSize": 575776,
+            "AvailableSize": 472576,
+            "PhysicalSize": 1048576
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 16777216,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 4521984,
+            "UsedSize": 4507728,
+            "AvailableSize": 0,
+            "PhysicalSize": 4521984
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 34406400,
+          "TotalHeapSizeExecutable": 786432,
+          "TotalPhysicalSize": 34406400,
+          "TotalAvailableSize": 1567291904,
+          "UsedHeapSize": 13299144,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 278576,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 188416,
+          "UsedGlobalHandlesSize": 180256,
+          "TotalAllocatedBytes": 87618480
+        },
+        "host_crossings": 6771,
+        "persistent_handles": 5631,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 16777216,
+            "UsedSize": 1414456,
+            "AvailableSize": 15361736,
+            "PhysicalSize": 16777216
+          },
+          {
+            "Name": "old_space",
+            "Size": 11272192,
+            "UsedSize": 6362656,
+            "AvailableSize": 69208,
+            "PhysicalSize": 11272192
+          },
+          {
+            "Name": "code_space",
+            "Size": 786432,
+            "UsedSize": 438528,
+            "AvailableSize": 347808,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 1048576,
+            "UsedSize": 575776,
+            "AvailableSize": 472640,
+            "PhysicalSize": 1048576
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 16777216,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 4521984,
+            "UsedSize": 4507728,
+            "AvailableSize": 0,
+            "PhysicalSize": 4521984
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 34144256,
+          "TotalHeapSizeExecutable": 786432,
+          "TotalPhysicalSize": 34144256,
+          "TotalAvailableSize": 1572398152,
+          "UsedHeapSize": 13280976,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 278576,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 188416,
+          "UsedGlobalHandlesSize": 180608,
+          "TotalAllocatedBytes": 86198480
+        },
+        "host_crossings": 6774,
+        "persistent_handles": 5642,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 16515072,
+            "UsedSize": 1415976,
+            "AvailableSize": 15360216,
+            "PhysicalSize": 16515072
+          },
+          {
+            "Name": "old_space",
+            "Size": 11272192,
+            "UsedSize": 6339016,
+            "AvailableSize": 4918688,
+            "PhysicalSize": 11272192
+          },
+          {
+            "Name": "code_space",
+            "Size": 786432,
+            "UsedSize": 441984,
+            "AvailableSize": 344352,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 1048576,
+            "UsedSize": 576272,
+            "AvailableSize": 472240,
+            "PhysicalSize": 1048576
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 16777216,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 4521984,
+            "UsedSize": 4507728,
+            "AvailableSize": 0,
+            "PhysicalSize": 4521984
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      }
+    ],
+    "pages": 5,
+    "phase": "live",
+    "private": 322576384,
+    "rss": 269193216,
+    "workload": "react"
+  },
+  {
+    "go_heap": 36963736,
+    "go_released": 7520256,
+    "go_sys": 59566328,
+    "goroutines": 52,
+    "isolates": [
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 33882112,
+          "TotalHeapSizeExecutable": 786432,
+          "TotalPhysicalSize": 33882112,
+          "TotalAvailableSize": 1572130768,
+          "UsedHeapSize": 13284408,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 278576,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 6128928,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 188416,
+          "UsedGlobalHandlesSize": 180608,
+          "TotalAllocatedBytes": 80678128
+        },
+        "host_crossings": 6774,
+        "persistent_handles": 5642,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 16777216,
+            "UsedSize": 1417648,
+            "AvailableSize": 15358544,
+            "PhysicalSize": 16777216
+          },
+          {
+            "Name": "old_space",
+            "Size": 10747904,
+            "UsedSize": 6339440,
+            "AvailableSize": 4392312,
+            "PhysicalSize": 10747904
+          },
+          {
+            "Name": "code_space",
+            "Size": 786432,
+            "UsedSize": 442688,
+            "AvailableSize": 343648,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 1048576,
+            "UsedSize": 576904,
+            "AvailableSize": 471464,
+            "PhysicalSize": 1048576
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 16777216,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 4521984,
+            "UsedSize": 4507728,
+            "AvailableSize": 0,
+            "PhysicalSize": 4521984
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 36241408,
+          "TotalHeapSizeExecutable": 1048576,
+          "TotalPhysicalSize": 36241408,
+          "TotalAvailableSize": 1567345616,
+          "UsedHeapSize": 12247152,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 278576,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 188416,
+          "UsedGlobalHandlesSize": 180256,
+          "TotalAllocatedBytes": 86410736
+        },
+        "host_crossings": 6771,
+        "persistent_handles": 5631,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 19660800,
+            "UsedSize": 14944,
+            "AvailableSize": 16761248,
+            "PhysicalSize": 19660800
+          },
+          {
+            "Name": "old_space",
+            "Size": 9699328,
+            "UsedSize": 6779488,
+            "AvailableSize": 858320,
+            "PhysicalSize": 9699328
+          },
+          {
+            "Name": "code_space",
+            "Size": 1048576,
+            "UsedSize": 396992,
+            "AvailableSize": 260384,
+            "PhysicalSize": 1048576
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 1310720,
+            "UsedSize": 548000,
+            "AvailableSize": 260160,
+            "PhysicalSize": 1310720
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 16777216,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 4521984,
+            "UsedSize": 4507728,
+            "AvailableSize": 0,
+            "PhysicalSize": 4521984
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 34144256,
+          "TotalHeapSizeExecutable": 786432,
+          "TotalPhysicalSize": 34144256,
+          "TotalAvailableSize": 1572140136,
+          "UsedHeapSize": 13276824,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 278576,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 188416,
+          "UsedGlobalHandlesSize": 180256,
+          "TotalAllocatedBytes": 84089984
+        },
+        "host_crossings": 6771,
+        "persistent_handles": 5631,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 16777216,
+            "UsedSize": 1414264,
+            "AvailableSize": 15361928,
+            "PhysicalSize": 16777216
+          },
+          {
+            "Name": "old_space",
+            "Size": 11010048,
+            "UsedSize": 6340528,
+            "AvailableSize": 4655168,
+            "PhysicalSize": 11010048
+          },
+          {
+            "Name": "code_space",
+            "Size": 786432,
+            "UsedSize": 438528,
+            "AvailableSize": 347808,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 1048576,
+            "UsedSize": 575776,
+            "AvailableSize": 472576,
+            "PhysicalSize": 1048576
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 16777216,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 4521984,
+            "UsedSize": 4507728,
+            "AvailableSize": 0,
+            "PhysicalSize": 4521984
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 34406400,
+          "TotalHeapSizeExecutable": 786432,
+          "TotalPhysicalSize": 34406400,
+          "TotalAvailableSize": 1567291904,
+          "UsedHeapSize": 13299144,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 278576,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 188416,
+          "UsedGlobalHandlesSize": 180256,
+          "TotalAllocatedBytes": 87618480
+        },
+        "host_crossings": 6771,
+        "persistent_handles": 5631,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 16777216,
+            "UsedSize": 1414456,
+            "AvailableSize": 15361736,
+            "PhysicalSize": 16777216
+          },
+          {
+            "Name": "old_space",
+            "Size": 11272192,
+            "UsedSize": 6362656,
+            "AvailableSize": 69208,
+            "PhysicalSize": 11272192
+          },
+          {
+            "Name": "code_space",
+            "Size": 786432,
+            "UsedSize": 438528,
+            "AvailableSize": 347808,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 1048576,
+            "UsedSize": 575776,
+            "AvailableSize": 472640,
+            "PhysicalSize": 1048576
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 16777216,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 4521984,
+            "UsedSize": 4507728,
+            "AvailableSize": 0,
+            "PhysicalSize": 4521984
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 34144256,
+          "TotalHeapSizeExecutable": 786432,
+          "TotalPhysicalSize": 34144256,
+          "TotalAvailableSize": 1572398152,
+          "UsedHeapSize": 13280976,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 278576,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 188416,
+          "UsedGlobalHandlesSize": 180608,
+          "TotalAllocatedBytes": 86198480
+        },
+        "host_crossings": 6774,
+        "persistent_handles": 5642,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 16515072,
+            "UsedSize": 1415976,
+            "AvailableSize": 15360216,
+            "PhysicalSize": 16515072
+          },
+          {
+            "Name": "old_space",
+            "Size": 11272192,
+            "UsedSize": 6339016,
+            "AvailableSize": 4918688,
+            "PhysicalSize": 11272192
+          },
+          {
+            "Name": "code_space",
+            "Size": 786432,
+            "UsedSize": 441984,
+            "AvailableSize": 344352,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 1048576,
+            "UsedSize": 576272,
+            "AvailableSize": 472240,
+            "PhysicalSize": 1048576
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 16777216,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 4521984,
+            "UsedSize": 4507728,
+            "AvailableSize": 0,
+            "PhysicalSize": 4521984
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 33619968,
+          "TotalHeapSizeExecutable": 786432,
+          "TotalPhysicalSize": 33619968,
+          "TotalAvailableSize": 1572146408,
+          "UsedHeapSize": 13267128,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 278576,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 188416,
+          "UsedGlobalHandlesSize": 180608,
+          "TotalAllocatedBytes": 78409968
+        },
+        "host_crossings": 6774,
+        "persistent_handles": 5642,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 16777216,
+            "UsedSize": 1414848,
+            "AvailableSize": 15361344,
+            "PhysicalSize": 16777216
+          },
+          {
+            "Name": "old_space",
+            "Size": 10485760,
+            "UsedSize": 6340824,
+            "AvailableSize": 4127072,
+            "PhysicalSize": 10485760
+          },
+          {
+            "Name": "code_space",
+            "Size": 786432,
+            "UsedSize": 432256,
+            "AvailableSize": 354080,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 1048576,
+            "UsedSize": 571472,
+            "AvailableSize": 476968,
+            "PhysicalSize": 1048576
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 16777216,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 4521984,
+            "UsedSize": 4507728,
+            "AvailableSize": 0,
+            "PhysicalSize": 4521984
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 33619968,
+          "TotalHeapSizeExecutable": 786432,
+          "TotalPhysicalSize": 33619968,
+          "TotalAvailableSize": 1572401504,
+          "UsedHeapSize": 13276152,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 278576,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 188416,
+          "UsedGlobalHandlesSize": 180256,
+          "TotalAllocatedBytes": 85847240
+        },
+        "host_crossings": 6771,
+        "persistent_handles": 5631,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 16515072,
+            "UsedSize": 1414536,
+            "AvailableSize": 15361656,
+            "PhysicalSize": 16515072
+          },
+          {
+            "Name": "old_space",
+            "Size": 10747904,
+            "UsedSize": 6339160,
+            "AvailableSize": 4392936,
+            "PhysicalSize": 10747904
+          },
+          {
+            "Name": "code_space",
+            "Size": 786432,
+            "UsedSize": 438848,
+            "AvailableSize": 347488,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 1048576,
+            "UsedSize": 575880,
+            "AvailableSize": 472480,
+            "PhysicalSize": 1048576
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 16777216,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 4521984,
+            "UsedSize": 4507728,
+            "AvailableSize": 0,
+            "PhysicalSize": 4521984
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 34668544,
+          "TotalHeapSizeExecutable": 786432,
+          "TotalPhysicalSize": 34668544,
+          "TotalAvailableSize": 1572139456,
+          "UsedHeapSize": 13277384,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 278576,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 188416,
+          "UsedGlobalHandlesSize": 180448,
+          "TotalAllocatedBytes": 83694080
+        },
+        "host_crossings": 6772,
+        "persistent_handles": 5637,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 16777216,
+            "UsedSize": 1414712,
+            "AvailableSize": 15361480,
+            "PhysicalSize": 16777216
+          },
+          {
+            "Name": "old_space",
+            "Size": 11272192,
+            "UsedSize": 6339056,
+            "AvailableSize": 4918672,
+            "PhysicalSize": 11272192
+          },
+          {
+            "Name": "code_space",
+            "Size": 786432,
+            "UsedSize": 439616,
+            "AvailableSize": 346720,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 1310720,
+            "UsedSize": 576272,
+            "AvailableSize": 734216,
+            "PhysicalSize": 1310720
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 16777216,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 4521984,
+            "UsedSize": 4507728,
+            "AvailableSize": 0,
+            "PhysicalSize": 4521984
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 33882112,
+          "TotalHeapSizeExecutable": 786432,
+          "TotalPhysicalSize": 33882112,
+          "TotalAvailableSize": 1568195584,
+          "UsedHeapSize": 13300496,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 278576,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 188416,
+          "UsedGlobalHandlesSize": 180256,
+          "TotalAllocatedBytes": 85975256
+        },
+        "host_crossings": 6771,
+        "persistent_handles": 5631,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 16515072,
+            "UsedSize": 1414536,
+            "AvailableSize": 15361656,
+            "PhysicalSize": 16515072
+          },
+          {
+            "Name": "old_space",
+            "Size": 10747904,
+            "UsedSize": 6363928,
+            "AvailableSize": 186552,
+            "PhysicalSize": 10747904
+          },
+          {
+            "Name": "code_space",
+            "Size": 786432,
+            "UsedSize": 438528,
+            "AvailableSize": 347808,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 1310720,
+            "UsedSize": 575776,
+            "AvailableSize": 734768,
+            "PhysicalSize": 1310720
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 16777216,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 4521984,
+            "UsedSize": 4507728,
+            "AvailableSize": 0,
+            "PhysicalSize": 4521984
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 35717120,
+          "TotalHeapSizeExecutable": 786432,
+          "TotalPhysicalSize": 35717120,
+          "TotalAvailableSize": 1568210064,
+          "UsedHeapSize": 12247912,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 278576,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 188416,
+          "UsedGlobalHandlesSize": 180256,
+          "TotalAllocatedBytes": 85960648
+        },
+        "host_crossings": 6771,
+        "persistent_handles": 5631,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 19660800,
+            "UsedSize": 14944,
+            "AvailableSize": 16761248,
+            "PhysicalSize": 19660800
+          },
+          {
+            "Name": "old_space",
+            "Size": 9699328,
+            "UsedSize": 6780248,
+            "AvailableSize": 829176,
+            "PhysicalSize": 9699328
+          },
+          {
+            "Name": "code_space",
+            "Size": 786432,
+            "UsedSize": 396992,
+            "AvailableSize": 389344,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 1048576,
+            "UsedSize": 548000,
+            "AvailableSize": 500504,
+            "PhysicalSize": 1048576
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 16777216,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 4521984,
+            "UsedSize": 4507728,
+            "AvailableSize": 0,
+            "PhysicalSize": 4521984
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      }
+    ],
+    "pages": 10,
+    "phase": "live",
+    "private": 516669440,
+    "rss": 454635520,
+    "workload": "react"
+  },
+  {
+    "collection_ms_per_page": [
+      7.3669,
+      7.8442,
+      7.4393,
+      6.4199,
+      5.8632,
+      8.1996,
+      7.3964,
+      6.8664,
+      7.3679,
+      9.3338
+    ],
+    "go_heap": 37016664,
+    "go_released": 7512064,
+    "go_sys": 59566328,
+    "goroutines": 52,
+    "isolates": [
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 11743232,
+          "TotalHeapSizeExecutable": 524288,
+          "TotalPhysicalSize": 11743232,
+          "TotalAvailableSize": 1559411600,
+          "UsedHeapSize": 10875408,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 278576,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 6128928,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 188416,
+          "UsedGlobalHandlesSize": 180608,
+          "TotalAllocatedBytes": 80678128
+        },
+        "host_crossings": 6774,
+        "persistent_handles": 5642,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048512,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "old_space",
+            "Size": 6815744,
+            "UsedSize": 6414576,
+            "AvailableSize": 388048,
+            "PhysicalSize": 6815744
+          },
+          {
+            "Name": "code_space",
+            "Size": 524288,
+            "UsedSize": 382144,
+            "AvailableSize": 0,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 786432,
+            "UsedSize": 475416,
+            "AvailableSize": 0,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048576,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 3616768,
+            "UsedSize": 3603272,
+            "AvailableSize": 0,
+            "PhysicalSize": 3616768
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 11743232,
+          "TotalHeapSizeExecutable": 524288,
+          "TotalPhysicalSize": 11743232,
+          "TotalAvailableSize": 1559717048,
+          "UsedHeapSize": 10861448,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 278576,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 188416,
+          "UsedGlobalHandlesSize": 180256,
+          "TotalAllocatedBytes": 86410736
+        },
+        "host_crossings": 6771,
+        "persistent_handles": 5631,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048512,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "old_space",
+            "Size": 6815744,
+            "UsedSize": 6412384,
+            "AvailableSize": 378576,
+            "PhysicalSize": 6815744
+          },
+          {
+            "Name": "code_space",
+            "Size": 524288,
+            "UsedSize": 374528,
+            "AvailableSize": 0,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 786432,
+            "UsedSize": 471264,
+            "AvailableSize": 314920,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048576,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 3616768,
+            "UsedSize": 3603272,
+            "AvailableSize": 0,
+            "PhysicalSize": 3616768
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 11743232,
+          "TotalHeapSizeExecutable": 524288,
+          "TotalPhysicalSize": 11743232,
+          "TotalAvailableSize": 1559416968,
+          "UsedHeapSize": 10869440,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 278576,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 188416,
+          "UsedGlobalHandlesSize": 180256,
+          "TotalAllocatedBytes": 84089984
+        },
+        "host_crossings": 6771,
+        "persistent_handles": 5631,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048512,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "old_space",
+            "Size": 6815744,
+            "UsedSize": 6413896,
+            "AvailableSize": 393416,
+            "PhysicalSize": 6815744
+          },
+          {
+            "Name": "code_space",
+            "Size": 524288,
+            "UsedSize": 377984,
+            "AvailableSize": 0,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 786432,
+            "UsedSize": 474288,
+            "AvailableSize": 0,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048576,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 3616768,
+            "UsedSize": 3603272,
+            "AvailableSize": 0,
+            "PhysicalSize": 3616768
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 11743232,
+          "TotalHeapSizeExecutable": 524288,
+          "TotalPhysicalSize": 11743232,
+          "TotalAvailableSize": 1559400032,
+          "UsedHeapSize": 10869304,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 278576,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 188416,
+          "UsedGlobalHandlesSize": 180256,
+          "TotalAllocatedBytes": 87618480
+        },
+        "host_crossings": 6771,
+        "persistent_handles": 5631,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048512,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "old_space",
+            "Size": 6815744,
+            "UsedSize": 6413760,
+            "AvailableSize": 376480,
+            "PhysicalSize": 6815744
+          },
+          {
+            "Name": "code_space",
+            "Size": 524288,
+            "UsedSize": 377984,
+            "AvailableSize": 0,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 786432,
+            "UsedSize": 474288,
+            "AvailableSize": 0,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048576,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 3616768,
+            "UsedSize": 3603272,
+            "AvailableSize": 0,
+            "PhysicalSize": 3616768
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 11743232,
+          "TotalHeapSizeExecutable": 524288,
+          "TotalPhysicalSize": 11743232,
+          "TotalAvailableSize": 1559414128,
+          "UsedHeapSize": 10872848,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 278576,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 188416,
+          "UsedGlobalHandlesSize": 180608,
+          "TotalAllocatedBytes": 86198480
+        },
+        "host_crossings": 6774,
+        "persistent_handles": 5642,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048512,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "old_space",
+            "Size": 6815744,
+            "UsedSize": 6413352,
+            "AvailableSize": 390576,
+            "PhysicalSize": 6815744
+          },
+          {
+            "Name": "code_space",
+            "Size": 524288,
+            "UsedSize": 381440,
+            "AvailableSize": 0,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 786432,
+            "UsedSize": 474784,
+            "AvailableSize": 0,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048576,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 3616768,
+            "UsedSize": 3603272,
+            "AvailableSize": 0,
+            "PhysicalSize": 3616768
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 11481088,
+          "TotalHeapSizeExecutable": 524288,
+          "TotalPhysicalSize": 11481088,
+          "TotalAvailableSize": 1559668472,
+          "UsedHeapSize": 10873408,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 278576,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 188416,
+          "UsedGlobalHandlesSize": 180608,
+          "TotalAllocatedBytes": 78409968
+        },
+        "host_crossings": 6774,
+        "persistent_handles": 5642,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048512,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "old_space",
+            "Size": 6815744,
+            "UsedSize": 6413912,
+            "AvailableSize": 382776,
+            "PhysicalSize": 6815744
+          },
+          {
+            "Name": "code_space",
+            "Size": 524288,
+            "UsedSize": 381440,
+            "AvailableSize": 0,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 524288,
+            "UsedSize": 474784,
+            "AvailableSize": 0,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048576,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 3616768,
+            "UsedSize": 3603272,
+            "AvailableSize": 0,
+            "PhysicalSize": 3616768
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 11743232,
+          "TotalHeapSizeExecutable": 524288,
+          "TotalPhysicalSize": 11743232,
+          "TotalAvailableSize": 1559412824,
+          "UsedHeapSize": 10868920,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 278576,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 188416,
+          "UsedGlobalHandlesSize": 180256,
+          "TotalAllocatedBytes": 85847240
+        },
+        "host_crossings": 6771,
+        "persistent_handles": 5631,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048512,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "old_space",
+            "Size": 6815744,
+            "UsedSize": 6413376,
+            "AvailableSize": 389272,
+            "PhysicalSize": 6815744
+          },
+          {
+            "Name": "code_space",
+            "Size": 524288,
+            "UsedSize": 377984,
+            "AvailableSize": 0,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 786432,
+            "UsedSize": 474288,
+            "AvailableSize": 0,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048576,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 3616768,
+            "UsedSize": 3603272,
+            "AvailableSize": 0,
+            "PhysicalSize": 3616768
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 11481088,
+          "TotalHeapSizeExecutable": 524288,
+          "TotalPhysicalSize": 11481088,
+          "TotalAvailableSize": 1559673928,
+          "UsedHeapSize": 10868992,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 278576,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 188416,
+          "UsedGlobalHandlesSize": 180448,
+          "TotalAllocatedBytes": 83694080
+        },
+        "host_crossings": 6772,
+        "persistent_handles": 5637,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048512,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "old_space",
+            "Size": 6815744,
+            "UsedSize": 6413448,
+            "AvailableSize": 388232,
+            "PhysicalSize": 6815744
+          },
+          {
+            "Name": "code_space",
+            "Size": 524288,
+            "UsedSize": 377984,
+            "AvailableSize": 0,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 524288,
+            "UsedSize": 474288,
+            "AvailableSize": 0,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048576,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 3616768,
+            "UsedSize": 3603272,
+            "AvailableSize": 0,
+            "PhysicalSize": 3616768
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 12005376,
+          "TotalHeapSizeExecutable": 524288,
+          "TotalPhysicalSize": 12005376,
+          "TotalAvailableSize": 1559414176,
+          "UsedHeapSize": 10869400,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 278576,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 188416,
+          "UsedGlobalHandlesSize": 180256,
+          "TotalAllocatedBytes": 85975256
+        },
+        "host_crossings": 6771,
+        "persistent_handles": 5631,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048512,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "old_space",
+            "Size": 7077888,
+            "UsedSize": 6413856,
+            "AvailableSize": 652768,
+            "PhysicalSize": 7077888
+          },
+          {
+            "Name": "code_space",
+            "Size": 524288,
+            "UsedSize": 377984,
+            "AvailableSize": 0,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 786432,
+            "UsedSize": 474288,
+            "AvailableSize": 0,
+            "PhysicalSize": 786432
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048576,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 3616768,
+            "UsedSize": 3603272,
+            "AvailableSize": 0,
+            "PhysicalSize": 3616768
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      },
+      {
+        "detail": null,
+        "heap": {
+          "TotalHeapSize": 11481088,
+          "TotalHeapSizeExecutable": 524288,
+          "TotalPhysicalSize": 11481088,
+          "TotalAvailableSize": 1559725792,
+          "UsedHeapSize": 10862208,
+          "HeapSizeLimit": 1568669696,
+          "MallocedMemory": 278576,
+          "ExternalMemory": 0,
+          "PeakMallocedMemory": 4927144,
+          "DoesZapGarbage": false,
+          "NumberOfNativeContexts": 1,
+          "NumberOfDetachedContexts": 0,
+          "TotalGlobalHandlesSize": 188416,
+          "UsedGlobalHandlesSize": 180256,
+          "TotalAllocatedBytes": 85960648
+        },
+        "host_crossings": 6771,
+        "persistent_handles": 5631,
+        "spaces": [
+          {
+            "Name": "read_only_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048512,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "old_space",
+            "Size": 6815744,
+            "UsedSize": 6413144,
+            "AvailableSize": 387320,
+            "PhysicalSize": 6815744
+          },
+          {
+            "Name": "code_space",
+            "Size": 524288,
+            "UsedSize": 374528,
+            "AvailableSize": 0,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_space",
+            "Size": 524288,
+            "UsedSize": 471264,
+            "AvailableSize": 52776,
+            "PhysicalSize": 524288
+          },
+          {
+            "Name": "shared_trusted_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "new_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 1048576,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "large_object_space",
+            "Size": 3616768,
+            "UsedSize": 3603272,
+            "AvailableSize": 0,
+            "PhysicalSize": 3616768
+          },
+          {
+            "Name": "code_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "shared_trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          },
+          {
+            "Name": "trusted_large_object_space",
+            "Size": 0,
+            "UsedSize": 0,
+            "AvailableSize": 0,
+            "PhysicalSize": 0
+          }
+        ]
+      }
+    ],
+    "pages": 10,
+    "phase": "live_after_v8_gc",
+    "private": 288686080,
+    "rss": 236175360,
+    "workload": "react"
+  },
+  {
+    "go_heap": 37973648,
+    "go_released": 7249920,
+    "go_sys": 59631864,
+    "goroutines": 42,
+    "isolates": null,
+    "pages": 0,
+    "phase": "closed_immediate",
+    "private": 214876160,
+    "rss": 168570880,
+    "workload": "react"
+  },
+  {
+    "go_heap": 37974984,
+    "go_released": 7249920,
+    "go_sys": 59631864,
+    "goroutines": 42,
+    "isolates": null,
+    "pages": 0,
+    "phase": "closed_250ms",
+    "private": 214876160,
+    "rss": 168570880,
+    "workload": "react"
+  },
+  {
+    "go_heap": 21269776,
+    "go_released": 7249920,
+    "go_sys": 59640056,
+    "goroutines": 42,
+    "isolates": null,
+    "pages": 0,
+    "phase": "closed_go_gc",
+    "private": 214884352,
+    "rss": 168591360,
+    "workload": "react"
+  },
+  {
+    "go_heap": 20991608,
+    "go_released": 16760832,
+    "go_sys": 59648248,
+    "goroutines": 42,
+    "isolates": null,
+    "pages": 0,
+    "phase": "closed_scavenged",
+    "private": 205381632,
+    "rss": 159100928,
+    "workload": "react"
+  }
+]

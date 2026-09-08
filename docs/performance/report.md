@@ -100,3 +100,12 @@ The new V8 Inspector profile attributes about 120-128 ms of DOM execution to fra
 V8 CPU sampling identified 120-128 ms in removeChild when moving 3,000 fragment children: repeated front removal shifted the remainder each time. Fragment insertion now drains membership once and clears synthetic parent links before inserting the ordered children. Existing append/insert-before, identity, ownerDocument, comment and cycle regressions pass for Goja and V8. Full ordinary correctness passes (browser 58.867 s).
 
 The fast gate records DOM execution 382.50 -> 333.43 ms (-12.8%). This run had substantial variance (DOM completion 301.60 to 494.85 ms across five iterations), and static also slowed from 54.19 to 69.54 ms; therefore a larger causal speedup is not claimed. V8 sampling confirms the former removeChild hotspot disappears. All raw samples remain in `fast-gates/fast-gate-linear-fragment.json`; native samples are in `linear-fragment-native-phases.json`. SHA-256 is in each gate's build receipt and launch records.
+
+
+## 07: Per-isolate nursery sizing
+
+Per-space V8 diagnostics identify 16 MiB physical new-space allocation on static Pages with only 1.71 MiB used; React has the same 16 MiB footprint with 1.35 MiB used. The engine's nursery growth is multiplied by the independent Page isolates. A diagnostic collection costs approximately 7-8 ms/page and releases about 23 MiB/page, but no forced collection is inserted into benchmark measurement.
+
+Isolate creation now caps the young generation at 4 MiB through V8 CreateParams. Old-generation limits retain V8 defaults; Page isolation and event-loop ownership are unchanged. All ordinary correctness tests pass (browser 77.609 s), and all six frozen semantic workloads pass in the fast gate.
+
+Static marginal RSS N=10: 39.40 -> 28.84 MiB/page; React: 43.08 -> 35.67. Corresponding private bytes: 28.90 and 36.01 MiB/page. Both memory targets pass this fast gate; the full milestone matrix remains necessary. Residual RSS after ten closed pages is still 207.50 MiB static / 261.76 MiB React above process readiness, so teardown remains unresolved. DOM execution median is 281.16 ms, static completion 57.72 ms and React completion 113.38 ms. Host-machine variance precludes attributing all timing changes to nursery sizing. Evidence is in `fast-gates/fast-gate-page-nursery.json` and `nursery-{before,after}-spaces.json`.
