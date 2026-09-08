@@ -318,14 +318,21 @@ func performanceProtocol(value any) string {
 	}
 }
 func (r *Realm) fn(f engine.Function) any { return r.runtime.Function(f) }
-func (r *Realm) val(v any) engine.Value   { return r.runtime.Value(v) }
+
+func (r *Realm) transientFn(f engine.Function) any {
+	if runtime, ok := r.runtime.(interface{ TransientFunction(engine.Function) any }); ok {
+		return runtime.TransientFunction(f)
+	}
+	return r.fn(f)
+}
+func (r *Realm) val(v any) engine.Value { return r.runtime.Value(v) }
 func (r *Realm) install() error {
 	p := r.agent.Page()
 	host := map[string]any{}
-	host["token"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(r.token), nil })
-	host["ready"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { r.apiTracking = true; return nil, nil })
-	host["selfFrameID"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(r.agent.ContextID()), nil })
-	host["windowRelations"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+	host["token"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(r.token), nil })
+	host["ready"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) { r.apiTracking = true; return nil, nil })
+	host["selfFrameID"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(r.agent.ContextID()), nil })
+	host["windowRelations"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		frame, ok := r.agent.(*Frame)
 		if !ok {
 			return r.val(map[string]any{"self": r.agent.ContextID(), "parent": r.agent.ContextID(), "top": r.agent.ContextID()}), nil
@@ -849,7 +856,7 @@ func (r *Realm) install() error {
 		r.document.SetTitle(strarg(a, 0))
 		return nil, nil
 	})
-	host["query"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["query"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		p.trace.Add(trace.API, "Document.querySelector", map[string]any{"selector": strarg(a, 0), "realm": r.ID})
 		n, ok := r.document.Find(strarg(a, 0))
 		if !ok {
@@ -857,7 +864,7 @@ func (r *Realm) install() error {
 		}
 		return r.val(nodeData(n)), nil
 	})
-	host["queryWithin"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["queryWithin"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		selector := strarg(a, 1)
 		p.trace.Add(trace.API, "Element.querySelector", map[string]any{"nodeId": int64(numarg(a, 0)), "selector": selector, "realm": r.ID})
 		n, ok := r.document.FindWithin(int64(numarg(a, 0)), selector)
@@ -866,20 +873,20 @@ func (r *Realm) install() error {
 		}
 		return r.val(nodeData(n)), nil
 	})
-	host["queryAll"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["queryAll"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(nodesData(r.document.FindAll(strarg(a, 0)))), nil
 	})
-	host["queryAllWithin"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["queryAllWithin"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(nodesData(r.document.FindAllWithin(int64(numarg(a, 0)), strarg(a, 1)))), nil
 	})
-	host["getAttribute"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["getAttribute"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		value, ok := r.document.GetAttribute(int64(numarg(a, 0)), strarg(a, 1))
 		if !ok {
 			return r.val(nil), nil
 		}
 		return r.val(value), nil
 	})
-	host["setAttribute"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["setAttribute"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		id, name, value := int64(numarg(a, 0)), strarg(a, 1), strarg(a, 2)
 		if err := r.document.SetAttribute(id, name, value); err != nil {
 			return nil, err
@@ -892,10 +899,10 @@ func (r *Realm) install() error {
 		}
 		return nil, nil
 	})
-	host["removeAttribute"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["removeAttribute"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return nil, r.document.RemoveAttribute(int64(numarg(a, 0)), strarg(a, 1))
 	})
-	host["elementsByTagName"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["elementsByTagName"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		tag := strarg(a, 0)
 		p.trace.Add(trace.API, "Document.getElementsByTagName", map[string]any{"tag": tag, "realm": r.ID})
 		nodes := r.document.FindAllByTagName(tag)
@@ -905,63 +912,76 @@ func (r *Realm) install() error {
 		}
 		return r.val(out), nil
 	})
-	host["create"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["create"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		n := r.document.CreateElement(strarg(a, 0))
 		r.detached[n.ID] = n
 		return r.val(nodeData(n)), nil
 	})
-	host["createNS"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["createNS"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		n := r.document.CreateElementNS(strarg(a, 0), strarg(a, 1))
 		r.detached[n.ID] = n
 		return r.val(nodeData(n)), nil
 	})
-	host["createComment"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["createComment"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		n := r.document.CreateComment(strarg(a, 0))
 		r.detached[n.ID] = n
 		return r.val(nodeData(n)), nil
 	})
-	host["createText"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["createText"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		n := r.document.CreateText(strarg(a, 0))
 		r.detached[n.ID] = n
 		return r.val(nodeData(n)), nil
 	})
 	host["append"] = r.fn(r.hostAppend)
 	host["insert"] = r.fn(r.hostInsert)
-	host["firstElementChild"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	// Non-resource insertion consumes only canonical IDs; resource insertion
+	// retains its callback-bearing path and browser scheduling semantics.
+	host["insertPlain"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		child := int64(numarg(a, 1))
+		if err := r.document.InsertNode(int64(numarg(a, 0)), child, int64(numarg(a, 2))); err != nil {
+			return nil, err
+		}
+		delete(r.detached, child)
+		return nil, nil
+	})
+	host["contains"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return r.val(r.document.Contains(int64(numarg(a, 0)), int64(numarg(a, 1)))), nil
+	})
+	host["firstElementChild"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		n, ok := r.document.FirstElementChild(int64(numarg(a, 0)))
 		if !ok {
 			return r.val(nil), nil
 		}
 		return r.val(nodeData(n)), nil
 	})
-	host["firstChild"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["firstChild"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		n, ok := r.document.FirstChild(int64(numarg(a, 0)))
 		if !ok {
 			return r.val(nil), nil
 		}
 		return r.val(nodeData(n)), nil
 	})
-	host["nodeChildren"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["nodeChildren"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(nodesData(r.document.Children(int64(numarg(a, 0))))), nil
 	})
-	host["parentNode"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["parentNode"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		n, ok := r.document.Parent(int64(numarg(a, 0)))
 		if !ok {
 			return r.val(nil), nil
 		}
 		return r.val(nodeData(n)), nil
 	})
-	host["isConnected"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["isConnected"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(r.document.IsConnected(int64(numarg(a, 0)))), nil
 	})
-	host["sibling"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["sibling"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		n, ok := r.document.Sibling(int64(numarg(a, 0)), int(numarg(a, 1)))
 		if !ok {
 			return r.val(nil), nil
 		}
 		return r.val(nodeData(n)), nil
 	})
-	host["elementChildren"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["elementChildren"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(nodesData(r.document.ElementChildren(int64(numarg(a, 0))))), nil
 	})
 	host["removeNode"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
@@ -981,7 +1001,7 @@ func (r *Realm) install() error {
 		}
 		return nil, nil
 	})
-	host["textContent"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["textContent"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(r.document.TextContent(int64(numarg(a, 0)))), nil
 	})
 	host["setTextContent"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
@@ -1161,7 +1181,7 @@ func (r *Realm) install() error {
 		p.trace.Add(trace.Unsupported, strarg(a, 0), map[string]any{"realm": r.ID})
 		return nil, nil
 	})
-	host["apiAccess"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["apiAccess"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		name := strarg(a, 0)
 		supported, _ := arg(a, 1).(bool)
 		r.recordAPIAccess(name, supported)
