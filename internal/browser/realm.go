@@ -991,7 +991,7 @@ func (r *Realm) install() error {
 			return nil, err
 		}
 		delete(r.detached, child)
-		return nil, nil
+		return r.val(r.document.HasFrameElements()), nil
 	}, "nnn")
 	host["contains"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(r.document.Contains(int64(numarg(a, 0)), int64(numarg(a, 1)))), nil
