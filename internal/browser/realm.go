@@ -347,6 +347,15 @@ func (r *Realm) transientFn(f engine.Function) any {
 	return r.fn(f)
 }
 func (r *Realm) val(v any) engine.Value { return r.runtime.Value(v) }
+
+func (r *Realm) packedFn(f engine.Function, signature string) any {
+	if runtime, ok := r.runtime.(interface {
+		PackedFunction(engine.Function, string) any
+	}); ok {
+		return runtime.PackedFunction(f, signature)
+	}
+	return r.transientFn(f)
+}
 func (r *Realm) install() error {
 	p := r.agent.Page()
 	host := map[string]any{}
@@ -885,7 +894,7 @@ func (r *Realm) install() error {
 		}
 		return r.val(nodeData(n)), nil
 	})
-	host["queryWithin"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["queryWithin"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		selector := strarg(a, 1)
 		p.trace.Add(trace.API, "Element.querySelector", map[string]any{"nodeId": int64(numarg(a, 0)), "selector": selector, "realm": r.ID})
 		n, ok := r.document.FindWithin(int64(numarg(a, 0)), selector)
@@ -893,13 +902,13 @@ func (r *Realm) install() error {
 			return r.val(nil), nil
 		}
 		return r.val(nodeData(n)), nil
-	})
+	}, "ns")
 	host["queryAll"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(r.document.FindAllIDs(0, strarg(a, 0))), nil
 	})
-	host["queryAllWithin"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["queryAllWithin"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(r.document.FindAllIDs(int64(numarg(a, 0)), strarg(a, 1))), nil
-	})
+	}, "ns")
 	host["nodeData"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		n, ok := r.document.Get(int64(numarg(a, 0)))
 		if !ok {
@@ -907,18 +916,18 @@ func (r *Realm) install() error {
 		}
 		return r.val(nodeData(n)), nil
 	})
-	host["getAttribute"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["getAttribute"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		value, ok := r.document.GetAttribute(int64(numarg(a, 0)), strarg(a, 1))
 		if !ok {
 			return r.val(nil), nil
 		}
 		return r.val(value), nil
-	})
-	host["toggleToken"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	}, "ns")
+	host["toggleToken"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		value, err := r.document.ToggleToken(int64(numarg(a, 0)), strarg(a, 1), strarg(a, 2), int(numarg(a, 3)))
 		return r.val(value), err
-	})
-	host["setAttribute"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	}, "nssn")
+	host["setAttribute"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		id, name, value := int64(numarg(a, 0)), strarg(a, 1), strarg(a, 2)
 		if err := r.document.SetAttribute(id, name, value); err != nil {
 			return nil, err
@@ -930,7 +939,7 @@ func (r *Realm) install() error {
 			}
 		}
 		return nil, nil
-	})
+	}, "nss")
 	host["removeAttribute"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return nil, r.document.RemoveAttribute(int64(numarg(a, 0)), strarg(a, 1))
 	})
@@ -944,7 +953,7 @@ func (r *Realm) install() error {
 		}
 		return r.val(out), nil
 	})
-	host["create"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["create"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		tag := strarg(a, 0)
 		n := r.document.CreateElement(tag)
 		r.detached[n.ID] = n
@@ -956,37 +965,37 @@ func (r *Realm) install() error {
 			}
 		}
 		return r.val(n.ID), nil
-	})
+	}, "s")
 	host["createNS"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		n := r.document.CreateElementNS(strarg(a, 0), strarg(a, 1))
 		r.detached[n.ID] = n
 		return r.val(nodeData(n)), nil
 	})
-	host["createComment"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["createComment"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		n := r.document.CreateComment(strarg(a, 0))
 		r.detached[n.ID] = n
 		return r.val(n.ID), nil
-	})
-	host["createText"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	}, "s")
+	host["createText"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		n := r.document.CreateText(strarg(a, 0))
 		r.detached[n.ID] = n
 		return r.val(n.ID), nil
-	})
+	}, "s")
 	host["append"] = r.fn(r.hostAppend)
 	host["insert"] = r.fn(r.hostInsert)
 	// Non-resource insertion consumes only canonical IDs; resource insertion
 	// retains its callback-bearing path and browser scheduling semantics.
-	host["insertPlain"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["insertPlain"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		child := int64(numarg(a, 1))
 		if err := r.document.InsertNode(int64(numarg(a, 0)), child, int64(numarg(a, 2))); err != nil {
 			return nil, err
 		}
 		delete(r.detached, child)
 		return nil, nil
-	})
-	host["contains"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	}, "nnn")
+	host["contains"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(r.document.Contains(int64(numarg(a, 0)), int64(numarg(a, 1)))), nil
-	})
+	}, "nn")
 	host["firstElementChild"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		n, ok := r.document.FirstElementChild(int64(numarg(a, 0)))
 		if !ok {
@@ -1004,13 +1013,13 @@ func (r *Realm) install() error {
 	host["nodeChildren"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(nodesData(r.document.Children(int64(numarg(a, 0))))), nil
 	})
-	host["parentNode"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["parentNode"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		n, ok := r.document.Parent(int64(numarg(a, 0)))
 		if !ok {
 			return r.val(nil), nil
 		}
 		return r.val(nodeData(n)), nil
-	})
+	}, "n")
 	host["isConnected"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(r.document.IsConnected(int64(numarg(a, 0)))), nil
 	})
@@ -1021,9 +1030,9 @@ func (r *Realm) install() error {
 		}
 		return r.val(nodeData(n)), nil
 	})
-	host["elementChildren"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["elementChildren"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(nodesData(r.document.ElementChildren(int64(numarg(a, 0))))), nil
-	})
+	}, "n")
 	host["removeNode"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		childID := int64(numarg(a, 1))
 		if err := r.document.RemoveNode(int64(numarg(a, 0)), childID); err != nil {
@@ -1041,9 +1050,9 @@ func (r *Realm) install() error {
 		}
 		return nil, nil
 	})
-	host["textContent"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["textContent"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(r.document.TextContent(int64(numarg(a, 0)))), nil
-	})
+	}, "n")
 	host["setTextContent"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return nil, r.document.SetTextContent(int64(numarg(a, 0)), strarg(a, 1))
 	})

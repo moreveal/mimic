@@ -60,6 +60,7 @@ type hostFunction struct {
 	function  engine.Function
 	name      string
 	transient bool
+	packed    string
 }
 
 type callbackContext struct {
@@ -80,6 +81,11 @@ type adapter struct {
 	callback         *callbackContext  // actor-thread only; guarded from foreign readers by actor TID
 	activeIsolate    *gov8.Isolate     // actor-thread only
 	transientFrames  []*transientFrame // owner-thread only; bounded scratch storage
+	packedStore      *gov8.BackingStore
+	packedMemory     *[packedBytes]byte
+	packedBuffer     *gov8.Global
+	packedFactories  map[string]*gov8.Global
+	packedFrames     []*packedFrame
 	callbackSeq      uint64
 	promiseFactory   engine.Value
 	globals          []*gov8.Global // retained engine.Values; released on the isolate thread
@@ -566,6 +572,13 @@ func (a *adapter) TransientFunction(function engine.Function) any {
 	return hostFunction{function: function, transient: true}
 }
 
+// PackedFunction is for synchronous primitive-argument hosts which ignore this.
+// It does not retain arguments or defer mutations. Other runtimes can use the
+// ordinary Function contract; the packing is private to this adapter.
+func (a *adapter) PackedFunction(function engine.Function, signature string) any {
+	return hostFunction{function: function, transient: true, packed: signature}
+}
+
 func (a *adapter) NewPromise() engine.Promise {
 	if a.promiseFactory == nil {
 		err := errors.New("V8 promise factory is unavailable")
@@ -714,6 +727,14 @@ func (a *adapter) Close() error {
 		a.modules = nil
 		a.moduleCache = nil
 		a.moduleNames = nil
+		if a.packedStore != nil {
+			_ = a.packedStore.Close()
+			a.packedStore = nil
+		}
+		a.packedBuffer = nil
+		a.packedMemory = nil
+		a.packedFactories = nil
+		a.packedFrames = nil
 		return nil, nil
 	})
 	a.mu.Lock()
@@ -845,6 +866,9 @@ func (a *adapter) marshal(scope *gov8.Scope, realm *gov8.Context, value any) (go
 		return a.local(scope, engineValue)
 	}
 	if function, ok := value.(hostFunction); ok {
+		if function.packed != "" {
+			return a.makePackedFunction(scope, realm, function)
+		}
 		return a.makeFunction(scope, realm, function.function, function.name, function.transient)
 	}
 	if primitiveValue, ok, err := marshalPrimitive(scope, value); ok || err != nil {
