@@ -71,3 +71,25 @@ Source `f1a526fc134be4cc009638ee2d1206363132f68c`, executable SHA-256 `7f55ba9d2
 | react | session_create_ms | 121.60 | 70.88 |
 | react | execution_ms | 166.03 | 96.41 |
 | react | completion_ms | 302.94 | 178.77 |
+
+
+## Fast iteration gate and class 05: DOM identity transport
+
+User-directed loop change: full matrix runs are milestone gates, not per-change iterations. The in-progress second verified full run was stopped on request; its completed raw samples remain in `benchmark/runs/02-verified-dom-host`, without a full-run completion claim. Runs 03 and 04 were not launched. The frozen harness and original raw baseline remain unchanged.
+
+`tools/performance/fast_gate.py` builds an executable into a fresh output directory and checks its SHA-256 immediately before every process launch. All six semantic workloads are mandatory; warm DOM/static/React use five measured iterations, static N=10/N=25 use three measured waves, with excluded warm-ups. Static and React memory are measured with ten live pages and after teardown/recovery. See `fast-gates/*.json` for all rows and executable provenance.
+
+Before class 05, the attributed Go allocation profile contains nodeData record projection, recursive JSON conversion and per-property native calls; queryAllWithin takes 63.24 ms for six calls. Query results now transport canonical node IDs and reuse existing wrappers, loading a full record only for a new wrapper. Canonical attributes remain visible after external Go mutations. Immutable realm token reads are hoisted once; plain record conversion is batched while retaining rejection of unsupported Go values.
+
+| Fast gate metric | Before class 05 | After class 05 |
+|---|---:|---:|
+| DOM execution median ms | 511.95 | 382.50 |
+| DOM completion median ms | 564.92 | 436.57 |
+| Static completion median ms | 54.45 | 54.19 |
+| React completion median ms | 118.96 | 123.22 |
+| Static marginal RSS MiB/page, N=10 | 39.16 | 39.40 |
+| React marginal RSS MiB/page, N=10 | 42.67 | 43.08 |
+
+Before executable SHA-256: `029caf9f8e83fde87e3531cd9b50c78d866ceb8603ead9545bbe290c682b0910`; after: `71bdc64069292b41d8f09503d5c0971fe5d9f0bb1adf98b6b042f0e231cc281c`. DOM execution improves 25.3%; no memory or React gain is claimed. Full ordinary correctness passed on retry. The first run timed out in TestPerformanceObserverReceivesFinalizedNavigationEntry; isolated replay passed, and the complete fresh retry passed. Both logs are retained locally.
+
+The new V8 Inspector profile attributes about 120-128 ms of DOM execution to fragment removeChild processing; bootstrap applyTargetExposure takes about 21 ms of a 41 ms execution phase. These are the next measured architectural costs. Go allocation sampling after class 05 totals 314 MiB over three DOM replays plus diagnostics (previous comparable replay 624 MiB, with an additional three obsolete blank bootstraps). Do not attribute that entire difference to class 05. The V8 heap snapshot after collection has approximately 15.2 MiB of live nodes: arrays 4.34, strings 3.60 (bootstrap source 2.69), objects 3.29, closures 1.63 MiB. This is not resident process memory; the gap to physical/resident allocation remains material. Diagnostic replay timings include profiler overhead and are separate from gate timings.

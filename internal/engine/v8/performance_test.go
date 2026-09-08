@@ -39,3 +39,15 @@ func TestBatchedCallbackRecordsPreserveCollectionValues(t *testing.T) {
 		t.Fatalf("%v %v", v, err)
 	}
 }
+
+func TestPlainRecordFastPathKeepsUnsupportedHostObjectsAsErrors(t *testing.T) {
+	r := (Factory{}).New().(*adapter)
+	defer r.Close()
+	r.Set("record", r.TransientFunction(func(engine.Value, []engine.Value) (engine.Value, error) {
+		return r.Value(map[string]any{"unsupported": struct{ Value int }{42}}), nil
+	}))
+	v, err := r.Eval(context.Background(), `(()=>{try{record();return false}catch(e){return String(e).includes('unsupported callback value')}})()`, "unsupported-record.js")
+	if err != nil || v.Export() != true {
+		t.Fatalf("unsupported object: %v %v", v, err)
+	}
+}

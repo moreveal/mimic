@@ -31,6 +31,7 @@ import (
 
 type Realm struct {
 	profileWrappers     uint64
+	profilePhases       map[string]float64
 	ID                  string
 	activationAt        time.Time
 	inputDispatcher     engine.Value
@@ -275,6 +276,9 @@ func strarg(args []engine.Value, n int) string {
 	v := arg(args, n)
 	if v == nil {
 		return ""
+	}
+	if text, ok := v.(string); ok {
+		return text
 	}
 	return fmt.Sprint(v)
 }
@@ -891,10 +895,17 @@ func (r *Realm) install() error {
 		return r.val(nodeData(n)), nil
 	})
 	host["queryAll"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		return r.val(nodesData(r.document.FindAll(strarg(a, 0)))), nil
+		return r.val(r.document.FindAllIDs(0, strarg(a, 0))), nil
 	})
 	host["queryAllWithin"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		return r.val(nodesData(r.document.FindAllWithin(int64(numarg(a, 0)), strarg(a, 1)))), nil
+		return r.val(r.document.FindAllIDs(int64(numarg(a, 0)), strarg(a, 1))), nil
+	})
+	host["nodeData"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		n, ok := r.document.Get(int64(numarg(a, 0)))
+		if !ok {
+			return r.val(nil), nil
+		}
+		return r.val(nodeData(n)), nil
 	})
 	host["getAttribute"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		value, ok := r.document.GetAttribute(int64(numarg(a, 0)), strarg(a, 1))
@@ -1277,6 +1288,15 @@ func (r *Realm) install() error {
 		profiling = diagnostic.ProfileEnabled()
 	}
 	if profiling {
+		r.profilePhases = map[string]float64{}
+		var start time.Time
+		host["profilePhase"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+			if start.IsZero() {
+				start = time.Now()
+			}
+			r.profilePhases[strarg(a, 0)] = float64(time.Since(start)) / 1e6
+			return nil, nil
+		})
 		host["profileWrapper"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { r.profileWrappers++; return nil, nil })
 	}
 	var exposureJSON string
@@ -1314,6 +1334,13 @@ func (r *Realm) install() error {
 		source = webapi.Surface(generated, exposure)
 	}
 	if profiling {
+		source = strings.Replace(source, "  'use strict';", "  'use strict';host.profilePhase('begin');", 1)
+		if generated != "" {
+			source = strings.Replace(source, generated, "host.profilePhase('generated-start');\n"+generated+"\nhost.profilePhase('generated-end');", 1)
+		}
+		for _, phase := range []string{"finalizeBindings();", "applyTargetExposure(JSON.parse(host.exposureJSON()));", "installNavigatorCapabilities();"} {
+			source = strings.Replace(source, phase, "host.profilePhase('before:"+phase+"');"+phase+"host.profilePhase('after:"+phase+"');", 1)
+		}
 		source = strings.Replace(source, "elementWrappers.set(key,proxy)", "host.profileWrapper();elementWrappers.set(key,proxy)", 1)
 	}
 	_, err := r.runtime.Eval(context.Background(), source, "mimic:webapi-surface")
