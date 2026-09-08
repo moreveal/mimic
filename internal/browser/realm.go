@@ -1313,6 +1313,8 @@ func (r *Realm) install() error {
 	}
 	var exposureJSON string
 	host["exposureJSON"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(exposureJSON), nil })
+	var catalogJSON string
+	host["catalogJSON"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(catalogJSON), nil })
 	if err := r.runtime.Set("__mimic", host); err != nil {
 		return err
 	}
@@ -1324,6 +1326,7 @@ func (r *Realm) install() error {
 		surface := bundle.Surface()
 		selectedSurface = surface
 		generated = surface.GeneratedJavaScript
+		catalogJSON = surface.GeneratedCatalogJSON
 		security := r.securityState()
 		if security.secureContext {
 			key := "window.secure.non-isolated"
@@ -1352,6 +1355,14 @@ func (r *Realm) install() error {
 		}
 		for _, phase := range []string{"finalizeBindings();", "applyTargetExposure(JSON.parse(host.exposureJSON()));", "installNavigatorCapabilities();"} {
 			source = strings.Replace(source, phase, "host.profilePhase('before:"+phase+"');"+phase+"host.profilePhase('after:"+phase+"');", 1)
+		}
+		for _, marker := range []struct{ text, phase string }{
+			{"    for(const property of properties){", "exposure:globals"},
+			{"    for(const [interfaceName,members] of Object.entries(exposure.prototypes||{})){", "exposure:prototypes"},
+			{"    const prototypeTargets=new Map();", "exposure:native-marking"},
+			{"    for(const [prototype,expectedMembers] of prototypeTargets){", "exposure:ownership"},
+		} {
+			source = strings.Replace(source, marker.text, "host.profilePhase('"+marker.phase+"');"+marker.text, 1)
 		}
 		source = strings.Replace(source, "elementWrappers.set(key,proxy)", "host.profileWrapper();elementWrappers.set(key,proxy)", 1)
 	}

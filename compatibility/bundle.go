@@ -17,6 +17,9 @@ type ChromeVersion struct {
 
 type WebAPISurface struct {
 	GeneratedJavaScript string
+	// Immutable generator input is transported separately from executable
+	// source, so retained functions do not root its escaped source literal.
+	GeneratedCatalogJSON string
 	// Exposures records effective, version/platform/feature-gated globals from
 	// the pinned browser. WebIDL remains the declaration source; these profiles
 	// provide the runtime-enabled exposure decision that IDL alone cannot make.

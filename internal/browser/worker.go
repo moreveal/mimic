@@ -243,6 +243,13 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 	host["performanceTimeOrigin"] = runtime.Function(func(engine.Value, []engine.Value) (engine.Value, error) {
 		return runtime.Value(float64(w.performanceOrigin.UnixNano()) / float64(time.Millisecond)), nil
 	})
+	host["catalogJSON"] = runtime.Function(func(engine.Value, []engine.Value) (engine.Value, error) {
+		catalog := ""
+		if bundle := p.Compatibility(); bundle != nil && bundle.Surface() != nil {
+			catalog = bundle.Surface().GeneratedCatalogJSON
+		}
+		return runtime.Value(catalog), nil
+	})
 	if err := runtime.Set("__workerHost", host); err != nil {
 		_ = w.reportError(err)
 		return
