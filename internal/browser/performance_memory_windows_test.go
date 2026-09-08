@@ -19,6 +19,8 @@ import (
 	"golang.org/x/sys/windows"
 )
 
+func init() { profileProcessMemory = processMemory }
+
 func processMemory(t *testing.T) map[string]any {
 	t.Helper()
 	var counters struct {

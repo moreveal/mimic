@@ -258,6 +258,13 @@ func (r *Runtime) Dispose() error {
 			if err := s.isolate.LowMemoryNotification(); err != nil && disposeErr == nil {
 				disposeErr = err
 			}
+			// Isolate.Close disposes V8, but gov8's Go callback registry has
+			// an explicit lifetime. Release it on the owner thread while the
+			// native isolate still exists; otherwise callbacks retain closed
+			// Realms, their DOM, response bodies and traces indefinitely.
+			if err := gov8.ReleaseIsolateHostState(s.isolate); err != nil && disposeErr == nil {
+				disposeErr = err
+			}
 			if err := s.isolate.Close(); err != nil && disposeErr == nil {
 				disposeErr = err
 			}

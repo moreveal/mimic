@@ -4,10 +4,45 @@ package v8
 
 import (
 	"context"
+	"runtime"
 	"sync"
 	"testing"
 	"time"
+	"weak"
 )
+
+func TestDisposeReleasesHostCallbackCaptures(t *testing.T) {
+	type payload struct{ bytes [1024]byte }
+	retained := func() weak.Pointer[payload] {
+		owner, err := NewRuntime()
+		if err != nil {
+			t.Fatal(err)
+		}
+		realm, err := owner.NewRealm()
+		if err != nil {
+			t.Fatal(err)
+		}
+		data := &payload{}
+		ref := weak.Make(data)
+		err = realm.SetHostObject("host", map[string]any{"read": HostFunction(func([]string) (any, error) { return int(data.bytes[0]), nil })})
+		if err != nil {
+			t.Fatal(err)
+		}
+		if _, err := realm.Eval("host.read()", "capture.js"); err != nil {
+			t.Fatal(err)
+		}
+		if err := owner.Dispose(); err != nil {
+			t.Fatal(err)
+		}
+		return ref
+	}()
+	for i := 0; i < 5; i++ {
+		runtime.GC()
+	}
+	if retained.Value() != nil {
+		t.Fatal("disposed isolate retains Go host callback capture")
+	}
+}
 
 func TestRuntimeDispatchDuringDispose(t *testing.T) {
 	owner, err := NewRuntime()
