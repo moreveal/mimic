@@ -1,0 +1,38 @@
+File: browser.test.exe
+Build ID: C:\Users\moreveal\AppData\Local\Temp\go-build3233037068\b001\browser.test.exe2026-09-08 17:56:18.4292835 +0400 +04
+Type: alloc_space
+Time: 2026-09-08 17:56:48 +04
+Showing nodes accounting for 1228.13MB, 96.00% of 1279.31MB total
+Dropped 891 nodes (cum <= 6.40MB)
+Showing top 30 nodes out of 91
+      flat  flat%   sum%        cum   cum%
+  857.73MB 67.05% 67.05%   871.03MB 68.09%  github.com/maclof/gov8.callTextFn
+   67.43MB  5.27% 72.32%  1168.89MB 91.37%  github.com/moreveal/mimic/internal/engine/v8.(*adapter).makeFunction.func1
+   31.63MB  2.47% 74.79%    31.63MB  2.47%  github.com/maclof/gov8.(*Scope).newStringAssumingCheck
+   30.29MB  2.37% 77.16%    30.29MB  2.37%  github.com/maclof/gov8.NewGlobal
+   27.41MB  2.14% 79.30%    57.71MB  4.51%  github.com/moreveal/mimic/internal/engine/v8.(*adapter).newGlobal
+   25.08MB  1.96% 81.26%    71.57MB  5.59%  github.com/moreveal/mimic/internal/webapi.Surface
+   23.54MB  1.84% 83.10%    41.81MB  3.27%  github.com/maclof/gov8.(*CallbackScope).ObjectSet
+   22.04MB  1.72% 84.82%    22.04MB  1.72%  github.com/moreveal/mimic/internal/browser.nodeData (inline)
+   20.81MB  1.63% 86.45%    20.82MB  1.63%  github.com/maclof/gov8.Value.predicate
+      20MB  1.56% 88.01%       20MB  1.56%  bytes.growSlice
+   17.14MB  1.34% 89.35%  1186.04MB 92.71%  github.com/maclof/gov8.hostCallbackDispatch
+   16.67MB  1.30% 90.66%    16.67MB  1.30%  internal/bytealg.MakeNoZero
+   12.75MB     1% 91.65%    12.75MB     1%  github.com/maclof/gov8.Value.ToString.func1
+   11.22MB  0.88% 92.53%    11.22MB  0.88%  reflect.unsafe_New
+   10.10MB  0.79% 93.32%    10.10MB  0.79%  github.com/maclof/gov8.(*Global).Close
+    9.42MB  0.74% 94.06%    29.85MB  2.33%  encoding/json.Marshal
+    7.82MB  0.61% 94.67%    14.82MB  1.16%  github.com/moreveal/mimic/internal/dom.(*Document).findAllWithin.func1
+    6.60MB  0.52% 95.18%     6.60MB  0.52%  reflect.growslice
+       4MB  0.31% 95.50%   860.66MB 67.28%  github.com/moreveal/mimic/internal/engine/v8.exportLocalPrimitive
+    1.66MB  0.13% 95.63%    71.82MB  5.61%  github.com/moreveal/mimic/internal/engine/v8.callbackValue
+    1.40MB  0.11% 95.74%   909.61MB 71.10%  github.com/moreveal/mimic/internal/engine/v8.exportCallback
+    1.24MB 0.097% 95.83%    15.53MB  1.21%  encoding/json.Unmarshal
+    0.64MB  0.05% 95.88%    14.96MB  1.17%  github.com/moreveal/mimic/internal/browser.(*Realm).install.func52
+    0.35MB 0.027% 95.91%    14.51MB  1.13%  github.com/moreveal/mimic/internal/browser.(*Realm).install.func51
+    0.32MB 0.025% 95.93%    88.47MB  6.92%  github.com/moreveal/mimic/internal/browser.(*Realm).install.func45
+    0.27MB 0.021% 95.96%    50.86MB  3.98%  github.com/moreveal/mimic/internal/browser.(*Realm).hostInsertArgs
+    0.21MB 0.016% 95.97%    17.90MB  1.40%  encoding/json.mapEncoder.encode
+    0.14MB 0.011% 95.98%    13.83MB  1.08%  github.com/moreveal/mimic/internal/browser.nodesData
+    0.14MB 0.011% 95.99%    14.96MB  1.17%  github.com/moreveal/mimic/internal/dom.(*Document).findAllWithin
+    0.06MB 0.005% 96.00%    79.96MB  6.25%  github.com/moreveal/mimic/internal/browser.(*Realm).install

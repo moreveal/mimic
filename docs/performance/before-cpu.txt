@@ -1,0 +1,39 @@
+File: browser.test.exe
+Build ID: C:\Users\moreveal\AppData\Local\Temp\go-build722842328\b001\browser.test.exe2026-09-08 17:57:41.0018584 +0400 +04
+Type: cpu
+Time: 2026-09-08 17:57:41 +04
+Duration: 4.50s, Total samples = 6.58s (146.37%)
+Showing nodes accounting for 5.22s, 79.33% of 6.58s total
+Dropped 219 nodes (cum <= 0.03s)
+Showing top 30 nodes out of 160
+      flat  flat%   sum%        cum   cum%
+     2.45s 37.23% 37.23%      4.03s 61.25%  runtime.cgocall
+     0.66s 10.03% 47.26%      0.95s 14.44%  runtime.tryDeferToSpanScan
+     0.28s  4.26% 51.52%      0.61s  9.27%  runtime.scanObjectsSmall
+     0.20s  3.04% 54.56%      1.06s 16.11%  runtime.scanObject
+     0.19s  2.89% 57.45%      0.19s  2.89%  runtime.spanClass.sizeclass (inline)
+     0.14s  2.13% 59.57%      0.15s  2.28%  runtime.typePointers.next
+     0.13s  1.98% 61.55%      0.13s  1.98%  runtime.memclrNoHeapPointers
+     0.11s  1.67% 63.22%      0.21s  3.19%  runtime.preemptM
+     0.09s  1.37% 64.59%      0.09s  1.37%  runtime.extractHeapBitsSmall
+     0.09s  1.37% 65.96%      0.09s  1.37%  runtime.semasleep
+     0.07s  1.06% 67.02%      0.17s  2.58%  runtime.mapaccess2_faststr
+     0.07s  1.06% 68.09%      0.07s  1.06%  runtime.semawakeup
+     0.06s  0.91% 69.00%      0.06s  0.91%  aeshashbody
+     0.06s  0.91% 69.91%      0.06s  0.91%  runtime.sysUnusedOS
+     0.06s  0.91% 70.82%      1.03s 15.65%  syscall.(*Proc).Call
+     0.05s  0.76% 71.58%      0.08s  1.22%  github.com/maclof/gov8.loadShim
+     0.05s  0.76% 72.34%      0.05s  0.76%  internal/runtime/maps.ctrlGroup.matchH2 (inline)
+     0.05s  0.76% 73.10%      0.06s  0.91%  runtime.mallocgcTiny
+     0.05s  0.76% 73.86%      0.05s  0.76%  runtime.nextFreeFast (inline)
+     0.04s  0.61% 74.47%      0.05s  0.76%  github.com/maclof/gov8.currentThreadID
+     0.04s  0.61% 75.08%      0.16s  2.43%  runtime.(*mcache).refill
+     0.04s  0.61% 75.68%      0.06s  0.91%  runtime.(*spanInlineMarkBits).tryAcquire
+     0.04s  0.61% 76.29%      0.04s  0.61%  runtime.memmove
+     0.04s  0.61% 76.90%      0.04s  0.61%  runtime.reentersyscall
+     0.03s  0.46% 77.36%      0.09s  1.37%  github.com/maclof/gov8.(*Isolate).check
+     0.03s  0.46% 77.81%      0.36s  5.47%  runtime.mallocgcSmallNoscan
+     0.03s  0.46% 78.27%      0.06s  0.91%  runtime.mapaccess1_faststr
+     0.03s  0.46% 78.72%      0.73s 11.09%  runtime.scanSpan
+     0.02s   0.3% 79.03%      0.04s  0.61%  fmt.(*pp).printArg
+     0.02s   0.3% 79.33%      0.04s  0.61%  github.com/maclof/gov8.(*CallbackScope).check

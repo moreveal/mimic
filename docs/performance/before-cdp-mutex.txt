@@ -1,0 +1,23 @@
+File: cdp.test.exe
+Build ID: C:\Users\moreveal\AppData\Local\Temp\go-build3111908762\b001\cdp.test.exe2026-09-08 17:57:19.538359 +0400 +04
+Type: delay
+Time: 2026-09-08 17:57:21 +04
+Showing nodes accounting for 694.68ms, 100% of 694.68ms total
+Dropped 189 nodes (cum <= 3.47ms)
+      flat  flat%   sum%        cum   cum%
+  663.65ms 95.53% 95.53%   663.65ms 95.53%  sync.(*Mutex).Unlock
+   25.16ms  3.62% 99.15%    25.16ms  3.62%  runtime.unlock (inline)
+    5.88ms  0.85%   100%     5.88ms  0.85%  runtime._LostContendedRuntimeLock
+         0     0%   100%    67.91ms  9.78%  github.com/moreveal/mimic/internal/cdp.(*Server).ws.func3
+         0     0%   100%    67.91ms  9.78%  github.com/moreveal/mimic/internal/cdp.(*session).handle (inline)
+         0     0%   100%    67.91ms  9.78%  github.com/moreveal/mimic/internal/cdp.(*session).handleRouted
+         0     0%   100%   595.55ms 85.73%  github.com/moreveal/mimic/internal/cdp.(*session).handleRouted.func1
+         0     0%   100%    20.94ms  3.01%  runtime.(*gcControllerState).enlistWorker
+         0     0%   100%    24.53ms  3.53%  runtime.gcBgMarkWorker
+         0     0%   100%    23.35ms  3.36%  runtime.gcBgMarkWorker.func2
+         0     0%   100%    23.35ms  3.36%  runtime.gcDrain
+         0     0%   100%    15.25ms  2.19%  runtime.gcDrainMarkWorkerDedicated (inline)
+         0     0%   100%     8.10ms  1.17%  runtime.gcDrainMarkWorkerIdle (inline)
+         0     0%   100%    21.30ms  3.07%  runtime.preemptM
+         0     0%   100%    20.94ms  3.01%  runtime.preemptone
+         0     0%   100%    24.69ms  3.55%  runtime.systemstack
