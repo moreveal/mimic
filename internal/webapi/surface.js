@@ -480,6 +480,10 @@
       if(!current||current.configurable)Object.defineProperty(globalThis,property.name,descriptor);
     }
     for(const [interfaceName,members] of Object.entries(exposure.prototypes||{})){
+      // ECMAScript intrinsics already own their engine-defined descriptors.
+      // Reapplying the WebIDL prototype pass invalidates V8 species/prototype
+      // guards even where the captured descriptor has the same visible shape.
+      if(engineGlobals.has(interfaceName))continue;
       const ctor=globalThis[interfaceName],prototype=ctor&&ctor.prototype;
       if(!prototype)continue;
       for(const property of members){
@@ -532,6 +536,7 @@
     // migrated interfaces use WeakMap-backed internal slots and expose none.
     const prototypeTargets=new Map();
     for(const [interfaceName,members] of Object.entries(exposure.prototypes||{})){
+      if(engineGlobals.has(interfaceName))continue;
       const ctor=globalThis[interfaceName];
       if(ctor&&ctor.prototype){
         prototypeTargets.set(ctor.prototype,new Set(members.map(member=>member.name)));
@@ -577,7 +582,7 @@
   if(globalThis.HTMLAudioElement)globalThis.Audio.prototype=globalThis.HTMLAudioElement.prototype;
   if(globalThis.HTMLOptionElement)globalThis.Option.prototype=globalThis.HTMLOptionElement.prototype;
   globalThis.globalThis=globalThis;
-  for(const name of Object.getOwnPropertyNames(globalThis)){const ctor=globalThis[name];if(typeof ctor==='function'&&ctor.prototype&&!Object.prototype.hasOwnProperty.call(ctor.prototype,Symbol.toStringTag))Object.defineProperty(ctor.prototype,Symbol.toStringTag,{value:name,configurable:true})}
+  for(const name of Object.getOwnPropertyNames(globalThis)){if(engineGlobals.has(name))continue;const ctor=globalThis[name];if(typeof ctor==='function'&&ctor.prototype&&!Object.prototype.hasOwnProperty.call(ctor.prototype,Symbol.toStringTag))Object.defineProperty(ctor.prototype,Symbol.toStringTag,{value:name,configurable:true})}
   for(const [name,fn] of [['setTimeout',setTimeout],['setInterval',setInterval],['clearTimeout',clearTimeout],['clearInterval',clearInterval],['fetch',fetch],['atob',atob],['btoa',btoa],['getComputedStyle',getComputedStyle],['matchMedia',matchMedia]])markNative(fn,name);
   // Window-exposed interface objects are non-enumerable data properties;
   // singleton browser objects are enumerable readonly accessors. Object.assign

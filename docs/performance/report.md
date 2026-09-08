@@ -441,3 +441,34 @@ teardown 4.79 -> 6.31 Pages/s. These are not concurrent-capacity or long-run lea
 results. Full matrix is deliberately not claimed for this incomplete kernel.
 All benchmark executables were rebuilt and SHA-256 verified before launch;
 frozen Chrome digest and harness fingerprint were checked and recorded.
+
+
+## 18: Preserve engine-owned ECMAScript intrinsic prototypes (2026-09-09)
+
+Fresh paired micro-diagnostics isolated a Page bootstrap defect: generic WebIDL
+exposure normalization rewrote built-in ECMAScript prototypes, added spurious
+Symbol.toStringTag properties, and invalidated V8 species/prototype guards.
+Pure-V8 string/token microcode takes about 8.4 ms after warmup; Page takes about
+51 ms before this fix and 9.3 ms after. V8 optimization traces show active Maglev
+and TurboFan compilation; a disabled JIT was not the cause. Merely skipping the
+final tag loop was insufficient: both exposure prototype passes also modified
+intrinsics. The fix excludes engine-supplied globals from these WebIDL passes.
+A regression compares intrinsic descriptors against the pristine engine, and
+checks subclass species behavior plus native/browser brands, on Goja and V8.
+The full ordinary Go suite passes; exact validation is under `intrinsics/`.
+
+The independent JS DOM kernel now takes 16.414 ms inside Mimic versus 16.480 ms
+inside frozen Chrome 152, in the same diagnostic protocol (20 measured samples
+each). Chrome native DOM takes 28.902 ms. Current production DOM in that series
+is still 65.855 ms. Thus the partial kernel demonstrates an execution-only lead,
+not a production/browser lead; its missing semantics remain as previously listed.
+
+The production fast gate control -> fixed: DOM execution 65.405 -> 67.519 ms,
+completion 125.200 -> 118.425; static completion 55.510 -> 53.622; React execution
+35.144 -> 37.684, completion 96.133 -> 99.066 ms. N10 throughput medians
+49.55 -> 53.61/s; N25 72.79 -> 62.53/s. All correctness rows valid. Short samples
+are noisy: do not present the micro-kernel gain as an across-workload gain.
+An earlier exploratory control and CDP run overlapped; they are not the clean
+control used here. All executable launches were freshly rebuilt and hash checked.
+Production DOM identity, synchronous Go DOM, event loops and API observation
+remain intact. No native code, runtime flag or JS DOM prototype is merged.
