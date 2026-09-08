@@ -232,3 +232,54 @@ Production validation, without the diagnostic policy override: React first/last-
 The unchanged short gate passes all semantic workloads. Static marginal RSS 26.24 MiB, React 32.74 MiB; static N=10/N=25 throughput 53.67/70.64 sessions/s, essentially unchanged from 54.06/71.24. Short-gate DOM execution regresses 140.11 → 152.11 ms; retain this result, do not replace it with the longer diagnostic. Static completion 52.63 ms, React execution 39.84 ms, completion 104.49 ms. Source and raw launch hashes are in `fast-gates/fast-gate-page-qos.json`; executable SHA-256 `8b42fc83cb03488ad8de95244b7788faaab004cc09ff3f0bcd5a26a76740c73c`.
 
 All ordinary tests pass (browser 87.283 s); engine race checks pass. A Windows regression verifies active QoS and exact restoration on the same OS thread. Long-run evidence and CPU topology are preserved in `dom-current`. A single new full frozen matrix follows this measured subsystem milestone. Startup remains deprioritized: internal readiness and the frozen external readiness probe measure different phases; no readiness workaround was added.
+
+
+## Milestone 04: full frozen matrix after classes 11–14
+
+The full run completed once, including every N=100 level for both systems, with all twelve semantic gates and every measured wave successful. Source is clean commit `082a22657dd7117affcb4fa3ab8b57a9c7b04359`; executable SHA-256 `3d5c896c4f710e93ab876a40f46b49c6ac3b6ac85246e192907e02dc9e708a46`. Every process launch verifies the recorded executable hash. The immutable comparator accepts the original harness, fixture and Chrome provenance. Raw evidence is `benchmark/runs/04-dom-long-run-milestone`; comparison is `benchmark/runs/04-dom-long-run-comparison.json`. The subsequent edits only extend diagnostic test serving/collection, not production behavior.
+
+Warm medians, 20 samples each. Ratios use the **original frozen Chrome 152**, not this run's Chrome. Each cell is Mimic milliseconds / Mimic-to-Chrome ratio.
+
+| Workload | Page creation | Navigation | Execution | Completion |
+|---|---:|---:|---:|---:|
+| static | 8.28 / 0.22× | 54.45 / 2.37× | 1.10 / 0.22× | 55.53 / 1.99× |
+| cpu | 12.96 / 0.30× | 55.92 / 2.35× | 46.91 / 1.61× | 103.14 / 1.96× |
+| dom | 12.04 / 0.32× | 52.86 / 2.35× | 148.62 / 4.90× | 201.91 / 3.77× |
+| async | 13.34 / 0.34× | 56.21 / 2.15× | 52.13 / 1.73× | 104.47 / 1.87× |
+| react | 13.50 / 0.35× | 64.45 / 2.62× | 44.33 / 1.80× | 107.05 / 2.18× |
+| wasm | 8.43 / 0.22× | 58.22 / 2.45× | 9.25 / 1.80× | 67.63 / 2.36× |
+
+Relative to milestone 03: DOM execution 153.50 → 148.62 ms (3.2%); React execution 87.83 → 44.33 ms (49.5%), completion 194.87 → 107.05 ms (45.1%). DOM remains expensive: its original frozen 1560.32 ms is reduced 10.5× overall, but current Chrome-relative 4.90× is not parity or an evidence-based claim of an absolute performance limit.
+
+| Workload | N=50 throughput / frozen Chrome | N=100 throughput / frozen Chrome | Fitted marginal RSS / frozen Chrome |
+|---|---:|---:|---:|
+| static | 76.72/s / 2.96× | 77.01/s / 3.68× | 21.19 / 59.46 MiB (0.36×) |
+| cpu | 45.07/s / 1.63× | 37.72/s / 2.14× | 35.99 / 73.87 MiB (0.49×) |
+| react | 44.42/s / 3.06× | 47.54/s / 3.43× | 27.99 / 72.27 MiB (0.39×) |
+
+These slopes fit all six valid levels through N=100. They differ from the short gate's direct ten-Page 26.24/32.74 MiB measurements; do not interchange estimators. Cold ready RSS across measured workloads has median 24.36 MiB versus frozen Chrome 380.18 MiB. Model intercepts are not the ready-process footprint. N=100 static waves last 1.26–1.37 s, so the previous ten-second connection tail did not recur; its original root cause remains unproven.
+
+**CPU memory regression:** compared with milestone 03, CPU marginal RSS rises 26.12 → 35.99 MiB (+37.8%) while N=50 throughput rises 32.52 → 45.07/s (+38.6%). That comparison spans classes 11–14, not QoS alone; it does not establish QoS as the sole cause. The prescribed static/React memory baselines are preserved and improved. This CPU memory regression is recorded, not hidden behind those improvements.
+
+### Final-build profiles and residual costs
+
+Fresh final-production profiles, captured after the full matrix, are summarized in `dom-current/final/native-hotspots.json`. Exact build and launch hashes accompany them. Native profiles and Go allocation/mutex/block/goroutine files remain in `.build/profiles-final-native-complete`. The diagnostic runner `tools/performance/profile_gate.py` rebuilds and verifies the executable before each replay, checks the frozen fixture fingerprint, and separates native sampling from execution-only Go CPU sampling. Its first async attempt found a missing `/worker.js` route in the diagnostic server, not a product regression; the server now serves the frozen runner's exact worker bytes. The full benchmark's async gates had already passed.
+
+* **DOM:** exactly 60,060 host crossings per uninstrumented-wrapper replay. Final native sampling averages 98.72 ms in anonymous native/host frames, 6.00 ms in API-access tracing, 5.78 ms in `wrap`, 4.79 ms in Proxy `get`, 2.96 ms in `observe`, and 5.16 ms in V8 GC. Inspector idle/setup is excluded from attribution. The earlier detailed conversion/host counters explain the native family; their inclusive timings are not added to these sampled self times. Synchronous canonical Go DOM and the present typed-value/UTF-8 SDK boundary explain the dominant overhead. Further large reduction requires changing that bridge's representation/call granularity, while preserving immediate canonical mutations; small selector optimizations cannot close this gap. It is **not** proven that every current bridge operation is unavoidable.
+* **CPU:** native samples predominantly execute `__benchRun` (37.63 ms/replay) and V8 GC (8.25 ms). This workload is not dominated by DOM host traffic. The four-MiB young generation remains an intentional density/GC trade-off; the exact 1.61× Chrome gap is not wholly explained by GC alone.
+* **React:** native/host samples ~15.81 ms, V8 GC ~1.47 ms, plus React reconciliation and wrapper/Proxy/insertion work. The earlier long-run doubling is independently reproduced and removed by the thread QoS experiment and production 100-Page validation. Remaining 1.80× full execution includes canonical DOM bridge and task delivery.
+* **Async:** the isolated replay is mostly waiting/task delivery; the CPU sampler cannot charge idle samples as CPU or equate them to the timed window. Its diagnostic median 24.70 ms is well below full CDP 52.13 ms, so the full gap is not solely JS execution. Exact CDP/scheduler/worker contributions remain unresolved; no false additive attribution is asserted.
+* **Wasm:** isolated execution is 2.76 ms with ~1.07 ms sampled in the workload loop, ~0.51 ms in export lookup, ~0.41 ms in JS→Wasm and ~0.10 ms in the Wasm body. Full CDP execution remains 9.25 ms. Thus the full 1.80× gap cannot be called an inherent slow Wasm backend; surrounding task/CDP completion costs remain to be isolated.
+* **Navigation/static:** the installed per-isolate compatibility surface and prototype/exposure work remain the principal measured navigation overhead. Static workload execution itself is already cheaper than Chrome. Startup probing was left untouched.
+
+Ten held Pages, independent diagnostic (not the benchmark's RSS slope):
+
+| Workload | Process RSS MiB | Go live heap MiB | Sum V8 used heap MiB | Sum V8 physical heap MiB | V8 reported malloc MiB |
+|---|---:|---:|---:|---:|---:|
+| static | 269.17 | 13.83 | 146.77 | 194.11 | 2.50 |
+| cpu | 351.64 | 15.20 | 165.97 | 255.88 | 3.59 |
+| react | 335.80 | 25.38 | 189.71 | 233.68 | 5.00 |
+
+V8 reported external memory is 0/480/0 bytes respectively. Used/physical heap and process RSS are overlapping measures, not additive components; mapped code, stacks, Go reservations and native allocator capacity are not fully attributed by V8 statistics. After close, ordinary 250-ms recovery RSS is 71.91/72.44/94.16 MiB. Explicit Go GC/scavenging (diagnostic only) lowers it to 63.50/67.04/71.03 MiB and ~8.4–8.5 MiB Go live heap.
+
+A separate **forced V8 collection diagnostic**, never substituted for benchmark results, lowers held ten-Page RSS from 267.04 → 145.59 MiB static, 355.09 → 154.44 MiB CPU, and 342.07 → 202.09 MiB React. Median per-Page collection costs are 5.06/6.00/7.90 ms. This proves considerable capacity/garbage is reclaimable and helps attribute CPU's footprint; it does not establish which class caused the full-fit regression. No collection was inserted into the workload or normal navigation to manufacture a smaller official memory number. Choosing an automatic reclamation policy would require a new measured latency/throughput/density trade-off, rather than treating forced-GC memory as the current product result.

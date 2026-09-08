@@ -47,7 +47,7 @@ func TestPerformanceDensityProfile(t *testing.T) {
 	}
 	os.MkdirAll(dir, 0755)
 	var records []map[string]any
-	for _, kind := range []string{"static", "react"} {
+	for _, kind := range []string{"static", "cpu", "react"} {
 		b, err := New(v8engine.Factory{}, chrome152.New())
 		if err != nil {
 			t.Fatal(err)
