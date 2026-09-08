@@ -110,8 +110,17 @@ func (r *Realm) securityState() documentSecurity {
 }
 
 func newRealm(p *Page, agent ExecutionAgent, d *dom.Document, u *url.URL) (*Realm, error) {
+	return newRealmState(p, agent, d, u, false)
+}
+
+func newRealmState(p *Page, agent ExecutionAgent, d *dom.Document, u *url.URL, deferred bool) (*Realm, error) {
 	resourceContext, cancelResources := context.WithCancel(p.ctx.lifetime)
-	r := &Realm{ID: uuid.NewString(), agent: agent, runtime: p.ctx.browser.factory.New(), document: d, url: u, origin: originOf(u.String()), token: uuid.NewString(), detached: map[int64]dom.Node{}, apiSeen: map[string]bool{}, readyState: "loading", workers: map[int64]*DedicatedWorker{}, childFrames: map[int64]*Frame{}, retainedFrames: map[string]*Frame{}, crossValues: map[int64]engine.Value{}, resourceContext: resourceContext, cancelResources: cancelResources}
+	r := &Realm{ID: uuid.NewString(), agent: agent, document: d, url: u, origin: originOf(u.String()), token: uuid.NewString(), detached: map[int64]dom.Node{}, apiSeen: map[string]bool{}, readyState: "loading", workers: map[int64]*DedicatedWorker{}, childFrames: map[int64]*Frame{}, retainedFrames: map[string]*Frame{}, crossValues: map[int64]engine.Value{}, resourceContext: resourceContext, cancelResources: cancelResources}
+	if deferred {
+		r.runtime = &deferredRuntime{realm: r, factory: p.ctx.browser.factory}
+	} else {
+		r.runtime = p.ctx.browser.factory.New()
+	}
 	r.scheduler = scheduler.New(p.ClockNow(), func(ctx context.Context) error {
 		if checkpoint, ok := r.runtime.(interface{ MicrotaskCheckpointContext(context.Context) error }); ok {
 			return checkpoint.MicrotaskCheckpointContext(ctx)
@@ -128,17 +137,25 @@ func newRealm(p *Page, agent ExecutionAgent, d *dom.Document, u *url.URL) (*Real
 			r.recordAPIAccess("Window."+name, supported)
 		}
 	})
+	if deferred {
+		return r, nil
+	}
 	if err := r.install(); err != nil {
 		r.runtime.Close()
 		return nil, err
 	}
-	p.ctx.mu.Lock()
-	if p.ctx.permissionRealms == nil {
-		p.ctx.permissionRealms = map[*Realm]struct{}{}
-	}
-	p.ctx.permissionRealms[r] = struct{}{}
-	p.ctx.mu.Unlock()
+	r.registerPermissions()
 	return r, nil
+}
+
+func (r *Realm) registerPermissions() {
+	c := r.agent.Page().ctx
+	c.mu.Lock()
+	if c.permissionRealms == nil {
+		c.permissionRealms = map[*Realm]struct{}{}
+	}
+	c.permissionRealms[r] = struct{}{}
+	c.mu.Unlock()
 }
 func (r *Realm) checkpoint(ctx context.Context) error {
 	var err error
@@ -1262,13 +1279,18 @@ func (r *Realm) install() error {
 	if profiling {
 		host["profileWrapper"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { r.profileWrappers++; return nil, nil })
 	}
+	var exposureJSON string
+	host["exposureJSON"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(exposureJSON), nil })
 	if err := r.runtime.Set("__mimic", host); err != nil {
 		return err
 	}
 	generated := ""
 	var exposure *compatibility.RealmExposure
+	var selectedSurface *compatibility.WebAPISurface
+	var exposureName string
 	if bundle := p.Compatibility(); bundle != nil && bundle.Surface() != nil {
 		surface := bundle.Surface()
+		selectedSurface = surface
 		generated = surface.GeneratedJavaScript
 		security := r.securityState()
 		if security.secureContext {
@@ -1278,12 +1300,19 @@ func (r *Realm) install() error {
 			}
 			if selected, ok := surface.Exposures[key]; ok {
 				exposure = &selected
+				exposureName = key
 			}
 		} else if selected, ok := surface.Exposures["window.insecure.non-isolated"]; ok {
 			exposure = &selected
+			exposureName = "window.insecure.non-isolated"
 		}
 	}
-	source := webapi.Surface(generated, exposure)
+	var source string
+	if selectedSurface != nil {
+		source, exposureJSON = webapi.SurfaceFor(selectedSurface, exposureName)
+	} else {
+		source = webapi.Surface(generated, exposure)
+	}
 	if profiling {
 		source = strings.Replace(source, "elementWrappers.set(key,proxy)", "host.profileWrapper();elementWrappers.set(key,proxy)", 1)
 	}

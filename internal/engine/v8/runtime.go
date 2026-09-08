@@ -21,16 +21,28 @@ import (
 type Factory struct{}
 
 func (Factory) New() engine.Runtime {
+	profile := newDiagnostics()
+	var started time.Time
+	if profile != nil {
+		started = time.Now()
+	}
 	owner, err := NewRuntime()
 	if err != nil {
 		panic(fmt.Sprintf("initialize pinned V8 backend: %v", err))
+	}
+	if profile != nil {
+		profile.Costs["factory:isolate"] = diagnosticCost{Count: 1, Nanoseconds: time.Since(started).Nanoseconds()}
+		started = time.Now()
 	}
 	realm, err := owner.NewRealm()
 	if err != nil {
 		_ = owner.Dispose()
 		panic(fmt.Sprintf("create V8 realm: %v", err))
 	}
-	backend := &adapter{owner: owner, realm: realm, moduleCache: map[string]*gov8.Module{}, moduleNames: map[*gov8.Module]string{}, profile: newDiagnostics()}
+	backend := &adapter{owner: owner, realm: realm, moduleCache: map[string]*gov8.Module{}, moduleNames: map[*gov8.Module]string{}, profile: profile}
+	if profile != nil {
+		backend.recordCost("factory:context", started)
+	}
 	factory, err := backend.Eval(context.Background(), `(()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b});return[promise,resolve,reject]})`, "mimic-promise-factory.js")
 	if err != nil {
 		_ = backend.Close()
@@ -1266,7 +1278,12 @@ func exportCallback(value gov8.Value, callback *callbackContext) any {
 	if err != nil || !ok {
 		return nil
 	}
-	text, err := encoded.StringValue()
+	var text string
+	if isString, _ := encoded.IsString(); isString {
+		text, err = encoded.StringValue()
+	} else {
+		text, err = callback.scope.ToString(encoded)
+	}
 	if err != nil || text == "undefined" {
 		return nil
 	}

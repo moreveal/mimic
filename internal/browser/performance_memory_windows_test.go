@@ -121,6 +121,14 @@ func TestPerformanceDensityProfile(t *testing.T) {
 				sample("live")
 			}
 		}
+		if os.Getenv("MIMIC_PROFILE_V8_GC") == "1" {
+			for _, p := range pages {
+				if err := p.Top.Realm.runtime.(interface{ ProfileCollect() error }).ProfileCollect(); err != nil {
+					t.Fatal(err)
+				}
+			}
+			sample("live_after_v8_gc")
+		}
 		for _, p := range pages {
 			c.ClosePage(p.ID)
 		}
