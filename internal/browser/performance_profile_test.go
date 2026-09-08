@@ -95,7 +95,7 @@ func TestPerformanceProfile(t *testing.T) {
 	sample := func(phase string, p *Page, elapsed time.Duration) {
 		var m runtime.MemStats
 		runtime.ReadMemStats(&m)
-		record := map[string]any{"phase": phase, "workload": kind, "iteration": iteration, "ms": float64(elapsed) / 1e6, "go_heap": m.HeapAlloc, "go_total_alloc": m.TotalAlloc, "go_sys": m.Sys, "goroutines": runtime.NumGoroutine()}
+		record := map[string]any{"phase": phase, "workload": kind, "iteration": iteration, "ms": float64(elapsed) / 1e6, "go_heap": m.HeapAlloc, "go_total_alloc": m.TotalAlloc, "go_sys": m.Sys, "go_gc_cycles": m.NumGC, "go_gc_pause_ns": m.PauseTotalNs, "go_mallocs": m.Mallocs, "go_frees": m.Frees, "goroutines": runtime.NumGoroutine()}
 		if profileProcessMemory != nil {
 			record["process"] = profileProcessMemory(t)
 		}
@@ -126,16 +126,66 @@ func TestPerformanceProfile(t *testing.T) {
 			t.Fatal(e)
 		}
 		sample("create", p, time.Since(start))
+
 		start = time.Now()
 		if e = p.Navigate(ctx, server.URL); e != nil {
 			t.Fatal(e)
 		}
 		sample("navigate", p, time.Since(start))
+		var restoreQoS func()
+		if os.Getenv("MIMIC_PROFILE_ACTIVE_QOS") == "1" {
+			restoreQoS, e = p.Top.Realm.runtime.(interface{ ProfileActiveQoS() (func(), error) }).ProfileActiveQoS()
+			if e != nil {
+				t.Fatal(e)
+			}
+		}
+		var finishCPU func() (any, error)
+		if os.Getenv("MIMIC_PROFILE_WHOLE_CPU") == "1" && (os.Getenv("MIMIC_PROFILE_CPU_EDGES") != "1" || i < 10 || i >= iterations-10) {
+			finishCPU, e = p.Top.Realm.runtime.(interface {
+				ProfileWorkloadCPU() (func() (any, error), error)
+			}).ProfileWorkloadCPU()
+			if e != nil {
+				t.Fatal(e)
+			}
+		}
+		var goCPU *os.File
+		if os.Getenv("MIMIC_PROFILE_EXEC_GO_CPU") == "1" {
+			goCPU, e = os.Create(filepath.Join(dir, fmt.Sprintf("execute-%02d-cpu.pprof", i)))
+			if e != nil {
+				t.Fatal(e)
+			}
+			if e = pprof.StartCPUProfile(goCPU); e != nil {
+				goCPU.Close()
+				t.Fatal(e)
+			}
+		}
 		start = time.Now()
 		if _, e = p.Evaluate(ctx, `__benchRun()`); e != nil {
+			if goCPU != nil {
+				pprof.StopCPUProfile()
+				goCPU.Close()
+			}
+			if finishCPU != nil {
+				_, _ = finishCPU()
+			}
 			t.Fatal(e)
 		}
-		sample("execute", p, time.Since(start))
+		execution := time.Since(start)
+		if goCPU != nil {
+			pprof.StopCPUProfile()
+			goCPU.Close()
+		}
+		var cpuProfile any
+		if finishCPU != nil {
+			cpuProfile, e = finishCPU()
+			if e != nil {
+				t.Fatal(e)
+			}
+		}
+		sample("execute", p, execution)
+		if cpuProfile != nil {
+			records[len(records)-1]["workload_cpu_profile"] = cpuProfile
+		}
 		if i == 0 && os.Getenv("MIMIC_V8_HEAP_SNAPSHOT") == "1" {
 			snapshot, e := os.Create(filepath.Join(dir, "v8-dom.heapsnapshot"))
 			if e != nil {
@@ -160,6 +210,9 @@ func TestPerformanceProfile(t *testing.T) {
 			t.Fatal("incorrect workload result")
 		}
 		start = time.Now()
+		if restoreQoS != nil {
+			restoreQoS()
+		}
 		c.ClosePage(p.ID)
 		sample("close", nil, time.Since(start))
 		cancel()

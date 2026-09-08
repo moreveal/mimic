@@ -41,6 +41,9 @@ func (Factory) New() engine.Runtime {
 		panic(fmt.Sprintf("create V8 realm: %v", err))
 	}
 	backend := &adapter{owner: owner, realm: realm, moduleCache: map[string]*gov8.Module{}, moduleNames: map[*gov8.Module]string{}, profile: profile}
+	if os.Getenv("MIMIC_PROFILE_PROCESSORS") == "1" {
+		backend.processorSamples = map[uintptr]uint64{}
+	}
 	if profile != nil {
 		backend.recordCost("factory:context", started)
 	}
@@ -67,22 +70,32 @@ type callbackContext struct {
 }
 
 type adapter struct {
-	profile        *diagnosticState
-	owner          *Runtime
-	realm          *Realm
-	now            func() time.Time
-	observer       func(string, bool)
-	closed         bool
-	mu             sync.Mutex
-	callback       *callbackContext // actor-thread only; guarded from foreign readers by actor TID
-	activeIsolate  *gov8.Isolate    // actor-thread only
-	callbackSeq    uint64
-	promiseFactory engine.Value
-	globals        []*gov8.Global // retained engine.Values; released on the isolate thread
-	modules        []*gov8.Module
-	moduleCache    map[string]*gov8.Module
-	moduleNames    map[*gov8.Module]string
-	nativePending  bool // actor-thread only; foreground/background V8 tasks
+	profile          *diagnosticState
+	owner            *Runtime
+	realm            *Realm
+	now              func() time.Time
+	observer         func(string, bool)
+	closed           bool
+	mu               sync.Mutex
+	callback         *callbackContext  // actor-thread only; guarded from foreign readers by actor TID
+	activeIsolate    *gov8.Isolate     // actor-thread only
+	transientFrames  []*transientFrame // owner-thread only; bounded scratch storage
+	callbackSeq      uint64
+	promiseFactory   engine.Value
+	globals          []*gov8.Global // retained engine.Values; released on the isolate thread
+	modules          []*gov8.Module
+	moduleCache      map[string]*gov8.Module
+	moduleNames      map[*gov8.Module]string
+	processorSamples map[uintptr]uint64 // opt-in diagnostic sampling, actor-thread only
+	nativePending    bool               // actor-thread only; foreground/background V8 tasks
+}
+
+// Transient arguments cannot escape the synchronous host call. A frame stays
+// checked out until the return value is marshalled, including nested JS calls.
+// Clearing it prevents closed scopes and host objects from becoming roots.
+type transientFrame struct {
+	values [9]runtimeValue
+	args   [8]engine.Value
 }
 
 type runtimeValue struct {
@@ -901,12 +914,40 @@ func (a *adapter) makeFunction(scope *gov8.Scope, realm *gov8.Context, function 
 			started := time.Now()
 			defer a.recordCost("host:"+name, started)
 		}
+		var argumentStart time.Time
+		if a.profile != nil && a.profile.Detailed {
+			argumentStart = time.Now()
+		}
 		previous := a.callback
 		a.callbackSeq++
+		if a.processorSamples != nil && a.callbackSeq%1024 == 0 {
+			processor, _, _ := diagnosticProcessor.Call()
+			a.processorSamples[processor]++
+		}
 		callbackID := a.callbackSeq
 		a.callback = &callbackContext{scope: cs, ctx: realm, result: rv, id: callbackID}
 		defer func() { a.callback = previous }()
-		wrapped := make([]engine.Value, args.Length())
+		var scratch *transientFrame
+		var wrapped []engine.Value
+		if transient && args.Length() <= 8 {
+			n := len(a.transientFrames)
+			if n > 0 {
+				scratch = a.transientFrames[n-1]
+				a.transientFrames[n-1] = nil
+				a.transientFrames = a.transientFrames[:n-1]
+			} else {
+				scratch = new(transientFrame)
+			}
+			wrapped = scratch.args[:args.Length()]
+			defer func() {
+				*scratch = transientFrame{}
+				if len(a.transientFrames) < 8 {
+					a.transientFrames = append(a.transientFrames, scratch)
+				}
+			}()
+		} else {
+			wrapped = make([]engine.Value, args.Length())
+		}
 		for i := range wrapped {
 			local, e := args.Get(i)
 			if e != nil {
@@ -919,7 +960,13 @@ func (a *adapter) makeFunction(scope *gov8.Scope, realm *gov8.Context, function 
 					return
 				}
 			}
-			wrapped[i] = &runtimeValue{runtime: a, global: global, local: local, borrowed: true, callbackID: callbackID}
+			value := runtimeValue{runtime: a, global: global, local: local, borrowed: true, callbackID: callbackID}
+			if scratch != nil {
+				scratch.values[i] = value
+				wrapped[i] = &scratch.values[i]
+			} else {
+				wrapped[i] = &runtimeValue{runtime: a, global: global, local: local, borrowed: true, callbackID: callbackID}
+			}
 		}
 		thisObject, e := args.This()
 		if e != nil {
@@ -932,7 +979,25 @@ func (a *adapter) makeFunction(scope *gov8.Scope, realm *gov8.Context, function 
 				return
 			}
 		}
-		result, e := function(&runtimeValue{runtime: a, global: thisGlobal, local: thisObject.Value, borrowed: true, callbackID: callbackID}, wrapped)
+		var thisValue *runtimeValue
+		if scratch != nil {
+			thisValue = &scratch.values[8]
+		} else {
+			thisValue = new(runtimeValue)
+		}
+		*thisValue = runtimeValue{runtime: a, global: thisGlobal, local: thisObject.Value, borrowed: true, callbackID: callbackID}
+		if !argumentStart.IsZero() {
+			a.recordCost("callback:arguments", argumentStart)
+		}
+		var bodyStart time.Time
+		if a.profile != nil && a.profile.Detailed {
+			bodyStart = time.Now()
+		}
+		result, e := function(thisValue, wrapped)
+		if !bodyStart.IsZero() {
+			a.recordCost("callback:body-inclusive", bodyStart)
+			defer a.recordCost("callback:return", time.Now())
+		}
 		if e != nil {
 			exception, _ := cs.NewError(e.Error())
 			_ = cs.ThrowException(exception)
@@ -1054,6 +1119,9 @@ func numberAsFloat(value any) (float64, bool) {
 }
 
 func (a *adapter) export(value *runtimeValue) any {
+	if a.profile != nil && a.profile.Detailed {
+		defer a.recordCost("conversion:export", time.Now())
+	}
 	if value.hostSet {
 		return value.host
 	}
@@ -1107,6 +1175,9 @@ func exportLocalPrimitive(value gov8.Value, realm *gov8.Context) any {
 type opaqueValue struct{ value gov8.Value }
 
 func (a *adapter) string(value *runtimeValue) string {
+	if a.profile != nil && a.profile.Detailed {
+		defer a.recordCost("conversion:string", time.Now())
+	}
 	if value.hostSet {
 		return fmt.Sprint(value.host)
 	}
