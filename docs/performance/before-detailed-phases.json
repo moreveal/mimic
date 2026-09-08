@@ -1,0 +1,2580 @@
+[
+  {
+    "go_heap": 2530272,
+    "go_sys": 12994808,
+    "go_total_alloc": 2530272,
+    "goroutines": 4,
+    "ms": 0,
+    "phase": "before"
+  },
+  {
+    "dom_wrappers": 0,
+    "go_heap": 8353392,
+    "go_sys": 40986872,
+    "go_total_alloc": 30576224,
+    "goroutines": 5,
+    "ms": 182.5444,
+    "phase": "create",
+    "v8": {
+      "detail": {
+        "costs": {
+          "compile:mimic-clock.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic-promise-factory.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:hide-input": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:hide-internals": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:webapi-surface": {
+            "count": 1,
+            "ns": 32258600
+          },
+          "execute:mimic-clock.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic-promise-factory.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:hide-input": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:hide-internals": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:webapi-surface": {
+            "count": 1,
+            "ns": 43081300
+          },
+          "host:capabilityState": {
+            "count": 386,
+            "ns": 1546800
+          },
+          "host:documentSecurity": {
+            "count": 2,
+            "ns": 739600
+          },
+          "host:intlEnvironment": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:permissionsPolicy": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:ready": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:screen": {
+            "count": 2,
+            "ns": 0
+          },
+          "host:token": {
+            "count": 24,
+            "ns": 0
+          },
+          "host:viewport": {
+            "count": 8,
+            "ns": 0
+          },
+          "host:windowRelations": {
+            "count": 1,
+            "ns": 0
+          }
+        },
+        "heaps": {
+          "mimic-clock.js": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 65608,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 57888,
+            "TotalAllocatedBytes": 1336344,
+            "TotalAvailableSize": 1570021352,
+            "TotalGlobalHandlesSize": 8192,
+            "TotalHeapSize": 786432,
+            "TotalHeapSizeExecutable": 0,
+            "TotalPhysicalSize": 786432,
+            "UsedGlobalHandlesSize": 96,
+            "UsedHeapSize": 483192
+          },
+          "mimic-promise-factory.js": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 65608,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 40960,
+            "TotalAllocatedBytes": 1027784,
+            "TotalAvailableSize": 1570026720,
+            "TotalGlobalHandlesSize": 8192,
+            "TotalHeapSize": 786432,
+            "TotalHeapSizeExecutable": 0,
+            "TotalPhysicalSize": 786432,
+            "UsedGlobalHandlesSize": 64,
+            "UsedHeapSize": 477824
+          },
+          "mimic:hide-input": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 25616776,
+            "TotalAllocatedBytes": 47605792,
+            "TotalAvailableSize": 1549901368,
+            "TotalGlobalHandlesSize": 40960,
+            "TotalHeapSize": 32391168,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 32391168,
+            "UsedGlobalHandlesSize": 38624,
+            "UsedHeapSize": 22162056
+          },
+          "mimic:hide-internals": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 25616776,
+            "TotalAllocatedBytes": 47901016,
+            "TotalAvailableSize": 1549900200,
+            "TotalGlobalHandlesSize": 40960,
+            "TotalHeapSize": 32391168,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 32391168,
+            "UsedGlobalHandlesSize": 38752,
+            "UsedHeapSize": 22163224
+          },
+          "mimic:webapi-surface": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 25616776,
+            "TotalAllocatedBytes": 47309736,
+            "TotalAvailableSize": 1549902200,
+            "TotalGlobalHandlesSize": 40960,
+            "TotalHeapSize": 32391168,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 32391168,
+            "UsedGlobalHandlesSize": 38496,
+            "UsedHeapSize": 22161224
+          }
+        }
+      },
+      "heap": {
+        "DoesZapGarbage": false,
+        "ExternalMemory": 0,
+        "HeapSizeLimit": 1568669696,
+        "MallocedMemory": 262264,
+        "NumberOfDetachedContexts": 0,
+        "NumberOfNativeContexts": 1,
+        "PeakMallocedMemory": 25616776,
+        "TotalAllocatedBytes": 47901016,
+        "TotalAvailableSize": 1549900200,
+        "TotalGlobalHandlesSize": 40960,
+        "TotalHeapSize": 32391168,
+        "TotalHeapSizeExecutable": 524288,
+        "TotalPhysicalSize": 32391168,
+        "UsedGlobalHandlesSize": 38752,
+        "UsedHeapSize": 22163224
+      },
+      "host_crossings": 426,
+      "persistent_handles": 1209
+    }
+  },
+  {
+    "dom_wrappers": 0,
+    "go_heap": 9334464,
+    "go_sys": 41773304,
+    "go_total_alloc": 51803352,
+    "goroutines": 9,
+    "ms": 90.3542,
+    "phase": "navigate",
+    "v8": {
+      "detail": {
+        "costs": {
+          "compile:http://127.0.0.1:41622/workload.js": {
+            "count": 1,
+            "ns": 512900
+          },
+          "compile:mimic-clock.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic-promise-factory.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:dom-content-loaded": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:hide-input": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:hide-internals": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:load": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:webapi-surface": {
+            "count": 1,
+            "ns": 32671200
+          },
+          "execute:http://127.0.0.1:41622/workload.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic-clock.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic-promise-factory.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:dom-content-loaded": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:hide-input": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:hide-internals": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:load": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:webapi-surface": {
+            "count": 1,
+            "ns": 46760100
+          },
+          "host:apiAccess": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:capabilityState": {
+            "count": 410,
+            "ns": 2321200
+          },
+          "host:documentSecurity": {
+            "count": 2,
+            "ns": 0
+          },
+          "host:intlEnvironment": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:permissionsPolicy": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:ready": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:screen": {
+            "count": 2,
+            "ns": 0
+          },
+          "host:token": {
+            "count": 24,
+            "ns": 0
+          },
+          "host:viewport": {
+            "count": 8,
+            "ns": 654400
+          },
+          "host:windowRelations": {
+            "count": 1,
+            "ns": 0
+          }
+        },
+        "heaps": {
+          "http://127.0.0.1:41622/workload.js": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 52184480,
+            "TotalAvailableSize": 1542884296,
+            "TotalGlobalHandlesSize": 49152,
+            "TotalHeapSize": 36917248,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 36917248,
+            "UsedGlobalHandlesSize": 41088,
+            "UsedHeapSize": 26295328
+          },
+          "mimic-clock.js": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 65608,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 57888,
+            "TotalAllocatedBytes": 1336344,
+            "TotalAvailableSize": 1570021352,
+            "TotalGlobalHandlesSize": 8192,
+            "TotalHeapSize": 786432,
+            "TotalHeapSizeExecutable": 0,
+            "TotalPhysicalSize": 786432,
+            "UsedGlobalHandlesSize": 96,
+            "UsedHeapSize": 483192
+          },
+          "mimic-promise-factory.js": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 65608,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 40960,
+            "TotalAllocatedBytes": 1027784,
+            "TotalAvailableSize": 1570026720,
+            "TotalGlobalHandlesSize": 8192,
+            "TotalHeapSize": 786432,
+            "TotalHeapSizeExecutable": 0,
+            "TotalPhysicalSize": 786432,
+            "UsedGlobalHandlesSize": 64,
+            "UsedHeapSize": 477824
+          },
+          "mimic:dom-content-loaded": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 52350480,
+            "TotalAvailableSize": 1548071872,
+            "TotalGlobalHandlesSize": 49152,
+            "TotalHeapSize": 37703680,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 37703680,
+            "UsedGlobalHandlesSize": 41216,
+            "UsedHeapSize": 21107664
+          },
+          "mimic:hide-input": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 51437088,
+            "TotalAvailableSize": 1542893120,
+            "TotalGlobalHandlesSize": 40960,
+            "TotalHeapSize": 36917248,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 36917248,
+            "UsedGlobalHandlesSize": 40928,
+            "UsedHeapSize": 26286504
+          },
+          "mimic:hide-internals": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 51811368,
+            "TotalAvailableSize": 1542891952,
+            "TotalGlobalHandlesSize": 49152,
+            "TotalHeapSize": 36917248,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 36917248,
+            "UsedGlobalHandlesSize": 41056,
+            "UsedHeapSize": 26287672
+          },
+          "mimic:load": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 52510664,
+            "TotalAvailableSize": 1548070408,
+            "TotalGlobalHandlesSize": 49152,
+            "TotalHeapSize": 37703680,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 37703680,
+            "UsedGlobalHandlesSize": 41248,
+            "UsedHeapSize": 21109128
+          },
+          "mimic:webapi-surface": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 51061976,
+            "TotalAvailableSize": 1542893952,
+            "TotalGlobalHandlesSize": 40960,
+            "TotalHeapSize": 36917248,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 36917248,
+            "UsedGlobalHandlesSize": 40800,
+            "UsedHeapSize": 26285672
+          }
+        }
+      },
+      "heap": {
+        "DoesZapGarbage": false,
+        "ExternalMemory": 0,
+        "HeapSizeLimit": 1568669696,
+        "MallocedMemory": 262264,
+        "NumberOfDetachedContexts": 0,
+        "NumberOfNativeContexts": 1,
+        "PeakMallocedMemory": 27910568,
+        "TotalAllocatedBytes": 52669384,
+        "TotalAvailableSize": 1548069376,
+        "TotalGlobalHandlesSize": 49152,
+        "TotalHeapSize": 37703680,
+        "TotalHeapSizeExecutable": 524288,
+        "TotalPhysicalSize": 37703680,
+        "UsedGlobalHandlesSize": 41312,
+        "UsedHeapSize": 21110160
+      },
+      "host_crossings": 451,
+      "persistent_handles": 1289
+    }
+  },
+  {
+    "dom_wrappers": 9005,
+    "go_heap": 41070312,
+    "go_sys": 91277560,
+    "go_total_alloc": 1279753328,
+    "goroutines": 9,
+    "ms": 1252.9075,
+    "phase": "dom",
+    "v8": {
+      "detail": {
+        "costs": {
+          "compile:__pyppeteer_evaluation_script__": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:http://127.0.0.1:41622/workload.js": {
+            "count": 1,
+            "ns": 512900
+          },
+          "compile:mimic-clock.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic-promise-factory.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:dom-content-loaded": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:hide-input": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:hide-internals": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:load": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:webapi-surface": {
+            "count": 1,
+            "ns": 32671200
+          },
+          "execute:__pyppeteer_evaluation_script__": {
+            "count": 1,
+            "ns": 1251393600
+          },
+          "execute:http://127.0.0.1:41622/workload.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic-clock.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic-promise-factory.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:dom-content-loaded": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:hide-input": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:hide-internals": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:load": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:webapi-surface": {
+            "count": 1,
+            "ns": 46760100
+          },
+          "host:apiAccess": {
+            "count": 120035,
+            "ns": 301592800
+          },
+          "host:append": {
+            "count": 9001,
+            "ns": 78627700
+          },
+          "host:capabilityState": {
+            "count": 410,
+            "ns": 2321200
+          },
+          "host:create": {
+            "count": 3001,
+            "ns": 32411200
+          },
+          "host:createComment": {
+            "count": 3000,
+            "ns": 23459700
+          },
+          "host:createText": {
+            "count": 3000,
+            "ns": 39500900
+          },
+          "host:documentSecurity": {
+            "count": 2,
+            "ns": 0
+          },
+          "host:elementChildren": {
+            "count": 6002,
+            "ns": 6051100
+          },
+          "host:getAttribute": {
+            "count": 21002,
+            "ns": 63344200
+          },
+          "host:intlEnvironment": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:nodeChildren": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:parentNode": {
+            "count": 18006,
+            "ns": 85704900
+          },
+          "host:performanceNow": {
+            "count": 2,
+            "ns": 0
+          },
+          "host:permissionsPolicy": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:profileWrapper": {
+            "count": 9005,
+            "ns": 5472500
+          },
+          "host:query": {
+            "count": 2,
+            "ns": 0
+          },
+          "host:queryAllWithin": {
+            "count": 6,
+            "ns": 149811600
+          },
+          "host:queryWithin": {
+            "count": 2,
+            "ns": 1017200
+          },
+          "host:ready": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:screen": {
+            "count": 2,
+            "ns": 0
+          },
+          "host:setAttribute": {
+            "count": 27000,
+            "ns": 91888600
+          },
+          "host:setInnerHTML": {
+            "count": 2,
+            "ns": 0
+          },
+          "host:storageGet": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:storageSet": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:textContent": {
+            "count": 2,
+            "ns": 0
+          },
+          "host:token": {
+            "count": 12031,
+            "ns": 11927800
+          },
+          "host:viewport": {
+            "count": 8,
+            "ns": 654400
+          },
+          "host:windowRelations": {
+            "count": 1,
+            "ns": 0
+          }
+        },
+        "heaps": {
+          "__pyppeteer_evaluation_script__": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 278576,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 155542488,
+            "TotalAvailableSize": 1542130600,
+            "TotalGlobalHandlesSize": 21266432,
+            "TotalHeapSize": 86151168,
+            "TotalHeapSizeExecutable": 786432,
+            "TotalPhysicalSize": 86151168,
+            "UsedGlobalHandlesSize": 21263488,
+            "UsedHeapSize": 44326248
+          },
+          "http://127.0.0.1:41622/workload.js": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 52184480,
+            "TotalAvailableSize": 1542884296,
+            "TotalGlobalHandlesSize": 49152,
+            "TotalHeapSize": 36917248,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 36917248,
+            "UsedGlobalHandlesSize": 41088,
+            "UsedHeapSize": 26295328
+          },
+          "mimic-clock.js": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 65608,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 57888,
+            "TotalAllocatedBytes": 1336344,
+            "TotalAvailableSize": 1570021352,
+            "TotalGlobalHandlesSize": 8192,
+            "TotalHeapSize": 786432,
+            "TotalHeapSizeExecutable": 0,
+            "TotalPhysicalSize": 786432,
+            "UsedGlobalHandlesSize": 96,
+            "UsedHeapSize": 483192
+          },
+          "mimic-promise-factory.js": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 65608,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 40960,
+            "TotalAllocatedBytes": 1027784,
+            "TotalAvailableSize": 1570026720,
+            "TotalGlobalHandlesSize": 8192,
+            "TotalHeapSize": 786432,
+            "TotalHeapSizeExecutable": 0,
+            "TotalPhysicalSize": 786432,
+            "UsedGlobalHandlesSize": 64,
+            "UsedHeapSize": 477824
+          },
+          "mimic:dom-content-loaded": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 52350480,
+            "TotalAvailableSize": 1548071872,
+            "TotalGlobalHandlesSize": 49152,
+            "TotalHeapSize": 37703680,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 37703680,
+            "UsedGlobalHandlesSize": 41216,
+            "UsedHeapSize": 21107664
+          },
+          "mimic:hide-input": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 51437088,
+            "TotalAvailableSize": 1542893120,
+            "TotalGlobalHandlesSize": 40960,
+            "TotalHeapSize": 36917248,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 36917248,
+            "UsedGlobalHandlesSize": 40928,
+            "UsedHeapSize": 26286504
+          },
+          "mimic:hide-internals": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 51811368,
+            "TotalAvailableSize": 1542891952,
+            "TotalGlobalHandlesSize": 49152,
+            "TotalHeapSize": 36917248,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 36917248,
+            "UsedGlobalHandlesSize": 41056,
+            "UsedHeapSize": 26287672
+          },
+          "mimic:load": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 52510664,
+            "TotalAvailableSize": 1548070408,
+            "TotalGlobalHandlesSize": 49152,
+            "TotalHeapSize": 37703680,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 37703680,
+            "UsedGlobalHandlesSize": 41248,
+            "UsedHeapSize": 21109128
+          },
+          "mimic:webapi-surface": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 51061976,
+            "TotalAvailableSize": 1542893952,
+            "TotalGlobalHandlesSize": 40960,
+            "TotalHeapSize": 36917248,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 36917248,
+            "UsedGlobalHandlesSize": 40800,
+            "UsedHeapSize": 26285672
+          }
+        }
+      },
+      "heap": {
+        "DoesZapGarbage": false,
+        "ExternalMemory": 0,
+        "HeapSizeLimit": 1568669696,
+        "MallocedMemory": 278576,
+        "NumberOfDetachedContexts": 0,
+        "NumberOfNativeContexts": 1,
+        "PeakMallocedMemory": 27910568,
+        "TotalAllocatedBytes": 155542488,
+        "TotalAvailableSize": 1542130600,
+        "TotalGlobalHandlesSize": 21266432,
+        "TotalHeapSize": 86151168,
+        "TotalHeapSizeExecutable": 786432,
+        "TotalPhysicalSize": 86151168,
+        "UsedGlobalHandlesSize": 21263520,
+        "UsedHeapSize": 44326248
+      },
+      "host_crossings": 231528,
+      "persistent_handles": 664483
+    }
+  },
+  {
+    "go_heap": 51839352,
+    "go_sys": 91408632,
+    "go_total_alloc": 1290522368,
+    "goroutines": 5,
+    "ms": 44.6594,
+    "phase": "close"
+  },
+  {
+    "dom_wrappers": 0,
+    "go_heap": 19828416,
+    "go_sys": 103991544,
+    "go_total_alloc": 1309617152,
+    "goroutines": 5,
+    "ms": 69.6371,
+    "phase": "create",
+    "v8": {
+      "detail": {
+        "costs": {
+          "compile:mimic-clock.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic-promise-factory.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:hide-input": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:hide-internals": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:webapi-surface": {
+            "count": 1,
+            "ns": 28514600
+          },
+          "execute:mimic-clock.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic-promise-factory.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:hide-input": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:hide-internals": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:webapi-surface": {
+            "count": 1,
+            "ns": 33164500
+          },
+          "host:capabilityState": {
+            "count": 386,
+            "ns": 1786200
+          },
+          "host:documentSecurity": {
+            "count": 2,
+            "ns": 0
+          },
+          "host:intlEnvironment": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:permissionsPolicy": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:ready": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:screen": {
+            "count": 2,
+            "ns": 0
+          },
+          "host:token": {
+            "count": 24,
+            "ns": 0
+          },
+          "host:viewport": {
+            "count": 8,
+            "ns": 0
+          },
+          "host:windowRelations": {
+            "count": 1,
+            "ns": 0
+          }
+        },
+        "heaps": {
+          "mimic-clock.js": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 65608,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 57888,
+            "TotalAllocatedBytes": 1336344,
+            "TotalAvailableSize": 1570021352,
+            "TotalGlobalHandlesSize": 8192,
+            "TotalHeapSize": 786432,
+            "TotalHeapSizeExecutable": 0,
+            "TotalPhysicalSize": 786432,
+            "UsedGlobalHandlesSize": 96,
+            "UsedHeapSize": 483192
+          },
+          "mimic-promise-factory.js": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 65608,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 40960,
+            "TotalAllocatedBytes": 1027784,
+            "TotalAvailableSize": 1570026720,
+            "TotalGlobalHandlesSize": 8192,
+            "TotalHeapSize": 786432,
+            "TotalHeapSizeExecutable": 0,
+            "TotalPhysicalSize": 786432,
+            "UsedGlobalHandlesSize": 64,
+            "UsedHeapSize": 477824
+          },
+          "mimic:hide-input": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 25616776,
+            "TotalAllocatedBytes": 46186616,
+            "TotalAvailableSize": 1549511344,
+            "TotalGlobalHandlesSize": 40960,
+            "TotalHeapSize": 33177600,
+            "TotalHeapSizeExecutable": 786432,
+            "TotalPhysicalSize": 33177600,
+            "UsedGlobalHandlesSize": 38624,
+            "UsedHeapSize": 22289912
+          },
+          "mimic:hide-internals": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 25616776,
+            "TotalAllocatedBytes": 46595824,
+            "TotalAvailableSize": 1549510176,
+            "TotalGlobalHandlesSize": 40960,
+            "TotalHeapSize": 33177600,
+            "TotalHeapSizeExecutable": 786432,
+            "TotalPhysicalSize": 33177600,
+            "UsedGlobalHandlesSize": 38752,
+            "UsedHeapSize": 22291080
+          },
+          "mimic:webapi-surface": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 25616776,
+            "TotalAllocatedBytes": 45776576,
+            "TotalAvailableSize": 1549512176,
+            "TotalGlobalHandlesSize": 40960,
+            "TotalHeapSize": 33177600,
+            "TotalHeapSizeExecutable": 786432,
+            "TotalPhysicalSize": 33177600,
+            "UsedGlobalHandlesSize": 38496,
+            "UsedHeapSize": 22289080
+          }
+        }
+      },
+      "heap": {
+        "DoesZapGarbage": false,
+        "ExternalMemory": 0,
+        "HeapSizeLimit": 1568669696,
+        "MallocedMemory": 262264,
+        "NumberOfDetachedContexts": 0,
+        "NumberOfNativeContexts": 1,
+        "PeakMallocedMemory": 25616776,
+        "TotalAllocatedBytes": 46595824,
+        "TotalAvailableSize": 1549510176,
+        "TotalGlobalHandlesSize": 40960,
+        "TotalHeapSize": 33177600,
+        "TotalHeapSizeExecutable": 786432,
+        "TotalPhysicalSize": 33177600,
+        "UsedGlobalHandlesSize": 38752,
+        "UsedHeapSize": 22291080
+      },
+      "host_crossings": 426,
+      "persistent_handles": 1209
+    }
+  },
+  {
+    "dom_wrappers": 0,
+    "go_heap": 26604104,
+    "go_sys": 103991544,
+    "go_total_alloc": 1330715480,
+    "goroutines": 9,
+    "ms": 82.4402,
+    "phase": "navigate",
+    "v8": {
+      "detail": {
+        "costs": {
+          "compile:http://127.0.0.1:41622/workload.js": {
+            "count": 1,
+            "ns": 513000
+          },
+          "compile:mimic-clock.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic-promise-factory.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:dom-content-loaded": {
+            "count": 1,
+            "ns": 570700
+          },
+          "compile:mimic:hide-input": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:hide-internals": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:load": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:webapi-surface": {
+            "count": 1,
+            "ns": 31066000
+          },
+          "execute:http://127.0.0.1:41622/workload.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic-clock.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic-promise-factory.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:dom-content-loaded": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:hide-input": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:hide-internals": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:load": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:webapi-surface": {
+            "count": 1,
+            "ns": 40758600
+          },
+          "host:apiAccess": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:capabilityState": {
+            "count": 410,
+            "ns": 518900
+          },
+          "host:documentSecurity": {
+            "count": 2,
+            "ns": 517800
+          },
+          "host:intlEnvironment": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:permissionsPolicy": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:ready": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:screen": {
+            "count": 2,
+            "ns": 0
+          },
+          "host:token": {
+            "count": 24,
+            "ns": 0
+          },
+          "host:viewport": {
+            "count": 8,
+            "ns": 545200
+          },
+          "host:windowRelations": {
+            "count": 1,
+            "ns": 0
+          }
+        },
+        "heaps": {
+          "http://127.0.0.1:41622/workload.js": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 51192464,
+            "TotalAvailableSize": 1542943280,
+            "TotalGlobalHandlesSize": 49152,
+            "TotalHeapSize": 36392960,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 36392960,
+            "UsedGlobalHandlesSize": 41088,
+            "UsedHeapSize": 26236440
+          },
+          "mimic-clock.js": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 65608,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 57888,
+            "TotalAllocatedBytes": 1336344,
+            "TotalAvailableSize": 1570021352,
+            "TotalGlobalHandlesSize": 8192,
+            "TotalHeapSize": 786432,
+            "TotalHeapSizeExecutable": 0,
+            "TotalPhysicalSize": 786432,
+            "UsedGlobalHandlesSize": 96,
+            "UsedHeapSize": 483192
+          },
+          "mimic-promise-factory.js": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 65608,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 40960,
+            "TotalAllocatedBytes": 1027784,
+            "TotalAvailableSize": 1570026720,
+            "TotalGlobalHandlesSize": 8192,
+            "TotalHeapSize": 786432,
+            "TotalHeapSizeExecutable": 0,
+            "TotalPhysicalSize": 786432,
+            "UsedGlobalHandlesSize": 64,
+            "UsedHeapSize": 477824
+          },
+          "mimic:dom-content-loaded": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 51503792,
+            "TotalAvailableSize": 1548169024,
+            "TotalGlobalHandlesSize": 49152,
+            "TotalHeapSize": 37965824,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 37965824,
+            "UsedGlobalHandlesSize": 41216,
+            "UsedHeapSize": 21010536
+          },
+          "mimic:hide-input": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 50476296,
+            "TotalAvailableSize": 1542952104,
+            "TotalGlobalHandlesSize": 40960,
+            "TotalHeapSize": 36392960,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 36392960,
+            "UsedGlobalHandlesSize": 40928,
+            "UsedHeapSize": 26227616
+          },
+          "mimic:hide-internals": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 50723352,
+            "TotalAvailableSize": 1542950936,
+            "TotalGlobalHandlesSize": 49152,
+            "TotalHeapSize": 36392960,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 36392960,
+            "UsedGlobalHandlesSize": 41056,
+            "UsedHeapSize": 26228784
+          },
+          "mimic:load": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 51809304,
+            "TotalAvailableSize": 1548167560,
+            "TotalGlobalHandlesSize": 49152,
+            "TotalHeapSize": 37965824,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 37965824,
+            "UsedGlobalHandlesSize": 41248,
+            "UsedHeapSize": 21012000
+          },
+          "mimic:webapi-surface": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 50228408,
+            "TotalAvailableSize": 1542952936,
+            "TotalGlobalHandlesSize": 40960,
+            "TotalHeapSize": 36392960,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 36392960,
+            "UsedGlobalHandlesSize": 40800,
+            "UsedHeapSize": 26226784
+          }
+        }
+      },
+      "heap": {
+        "DoesZapGarbage": false,
+        "ExternalMemory": 0,
+        "HeapSizeLimit": 1568669696,
+        "MallocedMemory": 262264,
+        "NumberOfDetachedContexts": 0,
+        "NumberOfNativeContexts": 1,
+        "PeakMallocedMemory": 27910568,
+        "TotalAllocatedBytes": 52113352,
+        "TotalAvailableSize": 1548166528,
+        "TotalGlobalHandlesSize": 49152,
+        "TotalHeapSize": 37965824,
+        "TotalHeapSizeExecutable": 524288,
+        "TotalPhysicalSize": 37965824,
+        "UsedGlobalHandlesSize": 41312,
+        "UsedHeapSize": 21013032
+      },
+      "host_crossings": 451,
+      "persistent_handles": 1289
+    }
+  },
+  {
+    "dom_wrappers": 9005,
+    "go_heap": 71663304,
+    "go_sys": 104573176,
+    "go_total_alloc": 2558524536,
+    "goroutines": 9,
+    "ms": 1256.1302,
+    "phase": "dom",
+    "v8": {
+      "detail": {
+        "costs": {
+          "compile:__pyppeteer_evaluation_script__": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:http://127.0.0.1:41622/workload.js": {
+            "count": 1,
+            "ns": 513000
+          },
+          "compile:mimic-clock.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic-promise-factory.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:dom-content-loaded": {
+            "count": 1,
+            "ns": 570700
+          },
+          "compile:mimic:hide-input": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:hide-internals": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:load": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:webapi-surface": {
+            "count": 1,
+            "ns": 31066000
+          },
+          "execute:__pyppeteer_evaluation_script__": {
+            "count": 1,
+            "ns": 1256130200
+          },
+          "execute:http://127.0.0.1:41622/workload.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic-clock.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic-promise-factory.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:dom-content-loaded": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:hide-input": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:hide-internals": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:load": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:webapi-surface": {
+            "count": 1,
+            "ns": 40758600
+          },
+          "host:apiAccess": {
+            "count": 120035,
+            "ns": 317506600
+          },
+          "host:append": {
+            "count": 9001,
+            "ns": 79261400
+          },
+          "host:capabilityState": {
+            "count": 410,
+            "ns": 518900
+          },
+          "host:create": {
+            "count": 3001,
+            "ns": 29066400
+          },
+          "host:createComment": {
+            "count": 3000,
+            "ns": 22072300
+          },
+          "host:createText": {
+            "count": 3000,
+            "ns": 17621500
+          },
+          "host:documentSecurity": {
+            "count": 2,
+            "ns": 517800
+          },
+          "host:elementChildren": {
+            "count": 6002,
+            "ns": 10754200
+          },
+          "host:getAttribute": {
+            "count": 21002,
+            "ns": 62808200
+          },
+          "host:intlEnvironment": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:nodeChildren": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:parentNode": {
+            "count": 18006,
+            "ns": 81568300
+          },
+          "host:performanceNow": {
+            "count": 2,
+            "ns": 0
+          },
+          "host:permissionsPolicy": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:profileWrapper": {
+            "count": 9005,
+            "ns": 2032000
+          },
+          "host:query": {
+            "count": 2,
+            "ns": 0
+          },
+          "host:queryAllWithin": {
+            "count": 6,
+            "ns": 150317300
+          },
+          "host:queryWithin": {
+            "count": 2,
+            "ns": 515800
+          },
+          "host:ready": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:screen": {
+            "count": 2,
+            "ns": 0
+          },
+          "host:setAttribute": {
+            "count": 27000,
+            "ns": 114157200
+          },
+          "host:setInnerHTML": {
+            "count": 2,
+            "ns": 0
+          },
+          "host:storageGet": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:storageSet": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:textContent": {
+            "count": 2,
+            "ns": 0
+          },
+          "host:token": {
+            "count": 12031,
+            "ns": 6482000
+          },
+          "host:viewport": {
+            "count": 8,
+            "ns": 545200
+          },
+          "host:windowRelations": {
+            "count": 1,
+            "ns": 0
+          }
+        },
+        "heaps": {
+          "__pyppeteer_evaluation_script__": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 278576,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 156671512,
+            "TotalAvailableSize": 1542105816,
+            "TotalGlobalHandlesSize": 21266432,
+            "TotalHeapSize": 86413312,
+            "TotalHeapSizeExecutable": 786432,
+            "TotalPhysicalSize": 86413312,
+            "UsedGlobalHandlesSize": 21263488,
+            "UsedHeapSize": 44350976
+          },
+          "http://127.0.0.1:41622/workload.js": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 51192464,
+            "TotalAvailableSize": 1542943280,
+            "TotalGlobalHandlesSize": 49152,
+            "TotalHeapSize": 36392960,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 36392960,
+            "UsedGlobalHandlesSize": 41088,
+            "UsedHeapSize": 26236440
+          },
+          "mimic-clock.js": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 65608,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 57888,
+            "TotalAllocatedBytes": 1336344,
+            "TotalAvailableSize": 1570021352,
+            "TotalGlobalHandlesSize": 8192,
+            "TotalHeapSize": 786432,
+            "TotalHeapSizeExecutable": 0,
+            "TotalPhysicalSize": 786432,
+            "UsedGlobalHandlesSize": 96,
+            "UsedHeapSize": 483192
+          },
+          "mimic-promise-factory.js": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 65608,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 40960,
+            "TotalAllocatedBytes": 1027784,
+            "TotalAvailableSize": 1570026720,
+            "TotalGlobalHandlesSize": 8192,
+            "TotalHeapSize": 786432,
+            "TotalHeapSizeExecutable": 0,
+            "TotalPhysicalSize": 786432,
+            "UsedGlobalHandlesSize": 64,
+            "UsedHeapSize": 477824
+          },
+          "mimic:dom-content-loaded": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 51503792,
+            "TotalAvailableSize": 1548169024,
+            "TotalGlobalHandlesSize": 49152,
+            "TotalHeapSize": 37965824,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 37965824,
+            "UsedGlobalHandlesSize": 41216,
+            "UsedHeapSize": 21010536
+          },
+          "mimic:hide-input": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 50476296,
+            "TotalAvailableSize": 1542952104,
+            "TotalGlobalHandlesSize": 40960,
+            "TotalHeapSize": 36392960,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 36392960,
+            "UsedGlobalHandlesSize": 40928,
+            "UsedHeapSize": 26227616
+          },
+          "mimic:hide-internals": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 50723352,
+            "TotalAvailableSize": 1542950936,
+            "TotalGlobalHandlesSize": 49152,
+            "TotalHeapSize": 36392960,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 36392960,
+            "UsedGlobalHandlesSize": 41056,
+            "UsedHeapSize": 26228784
+          },
+          "mimic:load": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 51809304,
+            "TotalAvailableSize": 1548167560,
+            "TotalGlobalHandlesSize": 49152,
+            "TotalHeapSize": 37965824,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 37965824,
+            "UsedGlobalHandlesSize": 41248,
+            "UsedHeapSize": 21012000
+          },
+          "mimic:webapi-surface": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 50228408,
+            "TotalAvailableSize": 1542952936,
+            "TotalGlobalHandlesSize": 40960,
+            "TotalHeapSize": 36392960,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 36392960,
+            "UsedGlobalHandlesSize": 40800,
+            "UsedHeapSize": 26226784
+          }
+        }
+      },
+      "heap": {
+        "DoesZapGarbage": false,
+        "ExternalMemory": 0,
+        "HeapSizeLimit": 1568669696,
+        "MallocedMemory": 278576,
+        "NumberOfDetachedContexts": 0,
+        "NumberOfNativeContexts": 1,
+        "PeakMallocedMemory": 27910568,
+        "TotalAllocatedBytes": 156671512,
+        "TotalAvailableSize": 1542105816,
+        "TotalGlobalHandlesSize": 21266432,
+        "TotalHeapSize": 86413312,
+        "TotalHeapSizeExecutable": 786432,
+        "TotalPhysicalSize": 86413312,
+        "UsedGlobalHandlesSize": 21263520,
+        "UsedHeapSize": 44350976
+      },
+      "host_crossings": 231528,
+      "persistent_handles": 664483
+    }
+  },
+  {
+    "go_heap": 46237336,
+    "go_sys": 104638712,
+    "go_total_alloc": 2569287032,
+    "goroutines": 6,
+    "ms": 61.1697,
+    "phase": "close"
+  },
+  {
+    "dom_wrappers": 0,
+    "go_heap": 65362096,
+    "go_sys": 113027320,
+    "go_total_alloc": 2588411792,
+    "goroutines": 5,
+    "ms": 97.4509,
+    "phase": "create",
+    "v8": {
+      "detail": {
+        "costs": {
+          "compile:mimic-clock.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic-promise-factory.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:hide-input": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:hide-internals": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:webapi-surface": {
+            "count": 1,
+            "ns": 43690300
+          },
+          "execute:mimic-clock.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic-promise-factory.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:hide-input": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:hide-internals": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:webapi-surface": {
+            "count": 1,
+            "ns": 43150500
+          },
+          "host:capabilityState": {
+            "count": 386,
+            "ns": 1563800
+          },
+          "host:documentSecurity": {
+            "count": 2,
+            "ns": 0
+          },
+          "host:intlEnvironment": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:permissionsPolicy": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:ready": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:screen": {
+            "count": 2,
+            "ns": 0
+          },
+          "host:token": {
+            "count": 24,
+            "ns": 0
+          },
+          "host:viewport": {
+            "count": 8,
+            "ns": 0
+          },
+          "host:windowRelations": {
+            "count": 1,
+            "ns": 0
+          }
+        },
+        "heaps": {
+          "mimic-clock.js": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 65608,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 57888,
+            "TotalAllocatedBytes": 1336344,
+            "TotalAvailableSize": 1570021352,
+            "TotalGlobalHandlesSize": 8192,
+            "TotalHeapSize": 786432,
+            "TotalHeapSizeExecutable": 0,
+            "TotalPhysicalSize": 786432,
+            "UsedGlobalHandlesSize": 96,
+            "UsedHeapSize": 483192
+          },
+          "mimic-promise-factory.js": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 65608,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 40960,
+            "TotalAllocatedBytes": 1027784,
+            "TotalAvailableSize": 1570026720,
+            "TotalGlobalHandlesSize": 8192,
+            "TotalHeapSize": 786432,
+            "TotalHeapSizeExecutable": 0,
+            "TotalPhysicalSize": 786432,
+            "UsedGlobalHandlesSize": 64,
+            "UsedHeapSize": 477824
+          },
+          "mimic:hide-input": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 25616776,
+            "TotalAllocatedBytes": 46450640,
+            "TotalAvailableSize": 1549510232,
+            "TotalGlobalHandlesSize": 40960,
+            "TotalHeapSize": 32915456,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 32915456,
+            "UsedGlobalHandlesSize": 38624,
+            "UsedHeapSize": 22291040
+          },
+          "mimic:hide-internals": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 25616776,
+            "TotalAllocatedBytes": 46866016,
+            "TotalAvailableSize": 1549509064,
+            "TotalGlobalHandlesSize": 40960,
+            "TotalHeapSize": 32915456,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 32915456,
+            "UsedGlobalHandlesSize": 38752,
+            "UsedHeapSize": 22292208
+          },
+          "mimic:webapi-surface": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 25616776,
+            "TotalAllocatedBytes": 46034432,
+            "TotalAvailableSize": 1549511064,
+            "TotalGlobalHandlesSize": 40960,
+            "TotalHeapSize": 32915456,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 32915456,
+            "UsedGlobalHandlesSize": 38496,
+            "UsedHeapSize": 22290208
+          }
+        }
+      },
+      "heap": {
+        "DoesZapGarbage": false,
+        "ExternalMemory": 0,
+        "HeapSizeLimit": 1568669696,
+        "MallocedMemory": 262264,
+        "NumberOfDetachedContexts": 0,
+        "NumberOfNativeContexts": 1,
+        "PeakMallocedMemory": 25616776,
+        "TotalAllocatedBytes": 46866016,
+        "TotalAvailableSize": 1549509064,
+        "TotalGlobalHandlesSize": 40960,
+        "TotalHeapSize": 32915456,
+        "TotalHeapSizeExecutable": 524288,
+        "TotalPhysicalSize": 32915456,
+        "UsedGlobalHandlesSize": 38752,
+        "UsedHeapSize": 22292208
+      },
+      "host_crossings": 426,
+      "persistent_handles": 1209
+    }
+  },
+  {
+    "dom_wrappers": 0,
+    "go_heap": 30394232,
+    "go_sys": 121415928,
+    "go_total_alloc": 2605300784,
+    "goroutines": 9,
+    "ms": 102.4606,
+    "phase": "navigate",
+    "v8": {
+      "detail": {
+        "costs": {
+          "compile:http://127.0.0.1:41622/workload.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic-clock.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic-promise-factory.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:dom-content-loaded": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:hide-input": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:hide-internals": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:load": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:webapi-surface": {
+            "count": 1,
+            "ns": 38717100
+          },
+          "execute:http://127.0.0.1:41622/workload.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic-clock.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic-promise-factory.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:dom-content-loaded": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:hide-input": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:hide-internals": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:load": {
+            "count": 1,
+            "ns": 518000
+          },
+          "execute:mimic:webapi-surface": {
+            "count": 1,
+            "ns": 50131300
+          },
+          "host:apiAccess": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:capabilityState": {
+            "count": 410,
+            "ns": 1080100
+          },
+          "host:documentSecurity": {
+            "count": 2,
+            "ns": 0
+          },
+          "host:intlEnvironment": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:permissionsPolicy": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:ready": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:screen": {
+            "count": 2,
+            "ns": 0
+          },
+          "host:token": {
+            "count": 24,
+            "ns": 0
+          },
+          "host:viewport": {
+            "count": 8,
+            "ns": 0
+          },
+          "host:windowRelations": {
+            "count": 1,
+            "ns": 0
+          }
+        },
+        "heaps": {
+          "http://127.0.0.1:41622/workload.js": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 52413200,
+            "TotalAvailableSize": 1542972968,
+            "TotalGlobalHandlesSize": 49152,
+            "TotalHeapSize": 35868672,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 35868672,
+            "UsedGlobalHandlesSize": 41088,
+            "UsedHeapSize": 26206776
+          },
+          "mimic-clock.js": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 65608,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 57888,
+            "TotalAllocatedBytes": 1336344,
+            "TotalAvailableSize": 1570021352,
+            "TotalGlobalHandlesSize": 8192,
+            "TotalHeapSize": 786432,
+            "TotalHeapSizeExecutable": 0,
+            "TotalPhysicalSize": 786432,
+            "UsedGlobalHandlesSize": 96,
+            "UsedHeapSize": 483192
+          },
+          "mimic-promise-factory.js": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 65608,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 40960,
+            "TotalAllocatedBytes": 1027784,
+            "TotalAvailableSize": 1570026720,
+            "TotalGlobalHandlesSize": 8192,
+            "TotalHeapSize": 786432,
+            "TotalHeapSizeExecutable": 0,
+            "TotalPhysicalSize": 786432,
+            "UsedGlobalHandlesSize": 64,
+            "UsedHeapSize": 477824
+          },
+          "mimic:dom-content-loaded": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 52663872,
+            "TotalAvailableSize": 1548144064,
+            "TotalGlobalHandlesSize": 49152,
+            "TotalHeapSize": 37965824,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 37965824,
+            "UsedGlobalHandlesSize": 41216,
+            "UsedHeapSize": 21035496
+          },
+          "mimic:hide-input": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 51467152,
+            "TotalAvailableSize": 1542981792,
+            "TotalGlobalHandlesSize": 40960,
+            "TotalHeapSize": 35868672,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 35868672,
+            "UsedGlobalHandlesSize": 40928,
+            "UsedHeapSize": 26197952
+          },
+          "mimic:hide-internals": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 51940760,
+            "TotalAvailableSize": 1542980624,
+            "TotalGlobalHandlesSize": 49152,
+            "TotalHeapSize": 35868672,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 35868672,
+            "UsedGlobalHandlesSize": 41056,
+            "UsedHeapSize": 26199120
+          },
+          "mimic:load": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 53054304,
+            "TotalAvailableSize": 1548142600,
+            "TotalGlobalHandlesSize": 49152,
+            "TotalHeapSize": 37965824,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 37965824,
+            "UsedGlobalHandlesSize": 41248,
+            "UsedHeapSize": 21036960
+          },
+          "mimic:webapi-surface": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 50992712,
+            "TotalAvailableSize": 1542982624,
+            "TotalGlobalHandlesSize": 40960,
+            "TotalHeapSize": 35868672,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 35868672,
+            "UsedGlobalHandlesSize": 40800,
+            "UsedHeapSize": 26197120
+          }
+        }
+      },
+      "heap": {
+        "DoesZapGarbage": false,
+        "ExternalMemory": 0,
+        "HeapSizeLimit": 1568669696,
+        "MallocedMemory": 262264,
+        "NumberOfDetachedContexts": 0,
+        "NumberOfNativeContexts": 1,
+        "PeakMallocedMemory": 27910568,
+        "TotalAllocatedBytes": 53298240,
+        "TotalAvailableSize": 1548141568,
+        "TotalGlobalHandlesSize": 49152,
+        "TotalHeapSize": 37965824,
+        "TotalHeapSizeExecutable": 524288,
+        "TotalPhysicalSize": 37965824,
+        "UsedGlobalHandlesSize": 41312,
+        "UsedHeapSize": 21037992
+      },
+      "host_crossings": 451,
+      "persistent_handles": 1289
+    }
+  },
+  {
+    "dom_wrappers": 9005,
+    "go_heap": 47041336,
+    "go_sys": 121694456,
+    "go_total_alloc": 3833091688,
+    "goroutines": 9,
+    "ms": 1858.2571,
+    "phase": "dom",
+    "v8": {
+      "detail": {
+        "costs": {
+          "compile:__pyppeteer_evaluation_script__": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:http://127.0.0.1:41622/workload.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic-clock.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic-promise-factory.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:dom-content-loaded": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:hide-input": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:hide-internals": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:load": {
+            "count": 1,
+            "ns": 0
+          },
+          "compile:mimic:webapi-surface": {
+            "count": 1,
+            "ns": 38717100
+          },
+          "execute:__pyppeteer_evaluation_script__": {
+            "count": 1,
+            "ns": 1857280200
+          },
+          "execute:http://127.0.0.1:41622/workload.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic-clock.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic-promise-factory.js": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:dom-content-loaded": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:hide-input": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:hide-internals": {
+            "count": 1,
+            "ns": 0
+          },
+          "execute:mimic:load": {
+            "count": 1,
+            "ns": 518000
+          },
+          "execute:mimic:webapi-surface": {
+            "count": 1,
+            "ns": 50131300
+          },
+          "host:apiAccess": {
+            "count": 120035,
+            "ns": 456326700
+          },
+          "host:append": {
+            "count": 9001,
+            "ns": 108197600
+          },
+          "host:capabilityState": {
+            "count": 410,
+            "ns": 1080100
+          },
+          "host:create": {
+            "count": 3001,
+            "ns": 31232200
+          },
+          "host:createComment": {
+            "count": 3000,
+            "ns": 41591100
+          },
+          "host:createText": {
+            "count": 3000,
+            "ns": 36882400
+          },
+          "host:documentSecurity": {
+            "count": 2,
+            "ns": 0
+          },
+          "host:elementChildren": {
+            "count": 6002,
+            "ns": 17584700
+          },
+          "host:getAttribute": {
+            "count": 21002,
+            "ns": 83870100
+          },
+          "host:intlEnvironment": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:nodeChildren": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:parentNode": {
+            "count": 18006,
+            "ns": 113901200
+          },
+          "host:performanceNow": {
+            "count": 2,
+            "ns": 0
+          },
+          "host:permissionsPolicy": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:profileWrapper": {
+            "count": 9005,
+            "ns": 3110400
+          },
+          "host:query": {
+            "count": 2,
+            "ns": 0
+          },
+          "host:queryAllWithin": {
+            "count": 6,
+            "ns": 263770800
+          },
+          "host:queryWithin": {
+            "count": 2,
+            "ns": 2482800
+          },
+          "host:ready": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:screen": {
+            "count": 2,
+            "ns": 0
+          },
+          "host:setAttribute": {
+            "count": 27000,
+            "ns": 146059100
+          },
+          "host:setInnerHTML": {
+            "count": 2,
+            "ns": 0
+          },
+          "host:storageGet": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:storageSet": {
+            "count": 1,
+            "ns": 0
+          },
+          "host:textContent": {
+            "count": 2,
+            "ns": 0
+          },
+          "host:token": {
+            "count": 12031,
+            "ns": 11677500
+          },
+          "host:viewport": {
+            "count": 8,
+            "ns": 0
+          },
+          "host:windowRelations": {
+            "count": 1,
+            "ns": 0
+          }
+        },
+        "heaps": {
+          "__pyppeteer_evaluation_script__": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 278576,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 151196672,
+            "TotalAvailableSize": 1542162320,
+            "TotalGlobalHandlesSize": 21266432,
+            "TotalHeapSize": 85889024,
+            "TotalHeapSizeExecutable": 786432,
+            "TotalPhysicalSize": 85889024,
+            "UsedGlobalHandlesSize": 21263488,
+            "UsedHeapSize": 44293720
+          },
+          "http://127.0.0.1:41622/workload.js": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 52413200,
+            "TotalAvailableSize": 1542972968,
+            "TotalGlobalHandlesSize": 49152,
+            "TotalHeapSize": 35868672,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 35868672,
+            "UsedGlobalHandlesSize": 41088,
+            "UsedHeapSize": 26206776
+          },
+          "mimic-clock.js": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 65608,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 57888,
+            "TotalAllocatedBytes": 1336344,
+            "TotalAvailableSize": 1570021352,
+            "TotalGlobalHandlesSize": 8192,
+            "TotalHeapSize": 786432,
+            "TotalHeapSizeExecutable": 0,
+            "TotalPhysicalSize": 786432,
+            "UsedGlobalHandlesSize": 96,
+            "UsedHeapSize": 483192
+          },
+          "mimic-promise-factory.js": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 65608,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 40960,
+            "TotalAllocatedBytes": 1027784,
+            "TotalAvailableSize": 1570026720,
+            "TotalGlobalHandlesSize": 8192,
+            "TotalHeapSize": 786432,
+            "TotalHeapSizeExecutable": 0,
+            "TotalPhysicalSize": 786432,
+            "UsedGlobalHandlesSize": 64,
+            "UsedHeapSize": 477824
+          },
+          "mimic:dom-content-loaded": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 52663872,
+            "TotalAvailableSize": 1548144064,
+            "TotalGlobalHandlesSize": 49152,
+            "TotalHeapSize": 37965824,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 37965824,
+            "UsedGlobalHandlesSize": 41216,
+            "UsedHeapSize": 21035496
+          },
+          "mimic:hide-input": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 51467152,
+            "TotalAvailableSize": 1542981792,
+            "TotalGlobalHandlesSize": 40960,
+            "TotalHeapSize": 35868672,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 35868672,
+            "UsedGlobalHandlesSize": 40928,
+            "UsedHeapSize": 26197952
+          },
+          "mimic:hide-internals": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 51940760,
+            "TotalAvailableSize": 1542980624,
+            "TotalGlobalHandlesSize": 49152,
+            "TotalHeapSize": 35868672,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 35868672,
+            "UsedGlobalHandlesSize": 41056,
+            "UsedHeapSize": 26199120
+          },
+          "mimic:load": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 53054304,
+            "TotalAvailableSize": 1548142600,
+            "TotalGlobalHandlesSize": 49152,
+            "TotalHeapSize": 37965824,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 37965824,
+            "UsedGlobalHandlesSize": 41248,
+            "UsedHeapSize": 21036960
+          },
+          "mimic:webapi-surface": {
+            "DoesZapGarbage": false,
+            "ExternalMemory": 0,
+            "HeapSizeLimit": 1568669696,
+            "MallocedMemory": 262264,
+            "NumberOfDetachedContexts": 0,
+            "NumberOfNativeContexts": 1,
+            "PeakMallocedMemory": 27910568,
+            "TotalAllocatedBytes": 50992712,
+            "TotalAvailableSize": 1542982624,
+            "TotalGlobalHandlesSize": 40960,
+            "TotalHeapSize": 35868672,
+            "TotalHeapSizeExecutable": 524288,
+            "TotalPhysicalSize": 35868672,
+            "UsedGlobalHandlesSize": 40800,
+            "UsedHeapSize": 26197120
+          }
+        }
+      },
+      "heap": {
+        "DoesZapGarbage": false,
+        "ExternalMemory": 0,
+        "HeapSizeLimit": 1568669696,
+        "MallocedMemory": 278576,
+        "NumberOfDetachedContexts": 0,
+        "NumberOfNativeContexts": 1,
+        "PeakMallocedMemory": 27910568,
+        "TotalAllocatedBytes": 151196672,
+        "TotalAvailableSize": 1542162320,
+        "TotalGlobalHandlesSize": 21266432,
+        "TotalHeapSize": 85889024,
+        "TotalHeapSizeExecutable": 786432,
+        "TotalPhysicalSize": 85889024,
+        "UsedGlobalHandlesSize": 21263520,
+        "UsedHeapSize": 44293720
+      },
+      "host_crossings": 231528,
+      "persistent_handles": 664483
+    }
+  },
+  {
+    "go_heap": 57790864,
+    "go_sys": 121825528,
+    "go_total_alloc": 3843841216,
+    "goroutines": 7,
+    "ms": 74.3938,
+    "phase": "close"
+  },
+  {
+    "go_heap": 18879256,
+    "go_sys": 121825528,
+    "go_total_alloc": 3843849856,
+    "goroutines": 4,
+    "ms": 0,
+    "phase": "after_gc"
+  }
+]

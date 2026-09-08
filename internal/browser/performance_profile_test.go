@@ -58,7 +58,11 @@ func TestPerformanceProfile(t *testing.T) {
 			if e != nil {
 				t.Fatal(e)
 			}
-			record["v8"] = stats
+			encoded, _ := json.Marshal(stats)
+			var snapshot any
+			json.Unmarshal(encoded, &snapshot)
+			record["v8"] = snapshot
+			record["dom_wrappers"] = p.Top.Realm.profileWrappers
 		}
 		records = append(records, record)
 	}
@@ -91,6 +95,7 @@ func TestPerformanceProfile(t *testing.T) {
 		}
 		start = time.Now()
 		c.ClosePage(p.ID)
+		c.Close()
 		sample("close", nil, time.Since(start))
 	}
 	runtime.GC()
