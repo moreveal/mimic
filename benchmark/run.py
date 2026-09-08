@@ -67,11 +67,16 @@ class Server:
                 except (BrokenPipeError,ConnectionResetError):pass
                 owner.requests.append(dict(path=path,bytes=len(data),start=start,server_ms=ms(start)))
         with PORT_LOCK:
-            while True:
-                self.http=http.server.ThreadingHTTPServer(('127.0.0.1',0),Handler)
-                port=self.http.server_address[1]
-                if port not in USED_PORTS:USED_PORTS.add(port);break
-                self.http.server_close()
+            # Windows can have a customized ephemeral range starting at 1024.
+            # Port 0 may then allocate a browser-blocked port (e.g. 6000).
+            # Use only high ports and never repeat an origin in this run.
+            for port in range(49152,65535):
+                if port in USED_PORTS:continue
+                USED_PORTS.add(port)
+                try:self.http=http.server.ThreadingHTTPServer(('127.0.0.1',port),Handler)
+                except OSError:continue
+                break
+            else:raise RuntimeError('Safe local benchmark port range exhausted')
         self.port=self.http.server_address[1];self.url=f'http://127.0.0.1:{self.port}/'
         self.thread=threading.Thread(target=lambda:self.http.serve_forever(poll_interval=.02),daemon=True);self.thread.start()
     def close(self):self.http.shutdown();self.http.server_close();self.thread.join()
@@ -154,7 +159,7 @@ def create_page(runtime,server):
 def execute(runtime,workload,barrier=None,hold=None,server=None):
     row=dict(system=runtime.system,workload=workload,status='ERROR',cache='HTTP disabled; unique origin; OS file cache uncontrolled',settle_ms=0)
     own_server=server is None
-    server=server or Server(workload);page=control=None;target=None;start=time.perf_counter()
+    server=server or Server(workload);row['url']=server.url;page=control=None;target=None;start=time.perf_counter()
     try:
         if barrier is None:row['before_session']=runtime.tree.snapshot()
         control,page,target,row['session_create_ms']=create_page(runtime,server)
@@ -162,7 +167,8 @@ def execute(runtime,workload,barrier=None,hold=None,server=None):
         if barrier:barrier.wait(timeout=120)
         nav=time.perf_counter();row['workload_start']=nav
         if barrier is None:row['before_workload']=runtime.tree.snapshot()
-        page.call('Page.navigate',dict(url=server.url));row['navigate_ack_ms']=ms(nav)
+        row['navigation_ack']=page.call('Page.navigate',dict(url=server.url));row['navigate_ack_ms']=ms(nav)
+        if row['navigation_ack'].get('errorText'):raise RuntimeError('Page.navigate failed: '+row['navigation_ack']['errorText'])
         wait_value(page,'({ready:document.readyState,url:location.href,runner:typeof window.__benchRun})',lambda v:v and v['ready']=='complete' and v['url']==server.url and v['runner']=='function',runtime.args.timeout)
         row['navigation_ms']=ms(nav);js=time.perf_counter()
         page.evaluate('void window.__benchRun()')

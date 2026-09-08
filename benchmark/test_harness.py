@@ -11,8 +11,14 @@ import unittest
 from windows_metrics import Tree
 from report import stats
 from compare import compare
+from run import Server
 
 class HarnessTests(unittest.TestCase):
+    def test_origins_use_high_ports_and_are_never_reused(self):
+        a=Server('static');first=a.port;a.close()
+        b=Server('static')
+        try:self.assertGreaterEqual(first,49152);self.assertGreaterEqual(b.port,49152);self.assertNotEqual(first,b.port)
+        finally:b.close()
     def test_comparison_percent_and_harness_drift(self):
         with tempfile.TemporaryDirectory() as directory:
             root=Path(directory)
