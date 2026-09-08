@@ -21,6 +21,12 @@
     "product": "Chrome",
     "version": "152.0.7977.82",
     "channel": "stable",
-    "platform": "windows-x64"
+    "platform": "windows-x64",
+    "v8_version": "15.2.124.21",
+    "browser_mode": "headful",
+    "environment_profile_id": "chrome-152-windows-x64-headful-controlled-v1",
+    "fresh_profile": true,
+    "window_size": "1280x800",
+    "authoritative": true
   }
 }

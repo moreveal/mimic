@@ -1,6 +1,5 @@
 {
   "product": "Mimic/152.0.7977.82",
-  "profile": "clean headless Windows; no feature overrides",
   "secure": {
     "isolated": false,
     "members": {
@@ -3895,8 +3894,7 @@
       },
       "geolocation.current": {
         "value": {
-          "code": 1,
-          "message": "User denied Geolocation"
+          "pending": true
         }
       },
       "connection": {
@@ -3948,7 +3946,7 @@
       "permissions.geo": {
         "value": {
           "name": "geolocation",
-          "state": "denied",
+          "state": "prompt",
           "tag": "[object PermissionStatus]"
         }
       },
@@ -3959,9 +3957,8 @@
         }
       },
       "clipboard.read": {
-        "error": {
-          "message": "Failed to execute 'readText' on 'Clipboard': Read permission denied.",
-          "name": "NotAllowedError"
+        "value": {
+          "pending": true
         }
       },
       "media.enumerate": {
@@ -4027,9 +4024,8 @@
         }
       },
       "media.getUserMedia": {
-        "error": {
-          "message": "Permission denied",
-          "name": "NotAllowedError"
+        "value": {
+          "pending": true
         }
       },
       "media.invalid": {
@@ -4144,9 +4140,8 @@
         }
       },
       "keyboard.lock": {
-        "error": {
-          "message": "lock() request could not be registered.",
-          "name": "InvalidStateError"
+        "value": {
+          "pending": true
         }
       },
       "keyboard.layout": {
@@ -4291,23 +4286,23 @@
           },
           "background-fetch": "granted",
           "background-sync": "granted",
-          "camera": "denied",
+          "camera": "prompt",
           "captured-surface-control": "prompt",
-          "clipboard-read": "denied",
+          "clipboard-read": "prompt",
           "clipboard-write": "granted",
           "display-capture": "prompt",
           "fullscreen": {
             "message": "Failed to execute 'query' on 'Permissions': Fullscreen Permission only supports allowWithoutGesture:true.",
             "name": "TypeError"
           },
-          "geolocation": "denied",
+          "geolocation": "prompt",
           "geolocation-approximate": {
             "message": "Failed to execute 'query' on 'Permissions': Permission API support for approximate geolocation is not enabled.",
             "name": "TypeError"
           },
           "gyroscope": "granted",
           "idle-detection": "prompt",
-          "keyboard-lock": "denied",
+          "keyboard-lock": "prompt",
           "local-fonts": "prompt",
           "local-network": "prompt",
           "local-network-access": "prompt",
@@ -9951,5 +9946,13 @@
         }
       }
     }
+  },
+  "environmentSelection": {
+    "browserMode": "headful",
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1"
+  },
+  "comparisonOracle": {
+    "capture": "navigator-chrome152.json",
+    "browserMode": "headful"
   }
 }

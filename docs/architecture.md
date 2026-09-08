@@ -24,6 +24,10 @@ adapters live below it. Production browser code does not import a concrete engin
 display, graphics, locale, clock, network and permissions. JavaScript-visible
 values and request headers are derived projections. Construction validates
 cross-field invariants; mutation occurs through commands on `Page`.
+Presentation mode and the Environment profile ID are first-class state. A complete
+headful or headless profile is selected before realm construction; runtime code
+must not spoof individual properties to conceal a headless identity. See the
+[oracle policy](oracle-policy.md).
 
 Environment permissions are initial defaults. Live permission decisions and
 changes, clipboard text, login state, bucket metadata and lock queues belong to

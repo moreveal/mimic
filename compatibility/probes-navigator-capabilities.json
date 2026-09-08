@@ -61,7 +61,7 @@
   },
   {
     "name": "clipboard.read",
-    "expression": "navigator.clipboard.readText()"
+    "expression": "navigator.clipboard.readText().then(()=>({resolved:true}))"
   },
   {
     "name": "media.enumerate",

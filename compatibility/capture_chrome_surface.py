@@ -14,24 +14,28 @@ import threading
 import urllib.request
 
 from pyppeteer import connect
+from oracle import (
+    MODES,
+    PINNED_PRODUCT,
+    capture_metadata,
+    default_profile_id,
+    prepare_page,
+    product,
+)
 
 
-PINNED_PRODUCT = "Chrome/152.0.7977.82"
-
-
-def product(endpoint: str) -> str:
-    with urllib.request.urlopen(endpoint.rstrip("/") + "/json/version") as response:
-        return json.load(response).get("Browser", "")
-
-
-async def capture(endpoint: str, url: str) -> dict:
+async def capture(endpoint: str, url: str, mode: str, profile_id: str,
+                  feature_overrides: list[str], window_size: str) -> dict:
     observed = product(endpoint)
     if observed != PINNED_PRODUCT:
         raise RuntimeError(f"Chrome oracle drift: expected {PINNED_PRODUCT}, got {observed!r}")
     browser = await connect(browserURL=endpoint, defaultViewport=None)
     page = await browser.newPage()
     try:
+        await prepare_page(browser, page, mode, window_size)
         await page.goto(url, {"waitUntil": "load", "timeout": 30_000})
+        if mode == "headful":
+            await page.bringToFront()
         context = await page.evaluate(
             """() => ({
               url: location.href,
@@ -111,6 +115,11 @@ async def capture(endpoint: str, url: str) -> dict:
                 "platform": "windows-x64",
                 "channel": "stable",
             },
+            "captureMetadata": await capture_metadata(
+                endpoint, browser, page, mode=mode,
+                environment_profile_id=profile_id,
+                declared_feature_overrides=feature_overrides,
+            ),
             "captureContext": context,
             "properties": properties,
             "prototypes": prototypes,
@@ -126,6 +135,10 @@ async def main() -> None:
     parser.add_argument("--url", default="https://example.com/")
     parser.add_argument("--output", default="chrome/152/generated/window-secure.json")
     parser.add_argument("--isolated-fixture", action="store_true")
+    parser.add_argument("--browser-mode", choices=MODES, default="headful")
+    parser.add_argument("--environment-profile-id", default="")
+    parser.add_argument("--feature-override", action="append", default=[])
+    parser.add_argument("--window-size", default="1280x800")
     args = parser.parse_args()
     server = None
     if args.isolated_fixture:
@@ -147,7 +160,9 @@ async def main() -> None:
         threading.Thread(target=server.serve_forever, daemon=True).start()
         args.url = f"http://127.0.0.1:{server.server_port}/"
     try:
-        result = await capture(args.chrome, args.url)
+        profile_id = args.environment_profile_id or default_profile_id(args.browser_mode)
+        result = await capture(args.chrome, args.url, args.browser_mode, profile_id,
+                               args.feature_override, args.window_size)
     finally:
         if server:
             server.shutdown()

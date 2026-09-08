@@ -9,12 +9,46 @@
     "platform": "windows-x64",
     "channel": "stable"
   },
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": {
+      "worker": true,
+      "ownerWindow": true
+    },
+    "isolationState": {
+      "worker": false,
+      "ownerWindow": false
+    },
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
   "captureContext": {
-    "url": "blob:https://example.com/50e3b204-cafe-4ad8-b70a-cfdb60343635",
+    "url": "blob:https://example.com/09a850b3-1e53-409a-9e35-c7cb13aab8d4",
     "origin": "https://example.com",
     "secureContext": true,
     "crossOriginIsolated": false,
-    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
     "platform": "Win32"
   },
   "properties": [

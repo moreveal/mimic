@@ -96,7 +96,22 @@ type ICEProfile struct {
 }
 type Permissions map[string]string
 
+type BrowserMode string
+
+const (
+	BrowserModeHeadful  BrowserMode = "headful"
+	BrowserModeHeadless BrowserMode = "headless"
+)
+
+type Presentation struct {
+	// Mode is part of the selected environment, never inferred from individual
+	// Navigator or Window properties.
+	Mode BrowserMode
+}
+
 type Environment struct {
+	ProfileID    string
+	Presentation Presentation
 	Product      Product
 	Platform     Platform
 	Hardware     Hardware
@@ -126,11 +141,13 @@ func ChromeDesktopWindows(product Product) Environment {
 		product.UserAgentProduct = "Chrome"
 	}
 	return Environment{
-		Product:  product,
-		Platform: Platform{"Windows", "10.0.0", "x86", false},
-		Hardware: Hardware{8, 8},
-		Display:  Display{PhysicalWidth: 1920, PhysicalHeight: 1080, AvailableWidth: 1920, AvailableHeight: 1040, DeviceScaleFactor: 1, ColorDepth: 24},
-		Window:   Window{0, 0, 1280, 800, 1280, 720},
+		ProfileID:    "chrome-desktop-windows-headful-default",
+		Presentation: Presentation{Mode: BrowserModeHeadful},
+		Product:      product,
+		Platform:     Platform{"Windows", "10.0.0", "x86", false},
+		Hardware:     Hardware{8, 8},
+		Display:      Display{PhysicalWidth: 1920, PhysicalHeight: 1080, AvailableWidth: 1920, AvailableHeight: 1040, DeviceScaleFactor: 1, ColorDepth: 24},
+		Window:       Window{0, 0, 1280, 800, 1280, 720},
 		Graphics: Graphics{
 			Vendor: "Google Inc. (Intel)", Renderer: "ANGLE (Intel, Intel(R) UHD Graphics Direct3D11 vs_5_0 ps_5_0, D3D11)", MaxTextureSize: 16384,
 			WebGPU: GPUAdapter{Vendor: "intel", Architecture: "gen-12lp", Features: []string{"bgra8unorm-storage", "clip-distances", "core-features-and-limits", "depth-clip-control", "depth32float-stencil8", "dual-source-blending", "float32-blendable", "float32-filterable", "indirect-first-instance", "primitive-index", "rg11b10ufloat-renderable", "shader-f16", "subgroup-size-control", "subgroups", "texture-component-swizzle", "texture-compression-bc", "texture-compression-bc-sliced-3d", "texture-formats-tier1", "texture-formats-tier2", "timestamp-query"}},
@@ -144,6 +161,12 @@ func ChromeDesktopWindows(product Product) Environment {
 }
 
 func (e Environment) Validate() error {
+	if e.ProfileID == "" {
+		return fmt.Errorf("environment profile ID is required")
+	}
+	if e.Presentation.Mode != BrowserModeHeadful && e.Presentation.Mode != BrowserModeHeadless {
+		return fmt.Errorf("browser presentation mode must be headful or headless")
+	}
 	if e.Product.Name != "Chrome" || e.Product.Version == "" {
 		return fmt.Errorf("product must name a concrete Chrome version")
 	}

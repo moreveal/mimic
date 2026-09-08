@@ -60,7 +60,7 @@ def main():
               'chromeExposed':dict(zip(contexts,[v['exposed'] for v in c]))})
     report=f'''# Navigator capability domains — Chrome 152
 
-Эталон: `{chrome['product']}`, Windows x64, headless, отдельный профиль, без feature overrides; синтетические локальные страницы. `Runtime.evaluate` выполняется с `userGesture:false`. Сеть и доступность OS-служб — состояние машины, а не константы версии Chrome.
+Эталон: `{chrome['product']}`, Windows x64, headful, свежий контролируемый профиль, без feature overrides; синтетические локальные страницы. `Runtime.evaluate` выполняется с `userGesture:false`. Сеть и доступность OS-служб — состояние машины, а не константы версии Chrome.
 
 Контексты в столбцах exposure: **secure / secure+COOP+COEP / opaque about:blank**. Данные insecure Window дополнительно получены на `data:`. Другие профили, origin trials, PWA, managed apps и разрешения iframe этим отчётом не сертифицированы.
 
@@ -87,7 +87,8 @@ Exposure выбирается из закреплённого снимка, за
 
 ## Проверяемые артефакты
 
-- [Chrome capture](../compatibility/captures/navigator-chrome152.json), [исходный HEAD](../compatibility/captures/navigator-mimic-baseline.json), [Mimic после изменений](../compatibility/captures/navigator-mimic-current.json).
+- [Headful Chrome capture](../compatibility/captures/navigator-chrome152.json), [mode-specific headless capture](../compatibility/captures/navigator-chrome152-headless.json), [исходный HEAD](../compatibility/captures/navigator-mimic-baseline.json), [Mimic после изменений](../compatibility/captures/navigator-mimic-current.json).
+- [Oracle policy](oracle-policy.md) и [отчёт аудита headless-ожиданий](oracle-headless-audit.md).
 - [Точные расхождения операций](navigator-capability-differences.json), [происхождение и условия каждого члена](navigator-capability-provenance.json).
 - [Общий сценарий захвата](../compatibility/navigator_capabilities.py), [пробы](../compatibility/probes-navigator-capabilities.json), [регрессионные тесты](../internal/browser/capabilities_test.go).
 - [109 закреплённых IDL-исходников](../chrome/152/generated/navigator-idl-sources.json), [их воспроизводимое восстановление](../tools/refresh_navigator_idl.py), [тесты парсера](../tools/test_generate_compat.py).

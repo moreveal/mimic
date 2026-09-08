@@ -43,6 +43,16 @@ func TestNavigatorCapturedShape(t *testing.T) {
 	if err = json.Unmarshal(fixture, &capture); err != nil {
 		t.Fatal(err)
 	}
+	var metadata struct {
+		BrowserMode          string `json:"browserMode"`
+		EnvironmentProfileID string `json:"environmentProfileId"`
+	}
+	if err = json.Unmarshal(capture["captureMetadata"], &metadata); err != nil {
+		t.Fatal(err)
+	}
+	if metadata.BrowserMode != "headful" || metadata.EnvironmentProfileID != "chrome-152-windows-x64-headful-controlled-v1" {
+		t.Fatalf("generic Navigator fixture must be the authoritative headful capture: %+v", metadata)
+	}
 	probe, err := os.ReadFile("../../compatibility/navigator_capabilities.py")
 	if err != nil {
 		t.Fatal(err)
@@ -134,7 +144,7 @@ func TestNavigatorCapturedOperationsV8(t *testing.T) {
 				// These differences are measured and reported, never normalized away
 				// in the retained differential: network is a different machine profile,
 				// Bluetooth startup is time-variable, and no power backend is installed.
-				if probe.Name == "connection" || (target.name == "secure" && (probe.Name == "bluetooth.available" || probe.Name == "wakeLock.request")) {
+				if probe.Name == "connection" || (target.name == "secure" && (probe.Name == "bluetooth.available" || probe.Name == "serial.ports" || probe.Name == "wakeLock.request")) {
 					continue
 				}
 				source, _ := json.Marshal(probe.Expression)

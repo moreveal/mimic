@@ -6,7 +6,8 @@ import threading
 from pathlib import Path
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 from pyppeteer import connect
-from capture_chrome_surface import product, PINNED_PRODUCT
+from oracle import (MODES, PINNED_PRODUCT, capture_metadata, default_profile_id,
+                    prepare_page, product)
 
 MEMBERS = "vendorSub productSub appCodeName doNotTrack userActivation scheduling geolocation bluetooth clipboard credentials ink devicePosture hid keyboard managed mediaCapabilities mediaSession mediaDevices permissions presentation serial serviceWorker virtualKeyboard wakeLock usb windowControlsOverlay xr storageBuckets locks connection storage webkitTemporaryStorage webkitPersistentStorage login protectedAudience deprecatedRunAdAuctionEnforcesKAnonymity".split()
 
@@ -57,7 +58,7 @@ OPERATIONS = {
  'credentials.prevent':'navigator.credentials.preventSilentAccess()',
  'permissions.geo':"navigator.permissions.query({name:'geolocation'}).then(p=>({state:p.state,name:p.name,tag:Object.prototype.toString.call(p)}))",
  'permissions.unknown':"navigator.permissions.query({name:'not-a-permission'})",
- 'clipboard.read':'navigator.clipboard.readText()',
+ 'clipboard.read':'navigator.clipboard.readText().then(()=>({resolved:true}))',
  'media.enumerate':'navigator.mediaDevices.enumerateDevices().then(ds=>ds.map(d=>d.toJSON()))',
  'media.constraints':'navigator.mediaDevices.getSupportedConstraints()',
  'media.getUserMedia':'navigator.mediaDevices.getUserMedia({video:true})',
@@ -99,26 +100,44 @@ permission_names=next(d['values'] for d in catalog['declarations'] if d['name']=
 OPERATIONS['permissions.all']="Promise.all("+json.dumps(permission_names)+".map(async name=>{try{return [name,(await navigator.permissions.query({name})).state]}catch(e){return [name,{name:e.name,message:e.message}]}})).then(Object.fromEntries)"
 OPERATIONS={'permissions.initial':OPERATIONS['permissions.all'],**OPERATIONS}
 
-async def observe(endpoint, url, operations=True):
+async def observe(endpoint, url, operations=True, mode='headful', window_size='1280x800', oracle=True):
     browser = await connect(browserURL=endpoint, defaultViewport=None)
     page = await browser.newPage()
     try:
+        if oracle: await prepare_page(browser, page, mode, window_size)
         if url != 'about:blank': await page.goto(url)
-        async def evaluate(function, *args):
+        if oracle and mode == 'headful': await page.bringToFront()
+        async def evaluate(target, function, *args):
             # Pyppeteer evaluate() silently sets userGesture=true. That changes
             # the very activation and capability semantics being measured.
-            response=await page._client.send('Runtime.evaluate', {'expression':f'({function})(...{json.dumps(args)})', 'awaitPromise':True,'returnByValue':True,'userGesture':False})
+            response=await target._client.send('Runtime.evaluate', {'expression':f'({function})(...{json.dumps(args)})', 'awaitPromise':True,'returnByValue':True,'userGesture':False})
             if 'exceptionDetails' in response: raise RuntimeError(response['exceptionDetails'])
             return response['result'].get('value')
-        result = await evaluate(SHAPE, MEMBERS)
+        result = await evaluate(page, SHAPE, MEMBERS)
         result['operations'] = {}
         for name, expression in (OPERATIONS.items() if operations else []):
-            result['operations'][name] = await evaluate(r"""async (source)=>{
-              try {const value=await Promise.race([eval(source),new Promise(resolve=>setTimeout(()=>resolve({pending:true}),1500))]);
-                return {value:value===undefined?{undefined:true}:value};
-              }catch(e){return {error:{name:e.name,message:e.message}}}
-            }""", expression)
-        return result
+            operation_page = await browser.newPage() if oracle else page
+            try:
+                if oracle:
+                    await browser._connection.send('Browser.resetPermissions')
+                    await prepare_page(browser, operation_page, mode, window_size)
+                if url != 'about:blank': await operation_page.goto(url)
+                if oracle and mode == 'headful': await operation_page.bringToFront()
+                result['operations'][name] = await evaluate(operation_page, r"""async (source)=>{
+                  try {const value=await Promise.race([eval(source),new Promise(resolve=>setTimeout(()=>resolve({pending:true}),1500))]);
+                    return {value:value===undefined?{undefined:true}:value};
+                  }catch(e){return {error:{name:e.name,message:e.message}}}
+                }""", expression)
+            finally:
+                if oracle: await operation_page.close()
+        if oracle and mode == 'headful': await page.bringToFront()
+        context = await evaluate(page, "() => ({secureContext:isSecureContext,crossOriginIsolated,visibilityState:document.visibilityState,hasFocus:document.hasFocus()})")
+        metadata = None
+        if oracle:
+            metadata = await capture_metadata(
+                endpoint, browser, page, mode=mode,
+                environment_profile_id='temporary', context_states={'current': context})
+        return result, context, metadata
     finally:
         await page.close()
         await browser.disconnect()
@@ -129,6 +148,10 @@ async def main():
     parser.add_argument('--mimic',action='store_true')
     parser.add_argument('--output',required=True)
     parser.add_argument('--write-probes',action='store_true')
+    parser.add_argument('--browser-mode',choices=MODES,default='headful')
+    parser.add_argument('--environment-profile-id',default='')
+    parser.add_argument('--feature-override',action='append',default=[])
+    parser.add_argument('--window-size',default='1280x800')
     args=parser.parse_args()
     if args.write_probes:
         Path(__file__).with_name('probes-navigator-capabilities.json').write_text(json.dumps([{'name':name,'expression':expression} for name,expression in OPERATIONS.items()],indent=2)+'\n',encoding='utf-8')
@@ -147,10 +170,30 @@ async def main():
     server=ThreadingHTTPServer(('127.0.0.1',0),Handler)
     threading.Thread(target=server.serve_forever,daemon=True).start()
     try:
-        data={'product':observed,'profile':'clean headless Windows; no feature overrides',
-          'secure':await observe(args.endpoint,f'http://127.0.0.1:{server.server_port}/'),
-          'isolated':await observe(args.endpoint,f'http://127.0.0.1:{server.server_port}/isolated',False),
-          'opaque':await observe(args.endpoint,'about:blank')}
+        observations = {}
+        contexts = {}
+        metadata = None
+        for name, url, operations in [
+            ('secure', f'http://127.0.0.1:{server.server_port}/', True),
+            ('isolated', f'http://127.0.0.1:{server.server_port}/isolated', False),
+            ('opaque', 'about:blank', True),
+        ]:
+            observations[name], contexts[name], metadata = await observe(
+                args.endpoint, url, operations, args.browser_mode, args.window_size, not args.mimic)
+        profile_id = args.environment_profile_id or default_profile_id(args.browser_mode)
+        data={'product':observed, **observations}
+        if args.mimic:
+            data['environmentSelection'] = {'browserMode': args.browser_mode,
+              'environmentProfileId': profile_id}
+            data['comparisonOracle'] = {'capture': 'navigator-chrome152.json',
+              'browserMode': args.browser_mode}
+        else:
+            metadata['environmentProfileId'] = profile_id
+            metadata['commandLineFeatureOverrides'] = sorted(set(
+                metadata['commandLineFeatureOverrides'] + args.feature_override))
+            metadata['secureContextState'] = {name:value['secureContext'] for name,value in contexts.items()}
+            metadata['isolationState'] = {name:value['crossOriginIsolated'] for name,value in contexts.items()}
+            data['captureMetadata'] = metadata
         Path(args.output).write_text(json.dumps(data,indent=2,ensure_ascii=False)+'\n',encoding='utf-8')
     finally: server.shutdown()
 

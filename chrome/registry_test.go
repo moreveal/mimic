@@ -1,6 +1,10 @@
 package chrome
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/moreveal/mimic/internal/state"
+)
 
 func TestGetReturnsExactVersionedBundle(t *testing.T) {
 	bundle, err := Get(152)
@@ -12,5 +16,12 @@ func TestGetReturnsExactVersionedBundle(t *testing.T) {
 	}
 	if _, err := Get(153); err == nil {
 		t.Fatal("uninstalled milestone must not silently fall back")
+	}
+	if bundle.Environment().Mode != state.BrowserModeHeadful {
+		t.Fatal("registry default must select the authoritative headful oracle")
+	}
+	headless, err := GetForMode(152, state.BrowserModeHeadless)
+	if err != nil || headless.Environment().Mode != state.BrowserModeHeadless {
+		t.Fatalf("explicit headless selection failed: %v", err)
 	}
 }

@@ -1,6 +1,7 @@
 package chrome152
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -22,8 +23,10 @@ const (
 // Environment returns the canonical Windows x64 Stable profile for this
 // compatibility bundle. Runtime state such as the wall clock is captured by
 // the base constructor, while product identity is pinned here.
-func environment() state.Environment {
-	environment := state.ChromeDesktopWindows(state.Product{Name: "Chrome", Version: "152.0.0.0", FullVersion: Version, UserAgentProduct: "HeadlessChrome", UserAgentBrands: []state.UserAgentBrand{{Brand: "Not?A_Brand", Version: "24", FullVersion: "24.0.0.0"}, {Brand: "Chromium", Version: "152", FullVersion: Version}}})
+func environment(mode state.BrowserMode) state.Environment {
+	environment := state.ChromeDesktopWindows(state.Product{Name: "Chrome", Version: "152.0.0.0", FullVersion: Version, UserAgentProduct: "Chrome", UserAgentBrands: []state.UserAgentBrand{{Brand: "Not?A_Brand", Version: "24", FullVersion: "24.0.0.0"}, {Brand: "Chromium", Version: "152", FullVersion: Version}}})
+	environment.ProfileID = "chrome-152-windows-x64-headful-controlled-v1"
+	environment.Presentation.Mode = mode
 	environment.Platform.Architecture = "x86_64"
 	for _, name := range strings.Fields("background-fetch background-sync accelerometer gyroscope magnetometer screen-wake-lock clipboard-write payment-handler storage-access pointer-lock") {
 		environment.Permissions[name] = "granted"
@@ -52,14 +55,14 @@ func environment() state.Environment {
 	environment.Platform.OSVersion = "19.0.0"
 	environment.Hardware.LogicalProcessors = 28
 	environment.Hardware.DeviceMemoryGB = 32
-	environment.Display.PhysicalWidth = 800
-	environment.Display.PhysicalHeight = 600
-	environment.Display.AvailableWidth = 800
-	environment.Display.AvailableHeight = 600
-	environment.Window.OuterWidth = 780
-	environment.Window.OuterHeight = 580
-	environment.Window.ViewportWidth = 772
-	environment.Window.ViewportHeight = 433
+	environment.Display.PhysicalWidth = 2560
+	environment.Display.PhysicalHeight = 1440
+	environment.Display.AvailableWidth = 2560
+	environment.Display.AvailableHeight = 1392
+	environment.Window.OuterWidth = 1280
+	environment.Window.OuterHeight = 800
+	environment.Window.ViewportWidth = 1272
+	environment.Window.ViewportHeight = 653
 	environment.Locale.Languages = []string{"ru-RU"}
 	environment.Locale.IntlLocale = "ru"
 	environment.Locale.Timezone = "Asia/Tbilisi"
@@ -72,10 +75,9 @@ func environment() state.Environment {
 	environment.Time.NetworkScale = 1
 	environment.Graphics.WebGPU.Vendor = "nvidia"
 	environment.Graphics.WebGPU.Architecture = "blackwell"
-	// This latency belongs to the pinned Windows/headless differential machine,
-	// not to Chrome 152. It models asynchronous graphics-process adapter
-	// discovery without requiring a GPU in Mimic.
-	environment.Graphics.WebGPU.InitializationDelayMillis = 250
+	// Adapter discovery timing is selected by this environment profile rather
+	// than treated as a Chrome-version semantic.
+	environment.Graphics.WebGPU.InitializationDelayMillis = 205
 	environment.Network.WireProfile = "chrome-152-windows-x64"
 	// These are properties of the pinned differential-test machine/network,
 	// not of a target site. They remain canonical and externally configurable
@@ -93,6 +95,25 @@ func environment() state.Environment {
 	environment.Network.ICE.HostDelayMillis = 21
 	environment.Network.ICE.ReflexiveDelayMillis = 30
 	environment.Network.ICE.EndDelayMillis = 130
+	if mode == state.BrowserModeHeadless {
+		// This is retained only as an explicit regression environment. It is not
+		// the default Chrome 152 oracle and cannot supply generic expectations.
+		environment.ProfileID = "chrome-152-windows-x64-headless-controlled-v1"
+		environment.Product.UserAgentProduct = "HeadlessChrome"
+		environment.Display.PhysicalWidth = 800
+		environment.Display.PhysicalHeight = 600
+		environment.Display.AvailableWidth = 800
+		environment.Display.AvailableHeight = 600
+		environment.Window.OuterWidth = 780
+		environment.Window.OuterHeight = 580
+		environment.Window.ViewportWidth = 772
+		environment.Window.ViewportHeight = 433
+		environment.Graphics.WebGPU.InitializationDelayMillis = 250
+		environment.Permissions["geolocation"] = "denied"
+		environment.Permissions["camera"] = "denied"
+		environment.Permissions["clipboard-read"] = "denied"
+		environment.Permissions["keyboard-lock"] = "denied"
+	}
 	return environment
 }
 
@@ -110,9 +131,18 @@ func newTransport() (http.RoundTripper, error) {
 	)
 }
 
-type Bundle struct{}
+type Bundle struct{ mode state.BrowserMode }
 
-func New() *Bundle { return &Bundle{} }
+func New() *Bundle { return &Bundle{mode: state.BrowserModeHeadful} }
+
+// NewForMode selects a complete presentation/runtime environment. Headless is
+// available for explicitly mode-scoped regression probes only.
+func NewForMode(mode state.BrowserMode) (*Bundle, error) {
+	if mode != state.BrowserModeHeadful && mode != state.BrowserModeHeadless {
+		return nil, fmt.Errorf("unsupported Chrome oracle mode %q", mode)
+	}
+	return &Bundle{mode: mode}, nil
+}
 
 func (*Bundle) Version() compatibility.ChromeVersion {
 	return compatibility.ChromeVersion{Milestone: Milestone, Version: Version, ChromiumCommit: ChromiumCommit, ChromiumRevision: ChromiumRevision}
@@ -131,9 +161,17 @@ func (*Bundle) Surface() *compatibility.WebAPISurface {
 func (*Bundle) CDP() *compatibility.ProtocolSchema {
 	return &compatibility.ProtocolSchema{Methods: generated.ProtocolMethods(), Events: generated.ProtocolEvents()}
 }
-func (*Bundle) Environment() *compatibility.EnvironmentProfile {
-	return &compatibility.EnvironmentProfile{State: environment(), NewTransport: newTransport}
+func (b *Bundle) Environment() *compatibility.EnvironmentProfile {
+	e := environment(b.mode)
+	return &compatibility.EnvironmentProfile{ID: e.ProfileID, Mode: e.Presentation.Mode, State: e, NewTransport: newTransport}
 }
 func (*Bundle) Expectations() *compatibility.CompatExpectations {
-	return &compatibility.CompatExpectations{Platform: "windows-x64", Channel: "stable"}
+	return &compatibility.CompatExpectations{
+		Platform: "windows-x64", Channel: "stable",
+		PrimaryOracle: compatibility.OracleDescriptor{ChromeVersion: Version, ChromiumRevision: ChromiumRevision, V8Version: "15.2.124.21", Platform: "windows-x64", Mode: state.BrowserModeHeadful, EnvironmentProfileID: "chrome-152-windows-x64-headful-controlled-v1", Authoritative: true},
+		Sources: map[state.BrowserMode]compatibility.OracleExpectationSource{
+			state.BrowserModeHeadful:  {Mode: state.BrowserModeHeadful, CapturePath: "compatibility/captures/navigator-chrome152.json", Authoritative: true},
+			state.BrowserModeHeadless: {Mode: state.BrowserModeHeadless, CapturePath: "compatibility/captures/navigator-chrome152-headless.json", Authoritative: false},
+		},
+	}
 }
