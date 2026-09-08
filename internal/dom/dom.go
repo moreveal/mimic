@@ -21,11 +21,12 @@ type Node struct {
 	Children   []int64           `json:"children,omitempty"`
 }
 type Document struct {
-	mu            sync.RWMutex
-	next          int64
-	nodes         map[int64]*Node
-	root          int64
-	title, source string
+	mu               sync.RWMutex
+	next             int64
+	nodes            map[int64]*Node
+	root             int64
+	title, source    string
+	hasFrameElements bool
 }
 
 func Parse(source string) (*Document, error) {
@@ -63,6 +64,7 @@ func Parse(source string) (*Document, error) {
 			node.Type = "other"
 		}
 		d.nodes[id] = node
+		d.hasFrameElements = d.hasFrameElements || node.TagName == "IFRAME"
 		if parent == 0 {
 			d.root = id
 		} else {
@@ -81,7 +83,15 @@ func Parse(source string) (*Document, error) {
 func (d *Document) Title() string     { d.mu.RLock(); defer d.mu.RUnlock(); return d.title }
 func (d *Document) SetTitle(v string) { d.mu.Lock(); d.title = v; d.mu.Unlock() }
 func (d *Document) Source() string    { return d.source }
-func (d *Document) Root() Node        { d.mu.RLock(); defer d.mu.RUnlock(); return *d.nodes[d.root] }
+
+// HasFrameElements is conservative: detached nodes remain reusable, so once an
+// iframe has existed we keep insertion steps enabled for this document.
+func (d *Document) HasFrameElements() bool {
+	d.mu.RLock()
+	defer d.mu.RUnlock()
+	return d.hasFrameElements
+}
+func (d *Document) Root() Node { d.mu.RLock(); defer d.mu.RUnlock(); return *d.nodes[d.root] }
 func (d *Document) Get(id int64) (Node, bool) {
 	d.mu.RLock()
 	defer d.mu.RUnlock()
@@ -397,6 +407,7 @@ func (d *Document) AppendElement(parent int64, tag string, attrs map[string]stri
 	d.next++
 	n := &Node{ID: d.next, Type: "element", TagName: strings.ToUpper(tag), Attributes: attrs, Parent: parent}
 	d.nodes[n.ID] = n
+	d.hasFrameElements = d.hasFrameElements || n.TagName == "IFRAME"
 	d.nodes[parent].Children = append(d.nodes[parent].Children, n.ID)
 	return *n, nil
 }
@@ -409,6 +420,7 @@ func (d *Document) CreateElementNS(namespace, tag string) Node {
 	d.next++
 	n := &Node{ID: d.next, Type: "element", TagName: strings.ToUpper(tag), Namespace: namespace, Attributes: map[string]string{}}
 	d.nodes[n.ID] = n
+	d.hasFrameElements = d.hasFrameElements || n.TagName == "IFRAME"
 	return *n
 }
 func (d *Document) CreateComment(data string) Node {
@@ -677,6 +689,7 @@ func (d *Document) SetInnerHTML(id int64, source string) error {
 			n.Type = "other"
 		}
 		d.nodes[n.ID] = n
+		d.hasFrameElements = d.hasFrameElements || n.TagName == "IFRAME"
 		d.nodes[parentID].Children = append(d.nodes[parentID].Children, n.ID)
 		for child := raw.FirstChild; child != nil; child = child.NextSibling {
 			add(child, n.ID)
