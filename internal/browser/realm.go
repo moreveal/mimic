@@ -30,6 +30,7 @@ import (
 )
 
 type Realm struct {
+	profileWrappers     uint64
 	ID                  string
 	activationAt        time.Time
 	inputDispatcher     engine.Value
@@ -1234,6 +1235,13 @@ func (r *Realm) install() error {
 	})
 	addStorageHosts(r, host)
 	addCapabilityHosts(r, host)
+	profiling := false
+	if diagnostic, ok := r.runtime.(interface{ ProfileEnabled() bool }); ok {
+		profiling = diagnostic.ProfileEnabled()
+	}
+	if profiling {
+		host["profileWrapper"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { r.profileWrappers++; return nil, nil })
+	}
 	if err := r.runtime.Set("__mimic", host); err != nil {
 		return err
 	}
@@ -1255,7 +1263,11 @@ func (r *Realm) install() error {
 			exposure = &selected
 		}
 	}
-	_, err := r.runtime.Eval(context.Background(), webapi.Surface(generated, exposure), "mimic:webapi-surface")
+	source := webapi.Surface(generated, exposure)
+	if profiling {
+		source = strings.Replace(source, "elementWrappers.set(key,proxy)", "host.profileWrapper();elementWrappers.set(key,proxy)", 1)
+	}
+	_, err := r.runtime.Eval(context.Background(), source, "mimic:webapi-surface")
 	if err != nil {
 		return err
 	}

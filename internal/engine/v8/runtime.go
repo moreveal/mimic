@@ -30,7 +30,7 @@ func (Factory) New() engine.Runtime {
 		_ = owner.Dispose()
 		panic(fmt.Sprintf("create V8 realm: %v", err))
 	}
-	backend := &adapter{owner: owner, realm: realm, moduleCache: map[string]*gov8.Module{}, moduleNames: map[*gov8.Module]string{}}
+	backend := &adapter{owner: owner, realm: realm, moduleCache: map[string]*gov8.Module{}, moduleNames: map[*gov8.Module]string{}, profile: newDiagnostics()}
 	factory, err := backend.Eval(context.Background(), `(()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b});return[promise,resolve,reject]})`, "mimic-promise-factory.js")
 	if err != nil {
 		_ = backend.Close()
@@ -40,7 +40,10 @@ func (Factory) New() engine.Runtime {
 	return backend
 }
 
-type hostFunction struct{ function engine.Function }
+type hostFunction struct {
+	function engine.Function
+	name     string
+}
 
 type callbackContext struct {
 	scope  *gov8.CallbackScope
@@ -50,6 +53,7 @@ type callbackContext struct {
 }
 
 type adapter struct {
+	profile        *diagnosticState
 	owner          *Runtime
 	realm          *Realm
 	now            func() time.Time
@@ -108,12 +112,27 @@ func (a *adapter) Eval(ctx context.Context, source, name string) (engine.Value, 
 			return nil, err
 		}
 		defer catcher.Close()
+		var started time.Time
+		if a.profile != nil {
+			started = time.Now()
+		}
 		script, err := realm.Compile(scope, source, catcher)
+		if a.profile != nil {
+			a.recordCost("compile:"+name, started)
+		}
 		if err != nil {
 			return nil, exceptionError(catcher, scope, realm, name, err)
 		}
 		defer script.Close()
+		if a.profile != nil {
+			started = time.Now()
+		}
 		result, err := script.Run(scope, catcher)
+		if a.profile != nil {
+			a.recordCost("execute:"+name, started)
+			heap, _ := s.isolate.GetHeapStatistics()
+			a.profile.Heaps[name] = heap
+		}
 		if err != nil {
 			return nil, exceptionError(catcher, scope, realm, name, err)
 		}
@@ -777,7 +796,7 @@ func (a *adapter) marshal(scope *gov8.Scope, realm *gov8.Context, value any) (go
 		return a.local(scope, engineValue)
 	}
 	if function, ok := value.(hostFunction); ok {
-		return a.makeFunction(scope, realm, function.function)
+		return a.makeFunction(scope, realm, function.function, function.name)
 	}
 	if primitiveValue, ok, err := marshalPrimitive(scope, value); ok || err != nil {
 		return primitiveValue, err
@@ -794,7 +813,12 @@ func (a *adapter) marshal(scope *gov8.Scope, realm *gov8.Context, value any) (go
 		}
 		iter := rv.MapRange()
 		for iter.Next() {
-			member, err := a.marshal(scope, realm, iter.Value().Interface())
+			value := iter.Value().Interface()
+			if function, ok := value.(hostFunction); ok {
+				function.name = iter.Key().String()
+				value = function
+			}
+			member, err := a.marshal(scope, realm, value)
 			if err != nil {
 				return gov8.Value{}, err
 			}
@@ -832,11 +856,15 @@ func (a *adapter) marshal(scope *gov8.Scope, realm *gov8.Context, value any) (go
 	return script.Run(scope, nil)
 }
 
-func (a *adapter) makeFunction(scope *gov8.Scope, realm *gov8.Context, function engine.Function) (gov8.Value, error) {
+func (a *adapter) makeFunction(scope *gov8.Scope, realm *gov8.Context, function engine.Function, name string) (gov8.Value, error) {
 	if a.activeIsolate == nil {
 		return gov8.Value{}, errors.New("V8 isolate is not active")
 	}
 	fn, err := a.activeIsolate.NewFunction(scope, realm, func(cs *gov8.CallbackScope, args gov8.FunctionCallbackArguments, rv gov8.ReturnValue) {
+		if a.profile != nil {
+			started := time.Now()
+			defer a.recordCost("host:"+name, started)
+		}
 		previous := a.callback
 		a.callbackSeq++
 		callbackID := a.callbackSeq
