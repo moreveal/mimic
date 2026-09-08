@@ -2,8 +2,8 @@
   'use strict';
   const hostToken=host.token();
   // Match the realm trace's once-per-(name,supported) contract before FFI.
-  const tracedAccesses=new Set();
-  const recordAPIAccess=(name,supported)=>{const key=name+':'+supported;if(tracedAccesses.has(key))return;tracedAccesses.add(key);host.apiAccess(name,supported)};
+  const tracedAccesses=new Map();
+  const recordAPIAccess=(name,supported)=>{const bit=supported?1:2,seen=tracedAccesses.get(name)||0;if(seen&bit)return;tracedAccesses.set(name,seen|bit);host.apiAccess(name,supported)};
   Object.defineProperty(globalThis,'__mimicAttributeUnsafeInterfaces',{value:new Set(['WritableStream','WritableStreamDefaultWriter','TransformStream','TransformStreamDefaultController','RTCDataChannel','RTCPeerConnection','GPUDevice','Plugin','PluginArray','MimeType','MimeTypeArray']),configurable:true});
   const engineGlobals=new Set(Reflect.ownKeys(globalThis));
   const nativeFunctionText=new WeakMap();
@@ -366,7 +366,20 @@
   globalThis.RTCDataChannel=RTCDataChannel;
   Object.defineProperty(RTCDataChannel.prototype,Symbol.toStringTag,{value:'RTCDataChannel',configurable:true});
   const targetAbsentProperties=new Set(['Document.namespaces','Element<script>.crossorigin']);
-  const observe=(name,target)=>{const proxy=new Proxy(target,{get(t,p,r){if(typeof p==='string'&&!p.startsWith('_')&&(p!=='then'||Reflect.has(t,p)))recordAPIAccess(name+'.'+p,Reflect.has(t,p)||targetAbsentProperties.has(name+'.'+p));return Reflect.get(t,p,r)},set(t,p,v,r){if(typeof p==='string'&&!p.startsWith('_'))recordAPIAccess(name+'.'+p,Reflect.has(t,p)||targetAbsentProperties.has(name+'.'+p));return Reflect.set(t,p,v,r)}});if(elementData.has(target))elementData.set(proxy,elementData.get(target));if(scriptStates.has(target))scriptStates.set(proxy,scriptStates.get(target));if(elementHandlers.has(target))elementHandlers.set(proxy,elementHandlers.get(target));if(storageAreas.has(target))storageAreas.set(proxy,storageAreas.get(target));if(rtcPeerStates.has(target))rtcPeerStates.set(proxy,rtcPeerStates.get(target));if(rtcPeerPrivate.has(target))rtcPeerPrivate.set(proxy,rtcPeerPrivate.get(target));if(rtcDataStates.has(target))rtcDataStates.set(proxy,rtcDataStates.get(target));if(permissionsPolicySlots.has(target))permissionsPolicySlots.set(proxy,permissionsPolicySlots.get(target));if(trustedFactorySlots.has(target))trustedFactorySlots.set(proxy,trustedFactorySlots.get(target));return proxy};
+  // Traps depend on the interface label, never on one particular wrapper.
+  // Share their code and qualified property names; still check support on every
+  // access so own properties and prototype changes retain their tracing semantics.
+  const observationHandlers=new Map();
+  const observationHandler=name=>{
+    let handler=observationHandlers.get(name);if(handler)return handler;
+    const names=new Map(),qualified=p=>{let value=names.get(p);if(value===undefined){value=name+'.'+p;if(names.size<128)names.set(p,value)}return value};
+    handler={
+      get(t,p,r){if(typeof p==='string'&&!p.startsWith('_')&&(p!=='then'||Reflect.has(t,p))){const key=qualified(p);recordAPIAccess(key,Reflect.has(t,p)||targetAbsentProperties.has(key))}return Reflect.get(t,p,r)},
+      set(t,p,v,r){if(typeof p==='string'&&!p.startsWith('_')){const key=qualified(p);recordAPIAccess(key,Reflect.has(t,p)||targetAbsentProperties.has(key))}return Reflect.set(t,p,v,r)}
+    };
+    observationHandlers.set(name,handler);return handler;
+  };
+  const observe=(name,target)=>{const proxy=new Proxy(target,observationHandler(name));if(elementData.has(target))elementData.set(proxy,elementData.get(target));if(scriptStates.has(target))scriptStates.set(proxy,scriptStates.get(target));if(elementHandlers.has(target))elementHandlers.set(proxy,elementHandlers.get(target));if(storageAreas.has(target))storageAreas.set(proxy,storageAreas.get(target));if(rtcPeerStates.has(target))rtcPeerStates.set(proxy,rtcPeerStates.get(target));if(rtcPeerPrivate.has(target))rtcPeerPrivate.set(proxy,rtcPeerPrivate.get(target));if(rtcDataStates.has(target))rtcDataStates.set(proxy,rtcDataStates.get(target));if(permissionsPolicySlots.has(target))permissionsPolicySlots.set(proxy,permissionsPolicySlots.get(target));if(trustedFactorySlots.has(target))trustedFactorySlots.set(proxy,trustedFactorySlots.get(target));return proxy};
   const storageTarget=Object.create(Storage.prototype),sessionStorageTarget=Object.create(Storage.prototype);storageAreas.set(storageTarget,'local');storageAreas.set(sessionStorageTarget,'session');
   const nav=observe('Navigator',Object.create(Navigator.prototype)),scr=observe('Screen',Object.create(Screen.prototype)),loc=observe('Location',Object.create(Location.prototype)),histTarget=Object.create(History.prototype),hist=observe('History',histTarget),storage=observe('Storage',storageTarget),sessionStorage=observe('Storage',sessionStorageTarget),crypto=observe('Crypto',Object.create(Crypto.prototype)),gpu=observe('GPU',Object.create(GPU.prototype)),trustedTypes=observe('TrustedTypePolicyFactory',new TrustedTypePolicyFactory(hostToken)),documentPolicy=observe('PermissionsPolicy',new PermissionsPolicy(hostToken,host.permissionsPolicy()));
   historySlots.set(histTarget,{state:null,scrollRestoration:'auto'});historySlots.set(hist,historySlots.get(histTarget));
