@@ -1,9 +1,24 @@
 # Next bounded ownership experiment
 
-Status: design investigation only; no implementation or measured gain claimed.
+Status: the reserved-ID importer and host bridge are implemented in the
+detached spike; automatic JS ownership and boundary hooks are not implemented.
+No performance gain is claimed for this foundation.
 Production reference: catalog filter 52a2aa2. Fresh profile:
 `catalog/profile/phases.json.gz`. The earlier independent JS kernel demonstrates
 that removing host calls can help, but is not a compatible replacement DOM.
+
+The bridge's Go tests cover atomic rejection of cycles, duplicate/unreserved
+IDs, missing/duplicate children, inconsistent parents and resource elements;
+failed imports preserve reservations for a valid retry. Input slices/maps cannot
+alias the canonical Go nodes. V8 and Goja tests create the actual existing WebAPI
+wrappers before importing their records, then verify the same wrapper references
+through child/parent/query lookups and insertion. Go mutations after import remain
+visible to the retained JS object. This test uses a test-only closure probe;
+normal `document.createElement` is deliberately not switched to deferred storage.
+
+Reproduction patch and validation are under `detached-bridge/`. The next code
+step is a private pending-node store plus comprehensive engine entry/exit hooks;
+the correctness conditions below still apply before measuring a complete fast path.
 
 The next useful experiment should keep newly created, detached, plain DOM
 subtrees in JavaScript and import their state into Go in one operation when a
