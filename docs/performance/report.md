@@ -309,3 +309,28 @@ Top ten cover 60,014 calls (99.923%). All host timers total 82.788 ms/replay. Re
 
 Evidence: `dom-current/crossings-20260908/` contains both raw phase series, build/launch receipts, complete per-replay/per-type counts and times in `summary.json`, and fast-gate results. Reproduce aggregation with `tools/performance/summarize_crossings.py`. Both diagnostic launches rebuilt and verified SHA-256 immediately before execution: `995452e25e294a660d8f410da4f4f8f6da8e2b162597d342fcca25041ed57916`. Frozen fingerprint verification passed. Fast gate passes all semantic gates, prescribed warm runs, N=10/25 waves and ten-Page memory collection. That supplementary gate overlapped correctness tests, so its latency/throughput/memory numbers must not be used to claim a performance delta; the two attribution replays preceded these checks and did not overlap them.
 Correctness: go test ./internal/engine/v8 ./internal/browser passes (browser 63.030 s). Full matrix is not rerun: no production optimization milestone occurred.
+
+## Typed attribute argument experiment — 2026-09-08 (not adopted)
+
+The user narrowed this work to one tested experiment before any full implementation. Scope: export hints for only setAttribute (number/string/string) and toggleToken (number/string/string/number). Synchronous Go DOM ownership and the workload remain unchanged. The prototype is isolated at `.build/cross-opt-typed`, detached commit `0b4c43c`; no runtime/browser change is applied to the main checkout. A complete patch and regression tests are retained in `dom-current/typed-attributes-experiment/prototype.patch`.
+
+The first variant used NumberValueRaw. Its DOM fast gate regressed 146.833 -> 149.923 ms (+2.1%). SDK inspection showed that existing NumberValue already uses a direct-return fast path. The revised variant preserves that path and skips only redundant type probes. StringValue itself validates strings; mismatched hints fall back to ordinary Export. No unchecked native casts or changed coercion rules were introduced.
+
+Fresh detailed profiles (ten executions each) show setAttribute inclusive mean 25.586 -> 21.911 ms and toggleToken 25.363 -> 21.179 ms; combined -15.4%. Export instrumentation falls 48.145 -> 42.069 ms. These overlapping instrumented times are attribution, not additive savings.
+
+Uninstrumented execution replays were then run sequentially in A/B/B/A order, 20 fresh Pages per block, rebuilding and verifying SHA-256 before every launch. A is the unchanged checkout and B the revised isolated prototype. No correctness tests or other agent benchmark jobs overlapped these measurements.
+
+| Block | DOM execution median ms | Mean Go allocated MiB/execution | Host calls/execution |
+|---|---:|---:|---:|
+| A1 | 183.239 | 29.829 | 60,060 |
+| B1 | 166.422 | 28.773 | 60,060 |
+| B2 | 171.822 | 28.784 | 60,060 |
+| A2 | 175.688 | 29.824 | 60,060 |
+
+Pooled medians across 40 executions per variant: 181.307 -> 170.608 ms (-5.9%, 1.063x); allocation traffic improves about 3.5%. System/run variation remains visible, including between these replays and the earlier gate. This supports a modest local effect, not a multiple-fold speedup or a precise universal 5.9% gain.
+
+**Fast-gate regressions are retained:** revised prototype DOM 146.833 -> 153.567 ms (+4.6%), static completion 55.641 -> 65.619 ms (+17.9%), React execution 48.737 -> 55.280 ms (+13.4%). Static N=10 throughput 53.47 -> 42.64/s (-20.2%), N=25 61.58 -> 58.33/s (-5.3%). These sequential gates do not isolate environmental drift from product effects, so the A/B/B/A diagnostic does not erase them or establish gate acceptance. Marginal RSS/static Page 26.347 -> 26.442 MiB; React 32.835 -> 33.026 MiB. After ordinary recovery, process RSS static 88.953 -> 90.590 MiB, React 111.895 -> 114.512 MiB. Retention is not improved by this experiment.
+
+All three fast gates completed the prescribed warm runs, N=10/25 waves, memory collection and all six semantic gates. Both detailed replays and all 80 uninstrumented DOM replays pass workload checks. Prototype engine/browser tests pass (browser 67.846 s, V8 0.363 s), including generic-vs-typed export equivalence, Unicode/lone-surrogate/NUL values, wrong-type fallback, non-finite numbers, large argument lists, nested callbacks and scratch-frame clearing. Frozen fingerprints and executable SHA-256 receipts are preserved beside raw phase/gate data and `summary.json` in `dom-current/typed-attributes-experiment/`.
+
+Decision: retain the prototype for review, do not merge or expand it. The measured opportunity in these type probes is modest, while the requested multiple-fold win would require removing substantially more work/crossings. No full matrix is warranted for an unadopted, limited experiment. No C++/Rust, DOM ownership migration, selector changes or insertion/collection optimizations were attempted.
