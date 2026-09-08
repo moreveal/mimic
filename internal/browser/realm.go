@@ -1353,7 +1353,7 @@ func (r *Realm) install() error {
 	}
 	var source string
 	if selectedSurface != nil {
-		source, exposureJSON = webapi.SurfaceFor(selectedSurface, exposureName)
+		source, exposureJSON, catalogJSON = webapi.BootstrapFor(selectedSurface, exposureName)
 	} else {
 		source = webapi.Surface(generated, exposure)
 	}
