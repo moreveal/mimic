@@ -1,0 +1,6 @@
+[
+  {
+    "name": "out-of-flow child layout",
+    "expression": "(()=>{const measure=position=>{const container=document.createElement('div'),child=document.createElement('iframe');container.style.width='100px';child.style.cssText='border:none;width:1px;height:1px;position:'+position+';left:0;top:0';container.appendChild(child);document.body.appendChild(container);const rect=container.getBoundingClientRect(),style=getComputedStyle(child),result={width:rect.width,height:rect.height,offsetHeight:container.offsetHeight,childHeight:child.getBoundingClientRect().height,childDisplay:style.display,childPosition:style.position};container.remove();return result};return{fixed:measure('fixed'),absolute:measure('absolute'),static:measure('static')}})()"
+  }
+]

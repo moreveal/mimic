@@ -1,0 +1,10 @@
+[
+  {
+    "name": "webgpu adapter availability",
+    "expression": "(async()=>{if(!navigator.gpu)return{gpu:false};const adapter=await navigator.gpu.requestAdapter();return{gpu:true,adapter:adapter===null?null:{tag:Object.prototype.toString.call(adapter),features:Array.from(adapter.features||[]).sort(),limitsType:typeof adapter.limits,infoType:typeof adapter.info}}})()"
+  },
+  {
+    "name": "blob worker capability path",
+    "expression": "new Promise((resolve,reject)=>{const source='postMessage({tag:Object.prototype.toString.call(self),window:typeof window,document:typeof document,crypto:typeof crypto,streams:typeof ReadableStream})';const url=URL.createObjectURL(new Blob([source],{type:'text/javascript'}));const worker=new Worker(url);const timer=setTimeout(()=>reject(new Error('timeout')),3000);worker.onmessage=e=>{clearTimeout(timer);worker.terminate();URL.revokeObjectURL(url);resolve(e.data)};worker.onerror=e=>reject(new Error(e.message))})"
+  }
+]

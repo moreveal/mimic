@@ -1,0 +1,40 @@
+{
+  "target": "Chrome/152.0.7977.82",
+  "mimic": "Mimic/152.0.7977.82",
+  "matched": 1,
+  "total": 1,
+  "results": [
+    {
+      "name": "CharacterData sibling traversal",
+      "match": true,
+      "chrome": {
+        "value": {
+          "count": 5,
+          "aNextType": 1,
+          "aNextName": "SPAN",
+          "spanPreviousType": 8,
+          "spanNextType": 8,
+          "bPreviousName": "SPAN",
+          "bNextType": 3,
+          "firstPrevious": 3,
+          "lastNext": null
+        },
+        "error": ""
+      },
+      "mimic": {
+        "value": {
+          "aNextName": "SPAN",
+          "aNextType": 1,
+          "bNextType": 3,
+          "bPreviousName": "SPAN",
+          "count": 5,
+          "firstPrevious": 3,
+          "lastNext": null,
+          "spanNextType": 8,
+          "spanPreviousType": 8
+        },
+        "error": ""
+      }
+    }
+  ]
+}

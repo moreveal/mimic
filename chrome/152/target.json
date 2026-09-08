@@ -1,0 +1,26 @@
+{
+  "milestone": 152,
+  "chrome_version": "152.0.7977.82",
+  "channel": "stable",
+  "platform": "windows-x64",
+  "chromium_ref": "refs/tags/152.0.7977.82",
+  "chromium_commit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+  "chromium_tree": "a1234efb76bffd5133c982cac4bef312c411da6a",
+  "main_branch_revision": 1669021,
+  "main_branch_commit": "b7fe14017379ddffae396d944fb8b59a5896c261",
+  "v8_revision": "4323497a6a73839e6d5260f6acd7ec0212cb3321",
+  "blink_idl_roots": {
+    "third_party/blink/renderer/core": "fdf0a40ab4ad3836cabdd27aa6fc661c525aeebe",
+    "third_party/blink/renderer/modules": "e811037541f58934bd12fe71c69b65ee6be4e73a"
+  },
+  "browser_protocol_json": "third_party/blink/public/devtools_protocol/browser_protocol-1.3.json",
+  "wpt_revision_source": "third_party/blink/web_tests/external/wpt",
+  "wpt_revision": "5251311032215fe14bbd74cd0867e14cb4b58e3f",
+  "generated_dir": "chrome/152/generated",
+  "differential_browser": {
+    "product": "Chrome",
+    "version": "152.0.7977.82",
+    "channel": "stable",
+    "platform": "windows-x64"
+  }
+}

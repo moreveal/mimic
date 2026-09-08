@@ -1,0 +1,236 @@
+{
+  "url": "http://127.0.0.1:63177/",
+  "chrome": {
+    "value": {
+      "order": [
+        "classic-before",
+        "classic-after",
+        "module:42"
+      ],
+      "moduleDone": true,
+      "types": [
+        "",
+        "application/json",
+        "application/ld+json",
+        "text/plain",
+        "module",
+        ""
+      ]
+    },
+    "exceptions": [],
+    "runtimeIssues": []
+  },
+  "mimic": {
+    "value": {
+      "moduleDone": false,
+      "order": [
+        "classic-before",
+        "classic-after"
+      ],
+      "types": [
+        null,
+        null,
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    "exceptions": [
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      ""
+    ],
+    "runtimeIssues": [
+      {
+        "sequence": 66,
+        "time": "2026-09-07T23:55:19.9417505Z",
+        "kind": "exception",
+        "name": "evaluation",
+        "data": {
+          "error": "http://127.0.0.1:63177/: SyntaxError: Unexpected token ':'",
+          "source": "http://127.0.0.1:63177/"
+        }
+      },
+      {
+        "sequence": 68,
+        "time": "2026-09-07T23:55:19.9422723Z",
+        "kind": "exception",
+        "name": "script",
+        "data": {
+          "error": "http://127.0.0.1:63177/: SyntaxError: Unexpected token ':'",
+          "url": "http://127.0.0.1:63177/"
+        }
+      },
+      {
+        "sequence": 74,
+        "time": "2026-09-07T23:55:19.9422723Z",
+        "kind": "error",
+        "name": "parserScriptTask",
+        "data": {
+          "error": "dom task: http://127.0.0.1:63177/: SyntaxError: Unexpected token ':'",
+          "url": "http://127.0.0.1:63177/"
+        }
+      },
+      {
+        "sequence": 79,
+        "time": "2026-09-07T23:55:19.9422723Z",
+        "kind": "exception",
+        "name": "evaluation",
+        "data": {
+          "error": "http://127.0.0.1:63177/: SyntaxError: Unexpected token ':'",
+          "source": "http://127.0.0.1:63177/"
+        }
+      },
+      {
+        "sequence": 81,
+        "time": "2026-09-07T23:55:19.9422723Z",
+        "kind": "exception",
+        "name": "script",
+        "data": {
+          "error": "http://127.0.0.1:63177/: SyntaxError: Unexpected token ':'",
+          "url": "http://127.0.0.1:63177/"
+        }
+      },
+      {
+        "sequence": 87,
+        "time": "2026-09-07T23:55:19.9422723Z",
+        "kind": "error",
+        "name": "parserScriptTask",
+        "data": {
+          "error": "dom task: http://127.0.0.1:63177/: SyntaxError: Unexpected token ':'",
+          "url": "http://127.0.0.1:63177/"
+        }
+      },
+      {
+        "sequence": 92,
+        "time": "2026-09-07T23:55:19.9422723Z",
+        "kind": "exception",
+        "name": "evaluation",
+        "data": {
+          "error": "http://127.0.0.1:63177/: Error: plain script executed",
+          "source": "http://127.0.0.1:63177/"
+        }
+      },
+      {
+        "sequence": 94,
+        "time": "2026-09-07T23:55:19.9428133Z",
+        "kind": "exception",
+        "name": "script",
+        "data": {
+          "error": "http://127.0.0.1:63177/: Error: plain script executed",
+          "url": "http://127.0.0.1:63177/"
+        }
+      },
+      {
+        "sequence": 100,
+        "time": "2026-09-07T23:55:19.9428133Z",
+        "kind": "error",
+        "name": "parserScriptTask",
+        "data": {
+          "error": "dom task: http://127.0.0.1:63177/: Error: plain script executed",
+          "url": "http://127.0.0.1:63177/"
+        }
+      },
+      {
+        "sequence": 113,
+        "time": "2026-09-07T23:55:19.9444072Z",
+        "kind": "exception",
+        "name": "evaluation",
+        "data": {
+          "error": "http://127.0.0.1:63177/entry.js: SyntaxError: Cannot use import statement outside a module",
+          "source": "http://127.0.0.1:63177/entry.js"
+        }
+      },
+      {
+        "sequence": 115,
+        "time": "2026-09-07T23:55:19.9444072Z",
+        "kind": "exception",
+        "name": "script",
+        "data": {
+          "error": "http://127.0.0.1:63177/entry.js: SyntaxError: Cannot use import statement outside a module",
+          "url": "http://127.0.0.1:63177/entry.js"
+        }
+      },
+      {
+        "sequence": 121,
+        "time": "2026-09-07T23:55:19.9444072Z",
+        "kind": "error",
+        "name": "parserScriptTask",
+        "data": {
+          "error": "dom task: http://127.0.0.1:63177/entry.js: SyntaxError: Cannot use import statement outside a module",
+          "url": "http://127.0.0.1:63177/entry.js"
+        }
+      },
+      {
+        "sequence": 133,
+        "time": "2026-09-07T23:55:19.9449747Z",
+        "kind": "unsupported",
+        "name": "Document.onDOMContentLoaded",
+        "data": {
+          "access": "property",
+          "realm": "5af8a9a5-1b60-4ed5-9150-c58928411c0b"
+        }
+      },
+      {
+        "sequence": 169,
+        "time": "2026-09-07T23:55:20.1488206Z",
+        "kind": "semantic-missing",
+        "name": "HTMLScriptElement.type",
+        "data": {
+          "realm": "5af8a9a5-1b60-4ed5-9150-c58928411c0b"
+        }
+      },
+      {
+        "sequence": 170,
+        "time": "2026-09-07T23:55:20.1488206Z",
+        "kind": "semantic-missing",
+        "name": "HTMLScriptElement.type",
+        "data": {
+          "realm": "5af8a9a5-1b60-4ed5-9150-c58928411c0b"
+        }
+      },
+      {
+        "sequence": 171,
+        "time": "2026-09-07T23:55:20.1488206Z",
+        "kind": "semantic-missing",
+        "name": "HTMLScriptElement.type",
+        "data": {
+          "realm": "5af8a9a5-1b60-4ed5-9150-c58928411c0b"
+        }
+      },
+      {
+        "sequence": 172,
+        "time": "2026-09-07T23:55:20.1488206Z",
+        "kind": "semantic-missing",
+        "name": "HTMLScriptElement.type",
+        "data": {
+          "realm": "5af8a9a5-1b60-4ed5-9150-c58928411c0b"
+        }
+      },
+      {
+        "sequence": 173,
+        "time": "2026-09-07T23:55:20.1488206Z",
+        "kind": "semantic-missing",
+        "name": "HTMLScriptElement.type",
+        "data": {
+          "realm": "5af8a9a5-1b60-4ed5-9150-c58928411c0b"
+        }
+      },
+      {
+        "sequence": 174,
+        "time": "2026-09-07T23:55:20.1488206Z",
+        "kind": "semantic-missing",
+        "name": "HTMLScriptElement.type",
+        "data": {
+          "realm": "5af8a9a5-1b60-4ed5-9150-c58928411c0b"
+        }
+      }
+    ]
+  }
+}

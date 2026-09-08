@@ -1,0 +1,6 @@
+[
+  {"name":"dynamic script force async","expression":"(()=>{const s=document.createElement('script');const initial=s.async;s.async=false;return{initial,after:s.async,attribute:s.getAttribute('async')!==null}})()"},
+  {"name":"detached iframe eval","expression":"(()=>{const f=document.createElement('iframe');document.body.appendChild(f);const e=f.contentWindow.eval,shape={name:e.name,length:e.length,text:Function.prototype.toString.call(e)};f.remove();return{...shape,result:e('6*7')}})()"},
+  {"name":"webgpu basic shape","expression":"new Promise(resolve=>navigator.gpu.requestAdapter().then(a=>resolve({gpu:Object.prototype.toString.call(navigator.gpu),adapter:Object.prototype.toString.call(a),fallback:a&&a.isFallbackAdapter,format:navigator.gpu.getPreferredCanvasFormat(),hasInfo:!!(a&&a.info)})))"},
+  {"name":"webrtc initial state","expression":"(()=>{const p=new RTCPeerConnection();const result={signaling:p.signalingState,gathering:p.iceGatheringState,ice:p.iceConnectionState,connection:p.connectionState,local:p.localDescription};p.close();return result})()"}
+]

@@ -1,0 +1,54 @@
+{
+  "url": "http://127.0.0.1:39477/",
+  "chrome": {
+    "value": {
+      "order": [
+        "classic-before",
+        "classic-after",
+        "module:42"
+      ],
+      "moduleDone": true,
+      "types": [
+        "",
+        "application/json",
+        "application/ld+json",
+        "text/plain",
+        "module",
+        ""
+      ]
+    },
+    "exceptions": [],
+    "runtimeIssues": []
+  },
+  "mimic": {
+    "value": {
+      "moduleDone": true,
+      "order": [
+        "classic-before",
+        "classic-after",
+        "module:42"
+      ],
+      "types": [
+        "",
+        "application/json",
+        "application/ld+json",
+        "text/plain",
+        "module",
+        ""
+      ]
+    },
+    "exceptions": [],
+    "runtimeIssues": [
+      {
+        "sequence": 96,
+        "time": "2026-09-08T00:03:00.1901378Z",
+        "kind": "unsupported",
+        "name": "Document.onDOMContentLoaded",
+        "data": {
+          "access": "property",
+          "realm": "8681e3e1-7082-4248-b1ee-9003d2efd5c7"
+        }
+      }
+    ]
+  }
+}

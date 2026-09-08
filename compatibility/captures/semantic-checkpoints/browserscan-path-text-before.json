@@ -1,0 +1,30 @@
+{
+  "target": "Chrome/152.0.7977.82",
+  "mimic": "Mimic/152.0.7977.82",
+  "matched": 0,
+  "total": 1,
+  "results": [
+    {
+      "name": "Text node construction",
+      "match": false,
+      "chrome": {
+        "value": {
+          "tag": "[object Text]",
+          "nodeType": 3,
+          "nodeName": "#text",
+          "data": "hello",
+          "textContent": "hello",
+          "length": 5,
+          "has": false,
+          "parent": null
+        },
+        "error": ""
+      },
+      "mimic": {
+        "value": null,
+        "error": "Protocol error (Runtime.evaluate): __pyppeteer_evaluation_script__: TypeError: Cannot read properties of null (reading 'nodeType')",
+        "workerTrace": []
+      }
+    }
+  ]
+}

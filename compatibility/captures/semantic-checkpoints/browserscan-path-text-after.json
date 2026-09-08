@@ -1,0 +1,38 @@
+{
+  "target": "Chrome/152.0.7977.82",
+  "mimic": "Mimic/152.0.7977.82",
+  "matched": 1,
+  "total": 1,
+  "results": [
+    {
+      "name": "Text node construction",
+      "match": true,
+      "chrome": {
+        "value": {
+          "tag": "[object Text]",
+          "nodeType": 3,
+          "nodeName": "#text",
+          "data": "hello",
+          "textContent": "hello",
+          "length": 5,
+          "has": false,
+          "parent": null
+        },
+        "error": ""
+      },
+      "mimic": {
+        "value": {
+          "data": "hello",
+          "has": false,
+          "length": 5,
+          "nodeName": "#text",
+          "nodeType": 3,
+          "parent": null,
+          "tag": "[object Text]",
+          "textContent": "hello"
+        },
+        "error": ""
+      }
+    }
+  ]
+}

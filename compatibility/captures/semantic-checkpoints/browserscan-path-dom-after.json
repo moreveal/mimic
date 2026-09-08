@@ -1,0 +1,314 @@
+{
+  "chromeProduct": "Chrome/152.0.7977.82",
+  "chromeVersion": "152.0.7977.82",
+  "probes": [
+    {
+      "name": "TextEncoder semantics",
+      "passed": true,
+      "mimic": {
+        "bytes": [
+          65,
+          195,
+          169
+        ],
+        "encodeInto": {
+          "bytes": [
+            195,
+            169,
+            0,
+            0
+          ],
+          "read": 1,
+          "written": 2
+        },
+        "encoding": "utf-8",
+        "instanceTag": "[object TextEncoder]",
+        "length": 0,
+        "name": "TextEncoder",
+        "tag": "[object Function]",
+        "type": "function"
+      },
+      "chrome": {
+        "bytes": [
+          65,
+          195,
+          169
+        ],
+        "encodeInto": {
+          "bytes": [
+            195,
+            169,
+            0,
+            0
+          ],
+          "read": 1,
+          "written": 2
+        },
+        "encoding": "utf-8",
+        "instanceTag": "[object TextEncoder]",
+        "length": 0,
+        "name": "TextEncoder",
+        "tag": "[object Function]",
+        "type": "function"
+      }
+    },
+    {
+      "name": "Fetch value constructors",
+      "passed": true,
+      "mimic": {
+        "headers": {
+          "entries": [
+            [
+              "x-test",
+              "two"
+            ],
+            [
+              "x_test",
+              "one"
+            ]
+          ],
+          "tag": "[object Headers]",
+          "value": "two"
+        },
+        "request": {
+          "cache": "default",
+          "credentials": "same-origin",
+          "method": "POST",
+          "mode": "cors",
+          "redirect": "follow",
+          "referrer": "about:client",
+          "tag": "[object Request]",
+          "url": "http://www.example.com/path"
+        },
+        "response": {
+          "ok": true,
+          "redirected": false,
+          "status": 200,
+          "statusText": "",
+          "tag": "[object Response]",
+          "type": "default",
+          "url": ""
+        }
+      },
+      "chrome": {
+        "headers": {
+          "entries": [
+            [
+              "x-test",
+              "two"
+            ],
+            [
+              "x_test",
+              "one"
+            ]
+          ],
+          "tag": "[object Headers]",
+          "value": "two"
+        },
+        "request": {
+          "cache": "default",
+          "credentials": "same-origin",
+          "method": "POST",
+          "mode": "cors",
+          "redirect": "follow",
+          "referrer": "about:client",
+          "tag": "[object Request]",
+          "url": "http://www.example.com/path"
+        },
+        "response": {
+          "ok": true,
+          "redirected": false,
+          "status": 200,
+          "statusText": "",
+          "tag": "[object Response]",
+          "type": "default",
+          "url": ""
+        }
+      }
+    },
+    {
+      "name": "DOMMatrix identity",
+      "passed": true,
+      "mimic": {
+        "a": 1,
+        "array": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "e": 0,
+        "f": 0,
+        "is2D": true,
+        "m11": 1,
+        "m12": 0,
+        "m21": 0,
+        "m22": 1,
+        "m41": 0,
+        "m42": 0,
+        "tag": "[object DOMMatrix]",
+        "text": "matrix(1, 0, 0, 1, 0, 0)"
+      },
+      "chrome": {
+        "a": 1,
+        "array": [
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1,
+          0,
+          0,
+          0,
+          0,
+          1
+        ],
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "e": 0,
+        "f": 0,
+        "is2D": true,
+        "m11": 1,
+        "m12": 0,
+        "m21": 0,
+        "m22": 1,
+        "m41": 0,
+        "m42": 0,
+        "tag": "[object DOMMatrix]",
+        "text": "matrix(1, 0, 0, 1, 0, 0)"
+      }
+    },
+    {
+      "name": "SVG createSVGRect",
+      "passed": true,
+      "mimic": {
+        "height": 0,
+        "method": "function",
+        "tag": "[object SVGRect]",
+        "width": 0,
+        "x": 0,
+        "y": 0
+      },
+      "chrome": {
+        "height": 0,
+        "method": "function",
+        "tag": "[object SVGRect]",
+        "width": 0,
+        "x": 0,
+        "y": 0
+      }
+    },
+    {
+      "name": "Intentional namespaces absence",
+      "passed": true,
+      "mimic": {
+        "present": false,
+        "type": "undefined",
+        "value": true
+      },
+      "chrome": {
+        "present": false,
+        "type": "undefined",
+        "value": true
+      }
+    },
+    {
+      "name": "Node child primitives",
+      "passed": true,
+      "mimic": {
+        "childCount": 2,
+        "firstElement": "SPAN",
+        "firstName": "SPAN",
+        "firstType": 1,
+        "has": true
+      },
+      "chrome": {
+        "childCount": 2,
+        "firstElement": "SPAN",
+        "firstName": "SPAN",
+        "firstType": 1,
+        "has": true
+      }
+    },
+    {
+      "name": "Script textContent",
+      "passed": true,
+      "mimic": {
+        "own": true,
+        "text": "const answer=42",
+        "value": "const answer=42"
+      },
+      "chrome": {
+        "own": true,
+        "text": "const answer=42",
+        "value": "const answer=42"
+      }
+    },
+    {
+      "name": "Comment construction",
+      "passed": true,
+      "mimic": {
+        "data": "hello",
+        "has": false,
+        "nodeName": "#comment",
+        "nodeType": 8,
+        "tag": "[object Comment]",
+        "textContent": "hello"
+      },
+      "chrome": {
+        "data": "hello",
+        "has": false,
+        "nodeName": "#comment",
+        "nodeType": 8,
+        "tag": "[object Comment]",
+        "textContent": "hello"
+      }
+    },
+    {
+      "name": "IntersectionObserver defaults",
+      "passed": true,
+      "mimic": {
+        "records": [],
+        "root": null,
+        "rootMargin": "0px 0px 0px 0px",
+        "scrollMargin": "0px 0px 0px 0px",
+        "tag": "[object IntersectionObserver]",
+        "thresholds": [
+          0
+        ]
+      },
+      "chrome": {
+        "records": [],
+        "root": null,
+        "rootMargin": "0px 0px 0px 0px",
+        "scrollMargin": "0px 0px 0px 0px",
+        "tag": "[object IntersectionObserver]",
+        "thresholds": [
+          0
+        ]
+      }
+    }
+  ]
+}

@@ -1,0 +1,10 @@
+[
+  {
+    "name": "same-origin iframe global identity",
+    "expression": "(()=>{const iframe=document.createElement('iframe');document.body.appendChild(iframe);const child=iframe.contentWindow;const result={stable:child===iframe.contentWindow,self:child.self===child,global:child.eval('globalThis')===child,parent:child.eval('parent')===window,distinctArray:child.eval('Array')!==Array,evalType:typeof child.eval,windowTag:Object.prototype.toString.call(child)};iframe.remove();return result})()"
+  },
+  {
+    "name": "same-origin iframe eval value transfer",
+    "expression": "(()=>{const iframe=document.createElement('iframe');document.body.appendChild(iframe);const child=iframe.contentWindow;const fn=child.eval('(function add(a,b){return a+b})');const object=child.eval('({x:1})');const result={functionType:typeof fn,functionCall:typeof fn==='function'?fn(2,3):null,functionRealm:typeof fn==='function'?Object.getPrototypeOf(fn)===child.eval('Function.prototype'):false,objectValue:object.x,objectRealm:Object.getPrototypeOf(object)===child.eval('Object.prototype')};iframe.remove();return result})()"
+  }
+]

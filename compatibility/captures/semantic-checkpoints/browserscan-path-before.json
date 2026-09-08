@@ -1,0 +1,40 @@
+{
+  "chromeProduct": "Chrome/152.0.7977.82",
+  "chromeVersion": "152.0.7977.82",
+  "probes": [
+    {
+      "name": "TextEncoder semantics",
+      "passed": false,
+      "mimic": {
+        "error": "TypeError: Illegal constructor",
+        "length": 0,
+        "name": "TextEncoder",
+        "tag": "[object Function]",
+        "type": "function"
+      },
+      "chrome": {
+        "bytes": [
+          65,
+          195,
+          169
+        ],
+        "encodeInto": {
+          "bytes": [
+            195,
+            169,
+            0,
+            0
+          ],
+          "read": 1,
+          "written": 2
+        },
+        "encoding": "utf-8",
+        "instanceTag": "[object TextEncoder]",
+        "length": 0,
+        "name": "TextEncoder",
+        "tag": "[object Function]",
+        "type": "function"
+      }
+    }
+  ]
+}

@@ -1,0 +1,1165 @@
+//go:build windows && amd64
+
+package v8
+
+import (
+	"context"
+	"encoding/json"
+	"errors"
+	"fmt"
+	"math"
+	"reflect"
+	"sync"
+	"time"
+
+	gov8 "github.com/maclof/gov8"
+	"github.com/moreveal/mimic/internal/engine"
+)
+
+// Factory exposes V8 through the same engine-neutral contract as QuickJS.
+// Browser code never imports this package directly.
+type Factory struct{}
+
+func (Factory) New() engine.Runtime {
+	owner, err := NewRuntime()
+	if err != nil {
+		panic(fmt.Sprintf("initialize pinned V8 backend: %v", err))
+	}
+	realm, err := owner.NewRealm()
+	if err != nil {
+		_ = owner.Dispose()
+		panic(fmt.Sprintf("create V8 realm: %v", err))
+	}
+	backend := &adapter{owner: owner, realm: realm, moduleCache: map[string]*gov8.Module{}, moduleNames: map[*gov8.Module]string{}}
+	factory, err := backend.Eval(context.Background(), `(()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b});return[promise,resolve,reject]})`, "mimic-promise-factory.js")
+	if err != nil {
+		_ = backend.Close()
+		panic(fmt.Sprintf("create V8 promise factory: %v", err))
+	}
+	backend.promiseFactory = factory
+	return backend
+}
+
+type hostFunction struct{ function engine.Function }
+
+type callbackContext struct {
+	scope  *gov8.CallbackScope
+	ctx    *gov8.Context
+	result gov8.ReturnValue
+	id     uint64
+}
+
+type adapter struct {
+	owner          *Runtime
+	realm          *Realm
+	now            func() time.Time
+	observer       func(string, bool)
+	closed         bool
+	mu             sync.Mutex
+	callback       *callbackContext // actor-thread only; guarded from foreign readers by actor TID
+	activeIsolate  *gov8.Isolate    // actor-thread only
+	callbackSeq    uint64
+	promiseFactory engine.Value
+	globals        []*gov8.Global // retained engine.Values; released on the isolate thread
+	modules        []*gov8.Module
+	moduleCache    map[string]*gov8.Module
+	moduleNames    map[*gov8.Module]string
+}
+
+type runtimeValue struct {
+	runtime    *adapter
+	global     *gov8.Global
+	local      gov8.Value
+	borrowed   bool
+	host       any
+	hostSet    bool
+	callbackID uint64
+}
+
+func (v *runtimeValue) Export() any {
+	if v == nil || v.runtime == nil {
+		return nil
+	}
+	return v.runtime.export(v)
+}
+
+func (v *runtimeValue) String() string {
+	if v == nil || v.runtime == nil {
+		return "undefined"
+	}
+	return v.runtime.string(v)
+}
+
+func (a *adapter) onCallback() *callbackContext {
+	if currentThreadID() != a.owner.actorTID {
+		return nil
+	}
+	return a.callback
+}
+
+func (a *adapter) Eval(ctx context.Context, source, name string) (engine.Value, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	return a.runContext(ctx, func(s *state, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
+		catcher, err := s.isolate.NewTryCatch()
+		if err != nil {
+			return nil, err
+		}
+		defer catcher.Close()
+		script, err := realm.Compile(scope, source, catcher)
+		if err != nil {
+			return nil, exceptionError(catcher, scope, realm, name, err)
+		}
+		defer script.Close()
+		result, err := script.Run(scope, catcher)
+		if err != nil {
+			return nil, exceptionError(catcher, scope, realm, name, err)
+		}
+		return a.persist(scope, result)
+	})
+}
+
+func (a *adapter) EvalModule(ctx context.Context, source, name string, loader engine.ModuleLoader) (engine.Value, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	if loader == nil {
+		return nil, errors.New("module loader is nil")
+	}
+	return a.runContext(ctx, func(s *state, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
+		catcher, err := s.isolate.NewTryCatch()
+		if err != nil {
+			return nil, err
+		}
+		defer catcher.Close()
+		compile := func(moduleSource, resourceName string, tc *gov8.TryCatch) (*gov8.Module, error) {
+			if cached := a.moduleCache[resourceName]; cached != nil {
+				return cached, nil
+			}
+			module, compileErr := realm.CompileModule(scope, moduleSource, resourceName, tc)
+			if compileErr != nil {
+				return nil, compileErr
+			}
+			a.modules = append(a.modules, module)
+			a.moduleNames[module] = resourceName
+			a.moduleCache[resourceName] = module
+			return module, nil
+		}
+		entry, err := compile(source, name, catcher)
+		if err != nil {
+			return nil, exceptionError(catcher, scope, realm, name, err)
+		}
+		linked, err := entry.Instantiate(scope, func(request gov8.ModuleResolveRequest) (*gov8.Module, error) {
+			referrer := a.moduleNames[request.Referrer]
+			dependencySource, resourceName, loadErr := loader(request.Specifier, referrer)
+			if loadErr != nil {
+				return nil, loadErr
+			}
+			return compile(dependencySource, resourceName, nil)
+		}, catcher)
+		if err != nil || !linked {
+			if err == nil {
+				err = errors.New("V8 rejected module graph instantiation")
+			}
+			return nil, exceptionError(catcher, scope, realm, name, err)
+		}
+		if err := s.isolate.SetHostImportModuleDynamicallyCallback(func(request gov8.DynamicImportRequest) (gov8.Promise, error) {
+			referrer, err := request.Scope.ToString(request.ResourceName)
+			if err != nil {
+				return gov8.Promise{}, err
+			}
+			specifier, err := request.Scope.ToString(request.Specifier)
+			if err != nil {
+				return gov8.Promise{}, err
+			}
+			dependencySource, resourceName, err := loader(specifier, referrer)
+			if err != nil {
+				return gov8.Promise{}, err
+			}
+			if module := a.moduleCache[resourceName]; module != nil {
+				namespace, namespaceErr := module.Namespace(request.Scope.Scope())
+				if namespaceErr != nil {
+					return gov8.Promise{}, namespaceErr
+				}
+				resolver, promise, resolverErr := request.Scope.NewCallbackPromiseResolver()
+				if resolverErr != nil {
+					return gov8.Promise{}, resolverErr
+				}
+				if _, settleErr := request.Scope.SettleCallbackPromise(resolver, namespace, false); settleErr != nil {
+					return gov8.Promise{}, settleErr
+				}
+				return promise, nil
+			}
+			var compileDynamic func(string, string) (*gov8.Module, error)
+			compileDynamic = func(moduleSource, moduleName string) (*gov8.Module, error) {
+				if cached := a.moduleCache[moduleName]; cached != nil {
+					return cached, nil
+				}
+				module, compileErr := realm.CompileModule(request.Scope.Scope(), moduleSource, moduleName, nil)
+				if compileErr != nil {
+					return nil, compileErr
+				}
+				a.modules = append(a.modules, module)
+				a.moduleNames[module] = moduleName
+				a.moduleCache[moduleName] = module
+				return module, nil
+			}
+			module, err := compileDynamic(dependencySource, resourceName)
+			if err != nil {
+				return gov8.Promise{}, err
+			}
+			linked, err := module.Instantiate(request.Scope.Scope(), func(importRequest gov8.ModuleResolveRequest) (*gov8.Module, error) {
+				childSource, childName, loadErr := loader(importRequest.Specifier, a.moduleNames[importRequest.Referrer])
+				if loadErr != nil {
+					return nil, loadErr
+				}
+				return compileDynamic(childSource, childName)
+			}, nil)
+			if err != nil || !linked {
+				if err == nil {
+					err = errors.New("V8 rejected dynamic module graph instantiation")
+				}
+				return gov8.Promise{}, err
+			}
+			if _, err := module.Evaluate(request.Scope.Scope(), nil); err != nil {
+				return gov8.Promise{}, err
+			}
+			namespace, err := module.Namespace(request.Scope.Scope())
+			if err != nil {
+				return gov8.Promise{}, err
+			}
+			resolver, promise, err := request.Scope.NewCallbackPromiseResolver()
+			if err != nil {
+				return gov8.Promise{}, err
+			}
+			if _, err := request.Scope.SettleCallbackPromise(resolver, namespace, false); err != nil {
+				return gov8.Promise{}, err
+			}
+			return promise, nil
+		}); err != nil {
+			return nil, err
+		}
+		promise, err := entry.Evaluate(scope, catcher)
+		if err != nil {
+			return nil, exceptionError(catcher, scope, realm, name, err)
+		}
+		return a.persist(scope, promise.Value)
+	})
+}
+
+func (a *adapter) Set(name string, value any) error {
+	_, err := a.run(func(s *state, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
+		local, err := a.marshal(scope, realm, value)
+		if err != nil {
+			return nil, err
+		}
+		global, err := realm.GlobalObject(scope)
+		if err != nil {
+			return nil, err
+		}
+		ok, err := global.SetByName(scope, realm, name, local)
+		if err != nil {
+			return nil, err
+		}
+		if !ok {
+			return nil, fmt.Errorf("V8 rejected global property %q", name)
+		}
+		return nil, nil
+	})
+	return err
+}
+
+func (a *adapter) Get(name string) engine.Value {
+	value, _ := a.run(func(s *state, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
+		global, err := realm.GlobalObject(scope)
+		if err != nil {
+			return nil, err
+		}
+		local, ok, err := global.GetByName(scope, realm, name)
+		if err != nil || !ok {
+			return nil, err
+		}
+		return a.persist(scope, local)
+	})
+	return value
+}
+
+func (a *adapter) Value(value any) engine.Value {
+	if callback := a.onCallback(); callback != nil {
+		return &runtimeValue{runtime: a, borrowed: true, host: value, hostSet: true}
+	}
+	result, _ := a.run(func(s *state, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
+		local, err := a.marshal(scope, realm, value)
+		if err != nil {
+			return nil, err
+		}
+		return a.persist(scope, local)
+	})
+	return result
+}
+
+func (a *adapter) GetProperty(object engine.Value, name string) engine.Value {
+	if callback := a.onCallback(); callback != nil {
+		local, err := a.localCallback(object)
+		if err != nil {
+			return nil
+		}
+		result, ok, err := callback.scope.ObjectGet(local, name)
+		if err != nil || !ok {
+			return nil
+		}
+		global, persistErr := a.newGlobal(callback.scope.Scope(), result)
+		if persistErr != nil {
+			return nil
+		}
+		return &runtimeValue{runtime: a, global: global, local: result, borrowed: true, callbackID: callback.id}
+	}
+	result, _ := a.run(func(s *state, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
+		local, err := a.local(scope, object)
+		if err != nil {
+			return nil, err
+		}
+		obj, err := gov8.AsObject(local)
+		if err != nil {
+			return nil, err
+		}
+		property, ok, err := obj.GetByName(scope, realm, name)
+		if err != nil || !ok {
+			return nil, err
+		}
+		return a.persist(scope, property)
+	})
+	return result
+}
+
+func (a *adapter) SetProperty(object engine.Value, name string, value any) error {
+	if callback := a.onCallback(); callback != nil {
+		objectLocal, err := a.localCallback(object)
+		if err != nil {
+			return err
+		}
+		valueLocal, err := a.marshalCallback(callback.scope, value)
+		if err != nil {
+			return err
+		}
+		ok, err := callback.scope.ObjectSet(objectLocal, name, valueLocal)
+		if err == nil && !ok {
+			err = fmt.Errorf("V8 rejected property %q", name)
+		}
+		return err
+	}
+	_, err := a.run(func(s *state, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
+		objectLocal, err := a.local(scope, object)
+		if err != nil {
+			return nil, err
+		}
+		obj, err := gov8.AsObject(objectLocal)
+		if err != nil {
+			return nil, err
+		}
+		valueLocal, err := a.marshal(scope, realm, value)
+		if err != nil {
+			return nil, err
+		}
+		ok, err := obj.SetByName(scope, realm, name, valueLocal)
+		if err == nil && !ok {
+			err = fmt.Errorf("V8 rejected property %q", name)
+		}
+		return nil, err
+	})
+	return err
+}
+
+func (a *adapter) TypeOf(value engine.Value) string {
+	operation := func(local gov8.Value) string {
+		if yes, _ := local.IsUndefined(); yes {
+			return "undefined"
+		}
+		if yes, _ := local.IsFunction(); yes {
+			return "function"
+		}
+		if yes, _ := local.IsBoolean(); yes {
+			return "boolean"
+		}
+		if yes, _ := local.IsString(); yes {
+			return "string"
+		}
+		if yes, _ := local.IsNumber(); yes {
+			return "number"
+		}
+		if yes, _ := local.IsBigInt(); yes {
+			return "bigint"
+		}
+		return "object"
+	}
+	if a.onCallback() != nil {
+		if v, ok := value.(*runtimeValue); ok && v.hostSet {
+			return goTypeOf(v.host)
+		}
+		local, err := a.localCallback(value)
+		if err != nil {
+			return "undefined"
+		}
+		return operation(local)
+	}
+	var result = "undefined"
+	_, _ = a.run(func(s *state, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
+		local, err := a.local(scope, value)
+		if err == nil {
+			result = operation(local)
+		}
+		return nil, err
+	})
+	return result
+}
+
+func (a *adapter) StrictEqual(left, right engine.Value) bool {
+	if a.onCallback() != nil {
+		l, le := a.localCallback(left)
+		r, re := a.localCallback(right)
+		if le != nil || re != nil {
+			return false
+		}
+		equal, _ := l.StrictEquals(r)
+		return equal
+	}
+	var equal bool
+	_, _ = a.run(func(s *state, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
+		l, err := a.local(scope, left)
+		if err != nil {
+			return nil, err
+		}
+		r, err := a.local(scope, right)
+		if err != nil {
+			return nil, err
+		}
+		equal, err = l.StrictEquals(r)
+		return nil, err
+	})
+	return equal
+}
+
+func (a *adapter) Call(ctx context.Context, function, this engine.Value, args ...engine.Value) (engine.Value, error) {
+	if callback := a.onCallback(); callback != nil {
+		fn, err := a.localCallback(function)
+		if err != nil {
+			return nil, err
+		}
+		receiver, err := a.localCallbackOrUndefined(callback.scope, this)
+		if err != nil {
+			return nil, err
+		}
+		argv := make([]gov8.Value, len(args))
+		for i := range args {
+			argv[i], err = a.localCallback(args[i])
+			if err != nil {
+				return nil, err
+			}
+		}
+		result, ok, err := callback.scope.CallFunction(fn, receiver, argv)
+		if err != nil || !ok {
+			return nil, err
+		}
+		global, persistErr := a.newGlobal(callback.scope.Scope(), result)
+		if persistErr != nil {
+			return nil, persistErr
+		}
+		return &runtimeValue{runtime: a, global: global, local: result, borrowed: true, callbackID: callback.id}, nil
+	}
+	return a.runContext(ctx, func(s *state, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
+		fnValue, err := a.local(scope, function)
+		if err != nil {
+			return nil, err
+		}
+		fn, ok, err := gov8.AsFunction(fnValue, realm)
+		if err != nil || !ok {
+			return nil, fmt.Errorf("value is not callable")
+		}
+		receiver, err := a.localOrUndefined(scope, this)
+		if err != nil {
+			return nil, err
+		}
+		argv := make([]gov8.Value, len(args))
+		for i := range args {
+			argv[i], err = a.local(scope, args[i])
+			if err != nil {
+				return nil, err
+			}
+		}
+		result, ok, err := fn.Call(scope, receiver, argv...)
+		if err != nil || !ok {
+			return nil, err
+		}
+		return a.persist(scope, result)
+	})
+}
+
+func (a *adapter) Function(function engine.Function) any { return hostFunction{function: function} }
+
+func (a *adapter) NewPromise() engine.Promise {
+	if a.promiseFactory == nil {
+		err := errors.New("V8 promise factory is unavailable")
+		return engine.Promise{Resolve: func(any) error { return err }, Reject: func(any) error { return err }}
+	}
+	value, err := a.Call(context.Background(), a.promiseFactory, nil)
+	if err != nil {
+		return engine.Promise{Resolve: func(any) error { return err }, Reject: func(any) error { return err }}
+	}
+	promise := a.GetProperty(value, "0")
+	resolve := a.GetProperty(value, "1")
+	reject := a.GetProperty(value, "2")
+	settle := func(function engine.Value, value any) error {
+		argument := a.Value(value)
+		_, err := a.Call(context.Background(), function, nil, argument)
+		return err
+	}
+	return engine.Promise{Value: promise, Resolve: func(v any) error { return settle(resolve, v) }, Reject: func(v any) error { return settle(reject, v) }}
+}
+
+func (a *adapter) Await(value engine.Value) (engine.Value, bool, error) {
+	var result engine.Value
+	var settled bool
+	_, err := a.run(func(s *state, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
+		local, err := a.local(scope, value)
+		if err != nil {
+			return nil, err
+		}
+		isPromise, err := local.IsPromise()
+		if err != nil {
+			return nil, err
+		}
+		if !isPromise {
+			result, settled = value, true
+			return nil, nil
+		}
+		promise, err := gov8.AsPromise(local)
+		if err != nil {
+			return nil, err
+		}
+		state, err := promise.State()
+		if err != nil {
+			return nil, err
+		}
+		if state == gov8.PromisePending {
+			return nil, nil
+		}
+		settled = true
+		localResult, err := promise.Result(scope)
+		if err != nil {
+			return nil, err
+		}
+		if state == gov8.PromiseRejected {
+			return nil, fmt.Errorf("promise rejected: %s", localResultString(localResult, realm))
+		}
+		result, err = a.persist(scope, localResult)
+		return nil, err
+	})
+	return result, settled, err
+}
+
+func (a *adapter) SetTimeSource(now func() time.Time) {
+	a.now = now
+	if now == nil {
+		return
+	}
+	_ = a.Set("__mimicDateNow", a.Function(func(engine.Value, []engine.Value) (engine.Value, error) {
+		// ECMAScript time values are integral milliseconds. performance.now()
+		// remains the independent high-resolution monotonic clock.
+		return a.Value(a.now().UnixMilli()), nil
+	}))
+	_, _ = a.Eval(context.Background(), `(()=>{const mimicDateNow=globalThis.__mimicDateNow;delete globalThis.__mimicDateNow;const NativeDate=Date;const MimicDate=new Proxy(NativeDate,{apply(target,thisArg,args){return args.length?Reflect.apply(target,thisArg,args):new NativeDate(mimicDateNow()).toString()},construct(target,args,newTarget){return Reflect.construct(target,args.length?args:[mimicDateNow()],newTarget)}});Object.defineProperty(MimicDate,'now',{value:()=>mimicDateNow(),writable:true,configurable:true});Object.defineProperty(MimicDate.prototype,'constructor',{value:MimicDate,writable:true,configurable:true});globalThis.Date=MimicDate})()`, "mimic-clock.js")
+}
+
+func (a *adapter) MicrotaskCheckpoint() error {
+	return a.MicrotaskCheckpointContext(context.Background())
+}
+
+func (a *adapter) MicrotaskCheckpointContext(ctx context.Context) error {
+	_, err := a.runContext(ctx, func(s *state, _ *gov8.Context, _ *gov8.Scope) (engine.Value, error) {
+		return nil, s.isolate.PerformMicrotaskCheckpoint()
+	})
+	return err
+}
+
+func (a *adapter) SetGlobalAccessObserver(observer func(name string, supported bool)) {
+	a.observer = observer
+}
+
+func (a *adapter) Close() error {
+	a.mu.Lock()
+	if a.closed {
+		a.mu.Unlock()
+		return nil
+	}
+	a.mu.Unlock()
+	_, _ = a.run(func(_ *state, _ *gov8.Context, _ *gov8.Scope) (engine.Value, error) {
+		for i := len(a.modules) - 1; i >= 0; i-- {
+			_ = a.modules[i].Close()
+		}
+		for _, global := range a.globals {
+			_ = global.Close()
+		}
+		a.globals = nil
+		a.modules = nil
+		a.moduleCache = nil
+		a.moduleNames = nil
+		return nil, nil
+	})
+	a.mu.Lock()
+	a.closed = true
+	a.mu.Unlock()
+	return a.owner.Dispose()
+}
+
+type realmOperation func(*state, *gov8.Context, *gov8.Scope) (engine.Value, error)
+
+func (a *adapter) run(operation realmOperation) (engine.Value, error) {
+	value, err := a.owner.execute(func(s *state) response {
+		realm := s.realms[a.realm.id]
+		if realm == nil {
+			return response{err: errors.New("V8 realm is closed")}
+		}
+		scope, err := s.isolate.NewScope()
+		if err != nil {
+			return response{err: err}
+		}
+		defer scope.Close()
+		a.activeIsolate = s.isolate
+		result, err := operation(s, realm, scope)
+		a.activeIsolate = nil
+		return response{value: result, err: err}
+	})
+	if err != nil {
+		return nil, err
+	}
+	if value == nil {
+		return nil, nil
+	}
+	return value.(engine.Value), nil
+}
+
+func (a *adapter) runContext(ctx context.Context, operation realmOperation) (engine.Value, error) {
+	if err := ctx.Err(); err != nil {
+		return nil, err
+	}
+	return a.run(func(s *state, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
+		// Join the watcher on the isolate thread before another operation or
+		// disposal can begin. Failed dispatch creates no watcher at all.
+		finished, watcherDone := make(chan struct{}), make(chan struct{})
+		handle := s.isolate.ThreadSafeHandle()
+		go func() {
+			defer close(watcherDone)
+			select {
+			case <-ctx.Done():
+				handle.TerminateExecution()
+			case <-finished:
+			}
+		}()
+		result, err := operation(s, realm, scope)
+		close(finished)
+		<-watcherDone
+		if ctx.Err() != nil {
+			_ = s.isolate.CancelTerminateExecution()
+			return nil, ctx.Err()
+		}
+		return result, err
+	})
+}
+
+func (a *adapter) newGlobal(scope *gov8.Scope, local gov8.Value) (*gov8.Global, error) {
+	global, err := gov8.NewGlobal(scope, local)
+	if err == nil {
+		a.globals = append(a.globals, global)
+	}
+	return global, err
+}
+
+func (a *adapter) persist(scope *gov8.Scope, local gov8.Value) (engine.Value, error) {
+	global, err := a.newGlobal(scope, local)
+	if err != nil {
+		return nil, err
+	}
+	return &runtimeValue{runtime: a, global: global}, nil
+}
+
+func (a *adapter) local(scope *gov8.Scope, value engine.Value) (gov8.Value, error) {
+	v, ok := value.(*runtimeValue)
+	if !ok || v == nil || v.runtime != a || v.global == nil {
+		return gov8.Value{}, errors.New("value belongs to another JavaScript engine")
+	}
+	return v.global.ToLocal(scope)
+}
+
+func (a *adapter) localOrUndefined(scope *gov8.Scope, value engine.Value) (gov8.Value, error) {
+	if value == nil {
+		return scope.Undefined()
+	}
+	return a.local(scope, value)
+}
+
+func (a *adapter) localCallback(value engine.Value) (gov8.Value, error) {
+	v, ok := value.(*runtimeValue)
+	if !ok || v == nil || v.runtime != a {
+		return gov8.Value{}, errors.New("callback value is not local to this V8 invocation")
+	}
+	if v.hostSet {
+		callback := a.onCallback()
+		if callback == nil {
+			return gov8.Value{}, errors.New("host value escaped its V8 callback")
+		}
+		return callbackValue(callback.scope, callback.result, v.host)
+	}
+	callback := a.onCallback()
+	if callback == nil {
+		return gov8.Value{}, errors.New("not in V8 callback")
+	}
+	if v.borrowed && v.callbackID == callback.id {
+		return v.local, nil
+	}
+	if v.global != nil {
+		return v.global.ToLocal(callback.scope.Scope())
+	}
+	return gov8.Value{}, errors.New("borrowed V8 value escaped without a persistent handle")
+}
+
+func (a *adapter) localCallbackOrUndefined(scope *gov8.CallbackScope, value engine.Value) (gov8.Value, error) {
+	if value == nil {
+		return a.marshalCallback(scope, nil)
+	}
+	return a.localCallback(value)
+}
+
+func (a *adapter) marshal(scope *gov8.Scope, realm *gov8.Context, value any) (gov8.Value, error) {
+	if engineValue, ok := value.(engine.Value); ok {
+		return a.local(scope, engineValue)
+	}
+	if function, ok := value.(hostFunction); ok {
+		return a.makeFunction(scope, realm, function.function)
+	}
+	if primitiveValue, ok, err := marshalPrimitive(scope, value); ok || err != nil {
+		return primitiveValue, err
+	}
+	rv := reflect.ValueOf(value)
+	switch rv.Kind() {
+	case reflect.Map:
+		if rv.Type().Key().Kind() != reflect.String {
+			break
+		}
+		object, err := scope.NewObject(realm)
+		if err != nil {
+			return gov8.Value{}, err
+		}
+		iter := rv.MapRange()
+		for iter.Next() {
+			member, err := a.marshal(scope, realm, iter.Value().Interface())
+			if err != nil {
+				return gov8.Value{}, err
+			}
+			ok, err := object.SetByName(scope, realm, iter.Key().String(), member)
+			if err != nil || !ok {
+				return gov8.Value{}, err
+			}
+		}
+		return object.Value, nil
+	case reflect.Slice, reflect.Array:
+		elements := make([]gov8.Value, rv.Len())
+		for i := range elements {
+			var err error
+			elements[i], err = a.marshal(scope, realm, rv.Index(i).Interface())
+			if err != nil {
+				return gov8.Value{}, err
+			}
+		}
+		array, err := scope.NewArrayWithElements(realm, elements)
+		if err != nil {
+			return gov8.Value{}, err
+		}
+		return array.Value, nil
+	}
+	encoded, err := json.Marshal(value)
+	if err != nil {
+		return gov8.Value{}, err
+	}
+	quoted, _ := json.Marshal(string(encoded))
+	script, err := realm.Compile(scope, "JSON.parse("+string(quoted)+")", nil)
+	if err != nil {
+		return gov8.Value{}, err
+	}
+	defer script.Close()
+	return script.Run(scope, nil)
+}
+
+func (a *adapter) makeFunction(scope *gov8.Scope, realm *gov8.Context, function engine.Function) (gov8.Value, error) {
+	if a.activeIsolate == nil {
+		return gov8.Value{}, errors.New("V8 isolate is not active")
+	}
+	fn, err := a.activeIsolate.NewFunction(scope, realm, func(cs *gov8.CallbackScope, args gov8.FunctionCallbackArguments, rv gov8.ReturnValue) {
+		previous := a.callback
+		a.callbackSeq++
+		callbackID := a.callbackSeq
+		a.callback = &callbackContext{scope: cs, ctx: realm, result: rv, id: callbackID}
+		defer func() { a.callback = previous }()
+		wrapped := make([]engine.Value, args.Length())
+		for i := range wrapped {
+			local, e := args.Get(i)
+			if e != nil {
+				return
+			}
+			global, e := a.newGlobal(cs.Scope(), local)
+			if e != nil {
+				return
+			}
+			wrapped[i] = &runtimeValue{runtime: a, global: global, local: local, borrowed: true, callbackID: callbackID}
+		}
+		thisObject, e := args.This()
+		if e != nil {
+			return
+		}
+		thisGlobal, e := a.newGlobal(cs.Scope(), thisObject.Value)
+		if e != nil {
+			return
+		}
+		result, e := function(&runtimeValue{runtime: a, global: thisGlobal, local: thisObject.Value, borrowed: true, callbackID: callbackID}, wrapped)
+		if e != nil {
+			exception, _ := cs.NewError(e.Error())
+			_ = cs.ThrowException(exception)
+			return
+		}
+		if result == nil {
+			_ = rv.SetUndefined()
+			return
+		}
+		if wrapped, ok := result.(*runtimeValue); ok && wrapped.hostSet {
+			local, valueErr := callbackValue(cs, rv, wrapped.host)
+			if valueErr != nil {
+				exception, _ := cs.NewError(valueErr.Error())
+				_ = cs.ThrowException(exception)
+				return
+			}
+			_ = rv.Set(local)
+			return
+		}
+		local, e := a.localCallback(result)
+		if e != nil {
+			exception, _ := cs.NewError(e.Error())
+			_ = cs.ThrowException(exception)
+			return
+		}
+		_ = rv.Set(local)
+	}, nil)
+	if err != nil {
+		return gov8.Value{}, err
+	}
+	return fn.Value, nil
+}
+
+func marshalPrimitive(scope *gov8.Scope, value any) (gov8.Value, bool, error) {
+	switch value := value.(type) {
+	case nil:
+		v, e := scope.Null()
+		return v, true, e
+	case string:
+		v, e := scope.NewString(value)
+		return v, true, e
+	case bool:
+		v, e := scope.Boolean(value)
+		return v, true, e
+	case int:
+		v, e := scope.Number(float64(value))
+		return v, true, e
+	case int32:
+		v, e := scope.Int32(value)
+		return v, true, e
+	case int64:
+		v, e := scope.Number(float64(value))
+		return v, true, e
+	case uint:
+		v, e := scope.Number(float64(value))
+		return v, true, e
+	case uint32:
+		v, e := scope.Uint32(value)
+		return v, true, e
+	case uint64:
+		v, e := scope.Number(float64(value))
+		return v, true, e
+	case float32:
+		v, e := scope.Number(float64(value))
+		return v, true, e
+	case float64:
+		v, e := scope.Number(value)
+		return v, true, e
+	}
+	return gov8.Value{}, false, nil
+}
+
+func (a *adapter) marshalCallback(scope *gov8.CallbackScope, value any) (gov8.Value, error) {
+	if engineValue, ok := value.(engine.Value); ok {
+		return a.localCallback(engineValue)
+	}
+	callback := a.onCallback()
+	if callback == nil {
+		return gov8.Value{}, errors.New("not in V8 callback")
+	}
+	return callbackValue(scope, callback.result, value)
+	/*
+		rv := reflect.ValueOf(value)
+		if rv.Kind() == reflect.Map && rv.Type().Key().Kind() == reflect.String {
+			object, err := scope.NewObject(); if err != nil { return gov8.Value{}, err }
+			iter := rv.MapRange()
+			for iter.Next() { member, err := a.marshalCallback(scope, iter.Value().Interface()); if err != nil { return gov8.Value{}, err }; ok, err := scope.ObjectSet(object, iter.Key().String(), member); if err != nil || !ok { return gov8.Value{}, err } }
+			return object, nil
+		}
+		if rv.Kind() == reflect.Slice || rv.Kind() == reflect.Array {
+			elements := make([]gov8.Value, rv.Len())
+			for i := range elements { var err error; elements[i], err = a.marshalCallback(scope, rv.Index(i).Interface()); if err != nil { return gov8.Value{}, err } }
+			return scope.NewArrayWithElements(elements)
+		}
+		return gov8.Value{}, fmt.Errorf("unsupported callback value %T", value)
+	*/
+}
+
+func numberAsFloat(value any) (float64, bool) {
+	switch value := value.(type) {
+	case int:
+		return float64(value), true
+	case int32:
+		return float64(value), true
+	case int64:
+		return float64(value), true
+	case uint:
+		return float64(value), true
+	case uint32:
+		return float64(value), true
+	case uint64:
+		return float64(value), true
+	case float32:
+		return float64(value), true
+	case float64:
+		return value, true
+	}
+	return 0, false
+}
+
+func (a *adapter) export(value *runtimeValue) any {
+	if value.hostSet {
+		return value.host
+	}
+	if callback := a.onCallback(); callback != nil && value.borrowed {
+		return exportCallback(value.local, callback)
+	}
+	var exported any
+	_, _ = a.run(func(s *state, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
+		local, err := a.local(scope, value)
+		if err != nil {
+			return nil, err
+		}
+		exported = exportLocalPrimitive(local, realm)
+		if _, opaque := exported.(opaqueValue); opaque {
+			exported = exportJSON(scope, realm, local, value)
+		}
+		return nil, nil
+	})
+	return exported
+}
+
+func exportLocalPrimitive(value gov8.Value, realm *gov8.Context) any {
+	if yes, _ := value.IsNullOrUndefined(); yes {
+		return nil
+	}
+	if yes, _ := value.IsBoolean(); yes {
+		result, _ := value.BooleanValue()
+		return result
+	}
+	if yes, _ := value.IsNumber(); yes {
+		result, ok, _ := value.NumberValue(realm)
+		if ok && !math.IsNaN(result) && !math.IsInf(result, 0) {
+			return result
+		}
+		return nil
+	}
+	if yes, _ := value.IsString(); yes {
+		result, _ := value.ToString(realm)
+		return result
+	}
+	if yes, _ := value.IsBigInt(); yes {
+		result, _ := value.ToString(realm)
+		return result
+	}
+	// Object export is performed by JSON in runtimeValue.String fallback. The
+	// full recursive path is handled outside callbacks below.
+	return opaqueValue{value: value}
+}
+
+type opaqueValue struct{ value gov8.Value }
+
+func (a *adapter) string(value *runtimeValue) string {
+	if value.hostSet {
+		return fmt.Sprint(value.host)
+	}
+	if callback := a.onCallback(); callback != nil && value.borrowed {
+		result, _ := callback.scope.ToString(value.local)
+		return result
+	}
+	result := "undefined"
+	_, _ = a.run(func(s *state, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
+		local, err := a.local(scope, value)
+		if err == nil {
+			result, err = local.ToString(realm)
+		}
+		return nil, err
+	})
+	return result
+}
+
+func localResultString(value gov8.Value, realm *gov8.Context) string {
+	result, _ := value.ToString(realm)
+	return result
+}
+
+func callbackValue(scope *gov8.CallbackScope, result gov8.ReturnValue, value any) (gov8.Value, error) {
+	switch value := value.(type) {
+	case nil:
+		_ = result.SetNull()
+	case string:
+		local, err := scope.NewString(value)
+		if err != nil {
+			return gov8.Value{}, err
+		}
+		return local, nil
+	case bool:
+		_ = result.SetBool(value)
+	case int:
+		_ = result.SetFloat64(float64(value))
+	case int32:
+		_ = result.SetInt32(value)
+	case int64:
+		_ = result.SetFloat64(float64(value))
+	case uint:
+		_ = result.SetFloat64(float64(value))
+	case uint32:
+		_ = result.SetUint32(value)
+	case uint64:
+		_ = result.SetFloat64(float64(value))
+	case float32:
+		_ = result.SetFloat64(float64(value))
+	case float64:
+		_ = result.SetFloat64(value)
+	default:
+		rv := reflect.ValueOf(value)
+		if rv.Kind() == reflect.Map && rv.Type().Key().Kind() == reflect.String {
+			object, err := scope.NewObject()
+			if err != nil {
+				return gov8.Value{}, err
+			}
+			iter := rv.MapRange()
+			for iter.Next() {
+				member, err := callbackValue(scope, result, iter.Value().Interface())
+				if err != nil {
+					return gov8.Value{}, err
+				}
+				ok, err := scope.ObjectSet(object, iter.Key().String(), member)
+				if err != nil || !ok {
+					return gov8.Value{}, err
+				}
+			}
+			return object, nil
+		}
+		if rv.Kind() == reflect.Slice || rv.Kind() == reflect.Array {
+			elements := make([]gov8.Value, rv.Len())
+			for i := range elements {
+				var err error
+				elements[i], err = callbackValue(scope, result, rv.Index(i).Interface())
+				if err != nil {
+					return gov8.Value{}, err
+				}
+			}
+			return scope.NewArrayWithElements(elements)
+		}
+		return gov8.Value{}, fmt.Errorf("unsupported callback value %T", value)
+	}
+	return result.Get()
+}
+
+func exportJSON(scope *gov8.Scope, realm *gov8.Context, value gov8.Value, fallback engine.Value) any {
+	script, err := realm.Compile(scope, `(value=>JSON.stringify(value))`, nil)
+	if err != nil {
+		return fallback
+	}
+	defer script.Close()
+	fnValue, err := script.Run(scope, nil)
+	if err != nil {
+		return fallback
+	}
+	fn, ok, err := gov8.AsFunction(fnValue, realm)
+	if err != nil || !ok {
+		return fallback
+	}
+	undefined, _ := scope.Undefined()
+	encoded, ok, err := fn.Call(scope, undefined, value)
+	if err != nil || !ok {
+		return fallback
+	}
+	if absent, _ := encoded.IsUndefined(); absent {
+		return fallback
+	}
+	text, err := encoded.ToString(realm)
+	if err != nil {
+		return fallback
+	}
+	var exported any
+	if json.Unmarshal([]byte(text), &exported) != nil {
+		return fallback
+	}
+	return exported
+}
+
+func exportCallback(value gov8.Value, callback *callbackContext) any {
+	primitive := exportLocalPrimitive(value, callback.ctx)
+	if _, opaque := primitive.(opaqueValue); !opaque {
+		return primitive
+	}
+	global, err := callback.scope.CurrentContextGlobal()
+	if err != nil {
+		return nil
+	}
+	jsonObject, ok, err := callback.scope.ObjectGet(global, "JSON")
+	if err != nil || !ok {
+		return nil
+	}
+	stringify, ok, err := callback.scope.ObjectGet(jsonObject, "stringify")
+	if err != nil || !ok {
+		return nil
+	}
+	encoded, ok, err := callback.scope.CallFunction(stringify, jsonObject, []gov8.Value{value})
+	if err != nil || !ok {
+		return nil
+	}
+	text, err := callback.scope.ToString(encoded)
+	if err != nil || text == "undefined" {
+		return nil
+	}
+	var exported any
+	if json.Unmarshal([]byte(text), &exported) != nil {
+		return nil
+	}
+	return exported
+}
+
+func goTypeOf(value any) string {
+	if value == nil {
+		return "object"
+	}
+	switch value.(type) {
+	case bool:
+		return "boolean"
+	case string:
+		return "string"
+	case int, int32, int64, uint, uint32, uint64, float32, float64:
+		return "number"
+	}
+	return "object"
+}
+
+var _ engine.Factory = Factory{}
+var _ engine.Runtime = (*adapter)(nil)

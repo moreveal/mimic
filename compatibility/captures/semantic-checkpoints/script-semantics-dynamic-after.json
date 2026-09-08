@@ -1,0 +1,47 @@
+{
+  "url": "http://127.0.0.1:53906/",
+  "chrome": {
+    "value": {
+      "order": [
+        "classic-before",
+        "classic-after",
+        "module:42",
+        "dynamic:84"
+      ],
+      "moduleDone": true,
+      "dynamicDone": true,
+      "types": [
+        "",
+        "application/json",
+        "application/ld+json",
+        "text/plain",
+        "module",
+        ""
+      ]
+    },
+    "exceptions": [],
+    "runtimeIssues": []
+  },
+  "mimic": {
+    "value": {
+      "dynamicDone": true,
+      "moduleDone": true,
+      "order": [
+        "classic-before",
+        "classic-after",
+        "module:42",
+        "dynamic:84"
+      ],
+      "types": [
+        "",
+        "application/json",
+        "application/ld+json",
+        "text/plain",
+        "module",
+        ""
+      ]
+    },
+    "exceptions": [],
+    "runtimeIssues": []
+  }
+}
