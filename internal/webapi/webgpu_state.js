@@ -30,7 +30,13 @@
  method('GPU','requestAdapter',()=>host.gpuRequestAdapter().then(g=>make('GPUAdapter',{info:info(g),features:makeFeatures(g.features||[]),limits:limits({...gpuLimitDefaults,maxTextureDimension2D:g.maxTextureSize}),requested:false})));
  const navProto=typeof WorkerNavigator==='function'?WorkerNavigator.prototype:Navigator.prototype;
  const secure=typeof host.isSecureContext==='function'?host.isSecureContext():host.documentSecurity().secureContext;
- if(secure)Object.defineProperty(navProto,'gpu',{get(){return gpu},enumerable:true,configurable:true});
+ if(secure){
+  // Capture the owning navigator: inheriting its prototype does not confer its brand.
+  const owner=globalThis.navigator;
+  const get=Object.getOwnPropertyDescriptor({get gpu(){if(this!==owner)throw new TypeError('Illegal invocation');return gpu}},'gpu').get;
+  if(typeof markNative==='function')markNative(get,'gpu','get ');
+  Object.defineProperty(navProto,'gpu',{get,enumerable:true,configurable:true});
+ }
  method('GPUAdapter','requestDevice',(adapter,descriptor={})=>{
   if(adapter.requested)return Promise.reject(operation('Adapter already used'));
   const requested=Array.from(descriptor.requiredFeatures||[],String),available=slots.get(adapter.features).values;

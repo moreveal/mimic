@@ -1,0 +1,34 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/webgpu_navigator_oracle.js",
+    "fixtureSHA256": "f71e38d7cbc453315608c1ca48614cc67b1c79ed393300f0d1818495a38ec88b",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "name": "get gpu",
+    "length": 0,
+    "source": "function get gpu() { [native code] }",
+    "keys": [
+      "length",
+      "name"
+    ],
+    "enumerable": true,
+    "configurable": true,
+    "tag": "[object GPU]",
+    "identity": true,
+    "invalid": [
+      "TypeError",
+      "TypeError",
+      "TypeError",
+      "TypeError"
+    ],
+    "construct": "TypeError"
+  }
+}

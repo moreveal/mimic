@@ -11,7 +11,7 @@ import (
 )
 
 func TestWebGPUResourceOracle(t *testing.T) {
-	for _, name := range []string{"resources", "flags", "lifecycle"} {
+	for _, name := range []string{"resources", "flags", "lifecycle", "navigator"} {
 		t.Run(name, func(t *testing.T) { webGPUOracle(t, name) })
 	}
 }
