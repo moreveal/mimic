@@ -22,6 +22,14 @@ Implemented observations:
   partial render quantum advances currentTime to a 128-frame boundary. A source
   can end within that quantum even if its end is beyond the output buffer length;
   an infinite loop does not end merely because offline rendering completed.
+- OscillatorNode and PeriodicWave construction, parameter bounds, sine/square/
+  sawtooth/triangle Fourier synthesis, copied custom coefficients, normalization,
+  DC removal, band limiting, negative/zero/Nyquist frequencies, detune, scheduling,
+  and ended notifications. Wavetable banks and phase belong to the context/node.
+- DynamicsCompressorNode with bounded k-rate parameters, mono/stereo linked peak
+  detection, nonlinear knee/ratio, 6 ms lookahead, makeup gain, 32-frame envelope
+  divisions, adaptive attack/release, and reduction metering. Its output derives
+  from delayed input samples and local envelope state.
 - Constant gain, scheduled values, linear/exponential ramps, copied value curves,
   cancellation and hold, with per-frame a-rate and 128-frame k-rate evaluation.
   Mono/stereo speaker conversion and
@@ -42,8 +50,7 @@ generation is used.
 
 ## Remaining boundaries
 
-This is not complete Web Audio support. Oscillators, filters, compressors,
-convolution, analyzers, setTargetAtTime, AudioParam connections, decoding,
+This is not complete Web Audio support. Filters, convolution, analyzers, setTargetAtTime, AudioParam connections, decoding,
 reverse loops, fractional loop boundaries,
 feedback graphs,
 destination channel reconfiguration and complex speaker conversion remain
@@ -92,3 +99,86 @@ Chrome hardware limits. More exact floating-point/denormal behavior and addition
 graph semantics require further native measurements.
 
 These local API checks do not establish a live Cloudflare pass.
+
+## Portable oscillator and compressor DSP
+
+Six additional frozen Chrome 152 captures cover oscillator parameter shape,
+error boundaries, all four built-in waveforms, custom periodic waves, scheduling,
+automation, 8/44.1/48/96 kHz sample rates, and oscillator/compressor composition.
+They compare every captured PCM sample on V8 and Goja. Existing buffer-source,
+gain and automation captures still compare exactly and are unchanged.
+
+The portable radix-2 transform computes band-limited waveform tables from Fourier
+coefficients. It follows Chrome 152's three pitch ranges per octave, table sizes,
+normalization and interpolation, but is not its native FFT implementation. New
+synthesis tests allow an explicit absolute numeric error of 1e-5; API states,
+errors, dimensions and types are checked exactly. The final 5000-frame triangle/compressor graph has measured maximum error
+1.20e-7; other synthesis graph cases remain below 2.39e-7. The separately measured
+4096-frame compressor cases match within 8.95e-8 (three cases match exactly).
+These results establish a measured approximate PCM model, not arbitrary or
+precomputed samples and not bit-identical native FFT/libm output.
+
+The DSP algorithm references are the Chrome 152.0.7977.82 sources
+[periodic_wave.cc](https://github.com/chromium/chromium/blob/152.0.7977.82/third_party/blink/renderer/modules/webaudio/periodic_wave.cc),
+[oscillator_handler.cc](https://github.com/chromium/chromium/blob/152.0.7977.82/third_party/blink/renderer/modules/webaudio/oscillator_handler.cc), and
+[dynamics_compressor.cc](https://github.com/chromium/chromium/blob/152.0.7977.82/third_party/blink/renderer/platform/audio/dynamics_compressor.cc).
+The applicable source notice is retained in the implementation.
+
+Fractional oscillator starts expose a distinction between initial constructor
+values and AudioParam changes: a parameter setter is an initial automation event.
+When the oscillator starts in that first quantum its phase begins at zero;
+a constant parameter carries the sub-frame remainder. The dedicated schedule
+capture records both the first quantum and starts beyond it. Oscillators and
+compressors still participate in the same canonical graph and asynchronous
+completion lifecycle as buffer sources; they do not require an audio device.
+
+The synthesis relation capture additionally checks repeated runs, exact gain
+scaling, stereo channel agreement, disconnection, stop-before-start events,
+partial-quantum compressor state and PeriodicWave reuse across contexts. Native
+waves retain their originating sample rate when reused by another context.
+Internal graph PCM covers the full final render quantum before clipping to the
+requested AudioBuffer length, so compressor state and readback share the same
+source samples. Lazy wavetable banks have a per-context 16-million-sample limit.
+Constant-rate oscillator phase uses four Float32 lanes with a double-precision
+origin restored at each quantum, preserving Chrome's phase rounding near steep
+waveform edges. Native FFT implementation differences still remain bounded by
+the explicit synthesis tolerance.
+
+The extreme-parameter capture also checks finite detune limits: native DSP flushes
+subnormal detune multipliers to zero, and a NaN effective frequency (zero times
+overflowed detune) clamps to Nyquist. These cases produce measured silence.
+
+## Chromium oscillator source notice
+
+The oscillator phase and interpolation algorithms reference code copyright
+2020, 2022 The Chromium Authors, under the following license:
+
+```text
+// Copyright 2015 The Chromium Authors
+//
+// Redistribution and use in source and binary forms, with or without
+// modification, are permitted provided that the following conditions are
+// met:
+//
+//    * Redistributions of source code must retain the above copyright
+// notice, this list of conditions and the following disclaimer.
+//    * Redistributions in binary form must reproduce the above
+// copyright notice, this list of conditions and the following disclaimer
+// in the documentation and/or other materials provided with the
+// distribution.
+//    * Neither the name of Google LLC nor the names of its
+// contributors may be used to endorse or promote products derived from
+// this software without specific prior written permission.
+//
+// THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+// "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+// LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+// A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+// OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+// SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+// LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+// DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+// THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+// (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+// OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+```

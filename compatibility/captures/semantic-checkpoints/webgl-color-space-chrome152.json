@@ -1,0 +1,320 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/webgl_color_space_oracle.js",
+    "fixtureSHA256": "8af34eed30f17dfb3b128d08b4df9cfed92be90ca5eb0017da412297efbba22e",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "webgl": {
+      "drawingBufferColorSpace": [
+        [
+          "default",
+          "srgb"
+        ],
+        [
+          "display-p3",
+          "display-p3",
+          null,
+          0
+        ],
+        [
+          "srgb",
+          "srgb",
+          null,
+          0
+        ],
+        [
+          "invalid",
+          "srgb",
+          null,
+          0
+        ],
+        [
+          "SRGB",
+          "srgb",
+          null,
+          0
+        ],
+        [
+          "",
+          "srgb",
+          null,
+          0
+        ],
+        [
+          "null",
+          "srgb",
+          null,
+          0
+        ],
+        [
+          "undefined",
+          "srgb",
+          null,
+          0
+        ],
+        [
+          "[object Object]",
+          "srgb",
+          null,
+          0
+        ],
+        [
+          "Symbol(x)",
+          "srgb",
+          "TypeError",
+          0
+        ],
+        [
+          "resize",
+          "display-p3"
+        ],
+        [
+          "separate",
+          "srgb"
+        ]
+      ],
+      "drawingBufferColorSpaceDescriptor": [
+        "get drawingBufferColorSpace",
+        "set drawingBufferColorSpace",
+        true,
+        true,
+        "TypeError"
+      ],
+      "unpackColorSpace": [
+        [
+          "default",
+          "srgb"
+        ],
+        [
+          "display-p3",
+          "display-p3",
+          null,
+          0
+        ],
+        [
+          "srgb",
+          "srgb",
+          null,
+          0
+        ],
+        [
+          "invalid",
+          "srgb",
+          null,
+          0
+        ],
+        [
+          "SRGB",
+          "srgb",
+          null,
+          0
+        ],
+        [
+          "",
+          "srgb",
+          null,
+          0
+        ],
+        [
+          "null",
+          "srgb",
+          null,
+          0
+        ],
+        [
+          "undefined",
+          "srgb",
+          null,
+          0
+        ],
+        [
+          "[object Object]",
+          "srgb",
+          null,
+          0
+        ],
+        [
+          "Symbol(x)",
+          "srgb",
+          "TypeError",
+          0
+        ],
+        [
+          "resize",
+          "display-p3"
+        ],
+        [
+          "separate",
+          "srgb"
+        ]
+      ],
+      "unpackColorSpaceDescriptor": [
+        "get unpackColorSpace",
+        "set unpackColorSpace",
+        true,
+        true,
+        "TypeError"
+      ]
+    },
+    "webgl2": {
+      "drawingBufferColorSpace": [
+        [
+          "default",
+          "srgb"
+        ],
+        [
+          "display-p3",
+          "display-p3",
+          null,
+          0
+        ],
+        [
+          "srgb",
+          "srgb",
+          null,
+          0
+        ],
+        [
+          "invalid",
+          "srgb",
+          null,
+          0
+        ],
+        [
+          "SRGB",
+          "srgb",
+          null,
+          0
+        ],
+        [
+          "",
+          "srgb",
+          null,
+          0
+        ],
+        [
+          "null",
+          "srgb",
+          null,
+          0
+        ],
+        [
+          "undefined",
+          "srgb",
+          null,
+          0
+        ],
+        [
+          "[object Object]",
+          "srgb",
+          null,
+          0
+        ],
+        [
+          "Symbol(x)",
+          "srgb",
+          "TypeError",
+          0
+        ],
+        [
+          "resize",
+          "display-p3"
+        ],
+        [
+          "separate",
+          "srgb"
+        ]
+      ],
+      "drawingBufferColorSpaceDescriptor": [
+        "get drawingBufferColorSpace",
+        "set drawingBufferColorSpace",
+        true,
+        true,
+        "TypeError"
+      ],
+      "unpackColorSpace": [
+        [
+          "default",
+          "srgb"
+        ],
+        [
+          "display-p3",
+          "display-p3",
+          null,
+          0
+        ],
+        [
+          "srgb",
+          "srgb",
+          null,
+          0
+        ],
+        [
+          "invalid",
+          "srgb",
+          null,
+          0
+        ],
+        [
+          "SRGB",
+          "srgb",
+          null,
+          0
+        ],
+        [
+          "",
+          "srgb",
+          null,
+          0
+        ],
+        [
+          "null",
+          "srgb",
+          null,
+          0
+        ],
+        [
+          "undefined",
+          "srgb",
+          null,
+          0
+        ],
+        [
+          "[object Object]",
+          "srgb",
+          null,
+          0
+        ],
+        [
+          "Symbol(x)",
+          "srgb",
+          "TypeError",
+          0
+        ],
+        [
+          "resize",
+          "display-p3"
+        ],
+        [
+          "separate",
+          "srgb"
+        ]
+      ],
+      "unpackColorSpaceDescriptor": [
+        "get unpackColorSpace",
+        "set unpackColorSpace",
+        true,
+        true,
+        "TypeError"
+      ]
+    }
+  }
+}

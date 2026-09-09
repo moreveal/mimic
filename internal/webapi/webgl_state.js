@@ -18,6 +18,14 @@
       // Replace generated successful placeholders with an observable boundary.
       for(const name of Object.getOwnPropertyNames(proto)){const d=Object.getOwnPropertyDescriptor(proto,name);if(name!=='constructor'&&typeof d.value==='function')define(proto,name,()=>fail(name))}
       const method=(name,fn)=>define(proto,name,fn);
+      // Context metadata survives drawing-buffer resize; independent contexts
+      // keep independent values. Pixel color conversion is a separate boundary.
+      for(const name of ['drawingBufferColorSpace','unpackColorSpace']){
+        const get=function(){return check(this)[name]||'srgb'},set=function(value){const s=check(this);if(typeof value==='symbol')throw new TypeError('Cannot convert a Symbol value to a string');value=String(value);if(value==='srgb'||value==='display-p3')s[name]=value};
+        Object.defineProperty(get,'name',{value:'get '+name,configurable:true});Object.defineProperty(set,'name',{value:'set '+name,configurable:true});
+        if(typeof markNative==='function'){markNative(get,name,'get ');markNative(set,name,'set ')}
+        Object.defineProperty(proto,name,{get,set,enumerable:true,configurable:true});
+      }
       for(const [name,get] of Object.entries({canvas:s=>s.canvas,drawingBufferWidth:s=>s.dim.width,drawingBufferHeight:s=>s.dim.height}))Object.defineProperty(proto,name,{get(){return get(check(this))},enumerable:true,configurable:true});
       method('getError',s=>{const code=s.error;s.error=0;return code});
       method('isContextLost',()=>false);

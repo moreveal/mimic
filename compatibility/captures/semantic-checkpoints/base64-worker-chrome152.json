@@ -1,0 +1,200 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/base64_oracle.js",
+    "fixtureSHA256": "5affbaf4b9e2866795bd226fae4adb131232766108a3b7c81d3d283b77e47ebb",
+    "fixtureHashNormalization": "LF",
+    "worker": true
+  },
+  "result": {
+    "atob": [
+      [
+        "",
+        [],
+        null
+      ],
+      [
+        "YQ",
+        [
+          97
+        ],
+        null
+      ],
+      [
+        "YQ=",
+        null,
+        "InvalidCharacterError"
+      ],
+      [
+        "YQ==",
+        [
+          97
+        ],
+        null
+      ],
+      [
+        "YQ===",
+        null,
+        "InvalidCharacterError"
+      ],
+      [
+        "=",
+        null,
+        "InvalidCharacterError"
+      ],
+      [
+        "==",
+        null,
+        "InvalidCharacterError"
+      ],
+      [
+        "===",
+        null,
+        "InvalidCharacterError"
+      ],
+      [
+        "A",
+        null,
+        "InvalidCharacterError"
+      ],
+      [
+        "AA",
+        [
+          0
+        ],
+        null
+      ],
+      [
+        "AAA",
+        [
+          0,
+          0
+        ],
+        null
+      ],
+      [
+        "AAAA",
+        [
+          0,
+          0,
+          0
+        ],
+        null
+      ],
+      [
+        "AB",
+        [
+          0
+        ],
+        null
+      ],
+      [
+        " Y Q ==",
+        [
+          97
+        ],
+        null
+      ],
+      [
+        "\u000bYQ==",
+        null,
+        "InvalidCharacterError"
+      ],
+      [
+        "-_",
+        null,
+        "InvalidCharacterError"
+      ],
+      [
+        "AA=",
+        null,
+        "InvalidCharacterError"
+      ],
+      [
+        "AAA=",
+        [
+          0,
+          0
+        ],
+        null
+      ],
+      [
+        "null",
+        [
+          158,
+          233,
+          101
+        ],
+        null
+      ],
+      [
+        "undefined",
+        null,
+        "InvalidCharacterError"
+      ],
+      [
+        "Symbol(x)",
+        null,
+        "TypeError"
+      ]
+    ],
+    "btoa": [
+      [
+        "",
+        "",
+        null
+      ],
+      [
+        "abc",
+        "YWJj",
+        null
+      ],
+      [
+        "\u00ff",
+        "/w==",
+        null
+      ],
+      [
+        "\u0100",
+        null,
+        "InvalidCharacterError"
+      ],
+      [
+        "null",
+        "bnVsbA==",
+        null
+      ],
+      [
+        "undefined",
+        "dW5kZWZpbmVk",
+        null
+      ],
+      [
+        "Symbol(x)",
+        null,
+        "TypeError"
+      ]
+    ],
+    "shape": [
+      [
+        "atob",
+        1,
+        "function atob() { [native code] }",
+        "TypeError",
+        "TypeError"
+      ],
+      [
+        "btoa",
+        1,
+        "function btoa() { [native code] }",
+        "TypeError",
+        "TypeError"
+      ]
+    ]
+  }
+}

@@ -49,6 +49,7 @@ type Realm struct {
 	frameReflection         *frameReflection
 	frameReferenceImport    engine.Value
 	frameReferenceDescribe  engine.Value
+	frameNodeDescribe       engine.Value
 	documentStreamEvent     engine.Value
 	url                     *url.URL
 	token                   string
@@ -144,6 +145,9 @@ func newRealm(p *Page, agent ExecutionAgent, d *dom.Document, u *url.URL) (*Real
 }
 
 func newRealmState(p *Page, agent ExecutionAgent, d *dom.Document, u *url.URL, deferred bool) (*Realm, error) {
+	if frame, ok := agent.(*Frame); ok && frame.parent != nil && frame.parent.Realm != nil {
+		d.ShareNodeArena(frame.parent.Realm.document)
+	}
 	origin, loaderID := p.PerformanceOrigin(), p.LoaderID()
 	if frame, ok := agent.(*Frame); ok && frame.parent != nil {
 		origin, loaderID = p.ClockNow(), frame.loaderID

@@ -1,0 +1,1 @@
+(async()=>{const out={};for(const start of [0,.25,.5,.75,1,1.25,127.25,128.25]){const c=new OfflineAudioContext(1,140,8000),o=c.createOscillator();o.frequency.value=1000;o.connect(c.destination);o.start(start/8000);out[start]=Array.from((await c.startRendering()).getChannelData(0));}return out})()

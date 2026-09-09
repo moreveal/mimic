@@ -1,0 +1,93 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/navigator_power_oracle.js",
+    "fixtureSHA256": "04cbc21b18602447bb908e72102eb1fa58e3271a7a21fbf0f7cc2ecd29a713f8",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "promise": {
+      "same": true,
+      "tag": "[object Promise]"
+    },
+    "battery": {
+      "same": true,
+      "tag": "[object BatteryManager]",
+      "eventTarget": true,
+      "own": [],
+      "charging": true,
+      "level": 1,
+      "chargingTime": "0",
+      "dischargingTime": "Infinity",
+      "handlers": [
+        null,
+        null,
+        null,
+        null
+      ]
+    },
+    "invalidBattery": {
+      "then": "function",
+      "error": "TypeError"
+    },
+    "gamepads": {
+      "array": true,
+      "same": false,
+      "length": 4,
+      "empty": true
+    },
+    "invalidGamepads": "TypeError",
+    "events": {
+      "chargingchange": [
+        "first",
+        "handler",
+        "last",
+        "first",
+        "replacement",
+        "last",
+        "first",
+        "last",
+        "handler"
+      ],
+      "chargingtimechange": [
+        "first",
+        "handler",
+        "last",
+        "first",
+        "replacement",
+        "last",
+        "first",
+        "last",
+        "handler"
+      ],
+      "dischargingtimechange": [
+        "first",
+        "handler",
+        "last",
+        "first",
+        "replacement",
+        "last",
+        "first",
+        "last",
+        "handler"
+      ],
+      "levelchange": [
+        "first",
+        "handler",
+        "last",
+        "first",
+        "replacement",
+        "last",
+        "first",
+        "last",
+        "handler"
+      ]
+    }
+  }
+}

@@ -1,0 +1,332 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/form_reflection_oracle.js",
+    "fixtureSHA256": "8ca4d87e41a415f8cc687515c01b0c9bc5fe900c5df7399ffbfeb6d7abc86293",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "input": [
+      [
+        null,
+        -1
+      ],
+      [
+        "",
+        -1
+      ],
+      [
+        "0",
+        0
+      ],
+      [
+        "-0",
+        0
+      ],
+      [
+        "-00",
+        0
+      ],
+      [
+        "-1",
+        -1
+      ],
+      [
+        "12",
+        12
+      ],
+      [
+        " 12x",
+        12
+      ],
+      [
+        "+3",
+        3
+      ],
+      [
+        "1.5",
+        1
+      ],
+      [
+        "2147483647",
+        2147483647
+      ],
+      [
+        "2147483648",
+        -1
+      ],
+      [
+        "9999999999999",
+        -1
+      ]
+    ],
+    "inputSet": [
+      [
+        "0",
+        null,
+        0,
+        "0"
+      ],
+      [
+        "1",
+        null,
+        1,
+        "1"
+      ],
+      [
+        "-1",
+        "IndexSizeError",
+        1,
+        "1"
+      ],
+      [
+        "1.9",
+        null,
+        1,
+        "1"
+      ],
+      [
+        "null",
+        null,
+        0,
+        "0"
+      ],
+      [
+        "undefined",
+        null,
+        0,
+        "0"
+      ],
+      [
+        "NaN",
+        null,
+        0,
+        "0"
+      ],
+      [
+        "Infinity",
+        null,
+        0,
+        "0"
+      ],
+      [
+        "2147483648",
+        "IndexSizeError",
+        0,
+        "0"
+      ],
+      [
+        "4294967296",
+        null,
+        0,
+        "0"
+      ],
+      [
+        "23",
+        null,
+        23,
+        "23"
+      ]
+    ],
+    "inputDir": [
+      [
+        "null",
+        "null"
+      ],
+      [
+        "undefined",
+        "undefined"
+      ],
+      [
+        "3",
+        "3"
+      ],
+      [
+        "abc",
+        "abc"
+      ]
+    ],
+    "inputClone": [
+      23,
+      "abc"
+    ],
+    "inputdirName": [
+      "get dirName",
+      "set dirName",
+      true,
+      true,
+      "TypeError"
+    ],
+    "inputmaxLength": [
+      "get maxLength",
+      "set maxLength",
+      true,
+      true,
+      "TypeError"
+    ],
+    "textarea": [
+      [
+        null,
+        -1
+      ],
+      [
+        "",
+        -1
+      ],
+      [
+        "0",
+        0
+      ],
+      [
+        "-0",
+        0
+      ],
+      [
+        "-00",
+        0
+      ],
+      [
+        "-1",
+        -1
+      ],
+      [
+        "12",
+        12
+      ],
+      [
+        " 12x",
+        12
+      ],
+      [
+        "+3",
+        3
+      ],
+      [
+        "1.5",
+        1
+      ],
+      [
+        "2147483647",
+        2147483647
+      ],
+      [
+        "2147483648",
+        -1
+      ],
+      [
+        "9999999999999",
+        -1
+      ]
+    ],
+    "textareaSet": [
+      [
+        "0",
+        null,
+        0,
+        "0"
+      ],
+      [
+        "1",
+        null,
+        1,
+        "1"
+      ],
+      [
+        "-1",
+        "IndexSizeError",
+        1,
+        "1"
+      ],
+      [
+        "1.9",
+        null,
+        1,
+        "1"
+      ],
+      [
+        "null",
+        null,
+        0,
+        "0"
+      ],
+      [
+        "undefined",
+        null,
+        0,
+        "0"
+      ],
+      [
+        "NaN",
+        null,
+        0,
+        "0"
+      ],
+      [
+        "Infinity",
+        null,
+        0,
+        "0"
+      ],
+      [
+        "2147483648",
+        "IndexSizeError",
+        0,
+        "0"
+      ],
+      [
+        "4294967296",
+        null,
+        0,
+        "0"
+      ],
+      [
+        "23",
+        null,
+        23,
+        "23"
+      ]
+    ],
+    "textareaDir": [
+      [
+        "null",
+        "null"
+      ],
+      [
+        "undefined",
+        "undefined"
+      ],
+      [
+        "3",
+        "3"
+      ],
+      [
+        "abc",
+        "abc"
+      ]
+    ],
+    "textareaClone": [
+      23,
+      "abc"
+    ],
+    "textareadirName": [
+      "get dirName",
+      "set dirName",
+      true,
+      true,
+      "TypeError"
+    ],
+    "textareamaxLength": [
+      "get maxLength",
+      "set maxLength",
+      true,
+      true,
+      "TypeError"
+    ]
+  }
+}

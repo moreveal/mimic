@@ -8,7 +8,7 @@ func (d *Document) newTemplateContentLocked(template *Node) *Node {
 		return d.nodes[template.TemplateContent]
 	}
 	d.next++
-	fragment := &Node{ID: d.next, Type: "fragment", TemplateHost: template.ID, Attributes: map[string]string{}}
+	fragment := &Node{ID: d.next, Type: "fragment", TemplateHost: template.ID, OwnerDocument: d.ownerDocumentLocked(template.ID), Attributes: map[string]string{}}
 	d.nodes[fragment.ID] = fragment
 	template.TemplateContent = fragment.ID
 	return fragment

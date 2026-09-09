@@ -50,7 +50,7 @@ function wrapDocumentNode(data) {
   const adopt=(node,doc)=>{
     const id=validDocument(doc),slot=elementSlot(node);
     if(slot)host.adoptNodeDocument(slot.nodeId,id);
-    else if(node instanceof DocumentFragment){fragmentOwnerDocuments.set(node,doc);for(const child of node.childNodes)adopt(child,doc)}
+    else if(isDOMFragment(node)){fragmentOwnerDocuments.set(node,doc);for(const child of node.childNodes)adopt(child,doc)}
     return node;
   };
   for(const name of ['createElement','createElementNS','createTextNode','createComment','createDocumentFragment']){
@@ -108,16 +108,16 @@ function wrapDocumentNode(data) {
   for(const name of ['createHTMLDocument','createDocument','hasFeature'])markNative(DOMImplementation.prototype[name],name);
   Object.defineProperty(globalThis,'DOMImplementation',{value:DOMImplementation,writable:true,configurable:true});
   accessor(Document.prototype,'implementation',function(){validDocument(this);let value=documentImplementations.get(this);if(!value){value=new DOMImplementation(hostToken);documentImplementations.set(this,value)}return value});
-  member(Document.prototype,'adoptNode',function(node){validDocument(this);if(!(node instanceof Node))throw new TypeError('Expected a Node');if(node instanceof Document||node instanceof ShadowRoot)throw new DOMException('Node cannot be adopted','NotSupportedError');if(node.parentNode)node.parentNode.removeChild(node);return adopt(node,this)});
+  member(Document.prototype,'adoptNode',function(node){validDocument(this);if(!isDOMNode(node))throw new TypeError('Expected a Node');if(node instanceof Document||node instanceof ShadowRoot)throw new DOMException('Node cannot be adopted','NotSupportedError');if(node.parentNode)node.parentNode.removeChild(node);return adopt(node,this)});
   const clone=Node.prototype.cloneNode;
   member(Node.prototype,'cloneNode',function(deep=false){const result=clone.call(this,deep);return adopt(result,this.ownerDocument||document)});
-  member(Document.prototype,'importNode',function(node,deep=false){validDocument(this);if(!(node instanceof Node))throw new TypeError('Expected a Node');return adopt(node.cloneNode(deep),this)});
+  member(Document.prototype,'importNode',function(node,deep=false){validDocument(this);if(!isDOMNode(node))throw new TypeError('Expected a Node');return adopt(node.cloneNode(deep),this)});
   for(const name of ['appendChild','insertBefore']){
     const original=Node.prototype[name];
     member(Node.prototype,name,function(node,before=null){
       if(this instanceof Document){
-        if(!(node instanceof Node))throw new TypeError('Expected a Node');
-        const added=node instanceof DocumentFragment?Array.from(node.childNodes):[node];
+        if(!isDOMNode(node))throw new TypeError('Expected a Node');
+        const added=isDOMFragment(node)?Array.from(node.childNodes):[node];
         const children=Array.from(this.childNodes).filter(child=>!added.includes(child));
         const index=before==null?children.length:children.indexOf(before);
         if(before!=null&&before!==node&&index<0)throw new DOMException('Reference node is not a child','NotFoundError');
@@ -139,7 +139,7 @@ function wrapDocumentNode(data) {
   const attr=node=>typeof Attr==='function'&&node instanceof Attr;
   const path=node=>{const nodes=[node];let parent=attr(node)?node.ownerElement:node.parentNode;for(;parent;parent=parent.parentNode)nodes.push(parent);return nodes};
   member(Node.prototype,'compareDocumentPosition',function(other){
-    if(!(this instanceof Node)||!(other instanceof Node))throw new TypeError('Expected a Node');if(this===other)return 0;
+    if(!isDOMNode(this)||!isDOMNode(other))throw new TypeError('Expected a Node');if(this===other)return 0;
     const a=path(this),b=path(other),ar=a[a.length-1],br=b[b.length-1];
     if(ar!==br)return 1|32|(order(ar)<order(br)?4:2);
     if(b.includes(this))return 4|16;if(a.includes(other))return 2|8;

@@ -35,13 +35,17 @@ type Node struct {
 	ScriptAlreadyStarted  bool              `json:"-"`
 	OwnerDocument         int64             `json:"ownerDocumentId,omitempty"`
 }
-type Document struct {
+type nodeArena struct {
 	mu               sync.RWMutex
 	next             int64
 	nodes            map[int64]*Node
-	root             int64
-	title, source    string
 	hasFrameElements bool
+}
+
+type Document struct {
+	*nodeArena
+	root          int64
+	title, source string
 }
 
 func Parse(source string) (*Document, error) {
@@ -49,12 +53,12 @@ func Parse(source string) (*Document, error) {
 	if err != nil {
 		return nil, err
 	}
-	d := &Document{nodes: map[int64]*Node{}, source: source}
+	d := &Document{nodeArena: &nodeArena{nodes: map[int64]*Node{}}, source: source}
 	var walk func(*html.Node, int64)
 	walk = func(n *html.Node, parent int64) {
 		d.next++
 		id := d.next
-		node := &Node{ID: id, Parent: parent, Attributes: map[string]string{}}
+		node := &Node{ID: id, Parent: parent, OwnerDocument: d.root, Attributes: map[string]string{}}
 		switch n.Type {
 		case html.DocumentNode:
 			node.Type = "document"
@@ -143,6 +147,9 @@ func (d *Document) IsConnected(id int64) bool {
 		node := d.nodes[id]
 		if node == nil {
 			return false
+		}
+		if node.Type == "document" {
+			return true
 		}
 		id = node.Parent
 	}
@@ -445,7 +452,7 @@ func (d *Document) AppendElement(parent int64, tag string, attrs map[string]stri
 		return Node{}, fmt.Errorf("parent node %d does not exist", parent)
 	}
 	d.next++
-	n := &Node{ID: d.next, Type: "element", TagName: strings.ToUpper(tag), Attributes: attrs, Parent: parent}
+	n := &Node{ID: d.next, Type: "element", TagName: strings.ToUpper(tag), Attributes: attrs, Parent: parent, OwnerDocument: d.ownerDocumentLocked(parent)}
 	for name := range attrs {
 		n.AttributeNames = append(n.AttributeNames, name)
 	}
@@ -462,7 +469,7 @@ func (d *Document) CreateElementNS(namespace, tag string) Node {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	d.next++
-	n := &Node{ID: d.next, Type: "element", TagName: strings.ToUpper(tag), Namespace: namespace, Attributes: map[string]string{}}
+	n := &Node{ID: d.next, Type: "element", TagName: strings.ToUpper(tag), Namespace: namespace, OwnerDocument: d.root, Attributes: map[string]string{}}
 	if namespace != "http://www.w3.org/1999/xhtml" {
 		n.QualifiedName = tag
 	}
@@ -477,7 +484,7 @@ func (d *Document) CreateComment(data string) Node {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	d.next++
-	n := &Node{ID: d.next, Type: "comment", Text: data, Attributes: map[string]string{}}
+	n := &Node{ID: d.next, Type: "comment", Text: data, OwnerDocument: d.root, Attributes: map[string]string{}}
 	d.nodes[n.ID] = n
 	return *n
 }
@@ -485,7 +492,7 @@ func (d *Document) CreateText(data string) Node {
 	d.mu.Lock()
 	defer d.mu.Unlock()
 	d.next++
-	n := &Node{ID: d.next, Type: "text", Text: data, Attributes: map[string]string{}}
+	n := &Node{ID: d.next, Type: "text", Text: data, OwnerDocument: d.root, Attributes: map[string]string{}}
 	d.nodes[n.ID] = n
 	return *n
 }
