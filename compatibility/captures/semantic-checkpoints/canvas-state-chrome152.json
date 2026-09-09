@@ -1,0 +1,77 @@
+{
+  "browser": "152.0.7977.82",
+  "result": {
+    "sizes": [
+      [
+        2,
+        3
+      ],
+      [
+        0,
+        0
+      ],
+      "TypeError",
+      [
+        1,
+        2
+      ],
+      "TypeError",
+      "TypeError"
+    ],
+    "data": [
+      "IndexSizeError",
+      "IndexSizeError",
+      "IndexSizeError",
+      {
+        "width": 1,
+        "height": 2,
+        "space": "srgb"
+      },
+      "IndexSizeError",
+      "InvalidStateError"
+    ],
+    "context": {
+      "same": true,
+      "other": null,
+      "alpha": true,
+      "tag": "[object OffscreenCanvasRenderingContext2D]"
+    },
+    "reset": {
+      "fill": "#000000",
+      "a": 1
+    },
+    "bitmap": {
+      "w": 2,
+      "h": 3
+    },
+    "pixels": [
+      0,
+      0,
+      0,
+      4,
+      0,
+      0,
+      0,
+      8
+    ],
+    "closed": [
+      0,
+      0
+    ]
+  },
+  "source": "internal/browser/testdata/canvas_state_oracle.js",
+  "sourceSHA256": "7a3c531a3c007a340a15643cce2643d1d45d73c7dcf809626acdb7c5f22550f1",
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "profileFreshness": "fresh-isolated-context",
+    "browserProfileFreshness": "unavailable: existing browser process",
+    "unavailable": [
+      "commandLineFeatureOverrides",
+      "environmentProfileId",
+      "window",
+      "viewport",
+      "hasFocus"
+    ]
+  }
+}

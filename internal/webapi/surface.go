@@ -66,6 +66,15 @@ var fetchPrimitivesSurface string
 //go:embed abort_encoding.js
 var abortEncodingSurface string
 
+//go:embed canvas_state.js
+var canvasStateSurface string
+
+//go:embed webgl_state.js
+var webglStateSurface string
+
+//go:embed dom_matrix.js
+var domMatrixSurface string
+
 //go:embed form_controls.js
 var formControlsSurface string
 
@@ -146,8 +155,9 @@ func composeSurface(generated, exposureSource string) string {
 	parts := []string{capabilitySurface, generated, "finalizeBindings();", exposureSource,
 		"installNavigatorCapabilities();", semanticFixups, strings.Replace(domCompatibilitySurface, "/* shared_abort_encoding */", abortEncodingSurface, 1),
 		templatesCompatibilitySurface, selectorsVendorSurface, selectorsCompatibilitySurface, cssomCompatibilitySurface, streamPrelude,
-		streamsVendorSurface, "}", fetchCompatibilitySurface, formControlsSurface, traversalCompatibilitySurface, documentCompatibilitySurface, attributesCompatibilitySurface, eventsCompatibilitySurface, documentStreamSurface, shadowSerializationSurface, marker}
+		streamsVendorSurface, "}", fetchCompatibilitySurface, formControlsSurface, traversalCompatibilitySurface, documentCompatibilitySurface, attributesCompatibilitySurface, eventsCompatibilitySurface, documentStreamSurface, shadowSerializationSurface, canvasStateSurface, webglStateSurface, marker}
 	base := strings.Replace(handwrittenSurface, "/* shared_fetch_primitives */", fetchPrimitivesSurface, 1)
+	base = strings.Replace(base, "/* shared_dom_matrix */", domMatrixSurface, 1)
 	return strings.Replace(base, marker, strings.Join(parts, "\n"), 1)
 }
 
@@ -162,5 +172,5 @@ func WorkerSurface(generated string, exposure *compatibility.RealmExposure) stri
 	}
 	shared := fetchPrimitivesSurface + "\nObject.assign(globalThis,{TextEncoder,DOMException,URL,URLSearchParams,Blob,File,Headers});\n" + abortEncodingSurface + "\n{let structuredClone;\n" + streamsVendorSurface + "\n}\n" + fetchCompatibilitySurface
 	base := strings.Replace(handwrittenWorkerSurface, "/* shared_worker_fetch */", shared, 1)
-	return base + "\n" + generated + "\n" + exposureSource + "__finishWorkerSurface();if(typeof __workerExposure!=='undefined')__applyWorkerPrototypeExposure(__workerExposure);delete globalThis.__applyWorkerExposure;delete globalThis.__applyWorkerPrototypeExposure;delete globalThis.__finishWorkerSurface;delete globalThis.__mimic;delete globalThis.__mimicIDLExposure;"
+	return base + "\n" + generated + "\n" + exposureSource + "__finishWorkerSurface();if(typeof __workerExposure!=='undefined')__applyWorkerPrototypeExposure(__workerExposure);delete globalThis.__applyWorkerExposure;delete globalThis.__applyWorkerPrototypeExposure;delete globalThis.__finishWorkerSurface;delete globalThis.__mimic;delete globalThis.__mimicIDLExposure;\n{const host=__workerHost;\n" + domMatrixSurface + "\n" + canvasStateSurface + "\n" + webglStateSurface + "\n}"
 }

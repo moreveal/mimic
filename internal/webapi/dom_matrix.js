@@ -1,0 +1,8 @@
+const DOMMatrix=(()=>{const def=(o,n,d)=>Object.defineProperty(o,n,{enumerable:true,configurable:true,...d});
+  const domMatrixSlots=new WeakMap(),identityMatrix=()=>[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1];
+  class DOMMatrix { constructor(init){let values=identityMatrix();if(init!==undefined){const input=Array.from(init,Number);if(input.length===6)values=[input[0],input[1],0,0,input[2],input[3],0,0,0,0,1,0,input[4],input[5],0,1];else if(input.length===16)values=input.slice();else throw new TypeError('DOMMatrix sequence must contain 6 or 16 elements')}domMatrixSlots.set(this,values)} get is2D(){const m=domMatrixSlots.get(this);return m[2]===0&&m[3]===0&&m[6]===0&&m[7]===0&&m[8]===0&&m[9]===0&&m[10]===1&&m[11]===0&&m[14]===0&&m[15]===1} toFloat64Array(){return new Float64Array(domMatrixSlots.get(this))} toFloat32Array(){return new Float32Array(domMatrixSlots.get(this))} toString(){const m=domMatrixSlots.get(this);return this.is2D?`matrix(${m[0]}, ${m[1]}, ${m[4]}, ${m[5]}, ${m[12]}, ${m[13]})`:`matrix3d(${m.join(', ')})`} }
+  for(let i=0;i<16;i++){const key='m'+(Math.floor(i/4)+1)+(i%4+1);def(DOMMatrix.prototype,key,{get(){return domMatrixSlots.get(this)[i]},set(value){domMatrixSlots.get(this)[i]=Number(value)}})}
+  for(const [alias,index] of Object.entries({a:0,b:1,c:4,d:5,e:12,f:13}))def(DOMMatrix.prototype,alias,{get(){return domMatrixSlots.get(this)[index]},set(value){domMatrixSlots.get(this)[index]=Number(value)}});
+  Object.defineProperty(DOMMatrix.prototype,Symbol.toStringTag,{value:'DOMMatrix',configurable:true});
+return DOMMatrix;})();
+Object.defineProperty(globalThis,'DOMMatrix',{value:DOMMatrix,writable:true,configurable:true});

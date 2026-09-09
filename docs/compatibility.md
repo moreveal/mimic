@@ -241,6 +241,28 @@ This avoids assignments into generated readonly IDL accessors. The existing
 GPU surface remains skeletal: this initialization fix does not implement GPU
 rendering, device-loss processing or full device feature negotiation.
 
+Canvas support is an observation/state model without a graphics backend or GPU.
+OffscreenCanvas and HTMLCanvasElement share dimension/context ownership and
+reset behavior. ImageData, premultiplied byte storage, explicit pixel writes,
+integer axis-aligned solid rectangles, bitmap snapshots, close and buffer copies
+are modeled. Storage is bounded to16 million pixels per canvas. Chrome constructor,
+reset, transfer and byte-roundtrip evidence is retained in the
+[canvas state capture](../compatibility/captures/semantic-checkpoints/canvas-state-chrome152.json).
+
+Text readbacks use deliberately synthetic local coverage bands derived from
+individual codepoints, placement, font size, alignment and transforms. There is
+no glyph atlas, font rasterization, random noise or whole-canvas hash. Approximate
+metrics use the same coverage extents and character advances. Ordered lazy
+materialization makes repeated and overlapping reads consistent and preserves
+clear/write/reset/copy relationships; replacing the last character affects only
+its local coverage region. This is not Chrome glyph shape, metric or pixel
+equivalence. Font fallback/shaping, arbitrary paths/clips/gradients, image decoding,
+general resampling and cross-worker transferable canvas/bitmap messaging remain
+unimplemented. Unmodeled drawing operations retain bounded primitive operation
+metadata and do not fabricate a full rendered image; readbacks reflect only
+modeled operations. Worker native-function stringification remains dependent on
+the existing worker surface rather than the Window markNative registry.
+
 Same-origin frame `eval` preserves non-string argument identity, including
 functions, boxed strings and objects with throwing conversion hooks. Locally
 branded TrustedScript values use their internal source and evaluate in the
