@@ -15,22 +15,24 @@ Implemented observations:
 - AudioBufferSourceNode and GainNode construction, branded node/parameter state,
   single-input/output connections, duplicate connection suppression, and basic
   disconnection. Sources and gains can be mixed through an acyclic graph.
-- PCM playback with constant rates, detune and source/context rate conversion,
+- PCM playback with constant or scheduled rates, detune and source/context rate conversion,
   fractional starts, rounded buffer offsets, stop/duration limits, supported loop
   intervals, and source end notifications. Zero rate holds the source sample;
   negative rates support non-looping reverse playback. The final
   partial render quantum advances currentTime to a 128-frame boundary. A source
   can end within that quantum even if its end is beyond the output buffer length;
   an infinite loop does not end merely because offline rendering completed.
-- Constant gain and scheduled setValueAtTime/cancelScheduledValues, with per-frame
-  a-rate and 128-frame k-rate evaluation. Mono/stereo speaker conversion and
+- Constant gain, scheduled values, linear/exponential ramps, copied value curves,
+  cancellation and hold, with per-frame a-rate and 128-frame k-rate evaluation.
+  Mono/stereo speaker conversion and
   discrete channel mapping share the same PCM samples. Stereo downmix scales
   before adding, preserving the measured finite result near Float32 limits.
 
-Thirteen focused Chrome 152 fixtures cover buffers, empty rendering, connected
+Nineteen focused Chrome 152 fixtures cover buffers, empty rendering, connected
 graphs, relational sample changes, lifecycle, validation, channel conversion,
 interpolation, playback rates, reverse playback, phase accumulation and source
-completion. Disconnected sources are not pulled by the destination and do not
+completion, automation validation/cancellation, scheduled rates and durations.
+Disconnected sources are not pulled by the destination and do not
 produce a synthetic ended event merely because the context completes.
 `go test ./internal/browser -run TestOfflineAudio` compares them on V8 and Goja
 and checks explicit rejection at unsupported boundaries. Repeat inputs produce
@@ -41,8 +43,8 @@ generation is used.
 ## Remaining boundaries
 
 This is not complete Web Audio support. Oscillators, filters, compressors,
-convolution, analyzers, ramps/curves/targets, AudioParam connections, decoding,
-scheduled playback-rate/detune changes, reverse loops, fractional loop boundaries,
+convolution, analyzers, setTargetAtTime, AudioParam connections, decoding,
+reverse loops, fractional loop boundaries,
 feedback graphs,
 destination channel reconfiguration and complex speaker conversion remain
 unsupported. Node creation or rendering reports NotSupportedError instead of
@@ -60,6 +62,26 @@ frame by frame, including across 128-frame quanta. Replacing that accumulation
 with a direct elapsed-time formula fails exact native comparisons at 44.1/48 kHz.
 The saved fixture also records that mutations through a channel view after
 source.start and before startRendering are observed by native playback.
+
+Automation events retain stable ordering for different event kinds at equal
+times; a new event replaces the same kind at the same time. Curves copy their
+input values and reject overlapping events. Native cancellation inside a curve
+removes the complete curve, whereas cancelAndHold preserves its preceding
+observations and freezes the value at the requested time. Curve interpolation
+uses sample coordinates to preserve exact zeros at measured sample boundaries.
+The active segment is found with binary search rather than rescanning the entire
+event history for every output sample.
+
+Source playbackRate and detune automation are sampled at 128-frame boundaries.
+Playback phase and consumed source duration advance with the effective rate;
+changing the rate to zero holds the source without exhausting a finite grain.
+Faster and slower scheduled playback therefore change the measured end time.
+
+The broader `audio-automation-chrome152.json` capture retains the native
+setTargetAtTime output as diagnostic evidence. Its rounding differs from a naive
+scalar exponential implementation. That operation remains explicitly unsupported
+and is not included among the passing conformance fixtures; its expectations
+have not been replaced by approximate results.
 
 PCM allocation is bounded to 16 million samples per buffer and per evaluated
 graph; source evaluation steps and mixing contributions share a 16-million work
