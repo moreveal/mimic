@@ -1,0 +1,84 @@
+{
+  "build": {
+    "revision": "ba4d7644fe55fec4ce6dee01bd957ee0d54bac41",
+    "sha256": "f71d14028b214e899ed740153e2afdc1038d997d210f23d19e8ab8b35b9b28ef",
+    "harness_sha256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7"
+  },
+  "finished": "2026-09-09T15:02:19.207950+04:00",
+  "failure": null,
+  "correctness": {
+    "static": "VALID",
+    "cpu": "VALID",
+    "dom": "VALID",
+    "async": "VALID",
+    "react": "VALID",
+    "wasm": "VALID"
+  },
+  "warm": {
+    "dom": {
+      "session_create_ms": 2.028600007179193,
+      "execution_ms": 115.86499999975786,
+      "completion_ms": 167.44599999219645
+    },
+    "static": {
+      "session_create_ms": 2.0607000042218715,
+      "execution_ms": 2.7128999936394393,
+      "completion_ms": 58.28500000643544
+    },
+    "react": {
+      "session_create_ms": 1.9382000027690083,
+      "execution_ms": 49.956100003328174,
+      "completion_ms": 112.27359999611508
+    }
+  },
+  "concurrency": {
+    "10": 55.963874198479935,
+    "25": 75.07401547063546
+  },
+  "memory": [
+    {
+      "workload": "static",
+      "marginal_rss_mib": 26.671875,
+      "marginal_private_mib": 26.51953125,
+      "stop_reason": null,
+      "after_recovery": {
+        "t": 94015.4731182,
+        "rss": 102637568,
+        "private": 136507392,
+        "user_s": 1.078125,
+        "kernel_s": 0.65625,
+        "cpu_s": 1.734375,
+        "active_processes": 2,
+        "total_processes": 2,
+        "memory_access_denied": 0,
+        "system_available": 17041514496,
+        "system_memory_percent": 50.1,
+        "page_faults": 113569,
+        "system_pages_input_s": 35.05146870035288,
+        "paging_counter_error": null
+      }
+    },
+    {
+      "workload": "react",
+      "marginal_rss_mib": 32.065625,
+      "marginal_private_mib": 32.144921875,
+      "stop_reason": null,
+      "after_recovery": {
+        "t": 94016.6667006,
+        "rss": 125976576,
+        "private": 159883264,
+        "user_s": 1.96875,
+        "kernel_s": 0.859375,
+        "cpu_s": 2.828125,
+        "active_processes": 2,
+        "total_processes": 2,
+        "memory_access_denied": 0,
+        "system_available": 17007226880,
+        "system_memory_percent": 50.2,
+        "page_faults": 133786,
+        "system_pages_input_s": 2442.935880570312,
+        "paging_counter_error": null
+      }
+    }
+  ]
+}
