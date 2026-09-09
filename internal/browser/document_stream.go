@@ -185,6 +185,7 @@ func (r *Realm) executeStreamScript(s *documentStream, node dom.Node) error {
 			loaded = &streamScriptResponse{}
 			s.scripts[node.ID] = loaded
 			request := network.Request{ContextID: r.agent.ContextID(), URL: u, Referrer: r.documentURL(), SourceURL: r.documentURL(), Initiator: network.Script}
+			r.applyClientHints(&request)
 			eventLoop := r.browserEventLoop()
 			r.resourceWG.Add(1)
 			go func() {

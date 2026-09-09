@@ -1,0 +1,2071 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 20,
+      "top": 20,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": false,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "visibilityState": "hidden",
+    "hasFocus": true
+  },
+  "source": "internal/browser/testdata/canvas_reflection_oracle.js",
+  "sourceSHA256": "86bedb61fd75cfcd5a2f48959d515d3089db2b569263246b1c48c1e21c3e94f4",
+  "result": {
+    "OffscreenCanvas": {
+      "length": 2,
+      "prototypeWritable": false,
+      "parent": "EventTarget",
+      "members": {
+        "width": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get width",
+          "setName": "set width"
+        },
+        "height": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get height",
+          "setName": "set height"
+        },
+        "oncontextlost": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get oncontextlost",
+          "setName": "set oncontextlost"
+        },
+        "oncontextrestored": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get oncontextrestored",
+          "setName": "set oncontextrestored"
+        },
+        "convertToBlob": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "convertToBlob"
+        },
+        "getContext": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 1,
+          "writable": true,
+          "name": "getContext"
+        },
+        "transferToImageBitmap": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "transferToImageBitmap"
+        }
+      }
+    },
+    "CanvasRenderingContext2D": {
+      "length": 0,
+      "prototypeWritable": false,
+      "parent": "Object",
+      "members": {
+        "canvas": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get canvas"
+        },
+        "lang": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get lang",
+          "setName": "set lang"
+        },
+        "font": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get font",
+          "setName": "set font"
+        },
+        "textAlign": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get textAlign",
+          "setName": "set textAlign"
+        },
+        "textBaseline": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get textBaseline",
+          "setName": "set textBaseline"
+        },
+        "direction": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get direction",
+          "setName": "set direction"
+        },
+        "fontKerning": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get fontKerning",
+          "setName": "set fontKerning"
+        },
+        "fontStretch": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get fontStretch",
+          "setName": "set fontStretch"
+        },
+        "fontVariantCaps": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get fontVariantCaps",
+          "setName": "set fontVariantCaps"
+        },
+        "letterSpacing": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get letterSpacing",
+          "setName": "set letterSpacing"
+        },
+        "textRendering": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get textRendering",
+          "setName": "set textRendering"
+        },
+        "wordSpacing": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get wordSpacing",
+          "setName": "set wordSpacing"
+        },
+        "globalCompositeOperation": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get globalCompositeOperation",
+          "setName": "set globalCompositeOperation"
+        },
+        "filter": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get filter",
+          "setName": "set filter"
+        },
+        "imageSmoothingQuality": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get imageSmoothingQuality",
+          "setName": "set imageSmoothingQuality"
+        },
+        "strokeStyle": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get strokeStyle",
+          "setName": "set strokeStyle"
+        },
+        "fillStyle": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get fillStyle",
+          "setName": "set fillStyle"
+        },
+        "shadowColor": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get shadowColor",
+          "setName": "set shadowColor"
+        },
+        "lineCap": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get lineCap",
+          "setName": "set lineCap"
+        },
+        "lineJoin": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get lineJoin",
+          "setName": "set lineJoin"
+        },
+        "globalAlpha": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get globalAlpha",
+          "setName": "set globalAlpha"
+        },
+        "imageSmoothingEnabled": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get imageSmoothingEnabled",
+          "setName": "set imageSmoothingEnabled"
+        },
+        "shadowOffsetX": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get shadowOffsetX",
+          "setName": "set shadowOffsetX"
+        },
+        "shadowOffsetY": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get shadowOffsetY",
+          "setName": "set shadowOffsetY"
+        },
+        "shadowBlur": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get shadowBlur",
+          "setName": "set shadowBlur"
+        },
+        "lineWidth": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get lineWidth",
+          "setName": "set lineWidth"
+        },
+        "miterLimit": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get miterLimit",
+          "setName": "set miterLimit"
+        },
+        "lineDashOffset": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get lineDashOffset",
+          "setName": "set lineDashOffset"
+        },
+        "clip": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "clip"
+        },
+        "createConicGradient": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 3,
+          "writable": true,
+          "name": "createConicGradient"
+        },
+        "createImageData": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 1,
+          "writable": true,
+          "name": "createImageData"
+        },
+        "createLinearGradient": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 4,
+          "writable": true,
+          "name": "createLinearGradient"
+        },
+        "createPattern": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 2,
+          "writable": true,
+          "name": "createPattern"
+        },
+        "createRadialGradient": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 6,
+          "writable": true,
+          "name": "createRadialGradient"
+        },
+        "drawFocusIfNeeded": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 1,
+          "writable": true,
+          "name": "drawFocusIfNeeded"
+        },
+        "drawImage": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 3,
+          "writable": true,
+          "name": "drawImage"
+        },
+        "fill": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "fill"
+        },
+        "fillText": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 3,
+          "writable": true,
+          "name": "fillText"
+        },
+        "getContextAttributes": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "getContextAttributes"
+        },
+        "getImageData": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 4,
+          "writable": true,
+          "name": "getImageData"
+        },
+        "getLineDash": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "getLineDash"
+        },
+        "getTransform": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "getTransform"
+        },
+        "isContextLost": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "isContextLost"
+        },
+        "isPointInPath": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 2,
+          "writable": true,
+          "name": "isPointInPath"
+        },
+        "isPointInStroke": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 2,
+          "writable": true,
+          "name": "isPointInStroke"
+        },
+        "measureText": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 1,
+          "writable": true,
+          "name": "measureText"
+        },
+        "reset": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "reset"
+        },
+        "roundRect": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 4,
+          "writable": true,
+          "name": "roundRect"
+        },
+        "setLineDash": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 1,
+          "writable": true,
+          "name": "setLineDash"
+        },
+        "strokeText": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 3,
+          "writable": true,
+          "name": "strokeText"
+        },
+        "arc": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 5,
+          "writable": true,
+          "name": "arc"
+        },
+        "arcTo": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 5,
+          "writable": true,
+          "name": "arcTo"
+        },
+        "beginPath": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "beginPath"
+        },
+        "bezierCurveTo": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 6,
+          "writable": true,
+          "name": "bezierCurveTo"
+        },
+        "clearRect": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 4,
+          "writable": true,
+          "name": "clearRect"
+        },
+        "closePath": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "closePath"
+        },
+        "ellipse": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 7,
+          "writable": true,
+          "name": "ellipse"
+        },
+        "fillRect": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 4,
+          "writable": true,
+          "name": "fillRect"
+        },
+        "lineTo": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 2,
+          "writable": true,
+          "name": "lineTo"
+        },
+        "moveTo": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 2,
+          "writable": true,
+          "name": "moveTo"
+        },
+        "putImageData": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 3,
+          "writable": true,
+          "name": "putImageData"
+        },
+        "quadraticCurveTo": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 4,
+          "writable": true,
+          "name": "quadraticCurveTo"
+        },
+        "rect": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 4,
+          "writable": true,
+          "name": "rect"
+        },
+        "resetTransform": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "resetTransform"
+        },
+        "restore": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "restore"
+        },
+        "rotate": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 1,
+          "writable": true,
+          "name": "rotate"
+        },
+        "save": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "save"
+        },
+        "scale": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 2,
+          "writable": true,
+          "name": "scale"
+        },
+        "setTransform": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "setTransform"
+        },
+        "stroke": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "stroke"
+        },
+        "strokeRect": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 4,
+          "writable": true,
+          "name": "strokeRect"
+        },
+        "transform": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 6,
+          "writable": true,
+          "name": "transform"
+        },
+        "translate": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 2,
+          "writable": true,
+          "name": "translate"
+        }
+      }
+    },
+    "OffscreenCanvasRenderingContext2D": {
+      "length": 0,
+      "prototypeWritable": false,
+      "parent": "Object",
+      "members": {
+        "canvas": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get canvas"
+        },
+        "lang": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get lang",
+          "setName": "set lang"
+        },
+        "font": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get font",
+          "setName": "set font"
+        },
+        "textAlign": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get textAlign",
+          "setName": "set textAlign"
+        },
+        "textBaseline": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get textBaseline",
+          "setName": "set textBaseline"
+        },
+        "direction": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get direction",
+          "setName": "set direction"
+        },
+        "fontKerning": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get fontKerning",
+          "setName": "set fontKerning"
+        },
+        "fontStretch": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get fontStretch",
+          "setName": "set fontStretch"
+        },
+        "fontVariantCaps": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get fontVariantCaps",
+          "setName": "set fontVariantCaps"
+        },
+        "letterSpacing": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get letterSpacing",
+          "setName": "set letterSpacing"
+        },
+        "textRendering": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get textRendering",
+          "setName": "set textRendering"
+        },
+        "wordSpacing": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get wordSpacing",
+          "setName": "set wordSpacing"
+        },
+        "globalCompositeOperation": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get globalCompositeOperation",
+          "setName": "set globalCompositeOperation"
+        },
+        "filter": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get filter",
+          "setName": "set filter"
+        },
+        "imageSmoothingQuality": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get imageSmoothingQuality",
+          "setName": "set imageSmoothingQuality"
+        },
+        "strokeStyle": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get strokeStyle",
+          "setName": "set strokeStyle"
+        },
+        "fillStyle": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get fillStyle",
+          "setName": "set fillStyle"
+        },
+        "shadowColor": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get shadowColor",
+          "setName": "set shadowColor"
+        },
+        "lineCap": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get lineCap",
+          "setName": "set lineCap"
+        },
+        "lineJoin": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get lineJoin",
+          "setName": "set lineJoin"
+        },
+        "globalAlpha": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get globalAlpha",
+          "setName": "set globalAlpha"
+        },
+        "imageSmoothingEnabled": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get imageSmoothingEnabled",
+          "setName": "set imageSmoothingEnabled"
+        },
+        "shadowOffsetX": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get shadowOffsetX",
+          "setName": "set shadowOffsetX"
+        },
+        "shadowOffsetY": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get shadowOffsetY",
+          "setName": "set shadowOffsetY"
+        },
+        "shadowBlur": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get shadowBlur",
+          "setName": "set shadowBlur"
+        },
+        "lineWidth": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get lineWidth",
+          "setName": "set lineWidth"
+        },
+        "miterLimit": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get miterLimit",
+          "setName": "set miterLimit"
+        },
+        "lineDashOffset": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get lineDashOffset",
+          "setName": "set lineDashOffset"
+        },
+        "clip": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "clip"
+        },
+        "createConicGradient": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 3,
+          "writable": true,
+          "name": "createConicGradient"
+        },
+        "createImageData": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 1,
+          "writable": true,
+          "name": "createImageData"
+        },
+        "createLinearGradient": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 4,
+          "writable": true,
+          "name": "createLinearGradient"
+        },
+        "createPattern": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 2,
+          "writable": true,
+          "name": "createPattern"
+        },
+        "createRadialGradient": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 6,
+          "writable": true,
+          "name": "createRadialGradient"
+        },
+        "drawImage": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 3,
+          "writable": true,
+          "name": "drawImage"
+        },
+        "fill": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "fill"
+        },
+        "fillText": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 3,
+          "writable": true,
+          "name": "fillText"
+        },
+        "getImageData": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 4,
+          "writable": true,
+          "name": "getImageData"
+        },
+        "getLineDash": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "getLineDash"
+        },
+        "getTransform": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "getTransform"
+        },
+        "isContextLost": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "isContextLost"
+        },
+        "isPointInPath": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 2,
+          "writable": true,
+          "name": "isPointInPath"
+        },
+        "isPointInStroke": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 2,
+          "writable": true,
+          "name": "isPointInStroke"
+        },
+        "measureText": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 1,
+          "writable": true,
+          "name": "measureText"
+        },
+        "reset": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "reset"
+        },
+        "roundRect": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 4,
+          "writable": true,
+          "name": "roundRect"
+        },
+        "setLineDash": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 1,
+          "writable": true,
+          "name": "setLineDash"
+        },
+        "strokeText": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 3,
+          "writable": true,
+          "name": "strokeText"
+        },
+        "arc": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 5,
+          "writable": true,
+          "name": "arc"
+        },
+        "arcTo": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 5,
+          "writable": true,
+          "name": "arcTo"
+        },
+        "beginPath": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "beginPath"
+        },
+        "bezierCurveTo": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 6,
+          "writable": true,
+          "name": "bezierCurveTo"
+        },
+        "clearRect": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 4,
+          "writable": true,
+          "name": "clearRect"
+        },
+        "closePath": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "closePath"
+        },
+        "ellipse": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 7,
+          "writable": true,
+          "name": "ellipse"
+        },
+        "fillRect": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 4,
+          "writable": true,
+          "name": "fillRect"
+        },
+        "lineTo": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 2,
+          "writable": true,
+          "name": "lineTo"
+        },
+        "moveTo": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 2,
+          "writable": true,
+          "name": "moveTo"
+        },
+        "putImageData": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 3,
+          "writable": true,
+          "name": "putImageData"
+        },
+        "quadraticCurveTo": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 4,
+          "writable": true,
+          "name": "quadraticCurveTo"
+        },
+        "rect": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 4,
+          "writable": true,
+          "name": "rect"
+        },
+        "resetTransform": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "resetTransform"
+        },
+        "restore": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "restore"
+        },
+        "rotate": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 1,
+          "writable": true,
+          "name": "rotate"
+        },
+        "save": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "save"
+        },
+        "scale": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 2,
+          "writable": true,
+          "name": "scale"
+        },
+        "setTransform": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "setTransform"
+        },
+        "stroke": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "stroke"
+        },
+        "strokeRect": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 4,
+          "writable": true,
+          "name": "strokeRect"
+        },
+        "transform": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 6,
+          "writable": true,
+          "name": "transform"
+        },
+        "translate": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 2,
+          "writable": true,
+          "name": "translate"
+        },
+        "getContextAttributes": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "getContextAttributes"
+        }
+      }
+    },
+    "ImageData": {
+      "length": 2,
+      "prototypeWritable": false,
+      "parent": "Object",
+      "members": {
+        "width": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get width"
+        },
+        "height": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get height"
+        },
+        "colorSpace": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get colorSpace"
+        },
+        "data": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get data"
+        },
+        "pixelFormat": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get pixelFormat"
+        }
+      }
+    },
+    "ImageBitmap": {
+      "length": 0,
+      "prototypeWritable": false,
+      "parent": "Object",
+      "members": {
+        "width": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get width"
+        },
+        "height": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get height"
+        },
+        "close": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "close"
+        }
+      }
+    },
+    "CanvasGradient": {
+      "length": 0,
+      "prototypeWritable": false,
+      "parent": "Object",
+      "members": {
+        "addColorStop": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 2,
+          "writable": true,
+          "name": "addColorStop"
+        }
+      }
+    },
+    "TextMetrics": {
+      "length": 0,
+      "prototypeWritable": false,
+      "parent": "Object",
+      "members": {
+        "width": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get width"
+        },
+        "actualBoundingBoxLeft": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get actualBoundingBoxLeft"
+        },
+        "actualBoundingBoxRight": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get actualBoundingBoxRight"
+        },
+        "fontBoundingBoxAscent": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get fontBoundingBoxAscent"
+        },
+        "fontBoundingBoxDescent": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get fontBoundingBoxDescent"
+        },
+        "actualBoundingBoxAscent": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get actualBoundingBoxAscent"
+        },
+        "actualBoundingBoxDescent": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get actualBoundingBoxDescent"
+        },
+        "hangingBaseline": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get hangingBaseline"
+        },
+        "alphabeticBaseline": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get alphabeticBaseline"
+        },
+        "ideographicBaseline": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get ideographicBaseline"
+        }
+      }
+    },
+    "createImageBitmap": {
+      "length": 1
+    },
+    "HTMLCanvasElement": {
+      "getContextLength": 1
+    }
+  },
+  "workerResult": {
+    "OffscreenCanvas": {
+      "length": 2,
+      "prototypeWritable": false,
+      "parent": "EventTarget",
+      "members": {
+        "width": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get width",
+          "setName": "set width"
+        },
+        "height": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get height",
+          "setName": "set height"
+        },
+        "oncontextlost": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get oncontextlost",
+          "setName": "set oncontextlost"
+        },
+        "oncontextrestored": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get oncontextrestored",
+          "setName": "set oncontextrestored"
+        },
+        "convertToBlob": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "convertToBlob"
+        },
+        "getContext": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 1,
+          "writable": true,
+          "name": "getContext"
+        },
+        "transferToImageBitmap": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "transferToImageBitmap"
+        }
+      }
+    },
+    "OffscreenCanvasRenderingContext2D": {
+      "length": 0,
+      "prototypeWritable": false,
+      "parent": "Object",
+      "members": {
+        "canvas": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get canvas"
+        },
+        "lang": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get lang",
+          "setName": "set lang"
+        },
+        "font": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get font",
+          "setName": "set font"
+        },
+        "textAlign": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get textAlign",
+          "setName": "set textAlign"
+        },
+        "textBaseline": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get textBaseline",
+          "setName": "set textBaseline"
+        },
+        "direction": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get direction",
+          "setName": "set direction"
+        },
+        "fontKerning": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get fontKerning",
+          "setName": "set fontKerning"
+        },
+        "fontStretch": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get fontStretch",
+          "setName": "set fontStretch"
+        },
+        "fontVariantCaps": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get fontVariantCaps",
+          "setName": "set fontVariantCaps"
+        },
+        "letterSpacing": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get letterSpacing",
+          "setName": "set letterSpacing"
+        },
+        "textRendering": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get textRendering",
+          "setName": "set textRendering"
+        },
+        "wordSpacing": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get wordSpacing",
+          "setName": "set wordSpacing"
+        },
+        "globalCompositeOperation": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get globalCompositeOperation",
+          "setName": "set globalCompositeOperation"
+        },
+        "filter": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get filter",
+          "setName": "set filter"
+        },
+        "imageSmoothingQuality": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get imageSmoothingQuality",
+          "setName": "set imageSmoothingQuality"
+        },
+        "strokeStyle": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get strokeStyle",
+          "setName": "set strokeStyle"
+        },
+        "fillStyle": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get fillStyle",
+          "setName": "set fillStyle"
+        },
+        "shadowColor": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get shadowColor",
+          "setName": "set shadowColor"
+        },
+        "lineCap": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get lineCap",
+          "setName": "set lineCap"
+        },
+        "lineJoin": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get lineJoin",
+          "setName": "set lineJoin"
+        },
+        "globalAlpha": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get globalAlpha",
+          "setName": "set globalAlpha"
+        },
+        "imageSmoothingEnabled": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get imageSmoothingEnabled",
+          "setName": "set imageSmoothingEnabled"
+        },
+        "shadowOffsetX": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get shadowOffsetX",
+          "setName": "set shadowOffsetX"
+        },
+        "shadowOffsetY": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get shadowOffsetY",
+          "setName": "set shadowOffsetY"
+        },
+        "shadowBlur": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get shadowBlur",
+          "setName": "set shadowBlur"
+        },
+        "lineWidth": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get lineWidth",
+          "setName": "set lineWidth"
+        },
+        "miterLimit": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get miterLimit",
+          "setName": "set miterLimit"
+        },
+        "lineDashOffset": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "set": 1,
+          "getName": "get lineDashOffset",
+          "setName": "set lineDashOffset"
+        },
+        "clip": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "clip"
+        },
+        "createConicGradient": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 3,
+          "writable": true,
+          "name": "createConicGradient"
+        },
+        "createImageData": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 1,
+          "writable": true,
+          "name": "createImageData"
+        },
+        "createLinearGradient": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 4,
+          "writable": true,
+          "name": "createLinearGradient"
+        },
+        "createPattern": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 2,
+          "writable": true,
+          "name": "createPattern"
+        },
+        "createRadialGradient": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 6,
+          "writable": true,
+          "name": "createRadialGradient"
+        },
+        "drawImage": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 3,
+          "writable": true,
+          "name": "drawImage"
+        },
+        "fill": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "fill"
+        },
+        "fillText": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 3,
+          "writable": true,
+          "name": "fillText"
+        },
+        "getImageData": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 4,
+          "writable": true,
+          "name": "getImageData"
+        },
+        "getLineDash": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "getLineDash"
+        },
+        "getTransform": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "getTransform"
+        },
+        "isContextLost": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "isContextLost"
+        },
+        "isPointInPath": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 2,
+          "writable": true,
+          "name": "isPointInPath"
+        },
+        "isPointInStroke": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 2,
+          "writable": true,
+          "name": "isPointInStroke"
+        },
+        "measureText": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 1,
+          "writable": true,
+          "name": "measureText"
+        },
+        "reset": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "reset"
+        },
+        "roundRect": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 4,
+          "writable": true,
+          "name": "roundRect"
+        },
+        "setLineDash": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 1,
+          "writable": true,
+          "name": "setLineDash"
+        },
+        "strokeText": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 3,
+          "writable": true,
+          "name": "strokeText"
+        },
+        "arc": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 5,
+          "writable": true,
+          "name": "arc"
+        },
+        "arcTo": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 5,
+          "writable": true,
+          "name": "arcTo"
+        },
+        "beginPath": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "beginPath"
+        },
+        "bezierCurveTo": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 6,
+          "writable": true,
+          "name": "bezierCurveTo"
+        },
+        "clearRect": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 4,
+          "writable": true,
+          "name": "clearRect"
+        },
+        "closePath": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "closePath"
+        },
+        "ellipse": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 7,
+          "writable": true,
+          "name": "ellipse"
+        },
+        "fillRect": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 4,
+          "writable": true,
+          "name": "fillRect"
+        },
+        "lineTo": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 2,
+          "writable": true,
+          "name": "lineTo"
+        },
+        "moveTo": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 2,
+          "writable": true,
+          "name": "moveTo"
+        },
+        "putImageData": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 3,
+          "writable": true,
+          "name": "putImageData"
+        },
+        "quadraticCurveTo": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 4,
+          "writable": true,
+          "name": "quadraticCurveTo"
+        },
+        "rect": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 4,
+          "writable": true,
+          "name": "rect"
+        },
+        "resetTransform": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "resetTransform"
+        },
+        "restore": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "restore"
+        },
+        "rotate": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 1,
+          "writable": true,
+          "name": "rotate"
+        },
+        "save": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "save"
+        },
+        "scale": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 2,
+          "writable": true,
+          "name": "scale"
+        },
+        "setTransform": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "setTransform"
+        },
+        "stroke": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "stroke"
+        },
+        "strokeRect": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 4,
+          "writable": true,
+          "name": "strokeRect"
+        },
+        "transform": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 6,
+          "writable": true,
+          "name": "transform"
+        },
+        "translate": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 2,
+          "writable": true,
+          "name": "translate"
+        },
+        "getContextAttributes": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "getContextAttributes"
+        }
+      }
+    },
+    "ImageData": {
+      "length": 2,
+      "prototypeWritable": false,
+      "parent": "Object",
+      "members": {
+        "width": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get width"
+        },
+        "height": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get height"
+        },
+        "colorSpace": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get colorSpace"
+        },
+        "data": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get data"
+        },
+        "pixelFormat": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get pixelFormat"
+        }
+      }
+    },
+    "ImageBitmap": {
+      "length": 0,
+      "prototypeWritable": false,
+      "parent": "Object",
+      "members": {
+        "width": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get width"
+        },
+        "height": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get height"
+        },
+        "close": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 0,
+          "writable": true,
+          "name": "close"
+        }
+      }
+    },
+    "CanvasGradient": {
+      "length": 0,
+      "prototypeWritable": false,
+      "parent": "Object",
+      "members": {
+        "addColorStop": {
+          "enumerable": true,
+          "configurable": true,
+          "length": 2,
+          "writable": true,
+          "name": "addColorStop"
+        }
+      }
+    },
+    "TextMetrics": {
+      "length": 0,
+      "prototypeWritable": false,
+      "parent": "Object",
+      "members": {
+        "width": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get width"
+        },
+        "actualBoundingBoxLeft": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get actualBoundingBoxLeft"
+        },
+        "actualBoundingBoxRight": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get actualBoundingBoxRight"
+        },
+        "fontBoundingBoxAscent": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get fontBoundingBoxAscent"
+        },
+        "fontBoundingBoxDescent": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get fontBoundingBoxDescent"
+        },
+        "actualBoundingBoxAscent": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get actualBoundingBoxAscent"
+        },
+        "actualBoundingBoxDescent": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get actualBoundingBoxDescent"
+        },
+        "hangingBaseline": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get hangingBaseline"
+        },
+        "alphabeticBaseline": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get alphabeticBaseline"
+        },
+        "ideographicBaseline": {
+          "enumerable": true,
+          "configurable": true,
+          "get": 0,
+          "getName": "get ideographicBaseline"
+        }
+      }
+    },
+    "createImageBitmap": {
+      "length": 1
+    }
+  }
+}

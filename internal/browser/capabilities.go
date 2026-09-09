@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"sort"
-	"time"
 
 	"github.com/moreveal/mimic/internal/engine"
 	"github.com/moreveal/mimic/internal/scheduler"
@@ -98,7 +97,7 @@ func addCapabilityHosts(r *Realm, h map[string]any) {
 			}
 			return r.val(map[string]any{"vendorSub": "", "productSub": "20030107", "appCodeName": "Mozilla", "doNotTrack": dnt}), nil
 		case "activation":
-			return r.val(map[string]any{"isActive": !r.activationAt.IsZero() && r.scheduler.Now().Sub(r.activationAt) < 5*time.Second, "hasBeenActive": !r.activationAt.IsZero(), "pending": r.scheduler.HasPendingInput()}), nil
+			return r.val(map[string]any{"isActive": r.navigationActivated(), "hasBeenActive": !r.activationAt.IsZero(), "pending": r.scheduler.HasPendingInput()}), nil
 		case "presentation":
 			return r.val(map[string]any{"mode": string(e.Presentation.Mode)}), nil
 		case "network":

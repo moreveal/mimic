@@ -52,7 +52,9 @@ func (m *moduleFetch) wait(ctx context.Context) (network.Response, error) {
 func (r *Realm) moduleRequest(target, referrer *url.URL) network.Request {
 	headers := make(http.Header)
 	headers.Set("Origin", r.origin)
-	return network.Request{ContextID: r.agent.ContextID(), URL: target, Referrer: referrer, SourceURL: referrer, Initiator: network.Script, Mode: "cors", Headers: headers}
+	request := network.Request{ContextID: r.agent.ContextID(), URL: target, Referrer: referrer, SourceURL: referrer, Initiator: network.Script, Mode: "cors", Headers: headers}
+	r.applyClientHints(&request)
+	return request
 }
 
 func (r *Realm) preloadModules() {

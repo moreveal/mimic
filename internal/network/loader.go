@@ -38,15 +38,22 @@ const (
 )
 
 type Request struct {
-	ID, ContextID string
-	URL           *url.URL
-	Referrer      *url.URL
+	// Worker script and worker Fetch requests do not acquire document hints.
+	OmitClientHints bool
+	ClientHints     *ClientHintsContext
+	ID, ContextID   string
+	URL             *url.URL
+	Referrer        *url.URL
 	// SourceURL is the initiating document/worker URL. It remains available
 	// for Fetch Metadata and origin decisions when Referrer-Policy suppresses
 	// the wire Referer header.
 	SourceURL *url.URL
-	Method    string
-	Headers   http.Header
+	// UserActivation is captured from the navigation initiator, not inferred from
+	// its destination. Script and iframe requests need not be user activated.
+	UserActivation bool
+	ReferrerPolicy string
+	Method         string
+	Headers        http.Header
 	// AuthorHeaderOrder preserves the order in which script supplied distinct
 	// header names. Blink stores those fields in HTTPHeaderMap; its pinned WTF
 	// HashMap iteration, rather than Go map iteration, feeds the network stack.
@@ -168,11 +175,14 @@ func (l *Loader) Load(ctx context.Context, r Request) (Response, error) {
 		}
 	} else {
 		for k, v := range l.env().RequestHeaders() {
+			if r.OmitClientHints && strings.HasPrefix(strings.ToLower(k), "sec-ch-") {
+				continue
+			}
 			if r.Headers.Get(k) == "" {
 				r.Headers.Set(k, v)
 			}
 		}
-		for k, v := range l.env().ClientHintHeaders(l.session.ClientHints(r.URL)) {
+		for k, v := range l.env().ClientHintHeaders(l.acceptedClientHints(r)) {
 			if r.Headers.Get(k) == "" {
 				r.Headers.Set(k, v)
 			}
@@ -182,8 +192,30 @@ func (l *Loader) Load(ctx context.Context, r Request) (Response, error) {
 			r.Headers.Set("Accept-Encoding", "gzip, deflate, br, zstd")
 		}
 	}
-	if r.Referrer != nil && r.Headers.Get("Referer") == "" && r.Referrer.Scheme+"://"+r.Referrer.Host == r.URL.Scheme+"://"+r.URL.Host {
-		r.Headers.Set("Referer", r.Referrer.String())
+	if r.Referrer != nil && r.Headers.Get("Referer") == "" {
+		referrer := *r.Referrer
+		referrer.User = nil
+		referrer.Fragment = ""
+		referrer.RawFragment = ""
+		policy := "strict-origin-when-cross-origin"
+		for _, token := range strings.Split(r.ReferrerPolicy, ",") {
+			switch strings.TrimSpace(strings.ToLower(token)) {
+			case "no-referrer", "no-referrer-when-downgrade", "same-origin", "origin", "strict-origin", "origin-when-cross-origin", "strict-origin-when-cross-origin", "unsafe-url":
+				policy = strings.TrimSpace(strings.ToLower(token))
+			}
+		}
+		sameOrigin := referrer.Scheme == r.URL.Scheme && referrer.Host == r.URL.Host
+		downgrade := referrer.Scheme == "https" && r.URL.Scheme != "https"
+		suppress := policy == "no-referrer" || policy == "same-origin" && !sameOrigin || downgrade && (policy == "no-referrer-when-downgrade" || policy == "strict-origin" || policy == "strict-origin-when-cross-origin")
+		if (referrer.Scheme == "http" || referrer.Scheme == "https") && !suppress {
+			if policy == "origin" || policy == "strict-origin" || !sameOrigin && (policy == "origin-when-cross-origin" || policy == "strict-origin-when-cross-origin") {
+				referrer.Path = "/"
+				referrer.RawPath = ""
+				referrer.RawQuery = ""
+				referrer.ForceQuery = false
+			}
+			r.Headers.Set("Referer", referrer.String())
+		}
 	}
 	for k, values := range snapshot.ExtraHeaders {
 		r.Headers.Del(k)
@@ -389,10 +421,18 @@ func applyBrowserRequestHeaders(r *Request) {
 	switch r.Initiator {
 	case Navigation, Iframe:
 		mode, destination = "navigate", "document"
+		if r.Initiator == Iframe {
+			destination = "iframe"
+		}
 		setDefault("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7")
 		setDefault("Upgrade-Insecure-Requests", "1")
-		setDefault("Sec-Fetch-User", "?1")
-	case Script, Worker:
+		if r.UserActivation {
+			setDefault("Sec-Fetch-User", "?1")
+		}
+	case Worker:
+		mode, destination = "same-origin", "worker"
+		setDefault("Accept", "*/*")
+	case Script:
 		destination = "script"
 		setDefault("Accept", "*/*")
 	case Stylesheet:
@@ -495,6 +535,9 @@ func (l *Loader) after(ctx context.Context, r Request, res Response) (Response, 
 				u.Fragment, u.RawFragment = r.URL.Fragment, r.URL.RawFragment
 			}
 			r.Headers = r.Headers.Clone()
+			for _, name := range []string{"Sec-CH-UA-Arch", "Sec-CH-UA-Bitness", "Sec-CH-UA-Full-Version", "Sec-CH-UA-Full-Version-List", "Sec-CH-UA-Model", "Sec-CH-UA-Platform-Version"} {
+				r.Headers.Del(name)
+			}
 			if !sameRedirectOrigin(r.URL, u) {
 				r.Headers.Del("Authorization")
 				r.Headers.Del("Proxy-Authorization")

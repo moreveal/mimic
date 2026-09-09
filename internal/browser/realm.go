@@ -31,10 +31,13 @@ import (
 )
 
 type Realm struct {
+	clientHints             *clientHintsDocument
+	documentSecurity        *documentSecurity
 	profileWrappers         uint64
 	profilePhases           map[string]float64
 	ID                      string
 	activationAt            time.Time
+	referrerPolicy          string
 	inputDispatcher         engine.Value
 	permissionNotifier      engine.Value
 	agent                   ExecutionAgent
@@ -125,11 +128,13 @@ func (r *Realm) securityState() documentSecurity {
 			security = frame.parent.Realm.securityState()
 		}
 		if r.url.Scheme != "about" {
-			hostname := r.url.Hostname()
-			trustworthy := r.url.Scheme == "https" || hostname == "localhost" || hostname == "127.0.0.1" || hostname == "::1"
+			trustworthy := potentiallyTrustworthyURL(r.url)
 			security.secureContext = security.secureContext && trustworthy
 			security.crossOriginIsolated = security.crossOriginIsolated && security.secureContext && frame.parent.Realm != nil && r.origin == frame.parent.Realm.origin
 		}
+	}
+	if r.documentSecurity != nil {
+		security.permissionsPolicy = r.documentSecurity.permissionsPolicy
 	}
 	return security
 }
@@ -146,10 +151,18 @@ func newRealmState(p *Page, agent ExecutionAgent, d *dom.Document, u *url.URL, d
 	return newRealmStateWithNavigation(p, agent, d, u, deferred, origin, loaderID)
 }
 
-func newRealmStateWithNavigation(p *Page, agent ExecutionAgent, d *dom.Document, u *url.URL, deferred bool, performanceOrigin time.Time, loaderID string) (*Realm, error) {
+func newRealmStateWithNavigation(p *Page, agent ExecutionAgent, d *dom.Document, u *url.URL, deferred bool, performanceOrigin time.Time, loaderID string, permissionsPolicy ...string) (*Realm, error) {
 	resourceContext, cancelResources := context.WithCancel(p.ctx.lifetime)
 	r := &Realm{ID: uuid.NewString(), agent: agent, document: d, url: u, origin: originOf(u.String()), token: uuid.NewString(), detached: map[int64]dom.Node{}, apiSeen: map[string]bool{}, readyState: "loading", workers: map[int64]*DedicatedWorker{}, childFrames: map[int64]*Frame{}, retainedFrames: map[string]*Frame{}, crossValues: map[int64]engine.Value{}, resourceContext: resourceContext, cancelResources: cancelResources}
 	r.navigationURL, r.navigationLoaderID, r.performanceOrigin = u.String(), loaderID, performanceOrigin
+	policyHeader := ""
+	if frame, ok := agent.(*Frame); ok && frame.parent == nil {
+		policyHeader = r.securityState().permissionsPolicy
+	}
+	if len(permissionsPolicy) != 0 {
+		policyHeader = permissionsPolicy[0]
+	}
+	r.initializeClientHints(policyHeader)
 	r.updateSelectorTarget(u.Fragment)
 	if deferred {
 		r.runtime = &deferredRuntime{realm: r, factory: p.ctx.browser.factory}
@@ -1376,14 +1389,17 @@ func (r *Realm) install() error {
 		}), nil
 	})
 	host["permissionsPolicy"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
-		p.mu.RLock()
-		policy := p.documentSecurity.permissionsPolicy
-		p.mu.RUnlock()
-		origin := "null"
-		if documentURL := r.documentURL(); documentURL != nil && documentURL.Scheme != "" && documentURL.Host != "" {
-			origin = documentURL.Scheme + "://" + documentURL.Host
+		policy := r.securityState().permissionsPolicy
+		origin := r.origin
+		request := network.Request{}
+		r.applyClientHints(&request)
+		hints := map[string][]string{}
+		if request.ClientHints != nil {
+			for _, feature := range clientHintFeatures {
+				hints[feature] = request.ClientHints.Allowed["sec-"+feature]
+			}
 		}
-		return r.val(map[string]any{"header": policy, "origin": origin}), nil
+		return r.val(map[string]any{"header": policy, "origin": origin, "clientHints": hints}), nil
 	})
 	host["documentCookie"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		if !p.Environment().Network.CookiesEnabled {
@@ -1624,14 +1640,19 @@ func (r *Realm) postNavigate(raw string, replaceOption ...bool) error {
 	}
 	if frame, ok := r.agent.(*Frame); ok && frame.parent != nil {
 		if frame.Realm == r && frame.parent.Realm != nil {
-			frame.parent.Realm.scheduleChildNavigationTo(frame, u, replace)
+			frame.parent.Realm.scheduleChildNavigationTo(frame, u, replace, r)
 		}
 		return nil
 	}
+	request := network.Request{SourceURL: current, Referrer: current, UserActivation: r.navigationActivated()}
+	request.ReferrerPolicy = r.referrerPolicy
 	r.scheduler.Post(scheduler.Navigation, 0, func(ctx context.Context) error {
-		return r.agent.Page().navigate(ctx, u.String(), uuid.NewString(), replace)
+		return r.agent.Page().navigateRequest(ctx, u.String(), uuid.NewString(), request, replace)
 	})
 	return nil
+}
+func (r *Realm) navigationActivated() bool {
+	return !r.activationAt.IsZero() && r.scheduler.Now().Sub(r.activationAt) < 5*time.Second
 }
 func (r *Realm) hostTimer(_ engine.Value, a []engine.Value) (engine.Value, error) {
 	if len(a) == 0 {
@@ -1662,6 +1683,7 @@ func (r *Realm) hostFetch(_ engine.Value, a []engine.Value) (engine.Value, error
 		return promise.Value, nil
 	}
 	request := fetchRequest(r.agent.ContextID(), u, r.documentURL(), a)
+	r.applyClientHints(&request)
 	loadContext, cancel := context.WithCancel(r.resourceContext)
 	if requestID != "" {
 		if r.fetchCancels == nil {
@@ -1712,6 +1734,7 @@ func (r *Realm) hostXHR(_ engine.Value, a []engine.Value) (engine.Value, error) 
 	}
 	timeout := time.Duration(numarg(a, 5)) * time.Millisecond
 	request := network.Request{ContextID: r.agent.ContextID(), URL: u, Referrer: r.documentURL(), SourceURL: r.documentURL(), Method: strarg(a, 1), Headers: headers, AuthorHeaderOrder: authorHeaderOrder, Body: body, Initiator: network.XHR}
+	r.applyClientHints(&request)
 	r.scheduler.Post(scheduler.Network, 0, func(context.Context) error {
 		if r.resourceContext.Err() != nil {
 			return nil
@@ -1948,6 +1971,7 @@ func (r *Realm) hostInsertArgs(a []engine.Value, hasBefore bool) (engine.Value, 
 		mode = "cors"
 	}
 	request := network.Request{ContextID: r.agent.ContextID(), URL: u, Referrer: referrer, SourceURL: r.documentURL(), Headers: headers, Initiator: initiator, Mode: mode}
+	r.applyClientHints(&request)
 	r.scheduler.Post(resourceSource, resourceDelay, func(context.Context) error {
 		r.resourceWG.Add(1)
 		go func() {

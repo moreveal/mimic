@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/url"
 	"sort"
+	"strings"
 	"time"
 
 	"github.com/google/uuid"
@@ -92,7 +93,9 @@ func (r *Realm) ensureChildFrameInternal(elementID int64, shadowConnected, sched
 	}
 	page.ctx.mu.Lock()
 	realm.origin = r.origin
+	realm.referrerPolicy = r.referrerPolicy
 	page.ctx.mu.Unlock()
+	realm.initializeClientHints("")
 	realm.readyState = "complete"
 	frame.Realm = realm
 	page.mu.Lock()
@@ -130,7 +133,22 @@ func (r *Realm) scheduleChildFrameNavigation(frame *Frame, elementID int64) {
 
 // The embedding realm owns the child navigation lifecycle, irrespective of
 // whether navigation was requested by an iframe attribute or child Location.
-func (r *Realm) scheduleChildNavigationTo(frame *Frame, target *url.URL, replace bool) {
+func (r *Realm) scheduleChildNavigationTo(frame *Frame, target *url.URL, replace bool, initiatingRealm ...*Realm) {
+	initiator := r
+	if len(initiatingRealm) > 0 && initiatingRealm[0] != nil {
+		initiator = initiatingRealm[0]
+	}
+	request := network.Request{SourceURL: initiator.documentURL(), Referrer: initiator.documentURL(), UserActivation: initiator.navigationActivated()}
+	request.ReferrerPolicy = initiator.referrerPolicy
+	r.applyChildNavigationClientHints(&request, frame, target)
+	if initiator == r {
+		if node, ok := r.document.Get(frame.elementID); ok {
+			switch policy := strings.ToLower(node.Attributes["referrerpolicy"]); policy {
+			case "no-referrer", "no-referrer-when-downgrade", "same-origin", "origin", "strict-origin", "origin-when-cross-origin", "strict-origin-when-cross-origin", "unsafe-url":
+				request.ReferrerPolicy = policy
+			}
+		}
+	}
 	blank := target.Scheme == "about" && target.Opaque == "blank"
 	if !blank && target.Scheme != "http" && target.Scheme != "https" {
 		return
@@ -173,7 +191,7 @@ func (r *Realm) scheduleChildNavigationTo(frame *Frame, target *url.URL, replace
 			navigation := &childNavigation{embeddingRealm: r, frame: frame, target: target, sequence: sequence, loaderID: loaderID, blockerReason: blockerReason, blocksLoad: blocksLoad, replace: replace}
 			return r.commitChildFrameNavigation(ctx, navigation, network.Response{URL: target, Body: []byte("<!doctype html><html><head></head><body></body></html>")}, nil)
 		}
-		r.startChildFrameNavigation(frame, target, sequence, loaderID, blockerReason, blocksLoad, replace)
+		r.startChildFrameNavigation(frame, target, sequence, loaderID, blockerReason, blocksLoad, replace, request)
 		return nil
 	})
 }
@@ -251,7 +269,7 @@ func (r *Realm) prepareChildFrameRemoval(elementID int64) bool {
 	return true
 }
 
-func (r *Realm) startChildFrameNavigation(frame *Frame, target *url.URL, sequence uint64, loaderID, blockerReason string, blocksLoad, replace bool) {
+func (r *Realm) startChildFrameNavigation(frame *Frame, target *url.URL, sequence uint64, loaderID, blockerReason string, blocksLoad, replace bool, request network.Request) {
 	p := r.agent.Page()
 	performanceOrigin := p.ClockNow()
 	navigation := &childNavigation{embeddingRealm: r, frame: frame, target: target, sequence: sequence, loaderID: loaderID, blockerReason: blockerReason, blocksLoad: blocksLoad, replace: replace}
@@ -263,12 +281,12 @@ func (r *Realm) startChildFrameNavigation(frame *Frame, target *url.URL, sequenc
 	eventLoop := r.browserEventLoop()
 	loadContext, cancel := context.WithCancel(r.resourceContext)
 	frame.navigationCancel = cancel
-	referrer := r.documentURL()
+	request.ID, request.ContextID, request.URL, request.Initiator = loaderID, frame.ID, target, network.Iframe
 	r.resourceWG.Add(1)
 	go func() {
 		defer r.resourceWG.Done()
 		defer cancel()
-		res, err := p.loader.Load(loadContext, network.Request{ID: loaderID, ContextID: frame.ID, URL: target, Referrer: referrer, SourceURL: referrer, Initiator: network.Iframe})
+		res, err := p.loader.Load(loadContext, request)
 		if loadContext.Err() != nil {
 			return
 		}
@@ -301,7 +319,7 @@ func (r *Realm) commitChildFrameNavigation(ctx context.Context, navigation *chil
 	if navigation.performanceOrigin.IsZero() {
 		navigation.performanceOrigin = p.ClockNow()
 	}
-	realm, err := newRealmStateWithNavigation(p, navigation.frame, document, documentURL, false, navigation.performanceOrigin, navigation.loaderID)
+	realm, err := newRealmStateWithNavigation(p, navigation.frame, document, documentURL, false, navigation.performanceOrigin, navigation.loaderID, res.Headers.Get("Permissions-Policy"))
 	if err != nil {
 		r.finishChildNavigation(navigation)
 		return err
@@ -310,6 +328,11 @@ func (r *Realm) commitChildFrameNavigation(ctx context.Context, navigation *chil
 		p.ctx.mu.Lock()
 		realm.origin = r.origin
 		p.ctx.mu.Unlock()
+	}
+	realm.referrerPolicy = res.Headers.Get("Referrer-Policy")
+	realm.initializeClientHints(res.Headers.Get("Permissions-Policy"))
+	if documentURL.Scheme == "about" {
+		realm.referrerPolicy = r.referrerPolicy
 	}
 	old := navigation.frame.Realm
 	p.mu.Lock()
