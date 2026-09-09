@@ -1,0 +1,1226 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/webkit_css_inventory_oracle.js",
+    "fixtureSHA256": "a3fafcbc464757ad38957337efa38a0097745c0800213bb92e6d655d68f93db0",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "properties": {
+      "webkitAlignContent": {
+        "cssText": "align-content: initial;",
+        "length": 1,
+        "item": "align-content",
+        "value": "initial",
+        "computed": "normal",
+        "supported": true
+      },
+      "webkitAlignItems": {
+        "cssText": "align-items: initial;",
+        "length": 1,
+        "item": "align-items",
+        "value": "initial",
+        "computed": "normal",
+        "supported": true
+      },
+      "webkitAlignSelf": {
+        "cssText": "align-self: initial;",
+        "length": 1,
+        "item": "align-self",
+        "value": "initial",
+        "computed": "auto",
+        "supported": true
+      },
+      "webkitAnimation": {
+        "cssText": "animation: initial;",
+        "length": 11,
+        "item": "animation-duration",
+        "value": "initial",
+        "computed": "none",
+        "supported": true
+      },
+      "webkitAnimationDelay": {
+        "cssText": "animation-delay: initial;",
+        "length": 1,
+        "item": "animation-delay",
+        "value": "initial",
+        "computed": "0s",
+        "supported": true
+      },
+      "webkitAnimationDirection": {
+        "cssText": "animation-direction: initial;",
+        "length": 1,
+        "item": "animation-direction",
+        "value": "initial",
+        "computed": "normal",
+        "supported": true
+      },
+      "webkitAnimationDuration": {
+        "cssText": "animation-duration: initial;",
+        "length": 1,
+        "item": "animation-duration",
+        "value": "initial",
+        "computed": "0s",
+        "supported": true
+      },
+      "webkitAnimationFillMode": {
+        "cssText": "animation-fill-mode: initial;",
+        "length": 1,
+        "item": "animation-fill-mode",
+        "value": "initial",
+        "computed": "none",
+        "supported": true
+      },
+      "webkitAnimationIterationCount": {
+        "cssText": "animation-iteration-count: initial;",
+        "length": 1,
+        "item": "animation-iteration-count",
+        "value": "initial",
+        "computed": "1",
+        "supported": true
+      },
+      "webkitAnimationName": {
+        "cssText": "animation-name: initial;",
+        "length": 1,
+        "item": "animation-name",
+        "value": "initial",
+        "computed": "none",
+        "supported": true
+      },
+      "webkitAnimationPlayState": {
+        "cssText": "animation-play-state: initial;",
+        "length": 1,
+        "item": "animation-play-state",
+        "value": "initial",
+        "computed": "running",
+        "supported": true
+      },
+      "webkitAnimationTimingFunction": {
+        "cssText": "animation-timing-function: initial;",
+        "length": 1,
+        "item": "animation-timing-function",
+        "value": "initial",
+        "computed": "ease",
+        "supported": true
+      },
+      "webkitAppRegion": {
+        "cssText": "app-region: initial;",
+        "length": 1,
+        "item": "app-region",
+        "value": "initial",
+        "computed": "none",
+        "supported": true
+      },
+      "webkitAppearance": {
+        "cssText": "appearance: initial;",
+        "length": 1,
+        "item": "appearance",
+        "value": "initial",
+        "computed": "none",
+        "supported": true
+      },
+      "webkitBackfaceVisibility": {
+        "cssText": "backface-visibility: initial;",
+        "length": 1,
+        "item": "backface-visibility",
+        "value": "initial",
+        "computed": "visible",
+        "supported": true
+      },
+      "webkitBackgroundClip": {
+        "cssText": "background-clip: initial;",
+        "length": 1,
+        "item": "background-clip",
+        "value": "initial",
+        "computed": "border-box",
+        "supported": true
+      },
+      "webkitBackgroundOrigin": {
+        "cssText": "background-origin: initial;",
+        "length": 1,
+        "item": "background-origin",
+        "value": "initial",
+        "computed": "padding-box",
+        "supported": true
+      },
+      "webkitBackgroundSize": {
+        "cssText": "background-size: initial;",
+        "length": 1,
+        "item": "background-size",
+        "value": "initial",
+        "computed": "auto",
+        "supported": true
+      },
+      "webkitBorderAfter": {
+        "cssText": "border-block-end: initial;",
+        "length": 3,
+        "item": "border-block-end-width",
+        "value": "initial",
+        "computed": "0px none rgb(0, 0, 0)",
+        "supported": true
+      },
+      "webkitBorderAfterColor": {
+        "cssText": "border-block-end-color: initial;",
+        "length": 1,
+        "item": "border-block-end-color",
+        "value": "initial",
+        "computed": "rgb(0, 0, 0)",
+        "supported": true
+      },
+      "webkitBorderAfterStyle": {
+        "cssText": "border-block-end-style: initial;",
+        "length": 1,
+        "item": "border-block-end-style",
+        "value": "initial",
+        "computed": "none",
+        "supported": true
+      },
+      "webkitBorderAfterWidth": {
+        "cssText": "border-block-end-width: initial;",
+        "length": 1,
+        "item": "border-block-end-width",
+        "value": "initial",
+        "computed": "0px",
+        "supported": true
+      },
+      "webkitBorderBefore": {
+        "cssText": "border-block-start: initial;",
+        "length": 3,
+        "item": "border-block-start-width",
+        "value": "initial",
+        "computed": "0px none rgb(0, 0, 0)",
+        "supported": true
+      },
+      "webkitBorderBeforeColor": {
+        "cssText": "border-block-start-color: initial;",
+        "length": 1,
+        "item": "border-block-start-color",
+        "value": "initial",
+        "computed": "rgb(0, 0, 0)",
+        "supported": true
+      },
+      "webkitBorderBeforeStyle": {
+        "cssText": "border-block-start-style: initial;",
+        "length": 1,
+        "item": "border-block-start-style",
+        "value": "initial",
+        "computed": "none",
+        "supported": true
+      },
+      "webkitBorderBeforeWidth": {
+        "cssText": "border-block-start-width: initial;",
+        "length": 1,
+        "item": "border-block-start-width",
+        "value": "initial",
+        "computed": "0px",
+        "supported": true
+      },
+      "webkitBorderBottomLeftRadius": {
+        "cssText": "border-bottom-left-radius: initial;",
+        "length": 1,
+        "item": "border-bottom-left-radius",
+        "value": "initial",
+        "computed": "0px",
+        "supported": true
+      },
+      "webkitBorderBottomRightRadius": {
+        "cssText": "border-bottom-right-radius: initial;",
+        "length": 1,
+        "item": "border-bottom-right-radius",
+        "value": "initial",
+        "computed": "0px",
+        "supported": true
+      },
+      "webkitBorderEnd": {
+        "cssText": "border-inline-end: initial;",
+        "length": 3,
+        "item": "border-inline-end-width",
+        "value": "initial",
+        "computed": "0px none rgb(0, 0, 0)",
+        "supported": true
+      },
+      "webkitBorderEndColor": {
+        "cssText": "border-inline-end-color: initial;",
+        "length": 1,
+        "item": "border-inline-end-color",
+        "value": "initial",
+        "computed": "rgb(0, 0, 0)",
+        "supported": true
+      },
+      "webkitBorderEndStyle": {
+        "cssText": "border-inline-end-style: initial;",
+        "length": 1,
+        "item": "border-inline-end-style",
+        "value": "initial",
+        "computed": "none",
+        "supported": true
+      },
+      "webkitBorderEndWidth": {
+        "cssText": "border-inline-end-width: initial;",
+        "length": 1,
+        "item": "border-inline-end-width",
+        "value": "initial",
+        "computed": "0px",
+        "supported": true
+      },
+      "webkitBorderHorizontalSpacing": {
+        "cssText": "-webkit-border-horizontal-spacing: initial;",
+        "length": 1,
+        "item": "-webkit-border-horizontal-spacing",
+        "value": "initial",
+        "computed": "0px",
+        "supported": true
+      },
+      "webkitBorderImage": {
+        "cssText": "-webkit-border-image: initial;",
+        "length": 1,
+        "item": "-webkit-border-image",
+        "value": "initial",
+        "computed": "none",
+        "supported": true
+      },
+      "webkitBorderRadius": {
+        "cssText": "border-radius: initial;",
+        "length": 4,
+        "item": "border-top-left-radius",
+        "value": "initial",
+        "computed": "0px",
+        "supported": true
+      },
+      "webkitBorderStart": {
+        "cssText": "border-inline-start: initial;",
+        "length": 3,
+        "item": "border-inline-start-width",
+        "value": "initial",
+        "computed": "0px none rgb(0, 0, 0)",
+        "supported": true
+      },
+      "webkitBorderStartColor": {
+        "cssText": "border-inline-start-color: initial;",
+        "length": 1,
+        "item": "border-inline-start-color",
+        "value": "initial",
+        "computed": "rgb(0, 0, 0)",
+        "supported": true
+      },
+      "webkitBorderStartStyle": {
+        "cssText": "border-inline-start-style: initial;",
+        "length": 1,
+        "item": "border-inline-start-style",
+        "value": "initial",
+        "computed": "none",
+        "supported": true
+      },
+      "webkitBorderStartWidth": {
+        "cssText": "border-inline-start-width: initial;",
+        "length": 1,
+        "item": "border-inline-start-width",
+        "value": "initial",
+        "computed": "0px",
+        "supported": true
+      },
+      "webkitBorderTopLeftRadius": {
+        "cssText": "border-top-left-radius: initial;",
+        "length": 1,
+        "item": "border-top-left-radius",
+        "value": "initial",
+        "computed": "0px",
+        "supported": true
+      },
+      "webkitBorderTopRightRadius": {
+        "cssText": "border-top-right-radius: initial;",
+        "length": 1,
+        "item": "border-top-right-radius",
+        "value": "initial",
+        "computed": "0px",
+        "supported": true
+      },
+      "webkitBorderVerticalSpacing": {
+        "cssText": "-webkit-border-vertical-spacing: initial;",
+        "length": 1,
+        "item": "-webkit-border-vertical-spacing",
+        "value": "initial",
+        "computed": "0px",
+        "supported": true
+      },
+      "webkitBoxAlign": {
+        "cssText": "-webkit-box-align: initial;",
+        "length": 1,
+        "item": "-webkit-box-align",
+        "value": "initial",
+        "computed": "stretch",
+        "supported": true
+      },
+      "webkitBoxDecorationBreak": {
+        "cssText": "-webkit-box-decoration-break: initial;",
+        "length": 1,
+        "item": "-webkit-box-decoration-break",
+        "value": "initial",
+        "computed": "slice",
+        "supported": true
+      },
+      "webkitBoxDirection": {
+        "cssText": "-webkit-box-direction: initial;",
+        "length": 1,
+        "item": "-webkit-box-direction",
+        "value": "initial",
+        "computed": "normal",
+        "supported": true
+      },
+      "webkitBoxFlex": {
+        "cssText": "-webkit-box-flex: initial;",
+        "length": 1,
+        "item": "-webkit-box-flex",
+        "value": "initial",
+        "computed": "0",
+        "supported": true
+      },
+      "webkitBoxOrdinalGroup": {
+        "cssText": "-webkit-box-ordinal-group: initial;",
+        "length": 1,
+        "item": "-webkit-box-ordinal-group",
+        "value": "initial",
+        "computed": "1",
+        "supported": true
+      },
+      "webkitBoxOrient": {
+        "cssText": "-webkit-box-orient: initial;",
+        "length": 1,
+        "item": "-webkit-box-orient",
+        "value": "initial",
+        "computed": "horizontal",
+        "supported": true
+      },
+      "webkitBoxPack": {
+        "cssText": "-webkit-box-pack: initial;",
+        "length": 1,
+        "item": "-webkit-box-pack",
+        "value": "initial",
+        "computed": "start",
+        "supported": true
+      },
+      "webkitBoxReflect": {
+        "cssText": "-webkit-box-reflect: initial;",
+        "length": 1,
+        "item": "-webkit-box-reflect",
+        "value": "initial",
+        "computed": "none",
+        "supported": true
+      },
+      "webkitBoxShadow": {
+        "cssText": "box-shadow: initial;",
+        "length": 1,
+        "item": "box-shadow",
+        "value": "initial",
+        "computed": "none",
+        "supported": true
+      },
+      "webkitBoxSizing": {
+        "cssText": "box-sizing: initial;",
+        "length": 1,
+        "item": "box-sizing",
+        "value": "initial",
+        "computed": "content-box",
+        "supported": true
+      },
+      "webkitClipPath": {
+        "cssText": "clip-path: initial;",
+        "length": 1,
+        "item": "clip-path",
+        "value": "initial",
+        "computed": "none",
+        "supported": true
+      },
+      "webkitColumnBreakAfter": {
+        "cssText": "break-after: initial;",
+        "length": 1,
+        "item": "break-after",
+        "value": "initial",
+        "computed": "auto",
+        "supported": true
+      },
+      "webkitColumnBreakBefore": {
+        "cssText": "break-before: initial;",
+        "length": 1,
+        "item": "break-before",
+        "value": "initial",
+        "computed": "auto",
+        "supported": true
+      },
+      "webkitColumnBreakInside": {
+        "cssText": "break-inside: initial;",
+        "length": 1,
+        "item": "break-inside",
+        "value": "initial",
+        "computed": "auto",
+        "supported": true
+      },
+      "webkitColumnCount": {
+        "cssText": "column-count: initial;",
+        "length": 1,
+        "item": "column-count",
+        "value": "initial",
+        "computed": "auto",
+        "supported": true
+      },
+      "webkitColumnGap": {
+        "cssText": "column-gap: initial;",
+        "length": 1,
+        "item": "column-gap",
+        "value": "initial",
+        "computed": "normal",
+        "supported": true
+      },
+      "webkitColumnRule": {
+        "cssText": "column-rule: initial;",
+        "length": 3,
+        "item": "column-rule-width",
+        "value": "initial",
+        "computed": "3px rgb(0, 0, 0)",
+        "supported": true
+      },
+      "webkitColumnRuleColor": {
+        "cssText": "column-rule-color: initial;",
+        "length": 1,
+        "item": "column-rule-color",
+        "value": "initial",
+        "computed": "rgb(0, 0, 0)",
+        "supported": true
+      },
+      "webkitColumnRuleStyle": {
+        "cssText": "column-rule-style: initial;",
+        "length": 1,
+        "item": "column-rule-style",
+        "value": "initial",
+        "computed": "none",
+        "supported": true
+      },
+      "webkitColumnRuleWidth": {
+        "cssText": "column-rule-width: initial;",
+        "length": 1,
+        "item": "column-rule-width",
+        "value": "initial",
+        "computed": "3px",
+        "supported": true
+      },
+      "webkitColumnSpan": {
+        "cssText": "column-span: initial;",
+        "length": 1,
+        "item": "column-span",
+        "value": "initial",
+        "computed": "none",
+        "supported": true
+      },
+      "webkitColumnWidth": {
+        "cssText": "column-width: initial;",
+        "length": 1,
+        "item": "column-width",
+        "value": "initial",
+        "computed": "auto",
+        "supported": true
+      },
+      "webkitColumns": {
+        "cssText": "columns: initial;",
+        "length": 4,
+        "item": "column-width",
+        "value": "initial",
+        "computed": "auto",
+        "supported": true
+      },
+      "webkitFilter": {
+        "cssText": "filter: initial;",
+        "length": 1,
+        "item": "filter",
+        "value": "initial",
+        "computed": "none",
+        "supported": true
+      },
+      "webkitFlex": {
+        "cssText": "flex: initial;",
+        "length": 3,
+        "item": "flex-grow",
+        "value": "initial",
+        "computed": "0 1 auto",
+        "supported": true
+      },
+      "webkitFlexBasis": {
+        "cssText": "flex-basis: initial;",
+        "length": 1,
+        "item": "flex-basis",
+        "value": "initial",
+        "computed": "auto",
+        "supported": true
+      },
+      "webkitFlexDirection": {
+        "cssText": "flex-direction: initial;",
+        "length": 1,
+        "item": "flex-direction",
+        "value": "initial",
+        "computed": "row",
+        "supported": true
+      },
+      "webkitFlexFlow": {
+        "cssText": "flex-flow: initial;",
+        "length": 2,
+        "item": "flex-direction",
+        "value": "initial",
+        "computed": "row nowrap",
+        "supported": true
+      },
+      "webkitFlexGrow": {
+        "cssText": "flex-grow: initial;",
+        "length": 1,
+        "item": "flex-grow",
+        "value": "initial",
+        "computed": "0",
+        "supported": true
+      },
+      "webkitFlexShrink": {
+        "cssText": "flex-shrink: initial;",
+        "length": 1,
+        "item": "flex-shrink",
+        "value": "initial",
+        "computed": "1",
+        "supported": true
+      },
+      "webkitFlexWrap": {
+        "cssText": "flex-wrap: initial;",
+        "length": 1,
+        "item": "flex-wrap",
+        "value": "initial",
+        "computed": "nowrap",
+        "supported": true
+      },
+      "webkitFontFeatureSettings": {
+        "cssText": "font-feature-settings: initial;",
+        "length": 1,
+        "item": "font-feature-settings",
+        "value": "initial",
+        "computed": "normal",
+        "supported": true
+      },
+      "webkitFontSmoothing": {
+        "cssText": "-webkit-font-smoothing: initial;",
+        "length": 1,
+        "item": "-webkit-font-smoothing",
+        "value": "initial",
+        "computed": "auto",
+        "supported": true
+      },
+      "webkitHyphenateCharacter": {
+        "cssText": "hyphenate-character: initial;",
+        "length": 1,
+        "item": "hyphenate-character",
+        "value": "initial",
+        "computed": "auto",
+        "supported": true
+      },
+      "webkitJustifyContent": {
+        "cssText": "justify-content: initial;",
+        "length": 1,
+        "item": "justify-content",
+        "value": "initial",
+        "computed": "normal",
+        "supported": true
+      },
+      "webkitLineBreak": {
+        "cssText": "-webkit-line-break: initial;",
+        "length": 1,
+        "item": "-webkit-line-break",
+        "value": "initial",
+        "computed": "auto",
+        "supported": true
+      },
+      "webkitLineClamp": {
+        "cssText": "-webkit-line-clamp: initial;",
+        "length": 1,
+        "item": "-webkit-line-clamp",
+        "value": "initial",
+        "computed": "none",
+        "supported": true
+      },
+      "webkitLocale": {
+        "cssText": "-webkit-locale: initial;",
+        "length": 1,
+        "item": "-webkit-locale",
+        "value": "initial",
+        "computed": "auto",
+        "supported": true
+      },
+      "webkitLogicalHeight": {
+        "cssText": "block-size: initial;",
+        "length": 1,
+        "item": "block-size",
+        "value": "initial",
+        "computed": "0px",
+        "supported": true
+      },
+      "webkitLogicalWidth": {
+        "cssText": "inline-size: initial;",
+        "length": 1,
+        "item": "inline-size",
+        "value": "initial",
+        "computed": "1256px",
+        "supported": true
+      },
+      "webkitMarginAfter": {
+        "cssText": "margin-block-end: initial;",
+        "length": 1,
+        "item": "margin-block-end",
+        "value": "initial",
+        "computed": "0px",
+        "supported": true
+      },
+      "webkitMarginBefore": {
+        "cssText": "margin-block-start: initial;",
+        "length": 1,
+        "item": "margin-block-start",
+        "value": "initial",
+        "computed": "0px",
+        "supported": true
+      },
+      "webkitMarginEnd": {
+        "cssText": "margin-inline-end: initial;",
+        "length": 1,
+        "item": "margin-inline-end",
+        "value": "initial",
+        "computed": "0px",
+        "supported": true
+      },
+      "webkitMarginStart": {
+        "cssText": "margin-inline-start: initial;",
+        "length": 1,
+        "item": "margin-inline-start",
+        "value": "initial",
+        "computed": "0px",
+        "supported": true
+      },
+      "webkitMask": {
+        "cssText": "mask: initial;",
+        "length": 9,
+        "item": "mask-image",
+        "value": "initial",
+        "computed": "none",
+        "supported": true
+      },
+      "webkitMaskBoxImage": {
+        "cssText": "-webkit-mask-box-image: initial;",
+        "length": 5,
+        "item": "-webkit-mask-box-image-source",
+        "value": "initial",
+        "computed": "none",
+        "supported": true
+      },
+      "webkitMaskBoxImageOutset": {
+        "cssText": "-webkit-mask-box-image-outset: initial;",
+        "length": 1,
+        "item": "-webkit-mask-box-image-outset",
+        "value": "initial",
+        "computed": "0",
+        "supported": true
+      },
+      "webkitMaskBoxImageRepeat": {
+        "cssText": "-webkit-mask-box-image-repeat: initial;",
+        "length": 1,
+        "item": "-webkit-mask-box-image-repeat",
+        "value": "initial",
+        "computed": "stretch",
+        "supported": true
+      },
+      "webkitMaskBoxImageSlice": {
+        "cssText": "-webkit-mask-box-image-slice: initial;",
+        "length": 1,
+        "item": "-webkit-mask-box-image-slice",
+        "value": "initial",
+        "computed": "0 fill",
+        "supported": true
+      },
+      "webkitMaskBoxImageSource": {
+        "cssText": "-webkit-mask-box-image-source: initial;",
+        "length": 1,
+        "item": "-webkit-mask-box-image-source",
+        "value": "initial",
+        "computed": "none",
+        "supported": true
+      },
+      "webkitMaskBoxImageWidth": {
+        "cssText": "-webkit-mask-box-image-width: initial;",
+        "length": 1,
+        "item": "-webkit-mask-box-image-width",
+        "value": "initial",
+        "computed": "auto",
+        "supported": true
+      },
+      "webkitMaskClip": {
+        "cssText": "mask-clip: initial;",
+        "length": 1,
+        "item": "mask-clip",
+        "value": "initial",
+        "computed": "border-box",
+        "supported": true
+      },
+      "webkitMaskComposite": {
+        "cssText": "mask-composite: initial;",
+        "length": 1,
+        "item": "mask-composite",
+        "value": "initial",
+        "computed": "add",
+        "supported": true
+      },
+      "webkitMaskImage": {
+        "cssText": "mask-image: initial;",
+        "length": 1,
+        "item": "mask-image",
+        "value": "initial",
+        "computed": "none",
+        "supported": true
+      },
+      "webkitMaskOrigin": {
+        "cssText": "mask-origin: initial;",
+        "length": 1,
+        "item": "mask-origin",
+        "value": "initial",
+        "computed": "border-box",
+        "supported": true
+      },
+      "webkitMaskPosition": {
+        "cssText": "mask-position: initial;",
+        "length": 2,
+        "item": "-webkit-mask-position-x",
+        "value": "initial",
+        "computed": "0% 0%",
+        "supported": true
+      },
+      "webkitMaskPositionX": {
+        "cssText": "-webkit-mask-position-x: initial;",
+        "length": 1,
+        "item": "-webkit-mask-position-x",
+        "value": "initial",
+        "computed": "0%",
+        "supported": true
+      },
+      "webkitMaskPositionY": {
+        "cssText": "-webkit-mask-position-y: initial;",
+        "length": 1,
+        "item": "-webkit-mask-position-y",
+        "value": "initial",
+        "computed": "0%",
+        "supported": true
+      },
+      "webkitMaskRepeat": {
+        "cssText": "mask-repeat: initial;",
+        "length": 1,
+        "item": "mask-repeat",
+        "value": "initial",
+        "computed": "repeat",
+        "supported": true
+      },
+      "webkitMaskSize": {
+        "cssText": "mask-size: initial;",
+        "length": 1,
+        "item": "mask-size",
+        "value": "initial",
+        "computed": "auto",
+        "supported": true
+      },
+      "webkitMaxLogicalHeight": {
+        "cssText": "max-block-size: initial;",
+        "length": 1,
+        "item": "max-block-size",
+        "value": "initial",
+        "computed": "none",
+        "supported": true
+      },
+      "webkitMaxLogicalWidth": {
+        "cssText": "max-inline-size: initial;",
+        "length": 1,
+        "item": "max-inline-size",
+        "value": "initial",
+        "computed": "none",
+        "supported": true
+      },
+      "webkitMinLogicalHeight": {
+        "cssText": "min-block-size: initial;",
+        "length": 1,
+        "item": "min-block-size",
+        "value": "initial",
+        "computed": "0px",
+        "supported": true
+      },
+      "webkitMinLogicalWidth": {
+        "cssText": "min-inline-size: initial;",
+        "length": 1,
+        "item": "min-inline-size",
+        "value": "initial",
+        "computed": "0px",
+        "supported": true
+      },
+      "webkitOpacity": {
+        "cssText": "opacity: initial;",
+        "length": 1,
+        "item": "opacity",
+        "value": "initial",
+        "computed": "1",
+        "supported": true
+      },
+      "webkitOrder": {
+        "cssText": "order: initial;",
+        "length": 1,
+        "item": "order",
+        "value": "initial",
+        "computed": "0",
+        "supported": true
+      },
+      "webkitPaddingAfter": {
+        "cssText": "padding-block-end: initial;",
+        "length": 1,
+        "item": "padding-block-end",
+        "value": "initial",
+        "computed": "0px",
+        "supported": true
+      },
+      "webkitPaddingBefore": {
+        "cssText": "padding-block-start: initial;",
+        "length": 1,
+        "item": "padding-block-start",
+        "value": "initial",
+        "computed": "0px",
+        "supported": true
+      },
+      "webkitPaddingEnd": {
+        "cssText": "padding-inline-end: initial;",
+        "length": 1,
+        "item": "padding-inline-end",
+        "value": "initial",
+        "computed": "0px",
+        "supported": true
+      },
+      "webkitPaddingStart": {
+        "cssText": "padding-inline-start: initial;",
+        "length": 1,
+        "item": "padding-inline-start",
+        "value": "initial",
+        "computed": "0px",
+        "supported": true
+      },
+      "webkitPerspective": {
+        "cssText": "perspective: initial;",
+        "length": 1,
+        "item": "perspective",
+        "value": "initial",
+        "computed": "none",
+        "supported": true
+      },
+      "webkitPerspectiveOrigin": {
+        "cssText": "perspective-origin: initial;",
+        "length": 1,
+        "item": "perspective-origin",
+        "value": "initial",
+        "computed": "628px 0px",
+        "supported": true
+      },
+      "webkitPerspectiveOriginX": {
+        "cssText": "-webkit-perspective-origin-x: initial;",
+        "length": 1,
+        "item": "-webkit-perspective-origin-x",
+        "value": "initial",
+        "computed": "",
+        "supported": true
+      },
+      "webkitPerspectiveOriginY": {
+        "cssText": "-webkit-perspective-origin-y: initial;",
+        "length": 1,
+        "item": "-webkit-perspective-origin-y",
+        "value": "initial",
+        "computed": "",
+        "supported": true
+      },
+      "webkitPrintColorAdjust": {
+        "cssText": "print-color-adjust: initial;",
+        "length": 1,
+        "item": "print-color-adjust",
+        "value": "initial",
+        "computed": "economy",
+        "supported": true
+      },
+      "webkitRtlOrdering": {
+        "cssText": "-webkit-rtl-ordering: initial;",
+        "length": 1,
+        "item": "-webkit-rtl-ordering",
+        "value": "initial",
+        "computed": "logical",
+        "supported": true
+      },
+      "webkitRubyPosition": {
+        "cssText": "-webkit-ruby-position: initial;",
+        "length": 1,
+        "item": "-webkit-ruby-position",
+        "value": "initial",
+        "computed": "before",
+        "supported": true
+      },
+      "webkitShapeImageThreshold": {
+        "cssText": "shape-image-threshold: initial;",
+        "length": 1,
+        "item": "shape-image-threshold",
+        "value": "initial",
+        "computed": "0",
+        "supported": true
+      },
+      "webkitShapeMargin": {
+        "cssText": "shape-margin: initial;",
+        "length": 1,
+        "item": "shape-margin",
+        "value": "initial",
+        "computed": "0px",
+        "supported": true
+      },
+      "webkitShapeOutside": {
+        "cssText": "shape-outside: initial;",
+        "length": 1,
+        "item": "shape-outside",
+        "value": "initial",
+        "computed": "none",
+        "supported": true
+      },
+      "webkitTapHighlightColor": {
+        "cssText": "-webkit-tap-highlight-color: initial;",
+        "length": 1,
+        "item": "-webkit-tap-highlight-color",
+        "value": "initial",
+        "computed": "rgba(0, 0, 0, 0.18)",
+        "supported": true
+      },
+      "webkitTextCombine": {
+        "cssText": "-webkit-text-combine: initial;",
+        "length": 1,
+        "item": "-webkit-text-combine",
+        "value": "initial",
+        "computed": "none",
+        "supported": true
+      },
+      "webkitTextDecorationsInEffect": {
+        "cssText": "-webkit-text-decorations-in-effect: initial;",
+        "length": 1,
+        "item": "-webkit-text-decorations-in-effect",
+        "value": "initial",
+        "computed": "none",
+        "supported": true
+      },
+      "webkitTextEmphasis": {
+        "cssText": "text-emphasis: initial;",
+        "length": 2,
+        "item": "text-emphasis-style",
+        "value": "initial",
+        "computed": "none rgb(0, 0, 0)",
+        "supported": true
+      },
+      "webkitTextEmphasisColor": {
+        "cssText": "text-emphasis-color: initial;",
+        "length": 1,
+        "item": "text-emphasis-color",
+        "value": "initial",
+        "computed": "rgb(0, 0, 0)",
+        "supported": true
+      },
+      "webkitTextEmphasisPosition": {
+        "cssText": "text-emphasis-position: initial;",
+        "length": 1,
+        "item": "text-emphasis-position",
+        "value": "initial",
+        "computed": "over",
+        "supported": true
+      },
+      "webkitTextEmphasisStyle": {
+        "cssText": "text-emphasis-style: initial;",
+        "length": 1,
+        "item": "text-emphasis-style",
+        "value": "initial",
+        "computed": "none",
+        "supported": true
+      },
+      "webkitTextFillColor": {
+        "cssText": "-webkit-text-fill-color: initial;",
+        "length": 1,
+        "item": "-webkit-text-fill-color",
+        "value": "initial",
+        "computed": "rgb(0, 0, 0)",
+        "supported": true
+      },
+      "webkitTextOrientation": {
+        "cssText": "-webkit-text-orientation: initial;",
+        "length": 1,
+        "item": "-webkit-text-orientation",
+        "value": "initial",
+        "computed": "vertical-right",
+        "supported": true
+      },
+      "webkitTextSecurity": {
+        "cssText": "-webkit-text-security: initial;",
+        "length": 1,
+        "item": "-webkit-text-security",
+        "value": "initial",
+        "computed": "none",
+        "supported": true
+      },
+      "webkitTextSizeAdjust": {
+        "cssText": "text-size-adjust: initial;",
+        "length": 1,
+        "item": "text-size-adjust",
+        "value": "initial",
+        "computed": "auto",
+        "supported": true
+      },
+      "webkitTextStroke": {
+        "cssText": "-webkit-text-stroke: initial;",
+        "length": 2,
+        "item": "-webkit-text-stroke-width",
+        "value": "initial",
+        "computed": "0px rgb(0, 0, 0)",
+        "supported": true
+      },
+      "webkitTextStrokeColor": {
+        "cssText": "-webkit-text-stroke-color: initial;",
+        "length": 1,
+        "item": "-webkit-text-stroke-color",
+        "value": "initial",
+        "computed": "rgb(0, 0, 0)",
+        "supported": true
+      },
+      "webkitTextStrokeWidth": {
+        "cssText": "-webkit-text-stroke-width: initial;",
+        "length": 1,
+        "item": "-webkit-text-stroke-width",
+        "value": "initial",
+        "computed": "0px",
+        "supported": true
+      },
+      "webkitTransform": {
+        "cssText": "transform: initial;",
+        "length": 1,
+        "item": "transform",
+        "value": "initial",
+        "computed": "none",
+        "supported": true
+      },
+      "webkitTransformOrigin": {
+        "cssText": "transform-origin: initial;",
+        "length": 1,
+        "item": "transform-origin",
+        "value": "initial",
+        "computed": "628px 0px",
+        "supported": true
+      },
+      "webkitTransformOriginX": {
+        "cssText": "-webkit-transform-origin-x: initial;",
+        "length": 1,
+        "item": "-webkit-transform-origin-x",
+        "value": "initial",
+        "computed": "",
+        "supported": true
+      },
+      "webkitTransformOriginY": {
+        "cssText": "-webkit-transform-origin-y: initial;",
+        "length": 1,
+        "item": "-webkit-transform-origin-y",
+        "value": "initial",
+        "computed": "",
+        "supported": true
+      },
+      "webkitTransformOriginZ": {
+        "cssText": "-webkit-transform-origin-z: initial;",
+        "length": 1,
+        "item": "-webkit-transform-origin-z",
+        "value": "initial",
+        "computed": "",
+        "supported": true
+      },
+      "webkitTransformStyle": {
+        "cssText": "transform-style: initial;",
+        "length": 1,
+        "item": "transform-style",
+        "value": "initial",
+        "computed": "flat",
+        "supported": true
+      },
+      "webkitTransition": {
+        "cssText": "transition: initial;",
+        "length": 5,
+        "item": "transition-property",
+        "value": "initial",
+        "computed": "all",
+        "supported": true
+      },
+      "webkitTransitionDelay": {
+        "cssText": "transition-delay: initial;",
+        "length": 1,
+        "item": "transition-delay",
+        "value": "initial",
+        "computed": "0s",
+        "supported": true
+      },
+      "webkitTransitionDuration": {
+        "cssText": "transition-duration: initial;",
+        "length": 1,
+        "item": "transition-duration",
+        "value": "initial",
+        "computed": "0s",
+        "supported": true
+      },
+      "webkitTransitionProperty": {
+        "cssText": "transition-property: initial;",
+        "length": 1,
+        "item": "transition-property",
+        "value": "initial",
+        "computed": "all",
+        "supported": true
+      },
+      "webkitTransitionTimingFunction": {
+        "cssText": "transition-timing-function: initial;",
+        "length": 1,
+        "item": "transition-timing-function",
+        "value": "initial",
+        "computed": "ease",
+        "supported": true
+      },
+      "webkitUserDrag": {
+        "cssText": "-webkit-user-drag: initial;",
+        "length": 1,
+        "item": "-webkit-user-drag",
+        "value": "initial",
+        "computed": "auto",
+        "supported": true
+      },
+      "webkitUserModify": {
+        "cssText": "-webkit-user-modify: initial;",
+        "length": 1,
+        "item": "-webkit-user-modify",
+        "value": "initial",
+        "computed": "read-only",
+        "supported": true
+      },
+      "webkitUserSelect": {
+        "cssText": "user-select: initial;",
+        "length": 1,
+        "item": "user-select",
+        "value": "initial",
+        "computed": "auto",
+        "supported": true
+      },
+      "webkitWritingMode": {
+        "cssText": "-webkit-writing-mode: initial;",
+        "length": 1,
+        "item": "-webkit-writing-mode",
+        "value": "initial",
+        "computed": "horizontal-tb",
+        "supported": true
+      }
+    }
+  }
+}

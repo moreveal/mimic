@@ -1,0 +1,2964 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/webkit_css_shorthands_oracle.js",
+    "fixtureSHA256": "10365d96998d18f7e62ba6ffd9b62a190af57f0bd6210bb07f8b053aae6449b7",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "webkitAnimation": {
+      "initial": {
+        "text": "animation: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "animation-duration",
+            "initial"
+          ],
+          [
+            "animation-timing-function",
+            "initial"
+          ],
+          [
+            "animation-delay",
+            "initial"
+          ],
+          [
+            "animation-iteration-count",
+            "initial"
+          ],
+          [
+            "animation-direction",
+            "initial"
+          ],
+          [
+            "animation-fill-mode",
+            "initial"
+          ],
+          [
+            "animation-play-state",
+            "initial"
+          ],
+          [
+            "animation-name",
+            "initial"
+          ],
+          [
+            "animation-timeline",
+            "initial"
+          ],
+          [
+            "animation-range-start",
+            "initial"
+          ],
+          [
+            "animation-range-end",
+            "initial"
+          ]
+        ]
+      },
+      "inherit": {
+        "text": "animation: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "animation-duration",
+            "inherit"
+          ],
+          [
+            "animation-timing-function",
+            "inherit"
+          ],
+          [
+            "animation-delay",
+            "inherit"
+          ],
+          [
+            "animation-iteration-count",
+            "inherit"
+          ],
+          [
+            "animation-direction",
+            "inherit"
+          ],
+          [
+            "animation-fill-mode",
+            "inherit"
+          ],
+          [
+            "animation-play-state",
+            "inherit"
+          ],
+          [
+            "animation-name",
+            "inherit"
+          ],
+          [
+            "animation-timeline",
+            "inherit"
+          ],
+          [
+            "animation-range-start",
+            "inherit"
+          ],
+          [
+            "animation-range-end",
+            "inherit"
+          ]
+        ]
+      },
+      "none": {
+        "text": "animation: auto ease 0s 1 normal none running none;",
+        "value": "auto ease 0s 1 normal none running none",
+        "components": [
+          [
+            "animation-duration",
+            "auto"
+          ],
+          [
+            "animation-timing-function",
+            "ease"
+          ],
+          [
+            "animation-delay",
+            "0s"
+          ],
+          [
+            "animation-iteration-count",
+            "1"
+          ],
+          [
+            "animation-direction",
+            "normal"
+          ],
+          [
+            "animation-fill-mode",
+            "none"
+          ],
+          [
+            "animation-play-state",
+            "running"
+          ],
+          [
+            "animation-name",
+            "none"
+          ],
+          [
+            "animation-timeline",
+            "auto"
+          ],
+          [
+            "animation-range-start",
+            "normal"
+          ],
+          [
+            "animation-range-end",
+            "normal"
+          ]
+        ]
+      },
+      "auto": {
+        "text": "animation: auto ease 0s 1 normal none running none;",
+        "value": "auto ease 0s 1 normal none running none",
+        "components": [
+          [
+            "animation-duration",
+            "auto"
+          ],
+          [
+            "animation-timing-function",
+            "ease"
+          ],
+          [
+            "animation-delay",
+            "0s"
+          ],
+          [
+            "animation-iteration-count",
+            "1"
+          ],
+          [
+            "animation-direction",
+            "normal"
+          ],
+          [
+            "animation-fill-mode",
+            "none"
+          ],
+          [
+            "animation-play-state",
+            "running"
+          ],
+          [
+            "animation-name",
+            "none"
+          ],
+          [
+            "animation-timeline",
+            "auto"
+          ],
+          [
+            "animation-range-start",
+            "normal"
+          ],
+          [
+            "animation-range-end",
+            "normal"
+          ]
+        ]
+      },
+      "1px solid red": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "1 0 auto": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "row wrap": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "opacity 1s ease": {
+        "text": "animation: 1s ease 0s 1 normal none running opacity;",
+        "value": "1s ease 0s 1 normal none running opacity",
+        "components": [
+          [
+            "animation-duration",
+            "1s"
+          ],
+          [
+            "animation-timing-function",
+            "ease"
+          ],
+          [
+            "animation-delay",
+            "0s"
+          ],
+          [
+            "animation-iteration-count",
+            "1"
+          ],
+          [
+            "animation-direction",
+            "normal"
+          ],
+          [
+            "animation-fill-mode",
+            "none"
+          ],
+          [
+            "animation-play-state",
+            "running"
+          ],
+          [
+            "animation-name",
+            "opacity"
+          ],
+          [
+            "animation-timeline",
+            "auto"
+          ],
+          [
+            "animation-range-start",
+            "normal"
+          ],
+          [
+            "animation-range-end",
+            "normal"
+          ]
+        ]
+      },
+      "slide 2s linear": {
+        "text": "animation: 2s linear 0s 1 normal none running slide;",
+        "value": "2s linear 0s 1 normal none running slide",
+        "components": [
+          [
+            "animation-duration",
+            "2s"
+          ],
+          [
+            "animation-timing-function",
+            "linear"
+          ],
+          [
+            "animation-delay",
+            "0s"
+          ],
+          [
+            "animation-iteration-count",
+            "1"
+          ],
+          [
+            "animation-direction",
+            "normal"
+          ],
+          [
+            "animation-fill-mode",
+            "none"
+          ],
+          [
+            "animation-play-state",
+            "running"
+          ],
+          [
+            "animation-name",
+            "slide"
+          ],
+          [
+            "animation-timeline",
+            "auto"
+          ],
+          [
+            "animation-range-start",
+            "normal"
+          ],
+          [
+            "animation-range-end",
+            "normal"
+          ]
+        ]
+      },
+      "2px": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "2px 4px": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "red": {
+        "text": "animation: auto ease 0s 1 normal none running red;",
+        "value": "auto ease 0s 1 normal none running red",
+        "components": [
+          [
+            "animation-duration",
+            "auto"
+          ],
+          [
+            "animation-timing-function",
+            "ease"
+          ],
+          [
+            "animation-delay",
+            "0s"
+          ],
+          [
+            "animation-iteration-count",
+            "1"
+          ],
+          [
+            "animation-direction",
+            "normal"
+          ],
+          [
+            "animation-fill-mode",
+            "none"
+          ],
+          [
+            "animation-play-state",
+            "running"
+          ],
+          [
+            "animation-name",
+            "red"
+          ],
+          [
+            "animation-timeline",
+            "auto"
+          ],
+          [
+            "animation-range-start",
+            "normal"
+          ],
+          [
+            "animation-range-end",
+            "normal"
+          ]
+        ]
+      },
+      "circle": {
+        "text": "animation: auto ease 0s 1 normal none running circle;",
+        "value": "auto ease 0s 1 normal none running circle",
+        "components": [
+          [
+            "animation-duration",
+            "auto"
+          ],
+          [
+            "animation-timing-function",
+            "ease"
+          ],
+          [
+            "animation-delay",
+            "0s"
+          ],
+          [
+            "animation-iteration-count",
+            "1"
+          ],
+          [
+            "animation-direction",
+            "normal"
+          ],
+          [
+            "animation-fill-mode",
+            "none"
+          ],
+          [
+            "animation-play-state",
+            "running"
+          ],
+          [
+            "animation-name",
+            "circle"
+          ],
+          [
+            "animation-timeline",
+            "auto"
+          ],
+          [
+            "animation-range-start",
+            "normal"
+          ],
+          [
+            "animation-range-end",
+            "normal"
+          ]
+        ]
+      },
+      "var(--value)": {
+        "text": "animation: var(--value);",
+        "value": "var(--value)",
+        "components": [
+          [
+            "animation-duration",
+            ""
+          ],
+          [
+            "animation-timing-function",
+            ""
+          ],
+          [
+            "animation-delay",
+            ""
+          ],
+          [
+            "animation-iteration-count",
+            ""
+          ],
+          [
+            "animation-direction",
+            ""
+          ],
+          [
+            "animation-fill-mode",
+            ""
+          ],
+          [
+            "animation-play-state",
+            ""
+          ],
+          [
+            "animation-name",
+            ""
+          ],
+          [
+            "animation-timeline",
+            ""
+          ],
+          [
+            "animation-range-start",
+            ""
+          ],
+          [
+            "animation-range-end",
+            ""
+          ]
+        ]
+      }
+    },
+    "webkitBorderAfter": {
+      "initial": {
+        "text": "border-block-end: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "border-block-end-width",
+            "initial"
+          ],
+          [
+            "border-block-end-style",
+            "initial"
+          ],
+          [
+            "border-block-end-color",
+            "initial"
+          ]
+        ]
+      },
+      "inherit": {
+        "text": "border-block-end: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "border-block-end-width",
+            "inherit"
+          ],
+          [
+            "border-block-end-style",
+            "inherit"
+          ],
+          [
+            "border-block-end-color",
+            "inherit"
+          ]
+        ]
+      },
+      "none": {
+        "text": "border-block-end: none;",
+        "value": "none",
+        "components": [
+          [
+            "border-block-end-width",
+            "initial"
+          ],
+          [
+            "border-block-end-style",
+            "none"
+          ],
+          [
+            "border-block-end-color",
+            "initial"
+          ]
+        ]
+      },
+      "auto": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "1px solid red": {
+        "text": "border-block-end: 1px solid red;",
+        "value": "1px solid red",
+        "components": [
+          [
+            "border-block-end-width",
+            "1px"
+          ],
+          [
+            "border-block-end-style",
+            "solid"
+          ],
+          [
+            "border-block-end-color",
+            "red"
+          ]
+        ]
+      },
+      "1 0 auto": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "row wrap": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "opacity 1s ease": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "slide 2s linear": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "2px": {
+        "text": "border-block-end: 2px;",
+        "value": "2px",
+        "components": [
+          [
+            "border-block-end-width",
+            "2px"
+          ],
+          [
+            "border-block-end-style",
+            "initial"
+          ],
+          [
+            "border-block-end-color",
+            "initial"
+          ]
+        ]
+      },
+      "2px 4px": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "red": {
+        "text": "border-block-end: red;",
+        "value": "red",
+        "components": [
+          [
+            "border-block-end-width",
+            "initial"
+          ],
+          [
+            "border-block-end-style",
+            "initial"
+          ],
+          [
+            "border-block-end-color",
+            "red"
+          ]
+        ]
+      },
+      "circle": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "var(--value)": {
+        "text": "border-block-end: var(--value);",
+        "value": "var(--value)",
+        "components": [
+          [
+            "border-block-end-width",
+            ""
+          ],
+          [
+            "border-block-end-style",
+            ""
+          ],
+          [
+            "border-block-end-color",
+            ""
+          ]
+        ]
+      }
+    },
+    "webkitBorderBefore": {
+      "initial": {
+        "text": "border-block-start: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "border-block-start-width",
+            "initial"
+          ],
+          [
+            "border-block-start-style",
+            "initial"
+          ],
+          [
+            "border-block-start-color",
+            "initial"
+          ]
+        ]
+      },
+      "inherit": {
+        "text": "border-block-start: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "border-block-start-width",
+            "inherit"
+          ],
+          [
+            "border-block-start-style",
+            "inherit"
+          ],
+          [
+            "border-block-start-color",
+            "inherit"
+          ]
+        ]
+      },
+      "none": {
+        "text": "border-block-start: none;",
+        "value": "none",
+        "components": [
+          [
+            "border-block-start-width",
+            "initial"
+          ],
+          [
+            "border-block-start-style",
+            "none"
+          ],
+          [
+            "border-block-start-color",
+            "initial"
+          ]
+        ]
+      },
+      "auto": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "1px solid red": {
+        "text": "border-block-start: 1px solid red;",
+        "value": "1px solid red",
+        "components": [
+          [
+            "border-block-start-width",
+            "1px"
+          ],
+          [
+            "border-block-start-style",
+            "solid"
+          ],
+          [
+            "border-block-start-color",
+            "red"
+          ]
+        ]
+      },
+      "1 0 auto": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "row wrap": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "opacity 1s ease": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "slide 2s linear": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "2px": {
+        "text": "border-block-start: 2px;",
+        "value": "2px",
+        "components": [
+          [
+            "border-block-start-width",
+            "2px"
+          ],
+          [
+            "border-block-start-style",
+            "initial"
+          ],
+          [
+            "border-block-start-color",
+            "initial"
+          ]
+        ]
+      },
+      "2px 4px": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "red": {
+        "text": "border-block-start: red;",
+        "value": "red",
+        "components": [
+          [
+            "border-block-start-width",
+            "initial"
+          ],
+          [
+            "border-block-start-style",
+            "initial"
+          ],
+          [
+            "border-block-start-color",
+            "red"
+          ]
+        ]
+      },
+      "circle": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "var(--value)": {
+        "text": "border-block-start: var(--value);",
+        "value": "var(--value)",
+        "components": [
+          [
+            "border-block-start-width",
+            ""
+          ],
+          [
+            "border-block-start-style",
+            ""
+          ],
+          [
+            "border-block-start-color",
+            ""
+          ]
+        ]
+      }
+    },
+    "webkitBorderEnd": {
+      "initial": {
+        "text": "border-inline-end: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "border-inline-end-width",
+            "initial"
+          ],
+          [
+            "border-inline-end-style",
+            "initial"
+          ],
+          [
+            "border-inline-end-color",
+            "initial"
+          ]
+        ]
+      },
+      "inherit": {
+        "text": "border-inline-end: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "border-inline-end-width",
+            "inherit"
+          ],
+          [
+            "border-inline-end-style",
+            "inherit"
+          ],
+          [
+            "border-inline-end-color",
+            "inherit"
+          ]
+        ]
+      },
+      "none": {
+        "text": "border-inline-end: none;",
+        "value": "none",
+        "components": [
+          [
+            "border-inline-end-width",
+            "initial"
+          ],
+          [
+            "border-inline-end-style",
+            "none"
+          ],
+          [
+            "border-inline-end-color",
+            "initial"
+          ]
+        ]
+      },
+      "auto": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "1px solid red": {
+        "text": "border-inline-end: 1px solid red;",
+        "value": "1px solid red",
+        "components": [
+          [
+            "border-inline-end-width",
+            "1px"
+          ],
+          [
+            "border-inline-end-style",
+            "solid"
+          ],
+          [
+            "border-inline-end-color",
+            "red"
+          ]
+        ]
+      },
+      "1 0 auto": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "row wrap": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "opacity 1s ease": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "slide 2s linear": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "2px": {
+        "text": "border-inline-end: 2px;",
+        "value": "2px",
+        "components": [
+          [
+            "border-inline-end-width",
+            "2px"
+          ],
+          [
+            "border-inline-end-style",
+            "initial"
+          ],
+          [
+            "border-inline-end-color",
+            "initial"
+          ]
+        ]
+      },
+      "2px 4px": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "red": {
+        "text": "border-inline-end: red;",
+        "value": "red",
+        "components": [
+          [
+            "border-inline-end-width",
+            "initial"
+          ],
+          [
+            "border-inline-end-style",
+            "initial"
+          ],
+          [
+            "border-inline-end-color",
+            "red"
+          ]
+        ]
+      },
+      "circle": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "var(--value)": {
+        "text": "border-inline-end: var(--value);",
+        "value": "var(--value)",
+        "components": [
+          [
+            "border-inline-end-width",
+            ""
+          ],
+          [
+            "border-inline-end-style",
+            ""
+          ],
+          [
+            "border-inline-end-color",
+            ""
+          ]
+        ]
+      }
+    },
+    "webkitBorderRadius": {
+      "initial": {
+        "text": "border-radius: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "border-top-left-radius",
+            "initial"
+          ],
+          [
+            "border-top-right-radius",
+            "initial"
+          ],
+          [
+            "border-bottom-right-radius",
+            "initial"
+          ],
+          [
+            "border-bottom-left-radius",
+            "initial"
+          ]
+        ]
+      },
+      "inherit": {
+        "text": "border-radius: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "border-top-left-radius",
+            "inherit"
+          ],
+          [
+            "border-top-right-radius",
+            "inherit"
+          ],
+          [
+            "border-bottom-right-radius",
+            "inherit"
+          ],
+          [
+            "border-bottom-left-radius",
+            "inherit"
+          ]
+        ]
+      },
+      "none": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "auto": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "1px solid red": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "1 0 auto": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "row wrap": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "opacity 1s ease": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "slide 2s linear": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "2px": {
+        "text": "border-radius: 2px;",
+        "value": "2px",
+        "components": [
+          [
+            "border-top-left-radius",
+            "2px"
+          ],
+          [
+            "border-top-right-radius",
+            "2px"
+          ],
+          [
+            "border-bottom-right-radius",
+            "2px"
+          ],
+          [
+            "border-bottom-left-radius",
+            "2px"
+          ]
+        ]
+      },
+      "2px 4px": {
+        "text": "border-radius: 2px / 4px;",
+        "value": "2px / 4px",
+        "components": [
+          [
+            "border-top-left-radius",
+            "2px 4px"
+          ],
+          [
+            "border-top-right-radius",
+            "2px 4px"
+          ],
+          [
+            "border-bottom-right-radius",
+            "2px 4px"
+          ],
+          [
+            "border-bottom-left-radius",
+            "2px 4px"
+          ]
+        ]
+      },
+      "red": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "circle": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "var(--value)": {
+        "text": "border-radius: var(--value);",
+        "value": "var(--value)",
+        "components": [
+          [
+            "border-top-left-radius",
+            ""
+          ],
+          [
+            "border-top-right-radius",
+            ""
+          ],
+          [
+            "border-bottom-right-radius",
+            ""
+          ],
+          [
+            "border-bottom-left-radius",
+            ""
+          ]
+        ]
+      }
+    },
+    "webkitBorderStart": {
+      "initial": {
+        "text": "border-inline-start: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "border-inline-start-width",
+            "initial"
+          ],
+          [
+            "border-inline-start-style",
+            "initial"
+          ],
+          [
+            "border-inline-start-color",
+            "initial"
+          ]
+        ]
+      },
+      "inherit": {
+        "text": "border-inline-start: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "border-inline-start-width",
+            "inherit"
+          ],
+          [
+            "border-inline-start-style",
+            "inherit"
+          ],
+          [
+            "border-inline-start-color",
+            "inherit"
+          ]
+        ]
+      },
+      "none": {
+        "text": "border-inline-start: none;",
+        "value": "none",
+        "components": [
+          [
+            "border-inline-start-width",
+            "initial"
+          ],
+          [
+            "border-inline-start-style",
+            "none"
+          ],
+          [
+            "border-inline-start-color",
+            "initial"
+          ]
+        ]
+      },
+      "auto": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "1px solid red": {
+        "text": "border-inline-start: 1px solid red;",
+        "value": "1px solid red",
+        "components": [
+          [
+            "border-inline-start-width",
+            "1px"
+          ],
+          [
+            "border-inline-start-style",
+            "solid"
+          ],
+          [
+            "border-inline-start-color",
+            "red"
+          ]
+        ]
+      },
+      "1 0 auto": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "row wrap": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "opacity 1s ease": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "slide 2s linear": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "2px": {
+        "text": "border-inline-start: 2px;",
+        "value": "2px",
+        "components": [
+          [
+            "border-inline-start-width",
+            "2px"
+          ],
+          [
+            "border-inline-start-style",
+            "initial"
+          ],
+          [
+            "border-inline-start-color",
+            "initial"
+          ]
+        ]
+      },
+      "2px 4px": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "red": {
+        "text": "border-inline-start: red;",
+        "value": "red",
+        "components": [
+          [
+            "border-inline-start-width",
+            "initial"
+          ],
+          [
+            "border-inline-start-style",
+            "initial"
+          ],
+          [
+            "border-inline-start-color",
+            "red"
+          ]
+        ]
+      },
+      "circle": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "var(--value)": {
+        "text": "border-inline-start: var(--value);",
+        "value": "var(--value)",
+        "components": [
+          [
+            "border-inline-start-width",
+            ""
+          ],
+          [
+            "border-inline-start-style",
+            ""
+          ],
+          [
+            "border-inline-start-color",
+            ""
+          ]
+        ]
+      }
+    },
+    "webkitColumnRule": {
+      "initial": {
+        "text": "column-rule: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "column-rule-width",
+            "initial"
+          ],
+          [
+            "column-rule-style",
+            "initial"
+          ],
+          [
+            "column-rule-color",
+            "initial"
+          ]
+        ]
+      },
+      "inherit": {
+        "text": "column-rule: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "column-rule-width",
+            "inherit"
+          ],
+          [
+            "column-rule-style",
+            "inherit"
+          ],
+          [
+            "column-rule-color",
+            "inherit"
+          ]
+        ]
+      },
+      "none": {
+        "text": "column-rule: medium;",
+        "value": "medium",
+        "components": [
+          [
+            "column-rule-width",
+            "medium"
+          ],
+          [
+            "column-rule-style",
+            "none"
+          ],
+          [
+            "column-rule-color",
+            "currentcolor"
+          ]
+        ]
+      },
+      "auto": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "1px solid red": {
+        "text": "column-rule: 1px solid red;",
+        "value": "1px solid red",
+        "components": [
+          [
+            "column-rule-width",
+            "1px"
+          ],
+          [
+            "column-rule-style",
+            "solid"
+          ],
+          [
+            "column-rule-color",
+            "red"
+          ]
+        ]
+      },
+      "1 0 auto": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "row wrap": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "opacity 1s ease": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "slide 2s linear": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "2px": {
+        "text": "column-rule: 2px;",
+        "value": "2px",
+        "components": [
+          [
+            "column-rule-width",
+            "2px"
+          ],
+          [
+            "column-rule-style",
+            "none"
+          ],
+          [
+            "column-rule-color",
+            "currentcolor"
+          ]
+        ]
+      },
+      "2px 4px": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "red": {
+        "text": "column-rule: red;",
+        "value": "red",
+        "components": [
+          [
+            "column-rule-width",
+            "medium"
+          ],
+          [
+            "column-rule-style",
+            "none"
+          ],
+          [
+            "column-rule-color",
+            "red"
+          ]
+        ]
+      },
+      "circle": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "var(--value)": {
+        "text": "column-rule: var(--value);",
+        "value": "var(--value)",
+        "components": [
+          [
+            "column-rule-width",
+            ""
+          ],
+          [
+            "column-rule-style",
+            ""
+          ],
+          [
+            "column-rule-color",
+            ""
+          ]
+        ]
+      }
+    },
+    "webkitColumns": {
+      "initial": {
+        "text": "columns: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "column-width",
+            "initial"
+          ],
+          [
+            "column-count",
+            "initial"
+          ],
+          [
+            "column-height",
+            "initial"
+          ],
+          [
+            "column-wrap",
+            "initial"
+          ]
+        ]
+      },
+      "inherit": {
+        "text": "columns: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "column-width",
+            "inherit"
+          ],
+          [
+            "column-count",
+            "inherit"
+          ],
+          [
+            "column-height",
+            "inherit"
+          ],
+          [
+            "column-wrap",
+            "inherit"
+          ]
+        ]
+      },
+      "none": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "auto": {
+        "text": "columns: auto;",
+        "value": "auto",
+        "components": [
+          [
+            "column-width",
+            "auto"
+          ],
+          [
+            "column-count",
+            "auto"
+          ],
+          [
+            "column-height",
+            "auto"
+          ],
+          [
+            "column-wrap",
+            "auto"
+          ]
+        ]
+      },
+      "1px solid red": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "1 0 auto": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "row wrap": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "opacity 1s ease": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "slide 2s linear": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "2px": {
+        "text": "columns: 2px;",
+        "value": "2px",
+        "components": [
+          [
+            "column-width",
+            "2px"
+          ],
+          [
+            "column-count",
+            "auto"
+          ],
+          [
+            "column-height",
+            "auto"
+          ],
+          [
+            "column-wrap",
+            "auto"
+          ]
+        ]
+      },
+      "2px 4px": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "red": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "circle": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "var(--value)": {
+        "text": "columns: var(--value);",
+        "value": "var(--value)",
+        "components": [
+          [
+            "column-width",
+            ""
+          ],
+          [
+            "column-count",
+            ""
+          ],
+          [
+            "column-height",
+            ""
+          ],
+          [
+            "column-wrap",
+            ""
+          ]
+        ]
+      }
+    },
+    "webkitFlex": {
+      "initial": {
+        "text": "flex: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "flex-grow",
+            "initial"
+          ],
+          [
+            "flex-shrink",
+            "initial"
+          ],
+          [
+            "flex-basis",
+            "initial"
+          ]
+        ]
+      },
+      "inherit": {
+        "text": "flex: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "flex-grow",
+            "inherit"
+          ],
+          [
+            "flex-shrink",
+            "inherit"
+          ],
+          [
+            "flex-basis",
+            "inherit"
+          ]
+        ]
+      },
+      "none": {
+        "text": "flex: 0 0 auto;",
+        "value": "0 0 auto",
+        "components": [
+          [
+            "flex-grow",
+            "0"
+          ],
+          [
+            "flex-shrink",
+            "0"
+          ],
+          [
+            "flex-basis",
+            "auto"
+          ]
+        ]
+      },
+      "auto": {
+        "text": "flex: 1 1 auto;",
+        "value": "1 1 auto",
+        "components": [
+          [
+            "flex-grow",
+            "1"
+          ],
+          [
+            "flex-shrink",
+            "1"
+          ],
+          [
+            "flex-basis",
+            "auto"
+          ]
+        ]
+      },
+      "1px solid red": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "1 0 auto": {
+        "text": "flex: 1 0 auto;",
+        "value": "1 0 auto",
+        "components": [
+          [
+            "flex-grow",
+            "1"
+          ],
+          [
+            "flex-shrink",
+            "0"
+          ],
+          [
+            "flex-basis",
+            "auto"
+          ]
+        ]
+      },
+      "row wrap": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "opacity 1s ease": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "slide 2s linear": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "2px": {
+        "text": "flex: 1 1 2px;",
+        "value": "1 1 2px",
+        "components": [
+          [
+            "flex-grow",
+            "1"
+          ],
+          [
+            "flex-shrink",
+            "1"
+          ],
+          [
+            "flex-basis",
+            "2px"
+          ]
+        ]
+      },
+      "2px 4px": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "red": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "circle": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "var(--value)": {
+        "text": "flex: var(--value);",
+        "value": "var(--value)",
+        "components": [
+          [
+            "flex-grow",
+            ""
+          ],
+          [
+            "flex-shrink",
+            ""
+          ],
+          [
+            "flex-basis",
+            ""
+          ]
+        ]
+      }
+    },
+    "webkitFlexFlow": {
+      "initial": {
+        "text": "flex-flow: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "flex-direction",
+            "initial"
+          ],
+          [
+            "flex-wrap",
+            "initial"
+          ]
+        ]
+      },
+      "inherit": {
+        "text": "flex-flow: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "flex-direction",
+            "inherit"
+          ],
+          [
+            "flex-wrap",
+            "inherit"
+          ]
+        ]
+      },
+      "none": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "auto": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "1px solid red": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "1 0 auto": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "row wrap": {
+        "text": "flex-flow: wrap;",
+        "value": "wrap",
+        "components": [
+          [
+            "flex-direction",
+            "row"
+          ],
+          [
+            "flex-wrap",
+            "wrap"
+          ]
+        ]
+      },
+      "opacity 1s ease": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "slide 2s linear": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "2px": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "2px 4px": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "red": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "circle": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "var(--value)": {
+        "text": "flex-flow: var(--value);",
+        "value": "var(--value)",
+        "components": [
+          [
+            "flex-direction",
+            ""
+          ],
+          [
+            "flex-wrap",
+            ""
+          ]
+        ]
+      }
+    },
+    "webkitMask": {
+      "initial": {
+        "text": "mask: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "mask-image",
+            "initial"
+          ],
+          [
+            "-webkit-mask-position-x",
+            "initial"
+          ],
+          [
+            "-webkit-mask-position-y",
+            "initial"
+          ],
+          [
+            "mask-size",
+            "initial"
+          ],
+          [
+            "mask-repeat",
+            "initial"
+          ],
+          [
+            "mask-origin",
+            "initial"
+          ],
+          [
+            "mask-clip",
+            "initial"
+          ],
+          [
+            "mask-composite",
+            "initial"
+          ],
+          [
+            "mask-mode",
+            "initial"
+          ]
+        ]
+      },
+      "inherit": {
+        "text": "mask: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "mask-image",
+            "inherit"
+          ],
+          [
+            "-webkit-mask-position-x",
+            "inherit"
+          ],
+          [
+            "-webkit-mask-position-y",
+            "inherit"
+          ],
+          [
+            "mask-size",
+            "inherit"
+          ],
+          [
+            "mask-repeat",
+            "inherit"
+          ],
+          [
+            "mask-origin",
+            "inherit"
+          ],
+          [
+            "mask-clip",
+            "inherit"
+          ],
+          [
+            "mask-composite",
+            "inherit"
+          ],
+          [
+            "mask-mode",
+            "inherit"
+          ]
+        ]
+      },
+      "none": {
+        "text": "mask: none;",
+        "value": "none",
+        "components": [
+          [
+            "mask-image",
+            "none"
+          ],
+          [
+            "-webkit-mask-position-x",
+            "0%"
+          ],
+          [
+            "-webkit-mask-position-y",
+            "0%"
+          ],
+          [
+            "mask-size",
+            "auto"
+          ],
+          [
+            "mask-repeat",
+            "repeat"
+          ],
+          [
+            "mask-origin",
+            "border-box"
+          ],
+          [
+            "mask-clip",
+            "border-box"
+          ],
+          [
+            "mask-composite",
+            "add"
+          ],
+          [
+            "mask-mode",
+            "match-source"
+          ]
+        ]
+      },
+      "auto": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "1px solid red": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "1 0 auto": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "row wrap": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "opacity 1s ease": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "slide 2s linear": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "2px": {
+        "text": "mask: 2px center;",
+        "value": "2px center",
+        "components": [
+          [
+            "mask-image",
+            "initial"
+          ],
+          [
+            "-webkit-mask-position-x",
+            "2px"
+          ],
+          [
+            "-webkit-mask-position-y",
+            "center"
+          ],
+          [
+            "mask-size",
+            "auto"
+          ],
+          [
+            "mask-repeat",
+            "repeat"
+          ],
+          [
+            "mask-origin",
+            "border-box"
+          ],
+          [
+            "mask-clip",
+            "border-box"
+          ],
+          [
+            "mask-composite",
+            "add"
+          ],
+          [
+            "mask-mode",
+            "match-source"
+          ]
+        ]
+      },
+      "2px 4px": {
+        "text": "mask: 2px 4px;",
+        "value": "2px 4px",
+        "components": [
+          [
+            "mask-image",
+            "initial"
+          ],
+          [
+            "-webkit-mask-position-x",
+            "2px"
+          ],
+          [
+            "-webkit-mask-position-y",
+            "4px"
+          ],
+          [
+            "mask-size",
+            "auto"
+          ],
+          [
+            "mask-repeat",
+            "repeat"
+          ],
+          [
+            "mask-origin",
+            "border-box"
+          ],
+          [
+            "mask-clip",
+            "border-box"
+          ],
+          [
+            "mask-composite",
+            "add"
+          ],
+          [
+            "mask-mode",
+            "match-source"
+          ]
+        ]
+      },
+      "red": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "circle": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "var(--value)": {
+        "text": "mask: var(--value);",
+        "value": "var(--value)",
+        "components": [
+          [
+            "mask-image",
+            ""
+          ],
+          [
+            "-webkit-mask-position-x",
+            ""
+          ],
+          [
+            "-webkit-mask-position-y",
+            ""
+          ],
+          [
+            "mask-size",
+            ""
+          ],
+          [
+            "mask-repeat",
+            ""
+          ],
+          [
+            "mask-origin",
+            ""
+          ],
+          [
+            "mask-clip",
+            ""
+          ],
+          [
+            "mask-composite",
+            ""
+          ],
+          [
+            "mask-mode",
+            ""
+          ]
+        ]
+      }
+    },
+    "webkitMaskBoxImage": {
+      "initial": {
+        "text": "-webkit-mask-box-image: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "-webkit-mask-box-image-source",
+            "initial"
+          ],
+          [
+            "-webkit-mask-box-image-slice",
+            "initial"
+          ],
+          [
+            "-webkit-mask-box-image-width",
+            "initial"
+          ],
+          [
+            "-webkit-mask-box-image-outset",
+            "initial"
+          ],
+          [
+            "-webkit-mask-box-image-repeat",
+            "initial"
+          ]
+        ]
+      },
+      "inherit": {
+        "text": "-webkit-mask-box-image: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "-webkit-mask-box-image-source",
+            "inherit"
+          ],
+          [
+            "-webkit-mask-box-image-slice",
+            "inherit"
+          ],
+          [
+            "-webkit-mask-box-image-width",
+            "inherit"
+          ],
+          [
+            "-webkit-mask-box-image-outset",
+            "inherit"
+          ],
+          [
+            "-webkit-mask-box-image-repeat",
+            "inherit"
+          ]
+        ]
+      },
+      "none": {
+        "text": "-webkit-mask-box-image-source: none; -webkit-mask-box-image-slice: initial; -webkit-mask-box-image-width: initial; -webkit-mask-box-image-outset: initial; -webkit-mask-box-image-repeat: initial;",
+        "value": "",
+        "components": [
+          [
+            "-webkit-mask-box-image-source",
+            "none"
+          ],
+          [
+            "-webkit-mask-box-image-slice",
+            "initial"
+          ],
+          [
+            "-webkit-mask-box-image-width",
+            "initial"
+          ],
+          [
+            "-webkit-mask-box-image-outset",
+            "initial"
+          ],
+          [
+            "-webkit-mask-box-image-repeat",
+            "initial"
+          ]
+        ]
+      },
+      "auto": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "1px solid red": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "1 0 auto": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "row wrap": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "opacity 1s ease": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "slide 2s linear": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "2px": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "2px 4px": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "red": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "circle": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "var(--value)": {
+        "text": "-webkit-mask-box-image: var(--value);",
+        "value": "var(--value)",
+        "components": [
+          [
+            "-webkit-mask-box-image-source",
+            ""
+          ],
+          [
+            "-webkit-mask-box-image-slice",
+            ""
+          ],
+          [
+            "-webkit-mask-box-image-width",
+            ""
+          ],
+          [
+            "-webkit-mask-box-image-outset",
+            ""
+          ],
+          [
+            "-webkit-mask-box-image-repeat",
+            ""
+          ]
+        ]
+      }
+    },
+    "webkitMaskPosition": {
+      "initial": {
+        "text": "mask-position: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "-webkit-mask-position-x",
+            "initial"
+          ],
+          [
+            "-webkit-mask-position-y",
+            "initial"
+          ]
+        ]
+      },
+      "inherit": {
+        "text": "mask-position: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "-webkit-mask-position-x",
+            "inherit"
+          ],
+          [
+            "-webkit-mask-position-y",
+            "inherit"
+          ]
+        ]
+      },
+      "none": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "auto": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "1px solid red": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "1 0 auto": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "row wrap": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "opacity 1s ease": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "slide 2s linear": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "2px": {
+        "text": "mask-position: 2px center;",
+        "value": "2px center",
+        "components": [
+          [
+            "-webkit-mask-position-x",
+            "2px"
+          ],
+          [
+            "-webkit-mask-position-y",
+            "center"
+          ]
+        ]
+      },
+      "2px 4px": {
+        "text": "mask-position: 2px 4px;",
+        "value": "2px 4px",
+        "components": [
+          [
+            "-webkit-mask-position-x",
+            "2px"
+          ],
+          [
+            "-webkit-mask-position-y",
+            "4px"
+          ]
+        ]
+      },
+      "red": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "circle": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "var(--value)": {
+        "text": "mask-position: var(--value);",
+        "value": "var(--value)",
+        "components": [
+          [
+            "-webkit-mask-position-x",
+            ""
+          ],
+          [
+            "-webkit-mask-position-y",
+            ""
+          ]
+        ]
+      }
+    },
+    "webkitTextEmphasis": {
+      "initial": {
+        "text": "text-emphasis: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "text-emphasis-style",
+            "initial"
+          ],
+          [
+            "text-emphasis-color",
+            "initial"
+          ]
+        ]
+      },
+      "inherit": {
+        "text": "text-emphasis: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "text-emphasis-style",
+            "inherit"
+          ],
+          [
+            "text-emphasis-color",
+            "inherit"
+          ]
+        ]
+      },
+      "none": {
+        "text": "text-emphasis: none;",
+        "value": "none",
+        "components": [
+          [
+            "text-emphasis-style",
+            "none"
+          ],
+          [
+            "text-emphasis-color",
+            "initial"
+          ]
+        ]
+      },
+      "auto": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "1px solid red": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "1 0 auto": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "row wrap": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "opacity 1s ease": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "slide 2s linear": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "2px": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "2px 4px": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "red": {
+        "text": "text-emphasis: red;",
+        "value": "red",
+        "components": [
+          [
+            "text-emphasis-style",
+            "initial"
+          ],
+          [
+            "text-emphasis-color",
+            "red"
+          ]
+        ]
+      },
+      "circle": {
+        "text": "text-emphasis: circle;",
+        "value": "circle",
+        "components": [
+          [
+            "text-emphasis-style",
+            "circle"
+          ],
+          [
+            "text-emphasis-color",
+            "initial"
+          ]
+        ]
+      },
+      "var(--value)": {
+        "text": "text-emphasis: var(--value);",
+        "value": "var(--value)",
+        "components": [
+          [
+            "text-emphasis-style",
+            ""
+          ],
+          [
+            "text-emphasis-color",
+            ""
+          ]
+        ]
+      }
+    },
+    "webkitTextStroke": {
+      "initial": {
+        "text": "-webkit-text-stroke: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "-webkit-text-stroke-width",
+            "initial"
+          ],
+          [
+            "-webkit-text-stroke-color",
+            "initial"
+          ]
+        ]
+      },
+      "inherit": {
+        "text": "-webkit-text-stroke: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "-webkit-text-stroke-width",
+            "inherit"
+          ],
+          [
+            "-webkit-text-stroke-color",
+            "inherit"
+          ]
+        ]
+      },
+      "none": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "auto": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "1px solid red": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "1 0 auto": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "row wrap": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "opacity 1s ease": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "slide 2s linear": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "2px": {
+        "text": "-webkit-text-stroke: 2px;",
+        "value": "2px",
+        "components": [
+          [
+            "-webkit-text-stroke-width",
+            "2px"
+          ],
+          [
+            "-webkit-text-stroke-color",
+            "initial"
+          ]
+        ]
+      },
+      "2px 4px": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "red": {
+        "text": "-webkit-text-stroke: red;",
+        "value": "red",
+        "components": [
+          [
+            "-webkit-text-stroke-width",
+            "initial"
+          ],
+          [
+            "-webkit-text-stroke-color",
+            "red"
+          ]
+        ]
+      },
+      "circle": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "var(--value)": {
+        "text": "-webkit-text-stroke: var(--value);",
+        "value": "var(--value)",
+        "components": [
+          [
+            "-webkit-text-stroke-width",
+            ""
+          ],
+          [
+            "-webkit-text-stroke-color",
+            ""
+          ]
+        ]
+      }
+    },
+    "webkitTransition": {
+      "initial": {
+        "text": "transition: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "transition-property",
+            "initial"
+          ],
+          [
+            "transition-duration",
+            "initial"
+          ],
+          [
+            "transition-timing-function",
+            "initial"
+          ],
+          [
+            "transition-delay",
+            "initial"
+          ],
+          [
+            "transition-behavior",
+            "initial"
+          ]
+        ]
+      },
+      "inherit": {
+        "text": "transition: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "transition-property",
+            "inherit"
+          ],
+          [
+            "transition-duration",
+            "inherit"
+          ],
+          [
+            "transition-timing-function",
+            "inherit"
+          ],
+          [
+            "transition-delay",
+            "inherit"
+          ],
+          [
+            "transition-behavior",
+            "inherit"
+          ]
+        ]
+      },
+      "none": {
+        "text": "transition: none;",
+        "value": "none",
+        "components": [
+          [
+            "transition-behavior",
+            "normal"
+          ],
+          [
+            "transition-duration",
+            "0s"
+          ],
+          [
+            "transition-timing-function",
+            "ease"
+          ],
+          [
+            "transition-delay",
+            "0s"
+          ],
+          [
+            "transition-property",
+            "none"
+          ]
+        ]
+      },
+      "auto": {
+        "text": "transition: auto;",
+        "value": "auto",
+        "components": [
+          [
+            "transition-behavior",
+            "normal"
+          ],
+          [
+            "transition-duration",
+            "0s"
+          ],
+          [
+            "transition-timing-function",
+            "ease"
+          ],
+          [
+            "transition-delay",
+            "0s"
+          ],
+          [
+            "transition-property",
+            "auto"
+          ]
+        ]
+      },
+      "1px solid red": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "1 0 auto": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "row wrap": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "opacity 1s ease": {
+        "text": "transition: opacity 1s;",
+        "value": "opacity 1s",
+        "components": [
+          [
+            "transition-behavior",
+            "normal"
+          ],
+          [
+            "transition-duration",
+            "1s"
+          ],
+          [
+            "transition-timing-function",
+            "ease"
+          ],
+          [
+            "transition-delay",
+            "0s"
+          ],
+          [
+            "transition-property",
+            "opacity"
+          ]
+        ]
+      },
+      "slide 2s linear": {
+        "text": "transition: slide 2s linear;",
+        "value": "slide 2s linear",
+        "components": [
+          [
+            "transition-behavior",
+            "normal"
+          ],
+          [
+            "transition-duration",
+            "2s"
+          ],
+          [
+            "transition-timing-function",
+            "linear"
+          ],
+          [
+            "transition-delay",
+            "0s"
+          ],
+          [
+            "transition-property",
+            "slide"
+          ]
+        ]
+      },
+      "2px": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "2px 4px": {
+        "text": "",
+        "value": "",
+        "components": []
+      },
+      "red": {
+        "text": "transition: red;",
+        "value": "red",
+        "components": [
+          [
+            "transition-behavior",
+            "normal"
+          ],
+          [
+            "transition-duration",
+            "0s"
+          ],
+          [
+            "transition-timing-function",
+            "ease"
+          ],
+          [
+            "transition-delay",
+            "0s"
+          ],
+          [
+            "transition-property",
+            "red"
+          ]
+        ]
+      },
+      "circle": {
+        "text": "transition: circle;",
+        "value": "circle",
+        "components": [
+          [
+            "transition-behavior",
+            "normal"
+          ],
+          [
+            "transition-duration",
+            "0s"
+          ],
+          [
+            "transition-timing-function",
+            "ease"
+          ],
+          [
+            "transition-delay",
+            "0s"
+          ],
+          [
+            "transition-property",
+            "circle"
+          ]
+        ]
+      },
+      "var(--value)": {
+        "text": "transition: var(--value);",
+        "value": "var(--value)",
+        "components": [
+          [
+            "transition-property",
+            ""
+          ],
+          [
+            "transition-duration",
+            ""
+          ],
+          [
+            "transition-timing-function",
+            ""
+          ],
+          [
+            "transition-delay",
+            ""
+          ],
+          [
+            "transition-behavior",
+            ""
+          ]
+        ]
+      }
+    }
+  }
+}

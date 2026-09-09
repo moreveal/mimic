@@ -18,6 +18,15 @@ var handwrittenSurface string
 //go:embed native_functions.js
 var nativeFunctionsSurface string
 
+//go:embed webkit_css_names.js
+var webkitCSSNamesSurface string
+
+//go:embed webkit_css.js
+var webkitCSSSurface string
+
+//go:embed css_supports.js
+var cssSupportsSurface string
+
 //go:embed worker.js
 var handwrittenWorkerSurface string
 
@@ -181,11 +190,12 @@ func composeSurface(generated, exposureSource string) string {
 	// transfer primitive for its fallback path (engines without one copy bytes).
 	streamPrelude := `{let structuredClone;try{const input=new ArrayBuffer(1),clone=globalThis.structuredClone;if(typeof clone==='function'){const output=clone(input,{transfer:[input]});if(output instanceof ArrayBuffer&&output.byteLength===1&&input.byteLength===0)structuredClone=clone}}catch{}`
 	parts := []string{capabilitySurface, generated, "finalizeBindings();", exposureSource,
-		"installNavigatorCapabilities();", semanticFixups, strings.Replace(domCompatibilitySurface, "/* shared_abort_encoding */", abortEncodingSurface, 1),
+		"installNavigatorCapabilities();", cssSupportsSurface, semanticFixups, strings.Replace(domCompatibilitySurface, "/* shared_abort_encoding */", abortEncodingSurface, 1),
 		templatesCompatibilitySurface, selectorsVendorSurface, selectorsCompatibilitySurface, cssomCompatibilitySurface, streamPrelude,
 		streamsVendorSurface, "}", fetchCompatibilitySurface, formControlsSurface, traversalCompatibilitySurface, documentCompatibilitySurface, attributesCompatibilitySurface, eventsCompatibilitySurface, documentStreamSurface, shadowSerializationSurface, strings.Replace(canvasStateSurface, "/* shared_canvas_paths */", canvasPathObservationsSurface, 1), webglObservationsSource(), webgpuStateSurface, fontFacesSurface, offlineAudioSurface, marker}
 	base := strings.Replace(handwrittenSurface, "/* shared_fetch_primitives */", fetchPrimitivesSurface, 1)
 	base = strings.Replace(base, "/* shared_native_functions */", nativeFunctionsSurface, 1)
+	base = strings.Replace(base, "/* shared_webkit_css */", webkitCSSNamesSurface+webkitCSSSurface, 1)
 	base = strings.Replace(base, "/* shared_dom_matrix */", domMatrixSurface, 1)
 	return strings.Replace(base, marker, strings.Join(parts, "\n"), 1)
 }

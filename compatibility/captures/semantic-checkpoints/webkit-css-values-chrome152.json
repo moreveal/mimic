@@ -1,0 +1,5000 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/webkit_css_values_oracle.js",
+    "fixtureSHA256": "c5ce4687a374b850ced0907d8a278c1bf99f9acf6de529ec31255165d5bd83d0",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "appearance": {
+      "base": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "base-select": [
+        "appearance: base-select;",
+        "base-select",
+        true,
+        true
+      ],
+      "listbox": [
+        "appearance: listbox;",
+        "listbox",
+        true,
+        true
+      ],
+      "menulist": [
+        "appearance: menulist;",
+        "menulist",
+        true,
+        true
+      ],
+      "meter": [
+        "appearance: meter;",
+        "meter",
+        true,
+        true
+      ],
+      "progress-bar": [
+        "appearance: progress-bar;",
+        "progress-bar",
+        true,
+        true
+      ],
+      "square-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "justify": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "antialiased": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "subpixel-antialiased": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "economy": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "exact": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "visible": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "hidden": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "flat": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "preserve-3d": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "none": [
+        "appearance: none;",
+        "none",
+        true,
+        true
+      ],
+      "auto": [
+        "appearance: auto;",
+        "auto",
+        true,
+        true
+      ],
+      "initial": [
+        "appearance: initial;",
+        "initial",
+        true,
+        true
+      ],
+      "inherit": [
+        "appearance: inherit;",
+        "inherit",
+        true,
+        true
+      ],
+      "unset": [
+        "appearance: unset;",
+        "unset",
+        true,
+        true
+      ],
+      "revert": [
+        "appearance: revert;",
+        "revert",
+        true,
+        true
+      ],
+      "revert-layer": [
+        "appearance: revert-layer;",
+        "revert-layer",
+        true,
+        true
+      ],
+      "button": [
+        "appearance: button;",
+        "button",
+        true,
+        true
+      ],
+      "textfield": [
+        "appearance: textfield;",
+        "textfield",
+        true,
+        true
+      ],
+      "menulist-button": [
+        "appearance: menulist-button;",
+        "menulist-button",
+        true,
+        true
+      ],
+      "checkbox": [
+        "appearance: checkbox;",
+        "checkbox",
+        true,
+        true
+      ],
+      "radio": [
+        "appearance: radio;",
+        "radio",
+        true,
+        true
+      ],
+      "searchfield": [
+        "appearance: searchfield;",
+        "searchfield",
+        true,
+        true
+      ],
+      "textarea": [
+        "appearance: textarea;",
+        "textarea",
+        true,
+        true
+      ],
+      "push-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "slider-horizontal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "definitely-invalid": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "AUTO": [
+        "appearance: auto;",
+        "auto",
+        true,
+        true
+      ],
+      " auto ": [
+        "appearance: auto;",
+        "auto",
+        true,
+        true
+      ],
+      "var(--choice)": [
+        "appearance: var(--choice);",
+        "var(--choice)",
+        true,
+        true
+      ],
+      "stretch": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "start": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "end": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "center": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "baseline": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "horizontal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "vertical": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "inline-axis": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "block-axis": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "normal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "reverse": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-only": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-write": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-write-plaintext-only": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "element": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "text": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "all": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "contain": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "touch": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "manipulation": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "disc": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "circle": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "square": [
+        "",
+        "",
+        false,
+        false
+      ]
+    },
+    "-webkit-appearance": {
+      "base": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "base-select": [
+        "appearance: base-select;",
+        "base-select",
+        true,
+        true
+      ],
+      "listbox": [
+        "appearance: listbox;",
+        "listbox",
+        true,
+        true
+      ],
+      "menulist": [
+        "appearance: menulist;",
+        "menulist",
+        true,
+        true
+      ],
+      "meter": [
+        "appearance: meter;",
+        "meter",
+        true,
+        true
+      ],
+      "progress-bar": [
+        "appearance: progress-bar;",
+        "progress-bar",
+        true,
+        true
+      ],
+      "square-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "justify": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "antialiased": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "subpixel-antialiased": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "economy": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "exact": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "visible": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "hidden": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "flat": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "preserve-3d": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "none": [
+        "appearance: none;",
+        "none",
+        true,
+        true
+      ],
+      "auto": [
+        "appearance: auto;",
+        "auto",
+        true,
+        true
+      ],
+      "initial": [
+        "appearance: initial;",
+        "initial",
+        true,
+        true
+      ],
+      "inherit": [
+        "appearance: inherit;",
+        "inherit",
+        true,
+        true
+      ],
+      "unset": [
+        "appearance: unset;",
+        "unset",
+        true,
+        true
+      ],
+      "revert": [
+        "appearance: revert;",
+        "revert",
+        true,
+        true
+      ],
+      "revert-layer": [
+        "appearance: revert-layer;",
+        "revert-layer",
+        true,
+        true
+      ],
+      "button": [
+        "appearance: button;",
+        "button",
+        true,
+        true
+      ],
+      "textfield": [
+        "appearance: textfield;",
+        "textfield",
+        true,
+        true
+      ],
+      "menulist-button": [
+        "appearance: menulist-button;",
+        "menulist-button",
+        true,
+        true
+      ],
+      "checkbox": [
+        "appearance: checkbox;",
+        "checkbox",
+        true,
+        true
+      ],
+      "radio": [
+        "appearance: radio;",
+        "radio",
+        true,
+        true
+      ],
+      "searchfield": [
+        "appearance: searchfield;",
+        "searchfield",
+        true,
+        true
+      ],
+      "textarea": [
+        "appearance: textarea;",
+        "textarea",
+        true,
+        true
+      ],
+      "push-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "slider-horizontal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "definitely-invalid": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "AUTO": [
+        "appearance: auto;",
+        "auto",
+        true,
+        true
+      ],
+      " auto ": [
+        "appearance: auto;",
+        "auto",
+        true,
+        true
+      ],
+      "var(--choice)": [
+        "appearance: var(--choice);",
+        "var(--choice)",
+        true,
+        true
+      ],
+      "stretch": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "start": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "end": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "center": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "baseline": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "horizontal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "vertical": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "inline-axis": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "block-axis": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "normal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "reverse": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-only": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-write": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-write-plaintext-only": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "element": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "text": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "all": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "contain": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "touch": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "manipulation": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "disc": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "circle": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "square": [
+        "",
+        "",
+        false,
+        false
+      ]
+    },
+    "-webkit-user-select": {
+      "base": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "base-select": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "listbox": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "menulist": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "meter": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "progress-bar": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "square-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "justify": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "antialiased": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "subpixel-antialiased": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "economy": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "exact": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "visible": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "hidden": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "flat": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "preserve-3d": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "none": [
+        "user-select: none;",
+        "none",
+        true,
+        true
+      ],
+      "auto": [
+        "user-select: auto;",
+        "auto",
+        true,
+        true
+      ],
+      "initial": [
+        "user-select: initial;",
+        "initial",
+        true,
+        true
+      ],
+      "inherit": [
+        "user-select: inherit;",
+        "inherit",
+        true,
+        true
+      ],
+      "unset": [
+        "user-select: unset;",
+        "unset",
+        true,
+        true
+      ],
+      "revert": [
+        "user-select: revert;",
+        "revert",
+        true,
+        true
+      ],
+      "revert-layer": [
+        "user-select: revert-layer;",
+        "revert-layer",
+        true,
+        true
+      ],
+      "button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "textfield": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "menulist-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "checkbox": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "radio": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "searchfield": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "textarea": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "push-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "slider-horizontal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "definitely-invalid": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "AUTO": [
+        "user-select: auto;",
+        "auto",
+        true,
+        true
+      ],
+      " auto ": [
+        "user-select: auto;",
+        "auto",
+        true,
+        true
+      ],
+      "var(--choice)": [
+        "user-select: var(--choice);",
+        "var(--choice)",
+        true,
+        true
+      ],
+      "stretch": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "start": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "end": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "center": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "baseline": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "horizontal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "vertical": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "inline-axis": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "block-axis": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "normal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "reverse": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-only": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-write": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-write-plaintext-only": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "element": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "text": [
+        "user-select: text;",
+        "text",
+        true,
+        true
+      ],
+      "all": [
+        "user-select: all;",
+        "all",
+        true,
+        true
+      ],
+      "contain": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "touch": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "manipulation": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "disc": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "circle": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "square": [
+        "",
+        "",
+        false,
+        false
+      ]
+    },
+    "-webkit-user-drag": {
+      "base": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "base-select": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "listbox": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "menulist": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "meter": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "progress-bar": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "square-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "justify": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "antialiased": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "subpixel-antialiased": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "economy": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "exact": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "visible": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "hidden": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "flat": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "preserve-3d": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "none": [
+        "-webkit-user-drag: none;",
+        "none",
+        true,
+        true
+      ],
+      "auto": [
+        "-webkit-user-drag: auto;",
+        "auto",
+        true,
+        true
+      ],
+      "initial": [
+        "-webkit-user-drag: initial;",
+        "initial",
+        true,
+        true
+      ],
+      "inherit": [
+        "-webkit-user-drag: inherit;",
+        "inherit",
+        true,
+        true
+      ],
+      "unset": [
+        "-webkit-user-drag: unset;",
+        "unset",
+        true,
+        true
+      ],
+      "revert": [
+        "-webkit-user-drag: revert;",
+        "revert",
+        true,
+        true
+      ],
+      "revert-layer": [
+        "-webkit-user-drag: revert-layer;",
+        "revert-layer",
+        true,
+        true
+      ],
+      "button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "textfield": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "menulist-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "checkbox": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "radio": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "searchfield": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "textarea": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "push-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "slider-horizontal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "definitely-invalid": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "AUTO": [
+        "-webkit-user-drag: auto;",
+        "auto",
+        true,
+        true
+      ],
+      " auto ": [
+        "-webkit-user-drag: auto;",
+        "auto",
+        true,
+        true
+      ],
+      "var(--choice)": [
+        "-webkit-user-drag: var(--choice);",
+        "var(--choice)",
+        true,
+        true
+      ],
+      "stretch": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "start": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "end": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "center": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "baseline": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "horizontal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "vertical": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "inline-axis": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "block-axis": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "normal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "reverse": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-only": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-write": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-write-plaintext-only": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "element": [
+        "-webkit-user-drag: element;",
+        "element",
+        true,
+        true
+      ],
+      "text": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "all": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "contain": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "touch": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "manipulation": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "disc": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "circle": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "square": [
+        "",
+        "",
+        false,
+        false
+      ]
+    },
+    "-webkit-user-modify": {
+      "base": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "base-select": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "listbox": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "menulist": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "meter": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "progress-bar": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "square-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "justify": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "antialiased": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "subpixel-antialiased": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "economy": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "exact": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "visible": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "hidden": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "flat": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "preserve-3d": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "none": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "auto": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "initial": [
+        "-webkit-user-modify: initial;",
+        "initial",
+        true,
+        true
+      ],
+      "inherit": [
+        "-webkit-user-modify: inherit;",
+        "inherit",
+        true,
+        true
+      ],
+      "unset": [
+        "-webkit-user-modify: unset;",
+        "unset",
+        true,
+        true
+      ],
+      "revert": [
+        "-webkit-user-modify: revert;",
+        "revert",
+        true,
+        true
+      ],
+      "revert-layer": [
+        "-webkit-user-modify: revert-layer;",
+        "revert-layer",
+        true,
+        true
+      ],
+      "button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "textfield": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "menulist-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "checkbox": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "radio": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "searchfield": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "textarea": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "push-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "slider-horizontal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "definitely-invalid": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "AUTO": [
+        "",
+        "",
+        false,
+        false
+      ],
+      " auto ": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "var(--choice)": [
+        "-webkit-user-modify: var(--choice);",
+        "var(--choice)",
+        true,
+        true
+      ],
+      "stretch": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "start": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "end": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "center": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "baseline": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "horizontal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "vertical": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "inline-axis": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "block-axis": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "normal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "reverse": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-only": [
+        "-webkit-user-modify: read-only;",
+        "read-only",
+        true,
+        true
+      ],
+      "read-write": [
+        "-webkit-user-modify: read-write;",
+        "read-write",
+        true,
+        true
+      ],
+      "read-write-plaintext-only": [
+        "-webkit-user-modify: read-write-plaintext-only;",
+        "read-write-plaintext-only",
+        true,
+        true
+      ],
+      "element": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "text": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "all": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "contain": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "touch": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "manipulation": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "disc": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "circle": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "square": [
+        "",
+        "",
+        false,
+        false
+      ]
+    },
+    "-webkit-box-align": {
+      "base": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "base-select": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "listbox": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "menulist": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "meter": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "progress-bar": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "square-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "justify": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "antialiased": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "subpixel-antialiased": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "economy": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "exact": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "visible": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "hidden": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "flat": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "preserve-3d": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "none": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "auto": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "initial": [
+        "-webkit-box-align: initial;",
+        "initial",
+        true,
+        true
+      ],
+      "inherit": [
+        "-webkit-box-align: inherit;",
+        "inherit",
+        true,
+        true
+      ],
+      "unset": [
+        "-webkit-box-align: unset;",
+        "unset",
+        true,
+        true
+      ],
+      "revert": [
+        "-webkit-box-align: revert;",
+        "revert",
+        true,
+        true
+      ],
+      "revert-layer": [
+        "-webkit-box-align: revert-layer;",
+        "revert-layer",
+        true,
+        true
+      ],
+      "button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "textfield": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "menulist-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "checkbox": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "radio": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "searchfield": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "textarea": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "push-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "slider-horizontal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "definitely-invalid": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "AUTO": [
+        "",
+        "",
+        false,
+        false
+      ],
+      " auto ": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "var(--choice)": [
+        "-webkit-box-align: var(--choice);",
+        "var(--choice)",
+        true,
+        true
+      ],
+      "stretch": [
+        "-webkit-box-align: stretch;",
+        "stretch",
+        true,
+        true
+      ],
+      "start": [
+        "-webkit-box-align: start;",
+        "start",
+        true,
+        true
+      ],
+      "end": [
+        "-webkit-box-align: end;",
+        "end",
+        true,
+        true
+      ],
+      "center": [
+        "-webkit-box-align: center;",
+        "center",
+        true,
+        true
+      ],
+      "baseline": [
+        "-webkit-box-align: baseline;",
+        "baseline",
+        true,
+        true
+      ],
+      "horizontal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "vertical": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "inline-axis": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "block-axis": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "normal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "reverse": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-only": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-write": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-write-plaintext-only": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "element": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "text": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "all": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "contain": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "touch": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "manipulation": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "disc": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "circle": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "square": [
+        "",
+        "",
+        false,
+        false
+      ]
+    },
+    "-webkit-box-pack": {
+      "base": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "base-select": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "listbox": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "menulist": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "meter": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "progress-bar": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "square-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "justify": [
+        "-webkit-box-pack: justify;",
+        "justify",
+        true,
+        true
+      ],
+      "antialiased": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "subpixel-antialiased": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "economy": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "exact": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "visible": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "hidden": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "flat": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "preserve-3d": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "none": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "auto": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "initial": [
+        "-webkit-box-pack: initial;",
+        "initial",
+        true,
+        true
+      ],
+      "inherit": [
+        "-webkit-box-pack: inherit;",
+        "inherit",
+        true,
+        true
+      ],
+      "unset": [
+        "-webkit-box-pack: unset;",
+        "unset",
+        true,
+        true
+      ],
+      "revert": [
+        "-webkit-box-pack: revert;",
+        "revert",
+        true,
+        true
+      ],
+      "revert-layer": [
+        "-webkit-box-pack: revert-layer;",
+        "revert-layer",
+        true,
+        true
+      ],
+      "button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "textfield": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "menulist-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "checkbox": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "radio": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "searchfield": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "textarea": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "push-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "slider-horizontal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "definitely-invalid": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "AUTO": [
+        "",
+        "",
+        false,
+        false
+      ],
+      " auto ": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "var(--choice)": [
+        "-webkit-box-pack: var(--choice);",
+        "var(--choice)",
+        true,
+        true
+      ],
+      "stretch": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "start": [
+        "-webkit-box-pack: start;",
+        "start",
+        true,
+        true
+      ],
+      "end": [
+        "-webkit-box-pack: end;",
+        "end",
+        true,
+        true
+      ],
+      "center": [
+        "-webkit-box-pack: center;",
+        "center",
+        true,
+        true
+      ],
+      "baseline": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "horizontal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "vertical": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "inline-axis": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "block-axis": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "normal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "reverse": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-only": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-write": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-write-plaintext-only": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "element": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "text": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "all": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "contain": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "touch": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "manipulation": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "disc": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "circle": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "square": [
+        "",
+        "",
+        false,
+        false
+      ]
+    },
+    "-webkit-box-orient": {
+      "base": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "base-select": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "listbox": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "menulist": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "meter": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "progress-bar": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "square-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "justify": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "antialiased": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "subpixel-antialiased": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "economy": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "exact": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "visible": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "hidden": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "flat": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "preserve-3d": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "none": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "auto": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "initial": [
+        "-webkit-box-orient: initial;",
+        "initial",
+        true,
+        true
+      ],
+      "inherit": [
+        "-webkit-box-orient: inherit;",
+        "inherit",
+        true,
+        true
+      ],
+      "unset": [
+        "-webkit-box-orient: unset;",
+        "unset",
+        true,
+        true
+      ],
+      "revert": [
+        "-webkit-box-orient: revert;",
+        "revert",
+        true,
+        true
+      ],
+      "revert-layer": [
+        "-webkit-box-orient: revert-layer;",
+        "revert-layer",
+        true,
+        true
+      ],
+      "button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "textfield": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "menulist-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "checkbox": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "radio": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "searchfield": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "textarea": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "push-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "slider-horizontal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "definitely-invalid": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "AUTO": [
+        "",
+        "",
+        false,
+        false
+      ],
+      " auto ": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "var(--choice)": [
+        "-webkit-box-orient: var(--choice);",
+        "var(--choice)",
+        true,
+        true
+      ],
+      "stretch": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "start": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "end": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "center": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "baseline": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "horizontal": [
+        "-webkit-box-orient: horizontal;",
+        "horizontal",
+        true,
+        true
+      ],
+      "vertical": [
+        "-webkit-box-orient: vertical;",
+        "vertical",
+        true,
+        true
+      ],
+      "inline-axis": [
+        "-webkit-box-orient: inline-axis;",
+        "inline-axis",
+        true,
+        true
+      ],
+      "block-axis": [
+        "-webkit-box-orient: block-axis;",
+        "block-axis",
+        true,
+        true
+      ],
+      "normal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "reverse": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-only": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-write": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-write-plaintext-only": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "element": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "text": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "all": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "contain": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "touch": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "manipulation": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "disc": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "circle": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "square": [
+        "",
+        "",
+        false,
+        false
+      ]
+    },
+    "-webkit-box-direction": {
+      "base": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "base-select": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "listbox": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "menulist": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "meter": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "progress-bar": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "square-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "justify": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "antialiased": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "subpixel-antialiased": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "economy": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "exact": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "visible": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "hidden": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "flat": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "preserve-3d": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "none": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "auto": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "initial": [
+        "-webkit-box-direction: initial;",
+        "initial",
+        true,
+        true
+      ],
+      "inherit": [
+        "-webkit-box-direction: inherit;",
+        "inherit",
+        true,
+        true
+      ],
+      "unset": [
+        "-webkit-box-direction: unset;",
+        "unset",
+        true,
+        true
+      ],
+      "revert": [
+        "-webkit-box-direction: revert;",
+        "revert",
+        true,
+        true
+      ],
+      "revert-layer": [
+        "-webkit-box-direction: revert-layer;",
+        "revert-layer",
+        true,
+        true
+      ],
+      "button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "textfield": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "menulist-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "checkbox": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "radio": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "searchfield": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "textarea": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "push-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "slider-horizontal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "definitely-invalid": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "AUTO": [
+        "",
+        "",
+        false,
+        false
+      ],
+      " auto ": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "var(--choice)": [
+        "-webkit-box-direction: var(--choice);",
+        "var(--choice)",
+        true,
+        true
+      ],
+      "stretch": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "start": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "end": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "center": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "baseline": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "horizontal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "vertical": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "inline-axis": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "block-axis": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "normal": [
+        "-webkit-box-direction: normal;",
+        "normal",
+        true,
+        true
+      ],
+      "reverse": [
+        "-webkit-box-direction: reverse;",
+        "reverse",
+        true,
+        true
+      ],
+      "read-only": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-write": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-write-plaintext-only": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "element": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "text": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "all": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "contain": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "touch": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "manipulation": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "disc": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "circle": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "square": [
+        "",
+        "",
+        false,
+        false
+      ]
+    },
+    "-webkit-font-smoothing": {
+      "base": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "base-select": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "listbox": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "menulist": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "meter": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "progress-bar": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "square-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "justify": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "antialiased": [
+        "-webkit-font-smoothing: antialiased;",
+        "antialiased",
+        true,
+        true
+      ],
+      "subpixel-antialiased": [
+        "-webkit-font-smoothing: subpixel-antialiased;",
+        "subpixel-antialiased",
+        true,
+        true
+      ],
+      "economy": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "exact": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "visible": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "hidden": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "flat": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "preserve-3d": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "none": [
+        "-webkit-font-smoothing: none;",
+        "none",
+        true,
+        true
+      ],
+      "auto": [
+        "-webkit-font-smoothing: auto;",
+        "auto",
+        true,
+        true
+      ],
+      "initial": [
+        "-webkit-font-smoothing: initial;",
+        "initial",
+        true,
+        true
+      ],
+      "inherit": [
+        "-webkit-font-smoothing: inherit;",
+        "inherit",
+        true,
+        true
+      ],
+      "unset": [
+        "-webkit-font-smoothing: unset;",
+        "unset",
+        true,
+        true
+      ],
+      "revert": [
+        "-webkit-font-smoothing: revert;",
+        "revert",
+        true,
+        true
+      ],
+      "revert-layer": [
+        "-webkit-font-smoothing: revert-layer;",
+        "revert-layer",
+        true,
+        true
+      ],
+      "button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "textfield": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "menulist-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "checkbox": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "radio": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "searchfield": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "textarea": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "push-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "slider-horizontal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "definitely-invalid": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "AUTO": [
+        "-webkit-font-smoothing: auto;",
+        "auto",
+        true,
+        true
+      ],
+      " auto ": [
+        "-webkit-font-smoothing: auto;",
+        "auto",
+        true,
+        true
+      ],
+      "var(--choice)": [
+        "-webkit-font-smoothing: var(--choice);",
+        "var(--choice)",
+        true,
+        true
+      ],
+      "stretch": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "start": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "end": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "center": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "baseline": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "horizontal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "vertical": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "inline-axis": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "block-axis": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "normal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "reverse": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-only": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-write": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-write-plaintext-only": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "element": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "text": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "all": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "contain": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "touch": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "manipulation": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "disc": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "circle": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "square": [
+        "",
+        "",
+        false,
+        false
+      ]
+    },
+    "-webkit-text-security": {
+      "base": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "base-select": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "listbox": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "menulist": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "meter": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "progress-bar": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "square-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "justify": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "antialiased": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "subpixel-antialiased": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "economy": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "exact": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "visible": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "hidden": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "flat": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "preserve-3d": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "none": [
+        "-webkit-text-security: none;",
+        "none",
+        true,
+        true
+      ],
+      "auto": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "initial": [
+        "-webkit-text-security: initial;",
+        "initial",
+        true,
+        true
+      ],
+      "inherit": [
+        "-webkit-text-security: inherit;",
+        "inherit",
+        true,
+        true
+      ],
+      "unset": [
+        "-webkit-text-security: unset;",
+        "unset",
+        true,
+        true
+      ],
+      "revert": [
+        "-webkit-text-security: revert;",
+        "revert",
+        true,
+        true
+      ],
+      "revert-layer": [
+        "-webkit-text-security: revert-layer;",
+        "revert-layer",
+        true,
+        true
+      ],
+      "button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "textfield": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "menulist-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "checkbox": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "radio": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "searchfield": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "textarea": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "push-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "slider-horizontal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "definitely-invalid": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "AUTO": [
+        "",
+        "",
+        false,
+        false
+      ],
+      " auto ": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "var(--choice)": [
+        "-webkit-text-security: var(--choice);",
+        "var(--choice)",
+        true,
+        true
+      ],
+      "stretch": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "start": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "end": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "center": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "baseline": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "horizontal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "vertical": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "inline-axis": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "block-axis": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "normal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "reverse": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-only": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-write": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-write-plaintext-only": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "element": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "text": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "all": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "contain": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "touch": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "manipulation": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "disc": [
+        "-webkit-text-security: disc;",
+        "disc",
+        true,
+        true
+      ],
+      "circle": [
+        "-webkit-text-security: circle;",
+        "circle",
+        true,
+        true
+      ],
+      "square": [
+        "-webkit-text-security: square;",
+        "square",
+        true,
+        true
+      ]
+    },
+    "-webkit-print-color-adjust": {
+      "base": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "base-select": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "listbox": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "menulist": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "meter": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "progress-bar": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "square-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "justify": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "antialiased": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "subpixel-antialiased": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "economy": [
+        "print-color-adjust: economy;",
+        "economy",
+        true,
+        true
+      ],
+      "exact": [
+        "print-color-adjust: exact;",
+        "exact",
+        true,
+        true
+      ],
+      "visible": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "hidden": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "flat": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "preserve-3d": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "none": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "auto": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "initial": [
+        "print-color-adjust: initial;",
+        "initial",
+        true,
+        true
+      ],
+      "inherit": [
+        "print-color-adjust: inherit;",
+        "inherit",
+        true,
+        true
+      ],
+      "unset": [
+        "print-color-adjust: unset;",
+        "unset",
+        true,
+        true
+      ],
+      "revert": [
+        "print-color-adjust: revert;",
+        "revert",
+        true,
+        true
+      ],
+      "revert-layer": [
+        "print-color-adjust: revert-layer;",
+        "revert-layer",
+        true,
+        true
+      ],
+      "button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "textfield": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "menulist-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "checkbox": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "radio": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "searchfield": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "textarea": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "push-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "slider-horizontal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "definitely-invalid": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "AUTO": [
+        "",
+        "",
+        false,
+        false
+      ],
+      " auto ": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "var(--choice)": [
+        "print-color-adjust: var(--choice);",
+        "var(--choice)",
+        true,
+        true
+      ],
+      "stretch": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "start": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "end": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "center": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "baseline": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "horizontal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "vertical": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "inline-axis": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "block-axis": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "normal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "reverse": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-only": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-write": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-write-plaintext-only": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "element": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "text": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "all": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "contain": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "touch": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "manipulation": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "disc": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "circle": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "square": [
+        "",
+        "",
+        false,
+        false
+      ]
+    },
+    "-webkit-backface-visibility": {
+      "base": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "base-select": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "listbox": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "menulist": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "meter": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "progress-bar": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "square-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "justify": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "antialiased": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "subpixel-antialiased": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "economy": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "exact": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "visible": [
+        "backface-visibility: visible;",
+        "visible",
+        true,
+        true
+      ],
+      "hidden": [
+        "backface-visibility: hidden;",
+        "hidden",
+        true,
+        true
+      ],
+      "flat": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "preserve-3d": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "none": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "auto": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "initial": [
+        "backface-visibility: initial;",
+        "initial",
+        true,
+        true
+      ],
+      "inherit": [
+        "backface-visibility: inherit;",
+        "inherit",
+        true,
+        true
+      ],
+      "unset": [
+        "backface-visibility: unset;",
+        "unset",
+        true,
+        true
+      ],
+      "revert": [
+        "backface-visibility: revert;",
+        "revert",
+        true,
+        true
+      ],
+      "revert-layer": [
+        "backface-visibility: revert-layer;",
+        "revert-layer",
+        true,
+        true
+      ],
+      "button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "textfield": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "menulist-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "checkbox": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "radio": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "searchfield": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "textarea": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "push-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "slider-horizontal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "definitely-invalid": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "AUTO": [
+        "",
+        "",
+        false,
+        false
+      ],
+      " auto ": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "var(--choice)": [
+        "backface-visibility: var(--choice);",
+        "var(--choice)",
+        true,
+        true
+      ],
+      "stretch": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "start": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "end": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "center": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "baseline": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "horizontal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "vertical": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "inline-axis": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "block-axis": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "normal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "reverse": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-only": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-write": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-write-plaintext-only": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "element": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "text": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "all": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "contain": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "touch": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "manipulation": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "disc": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "circle": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "square": [
+        "",
+        "",
+        false,
+        false
+      ]
+    },
+    "-webkit-transform-style": {
+      "base": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "base-select": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "listbox": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "menulist": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "meter": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "progress-bar": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "square-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "justify": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "antialiased": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "subpixel-antialiased": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "economy": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "exact": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "visible": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "hidden": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "flat": [
+        "transform-style: flat;",
+        "flat",
+        true,
+        true
+      ],
+      "preserve-3d": [
+        "transform-style: preserve-3d;",
+        "preserve-3d",
+        true,
+        true
+      ],
+      "none": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "auto": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "initial": [
+        "transform-style: initial;",
+        "initial",
+        true,
+        true
+      ],
+      "inherit": [
+        "transform-style: inherit;",
+        "inherit",
+        true,
+        true
+      ],
+      "unset": [
+        "transform-style: unset;",
+        "unset",
+        true,
+        true
+      ],
+      "revert": [
+        "transform-style: revert;",
+        "revert",
+        true,
+        true
+      ],
+      "revert-layer": [
+        "transform-style: revert-layer;",
+        "revert-layer",
+        true,
+        true
+      ],
+      "button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "textfield": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "menulist-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "checkbox": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "radio": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "searchfield": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "textarea": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "push-button": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "slider-horizontal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "definitely-invalid": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "AUTO": [
+        "",
+        "",
+        false,
+        false
+      ],
+      " auto ": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "var(--choice)": [
+        "transform-style: var(--choice);",
+        "var(--choice)",
+        true,
+        true
+      ],
+      "stretch": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "start": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "end": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "center": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "baseline": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "horizontal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "vertical": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "inline-axis": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "block-axis": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "normal": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "reverse": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-only": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-write": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "read-write-plaintext-only": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "element": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "text": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "all": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "contain": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "touch": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "manipulation": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "disc": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "circle": [
+        "",
+        "",
+        false,
+        false
+      ],
+      "square": [
+        "",
+        "",
+        false,
+        false
+      ]
+    }
+  }
+}

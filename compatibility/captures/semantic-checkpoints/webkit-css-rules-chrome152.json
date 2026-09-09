@@ -1,0 +1,33 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/webkit_css_rules_oracle.js",
+    "fixtureSHA256": "3a6a4c657d6e4e5586b83d9f895c003e27f8f07ee46f2173f0850096d4bef8e6",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "initial": [
+      "div { appearance: button; user-select: none !important; }",
+      "appearance: button; user-select: none !important;",
+      "button",
+      "button",
+      "appearance",
+      2
+    ],
+    "write": [
+      "div { appearance: none; user-select: none !important; }",
+      "none"
+    ],
+    "invalid": "appearance: none; user-select: none !important;",
+    "remove": [
+      "none",
+      "appearance: none;"
+    ]
+  }
+}

@@ -1,0 +1,6 @@
+(()=>{
+ const values=['base','base-select','listbox','menulist','meter','progress-bar','square-button','justify','antialiased','subpixel-antialiased','economy','exact','visible','hidden','flat','preserve-3d','none','auto','initial','inherit','unset','revert','revert-layer','button','textfield','menulist-button','checkbox','radio','searchfield','textarea','push-button','slider-horizontal','definitely-invalid','AUTO',' auto ','var(--choice)','stretch','start','end','center','baseline','horizontal','vertical','inline-axis','block-axis','normal','reverse','read-only','read-write','read-write-plaintext-only','element','text','all','contain','touch','manipulation','disc','circle','square'];
+ const properties=['appearance','-webkit-appearance','-webkit-user-select','-webkit-user-drag','-webkit-user-modify','-webkit-box-align','-webkit-box-pack','-webkit-box-orient','-webkit-box-direction','-webkit-font-smoothing','-webkit-text-security','-webkit-print-color-adjust','-webkit-backface-visibility','-webkit-transform-style'];
+ const out={};for(const property of properties){out[property]={};for(const value of values){const s=document.createElement('div').style;s.setProperty(property,value);out[property][value]=[s.cssText,s.getPropertyValue(property),CSS.supports(property,value),CSS.supports('('+property+': '+value+')')];}}
+ return out;
+})()
