@@ -214,6 +214,24 @@ func (a *adapter) EvalModule(ctx context.Context, source, name string, loader en
 			a.moduleCache[resourceName] = module
 			return module, nil
 		}
+		// V8 owns the stable, null-prototype import.meta object; the embedder
+		// supplies the module's resource URL, including its query and fragment.
+		// Keep this tied to module identity, not the currently executing entry:
+		// dependencies and later dynamic imports have their own base URLs.
+		if err := s.isolate.SetHostInitializeImportMetaObjectCallback(func(cs *gov8.CallbackScope, module *gov8.Module, meta *gov8.Object) error {
+			resourceName, ok := a.moduleNames[module]
+			if !ok {
+				return errors.New("import.meta module has no resource name")
+			}
+			value, err := cs.NewString(resourceName)
+			if err != nil {
+				return err
+			}
+			_, err = cs.ObjectSet(meta.Value, "url", value)
+			return err
+		}); err != nil {
+			return nil, err
+		}
 		entry, err := compile(source, name, catcher)
 		if err != nil {
 			return nil, exceptionError(catcher, scope, realm, name, err)
