@@ -15,7 +15,17 @@ func (r *Realm) installFrameDocumentBridge(host map[string]any) {
 			return nil, fmt.Errorf("frame reference bridge already installed")
 		}
 		r.frameReferenceImport, r.frameReferenceDescribe = args[0], args[1]
+		if len(args) > 2 {
+			r.frameNodeDescribe = args[2]
+		}
 		return nil, nil
+	})
+	host["frameDocumentRoot"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		frame := r.agent.Page().frame(strarg(args, 0))
+		if !r.canAccess(frame) {
+			return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
+		}
+		return r.val(frame.Realm.document.Root().ID), nil
 	})
 	host["frameReference"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		value := args[0]

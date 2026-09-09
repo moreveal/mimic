@@ -17,20 +17,37 @@
     if(signal)signal.addEventListener('abort',()=>{record.removed=true;const index=list.indexOf(record);if(index>=0)list.splice(index,1)},{once:true});
   });
   member(EventTarget.prototype,'removeEventListener',function(type,callback,options){const list=listenersFor(this==null?window:this).get(String(type))||[],capture=optionCapture(options),index=list.findIndex(record=>record.callback===callback&&record.capture===capture);if(index>=0){list[index].removed=true;list.splice(index,1)}});
+  // Handler properties occupy their first assigned position in the same
+  // listener list. Replacing a callback keeps order; clearing removes it.
+  for(const C of [Document,HTMLElement]){
+  const prototype=C.prototype;
+  // Blink installs these runtime-enabled handlers after the static members.
+  for(const name of (C===Document?['onpointerrawupdate','onscrollsnapchange','onscrollsnapchanging']:['onscrollsnapchange','onscrollsnapchanging','onpointerrawupdate'])){
+    const descriptor=Object.getOwnPropertyDescriptor(prototype,name);if(descriptor){delete prototype[name];Object.defineProperty(prototype,name,descriptor)}
+  }
+  for(const name of Object.getOwnPropertyNames(prototype).filter(name=>/^on/.test(name))){
+    const type=name.slice(2),state=target=>{if(!(target instanceof C))throw new TypeError('Illegal invocation');return eventHandlerRecord(target,type)};
+    const get=function(){if(name==='onreadystatechange'&&!(this instanceof C))return undefined;return state(this).value},set=function(value){
+      if(name==='onreadystatechange'&&!(this instanceof C))return;
+      state(this);setEventHandlerValue(this,type,value);
+    };
+    Object.defineProperty(get,'name',{value:'get '+name,configurable:true});Object.defineProperty(set,'name',{value:'set '+name,configurable:true});accessor(prototype,name,get,set);
+  }
+  }
   for(const [name,key,fallback] of [['target','target',null],['srcElement','target',null],['currentTarget','currentTarget',null],['eventPhase','phase',0],['composed','composed',false]])accessor(Event.prototype,name,function(){return stateOf(this)[key]??fallback});
   accessor(Event.prototype,'cancelBubble',function(){return !!stateOf(this).stopped},function(value){if(value)stateOf(this).stopped=true});
   accessor(Event.prototype,'returnValue',function(){return !stateOf(this).defaultPrevented},function(value){if(!value)this.preventDefault()});
   member(Event.prototype,'stopPropagation',function(){stateOf(this).stopped=true});
   member(Event.prototype,'stopImmediatePropagation',function(){const state=stateOf(this);state.stopped=true;state.immediate=true});
   member(Event.prototype,'preventDefault',function(){const state=stateOf(this);if(state.cancelable&&!state.passive)state.defaultPrevented=true});
-  const insideRoot=(node,root)=>{for(let current=node;current instanceof Node;current=current.parentNode||(current instanceof ShadowRoot?current.host:null))if(current===root)return true;return false};
-  member(Event.prototype,'composedPath',function(){const state=stateOf(this);return (state.path||[]).filter(node=>{for(let current=node;current instanceof Node;){const root=current.getRootNode();if(!(root instanceof ShadowRoot))break;if(root.mode==='closed'&&!insideRoot(state.currentTarget,root))return false;current=root.host}return true})});
-  const retarget=(target,current)=>{let node=target;while(node instanceof Node){const root=node.getRootNode();if(!(root instanceof ShadowRoot)||current instanceof Node&&current.getRootNode()===root)return node;node=root.host}return node};
+  const insideRoot=(node,root)=>{for(let current=node;isDOMNode(current);current=current.parentNode||(current instanceof ShadowRoot?current.host:null))if(current===root)return true;return false};
+  member(Event.prototype,'composedPath',function(){const state=stateOf(this);return (state.path||[]).filter(node=>{for(let current=node;isDOMNode(current);){const root=current.getRootNode();if(!(root instanceof ShadowRoot))break;if(root.mode==='closed'&&!insideRoot(state.currentTarget,root))return false;current=root.host}return true})});
+  const retarget=(target,current)=>{let node=target;while(isDOMNode(node)){const root=node.getRootNode();if(!(root instanceof ShadowRoot)||isDOMNode(current)&&current.getRootNode()===root)return node;node=root.host}return node};
   dispatchEventCore=(target,event,trusted)=>{
     const state=stateOf(event);if(state.dispatching||!state.type)throw new DOMException('Event is already being dispatched or uninitialized','InvalidStateError');
     state.trusted=!!trusted;state.dispatching=true;state.stopped=false;state.immediate=false;
     const path=[target];let current=target;
-    while(current instanceof Node){let parent=current.parentNode;if(!parent&&current instanceof ShadowRoot&&state.composed)parent=current.host;if(!parent&&current instanceof Document&&state.type!=='load')parent=current.defaultView;if(!parent)break;path.push(parent);current=parent}
+    while(isDOMNode(current)){let parent=current.parentNode;if(!parent&&current instanceof ShadowRoot&&state.composed)parent=current.host;if(!parent&&current instanceof Document&&state.type!=='load')parent=current.defaultView;if(!parent)break;path.push(parent);current=parent}
     state.path=path;
     const report=error=>{try{console.error(error?.stack||String(error))}catch{}};
     const invoke=(current,capture,phase)=>{

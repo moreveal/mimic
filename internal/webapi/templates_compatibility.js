@@ -67,7 +67,7 @@
     return copy;
   },writable:true});
   define(Document.prototype,'importNode',{value:function(node,deep=false){
-    if(!(node instanceof Node))throw new TypeError('Expected Node');
+    if(!(isDOMNode(node)))throw new TypeError('Expected Node');
     const old=importing;importing=true;try{return node.cloneNode(deep)}finally{importing=old}
   },writable:true});
 })();

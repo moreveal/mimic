@@ -70,7 +70,7 @@ func TestOfflineAudioUnsupportedGraphRejects(t *testing.T) {
  if(await c.startRendering().then(()=>'',e=>e.name)!=='NotSupportedError'||complete||c.state!=='closed')return false;
  if(await c.startRendering().then(()=>'',e=>e.name)!=='InvalidStateError')return false;
  const d=new OfflineAudioContext(1,8,8000);
- try{d.createOscillator();return false}catch(e){if(e.name!=='NotSupportedError')return false}
+ try{d.createBiquadFilter();return false}catch(e){if(e.name!=='NotSupportedError')return false}
  return await d.decodeAudioData(new ArrayBuffer(8)).then(()=>false,e=>e.name==='NotSupportedError');
 })()`)
 		if err != nil || value != true {

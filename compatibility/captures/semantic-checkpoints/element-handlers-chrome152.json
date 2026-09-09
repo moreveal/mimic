@@ -1,0 +1,352 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/element_handlers_oracle.js",
+    "fixtureSHA256": "fd7600e1ab156082552d328a800451439e571e360bd2cd2d5eb3a255be0b0e79",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "names": [
+      "onabort",
+      "onbeforeinput",
+      "onbeforematch",
+      "onbeforetoggle",
+      "onblur",
+      "oncancel",
+      "oncanplay",
+      "oncanplaythrough",
+      "onchange",
+      "onclick",
+      "onclose",
+      "oncommand",
+      "oncontentvisibilityautostatechange",
+      "oncontextlost",
+      "oncontextmenu",
+      "oncontextrestored",
+      "oncuechange",
+      "ondblclick",
+      "ondrag",
+      "ondragend",
+      "ondragenter",
+      "ondragleave",
+      "ondragover",
+      "ondragstart",
+      "ondrop",
+      "ondurationchange",
+      "onemptied",
+      "onended",
+      "onerror",
+      "onfocus",
+      "onformdata",
+      "oninput",
+      "oninvalid",
+      "onkeydown",
+      "onkeypress",
+      "onkeyup",
+      "onload",
+      "onloadeddata",
+      "onloadedmetadata",
+      "onloadstart",
+      "onmousedown",
+      "onmouseenter",
+      "onmouseleave",
+      "onmousemove",
+      "onmouseout",
+      "onmouseover",
+      "onmouseup",
+      "onmousewheel",
+      "onpause",
+      "onplay",
+      "onplaying",
+      "onprogress",
+      "onratechange",
+      "onreset",
+      "onresize",
+      "onscroll",
+      "onscrollend",
+      "onsecuritypolicyviolation",
+      "onseeked",
+      "onseeking",
+      "onselect",
+      "onslotchange",
+      "onstalled",
+      "onsubmit",
+      "onsuspend",
+      "ontimeupdate",
+      "ontoggle",
+      "onvolumechange",
+      "onwaiting",
+      "onwebkitanimationend",
+      "onwebkitanimationiteration",
+      "onwebkitanimationstart",
+      "onwebkittransitionend",
+      "onwheel",
+      "onauxclick",
+      "ongotpointercapture",
+      "onlostpointercapture",
+      "onpointerdown",
+      "onpointermove",
+      "onpointerup",
+      "onpointercancel",
+      "onpointerover",
+      "onpointerout",
+      "onpointerenter",
+      "onpointerleave",
+      "onselectstart",
+      "onselectionchange",
+      "onanimationcancel",
+      "onanimationend",
+      "onanimationiteration",
+      "onanimationstart",
+      "ontransitionrun",
+      "ontransitionstart",
+      "ontransitionend",
+      "ontransitioncancel",
+      "onbeforexrselect",
+      "oncopy",
+      "oncut",
+      "onpaste",
+      "onscrollsnapchange",
+      "onscrollsnapchanging",
+      "onpointerrawupdate"
+    ],
+    "onclick": {
+      "initial": null,
+      "identity": true,
+      "dispatch": false,
+      "first": [
+        "before",
+        "first",
+        "after"
+      ],
+      "second": [
+        "before",
+        "second",
+        "after"
+      ],
+      "reinsert": [
+        "before",
+        "after",
+        "first"
+      ],
+      "invalid": [
+        true,
+        [
+          "before",
+          "after"
+        ],
+        true,
+        [
+          "before",
+          "after"
+        ],
+        false,
+        [
+          "before",
+          "after"
+        ],
+        true,
+        [
+          "before",
+          "after"
+        ]
+      ],
+      "descriptor": [
+        "get onclick",
+        "set onclick",
+        true,
+        true,
+        "TypeError"
+      ],
+      "isolation": true
+    },
+    "onmousedown": {
+      "initial": null,
+      "identity": true,
+      "dispatch": false,
+      "first": [
+        "before",
+        "first",
+        "after"
+      ],
+      "second": [
+        "before",
+        "second",
+        "after"
+      ],
+      "reinsert": [
+        "before",
+        "after",
+        "first"
+      ],
+      "invalid": [
+        true,
+        [
+          "before",
+          "after"
+        ],
+        true,
+        [
+          "before",
+          "after"
+        ],
+        false,
+        [
+          "before",
+          "after"
+        ],
+        true,
+        [
+          "before",
+          "after"
+        ]
+      ],
+      "descriptor": [
+        "get onmousedown",
+        "set onmousedown",
+        true,
+        true,
+        "TypeError"
+      ],
+      "isolation": true
+    },
+    "onerror": {
+      "initial": null,
+      "identity": true,
+      "dispatch": false,
+      "first": [
+        "before",
+        "first",
+        "after"
+      ],
+      "second": [
+        "before",
+        "second",
+        "after"
+      ],
+      "reinsert": [
+        "before",
+        "after",
+        "first"
+      ],
+      "invalid": [
+        true,
+        [
+          "before",
+          "after"
+        ],
+        true,
+        [
+          "before",
+          "after"
+        ],
+        false,
+        [
+          "before",
+          "after"
+        ],
+        true,
+        [
+          "before",
+          "after"
+        ]
+      ],
+      "descriptor": [
+        "get onerror",
+        "set onerror",
+        true,
+        true,
+        "TypeError"
+      ],
+      "isolation": true
+    },
+    "onanimationend": {
+      "initial": null,
+      "identity": true,
+      "dispatch": false,
+      "first": [
+        "before",
+        "first",
+        "after"
+      ],
+      "second": [
+        "before",
+        "second",
+        "after"
+      ],
+      "reinsert": [
+        "before",
+        "after",
+        "first"
+      ],
+      "invalid": [
+        true,
+        [
+          "before",
+          "after"
+        ],
+        true,
+        [
+          "before",
+          "after"
+        ],
+        false,
+        [
+          "before",
+          "after"
+        ],
+        true,
+        [
+          "before",
+          "after"
+        ]
+      ],
+      "descriptor": [
+        "get onanimationend",
+        "set onanimationend",
+        true,
+        true,
+        "TypeError"
+      ],
+      "isolation": true
+    },
+    "lenient": [
+      [
+        "onmousedown",
+        "TypeError",
+        "TypeError"
+      ],
+      [
+        "onmousedown",
+        "TypeError",
+        "TypeError"
+      ],
+      [
+        "onmousedown",
+        "TypeError",
+        "TypeError"
+      ],
+      [
+        "onclick",
+        "TypeError",
+        "TypeError"
+      ],
+      [
+        "onclick",
+        "TypeError",
+        "TypeError"
+      ],
+      [
+        "onclick",
+        "TypeError",
+        "TypeError"
+      ]
+    ]
+  }
+}

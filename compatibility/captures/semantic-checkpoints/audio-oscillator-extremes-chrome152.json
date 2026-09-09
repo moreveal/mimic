@@ -1,0 +1,66 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": false,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/audio_oscillator_extremes_oracle.js",
+    "fixtureSHA256": "8d8e3a9070786f9c818110e6c63732c91e24d1fb3e8896d4ad41b57d1c2592c1",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "0,153600": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "440,153600": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "440,-153600": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "0,-153600": [
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "automatedBounds": [
+      0,
+      1,
+      0,
+      -1,
+      0,
+      1,
+      0,
+      -1
+    ]
+  }
+}

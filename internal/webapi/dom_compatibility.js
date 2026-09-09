@@ -116,7 +116,7 @@ const compatibilityElementState={};
     class MutationObserver {
       constructor(callback){if(typeof callback!=='function')throw new TypeError('Callback must be callable');observerSlots.set(this,{callback,sequence:observerSequence++,records:[],targets:new Map(),transients:[]})}
       observe(target,options){
-        const s=observerState(this);if(!(target instanceof Node))throw new TypeError('Target must be a Node');
+        const s=observerState(this);if(!(isDOMNode(target)))throw new TypeError('Target must be a Node');
         const init=Object(options);options={attributeFilter:init.attributeFilter,attributeOldValue:init.attributeOldValue,attributes:init.attributes,characterData:init.characterData,characterDataOldValue:init.characterDataOldValue,childList:init.childList,subtree:init.subtree};
         if(options.attributes===undefined&&(options.attributeOldValue!==undefined||options.attributeFilter!==undefined))options.attributes=true;
         if(options.characterData===undefined&&options.characterDataOldValue!==undefined)options.characterData=true;
@@ -168,18 +168,18 @@ const compatibilityElementState={};
     member(Text.prototype,'splitText',function(offset){if(!arguments.length)throw new TypeError('Argument required');offset=unsigned(offset);const text=this.data;if(offset>text.length)throw new DOMException('Offset exceeds data length','IndexSizeError');const node=document.createTextNode(text.slice(offset)),parent=this.parentNode;if(parent)parent.insertBefore(node,this.nextSibling);this.replaceData(offset,text.length-offset,'');return node});
     accessor(Text.prototype,'wholeText',function(){let node=this;while(node.previousSibling?.nodeType===3)node=node.previousSibling;let text='';for(;node?.nodeType===3;node=node.nextSibling)text+=node.data;return text});
     member(Node.prototype,'normalize',function(){for(let node=this.firstChild;node;){if(node.nodeType===3){if(node.length===0){const next=node.nextSibling;this.removeChild(node);node=next;continue}while(node.nextSibling?.nodeType===3){const next=node.nextSibling;node.appendData(next.data);this.removeChild(next)}}else node.normalize();node=node.nextSibling}});
-    member(Node.prototype,'replaceChild',function(node,child){if(!(node instanceof Node)||!(child instanceof Node))throw new TypeError('Expected Nodes');if(child.parentNode!==this)throw new DOMException('Not a child','NotFoundError');if(node===child)return child;this.insertBefore(node,child);this.removeChild(child);return child});
+    member(Node.prototype,'replaceChild',function(node,child){if(!isDOMNode(node)||!(isDOMNode(child)))throw new TypeError('Expected Nodes');if(child.parentNode!==this)throw new DOMException('Not a child','NotFoundError');if(node===child)return child;this.insertBefore(node,child);this.removeChild(child);return child});
     const removeChildBase=Node.prototype.removeChild;
-    member(Node.prototype,'removeChild',function(node){if(!(node instanceof Node))throw new TypeError('Expected a Node');if(node.parentNode!==this)throw new DOMException('Not a child','NotFoundError');return removeChildBase.call(this,node)});
+    member(Node.prototype,'removeChild',function(node){if(!isDOMNode(node))throw new TypeError('Expected a Node');if(node.parentNode!==this)throw new DOMException('Not a child','NotFoundError');return removeChildBase.call(this,node)});
     for(const proto of [Element.prototype,CharacterData.prototype]){
       member(proto,'remove',function(){if(this.parentNode)this.parentNode.removeChild(this)});
-      member(proto,'before',function(...nodes){const parent=this.parentNode;if(!parent)return;for(const node of nodes)parent.insertBefore(node instanceof Node?node:document.createTextNode(String(node)),this)});
-      member(proto,'after',function(...nodes){const parent=this.parentNode;if(!parent)return;const next=this.nextSibling;for(const node of nodes)parent.insertBefore(node instanceof Node?node:document.createTextNode(String(node)),next)});
+      member(proto,'before',function(...nodes){const parent=this.parentNode;if(!parent)return;for(const node of nodes)parent.insertBefore(isDOMNode(node)?node:document.createTextNode(String(node)),this)});
+      member(proto,'after',function(...nodes){const parent=this.parentNode;if(!parent)return;const next=this.nextSibling;for(const node of nodes)parent.insertBefore(isDOMNode(node)?node:document.createTextNode(String(node)),next)});
       member(proto,'replaceWith',function(...nodes){const parent=this.parentNode;if(!parent)return;this.before(...nodes);if(this.parentNode===parent)parent.removeChild(this)});
     }
     for(const proto of [Element.prototype,DocumentFragment.prototype]){
-      member(proto,'append',function(...nodes){for(const node of nodes)this.appendChild(node instanceof Node?node:document.createTextNode(String(node)))});
-      member(proto,'prepend',function(...nodes){const before=this.firstChild;for(const node of nodes)this.insertBefore(node instanceof Node?node:document.createTextNode(String(node)),before)});
+      member(proto,'append',function(...nodes){for(const node of nodes)this.appendChild(isDOMNode(node)?node:document.createTextNode(String(node)))});
+      member(proto,'prepend',function(...nodes){const before=this.firstChild;for(const node of nodes)this.insertBefore(isDOMNode(node)?node:document.createTextNode(String(node)),before)});
       member(proto,'replaceChildren',function(...nodes){const fragment=document.createDocumentFragment();fragment.append(...nodes);while(this.firstChild)this.removeChild(this.firstChild);this.appendChild(fragment)});
     }
     const attributeChanged=(node,name,oldValue)=>{
@@ -211,11 +211,11 @@ const compatibilityElementState={};
       const original=mutationOriginals[method];
       member(Node.prototype,method,function(node,reference){
         if(mutationDepth||!observers.size&&!definitions.size&&!compatibilityElementState.hasModal?.())return original.apply(this,arguments);
-        if(!(node instanceof Node))return original.apply(this,arguments);
+        if(!isDOMNode(node))return original.apply(this,arguments);
         if(method==='removeChild'){if(node.parentNode!==this)throw new DOMException('Not a child','NotFoundError')}else prepareInsertion(this,node,method==='appendChild'?null:reference);
         const fragment=node instanceof DocumentFragment,children=fragment?Array.from(node.childNodes):[node],entries=children.map(nodeSnapshot);
         const removed=method==='removeChild'?node:method==='replaceChild'?reference:null;
-        const removedEntry=removed instanceof Node?nodeSnapshot(removed):null;
+        const removedEntry=isDOMNode(removed)?nodeSnapshot(removed):null;
         // Snapshot transient registrations while the old ancestor chain exists.
         for(const entry of entries)if(entry.parent)retainRemoved(entry.node);
         if(removedEntry)retainRemoved(removed);
@@ -292,7 +292,7 @@ const compatibilityElementState={};
       return markupMutation(this.parentNode,this,()=>outerHTML.set.call(this,value));
     }});
     const convertMutationNodes=values=>{
-      const nodes=values.map(value=>value instanceof Node?value:document.createTextNode(String(value)));
+      const nodes=values.map(value=>isDOMNode(value)?value:document.createTextNode(String(value)));
       if(nodes.length===1)return nodes[0];
       const fragment=document.createDocumentFragment();for(const node of nodes)fragment.appendChild(node);return fragment;
     };

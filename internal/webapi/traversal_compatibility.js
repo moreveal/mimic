@@ -31,7 +31,7 @@ if(typeof globalThis.TreeWalker==='function') {
     root:{get(){return state(this).root},configurable:true,enumerable:true},
     whatToShow:{get(){return state(this).whatToShow},configurable:true,enumerable:true},
     filter:{get(){return state(this).filter},configurable:true,enumerable:true},
-    currentNode:{get(){return state(this).current},set(node){if(!(node instanceof Node))throw new TypeError('currentNode must be a Node');state(this).current=node},configurable:true,enumerable:true},
+    currentNode:{get(){return state(this).current},set(node){if(!(isDOMNode(node)))throw new TypeError('currentNode must be a Node');state(this).current=node},configurable:true,enumerable:true},
     parentNode:{value:function(){const s=state(this);let node=s.current;while(node&&node!==s.root){node=node.parentNode;if(node&&accept(s,node)===1){s.current=node;return node}}return null},configurable:true,writable:true},
     firstChild:{value:function(){return child(state(this),false)},configurable:true,writable:true},
     lastChild:{value:function(){return child(state(this),true)},configurable:true,writable:true},
@@ -47,7 +47,7 @@ if(typeof globalThis.TreeWalker==='function') {
       }return null},configurable:true,writable:true}
   });
   Object.defineProperty(Document.prototype,'createTreeWalker',{value:function(root,whatToShow=0xFFFFFFFF,filter=null){
-    if(!(root instanceof Node))throw new TypeError('root must be a Node');
+    if(!(isDOMNode(root)))throw new TypeError('root must be a Node');
     if(filter!==null&&(typeof filter!=='function'&&typeof filter!=='object'))throw new TypeError('filter must be an object');
     const walker=Object.create(proto);walkers.set(walker,{root,current:root,whatToShow:Number(whatToShow)>>>0,filter,active:false});return walker;
   },configurable:true,writable:true,enumerable:true});

@@ -1,0 +1,367 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/document_handlers_oracle.js",
+    "fixtureSHA256": "8b83a57566e7fd2e115a7cc88d0251c0fb7e707db18be2d250078e8661c8fb7d",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "names": [
+      "onreadystatechange",
+      "onpointerlockchange",
+      "onpointerlockerror",
+      "onbeforecopy",
+      "onbeforecut",
+      "onbeforepaste",
+      "onfreeze",
+      "onprerenderingchange",
+      "onresume",
+      "onsearch",
+      "onvisibilitychange",
+      "onfullscreenchange",
+      "onfullscreenerror",
+      "onwebkitfullscreenchange",
+      "onwebkitfullscreenerror",
+      "onabort",
+      "onbeforeinput",
+      "onbeforematch",
+      "onbeforetoggle",
+      "onblur",
+      "oncancel",
+      "oncanplay",
+      "oncanplaythrough",
+      "onchange",
+      "onclick",
+      "onclose",
+      "oncommand",
+      "oncontentvisibilityautostatechange",
+      "oncontextlost",
+      "oncontextmenu",
+      "oncontextrestored",
+      "oncuechange",
+      "ondblclick",
+      "ondrag",
+      "ondragend",
+      "ondragenter",
+      "ondragleave",
+      "ondragover",
+      "ondragstart",
+      "ondrop",
+      "ondurationchange",
+      "onemptied",
+      "onended",
+      "onerror",
+      "onfocus",
+      "onformdata",
+      "oninput",
+      "oninvalid",
+      "onkeydown",
+      "onkeypress",
+      "onkeyup",
+      "onload",
+      "onloadeddata",
+      "onloadedmetadata",
+      "onloadstart",
+      "onmousedown",
+      "onmouseenter",
+      "onmouseleave",
+      "onmousemove",
+      "onmouseout",
+      "onmouseover",
+      "onmouseup",
+      "onmousewheel",
+      "onpause",
+      "onplay",
+      "onplaying",
+      "onprogress",
+      "onratechange",
+      "onreset",
+      "onresize",
+      "onscroll",
+      "onscrollend",
+      "onsecuritypolicyviolation",
+      "onseeked",
+      "onseeking",
+      "onselect",
+      "onslotchange",
+      "onstalled",
+      "onsubmit",
+      "onsuspend",
+      "ontimeupdate",
+      "ontoggle",
+      "onvolumechange",
+      "onwaiting",
+      "onwebkitanimationend",
+      "onwebkitanimationiteration",
+      "onwebkitanimationstart",
+      "onwebkittransitionend",
+      "onwheel",
+      "onauxclick",
+      "ongotpointercapture",
+      "onlostpointercapture",
+      "onpointerdown",
+      "onpointermove",
+      "onpointerup",
+      "onpointercancel",
+      "onpointerover",
+      "onpointerout",
+      "onpointerenter",
+      "onpointerleave",
+      "onselectstart",
+      "onselectionchange",
+      "onanimationcancel",
+      "onanimationend",
+      "onanimationiteration",
+      "onanimationstart",
+      "ontransitionrun",
+      "ontransitionstart",
+      "ontransitionend",
+      "ontransitioncancel",
+      "onbeforexrselect",
+      "oncopy",
+      "oncut",
+      "onpaste",
+      "onpointerrawupdate",
+      "onscrollsnapchange",
+      "onscrollsnapchanging"
+    ],
+    "onclick": {
+      "initial": null,
+      "identity": true,
+      "dispatch": false,
+      "first": [
+        "before",
+        "first",
+        "after"
+      ],
+      "second": [
+        "before",
+        "second",
+        "after"
+      ],
+      "reinsert": [
+        "before",
+        "after",
+        "first"
+      ],
+      "invalid": [
+        true,
+        [
+          "before",
+          "after"
+        ],
+        true,
+        [
+          "before",
+          "after"
+        ],
+        false,
+        [
+          "before",
+          "after"
+        ],
+        true,
+        [
+          "before",
+          "after"
+        ]
+      ],
+      "descriptor": [
+        "get onclick",
+        "set onclick",
+        true,
+        true,
+        "TypeError"
+      ],
+      "isolation": true
+    },
+    "onreadystatechange": {
+      "initial": null,
+      "identity": true,
+      "dispatch": false,
+      "first": [
+        "before",
+        "first",
+        "after"
+      ],
+      "second": [
+        "before",
+        "second",
+        "after"
+      ],
+      "reinsert": [
+        "before",
+        "after",
+        "first"
+      ],
+      "invalid": [
+        true,
+        [
+          "before",
+          "after"
+        ],
+        true,
+        [
+          "before",
+          "after"
+        ],
+        false,
+        [
+          "before",
+          "after"
+        ],
+        true,
+        [
+          "before",
+          "after"
+        ]
+      ],
+      "descriptor": [
+        "get onreadystatechange",
+        "set onreadystatechange",
+        true,
+        true,
+        null
+      ],
+      "isolation": true
+    },
+    "onerror": {
+      "initial": null,
+      "identity": true,
+      "dispatch": false,
+      "first": [
+        "before",
+        "first",
+        "after"
+      ],
+      "second": [
+        "before",
+        "second",
+        "after"
+      ],
+      "reinsert": [
+        "before",
+        "after",
+        "first"
+      ],
+      "invalid": [
+        true,
+        [
+          "before",
+          "after"
+        ],
+        true,
+        [
+          "before",
+          "after"
+        ],
+        false,
+        [
+          "before",
+          "after"
+        ],
+        true,
+        [
+          "before",
+          "after"
+        ]
+      ],
+      "descriptor": [
+        "get onerror",
+        "set onerror",
+        true,
+        true,
+        "TypeError"
+      ],
+      "isolation": true
+    },
+    "onwebkitfullscreenchange": {
+      "initial": null,
+      "identity": true,
+      "dispatch": false,
+      "first": [
+        "before",
+        "first",
+        "after"
+      ],
+      "second": [
+        "before",
+        "second",
+        "after"
+      ],
+      "reinsert": [
+        "before",
+        "after",
+        "first"
+      ],
+      "invalid": [
+        true,
+        [
+          "before",
+          "after"
+        ],
+        true,
+        [
+          "before",
+          "after"
+        ],
+        false,
+        [
+          "before",
+          "after"
+        ],
+        true,
+        [
+          "before",
+          "after"
+        ]
+      ],
+      "descriptor": [
+        "get onwebkitfullscreenchange",
+        "set onwebkitfullscreenchange",
+        true,
+        true,
+        "TypeError"
+      ],
+      "isolation": true
+    },
+    "lenient": [
+      [
+        "onreadystatechange",
+        "undefined",
+        "undefined"
+      ],
+      [
+        "onreadystatechange",
+        "undefined",
+        "undefined"
+      ],
+      [
+        "onreadystatechange",
+        "undefined",
+        "undefined"
+      ],
+      [
+        "onclick",
+        "TypeError",
+        "TypeError"
+      ],
+      [
+        "onclick",
+        "TypeError",
+        "TypeError"
+      ],
+      [
+        "onclick",
+        "TypeError",
+        "TypeError"
+      ]
+    ]
+  }
+}

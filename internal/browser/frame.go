@@ -533,6 +533,15 @@ func (r *Realm) crossRealmValue(value engine.Value) (map[string]any, error) {
 	}
 	shape := func(id int64) (map[string]any, error) {
 		out := map[string]any{"__mimicCrossRealm": typeName, "frame": r.agent.ContextID(), "realm": r.ID, "handle": id}
+		if r.frameNodeDescribe != nil && typeName == "object" {
+			value, err := r.runtime.Call(context.Background(), r.frameNodeDescribe, nil, value)
+			if err != nil {
+				return nil, err
+			}
+			if nodeID := numberValue(value.Export()); nodeID != 0 {
+				out["nodeId"] = nodeID
+			}
+		}
 		metadata, err := r.callFrameReflection(context.Background(), "shape", value, nil, nil)
 		if err != nil {
 			return nil, err

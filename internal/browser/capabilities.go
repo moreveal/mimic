@@ -104,6 +104,10 @@ func addCapabilityHosts(r *Realm, h map[string]any) {
 			return r.val(map[string]any{"effectiveType": e.Network.EffectiveType, "downlink": e.Network.DownlinkMbps, "rtt": e.Network.RTTMillis, "saveData": e.Network.SaveData}), nil
 		case "devices":
 			return r.val(map[string]any{"bluetooth": e.Capabilities.Devices.BluetoothAvailable, "posture": e.Capabilities.Devices.Posture}), nil
+		case "battery":
+			// No battery backend is connected. Blink's unavailable-device state
+			// represents a fully charged supply, with no discharge deadline.
+			return r.val(map[string]any{"charging": true, "level": 1, "chargingTime": 0, "dischargingTime": nil}), nil
 		case "deviceList":
 			// No transport backend is installed. All device API families share
 			// this registry boundary and cannot fabricate authorized devices.

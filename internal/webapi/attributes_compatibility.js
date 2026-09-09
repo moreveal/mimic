@@ -6,6 +6,15 @@ const attributeCompatibility=(()=>{
   const member=(prototype,name,value)=>{Object.defineProperty(value,'name',{value:name,configurable:true});markNative(value,name);Object.defineProperty(prototype,name,{value,writable:true,enumerable:true,configurable:true})};
   const accessor=(prototype,name,get,set)=>{if(get)Object.defineProperty(get,'name',{value:'get '+name,configurable:true});if(set)Object.defineProperty(set,'name',{value:'set '+name,configurable:true});markNative(get,name,'get ');markNative(set,name,'set ');Object.defineProperty(prototype,name,{get,set,enumerable:true,configurable:true})};
   const htmlElement=value=>{if(!(value instanceof HTMLElement)||!elementSlot(value))throw new TypeError('Illegal invocation');return value};
+  for(const C of [globalThis.HTMLInputElement,globalThis.HTMLTextAreaElement]){
+    if(typeof C!=='function')continue;
+    const control=value=>{if(!(value instanceof C)||!elementSlot(value))throw new TypeError('Illegal invocation');return value};
+    accessor(C.prototype,'dirName',function(){return control(this).getAttribute('dirname')||''},function(value){control(this);if(typeof value==='symbol')throw new TypeError('Cannot convert a Symbol value to a string');this.setAttribute('dirname',String(value))});
+    accessor(C.prototype,'maxLength',function(){
+      const raw=control(this).getAttribute('maxlength')||'',match=/^[\t\n\f\r ]*([+-]?\d+)/.exec(raw),value=match?Number(match[1]):-1;
+      return value>=0&&value<=2147483647?value:-1;
+    },function(value){control(this);value=(+value)|0;if(value<0)throw new DOMException('The value provided is negative.','IndexSizeError');this.setAttribute('maxlength',String(value))});
+  }
   for(const name of ['translate','spellcheck','draggable'])accessor(HTMLElement.prototype,name,function(){
     let node=htmlElement(this);
     while(node){
@@ -23,7 +32,7 @@ const attributeCompatibility=(()=>{
   const state=attr=>{const value=slots.get(attr);if(!value)throw new TypeError('Illegal invocation');return value};
   const normalize=(element,name)=>element.namespaceURI==='http://www.w3.org/1999/xhtml'?String(name).toLowerCase():String(name);
   const detach=attr=>{const value=state(attr);if(value.owner){value.value=value.owner.getAttribute(value.name)??value.value;value.document=value.owner.ownerDocument;value.owner=null}return attr};
-  const create=(name,value,document,owner=null,namespace=null)=>{const attr=Object.create(globalThis.Attr.prototype);slots.set(attr,{name,value,document,owner,namespace});return attr};
+  const create=(name,value,document,owner=null,namespace=null)=>{const attr=Object.create(globalThis.Attr.prototype);slots.set(attr,{name,value,document,owner,namespace});nonHostNodeBrands.add(attr);return attr};
   const get=(element,name)=>{
     name=normalize(element,name);const value=element.getAttribute(name),values=cache(element),previous=values.get(name);
     if(value===null){if(previous){detach(previous);values.delete(name)}return null}

@@ -32,6 +32,23 @@
     };
     const scalar=()=>state('identity');
     slots.set(nav,{type:'Navigator'});
+    // A machine without battery/gamepad backends has observable, empty device
+    // state. Battery promises and the manager are stable within this Navigator.
+    let batteryPromise;
+    if(typeof BatteryManager==='function'){
+      const readBattery=()=>state('battery');
+      for(const key of ['charging','level'])attribute('BatteryManager',key,()=>readBattery()[key]);
+      for(const key of ['chargingTime','dischargingTime'])attribute('BatteryManager',key,()=>readBattery()[key]??Infinity);
+      for(const key of ['onchargingchange','onchargingtimechange','ondischargingtimechange','onlevelchange'])attribute('BatteryManager',key,(_s,target)=>eventHandlerRecord(target,key.slice(2)).value,(_s,value,target)=>setEventHandlerValue(target,key.slice(2),value));
+      const getBattery={getBattery(){try{check(this,'Navigator');if(!batteryPromise)batteryPromise=Promise.resolve(create('BatteryManager'));return batteryPromise}catch(e){return Promise.reject(e)}}}.getBattery;
+      native(getBattery,'getBattery');
+      const descriptor=Object.getOwnPropertyDescriptor(Navigator.prototype,'getBattery');
+      if(descriptor)Object.defineProperty(Navigator.prototype,'getBattery',{...descriptor,value:getBattery});
+    }
+    method('Navigator','getGamepads',()=>{
+      if(!documentPolicy.allowsFeature('gamepad'))throw error('SecurityError','Access to gamepads is disallowed by permissions policy.');
+      return [null,null,null,null];
+    });
     const domainSources=new Set(members.filter(m=>names.has(m.name)).map(m=>m.origin?.source));
     // Close the declaring Navigator domain too (not only its object-valued
     // entry point). In particular auction operations must not inherit a

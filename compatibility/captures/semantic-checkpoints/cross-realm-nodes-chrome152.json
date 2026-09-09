@@ -1,0 +1,89 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/cross_realm_nodes_oracle.js",
+    "fixtureSHA256": "c7c6257422355556daa5fd602790863b33055baa163069d0aefc7d07544d1c85",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "foreignBrand": {
+      "local": false,
+      "remote": true
+    },
+    "styleBorrow": "rgb(1, 2, 3)",
+    "styleOwner": "17px",
+    "append": {
+      "same": true,
+      "owner": true,
+      "parent": true,
+      "connected": true,
+      "child": true,
+      "lookup": true,
+      "old": true
+    },
+    "insertBefore": {
+      "same": true,
+      "owner": true,
+      "parent": true,
+      "lookup": true
+    },
+    "remove": {
+      "same": true,
+      "owner": true,
+      "parent": true,
+      "connected": false
+    },
+    "adopt": {
+      "same": true,
+      "owner": true
+    },
+    "import": {
+      "distinct": true,
+      "owner": true,
+      "text": "before",
+      "realm": true
+    },
+    "position": {
+      "contains": true,
+      "mask": 20
+    },
+    "fragment": {
+      "empty": true,
+      "owner": true,
+      "parent": true,
+      "text": true
+    },
+    "borrowedMethods": {
+      "same": true,
+      "contains": true,
+      "removed": true,
+      "owner": true
+    },
+    "replaceAndVariadic": {
+      "replaced": true,
+      "tree": [
+        "U",
+        "B",
+        "#text"
+      ],
+      "after": [
+        "U",
+        "I",
+        "#text",
+        "#text"
+      ],
+      "adopted": true
+    },
+    "traversal": {
+      "root": true,
+      "next": true
+    },
+    "spoof": "TypeError"
+  }
+}
