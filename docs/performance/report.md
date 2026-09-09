@@ -1108,3 +1108,27 @@ process; the successful local teardown gate does not resolve that limitation.
 [Build and measurement receipts](../compatibility/svg-snapshot-20260909/performance.json)
 and [visual verification](../compatibility/svg-snapshot-20260909/report.md) retain
 the evidence and boundaries. Raw gate data is in `.build/svg-snapshot-gate/`.
+
+
+## 2026-09-09 — Callback exception propagation and lazy style geometry
+
+A native V8 CPU profile of an isolated live weather.com navigation attributed
+27.6% of weighted samples inclusively to computed CSS declarations and 25.2% to
+layoutRectFor. Reading one computed property eagerly calculated both fallback
+dimensions, recursively resolving descendant styles even when the requested
+property was unrelated or already declared. Fallback dimensions are now lazy;
+no stylesheet cache or invalidation model was introduced.
+
+The same batch restores useful errors from direct V8 function calls and preserves
+thrown-value identity through reentrant host callbacks. The fresh-build fast gate
+passed its correctness, concurrency, and memory waves. Compact measurements and
+binary/harness hashes are in the linked receipt. These are unpaired measurements
+with other interactive processes present, not a demonstrated end-to-end speedup.
+The frozen harness and original baseline were unchanged; no full matrix was run.
+
+Live weather.com still exceeded a full-load timeout, as did frozen Chrome 152.
+A DOMContentLoaded-plus-three-seconds export took 14.93 seconds but retained
+forecast placeholders. Live teardown also stalled. Neither the successful local
+gate nor the CSS profile establishes that live hydration, load completion, or
+teardown is resolved. See the [investigation and limitations](../compatibility/callback-style-20260909/report.md)
+and [measurement receipt](../compatibility/callback-style-20260909/performance.json).

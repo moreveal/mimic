@@ -526,8 +526,28 @@ func (a *adapter) StrictEqual(left, right engine.Value) bool {
 	return equal
 }
 
+type callException struct {
+	error
+	value engine.Value
+}
+
+func (a *adapter) callError(catcher *gov8.TryCatch, scope *gov8.Scope, realm *gov8.Context) error {
+	err := exceptionError(catcher, scope, realm, "JavaScript callback", errors.New("call threw"))
+	if exception, ok, readErr := catcher.Exception(scope); readErr == nil && ok {
+		if value, persistErr := a.persist(scope, exception); persistErr == nil {
+			return &callException{error: err, value: value}
+		}
+	}
+	return err
+}
+
 func (a *adapter) Call(ctx context.Context, function, this engine.Value, args ...engine.Value) (engine.Value, error) {
 	if callback := a.onCallback(); callback != nil {
+		catcher, err := callback.scope.Isolate().NewTryCatch()
+		if err != nil {
+			return nil, err
+		}
+		defer catcher.Close()
 		fn, err := a.localCallback(function)
 		if err != nil {
 			return nil, err
@@ -544,7 +564,13 @@ func (a *adapter) Call(ctx context.Context, function, this engine.Value, args ..
 			}
 		}
 		result, ok, err := callback.scope.CallFunction(fn, receiver, argv)
+		if caught, _ := catcher.HasCaught(); caught {
+			return nil, a.callError(catcher, callback.scope.Scope(), callback.ctx)
+		}
 		if err != nil || !ok {
+			if err == nil {
+				err = errors.New("JavaScript callback failed")
+			}
 			return nil, err
 		}
 		global, persistErr := a.newGlobal(callback.scope.Scope(), result)
@@ -554,6 +580,11 @@ func (a *adapter) Call(ctx context.Context, function, this engine.Value, args ..
 		return &runtimeValue{runtime: a, global: global, local: result, borrowed: true, callbackID: callback.id}, nil
 	}
 	return a.runContext(ctx, func(s *state, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
+		catcher, err := s.isolate.NewTryCatch()
+		if err != nil {
+			return nil, err
+		}
+		defer catcher.Close()
 		fnValue, err := a.local(scope, function)
 		if err != nil {
 			return nil, err
@@ -574,7 +605,13 @@ func (a *adapter) Call(ctx context.Context, function, this engine.Value, args ..
 			}
 		}
 		result, ok, err := fn.Call(scope, receiver, argv...)
+		if caught, _ := catcher.HasCaught(); caught {
+			return nil, a.callError(catcher, scope, realm)
+		}
 		if err != nil || !ok {
+			if err == nil {
+				err = errors.New("JavaScript callback failed")
+			}
 			return nil, err
 		}
 		return a.persist(scope, result)
@@ -1041,6 +1078,15 @@ func (a *adapter) makeFunction(scope *gov8.Scope, realm *gov8.Context, function 
 			defer a.recordCost("callback:return", time.Now())
 		}
 		if e != nil {
+			// A reentrant JavaScript call may throw any value. Preserve its identity
+			// when it crosses this host callback instead of constructing a new Error.
+			var thrown *callException
+			if errors.As(e, &thrown) {
+				if exception, valueErr := a.localCallback(thrown.value); valueErr == nil {
+					_ = cs.ThrowException(exception)
+					return
+				}
+			}
 			exception, _ := cs.NewError(e.Error())
 			_ = cs.ThrowException(exception)
 			return
