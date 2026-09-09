@@ -46,9 +46,12 @@ type GPUAdapter struct {
 	InitializationDelayMillis float64
 }
 type Locale struct {
-	Languages  []string
-	IntlLocale string
-	Timezone   string
+	// Languages retains the complete ordered preference list. Reduction affects
+	// navigator observations and document requests, but not Worker fetch headers.
+	ReduceAcceptLanguage bool
+	Languages            []string
+	IntlLocale           string
+	Timezone             string
 }
 type Preferences struct {
 	ColorScheme   string
@@ -223,10 +226,14 @@ type NavigatorView struct {
 }
 
 func (e Environment) Navigator() NavigatorView {
+	languages := e.Locale.Languages
+	if e.Locale.ReduceAcceptLanguage && len(languages) > 1 {
+		languages = languages[:1]
+	}
 	os := "Windows NT 10.0; Win64; x64"
 	return NavigatorView{
 		UserAgent: fmt.Sprintf("Mozilla/5.0 (%s) AppleWebKit/537.36 (KHTML, like Gecko) %s/%s Safari/537.36", os, e.Product.UserAgentProduct, e.Product.Version),
-		Platform:  "Win32", Languages: append([]string(nil), e.Locale.Languages...), HardwareConcurrency: e.Hardware.LogicalProcessors, DeviceMemory: e.Hardware.DeviceMemoryGB, Online: e.Network.Online, CookieEnabled: e.Network.CookiesEnabled,
+		Platform:  "Win32", Languages: append([]string(nil), languages...), HardwareConcurrency: e.Hardware.LogicalProcessors, DeviceMemory: e.Hardware.DeviceMemoryGB, Online: e.Network.Online, CookieEnabled: e.Network.CookiesEnabled,
 	}
 }
 
@@ -247,17 +254,29 @@ func (e Environment) Screen() ScreenView {
 	return ScreenView{int(math.Round(float64(e.Display.PhysicalWidth) / d)), int(math.Round(float64(e.Display.PhysicalHeight) / d)), int(math.Round(float64(availableWidth) / d)), int(math.Round(float64(availableHeight) / d)), e.Display.ColorDepth, e.Display.ColorDepth, d}
 }
 func (e Environment) RequestHeaders() map[string]string {
+	return e.requestHeaders(e.Locale.ReduceAcceptLanguage)
+}
+
+func (e Environment) WorkerRequestHeaders() map[string]string {
+	return e.requestHeaders(false)
+}
+
+func (e Environment) requestHeaders(reduce bool) map[string]string {
+	selectedLanguages := e.Locale.Languages
+	if reduce && len(selectedLanguages) > 1 {
+		selectedLanguages = selectedLanguages[:1]
+	}
 	n := e.Navigator()
 	languages := ""
-	for index, language := range e.Locale.Languages {
+	for index, language := range selectedLanguages {
 		if index == 0 {
 			languages = language
 		} else {
 			languages += fmt.Sprintf(",%s;q=%.1f", language, math.Max(.1, 1-float64(index)/10))
 		}
 	}
-	if len(e.Locale.Languages) == 1 {
-		if base, _, found := strings.Cut(e.Locale.Languages[0], "-"); found {
+	if len(selectedLanguages) == 1 {
+		if base, _, found := strings.Cut(selectedLanguages[0], "-"); found {
 			languages += "," + base + ";q=0.9"
 		}
 	}

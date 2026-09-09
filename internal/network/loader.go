@@ -38,6 +38,12 @@ const (
 )
 
 type Request struct {
+	// ClientIsWorker identifies the initiating realm, not the resource type:
+	// a worker script loaded by a document still has a document client.
+	ClientIsWorker bool
+	TopLevelURL    *url.URL
+	Credentials    string
+	OpaqueOrigin   bool
 	// Worker script and worker Fetch requests do not acquire document hints.
 	OmitClientHints bool
 	ClientHints     *ClientHintsContext
@@ -174,7 +180,11 @@ func (l *Loader) Load(ctx context.Context, r Request) (Response, error) {
 			r.Headers.Set("Accept", "*/*")
 		}
 	} else {
-		for k, v := range l.env().RequestHeaders() {
+		headers := l.env().RequestHeaders()
+		if r.ClientIsWorker {
+			headers = l.env().WorkerRequestHeaders()
+		}
+		for k, v := range headers {
 			if r.OmitClientHints && strings.HasPrefix(strings.ToLower(k), "sec-ch-") {
 				continue
 			}
@@ -188,6 +198,7 @@ func (l *Loader) Load(ctx context.Context, r Request) (Response, error) {
 			}
 		}
 		applyBrowserRequestHeaders(&r)
+		applyStorageAccessHeader(&r, l.env().Network.CookiesEnabled)
 		if r.Headers.Get("Accept-Encoding") == "" {
 			r.Headers.Set("Accept-Encoding", "gzip, deflate, br, zstd")
 		}
@@ -223,8 +234,11 @@ func (l *Loader) Load(ctx context.Context, r Request) (Response, error) {
 			r.Headers.Add(k, v)
 		}
 	}
+	if !requestIncludesCredentials(r) {
+		r.Headers.Del("Cookie")
+	}
 	var cookiePairs []string
-	if l.env().Network.CookiesEnabled {
+	if l.env().Network.CookiesEnabled && requestIncludesCredentials(r) {
 		for _, c := range l.cookies.ForURL(r.URL) {
 			cookiePairs = append(cookiePairs, c.Name+"="+c.Value)
 		}
@@ -320,7 +334,7 @@ func (l *Loader) Load(ctx context.Context, r Request) (Response, error) {
 	res := Response{Status: raw.StatusCode, Headers: raw.Header.Clone(), Body: body, URL: r.URL, Duration: time.Since(start), EncodedBodySize: encodedBodySize, Protocol: raw.Proto, TransportTiming: timingSnapshot, BrowserVisibleTiming: browserTiming}
 	acceptedBefore := l.session.ClientHints(r.URL)
 	l.session.AcceptClientHints(r.URL, res.Headers.Get("Accept-CH"))
-	if l.env().Network.CookiesEnabled {
+	if l.env().Network.CookiesEnabled && requestIncludesCredentials(r) {
 		l.cookies.SetFromResponse(r.URL, res.Headers)
 	}
 	if missing := criticalClientHintsForRestart(l.env(), r, res, acceptedBefore); len(missing) != 0 {
@@ -411,8 +425,10 @@ func applyBrowserRequestHeaders(r *Request) {
 		source = r.Referrer
 	}
 	if source != nil {
-		if source.Scheme == r.URL.Scheme && source.Host == r.URL.Host {
+		if !r.OpaqueOrigin && sameRequestOrigin(source, r.URL) {
 			site = "same-origin"
+		} else if !r.OpaqueOrigin && requestSameSite(source, r.URL) {
+			site = "same-site"
 		} else {
 			site = "cross-site"
 		}
@@ -452,7 +468,7 @@ func applyBrowserRequestHeaders(r *Request) {
 		setDefault("Accept", "*/*")
 		if source != nil && r.Method != http.MethodGet && r.Method != http.MethodHead {
 			origin := source.Scheme + "://" + source.Host
-			if source.Scheme == "file" || source.Scheme == "data" {
+			if r.OpaqueOrigin || source.Scheme == "file" || source.Scheme == "data" {
 				origin = "null"
 			}
 			setDefault("Origin", origin)
@@ -550,7 +566,7 @@ func (l *Loader) after(ctx context.Context, r Request, res Response) (Response, 
 			}
 			// These fields belong to the new request, not to the previous hop.
 			// In particular, do not forward the source host's cookie jar entry.
-			for _, name := range []string{"Cookie", "Referer", "Origin", "Sec-Fetch-Site"} {
+			for _, name := range []string{"Cookie", "Referer", "Origin", "Sec-Fetch-Site", "Sec-Fetch-Storage-Access"} {
 				r.Headers.Del(name)
 			}
 			r.URL = u

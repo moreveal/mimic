@@ -319,3 +319,10 @@ operation snapshots with text. A bounded WebGL arithmetic evaluator preserves
 program/resource state and relational readbacks without GPU execution. The
 [graphics observation checkpoint](compatibility/graphics-observations.md)
 distinguishes measured Chrome agreement from approximate or unsupported behavior.
+
+
+Request language reduction now preserves full locale preferences while projecting
+Chrome's reduced Navigator/document view. Worker headers, Fetch/XHR credentials,
+Set-Cookie acceptance and credentialed storage-access metadata share explicit
+request context. See [request storage context](compatibility/request-storage-context.md)
+for the local Chrome oracles and remaining cookie-policy boundaries.

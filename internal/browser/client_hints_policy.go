@@ -116,6 +116,8 @@ func (r *Realm) frameClientHintsContainer(frame *Frame, target string) map[strin
 }
 
 func (r *Realm) applyClientHints(request *network.Request) {
+	request.TopLevelURL = r.requestTopLevelURL()
+	request.OpaqueOrigin = r.origin == "null"
 	if r.clientHints == nil {
 		return
 	}
@@ -144,4 +146,12 @@ func (r *Realm) applyChildNavigationClientHints(request *network.Request, frame 
 	for feature, allowed := range r.frameClientHintsContainer(frame, originOf(target.String())) {
 		request.ClientHints.Allowed["sec-"+feature] = allowed
 	}
+}
+
+// Capture the committed document context before dispatching network work.
+func (r *Realm) requestTopLevelURL() *url.URL {
+	if r.clientHints != nil {
+		return r.clientHints.top
+	}
+	return r.documentURL()
 }

@@ -613,6 +613,9 @@ func (r *Realm) install() error {
 		}
 		return r.val(map[string]any{"hostCandidateCount": count, "reflexiveCandidateCount": reflexiveCount, "portOffsets": offsets, "reflexivePortOffsets": reflexiveOffsets, "publicAddress": ice.PublicAddress, "networkCost": ice.NetworkCost, "hostDelayMillis": ice.HostDelayMillis, "reflexiveDelayMillis": ice.ReflexiveDelayMillis, "endDelayMillis": ice.EndDelayMillis}), nil
 	})
+	host["hasStorageAccess"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		return r.val(p.Environment().Network.CookiesEnabled && r.origin != "null"), nil
+	})
 	host["gpuRequestAdapter"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		promise := r.runtime.NewPromise()
 		delay := time.Duration(p.Environment().Graphics.WebGPU.InitializationDelayMillis * float64(time.Millisecond))
@@ -1746,7 +1749,10 @@ func (r *Realm) hostXHR(_ engine.Value, a []engine.Value) (engine.Value, error) 
 		headers.Set("Content-Type", "text/plain;charset=UTF-8")
 	}
 	timeout := time.Duration(numarg(a, 5)) * time.Millisecond
-	request := network.Request{ContextID: r.agent.ContextID(), URL: u, Referrer: r.documentURL(), SourceURL: r.documentURL(), Method: strarg(a, 1), Headers: headers, AuthorHeaderOrder: authorHeaderOrder, Body: body, Initiator: network.XHR}
+	request := network.Request{ContextID: r.agent.ContextID(), URL: u, Referrer: r.documentURL(), SourceURL: r.documentURL(), Method: strarg(a, 1), Headers: headers, AuthorHeaderOrder: authorHeaderOrder, Body: body, Initiator: network.XHR, Credentials: "same-origin"}
+	if value, ok := arg(a, 7).(bool); ok && value {
+		request.Credentials = "include"
+	}
 	r.applyClientHints(&request)
 	r.scheduler.Post(scheduler.Network, 0, func(context.Context) error {
 		if r.resourceContext.Err() != nil {

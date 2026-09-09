@@ -34,6 +34,7 @@ type DedicatedWorker struct {
 	errorCallback     engine.Value
 	messageReceiver   engine.Value
 	url               *url.URL
+	topLevelURL       *url.URL
 	securityURL       *url.URL // inherited creator URL for blob workers; independent of URL base
 	closed            bool
 	started           bool
@@ -56,7 +57,7 @@ func (r *Realm) hostCreateWorker(_ engine.Value, args []engine.Value) (engine.Va
 	if err != nil {
 		return nil, err
 	}
-	w := &DedicatedWorker{id: id, parent: r, deliverCallback: args[0], errorCallback: args[1], url: workerURL, securityURL: r.documentURL(), done: make(chan struct{}), wake: make(chan struct{}, 1), performanceOrigin: r.scheduler.Now()}
+	w := &DedicatedWorker{id: id, parent: r, deliverCallback: args[0], errorCallback: args[1], url: workerURL, securityURL: r.documentURL(), topLevelURL: r.requestTopLevelURL(), done: make(chan struct{}), wake: make(chan struct{}, 1), performanceOrigin: r.scheduler.Now()}
 	r.workers[id] = w
 	source := strarg(args, 3)
 	r.agent.Page().trace.Add(trace.Lifecycle, "workerCreated", map[string]any{"url": workerURL.String(), "worker": id, "realm": r.ID})
