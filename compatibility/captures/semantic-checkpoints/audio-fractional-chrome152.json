@@ -1,0 +1,73 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/audio_fractional_oracle.js",
+    "fixtureSHA256": "aacdd7e1c7951834455bae95585c4191066c2001526d5e48ddec22ec769576a4",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "0": [
+      9,
+      2,
+      3,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "0.4": [
+      0,
+      4.800000190734863,
+      2.5999999046325684,
+      3.5999999046325684,
+      0,
+      0,
+      0,
+      0
+    ],
+    "0.6": [
+      0,
+      6.199999809265137,
+      2.4000000953674316,
+      3.4000000953674316,
+      0,
+      0,
+      0,
+      0
+    ],
+    "1.4": [
+      0,
+      0,
+      4.800000190734863,
+      2.5999999046325684,
+      3.5999999046325684,
+      0,
+      0,
+      0
+    ],
+    "1.6": [
+      0,
+      0,
+      6.199999809265137,
+      2.4000000953674316,
+      3.4000000953674316,
+      0,
+      0,
+      0
+    ],
+    "events": [
+      "running",
+      "state:running",
+      "complete",
+      "promise",
+      "state:closed"
+    ]
+  }
+}

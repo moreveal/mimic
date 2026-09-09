@@ -1,0 +1,46 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/audio_relations_oracle.js",
+    "fixtureSHA256": "38fbf04d37f3ba18facb4d9290619df14f76ba857336a0304ac34fae0a168c6e",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "samples": [
+      0.5,
+      1,
+      1.5,
+      2,
+      0.5,
+      1,
+      1.5,
+      2,
+      0.25,
+      0.5,
+      0.75,
+      1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "repeat": true,
+    "changed": [
+      2,
+      6,
+      10
+    ],
+    "ownership": [
+      32,
+      true,
+      1
+    ],
+    "loopEnded": 0
+  }
+}

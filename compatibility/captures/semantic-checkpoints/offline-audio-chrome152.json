@@ -1,0 +1,52 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/offline_audio_oracle.js",
+    "fixtureSHA256": "36e6ce55d95c61cf79f8fb668f4b0299901aa60719dbdb14e5faa200e308d7c3",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "invalid": [
+      "TypeError",
+      "NotSupportedError",
+      "NotSupportedError",
+      null
+    ],
+    "initial": [
+      "[object OfflineAudioContext]",
+      1000,
+      44100,
+      0,
+      "suspended",
+      true,
+      "[object AudioDestinationNode]",
+      true,
+      1,
+      0,
+      1,
+      "explicit",
+      "speakers",
+      1
+    ],
+    "render": [
+      "closed",
+      0.023219954648526078,
+      1000,
+      1,
+      44100,
+      true,
+      [
+        "state:running",
+        "complete:1000",
+        "promise"
+      ]
+    ],
+    "second": "InvalidStateError"
+  }
+}

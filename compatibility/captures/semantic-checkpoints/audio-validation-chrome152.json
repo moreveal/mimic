@@ -1,0 +1,65 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/audio_validation_oracle.js",
+    "fixtureSHA256": "0e3f13edd90d2fa5dfe92e93e029ba485a0507fb7c3f8ea5760e51808430a591",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "rates": [
+      [
+        2999,
+        "NotSupportedError"
+      ],
+      [
+        3000,
+        null
+      ],
+      [
+        768000,
+        null
+      ],
+      [
+        768001,
+        "NotSupportedError"
+      ],
+      [
+        1e+40,
+        "TypeError"
+      ]
+    ],
+    "options": [
+      1,
+      "explicit",
+      "discrete",
+      0.25
+    ],
+    "paramErrors": [
+      "TypeError",
+      "TypeError",
+      "TypeError"
+    ],
+    "subclass": [
+      true,
+      true
+    ],
+    "reassign": "InvalidStateError",
+    "destination": [
+      null,
+      null,
+      "max",
+      2,
+      2
+    ],
+    "sourceRate": [
+      "InvalidStateError",
+      "k-rate"
+    ]
+  }
+}
