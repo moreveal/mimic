@@ -5,6 +5,7 @@ import (
 	"errors"
 	"fmt"
 	"math/big"
+	"reflect"
 	"strings"
 	"time"
 
@@ -249,3 +250,16 @@ func (r *runtime) MicrotaskCheckpoint() error {
 	return err
 }
 func (r *runtime) Close() error { return nil }
+
+func (r *runtime) DetachArrayBuffer(v engine.Value) error {
+	object, ok := unwrap(v).(*goja.Object)
+	if !ok || object.ExportType() != reflect.TypeOf(goja.ArrayBuffer{}) {
+		return errors.New("expected ArrayBuffer")
+	}
+	buffer, ok := object.Export().(goja.ArrayBuffer)
+	if !ok {
+		return errors.New("expected ArrayBuffer")
+	}
+	buffer.Detach()
+	return nil
+}

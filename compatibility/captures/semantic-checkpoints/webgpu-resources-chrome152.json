@@ -1,0 +1,51 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "fixture": "internal/browser/testdata/webgpu_resources_oracle.js",
+    "fixtureSHA256": "d7bcba6ae8f14972c752bf6c1f34bd82b31e24175a1126240bcae91c6e60998f",
+    "fixtureHashNormalization": "LF"
+  },
+  "result": {
+    "brands": [
+      "[object GPUDevice]",
+      "[object GPUQueue]",
+      "[object GPUSupportedFeatures]"
+    ],
+    "identity": {
+      "features": false,
+      "limits": false,
+      "info": false
+    },
+    "emptyScope": "OperationError",
+    "buffer": [
+      16,
+      12,
+      "mapped",
+      "source",
+      "[object GPUBuffer]"
+    ],
+    "overlap": "OperationError",
+    "unmap": [
+      "unmapped",
+      0
+    ],
+    "copy": [
+      11,
+      22,
+      33,
+      44
+    ],
+    "validScope": null,
+    "validation": [
+      "[object GPUValidationError]",
+      "string"
+    ],
+    "lost": [
+      "destroyed",
+      "string"
+    ]
+  }
+}

@@ -1,0 +1,129 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "fixture": "internal/browser/testdata/webgpu_flags_oracle.js",
+    "fixtureSHA256": "1bbc41d1a3df27a6c0a3c83fd8c57299b00e08b7099d3e8c71d05af063be88c2",
+    "fixtureHashNormalization": "LF"
+  },
+  "result": {
+    "GPUBufferUsage": {
+      "type": "object",
+      "tag": "[object GPUBufferUsage]",
+      "prototype": true,
+      "values": {
+        "MAP_READ": 1,
+        "MAP_WRITE": 2,
+        "COPY_SRC": 4,
+        "COPY_DST": 8,
+        "INDEX": 16,
+        "VERTEX": 32,
+        "UNIFORM": 64,
+        "STORAGE": 128,
+        "INDIRECT": 256,
+        "QUERY_RESOLVE": 512
+      },
+      "descriptor": {
+        "value": 1,
+        "writable": false,
+        "enumerable": true,
+        "configurable": false
+      },
+      "global": {
+        "writable": true,
+        "enumerable": false,
+        "configurable": true
+      }
+    },
+    "GPUMapMode": {
+      "type": "object",
+      "tag": "[object GPUMapMode]",
+      "prototype": true,
+      "values": {
+        "READ": 1,
+        "WRITE": 2
+      },
+      "descriptor": {
+        "value": 1,
+        "writable": false,
+        "enumerable": true,
+        "configurable": false
+      },
+      "global": {
+        "writable": true,
+        "enumerable": false,
+        "configurable": true
+      }
+    },
+    "GPUTextureUsage": {
+      "type": "object",
+      "tag": "[object GPUTextureUsage]",
+      "prototype": true,
+      "values": {
+        "COPY_SRC": 1,
+        "COPY_DST": 2,
+        "TEXTURE_BINDING": 4,
+        "STORAGE_BINDING": 8,
+        "RENDER_ATTACHMENT": 16,
+        "TRANSIENT_ATTACHMENT": 32
+      },
+      "descriptor": {
+        "value": 1,
+        "writable": false,
+        "enumerable": true,
+        "configurable": false
+      },
+      "global": {
+        "writable": true,
+        "enumerable": false,
+        "configurable": true
+      }
+    },
+    "GPUShaderStage": {
+      "type": "object",
+      "tag": "[object GPUShaderStage]",
+      "prototype": true,
+      "values": {
+        "VERTEX": 1,
+        "FRAGMENT": 2,
+        "COMPUTE": 4
+      },
+      "descriptor": {
+        "value": 1,
+        "writable": false,
+        "enumerable": true,
+        "configurable": false
+      },
+      "global": {
+        "writable": true,
+        "enumerable": false,
+        "configurable": true
+      }
+    },
+    "GPUColorWrite": {
+      "type": "object",
+      "tag": "[object GPUColorWrite]",
+      "prototype": true,
+      "values": {
+        "RED": 1,
+        "GREEN": 2,
+        "BLUE": 4,
+        "ALPHA": 8,
+        "ALL": 15
+      },
+      "descriptor": {
+        "value": 1,
+        "writable": false,
+        "enumerable": true,
+        "configurable": false
+      },
+      "global": {
+        "writable": true,
+        "enumerable": false,
+        "configurable": true
+      }
+    }
+  }
+}

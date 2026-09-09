@@ -197,6 +197,23 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 			"deviceMemory": n.DeviceMemory, "onLine": n.Online,
 		}), nil
 	})
+	if detacher, ok := runtime.(engine.ArrayBufferDetacher); ok {
+		host["detachArrayBuffer"] = runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+			if len(args) != 1 {
+				return nil, fmt.Errorf("expected ArrayBuffer")
+			}
+			return nil, detacher.DetachArrayBuffer(args[0])
+		})
+	}
+	host["gpuRequestAdapter"] = runtime.Function(func(engine.Value, []engine.Value) (engine.Value, error) {
+		promise := runtime.NewPromise()
+		delay := time.Duration(p.Environment().Graphics.WebGPU.InitializationDelayMillis * float64(time.Millisecond))
+		workerScheduler.Post(scheduler.Control, delay, func(context.Context) error {
+			g := p.Environment().Graphics
+			return promise.Resolve(map[string]any{"vendor": g.WebGPU.Vendor, "architecture": g.WebGPU.Architecture, "device": g.WebGPU.Device, "description": g.WebGPU.Description, "features": g.WebGPU.Features, "maxTextureSize": g.MaxTextureSize})
+		})
+		return promise.Value, nil
+	})
 	host["graphics"] = runtime.Function(func(engine.Value, []engine.Value) (engine.Value, error) {
 		g := p.Environment().Graphics
 		return runtime.Value(map[string]any{"vendor": g.Vendor, "renderer": g.Renderer, "maxTextureSize": g.MaxTextureSize, "capabilitiesJSON": g.WebGLCapabilities()}), nil

@@ -12,6 +12,17 @@
   const missing=(iface,member)=>host.semanticMissing(iface+'.'+member);
   for(const spec of catalog){
     if(!exposed(spec))continue;
+    if(spec.kind==='namespace'){
+      let namespace=globals[spec.name];
+      if(!namespace||typeof namespace!=='object'){namespace={};Object.defineProperty(globals,spec.name,{value:namespace,writable:true,configurable:true})}
+      if(!Object.hasOwn(namespace,Symbol.toStringTag))Object.defineProperty(namespace,Symbol.toStringTag,{value:spec.name,configurable:true});
+      for(const member of spec.members){
+        if(member.name in namespace)continue;
+        if(member.kind==='constant')Object.defineProperty(namespace,member.name,{value:Number(member.value),enumerable:true});
+        else if(member.kind==='operation')Object.defineProperty(namespace,member.name,{value:function(){return missing(spec.name,member.name)},writable:true,enumerable:true,configurable:true});
+      }
+      continue;
+    }
     const interfaceName=spec.name;
     let ctor=globals[spec.name];
     const generated=typeof ctor!=='function';
@@ -19,6 +30,7 @@
       ctor={[spec.name]:function(){missing(interfaceName,'constructor');throw new TypeError('Illegal constructor')}}[spec.name];
       Object.defineProperty(globals,spec.name,{value:ctor,writable:true,configurable:true});
     }
+    if(!Object.hasOwn(ctor.prototype,Symbol.toStringTag))Object.defineProperty(ctor.prototype,Symbol.toStringTag,{value:spec.name,configurable:true});
     if(realmExposure==='Window')for(const alias of spec.legacyWindowAliases||[])Object.defineProperty(globals,alias,{value:ctor,writable:true,configurable:true});
     const parent=spec.parent&&globals[spec.parent];
     if(parent&&parent.prototype&&Object.getPrototypeOf(ctor.prototype)!==parent.prototype)Object.setPrototypeOf(ctor.prototype,parent.prototype);

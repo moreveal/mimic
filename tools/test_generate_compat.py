@@ -1,8 +1,17 @@
 """Regression for partial-interface and mixin provenance, independent of Chrome."""
 import unittest
-from generate_compat import normalize_idl, extended
+import json
+from generate_compat import normalize_idl, extended, surface_catalog
 
 class ProvenanceTests(unittest.TestCase):
+    def test_namespace_constants_survive_projection(self):
+        catalog=normalize_idl({'flags.idl':'[Exposed=(Window, Worker), SecureContext] namespace ExampleFlags { const unsigned long READ = 0x0001; const unsigned long WRITE = 2; };'}, {'chrome_version':'test','chromium_ref':'pinned'})
+        projected=json.loads(surface_catalog(catalog))
+        self.assertEqual(len(projected),1)
+        self.assertEqual(projected[0]['kind'],'namespace')
+        self.assertEqual(projected[0]['exposed'],['Window','Worker'])
+        self.assertEqual([(m['name'],m['value']) for m in projected[0]['members']],[('READ','0x0001'),('WRITE','2')])
+
     def test_conditional_exposure(self):
         self.assertEqual(extended('[Exposed(Window WebHID, DedicatedWorker WorkerHID), SecureContext]'),
                          {'Exposed':['Window','DedicatedWorker'],'ExposureFeatures':{'Window':'WebHID','DedicatedWorker':'WorkerHID'},'SecureContext':True})

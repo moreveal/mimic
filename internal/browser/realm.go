@@ -575,6 +575,14 @@ func (r *Realm) install() error {
 		w := p.Environment().Window
 		return r.val(map[string]any{"width": w.ViewportWidth, "height": w.ViewportHeight, "outerWidth": w.OuterWidth, "outerHeight": w.OuterHeight}), nil
 	})
+	if detacher, ok := r.runtime.(engine.ArrayBufferDetacher); ok {
+		host["detachArrayBuffer"] = r.runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+			if len(args) != 1 {
+				return nil, fmt.Errorf("expected ArrayBuffer")
+			}
+			return nil, detacher.DetachArrayBuffer(args[0])
+		})
+	}
 	host["graphics"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		g := p.Environment().Graphics
 		return r.val(map[string]any{"vendor": g.Vendor, "renderer": g.Renderer, "maxTextureSize": g.MaxTextureSize, "capabilitiesJSON": g.WebGLCapabilities()}), nil
