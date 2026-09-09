@@ -999,3 +999,39 @@ Chrome CPU N100 stopped under the frozen sustained-paging rule. The final React
 N100 series/startup calibration did not finish, so this is not a completed full
 matrix. [Partial results and launch receipts](../compatibility/repository-hydration-20260909/full-matrix-summary.json)
 are retained; the original baseline is immutable.
+
+## 2026-09-09 — Weather and additional site hydration
+
+Release fast gate at source `40581bd` passed all six unchanged correctness
+workloads, all measured concurrency waves, and both teardown/memory waves.
+The executable was freshly built and checked before each launch; the frozen
+harness hash remained unchanged. No full benchmark matrix was run for this
+compatibility batch.
+
+| Metric | Release observation |
+|---|---:|
+| Warm DOM completion median | 158.752 ms |
+| Warm static completion median | 53.954 ms |
+| Warm React completion median | 109.916 ms |
+| Static N10 throughput median | 56.078 Pages/s |
+| Static N25 throughput median | 73.916 Pages/s |
+| Static marginal RSS/Page, N10 | 26.769 MiB |
+| React marginal RSS/Page, N10 | 31.954 MiB |
+| Static RSS after teardown/recovery | 102.063 MiB |
+| React RSS after teardown/recovery | 118.918 MiB |
+
+This is a release checkpoint, not a paired before/after experiment. DOM completion
+and retained RSS are higher than the preceding report's release checkpoint;
+the new DOM/CSSOM/event bindings have a compatibility cost, and this batch does
+not claim a performance win. Bootstrap and retained state remain measured areas
+for subsequent optimization. No global runtime lock or workload shortcut was added.
+
+Live weather profiling found two correctness failures with severe CPU/memory
+amplification: more than 120,000 listeners accumulated through premature Window
+load events; an unsupported attribute-removal operation generated over 12 million
+calls in a sanitizer loop. The semantic repairs eliminate both observed loops.
+
+[Compact gate evidence](../compatibility/site-hydration-20260909/performance-summary.json)
+includes executable/harness hashes, concurrency results and memory observations.
+Raw data remains in `.build/site-compat-20260909/fast-gate-release/`.
+

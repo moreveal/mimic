@@ -1,0 +1,9 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "results": {
+    "https://www.example.com/a/b": "domain=yes; host=yes; later=1; same=updated; same=root",
+    "https://example.com/a/b": "domain=yes",
+    "https://child.www.example.com/a/b": "domain=yes",
+    "https://www.example.com/ab": "same=root"
+  }
+}

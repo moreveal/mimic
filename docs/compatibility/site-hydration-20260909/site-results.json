@@ -1,0 +1,47 @@
+{
+  "reference": "Chrome 152.0.7977.82 headful",
+  "binarySha256": "a4c9d4cc81dd6d7f53bb0067ca046442127a9f3f50121336c518373c8f5ce622",
+  "sites": {
+    "weather": {
+      "url": "https://weather.com/",
+      "status": 200,
+      "htmlBytes": 367307,
+      "files": 41,
+      "placeholderClassCount": 0,
+      "shadowRoots": 1,
+      "embeddedFramesOmitted": 3,
+      "unavailableResourceWarnings": 13,
+      "forecastSectionsPresent": true
+    },
+    "react": {
+      "url": "https://react.dev/learn",
+      "status": 200,
+      "htmlBytes": 236663,
+      "files": 58,
+      "placeholderClassCount": 0,
+      "shadowRoots": 0,
+      "embeddedFramesOmitted": 5,
+      "unavailableResourceWarnings": 0
+    },
+    "wikipedia": {
+      "url": "https://en.wikipedia.org/wiki/JavaScript",
+      "status": 200,
+      "htmlBytes": 912621,
+      "files": 182,
+      "placeholderClassCount": 0,
+      "shadowRoots": 0,
+      "embeddedFramesOmitted": 0,
+      "unavailableResourceWarnings": 0
+    },
+    "mdn": {
+      "url": "https://developer.mozilla.org/en-US/docs/Web/JavaScript",
+      "status": 200,
+      "htmlBytes": 327868,
+      "files": 83,
+      "placeholderClassCount": 0,
+      "shadowRoots": 56,
+      "embeddedFramesOmitted": 0,
+      "unavailableResourceWarnings": 0
+    }
+  }
+}

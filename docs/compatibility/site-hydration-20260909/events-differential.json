@@ -1,0 +1,108 @@
+{
+  "chrome": {
+    "trace": [
+      [
+        "root",
+        true,
+        true,
+        true,
+        1
+      ],
+      [
+        "child",
+        true,
+        true,
+        true,
+        2
+      ],
+      [
+        "child",
+        false,
+        true,
+        true,
+        2
+      ],
+      [
+        "root",
+        false,
+        true,
+        true,
+        3
+      ]
+    ],
+    "sample": {
+      "constructor": "PointerEvent",
+      "trusted": false,
+      "bubbles": true,
+      "cancelable": true,
+      "composed": true,
+      "pointerId": -1,
+      "pointerType": "",
+      "viewWindow": true,
+      "viewNull": false,
+      "detail": 0,
+      "buttons": 0,
+      "which": 1
+    },
+    "calls": 1,
+    "after": [
+      true,
+      null,
+      0,
+      0
+    ]
+  },
+  "mimic": {
+    "after": [
+      true,
+      null,
+      0,
+      0
+    ],
+    "calls": 1,
+    "sample": {
+      "bubbles": true,
+      "buttons": 0,
+      "cancelable": true,
+      "composed": true,
+      "constructor": "PointerEvent",
+      "detail": 0,
+      "pointerId": -1,
+      "pointerType": "",
+      "trusted": false,
+      "viewNull": false,
+      "viewWindow": true,
+      "which": 1
+    },
+    "trace": [
+      [
+        "root",
+        true,
+        true,
+        true,
+        1
+      ],
+      [
+        "child",
+        true,
+        true,
+        true,
+        2
+      ],
+      [
+        "child",
+        false,
+        true,
+        true,
+        2
+      ],
+      [
+        "root",
+        false,
+        true,
+        true,
+        3
+      ]
+    ]
+  }
+}
