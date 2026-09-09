@@ -1741,7 +1741,7 @@ func TestCSPNonceReflectionAllowsDynamicScript(t *testing.T) {
 			return
 		}
 		w.Header().Set("Content-Security-Policy", "script-src 'nonce-good'")
-		fmt.Fprint(w, `<script nonce="good">const s=document.createElement('script');s.nonce='good';s.onload=()=>window.dynamicLoadState=document.readyState;s.src='/dynamic.js';document.querySelector('body').appendChild(s)</script>`)
+		fmt.Fprint(w, `<body><script nonce="good">const s=document.createElement('script');s.nonce='good';s.onload=()=>window.dynamicLoadState=document.readyState;s.src='/dynamic.js';document.querySelector('body').appendChild(s)</script>`)
 	}))
 	defer srv.Close()
 	p := testPage(t)

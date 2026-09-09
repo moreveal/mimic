@@ -1,0 +1,1134 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "visibilityState": "visible",
+    "hasFocus": true,
+    "window": {
+      "left": 10,
+      "top": 10,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled"
+  },
+  "origin": "http://127.0.0.1:53028",
+  "source": "internal/browser/testdata/worker_fetch_oracle.js",
+  "sha256": "f0c8ca087fc3bb936afaeeea74fc4884376ac5e44b8358ccda58e06e717303bb",
+  "results": [
+    {
+      "label": "ordinary",
+      "location": {
+        "href": "http://127.0.0.1:53028/worker/base/worker.js",
+        "origin": "http://127.0.0.1:53028"
+      },
+      "types": {
+        "fetch": "function",
+        "Response": "function",
+        "Headers": "function",
+        "Request": "function",
+        "AbortController": "function",
+        "AbortSignal": "function"
+      },
+      "relative": {
+        "promise": true,
+        "response": true,
+        "headers": true,
+        "status": 200,
+        "statusText": "OK",
+        "ok": true,
+        "url": "http://127.0.0.1:53028/worker/base/relative?worker=ordinary",
+        "type": "basic",
+        "redirected": false,
+        "bodyUsedBefore": false,
+        "header": "present",
+        "body": "{\"path\":\"/worker/base/relative?worker=ordinary\",\"method\":\"GET\",\"body\":\"\",\"referer\":\"http://127.0.0.1:53028/worker/base/worker.js\",\"contentType\":null,\"keep\":null}",
+        "cloneBody": "{\"path\":\"/worker/base/relative?worker=ordinary\",\"method\":\"GET\",\"body\":\"\",\"referer\":\"http://127.0.0.1:53028/worker/base/worker.js\",\"contentType\":null,\"keep\":null}",
+        "bodyUsedAfter": true,
+        "secondReadError": {
+          "name": "TypeError",
+          "message": "Failed to execute 'text' on 'Response': body stream already read"
+        }
+      },
+      "root": {
+        "promise": true,
+        "response": true,
+        "headers": true,
+        "status": 200,
+        "statusText": "OK",
+        "ok": true,
+        "url": "http://127.0.0.1:53028/root?worker=ordinary",
+        "type": "basic",
+        "redirected": false,
+        "bodyUsedBefore": false,
+        "header": "present",
+        "body": "{\"path\":\"/root?worker=ordinary\",\"method\":\"GET\",\"body\":\"\",\"referer\":\"http://127.0.0.1:53028/worker/base/worker.js\",\"contentType\":null,\"keep\":null}",
+        "cloneBody": "{\"path\":\"/root?worker=ordinary\",\"method\":\"GET\",\"body\":\"\",\"referer\":\"http://127.0.0.1:53028/worker/base/worker.js\",\"contentType\":null,\"keep\":null}",
+        "bodyUsedAfter": true,
+        "secondReadError": {
+          "name": "TypeError",
+          "message": "Failed to execute 'text' on 'Response': body stream already read"
+        }
+      },
+      "absolute": {
+        "promise": true,
+        "response": true,
+        "headers": true,
+        "status": 200,
+        "statusText": "OK",
+        "ok": true,
+        "url": "http://127.0.0.1:53028/absolute?worker=ordinary",
+        "type": "basic",
+        "redirected": false,
+        "bodyUsedBefore": false,
+        "header": "present",
+        "body": "{\"path\":\"/absolute?worker=ordinary\",\"method\":\"GET\",\"body\":\"\",\"referer\":\"http://127.0.0.1:53028/worker/base/worker.js\",\"contentType\":null,\"keep\":null}",
+        "cloneBody": "{\"path\":\"/absolute?worker=ordinary\",\"method\":\"GET\",\"body\":\"\",\"referer\":\"http://127.0.0.1:53028/worker/base/worker.js\",\"contentType\":null,\"keep\":null}",
+        "bodyUsedAfter": true,
+        "secondReadError": {
+          "name": "TypeError",
+          "message": "Failed to execute 'text' on 'Response': body stream already read"
+        }
+      },
+      "fetchRedirect": {
+        "promise": true,
+        "response": true,
+        "headers": true,
+        "status": 200,
+        "statusText": "OK",
+        "ok": true,
+        "url": "http://127.0.0.1:53028/fetch-final?worker=ordinary",
+        "type": "basic",
+        "redirected": true,
+        "bodyUsedBefore": false,
+        "header": "present",
+        "body": "{\"path\":\"/fetch-final?worker=ordinary\",\"method\":\"GET\",\"body\":\"\",\"referer\":\"http://127.0.0.1:53028/worker/base/worker.js\",\"contentType\":null,\"keep\":null}",
+        "cloneBody": "{\"path\":\"/fetch-final?worker=ordinary\",\"method\":\"GET\",\"body\":\"\",\"referer\":\"http://127.0.0.1:53028/worker/base/worker.js\",\"contentType\":null,\"keep\":null}",
+        "bodyUsedAfter": true,
+        "secondReadError": {
+          "name": "TypeError",
+          "message": "Failed to execute 'text' on 'Response': body stream already read"
+        }
+      },
+      "notFound": {
+        "promise": true,
+        "response": true,
+        "headers": true,
+        "status": 404,
+        "statusText": "Not Found",
+        "ok": false,
+        "url": "http://127.0.0.1:53028/not-found?worker=ordinary",
+        "type": "basic",
+        "redirected": false,
+        "bodyUsedBefore": false,
+        "header": "present",
+        "body": "{\"path\":\"/not-found?worker=ordinary\",\"method\":\"GET\",\"body\":\"\",\"referer\":\"http://127.0.0.1:53028/worker/base/worker.js\",\"contentType\":null,\"keep\":null}",
+        "cloneBody": "{\"path\":\"/not-found?worker=ordinary\",\"method\":\"GET\",\"body\":\"\",\"referer\":\"http://127.0.0.1:53028/worker/base/worker.js\",\"contentType\":null,\"keep\":null}",
+        "bodyUsedAfter": true,
+        "secondReadError": {
+          "name": "TypeError",
+          "message": "Failed to execute 'text' on 'Response': body stream already read"
+        }
+      },
+      "invalid": {
+        "promise": true,
+        "rejected": true,
+        "error": {
+          "name": "TypeError",
+          "message": "Failed to execute 'fetch' on 'WorkerGlobalScope': Failed to parse URL from http://["
+        }
+      },
+      "preAbort": {
+        "promise": true,
+        "rejected": true,
+        "error": {
+          "name": "AbortError",
+          "message": "signal is aborted without reason",
+          "code": 20
+        }
+      },
+      "customAbortIdentity": true,
+      "duringAbort": {
+        "order": [
+          "event",
+          "after-abort",
+          "rejection"
+        ],
+        "error": {
+          "name": "AbortError",
+          "message": "signal is aborted without reason",
+          "code": 20
+        },
+        "reasonIdentity": true
+      },
+      "bodyAbort": {
+        "status": 200,
+        "error": {
+          "name": "AbortError",
+          "message": "The user aborted a request.",
+          "code": 20
+        }
+      },
+      "redirectMethods": {
+        "301": {
+          "promise": true,
+          "response": true,
+          "headers": true,
+          "status": 200,
+          "statusText": "OK",
+          "ok": true,
+          "url": "http://127.0.0.1:53028/echo",
+          "type": "basic",
+          "redirected": true,
+          "bodyUsedBefore": false,
+          "header": "present",
+          "body": "{\"path\":\"/echo\",\"method\":\"GET\",\"body\":\"\",\"referer\":\"http://127.0.0.1:53028/worker/base/worker.js\",\"contentType\":null,\"keep\":\"yes\"}",
+          "cloneBody": "{\"path\":\"/echo\",\"method\":\"GET\",\"body\":\"\",\"referer\":\"http://127.0.0.1:53028/worker/base/worker.js\",\"contentType\":null,\"keep\":\"yes\"}",
+          "bodyUsedAfter": true,
+          "secondReadError": {
+            "name": "TypeError",
+            "message": "Failed to execute 'text' on 'Response': body stream already read"
+          }
+        },
+        "302": {
+          "promise": true,
+          "response": true,
+          "headers": true,
+          "status": 200,
+          "statusText": "OK",
+          "ok": true,
+          "url": "http://127.0.0.1:53028/echo",
+          "type": "basic",
+          "redirected": true,
+          "bodyUsedBefore": false,
+          "header": "present",
+          "body": "{\"path\":\"/echo\",\"method\":\"GET\",\"body\":\"\",\"referer\":\"http://127.0.0.1:53028/worker/base/worker.js\",\"contentType\":null,\"keep\":\"yes\"}",
+          "cloneBody": "{\"path\":\"/echo\",\"method\":\"GET\",\"body\":\"\",\"referer\":\"http://127.0.0.1:53028/worker/base/worker.js\",\"contentType\":null,\"keep\":\"yes\"}",
+          "bodyUsedAfter": true,
+          "secondReadError": {
+            "name": "TypeError",
+            "message": "Failed to execute 'text' on 'Response': body stream already read"
+          }
+        },
+        "303": {
+          "promise": true,
+          "response": true,
+          "headers": true,
+          "status": 200,
+          "statusText": "OK",
+          "ok": true,
+          "url": "http://127.0.0.1:53028/echo",
+          "type": "basic",
+          "redirected": true,
+          "bodyUsedBefore": false,
+          "header": "present",
+          "body": "{\"path\":\"/echo\",\"method\":\"GET\",\"body\":\"\",\"referer\":\"http://127.0.0.1:53028/worker/base/worker.js\",\"contentType\":null,\"keep\":\"yes\"}",
+          "cloneBody": "{\"path\":\"/echo\",\"method\":\"GET\",\"body\":\"\",\"referer\":\"http://127.0.0.1:53028/worker/base/worker.js\",\"contentType\":null,\"keep\":\"yes\"}",
+          "bodyUsedAfter": true,
+          "secondReadError": {
+            "name": "TypeError",
+            "message": "Failed to execute 'text' on 'Response': body stream already read"
+          }
+        },
+        "307": {
+          "promise": true,
+          "response": true,
+          "headers": true,
+          "status": 200,
+          "statusText": "OK",
+          "ok": true,
+          "url": "http://127.0.0.1:53028/echo",
+          "type": "basic",
+          "redirected": true,
+          "bodyUsedBefore": false,
+          "header": "present",
+          "body": "{\"path\":\"/echo\",\"method\":\"POST\",\"body\":\"payload\",\"referer\":\"http://127.0.0.1:53028/worker/base/worker.js\",\"contentType\":\"text/plain\",\"keep\":\"yes\"}",
+          "cloneBody": "{\"path\":\"/echo\",\"method\":\"POST\",\"body\":\"payload\",\"referer\":\"http://127.0.0.1:53028/worker/base/worker.js\",\"contentType\":\"text/plain\",\"keep\":\"yes\"}",
+          "bodyUsedAfter": true,
+          "secondReadError": {
+            "name": "TypeError",
+            "message": "Failed to execute 'text' on 'Response': body stream already read"
+          }
+        },
+        "308": {
+          "promise": true,
+          "response": true,
+          "headers": true,
+          "status": 200,
+          "statusText": "OK",
+          "ok": true,
+          "url": "http://127.0.0.1:53028/echo",
+          "type": "basic",
+          "redirected": true,
+          "bodyUsedBefore": false,
+          "header": "present",
+          "body": "{\"path\":\"/echo\",\"method\":\"POST\",\"body\":\"payload\",\"referer\":\"http://127.0.0.1:53028/worker/base/worker.js\",\"contentType\":\"text/plain\",\"keep\":\"yes\"}",
+          "cloneBody": "{\"path\":\"/echo\",\"method\":\"POST\",\"body\":\"payload\",\"referer\":\"http://127.0.0.1:53028/worker/base/worker.js\",\"contentType\":\"text/plain\",\"keep\":\"yes\"}",
+          "bodyUsedAfter": true,
+          "secondReadError": {
+            "name": "TypeError",
+            "message": "Failed to execute 'text' on 'Response': body stream already read"
+          }
+        }
+      },
+      "notRedirect304": {
+        "promise": true,
+        "response": true,
+        "headers": true,
+        "status": 304,
+        "statusText": "Not Modified",
+        "ok": false,
+        "url": "http://127.0.0.1:53028/redirect/304",
+        "type": "basic",
+        "redirected": false,
+        "bodyUsedBefore": false,
+        "header": null,
+        "body": "",
+        "cloneBody": "",
+        "bodyUsedAfter": true,
+        "secondReadError": {
+          "name": "TypeError",
+          "message": "Failed to execute 'text' on 'Response': body stream already read"
+        }
+      },
+      "manualRedirect": {
+        "promise": true,
+        "response": true,
+        "headers": true,
+        "status": 0,
+        "statusText": "",
+        "ok": false,
+        "url": "http://127.0.0.1:53028/redirect/302",
+        "type": "opaqueredirect",
+        "redirected": false,
+        "bodyUsedBefore": false,
+        "header": null,
+        "body": "",
+        "cloneBody": "",
+        "bodyUsedAfter": false
+      },
+      "errorRedirect": {
+        "promise": true,
+        "rejected": true,
+        "error": {
+          "name": "TypeError",
+          "message": "Failed to fetch"
+        }
+      },
+      "redirectLoop": {
+        "promise": true,
+        "rejected": true,
+        "error": {
+          "name": "TypeError",
+          "message": "Failed to fetch"
+        }
+      }
+    },
+    {
+      "label": "redirected",
+      "location": {
+        "href": "http://127.0.0.1:53028/moved/final.js",
+        "origin": "http://127.0.0.1:53028"
+      },
+      "types": {
+        "fetch": "function",
+        "Response": "function",
+        "Headers": "function",
+        "Request": "function",
+        "AbortController": "function",
+        "AbortSignal": "function"
+      },
+      "relative": {
+        "promise": true,
+        "response": true,
+        "headers": true,
+        "status": 200,
+        "statusText": "OK",
+        "ok": true,
+        "url": "http://127.0.0.1:53028/moved/relative?worker=redirected",
+        "type": "basic",
+        "redirected": false,
+        "bodyUsedBefore": false,
+        "header": "present",
+        "body": "{\"path\":\"/moved/relative?worker=redirected\",\"method\":\"GET\",\"body\":\"\",\"referer\":\"http://127.0.0.1:53028/moved/final.js\",\"contentType\":null,\"keep\":null}",
+        "cloneBody": "{\"path\":\"/moved/relative?worker=redirected\",\"method\":\"GET\",\"body\":\"\",\"referer\":\"http://127.0.0.1:53028/moved/final.js\",\"contentType\":null,\"keep\":null}",
+        "bodyUsedAfter": true,
+        "secondReadError": {
+          "name": "TypeError",
+          "message": "Failed to execute 'text' on 'Response': body stream already read"
+        }
+      },
+      "root": {
+        "promise": true,
+        "response": true,
+        "headers": true,
+        "status": 200,
+        "statusText": "OK",
+        "ok": true,
+        "url": "http://127.0.0.1:53028/root?worker=redirected",
+        "type": "basic",
+        "redirected": false,
+        "bodyUsedBefore": false,
+        "header": "present",
+        "body": "{\"path\":\"/root?worker=redirected\",\"method\":\"GET\",\"body\":\"\",\"referer\":\"http://127.0.0.1:53028/moved/final.js\",\"contentType\":null,\"keep\":null}",
+        "cloneBody": "{\"path\":\"/root?worker=redirected\",\"method\":\"GET\",\"body\":\"\",\"referer\":\"http://127.0.0.1:53028/moved/final.js\",\"contentType\":null,\"keep\":null}",
+        "bodyUsedAfter": true,
+        "secondReadError": {
+          "name": "TypeError",
+          "message": "Failed to execute 'text' on 'Response': body stream already read"
+        }
+      },
+      "absolute": {
+        "promise": true,
+        "response": true,
+        "headers": true,
+        "status": 200,
+        "statusText": "OK",
+        "ok": true,
+        "url": "http://127.0.0.1:53028/absolute?worker=redirected",
+        "type": "basic",
+        "redirected": false,
+        "bodyUsedBefore": false,
+        "header": "present",
+        "body": "{\"path\":\"/absolute?worker=redirected\",\"method\":\"GET\",\"body\":\"\",\"referer\":\"http://127.0.0.1:53028/moved/final.js\",\"contentType\":null,\"keep\":null}",
+        "cloneBody": "{\"path\":\"/absolute?worker=redirected\",\"method\":\"GET\",\"body\":\"\",\"referer\":\"http://127.0.0.1:53028/moved/final.js\",\"contentType\":null,\"keep\":null}",
+        "bodyUsedAfter": true,
+        "secondReadError": {
+          "name": "TypeError",
+          "message": "Failed to execute 'text' on 'Response': body stream already read"
+        }
+      },
+      "fetchRedirect": {
+        "promise": true,
+        "response": true,
+        "headers": true,
+        "status": 200,
+        "statusText": "OK",
+        "ok": true,
+        "url": "http://127.0.0.1:53028/fetch-final?worker=redirected",
+        "type": "basic",
+        "redirected": true,
+        "bodyUsedBefore": false,
+        "header": "present",
+        "body": "{\"path\":\"/fetch-final?worker=redirected\",\"method\":\"GET\",\"body\":\"\",\"referer\":\"http://127.0.0.1:53028/moved/final.js\",\"contentType\":null,\"keep\":null}",
+        "cloneBody": "{\"path\":\"/fetch-final?worker=redirected\",\"method\":\"GET\",\"body\":\"\",\"referer\":\"http://127.0.0.1:53028/moved/final.js\",\"contentType\":null,\"keep\":null}",
+        "bodyUsedAfter": true,
+        "secondReadError": {
+          "name": "TypeError",
+          "message": "Failed to execute 'text' on 'Response': body stream already read"
+        }
+      },
+      "notFound": {
+        "promise": true,
+        "response": true,
+        "headers": true,
+        "status": 404,
+        "statusText": "Not Found",
+        "ok": false,
+        "url": "http://127.0.0.1:53028/not-found?worker=redirected",
+        "type": "basic",
+        "redirected": false,
+        "bodyUsedBefore": false,
+        "header": "present",
+        "body": "{\"path\":\"/not-found?worker=redirected\",\"method\":\"GET\",\"body\":\"\",\"referer\":\"http://127.0.0.1:53028/moved/final.js\",\"contentType\":null,\"keep\":null}",
+        "cloneBody": "{\"path\":\"/not-found?worker=redirected\",\"method\":\"GET\",\"body\":\"\",\"referer\":\"http://127.0.0.1:53028/moved/final.js\",\"contentType\":null,\"keep\":null}",
+        "bodyUsedAfter": true,
+        "secondReadError": {
+          "name": "TypeError",
+          "message": "Failed to execute 'text' on 'Response': body stream already read"
+        }
+      },
+      "invalid": {
+        "promise": true,
+        "rejected": true,
+        "error": {
+          "name": "TypeError",
+          "message": "Failed to execute 'fetch' on 'WorkerGlobalScope': Failed to parse URL from http://["
+        }
+      },
+      "preAbort": {
+        "promise": true,
+        "rejected": true,
+        "error": {
+          "name": "AbortError",
+          "message": "signal is aborted without reason",
+          "code": 20
+        }
+      },
+      "customAbortIdentity": true,
+      "duringAbort": {
+        "order": [
+          "event",
+          "after-abort",
+          "rejection"
+        ],
+        "error": {
+          "name": "AbortError",
+          "message": "signal is aborted without reason",
+          "code": 20
+        },
+        "reasonIdentity": true
+      },
+      "bodyAbort": {
+        "status": 200,
+        "error": {
+          "name": "AbortError",
+          "message": "The user aborted a request.",
+          "code": 20
+        }
+      }
+    },
+    {
+      "label": "blob",
+      "location": {
+        "href": "blob:http://127.0.0.1:53028/4e0c6ba9-d693-4f9d-91bd-cb7f7360607f",
+        "origin": "http://127.0.0.1:53028"
+      },
+      "types": {
+        "fetch": "function",
+        "Response": "function",
+        "Headers": "function",
+        "Request": "function",
+        "AbortController": "function",
+        "AbortSignal": "function"
+      },
+      "relative": {
+        "promise": true,
+        "rejected": true,
+        "error": {
+          "name": "TypeError",
+          "message": "Failed to execute 'fetch' on 'WorkerGlobalScope': Failed to parse URL from relative?worker=blob"
+        }
+      },
+      "root": {
+        "promise": true,
+        "rejected": true,
+        "error": {
+          "name": "TypeError",
+          "message": "Failed to execute 'fetch' on 'WorkerGlobalScope': Failed to parse URL from /root?worker=blob"
+        }
+      },
+      "absolute": {
+        "promise": true,
+        "response": true,
+        "headers": true,
+        "status": 200,
+        "statusText": "OK",
+        "ok": true,
+        "url": "http://127.0.0.1:53028/absolute?worker=blob",
+        "type": "basic",
+        "redirected": false,
+        "bodyUsedBefore": false,
+        "header": "present",
+        "body": "{\"path\":\"/absolute?worker=blob\",\"method\":\"GET\",\"body\":\"\",\"referer\":null,\"contentType\":null,\"keep\":null}",
+        "cloneBody": "{\"path\":\"/absolute?worker=blob\",\"method\":\"GET\",\"body\":\"\",\"referer\":null,\"contentType\":null,\"keep\":null}",
+        "bodyUsedAfter": true,
+        "secondReadError": {
+          "name": "TypeError",
+          "message": "Failed to execute 'text' on 'Response': body stream already read"
+        }
+      },
+      "fetchRedirect": {
+        "promise": true,
+        "response": true,
+        "headers": true,
+        "status": 200,
+        "statusText": "OK",
+        "ok": true,
+        "url": "http://127.0.0.1:53028/fetch-final?worker=blob",
+        "type": "basic",
+        "redirected": true,
+        "bodyUsedBefore": false,
+        "header": "present",
+        "body": "{\"path\":\"/fetch-final?worker=blob\",\"method\":\"GET\",\"body\":\"\",\"referer\":null,\"contentType\":null,\"keep\":null}",
+        "cloneBody": "{\"path\":\"/fetch-final?worker=blob\",\"method\":\"GET\",\"body\":\"\",\"referer\":null,\"contentType\":null,\"keep\":null}",
+        "bodyUsedAfter": true,
+        "secondReadError": {
+          "name": "TypeError",
+          "message": "Failed to execute 'text' on 'Response': body stream already read"
+        }
+      },
+      "notFound": {
+        "promise": true,
+        "response": true,
+        "headers": true,
+        "status": 404,
+        "statusText": "Not Found",
+        "ok": false,
+        "url": "http://127.0.0.1:53028/not-found?worker=blob",
+        "type": "basic",
+        "redirected": false,
+        "bodyUsedBefore": false,
+        "header": "present",
+        "body": "{\"path\":\"/not-found?worker=blob\",\"method\":\"GET\",\"body\":\"\",\"referer\":null,\"contentType\":null,\"keep\":null}",
+        "cloneBody": "{\"path\":\"/not-found?worker=blob\",\"method\":\"GET\",\"body\":\"\",\"referer\":null,\"contentType\":null,\"keep\":null}",
+        "bodyUsedAfter": true,
+        "secondReadError": {
+          "name": "TypeError",
+          "message": "Failed to execute 'text' on 'Response': body stream already read"
+        }
+      },
+      "invalid": {
+        "promise": true,
+        "rejected": true,
+        "error": {
+          "name": "TypeError",
+          "message": "Failed to execute 'fetch' on 'WorkerGlobalScope': Failed to parse URL from http://["
+        }
+      },
+      "preAbort": {
+        "promise": true,
+        "rejected": true,
+        "error": {
+          "name": "AbortError",
+          "message": "signal is aborted without reason",
+          "code": 20
+        }
+      },
+      "customAbortIdentity": true,
+      "duringAbort": {
+        "order": [
+          "event",
+          "after-abort",
+          "rejection"
+        ],
+        "error": {
+          "name": "AbortError",
+          "message": "signal is aborted without reason",
+          "code": 20
+        },
+        "reasonIdentity": true
+      },
+      "bodyAbort": {
+        "status": 200,
+        "error": {
+          "name": "AbortError",
+          "message": "The user aborted a request.",
+          "code": 20
+        }
+      }
+    }
+  ],
+  "requests": [
+    {
+      "path": "/top",
+      "method": "GET",
+      "body": "",
+      "headers": {}
+    },
+    {
+      "path": "/favicon.ico",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/top"
+      }
+    },
+    {
+      "path": "/worker/base/worker.js",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/top"
+      }
+    },
+    {
+      "path": "/worker/base/relative?worker=ordinary",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/root?worker=ordinary",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/absolute?worker=ordinary",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/fetch-redirect?worker=ordinary",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/fetch-final?worker=ordinary",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/not-found?worker=ordinary",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/slow?worker=ordinary",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/slow-body?worker=ordinary",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/redirect/301",
+      "method": "POST",
+      "body": "payload",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js",
+        "contentType": "text/plain",
+        "keep": "yes"
+      }
+    },
+    {
+      "path": "/echo",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js",
+        "keep": "yes"
+      }
+    },
+    {
+      "path": "/redirect/302",
+      "method": "POST",
+      "body": "payload",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js",
+        "contentType": "text/plain",
+        "keep": "yes"
+      }
+    },
+    {
+      "path": "/echo",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js",
+        "keep": "yes"
+      }
+    },
+    {
+      "path": "/redirect/303",
+      "method": "PUT",
+      "body": "payload",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js",
+        "contentType": "text/plain",
+        "keep": "yes"
+      }
+    },
+    {
+      "path": "/echo",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js",
+        "keep": "yes"
+      }
+    },
+    {
+      "path": "/redirect/307",
+      "method": "POST",
+      "body": "payload",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js",
+        "contentType": "text/plain",
+        "keep": "yes"
+      }
+    },
+    {
+      "path": "/echo",
+      "method": "POST",
+      "body": "payload",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js",
+        "contentType": "text/plain",
+        "keep": "yes"
+      }
+    },
+    {
+      "path": "/redirect/308",
+      "method": "POST",
+      "body": "payload",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js",
+        "contentType": "text/plain",
+        "keep": "yes"
+      }
+    },
+    {
+      "path": "/echo",
+      "method": "POST",
+      "body": "payload",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js",
+        "contentType": "text/plain",
+        "keep": "yes"
+      }
+    },
+    {
+      "path": "/redirect/304",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/redirect/302",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/redirect/302",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/loop?hop=0",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/loop?hop=1",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/loop?hop=2",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/loop?hop=3",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/loop?hop=4",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/loop?hop=5",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/loop?hop=6",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/loop?hop=7",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/loop?hop=8",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/loop?hop=9",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/loop?hop=10",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/loop?hop=11",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/loop?hop=12",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/loop?hop=13",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/loop?hop=14",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/loop?hop=15",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/loop?hop=16",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/loop?hop=17",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/loop?hop=18",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/loop?hop=19",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/loop?hop=20",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/worker/base/worker.js"
+      }
+    },
+    {
+      "path": "/worker/start.js",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/top"
+      }
+    },
+    {
+      "path": "/moved/final.js",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/top"
+      }
+    },
+    {
+      "path": "/moved/relative?worker=redirected",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/moved/final.js"
+      }
+    },
+    {
+      "path": "/root?worker=redirected",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/moved/final.js"
+      }
+    },
+    {
+      "path": "/absolute?worker=redirected",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/moved/final.js"
+      }
+    },
+    {
+      "path": "/fetch-redirect?worker=redirected",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/moved/final.js"
+      }
+    },
+    {
+      "path": "/fetch-final?worker=redirected",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/moved/final.js"
+      }
+    },
+    {
+      "path": "/not-found?worker=redirected",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/moved/final.js"
+      }
+    },
+    {
+      "path": "/slow?worker=redirected",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/moved/final.js"
+      }
+    },
+    {
+      "path": "/slow-body?worker=redirected",
+      "method": "GET",
+      "body": "",
+      "headers": {
+        "referer": "http://127.0.0.1:53028/moved/final.js"
+      }
+    },
+    {
+      "path": "/absolute?worker=blob",
+      "method": "GET",
+      "body": "",
+      "headers": {}
+    },
+    {
+      "path": "/fetch-redirect?worker=blob",
+      "method": "GET",
+      "body": "",
+      "headers": {}
+    },
+    {
+      "path": "/fetch-final?worker=blob",
+      "method": "GET",
+      "body": "",
+      "headers": {}
+    },
+    {
+      "path": "/not-found?worker=blob",
+      "method": "GET",
+      "body": "",
+      "headers": {}
+    },
+    {
+      "path": "/slow?worker=blob",
+      "method": "GET",
+      "body": "",
+      "headers": {}
+    },
+    {
+      "path": "/slow-body?worker=blob",
+      "method": "GET",
+      "body": "",
+      "headers": {}
+    }
+  ],
+  "fixture": {
+    "page": "/top",
+    "workerScripts": [
+      "/worker/base/worker.js",
+      "/worker/start.js -> 302 -> /moved/final.js",
+      "blob URL created from the same source"
+    ],
+    "echo": "All ordinary resource endpoints return JSON describing path, method, body, Referer, Content-Type and X-Keep, with X-Probe: present.",
+    "fetchRedirect": "/fetch-redirect -> 302 -> /fetch-final",
+    "methods": "/redirect/{301,302,303,307,308} -> /echo; /redirect/304 also carries Location: /echo.",
+    "loop": "/loop?hop=n -> 302 -> /loop?hop=n+1",
+    "slow": "/slow waits 100ms before response",
+    "slowBody": "/slow-body flushes 200 headers and start immediately, then end after 150ms."
+  }
+}

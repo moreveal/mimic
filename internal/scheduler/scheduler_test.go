@@ -21,6 +21,54 @@ func TestDeterministicOrdering(t *testing.T) {
 	}
 }
 
+func TestWaitAnyWakesForAnotherQueue(t *testing.T) {
+	queues := []*Scheduler{New(time.Unix(0, 0), nil), New(time.Unix(0, 0), nil)}
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	done := make(chan error, 1)
+	go func() { done <- WaitAny(ctx, queues) }()
+	queues[1].Post(Network, 0, func(context.Context) error { return nil })
+	if err := <-done; err != nil {
+		t.Fatalf("other queue did not wake wait: %v", err)
+	}
+}
+
+func TestWaitAnyUsesEarliestTimerAndAdvancesAllClocks(t *testing.T) {
+	start := time.Unix(0, 0)
+	first, second := New(start, nil), New(start, nil)
+	firstRan, secondRan := false, false
+	first.Post(Timer, time.Hour, func(context.Context) error { firstRan = true; return nil })
+	second.Post(Timer, 10*time.Millisecond, func(context.Context) error { secondRan = true; return nil })
+	// Consume enqueue notifications so this wait is driven by the due timer.
+	<-first.wake
+	<-second.wake
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	if err := WaitAny(ctx, []*Scheduler{first, second}); err != nil {
+		t.Fatal(err)
+	}
+	if !first.Now().Equal(second.Now()) || first.Now().Sub(start) < 10*time.Millisecond {
+		t.Fatalf("clocks diverged: %v %v", first.Now(), second.Now())
+	}
+	if err := first.RunReady(ctx, 10); err != nil {
+		t.Fatal(err)
+	}
+	if err := second.RunReady(ctx, 10); err != nil {
+		t.Fatal(err)
+	}
+	if firstRan || !secondRan {
+		t.Fatalf("wrong due task: first=%v second=%v", firstRan, secondRan)
+	}
+}
+
+func TestWaitAnyCancellation(t *testing.T) {
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	if err := WaitAny(ctx, []*Scheduler{New(time.Unix(0, 0), nil)}); err != context.Canceled {
+		t.Fatalf("cancellation: %v", err)
+	}
+}
+
 func TestRunReadyDoesNotFastForwardTimers(t *testing.T) {
 	s := New(time.Unix(0, 0), nil)
 	called := false

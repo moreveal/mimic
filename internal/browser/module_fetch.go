@@ -58,7 +58,13 @@ func (r *Realm) moduleRequest(target, referrer *url.URL) network.Request {
 func (r *Realm) preloadModules() {
 	page := r.agent.Page()
 	base := r.documentURL()
+	if r.preloadedModuleLinks == nil {
+		r.preloadedModuleLinks = map[int64]bool{}
+	}
 	for _, link := range r.document.FindAllByTagName("link") {
+		if r.preloadedModuleLinks[link.ID] {
+			continue
+		}
 		if !hasLinkRelation(link.Attributes["rel"], "modulepreload") || link.Attributes["href"] == "" {
 			continue
 		}
@@ -70,6 +76,7 @@ func (r *Realm) preloadModules() {
 			continue
 		}
 		request := r.moduleRequest(target, base)
+		r.preloadedModuleLinks[link.ID] = true
 		request.PerformanceInitiatorType = "link"
 		pending := r.fetchModule(request)
 		id := link.ID

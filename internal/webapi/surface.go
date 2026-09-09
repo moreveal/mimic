@@ -45,6 +45,9 @@ var attributesCompatibilitySurface string
 //go:embed events_compatibility.js
 var eventsCompatibilitySurface string
 
+//go:embed document_stream.js
+var documentStreamSurface string
+
 //go:embed selectors_vendor.js
 var selectorsVendorSurface string
 
@@ -56,6 +59,12 @@ var streamsVendorSurface string
 
 //go:embed fetch_compatibility.js
 var fetchCompatibilitySurface string
+
+//go:embed fetch_primitives.js
+var fetchPrimitivesSurface string
+
+//go:embed abort_encoding.js
+var abortEncodingSurface string
 
 //go:embed form_controls.js
 var formControlsSurface string
@@ -135,10 +144,11 @@ func composeSurface(generated, exposureSource string) string {
 	// transfer primitive for its fallback path (engines without one copy bytes).
 	streamPrelude := `{let structuredClone;try{const input=new ArrayBuffer(1),clone=globalThis.structuredClone;if(typeof clone==='function'){const output=clone(input,{transfer:[input]});if(output instanceof ArrayBuffer&&output.byteLength===1&&input.byteLength===0)structuredClone=clone}}catch{}`
 	parts := []string{capabilitySurface, generated, "finalizeBindings();", exposureSource,
-		"installNavigatorCapabilities();", semanticFixups, domCompatibilitySurface,
+		"installNavigatorCapabilities();", semanticFixups, strings.Replace(domCompatibilitySurface, "/* shared_abort_encoding */", abortEncodingSurface, 1),
 		templatesCompatibilitySurface, selectorsVendorSurface, selectorsCompatibilitySurface, cssomCompatibilitySurface, streamPrelude,
-		streamsVendorSurface, "}", fetchCompatibilitySurface, formControlsSurface, traversalCompatibilitySurface, documentCompatibilitySurface, attributesCompatibilitySurface, eventsCompatibilitySurface, shadowSerializationSurface, marker}
-	return strings.Replace(handwrittenSurface, marker, strings.Join(parts, "\n"), 1)
+		streamsVendorSurface, "}", fetchCompatibilitySurface, formControlsSurface, traversalCompatibilitySurface, documentCompatibilitySurface, attributesCompatibilitySurface, eventsCompatibilitySurface, documentStreamSurface, shadowSerializationSurface, marker}
+	base := strings.Replace(handwrittenSurface, "/* shared_fetch_primitives */", fetchPrimitivesSurface, 1)
+	return strings.Replace(base, marker, strings.Join(parts, "\n"), 1)
 }
 
 func WorkerSurface(generated string, exposure *compatibility.RealmExposure) string {
@@ -150,5 +160,7 @@ func WorkerSurface(generated string, exposure *compatibility.RealmExposure) stri
 		}
 		exposureSource = "const __workerExposure=" + string(encoded) + ";__applyWorkerExposure(__workerExposure);\n"
 	}
-	return handwrittenWorkerSurface + "\n" + generated + "\n" + exposureSource + "__finishWorkerSurface();if(typeof __workerExposure!=='undefined')__applyWorkerPrototypeExposure(__workerExposure);delete globalThis.__applyWorkerExposure;delete globalThis.__applyWorkerPrototypeExposure;delete globalThis.__finishWorkerSurface;delete globalThis.__mimic;delete globalThis.__mimicIDLExposure;"
+	shared := fetchPrimitivesSurface + "\nObject.assign(globalThis,{TextEncoder,DOMException,URL,URLSearchParams,Blob,File,Headers});\n" + abortEncodingSurface + "\n{let structuredClone;\n" + streamsVendorSurface + "\n}\n" + fetchCompatibilitySurface
+	base := strings.Replace(handwrittenWorkerSurface, "/* shared_worker_fetch */", shared, 1)
+	return base + "\n" + generated + "\n" + exposureSource + "__finishWorkerSurface();if(typeof __workerExposure!=='undefined')__applyWorkerPrototypeExposure(__workerExposure);delete globalThis.__applyWorkerExposure;delete globalThis.__applyWorkerPrototypeExposure;delete globalThis.__finishWorkerSurface;delete globalThis.__mimic;delete globalThis.__mimicIDLExposure;"
 }

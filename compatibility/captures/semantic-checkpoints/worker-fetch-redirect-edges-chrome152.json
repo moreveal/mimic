@@ -1,0 +1,165 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "visibilityState": "visible",
+    "hasFocus": true,
+    "window": {
+      "left": 10,
+      "top": 10,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled"
+  },
+  "origin": "http://127.0.0.1:59542",
+  "source": "internal/browser/testdata/worker_fetch_redirect_edges_oracle.js",
+  "sha256": "d4f89c3746b0446cae7ee94909f9b5e1ab8a554938d31b398d1c116a62ae0eca",
+  "result": [
+    {
+      "kind": "missing",
+      "redirect": "follow",
+      "status": 302,
+      "type": "basic",
+      "url": "http://127.0.0.1:59542/edge?kind=missing&mode=follow",
+      "redirected": false,
+      "body": "redirect body"
+    },
+    {
+      "kind": "missing",
+      "redirect": "manual",
+      "status": 0,
+      "type": "opaqueredirect",
+      "url": "http://127.0.0.1:59542/edge?kind=missing&mode=manual",
+      "redirected": false,
+      "body": ""
+    },
+    {
+      "kind": "missing",
+      "redirect": "error",
+      "status": 302,
+      "type": "basic",
+      "url": "http://127.0.0.1:59542/edge?kind=missing&mode=error",
+      "redirected": false,
+      "body": "redirect body"
+    },
+    {
+      "kind": "empty",
+      "redirect": "follow",
+      "status": 302,
+      "type": "basic",
+      "url": "http://127.0.0.1:59542/edge?kind=empty&mode=follow",
+      "redirected": false,
+      "body": "redirect body"
+    },
+    {
+      "kind": "empty",
+      "redirect": "manual",
+      "status": 0,
+      "type": "opaqueredirect",
+      "url": "http://127.0.0.1:59542/edge?kind=empty&mode=manual",
+      "redirected": false,
+      "body": ""
+    },
+    {
+      "kind": "empty",
+      "redirect": "error",
+      "status": 302,
+      "type": "basic",
+      "url": "http://127.0.0.1:59542/edge?kind=empty&mode=error",
+      "redirected": false,
+      "body": "redirect body"
+    },
+    {
+      "kind": "credentials",
+      "redirect": "follow",
+      "error": {
+        "name": "TypeError",
+        "message": "Failed to fetch"
+      }
+    },
+    {
+      "kind": "credentials",
+      "redirect": "manual",
+      "status": 0,
+      "type": "opaqueredirect",
+      "url": "http://127.0.0.1:59542/edge?kind=credentials&mode=manual",
+      "redirected": false,
+      "body": ""
+    },
+    {
+      "kind": "credentials",
+      "redirect": "error",
+      "error": {
+        "name": "TypeError",
+        "message": "Failed to fetch"
+      }
+    }
+  ],
+  "requests": [
+    {
+      "path": "/top",
+      "authorization": null
+    },
+    {
+      "path": "/favicon.ico",
+      "authorization": null
+    },
+    {
+      "path": "/worker.js",
+      "authorization": null
+    },
+    {
+      "path": "/edge?kind=missing&mode=follow",
+      "authorization": null
+    },
+    {
+      "path": "/edge?kind=missing&mode=manual",
+      "authorization": null
+    },
+    {
+      "path": "/edge?kind=missing&mode=error",
+      "authorization": null
+    },
+    {
+      "path": "/edge?kind=empty&mode=follow",
+      "authorization": null
+    },
+    {
+      "path": "/edge?kind=empty&mode=manual",
+      "authorization": null
+    },
+    {
+      "path": "/edge?kind=empty&mode=error",
+      "authorization": null
+    },
+    {
+      "path": "/edge?kind=credentials&mode=follow",
+      "authorization": null
+    },
+    {
+      "path": "/edge?kind=credentials&mode=manual",
+      "authorization": null
+    },
+    {
+      "path": "/edge?kind=credentials&mode=error",
+      "authorization": null
+    }
+  ],
+  "fixture": "Same-origin /worker.js. /edge returns 302 with body redirect body. kind=missing omits Location; kind=empty sends an empty Location header; kind=credentials sends same-origin http://user:password@host/done. /done echoes Authorization. Request log verifies no credential target request occurred."
+}

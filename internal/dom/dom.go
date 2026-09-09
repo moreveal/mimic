@@ -388,18 +388,25 @@ func (d *Document) FindAllByTagName(tag string) []Node {
 	defer d.mu.RUnlock()
 	tag = strings.ToUpper(tag)
 	out := make([]Node, 0)
-	for i := int64(1); i <= d.next; i++ {
-		n := d.nodes[i]
-		if n == nil || n.Type != "element" || (tag != "*" && n.TagName != tag) {
-			continue
+	var visit func(int64)
+	visit = func(id int64) {
+		n := d.nodes[id]
+		if n == nil {
+			return
 		}
-		copy := *n
-		copy.Attributes = cloneAttributes(n.Attributes)
-		copy.AttributeNamespaces = cloneAttributes(n.AttributeNamespaces)
-		copy.AttributeNames = append([]string(nil), n.AttributeNames...)
-		copy.Children = append([]int64(nil), n.Children...)
-		out = append(out, copy)
+		if n.Type == "element" && (tag == "*" || n.TagName == tag) {
+			copy := *n
+			copy.Attributes = cloneAttributes(n.Attributes)
+			copy.AttributeNamespaces = cloneAttributes(n.AttributeNamespaces)
+			copy.AttributeNames = append([]string(nil), n.AttributeNames...)
+			copy.Children = append([]int64(nil), n.Children...)
+			out = append(out, copy)
+		}
+		for _, child := range n.Children {
+			visit(child)
+		}
 	}
+	visit(d.root)
 	return out
 }
 

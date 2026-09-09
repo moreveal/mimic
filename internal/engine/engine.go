@@ -39,6 +39,14 @@ type Runtime interface {
 	Close() error
 }
 
+// ReentrantRuntime permits a synchronous call into another actor-owned realm
+// while servicing calls back into this realm on its original actor thread.
+// The operation must use the supplied context and return before RunNested
+// returns; it must not dispose the calling runtime from inside the operation.
+type ReentrantRuntime interface {
+	RunNested(context.Context, func(context.Context) error) error
+}
+
 // ModuleLoader resolves one static module request. referrer is the canonical
 // resource name supplied for the importing module; resourceName becomes the
 // identity and base URL of the returned source.
@@ -48,6 +56,14 @@ type ModuleLoader func(specifier, referrer string) (source, resourceName string,
 // evaluate ECMAScript SourceTextModule graphs.
 type ModuleRuntime interface {
 	EvalModule(context.Context, string, string, ModuleLoader) (Value, error)
+}
+
+// EvalSourceRuntime lets the browser recognize branded code objects without
+// replacing native eval (which would destroy direct eval's lexical scope).
+// The realm-owned resolver returns a source string for a recognized object,
+// or undefined to preserve native eval's non-string identity behavior.
+type EvalSourceRuntime interface {
+	SetEvalSourceResolver(Value) error
 }
 
 type Factory interface{ New() Runtime }

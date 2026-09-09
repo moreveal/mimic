@@ -1,6 +1,7 @@
 // Fetch Body semantics over canonical transport and the pinned streams implementation.
-// This file runs inside the webapi closure, after streams_vendor and DOM compatibility.
+// This file runs inside either realm closure after shared primitives and streams_vendor.
 {
+  const fetchBaseURL = () => typeof document === 'undefined' ? globalThis.location.href : document.baseURI || document.URL;
   const Streams = globalThis.ReadableStream;
   const BaseHeaders = globalThis.Headers;
   const NativeBlob = globalThis.Blob;
@@ -34,9 +35,9 @@
   function responseBody(value,signal,type){
     let cleanup=()=>{};
     const stream=new Streams({type:'bytes',start(controller){
-      const abort=()=>{controller.error(signal.reason);cleanup()};
+      const abort=()=>{controller.error(new DOMException('The user aborted a request.','AbortError'));cleanup()};
       cleanup=()=>signal.removeEventListener('abort',abort);
-      if(signal.aborted){controller.error(signal.reason);return}
+      if(signal.aborted){abort();return}
       signal.addEventListener('abort',abort,{once:true});
       if(value.length)controller.enqueue(value.slice());controller.close();
     },cancel(){cleanup()}});
@@ -74,7 +75,7 @@
     get ok(){const status=slot(responses,this).status;return status>=200&&status<=299}
     clone(){const record=slot(responses,this),body=cloneBody(this),list=headers(record.headers,'response');guards.set(list,guards.get(record.headers));return createResponse({...record,headers:list},body)}
     static error(){const list=headers();guards.set(list,'immutable');return createResponse({status:0,statusText:'',headers:list,url:'',type:'error',redirected:false},{stream:null,type:null})}
-    static redirect(url,status=302){status=(Number(status)>>>0)&65535;if(![301,302,303,307,308].includes(status))throw new RangeError('Invalid redirect status');const result=new FetchResponse(null,{status,headers:{location:new globalThis.URL(String(url),document.baseURI||document.URL).href}});guards.set(result.headers,'immutable');return result}
+    static redirect(url,status=302){status=(Number(status)>>>0)&65535;if(![301,302,303,307,308].includes(status))throw new RangeError('Invalid redirect status');const result=new FetchResponse(null,{status,headers:{location:new globalThis.URL(String(url),fetchBaseURL()).href}});guards.set(result.headers,'immutable');return result}
     static json(data,init={}){const value=JSON.stringify(data);if(value===undefined)throw new TypeError('Value is not JSON serializable');const list=new FetchHeaders(init.headers);if(!list.has('content-type'))list.set('content-type','application/json');return new FetchResponse(value,{...init,headers:list})}
   }
   for(const name of ['status','statusText','headers','url','type','redirected'])Object.defineProperty(FetchResponse.prototype,name,{get(){return slot(responses,this)[name]},configurable:true,enumerable:true});
@@ -84,7 +85,7 @@
   class FetchRequest {
     constructor(input,init={}){
       if(arguments.length===0)throw new TypeError('Request requires input');
-      const previous=requests.get(input),url=new globalThis.URL(previous?previous.url:String(input),document.baseURI||document.URL);if(url.username||url.password)throw new TypeError('Request URL contains credentials');
+      const previous=requests.get(input),url=new globalThis.URL(previous?previous.url:String(input),fetchBaseURL());if(url.username||url.password)throw new TypeError('Request URL contains credentials');
       let method=String(init.method===undefined?(previous?.method||'GET'):init.method);if(!/^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/.test(method)||['CONNECT','TRACE','TRACK'].includes(method.toUpperCase()))throw new TypeError('Invalid HTTP method');if(normalizedMethods.has(method.toUpperCase()))method=method.toUpperCase();
       const mode=String(init.mode??previous?.mode??'cors'),credentials=String(init.credentials??previous?.credentials??'same-origin'),cache=String(init.cache??previous?.cache??'default'),redirect=String(init.redirect??previous?.redirect??'follow');
       if(!['cors','same-origin','no-cors','navigate'].includes(mode)||mode==='navigate'&&init.mode!==undefined)throw new TypeError('Invalid request mode');

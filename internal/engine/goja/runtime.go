@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"math/big"
 	"strings"
 	"time"
 
@@ -51,18 +52,25 @@ func (r *runtime) Eval(ctx context.Context, source, name string) (engine.Value, 
 	return value{v}, nil
 }
 
-func (r *runtime) Set(name string, v any) error { return r.vm.Set(name, v) }
+func nativeValue(v any) any {
+	if wrapped, ok := v.(value); ok {
+		return wrapped.v
+	}
+	return v
+}
+
+func (r *runtime) Set(name string, v any) error { return r.vm.Set(name, nativeValue(v)) }
 func (r *runtime) Get(name string) engine.Value { return value{r.vm.Get(name)} }
-func (r *runtime) Value(v any) engine.Value     { return value{r.vm.ToValue(v)} }
+func (r *runtime) Value(v any) engine.Value     { return value{r.vm.ToValue(nativeValue(v))} }
 func (r *runtime) GetProperty(v engine.Value, name string) engine.Value {
 	return value{unwrap(v).ToObject(r.vm).Get(name)}
 }
 func (r *runtime) SetProperty(v engine.Value, name string, x any) error {
-	return unwrap(v).ToObject(r.vm).Set(name, x)
+	return unwrap(v).ToObject(r.vm).Set(name, nativeValue(x))
 }
 func (r *runtime) TypeOf(v engine.Value) string {
 	x := unwrap(v)
-	if goja.IsUndefined(x) {
+	if x == nil || goja.IsUndefined(x) {
 		return "undefined"
 	}
 	if goja.IsNull(x) {
@@ -71,6 +79,14 @@ func (r *runtime) TypeOf(v engine.Value) string {
 	if _, ok := goja.AssertFunction(x); ok {
 		return "function"
 	}
+	// Exporting an object reads enumerable properties and can invoke getters.
+	// JavaScript typeof never observes those properties or converts the object.
+	if _, ok := x.(*goja.Object); ok {
+		return "object"
+	}
+	if _, ok := x.(*goja.Symbol); ok {
+		return "symbol"
+	}
 	switch x.Export().(type) {
 	case bool:
 		return "boolean"
@@ -78,6 +94,8 @@ func (r *runtime) TypeOf(v engine.Value) string {
 		return "string"
 	case int, int32, int64, float32, float64:
 		return "number"
+	case *big.Int:
+		return "bigint"
 	default:
 		return "object"
 	}

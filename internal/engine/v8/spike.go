@@ -22,6 +22,12 @@ type response struct {
 
 type command func(*state) response
 
+type actorCommand struct {
+	run       command
+	reject    func(error)
+	outerOnly bool // disposal must wait until the active JavaScript stack unwinds
+}
+
 type state struct {
 	isolate             *gov8.Isolate
 	realms              map[uint64]*gov8.Context
@@ -33,10 +39,12 @@ type state struct {
 // goroutine. This is necessary on Windows: V8 isolates cannot follow a Go
 // goroutine when it migrates between OS threads.
 type Runtime struct {
-	commands chan command
-	done     chan struct{}
-	once     sync.Once
-	actorTID uint32
+	commands   chan actorCommand
+	done       chan struct{}
+	once       sync.Once
+	actorTID   uint32
+	actorState *state         // actor-thread only after initialization
+	deferred   []actorCommand // actor-thread only; drained at the outer boundary
 }
 
 type Realm struct {
@@ -52,7 +60,7 @@ func NewRuntime() (*Runtime, error) {
 	if _, err := initialize(); err != nil {
 		return nil, err
 	}
-	r := &Runtime{commands: make(chan command), done: make(chan struct{})}
+	r := &Runtime{commands: make(chan actorCommand), done: make(chan struct{})}
 	ready := make(chan error, 1)
 	go r.loop(ready)
 	if err := <-ready; err != nil {
@@ -84,10 +92,23 @@ func (r *Runtime) loop(ready chan<- error) {
 		return
 	}
 	s := &state{isolate: iso, realms: make(map[uint64]*gov8.Context), restoreThreadPolicy: configurePageThreadPolicy()}
+	r.actorState = s
 	ready <- nil
-	for command := range r.commands {
-		result := command(s)
+	for {
+		var command actorCommand
+		if len(r.deferred) != 0 {
+			command = r.deferred[0]
+			r.deferred[0] = actorCommand{}
+			r.deferred = r.deferred[1:]
+		} else {
+			command = <-r.commands
+		}
+		result := command.run(s)
 		if result.err != nil && errors.Is(result.err, errDispose) {
+			for _, pending := range r.deferred {
+				pending.reject(errors.New("V8 runtime is closed"))
+			}
+			r.deferred = nil
 			break
 		}
 	}
@@ -95,6 +116,10 @@ func (r *Runtime) loop(ready chan<- error) {
 }
 
 func (r *Runtime) execute(command command) (any, error) {
+	return r.executeCommand(command, false)
+}
+
+func (r *Runtime) executeCommand(command command, outerOnly bool) (any, error) {
 	select {
 	case <-r.done:
 		return nil, errors.New("V8 runtime is closed")
@@ -102,11 +127,11 @@ func (r *Runtime) execute(command command) (any, error) {
 	}
 	replies := make(chan response, 1)
 	select {
-	case r.commands <- func(s *state) response {
+	case r.commands <- actorCommand{run: func(s *state) response {
 		result := command(s)
 		replies <- result
 		return result
-	}:
+	}, reject: func(err error) { replies <- response{err: err} }, outerOnly: outerOnly}:
 	case <-r.done:
 		return nil, errors.New("V8 runtime is closed")
 	}
@@ -230,14 +255,14 @@ func (r *Realm) MicrotaskCheckpoint() error {
 }
 
 func (r *Realm) Dispose() error {
-	_, err := r.runtime.execute(func(s *state) response {
+	_, err := r.runtime.executeCommand(func(s *state) response {
 		ctx := s.realms[r.id]
 		if ctx == nil {
 			return response{}
 		}
 		delete(s.realms, r.id)
 		return response{err: ctx.Close()}
-	})
+	}, true)
 	return err
 }
 
@@ -246,7 +271,7 @@ var errDispose = errors.New("dispose V8 runtime")
 func (r *Runtime) Dispose() error {
 	var disposeErr error
 	r.once.Do(func() {
-		_, dispatchErr := r.execute(func(s *state) response {
+		_, dispatchErr := r.executeCommand(func(s *state) response {
 			for id, ctx := range s.realms {
 				if err := ctx.Close(); err != nil && disposeErr == nil {
 					disposeErr = err
@@ -276,7 +301,7 @@ func (r *Runtime) Dispose() error {
 				disposeErr = err
 			}
 			return response{err: errDispose}
-		})
+		}, true)
 		if dispatchErr != nil && !errors.Is(dispatchErr, errDispose) && disposeErr == nil {
 			disposeErr = dispatchErr
 		}
@@ -315,6 +340,17 @@ func evalText(iso *gov8.Isolate, ctx *gov8.Context, source, name string) (string
 func exceptionError(catcher *gov8.TryCatch, scope *gov8.Scope, ctx *gov8.Context, name string, cause error) error {
 	text, err := catcher.ExceptionText(scope, ctx)
 	if err == nil && text != "" {
+		// Read engine-owned source coordinates, not exception.stack: the latter
+		// can execute application getters or Error.prepareStackTrace while we
+		// are preserving the original exception across a host callback.
+		if message, ok, messageErr := catcher.Message(scope); messageErr == nil && ok {
+			resource, resourceErr := message.ResourceName(ctx)
+			line, hasLine, lineErr := message.LineNumber(ctx)
+			column, columnErr := message.StartColumn()
+			if resourceErr == nil && resource != "" && resource != "undefined" && hasLine && lineErr == nil && columnErr == nil {
+				return fmt.Errorf("%s: %s (%s:%d:%d)", name, text, resource, line, column+1)
+			}
+		}
 		return fmt.Errorf("%s: %s", name, text)
 	}
 	return fmt.Errorf("%s: %w", name, cause)
