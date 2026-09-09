@@ -4,11 +4,11 @@
   "exposure_data.go": "64618c71c75ef2874f500205c52eea9f082178bcef7ac42938ae24300bdf479a",
   "lock.json": "dae13a75c9ac52484b8905d706450dc618e0eb887f422243826486b0c2f27602",
   "navigator-idl-sources.json": "8f2afe4478ce43e57c6e5d567e04b59bf2a058bbb343e398ff4ae872f082a2b3",
-  "surface.js": "be94f901113a460822625a0802eeec29eae9da3494a79522b417c02ffc32b007",
+  "surface.js": "cdc8083a5619d0a361a716c720eeaa85b020e07380e0fdc0bf076411611804d5",
   "webapi.json": "ad2360d6d766db372d6806c1173b57e4eb91ed7b4d8e7c31894dbee933c81cb8",
   "window-insecure.json": "78cd6a4828e9ab9377dcb187c1c73b6109b6fb7ca09a6bd136b3712fadac4707",
   "window-secure-isolated.json": "b1ba3c6d8cc2bcb199483de899afdb6a74de79eeac88d2cbb0993e891b32f3f9",
   "window-secure.json": "0f688c58420c75dcd4c8d71920db0e4a2c0c67053ed99584efb6b5a5adc6e05c",
   "worker-secure.json": "cc5968d6518ffcd6283ebd74080e2cef43846f7010e945c16b8e5192d9250c34",
-  "surface-catalog.json": "23ee966e50af4746e9e4de29a38c17da783e83100bd1ed0fd252a8cffad217b5"
+  "surface-catalog.json": "5c82c15d28beeb17fea925cc2ed4276629e7f88c506f4bfdcaa8c5a2017e4434"
 }

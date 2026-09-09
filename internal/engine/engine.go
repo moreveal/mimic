@@ -67,3 +67,9 @@ type EvalSourceRuntime interface {
 }
 
 type Factory interface{ New() Runtime }
+
+// ArrayBufferDetacher supplies real backing-store detachment where the engine
+// does not expose ArrayBuffer.prototype.transfer. Call only on the realm actor.
+type ArrayBufferDetacher interface {
+	DetachArrayBuffer(Value) error
+}

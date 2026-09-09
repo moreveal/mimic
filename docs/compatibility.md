@@ -277,11 +277,12 @@ BOM handling and typed-view offsets are checked against the
 [all-byte Chrome fixture](../compatibility/captures/semantic-checkpoints/windows1252-decoder-chrome152.json).
 Other encoding families remain unsupported rather than silently decoding as UTF-8.
 
-GPUDevice initialization stores its exposed state in realm-owned slots, with
-readonly prototype getters for adapterInfo, features, limits, queue and lost.
-This avoids assignments into generated readonly IDL accessors. The existing
-GPU surface remains skeletal: this initialization fix does not implement GPU
-rendering, device-loss processing or full device feature negotiation.
+WebGPU adapter, device, queue and buffer observations use shared Window/Worker
+state. Device-owned features, limits and information have independent identities;
+mapping detaches actual ArrayBuffers, and copy/write/clear commands operate on
+the same resource bytes. Error scopes and device loss have observable lifecycle
+semantics. See [WebGPU resources](compatibility/webgpu-resources.md) for measured
+coverage and remaining texture/shader execution boundaries.
 
 Canvas support is an observation/state model without a graphics backend or GPU.
 OffscreenCanvas and HTMLCanvasElement share dimension/context ownership and

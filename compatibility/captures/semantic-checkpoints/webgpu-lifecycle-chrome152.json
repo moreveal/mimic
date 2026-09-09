@@ -1,0 +1,32 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "fixture": "internal/browser/testdata/webgpu_lifecycle_oracle.js",
+    "fixtureSHA256": "b5c1fbee2c253e687903501e805ec778a8b0b8785d83299b0944b2518f636aa1",
+    "fixtureHashNormalization": "LF"
+  },
+  "result": {
+    "pending": "pending",
+    "abort": "AbortError",
+    "afterAbort": "unmapped",
+    "destroy": [
+      "unmapped",
+      0,
+      16,
+      9
+    ],
+    "writeCopy": [
+      8,
+      9,
+      10,
+      11
+    ],
+    "reused": "[object GPUValidationError]",
+    "writeAlignment": "[object GPUValidationError]",
+    "reuseAdapter": "OperationError",
+    "scopeAfterReuse": null
+  }
+}
