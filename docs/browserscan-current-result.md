@@ -1,47 +1,47 @@
-# BrowserScan как внешний тест совместимости — 8 сентября 2026
+# BrowserScan as an external compatibility test — September 8, 2026
 
-Проверяемая страница: https://www.browserscan.net/bot-detection
+Page under test: https://www.browserscan.net/bot-detection
 
-BrowserScan использовался только для чтения через обычное подключение Pyppeteer к CDP. В runtime нет проверок URL, названий BrowserScan, подмены результата или веток для конкретного детектора. Эталон общих семантик — закреплённый Chrome `152.0.7977.82`.
+BrowserScan was used read-only through a normal Pyppeteer CDP connection. The runtime contains no URL checks, BrowserScan name checks, result substitution, or detector-specific branches. The reference for general semantics is pinned Chrome `152.0.7977.82`.
 
-## Итог совместимости
+## Compatibility outcome
 
-Страница загружается с HTTP 200, доходит до `document.readyState=complete`, выполняет клиентские модули и отображает итог. В финальном запуске нет JS-исключений и ошибок консоли. Trace продолжает отдельно перечислять отсутствующие поверхности, которые страница исследует как данные fingerprint (`Navigator.*`, `setAttributeNS`, `requestIdleCallback` и другие); они не остановили выполнение теста и не скрыты из отчёта.
+The page loads with HTTP 200, reaches `document.readyState=complete`, executes client modules, and displays the result. The final run has no JS exceptions or console errors. The trace separately lists missing surfaces that the page inspects as fingerprint data (`Navigator.*`, `setAttributeNS`, `requestIdleCallback`, and others); these did not stop the test and remain visible in the report.
 
-Выбранный набор из 20 сравнительных тестов совпадает с Chrome: `20/20`. Это не исчерпывающая проверка всех вызванных API и не доказательство полного выполнения приложения. RSA-OAEP отдельно зафиксирован до исправления (`NotSupportedError` в Mimic) и после него (совпадение проверенных метаданных `CryptoKey` и размера 128-байтного `ArrayBuffer`; расшифрование результата этим тестом не проверялось).
+The selected set of 20 differential tests matches Chrome: `20/20`. This is neither an exhaustive check of every API called nor proof of complete application execution. RSA-OAEP was captured separately before the fix (`NotSupportedError` in Mimic) and afterward (matching tested `CryptoKey` metadata and a 128-byte `ArrayBuffer`; this test did not verify decryption of the result).
 
-## Результат сайта
+## Site result
 
-Дополнительное наблюдение через Computer Use: в существующей вкладке пользовательского Chrome виден `Test Results: Normal` и заполнены отдельные результаты. Это отдельная сессия, не повторное измерение закреплённого CDP-запуска ниже. Сборщик отчёта ранее не распознавал `Normal`; теперь он читает итог рядом с заголовком `Test Results:` и не принимает статусы отдельных проверок за общий результат. Нового benchmark этим изменённым сборщиком пока не проводилось.
+A separate observation in a regular Chrome session shows `Test Results: Normal` and populated individual results. This is a separate session, not a repeat measurement of the pinned CDP run below. The report collector previously did not recognize `Normal`; it now reads the result next to the `Test Results:` heading and does not mistake individual check statuses for the overall result. No new benchmark has been run with this updated collector yet.
 
-Независимая локальная регрессия `TestV8FetchJSONCompletesRenderedState` проходит для `[]`, массива с данными и некорректного JSON: цепочка Fetch/Promise/DOM обновляет интерфейс в каждом случае.
+The independent local regression `TestV8FetchJSONCompletesRenderedState` passes for `[]`, an array with data, and invalid JSON: the Fetch/Promise/DOM chain updates the UI in each case.
 
-- Chrome 152: `Robot` в автоматизированном контрольном запуске; пользовательский обычный Chrome показывал `Normal`.
-- Mimic: `Robot`. DOM содержит `Test Results:Robot`; финальный benchmark сохранил HTTP 200, `readyState=complete`, пустые списки page exceptions и console errors.
+- Chrome 152: `Robot` in the automated control run; regular Chrome showed `Normal`.
+- Mimic: `Robot`. The DOM contains `Test Results:Robot`; the final benchmark recorded HTTP 200, `readyState=complete`, and empty page-exception and console-error lists.
 
-Ответ `[]` оказался подтверждением приёма отчёта об ошибке, а не результатом bot detection. Расшифрованный диагностический payload содержал `type: "vue_error"` и `Cannot read properties of null (reading 'ce')`. Причиной было повторное вычисление одного ES module через статический и динамический пути V8: приложение получало два экземпляра состояния Vue. После общего module cache ошибка исчезла. Следующая остановка происходила потому, что отложенный `import()` использовал уже отменённый context исходной scheduler-задачи; чанки проверки завершались `context canceled`. Загрузка модулей теперь живёт столько же, сколько document realm. Дополнительно реализован отсутствовавший `Document.createTextNode`.
+The `[]` response proved to be an acknowledgment of an error report, not the bot-detection result. The decrypted diagnostic payload contained `type: "vue_error"` and `Cannot read properties of null (reading 'ce')`. The cause was repeated evaluation of the same ES module through V8's static and dynamic paths: the application received two instances of Vue state. A shared module cache eliminated the error. The next interruption occurred because a deferred `import()` used the already canceled context of the original scheduler task; detection chunks failed with `context canceled`. Module loading now has the lifetime of the document realm. The missing `Document.createTextNode` was also implemented.
 
-## Исправленные общие семантики
+## General semantics fixed
 
-- типы `script`, статические и динамические ES modules;
-- единый identity/evaluation cache статических и динамических V8 modules;
-- отложенный `import()` после завершения исходной browser task;
-- UTF-8 `TextEncoder`, `Headers`, `Request`, `Response` и базовая интеграция `fetch`;
-- `DOMMatrix`, узлы `Text`, `Comment`, `DocumentFragment` и их Chrome-совместимые свойства;
+- `script` types, static and dynamic ES modules;
+- a shared identity/evaluation cache for static and dynamic V8 modules;
+- deferred `import()` after the original browser task completes;
+- UTF-8 `TextEncoder`, `Headers`, `Request`, `Response`, and basic `fetch` integration;
+- `DOMMatrix`, `Text`, `Comment`, and `DocumentFragment` nodes and their Chrome-compatible properties;
 - `Document.createTextNode`;
-- `SVGSVGElement.createSVGRect`, `IntersectionObserver`, `History`, `HTMLLinkElement`, `HTMLMetaElement`;
-- события загрузки динамических `link` и `modulepreload`;
-- `Performance.timing`, `Performance.mark`, `BroadcastChannel`;
-- `SubtleCrypto.digest`, импорт публичного SPKI RSA-OAEP и RSA-OAEP encrypt для SHA-1/256/384/512;
-- корректное отсутствие намеренно отсутствующих свойств `Document.namespaces` и lowercase `script.crossorigin`.
+- `SVGSVGElement.createSVGRect`, `IntersectionObserver`, `History`, `HTMLLinkElement`, and `HTMLMetaElement`;
+- load events for dynamic `link` and `modulepreload`;
+- `Performance.timing`, `Performance.mark`, and `BroadcastChannel`;
+- `SubtleCrypto.digest`, public SPKI RSA-OAEP import, and RSA-OAEP encryption for SHA-1/256/384/512;
+- correct absence of intentionally absent `Document.namespaces` and lowercase `script.crossorigin` properties.
 
-Каждое расхождение сначала воспроизводилось отдельным Chrome 152 ↔ Mimic тестом. Для исправленных контрактов добавлены регрессии в пакете browser.
+Each difference was first reproduced in a separate Chrome 152 ↔ Mimic test. Regressions for the corrected contracts were added to the browser package.
 
-## Сохранённые свидетельства после очистки
+## Evidence retained after cleanup
 
-Компактные сравнения `.script-*` и `.browserscan-path-*` перенесены в
-`compatibility/captures/semantic-checkpoints/` без ведущей точки в имени.
-Они сохраняют до/после-результаты modules, RSA-OAEP, DOM и общих семантик.
-Сырые BrowserScan-результаты, сетевые заголовки, payload и сохранённая HTML-страница
-вынесены в локальный архив вне репозитория: они могут содержать данные сессий.
-Выводы выше являются историческими наблюдениями, в cleanup они не перепроверялись.
+Compact `.script-*` and `.browserscan-path-*` comparisons were moved to
+`compatibility/captures/semantic-checkpoints/` without the leading dot in their names.
+They preserve before/after results for modules, RSA-OAEP, DOM, and general semantics.
+Raw BrowserScan results, network headers, payloads, and the saved HTML page
+were moved to a local archive outside the repository because they may contain session data.
+The conclusions above are historical observations and were not reverified during cleanup.

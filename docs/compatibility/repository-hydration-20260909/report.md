@@ -3,7 +3,7 @@
 ## Completed workload checkpoint — 2026-09-09
 
 The current source resolves the repository metadata/file-row placeholders and
-preserves relative dates in the user's static exporter. The historical first
+preserves relative dates in the static exporter. The historical first
 blocker investigation below is retained, but is no longer the current outcome.
 
 A fresh pinned headful Chrome 152 profile and a separately hash/PID-verified
@@ -43,7 +43,7 @@ Reusable selector parsing/matching and Streams implementations replaced the
 corresponding handwritten algorithms. The [coverage matrix](../coverage.md)
 separates observed/registered/expected WPT counts and explicitly records blocked
 domains. This checkpoint completes this workload, not the entire web platform.
-The separate [reuse audit](../standards-reuse-audit.md) covers the nine requested
+The separate [reuse audit](../standards-reuse-audit.md) covers nine
 subsystems, licenses, adapters, migration cost and performance expectations.
 
 ## Historical first blocker checkpoint
@@ -58,7 +58,7 @@ to production code. The frozen performance harness and baseline were untouched.
 
 ## Evidence and causal chain
 
-The user's exporter waits for `load` and defaults to zero additional settling.
+The exporter waits for `load` and defaults to zero additional settling.
 That can capture an intermediate Chrome state, but does not explain Mimic's
 persistent state: its DOM remains unchanged at load +2 and +10 seconds.
 

@@ -22,7 +22,7 @@ The original bridge patch and validation are under `detached-bridge/`.
 The stages below have since been exercised with the pending store: host counts
 fall from 54055 to 9104 per frozen DOM iteration, but execution remains around
 the production baseline. JSON replacement, read caching, and a deliberately
-invalid observation-free bound did not produce the requested speedup.
+invalid observation-free bound did not produce the target speedup.
 The next experiment needs to avoid repeatedly materializing a Go mirror merely
 to answer DOM queries: retain a JS-owned tree, implement those reads in JS, and
 synchronize for actual Go consumers. Do not skip Go visibility, observation,

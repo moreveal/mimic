@@ -1,71 +1,71 @@
 # Navigator capability domains — Chrome 152
 
-Эталон: `Chrome/152.0.7977.82`, Windows x64, headful, свежий контролируемый профиль, без feature overrides; синтетические локальные страницы. `Runtime.evaluate` выполняется с `userGesture:false`. Сеть и доступность OS-служб — состояние машины, а не константы версии Chrome.
+Reference: `Chrome/152.0.7977.82`, Windows x64, headful, fresh controlled profile, no feature overrides; synthetic local pages. `Runtime.evaluate` uses `userGesture:false`. Network and OS-service availability reflect machine state, not constants of the Chrome version.
 
-Контексты в столбцах exposure: **secure / secure+COOP+COEP / opaque about:blank**. Данные insecure Window дополнительно получены на `data:`. Другие профили, origin trials, PWA, managed apps и разрешения iframe этим отчётом не сертифицированы.
+Contexts in the exposure columns: **secure / secure+COOP+COEP / opaque about:blank**. Additional insecure Window data was captured on `data:`. This report does not certify other profiles, origin trials, PWAs, managed apps, or iframe permissions.
 
-Полная форма совпала: **108/108** наблюдений, исходный HEAD `73d6b8b49d05d6c1cf27695e0c67560bac1ef0eb`: **0/108**. В secure-контексте совпали **50/54** результатов операций; в opaque — **53/54**. Для isolated здесь проверена форма, не операции. Это ограниченный набор наблюдений, а не процент совместимости браузера.
+Full shape matched in **108/108** observations; original HEAD `73d6b8b49d05d6c1cf27695e0c67560bac1ef0eb`: **0/108**. In the secure context, **50/54** operation results matched; in opaque, **53/54**. For isolated contexts, only shape was checked here, not operations. This is a limited set of observations, not a browser compatibility percentage.
 
-Проверяются владелец, дескрипторы, native Function#toString, name/length, собственные ключи функций, неконструируемость методов/getters, readonly constructor.prototype, цепочки наследования, constructor identity, same-object, отсутствие утечек собственных полей и illegal receiver.
+Checks cover owners, descriptors, native Function#toString, name/length, function own keys, non-constructible methods/getters, readonly constructor.prototype, inheritance chains, constructor identity, same-object behavior, absence of leaked own fields, and illegal receivers.
 
 | member / domain | Chrome exposed? | Mimic exposed? | descriptor parity | prototype parity | capability/value parity | semantics / capability-only / unsupported |
 |---|---|---|---|---|---|---|
-| `vendorSub` / Legacy identity | да/да/да | да/да/да | да | да | совпали в пробах | semantics implemented |
-| `productSub` / Legacy identity | да/да/да | да/да/да | да | да | совпали в пробах | semantics implemented |
-| `appCodeName` / Legacy identity | да/да/да | да/да/да | да | да | совпали в пробах | semantics implemented |
-| `doNotTrack` / Legacy identity | да/да/да | да/да/да | да | да | совпали в пробах | semantics implemented |
-| `userActivation` / Input | да/да/да | да/да/да | да | да | совпали в пробах | capability-only; input activation implemented |
-| `scheduling` / Input | да/да/да | да/да/да | да | да | совпали в пробах | capability-only; input activation implemented |
-| `keyboard` / Input | да/да/нет | да/да/нет | да | да | совпали в пробах | capability-only; input activation implemented |
-| `virtualKeyboard` / Input | да/да/нет | да/да/нет | да | да | совпали в пробах | capability-only; input activation implemented |
-| `ink` / Input | да/да/да | да/да/да | да | да | совпали в пробах | capability-only; input activation implemented |
-| `permissions` / Permissions / credentials | да/да/да | да/да/да | да | да | совпали в пробах | capability-only; shared permission store implemented |
-| `credentials` / Permissions / credentials | да/да/нет | да/да/нет | да | да | совпали в пробах | capability-only; shared permission store implemented |
-| `clipboard` / Permissions / credentials | да/да/нет | да/да/нет | да | да | совпали в пробах | capability-only; shared permission store implemented |
-| `geolocation` / Permissions / credentials | да/да/да | да/да/да | да | да | совпали в пробах | capability-only; shared permission store implemented |
-| `connection` / Network / storage | да/да/да | да/да/да | да | да | расхождения: secure: connection, opaque: connection | semantics implemented for tested operations; see limits |
-| `storage` / Network / storage | да/да/нет | да/да/нет | да | да | совпали в пробах | semantics implemented for tested operations; see limits |
-| `storageBuckets` / Network / storage | да/да/нет | да/да/нет | да | да | совпали в пробах | semantics implemented for tested operations; see limits |
-| `locks` / Network / storage | да/да/нет | да/да/нет | да | да | совпали в пробах | semantics implemented for tested operations; see limits |
-| `webkitTemporaryStorage` / Network / storage | да/да/да | да/да/да | да | да | совпали в пробах | semantics implemented for tested operations; see limits |
-| `webkitPersistentStorage` / Network / storage | да/да/да | да/да/да | да | да | совпали в пробах | semantics implemented for tested operations; see limits |
-| `mediaDevices` / Media | да/да/нет | да/да/нет | да | да | совпали в пробах | capability-only |
-| `mediaCapabilities` / Media | да/да/да | да/да/да | да | да | совпали в пробах | capability-only |
-| `mediaSession` / Media | да/да/да | да/да/да | да | да | совпали в пробах | capability-only |
-| `presentation` / Media | да/да/нет | да/да/нет | да | да | совпали в пробах | capability-only |
-| `bluetooth` / Devices | да/да/нет | да/да/нет | да | да | расхождения: secure: bluetooth.available | capability-only; transport unsupported by design |
-| `hid` / Devices | да/да/нет | да/да/нет | да | да | совпали в пробах | capability-only; transport unsupported by design |
-| `serial` / Devices | да/да/нет | да/да/нет | да | да | расхождения: secure: serial.ports | capability-only; transport unsupported by design |
-| `usb` / Devices | да/да/нет | да/да/нет | да | да | совпали в пробах | capability-only; transport unsupported by design |
-| `devicePosture` / Devices | да/да/нет | да/да/нет | да | да | совпали в пробах | capability-only; transport unsupported by design |
-| `serviceWorker` / Browser services | да/да/нет | да/да/нет | да | да | совпали в пробах | capability-only; service backends unsupported by design |
-| `wakeLock` / Browser services | да/да/нет | да/да/нет | да | да | расхождения: secure: wakeLock.request | capability-only; service backends unsupported by design |
-| `windowControlsOverlay` / Browser services | да/да/да | да/да/да | да | да | совпали в пробах | capability-only; service backends unsupported by design |
-| `xr` / Browser services | да/да/нет | да/да/нет | да | да | совпали в пробах | capability-only; service backends unsupported by design |
-| `managed` / Browser services | да/да/нет | да/да/нет | да | да | совпали в пробах | capability-only; service backends unsupported by design |
-| `login` / Browser services | да/да/нет | да/да/нет | да | да | совпали в пробах | capability-only; service backends unsupported by design |
-| `protectedAudience` / Privacy | да/да/нет | да/да/нет | да | да | совпали в пробах | capability-only; auctions unsupported by design |
-| `deprecatedRunAdAuctionEnforcesKAnonymity` / Privacy | да/да/нет | да/да/нет | да | да | совпали в пробах | capability-only; auctions unsupported by design |
+| `vendorSub` / Legacy identity | yes/yes/yes | yes/yes/yes | yes | yes | matched in probes | semantics implemented |
+| `productSub` / Legacy identity | yes/yes/yes | yes/yes/yes | yes | yes | matched in probes | semantics implemented |
+| `appCodeName` / Legacy identity | yes/yes/yes | yes/yes/yes | yes | yes | matched in probes | semantics implemented |
+| `doNotTrack` / Legacy identity | yes/yes/yes | yes/yes/yes | yes | yes | matched in probes | semantics implemented |
+| `userActivation` / Input | yes/yes/yes | yes/yes/yes | yes | yes | matched in probes | capability-only; input activation implemented |
+| `scheduling` / Input | yes/yes/yes | yes/yes/yes | yes | yes | matched in probes | capability-only; input activation implemented |
+| `keyboard` / Input | yes/yes/no | yes/yes/no | yes | yes | matched in probes | capability-only; input activation implemented |
+| `virtualKeyboard` / Input | yes/yes/no | yes/yes/no | yes | yes | matched in probes | capability-only; input activation implemented |
+| `ink` / Input | yes/yes/yes | yes/yes/yes | yes | yes | matched in probes | capability-only; input activation implemented |
+| `permissions` / Permissions / credentials | yes/yes/yes | yes/yes/yes | yes | yes | matched in probes | capability-only; shared permission store implemented |
+| `credentials` / Permissions / credentials | yes/yes/no | yes/yes/no | yes | yes | matched in probes | capability-only; shared permission store implemented |
+| `clipboard` / Permissions / credentials | yes/yes/no | yes/yes/no | yes | yes | matched in probes | capability-only; shared permission store implemented |
+| `geolocation` / Permissions / credentials | yes/yes/yes | yes/yes/yes | yes | yes | matched in probes | capability-only; shared permission store implemented |
+| `connection` / Network / storage | yes/yes/yes | yes/yes/yes | yes | yes | differences: secure: connection, opaque: connection | semantics implemented for tested operations; see limits |
+| `storage` / Network / storage | yes/yes/no | yes/yes/no | yes | yes | matched in probes | semantics implemented for tested operations; see limits |
+| `storageBuckets` / Network / storage | yes/yes/no | yes/yes/no | yes | yes | matched in probes | semantics implemented for tested operations; see limits |
+| `locks` / Network / storage | yes/yes/no | yes/yes/no | yes | yes | matched in probes | semantics implemented for tested operations; see limits |
+| `webkitTemporaryStorage` / Network / storage | yes/yes/yes | yes/yes/yes | yes | yes | matched in probes | semantics implemented for tested operations; see limits |
+| `webkitPersistentStorage` / Network / storage | yes/yes/yes | yes/yes/yes | yes | yes | matched in probes | semantics implemented for tested operations; see limits |
+| `mediaDevices` / Media | yes/yes/no | yes/yes/no | yes | yes | matched in probes | capability-only |
+| `mediaCapabilities` / Media | yes/yes/yes | yes/yes/yes | yes | yes | matched in probes | capability-only |
+| `mediaSession` / Media | yes/yes/yes | yes/yes/yes | yes | yes | matched in probes | capability-only |
+| `presentation` / Media | yes/yes/no | yes/yes/no | yes | yes | matched in probes | capability-only |
+| `bluetooth` / Devices | yes/yes/no | yes/yes/no | yes | yes | differences: secure: bluetooth.available | capability-only; transport unsupported by design |
+| `hid` / Devices | yes/yes/no | yes/yes/no | yes | yes | matched in probes | capability-only; transport unsupported by design |
+| `serial` / Devices | yes/yes/no | yes/yes/no | yes | yes | differences: secure: serial.ports | capability-only; transport unsupported by design |
+| `usb` / Devices | yes/yes/no | yes/yes/no | yes | yes | matched in probes | capability-only; transport unsupported by design |
+| `devicePosture` / Devices | yes/yes/no | yes/yes/no | yes | yes | matched in probes | capability-only; transport unsupported by design |
+| `serviceWorker` / Browser services | yes/yes/no | yes/yes/no | yes | yes | matched in probes | capability-only; service backends unsupported by design |
+| `wakeLock` / Browser services | yes/yes/no | yes/yes/no | yes | yes | differences: secure: wakeLock.request | capability-only; service backends unsupported by design |
+| `windowControlsOverlay` / Browser services | yes/yes/yes | yes/yes/yes | yes | yes | matched in probes | capability-only; service backends unsupported by design |
+| `xr` / Browser services | yes/yes/no | yes/yes/no | yes | yes | matched in probes | capability-only; service backends unsupported by design |
+| `managed` / Browser services | yes/yes/no | yes/yes/no | yes | yes | matched in probes | capability-only; service backends unsupported by design |
+| `login` / Browser services | yes/yes/no | yes/yes/no | yes | yes | matched in probes | capability-only; service backends unsupported by design |
+| `protectedAudience` / Privacy | yes/yes/no | yes/yes/no | yes | yes | matched in probes | capability-only; auctions unsupported by design |
+| `deprecatedRunAdAuctionEnforcesKAnonymity` / Privacy | yes/yes/no | yes/yes/no | yes | yes | matched in probes | capability-only; auctions unsupported by design |
 
-## Состояние и границы
+## State and boundaries
 
-- Legacy: фиксированные правила Blink и preference DoNotTrack; это не значения из сайта.
-- Input: trusted `Page.DispatchInput`, очередь UserInteraction и время Scheduler; synthetic dispatchEvent не активирует страницу. Поддержаны mousedown/keydown/touchend, expiry и sticky activation. Это не полный CDP Input, hit-testing или полный алгоритм распространения/потребления активации. KeyboardLayoutMap берёт раскладку из Environment. Реальных keyboard lock, virtual keyboard и ink renderer нет.
-- Permissions: один origin store в Context; query, location, clipboard, media и keyboard используют его; изменения PermissionStatus доставляются задачами. Полный набор специализированных descriptor-алгоритмов (MIDI sysex, requestedOrigin, fullscreen и другие) не реализован. Credential transport, WebAuthn/FedCM и ClipboardItem transport отсутствуют. У location без backend нет фиктивной позиции.
-- Network/storage: connection читает Environment.Network. Quota имеет общий профиль; Web Storage, как в Chrome, не учитывается в StorageManager usage. Поддержаны bucket metadata/lifecycle, expiry и persistence. Quota-consuming IDB/Cache/OPFS clients отсутствуют: estimate не является статистикой реального диска. Locks поддерживает очередь, shared/exclusive, callback lifetime, ifAvailable, abort и освобождение при закрытии realm; steal явно не поддерживается. Старые два quota getter возвращают один объект без публичного конструктора.
-- Media: одна модель установленных классов устройств, redaction и capability profile. Потоки не создаются. Codec negotiation ограничен настроенными content types и проверенными конфигурациями; это не полный decoder/encoder/EME, media pipeline или проверка производительности произвольных разрешений/битрейтов. MediaSession хранит playback/action/position state; конструкторы MediaMetadata/PresentationRequest и Presentation transport не реализованы.
-- Devices: один пустой transport registry, а не независимые успешные устройства. HID/USB/Serial возвращают пустые списки; chooser без активации отвергается. Bluetooth getDevices отсутствует в выбранном Chrome-профиле. Availability Bluetooth на этой машине иногда не успевает завершиться за 1500 ms, иногда возвращает false; Mimic сообщает отсутствие адаптера сразу.
-- Browser services: нет service-worker execution, XR session backend, presentation receiver, managed configuration и системного power backend. Controller/registration queries описывают пустое состояние; ready остаётся pending. Неподдержанные операции явно отвергаются, не возвращают успешный null из semanticMissing. Chrome с power backend выдаёт WakeLockSentinel; Mimic отклоняет request. Это сознательное расхождение, не доказанная Chrome parity. Window controls overlay выключен для обычного окна. Login status хранится по origin.
-- Privacy: поддержаны наблюдённые capability ответы; auctions/interest-group backend не реализован. Связанные операции Navigator из того же IDL-источника явно отклоняют Promise вместо успешного null из semanticMissing. deprecatedRunAdAuctionEnforcesKAnonymity равен false в выбранном профиле.
+- Legacy: fixed Blink rules and the DoNotTrack preference; these are not values taken from a site.
+- Input: trusted `Page.DispatchInput`, the UserInteraction queue, and Scheduler time; synthetic dispatchEvent does not activate the page. Supports mousedown/keydown/touchend, expiry, and sticky activation. This is not complete CDP Input, hit-testing, or the full activation propagation/consumption algorithm. KeyboardLayoutMap reads the layout from Environment. No actual keyboard lock, virtual keyboard, or ink renderer is provided.
+- Permissions: one origin store in Context, shared by query, location, clipboard, media, and keyboard; PermissionStatus changes are delivered as tasks. The full set of specialized descriptor algorithms (MIDI sysex, requestedOrigin, fullscreen, and others) is not implemented. Credential transport, WebAuthn/FedCM, and ClipboardItem transport are absent. Location does not fabricate a position without a backend.
+- Network/storage: connection reads Environment.Network. Quota uses a shared profile; as in Chrome, Web Storage is excluded from StorageManager usage. Bucket metadata/lifecycle, expiry, and persistence are supported. Quota-consuming IDB/Cache/OPFS clients are absent: estimate is not real disk usage. Locks supports queuing, shared/exclusive modes, callback lifetime, ifAvailable, abort, and release on realm closure; steal is explicitly unsupported. The two legacy quota getters return the same object without a public constructor.
+- Media: one model of installed device classes, redaction, and capability profiles. No streams are created. Codec negotiation is limited to configured content types and tested configurations; this is not a complete decoder/encoder/EME, media pipeline, or performance test of arbitrary resolutions/bitrates. MediaSession stores playback/action/position state; MediaMetadata/PresentationRequest constructors and Presentation transport are not implemented.
+- Devices: one empty transport registry, not independent successful devices. HID/USB/Serial return empty lists; a chooser without activation is rejected. Bluetooth getDevices is absent in the selected Chrome profile. On this machine, Bluetooth availability sometimes does not settle within 1500 ms and sometimes returns false; Mimic reports the absence of an adapter immediately.
+- Browser services: no service-worker execution, XR session backend, presentation receiver, managed configuration, or system power backend. Controller/registration queries describe an empty state; ready remains pending. Unsupported operations explicitly reject instead of resolving to null through semanticMissing. Chrome with a power backend returns WakeLockSentinel; Mimic rejects the request. This is an intentional difference, not demonstrated Chrome parity. Window controls overlay is disabled for a regular window. Login status is stored per origin.
+- Privacy: observed capability responses are supported; the auctions/interest-group backend is not implemented. Related Navigator operations from the same IDL source explicitly reject their Promise instead of resolving to null through semanticMissing. deprecatedRunAdAuctionEnforcesKAnonymity is false in the selected profile.
 
-Exposure выбирается из закреплённого снимка, затем может быть ограничен явными Environment.Features. Неизвестный или включённый override не добавляет API поверх снимка. Сохранены исходники и условия partial/mixin и условного Exposed(Window Feature); происхождение не подменяется слитыми условиями Navigator.
+Exposure is selected from the pinned snapshot and may then be restricted by explicit Environment.Features. An unknown or enabled override does not add APIs beyond the snapshot. Sources and conditions for partial/mixin declarations and conditional Exposed(Window Feature) are preserved; provenance is not replaced with merged Navigator conditions.
 
-## Проверяемые артефакты
+## Verifiable artifacts
 
-- [Headful Chrome capture](../compatibility/captures/navigator-chrome152.json), [mode-specific headless capture](../compatibility/captures/navigator-chrome152-headless.json), [исходный HEAD](../compatibility/captures/navigator-mimic-baseline.json), [Mimic после изменений](../compatibility/captures/navigator-mimic-current.json).
-- [Oracle policy](oracle-policy.md) и [отчёт аудита headless-ожиданий](oracle-headless-audit.md).
-- [Точные расхождения операций](navigator-capability-differences.json), [происхождение и условия каждого члена](navigator-capability-provenance.json).
-- [Общий сценарий захвата](../compatibility/navigator_capabilities.py), [пробы](../compatibility/probes-navigator-capabilities.json), [регрессионные тесты](../internal/browser/capabilities_test.go).
-- [109 закреплённых IDL-исходников](../chrome/152/generated/navigator-idl-sources.json), [их воспроизводимое восстановление](../tools/refresh_navigator_idl.py), [тесты парсера](../tools/test_generate_compat.py).
+- [Headful Chrome capture](../compatibility/captures/navigator-chrome152.json), [mode-specific headless capture](../compatibility/captures/navigator-chrome152-headless.json), [original HEAD](../compatibility/captures/navigator-mimic-baseline.json), [Mimic after changes](../compatibility/captures/navigator-mimic-current.json).
+- [Oracle policy](oracle-policy.md) and [headless expectations audit](oracle-headless-audit.md).
+- [Exact operation differences](navigator-capability-differences.json), [provenance and conditions for each member](navigator-capability-provenance.json).
+- [Shared capture scenario](../compatibility/navigator_capabilities.py), [probes](../compatibility/probes-navigator-capabilities.json), [regression tests](../internal/browser/capabilities_test.go).
+- [109 pinned IDL sources](../chrome/152/generated/navigator-idl-sources.json), [reproducible reconstruction](../tools/refresh_navigator_idl.py), [parser tests](../tools/test_generate_compat.py).
 
-Матрица не означает завершённую реализацию всех методов этих интерфейсов. `capability-only` и `unsupported by design` остаются явными границами, даже когда shape полностью совпадает.
+The matrix does not imply complete implementation of every method on these interfaces. `capability-only` and `unsupported by design` remain explicit boundaries even when shape matches completely.

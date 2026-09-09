@@ -6,7 +6,7 @@ The frozen Chrome 152 measurements are the reference. Absolute millisecond miles
 
 Continue a measured path until its gap is small, profiling demonstrates an intentional architectural tradeoff or unavoidable backend boundary, or diminishing returns make another measured bottleneck materially more important. An expensive current implementation is not by itself proof of an unavoidable cost. Correctness remains mandatory. The fast gate is the iteration tool; the full frozen matrix is a milestone gate after a substantial group of changes.
 
-**CORRECTION: runs `01-page-concurrency` and `02-dom-host` are invalid for optimization attribution.** The invocation used `--skip-build` without `--mimic`, so the frozen harness selected the pre-existing `.build/mimic-benchmark.exe` rather than the newly built `.build/mimic.exe`. The former embeds revision 2d6ae126 with modified=true. Tables and aggregate statements below for those two runs describe that stale binary, NOT the optimization commits. Source HEAD alone was insufficient provenance. Preserve all raw observations. Subsequent fast and milestone gates use explicit freshly built executables with per-launch SHA-256 verification; the user superseded the earlier per-class full-rerun plan. Diagnostic Go test profiles were built from their intended source and remain usable.
+**CORRECTION: runs `01-page-concurrency` and `02-dom-host` are invalid for optimization attribution.** The invocation used `--skip-build` without `--mimic`, so the frozen harness selected the pre-existing `.build/mimic-benchmark.exe` rather than the newly built `.build/mimic.exe`. The former embeds revision 2d6ae126 with modified=true. Tables and aggregate statements below for those two runs describe that stale binary, NOT the optimization commits. Source HEAD alone was insufficient provenance. Preserve all raw observations. Subsequent fast and milestone gates use explicit freshly built executables with per-launch SHA-256 verification, replacing the earlier per-class full-rerun plan. Diagnostic Go test profiles were built from their intended source and remain usable.
 
 Frozen harness SHA-256: `ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7`. Original `benchmark/results` is unchanged.
 
@@ -81,7 +81,7 @@ Source `f1a526fc134be4cc009638ee2d1206363132f68c`, executable SHA-256 `7f55ba9d2
 
 ## Fast iteration gate and class 05: DOM identity transport
 
-User-directed loop change: full matrix runs are milestone gates, not per-change iterations. The in-progress second verified full run was stopped on request; its completed raw samples remain in `benchmark/runs/02-verified-dom-host`, without a full-run completion claim. Runs 03 and 04 were not launched. The frozen harness and original raw baseline remain unchanged.
+Full matrix runs are milestone gates, not per-change iterations. The in-progress second verified full run was stopped before completion; its completed raw samples remain in `benchmark/runs/02-verified-dom-host`, without a full-run completion claim. Runs 03 and 04 were not launched. The frozen harness and original raw baseline remain unchanged.
 
 `tools/performance/fast_gate.py` builds an executable into a fresh output directory and checks its SHA-256 immediately before every process launch. All six semantic workloads are mandatory; warm DOM/static/React use five measured iterations, static N=10/N=25 use three measured waves, with excluded warm-ups. Static and React memory are measured with ten live pages and after teardown/recovery. See `fast-gates/*.json` for all rows and executable provenance.
 
@@ -312,13 +312,13 @@ Correctness: go test ./internal/engine/v8 ./internal/browser passes (browser 63.
 
 ## Typed attribute argument experiment — 2026-09-08 (not adopted)
 
-The user narrowed this work to one tested experiment before any full implementation. Scope: export hints for only setAttribute (number/string/string) and toggleToken (number/string/string/number). Synchronous Go DOM ownership and the workload remain unchanged. The prototype is isolated at `.build/cross-opt-typed`, detached commit `0b4c43c`; no runtime/browser change is applied to the main checkout. A complete patch and regression tests are retained in `dom-current/typed-attributes-experiment/prototype.patch`.
+This isolated experiment tests a limited scope before full implementation: export hints for only setAttribute (number/string/string) and toggleToken (number/string/string/number). Synchronous Go DOM ownership and the workload remain unchanged. The prototype is isolated at `.build/cross-opt-typed`, detached commit `0b4c43c`; no runtime/browser change is applied to the main checkout. A complete patch and regression tests are retained in `dom-current/typed-attributes-experiment/prototype.patch`.
 
 The first variant used NumberValueRaw. Its DOM fast gate regressed 146.833 -> 149.923 ms (+2.1%). SDK inspection showed that existing NumberValue already uses a direct-return fast path. The revised variant preserves that path and skips only redundant type probes. StringValue itself validates strings; mismatched hints fall back to ordinary Export. No unchecked native casts or changed coercion rules were introduced.
 
 Fresh detailed profiles (ten executions each) show setAttribute inclusive mean 25.586 -> 21.911 ms and toggleToken 25.363 -> 21.179 ms; combined -15.4%. Export instrumentation falls 48.145 -> 42.069 ms. These overlapping instrumented times are attribution, not additive savings.
 
-Uninstrumented execution replays were then run sequentially in A/B/B/A order, 20 fresh Pages per block, rebuilding and verifying SHA-256 before every launch. A is the unchanged checkout and B the revised isolated prototype. No correctness tests or other agent benchmark jobs overlapped these measurements.
+Uninstrumented execution replays were then run sequentially in A/B/B/A order, 20 fresh Pages per block, rebuilding and verifying SHA-256 before every launch. A is the unchanged checkout and B the revised isolated prototype. No correctness tests or other benchmark jobs overlapped these measurements.
 
 | Block | DOM execution median ms | Mean Go allocated MiB/execution | Host calls/execution |
 |---|---:|---:|---:|
@@ -333,7 +333,7 @@ Pooled medians across 40 executions per variant: 181.307 -> 170.608 ms (-5.9%, 1
 
 All three fast gates completed the prescribed warm runs, N=10/25 waves, memory collection and all six semantic gates. Both detailed replays and all 80 uninstrumented DOM replays pass workload checks. Prototype engine/browser tests pass (browser 67.846 s, V8 0.363 s), including generic-vs-typed export equivalence, Unicode/lone-surrogate/NUL values, wrong-type fallback, non-finite numbers, large argument lists, nested callbacks and scratch-frame clearing. Frozen fingerprints and executable SHA-256 receipts are preserved beside raw phase/gate data and `summary.json` in `dom-current/typed-attributes-experiment/`.
 
-Decision: retain the prototype for review, do not merge or expand it. The measured opportunity in these type probes is modest, while the requested multiple-fold win would require removing substantially more work/crossings. No full matrix is warranted for an unadopted, limited experiment. No C++/Rust, DOM ownership migration, selector changes or insertion/collection optimizations were attempted.
+Decision: retain the prototype for review, do not merge or expand it. The measured opportunity in these type probes is modest, while a multiple-fold win would require removing substantially more work/crossings. No full matrix is warranted for an unadopted, limited experiment. No C++/Rust, DOM ownership migration, selector changes or insertion/collection optimizations were attempted.
 
 ## Class 15: synchronous packed primitive bridge
 
@@ -367,7 +367,7 @@ All six semantic gates pass. Focused Goja/V8 regressions verify one trace per su
 
 Final production source is clean commit `0abfa05` (classes 15–17); executable SHA-256 `ea237da15757c8f1a11e8a8632cc5a9495040cd64d4373e923a746e1833988c6`. The original frozen Chrome 152 executable hash remains `ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9`. Every benchmark process launch verifies the just-built executable hash; the frozen harness/fixture fingerprint remains unchanged. Raw full-matrix evidence is `benchmark/runs/05-packed-dom-milestone`, with the immutable comparison against milestone 04 in `benchmark/runs/05-packed-dom-comparison.json`.
 
-**The requested multiple-fold DOM gain is confirmed:** warm execution 148.618 -> 73.406 ms, **2.02x** on the full frozen workload, 20 samples per version. The fresh short gate independently measured 147.749 -> 70.283 ms, 2.10x. Full DOM completion (including navigation) is 201.910 -> 131.728 ms, only 1.53x. Relative to the original frozen Chrome 152 execution median, Mimic DOM improves from 4.90x to 2.42x Chrome; it has not reached parity.
+**The multiple-fold DOM gain is confirmed:** warm execution 148.618 -> 73.406 ms, **2.02x** on the full frozen workload, 20 samples per version. The fresh short gate independently measured 147.749 -> 70.283 ms, 2.10x. Full DOM completion (including navigation) is 201.910 -> 131.728 ms, only 1.53x. Relative to the original frozen Chrome 152 execution median, Mimic DOM improves from 4.90x to 2.42x Chrome; it has not reached parity.
 
 | Workload | Previous / final execution ms | Previous / final completion ms |
 |---|---:|---:|
@@ -393,7 +393,7 @@ The final ordinary suite passes: 222 test/subtest passes, zero failures; browser
 
 ## 2026-09-09 — isolated JS-owned DOM kernel, not production migration
 
-User-authorized architecture spike is isolated in `.build/jsdom-spike`, commit
+The architecture spike is isolated in `.build/jsdom-spike`, commit
 `93c1c4a`; its portable patch, receipts and raw evidence are retained in
 `docs/performance/dom-current/jsdom-spike/`. Production code is unchanged.
 
@@ -882,11 +882,11 @@ targeted test rejects malformed snapshots and verifies subsequent ordinary
 runtime creation still works. That targeted test was added after the full suite
 started and has its own saved result. Production remains unchanged.
 
-## Stopped checkpoint — user request, 2026-09-09
+## Stopped checkpoint — 2026-09-09
 
 Optimization is stopped. See `checkpoint-20260909/checkpoint.md` for the commit
 ledger, validation scope, production crossing census and preserved artifacts.
-No new benchmark or performance change was started after the stop request.
+No new benchmark or performance change was started after this checkpoint.
 
 The final isolated snapshot experiment a19b84d now reaches actual Pages with
 source/configuration checks and live host rebinding. Three defects were caught:
@@ -908,10 +908,10 @@ cost from these timings. This is not a production-worthy general improvement.
 
 Final ordinary correctness and scoped race checks pass; exact commands and raw
 logs are preserved. Production remains 52a2aa2, with full07 DOM execution
-68.929 ms versus Chrome 30.747 ms. The requested 73.406 versus 30.326 ms is the
+68.929 ms versus Chrome 30.747 ms. The 73.406 versus 30.326 ms comparison is the
 verified historical milestone05/original-Chrome comparison, not the latest run.
 
-## One focused wrapper diagnostic — explicitly requested after stopping optimization
+## Focused wrapper diagnostic after the optimization checkpoint
 
 Exactly one frozen DOM execution was profiled at production source 7886b13,
 using isolated diagnostic instrumentation (6cf4506), local call counters, V8 CPU
@@ -992,7 +992,7 @@ and is explicitly excluded from final performance conclusions.
 Build/per-launch executable hashes and unchanged frozen harness hashes are in
 [release fast-gate evidence](../compatibility/repository-hydration-20260909/performance-comparison.json).
 Raw gates and profiles remain under `.build/hydration-complete/`. The full matrix
-was interrupted at the user's explicit request to finalize and commit. All 12
+was interrupted before completion. All 12
 Chrome/Mimic correctness gates and 360 measured cold/warm single-page samples
 completed successfully. Completed concurrency waves also passed correctness;
 Chrome CPU N100 stopped under the frozen sustained-paging rule. The final React

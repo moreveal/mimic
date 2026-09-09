@@ -1,12 +1,12 @@
-# Mimic V8 и Chrome 152: baseline Windows x64
+# Mimic V8 and Chrome 152: Windows x64 baseline
 
-Это измерение после исправления ошибок семантики, разрешённого пользователем. Оптимизации runtime ради производительности не выполнялись. Проверка исходной версии сохранена отдельно в `pre-fix/raw.json`.
+This is a measurement after semantic fixes. No runtime performance optimizations were performed. The original version's correctness check is saved separately in `pre-fix/raw.json`.
 
-## Окружение
+## Environment
 
-| Параметр | Значение |
+| Parameter | Value |
 |---|---|
-| Дата начала / конца | 2026-09-08T18:27:48.839782+04:00 / 2026-09-08T18:45:06.389971+04:00 |
+| Start / end date | 2026-09-08T18:27:48.839782+04:00 / 2026-09-08T18:45:06.389971+04:00 |
 | Chrome | {'protocolVersion': '1.3', 'product': 'Chrome/152.0.7977.82', 'revision': '@d04cdb24d67b081f6cf80200ffc5233f44b61109', 'userAgent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36', 'jsVersion': '15.2.124.21'} |
 | Chromium | 1669021 / d04cdb24d67b081f6cf80200ffc5233f44b61109 |
 | Mimic commit | 506b0aa82d0186f42041d6033091dad2e688a0de |
@@ -15,29 +15,29 @@
 | CPU | {"Name":"Intel(R) Core(TM) i7-14700KF","NumberOfCores":20,"NumberOfLogicalProcessors":28} |
 | CPU physical / logical | 20 / 28 |
 | RAM GiB | 31.83 |
-| План питания | GUID схемы питания: 381b4222-f694-41f0-9685-ff5bb260df2e  (Сбалансированная) |
+| Power plan | Power Scheme GUID: 381b4222-f694-41f0-9685-ff5bb260df2e  (Balanced) |
 | Power overlay | 0 00000000-0000-0000-0000-000000000000 |
-| Антивирус | {"displayName":"Windows Defender","productState":397568} |
+| Antivirus | {"displayName":"Windows Defender","productState":397568} |
 | Chrome SHA-256 | ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9 |
 | Mimic SHA-256 | 7e31bf20d7e0ae996760ff2df847e193b6096ff64605bed1aeefa0b9b0263cba |
 
-Рабочая станция не была эксклюзивно выделена тесту: фоновые приложения и антивирус включены. Список процессов, версии инструментов, аргументы, SHA-256 фикстур и бинарников находятся в raw.json.
+The workstation was not dedicated exclusively to the test: background applications and antivirus were enabled. Process lists, tool versions, arguments, and fixture/binary SHA-256 hashes are in raw.json.
 
-## Методика и корректность
+## Methodology and correctness
 
-В обеих системах создаётся новая страница и уникальный loopback-origin. HTTP cache отключён, ответы no-store; cookie не используются. Контексты, транспорт и процесс в warm сохраняются, состояние страницы не используется повторно. Это изоляция для данного контролируемого корпуса, а не проверка tenant/security isolation. Cold создаёт новый процесс и профиль. Кэш файлов Windows, DLL и DNS ОС не очищается; «cold» означает новый процесс, а не холодный диск. Вариант warm HTTP cache не измерялся.
+Both systems create a fresh page and a unique loopback origin. HTTP cache is disabled, responses use no-store, and cookies are not used. Contexts, transport, and the process persist in warm runs; page state is not reused. This provides isolation for this controlled corpus, not a test of tenant/security isolation. Cold runs create a new process and profile. Windows file, DLL, and OS DNS caches are not cleared; “cold” means a fresh process, not a cold disk. Warm HTTP-cache behavior was not measured.
 
-Навигация заканчивается только при точном URL, document.readyState === "complete" и наличии __benchRun. Затем одинаковый явный запуск __benchRun; завершение — done и точное совпадение детерминированного результата. Settle = 0. Paint/networkidle не ожидаются. Chrome headless=new; результаты не переносятся автоматически на headful.
+Navigation completes only at the exact URL, with document.readyState === "complete" and __benchRun present. Both systems then explicitly invoke __benchRun; completion requires done and an exact match of the deterministic result. Settle = 0. Paint/networkidle are not awaited. Chrome uses headless=new; results do not automatically apply to headful mode.
 
-Внешние часы perf_counter/QPC; polling 5 ms плюс задержка CDP/планировщика ОС. navigation_ms включает разбор HTML и загрузку скриптов, execution_ms — запуск/выполнение приложения и обнаружение маркера. Они не являются изолированным временем JIT или чистого JavaScript. js_ms страницы диагностический: в Mimic виртуальное время часто равно нулю.
+External perf_counter/QPC clock; 5 ms polling plus CDP/OS scheduler latency. navigation_ms includes HTML parsing and script loading; execution_ms includes application startup/execution and marker detection. These are not isolated JIT or pure JavaScript timings. The page's js_ms is diagnostic: Mimic's virtual time is often zero.
 
-Процесс запускается приостановленным, включается в Windows Job Object, затем возобновляется. process_start_ms — вызов создания процесса; CDP readiness отсчитывается от начала создания до ответа протокола. runtime_initialization_ms — остаток между ними; внутренние фазы V8 отдельно не инструментированы. Cold total включает создание страницы, выполнение, teardown и завершение процесса; удаление временного профиля и обслуживание локального сервера не включены.
+The process starts suspended, is assigned to a Windows Job Object, and then resumes. process_start_ms measures the process-creation call; CDP readiness runs from the start of creation to the protocol response. runtime_initialization_ms is the remainder between them; internal V8 phases are not separately instrumented. Cold total includes page creation, execution, teardown, and process exit; temporary-profile removal and local-server maintenance are excluded.
 
-CPU — user+kernel всего Job Object, включая завершившихся потомков. Working set/private bytes — сумма всех текущих участников Job Object каждые 50 ms и в контрольных точках. Кратковременные пики памяти могут быть пропущены, общие страницы DLL могут учитываться несколько раз. CPU % задан относительно одного логического ядра; 100% машины = 2800%. Пики CPU чувствительны к дискретности счётчиков Windows.
+CPU is user+kernel for the entire Job Object, including exited descendants. Working set/private bytes sum all current Job Object members every 50 ms and at checkpoints. Short memory peaks may be missed, and shared DLL pages may be counted multiple times. CPU % is relative to one logical core; 100% of the machine = 2800%. CPU peaks are sensitive to Windows counter granularity.
 
-Одна проверка и по одному первоначальному warmup на серию исключены явно. Основные серии: 10 cold и 20 warm, без удаления медленных наблюдений. p95 публикуется при n≥10, p99 при n≥100; используется линейная интерполяция эмпирических квантилей, хвосты при n=10–20 особенно неустойчивы. SD и CV, min/max всех серий доступны в summary.csv. Ускорение не агрегируется в одно отношение.
+One correctness check and one initial warmup per series are explicitly excluded. Main series: 10 cold and 20 warm runs, without removing slow observations. p95 is published at n≥10 and p99 at n≥100; empirical quantiles use linear interpolation, and tails at n=10–20 are particularly unstable. SD, CV, and min/max for all series are available in summary.csv. Speedups are not aggregated into a single ratio.
 
-| Система / workload | Correctness gate |
+| System / workload | Correctness gate |
 |---|---|
 | chrome/async | VALID |
 | chrome/cpu | VALID |
@@ -52,18 +52,18 @@ CPU — user+kernel всего Job Object, включая завершивших
 | mimic/static | VALID |
 | mimic/wasm | VALID |
 
-### CDP readiness: отдельная серия с одинаковой пробой
+### CDP readiness: separate series with an identical probe
 
-В финальной серии обе системы отвечают на Target.getTargets после WebSocket handshake. По 10 новых процессов, порядок систем чередуется; warmup исключён. Дата: 2026-09-08T18:44:39.400442+04:00. Основная серия использует ту же общую пробу.
+In the final series, both systems respond to Target.getTargets after the WebSocket handshake. Each uses 10 fresh processes, alternating system order; warmup is excluded. Date: 2026-09-08T18:44:39.400442+04:00. The main series uses the same shared probe.
 
-| Система | n | CDP p50 ms | p95 | Min | Max | SD | Ready RSS MiB |
+| System | n | CDP p50 ms | p95 | Min | Max | SD | Ready RSS MiB |
 |---|---|---|---|---|---|---|---|
 | mimic | 10 | 215.24 | 229.49 | 213.50 | 234.22 | 6.45 | 104.07 |
 | chrome | 10 | 287.06 | 396.19 | 252.98 | 443.23 | 55.42 | 383.48 |
 
-## Cold startup (медианы, ms)
+## Cold startup (medians, ms)
 
-| Система | Workload | n | Process create | CDP ready | Runtime init | Cold total | Shutdown |
+| System | Workload | n | Process create | CDP ready | Runtime init | Cold total | Shutdown |
 |---|---|---|---|---|---|---|---|
 | chrome | static | 10 | 8.10 | 293.52 | 285.43 | 508.91 | 104.78 |
 | mimic | static | 10 | 6.64 | 232.91 | 224.09 | 469.76 | 67.14 |
@@ -78,9 +78,9 @@ CPU — user+kernel всего Job Object, включая завершивших
 | mimic | wasm | 10 | 5.49 | 214.04 | 208.51 | 445.33 | 60.35 |
 | chrome | wasm | 10 | 6.39 | 272.36 | 265.65 | 448.60 | 94.93 |
 
-## Warm session startup / teardown (медианы)
+## Warm session startup / teardown (medians)
 
-| Система | Workload | n | Create ms | Teardown ms | RSS после teardown MiB |
+| System | Workload | n | Create ms | Teardown ms | RSS after teardown MiB |
 |---|---|---|---|---|---|
 | chrome | static | 20 | 31.29 | 10.92 | 1192.75 |
 | mimic | static | 20 | 94.28 | 2.67 | 172.24 |
@@ -97,7 +97,7 @@ CPU — user+kernel всего Job Object, включая завершивших
 
 ## Single-session workload latency (ms)
 
-| Система | Workload | Mode | n | Nav p50 | Execution p50 | Completion p50 | p95 | Min | Max | SD | CV |
+| System | Workload | Mode | n | Nav p50 | Execution p50 | Completion p50 | p95 | Min | Max | SD | CV |
 |---|---|---|---|---|---|---|---|---|---|---|---|
 | chrome | static | cold | 10 | 26.04 | 3.15 | 29.82 | — | 24.91 | 63.19 | 13.83 | 0.37 |
 | mimic | static | cold | 10 | 86.34 | 2.02 | 88.59 | 96.01 | 81.11 | 97.90 | 5.43 | 0.06 |
@@ -124,9 +124,9 @@ CPU — user+kernel всего Job Object, включая завершивших
 | mimic | wasm | warm | 20 | 72.33 | 9.51 | 81.69 | 84.84 | 76.83 | 86.44 | 2.34 | 0.03 |
 | chrome | wasm | warm | 20 | 16.83 | 4.78 | 21.93 | 23.86 | 19.23 | 26.08 | 1.45 | 0.07 |
 
-## Single-session память / CPU (медианы)
+## Single-session memory / CPU (medians)
 
-| Система | Workload | Mode | До страницы MiB | После create MiB | Peak RSS MiB | Peak private MiB | CPU/session ms | CPU/workload ms |
+| System | Workload | Mode | Before page MiB | After create MiB | Peak RSS MiB | Peak private MiB | CPU/session ms | CPU/workload ms |
 |---|---|---|---|---|---|---|---|---|
 | chrome | static | cold | 373.63 | 420.04 | 473.72 | 249.56 | 335.94 | 125.00 |
 | mimic | static | cold | 104.27 | 138.91 | 169.99 | 210.15 | 218.75 | 117.19 |
@@ -155,13 +155,13 @@ CPU — user+kernel всего Job Object, включая завершивших
 
 ## Concurrency / density
 
-Каждый уровень — отдельный процесс; один исключённый warmup и max(5, ceil(20/N)) измеряемых волн. Страницы создаются параллельно; после барьера все начинают навигацию. Завершившиеся страницы удерживаются до окончания волны для одновременного RSS. Throughput = успешные сессии / время create→последний teardown, включая барьер и измерения, но без HTTP-server setup/cleanup. Latency = create→completion, включая ожидание барьера. Это batch throughput, не оптимизированный постоянный поток запросов. Удержание не добавляется в latency, но входит в throughput. CPU на сессию = CPU всей волны / число успехов; пересекающиеся интервалы CPU отдельных страниц не суммируются.
+Each level uses a separate process, one excluded warmup, and max(5, ceil(20/N)) measured waves. Pages are created concurrently and all begin navigation after a barrier. Completed pages are held until the wave ends to measure simultaneous RSS. Throughput = successful sessions / time from create to final teardown, including the barrier and measurements but excluding HTTP-server setup/cleanup. Latency = create→completion, including barrier wait. This is batch throughput, not an optimized continuous request stream. Holding pages adds to throughput time but not latency. CPU per session = total wave CPU / successes; overlapping per-page CPU intervals are not summed.
 
-Пределы остановки: любая ошибка, <15% либо <2 GiB доступной RAM, >1024 pages input/s в течение 3 s, timeout 180 s. Это защита рабочей машины; максимум прошедшего уровня — нижняя граница поддержанной здесь ёмкости, не доказательство абсолютного максимума.
+Stopping limits: any error, <15% or <2 GiB available RAM, >1024 pages input/s for 3 s, or a 180 s timeout. These protect the workstation; the highest passing level is a lower bound on capacity supported here, not proof of an absolute maximum.
 
-Mimic сериализует команды CDP общим mutex. Измерение включает это поведение; профилирование причин затрат не проводилось. В строках с остановкой RSS может быть снят раньше завершения всех страниц, а число волн 0 означает остановку на исключаемом warmup. Такие строки диагностические и не входят в fit/графики стабильных уровней. Между волнами дополнительно выполняются 250 ms recovery, очистка серверов и запись checkpoint вне batch throughput.
+Mimic serializes CDP commands with a shared mutex. The measurement includes this behavior; its cost was not profiled. In stopped rows, RSS may have been sampled before all pages completed, and 0 waves means stopping during the excluded warmup. Such rows are diagnostic and excluded from stable-level fits/charts. Between waves, an additional 250 ms recovery, server cleanup, and checkpoint writing are outside batch throughput.
 
-| Система | Workload | N | Волн | Успех % | RSS MiB | RSS/N MiB | Peak MiB | CPU/session ms | Сессий/s | p50 ms | p95 ms | p99 ms | Стоп |
+| System | Workload | N | Waves | Success % | RSS MiB | RSS/N MiB | Peak MiB | CPU/session ms | Sessions/s | p50 ms | p95 ms | p99 ms | Stop |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|
 | chrome | static | 1 | 20 | 100.00 | 1174.62 | 1174.62 | 1181.88 | 192.97 | 15.86 | 46.49 | 50.10 | — |  |
 | mimic | static | 1 | 20 | 100.00 | 180.88 | 180.88 | 226.07 | 182.81 | 6.25 | 142.03 | 153.64 | — |  |
@@ -201,9 +201,9 @@ Mimic сериализует команды CDP общим mutex. Измерен
 
 ## Marginal RAM/session
 
-Измерена конечная разность между соседними протестированными N, делённая на ΔN; это не прямое измерение каждого N→N+1. Линейная модель — описательный OLS fit по медианам только успешных уровней. Пересечение — экстраполяция; реальный startup overhead включает исходную пустую страницу. Общий RSS включает процессы и кэши, оставшиеся от предыдущих волн, а число волн зависит от N. Поэтому fit смешивает стоимость активных страниц с историей процесса. Дополнительно показан прирост RSS относительно начала той же волны: он тоже может включать фоновую активность и GC.
+The finite difference between adjacent tested N values is measured and divided by ΔN; this is not a direct measurement of every N→N+1 step. The linear model is a descriptive OLS fit to medians of successful levels only. The intercept is an extrapolation; actual startup overhead includes the initial blank page. Total RSS includes processes and caches retained from earlier waves, and the number of waves depends on N. The fit therefore combines active-page costs with process history. RSS growth relative to the start of the same wave is also shown; it can include background activity and GC.
 
-| Система | Workload | N | (Active RSS − before wave RSS)/N MiB |
+| System | Workload | N | (Active RSS − before wave RSS)/N MiB |
 |---|---|---|---|
 | chrome | static | 1 | 58.30 |
 | mimic | static | 1 | 12.92 |
@@ -241,7 +241,7 @@ Mimic сериализует команды CDP общим mutex. Измерен
 | chrome | react | 100 | 70.87 |
 | mimic | react | 100 | 48.42 |
 
-| Система | Workload | N low→high | ΔRSS MiB | ΔRSS/ΔN MiB |
+| System | Workload | N low→high | ΔRSS MiB | ΔRSS/ΔN MiB |
 |---|---|---|---|---|
 | chrome | cpu | 1→5 | 198.52 | 49.63 |
 | chrome | cpu | 5→10 | 339.16 | 67.83 |
@@ -270,7 +270,7 @@ Mimic сериализует команды CDP общим mutex. Измерен
 | mimic | static | 5→10 | 294.70 | 58.94 |
 | mimic | static | 10→25 | 950.43 | 63.36 |
 
-| Система | Workload | Fixed fit MiB | Marginal fit MiB | R² | Max stable N |
+| System | Workload | Fixed fit MiB | Marginal fit MiB | R² | Max stable N |
 |---|---|---|---|---|---|
 | chrome | cpu | 1272.06 | 73.64 | 1.00 | 100 |
 | mimic | cpu | 123.10 | 62.97 | 1.00 | 50 |
@@ -281,7 +281,7 @@ Mimic сериализует команды CDP общим mutex. Измерен
 
 ## Teardown / recovery
 
-| Система | Workload | N | Ready RSS MiB | RSS после волн MiB | CPU всей серии s | CPU % |
+| System | Workload | N | Ready RSS MiB | RSS after waves MiB | Whole-series CPU s | CPU % |
 |---|---|---|---|---|---|---|
 | chrome | static | 1 | 379.55 | 1117.12 | 3.86 | 305.98 |
 | mimic | static | 1 | 103.96 | 171.31 | 3.66 | 114.23 |
@@ -319,11 +319,11 @@ Mimic сериализует команды CDP общим mutex. Измерен
 | chrome | react | 100 | 385.00 | 1435.55 | 108.72 | 402.61 |
 | mimic | react | 100 | 103.73 | 3623.83 | 46.53 | 162.24 |
 
-## Локальный сервер (измеряется независимо)
+## Local server (measured independently)
 
-Время обработчика HTTP — от получения запроса обработчиком до завершения записи ответа; не включает очередь TCP/планировщика сервера или сетевой roundtrip. До основного workload сервер создаётся вне измеряемого интервала. Запросы и bytes каждого ресурса записаны в raw.json.
+HTTP handler time runs from the handler receiving a request to completion of response writing; it excludes TCP/server scheduler queues and network roundtrip. Before the main workload, the server is created outside the measured interval. Requests and bytes for each resource are recorded in raw.json.
 
-| Система | Workload | Mode | Запросов | Server p50 ms | Server p95 ms | Server max ms |
+| System | Workload | Mode | Requests | Server p50 ms | Server p95 ms | Server max ms |
 |---|---|---|---|---|---|---|
 | chrome | static | cold | 18 | 0.26 | 0.54 | 0.55 |
 | mimic | static | cold | 20 | 0.19 | 0.37 | 0.42 |
@@ -350,9 +350,9 @@ Mimic сериализует команды CDP общим mutex. Измерен
 | mimic | wasm | warm | 40 | 0.14 | 0.26 | 0.28 |
 | chrome | wasm | warm | 40 | 0.21 | 0.33 | 0.39 |
 
-## Валидность измеряемых серий
+## Validity of measured series
 
-| Система | Workload | Mode | Успех / попыток | Использование сравнения |
+| System | Workload | Mode | Successes / attempts | Comparison use |
 |---|---|---|---|---|
 | chrome | static | cold | 9/10 | INVALID — error or semantic mismatch; no speed claim |
 | mimic | static | cold | 10/10 | VALID |
@@ -389,30 +389,30 @@ Mimic сериализует команды CDP общим mutex. Измерен
 
 ![CPU (% of one logical core)](cpu.png)
 
-## Инженерный вывод
+## Engineering conclusions
 
-1. По медиане warm navigation→completion Mimic быстрее: ни на одной из измеренных нагрузок. CDP readiness (общая проба, отдельные cold): mimic 215.24 ms; chrome 287.06 ms
+1. By median warm navigation→completion, Mimic is faster on: none of the measured workloads. CDP readiness (shared probe, separate cold runs): mimic 215.24 ms; chrome 287.06 ms
 
-2. Chrome быстрее по той же метрике: async (120.91 / 43.52 ms Mimic/Chrome); cpu (117.43 / 46.26 ms Mimic/Chrome); dom (1196.34 / 46.87 ms Mimic/Chrome); react (173.36 / 43.12 ms Mimic/Chrome); static (101.49 / 23.23 ms Mimic/Chrome); wasm (81.69 / 21.93 ms Mimic/Chrome).
+2. Chrome is faster by the same metric on: async (120.91 / 43.52 ms Mimic/Chrome); cpu (117.43 / 46.26 ms Mimic/Chrome); dom (1196.34 / 46.87 ms Mimic/Chrome); react (173.36 / 43.12 ms Mimic/Chrome); static (101.49 / 23.23 ms Mimic/Chrome); wasm (81.69 / 21.93 ms Mimic/Chrome).
 
-3. Фиксированный overhead процесса (CDP ready, включая исходную страницу): mimic 104.20 MiB; chrome 378.72 MiB. Startup latency и OLS intercept приведены отдельно выше.
+3. Fixed process overhead (CDP ready, including the initial page): mimic 104.20 MiB; chrome 378.72 MiB. Startup latency and the OLS intercept are reported separately above.
 
-4. Оценки marginal RAM/session: chrome/cpu 73.64 MiB; mimic/cpu 62.97 MiB; chrome/react 72.02 MiB; mimic/react 56.43 MiB; chrome/static 59.51 MiB; mimic/static 62.34 MiB.
+4. Estimated marginal RAM/session: chrome/cpu 73.64 MiB; mimic/cpu 62.97 MiB; chrome/react 72.02 MiB; mimic/react 56.43 MiB; chrome/static 59.51 MiB; mimic/static 62.34 MiB.
 
-5. Максимальный стабильный N по нагрузке: mimic/cpu 50; chrome/cpu 100; mimic/react 50; chrome/react 100; mimic/static 25; chrome/static 100.
+5. Maximum stable N by workload: mimic/cpu 50; chrome/cpu 100; mimic/react 50; chrome/react 100; mimic/static 25; chrome/static 100.
 
-6. Throughput на максимальном общем стабильном уровне:
+6. Throughput at the highest common stable level:
 
-cpu, N=50: Mimic 5.98 и Chrome 28.04 успешных сессий/s; RSS 3269.39 и 4950.92 MiB; CPU/session 235.12 и 161.88 ms.
+cpu, N=50: Mimic 5.98 and Chrome 28.04 successful sessions/s; RSS 3269.39 and 4950.92 MiB; CPU/session 235.12 and 161.88 ms.
 
-react, N=50: Mimic 3.70 и Chrome 18.75 успешных сессий/s; RSS 2941.38 и 4765.48 MiB; CPU/session 457.75 и 192.81 ms.
+react, N=50: Mimic 3.70 and Chrome 18.75 successful sessions/s; RSS 2941.38 and 4765.48 MiB; CPU/session 457.75 and 192.81 ms.
 
-static, N=25: Mimic 7.71 и Chrome 32.29 успешных сессий/s; RSS 1677.64 и 2562.45 MiB; CPU/session 196.00 и 107.88 ms.
+static, N=25: Mimic 7.71 and Chrome 32.29 successful sessions/s; RSS 1677.64 and 2562.45 MiB; CPU/session 196.00 and 107.88 ms.
 
-7. Невалидные сравнения после исправлений: нет на correctness gate; ошибки отдельных итераций остаются в raw.json. До исправлений: DOM, async, React, WebAssembly (см. pre-fix).
+7. Invalid comparisons after fixes: none at the correctness gate; individual iteration errors remain in raw.json. Before fixes: DOM, async, React, WebAssembly (see pre-fix).
 
-8. Ограничения: одна занятая рабочая станция; headless Chrome; различные сборки V8; HTTP cache отключён; ограниченные размеры и семантические проверки корпуса; React-фикстура синтетическая, не Next.js/production-приложение. Polling и sampler входят в нагрузку системы. RSS — сумма рабочих наборов, не уникальная физическая RAM; нет финансовой модели стоимости сессии. Paging — общесистемный счётчик, не атрибуция hard faults конкретному процессу. Значения виртуальных часов Mimic не используются для сравнений.
+8. Limitations: one busy workstation; headless Chrome; different V8 builds; HTTP cache disabled; limited corpus sizes and semantic checks; a synthetic React fixture, not a Next.js/production application. Polling and sampling add system load. RSS sums working sets, not unique physical RAM; no financial model of session cost is provided. Paging is a system-wide counter, not attribution of hard faults to a specific process. Mimic virtual-clock values are not used for comparisons.
 
-9. Наиболее сильная защищаемая формулировка для README: «На Windows x64 локальные контролируемые нагрузки прошли проверку результатов в Mimic V8 и Chrome 152.0.7977.82; опубликованы воспроизводимый harness, исходные наблюдения и отдельные показатели latency, CPU и памяти. cpu, N=50: Mimic 5.98 и Chrome 28.04 успешных сессий/s; RSS 3269.39 и 4950.92 MiB; CPU/session 235.12 и 161.88 ms.»
+9. Supported scope: “On Windows x64, local controlled workloads passed result validation in Mimic V8 and Chrome 152.0.7977.82; a reproducible harness, raw observations, and separate latency, CPU, and memory metrics are published. cpu, N=50: Mimic 5.98 and Chrome 28.04 successful sessions/s; RSS 3269.39 and 4950.92 MiB; CPU/session 235.12 and 161.88 ms.”
 
-10. Данные НЕ подтверждают утверждение «Mimic в X раз быстрее Chrome вообще», полную совместимость с браузером, безопасность изоляции tenants, преимущество чистого V8/JIT, выигрыш на произвольных сайтах или денежную экономию без модели эксплуатации.
+10. The data do NOT support claims that “Mimic is X times faster than Chrome in general,” full browser compatibility, tenant-isolation security, an advantage in pure V8/JIT execution, gains on arbitrary sites, or monetary savings without an operating model.
