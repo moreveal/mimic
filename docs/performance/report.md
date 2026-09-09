@@ -925,3 +925,25 @@ direct host crossings and explicit Go-attribution limitations. Key counts are
 observation checks. Only 28 observation checks cross to Go; wrap performs zero
 nodeData calls. Total workload host calls remain 54,055. All raw artifacts,
 diagnostic patch and launch-hash receipts are preserved with the report.
+
+## Repository hydration compatibility workload — 2026-09-09
+
+The first blocking module semantic on the repository-page workload was missing
+`import.meta.url`. An independent local module → fetch → DOM reproduction now
+populates correctly after supplying the module resource URL through V8's host
+initializer. Synchronous rejected module evaluations are also reported. The
+live site still encounters unimplemented custom-element/DOM APIs; this is not
+a claim of complete GitHub hydration or a site-specific optimization.
+
+Fresh DOM/static/React profiles and before/final fast gates preserve build and
+per-launch hashes. All six correctness workloads pass; frozen files are unchanged.
+DOM completion 111.249 → 113.278 ms (+1.82%); static 43.556 → 44.273 ms (+1.65%);
+React 86.146 → 81.731 ms (−5.13%). Static throughput N10 55.593 → 53.023 Pages/s
+(−4.62%), N25 72.954 → 71.884 (−1.47%). Marginal RSS per Page: static
+24.427 → 24.675 MiB, React 29.102 → 29.161 MiB. Retained RSS above ready baseline
+after teardown +250 ms: static 69.367 → 72.480 MiB, React 89.164 → 89.172 MiB.
+These single-gate deltas include regressions and environmental variance; no
+performance benefit is attributed to this compatibility fix. No full-matrix
+milestone is claimed for this one scoped change.
+
+[Investigation, limitations and raw gates](../compatibility/repository-hydration-20260909/report.md).

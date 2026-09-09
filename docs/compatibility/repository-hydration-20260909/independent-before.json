@@ -1,0 +1,45 @@
+{
+  "chrome": {
+    "meta": {
+      "url": "http://127.0.0.1:49389/modules/entry.js?entry#fragment",
+      "dependency": "http://127.0.0.1:49389/modules/dependency.js?dep#part",
+      "stable": true,
+      "distinct": true,
+      "nullPrototype": true,
+      "descriptor": {
+        "writable": true,
+        "enumerable": true,
+        "configurable": true
+      },
+      "inlineURL": "http://127.0.0.1:49389/",
+      "dynamic": "http://127.0.0.1:49389/modules/dynamic.js"
+    },
+    "order": [
+      "classic",
+      "module",
+      "microtask",
+      "DOMContentLoaded",
+      "fetch"
+    ],
+    "text": "populated",
+    "errors": []
+  },
+  "mimic": {
+    "meta": {
+      "descriptor": null,
+      "distinct": true,
+      "failure": "module URL is missing",
+      "nullPrototype": true,
+      "stable": true
+    },
+    "order": [
+      "classic",
+      "module",
+      "microtask",
+      "DOMContentLoaded"
+    ],
+    "text": "pending",
+    "errors": [],
+    "issues": []
+  }
+}

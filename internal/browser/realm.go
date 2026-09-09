@@ -228,6 +228,12 @@ func (r *Realm) EvaluateModule(ctx context.Context, source, name string, loader 
 		return nil, fmt.Errorf("JavaScript engine does not support ECMAScript modules")
 	}
 	v, err := moduleRuntime.EvalModule(ctx, source, name, loader)
+	// V8 returns a rejected evaluation promise for a synchronous module throw,
+	// rather than a failed embedder call. Inspect without pumping jobs or
+	// blocking on top-level await so script diagnostics don't report success.
+	if err == nil {
+		_, _, err = r.runtime.Await(v)
+	}
 	if err != nil {
 		r.agent.Page().trace.Add(trace.Exception, "evaluation", map[string]any{"source": name, "error": err.Error(), "module": true})
 	}

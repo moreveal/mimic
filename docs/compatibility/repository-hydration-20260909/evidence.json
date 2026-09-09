@@ -1,0 +1,798 @@
+{
+  "url": "https://github.com/moreveal/AuthMeReloaded",
+  "captures": {
+    "chrome-fresh-verified": {
+      "receipt": {
+        "binary": "<repo>\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+        "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+        "url": "https://github.com/moreveal/AuthMeReloaded",
+        "endpoint": "http://127.0.0.1:19327",
+        "oracle": true,
+        "metadata": {
+          "schemaVersion": 1,
+          "chromeVersion": "152.0.7977.82",
+          "chromiumRevision": 1669021,
+          "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+          "v8Version": "15.2.124.21",
+          "platform": "windows-x64",
+          "browserMode": "headful",
+          "commandLineFeatureOverrides": [],
+          "viewport": {
+            "width": 1272,
+            "height": 653,
+            "deviceScaleFactor": 1
+          },
+          "window": {
+            "left": 0,
+            "top": 0,
+            "width": 1280,
+            "height": 800,
+            "windowState": "normal"
+          },
+          "secureContextState": true,
+          "isolationState": false,
+          "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+          "profileFreshness": "fresh-controlled",
+          "visibilityState": "visible",
+          "hasFocus": false
+        }
+      },
+      "responseStatuses": {
+        "200": 161,
+        "204": 3
+      },
+      "fetchXHR": [
+        {
+          "type": "Fetch",
+          "status": 200,
+          "url": "https://github.com/moreveal/AuthMeReloaded/recently-touched-branches"
+        },
+        {
+          "type": "Fetch",
+          "status": 200,
+          "url": "https://github.com/moreveal/AuthMeReloaded/branch-and-tag-count"
+        },
+        {
+          "type": "Fetch",
+          "status": 200,
+          "url": "https://github.com/moreveal/AuthMeReloaded/latest-commit"
+        },
+        {
+          "type": "Fetch",
+          "status": 200,
+          "url": "https://github.com/moreveal/AuthMeReloaded/refs?type=branch"
+        },
+        {
+          "type": "Fetch",
+          "status": 200,
+          "url": "https://github.com/moreveal/AuthMeReloaded/tree-commit-info"
+        },
+        {
+          "type": "Fetch",
+          "status": 200,
+          "url": "https://github.com/moreveal/AuthMeReloaded/overview-files/master"
+        },
+        {
+          "type": "Fetch",
+          "status": 200,
+          "url": "https://github.com/moreveal/AuthMeReloaded/branch-infobar/master"
+        },
+        {
+          "type": "Fetch",
+          "status": 200,
+          "url": "https://github.com/moreveal/AuthMeReloaded/_sidebar"
+        }
+      ],
+      "dom": [
+        {
+          "secondsAfterLoad": 0,
+          "characters": 362157,
+          "SkeletonOccurrences": 29,
+          "skeletonOccurrences": 5,
+          "sha256": "908739d25c91870b0afc024326b149af7e61173a71d5f10b6ab2c8f9022b0d6c"
+        },
+        {
+          "secondsAfterLoad": 2,
+          "characters": 362772,
+          "SkeletonOccurrences": 0,
+          "skeletonOccurrences": 0,
+          "sha256": "8a06810580f538aba8da67aefaadb90585a7cb72d5e0baf111d8765c30f65f13"
+        },
+        {
+          "secondsAfterLoad": 10,
+          "characters": 362772,
+          "SkeletonOccurrences": 0,
+          "skeletonOccurrences": 0,
+          "sha256": "8a06810580f538aba8da67aefaadb90585a7cb72d5e0baf111d8765c30f65f13"
+        }
+      ]
+    },
+    "mimic-verified": {
+      "receipt": {
+        "binary": "<repo>\\.build\\repository-compat\\mimic-final.exe",
+        "sha256": "281cb01cef8dd1e654ddd594f1898fddd0ea18a67cb21eadc3133fea03991736",
+        "url": "https://github.com/moreveal/AuthMeReloaded",
+        "endpoint": "http://127.0.0.1:19326",
+        "oracle": false
+      },
+      "responseStatuses": {
+        "200": 202
+      },
+      "fetchXHR": [],
+      "dom": [
+        {
+          "secondsAfterLoad": 0,
+          "characters": 346038,
+          "SkeletonOccurrences": 115,
+          "skeletonOccurrences": 5,
+          "sha256": "7aaf1a98c62e5a2338d2e33f754a3c6d31fdc4ed9612242e8bbb0f321310fbb1"
+        },
+        {
+          "secondsAfterLoad": 2,
+          "characters": 346038,
+          "SkeletonOccurrences": 115,
+          "skeletonOccurrences": 5,
+          "sha256": "7aaf1a98c62e5a2338d2e33f754a3c6d31fdc4ed9612242e8bbb0f321310fbb1"
+        },
+        {
+          "secondsAfterLoad": 10,
+          "characters": 346038,
+          "SkeletonOccurrences": 115,
+          "skeletonOccurrences": 5,
+          "sha256": "7aaf1a98c62e5a2338d2e33f754a3c6d31fdc4ed9612242e8bbb0f321310fbb1"
+        }
+      ],
+      "scriptTimeline": [
+        {
+          "sequence": 52,
+          "time": "2026-09-09T00:14:18.3393298Z",
+          "kind": "lifecycle",
+          "name": "frameNavigated",
+          "data": {
+            "realm": "91ff3517-b713-46ef-90a3-740f35e91151",
+            "url": "https://github.com/moreveal/AuthMeReloaded"
+          }
+        },
+        {
+          "sequence": 168,
+          "time": "2026-09-09T00:14:19.5439798Z",
+          "kind": "js",
+          "name": "scriptStart",
+          "data": {
+            "module": true,
+            "realm": "91ff3517-b713-46ef-90a3-740f35e91151",
+            "url": "https://github.githubassets.com/assets/high-contrast-cookie-e3d808ee18eb9784.js"
+          }
+        },
+        {
+          "sequence": 180,
+          "time": "2026-09-09T00:14:19.5449958Z",
+          "kind": "js",
+          "name": "scriptEnd",
+          "data": {
+            "module": true,
+            "realm": "91ff3517-b713-46ef-90a3-740f35e91151",
+            "url": "https://github.githubassets.com/assets/high-contrast-cookie-e3d808ee18eb9784.js"
+          }
+        },
+        {
+          "sequence": 185,
+          "time": "2026-09-09T00:14:19.5449958Z",
+          "kind": "js",
+          "name": "scriptStart",
+          "data": {
+            "module": true,
+            "realm": "91ff3517-b713-46ef-90a3-740f35e91151",
+            "url": "https://github.githubassets.com/assets/environment-70ddc8f64a6b62f8.js"
+          }
+        },
+        {
+          "sequence": 273,
+          "time": "2026-09-09T00:14:19.913161Z",
+          "kind": "semantic-missing",
+          "name": "ClipboardItem.constructor",
+          "data": {
+            "realm": "91ff3517-b713-46ef-90a3-740f35e91151"
+          }
+        },
+        {
+          "sequence": 274,
+          "time": "2026-09-09T00:14:19.913161Z",
+          "kind": "semantic-missing",
+          "name": "ClipboardItem.constructor",
+          "data": {
+            "realm": "91ff3517-b713-46ef-90a3-740f35e91151"
+          }
+        },
+        {
+          "sequence": 280,
+          "time": "2026-09-09T00:14:19.9141803Z",
+          "kind": "js",
+          "name": "scriptEnd",
+          "data": {
+            "module": true,
+            "realm": "91ff3517-b713-46ef-90a3-740f35e91151",
+            "url": "https://github.githubassets.com/assets/environment-70ddc8f64a6b62f8.js"
+          }
+        },
+        {
+          "sequence": 288,
+          "time": "2026-09-09T00:14:19.9147001Z",
+          "kind": "js",
+          "name": "scriptStart",
+          "data": {
+            "module": true,
+            "realm": "91ff3517-b713-46ef-90a3-740f35e91151",
+            "url": "https://github.githubassets.com/assets/github-elements-60b7bcf1b9f09570.js"
+          }
+        },
+        {
+          "sequence": 439,
+          "time": "2026-09-09T00:14:20.8079535Z",
+          "kind": "exception",
+          "name": "evaluation",
+          "data": {
+            "error": "promise rejected: TypeError: Cannot read properties of undefined (reading 'define')",
+            "module": true,
+            "source": "https://github.githubassets.com/assets/github-elements-60b7bcf1b9f09570.js"
+          }
+        },
+        {
+          "sequence": 441,
+          "time": "2026-09-09T00:14:20.8079535Z",
+          "kind": "exception",
+          "name": "script",
+          "data": {
+            "error": "promise rejected: TypeError: Cannot read properties of undefined (reading 'define')",
+            "module": true,
+            "url": "https://github.githubassets.com/assets/github-elements-60b7bcf1b9f09570.js"
+          }
+        },
+        {
+          "sequence": 443,
+          "time": "2026-09-09T00:14:20.8079535Z",
+          "kind": "js",
+          "name": "scriptEnd",
+          "data": {
+            "error": "promise rejected: TypeError: Cannot read properties of undefined (reading 'define')",
+            "module": true,
+            "realm": "91ff3517-b713-46ef-90a3-740f35e91151",
+            "url": "https://github.githubassets.com/assets/github-elements-60b7bcf1b9f09570.js"
+          }
+        },
+        {
+          "sequence": 447,
+          "time": "2026-09-09T00:14:20.8079535Z",
+          "kind": "error",
+          "name": "moduleScriptTask",
+          "data": {
+            "error": "dom task: promise rejected: TypeError: Cannot read properties of undefined (reading 'define')",
+            "url": "https://github.githubassets.com/assets/github-elements-60b7bcf1b9f09570.js"
+          }
+        },
+        {
+          "sequence": 450,
+          "time": "2026-09-09T00:14:20.8079535Z",
+          "kind": "js",
+          "name": "scriptStart",
+          "data": {
+            "module": true,
+            "realm": "91ff3517-b713-46ef-90a3-740f35e91151",
+            "url": "https://github.githubassets.com/assets/element-registry-4e04c6f3d7c5e3cd.js"
+          }
+        },
+        {
+          "sequence": 502,
+          "time": "2026-09-09T00:14:21.1115783Z",
+          "kind": "semantic-missing",
+          "name": "AbortController.constructor",
+          "data": {
+            "realm": "91ff3517-b713-46ef-90a3-740f35e91151"
+          }
+        },
+        {
+          "sequence": 503,
+          "time": "2026-09-09T00:14:21.1115783Z",
+          "kind": "semantic-missing",
+          "name": "MutationObserver.constructor",
+          "data": {
+            "realm": "91ff3517-b713-46ef-90a3-740f35e91151"
+          }
+        },
+        {
+          "sequence": 504,
+          "time": "2026-09-09T00:14:21.1120927Z",
+          "kind": "exception",
+          "name": "evaluation",
+          "data": {
+            "error": "promise rejected: TypeError: Illegal constructor",
+            "module": true,
+            "source": "https://github.githubassets.com/assets/element-registry-4e04c6f3d7c5e3cd.js"
+          }
+        },
+        {
+          "sequence": 506,
+          "time": "2026-09-09T00:14:21.1120927Z",
+          "kind": "exception",
+          "name": "script",
+          "data": {
+            "error": "promise rejected: TypeError: Illegal constructor",
+            "module": true,
+            "url": "https://github.githubassets.com/assets/element-registry-4e04c6f3d7c5e3cd.js"
+          }
+        },
+        {
+          "sequence": 508,
+          "time": "2026-09-09T00:14:21.1120927Z",
+          "kind": "js",
+          "name": "scriptEnd",
+          "data": {
+            "error": "promise rejected: TypeError: Illegal constructor",
+            "module": true,
+            "realm": "91ff3517-b713-46ef-90a3-740f35e91151",
+            "url": "https://github.githubassets.com/assets/element-registry-4e04c6f3d7c5e3cd.js"
+          }
+        },
+        {
+          "sequence": 512,
+          "time": "2026-09-09T00:14:21.1120927Z",
+          "kind": "error",
+          "name": "moduleScriptTask",
+          "data": {
+            "error": "dom task: promise rejected: TypeError: Illegal constructor",
+            "url": "https://github.githubassets.com/assets/element-registry-4e04c6f3d7c5e3cd.js"
+          }
+        },
+        {
+          "sequence": 515,
+          "time": "2026-09-09T00:14:21.1120927Z",
+          "kind": "js",
+          "name": "scriptStart",
+          "data": {
+            "module": true,
+            "realm": "91ff3517-b713-46ef-90a3-740f35e91151",
+            "url": "https://github.githubassets.com/assets/behaviors-3e12f3a34eccf6d5.js"
+          }
+        },
+        {
+          "sequence": 780,
+          "time": "2026-09-09T00:14:22.7001141Z",
+          "kind": "semantic-missing",
+          "name": "MutationObserver.constructor",
+          "data": {
+            "realm": "91ff3517-b713-46ef-90a3-740f35e91151"
+          }
+        },
+        {
+          "sequence": 781,
+          "time": "2026-09-09T00:14:22.7001141Z",
+          "kind": "exception",
+          "name": "evaluation",
+          "data": {
+            "error": "promise rejected: TypeError: Illegal constructor",
+            "module": true,
+            "source": "https://github.githubassets.com/assets/behaviors-3e12f3a34eccf6d5.js"
+          }
+        },
+        {
+          "sequence": 783,
+          "time": "2026-09-09T00:14:22.7001141Z",
+          "kind": "exception",
+          "name": "script",
+          "data": {
+            "error": "promise rejected: TypeError: Illegal constructor",
+            "module": true,
+            "url": "https://github.githubassets.com/assets/behaviors-3e12f3a34eccf6d5.js"
+          }
+        },
+        {
+          "sequence": 785,
+          "time": "2026-09-09T00:14:22.7001141Z",
+          "kind": "js",
+          "name": "scriptEnd",
+          "data": {
+            "error": "promise rejected: TypeError: Illegal constructor",
+            "module": true,
+            "realm": "91ff3517-b713-46ef-90a3-740f35e91151",
+            "url": "https://github.githubassets.com/assets/behaviors-3e12f3a34eccf6d5.js"
+          }
+        },
+        {
+          "sequence": 789,
+          "time": "2026-09-09T00:14:22.7001141Z",
+          "kind": "error",
+          "name": "moduleScriptTask",
+          "data": {
+            "error": "dom task: promise rejected: TypeError: Illegal constructor",
+            "url": "https://github.githubassets.com/assets/behaviors-3e12f3a34eccf6d5.js"
+          }
+        },
+        {
+          "sequence": 792,
+          "time": "2026-09-09T00:14:22.7001141Z",
+          "kind": "js",
+          "name": "scriptStart",
+          "data": {
+            "module": true,
+            "realm": "91ff3517-b713-46ef-90a3-740f35e91151",
+            "url": "https://github.githubassets.com/assets/codespaces-cbfd0d8c9eccf007.js"
+          }
+        },
+        {
+          "sequence": 894,
+          "time": "2026-09-09T00:14:23.2897818Z",
+          "kind": "semantic-missing",
+          "name": "MutationObserver.constructor",
+          "data": {
+            "realm": "91ff3517-b713-46ef-90a3-740f35e91151"
+          }
+        },
+        {
+          "sequence": 895,
+          "time": "2026-09-09T00:14:23.2897818Z",
+          "kind": "exception",
+          "name": "evaluation",
+          "data": {
+            "error": "promise rejected: TypeError: Illegal constructor",
+            "module": true,
+            "source": "https://github.githubassets.com/assets/codespaces-cbfd0d8c9eccf007.js"
+          }
+        },
+        {
+          "sequence": 897,
+          "time": "2026-09-09T00:14:23.2897818Z",
+          "kind": "exception",
+          "name": "script",
+          "data": {
+            "error": "promise rejected: TypeError: Illegal constructor",
+            "module": true,
+            "url": "https://github.githubassets.com/assets/codespaces-cbfd0d8c9eccf007.js"
+          }
+        },
+        {
+          "sequence": 899,
+          "time": "2026-09-09T00:14:23.2897818Z",
+          "kind": "js",
+          "name": "scriptEnd",
+          "data": {
+            "error": "promise rejected: TypeError: Illegal constructor",
+            "module": true,
+            "realm": "91ff3517-b713-46ef-90a3-740f35e91151",
+            "url": "https://github.githubassets.com/assets/codespaces-cbfd0d8c9eccf007.js"
+          }
+        },
+        {
+          "sequence": 903,
+          "time": "2026-09-09T00:14:23.2902931Z",
+          "kind": "error",
+          "name": "moduleScriptTask",
+          "data": {
+            "error": "dom task: promise rejected: TypeError: Illegal constructor",
+            "url": "https://github.githubassets.com/assets/codespaces-cbfd0d8c9eccf007.js"
+          }
+        },
+        {
+          "sequence": 906,
+          "time": "2026-09-09T00:14:23.2902931Z",
+          "kind": "js",
+          "name": "scriptStart",
+          "data": {
+            "module": true,
+            "realm": "91ff3517-b713-46ef-90a3-740f35e91151",
+            "url": "https://github.githubassets.com/assets/repositories-7d4076f0bbeb715d.js"
+          }
+        },
+        {
+          "sequence": 1027,
+          "time": "2026-09-09T00:14:24.0084613Z",
+          "kind": "exception",
+          "name": "evaluation",
+          "data": {
+            "error": "promise rejected: TypeError: Cannot read properties of undefined (reading 'define')",
+            "module": true,
+            "source": "https://github.githubassets.com/assets/repositories-7d4076f0bbeb715d.js"
+          }
+        },
+        {
+          "sequence": 1029,
+          "time": "2026-09-09T00:14:24.0084613Z",
+          "kind": "exception",
+          "name": "script",
+          "data": {
+            "error": "promise rejected: TypeError: Cannot read properties of undefined (reading 'define')",
+            "module": true,
+            "url": "https://github.githubassets.com/assets/repositories-7d4076f0bbeb715d.js"
+          }
+        },
+        {
+          "sequence": 1031,
+          "time": "2026-09-09T00:14:24.0084613Z",
+          "kind": "js",
+          "name": "scriptEnd",
+          "data": {
+            "error": "promise rejected: TypeError: Cannot read properties of undefined (reading 'define')",
+            "module": true,
+            "realm": "91ff3517-b713-46ef-90a3-740f35e91151",
+            "url": "https://github.githubassets.com/assets/repositories-7d4076f0bbeb715d.js"
+          }
+        },
+        {
+          "sequence": 1035,
+          "time": "2026-09-09T00:14:24.0084613Z",
+          "kind": "error",
+          "name": "moduleScriptTask",
+          "data": {
+            "error": "dom task: promise rejected: TypeError: Cannot read properties of undefined (reading 'define')",
+            "url": "https://github.githubassets.com/assets/repositories-7d4076f0bbeb715d.js"
+          }
+        },
+        {
+          "sequence": 1038,
+          "time": "2026-09-09T00:14:24.0084613Z",
+          "kind": "js",
+          "name": "scriptStart",
+          "data": {
+            "module": true,
+            "realm": "91ff3517-b713-46ef-90a3-740f35e91151",
+            "url": "https://github.githubassets.com/assets/code-menu-420642b996854289.js"
+          }
+        },
+        {
+          "sequence": 1057,
+          "time": "2026-09-09T00:14:24.1266703Z",
+          "kind": "js",
+          "name": "scriptEnd",
+          "data": {
+            "module": true,
+            "realm": "91ff3517-b713-46ef-90a3-740f35e91151",
+            "url": "https://github.githubassets.com/assets/code-menu-420642b996854289.js"
+          }
+        },
+        {
+          "sequence": 1062,
+          "time": "2026-09-09T00:14:24.1266703Z",
+          "kind": "js",
+          "name": "scriptStart",
+          "data": {
+            "module": true,
+            "realm": "91ff3517-b713-46ef-90a3-740f35e91151",
+            "url": "https://github.githubassets.com/assets/code-view-5acc61bccb258c12.js"
+          }
+        },
+        {
+          "sequence": 1695,
+          "time": "2026-09-09T00:14:28.5916203Z",
+          "kind": "semantic-missing",
+          "name": "TextDecoder.constructor",
+          "data": {
+            "realm": "91ff3517-b713-46ef-90a3-740f35e91151"
+          }
+        },
+        {
+          "sequence": 1696,
+          "time": "2026-09-09T00:14:28.5916203Z",
+          "kind": "exception",
+          "name": "evaluation",
+          "data": {
+            "error": "promise rejected: TypeError: Illegal constructor",
+            "module": true,
+            "source": "https://github.githubassets.com/assets/code-view-5acc61bccb258c12.js"
+          }
+        },
+        {
+          "sequence": 1698,
+          "time": "2026-09-09T00:14:28.5921403Z",
+          "kind": "exception",
+          "name": "script",
+          "data": {
+            "error": "promise rejected: TypeError: Illegal constructor",
+            "module": true,
+            "url": "https://github.githubassets.com/assets/code-view-5acc61bccb258c12.js"
+          }
+        },
+        {
+          "sequence": 1700,
+          "time": "2026-09-09T00:14:28.5921403Z",
+          "kind": "js",
+          "name": "scriptEnd",
+          "data": {
+            "error": "promise rejected: TypeError: Illegal constructor",
+            "module": true,
+            "realm": "91ff3517-b713-46ef-90a3-740f35e91151",
+            "url": "https://github.githubassets.com/assets/code-view-5acc61bccb258c12.js"
+          }
+        },
+        {
+          "sequence": 1704,
+          "time": "2026-09-09T00:14:28.5926753Z",
+          "kind": "error",
+          "name": "moduleScriptTask",
+          "data": {
+            "error": "dom task: promise rejected: TypeError: Illegal constructor",
+            "url": "https://github.githubassets.com/assets/code-view-5acc61bccb258c12.js"
+          }
+        },
+        {
+          "sequence": 1707,
+          "time": "2026-09-09T00:14:28.5926753Z",
+          "kind": "js",
+          "name": "scriptStart",
+          "data": {
+            "module": true,
+            "realm": "91ff3517-b713-46ef-90a3-740f35e91151",
+            "url": "https://github.githubassets.com/assets/notifications-subscriptions-menu-e34490eb1be21af4.js"
+          }
+        },
+        {
+          "sequence": 1953,
+          "time": "2026-09-09T00:14:30.1124054Z",
+          "kind": "exception",
+          "name": "evaluation",
+          "data": {
+            "error": "promise rejected: TypeError: Cannot read properties of undefined (reading 'define')",
+            "module": true,
+            "source": "https://github.githubassets.com/assets/notifications-subscriptions-menu-e34490eb1be21af4.js"
+          }
+        },
+        {
+          "sequence": 1955,
+          "time": "2026-09-09T00:14:30.1124054Z",
+          "kind": "exception",
+          "name": "script",
+          "data": {
+            "error": "promise rejected: TypeError: Cannot read properties of undefined (reading 'define')",
+            "module": true,
+            "url": "https://github.githubassets.com/assets/notifications-subscriptions-menu-e34490eb1be21af4.js"
+          }
+        },
+        {
+          "sequence": 1957,
+          "time": "2026-09-09T00:14:30.1124054Z",
+          "kind": "js",
+          "name": "scriptEnd",
+          "data": {
+            "error": "promise rejected: TypeError: Cannot read properties of undefined (reading 'define')",
+            "module": true,
+            "realm": "91ff3517-b713-46ef-90a3-740f35e91151",
+            "url": "https://github.githubassets.com/assets/notifications-subscriptions-menu-e34490eb1be21af4.js"
+          }
+        },
+        {
+          "sequence": 1961,
+          "time": "2026-09-09T00:14:30.1124054Z",
+          "kind": "error",
+          "name": "moduleScriptTask",
+          "data": {
+            "error": "dom task: promise rejected: TypeError: Cannot read properties of undefined (reading 'define')",
+            "url": "https://github.githubassets.com/assets/notifications-subscriptions-menu-e34490eb1be21af4.js"
+          }
+        },
+        {
+          "sequence": 2223,
+          "time": "2026-09-09T00:14:31.7628278Z",
+          "kind": "lifecycle",
+          "name": "DOMContentLoaded",
+          "data": {
+            "frameId": "bfc35a82-af46-4073-8f18-aaeee2d149c4",
+            "realm": "91ff3517-b713-46ef-90a3-740f35e91151",
+            "url": "https://github.com/moreveal/AuthMeReloaded"
+          }
+        },
+        {
+          "sequence": 2243,
+          "time": "2026-09-09T00:14:31.7660573Z",
+          "kind": "lifecycle",
+          "name": "readyStateComplete",
+          "data": {
+            "realm": "91ff3517-b713-46ef-90a3-740f35e91151"
+          }
+        },
+        {
+          "sequence": 2248,
+          "time": "2026-09-09T00:14:31.7670745Z",
+          "kind": "lifecycle",
+          "name": "load",
+          "data": {
+            "url": "https://github.com/moreveal/AuthMeReloaded"
+          }
+        }
+      ]
+    }
+  },
+  "beforeModuleRejections": [
+    {
+      "sequence": 244,
+      "time": "2026-09-09T00:06:14.4656649Z",
+      "kind": "exception",
+      "name": "moduleDiagnostic",
+      "data": {
+        "error": "promise rejected: Error: Automatic publicPath is not supported in this browser",
+        "source": "https://github.githubassets.com/assets/environment-70ddc8f64a6b62f8.js"
+      }
+    },
+    {
+      "sequence": 402,
+      "time": "2026-09-09T00:06:15.3600855Z",
+      "kind": "exception",
+      "name": "moduleDiagnostic",
+      "data": {
+        "error": "promise rejected: Error: Automatic publicPath is not supported in this browser",
+        "source": "https://github.githubassets.com/assets/github-elements-60b7bcf1b9f09570.js"
+      }
+    },
+    {
+      "sequence": 460,
+      "time": "2026-09-09T00:06:15.6567665Z",
+      "kind": "exception",
+      "name": "moduleDiagnostic",
+      "data": {
+        "error": "promise rejected: Error: Automatic publicPath is not supported in this browser",
+        "source": "https://github.githubassets.com/assets/element-registry-4e04c6f3d7c5e3cd.js"
+      }
+    },
+    {
+      "sequence": 728,
+      "time": "2026-09-09T00:06:17.1926709Z",
+      "kind": "exception",
+      "name": "moduleDiagnostic",
+      "data": {
+        "error": "promise rejected: Error: Automatic publicPath is not supported in this browser",
+        "source": "https://github.githubassets.com/assets/behaviors-3e12f3a34eccf6d5.js"
+      }
+    },
+    {
+      "sequence": 838,
+      "time": "2026-09-09T00:06:17.765886Z",
+      "kind": "exception",
+      "name": "moduleDiagnostic",
+      "data": {
+        "error": "promise rejected: Error: Automatic publicPath is not supported in this browser",
+        "source": "https://github.githubassets.com/assets/codespaces-cbfd0d8c9eccf007.js"
+      }
+    },
+    {
+      "sequence": 964,
+      "time": "2026-09-09T00:06:18.4600256Z",
+      "kind": "exception",
+      "name": "moduleDiagnostic",
+      "data": {
+        "error": "promise rejected: Error: Automatic publicPath is not supported in this browser",
+        "source": "https://github.githubassets.com/assets/repositories-7d4076f0bbeb715d.js"
+      }
+    },
+    {
+      "sequence": 992,
+      "time": "2026-09-09T00:06:18.5763809Z",
+      "kind": "exception",
+      "name": "moduleDiagnostic",
+      "data": {
+        "error": "promise rejected: Error: Automatic publicPath is not supported in this browser",
+        "source": "https://github.githubassets.com/assets/code-menu-420642b996854289.js"
+      }
+    },
+    {
+      "sequence": 1630,
+      "time": "2026-09-09T00:06:22.3171303Z",
+      "kind": "exception",
+      "name": "moduleDiagnostic",
+      "data": {
+        "error": "promise rejected: Error: Automatic publicPath is not supported in this browser",
+        "source": "https://github.githubassets.com/assets/code-view-5acc61bccb258c12.js"
+      }
+    },
+    {
+      "sequence": 1878,
+      "time": "2026-09-09T00:06:23.7420408Z",
+      "kind": "exception",
+      "name": "moduleDiagnostic",
+      "data": {
+        "error": "promise rejected: Error: Automatic publicPath is not supported in this browser",
+        "source": "https://github.githubassets.com/assets/notifications-subscriptions-menu-e34490eb1be21af4.js"
+      }
+    }
+  ],
+  "runtimeAsset": {
+    "name": "wp-runtime-802d2cd51dadf61b.js",
+    "sha256": "94af15b1f99a99253f3fdfb7405c7f23aae43e50bd9d1d699ce7664248dab51d"
+  }
+}
