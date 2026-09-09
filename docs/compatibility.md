@@ -181,6 +181,18 @@ documents `600*` as generic challenge failure; its internal suffix does not expo
 the exact rejected observation. See the
 [official error table](https://developers.cloudflare.com/turnstile/troubleshooting/client-side-errors/error-codes/).
 
+After the measured navigation metadata, Client Hints delegation and canvas
+reflection corrections, a fresh 25-second capture still receives challenge 403.
+Script reload now sends same-origin Fetch Metadata and Referer without transient
+activation; iframe navigation uses destination `iframe`. The two subsequent
+document requests send the latest clearance cookie unchanged. No diagnostic
+JavaScript was injected and no frame was evaluated in this capture. Events,
+bodies, trace, binary hash and integrity manifest are retained privately under
+`compatibility/private-captures/iroshop-2026-09-09-mimic-request-context`.
+The failed `brunhild.challenges.cloudflare.com` Fetch DNS lookup also occurs in
+the successful native capture, so it alone does not explain rejection.
+These fixes narrow observable differences; the server's decision remains unresolved.
+
 A successful native capture of `iroshop.tech/mimic-e2e` is retained locally under
 `compatibility/private-captures/iroshop-2026-09-09-chrome152`: initial challenge
 403, then `cf_clearance` and an application response without the challenge header.

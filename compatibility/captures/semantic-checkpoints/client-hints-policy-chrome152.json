@@ -1,0 +1,1252 @@
+{
+  "browser": "152.0.7977.82",
+  "metadata": {
+    "freshIsolatedContextPerCase": true,
+    "existingBrowser": true,
+    "launchFlags": null,
+    "profile": null,
+    "fixture": "tools/compatibility/client_hints_policy_oracle.cjs",
+    "fixtureSHA256": "895000a837f97cc71da96663325da1b39003a8ef36c27d6a1194edd687dece3b"
+  },
+  "origin": "http://127.0.0.1:34804",
+  "childOrigin": "http://127.0.0.1:34803",
+  "cases": [
+    {
+      "mode": "default",
+      "permissions": {
+        "allows": false,
+        "allowlist": []
+      },
+      "requests": [
+        {
+          "server": "top",
+          "url": "/default",
+          "headers": {
+            "host": "127.0.0.1:34804",
+            "connection": "keep-alive",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "upgrade-insecure-requests": "1",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            "sec-fetch-site": "none",
+            "sec-fetch-mode": "navigate",
+            "sec-fetch-user": "?1",
+            "sec-fetch-dest": "document",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/child",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "upgrade-insecure-requests": "1",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            "sec-fetch-site": "same-site",
+            "sec-fetch-mode": "navigate",
+            "sec-fetch-dest": "iframe",
+            "referer": "http://127.0.0.1:34804/",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "top",
+          "url": "/favicon.ico",
+          "headers": {
+            "host": "127.0.0.1:34804",
+            "connection": "keep-alive",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform-version": "\"19.0.0\"",
+            "accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "no-cors",
+            "sec-fetch-dest": "image",
+            "referer": "http://127.0.0.1:34804/default",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "top",
+          "url": "/top-fetch",
+          "headers": {
+            "host": "127.0.0.1:34804",
+            "connection": "keep-alive",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform-version": "\"19.0.0\"",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "http://127.0.0.1:34804/default",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/fetch",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "sec-ch-ua-mobile": "?0",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "http://127.0.0.1:34803/child",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/xhr",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "sec-ch-ua-mobile": "?0",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "http://127.0.0.1:34803/child",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/worker-fetch",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/worker.js",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "same-origin",
+            "sec-fetch-dest": "worker",
+            "referer": "http://127.0.0.1:34803/child",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/url-worker-fetch",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "http://127.0.0.1:34803/worker.js",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+          }
+        }
+      ]
+    },
+    {
+      "mode": "delegate",
+      "permissions": {
+        "allows": true,
+        "allowlist": [
+          "http://127.0.0.1:34803"
+        ]
+      },
+      "requests": [
+        {
+          "server": "top",
+          "url": "/delegate",
+          "headers": {
+            "host": "127.0.0.1:34804",
+            "connection": "keep-alive",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "upgrade-insecure-requests": "1",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            "sec-fetch-site": "none",
+            "sec-fetch-mode": "navigate",
+            "sec-fetch-user": "?1",
+            "sec-fetch-dest": "document",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/child",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-ch-ua-platform-version": "\"19.0.0\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "upgrade-insecure-requests": "1",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            "sec-fetch-site": "same-site",
+            "sec-fetch-mode": "navigate",
+            "sec-fetch-dest": "iframe",
+            "referer": "http://127.0.0.1:34804/",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "top",
+          "url": "/favicon.ico",
+          "headers": {
+            "host": "127.0.0.1:34804",
+            "connection": "keep-alive",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform-version": "\"19.0.0\"",
+            "accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "no-cors",
+            "sec-fetch-dest": "image",
+            "referer": "http://127.0.0.1:34804/delegate",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "top",
+          "url": "/top-fetch",
+          "headers": {
+            "host": "127.0.0.1:34804",
+            "connection": "keep-alive",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform-version": "\"19.0.0\"",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "http://127.0.0.1:34804/delegate",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/fetch",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform-version": "\"19.0.0\"",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "http://127.0.0.1:34803/child",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/xhr",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform-version": "\"19.0.0\"",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "http://127.0.0.1:34803/child",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/worker-fetch",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/worker.js",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "same-origin",
+            "sec-fetch-dest": "worker",
+            "referer": "http://127.0.0.1:34803/child",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/url-worker-fetch",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "http://127.0.0.1:34803/worker.js",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+          }
+        }
+      ]
+    },
+    {
+      "mode": "allow",
+      "permissions": {
+        "allows": true,
+        "allowlist": [
+          "http://127.0.0.1:34803"
+        ]
+      },
+      "requests": [
+        {
+          "server": "top",
+          "url": "/allow",
+          "headers": {
+            "host": "127.0.0.1:34804",
+            "connection": "keep-alive",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "upgrade-insecure-requests": "1",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            "sec-fetch-site": "none",
+            "sec-fetch-mode": "navigate",
+            "sec-fetch-user": "?1",
+            "sec-fetch-dest": "document",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/child",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-ch-ua-platform-version": "\"19.0.0\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "upgrade-insecure-requests": "1",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            "sec-fetch-site": "same-site",
+            "sec-fetch-mode": "navigate",
+            "sec-fetch-dest": "iframe",
+            "referer": "http://127.0.0.1:34804/",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "top",
+          "url": "/favicon.ico",
+          "headers": {
+            "host": "127.0.0.1:34804",
+            "connection": "keep-alive",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform-version": "\"19.0.0\"",
+            "accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "no-cors",
+            "sec-fetch-dest": "image",
+            "referer": "http://127.0.0.1:34804/allow",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "top",
+          "url": "/top-fetch",
+          "headers": {
+            "host": "127.0.0.1:34804",
+            "connection": "keep-alive",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform-version": "\"19.0.0\"",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "http://127.0.0.1:34804/allow",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/fetch",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform-version": "\"19.0.0\"",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "http://127.0.0.1:34803/child",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/xhr",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform-version": "\"19.0.0\"",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "http://127.0.0.1:34803/child",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/worker-fetch",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/worker.js",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "same-origin",
+            "sec-fetch-dest": "worker",
+            "referer": "http://127.0.0.1:34803/child",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/url-worker-fetch",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "http://127.0.0.1:34803/worker.js",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+          }
+        }
+      ]
+    },
+    {
+      "mode": "delegate-allow",
+      "permissions": {
+        "allows": true,
+        "allowlist": [
+          "http://127.0.0.1:34803"
+        ]
+      },
+      "requests": [
+        {
+          "server": "top",
+          "url": "/delegate-allow",
+          "headers": {
+            "host": "127.0.0.1:34804",
+            "connection": "keep-alive",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "upgrade-insecure-requests": "1",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            "sec-fetch-site": "none",
+            "sec-fetch-mode": "navigate",
+            "sec-fetch-user": "?1",
+            "sec-fetch-dest": "document",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/child",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-ch-ua-platform-version": "\"19.0.0\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "upgrade-insecure-requests": "1",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            "sec-fetch-site": "same-site",
+            "sec-fetch-mode": "navigate",
+            "sec-fetch-dest": "iframe",
+            "referer": "http://127.0.0.1:34804/",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "top",
+          "url": "/favicon.ico",
+          "headers": {
+            "host": "127.0.0.1:34804",
+            "connection": "keep-alive",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform-version": "\"19.0.0\"",
+            "accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "no-cors",
+            "sec-fetch-dest": "image",
+            "referer": "http://127.0.0.1:34804/delegate-allow",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "top",
+          "url": "/top-fetch",
+          "headers": {
+            "host": "127.0.0.1:34804",
+            "connection": "keep-alive",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform-version": "\"19.0.0\"",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "http://127.0.0.1:34804/delegate-allow",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/fetch",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform-version": "\"19.0.0\"",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "http://127.0.0.1:34803/child",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/xhr",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform-version": "\"19.0.0\"",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "http://127.0.0.1:34803/child",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/worker-fetch",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/worker.js",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "same-origin",
+            "sec-fetch-dest": "worker",
+            "referer": "http://127.0.0.1:34803/child",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/url-worker-fetch",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "http://127.0.0.1:34803/worker.js",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+          }
+        }
+      ]
+    },
+    {
+      "mode": "deny-allow",
+      "permissions": {
+        "allows": false,
+        "allowlist": []
+      },
+      "requests": [
+        {
+          "server": "top",
+          "url": "/deny-allow",
+          "headers": {
+            "host": "127.0.0.1:34804",
+            "connection": "keep-alive",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "upgrade-insecure-requests": "1",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            "sec-fetch-site": "none",
+            "sec-fetch-mode": "navigate",
+            "sec-fetch-user": "?1",
+            "sec-fetch-dest": "document",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/child",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-ch-ua-platform-version": "\"19.0.0\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "upgrade-insecure-requests": "1",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            "sec-fetch-site": "same-site",
+            "sec-fetch-mode": "navigate",
+            "sec-fetch-dest": "iframe",
+            "referer": "http://127.0.0.1:34804/",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "top",
+          "url": "/favicon.ico",
+          "headers": {
+            "host": "127.0.0.1:34804",
+            "connection": "keep-alive",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "sec-ch-ua-mobile": "?0",
+            "accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "no-cors",
+            "sec-fetch-dest": "image",
+            "referer": "http://127.0.0.1:34804/deny-allow",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "top",
+          "url": "/top-fetch",
+          "headers": {
+            "host": "127.0.0.1:34804",
+            "connection": "keep-alive",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "sec-ch-ua-mobile": "?0",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "http://127.0.0.1:34804/deny-allow",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/fetch",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "sec-ch-ua-mobile": "?0",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "http://127.0.0.1:34803/child",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/xhr",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "sec-ch-ua-mobile": "?0",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "http://127.0.0.1:34803/child",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/worker-fetch",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/worker.js",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "same-origin",
+            "sec-fetch-dest": "worker",
+            "referer": "http://127.0.0.1:34803/child",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/url-worker-fetch",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "http://127.0.0.1:34803/worker.js",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+          }
+        }
+      ]
+    },
+    {
+      "mode": "noaccept-allow",
+      "permissions": {
+        "allows": true,
+        "allowlist": [
+          "http://127.0.0.1:34803"
+        ]
+      },
+      "requests": [
+        {
+          "server": "top",
+          "url": "/noaccept-allow",
+          "headers": {
+            "host": "127.0.0.1:34804",
+            "connection": "keep-alive",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "upgrade-insecure-requests": "1",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            "sec-fetch-site": "none",
+            "sec-fetch-mode": "navigate",
+            "sec-fetch-user": "?1",
+            "sec-fetch-dest": "document",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/child",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "upgrade-insecure-requests": "1",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            "sec-fetch-site": "same-site",
+            "sec-fetch-mode": "navigate",
+            "sec-fetch-dest": "iframe",
+            "referer": "http://127.0.0.1:34804/",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "top",
+          "url": "/favicon.ico",
+          "headers": {
+            "host": "127.0.0.1:34804",
+            "connection": "keep-alive",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "sec-ch-ua-mobile": "?0",
+            "accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "no-cors",
+            "sec-fetch-dest": "image",
+            "referer": "http://127.0.0.1:34804/noaccept-allow",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "top",
+          "url": "/top-fetch",
+          "headers": {
+            "host": "127.0.0.1:34804",
+            "connection": "keep-alive",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "sec-ch-ua-mobile": "?0",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "http://127.0.0.1:34804/noaccept-allow",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/fetch",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "sec-ch-ua-mobile": "?0",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "http://127.0.0.1:34803/child",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/xhr",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "sec-ch-ua-mobile": "?0",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "http://127.0.0.1:34803/child",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/worker-fetch",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/worker.js",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "same-origin",
+            "sec-fetch-dest": "worker",
+            "referer": "http://127.0.0.1:34803/child",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/url-worker-fetch",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "http://127.0.0.1:34803/worker.js",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+          }
+        }
+      ]
+    },
+    {
+      "mode": "child-noaccept-allow",
+      "permissions": {
+        "allows": true,
+        "allowlist": [
+          "http://127.0.0.1:34803"
+        ]
+      },
+      "requests": [
+        {
+          "server": "top",
+          "url": "/child-noaccept-allow",
+          "headers": {
+            "host": "127.0.0.1:34804",
+            "connection": "keep-alive",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "upgrade-insecure-requests": "1",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            "sec-fetch-site": "none",
+            "sec-fetch-mode": "navigate",
+            "sec-fetch-user": "?1",
+            "sec-fetch-dest": "document",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/child?noaccept",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "sec-ch-ua-platform-version": "\"19.0.0\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "upgrade-insecure-requests": "1",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+            "sec-fetch-site": "same-site",
+            "sec-fetch-mode": "navigate",
+            "sec-fetch-dest": "iframe",
+            "referer": "http://127.0.0.1:34804/",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "top",
+          "url": "/favicon.ico",
+          "headers": {
+            "host": "127.0.0.1:34804",
+            "connection": "keep-alive",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform-version": "\"19.0.0\"",
+            "accept": "image/avif,image/webp,image/apng,image/svg+xml,image/*,*/*;q=0.8",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "no-cors",
+            "sec-fetch-dest": "image",
+            "referer": "http://127.0.0.1:34804/child-noaccept-allow",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "top",
+          "url": "/top-fetch",
+          "headers": {
+            "host": "127.0.0.1:34804",
+            "connection": "keep-alive",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform-version": "\"19.0.0\"",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "http://127.0.0.1:34804/child-noaccept-allow",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/fetch",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform-version": "\"19.0.0\"",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "http://127.0.0.1:34803/child?noaccept",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/xhr",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "sec-ch-ua-platform": "\"Windows\"",
+            "accept-language": "ru-RU,ru;q=0.9",
+            "sec-ch-ua": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform-version": "\"19.0.0\"",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "http://127.0.0.1:34803/child?noaccept",
+            "accept-encoding": "gzip, deflate, br, zstd"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/worker-fetch",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/worker.js",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "same-origin",
+            "sec-fetch-dest": "worker",
+            "referer": "http://127.0.0.1:34803/child?noaccept",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+          }
+        },
+        {
+          "server": "child",
+          "url": "/url-worker-fetch",
+          "headers": {
+            "host": "127.0.0.1:34803",
+            "connection": "keep-alive",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+            "accept": "*/*",
+            "sec-fetch-site": "same-origin",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-dest": "empty",
+            "referer": "http://127.0.0.1:34803/worker.js",
+            "accept-encoding": "gzip, deflate, br, zstd",
+            "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+          }
+        }
+      ]
+    }
+  ]
+}

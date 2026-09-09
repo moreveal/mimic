@@ -43,10 +43,12 @@ func (r *Realm) executeChildNavigationScript(ctx context.Context, navigation *ch
 			stream.scripts[node.ID] = loaded
 			eventLoop := r.browserEventLoop()
 			referrer := realm.documentURL()
+			request := network.Request{ContextID: navigation.frame.ID, URL: target, Referrer: referrer, SourceURL: referrer, Initiator: network.Script}
+			realm.applyClientHints(&request)
 			realm.resourceWG.Add(1)
 			go func() {
 				defer realm.resourceWG.Done()
-				response, loadErr := r.agent.Page().loader.Load(stream.ctx, network.Request{ContextID: navigation.frame.ID, URL: target, Referrer: referrer, SourceURL: referrer, Initiator: network.Script})
+				response, loadErr := r.agent.Page().loader.Load(stream.ctx, request)
 				if loadErr == nil {
 					loadErr = scriptResponseError(response)
 				}

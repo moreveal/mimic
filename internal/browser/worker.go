@@ -335,7 +335,7 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 		// structured JS trace so protocol subscribers do not misroute it.
 		p.trace.Add(trace.JS, "workerStart", map[string]any{"url": w.url.String(), "worker": w.id})
 		if source == "" {
-			res, loadErr := p.loader.Load(taskContext, network.Request{ContextID: w.parent.agent.ContextID(), URL: w.url, Referrer: w.parent.documentURL(), Initiator: network.Worker})
+			res, loadErr := p.loader.Load(taskContext, network.Request{ContextID: w.parent.agent.ContextID(), URL: w.url, Referrer: w.securityURL, SourceURL: w.securityURL, Initiator: network.Worker, OmitClientHints: true})
 			if loadErr != nil {
 				return loadErr
 			}
@@ -496,15 +496,15 @@ func prefixed(value, prefix string) string {
 }
 
 func (w *DedicatedWorker) isSecureContext() bool {
-	scheme := w.url.Scheme
-	if scheme == "blob" {
+	u := w.url
+	if u.Scheme == "blob" {
 		inner := w.url.Opaque
 		if inner == "" {
 			inner = strings.TrimPrefix(w.url.String(), "blob:")
 		}
 		if innerURL, err := url.Parse(inner); err == nil {
-			scheme = innerURL.Scheme
+			u = innerURL
 		}
 	}
-	return scheme == "https"
+	return potentiallyTrustworthyURL(u)
 }

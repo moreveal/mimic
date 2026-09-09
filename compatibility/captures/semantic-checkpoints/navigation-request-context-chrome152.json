@@ -1,0 +1,130 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 709,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 20,
+      "top": 20,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "visibilityState": "hidden",
+    "hasFocus": true
+  },
+  "scenarios": [
+    "CDP direct navigation",
+    "script reload",
+    "script location.href",
+    "cross-origin iframe",
+    "no-referrer same-origin iframe",
+    "response same-origin policy",
+    "cross-origin iframe under response policy",
+    "iframe unsafe-url override"
+  ],
+  "requests": [
+    {
+      "path": "/start?source=1",
+      "headers": {
+        "sec-fetch-site": "none",
+        "sec-fetch-mode": "navigate",
+        "sec-fetch-user": "?1",
+        "sec-fetch-dest": "document"
+      }
+    },
+    {
+      "path": "/start?source=1",
+      "headers": {
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "navigate",
+        "sec-fetch-dest": "document",
+        "referer": "ORIGIN/start?source=1"
+      }
+    },
+    {
+      "path": "/next",
+      "headers": {
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "navigate",
+        "sec-fetch-dest": "document",
+        "referer": "ORIGIN/start?source=1"
+      }
+    },
+    {
+      "path": "/frame",
+      "headers": {
+        "sec-fetch-site": "cross-site",
+        "sec-fetch-mode": "navigate",
+        "sec-fetch-dest": "iframe",
+        "referer": "ORIGIN/"
+      }
+    },
+    {
+      "path": "/private-frame",
+      "headers": {
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "navigate",
+        "sec-fetch-dest": "iframe"
+      }
+    },
+    {
+      "path": "/policy?source=1",
+      "headers": {
+        "sec-fetch-site": "none",
+        "sec-fetch-mode": "navigate",
+        "sec-fetch-user": "?1",
+        "sec-fetch-dest": "document"
+      }
+    },
+    {
+      "path": "/policy-frame",
+      "headers": {
+        "sec-fetch-site": "cross-site",
+        "sec-fetch-mode": "navigate",
+        "sec-fetch-dest": "iframe"
+      }
+    },
+    {
+      "path": "/unsafe-frame",
+      "headers": {
+        "sec-fetch-site": "cross-site",
+        "sec-fetch-mode": "navigate",
+        "sec-fetch-dest": "iframe",
+        "referer": "ORIGIN/policy?source=1"
+      }
+    }
+  ],
+  "iframeReflection": [
+    [
+      "NO-REFERRER",
+      "no-referrer"
+    ],
+    [
+      "bad",
+      ""
+    ],
+    [
+      " origin ",
+      ""
+    ],
+    [
+      "unsafe-url",
+      "unsafe-url"
+    ]
+  ]
+}

@@ -81,6 +81,7 @@ func (r *Realm) updateImage(id int64, changed bool) {
 			mode = "cors"
 		}
 		request := network.Request{ContextID: r.agent.ContextID(), URL: u, Referrer: referrer, SourceURL: r.documentURL(), Headers: headers, Initiator: network.Image, Mode: mode}
+		r.applyClientHints(&request)
 		resourceContext, cancel := context.WithCancel(r.resourceContext)
 		current.cancel = cancel
 		r.resourceWG.Add(1)

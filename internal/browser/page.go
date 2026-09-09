@@ -238,6 +238,9 @@ func (p *Page) NavigateReserved(ctx context.Context, raw, loaderID string) error
 	return p.navigate(ctx, raw, loaderID)
 }
 func (p *Page) navigate(ctx context.Context, raw, loaderID string, replace ...bool) error {
+	return p.navigateRequest(ctx, raw, loaderID, network.Request{UserActivation: true}, replace...)
+}
+func (p *Page) navigateRequest(ctx context.Context, raw, loaderID string, request network.Request, replace ...bool) error {
 	u, err := url.Parse(raw)
 	if err != nil {
 		return err
@@ -262,7 +265,8 @@ func (p *Page) navigate(ctx context.Context, raw, loaderID string, replace ...bo
 	// CDP defines the main resource request id as the navigation loader id.
 	// Puppeteer/Pyppeteer use this equality (together with type=Document) to
 	// recognize the navigation request and return its Response from goto().
-	res, err := p.loader.Load(ctx, network.Request{ID: loaderID, ContextID: p.Top.ID, URL: u, Method: http.MethodGet, Initiator: network.Navigation})
+	request.ID, request.ContextID, request.URL, request.Method, request.Initiator = loaderID, p.Top.ID, u, http.MethodGet, network.Navigation
+	res, err := p.loader.Load(ctx, request)
 	if err != nil {
 		return err
 	}
@@ -289,7 +293,7 @@ func (p *Page) navigate(ctx context.Context, raw, loaderID string, replace ...bo
 	}
 	coep := strings.ToLower(strings.TrimSpace(res.Headers.Get("Cross-Origin-Embedder-Policy")))
 	coop := strings.ToLower(strings.TrimSpace(res.Headers.Get("Cross-Origin-Opener-Policy")))
-	secureContext := u.Scheme == "https" || u.Hostname() == "localhost" || u.Hostname() == "127.0.0.1" || u.Hostname() == "::1"
+	secureContext := potentiallyTrustworthyURL(u)
 	p.mu.Lock()
 	p.documentSecurity = documentSecurity{
 		secureContext:       secureContext,
@@ -303,6 +307,8 @@ func (p *Page) navigate(ctx context.Context, raw, loaderID string, replace ...bo
 	if err != nil {
 		return err
 	}
+	realm.referrerPolicy = res.Headers.Get("Referrer-Policy")
+	realm.initializeClientHints(res.Headers.Get("Permissions-Policy"))
 	p.mu.Lock()
 	old := p.Top.Realm
 	p.removeDescendantFramesLocked(p.Top)
@@ -355,6 +361,7 @@ func (p *Page) navigate(ctx context.Context, raw, loaderID string, replace ...bo
 				return nil
 			}
 			request := network.Request{ContextID: p.Top.ID, URL: su, Referrer: u, SourceURL: u, Initiator: network.Script}
+			realm.applyClientHints(&request)
 			if _, crossOrigin := s.Attributes["crossorigin"]; crossOrigin || kind == "module" {
 				request.Mode = "cors"
 				request.Headers = make(http.Header)
@@ -449,6 +456,7 @@ func (p *Page) navigate(ctx context.Context, raw, loaderID string, replace ...bo
 					return "", "", parseErr
 				}
 				request := network.Request{ContextID: p.Top.ID, URL: dependency, Referrer: base, SourceURL: base, Initiator: network.Script, Mode: "cors", Headers: make(http.Header)}
+				realm.applyClientHints(&request)
 				request.Headers.Set("Origin", originOf(u.String()))
 				// Dynamic import callbacks may run in a later browser task, after this
 				// module-evaluation task has completed. Network work belongs to the
@@ -487,6 +495,7 @@ func (p *Page) navigate(ctx context.Context, raw, loaderID string, replace ...bo
 			continue
 		}
 		request := network.Request{ContextID: p.Top.ID, URL: stylesheetURL, Referrer: u, SourceURL: u, Initiator: network.Stylesheet}
+		realm.applyClientHints(&request)
 		if _, loadErr := p.loader.Load(ctx, request); loadErr != nil {
 			p.trace.Add(trace.Error, "stylesheetLoad", map[string]any{"url": stylesheetURL.String(), "error": loadErr.Error()})
 		}
@@ -542,6 +551,7 @@ func (p *Page) navigate(ctx context.Context, raw, loaderID string, replace ...bo
 		favicon := favicon
 		realm.scheduler.Post(scheduler.ResourceLow, 0, func(taskContext context.Context) error {
 			request := network.Request{ContextID: p.Top.ID, URL: favicon, Referrer: u, SourceURL: u, Initiator: network.Other, PerformanceInitiatorType: iconInitiatorType}
+			realm.applyClientHints(&request)
 			realm.resourceWG.Add(1)
 			go func() {
 				defer realm.resourceWG.Done()
