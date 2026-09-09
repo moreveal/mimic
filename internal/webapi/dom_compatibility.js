@@ -187,6 +187,9 @@ const compatibilityElementState={};
       const definition=upgraded.get(node);
       if(definition&&definition.attributes.includes(name))reaction(node,'attributeChangedCallback',[name,oldValue,node.getAttribute(name),null]);
     };
+    compatibilityElementState.inlineStyleChanged=(node,oldValue)=>{
+      if(observers.size||definitions.size)attributeChanged(node,'style',oldValue);
+    };
     for(const name of ['setAttribute','removeAttribute']){
       const original=Element.prototype[name];
       Object.defineProperty(Element.prototype,name,{value:function(key,value){
@@ -384,7 +387,7 @@ const compatibilityElementState={};
     Object.defineProperty(Node.prototype,'getRootNode',{value:function(options={}){let node=this;while(node.parentNode)node=node.parentNode;if(options.composed&&node instanceof ShadowRoot)return node.host.getRootNode(options);return node},writable:true,configurable:true,enumerable:true});
     Object.defineProperty(Node.prototype,'cloneNode',{value:function(deep=false){
       let copy;
-      if(this.nodeType===1){copy=this.namespaceURI&&this.namespaceURI!=='http://www.w3.org/1999/xhtml'?document.createElementNS(this.namespaceURI,this.localName):document.createElement(this.localName);for(const name of this.getAttributeNames()){const attr=this.getAttributeNode(name);if(attr.namespaceURI)copy.setAttributeNS(attr.namespaceURI,name,attr.value);else copy.setAttribute(name,attr.value)}}
+      if(this.nodeType===1){copy=this.namespaceURI&&this.namespaceURI!=='http://www.w3.org/1999/xhtml'?document.createElementNS(this.namespaceURI,this.localName):document.createElement(this.localName);for(const name of this.getAttributeNames()){const attr=this.getAttributeNode(name);if(attr.namespaceURI)copy.setAttributeNS(attr.namespaceURI,name,attr.value);else copy.setAttribute(name,attr.value)}if(this.hasAttribute('style'))host.copyInlineStyle(elementSlot(this).nodeId,elementSlot(copy).nodeId)}
       else if(this.nodeType===3)copy=document.createTextNode(this.textContent);
       else if(this.nodeType===8)copy=document.createComment(this.textContent);
       else if(this.nodeType===11)copy=document.createDocumentFragment();

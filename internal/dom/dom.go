@@ -23,16 +23,17 @@ type Node struct {
 	Text           string `json:"text,omitempty"`
 	// TextJSON preserves DOMString code units that cannot cross a UTF-8 string
 	// boundary (unpaired UTF-16 surrogates). Text is its scalar projection.
-	TextJSON             string            `json:"-"`
-	Attributes           map[string]string `json:"attributes,omitempty"`
-	AttributeNamespaces  map[string]string `json:"attributeNamespaces,omitempty"`
-	AttributeNames       []string          `json:"attributeNames,omitempty"`
-	Parent               int64             `json:"parentId,omitempty"`
-	Children             []int64           `json:"children,omitempty"`
-	TemplateContent      int64             `json:"templateContent,omitempty"`
-	TemplateHost         int64             `json:"templateHost,omitempty"`
-	ScriptAlreadyStarted bool              `json:"-"`
-	OwnerDocument        int64             `json:"ownerDocumentId,omitempty"`
+	TextJSON              string            `json:"-"`
+	StyleDeclarationsJSON string            `json:"-"`
+	Attributes            map[string]string `json:"attributes,omitempty"`
+	AttributeNamespaces   map[string]string `json:"attributeNamespaces,omitempty"`
+	AttributeNames        []string          `json:"attributeNames,omitempty"`
+	Parent                int64             `json:"parentId,omitempty"`
+	Children              []int64           `json:"children,omitempty"`
+	TemplateContent       int64             `json:"templateContent,omitempty"`
+	TemplateHost          int64             `json:"templateHost,omitempty"`
+	ScriptAlreadyStarted  bool              `json:"-"`
+	OwnerDocument         int64             `json:"ownerDocumentId,omitempty"`
 }
 type Document struct {
 	mu               sync.RWMutex
@@ -249,6 +250,9 @@ func (d *Document) RemoveAttribute(id int64, name string) error {
 		return fmt.Errorf("element node %d does not exist", id)
 	}
 	name = n.attributeName(name)
+	if name == "style" {
+		n.StyleDeclarationsJSON = ""
+	}
 	delete(n.AttributeNamespaces, name)
 	delete(n.Attributes, name)
 	for i, item := range n.AttributeNames {
@@ -423,6 +427,9 @@ func cloneAttributes(in map[string]string) map[string]string {
 // Attribute values are indexed for lookup, while the ordered names preserve
 // parser/insertion order for DOM enumeration and HTML serialization.
 func (n *Node) setAttribute(name, value string) {
+	if name == "style" && n.Attributes[name] != value {
+		n.StyleDeclarationsJSON = ""
+	}
 	if n.Attributes == nil {
 		n.Attributes = map[string]string{}
 	}

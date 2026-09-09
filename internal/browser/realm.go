@@ -1057,6 +1057,17 @@ func (r *Realm) install() error {
 		value, err := r.document.ToggleToken(int64(numarg(a, 0)), strarg(a, 1), strarg(a, 2), int(numarg(a, 3)))
 		return r.val(value), err
 	}, "nssn")
+	host["inlineStyleState"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return r.val(r.document.InlineStyleState(int64(numarg(a, 0)))), nil
+	}, "n")
+	host["copyInlineStyle"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		r.document.CopyInlineStyle(int64(numarg(a, 0)), int64(numarg(a, 1)))
+		return nil, nil
+	}, "nn")
+	host["setInlineStyle"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		old, err := r.document.SetInlineStyle(int64(numarg(a, 0)), strarg(a, 1), strarg(a, 2))
+		return r.val(old), err
+	}, "nss")
 	host["setAttribute"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		id, name, value := int64(numarg(a, 0)), strarg(a, 1), strarg(a, 2)
 		if err := r.document.SetAttribute(id, name, value); err != nil {

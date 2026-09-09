@@ -1,0 +1,91 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/webkit_css_state_oracle.js",
+    "fixtureSHA256": "de68bd527f1f09c3ab23a094e45a2a505b921d54fa4537412de8e1b4e29c4eef",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "before": [
+      "flex-grow: 2; flex-shrink: ; flex-basis: ;",
+      3,
+      [
+        "flex-grow",
+        "flex-shrink",
+        "flex-basis"
+      ]
+    ],
+    "clone": [
+      "flex-grow: 2; flex-shrink: ; flex-basis: ;",
+      3,
+      [
+        "flex-grow",
+        "flex-shrink",
+        "flex-basis"
+      ]
+    ],
+    "attribute": [
+      "flex-grow: 2; flex-shrink: ; flex-basis: ;",
+      3,
+      [
+        "flex-grow",
+        "flex-shrink",
+        "flex-basis"
+      ]
+    ],
+    "cssText": [
+      "flex-grow: 2;",
+      1,
+      [
+        "flex-grow"
+      ]
+    ],
+    "namespace": [
+      "flex-grow: 2; flex-shrink: ; flex-basis: ;",
+      3,
+      [
+        "flex-grow",
+        "flex-shrink",
+        "flex-basis"
+      ]
+    ],
+    "attr": [
+      "flex-grow: 2; flex-shrink: ; flex-basis: ;",
+      3,
+      [
+        "flex-grow",
+        "flex-shrink",
+        "flex-basis"
+      ]
+    ],
+    "removed": [
+      "",
+      0,
+      []
+    ],
+    "reaction": [
+      "flex-grow: 2; flex-shrink: ; flex-basis: ;",
+      3,
+      [
+        "flex-grow",
+        "flex-shrink",
+        "flex-basis"
+      ]
+    ],
+    "custom": [
+      "flex-grow: 2; flex-shrink: ; flex-basis: ;",
+      3,
+      [
+        "flex-grow",
+        "flex-shrink",
+        "flex-basis"
+      ]
+    ]
+  }
+}

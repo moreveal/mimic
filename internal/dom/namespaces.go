@@ -76,6 +76,9 @@ func (d *Document) SetAttributeNS(id int64, namespace, name, value string) error
 	for _, old := range n.AttributeNames {
 		if n.AttributeNamespaces[old] == namespace && attributeLocalName(old) == local {
 			// setAttributeNS changes the value of the existing Attr, retaining its prefix.
+			if old == "style" && namespace == "" && n.Attributes[old] != value {
+				n.StyleDeclarationsJSON = ""
+			}
 			n.Attributes[old] = value
 			return nil
 		}

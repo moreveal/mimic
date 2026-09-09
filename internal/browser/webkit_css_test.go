@@ -5,13 +5,14 @@ import (
 	"encoding/json"
 	"os"
 	"reflect"
+	"strings"
 	"testing"
 )
 
 func TestWebkitCSSOracle(t *testing.T) {
-	for _, name := range []string{"values", "aliases", "computed", "rules", "supports", "longhands"} {
+	for _, name := range []string{"values", "aliases", "computed", "rules", "supports", "longhands", "shorthand-wide", "shorthand-mutation", "shorthand-rule-mutation", "state", "reflection"} {
 		t.Run(name, func(t *testing.T) {
-			source, err := os.ReadFile("testdata/webkit_css_" + name + "_oracle.js")
+			source, err := os.ReadFile("testdata/webkit_css_" + strings.ReplaceAll(name, "-", "_") + "_oracle.js")
 			if err != nil {
 				t.Fatal(err)
 			}
