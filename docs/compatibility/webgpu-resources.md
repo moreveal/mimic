@@ -1,5 +1,15 @@
 # WebGPU resources without a native backend
 
+The navigator getter has a frozen Chrome 152 reflection regression in
+`webgpu-navigator-chrome152.json` and its Worker counterpart. Installing the
+resource implementation after the original surface's native-function marking
+had exposed its JavaScript source and an incorrect getter name. The getter now
+uses the shared realm-local native-function registry and validates its owning
+navigator, including rejection of objects inheriting from that navigator.
+The GPU string tag was already `[object GPU]` before the resource implementation.
+These checks establish API agreement; they do not establish an external detector
+or challenge result.
+
 The shared Window/Worker implementation owns adapters, device views, queues,
 buffers, mapped ranges, command encoders and command buffers. Resource identity
 and storage are realm-local; the immutable environment supplies adapter features,

@@ -6,16 +6,9 @@
   const recordAPIAccess=(name,supported)=>{const bit=supported?1:2,seen=tracedAccesses.get(name)||0;if(seen&bit)return;tracedAccesses.set(name,seen|bit);host.apiAccess(name,supported)};
   Object.defineProperty(globalThis,'__mimicAttributeUnsafeInterfaces',{value:new Set(['WritableStream','WritableStreamDefaultWriter','TransformStream','TransformStreamDefaultController','RTCDataChannel','RTCPeerConnection','GPUDevice','Plugin','PluginArray','MimeType','MimeTypeArray']),configurable:true});
   const engineGlobals=new Set(Reflect.ownKeys(globalThis));
-  const nativeFunctionText=new WeakMap();
-  const nativeFunctionTextGet=WeakMap.prototype.get.bind(nativeFunctionText),nativeFunctionTextSet=WeakMap.prototype.set.bind(nativeFunctionText),functionSourceApply=Reflect.apply;
   const illegal = n => { throw new TypeError('Illegal constructor: ' + n); };
   const def = (o,n,d) => Object.defineProperty(o,n,Object.assign({enumerable:true,configurable:true},d));
-  const engineFunctionToString=Function.prototype.toString;
-  // Only explicitly marked platform functions override the engine's source.
-  // Reading callable properties here invokes user getters/proxy traps, and
-  // inspecting source text also misclassifies ordinary user function bodies.
-  Function.prototype.toString=new Proxy(engineFunctionToString,{apply(target,thisArg,args){const native=nativeFunctionTextGet(thisArg);return native||functionSourceApply(target,thisArg,args)}});
-  const markNative=(fn,name,prefix='')=>{if(typeof fn==='function')nativeFunctionTextSet(fn,'function '+prefix+String(name)+'() { [native code] }')};
+  /* shared_native_functions */
   // QuickJS intentionally keeps ECMA-402 optional. Chrome does not, so expose
   // the target profile's locale/time-zone through a small deterministic Intl
   // layer while richer CLDR-backed semantics are added behind the same API.
