@@ -1,0 +1,17 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/font_documents_oracle.js",
+    "fixtureSHA256": "ab1d2507a1a50bff5b9c053f5e42df36306c987f4cc3e674b94784e5a68ba8c5",
+    "fixtureHashNormalization": "LF",
+    "worker": true
+  },
+  "result": {
+    "available": false
+  }
+}

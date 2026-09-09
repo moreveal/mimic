@@ -1,0 +1,193 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/font_descriptors_oracle.js",
+    "fixtureSHA256": "bc95a2890b6556a62fa0ef4b43cd0b38744ee569e60ed6f416885417a47475b2",
+    "fixtureHashNormalization": "LF"
+  },
+  "result": {
+    "family": [
+      [
+        "A",
+        "A",
+        "unloaded",
+        null
+      ],
+      [
+        "A B",
+        "A B",
+        "unloaded",
+        null
+      ],
+      [
+        "\"A B\"",
+        "\"A B\"",
+        "unloaded",
+        null
+      ],
+      [
+        "serif",
+        "serif",
+        "unloaded",
+        null
+      ],
+      [
+        "",
+        "",
+        "unloaded",
+        null
+      ],
+      [
+        "A,B",
+        "A,B",
+        "unloaded",
+        null
+      ],
+      [
+        "123",
+        "123",
+        "unloaded",
+        null
+      ],
+      [
+        "A   B",
+        "A   B",
+        "unloaded",
+        null
+      ]
+    ],
+    "style": [
+      [
+        "italic",
+        "italic",
+        "unloaded",
+        null
+      ],
+      [
+        "oblique 10deg",
+        "oblique 10deg",
+        "unloaded",
+        null
+      ],
+      [
+        "bad",
+        "normal",
+        "unloaded",
+        "SyntaxError"
+      ]
+    ],
+    "weight": [
+      [
+        "400",
+        "400",
+        "unloaded",
+        null
+      ],
+      [
+        "bold",
+        "bold",
+        "unloaded",
+        null
+      ],
+      [
+        "100 900",
+        "100 900",
+        "unloaded",
+        null
+      ],
+      [
+        "0",
+        "normal",
+        "unloaded",
+        "SyntaxError"
+      ]
+    ],
+    "stretch": [
+      [
+        "condensed",
+        "condensed",
+        "unloaded",
+        null
+      ],
+      [
+        "75%",
+        "75%",
+        "unloaded",
+        null
+      ],
+      [
+        "bad",
+        "normal",
+        "unloaded",
+        "SyntaxError"
+      ]
+    ],
+    "unicodeRange": [
+      [
+        "u+0-ff",
+        "U+0-FF",
+        "unloaded",
+        null
+      ],
+      [
+        "U+4??",
+        "U+400-4FF",
+        "unloaded",
+        null
+      ],
+      [
+        "bad",
+        "U+0-10FFFF",
+        "unloaded",
+        "SyntaxError"
+      ]
+    ],
+    "display": [
+      [
+        "swap",
+        "swap",
+        "unloaded",
+        null
+      ],
+      [
+        "bad",
+        "auto",
+        "unloaded",
+        "SyntaxError"
+      ]
+    ],
+    "sizeAdjust": [
+      [
+        "120%",
+        "120%",
+        "unloaded",
+        null
+      ],
+      [
+        "-1%",
+        "100%",
+        "unloaded",
+        "SyntaxError"
+      ]
+    ],
+    "featureSettings": [
+      [
+        "\"liga\" 0",
+        "\"liga\" 0",
+        "unloaded",
+        null
+      ],
+      [
+        "bad",
+        "normal",
+        "unloaded",
+        "SyntaxError"
+      ]
+    ]
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/font_constructor_oracle.js",
+    "fixtureSHA256": "d7973f4627e23ee69b52efc0c56f81ec20f1933e2df041a417f5d3ffe86e09e1",
+    "fixtureHashNormalization": "LF",
+    "worker": true
+  },
+  "result": {
+    "families": [
+      [
+        "A",
+        "A",
+        "unloaded"
+      ],
+      [
+        "A B",
+        "\"A B\"",
+        "unloaded"
+      ],
+      [
+        "\"A B\"",
+        "\"\\\"A B\\\"\"",
+        "unloaded"
+      ],
+      [
+        "serif",
+        "\"serif\"",
+        "unloaded"
+      ],
+      [
+        "",
+        "\"\"",
+        "unloaded"
+      ],
+      [
+        "A,B",
+        "\"A,B\"",
+        "unloaded"
+      ],
+      [
+        "123",
+        "\"123\"",
+        "unloaded"
+      ]
+    ],
+    "sources": [
+      [
+        "",
+        "error",
+        "SyntaxError"
+      ],
+      [
+        "bad",
+        "error",
+        "SyntaxError"
+      ],
+      [
+        "local(Test)",
+        "unloaded",
+        null
+      ],
+      [
+        "url(data:font/woff;base64,AA==)",
+        "unloaded",
+        null
+      ]
+    ],
+    "invalid": [
+      "error",
+      "normal",
+      "SyntaxError"
+    ],
+    "brand": "TypeError"
+  }
+}
