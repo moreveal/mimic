@@ -70,8 +70,8 @@ not the frozen performance baseline.
 | `ul:has(> li.b)` | 26.735 ms | 27.152 ms | 0.410 ms |
 
 The fresh DOM native profile before the leaf route completed correctly
-(`.build/selector-library-audit/profile-before-simple`). The root task owns the
-full fast-gate latency, throughput and ten-Page retention comparison; this small
+(`.build/selector-library-audit/profile-before-simple`). The full fast-gate
+latency, throughput and ten-Page retention comparison is separate; this small
 selector diagnostic does not substitute for it. The original handwritten matcher
 returned false for nth/has, so its timing is not a valid correctness-equivalent
 baseline for those selectors.

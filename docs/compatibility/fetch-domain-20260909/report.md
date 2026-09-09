@@ -1,32 +1,32 @@
-# Fetch Body и Streams: проверка домена
+# Fetch Body and Streams: domain validation
 
-2026-09-09, integration binary iteration8, CDP19432. Эталон — pinned Chrome152.0.7977.82, CDP19423. Замена не зависит от GitHub. Source changes после iteration8: один вызов onabort вместо двойного; Go regression tests проходят уже с этой правкой.
+2026-09-09, integration binary iteration 8, CDP 19432. Reference: pinned Chrome 152.0.7977.82, CDP 19423. The replacement is independent of GitHub. Source changes after iteration 8: one onabort call instead of two; Go regression tests pass with this fix.
 
-Ручные Streams заменены pinned web-streams-polyfill4.3.0 (MIT); bundle/source integrity/license в internal/webapi/vendor/web-streams-polyfill. Fetch Body слой использует его nullable byte streams, disturbed/locked state, tee cloning, единый consume для text/json/arrayBuffer/bytes/blob. Request body transfer/clone и dependent AbortSignal реализованы; canonical Go transport получает bytes и per-fetch cancellation. Body/Request/Response не создают второй DOM и не вводят отдельный event loop.
+Handwritten Streams were replaced with pinned web-streams-polyfill 4.3.0 (MIT); bundle/source integrity/license are in internal/webapi/vendor/web-streams-polyfill. The Fetch Body layer uses its nullable byte streams, disturbed/locked state, tee cloning, and a shared consumer for text/json/arrayBuffer/bytes/blob. Request body transfer/clone and dependent AbortSignal are implemented; canonical Go transport receives bytes and per-fetch cancellation. Body/Request/Response do not create a second DOM or introduce a separate event loop.
 
-Generic differential из14 случаев: baseline имел13 расхождений; iteration8 совпадает13/14. Последнее — onabort дважды — исправлено в исходниках после сборки и покрыто Go test. Дополнительные6 probes покрыли Request transfer/clone, read+release disturbance, unsigned-short status conversion, Response statics, DataView offsets. Остается независимое URL serialization отличие redirect trailing slash; здесь не добавлялся локальный workaround.
+Generic differential with 14 cases: the baseline had 13 differences; iteration 8 matches 13/14. The last difference, duplicate onabort calls, was fixed in source after the build and covered by a Go test. Another 6 probes covered Request transfer/clone, read+release disturbance, unsigned-short status conversion, Response statics, and DataView offsets. An independent URL-serialization difference remains for the redirect trailing slash; no local workaround was added here.
 
-Go `TestFetchCanonicalBytesCloneAndCancellation` и `TestFetchBodyDisturbanceAndRequestTransfer` проходят. Они проверяют byte-preserving POST/response clone, повторное consumption, настоящий server Request.Context cancellation, точный AbortSignal.reason, перенос body ownership, один onabort. Это реальные canonical transport integration tests, не mock.
+Go `TestFetchCanonicalBytesCloneAndCancellation` and `TestFetchBodyDisturbanceAndRequestTransfer` pass. They check byte-preserving POST/response cloning, repeated consumption, actual server Request.Context cancellation, exact AbortSignal.reason, body-ownership transfer, and a single onabort call. These are canonical transport integration tests, not mocks.
 
 ## WPT
 
-Тесты и необходимые META helpers скачаны без редактирования с revision в wpt-manifest.json. Runner создает обычную HTML страницу с upstream testharness.js, scripts и resource files. Скрипты запускаются на Window. Worker/HTTPS variants здесь не запускались. Первоначальный эксперимент с инъекцией harness в уже загруженный about:blank давал harness timeout, поэтому исключен из итогового доказательства. Frozen benchmark harness не менялся.
+Tests and required META helpers were downloaded unchanged from the revision in wpt-manifest.json. The runner creates an ordinary HTML page with upstream testharness.js, scripts, and resource files. Scripts run in Window. Worker/HTTPS variants were not run here. An initial experiment injecting the harness into an already loaded about:blank produced a harness timeout and was excluded from the final evidence. The frozen benchmark harness was unchanged.
 
-Расширенный subset,13 файлов: Response initialization/static error, disturbed states1–6/pipe, cancel, bad chunks, propagation underlying stream errors. Chrome зарегистрировал113 cases:99PASS14FAIL. Mimic зарегистрировал106:103PASS3FAIL;7 cases не зарегистрированы из-за верхнеуровневого FormData constructor failure в response-init-002. Поэтому корректный denominator —113 ожидаемых cases, а не106.
+Expanded subset, 13 files: Response initialization/static error, disturbed states 1–6/pipe, cancel, bad chunks, and propagation of underlying stream errors. Chrome registered 113 cases: 99 PASS, 14 FAIL. Mimic registered 106: 103 PASS, 3 FAIL; 7 cases were not registered because of a top-level FormData constructor failure in response-init-002. The correct denominator is therefore 113 expected cases, not 106.
 
-Mimic failures3: Response.formData отсутствует в body consumer тестах. Дополнительный subset consume-empty/consume-stream/request-body-override обнаруживает тот же domain limit и прерывание регистрации на FormData; см. отдельный JSON. Нельзя представлять его частичный список как полный pass.
+Mimic's 3 failures: Response.formData is absent in body-consumer tests. The additional consume-empty/consume-stream/request-body-override subset exposes the same domain limit and registration interruption at FormData; see the separate JSON. Its partial list must not be presented as a complete pass.
 
-Chrome152 сам провалил14 актуальных upstream assertions:2 synchronous bodyUsed после pipeTo/pipeThrough и12 exact identity пользовательских ошибок underlying stream. Mimic/зрелая библиотека проходит эти assertions. Это расхождение frozen browser и текущего WPT, а не основание объявить Chrome полностью passing или переписать библиотеку под сайт.
+Chrome 152 itself failed 14 current upstream assertions: 2 synchronous bodyUsed checks after pipeTo/pipeThrough and 12 exact-identity checks for custom underlying-stream errors. Mimic/the mature library passes these assertions. This is a difference between the frozen browser and current WPT, not grounds to claim Chrome passes everything or rewrite the library for a site.
 
-## Явные границы
+## Explicit boundaries
 
-- FormData constructor/multipart extraction и formData consumption не завершены; multipart BodyInit сейчас явно NotSupportedError, если объект FormData существует.
-- Network loader по-прежнему буферизует полный ответ. API body имеет настоящие stream semantics, но fetch еще не возвращается на headers до загрузки всего body. Это не полный incremental network streaming.
-- no-cors filtering, CORS/opaque policy, request header guards, referrer validation и redirects требуют отдельного полного domain corpus. Наличие опций Request не гарантирует весь policy layer.
-- Internal adapter читает `_disturbed` pinned polyfill в одном месте; это осознанная зависимость от версии, которую нужно проверять при обновлении. Vendor bundle не модифицирован.
-- URL/encoding используют существующие subsystem реализации; библиотека Streams не исправляет их.
-- Retention/cancellation после внешнего reader и cloning надо расширять отдельными memory cases; benchmark/performance выводов из этих semantic tests нет.
+- FormData construction/multipart extraction and formData consumption remain unfinished; multipart BodyInit currently throws an explicit NotSupportedError if a FormData object exists.
+- The network loader still buffers the entire response. The API body has real stream semantics, but fetch does not yet return at headers before the entire body loads. This is not complete incremental network streaming.
+- no-cors filtering, CORS/opaque policy, request-header guards, referrer validation, and redirects require a separate full domain corpus. The presence of Request options does not guarantee the entire policy layer.
+- The internal adapter reads the pinned polyfill's `_disturbed` field in one place; this is an intentional version dependency that must be checked on updates. The vendor bundle is unmodified.
+- URL/encoding use existing subsystem implementations; the Streams library does not fix them.
+- Retention/cancellation with an external reader and cloning need broader memory cases; these semantic tests do not support benchmark/performance conclusions.
 
-Исходные runner/probes находятся .build/fetch-domain; JSON evidence сохранено рядом с этим отчетом. Финальные SHA receipts/fast gate относятся к общей интеграционной сборке родительской задачи.
+Original runners/probes are in .build/fetch-domain; JSON evidence is stored beside this report. Final SHA receipts/fast-gate results refer to the combined integration build.
 
-Final review: independent Chrome network-failure probe вернул TypeError, Mimic до correction — raw string из transport. Обертка host.fetch теперь превращает только transport rejection в TypeError, сохраняя abort reason и body stream custom error identity. TestFetchNetworkFailureIsTypeErrorAndBodyErrorIdentity и TestFetchCanonicalBytesCloneAndCancellation PASS после correction. Frozen/performance workloads не изменены.
+Final review: an independent Chrome network-failure probe returned TypeError; Mimic before correction returned a raw transport string. The host.fetch wrapper now converts only transport rejection to TypeError, preserving abort reason and custom body-stream error identity. TestFetchNetworkFailureIsTypeErrorAndBodyErrorIdentity and TestFetchCanonicalBytesCloneAndCancellation PASS after correction. Frozen/performance workloads were unchanged.

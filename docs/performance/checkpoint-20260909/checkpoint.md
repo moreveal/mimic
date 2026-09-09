@@ -1,20 +1,18 @@
 # Stopped checkpoint — 2026-09-09
 
-Stopped at the user's explicit request. Do not resume performance work or start
-the recommended experiment without a new explicit user instruction. No new
-benchmark was started after the stop request. The already-running control fast
-gate had completed when its handle was polled. No full matrix was run for this
-checkpoint. Subsequent activity was validation, preservation and committing.
+Performance work stopped at this checkpoint. The control fast gate completed;
+no full matrix was run. Subsequent changes were limited to validation, artifact
+preservation, and commits.
 
 Production implementation remains 52a2aa2. Latest snapshot code is committed
 separately as a19b84d, based on ca557ca; it is not promoted. The rejected 8 MiB
-nursery change is preserved separately as 2d4264e. All session worktrees were
+nursery change is preserved separately as 2d4264e. All experimental worktrees were
 checked; these were the only two with outstanding changes before preservation.
 The final main documentation commit is the commit containing this checkpoint.
 
 ## Commits
 
-Complete main and detached experimental history for this session is in
+Complete main and detached experimental history for this checkpoint is in
 [commits.txt](commits.txt). Adopted code changes: 6844dcd (packed DOM bridge),
 6277094 (insertion traversal), 0abfa05 (observation handlers), 4d0f0a1 (native
 intrinsic preservation), 52a2aa2 (catalog filtering). Main evidence commits and
@@ -24,7 +22,7 @@ is intentionally not self-referenced in its own contents.
 
 ## Benchmarks and limitations
 
-The requested **73.406 ms Mimic versus 30.326 ms frozen Chrome 152** is verified
+The **73.406 ms Mimic versus 30.326 ms frozen Chrome 152** is verified
 for milestone 05 against the original frozen baseline. It is historical, not
 the latest full-matrix result. Latest full07 is **68.929 versus 30.747 ms**.
 Neither establishes a DOM latency lead over Chrome.
@@ -97,7 +95,7 @@ attributed; do not infer that reducing host counts alone removes these costs.
 Source: `../dom-current/catalog/crossings.json`. Bootstrap and diagnostic hooks
 are excluded. Separate incomplete prototypes measured 9,104 and 3,104 calls;
 they were not merged, and those counts do not describe production or a new
-snapshot census. No new profile was run after the stop request.
+snapshot census. No new profile was run after this checkpoint.
 
 ## Validation and preservation
 

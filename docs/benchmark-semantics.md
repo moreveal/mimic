@@ -1,7 +1,7 @@
 # Semantic defects found by the controlled benchmark
 
 The 2026-09-08 correctness gate against pinned Chrome 152 found four failing
-workloads before performance comparisons. The user authorized runtime fixes in
+workloads before performance comparisons. Runtime fixes were recorded in
 a separate commit; these are correctness changes, not benchmark optimizations.
 
 - DocumentFragment append/insert now moves its children in order and empties the

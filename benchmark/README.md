@@ -1,184 +1,184 @@
-# Воспроизводимый benchmark: Mimic V8 и Chrome 152
+# Reproducible benchmark: Mimic V8 and Chrome 152
 
-Из корня репозитория, Windows x64:
+From the repository root on Windows x64:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File benchmark/run.ps1
 ```
 
-Команда создаёт локальное Python-окружение, устанавливает закреплённые зависимости,
-собирает текущий Mimic, проверяет семантику, выполняет серии и генерирует
-`benchmark/results/raw.json`, CSV, `summary.json`, `report.md` и пять PNG-графиков.
-Нужны Python 3.14 x64, Go 1.26, CGO/GCC и закреплённые зависимости проекта.
-Первая установка Python-пакетов использует интернет; сами нагрузки полностью локальны.
-React 18.3.1 / ReactDOM 18.3.1 включены в `fixtures/vendor` с MIT-лицензией.
-Их источники: npm-пакеты `react@18.3.1` и `react-dom@18.3.1`, файлы
-`umd/react.production.min.js` и `umd/react-dom.production.min.js`.
+The command creates a local Python environment, installs pinned dependencies,
+builds the current Mimic, checks semantics, runs the measurement series, and generates
+`benchmark/results/raw.json`, CSV, `summary.json`, `report.md`, and five PNG charts.
+Python 3.14 x64, Go 1.26, CGO/GCC, and the project's pinned dependencies are required.
+Initial Python package installation uses the internet; workloads are entirely local.
+React 18.3.1 / ReactDOM 18.3.1 are included in `fixtures/vendor` under the MIT license.
+Their sources are the npm packages `react@18.3.1` and `react-dom@18.3.1`, files
+`umd/react.production.min.js` and `umd/react-dom.production.min.js`.
 
-Автопоиск Chrome проверяет проектный `compatibility/.chrome-for-testing/152.0.7977.82/`
-и сохранённый рядом архив `mimic-cleanup-private-archive-20260908`. Другой путь:
+Chrome discovery checks the project's `compatibility/.chrome-for-testing/152.0.7977.82/`
+and the adjacent `mimic-cleanup-private-archive-20260908` archive. To specify another path:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File benchmark/run.ps1 -Chrome 'D:\browsers\chrome-win64\chrome.exe'
 ```
 
-Версия CDP обязана быть точно `Chrome/152.0.7977.82`; подмена установленным Chrome
-другой версии запрещена. SHA-256 исполняемых файлов, V8, Chromium revision,
-Mimic commit, CPU/RAM/OS, питание и фоновые процессы сохраняются в raw.json.
-Пользовательские абсолютные пути заменяются `<repo>`, `<workspace-parent>`, `<user>`.
-Аргументы запуска определены в `Runtime` и одинаковы во всех итерациях системы.
-Экземпляры Chrome используют новые профили, порты и TEMP; расширения отключены.
+The CDP version must be exactly `Chrome/152.0.7977.82`; substituting an installed
+Chrome of another version is prohibited. Executable SHA-256 hashes, V8, Chromium revision,
+Mimic commit, CPU/RAM/OS, power settings, and background processes are recorded in raw.json.
+User-specific absolute paths are replaced with `<repo>`, `<workspace-parent>`, and `<user>`.
+Launch arguments are defined in `Runtime` and remain identical across each system's iterations.
+Chrome instances use fresh profiles, ports, and TEMP directories; extensions are disabled.
 
-Для быстрой проверки harness используйте `-Smoke`: это отдельный результат в
-`.build/benchmark-smoke`, непригодный для выводов о производительности.
-Только correctness gate:
+For a quick harness check, use `-Smoke`: this writes separate results to
+`.build/benchmark-smoke`, which cannot support performance conclusions.
+To run only the correctness gate:
 
 ```powershell
 .build/benchmark-venv/Scripts/python.exe benchmark/run.py --gate-only --output .build/benchmark-gate
 ```
 
-При прерывании сохранённый запуск можно продолжить той же командой с `-Resume`.
-Хеши обоих бинарников и фикстур обязаны совпасть. Завершённые серии сохраняются,
-незавершённая серия запускается целиком с новым процессом; прерванные наблюдения
-не удаляются, а помечаются и отдельно суммируются в отчёте. Новые даты/состояние
-машины при продолжении находятся в `resumptions`. Обычный запуск без `-Resume`
-откажется перезаписывать каталог с raw.json: задайте новый `-Output`.
+An interrupted saved run can be resumed with the same command and `-Resume`.
+Both binary hashes and fixture hashes must match. Completed series are retained;
+an incomplete series restarts in full with a new process. Interrupted observations
+are marked and summarized separately in the report rather than deleted. New dates
+and machine state on resumption are recorded in `resumptions`. A normal run without
+`-Resume` refuses to overwrite a directory containing raw.json: specify a new `-Output`.
 
-## Зафиксированный baseline и будущие оптимизации
+## Frozen baseline and future optimizations
 
-`results/baseline.yaml` сохраняет commit, commit/hash harness, cold/warm,
-уровни 1/5/10/25/50/100, RSS, private bytes, CPU, latency и throughput.
-`manifest.json` содержит SHA-256 исходных данных и всех итоговых артефактов.
-Хеш harness включает измеритель, отчёт, comparator, dependency lock и фикстуры.
-Он проверяется при продолжении и в конце измерения: менять harness во время
-прогона нельзя. Репозиторный baseline не перезаписывается.
+`results/baseline.yaml` records the commit, harness commit/hash, cold/warm results,
+levels 1/5/10/25/50/100, RSS, private bytes, CPU, latency, and throughput.
+`manifest.json` contains SHA-256 hashes of source data and all final artifacts.
+The harness hash includes measurement, reporting, comparison, the dependency lock, and fixtures.
+It is checked on resumption and at the end of measurement: do not change the harness
+during a run. The repository baseline is not overwritten.
 
-Будущие оптимизации сохраняются отдельным коммитом вида `perf: reduce ...`.
-Нельзя одновременно менять workload, ожидаемые результаты, тайминги, флаги,
-порог остановки, статистику или sampler. Запускается **тот же harness без изменений**:
+Future optimizations are recorded in a separate commit such as `perf: reduce ...`.
+Do not simultaneously change workloads, expected results, timings, flags,
+stopping thresholds, statistics, or the sampler. Run **the same unchanged harness**:
 
 ```powershell
 powershell -NoProfile -ExecutionPolicy Bypass -File benchmark/run.ps1 -Output benchmark/runs/after-optimization
 .build/benchmark-venv/Scripts/python.exe benchmark/compare.py benchmark/results benchmark/runs/after-optimization --output benchmark/runs/comparison.json
 ```
 
-Comparator проверяет хеш harness/фикстур/Chrome, CPU, OS, RAM, питание и политику
-повторений; сравнивает только совпадающие успешные серии и уровни concurrency.
-Процент рассчитывается из чисел `(after - before) / before * 100`, без ручных
-«выигрышей». Отрицательное изменение RSS/CPU/latency — улучшение, отрицательное
-изменение throughput — ухудшение. Фоновые приложения и состояние памяти ОС всё
-равно могут различаться: большой CV или paging требует интерпретации, а не
-объявления универсального ускорения.
+The comparator checks harness/fixture/Chrome hashes, CPU, OS, RAM, power settings,
+and repetition policy; it compares only matching successful series and concurrency levels.
+Percentages are calculated as `(after - before) / before * 100`, without manually
+assigned gains. A negative RSS/CPU/latency change is an improvement; a negative
+throughput change is a regression. Background applications and OS memory state can
+still differ: high CV or paging requires interpretation, not a claim of universal speedup.
 
-Перегенерировать отчёт из сохранённых данных без браузеров:
+Generate an English report from saved data without browsers. Use a copied run
+directory to preserve the original baseline artifacts:
 
 ```powershell
-.build/benchmark-venv/Scripts/python.exe benchmark/report.py benchmark/results/raw.json
+.build/benchmark-venv/Scripts/python.exe tools/report_benchmark.py <run-directory>/raw.json
 ```
 
-Проверка счётчиков Job Object, учёта завершившихся дочерних процессов и статистики:
+Check Job Object counters, accounting for exited child processes, and statistics:
 
 ```powershell
 .build/benchmark-venv/Scripts/python.exe benchmark/test_harness.py
 ```
 
-## Контракт измерения
+The historical `benchmark/report.py` remains byte-for-byte frozen because it is
+part of the measurement harness fingerprint. `tools/report_benchmark.py` provides
+the English reporting variant with the same calculations.
 
-| Этап | Начало → конец |
+## Measurement contract
+
+| Stage | Start → end |
 |---|---|
-| process_start_ms | Popen → создан приостановленный процесс |
-| http_ready_ms | начало Popen → доступен /json/version |
-| cdp_ready_ms | начало Popen → WebSocket подключён и получен ответ CDP |
-| runtime_initialization_ms | cdp_ready_ms − process_start_ms; включает harness/протокол |
-| session_create_ms | подключение control CDP → новая страница, подключение page CDP, отключение HTTP cache |
-| navigate_ack_ms | Page.navigate → ACK, только диагностика |
-| navigation_ms | Page.navigate → точный URL + readyState complete + функция нагрузки |
-| execution_ms | явный запуск нагрузки → обнаружение done и чтение результата |
-| completion_ms | Page.navigate → done; navigation_ms + execution_ms с небольшим промежутком harness |
-| teardown_ms | закрытие page CDP → Target.closeTarget и отсутствие target в Target.getTargets |
-| total_cold_ms | Popen → завершение runtime и его Job Object |
+| process_start_ms | Popen → suspended process created |
+| http_ready_ms | start of Popen → /json/version available |
+| cdp_ready_ms | start of Popen → WebSocket connected and CDP response received |
+| runtime_initialization_ms | cdp_ready_ms − process_start_ms; includes harness/protocol |
+| session_create_ms | control CDP connection → new page, page CDP connection, HTTP cache disabled |
+| navigate_ack_ms | Page.navigate → ACK, diagnostic only |
+| navigation_ms | Page.navigate → exact URL + readyState complete + workload function |
+| execution_ms | explicit workload start → done detected and result read |
+| completion_ms | Page.navigate → done; navigation_ms + execution_ms with a small harness gap |
+| teardown_ms | page CDP close → Target.closeTarget and target absent from Target.getTargets |
+| total_cold_ms | Popen → runtime and its Job Object exit |
 
-Workload settle = 0: нет ожидания paint, visual rendering или networkidle.
-CDP readiness подтверждается одинаковым `Target.getTargets` в обеих системах.
-В конце также выполняются 10 interleaved cold запусков с этой пробой и отдельным
-warmup. В сохранённом первом baseline первоначальная readiness-проба различалась;
-его отчёт использует для вывода о startup только исправленную отдельную серию,
-оставляя первоначальные наблюдения видимыми.
-На каждый controlled workload: 10 cold и 20 warm измерений, плюс исключённый
-warmup. Все медленные итерации сохраняются. Ошибка correctness gate исключает
-нагрузку из timed comparison обеих систем; ошибка timed iteration сохраняется
-и запрещает вывод о преимуществе по соответствующей серии.
+Workload settle = 0: no waiting for paint, visual rendering, or networkidle.
+CDP readiness is confirmed by the same `Target.getTargets` call in both systems.
+At the end, 10 interleaved cold runs use this probe with a separate warmup.
+The original readiness probes differed in the first saved baseline; its report bases
+startup conclusions only on the corrected separate series while retaining the original observations.
+Each controlled workload has 10 cold and 20 warm measurements, plus an excluded warmup.
+All slow iterations are retained. A correctness-gate failure excludes the workload from
+timed comparisons for both systems; a timed-iteration failure is retained and precludes
+claims of an advantage for that series.
 
-Каждая страница получает уникальный порт локального сервера, не переиспользуемый
-в пределах запуска. Серверы используют только диапазон 49152–65534: на этой
-машине системный ephemeral range начинается с 1024 и может выдавать порты,
-запрещённые Chrome. URL и полный Page.navigate ACK сохраняются для диагностики.
-`localStorage` дополнительно проверяется на отсутствие следа
-предыдущей итерации. Страницы не пишут cookies, не регистрируют service workers,
-не используют внешний сайт. Mimic не поддерживает создание CDP browser contexts:
-используется изоляция страниц/оригинов, а не независимые security tenants.
-Процесс, общий транспорт и контекст в warm сохраняются. HTTP cache отключён
-с обеих сторон, `Cache-Control: no-store`; warm-cache HTTP вариант не заявляется.
-DNS, кэш DLL/файлов ОС и состояние машины не сбрасываются.
+Each page receives a unique local-server port that is not reused within the run.
+Servers use only ports 49152–65534: this machine's system ephemeral range starts at
+1024 and can allocate ports prohibited by Chrome. URLs and full Page.navigate ACKs
+are saved for diagnostics. `localStorage` is also checked for traces of the previous
+iteration. Pages do not write cookies, register service workers, or use external sites.
+Mimic does not support creating CDP browser contexts: isolation is by page/origin,
+not independent security tenants. The process, shared transport, and context persist
+in warm runs. HTTP cache is disabled on both sides with `Cache-Control: no-store`;
+no warm HTTP-cache scenario is claimed. DNS, OS DLL/file caches, and machine state are not reset.
 
-| Нагрузка | Независимое ожидаемое значение |
+| Workload | Independent expected value |
 |---|---|
-| static | текст baseline, один root |
-| cpu | сумма 59614380 и SHA-256 её десятичной строки; объекты/массивы/Map/JSON/regex/Promise/crypto |
-| dom | 3000 элементов, 3000 active, конкретный последний текст, число дочерних узлов и общая длина текста |
-| async | точные Promise/microtask/timer/MessageChannel/Worker/window.postMessage/fetch/XHR результаты |
-| react | React 18.3.1: fetch, 200 карточек, три state transition, effect marker, первый/последний текст |
-| wasm | async instantiate и 100000 вызовов i32 add; сумма 704982704 |
+| static | baseline text, one root |
+| cpu | sum 59614380 and SHA-256 of its decimal string; objects/arrays/Map/JSON/regex/Promise/crypto |
+| dom | 3000 elements, 3000 active, specific final text, child-node count, and total text length |
+| async | exact Promise/microtask/timer/MessageChannel/Worker/window.postMessage/fetch/XHR results |
+| react | React 18.3.1: fetch, 200 cards, three state transitions, effect marker, first/last text |
+| wasm | async instantiate and 100000 i32 add calls; sum 704982704 |
 
-React-корпус — воспроизводимая синтетическая клиентская программа, не полный
-Next.js-сайт и не утверждение о совместимости любых React-приложений.
-Фикстуры и их ожидаемые результаты одинаковы для обоих движков; нет веток по UA.
+The React corpus is a reproducible synthetic client application, not a complete
+Next.js site or a claim of compatibility with arbitrary React applications.
+Fixtures and expected results are identical for both engines; there are no UA branches.
 
-## Память, CPU и concurrency
+## Memory, CPU, and concurrency
 
-Windows Job Object назначается до возобновления процесса и наследуется потомками.
-Job CPU accounting сохраняет user/kernel CPU уже завершившихся процессов.
-Рабочие наборы и private bytes суммируются по Job Object, включая browser,
-renderer, GPU, network, utility и служебные процессы, созданные этим экземпляром.
-Управляющий Python и HTTP-серверы исключены из метрик SUT. Их системная нагрузка
-остаётся фактором измерения. Общие DLL-страницы могут учитываться несколько раз.
-Это сумма working set, а не измерение unique resident RAM или доступной памяти ОС.
-Период sampler — 50 ms; реальные timestamps сохранены, короткие пики могут теряться.
+A Windows Job Object is assigned before the process resumes and is inherited by descendants.
+Job CPU accounting retains user/kernel CPU for processes that have already exited.
+Working sets and private bytes are summed across the Job Object, including browser,
+renderer, GPU, network, utility, and helper processes created by that instance.
+The controlling Python process and HTTP servers are excluded from SUT metrics.
+Their system load remains a measurement factor. Shared DLL pages can be counted more than once.
+This is a sum of working sets, not unique resident RAM or available OS memory.
+The sampler period is 50 ms; actual timestamps are saved, and short peaks can be missed.
 
-Проверяются 1, 5, 10, 25, 50, 100 одновременных страниц для static, cpu и React.
-Для каждого уровня новый процесс, исключённая warmup-волна и
-`max(5, ceil(20/N))` измеряемых волн. Страницы создаются параллельно, затем барьер
-запускает навигации; все завершившиеся страницы удерживаются до окончания волны
-для измерения одновременного RSS. CPU считается один раз на волну, а не суммой
-перекрывающихся интервалов страниц. Throughput включает create, выполнение,
-барьер и teardown; HTTP-server setup/cleanup вынесены за измеряемый интервал.
-Это throughput пакетной нагрузки, не результат оптимизированного steady-state pool.
+Static, CPU, and React workloads are tested at 1, 5, 10, 25, 50, and 100 concurrent pages.
+Each level uses a fresh process, one excluded warmup wave, and
+`max(5, ceil(20/N))` measured waves. Pages are created concurrently, then a barrier
+starts navigation. Completed pages are held until the wave ends to measure simultaneous RSS.
+CPU is counted once per wave, not by summing overlapping page intervals. Throughput
+includes creation, execution, the barrier, and teardown; HTTP-server setup/cleanup
+is outside the measured interval. This is batch throughput, not an optimized steady-state pool.
 
-После warm iteration и density wave есть отдельный период восстановления 250 ms,
-одинаковый для обеих систем и не включённый в latency/batch throughput. Память до
-новой волны, при активных страницах, сразу после teardown и после восстановления
-сохраняется. Память сохранённых движком процессов/кэшей не вычитается из общего RSS.
-Дополнительные промежутки между волнами включают очистку серверов и запись
-checkpoint JSON. Они вне throughput; поэтому это не измерение непрерывного
-production-пула. При остановке на warmup строка уровня диагностическая: RSS
-мог быть снят до завершения всех страниц, и не используется в memory fit.
-OLS fit и конечные разности отражают этот конкретный жизненный цикл и историю
-волн; это не универсальная стоимость новой страницы и не security isolation cost.
+Each warm iteration and density wave has a separate 250 ms recovery period,
+identical for both systems and excluded from latency/batch throughput. Memory is
+recorded before the next wave, with active pages, immediately after teardown, and after recovery.
+Memory retained in engine processes/caches is not subtracted from total RSS.
+Additional gaps between waves include server cleanup and checkpoint JSON writes.
+They are outside throughput; this is therefore not a continuous production-pool measurement.
+When a level stops during warmup, its row is diagnostic: RSS may have been sampled
+before all pages completed and is not used in the memory fit. OLS fits and finite
+differences reflect this particular lifecycle and wave history, not a universal
+cost per new page or a security-isolation cost.
 
-Рост N прекращается при ошибке, доступной RAM ниже max(15%, 2 GiB), длительном
-paging (`Memory\\Pages Input/sec` >1024 в течение 3 s) или timeout волны 180 s.
-Для failed warmup уровень отмечается неуспешным, следующие N не запускаются.
-Достигнутые 100 сессий означают «100 проверено», а не предел движка.
+Increasing N stops on an error, available RAM below max(15%, 2 GiB), sustained
+paging (`Memory\\Pages Input/sec` >1024 for 3 s), or a 180 s wave timeout.
+A failed warmup marks the level unsuccessful and prevents higher N levels from running.
+Reaching 100 sessions means “100 tested,” not the engine's limit.
 
-Процессы закрываются через Browser.close / Ctrl+C в специально созданной скрытой
-консоли Mimic. Остаточные процессы завершаются только через принадлежащий тесту
-Job Object. Job также закрывает потомков при аварии harness. Чужие Chrome не
-перечисляются для остановки и не завершаются. Удаляется только собственный TEMP.
+Processes are closed through Browser.close / Ctrl+C in a dedicated hidden Mimic console.
+Remaining processes are terminated only through the test-owned Job Object.
+The Job also closes descendants if the harness crashes. Unrelated Chrome processes
+are neither enumerated for termination nor terminated. Only the test's own TEMP is deleted.
 
-## Изменения runtime
+## Runtime changes
 
-По дополнительному поручению пользователя исправлены семантические ошибки,
-выявленные исходным gate; см. `docs/benchmark-semantics.md` и отдельный коммит.
-`results/pre-fix/raw.json` — только исходная проверка корректности, не baseline
-производительности. Финальные числа относятся к хешу Mimic из metadata итогового
-raw.json. Runtime не содержит веток или оптимизаций для benchmark-корпуса.
+Semantic errors found by the original gate were fixed; see
+`docs/benchmark-semantics.md` and the separate commit.
+`results/pre-fix/raw.json` contains only the initial correctness check, not a performance baseline.
+Final numbers correspond to the Mimic hash in the final raw.json metadata.
+The runtime contains no branches or optimizations specific to the benchmark corpus.
