@@ -338,3 +338,26 @@ event loop, preserving shared AudioBuffer views, sample relationships and
 measured completion ordering without an audio device. See
 [offline audio](compatibility/offline-audio.md) for the Chrome captures and
 explicit DSP, interpolation and scheduling boundaries.
+
+## Document observations checkpoint (2026-09-10)
+
+Two retained Chrome 152 oracles cover visibility aliases/inert documents and
+HTML enumerated attributes (`translate`, `draggable`, `spellcheck`). Both run
+on Goja and V8. Active-document visibility compares alias equality rather than
+assuming that the existing native browser is foreground; inert HTML/XML
+visibility values are compared exactly. This does not implement window
+visibility transitions. Accessors preserve native names and reject invalid
+receivers. Enumerated attribute state is read from the canonical DOM, including
+parent changes and the distinct shadow-host inheritance rules.
+
+Fresh 25-second Voxel captures before and after this batch remain private in
+`compatibility/private-captures/voxel-20260910-webkit` and
+`compatibility/private-captures/voxel-20260910-document`. Each retains CDP events,
+response bodies, the Mimic trace, and integrity hashes including the executed
+binary. Both runs received a top-level challenge HTTP 403 and a child document
+HTTP 200, with no redirect. The five targeted unsupported-property diagnostics
+are absent after the fix, but the shop still does not open. These are measured
+compatibility corrections, not an established explanation of server rejection.
+`structuredClone` and the remaining unsupported observations are further leads,
+not proven blockers. Caught exceptions that are never logged are outside this
+passive capture's visibility.

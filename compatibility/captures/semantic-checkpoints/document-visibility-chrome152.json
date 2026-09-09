@@ -1,0 +1,130 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/document_visibility_oracle.js",
+    "fixtureSHA256": "6267bb94520614cfa3324e0ae09575002e7b334e94b0326badbc4d0528de2a0c",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "active": {
+      "hidden": {
+        "value": true,
+        "enumerable": true,
+        "configurable": true,
+        "set": "undefined",
+        "name": "get hidden",
+        "source": "function get hidden() { [native code] }",
+        "illegal": "TypeError"
+      },
+      "visibilityState": {
+        "value": true,
+        "enumerable": true,
+        "configurable": true,
+        "set": "undefined",
+        "name": "get visibilityState",
+        "source": "function get visibilityState() { [native code] }",
+        "illegal": "TypeError"
+      },
+      "webkitHidden": {
+        "value": true,
+        "enumerable": true,
+        "configurable": true,
+        "set": "undefined",
+        "name": "get webkitHidden",
+        "source": "function get webkitHidden() { [native code] }",
+        "illegal": "TypeError"
+      },
+      "webkitVisibilityState": {
+        "value": true,
+        "enumerable": true,
+        "configurable": true,
+        "set": "undefined",
+        "name": "get webkitVisibilityState",
+        "source": "function get webkitVisibilityState() { [native code] }",
+        "illegal": "TypeError"
+      }
+    },
+    "html": {
+      "hidden": {
+        "value": true,
+        "enumerable": true,
+        "configurable": true,
+        "set": "undefined",
+        "name": "get hidden",
+        "source": "function get hidden() { [native code] }",
+        "illegal": "TypeError"
+      },
+      "visibilityState": {
+        "value": "hidden",
+        "enumerable": true,
+        "configurable": true,
+        "set": "undefined",
+        "name": "get visibilityState",
+        "source": "function get visibilityState() { [native code] }",
+        "illegal": "TypeError"
+      },
+      "webkitHidden": {
+        "value": true,
+        "enumerable": true,
+        "configurable": true,
+        "set": "undefined",
+        "name": "get webkitHidden",
+        "source": "function get webkitHidden() { [native code] }",
+        "illegal": "TypeError"
+      },
+      "webkitVisibilityState": {
+        "value": "hidden",
+        "enumerable": true,
+        "configurable": true,
+        "set": "undefined",
+        "name": "get webkitVisibilityState",
+        "source": "function get webkitVisibilityState() { [native code] }",
+        "illegal": "TypeError"
+      }
+    },
+    "xml": {
+      "hidden": {
+        "value": true,
+        "enumerable": true,
+        "configurable": true,
+        "set": "undefined",
+        "name": "get hidden",
+        "source": "function get hidden() { [native code] }",
+        "illegal": "TypeError"
+      },
+      "visibilityState": {
+        "value": "hidden",
+        "enumerable": true,
+        "configurable": true,
+        "set": "undefined",
+        "name": "get visibilityState",
+        "source": "function get visibilityState() { [native code] }",
+        "illegal": "TypeError"
+      },
+      "webkitHidden": {
+        "value": true,
+        "enumerable": true,
+        "configurable": true,
+        "set": "undefined",
+        "name": "get webkitHidden",
+        "source": "function get webkitHidden() { [native code] }",
+        "illegal": "TypeError"
+      },
+      "webkitVisibilityState": {
+        "value": "hidden",
+        "enumerable": true,
+        "configurable": true,
+        "set": "undefined",
+        "name": "get webkitVisibilityState",
+        "source": "function get webkitVisibilityState() { [native code] }",
+        "illegal": "TypeError"
+      }
+    }
+  }
+}
