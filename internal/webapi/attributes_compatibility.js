@@ -4,7 +4,21 @@
 const attributeCompatibility=(()=>{
   const slots=new WeakMap(),maps=new WeakMap(),attributes=new WeakMap();
   const member=(prototype,name,value)=>{Object.defineProperty(value,'name',{value:name,configurable:true});markNative(value,name);Object.defineProperty(prototype,name,{value,writable:true,enumerable:true,configurable:true})};
-  const accessor=(prototype,name,get,set)=>{markNative(get,name,'get ');markNative(set,name,'set ');Object.defineProperty(prototype,name,{get,set,enumerable:true,configurable:true})};
+  const accessor=(prototype,name,get,set)=>{if(get)Object.defineProperty(get,'name',{value:'get '+name,configurable:true});if(set)Object.defineProperty(set,'name',{value:'set '+name,configurable:true});markNative(get,name,'get ');markNative(set,name,'set ');Object.defineProperty(prototype,name,{get,set,enumerable:true,configurable:true})};
+  const htmlElement=value=>{if(!(value instanceof HTMLElement)||!elementSlot(value))throw new TypeError('Illegal invocation');return value};
+  for(const name of ['translate','spellcheck','draggable'])accessor(HTMLElement.prototype,name,function(){
+    let node=htmlElement(this);
+    while(node){
+      const value=node.getAttribute(name)?.toLowerCase();
+      if(name==='draggable')return value==='true'?true:value==='false'?false:node.localName==='img'||node.localName==='a'&&node.hasAttribute('href');
+      if(value===(name==='translate'?'no':'false'))return false;
+      if(value===''||value===(name==='translate'?'yes':'true'))return true;
+      const parent=node.parentNode;
+      // Chrome spellcheck crosses a shadow host; translate uses DOM ancestry.
+      node=parent instanceof HTMLElement?parent:name==='spellcheck'&&parent instanceof ShadowRoot?parent.host:null;
+    }
+    return !(name==='spellcheck'&&this.localName==='input'&&this.type==='password');
+  },function(value){htmlElement(this).setAttribute(name,name==='translate'?(value?'yes':'no'):(value?'true':'false'))});
   const cache=element=>{let value=attributes.get(element);if(!value){value=new Map();attributes.set(element,value)}return value};
   const state=attr=>{const value=slots.get(attr);if(!value)throw new TypeError('Illegal invocation');return value};
   const normalize=(element,name)=>element.namespaceURI==='http://www.w3.org/1999/xhtml'?String(name).toLowerCase():String(name);

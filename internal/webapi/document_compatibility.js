@@ -11,9 +11,17 @@ function wrapDocumentNode(data) {
 }
 {
   const member=(prototype,name,value)=>{Object.defineProperty(value,'name',{value:name,configurable:true});markNative(value,name);Object.defineProperty(prototype,name,{value,writable:true,enumerable:true,configurable:true})};
-  const accessor=(prototype,name,get,set)=>{markNative(get,name,'get ');markNative(set,name,'set ');Object.defineProperty(prototype,name,{get,set,enumerable:true,configurable:true})};
+  const accessor=(prototype,name,get,set)=>{if(get)Object.defineProperty(get,'name',{value:'get '+name,configurable:true});if(set)Object.defineProperty(set,'name',{value:'set '+name,configurable:true});markNative(get,name,'get ');markNative(set,name,'set ');Object.defineProperty(prototype,name,{get,set,enumerable:true,configurable:true})};
   const docID=value=>value===document?host.documentRootID():elementSlot(value)?.nodeId;
   const validDocument=value=>{if(!(value instanceof Document))throw new TypeError('Illegal invocation');return docID(value)};
+  // Detached documents have no visible browsing context. Prefixes share the
+  // canonical accessors, including their receiver checks, rather than state.
+  for(const name of ['hidden','visibilityState']){
+    const original=Object.getOwnPropertyDescriptor(Document.prototype,name).get;
+    const read=function(){validDocument(this);return this===document?original.call(this):name==='hidden'?true:'hidden'};
+    accessor(Document.prototype,name,read);
+    accessor(Document.prototype,name==='hidden'?'webkitHidden':'webkitVisibilityState',function(){return read.call(this)});
+  }
   const contentType=value=>elementSlot(value)?.contentType||'text/html';
   const xmlName=name=>{if(!/^[\p{L}_:][\p{L}\p{N}_.:\-\u00b7\p{M}]*$/u.test(name))throw new DOMException('Invalid XML name','InvalidCharacterError');return name};
   const qualifiedName=(namespace,name)=>{
