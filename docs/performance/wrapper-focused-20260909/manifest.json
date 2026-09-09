@@ -4,6 +4,18 @@
   "files": {
     "alloc.pprof": "5495753de8e024c0db290304fafdd4ed8d6a046fbf33feedb196a9290b84d153",
     "allocs.pprof": "49b506229a363373ec61cf8b1d9856f8c664d3277dc18697af06321d22736154",
+    "build.json": "bfff5c4d350652da0cd6cb68283bdfc5635cc95404b044f117464cdb0b270ca8",
+    "go-allocation-top.txt": "d58265992e1465184ac6460f4741af6d5faef20b8a5cd609b86c63760d700a9f",
+    "instrumentation.patch": "f0d6bb6ab5e67a2897370c4820336b37196ff96fd74f0f81724e9813f85c7fcc",
+    "launches.jsonl": "23f36da5d89a3e53f10bb059b3bebdc8e1dc762417682023c727637670157a11",
+    "phases.json.gz": "aa95563e0bd8a1aba58ef6bbeb33acc3f963624e3845d9c1f47530bfa47be006",
+    "report.md": "04fd9997fe585a837379da07710098dc1a288a299ce98a8c21c911d4797b7ab5",
+    "summary.json": "6c5649c6d9beea6539baa55021a5a6f2a281d9e2c04330162030c64c7b41df62",
+    "validation.txt": "4a6fd2b74785e61f4e1e453f180a5ce3eea0641f77fff00686b2a92ceeb59e41"
+  },
+  "original_worktree_files": {
+    "alloc.pprof": "5495753de8e024c0db290304fafdd4ed8d6a046fbf33feedb196a9290b84d153",
+    "allocs.pprof": "49b506229a363373ec61cf8b1d9856f8c664d3277dc18697af06321d22736154",
     "build.json": "87e6b6e15759b8801481d098be976438fcfa776f1ce6903642c237dab4da224c",
     "go-allocation-top.txt": "5bf6b94c427cfd7a9de38ddda9cd7c05a869ac97386670e03b97f1253fe932d3",
     "instrumentation.patch": "f0d6bb6ab5e67a2897370c4820336b37196ff96fd74f0f81724e9813f85c7fcc",
@@ -12,5 +24,6 @@
     "report.md": "b5e58e4d939b30bdd9f6917534242e6dc8fc4f6418922f766f8977ab64059bd1",
     "summary.json": "1443019b6ff49fc26c2a2fe6d8ccf5a753376fc727d586286bcbd8bbd61ee13e",
     "validation.txt": "4a6fd2b74785e61f4e1e453f180a5ce3eea0641f77fff00686b2a92ceeb59e41"
-  }
+  },
+  "hash_scope": "files hashes refer to committed Git blob bytes; original_worktree_files preserves pre-checkout hashes, including original line endings"
 }
