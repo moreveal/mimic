@@ -7,12 +7,24 @@ from pathlib import Path, PurePosixPath
 from pyppeteer import connect
 
 
+async def wait_for_selector(page, selector, timeout_ms):
+    """Wait for application readiness without exporting a remote DOM handle."""
+    async def poll():
+        while not await page.evaluate(
+            "selector => Boolean(document.querySelector(selector))", selector
+        ):
+            await asyncio.sleep(0.1)
+    await asyncio.wait_for(poll(), timeout=timeout_ms / 1000)
+
+
 async def save(args):
     browser = await connect(browserURL=args.endpoint)
     try:
         pages = await browser.pages()
         if args.page < 0 or args.page >= len(pages):
             raise ValueError(f"Page index {args.page} unavailable; {len(pages)} page(s) open")
+        if args.wait_selector:
+            await wait_for_selector(pages[args.page], args.wait_selector, args.timeout)
         session = await pages[args.page].target.createCDPSession()
         snapshot = await session.send("Mimic.captureSnapshot")
         # Validate before touching disk; never overwrite an existing snapshot.
@@ -43,4 +55,6 @@ if __name__ == "__main__":
     parser.add_argument("--endpoint", default="http://127.0.0.1:9222")
     parser.add_argument("--page", type=int, default=0, help="Zero-based open page index")
     parser.add_argument("--output", required=True, help="New snapshot directory")
+    parser.add_argument("--wait-selector", help="CSS selector indicating application readiness")
+    parser.add_argument("--timeout", type=int, default=30_000, help="Readiness timeout in milliseconds")
     asyncio.run(save(parser.parse_args()))

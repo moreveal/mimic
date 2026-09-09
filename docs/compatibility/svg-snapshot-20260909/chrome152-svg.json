@@ -1,0 +1,5 @@
+{
+  "result": "ok",
+  "svg": "<svg><symbol id=\"mark\" viewBox=\"0 0 20 20\"><path d=\"M0 0\"></path><path d=\"M1 1\"></path><linearGradient id=\"gradient\"><stop offset=\"0\"></stop><stop offset=\"1\"></stop></linearGradient></symbol><foreignObject><div>HTML</div></foreignObject><use xlink:href=\"#mark\"></use></svg>",
+  "version": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+}

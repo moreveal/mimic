@@ -73,6 +73,7 @@ type Realm struct {
 	cancelResources         context.CancelFunc
 	resourceWG              sync.WaitGroup
 	moduleFetches           map[string]*moduleFetch
+	imageLoads              map[int64]*imageLoad
 	fetchCancels            map[string]context.CancelFunc
 	nativePollQueued        bool
 }
@@ -215,6 +216,7 @@ func (r *Realm) Close() error {
 	r.cancelResources()
 	r.resourceWG.Wait()
 	r.moduleFetches = nil
+	r.imageLoads = nil
 	for _, worker := range r.workers {
 		_ = worker.Close()
 	}
@@ -1015,6 +1017,9 @@ func (r *Realm) install() error {
 			return nil, err
 		}
 		if strings.EqualFold(name, "src") {
+			if node, ok := r.document.Get(id); ok && node.TagName == "IMG" {
+				r.updateImage(id, true)
+			}
 			if frame := r.childFrames[id]; frame != nil {
 				frame.navigationStarted = false
 				r.scheduleChildFrameNavigation(frame, id)
@@ -1023,7 +1028,14 @@ func (r *Realm) install() error {
 		return nil, nil
 	}, "nss")
 	host["removeAttribute"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		return nil, r.document.RemoveAttribute(int64(numarg(a, 0)), strarg(a, 1))
+		id, name := int64(numarg(a, 0)), strarg(a, 1)
+		err := r.document.RemoveAttribute(id, name)
+		if err == nil && strings.EqualFold(name, "src") {
+			if node, ok := r.document.Get(id); ok && node.TagName == "IMG" {
+				r.updateImage(id, true)
+			}
+		}
+		return nil, err
 	})
 	host["elementsByTagName"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		tag := strarg(a, 0)
@@ -1532,7 +1544,7 @@ func nodeData(n dom.Node) map[string]any {
 	for k, v := range n.Attributes {
 		attrs[k] = v
 	}
-	return map[string]any{"nodeId": n.ID, "type": n.Type, "tagName": n.TagName, "namespaceURI": n.Namespace, "qualifiedName": n.QualifiedName, "contentType": n.ContentType, "text": n.Text, "attributes": attrs, "attributeNames": n.AttributeNames, "parentId": n.Parent, "children": n.Children}
+	return map[string]any{"nodeId": n.ID, "type": n.Type, "tagName": n.TagName, "namespaceURI": n.Namespace, "qualifiedName": n.QualifiedName, "contentType": n.ContentType, "text": n.Text, "attributes": attrs, "attributeNames": n.AttributeNames, "attributeNamespaces": n.AttributeNamespaces, "parentId": n.Parent, "children": n.Children}
 }
 func nodesData(nodes []dom.Node) []map[string]any {
 	out := make([]map[string]any, 0, len(nodes))
@@ -1817,6 +1829,10 @@ func (r *Realm) hostInsertArgs(a []engine.Value, hasBefore bool) (engine.Value, 
 			}
 			return nil, nil
 		}
+		return nil, nil
+	}
+	if tag == "IMG" {
+		r.updateImage(childID, false)
 		return nil, nil
 	}
 	blockerReason := strings.ToLower(tag) + ":" + src

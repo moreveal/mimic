@@ -52,6 +52,9 @@ wait for lifecycle events before treating the page as loaded. See the
 [CDP matrix](docs/cdp-compatibility.md) for the actual supported contract.
 An optional static snapshot exporter is available as
 `python compatibility/save_snapshot.py --endpoint http://127.0.0.1:9222 --output snapshots/example`
+Use `--wait-selector '#ready'` when the application exposes a readiness marker:
+the browser's `load` event can precede application hydration. The exporter also
+accepts `--timeout` in milliseconds for that wait.
 with Pyppeteer 2.0.0 installed. It may load referenced resources and does not
 capture canvas pixels, live form state or embedded frames.
 

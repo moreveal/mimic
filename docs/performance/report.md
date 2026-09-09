@@ -1080,3 +1080,31 @@ The full matrix was not run. The frozen harness and original baseline remain
 unchanged. [Compact evidence](../compatibility/github-loading-20260909/validation.json)
 includes binary/harness hashes and measurements; raw gate data remains in
 `.build/github-fix-gate/`.
+
+## 2026-09-09 — SVG snapshots and detached image requests
+
+The fresh-build SVG/image checkpoint passed all six frozen correctness workloads,
+all concurrency waves and both memory/teardown waves. The harness and baseline
+were unchanged; no full matrix was run. This is a release observation, not a
+paired before/after comparison. Other interactive runtime processes were present
+on the machine, so these samples do not establish small performance changes.
+
+| Metric | Observation |
+|---|---:|
+| Warm DOM/static/React completion medians | 161.137 / 55.335 / 114.047 ms |
+| Static N10/N25 throughput medians | 56.339 / 76.686 Pages/s |
+| Static/React marginal RSS per Page, N10 | 26.607 / 32.080 MiB |
+| Static/React RSS after teardown/recovery | 103.348 / 121.148 MiB |
+
+Live tracing found a cached detached-image request waiting 14.6 seconds before
+transport start behind unrelated work at the lowest scheduler priority. Image
+starts now use ordinary resource tasks, retaining precedence for script starts.
+The verified BrowserScan export subsequently loaded, reached its selected ready
+state and captured in 3.61 s total. A prior fixed-delay capture took 36.36 s and
+missed the background. These live observations are not controlled speedup ratios.
+One live BrowserScan teardown stalled and required stopping the diagnostic
+process; the successful local teardown gate does not resolve that limitation.
+
+[Build and measurement receipts](../compatibility/svg-snapshot-20260909/performance.json)
+and [visual verification](../compatibility/svg-snapshot-20260909/report.md) retain
+the evidence and boundaries. Raw gate data is in `.build/svg-snapshot-gate/`.

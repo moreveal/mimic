@@ -9,14 +9,26 @@ const attributeCompatibility=(()=>{
   const state=attr=>{const value=slots.get(attr);if(!value)throw new TypeError('Illegal invocation');return value};
   const normalize=(element,name)=>element.namespaceURI==='http://www.w3.org/1999/xhtml'?String(name).toLowerCase():String(name);
   const detach=attr=>{const value=state(attr);if(value.owner){value.value=value.owner.getAttribute(value.name)??value.value;value.document=value.owner.ownerDocument;value.owner=null}return attr};
-  const create=(name,value,document,owner=null)=>{const attr=Object.create(globalThis.Attr.prototype);slots.set(attr,{name,value,document,owner});return attr};
+  const create=(name,value,document,owner=null,namespace=null)=>{const attr=Object.create(globalThis.Attr.prototype);slots.set(attr,{name,value,document,owner,namespace});return attr};
   const get=(element,name)=>{
     name=normalize(element,name);const value=element.getAttribute(name),values=cache(element),previous=values.get(name);
     if(value===null){if(previous){detach(previous);values.delete(name)}return null}
     if(previous){state(previous).value=value;return previous}
-    const attr=create(name,value,element.ownerDocument,element);values.set(name,attr);return attr;
+    const attr=create(name,value,element.ownerDocument,element,host.nodeData(elementSlot(element).nodeId).attributeNamespaces?.[name]||null);values.set(name,attr);return attr;
   };
   const names=element=>element.getAttributeNames();
+  const nsName=(element,namespace,local)=>{if(!(element instanceof Element))throw new TypeError('Illegal invocation');return host.attributeNameNS(elementSlot(element).nodeId,namespace==null?'':String(namespace),String(local))};
+  member(Element.prototype,'getAttributeNS',function(namespace,local){const name=nsName(this,namespace,local);return name?this.getAttribute(name):null});
+  member(Element.prototype,'hasAttributeNS',function(namespace,local){return !!nsName(this,namespace,local)});
+  member(Element.prototype,'removeAttributeNS',function(namespace,local){const name=nsName(this,namespace,local);if(name)this.removeAttribute(name)});
+  member(Element.prototype,'setAttributeNS',function(namespace,name,value){
+    if(!(this instanceof Element))throw new TypeError('Illegal invocation');if(arguments.length<3)throw new TypeError('Not enough arguments');
+    namespace=namespace==null?'':String(namespace);name=String(name);value=String(value);
+    if(!/^[\p{L}_:][\p{L}\p{N}_.:\-\u00b7\p{M}]*$/u.test(name))throw new DOMException('Invalid XML name','InvalidCharacterError');
+    const prefix=name.includes(':')?name.split(':')[0]:null;
+    if(prefix&&!namespace||prefix==='xml'&&namespace!=='http://www.w3.org/XML/1998/namespace'||(name==='xmlns'||prefix==='xmlns')&&namespace!=='http://www.w3.org/2000/xmlns/'||namespace==='http://www.w3.org/2000/xmlns/'&&name!=='xmlns'&&prefix!=='xmlns')throw new DOMException('Invalid namespace','NamespaceError');
+    host.setAttributeNS(elementSlot(this).nodeId,namespace,name,value);
+  });
   const indexed=key=>typeof key==='string'&&/^(0|[1-9][0-9]*)$/.test(key)&&Number(key)<4294967295;
   const mapOwners=new WeakMap();
   function namedMap(element){
@@ -37,8 +49,11 @@ const attributeCompatibility=(()=>{
   member(globalThis.NamedNodeMap.prototype,'removeNamedItem',function(name){const element=owner(this),attr=get(element,name);if(!attr)throw new DOMException('Attribute not found','NotFoundError');return element.removeAttributeNode(attr)});
   member(globalThis.NamedNodeMap.prototype,'setNamedItem',function(attr){return owner(this).setAttributeNode(attr)});
   Object.defineProperty(globalThis.NamedNodeMap.prototype,Symbol.iterator,{value:function*(){const element=owner(this);for(let index=0;index<names(element).length;index++)yield get(element,names(element)[index])},writable:true,configurable:true});
-  for(const name of ['name','nodeName','localName'])accessor(globalThis.Attr.prototype,name,function(){return state(this).name});
-  for(const name of ['namespaceURI','prefix','parentNode','parentElement'])accessor(globalThis.Attr.prototype,name,function(){state(this);return null});
+  for(const name of ['name','nodeName'])accessor(globalThis.Attr.prototype,name,function(){return state(this).name});
+  accessor(globalThis.Attr.prototype,'namespaceURI',function(){return state(this).namespace});
+  accessor(globalThis.Attr.prototype,'localName',function(){const s=state(this);return s.namespace?s.name.split(':').at(-1):s.name});
+  accessor(globalThis.Attr.prototype,'prefix',function(){const s=state(this);return s.namespace&&s.name.includes(':')?s.name.split(':')[0]:null});
+  for(const name of ['parentNode','parentElement'])accessor(globalThis.Attr.prototype,name,function(){state(this);return null});
   accessor(globalThis.Attr.prototype,'nodeType',function(){state(this);return 2});
   accessor(globalThis.Attr.prototype,'specified',function(){state(this);return true});
   accessor(globalThis.Attr.prototype,'ownerElement',function(){const value=state(this);if(value.owner&&!value.owner.hasAttribute(value.name)){cache(value.owner).delete(value.name);detach(this)}return value.owner});
@@ -47,8 +62,9 @@ const attributeCompatibility=(()=>{
   const write=function(input){const value=state(this),text=String(input);if(value.owner)value.owner.setAttribute(value.name,text);else value.value=text};
   accessor(globalThis.Attr.prototype,'value',read,write);
   for(const name of ['nodeValue','textContent'])accessor(globalThis.Attr.prototype,name,read,function(value){write.call(this,value==null?'':value)});
-  member(globalThis.Attr.prototype,'cloneNode',function(){const value=state(this);return create(value.name,this.value,this.ownerDocument)});
+  member(globalThis.Attr.prototype,'cloneNode',function(){const value=state(this);return create(value.name,this.value,this.ownerDocument,null,value.namespace)});
   member(Document.prototype,'createAttribute',function(name){if(!(this instanceof Document))throw new TypeError('Illegal invocation');name=String(name);if(!name||/[\s<>\/=]/.test(name))throw new DOMException('Invalid attribute name','InvalidCharacterError');return create(name.toLowerCase(),'',this)});
+  member(Element.prototype,'getAttributeNodeNS',function(namespace,local){const name=nsName(this,namespace,local);return name?get(this,name):null});
   member(Element.prototype,'getAttributeNode',function(name){if(!(this instanceof Element))throw new TypeError('Illegal invocation');return get(this,name)});
   const remove=Element.prototype.removeAttribute;
   member(Element.prototype,'removeAttribute',function(name){name=normalize(this,name);const attr=cache(this).get(name);if(attr){detach(attr);cache(this).delete(name)}return remove.call(this,name)});
@@ -63,7 +79,7 @@ const attributeCompatibility=(()=>{
     const value=state(attr);if(value.owner&&value.owner!==this)throw new DOMException('Attribute is already in use','InUseAttributeError');
     const previous=get(this,value.name);if(previous===attr)return attr;
     if(previous)detach(previous);
-    value.document=this.ownerDocument;value.owner=this;cache(this).set(value.name,attr);this.setAttribute(value.name,value.value);return previous;
+    value.document=this.ownerDocument;value.owner=this;cache(this).set(value.name,attr);if(value.namespace)this.setAttributeNS(value.namespace,value.name,value.value);else this.setAttribute(value.name,value.value);return previous;
   });
   return {namedMap};
 })();
