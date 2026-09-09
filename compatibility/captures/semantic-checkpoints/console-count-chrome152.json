@@ -1,0 +1,192 @@
+{
+  "browser": "152.0.7977.82",
+  "results": {
+    "rows": [
+      {
+        "result": "undefined"
+      },
+      {
+        "result": "undefined"
+      },
+      {
+        "result": "undefined"
+      },
+      {
+        "result": "undefined"
+      },
+      {
+        "result": "undefined"
+      },
+      {
+        "result": "undefined"
+      },
+      {
+        "result": "undefined"
+      },
+      {
+        "error": "TypeError",
+        "message": "Cannot convert a Symbol value to a string"
+      },
+      {
+        "error": "TypeError",
+        "message": "Cannot convert a Symbol value to a string"
+      }
+    ],
+    "effects": [
+      "string",
+      "string",
+      "string",
+      "string"
+    ],
+    "countName": "count",
+    "countLength": 0,
+    "resetLength": 0
+  },
+  "events": [
+    {
+      "type": "count",
+      "args": [
+        {
+          "type": "string",
+          "value": "default: 1"
+        }
+      ]
+    },
+    {
+      "type": "count",
+      "args": [
+        {
+          "type": "string",
+          "value": "default: 2"
+        }
+      ]
+    },
+    {
+      "type": "count",
+      "args": [
+        {
+          "type": "string",
+          "value": "default: 3"
+        }
+      ]
+    },
+    {
+      "type": "count",
+      "args": [
+        {
+          "type": "string",
+          "value": "null: 1"
+        }
+      ]
+    },
+    {
+      "type": "count",
+      "args": [
+        {
+          "type": "string",
+          "value": "default: 1"
+        }
+      ]
+    },
+    {
+      "type": "warning",
+      "args": [
+        {
+          "type": "string",
+          "value": "Count for 'missing' does not exist"
+        }
+      ]
+    },
+    {
+      "type": "count",
+      "args": [
+        {
+          "type": "string",
+          "value": "default: 2"
+        }
+      ]
+    },
+    {
+      "type": "count",
+      "args": [
+        {
+          "type": "string",
+          "value": "label: 1"
+        }
+      ]
+    },
+    {
+      "type": "count",
+      "args": [
+        {
+          "type": "string",
+          "value": "label: 2"
+        }
+      ]
+    },
+    {
+      "type": "count",
+      "args": [
+        {
+          "type": "string",
+          "value": "label: 1"
+        }
+      ]
+    },
+    {
+      "type": "count",
+      "args": [
+        {
+          "type": "string",
+          "value": "borrowed: 1"
+        }
+      ]
+    },
+    {
+      "type": "count",
+      "args": [
+        {
+          "type": "string",
+          "value": "borrowed: 2"
+        }
+      ]
+    },
+    {
+      "type": "count",
+      "args": [
+        {
+          "type": "string",
+          "value": "label: 1"
+        }
+      ]
+    },
+    {
+      "type": "count",
+      "args": [
+        {
+          "type": "string",
+          "value": "label: 2"
+        }
+      ]
+    }
+  ],
+  "source": "internal/browser/testdata/console_count_oracle.js",
+  "sourceSHA256": "a1e2da6500eb33c4a1084f4312441dd0bcd3dd9e5a330af9221cdd1e48b25dfc",
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "profileFreshness": "fresh-isolated-context",
+    "browserProfileFreshness": "unavailable: existing process",
+    "unavailable": [
+      "commandLineFeatureOverrides",
+      "environmentProfileId",
+      "window",
+      "hasFocus",
+      "viewport",
+      "secureContextState",
+      "isolationState",
+      "visibilityState"
+    ],
+    "provenance": "Own isolated context in existing Chrome9343; context closed, existing browser retained."
+  }
+}

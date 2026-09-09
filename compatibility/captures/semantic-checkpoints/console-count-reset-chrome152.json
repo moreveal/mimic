@@ -1,0 +1,52 @@
+{
+  "browser": "152.0.7977.82",
+  "results": true,
+  "events": [
+    {
+      "type": "count",
+      "args": [
+        {
+          "type": "string",
+          "value": "x: 1"
+        }
+      ]
+    },
+    {
+      "type": "warning",
+      "args": [
+        {
+          "type": "string",
+          "value": "Count for 'x' does not exist"
+        }
+      ]
+    },
+    {
+      "type": "count",
+      "args": [
+        {
+          "type": "string",
+          "value": "x: 1"
+        }
+      ]
+    }
+  ],
+  "source": "internal/browser/testdata/console_count_reset_oracle.js",
+  "sourceSHA256": "d74ca236154624c52373707362be9f3f8b760301ac462a5d1f541d3857eb8eaf",
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "profileFreshness": "fresh-isolated-context",
+    "browserProfileFreshness": "unavailable: existing process",
+    "unavailable": [
+      "commandLineFeatureOverrides",
+      "environmentProfileId",
+      "window",
+      "hasFocus",
+      "viewport",
+      "secureContextState",
+      "isolationState",
+      "visibilityState"
+    ],
+    "provenance": "Own isolated context in existing Chrome9343; context closed, existing browser retained."
+  }
+}
