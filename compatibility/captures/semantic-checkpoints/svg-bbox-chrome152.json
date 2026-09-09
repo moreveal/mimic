@@ -1,0 +1,596 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/svg_bbox_oracle.js",
+    "fixtureSHA256": "5c821af6854d5af53c7ee26cf7792cadc293ebc71a7e5e80886107b1a3ff61cd",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "rect": {
+      "tag": "[object SVGRectElement]",
+      "graphics": true,
+      "geometry": true,
+      "box": [
+        10,
+        20,
+        30,
+        40
+      ]
+    },
+    "negative": {
+      "tag": "[object SVGRectElement]",
+      "graphics": true,
+      "geometry": true,
+      "box": [
+        -5,
+        -7,
+        3,
+        2
+      ]
+    },
+    "zero": {
+      "tag": "[object SVGRectElement]",
+      "graphics": true,
+      "geometry": true,
+      "box": [
+        10,
+        20,
+        0,
+        30
+      ]
+    },
+    "invalid": {
+      "tag": "[object SVGRectElement]",
+      "graphics": true,
+      "geometry": true,
+      "box": [
+        0,
+        0,
+        0,
+        20
+      ]
+    },
+    "circle": {
+      "tag": "[object SVGCircleElement]",
+      "graphics": true,
+      "geometry": true,
+      "box": [
+        10,
+        20,
+        20,
+        20
+      ]
+    },
+    "ellipse": {
+      "tag": "[object SVGEllipseElement]",
+      "graphics": true,
+      "geometry": true,
+      "box": [
+        10,
+        15,
+        10,
+        20
+      ]
+    },
+    "line": {
+      "tag": "[object SVGLineElement]",
+      "graphics": true,
+      "geometry": true,
+      "box": [
+        -10,
+        10,
+        30,
+        20
+      ]
+    },
+    "polyline": {
+      "tag": "[object SVGPolylineElement]",
+      "graphics": true,
+      "geometry": true,
+      "box": [
+        -10,
+        5,
+        40,
+        45
+      ]
+    },
+    "polygon": {
+      "tag": "[object SVGPolygonElement]",
+      "graphics": true,
+      "geometry": true,
+      "box": [
+        -10,
+        5,
+        40,
+        45
+      ]
+    },
+    "path": {
+      "tag": "[object SVGPathElement]",
+      "graphics": true,
+      "geometry": true,
+      "box": [
+        10,
+        20,
+        30,
+        40
+      ]
+    },
+    "quadratic": {
+      "tag": "[object SVGPathElement]",
+      "graphics": true,
+      "geometry": true,
+      "box": [
+        0,
+        0,
+        100,
+        50
+      ]
+    },
+    "cubic": {
+      "tag": "[object SVGPathElement]",
+      "graphics": true,
+      "geometry": true,
+      "box": [
+        0,
+        0,
+        100,
+        75
+      ]
+    },
+    "arc": {
+      "tag": "[object SVGPathElement]",
+      "graphics": true,
+      "geometry": true,
+      "box": [
+        0,
+        -25,
+        100,
+        25
+      ]
+    },
+    "empty": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "union": [
+      -5,
+      -5,
+      45,
+      65
+    ],
+    "transforms": {
+      "self": [
+        10,
+        20,
+        30,
+        40
+      ],
+      "group": [
+        25,
+        70,
+        60,
+        120
+      ]
+    },
+    "nested": [
+      25,
+      50,
+      60,
+      80
+    ],
+    "rotate": [
+      -60,
+      10,
+      40,
+      30
+    ],
+    "detached": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "detachedRoot": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "hidden": {
+      "before": [
+        10,
+        20,
+        60,
+        60
+      ],
+      "after": [
+        10,
+        20,
+        60,
+        60
+      ]
+    },
+    "noneSelf": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "defs": [
+      10,
+      20,
+      30,
+      40
+    ],
+    "viewBox": [
+      40,
+      40,
+      200,
+      50
+    ],
+    "units": [
+      96,
+      37.79528,
+      2.66667,
+      11.33858
+    ],
+    "mutation": {
+      "distinct": true,
+      "old": [
+        10,
+        20,
+        999,
+        40
+      ],
+      "next": [
+        10,
+        20,
+        50,
+        40
+      ],
+      "tag": "[object SVGRect]"
+    },
+    "options": {
+      "reads": 0,
+      "box": [
+        10,
+        20,
+        30,
+        40
+      ]
+    },
+    "receiver": {
+      "errors": [
+        "TypeError",
+        "TypeError",
+        "TypeError"
+      ],
+      "length": 0,
+      "name": "getBBox",
+      "own": false
+    },
+    "foreign": [
+      10,
+      20,
+      30,
+      40
+    ],
+    "zeroFamily": [
+      [
+        "rect",
+        [
+          10,
+          20,
+          0,
+          0
+        ]
+      ],
+      [
+        "circle",
+        [
+          10,
+          20,
+          0,
+          0
+        ]
+      ],
+      [
+        "ellipse",
+        [
+          10,
+          10,
+          0,
+          20
+        ]
+      ],
+      [
+        "line",
+        [
+          0,
+          0,
+          0,
+          0
+        ]
+      ],
+      [
+        "polyline",
+        [
+          10,
+          20,
+          0,
+          0
+        ]
+      ],
+      [
+        "polygon",
+        [
+          10,
+          20,
+          0,
+          0
+        ]
+      ],
+      [
+        "path",
+        [
+          10,
+          20,
+          0,
+          0
+        ]
+      ]
+    ],
+    "zeroChildren": [
+      10,
+      20,
+      30,
+      40
+    ],
+    "hiddenAncestors": [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "defsSelf": [
+      10,
+      20,
+      30,
+      40
+    ],
+    "nestedViewport": {
+      "self": [
+        10,
+        20,
+        30,
+        40
+      ],
+      "parent": [
+        65,
+        30,
+        30,
+        40
+      ]
+    },
+    "cssGeometry": [
+      10,
+      20,
+      30,
+      40
+    ],
+    "skew": [
+      30,
+      20,
+      70,
+      40
+    ],
+    "smooth": [
+      0,
+      -50,
+      200,
+      100
+    ],
+    "smoothCubic": [
+      0,
+      -75,
+      200,
+      150
+    ],
+    "relative": [
+      10,
+      -10,
+      80,
+      60
+    ],
+    "arcLarge": [
+      0,
+      0,
+      100,
+      25
+    ],
+    "arcRotated": [
+      0,
+      0,
+      25,
+      100
+    ],
+    "arcCompact": [
+      0,
+      -25,
+      100,
+      25
+    ],
+    "partial": [
+      10,
+      20,
+      20,
+      20
+    ],
+    "moveOnly": [
+      100,
+      200,
+      0,
+      0
+    ],
+    "closedMove": [
+      10,
+      20,
+      0,
+      0
+    ],
+    "hiddenMutation": [
+      [
+        10,
+        20,
+        30,
+        40
+      ],
+      [
+        10,
+        20,
+        80,
+        40
+      ],
+      [
+        10,
+        20,
+        80,
+        40
+      ],
+      [
+        10,
+        20,
+        80,
+        40
+      ]
+    ],
+    "hiddenInitially": [
+      10,
+      20,
+      30,
+      40
+    ],
+    "hiddenAfterSiblingQuery": [
+      10,
+      20,
+      30,
+      40
+    ],
+    "moveTail": [
+      10,
+      20,
+      20,
+      20
+    ],
+    "pointGroup": [
+      10,
+      20,
+      90,
+      180
+    ],
+    "caseSensitive": [
+      [
+        "g",
+        "[object SVGGElement]",
+        "function"
+      ],
+      [
+        "G",
+        "[object SVGElement]",
+        "undefined"
+      ],
+      [
+        "rect",
+        "[object SVGRectElement]",
+        "function"
+      ],
+      [
+        "RECT",
+        "[object SVGElement]",
+        "undefined"
+      ],
+      [
+        "foreignObject",
+        "[object SVGForeignObjectElement]",
+        "function"
+      ],
+      [
+        "foreignobject",
+        "[object SVGElement]",
+        "undefined"
+      ],
+      [
+        "x:rect",
+        "[object SVGRectElement]",
+        "function"
+      ]
+    ],
+    "overrides": {
+      "rect": [
+        10,
+        20,
+        30,
+        40
+      ],
+      "group": [
+        10,
+        20,
+        30,
+        40
+      ]
+    },
+    "malformed": [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        10,
+        20,
+        30,
+        40
+      ]
+    ],
+    "shadow": [
+      10,
+      20,
+      30,
+      40
+    ],
+    "constructorOverride": {
+      "canonical": true,
+      "tag": "[object SVGGElement]",
+      "box": [
+        10,
+        20,
+        30,
+        40
+      ]
+    }
+  }
+}

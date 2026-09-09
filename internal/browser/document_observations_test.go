@@ -44,7 +44,7 @@ func TestBase64WorkerChrome(t *testing.T) {
 }
 
 func TestDocumentCompatibilityOracle(t *testing.T) {
-	for _, name := range []string{"document-visibility", "html-enumerated", "form-reflection", "webgl-color-space", "document-handlers", "element-handlers", "base64", "navigator-power", "cross-realm-nodes"} {
+	for _, name := range []string{"document-visibility", "html-enumerated", "form-reflection", "webgl-color-space", "document-handlers", "element-handlers", "base64", "navigator-power", "cross-realm-nodes", "svg-bbox"} {
 		t.Run(name, func(t *testing.T) {
 			source, err := os.ReadFile("testdata/" + strings.ReplaceAll(name, "-", "_") + "_oracle.js")
 			if err != nil {
