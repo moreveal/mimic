@@ -87,6 +87,7 @@ const compatibilitySelectors = (() => {
     equals: (a,b) => a===b
   };
   const statePseudos={
+    modal:node=>compatibilityElementState.modal(node),
     target:node=>elementSlot(node).nodeId===host.selectorTargetID(),
     defined:node=>compatibilityElementState.isDefined(node),
     focus:node=>compatibilityElementState.focused()===node,
@@ -166,6 +167,8 @@ const compatibilitySelectors = (() => {
   function getElementById(root,id) {
     id=String(id);
     if(!id)return null;
+    const slot=elementSlot(root);
+    if(root===document||slot){const found=host.elementByID(root===document?documentID:slot.nodeId,id);return found?wrap(found):null;}
     return run(()=>library.findOne(node=>attribute(node,'id')===id,children(root),options(scopeFor(root))));
   }
   return {query,matches,closest,getElementById};

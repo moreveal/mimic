@@ -1035,3 +1035,48 @@ calls in a sanitizer loop. The semantic repairs eliminate both observed loops.
 includes executable/harness hashes, concurrency results and memory observations.
 Raw data remains in `.build/site-compat-20260909/fast-gate-release/`.
 
+## 2026-09-09 — GitHub profile lookup and cold module loading
+
+Native profiling of a stalled profile identified DOM traversal through repeated
+JavaScript/Go crossings in `getElementById`, reached from custom-element
+callbacks. A direct traversal of the canonical node arena removes those
+crossings without introducing a duplicate ID index. Per-element reaction queues
+also preserve the Chrome-observed order during nested attribute callbacks.
+The profile then completed in 12.05 s instead of exceeding the 35-second
+diagnostic timeout. A separate final-build snapshot run loaded in 14.81 s and
+captured in 10.89 s; capture/resource collection remains a substantial cost.
+
+Static module preloads now overlap and share responses with imports within the
+realm, including non-cacheable responses. A deterministic local regression test
+requires both requests to start before either response is released, verifies
+one request per module and checks dependency-first evaluation.
+
+BrowserScan navigation observations on fresh processes were 2248.64 ms before
+and 1787.47 ms after this batch; subsequent after runs were 432.26 and 420.95 ms.
+These live-network samples are not a controlled speedup estimate. Cold DNS/TLS
+and network cache state still explain part of the first-run gap. Snapshot capture
+was 513.82 ms before and 593.88 ms after on the first run; it did not improve in
+this observation. No hidden warm-up navigation was introduced.
+
+The fresh-build fast gate passed all six unchanged correctness workloads and
+all concurrency and teardown waves. Tests and live captures did not overlap the
+gate. This is a release checkpoint, not a paired benchmark comparison.
+
+| Metric | Release observation |
+|---|---:|
+| Warm DOM completion median | 162.308 ms |
+| Warm static completion median | 55.324 ms |
+| Warm React completion median | 113.256 ms |
+| Static N10 throughput median | 56.283 Pages/s |
+| Static N25 throughput median | 75.945 Pages/s |
+| Static marginal RSS/Page, N10 | 26.786 MiB |
+| React marginal RSS/Page, N10 | 31.959 MiB |
+| Static RSS after teardown/recovery | 103.445 MiB |
+| React RSS after teardown/recovery | 120.777 MiB |
+
+DOM/static/React latency and retained RSS are slightly higher than the preceding
+checkpoint; this batch does not establish a general benchmark improvement.
+The full matrix was not run. The frozen harness and original baseline remain
+unchanged. [Compact evidence](../compatibility/github-loading-20260909/validation.json)
+includes binary/harness hashes and measurements; raw gate data remains in
+`.build/github-fix-gate/`.

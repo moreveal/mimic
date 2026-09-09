@@ -1,5 +1,39 @@
 package dom
 
+// ElementByID returns the first descendant in tree order. IDs are literal
+// DOMStrings, not CSS selectors; detached roots and duplicate IDs are supported.
+func (d *Document) ElementByID(root int64, value string) int64 {
+	d.mu.RLock()
+	defer d.mu.RUnlock()
+	if value == "" {
+		return 0
+	}
+	var visit func(int64) int64
+	visit = func(id int64) int64 {
+		n := d.nodes[id]
+		if n == nil {
+			return 0
+		}
+		if n.Type == "element" && n.Attributes["id"] == value {
+			return id
+		}
+		for _, child := range n.Children {
+			if found := visit(child); found != 0 {
+				return found
+			}
+		}
+		return 0
+	}
+	if n := d.nodes[root]; n != nil {
+		for _, child := range n.Children {
+			if found := visit(child); found != 0 {
+				return found
+			}
+		}
+	}
+	return 0
+}
+
 // Inert documents share the Page's canonical node arena, but have independent
 // roots and persistent ownership. A detached node keeps its document on removal;
 // insertion adopts the entire subtree, without cloning or changing identity.
@@ -73,4 +107,39 @@ func (d *Document) CreateHTMLDocument(title *string) Node {
 	}
 	newNode("element", "BODY", html.ID)
 	return *root
+}
+
+// CreateXMLDocument allocates an inert root in the same canonical arena.
+// It owns nodes but never creates a Window, scheduler, or independent DOM store.
+func (d *Document) CreateXMLDocument(namespace, name string) Node {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	d.next++
+	root := &Node{ID: d.next, Type: "document", ContentType: "application/xml", Attributes: map[string]string{}}
+	switch namespace {
+	case "http://www.w3.org/1999/xhtml":
+		root.ContentType = "application/xhtml+xml"
+	case "http://www.w3.org/2000/svg":
+		root.ContentType = "image/svg+xml"
+	}
+	d.nodes[root.ID] = root
+	if name != "" {
+		n := d.createDocumentElementLocked(root.ID, namespace, name)
+		n.Parent = root.ID
+		root.Children = []int64{n.ID}
+	}
+	return *root
+}
+
+func (d *Document) createDocumentElementLocked(owner int64, namespace, name string) *Node {
+	d.next++
+	n := &Node{ID: d.next, Type: "element", TagName: name, QualifiedName: name, Namespace: namespace, OwnerDocument: owner, Attributes: map[string]string{}}
+	d.nodes[n.ID] = n
+	return n
+}
+
+func (d *Document) CreateDocumentElement(owner int64, namespace, name string) Node {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	return *d.createDocumentElementLocked(owner, namespace, name)
 }

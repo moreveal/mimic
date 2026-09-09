@@ -5,9 +5,11 @@ const compatibilityElementState={};
     const definitions=new Map(),constructors=new Map(),upgraded=new WeakMap(),construction=[];
     const waiting=new Map();let defining=false;
     const report=error=>console.error(error&&error.stack||String(error));
-    let reactionDepth=0;const reactions=[];
-    const flushReactions=()=>{if(reactionDepth)return;while(reactions.length){const [node,fn,args]=reactions.shift();try{fn.apply(node,args)}catch(error){report(error)}}};
-    const reaction=(node,name,args=[])=>{const fn=upgraded.get(node)?.callbacks[name];if(typeof fn==='function'){reactions.push([node,fn,args]);flushReactions()}};
+    let reactionDepth=0;const reactions=[],elementReactions=new WeakMap();
+    // An invocation owns its element queue. A nested CEReactions operation
+    // drains the affected element's reactions, never its pending siblings.
+    const flushReactions=()=>{if(reactionDepth)return;const pending=reactions.splice(0);for(const node of pending){const queue=elementReactions.get(node);while(queue?.length){const [fn,args]=queue.shift();try{fn.apply(node,args)}catch(error){report(error)}}}};
+    const reaction=(node,name,args=[])=>{const fn=upgraded.get(node)?.callbacks[name];if(typeof fn==='function'){let queue=elementReactions.get(node);if(!queue)elementReactions.set(node,queue=[]);queue.push([fn,args]);reactions.push(node);flushReactions()}};
     const validName=name=>/^[a-z][.0-9_a-z\-]*-[.0-9_a-z\-]*$/.test(name)&&!['annotation-xml','color-profile','font-face','font-face-src','font-face-uri','font-face-format','font-face-name','missing-glyph'].includes(name);
     const rawCreate=Document.prototype.createElement;
     constructCustomElement=ctor=>{
@@ -188,7 +190,7 @@ const compatibilityElementState={};
     for(const name of ['setAttribute','removeAttribute']){
       const original=Element.prototype[name];
       Object.defineProperty(Element.prototype,name,{value:function(key,value){
-        if(!observers.size&&!definitions.size)return original.apply(this,arguments);
+        if(!observers.size&&!definitions.size&&!compatibilityElementState.hasModal?.())return original.apply(this,arguments);
         key=String(key).toLowerCase();const old=this.getAttribute(key);
         const result=original.apply(this,arguments);
         if(name==='setAttribute'||old!==null)attributeChanged(this,key,old);
@@ -199,13 +201,13 @@ const compatibilityElementState={};
     // insertion and replaceChild's remove/insert steps must not emit duplicates.
     const mutationOriginals=Object.fromEntries(['appendChild','insertBefore','removeChild','replaceChild'].map(name=>[name,Node.prototype[name]]));
     const nodeSnapshot=node=>({node,parent:node.parentNode,previousSibling:node.previousSibling,nextSibling:node.nextSibling,connected:node.isConnected});
-    const detachedReaction=entry=>{if(entry.connected&&definitions.size)walk(entry.node,n=>{if(upgraded.get(n))reaction(n,'disconnectedCallback')})};
+    const detachedReaction=entry=>{if(entry.connected)walk(entry.node,n=>{compatibilityElementState.detached?.(n);if(definitions.size&&upgraded.get(n))reaction(n,'disconnectedCallback')})};
     const insertedReaction=node=>{if(definitions.size&&!customElementCloneInert&&!templateTreeIsInert(node))walk(node,n=>{if(upgraded.get(n)){if(n.isConnected)reaction(n,'connectedCallback')}else upgrade(n)})};
     const emitRemoval=entry=>{if(entry.parent)queueRecord('childList',entry.parent,{removedNodes:[entry.node],previousSibling:entry.previousSibling,nextSibling:entry.nextSibling})};
     for(const method of ['appendChild','insertBefore','removeChild','replaceChild']){
       const original=mutationOriginals[method];
       member(Node.prototype,method,function(node,reference){
-        if(mutationDepth||!observers.size&&!definitions.size)return original.apply(this,arguments);
+        if(mutationDepth||!observers.size&&!definitions.size&&!compatibilityElementState.hasModal?.())return original.apply(this,arguments);
         if(!(node instanceof Node))return original.apply(this,arguments);
         if(method==='removeChild'){if(node.parentNode!==this)throw new DOMException('Not a child','NotFoundError')}else prepareInsertion(this,node,method==='appendChild'?null:reference);
         const fragment=node instanceof DocumentFragment,children=fragment?Array.from(node.childNodes):[node],entries=children.map(nodeSnapshot);
@@ -243,7 +245,7 @@ const compatibilityElementState={};
     for(const [prototype,key] of [[Element.prototype,'innerHTML'],[Element.prototype,'textContent'],[Node.prototype,'textContent']]){
       const original=Object.getOwnPropertyDescriptor(prototype,key);if(!original?.set)continue;
       Object.defineProperty(prototype,key,{...original,set(value){
-        if(mutationDepth||!observers.size&&!definitions.size)return original.set.call(this,value);
+        if(mutationDepth||!observers.size&&!definitions.size&&!compatibilityElementState.hasModal?.())return original.set.call(this,value);
         const character=this.nodeType===3||this.nodeType===8,old=character?this.textContent:null;
         const removed=character?[]:Array.from(this.childNodes),entries=removed.map(nodeSnapshot);
         for(const node of removed)retainRemoved(node);
@@ -291,7 +293,7 @@ const compatibilityElementState={};
     const checkedTokens=tokens=>tokens.map(value=>{const token=String(value);if(!token)throw new DOMException('Empty token','SyntaxError');if(/[\t\n\f\r ]/.test(token))throw new DOMException('Whitespace in token','InvalidCharacterError');return token});
     member(DOMTokenList.prototype,'add',function(...values){const tokens=checkedTokens(values);writeDOMTokens(this,domTokens(this).concat(tokens))});
     member(DOMTokenList.prototype,'remove',function(...values){const tokens=new Set(checkedTokens(values));writeDOMTokens(this,domTokens(this).filter(value=>!tokens.has(value)))});
-    member(DOMTokenList.prototype,'toggle',function(value,force){const [token]=checkedTokens([value]);if(!observers.size&&!definitions.size){const state=domTokenState(this);return host.toggleToken(elementSlot(state.element).nodeId,state.attribute,token,force===undefined?-1:Boolean(force)?1:0)}const tokens=domTokens(this),has=tokens.includes(token);if(has){if(force===undefined||!Boolean(force)){writeDOMTokens(this,tokens.filter(value=>value!==token));return false}return true}if(force!==undefined&&!Boolean(force))return false;writeDOMTokens(this,[...tokens,token]);return true});
+    member(DOMTokenList.prototype,'toggle',function(value,force){const [token]=checkedTokens([value]);if(!observers.size&&!definitions.size&&!compatibilityElementState.hasModal?.()){const state=domTokenState(this);return host.toggleToken(elementSlot(state.element).nodeId,state.attribute,token,force===undefined?-1:Boolean(force)?1:0)}const tokens=domTokens(this),has=tokens.includes(token);if(has){if(force===undefined||!Boolean(force)){writeDOMTokens(this,tokens.filter(value=>value!==token));return false}return true}if(force!==undefined&&!Boolean(force))return false;writeDOMTokens(this,[...tokens,token]);return true});
 
     const abortSlots=new WeakMap(),controllerSlots=new WeakMap();
     const abort=(signal,reason)=>{const s=abortSlots.get(signal);if(s.aborted)return;s.aborted=true;s.reason=reason===undefined?new DOMException('signal is aborted without reason','AbortError'):reason;dispatchTrusted(signal,new Event('abort'))};
@@ -334,6 +336,21 @@ const compatibilityElementState={};
       return slot?.namespaceURI!=='http://www.w3.org/1999/xhtml'||!validName(node.localName)||!!upgraded.get(node);
     };
     compatibilityElementState.focused=()=>focused&&focused.isConnected?focused:null;
+    const modalDialogs=new Set(),dialogReturnValues=new WeakMap();
+    compatibilityElementState.hasModal=()=>modalDialogs.size!==0;
+    compatibilityElementState.modal=node=>modalDialogs.has(node)&&node.isConnected;
+    compatibilityElementState.detached=node=>modalDialogs.delete(node);
+    if(globalThis.HTMLDialogElement){
+      const proto=HTMLDialogElement.prototype;
+      const dialog=node=>{if(!(node instanceof HTMLDialogElement))throw new TypeError('Illegal invocation');return node};
+      Object.defineProperties(proto,{
+        open:{get(){return dialog(this).hasAttribute('open')},set(value){dialog(this);if(value)this.setAttribute('open','');else this.removeAttribute('open')},configurable:true,enumerable:true},
+        returnValue:{get(){dialog(this);return dialogReturnValues.get(this)||''},set(value){dialog(this);dialogReturnValues.set(this,String(value))},configurable:true,enumerable:true},
+        show:{value:function(){dialog(this);if(this.open){if(modalDialogs.has(this))throw new DOMException('Dialog is already modal','InvalidStateError');return}this.open=true},writable:true,configurable:true,enumerable:true},
+        showModal:{value:function(){dialog(this);if(this.open){if(!modalDialogs.has(this))throw new DOMException('Dialog is already open','InvalidStateError');return}if(!this.isConnected)throw new DOMException('Dialog is not connected','InvalidStateError');modalDialogs.add(this);this.open=true},writable:true,configurable:true,enumerable:true},
+        close:{value:function(value){dialog(this);if(!this.open)return;if(value!==undefined)this.returnValue=value;this.open=false;modalDialogs.delete(this);setTimeout(()=>dispatchTrusted(this,new Event('close')),0)},writable:true,configurable:true,enumerable:true}
+      });
+    }
     compatibilityElementState.focusVisible=node=>compatibilityElementState.focused()===node&&
       (keyboardFocus||node.localName==='textarea'||node.localName==='input'&&!['button','checkbox','color','file','hidden','image','radio','range','reset','submit'].includes(String(node.type)));
     compatibilityElementState.noteTrustedInput=type=>{

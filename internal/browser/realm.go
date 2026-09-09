@@ -72,6 +72,7 @@ type Realm struct {
 	resourceContext         context.Context
 	cancelResources         context.CancelFunc
 	resourceWG              sync.WaitGroup
+	moduleFetches           map[string]*moduleFetch
 	fetchCancels            map[string]context.CancelFunc
 	nativePollQueued        bool
 }
@@ -213,6 +214,7 @@ func (r *Realm) Close() error {
 	c.mu.Unlock()
 	r.cancelResources()
 	r.resourceWG.Wait()
+	r.moduleFetches = nil
 	for _, worker := range r.workers {
 		_ = worker.Close()
 	}
@@ -1530,7 +1532,7 @@ func nodeData(n dom.Node) map[string]any {
 	for k, v := range n.Attributes {
 		attrs[k] = v
 	}
-	return map[string]any{"nodeId": n.ID, "type": n.Type, "tagName": n.TagName, "namespaceURI": n.Namespace, "text": n.Text, "attributes": attrs, "attributeNames": n.AttributeNames, "parentId": n.Parent, "children": n.Children}
+	return map[string]any{"nodeId": n.ID, "type": n.Type, "tagName": n.TagName, "namespaceURI": n.Namespace, "qualifiedName": n.QualifiedName, "contentType": n.ContentType, "text": n.Text, "attributes": attrs, "attributeNames": n.AttributeNames, "parentId": n.Parent, "children": n.Children}
 }
 func nodesData(nodes []dom.Node) []map[string]any {
 	out := make([]map[string]any, 0, len(nodes))

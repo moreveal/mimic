@@ -3,6 +3,15 @@ package browser
 import "github.com/moreveal/mimic/internal/engine"
 
 func (r *Realm) installDocumentCompatibility(host map[string]any) {
+	host["elementByID"] = r.packedFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		return r.val(r.document.ElementByID(int64(numarg(args, 0)), strarg(args, 1))), nil
+	}, "ns")
+	host["createXMLDocument"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		return r.val(nodeData(r.document.CreateXMLDocument(strarg(args, 0), strarg(args, 1)))), nil
+	})
+	host["createDocumentElement"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		return r.val(nodeData(r.document.CreateDocumentElement(int64(numarg(args, 0)), strarg(args, 1), strarg(args, 2)))), nil
+	})
 	host["createHTMLDocument"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		var title *string
 		if len(args) > 0 {

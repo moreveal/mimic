@@ -309,6 +309,7 @@ func (p *Page) navigate(ctx context.Context, raw, loaderID string) error {
 	}
 	p.trace.Add(trace.Lifecycle, "frameNavigated", map[string]any{"url": u.String(), "realm": realm.ID})
 	p.runInitScripts(ctx, realm)
+	realm.preloadModules()
 	type deferredModule struct {
 		code string
 		name string
@@ -337,7 +338,12 @@ func (p *Page) navigate(ctx context.Context, raw, loaderID string) error {
 				request.Headers = make(http.Header)
 				request.Headers.Set("Origin", originOf(u.String()))
 			}
-			rr, err := p.loader.Load(ctx, request)
+			var rr network.Response
+			if kind == "module" {
+				rr, err = realm.fetchModule(request).wait(ctx)
+			} else {
+				rr, err = p.loader.Load(ctx, request)
+			}
 			if err == nil {
 				err = scriptResponseError(rr)
 			}
@@ -405,7 +411,7 @@ func (p *Page) navigate(ctx context.Context, raw, loaderID string) error {
 				// Dynamic import callbacks may run in a later browser task, after this
 				// module-evaluation task has completed. Network work belongs to the
 				// document realm and remains live until that realm is discarded.
-				response, loadErr := p.loader.Load(realm.resourceContext, request)
+				response, loadErr := realm.fetchModule(request).wait(realm.resourceContext)
 				if loadErr == nil {
 					loadErr = scriptResponseError(response)
 				}
