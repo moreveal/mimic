@@ -100,11 +100,16 @@ func (r *Realm) scheduleChildFrameNavigation(frame *Frame, elementID int64) {
 		return
 	}
 	node, ok := r.document.Get(elementID)
-	if !ok || node.Attributes["src"] == "" {
+	if !ok {
 		return
 	}
-	target, err := r.resolveDocument(node.Attributes["src"])
-	if err != nil || (target.Scheme != "http" && target.Scheme != "https") {
+	src := node.Attributes["src"]
+	if src == "" {
+		src = "about:blank"
+	}
+	target, err := r.resolveDocument(src)
+	blank := err == nil && target.Scheme == "about" && target.Opaque == "blank"
+	if err != nil || (!blank && target.Scheme != "http" && target.Scheme != "https") {
 		return
 	}
 	if frame.navigationCancel != nil {
@@ -120,7 +125,31 @@ func (r *Realm) scheduleChildFrameNavigation(frame *Frame, elementID int64) {
 	if blocksLoad {
 		frame.loadBlockers[sequence] = blockerReason
 	}
+	if blank && frame.loaderID == "" {
+		navigation := &childNavigation{embeddingRealm: r, frame: frame, target: target, sequence: sequence, loaderID: loaderID, blockerReason: blockerReason, blocksLoad: blocksLoad, realm: frame.Realm}
+		frame.loaderID = loaderID
+		frame.navigationPending = false
+		p := r.agent.Page()
+		p.trace.Add(trace.Lifecycle, "frameNavigated", map[string]any{"frameId": frame.ID, "parentFrameId": frame.parent.ID, "loaderId": loaderID, "url": "about:blank", "realm": frame.Realm.ID})
+		// Chrome 152 completes the initial empty Document and fires its owner's
+		// load synchronously during insertion. Its readyState is already complete
+		// when appendChild returns; this lifecycle also belongs to the frame in CDP.
+		p.trace.Add(trace.Lifecycle, "DOMContentLoaded", map[string]any{"frameId": frame.ID, "loaderId": loaderID, "url": "about:blank", "realm": frame.Realm.ID})
+		p.trace.Add(trace.Lifecycle, "load", map[string]any{"frameId": frame.ID, "loaderId": loaderID, "url": "about:blank", "realm": frame.Realm.ID})
+		if r.frameLoadDispatcher != nil {
+			p.trace.Add(trace.Lifecycle, "iframeOwnerLoad", map[string]any{"frameId": frame.ID, "elementNodeId": frame.elementID, "realm": r.ID})
+			if _, err := r.runtime.Call(r.resourceContext, r.frameLoadDispatcher, nil, r.runtime.Value(frame.elementID)); err != nil {
+				p.trace.Add(trace.Error, "frameLoad", map[string]any{"frameId": frame.ID, "url": "about:blank", "error": err.Error()})
+			}
+		}
+		r.finishChildNavigation(navigation)
+		return
+	}
 	r.scheduler.Post(scheduler.Navigation, 0, func(ctx context.Context) error {
+		if blank {
+			navigation := &childNavigation{embeddingRealm: r, frame: frame, target: target, sequence: sequence, loaderID: loaderID, blockerReason: blockerReason, blocksLoad: blocksLoad}
+			return r.commitChildFrameNavigation(ctx, navigation, network.Response{URL: target, Body: []byte("<!doctype html><html><head></head><body></body></html>")}, nil)
+		}
 		r.startChildFrameNavigation(frame, target, sequence, loaderID, blockerReason, blocksLoad)
 		return nil
 	})
@@ -249,6 +278,11 @@ func (r *Realm) commitChildFrameNavigation(ctx context.Context, navigation *chil
 		r.finishChildNavigation(navigation)
 		return err
 	}
+	if documentURL.Scheme == "about" && documentURL.Opaque == "blank" {
+		p.ctx.mu.Lock()
+		realm.origin = r.origin
+		p.ctx.mu.Unlock()
+	}
 	old := navigation.frame.Realm
 	navigation.frame.Realm = realm
 	navigation.frame.loaderID = navigation.loaderID
@@ -278,7 +312,7 @@ func (r *Realm) runChildFrameScripts(ctx context.Context, navigation *childNavig
 			if parseErr != nil {
 				continue
 			}
-			r.startChildFrameScriptLoad(navigation, scriptURL)
+			r.startChildFrameScriptLoad(navigation, scriptURL, script.ID)
 			return nil
 		}
 		if err := r.executeChildFrameScript(ctx, navigation, code, name); err != nil {
@@ -313,7 +347,7 @@ func (r *Realm) runChildFrameScripts(ctx context.Context, navigation *childNavig
 	return nil
 }
 
-func (r *Realm) startChildFrameScriptLoad(navigation *childNavigation, scriptURL *url.URL) {
+func (r *Realm) startChildFrameScriptLoad(navigation *childNavigation, scriptURL *url.URL, scriptID int64) {
 	p := r.agent.Page()
 	eventLoop := r.browserEventLoop()
 	navigation.realm.resourceWG.Add(1)
@@ -323,6 +357,9 @@ func (r *Realm) startChildFrameScriptLoad(navigation *childNavigation, scriptURL
 		if navigation.realm.resourceContext.Err() != nil {
 			return
 		}
+		if err == nil {
+			err = scriptResponseError(response)
+		}
 		eventLoop.Post(scheduler.Network, 0, func(ctx context.Context) error {
 			if !r.childNavigationCurrent(navigation) || navigation.frame.Realm != navigation.realm {
 				r.finishChildNavigation(navigation)
@@ -330,6 +367,9 @@ func (r *Realm) startChildFrameScriptLoad(navigation *childNavigation, scriptURL
 			}
 			if err != nil {
 				p.trace.Add(trace.Error, "frameScriptLoad", map[string]any{"frameId": navigation.frame.ID, "url": scriptURL.String(), "error": err.Error()})
+				if eventErr := navigation.realm.dispatchResourceEvent(ctx, scriptID, "error"); eventErr != nil {
+					return eventErr
+				}
 			} else if executeErr := r.executeChildFrameScript(ctx, navigation, string(response.Body), scriptURL.String()); executeErr != nil {
 				return executeErr
 			}
@@ -344,12 +384,11 @@ func (r *Realm) executeChildFrameScript(ctx context.Context, navigation *childNa
 	}
 	p := r.agent.Page()
 	p.trace.Add(trace.JS, "scriptStart", map[string]any{"frameId": navigation.frame.ID, "url": name, "realm": navigation.realm.ID})
-	if _, evalErr := navigation.realm.Evaluate(ctx, code, name); evalErr != nil {
+	if evalErr := navigation.realm.evaluateClassicScript(ctx, code, name, navigation.scripts[navigation.nextScript-1].ID); evalErr != nil {
 		p.trace.Add(trace.Exception, "frameScript", map[string]any{"frameId": navigation.frame.ID, "url": name, "error": evalErr.Error()})
 		return nil
 	}
-	return navigation.realm.checkpoint(ctx)
-
+	return nil
 }
 
 func (r *Realm) completeChildFrameLoad(ctx context.Context, navigation *childNavigation) error {

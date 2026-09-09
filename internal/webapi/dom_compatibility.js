@@ -384,6 +384,14 @@ const compatibilityElementState={};
     Object.defineProperty(Node.prototype,'nodeValue',{get(){return this.nodeType===3||this.nodeType===8?this.textContent:null},set(value){if(this.nodeType===3||this.nodeType===8)this.textContent=value??''},enumerable:true,configurable:true});
     Object.defineProperty(Document.prototype,'firstElementChild',{get(){return this.documentElement},enumerable:true,configurable:true});
     Object.defineProperty(Document.prototype,'getElementsByName',{value:function(name){return this.querySelectorAll('[name="'+String(name).replace(/\\/g,'\\\\').replace(/"/g,'\\"')+'"]')},writable:true,enumerable:true,configurable:true});
+    // HTMLCollection is live: class mutations, insertion and removal are read
+    // from the canonical tree on every access, with ASCII whitespace tokens.
+    for(const ctor of [Document,Element])Object.defineProperty(ctor.prototype,'getElementsByClassName',{value:function(names){
+      if(arguments.length===0)throw new TypeError('Expected class names');
+      const root=this,normalize=value=>(root instanceof Document?root:root.ownerDocument)?.compatMode==='BackCompat'?value.replace(/[A-Z]/g,c=>c.toLowerCase()):value;
+      const tokens=[...new Set(normalize(String(names)).split(/[\t\n\f\r ]+/).filter(Boolean))];
+      return htmlCollection(()=>tokens.length?Array.from(root.querySelectorAll('*')).filter(node=>{const classes=normalize(node.getAttribute('class')||'').split(/[\t\n\f\r ]+/);return tokens.every(token=>classes.includes(token))}).map(node=>host.nodeData(elementSlot(node).nodeId)):[]);
+    },writable:true,enumerable:true,configurable:true});
     Object.defineProperty(DocumentFragment.prototype,'textContent',{get(){return Array.from(this.childNodes).map(node=>node.textContent||'').join('')},set(value){for(const child of Array.from(this.childNodes))this.removeChild(child);if(value!=null&&String(value)!=='')this.appendChild(document.createTextNode(String(value)))},enumerable:true,configurable:true});
     if(typeof globalThis.CSS!=='undefined')Object.defineProperty(globalThis.CSS,'escape',{value:function(value){const s=String(value);let out='';for(let i=0;i<s.length;i++){const c=s.charCodeAt(i);if(c===0){out+='\ufffd';continue}if(c<32||c===127||i===0&&c>=48&&c<=57||i===1&&c>=48&&c<=57&&s[0]==='-'){out+='\\'+c.toString(16)+' ';continue}if(i===0&&s.length===1&&s[i]==='-'){out+='\\-';continue}out+=c>=128||c===45||c===95||c>=48&&c<=57||c>=65&&c<=90||c>=97&&c<=122?s[i]:'\\'+s[i]}return out},writable:true,configurable:true,enumerable:true});
     if(typeof globalThis.ClipboardItem==='function'){

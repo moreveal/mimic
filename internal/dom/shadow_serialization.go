@@ -12,11 +12,12 @@ import (
 // ShadowSnapshot describes realm-owned shadow attachment state. Its children
 // reference the canonical node store; it is not a second mutable DOM.
 type ShadowSnapshot struct {
-	HostID         int64   `json:"hostID"`
-	Mode           string  `json:"mode"`
-	DelegatesFocus bool    `json:"delegatesFocus"`
-	Children       []int64 `json:"children"`
-	HTML           string  `json:"html"`
+	HostID         int64    `json:"hostID"`
+	Mode           string   `json:"mode"`
+	DelegatesFocus bool     `json:"delegatesFocus"`
+	Children       []int64  `json:"children"`
+	HTML           string   `json:"html"`
+	Styles         []string `json:"styles"`
 }
 
 func (d *Document) SerializeNodeList(ids []int64) (string, error) {
@@ -38,6 +39,10 @@ func (d *Document) SerializeNodeList(ids []int64) (string, error) {
 // SnapshotTree creates an immutable serialization projection. Shadow roots are
 // declarative templates so a script-free browser export retains composition.
 func (d *Document) SnapshotTree(rootID int64, shadows []ShadowSnapshot) (*html.Node, error) {
+	return d.SnapshotTreeWithFormState(rootID, shadows, nil)
+}
+
+func (d *Document) SnapshotTreeWithFormState(rootID int64, shadows []ShadowSnapshot, forms []FormSnapshot) (*html.Node, error) {
 	d.mu.RLock()
 	defer d.mu.RUnlock()
 	if d.nodes[rootID] == nil {
@@ -46,6 +51,10 @@ func (d *Document) SnapshotTree(rootID int64, shadows []ShadowSnapshot) (*html.N
 	byHost := make(map[int64]ShadowSnapshot, len(shadows))
 	for _, s := range shadows {
 		byHost[s.HostID] = s
+	}
+	byControl := make(map[int64]FormSnapshot, len(forms))
+	for _, form := range forms {
+		byControl[form.NodeID] = form
 	}
 	active := map[int64]bool{}
 	var decorate func(int64, *html.Node) error
@@ -73,8 +82,36 @@ func (d *Document) SnapshotTree(rootID int64, shadows []ShadowSnapshot) (*html.N
 			}
 			c = c.NextSibling
 		}
+		if form, ok := byControl[id]; ok {
+			projectFormSnapshot(out, form)
+		}
 		s, ok := byHost[id]
 		if !ok {
+			return nil
+		}
+		appendStyles := func(target *html.Node) {
+			for _, css := range s.Styles {
+				style := &html.Node{Type: html.ElementNode, Data: "style", DataAtom: atom.Style}
+				style.AppendChild(&html.Node{Type: html.TextNode, Data: css})
+				target.AppendChild(style)
+			}
+		}
+		if out.Type == html.DocumentNode {
+			var head *html.Node
+			var findHead func(*html.Node)
+			findHead = func(node *html.Node) {
+				if node.Type == html.ElementNode && node.DataAtom == atom.Head {
+					head = node
+					return
+				}
+				for child := node.FirstChild; child != nil && head == nil; child = child.NextSibling {
+					findHead(child)
+				}
+			}
+			findHead(out)
+			if head != nil {
+				appendStyles(head)
+			}
 			return nil
 		}
 		if s.Mode != "open" && s.Mode != "closed" {
@@ -104,6 +141,7 @@ func (d *Document) SnapshotTree(rootID int64, shadows []ShadowSnapshot) (*html.N
 				t.AppendChild(child)
 			}
 		}
+		appendStyles(t)
 		out.InsertBefore(t, out.FirstChild)
 		return nil
 	}

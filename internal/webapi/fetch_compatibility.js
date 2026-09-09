@@ -126,5 +126,23 @@
       return await Promise.race([operation,aborted]);
     }finally{signal.removeEventListener('abort',abortListener)}
   }
-  for(const [name,value] of Object.entries({Headers:FetchHeaders,Request:FetchRequest,Response:FetchResponse,fetch}))Object.defineProperty(globalThis,name,{value,writable:true,configurable:true});
+  // Decoder state spans chunks; the upstream TransformStream supplies error
+  // propagation, cancellation and backpressure rather than a second queue.
+  const decoderStreams=new WeakMap();
+  class TextDecoderStream {
+    constructor(label='utf-8',options={}) {
+      const decoder=new Decoder(label,options);
+      const stream=new globalThis.TransformStream({
+        transform(chunk,controller){
+          if(!(chunk instanceof ArrayBuffer)&&!ArrayBuffer.isView(chunk))throw new TypeError('Expected a BufferSource');
+          const text=decoder.decode(chunk,{stream:true});if(text)controller.enqueue(text);
+        },
+        flush(controller){const text=decoder.decode();if(text)controller.enqueue(text)}
+      });
+      decoderStreams.set(this,{decoder,stream});
+    }
+  }
+  for(const name of ['encoding','fatal','ignoreBOM','readable','writable'])Object.defineProperty(TextDecoderStream.prototype,name,{get(){const state=slot(decoderStreams,this);return name==='readable'||name==='writable'?state.stream[name]:state.decoder[name]},configurable:true,enumerable:true});
+  Object.defineProperty(TextDecoderStream.prototype,Symbol.toStringTag,{value:'TextDecoderStream',configurable:true});
+  for(const [name,value] of Object.entries({Headers:FetchHeaders,Request:FetchRequest,Response:FetchResponse,TextDecoderStream,fetch}))Object.defineProperty(globalThis,name,{value,writable:true,configurable:true});
 }
