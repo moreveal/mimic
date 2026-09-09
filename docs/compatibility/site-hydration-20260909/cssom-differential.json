@@ -1,0 +1,34 @@
+{
+  "chrome": {
+    "initial": [
+      "a { color: red; --x: \"a;b\"; }",
+      "@media (min-width: 1px) {\n  b { display: none; }\n}"
+    ],
+    "edited": "a { color: blue; --x: \"a;b\"; }",
+    "bad": "TypeError",
+    "syntax": "SyntaxError",
+    "range": "IndexSizeError",
+    "listIdentity": true,
+    "adoptionIdentity": true,
+    "adopted": true,
+    "final": "span { color: purple; }",
+    "instance": true,
+    "base": true
+  },
+  "mimic": {
+    "adopted": true,
+    "adoptionIdentity": true,
+    "bad": "TypeError",
+    "base": true,
+    "edited": "a { color: blue; --x: \"a;b\"; }",
+    "final": "span { color: purple; }",
+    "initial": [
+      "a { color: red; --x: \"a;b\"; }",
+      "@media (min-width: 1px) {\n  b { display: none; }\n}"
+    ],
+    "instance": true,
+    "listIdentity": true,
+    "range": "IndexSizeError",
+    "syntax": "SyntaxError"
+  }
+}

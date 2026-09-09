@@ -1,0 +1,70 @@
+{
+  "chrome": {
+    "mapIdentity": true,
+    "attrIdentity": true,
+    "prototype": true,
+    "nodeType": 2,
+    "name": "z",
+    "owner": true,
+    "doc": true,
+    "names": [
+      "z",
+      "a"
+    ],
+    "missing": true,
+    "keys": [
+      "0",
+      "1"
+    ],
+    "live": "updated",
+    "reflected": "written",
+    "removed": true,
+    "error": "NotFoundError",
+    "foreign": "NotFoundError",
+    "setReturn": true,
+    "reattach": true,
+    "stringRemoval": true,
+    "fresh": [
+      "title",
+      "title"
+    ],
+    "loop": [
+      "a",
+      "title"
+    ]
+  },
+  "mimic": {
+    "attrIdentity": true,
+    "doc": true,
+    "error": "NotFoundError",
+    "foreign": "NotFoundError",
+    "fresh": [
+      "title",
+      "title"
+    ],
+    "keys": [
+      "0",
+      "1"
+    ],
+    "live": "updated",
+    "loop": [
+      "a",
+      "title"
+    ],
+    "mapIdentity": true,
+    "missing": true,
+    "name": "z",
+    "names": [
+      "z",
+      "a"
+    ],
+    "nodeType": 2,
+    "owner": true,
+    "prototype": true,
+    "reattach": true,
+    "reflected": "written",
+    "removed": true,
+    "setReturn": true,
+    "stringRemoval": true
+  }
+}

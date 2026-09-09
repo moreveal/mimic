@@ -1,0 +1,27 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "result": {
+    "split": {
+      "out": "\ud83d\ude42A",
+      "error": ""
+    },
+    "bom": {
+      "out": "\ufeffA",
+      "error": ""
+    },
+    "flush": {
+      "out": "\ufffd",
+      "error": ""
+    },
+    "fatal": {
+      "out": "",
+      "error": "TypeError"
+    },
+    "invalid": {
+      "out": "",
+      "error": "TypeError"
+    },
+    "tag": "[object TextDecoderStream]",
+    "encoding": "utf-8"
+  }
+}

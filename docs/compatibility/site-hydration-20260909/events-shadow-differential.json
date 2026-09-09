@@ -1,0 +1,82 @@
+{
+  "chrome": {
+    "log": [
+      [
+        "host",
+        true,
+        2,
+        "host",
+        false
+      ],
+      [
+        "shadow",
+        true,
+        1,
+        "child",
+        true
+      ],
+      [
+        "child",
+        true,
+        2,
+        "child",
+        true
+      ],
+      [
+        "child",
+        false,
+        2,
+        "child",
+        true
+      ],
+      [
+        "host",
+        false,
+        2,
+        "host",
+        false
+      ]
+    ],
+    "target": true
+  },
+  "mimic": {
+    "log": [
+      [
+        "host",
+        true,
+        2,
+        "host",
+        false
+      ],
+      [
+        "shadow",
+        true,
+        1,
+        "child",
+        true
+      ],
+      [
+        "child",
+        true,
+        2,
+        "child",
+        true
+      ],
+      [
+        "child",
+        false,
+        2,
+        "child",
+        true
+      ],
+      [
+        "host",
+        false,
+        2,
+        "host",
+        false
+      ]
+    ],
+    "target": true
+  }
+}

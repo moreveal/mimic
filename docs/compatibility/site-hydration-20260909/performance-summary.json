@@ -1,0 +1,55 @@
+{
+  "sourceRevision": "40581bd59d4c478ae9659269145d35ec3d3b53e0",
+  "executableSha256": "82af7b3dded6fc3cf431ffd7a18b2a7ad512515b8ed9e3dd46228adc8d496761",
+  "frozenHarnessSha256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7",
+  "finished": "2026-09-09T07:08:42.342150+04:00",
+  "correctness": {
+    "workloads": 6,
+    "allValid": true
+  },
+  "warmMedians": {
+    "dom": {
+      "session_create_ms": 2.1943000028841197,
+      "execution_ms": 107.60970000410452,
+      "completion_ms": 158.75159999995958
+    },
+    "static": {
+      "session_create_ms": 2.2911999985808507,
+      "execution_ms": 2.5397999997949228,
+      "completion_ms": 53.95439999119844
+    },
+    "react": {
+      "session_create_ms": 2.7174999995622784,
+      "execution_ms": 51.307199988514185,
+      "completion_ms": 109.9155999982031
+    }
+  },
+  "concurrency": {
+    "10": {
+      "throughputMedian": 56.07804718315809,
+      "allValid": true
+    },
+    "25": {
+      "throughputMedian": 73.91555532057745,
+      "allValid": true
+    }
+  },
+  "memory": [
+    {
+      "workload": "static",
+      "n": 10,
+      "marginal_rss_mib": 26.769140625,
+      "marginal_private_mib": 26.8,
+      "stop_reason": null,
+      "afterRecoveryRSSMiB": 102.0625
+    },
+    {
+      "workload": "react",
+      "n": 10,
+      "marginal_rss_mib": 31.95390625,
+      "marginal_private_mib": 32.2953125,
+      "stop_reason": null,
+      "afterRecoveryRSSMiB": 118.91796875
+    }
+  ]
+}

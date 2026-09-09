@@ -1,0 +1,24 @@
+{
+  "chrome": {
+    "ran": false,
+    "continued": true,
+    "errors": [
+      true,
+      true
+    ],
+    "dynamic": "error",
+    "status": 403,
+    "body": "globalThis.rejectedScriptRan=true;"
+  },
+  "mimic": {
+    "body": "globalThis.rejectedScriptRan=true;",
+    "continued": true,
+    "dynamic": "error",
+    "errors": [
+      true,
+      true
+    ],
+    "ran": false,
+    "status": 403
+  }
+}
