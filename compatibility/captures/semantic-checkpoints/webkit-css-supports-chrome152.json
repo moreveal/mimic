@@ -1,0 +1,37 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/webkit_css_supports_oracle.js",
+    "fixtureSHA256": "41dae2aac68d3497ee12b13c69ad44818865de517691d422cd7cd26d405bafe5",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "(-webkit-appearance: none)": true,
+    "(-webkit-appearance: bad)": false,
+    "not (-webkit-appearance: bad)": true,
+    "(-webkit-appearance: none) and (-webkit-user-select: text)": true,
+    "(-webkit-appearance: bad) or (-webkit-user-select: text)": true,
+    "((-webkit-appearance: none))": true,
+    "not bad": false,
+    "not": false,
+    "not ()": true,
+    "()": false,
+    "(foo)": false,
+    "not (foo)": true,
+    "(-webkit-appearance: none) and": false,
+    "(-webkit-appearance: none) or": false,
+    "(-webkit-appearance: none) and (-webkit-user-select: text) or (-webkit-user-drag: none)": false,
+    "(-webkit-appearance: var(--x, auto))": true,
+    "(-webkit-appearance: AUTO)": true,
+    "(-webkit-appearance: auto !important)": true,
+    "(-webkit-appearance: )": false,
+    "(-webkit-appearance: none) AND (-webkit-user-select: text)": true,
+    "NOT (-webkit-appearance: bad)": true
+  }
+}

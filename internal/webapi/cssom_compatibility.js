@@ -21,7 +21,7 @@ const constructedStyleSheets = (() => {
     return values;
   }
   function declarationText(block) {
-    return declarations(block).map(node=>node.property+': '+generate(node.value).trim()+(node.important?' !important':'')+';').join(' ');
+    return serializeCSS(parseCSS(declarations(block).map(node=>node.property+': '+generate(node.value).trim()+(node.important?' !important':'')+';').join(' ')));
   }
   function preludeText(node) {
     if(!node)return '';
@@ -41,8 +41,8 @@ const constructedStyleSheets = (() => {
   function makeStyle(state) {
     const target=Object.create(CSSStyleDeclaration.prototype);
     const setText=text=>{const ast=parse(String(text),{context:'declarationList'});state.node.block.children=ast.children;};
-    const names=()=>declarations(state.node.block);
-    const get=name=>names().find(node=>node.property===String(name));
+    const names=()=>Array.from(parse(declarationText(state.node.block),{context:'declarationList'}).children);
+    const get=name=>names().find(node=>node.property===cssName(name));
     Object.defineProperties(target,{
       cssText:{get:()=>declarationText(state.node.block),set:setText,configurable:true},
       length:{get:()=>names().length,configurable:true},
@@ -51,18 +51,18 @@ const constructedStyleSheets = (() => {
       getPropertyValue:{value:name=>{const node=get(name);return node?generate(node.value):''}},
       getPropertyPriority:{value:name=>get(name)?.important?'important':''},
       setProperty:{value:(name,value,priority='')=>{
-        name=String(name);value=String(value);priority=String(priority).toLowerCase();
+        name=cssName(name);if(/^webkit/i.test(name))return;value=normalizeCSSValue(name,value);if(value===null)return;priority=String(priority).toLowerCase();
         if(priority&&priority!=='important')return;
         const replacement=value?name+':'+value+(priority?' !important':'')+';':'';
         let found=false;
         const next=names().map(node=>{if(node.property!==name)return generate(node)+';';found=true;return replacement}).join('');
         setText(next+(!found?replacement:''));
       }},
-      removeProperty:{value:name=>{const old=target.getPropertyValue(name);target.setProperty(name,'');return old;}}
+      removeProperty:{value:name=>{const old=target.getPropertyValue(name);target.setProperty(name,'');return webkitCSSLegacyBreakShorthands.has(String(name).toLowerCase())?'':old;}}
     });
     return new Proxy(target,{
-      get(object,key,receiver){if(typeof key==='string'&&/^\d+$/.test(key))return names()[Number(key)]?.property; if(typeof key==='string'&&!(key in object))return target.getPropertyValue(key.replace(/[A-Z]/g,c=>'-'+c.toLowerCase()));return Reflect.get(object,key,receiver)},
-      set(object,key,value,receiver){if(typeof key==='string'&&key!=='cssText'&&!(key in object)){target.setProperty(key.replace(/[A-Z]/g,c=>'-'+c.toLowerCase()),value);return true}return Reflect.set(object,key,value,receiver)}
+      get(object,key,receiver){if(typeof key==='string'&&/^\d+$/.test(key))return names()[Number(key)]?.property; if(typeof key==='string'&&!(key in object))return target.getPropertyValue(cssJSName(key));return Reflect.get(object,key,receiver)},
+      set(object,key,value,receiver){if(typeof key==='string'&&key!=='cssText'&&!(key in object)){target.setProperty(cssJSName(key),value);return true}return Reflect.set(object,key,value,receiver)}
     });
   }
   function makeRule(node,sheet,parent=null) {

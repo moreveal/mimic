@@ -1,0 +1,69 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/webkit_css_aliases_oracle.js",
+    "fixtureSHA256": "7067098473c1e65477f5f8562aadcf8731ad91fd89463c1ea22a264419a3ea46",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "webkitAppearance": {
+      "has": true,
+      "type": "string",
+      "own": true
+    },
+    "WebkitAppearance": {
+      "has": true,
+      "type": "string",
+      "own": true
+    },
+    "-webkit-appearance": {
+      "has": true,
+      "type": "string",
+      "own": true
+    },
+    "appearance": {
+      "has": true,
+      "type": "string",
+      "own": true
+    },
+    "webkitNotReal": {
+      "has": false,
+      "type": "undefined",
+      "own": false
+    },
+    "write": [
+      "appearance: button;",
+      "button",
+      "button",
+      "button",
+      1,
+      "appearance",
+      "button"
+    ],
+    "invalid": "appearance: button;",
+    "camelMethod": "appearance: button;",
+    "upper": [
+      "appearance: none !important;",
+      "important",
+      "important"
+    ],
+    "remove": [
+      "none",
+      ""
+    ],
+    "priority": [
+      "appearance: button !important;",
+      "button"
+    ],
+    "reset": [
+      "appearance: auto;",
+      "auto"
+    ]
+  }
+}

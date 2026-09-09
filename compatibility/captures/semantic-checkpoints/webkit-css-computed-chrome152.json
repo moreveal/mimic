@@ -1,0 +1,100 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/webkit_css_computed_oracle.js",
+    "fixtureSHA256": "c401b04ffc4a3347f6968f9407cf4c8b04eac4b35d28136989e1cee8aa1b1fd3",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "appearance": [
+      "none",
+      "none",
+      "none",
+      "button"
+    ],
+    "-webkit-appearance": [
+      "none",
+      "none",
+      "none",
+      "button"
+    ],
+    "-webkit-user-select": [
+      "auto",
+      "none",
+      "auto",
+      "none"
+    ],
+    "-webkit-user-drag": [
+      "auto",
+      "auto",
+      "auto",
+      "none"
+    ],
+    "-webkit-user-modify": [
+      "read-only",
+      "read-write",
+      "read-only",
+      "read-write"
+    ],
+    "-webkit-box-align": [
+      "stretch",
+      "stretch",
+      "stretch",
+      "center"
+    ],
+    "-webkit-box-pack": [
+      "start",
+      "start",
+      "start",
+      "end"
+    ],
+    "-webkit-box-orient": [
+      "horizontal",
+      "horizontal",
+      "horizontal",
+      "vertical"
+    ],
+    "-webkit-box-direction": [
+      "normal",
+      "normal",
+      "normal",
+      "reverse"
+    ],
+    "-webkit-font-smoothing": [
+      "auto",
+      "none",
+      "auto",
+      "none"
+    ],
+    "-webkit-text-security": [
+      "none",
+      "disc",
+      "none",
+      "disc"
+    ],
+    "-webkit-print-color-adjust": [
+      "economy",
+      "exact",
+      "economy",
+      "exact"
+    ],
+    "-webkit-backface-visibility": [
+      "visible",
+      "visible",
+      "visible",
+      "hidden"
+    ],
+    "-webkit-transform-style": [
+      "flat",
+      "flat",
+      "flat",
+      "preserve-3d"
+    ]
+  }
+}
