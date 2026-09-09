@@ -1,0 +1,1853 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "fixture": "internal/browser/testdata/webgl_capabilities_oracle.js",
+    "fixtureSHA256": "a33981494e86510057d0715a9e1178c821b3d64042e2ea605520255f3867db5b"
+  },
+  "result": {
+    "webgl": {
+      "parameters": {
+        "2963": {
+          "name": "STENCIL_VALUE_MASK",
+          "type": "Number",
+          "value": 4294967295,
+          "error": 0
+        },
+        "2968": {
+          "name": "STENCIL_WRITEMASK",
+          "type": "Number",
+          "value": 4294967295,
+          "error": 0
+        },
+        "3386": {
+          "name": "MAX_VIEWPORT_DIMS",
+          "type": "Int32Array",
+          "value": [
+            32767,
+            32767
+          ],
+          "error": 0
+        },
+        "3408": {
+          "name": "SUBPIXEL_BITS",
+          "type": "Number",
+          "value": 4,
+          "error": 0
+        },
+        "3410": {
+          "name": "RED_BITS",
+          "type": "Number",
+          "value": 8,
+          "error": 0
+        },
+        "3411": {
+          "name": "GREEN_BITS",
+          "type": "Number",
+          "value": 8,
+          "error": 0
+        },
+        "3412": {
+          "name": "BLUE_BITS",
+          "type": "Number",
+          "value": 8,
+          "error": 0
+        },
+        "3413": {
+          "name": "ALPHA_BITS",
+          "type": "Number",
+          "value": 8,
+          "error": 0
+        },
+        "3414": {
+          "name": "DEPTH_BITS",
+          "type": "Number",
+          "value": 24,
+          "error": 0
+        },
+        "3415": {
+          "name": "STENCIL_BITS",
+          "type": "Number",
+          "value": 0,
+          "error": 0
+        },
+        "32883": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "32936": {
+          "name": "SAMPLE_BUFFERS",
+          "type": "Number",
+          "value": 0,
+          "error": 0
+        },
+        "32937": {
+          "name": "SAMPLES",
+          "type": "Number",
+          "value": 0,
+          "error": 0
+        },
+        "33000": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "33001": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "33901": {
+          "name": "ALIASED_POINT_SIZE_RANGE",
+          "type": "Float32Array",
+          "value": [
+            1,
+            1024
+          ],
+          "error": 0
+        },
+        "33902": {
+          "name": "ALIASED_LINE_WIDTH_RANGE",
+          "type": "Float32Array",
+          "value": [
+            1,
+            1
+          ],
+          "error": 0
+        },
+        "34024": {
+          "name": "MAX_RENDERBUFFER_SIZE",
+          "type": "Number",
+          "value": 16384,
+          "error": 0
+        },
+        "34045": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "34047": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "34076": {
+          "name": "MAX_CUBE_MAP_TEXTURE_SIZE",
+          "type": "Number",
+          "value": 16384,
+          "error": 0
+        },
+        "34467": {
+          "name": "COMPRESSED_TEXTURE_FORMATS",
+          "type": "Uint32Array",
+          "value": [],
+          "error": 0
+        },
+        "34852": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "34921": {
+          "name": "MAX_VERTEX_ATTRIBS",
+          "type": "Number",
+          "value": 16,
+          "error": 0
+        },
+        "34930": {
+          "name": "MAX_TEXTURE_IMAGE_UNITS",
+          "type": "Number",
+          "value": 16,
+          "error": 0
+        },
+        "35071": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "35076": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "35077": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "35371": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "35373": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "35374": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "35375": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "35376": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "35377": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "35379": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "35380": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "35657": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "35658": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "35659": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "35660": {
+          "name": "MAX_VERTEX_TEXTURE_IMAGE_UNITS",
+          "type": "Number",
+          "value": 16,
+          "error": 0
+        },
+        "35661": {
+          "name": "MAX_COMBINED_TEXTURE_IMAGE_UNITS",
+          "type": "Number",
+          "value": 32,
+          "error": 0
+        },
+        "35723": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "35738": {
+          "name": "IMPLEMENTATION_COLOR_READ_TYPE",
+          "type": "Number",
+          "value": 5121,
+          "error": 0
+        },
+        "35739": {
+          "name": "IMPLEMENTATION_COLOR_READ_FORMAT",
+          "type": "Number",
+          "value": 6408,
+          "error": 0
+        },
+        "35968": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "35978": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "35979": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "36004": {
+          "name": "STENCIL_BACK_VALUE_MASK",
+          "type": "Number",
+          "value": 4294967295,
+          "error": 0
+        },
+        "36005": {
+          "name": "STENCIL_BACK_WRITEMASK",
+          "type": "Number",
+          "value": 4294967295,
+          "error": 0
+        },
+        "36063": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "36183": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "36203": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "36347": {
+          "name": "MAX_VERTEX_UNIFORM_VECTORS",
+          "type": "Number",
+          "value": 4095,
+          "error": 0
+        },
+        "36348": {
+          "name": "MAX_VARYING_VECTORS",
+          "type": "Number",
+          "value": 30,
+          "error": 0
+        },
+        "36349": {
+          "name": "MAX_FRAGMENT_UNIFORM_VECTORS",
+          "type": "Number",
+          "value": 1024,
+          "error": 0
+        },
+        "36795": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "37137": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "37154": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "37157": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "37447": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        }
+      },
+      "samples": {},
+      "invalid": [],
+      "extensions": [
+        "ANGLE_instanced_arrays",
+        "EXT_blend_minmax",
+        "EXT_clip_control",
+        "EXT_color_buffer_half_float",
+        "EXT_depth_clamp",
+        "EXT_disjoint_timer_query",
+        "EXT_float_blend",
+        "EXT_frag_depth",
+        "EXT_polygon_offset_clamp",
+        "EXT_shader_texture_lod",
+        "EXT_texture_compression_bptc",
+        "EXT_texture_compression_rgtc",
+        "EXT_texture_filter_anisotropic",
+        "EXT_texture_mirror_clamp_to_edge",
+        "EXT_sRGB",
+        "KHR_parallel_shader_compile",
+        "OES_element_index_uint",
+        "OES_fbo_render_mipmap",
+        "OES_standard_derivatives",
+        "OES_texture_float",
+        "OES_texture_float_linear",
+        "OES_texture_half_float",
+        "OES_texture_half_float_linear",
+        "OES_vertex_array_object",
+        "WEBGL_blend_func_extended",
+        "WEBGL_color_buffer_float",
+        "WEBGL_compressed_texture_s3tc",
+        "WEBGL_compressed_texture_s3tc_srgb",
+        "WEBGL_debug_renderer_info",
+        "WEBGL_debug_shaders",
+        "WEBGL_depth_texture",
+        "WEBGL_draw_buffers",
+        "WEBGL_lose_context",
+        "WEBGL_multi_draw",
+        "WEBGL_polygon_mode"
+      ],
+      "extensionResults": {
+        "EXT_texture_filter_anisotropic": {
+          "available": true,
+          "parameters": {
+            "34047": {
+              "type": "Number",
+              "value": 16,
+              "error": 0
+            },
+            "35723": {
+              "type": "Null",
+              "value": null,
+              "error": 1280
+            }
+          },
+          "samples": {}
+        },
+        "OES_standard_derivatives": {
+          "available": true,
+          "parameters": {
+            "34047": {
+              "type": "Number",
+              "value": 16,
+              "error": 0
+            },
+            "35723": {
+              "type": "Number",
+              "value": 4352,
+              "error": 0
+            }
+          },
+          "samples": {}
+        },
+        "EXT_color_buffer_float": {
+          "available": false,
+          "parameters": {
+            "34047": {
+              "type": "Number",
+              "value": 16,
+              "error": 0
+            },
+            "35723": {
+              "type": "Number",
+              "value": 4352,
+              "error": 0
+            }
+          },
+          "samples": {}
+        },
+        "EXT_color_buffer_half_float": {
+          "available": true,
+          "parameters": {
+            "34047": {
+              "type": "Number",
+              "value": 16,
+              "error": 0
+            },
+            "35723": {
+              "type": "Number",
+              "value": 4352,
+              "error": 0
+            }
+          },
+          "samples": {}
+        }
+      },
+      "precision": {
+        "35632,36336": {
+          "value": {
+            "rangeMin": 127,
+            "rangeMax": 127,
+            "precision": 23
+          },
+          "error": 0
+        },
+        "35632,36337": {
+          "value": {
+            "rangeMin": 127,
+            "rangeMax": 127,
+            "precision": 23
+          },
+          "error": 0
+        },
+        "35632,36338": {
+          "value": {
+            "rangeMin": 127,
+            "rangeMax": 127,
+            "precision": 23
+          },
+          "error": 0
+        },
+        "35632,36339": {
+          "value": {
+            "rangeMin": 31,
+            "rangeMax": 30,
+            "precision": 0
+          },
+          "error": 0
+        },
+        "35632,36340": {
+          "value": {
+            "rangeMin": 31,
+            "rangeMax": 30,
+            "precision": 0
+          },
+          "error": 0
+        },
+        "35632,36341": {
+          "value": {
+            "rangeMin": 31,
+            "rangeMax": 30,
+            "precision": 0
+          },
+          "error": 0
+        },
+        "35632,0": {
+          "value": null,
+          "error": 1280
+        },
+        "35633,36336": {
+          "value": {
+            "rangeMin": 127,
+            "rangeMax": 127,
+            "precision": 23
+          },
+          "error": 0
+        },
+        "35633,36337": {
+          "value": {
+            "rangeMin": 127,
+            "rangeMax": 127,
+            "precision": 23
+          },
+          "error": 0
+        },
+        "35633,36338": {
+          "value": {
+            "rangeMin": 127,
+            "rangeMax": 127,
+            "precision": 23
+          },
+          "error": 0
+        },
+        "35633,36339": {
+          "value": {
+            "rangeMin": 31,
+            "rangeMax": 30,
+            "precision": 0
+          },
+          "error": 0
+        },
+        "35633,36340": {
+          "value": {
+            "rangeMin": 31,
+            "rangeMax": 30,
+            "precision": 0
+          },
+          "error": 0
+        },
+        "35633,36341": {
+          "value": {
+            "rangeMin": 31,
+            "rangeMax": 30,
+            "precision": 0
+          },
+          "error": 0
+        },
+        "35633,0": {
+          "value": null,
+          "error": 1280
+        },
+        "0,36336": {
+          "value": null,
+          "error": 1280
+        },
+        "0,36337": {
+          "value": null,
+          "error": 1280
+        },
+        "0,36338": {
+          "value": null,
+          "error": 1280
+        },
+        "0,36339": {
+          "value": null,
+          "error": 1280
+        },
+        "0,36340": {
+          "value": null,
+          "error": 1280
+        },
+        "0,36341": {
+          "value": null,
+          "error": 1280
+        },
+        "0,0": {
+          "value": null,
+          "error": 1280
+        }
+      }
+    },
+    "webgl2": {
+      "parameters": {
+        "2963": {
+          "name": "STENCIL_VALUE_MASK",
+          "type": "Number",
+          "value": 4294967295,
+          "error": 0
+        },
+        "2968": {
+          "name": "STENCIL_WRITEMASK",
+          "type": "Number",
+          "value": 4294967295,
+          "error": 0
+        },
+        "3386": {
+          "name": "MAX_VIEWPORT_DIMS",
+          "type": "Int32Array",
+          "value": [
+            32767,
+            32767
+          ],
+          "error": 0
+        },
+        "3408": {
+          "name": "SUBPIXEL_BITS",
+          "type": "Number",
+          "value": 4,
+          "error": 0
+        },
+        "3410": {
+          "name": "RED_BITS",
+          "type": "Number",
+          "value": 8,
+          "error": 0
+        },
+        "3411": {
+          "name": "GREEN_BITS",
+          "type": "Number",
+          "value": 8,
+          "error": 0
+        },
+        "3412": {
+          "name": "BLUE_BITS",
+          "type": "Number",
+          "value": 8,
+          "error": 0
+        },
+        "3413": {
+          "name": "ALPHA_BITS",
+          "type": "Number",
+          "value": 8,
+          "error": 0
+        },
+        "3414": {
+          "name": "DEPTH_BITS",
+          "type": "Number",
+          "value": 24,
+          "error": 0
+        },
+        "3415": {
+          "name": "STENCIL_BITS",
+          "type": "Number",
+          "value": 0,
+          "error": 0
+        },
+        "32883": {
+          "name": "MAX_3D_TEXTURE_SIZE",
+          "type": "Number",
+          "value": 2048,
+          "error": 0
+        },
+        "32936": {
+          "name": "SAMPLE_BUFFERS",
+          "type": "Number",
+          "value": 0,
+          "error": 0
+        },
+        "32937": {
+          "name": "SAMPLES",
+          "type": "Number",
+          "value": 0,
+          "error": 0
+        },
+        "33000": {
+          "name": "MAX_ELEMENTS_VERTICES",
+          "type": "Number",
+          "value": 2147483647,
+          "error": 0
+        },
+        "33001": {
+          "name": "MAX_ELEMENTS_INDICES",
+          "type": "Number",
+          "value": 2147483647,
+          "error": 0
+        },
+        "33901": {
+          "name": "ALIASED_POINT_SIZE_RANGE",
+          "type": "Float32Array",
+          "value": [
+            1,
+            1024
+          ],
+          "error": 0
+        },
+        "33902": {
+          "name": "ALIASED_LINE_WIDTH_RANGE",
+          "type": "Float32Array",
+          "value": [
+            1,
+            1
+          ],
+          "error": 0
+        },
+        "34024": {
+          "name": "MAX_RENDERBUFFER_SIZE",
+          "type": "Number",
+          "value": 16384,
+          "error": 0
+        },
+        "34045": {
+          "name": "MAX_TEXTURE_LOD_BIAS",
+          "type": "Number",
+          "value": 2,
+          "error": 0
+        },
+        "34047": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "34076": {
+          "name": "MAX_CUBE_MAP_TEXTURE_SIZE",
+          "type": "Number",
+          "value": 16384,
+          "error": 0
+        },
+        "34467": {
+          "name": "COMPRESSED_TEXTURE_FORMATS",
+          "type": "Uint32Array",
+          "value": [],
+          "error": 0
+        },
+        "34852": {
+          "name": "MAX_DRAW_BUFFERS",
+          "type": "Number",
+          "value": 8,
+          "error": 0
+        },
+        "34921": {
+          "name": "MAX_VERTEX_ATTRIBS",
+          "type": "Number",
+          "value": 16,
+          "error": 0
+        },
+        "34930": {
+          "name": "MAX_TEXTURE_IMAGE_UNITS",
+          "type": "Number",
+          "value": 16,
+          "error": 0
+        },
+        "35071": {
+          "name": "MAX_ARRAY_TEXTURE_LAYERS",
+          "type": "Number",
+          "value": 2048,
+          "error": 0
+        },
+        "35076": {
+          "name": "MIN_PROGRAM_TEXEL_OFFSET",
+          "type": "Number",
+          "value": -8,
+          "error": 0
+        },
+        "35077": {
+          "name": "MAX_PROGRAM_TEXEL_OFFSET",
+          "type": "Number",
+          "value": 7,
+          "error": 0
+        },
+        "35371": {
+          "name": "MAX_VERTEX_UNIFORM_BLOCKS",
+          "type": "Number",
+          "value": 12,
+          "error": 0
+        },
+        "35373": {
+          "name": "MAX_FRAGMENT_UNIFORM_BLOCKS",
+          "type": "Number",
+          "value": 12,
+          "error": 0
+        },
+        "35374": {
+          "name": "MAX_COMBINED_UNIFORM_BLOCKS",
+          "type": "Number",
+          "value": 24,
+          "error": 0
+        },
+        "35375": {
+          "name": "MAX_UNIFORM_BUFFER_BINDINGS",
+          "type": "Number",
+          "value": 24,
+          "error": 0
+        },
+        "35376": {
+          "name": "MAX_UNIFORM_BLOCK_SIZE",
+          "type": "Number",
+          "value": 65536,
+          "error": 0
+        },
+        "35377": {
+          "name": "MAX_COMBINED_VERTEX_UNIFORM_COMPONENTS",
+          "type": "Number",
+          "value": 212988,
+          "error": 0
+        },
+        "35379": {
+          "name": "MAX_COMBINED_FRAGMENT_UNIFORM_COMPONENTS",
+          "type": "Number",
+          "value": 200704,
+          "error": 0
+        },
+        "35380": {
+          "name": "UNIFORM_BUFFER_OFFSET_ALIGNMENT",
+          "type": "Number",
+          "value": 256,
+          "error": 0
+        },
+        "35657": {
+          "name": "MAX_FRAGMENT_UNIFORM_COMPONENTS",
+          "type": "Number",
+          "value": 4096,
+          "error": 0
+        },
+        "35658": {
+          "name": "MAX_VERTEX_UNIFORM_COMPONENTS",
+          "type": "Number",
+          "value": 16380,
+          "error": 0
+        },
+        "35659": {
+          "name": "MAX_VARYING_COMPONENTS",
+          "type": "Number",
+          "value": 120,
+          "error": 0
+        },
+        "35660": {
+          "name": "MAX_VERTEX_TEXTURE_IMAGE_UNITS",
+          "type": "Number",
+          "value": 16,
+          "error": 0
+        },
+        "35661": {
+          "name": "MAX_COMBINED_TEXTURE_IMAGE_UNITS",
+          "type": "Number",
+          "value": 32,
+          "error": 0
+        },
+        "35723": {
+          "name": "FRAGMENT_SHADER_DERIVATIVE_HINT",
+          "type": "Number",
+          "value": 4352,
+          "error": 0
+        },
+        "35738": {
+          "name": "IMPLEMENTATION_COLOR_READ_TYPE",
+          "type": "Number",
+          "value": 5121,
+          "error": 0
+        },
+        "35739": {
+          "name": "IMPLEMENTATION_COLOR_READ_FORMAT",
+          "type": "Number",
+          "value": 6408,
+          "error": 0
+        },
+        "35968": {
+          "name": "MAX_TRANSFORM_FEEDBACK_SEPARATE_COMPONENTS",
+          "type": "Number",
+          "value": 4,
+          "error": 0
+        },
+        "35978": {
+          "name": "MAX_TRANSFORM_FEEDBACK_INTERLEAVED_COMPONENTS",
+          "type": "Number",
+          "value": 120,
+          "error": 0
+        },
+        "35979": {
+          "name": "MAX_TRANSFORM_FEEDBACK_SEPARATE_ATTRIBS",
+          "type": "Number",
+          "value": 4,
+          "error": 0
+        },
+        "36004": {
+          "name": "STENCIL_BACK_VALUE_MASK",
+          "type": "Number",
+          "value": 4294967295,
+          "error": 0
+        },
+        "36005": {
+          "name": "STENCIL_BACK_WRITEMASK",
+          "type": "Number",
+          "value": 4294967295,
+          "error": 0
+        },
+        "36063": {
+          "name": "MAX_COLOR_ATTACHMENTS",
+          "type": "Number",
+          "value": 8,
+          "error": 0
+        },
+        "36183": {
+          "name": "MAX_SAMPLES",
+          "type": "Number",
+          "value": 8,
+          "error": 0
+        },
+        "36203": {
+          "name": "MAX_ELEMENT_INDEX",
+          "type": "Number",
+          "value": 4294967294,
+          "error": 0
+        },
+        "36347": {
+          "name": "MAX_VERTEX_UNIFORM_VECTORS",
+          "type": "Number",
+          "value": 4095,
+          "error": 0
+        },
+        "36348": {
+          "name": "MAX_VARYING_VECTORS",
+          "type": "Number",
+          "value": 30,
+          "error": 0
+        },
+        "36349": {
+          "name": "MAX_FRAGMENT_UNIFORM_VECTORS",
+          "type": "Number",
+          "value": 1024,
+          "error": 0
+        },
+        "36795": {
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "37137": {
+          "name": "MAX_SERVER_WAIT_TIMEOUT",
+          "type": "Number",
+          "value": 0,
+          "error": 0
+        },
+        "37154": {
+          "name": "MAX_VERTEX_OUTPUT_COMPONENTS",
+          "type": "Number",
+          "value": 120,
+          "error": 0
+        },
+        "37157": {
+          "name": "MAX_FRAGMENT_INPUT_COMPONENTS",
+          "type": "Number",
+          "value": 120,
+          "error": 0
+        },
+        "37447": {
+          "name": "MAX_CLIENT_WAIT_TIMEOUT_WEBGL",
+          "type": "Number",
+          "value": 0,
+          "error": 0
+        }
+      },
+      "samples": {
+        "32849": {
+          "name": "RGB8",
+          "type": "Int32Array",
+          "value": [
+            8,
+            4,
+            2,
+            1
+          ],
+          "error": 0
+        },
+        "32854": {
+          "name": "RGBA4",
+          "type": "Int32Array",
+          "value": [
+            8,
+            4,
+            2,
+            1
+          ],
+          "error": 0
+        },
+        "32855": {
+          "name": "RGB5_A1",
+          "type": "Int32Array",
+          "value": [
+            8,
+            4,
+            2,
+            1
+          ],
+          "error": 0
+        },
+        "32856": {
+          "name": "RGBA8",
+          "type": "Int32Array",
+          "value": [
+            8,
+            4,
+            2,
+            1
+          ],
+          "error": 0
+        },
+        "32857": {
+          "name": "RGB10_A2",
+          "type": "Int32Array",
+          "value": [
+            8,
+            4,
+            2,
+            1
+          ],
+          "error": 0
+        },
+        "33189": {
+          "name": "DEPTH_COMPONENT16",
+          "type": "Int32Array",
+          "value": [
+            8,
+            4,
+            2,
+            1
+          ],
+          "error": 0
+        },
+        "33190": {
+          "name": "DEPTH_COMPONENT24",
+          "type": "Int32Array",
+          "value": [
+            8,
+            4,
+            2,
+            1
+          ],
+          "error": 0
+        },
+        "33321": {
+          "name": "R8",
+          "type": "Int32Array",
+          "value": [
+            8,
+            4,
+            2,
+            1
+          ],
+          "error": 0
+        },
+        "33323": {
+          "name": "RG8",
+          "type": "Int32Array",
+          "value": [
+            8,
+            4,
+            2,
+            1
+          ],
+          "error": 0
+        },
+        "33325": {
+          "name": "R16F",
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "33326": {
+          "name": "R32F",
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "33327": {
+          "name": "RG16F",
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "33328": {
+          "name": "RG32F",
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "33329": {
+          "name": "R8I",
+          "type": "Int32Array",
+          "value": [],
+          "error": 0
+        },
+        "33330": {
+          "name": "R8UI",
+          "type": "Int32Array",
+          "value": [],
+          "error": 0
+        },
+        "33331": {
+          "name": "R16I",
+          "type": "Int32Array",
+          "value": [],
+          "error": 0
+        },
+        "33332": {
+          "name": "R16UI",
+          "type": "Int32Array",
+          "value": [],
+          "error": 0
+        },
+        "33333": {
+          "name": "R32I",
+          "type": "Int32Array",
+          "value": [],
+          "error": 0
+        },
+        "33334": {
+          "name": "R32UI",
+          "type": "Int32Array",
+          "value": [],
+          "error": 0
+        },
+        "33335": {
+          "name": "RG8I",
+          "type": "Int32Array",
+          "value": [],
+          "error": 0
+        },
+        "33336": {
+          "name": "RG8UI",
+          "type": "Int32Array",
+          "value": [],
+          "error": 0
+        },
+        "33337": {
+          "name": "RG16I",
+          "type": "Int32Array",
+          "value": [],
+          "error": 0
+        },
+        "33338": {
+          "name": "RG16UI",
+          "type": "Int32Array",
+          "value": [],
+          "error": 0
+        },
+        "33339": {
+          "name": "RG32I",
+          "type": "Int32Array",
+          "value": [],
+          "error": 0
+        },
+        "33340": {
+          "name": "RG32UI",
+          "type": "Int32Array",
+          "value": [],
+          "error": 0
+        },
+        "34836": {
+          "name": "RGBA32F",
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "34837": {
+          "name": "RGB32F",
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "34842": {
+          "name": "RGBA16F",
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "34843": {
+          "name": "RGB16F",
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "35056": {
+          "name": "DEPTH24_STENCIL8",
+          "type": "Int32Array",
+          "value": [
+            8,
+            4,
+            2,
+            1
+          ],
+          "error": 0
+        },
+        "35898": {
+          "name": "R11F_G11F_B10F",
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "35901": {
+          "name": "RGB9_E5",
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "35905": {
+          "name": "SRGB8",
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "35907": {
+          "name": "SRGB8_ALPHA8",
+          "type": "Int32Array",
+          "value": [
+            8,
+            4,
+            2,
+            1
+          ],
+          "error": 0
+        },
+        "36012": {
+          "name": "DEPTH_COMPONENT32F",
+          "type": "Int32Array",
+          "value": [
+            8,
+            4,
+            2,
+            1
+          ],
+          "error": 0
+        },
+        "36013": {
+          "name": "DEPTH32F_STENCIL8",
+          "type": "Int32Array",
+          "value": [
+            8,
+            4,
+            2,
+            1
+          ],
+          "error": 0
+        },
+        "36168": {
+          "name": "STENCIL_INDEX8",
+          "type": "Int32Array",
+          "value": [
+            8,
+            4,
+            2,
+            1
+          ],
+          "error": 0
+        },
+        "36194": {
+          "name": "RGB565",
+          "type": "Int32Array",
+          "value": [
+            8,
+            4,
+            2,
+            1
+          ],
+          "error": 0
+        },
+        "36208": {
+          "name": "RGBA32UI",
+          "type": "Int32Array",
+          "value": [],
+          "error": 0
+        },
+        "36209": {
+          "name": "RGB32UI",
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "36214": {
+          "name": "RGBA16UI",
+          "type": "Int32Array",
+          "value": [],
+          "error": 0
+        },
+        "36215": {
+          "name": "RGB16UI",
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "36220": {
+          "name": "RGBA8UI",
+          "type": "Int32Array",
+          "value": [],
+          "error": 0
+        },
+        "36221": {
+          "name": "RGB8UI",
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "36226": {
+          "name": "RGBA32I",
+          "type": "Int32Array",
+          "value": [],
+          "error": 0
+        },
+        "36227": {
+          "name": "RGB32I",
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "36232": {
+          "name": "RGBA16I",
+          "type": "Int32Array",
+          "value": [],
+          "error": 0
+        },
+        "36233": {
+          "name": "RGB16I",
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "36238": {
+          "name": "RGBA8I",
+          "type": "Int32Array",
+          "value": [],
+          "error": 0
+        },
+        "36239": {
+          "name": "RGB8I",
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "36756": {
+          "name": "R8_SNORM",
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "36757": {
+          "name": "RG8_SNORM",
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "36759": {
+          "name": "RGBA8_SNORM",
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        "36975": {
+          "name": "RGB10_A2UI",
+          "type": "Int32Array",
+          "value": [],
+          "error": 0
+        }
+      },
+      "invalid": [
+        {
+          "args": [
+            0,
+            32856,
+            32937
+          ],
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        {
+          "args": [
+            36160,
+            32856,
+            32937
+          ],
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        {
+          "args": [
+            36161,
+            0,
+            32937
+          ],
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        },
+        {
+          "args": [
+            36161,
+            32856,
+            0
+          ],
+          "type": "Null",
+          "value": null,
+          "error": 1280
+        }
+      ],
+      "extensions": [
+        "EXT_clip_control",
+        "EXT_color_buffer_float",
+        "EXT_color_buffer_half_float",
+        "EXT_conservative_depth",
+        "EXT_depth_clamp",
+        "EXT_disjoint_timer_query_webgl2",
+        "EXT_float_blend",
+        "EXT_polygon_offset_clamp",
+        "EXT_render_snorm",
+        "EXT_texture_compression_bptc",
+        "EXT_texture_compression_rgtc",
+        "EXT_texture_filter_anisotropic",
+        "EXT_texture_mirror_clamp_to_edge",
+        "EXT_texture_norm16",
+        "KHR_parallel_shader_compile",
+        "NV_shader_noperspective_interpolation",
+        "OES_draw_buffers_indexed",
+        "OES_sample_variables",
+        "OES_shader_multisample_interpolation",
+        "OES_texture_float_linear",
+        "OVR_multiview2",
+        "WEBGL_blend_func_extended",
+        "WEBGL_clip_cull_distance",
+        "WEBGL_compressed_texture_s3tc",
+        "WEBGL_compressed_texture_s3tc_srgb",
+        "WEBGL_debug_renderer_info",
+        "WEBGL_debug_shaders",
+        "WEBGL_lose_context",
+        "WEBGL_multi_draw",
+        "WEBGL_polygon_mode",
+        "WEBGL_provoking_vertex",
+        "WEBGL_stencil_texturing"
+      ],
+      "extensionResults": {
+        "EXT_texture_filter_anisotropic": {
+          "available": true,
+          "parameters": {
+            "34047": {
+              "type": "Number",
+              "value": 16,
+              "error": 0
+            },
+            "35723": {
+              "type": "Number",
+              "value": 4352,
+              "error": 0
+            }
+          },
+          "samples": {
+            "33325": {
+              "type": "Null",
+              "value": null,
+              "error": 1280
+            },
+            "33326": {
+              "type": "Null",
+              "value": null,
+              "error": 1280
+            },
+            "33327": {
+              "type": "Null",
+              "value": null,
+              "error": 1280
+            },
+            "33328": {
+              "type": "Null",
+              "value": null,
+              "error": 1280
+            },
+            "34836": {
+              "type": "Null",
+              "value": null,
+              "error": 1280
+            },
+            "34842": {
+              "type": "Null",
+              "value": null,
+              "error": 1280
+            },
+            "35898": {
+              "type": "Null",
+              "value": null,
+              "error": 1280
+            }
+          }
+        },
+        "OES_standard_derivatives": {
+          "available": false,
+          "parameters": {
+            "34047": {
+              "type": "Number",
+              "value": 16,
+              "error": 0
+            },
+            "35723": {
+              "type": "Number",
+              "value": 4352,
+              "error": 0
+            }
+          },
+          "samples": {
+            "33325": {
+              "type": "Null",
+              "value": null,
+              "error": 1280
+            },
+            "33326": {
+              "type": "Null",
+              "value": null,
+              "error": 1280
+            },
+            "33327": {
+              "type": "Null",
+              "value": null,
+              "error": 1280
+            },
+            "33328": {
+              "type": "Null",
+              "value": null,
+              "error": 1280
+            },
+            "34836": {
+              "type": "Null",
+              "value": null,
+              "error": 1280
+            },
+            "34842": {
+              "type": "Null",
+              "value": null,
+              "error": 1280
+            },
+            "35898": {
+              "type": "Null",
+              "value": null,
+              "error": 1280
+            }
+          }
+        },
+        "EXT_color_buffer_float": {
+          "available": true,
+          "parameters": {
+            "34047": {
+              "type": "Number",
+              "value": 16,
+              "error": 0
+            },
+            "35723": {
+              "type": "Number",
+              "value": 4352,
+              "error": 0
+            }
+          },
+          "samples": {
+            "33325": {
+              "type": "Int32Array",
+              "value": [
+                8,
+                4,
+                2,
+                1
+              ],
+              "error": 0
+            },
+            "33326": {
+              "type": "Int32Array",
+              "value": [
+                8,
+                4,
+                2,
+                1
+              ],
+              "error": 0
+            },
+            "33327": {
+              "type": "Int32Array",
+              "value": [
+                8,
+                4,
+                2,
+                1
+              ],
+              "error": 0
+            },
+            "33328": {
+              "type": "Int32Array",
+              "value": [
+                8,
+                4,
+                2,
+                1
+              ],
+              "error": 0
+            },
+            "34836": {
+              "type": "Int32Array",
+              "value": [
+                8,
+                4,
+                2,
+                1
+              ],
+              "error": 0
+            },
+            "34842": {
+              "type": "Int32Array",
+              "value": [
+                8,
+                4,
+                2,
+                1
+              ],
+              "error": 0
+            },
+            "35898": {
+              "type": "Int32Array",
+              "value": [
+                8,
+                4,
+                2,
+                1
+              ],
+              "error": 0
+            }
+          }
+        },
+        "EXT_color_buffer_half_float": {
+          "available": true,
+          "parameters": {
+            "34047": {
+              "type": "Number",
+              "value": 16,
+              "error": 0
+            },
+            "35723": {
+              "type": "Number",
+              "value": 4352,
+              "error": 0
+            }
+          },
+          "samples": {
+            "33325": {
+              "type": "Int32Array",
+              "value": [
+                8,
+                4,
+                2,
+                1
+              ],
+              "error": 0
+            },
+            "33326": {
+              "type": "Int32Array",
+              "value": [
+                8,
+                4,
+                2,
+                1
+              ],
+              "error": 0
+            },
+            "33327": {
+              "type": "Int32Array",
+              "value": [
+                8,
+                4,
+                2,
+                1
+              ],
+              "error": 0
+            },
+            "33328": {
+              "type": "Int32Array",
+              "value": [
+                8,
+                4,
+                2,
+                1
+              ],
+              "error": 0
+            },
+            "34836": {
+              "type": "Int32Array",
+              "value": [
+                8,
+                4,
+                2,
+                1
+              ],
+              "error": 0
+            },
+            "34842": {
+              "type": "Int32Array",
+              "value": [
+                8,
+                4,
+                2,
+                1
+              ],
+              "error": 0
+            },
+            "35898": {
+              "type": "Int32Array",
+              "value": [
+                8,
+                4,
+                2,
+                1
+              ],
+              "error": 0
+            }
+          }
+        }
+      },
+      "precision": {
+        "35632,36336": {
+          "value": {
+            "rangeMin": 127,
+            "rangeMax": 127,
+            "precision": 23
+          },
+          "error": 0
+        },
+        "35632,36337": {
+          "value": {
+            "rangeMin": 127,
+            "rangeMax": 127,
+            "precision": 23
+          },
+          "error": 0
+        },
+        "35632,36338": {
+          "value": {
+            "rangeMin": 127,
+            "rangeMax": 127,
+            "precision": 23
+          },
+          "error": 0
+        },
+        "35632,36339": {
+          "value": {
+            "rangeMin": 31,
+            "rangeMax": 30,
+            "precision": 0
+          },
+          "error": 0
+        },
+        "35632,36340": {
+          "value": {
+            "rangeMin": 31,
+            "rangeMax": 30,
+            "precision": 0
+          },
+          "error": 0
+        },
+        "35632,36341": {
+          "value": {
+            "rangeMin": 31,
+            "rangeMax": 30,
+            "precision": 0
+          },
+          "error": 0
+        },
+        "35632,0": {
+          "value": null,
+          "error": 1280
+        },
+        "35633,36336": {
+          "value": {
+            "rangeMin": 127,
+            "rangeMax": 127,
+            "precision": 23
+          },
+          "error": 0
+        },
+        "35633,36337": {
+          "value": {
+            "rangeMin": 127,
+            "rangeMax": 127,
+            "precision": 23
+          },
+          "error": 0
+        },
+        "35633,36338": {
+          "value": {
+            "rangeMin": 127,
+            "rangeMax": 127,
+            "precision": 23
+          },
+          "error": 0
+        },
+        "35633,36339": {
+          "value": {
+            "rangeMin": 31,
+            "rangeMax": 30,
+            "precision": 0
+          },
+          "error": 0
+        },
+        "35633,36340": {
+          "value": {
+            "rangeMin": 31,
+            "rangeMax": 30,
+            "precision": 0
+          },
+          "error": 0
+        },
+        "35633,36341": {
+          "value": {
+            "rangeMin": 31,
+            "rangeMax": 30,
+            "precision": 0
+          },
+          "error": 0
+        },
+        "35633,0": {
+          "value": null,
+          "error": 1280
+        },
+        "0,36336": {
+          "value": null,
+          "error": 1280
+        },
+        "0,36337": {
+          "value": null,
+          "error": 1280
+        },
+        "0,36338": {
+          "value": null,
+          "error": 1280
+        },
+        "0,36339": {
+          "value": null,
+          "error": 1280
+        },
+        "0,36340": {
+          "value": null,
+          "error": 1280
+        },
+        "0,36341": {
+          "value": null,
+          "error": 1280
+        },
+        "0,0": {
+          "value": null,
+          "error": 1280
+        }
+      }
+    }
+  }
+}

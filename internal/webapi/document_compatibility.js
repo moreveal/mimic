@@ -6,7 +6,7 @@ const fragmentOwnerDocuments = new WeakMap();
 function wrapDocumentNode(data) {
   if(data.nodeId===host.documentRootID())return document;
   let value=documentWrappers.get(data.nodeId);
-  if(!value){value=Object.create((data.contentType?globalThis.XMLDocument:Document).prototype);elementData.set(value,data);documentWrappers.set(data.nodeId,value)}
+  if(!value){value=Object.create((data.contentType&&data.contentType!=='text/html'?globalThis.XMLDocument:Document).prototype);elementData.set(value,data);documentWrappers.set(data.nodeId,value)}
   return value;
 }
 {
@@ -70,11 +70,11 @@ function wrapDocumentNode(data) {
   });
   accessor(Document.prototype,'defaultView',function(){validDocument(this);return this===document?window:null});
   accessor(Document.prototype,'textContent',function(){validDocument(this);return null},function(){validDocument(this)});
-  for(const name of ['URL','documentURI'])accessor(Document.prototype,name,function(){validDocument(this);return this===document?location.href:'about:blank'});
+  for(const name of ['URL','documentURI'])accessor(Document.prototype,name,function(){validDocument(this);return this===document?location.href:elementSlot(this)?.documentURL||'about:blank'});
   accessor(Document.prototype,'location',function(){validDocument(this);return this===document?location:null});
   const ready=Object.getOwnPropertyDescriptor(Document.prototype,'readyState').get;
   accessor(Document.prototype,'readyState',function(){validDocument(this);return this===document?ready.call(this):'complete'});
-  accessor(Document.prototype,'compatMode',function(){validDocument(this);return this===document&&!Array.from(this.childNodes).some(node=>node.nodeType===10)?'BackCompat':'CSS1Compat'});
+  accessor(Document.prototype,'compatMode',function(){validDocument(this);return contentType(this)==='text/html'&&(this===document||elementSlot(this)?.parsedDocument)&&!Array.from(this.childNodes).some(node=>node.nodeType===10)?'BackCompat':'CSS1Compat'});
   accessor(Document.prototype,'doctype',function(){validDocument(this);return Array.from(this.childNodes).find(node=>node.nodeType===10)||null});
   accessor(Document.prototype,'contentType',function(){validDocument(this);return contentType(this)});
   for(const name of ['characterSet','charset','inputEncoding'])accessor(Document.prototype,name,function(){validDocument(this);return 'UTF-8'});
@@ -119,4 +119,33 @@ function wrapDocumentNode(data) {
       return name==='appendChild'?original.call(this,node):original.call(this,node,before);
     });
   }
+  const collections=new WeakMap();
+  const documentCollection=(doc,name,read)=>{validDocument(doc);let values=collections.get(doc);if(!values){values=new Map();collections.set(doc,values)}if(!values.has(name))values.set(name,htmlCollection(read));return values.get(name)};
+  accessor(Document.prototype,'children',function(){return documentCollection(this,'children',()=>Array.from(this.childNodes).filter(node=>node.nodeType===1).map(node=>elementSlot(node).nodeId))});
+  accessor(Document.prototype,'childElementCount',function(){validDocument(this);return this.children.length});
+  for(const name of ['firstElementChild','lastElementChild'])accessor(Document.prototype,name,function(){validDocument(this);const nodes=this.children;return nodes.item(name==='firstElementChild'?0:nodes.length-1)});
+  for(const [name,selector]of Object.entries({links:'a[href],area[href]',anchors:'a[name]',forms:'form',images:'img',embeds:'embed',scripts:'script',applets:null}))accessor(Document.prototype,name,function(){return documentCollection(this,name,()=>selector?Array.from(this.querySelectorAll(selector)).filter(node=>node.namespaceURI==='http://www.w3.org/1999/xhtml').map(node=>elementSlot(node).nodeId):[])});
+  accessor(Document.prototype,'plugins',function(){validDocument(this);return this.embeds});
+  const disconnectedOrder=new WeakMap();let nextDisconnectedOrder=0;
+  const order=node=>{if(!disconnectedOrder.has(node))disconnectedOrder.set(node,++nextDisconnectedOrder);return disconnectedOrder.get(node)};
+  const attr=node=>typeof Attr==='function'&&node instanceof Attr;
+  const path=node=>{const nodes=[node];let parent=attr(node)?node.ownerElement:node.parentNode;for(;parent;parent=parent.parentNode)nodes.push(parent);return nodes};
+  member(Node.prototype,'compareDocumentPosition',function(other){
+    if(!(this instanceof Node)||!(other instanceof Node))throw new TypeError('Expected a Node');if(this===other)return 0;
+    const a=path(this),b=path(other),ar=a[a.length-1],br=b[b.length-1];
+    if(ar!==br)return 1|32|(order(ar)<order(br)?4:2);
+    if(b.includes(this))return 4|16;if(a.includes(other))return 2|8;
+    let i=a.length-1,j=b.length-1;while(i>=0&&j>=0&&a[i]===b[j]){i--;j--}const left=a[i],right=b[j],parent=a[i+1];
+    if(attr(left)&&attr(right)){const names=parent.getAttributeNames();return 32|(names.indexOf(left.name)<names.indexOf(right.name)?4:2)}
+    if(attr(left))return 4;if(attr(right))return 2;
+    return Array.from(parent.childNodes).indexOf(left)<Array.from(parent.childNodes).indexOf(right)?4:2;
+  });
+
+  const parserSlots=new WeakSet();
+  class DOMParser {
+    constructor(){parserSlots.add(this)}
+    parseFromString(input,type){if(!parserSlots.has(this))throw new TypeError('Illegal invocation');if(arguments.length<2)throw new TypeError('Not enough arguments');input=String(input);type=String(type);if(!['text/html','text/xml','application/xml','application/xhtml+xml','image/svg+xml'].includes(type))throw new TypeError('Invalid supported type');return wrap(host.parseInertDocument(input,type))}
+  }
+  Object.defineProperty(DOMParser.prototype,Symbol.toStringTag,{value:'DOMParser',configurable:true});markNative(DOMParser,'DOMParser');markNative(DOMParser.prototype.parseFromString,'parseFromString');Object.defineProperty(DOMParser.prototype,'parseFromString',{enumerable:true});Object.defineProperty(globalThis,'DOMParser',{value:DOMParser,writable:true,configurable:true});
+
 }

@@ -2,7 +2,9 @@
   // execution is explicit: successful compilation or shader-derived pixels must
   // never be inferred from the existence of the WebIDL interfaces.
   (()=>{
-    const slots=new WeakMap(), resources=new WeakMap();
+    const slots=new WeakMap(), resources=new WeakMap(), precisionFormats=new WeakMap();
+    if(typeof WebGLShaderPrecisionFormat==='function')for(const name of ['rangeMin','rangeMax','precision']){const get=function(){const data=precisionFormats.get(this);if(!data)throw new TypeError('Illegal invocation');return data[name]};if(typeof markNative==='function')markNative(get,name,'get ');Object.defineProperty(WebGLShaderPrecisionFormat.prototype,name,{get,enumerable:true,configurable:true})}
+    const graphics=typeof host.graphics==='function'?host.graphics():{},capabilities=JSON.parse(graphics.capabilitiesJSON||'{}');
     const fail=name=>{host.semanticMissing('WebGL.'+name);throw new DOMException('WebGL '+name+' requires an unsupported graphics operation.','NotSupportedError')};
     const check=value=>{const s=slots.get(value);if(!s)throw new TypeError('Illegal invocation');return s};
     const error=(s,code)=>{if(!s.error)s.error=code};
@@ -19,18 +21,32 @@
       method('getError',s=>{const code=s.error;s.error=0;return code});
       method('isContextLost',()=>false);
       method('getContextAttributes',s=>({...s.attributes}));
-      method('getSupportedExtensions',()=>typeof host.graphics==='function'?['WEBGL_debug_renderer_info']:[]);
-      method('getExtension',(s,name)=>{if(String(name).toLowerCase()!=='webgl_debug_renderer_info'||typeof host.graphics!=='function')return null;return s.debug||(s.debug={UNMASKED_VENDOR_WEBGL:37445,UNMASKED_RENDERER_WEBGL:37446})});
+      const profile=capabilities[kind]||{parameters:{},samples:{},floatSamples:{}};
+      const extensionNames=['WEBGL_debug_renderer_info','EXT_texture_filter_anisotropic','EXT_color_buffer_half_float',kind==='webgl2'?'EXT_color_buffer_float':'OES_standard_derivatives'];
+      method('getSupportedExtensions',()=>extensionNames.slice());
+      method('getExtension',(s,name)=>{name=String(name).toLowerCase();const canonical=extensionNames.find(value=>value.toLowerCase()===name);if(!canonical)return null;if(s.extensions.has(canonical))return s.extensions.get(canonical);const ext={};if(canonical==='WEBGL_debug_renderer_info'){Object.assign(ext,{UNMASKED_VENDOR_WEBGL:37445,UNMASKED_RENDERER_WEBGL:37446});s.debug=ext}if(canonical==='EXT_texture_filter_anisotropic')Object.assign(ext,{TEXTURE_MAX_ANISOTROPY_EXT:34046,MAX_TEXTURE_MAX_ANISOTROPY_EXT:34047});if(canonical==='OES_standard_derivatives')ext.FRAGMENT_SHADER_DERIVATIVE_HINT_OES=35723;if(canonical==='EXT_color_buffer_half_float')Object.assign(ext,{RGBA16F_EXT:34842,RGB16F_EXT:34843,FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE_EXT:33297,UNSIGNED_NORMALIZED_EXT:35863});s.extensions.set(canonical,ext);return ext});
+      const parameterValue=entry=>{if(entry.type==='Int32Array')return new Int32Array(entry.value);if(entry.type==='Float32Array')return new Float32Array(entry.value);if(entry.type==='Uint32Array')return new Uint32Array(entry.value);return entry.value};
+      if(kind==='webgl2')method('getInternalformatParameter',(s,target,format,pname)=>{target=Number(target)>>>0;format=Number(format)>>>0;pname=Number(pname)>>>0;if(target!==36161||pname!==32937){error(s,1280);return null}let values=profile.samples[format];if(values===undefined&&(s.extensions.has('EXT_color_buffer_float')||s.extensions.has('EXT_color_buffer_half_float')&&[33325,33327,34842].includes(format)))values=profile.floatSamples[format];if(values===undefined){error(s,1280);return null}return new Int32Array(values)});
+      method('getShaderPrecisionFormat',(s,shader,precision)=>{const data=profile.precision?.[(Number(shader)>>>0)+','+(Number(precision)>>>0)];if(!data){error(s,1280);return null}const value=Object.create(WebGLShaderPrecisionFormat.prototype);precisionFormats.set(value,{...data});return value});
       method('getParameter',(s,p)=>{
-        p=Number(p);if(p===34964)return s.bindings.get(34962)||null;if(p===34965)return s.bindings.get(34963)||null;
+        p=Number(p)>>>0;if(p===34964)return s.bindings.get(34962)||null;if(p===34965)return s.bindings.get(34963)||null;
         // Chrome's masked API identification is independent of the selected GPU.
         // Unmasked machine identity continues to come from Environment.Graphics.
         if(p===7936)return 'WebKit';if(p===7937)return 'WebKit WebGL';
         if(p===7938)return kind==='webgl2'?'WebGL 2.0 (OpenGL ES 3.0 Chromium)':'WebGL 1.0 (OpenGL ES 2.0 Chromium)';
         if(p===35724)return kind==='webgl2'?'WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)':'WebGL GLSL ES 1.0 (OpenGL ES GLSL ES 1.0 Chromium)';
         if(p===3106)return new Float32Array(s.color);if(p===3107)return s.mask.slice();if(p===2978)return new Int32Array(s.viewport);if(p===3088)return new Int32Array(s.scissor);if(p===3333)return s.pack;if(p===2931)return s.depthClear;if(p===2961)return s.stencilClear;if(p===2930)return s.depthMask;
-        if(p===3379&&typeof host.graphics==='function')return host.graphics().maxTextureSize;
-        if((p===37445||p===37446)&&s.debug)return host.graphics()[p===37445?'vendor':'renderer'];
+        if(p===3379)return graphics.maxTextureSize;
+        if(profile.parameters[p])return parameterValue(profile.parameters[p]);
+        if(p===34467)return new Uint32Array(0);
+        if(p===35738)return 5121;if(p===35739)return 6408;
+        if([3410,3411,3412].includes(p))return 8;if(p===3413)return s.attributes.alpha?8:0;if(p===3414)return s.attributes.depth?24:0;if(p===3415)return s.attributes.stencil?8:0;
+        if(p===32936||p===32937)return 0;
+        if(p===2963||p===36004)return 4294967295;if(p===2968)return s.stencilMaskFront;if(p===36005)return s.stencilMaskBack;
+        if(p===34047){if(s.extensions.has('EXT_texture_filter_anisotropic'))return profile.anisotropy;error(s,1280);return null}
+        if(p===35723){if(kind==='webgl2'||s.extensions.has('OES_standard_derivatives'))return s.derivativeHint;error(s,1280);return null}
+        if(p===36795){error(s,1280);return null}
+        if((p===37445||p===37446)&&s.debug)return graphics[p===37445?'vendor':'renderer'];
         if(s.enabled.has(p))return s.enabled.get(p);
         if(!knownEnums.has(p)){error(s,1280);return null}return fail('getParameter('+p+')');
       });
@@ -54,7 +70,10 @@
       method('clearColor',(s,r,g,b,a)=>{s.color=[r,g,b,a].map(v=>Math.fround(Math.min(1,Math.max(0,Number(v)))))});
       method('colorMask',(s,r,g,b,a)=>{s.mask=[r,g,b,a].map(Boolean)});
       method('clearDepth',(s,value)=>{s.depthClear=Math.min(1,Math.max(0,Number(value)))});
-      method('clearStencil',(s,value)=>{s.stencilClear=Number(value)|0});
+      method('stencilMask',(s,value)=>{s.stencilMaskFront=s.stencilMaskBack=Number(value)>>>0});
+      method('stencilMaskSeparate',(s,face,value)=>{face=Number(face)>>>0;value=Number(value)>>>0;if(![1028,1029,1032].includes(face)){error(s,1280);return}if(face!==1029)s.stencilMaskFront=value;if(face!==1028)s.stencilMaskBack=value});
+      method('hint',(s,target,mode)=>{target=Number(target)>>>0;mode=Number(mode)>>>0;if(![4352,4353,4354].includes(mode)||target!==33170&&!(target===35723&&(kind==='webgl2'||s.extensions.has('OES_standard_derivatives')))){error(s,1280);return}if(target===35723)s.derivativeHint=mode;else s.mipmapHint=mode});
+      method('clearStencil' ,(s,value)=>{s.stencilClear=Number(value)|0});
       method('depthMask',(s,value)=>{s.depthMask=Boolean(value)});
       const rectangle=(s,key,x,y,w,h)=>{const rect=[x,y,w,h].map(v=>Number(v)|0);if(rect[2]<0||rect[3]<0){error(s,1281);return}s[key]=rect};
       method('viewport',(s,...args)=>rectangle(s,'viewport',...args));method('scissor',(s,...args)=>rectangle(s,'scissor',...args));
@@ -64,7 +83,7 @@
       const storage=s=>{const {width,height}=s.dim;if(width*height>16*1024*1024)fail('drawing buffer allocation limit');if(!s.pixels||s.width!==width||s.height!==height){s.width=width;s.height=height;s.pixels=new Uint8Array(width*height*4);if(!s.attributes.alpha)for(let i=3;i<s.pixels.length;i+=4)s.pixels[i]=255}return s.pixels};
       method('clear',(s,mask)=>{mask=Number(mask)>>>0;if(mask&~(16384|256|1024)){error(s,1281);return}if(mask&256)s.depthValue=s.depthMask?s.depthClear:s.depthValue;if(mask&1024)s.stencilValue=s.stencilClear;if(!(mask&16384))return;const pixels=storage(s),rect=s.enabled.get(3089)?s.scissor:[0,0,s.width,s.height];for(let y=Math.max(0,rect[1]);y<Math.min(s.height,rect[1]+rect[3]);y++)for(let x=Math.max(0,rect[0]);x<Math.min(s.width,rect[0]+rect[2]);x++)for(let c=0;c<4;c++)if(s.mask[c]&&(c!==3||s.attributes.alpha))pixels[(y*s.width+x)*4+c]=Math.floor(s.color[c]*255)});
       method('readPixels',(s,x,y,w,h,format,pixelType,dest,...extra)=>{if(extra.length)fail('readPixels destination offset');x=Number(x)|0;y=Number(y)|0;w=Number(w)|0;h=Number(h)|0;if(w<0||h<0){error(s,1281);return}if(Number(format)!==6408||Number(pixelType)!==5121)fail('readPixels format');if(!(dest instanceof Uint8Array))throw new TypeError('Expected Uint8Array');const stride=Math.ceil(w*4/s.pack)*s.pack;if(dest.length<(h?stride*(h-1)+w*4:0)){error(s,1282);return}const pixels=storage(s);for(let row=0;row<h;row++)for(let col=0;col<w;col++)for(let c=0;c<4;c++){const inside=x+col>=0&&x+col<s.width&&y+row>=0&&y+row<s.height;dest[row*stride+col*4+c]=inside?pixels[((y+row)*s.width+x+col)*4+c]:0}});
-      const create=(canvas,attributes,dim)=>{attributes=attributes||{};if(attributes.antialias===true)fail('multisampling');const context=Object.create(proto),s={canvas,dim,error:0,bindings:new Map(),color:[0,0,0,0],mask:[true,true,true,true],viewport:[0,0,dim.width,dim.height],scissor:[0,0,dim.width,dim.height],pack:4,enabled:new Map([[3089,false],[3024,true],[3042,false],[2929,false],[2960,false],[2884,false],[32823,false],[32926,false],[32928,false]]),attributes:{alpha:attributes.alpha!==false,depth:attributes.depth!==false,stencil:!!attributes.stencil,antialias:false,premultipliedAlpha:attributes.premultipliedAlpha!==false,preserveDrawingBuffer:!!attributes.preserveDrawingBuffer,failIfMajorPerformanceCaveat:!!attributes.failIfMajorPerformanceCaveat,powerPreference:'default',desynchronized:false}};slots.set(context,s);return context};
+      const create=(canvas,attributes,dim)=>{attributes=attributes||{};if(attributes.antialias===true)fail('multisampling');const context=Object.create(proto),s={canvas,dim,error:0,extensions:new Map(),stencilMaskFront:4294967295,stencilMaskBack:4294967295,derivativeHint:4352,mipmapHint:4352,bindings:new Map(),color:[0,0,0,0],mask:[true,true,true,true],viewport:[0,0,dim.width,dim.height],scissor:[0,0,dim.width,dim.height],pack:4,enabled:new Map([[3089,false],[3024,true],[3042,false],[2929,false],[2960,false],[2884,false],[32823,false],[32926,false],[32928,false]]),attributes:{alpha:attributes.alpha!==false,depth:attributes.depth!==false,stencil:!!attributes.stencil,antialias:false,premultipliedAlpha:attributes.premultipliedAlpha!==false,preserveDrawingBuffer:!!attributes.preserveDrawingBuffer,failIfMajorPerformanceCaveat:!!attributes.failIfMajorPerformanceCaveat,powerPreference:'default',desynchronized:false}};slots.set(context,s);return context};
       const factory=(canvas,attributes,dim)=>{const context=create(canvas,attributes,dim),s=slots.get(context);s.depthClear=1;s.stencilClear=0;s.depthMask=true;s.depthValue=1;s.stencilValue=0;dim.readPixels=()=>{const src=storage(s),out=new Uint8ClampedArray(src.length);for(let y=0;y<s.height;y++)for(let x=0;x<s.width;x++){const from=(y*s.width+x)*4,to=((s.height-1-y)*s.width+x)*4,a=src[from+3];for(let c=0;c<3;c++)out[to+c]=s.attributes.premultipliedAlpha?src[from+c]:Math.round(src[from+c]*a/255);out[to+3]=a}return out};dim.onTransfer=()=>{s.pixels=null};dim.onResize=()=>{if(dim.width!==s.width||dim.height!==s.height)s.pixels=null};return context};
       canvasCompatibilityState.registerContext(kind,factory);if(kind==='webgl')canvasCompatibilityState.registerContext('experimental-webgl',factory,'webgl');
     }

@@ -577,7 +577,7 @@ func (r *Realm) install() error {
 	})
 	host["graphics"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		g := p.Environment().Graphics
-		return r.val(map[string]any{"vendor": g.Vendor, "renderer": g.Renderer, "maxTextureSize": g.MaxTextureSize}), nil
+		return r.val(map[string]any{"vendor": g.Vendor, "renderer": g.Renderer, "maxTextureSize": g.MaxTextureSize, "capabilitiesJSON": g.WebGLCapabilities()}), nil
 	})
 	host["rtcEnvironment"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		ice := p.Environment().Network.ICE
@@ -1546,7 +1546,12 @@ func nodeData(n dom.Node) map[string]any {
 	for k, v := range n.Attributes {
 		attrs[k] = v
 	}
-	return map[string]any{"nodeId": n.ID, "type": n.Type, "tagName": n.TagName, "namespaceURI": n.Namespace, "qualifiedName": n.QualifiedName, "contentType": n.ContentType, "text": n.Text, "attributes": attrs, "attributeNames": n.AttributeNames, "attributeNamespaces": n.AttributeNamespaces, "parentId": n.Parent, "children": n.Children}
+	data := map[string]any{"nodeId": n.ID, "type": n.Type, "tagName": n.TagName, "namespaceURI": n.Namespace, "qualifiedName": n.QualifiedName, "contentType": n.ContentType, "text": n.Text, "attributes": attrs, "attributeNames": n.AttributeNames, "attributeNamespaces": n.AttributeNamespaces, "parentId": n.Parent, "children": n.Children}
+	if n.ParsedDocument {
+		data["documentURL"] = n.DocumentURL
+		data["parsedDocument"] = true
+	}
+	return data
 }
 func nodesData(nodes []dom.Node) []map[string]any {
 	out := make([]map[string]any, 0, len(nodes))
