@@ -41,6 +41,12 @@ type Realm struct {
 	runtime                 engine.Runtime
 	scheduler               *scheduler.Scheduler
 	document                *dom.Document
+	documentStream          *documentStream
+	documentStreamReset     engine.Value
+	frameReflection         *frameReflection
+	frameReferenceImport    engine.Value
+	frameReferenceDescribe  engine.Value
+	documentStreamEvent     engine.Value
 	url                     *url.URL
 	token                   string
 	detached                map[int64]dom.Node
@@ -68,14 +74,23 @@ type Realm struct {
 	loadRequested           bool
 	loadScheduled           bool
 	loadCompleted           bool
+	loadEpoch               uint64
 	loadCallback            func(context.Context)
 	resourceContext         context.Context
 	cancelResources         context.CancelFunc
 	resourceWG              sync.WaitGroup
 	moduleFetches           map[string]*moduleFetch
+	preloadedModuleLinks    map[int64]bool
 	imageLoads              map[int64]*imageLoad
 	fetchCancels            map[string]context.CancelFunc
 	nativePollQueued        bool
+	// Navigation timing belongs to the committed document, not the mutable
+	// same-document History URL or another frame's most recent navigation.
+	navigationURL      string
+	navigationLoaderID string
+	performanceOrigin  time.Time
+	navigationLoadEnd  time.Time
+	documentEntry      *Realm
 }
 
 // documentURL is the URL observed by this realm. For the top-level realm it
@@ -97,7 +112,7 @@ func (r *Realm) resolveDocument(raw string) (*url.URL, error) {
 	if err != nil {
 		return nil, err
 	}
-	return r.documentURL().ResolveReference(reference), nil
+	return r.documentBaseURL().ResolveReference(reference), nil
 }
 
 func (r *Realm) securityState() documentSecurity {
@@ -124,8 +139,17 @@ func newRealm(p *Page, agent ExecutionAgent, d *dom.Document, u *url.URL) (*Real
 }
 
 func newRealmState(p *Page, agent ExecutionAgent, d *dom.Document, u *url.URL, deferred bool) (*Realm, error) {
+	origin, loaderID := p.PerformanceOrigin(), p.LoaderID()
+	if frame, ok := agent.(*Frame); ok && frame.parent != nil {
+		origin, loaderID = p.ClockNow(), frame.loaderID
+	}
+	return newRealmStateWithNavigation(p, agent, d, u, deferred, origin, loaderID)
+}
+
+func newRealmStateWithNavigation(p *Page, agent ExecutionAgent, d *dom.Document, u *url.URL, deferred bool, performanceOrigin time.Time, loaderID string) (*Realm, error) {
 	resourceContext, cancelResources := context.WithCancel(p.ctx.lifetime)
 	r := &Realm{ID: uuid.NewString(), agent: agent, document: d, url: u, origin: originOf(u.String()), token: uuid.NewString(), detached: map[int64]dom.Node{}, apiSeen: map[string]bool{}, readyState: "loading", workers: map[int64]*DedicatedWorker{}, childFrames: map[int64]*Frame{}, retainedFrames: map[string]*Frame{}, crossValues: map[int64]engine.Value{}, resourceContext: resourceContext, cancelResources: cancelResources}
+	r.navigationURL, r.navigationLoaderID, r.performanceOrigin = u.String(), loaderID, performanceOrigin
 	r.updateSelectorTarget(u.Fragment)
 	if deferred {
 		r.runtime = &deferredRuntime{realm: r, factory: p.ctx.browser.factory}
@@ -213,6 +237,11 @@ func (r *Realm) Close() error {
 		state.locks = remaining
 	}
 	c.mu.Unlock()
+	if r.documentStream != nil {
+		r.documentStream.cancel()
+		r.documentStream.parser.Abort()
+		r.documentStream = nil
+	}
 	r.cancelResources()
 	r.resourceWG.Wait()
 	r.moduleFetches = nil
@@ -388,6 +417,7 @@ func (r *Realm) packedFn(f engine.Function, signature string) any {
 func (r *Realm) install() error {
 	p := r.agent.Page()
 	host := map[string]any{}
+	r.installDocumentStream(host)
 	host["token"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(r.token), nil })
 	host["ready"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) { r.apiTracking = true; return nil, nil })
 	host["selfFrameID"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(r.agent.ContextID()), nil })
@@ -437,68 +467,54 @@ func (r *Realm) install() error {
 		return r.val(frame.ID), nil
 	})
 	host["frameEval"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		frame := p.frame(strarg(a, 0))
-		value, err := r.evalInFrame(context.Background(), strarg(a, 0), strarg(a, 1))
-		if err != nil || frame == nil || frame.Realm == nil {
-			return nil, err
-		}
-		return r.val(frame.Realm.crossRealmValue(value)), nil
-	})
-	host["frameCall"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		frame := p.frame(strarg(a, 0))
+		id, source := strarg(a, 0), strarg(a, 1)
+		frame := p.frame(id)
 		if !r.canAccess(frame) {
 			return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
 		}
-		value := frame.Realm.crossValues[int64(numarg(a, 1))]
-		if value == nil {
-			return nil, fmt.Errorf("cross-realm function is no longer available")
-		}
-		raw, _ := arg(a, 2).([]any)
-		arguments := make([]engine.Value, len(raw))
-		for index := range raw {
-			arguments[index] = frame.Realm.runtime.Value(raw[index])
-		}
-		result, err := frame.Realm.runtime.Call(context.Background(), value, nil, arguments...)
-		if err != nil {
-			return nil, err
-		}
-		return r.val(frame.Realm.crossRealmValue(result)), nil
+		return r.crossFrameResult(frame.Realm, func(ctx context.Context) (engine.Value, error) { return r.evalInFrame(ctx, id, source) })
 	})
+	host["frameCall"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return r.callFrameReference(a)
+	})
+	r.installFrameDocumentBridge(host)
 	host["frameGet"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		frame := p.frame(strarg(a, 0))
 		if !r.canAccess(frame) {
 			return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
 		}
+		if strarg(a, 3) != frame.Realm.ID {
+			return nil, fmt.Errorf("cross-realm object is no longer available")
+		}
 		value := frame.Realm.crossValues[int64(numarg(a, 1))]
 		if value == nil {
 			return r.val(map[string]any{"__mimicCrossRealm": "undefined"}), nil
 		}
-		result := frame.Realm.runtime.GetProperty(value, strarg(a, 2))
-		return r.val(frame.Realm.crossRealmValue(result)), nil
+		return r.reflectFrameGet(frame.Realm, value, arg(a, 2))
 	})
 	host["frameGlobalGet"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		frame := p.frame(strarg(a, 0))
 		if !r.canAccess(frame) {
 			return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
 		}
-		result := frame.Realm.runtime.Get(strarg(a, 1))
-		return r.val(frame.Realm.crossRealmValue(result)), nil
+		property := strarg(a, 1)
+		return r.crossFrameResult(frame.Realm, func(context.Context) (engine.Value, error) { return frame.Realm.runtime.Get(property), nil })
 	})
 	host["framePrototype"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		frame := p.frame(strarg(a, 0))
 		if !r.canAccess(frame) {
 			return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
 		}
+		if strarg(a, 2) != frame.Realm.ID {
+			return nil, fmt.Errorf("cross-realm object is no longer available")
+		}
 		value := frame.Realm.crossValues[int64(numarg(a, 1))]
 		if value == nil {
 			return r.val(map[string]any{"__mimicCrossRealm": "null"}), nil
 		}
-		frame.Realm.runtime.Set("__mimicCrossValue", value)
-		prototype, err := frame.Realm.runtime.Eval(context.Background(), `Object.getPrototypeOf(__mimicCrossValue)`, "mimic:cross-realm-prototype")
-		if err != nil {
-			return nil, err
-		}
-		return r.val(frame.Realm.crossRealmValue(prototype)), nil
+		return r.crossFrameResult(frame.Realm, func(ctx context.Context) (engine.Value, error) {
+			return frame.Realm.callFrameReflection(ctx, "prototype", value, nil, nil)
+		})
 	})
 	host["frameLocation"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		frame := p.frame(strarg(a, 0))
@@ -580,10 +596,10 @@ func (r *Realm) install() error {
 		return promise.Value, nil
 	})
 	host["performanceNow"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
-		return r.val(float64(r.scheduler.Now().Sub(p.PerformanceOrigin())) / float64(time.Millisecond)), nil
+		return r.val(float64(r.scheduler.Now().Sub(r.performanceOrigin)) / float64(time.Millisecond)), nil
 	})
 	host["performanceTimeOrigin"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
-		return r.val(float64(p.PerformanceOrigin().UnixNano()) / float64(time.Millisecond)), nil
+		return r.val(float64(r.performanceOrigin.UnixNano()) / float64(time.Millisecond)), nil
 	})
 	host["performanceEntries"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		requested := map[string]bool{}
@@ -593,18 +609,18 @@ func (r *Realm) install() error {
 			}
 		}
 		entries := []map[string]any{}
-		origin := p.PerformanceOrigin()
+		origin := r.performanceOrigin
 		clockProfile := p.Environment().Time
 		var navigationResponseTime time.Time
 		var navigationEnd float64
 		if len(requested) == 0 || requested["navigation"] {
 			navigationID := uint32(2166136261)
-			for _, octet := range []byte(p.LoaderID()) {
+			for _, octet := range []byte(r.navigationLoaderID) {
 				navigationID = (navigationID ^ uint32(octet)) * 16777619
 			}
-			navigation := map[string]any{"name": p.URL(), "entryType": "navigation", "initiatorType": "navigation", "startTime": 0, "duration": 0, "fetchStart": 0, "requestStart": 0, "responseStart": 0, "responseEnd": 0, "transferSize": 0, "encodedBodySize": 0, "decodedBodySize": 0, "nextHopProtocol": "", "serverTiming": []map[string]any{}, "contentType": "", "type": "navigate", "redirectCount": 0, "activationStart": 0, "navigationId": int(navigationID%9000) + 1000}
+			navigation := map[string]any{"name": r.navigationURL, "entryType": "navigation", "initiatorType": "navigation", "startTime": 0, "duration": 0, "fetchStart": 0, "requestStart": 0, "responseStart": 0, "responseEnd": 0, "transferSize": 0, "encodedBodySize": 0, "decodedBodySize": 0, "nextHopProtocol": "", "serverTiming": []map[string]any{}, "contentType": "", "type": "navigate", "redirectCount": 0, "activationStart": 0, "navigationId": int(navigationID%9000) + 1000}
 			for _, event := range p.Trace().Events() {
-				if event.Time.Before(origin) || event.Kind != trace.Network || event.Name != "response" || event.Data["initiator"] != network.Navigation {
+				if event.Kind != trace.Network || event.Name != "response" || event.Data["id"] != r.navigationLoaderID || event.Data["context"] != r.agent.ContextID() {
 					continue
 				}
 				rawDuration := numberValue(event.Data["durationMs"])
@@ -626,8 +642,8 @@ func (r *Realm) install() error {
 				// NavigationTiming.duration is loadEventEnd. While a dynamically
 				// loaded script is executing after DOMContentLoaded but before load,
 				// Chrome exposes zero rather than the response duration.
-				if p.LoadEventEnded() {
-					navigation["duration"] = max(0, float64(r.scheduler.Now().Sub(origin))/float64(time.Millisecond))
+				if !r.navigationLoadEnd.IsZero() {
+					navigation["duration"] = max(0, float64(r.navigationLoadEnd.Sub(origin))/float64(time.Millisecond))
 				}
 				navigation["transferSize"] = event.Data["transferSize"]
 				navigation["encodedBodySize"] = event.Data["encodedBodySize"]
@@ -644,7 +660,7 @@ func (r *Realm) install() error {
 		if len(requested) == 0 || requested["resource"] {
 			if navigationResponseTime.IsZero() {
 				for _, candidate := range p.Trace().Events() {
-					if !candidate.Time.Before(origin) && candidate.Kind == trace.Network && candidate.Name == "response" && candidate.Data["initiator"] == network.Navigation {
+					if candidate.Kind == trace.Network && candidate.Name == "response" && candidate.Data["id"] == r.navigationLoaderID && candidate.Data["context"] == r.agent.ContextID() {
 						navigationResponseTime = candidate.Time
 						navigationEnd = numberValue(candidate.Data["durationMs"]) * clockProfile.NavigationScale
 						break
@@ -917,7 +933,7 @@ func (r *Realm) install() error {
 	})
 	host["query"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		p.trace.Add(trace.API, "Document.querySelector", map[string]any{"selector": strarg(a, 0), "realm": r.ID})
-		n, ok := r.document.Find(strarg(a, 0))
+		n, ok := r.document.FindWithin(r.document.Root().ID, strarg(a, 0))
 		if !ok {
 			return r.val(nil), nil
 		}
@@ -1150,6 +1166,7 @@ func (r *Realm) install() error {
 	})
 	host["completeSynchronousLoad"] = r.fn(func(_ engine.Value, _ []engine.Value) (engine.Value, error) {
 		if r.loadCallback != nil {
+			r.navigationLoadEnd = r.scheduler.Now()
 			r.loadCallback(context.Background())
 		}
 		return nil, nil
@@ -1208,71 +1225,10 @@ func (r *Realm) install() error {
 		}
 		return r.val(""), nil
 	})
-	host["urlParts"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		base := r.documentURL()
-		if len(a) > 1 && strarg(a, 1) != "" {
-			var err error
-			base, err = url.Parse(strarg(a, 1))
-			if err != nil || !base.IsAbs() {
-				return nil, fmt.Errorf("invalid base URL")
-			}
-		}
-		u, err := base.Parse(strarg(a, 0))
-		if err != nil {
-			return nil, err
-		}
-		search, hash := "", ""
-		if u.RawQuery != "" {
-			search = "?" + u.RawQuery
-		}
-		if u.Fragment != "" {
-			hash = "#" + u.Fragment
-		}
-		origin := "null"
-		if u.Scheme == "http" || u.Scheme == "https" {
-			origin = u.Scheme + "://" + u.Host
-		}
-		return r.val(map[string]any{"href": u.String(), "origin": origin, "protocol": u.Scheme + ":", "username": usernameOf(u), "password": passwordOf(u), "host": u.Host, "hostname": u.Hostname(), "port": u.Port(), "pathname": u.EscapedPath(), "search": search, "hash": hash}), nil
-	})
-	host["setURLPart"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		u, err := url.Parse(strarg(a, 0))
-		if err != nil {
-			return nil, err
-		}
-		part, value := strarg(a, 1), strarg(a, 2)
-		switch part {
-		case "protocol":
-			u.Scheme = strings.TrimSuffix(value, ":")
-		case "username":
-			password := passwordOf(u)
-			u.User = url.UserPassword(value, password)
-		case "password":
-			u.User = url.UserPassword(usernameOf(u), value)
-		case "host":
-			u.Host = value
-		case "hostname":
-			port := u.Port()
-			u.Host = value
-			if port != "" {
-				u.Host += ":" + port
-			}
-		case "port":
-			u.Host = u.Hostname()
-			if value != "" {
-				u.Host += ":" + value
-			}
-		case "pathname":
-			u.Path, u.RawPath = value, ""
-		case "search":
-			u.RawQuery = strings.TrimPrefix(value, "?")
-		case "hash":
-			u.Fragment = strings.TrimPrefix(value, "#")
-		}
-		return r.val(u.String()), nil
-	})
+	installURLHost(host, r.runtime, r.documentURL)
 	host["setLocationPart"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		part, v := strarg(a, 0), strarg(a, 1)
-		u, _ := url.Parse(p.URL())
+		u := r.documentURL()
 		switch part {
 		case "href":
 			return nil, r.postNavigate(v)
@@ -1281,26 +1237,33 @@ func (r *Realm) install() error {
 			if err != nil {
 				return nil, err
 			}
-			if reference.Fragment != u.Fragment {
-				r.updateSelectorTarget(reference.Fragment)
+			if reference.Fragment == u.Fragment && reference.RawFragment == u.RawFragment {
+				return nil, nil
 			}
 			u.Fragment, u.RawFragment = reference.Fragment, reference.RawFragment
+			r.navigateFragment(u, false)
+			return nil, nil
 		case "search":
 			u.RawQuery = strings.TrimPrefix(v, "?")
 		case "pathname":
-			u.Path = v
+			u.Path, u.RawPath = v, ""
 		}
-		return nil, p.historyPush(u.String(), true)
+		return nil, r.postNavigate(u.String())
 	})
-	host["navigate"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) { return nil, r.postNavigate(strarg(a, 0)) })
+	host["navigate"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		replace, _ := arg(a, 1).(bool)
+		reload, _ := arg(a, 2).(bool)
+		return nil, r.postNavigate(strarg(a, 0), replace, reload)
+	})
 	host["historyPush"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		return nil, p.historyPush(strarg(a, 0), false)
+		return r.val(r.historyPush(strarg(a, 0), false, a[1])), nil
 	})
 	host["historyReplace"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		return nil, p.historyPush(strarg(a, 0), true)
+		return r.val(r.historyPush(strarg(a, 0), true, a[1])), nil
 	})
+	host["historyState"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.historyState(), nil })
 	host["historyGo"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		p.historyGo(int(numarg(a, 0)))
+		r.historyGo(int(numarg(a, 0)))
 		return nil, nil
 	})
 	host["historyLength"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(p.historyLength()), nil })
@@ -1501,10 +1464,15 @@ func (r *Realm) install() error {
 	if err != nil {
 		return err
 	}
+	if err := installEvalSourceResolver(r.runtime); err != nil {
+		return err
+	}
 	r.messageReceiver = r.runtime.Get("__receiveFrameMessage")
+	r.documentStreamReset = r.runtime.Get("__mimicResetDocumentStream")
+	r.documentStreamEvent = r.runtime.Get("__mimicDocumentStreamEvent")
 	r.inputDispatcher = r.runtime.Get("__mimicDispatchInput")
 	r.permissionNotifier = r.runtime.Get("__mimicPermissionChanged")
-	if _, err = r.runtime.Eval(context.Background(), `delete globalThis.__mimicDispatchInput;delete globalThis.__mimicPermissionChanged`, "mimic:hide-input"); err != nil {
+	if _, err = r.runtime.Eval(context.Background(), `delete globalThis.__mimicDispatchInput;delete globalThis.__mimicPermissionChanged;delete globalThis.__mimicEvalSourceResolver;delete globalThis.__mimicResetDocumentStream;delete globalThis.__mimicDocumentStreamEvent`, "mimic:hide-input"); err != nil {
 		return err
 	}
 	r.messagePortReceiver = r.runtime.Get("__receiveMessagePort")
@@ -1519,7 +1487,7 @@ func (r *Realm) notifyPerformanceObservers(ctx context.Context) {
 	if r.performanceNotifier == nil {
 		return
 	}
-	if _, err := r.runtime.Call(ctx, r.performanceNotifier, nil, r.val(r.agent.Page().LoadEventEnded())); err != nil {
+	if _, err := r.runtime.Call(ctx, r.performanceNotifier, nil, r.val(!r.navigationLoadEnd.IsZero())); err != nil {
 		r.agent.Page().trace.Add(trace.Error, "performanceObserverNotification", map[string]any{"realm": r.ID, "error": err.Error()})
 	}
 }
@@ -1587,7 +1555,11 @@ func (r *Realm) scheduleLoadIfReady() {
 	// that removed the final blocker. Its microtask checkpoint may insert a
 	// transitive load-blocking resource before this task is selected.
 	r.loadScheduled = true
+	epoch := r.loadEpoch
 	r.scheduler.Post(scheduler.DOM, 0, func(taskContext context.Context) error {
+		if epoch != r.loadEpoch {
+			return nil
+		}
 		r.loadScheduled = false
 		if r.loadBlockers != 0 {
 			r.scheduleLoadIfReady()
@@ -1600,6 +1572,7 @@ func (r *Realm) scheduleLoadIfReady() {
 			r.agent.Page().trace.Add(trace.Exception, "loadEvent", map[string]any{"url": r.documentURL().String(), "error": eventErr.Error(), "realm": r.ID})
 		}
 		if r.loadCallback != nil {
+			r.navigationLoadEnd = r.scheduler.Now()
 			r.loadCallback(taskContext)
 		}
 		return nil
@@ -1617,12 +1590,29 @@ func (r *Realm) recordAPIAccess(name string, supported bool) {
 		p.trace.Add(trace.Unsupported, name, map[string]any{"realm": r.ID, "access": "property"})
 	}
 }
-func (r *Realm) postNavigate(raw string) error {
+func (r *Realm) postNavigate(raw string, replaceOption ...bool) error {
 	u, err := r.resolveDocument(raw)
 	if err != nil {
 		return err
 	}
-	r.scheduler.Post(scheduler.Navigation, 0, func(ctx context.Context) error { return r.agent.Page().Navigate(ctx, u.String()) })
+	replace := len(replaceOption) > 0 && replaceOption[0]
+	reload := len(replaceOption) > 1 && replaceOption[1]
+	current := r.documentURL()
+	withoutFragment := *u
+	withoutFragment.Fragment, withoutFragment.RawFragment = current.Fragment, current.RawFragment
+	if !reload && strings.Contains(raw, "#") && withoutFragment.String() == current.String() {
+		r.navigateFragment(u, replace)
+		return nil
+	}
+	if frame, ok := r.agent.(*Frame); ok && frame.parent != nil {
+		if frame.Realm == r && frame.parent.Realm != nil {
+			frame.parent.Realm.scheduleChildNavigationTo(frame, u, replace)
+		}
+		return nil
+	}
+	r.scheduler.Post(scheduler.Navigation, 0, func(ctx context.Context) error {
+		return r.agent.Page().navigate(ctx, u.String(), uuid.NewString(), replace)
+	})
 	return nil
 }
 func (r *Realm) hostTimer(_ engine.Value, a []engine.Value) (engine.Value, error) {
@@ -1646,20 +1636,14 @@ func (r *Realm) hostTimer(_ engine.Value, a []engine.Value) (engine.Value, error
 }
 func (r *Realm) hostFetch(_ engine.Value, a []engine.Value) (engine.Value, error) {
 	promise := r.runtime.NewPromise()
-	raw, method, body := strarg(a, 0), strarg(a, 1), byteSlice(arg(a, 3))
+	raw := strarg(a, 0)
 	requestID := strarg(a, 4)
 	u, err := r.resolveDocument(raw)
 	if err != nil {
 		_ = promise.Reject(err.Error())
 		return promise.Value, nil
 	}
-	headers := headerMap(arg(a, 2))
-	request := network.Request{ContextID: r.agent.ContextID(), URL: u, Referrer: r.documentURL(), SourceURL: r.documentURL(), Method: method, Headers: headers, Body: body, Initiator: network.Fetch}
-	if options, ok := arg(a, 5).(map[string]any); ok {
-		if mode, ok := options["mode"].(string); ok {
-			request.Mode = mode
-		}
-	}
+	request := fetchRequest(r.agent.ContextID(), u, r.documentURL(), a)
 	loadContext, cancel := context.WithCancel(r.resourceContext)
 	if requestID != "" {
 		if r.fetchCancels == nil {
@@ -1686,11 +1670,7 @@ func (r *Realm) hostFetch(_ engine.Value, a []engine.Value) (engine.Value, error
 					return promise.Reject(loadErr.Error())
 				}
 				r.notifyPerformanceObservers(ctx)
-				bytes := make([]int, len(res.Body))
-				for i, b := range res.Body {
-					bytes[i] = int(b)
-				}
-				return promise.Resolve(map[string]any{"status": res.Status, "statusText": http.StatusText(res.Status), "url": res.URL.String(), "headers": res.Headers, "body": string(res.Body), "bodyBytes": bytes, "type": "basic"})
+				return promise.Resolve(fetchResponse(res))
 			})
 		}()
 		return nil

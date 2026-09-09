@@ -1,0 +1,253 @@
+{
+  "browser": "152.0.7977.82",
+  "result": {
+    "src": {
+      "get": "function",
+      "set": "function",
+      "enumerable": true,
+      "configurable": true
+    },
+    "srcGetterCall": "https://example.test/a.js",
+    "ownNames": [
+      "src",
+      "type",
+      "noModule",
+      "charset",
+      "async",
+      "defer",
+      "crossOrigin",
+      "text",
+      "referrerPolicy",
+      "fetchPriority",
+      "event",
+      "htmlFor",
+      "integrity",
+      "blocking",
+      "cacheHint",
+      "textContent",
+      "innerText",
+      "constructor"
+    ],
+    "ownKeys": [
+      "src",
+      "type",
+      "noModule",
+      "charset",
+      "async",
+      "defer",
+      "crossOrigin",
+      "text",
+      "referrerPolicy",
+      "fetchPriority",
+      "event",
+      "htmlFor",
+      "integrity",
+      "blocking",
+      "cacheHint",
+      "textContent",
+      "innerText",
+      "constructor",
+      "Symbol(Symbol.toStringTag)"
+    ],
+    "identity": true,
+    "getterIdentity": true,
+    "setterIdentity": true,
+    "tagSymbolIdentity": true,
+    "tagDescriptor": {
+      "value": "HTMLScriptElement",
+      "writable": false,
+      "enumerable": false,
+      "configurable": true
+    },
+    "constructorPrototypeIdentity": true,
+    "functions": {
+      "Function.prototype": {
+        "ownKeys": [
+          "length",
+          "name",
+          "constructor",
+          "apply",
+          "bind",
+          "call",
+          "toString",
+          "arguments",
+          "caller",
+          "Symbol(Symbol.hasInstance)"
+        ],
+        "name": {
+          "value": "",
+          "writable": false,
+          "enumerable": false,
+          "configurable": true
+        },
+        "length": {
+          "value": 0,
+          "writable": false,
+          "enumerable": false,
+          "configurable": true
+        },
+        "caller": {
+          "get": "function",
+          "set": "function",
+          "enumerable": false,
+          "configurable": true
+        },
+        "arguments": {
+          "get": "function",
+          "set": "function",
+          "enumerable": false,
+          "configurable": true
+        }
+      },
+      "HTMLScriptElement": {
+        "ownKeys": [
+          "length",
+          "name",
+          "prototype",
+          "supports"
+        ],
+        "name": {
+          "value": "HTMLScriptElement",
+          "writable": false,
+          "enumerable": false,
+          "configurable": true
+        },
+        "length": {
+          "value": 0,
+          "writable": false,
+          "enumerable": false,
+          "configurable": true
+        },
+        "prototype": {
+          "value": {},
+          "writable": false,
+          "enumerable": false,
+          "configurable": false
+        }
+      },
+      "srcGetter": {
+        "ownKeys": [
+          "length",
+          "name"
+        ],
+        "name": {
+          "value": "get src",
+          "writable": false,
+          "enumerable": false,
+          "configurable": true
+        },
+        "length": {
+          "value": 0,
+          "writable": false,
+          "enumerable": false,
+          "configurable": true
+        }
+      },
+      "ordinary": {
+        "ownKeys": [
+          "length",
+          "name",
+          "prototype"
+        ],
+        "name": {
+          "value": "ordinary",
+          "writable": false,
+          "enumerable": false,
+          "configurable": true
+        },
+        "length": {
+          "value": 2,
+          "writable": false,
+          "enumerable": false,
+          "configurable": true
+        },
+        "prototype": {
+          "value": {},
+          "writable": true,
+          "enumerable": false,
+          "configurable": false
+        }
+      }
+    },
+    "arraySymbols": {
+      "iteratorIdentity": true,
+      "unscopablesIdentity": true,
+      "iteratorDescriptor": {
+        "value": "function",
+        "writable": true,
+        "enumerable": false,
+        "configurable": true
+      }
+    },
+    "nodeType": {
+      "descriptor": {
+        "get": "function",
+        "enumerable": true,
+        "configurable": true
+      },
+      "call": 1,
+      "identity": true,
+      "ownKeys": [
+        "length",
+        "name"
+      ]
+    },
+    "custom": {
+      "ownKeys": [
+        "fixed",
+        "accessor",
+        "Symbol(shared)",
+        "Symbol(local)"
+      ],
+      "fixed": {
+        "value": 17,
+        "writable": false,
+        "enumerable": true,
+        "configurable": false
+      },
+      "accessor": {
+        "get": "function",
+        "enumerable": true,
+        "configurable": false
+      },
+      "accessorValue": 23,
+      "symbolValues": [
+        31,
+        37
+      ],
+      "sharedSymbolIdentity": true,
+      "symbolIdentity": true
+    }
+  },
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "secureContextState": false,
+    "isolationState": false,
+    "visibilityState": "visible",
+    "hasFocus": true,
+    "window": {
+      "left": 10,
+      "top": 10,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled"
+  },
+  "fixture": "Fresh about:blank document with appended same-origin about:blank iframe; descriptor operations run from parent on child objects. Runner .build/remote-descriptor-oracle.cjs",
+  "source": "internal/browser/testdata/cross_realm_reflection_oracle.js",
+  "sourceSHA256": "5f2dc3a2a1515a53b82160e9c4da1fb6ab3ed84c37ce7457312f411dcb6c423d"
+}

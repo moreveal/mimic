@@ -71,29 +71,32 @@ type callbackContext struct {
 }
 
 type adapter struct {
-	profile          *diagnosticState
-	owner            *Runtime
-	realm            *Realm
-	now              func() time.Time
-	observer         func(string, bool)
-	closed           bool
-	mu               sync.Mutex
-	callback         *callbackContext  // actor-thread only; guarded from foreign readers by actor TID
-	activeIsolate    *gov8.Isolate     // actor-thread only
-	transientFrames  []*transientFrame // owner-thread only; bounded scratch storage
-	packedStore      *gov8.BackingStore
-	packedMemory     *[packedBytes]byte
-	packedBuffer     *gov8.Global
-	packedFactories  map[string]*gov8.Global
-	packedFrames     []*packedFrame
-	callbackSeq      uint64
-	promiseFactory   engine.Value
-	globals          []*gov8.Global // retained engine.Values; released on the isolate thread
-	modules          []*gov8.Module
-	moduleCache      map[string]*gov8.Module
-	moduleNames      map[*gov8.Module]string
-	processorSamples map[uintptr]uint64 // opt-in diagnostic sampling, actor-thread only
-	nativePending    bool               // actor-thread only; foreground/background V8 tasks
+	profile           *diagnosticState
+	owner             *Runtime
+	realm             *Realm
+	now               func() time.Time
+	observer          func(string, bool)
+	closed            bool
+	mu                sync.Mutex
+	callback          *callbackContext  // actor-thread only; guarded from foreign readers by actor TID
+	activeIsolate     *gov8.Isolate     // actor-thread only
+	nestedTermination bool              // clear only after the outer actor turn unwinds
+	activeContext     context.Context   // actor-thread only; inherited by cross-realm calls
+	runDepth          int               // actor-thread only; includes cooperatively serviced calls
+	transientFrames   []*transientFrame // owner-thread only; bounded scratch storage
+	packedStore       *gov8.BackingStore
+	packedMemory      *[packedBytes]byte
+	packedBuffer      *gov8.Global
+	packedFactories   map[string]*gov8.Global
+	packedFrames      []*packedFrame
+	callbackSeq       uint64
+	promiseFactory    engine.Value
+	globals           []*gov8.Global // retained engine.Values; released on the isolate thread
+	modules           []*gov8.Module
+	moduleCache       map[string]*gov8.Module
+	moduleNames       map[*gov8.Module]string
+	processorSamples  map[uintptr]uint64 // opt-in diagnostic sampling, actor-thread only
+	nativePending     bool               // actor-thread only; foreground/background V8 tasks
 }
 
 // Transient arguments cannot escape the synchronous host call. A frame stays
@@ -135,57 +138,145 @@ func (a *adapter) onCallback() *callbackContext {
 	return a.callback
 }
 
+func (a *adapter) RunNested(ctx context.Context, operation func(context.Context) error) error {
+	if a.onCallback() == nil {
+		return operation(ctx)
+	}
+	nestedContext, cancel := context.WithCancel(ctx)
+	defer cancel()
+	if a.activeContext != nil {
+		stop := context.AfterFunc(a.activeContext, cancel)
+		defer stop()
+		if a.activeContext.Err() != nil {
+			cancel()
+		}
+	}
+	if err := nestedContext.Err(); err != nil {
+		return err
+	}
+	done := make(chan error, 1)
+	go func() { done <- operation(nestedContext) }()
+	// The caller's JavaScript stack remains suspended on its original thread.
+	// Only this actor's incoming operations can run here: no Page timer or
+	// other actor is driven. Synchronous child -> parent callbacks therefore
+	// preserve both stack ordering and isolate affinity, including deeper chains.
+	for {
+		select {
+		case err := <-done:
+			return err
+		case command := <-a.owner.commands:
+			if command.outerOnly {
+				a.owner.deferred = append(a.owner.deferred, command)
+				continue
+			}
+			command.run(a.owner.actorState)
+		}
+	}
+}
+
 func (a *adapter) Eval(ctx context.Context, source, name string) (engine.Value, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, err
 	}
-	return a.runContext(ctx, func(s *state, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
-		if a.profile != nil && os.Getenv("MIMIC_V8_CPU_PROFILE") == "1" && (name == "mimic:webapi-surface" || name == "__pyppeteer_evaluation_script__") {
-			finish, err := startNativeProfile(s.isolate, realm)
-			if err != nil {
-				return nil, err
-			}
-			defer func() {
-				data, err := finish()
-				if err == nil {
-					if a.profile.CPUProfiles == nil {
-						a.profile.CPUProfiles = map[string]json.RawMessage{}
-					}
-					a.profile.CPUProfiles[name] = data
+	if callback := a.onCallback(); callback != nil {
+		// A host callback already owns this actor and isolate. Dispatching to
+		// the actor again waits for ourselves; evaluate in the current scope.
+		isolate := callback.scope.Isolate()
+		var finished, watcherDone chan struct{}
+		if ctx.Done() != nil {
+			finished, watcherDone = make(chan struct{}), make(chan struct{})
+			handle := isolate.ThreadSafeHandle()
+			go func() {
+				defer close(watcherDone)
+				select {
+				case <-ctx.Done():
+					handle.TerminateExecution()
+				case <-finished:
 				}
 			}()
 		}
-		catcher, err := s.isolate.NewTryCatch()
+		value, err := a.evalScoped(isolate, callback.ctx, callback.scope.Scope(), source, name)
+		if finished != nil {
+			close(finished)
+			<-watcherDone
+		}
+		if ctx.Err() != nil {
+			// Clearing termination here would let JavaScript continue inside
+			// the canceled outer invocation. The actor boundary does cleanup.
+			a.nestedTermination = true
+			return nil, ctx.Err()
+		}
+		return value, err
+	}
+	return a.runContext(ctx, func(s *state, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
+		return a.evalScoped(s.isolate, realm, scope, source, name)
+	})
+}
+
+func (a *adapter) evalScoped(isolate *gov8.Isolate, realm *gov8.Context, scope *gov8.Scope, source, name string) (engine.Value, error) {
+	if a.profile != nil && os.Getenv("MIMIC_V8_CPU_PROFILE") == "1" && (name == "mimic:webapi-surface" || name == "__pyppeteer_evaluation_script__") {
+		finish, err := startNativeProfile(isolate, realm)
 		if err != nil {
 			return nil, err
 		}
-		defer catcher.Close()
-		var started time.Time
-		if a.profile != nil {
-			started = time.Now()
+		defer func() {
+			data, err := finish()
+			if err == nil {
+				if a.profile.CPUProfiles == nil {
+					a.profile.CPUProfiles = map[string]json.RawMessage{}
+				}
+				a.profile.CPUProfiles[name] = data
+			}
+		}()
+	}
+	catcher, err := isolate.NewTryCatch()
+	if err != nil {
+		return nil, err
+	}
+	defer catcher.Close()
+	var started time.Time
+	if a.profile != nil {
+		started = time.Now()
+	}
+	resourceName, err := scope.NewString(name)
+	if err != nil {
+		return nil, err
+	}
+	script, err := realm.CompileScriptCompilerSource(scope,
+		gov8.NewScriptCompilerSource(source, &gov8.ScriptCompilerOrigin{ResourceName: resourceName, ScriptID: -1}),
+		gov8.OptNoCompileOptions, gov8.NoCacheNoReason, catcher)
+	if a.profile != nil {
+		a.recordCost("compile:"+name, started)
+	}
+	if err != nil {
+		return nil, a.evalError(catcher, scope, realm, name, err)
+	}
+	defer script.Close()
+	if a.profile != nil {
+		started = time.Now()
+	}
+	result, err := script.Run(scope, catcher)
+	if a.profile != nil {
+		a.recordCost("execute:"+name, started)
+		heap, _ := isolate.GetHeapStatistics()
+		a.profile.Heaps[name] = heap
+	}
+	if err != nil {
+		return nil, a.evalError(catcher, scope, realm, name, err)
+	}
+	return a.persist(scope, result)
+}
+
+func (a *adapter) evalError(catcher *gov8.TryCatch, scope *gov8.Scope, realm *gov8.Context, name string, cause error) error {
+	err := exceptionError(catcher, scope, realm, name, cause)
+	if a.onCallback() != nil {
+		if exception, ok, readErr := catcher.Exception(scope); readErr == nil && ok {
+			if value, persistErr := a.persist(scope, exception); persistErr == nil {
+				return &callException{error: err, value: value}
+			}
 		}
-		script, err := realm.Compile(scope, source, catcher)
-		if a.profile != nil {
-			a.recordCost("compile:"+name, started)
-		}
-		if err != nil {
-			return nil, exceptionError(catcher, scope, realm, name, err)
-		}
-		defer script.Close()
-		if a.profile != nil {
-			started = time.Now()
-		}
-		result, err := script.Run(scope, catcher)
-		if a.profile != nil {
-			a.recordCost("execute:"+name, started)
-			heap, _ := s.isolate.GetHeapStatistics()
-			a.profile.Heaps[name] = heap
-		}
-		if err != nil {
-			return nil, exceptionError(catcher, scope, realm, name, err)
-		}
-		return a.persist(scope, result)
-	})
+	}
+	return err
 }
 
 func (a *adapter) EvalModule(ctx context.Context, source, name string, loader engine.ModuleLoader) (engine.Value, error) {
@@ -477,6 +568,9 @@ func (a *adapter) TypeOf(value engine.Value) string {
 		if yes, _ := local.IsBigInt(); yes {
 			return "bigint"
 		}
+		if yes, _ := local.IsSymbol(); yes {
+			return "symbol"
+		}
 		return "object"
 	}
 	if a.onCallback() != nil {
@@ -713,6 +807,11 @@ func (a *adapter) MicrotaskCheckpoint() error {
 }
 
 func (a *adapter) MicrotaskCheckpointContext(ctx context.Context) error {
+	if a.onCallback() != nil {
+		// Nested script cleanup is still inside the outer JavaScript stack.
+		// Its jobs run at the outer task boundary, not inside the host call.
+		return ctx.Err()
+	}
 	_, err := a.runContext(ctx, func(s *state, _ *gov8.Context, _ *gov8.Scope) (engine.Value, error) {
 		// Native asynchronous compilation (notably WebAssembly) posts foreground
 		// tasks outside the Promise microtask queue. Pump them without blocking,
@@ -752,6 +851,9 @@ func (a *adapter) MicrotaskCheckpointContext(ctx context.Context) error {
 // NativeTasksPending requests another browser task boundary while native work
 // is outstanding. No background goroutine may enter the JavaScript isolate.
 func (a *adapter) NativeTasksPending() bool {
+	if a.onCallback() != nil {
+		return a.nativePending
+	}
 	var pending bool
 	_, _ = a.run(func(_ *state, _ *gov8.Context, _ *gov8.Scope) (engine.Value, error) {
 		pending = a.nativePending
@@ -771,7 +873,7 @@ func (a *adapter) Close() error {
 		return nil
 	}
 	a.mu.Unlock()
-	_, _ = a.run(func(_ *state, _ *gov8.Context, _ *gov8.Scope) (engine.Value, error) {
+	_, _ = a.runCommand(func(_ *state, _ *gov8.Context, _ *gov8.Scope) (engine.Value, error) {
 		for i := len(a.modules) - 1; i >= 0; i-- {
 			_ = a.modules[i].Close()
 		}
@@ -791,7 +893,7 @@ func (a *adapter) Close() error {
 		a.packedFactories = nil
 		a.packedFrames = nil
 		return nil, nil
-	})
+	}, true)
 	a.mu.Lock()
 	a.closed = true
 	a.mu.Unlock()
@@ -801,7 +903,11 @@ func (a *adapter) Close() error {
 type realmOperation func(*state, *gov8.Context, *gov8.Scope) (engine.Value, error)
 
 func (a *adapter) run(operation realmOperation) (engine.Value, error) {
-	value, err := a.owner.execute(func(s *state) response {
+	return a.runCommand(operation, false)
+}
+
+func (a *adapter) runCommand(operation realmOperation, outerOnly bool) (engine.Value, error) {
+	value, err := a.owner.executeCommand(func(s *state) response {
 		realm := s.realms[a.realm.id]
 		if realm == nil {
 			return response{err: errors.New("V8 realm is closed")}
@@ -811,11 +917,18 @@ func (a *adapter) run(operation realmOperation) (engine.Value, error) {
 			return response{err: err}
 		}
 		defer scope.Close()
+		previousIsolate := a.activeIsolate
 		a.activeIsolate = s.isolate
+		a.runDepth++
 		result, err := operation(s, realm, scope)
-		a.activeIsolate = nil
+		a.runDepth--
+		if a.nestedTermination && a.runDepth == 0 {
+			_ = s.isolate.CancelTerminateExecution()
+			a.nestedTermination = false
+		}
+		a.activeIsolate = previousIsolate
 		return response{value: result, err: err}
-	})
+	}, outerOnly)
 	if err != nil {
 		return nil, err
 	}
@@ -830,6 +943,9 @@ func (a *adapter) runContext(ctx context.Context, operation realmOperation) (eng
 		return nil, err
 	}
 	return a.run(func(s *state, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
+		previousContext := a.activeContext
+		a.activeContext = ctx
+		defer func() { a.activeContext = previousContext }()
 		// Join the watcher on the isolate thread before another operation or
 		// disposal can begin. Failed dispatch creates no watcher at all.
 		finished, watcherDone := make(chan struct{}), make(chan struct{})
@@ -846,7 +962,11 @@ func (a *adapter) runContext(ctx context.Context, operation realmOperation) (eng
 		close(finished)
 		<-watcherDone
 		if ctx.Err() != nil {
-			_ = s.isolate.CancelTerminateExecution()
+			if a.runDepth == 1 {
+				_ = s.isolate.CancelTerminateExecution()
+			} else {
+				a.nestedTermination = true
+			}
 			return nil, ctx.Err()
 		}
 		return result, err

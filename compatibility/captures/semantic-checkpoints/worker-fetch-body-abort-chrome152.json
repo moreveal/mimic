@@ -1,0 +1,140 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "visibilityState": "visible",
+    "hasFocus": true,
+    "window": {
+      "left": 10,
+      "top": 10,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled"
+  },
+  "origin": "http://127.0.0.1:7253",
+  "source": "internal/browser/testdata/worker_fetch_body_abort_oracle.js",
+  "sha256": "e0eb3797251d4ea3c75f846b645fd33aa4a4ef9e303f201b30c70a8be37e7e06",
+  "result": [
+    {
+      "stage": "before-read",
+      "reasonKind": "default",
+      "error": {
+        "name": "AbortError",
+        "message": "The user aborted a request.",
+        "code": 20
+      },
+      "sameReason": false,
+      "sameCustom": false
+    },
+    {
+      "stage": "before-read",
+      "reasonKind": "object",
+      "error": {
+        "name": "AbortError",
+        "message": "The user aborted a request.",
+        "code": 20
+      },
+      "sameReason": false,
+      "sameCustom": false
+    },
+    {
+      "stage": "before-read",
+      "reasonKind": "string",
+      "error": {
+        "name": "AbortError",
+        "message": "The user aborted a request.",
+        "code": 20
+      },
+      "sameReason": false,
+      "sameCustom": false
+    },
+    {
+      "stage": "during-read",
+      "reasonKind": "default",
+      "error": {
+        "name": "AbortError",
+        "message": "The user aborted a request.",
+        "code": 20
+      },
+      "sameReason": false,
+      "sameCustom": false
+    },
+    {
+      "stage": "during-read",
+      "reasonKind": "object",
+      "error": {
+        "name": "AbortError",
+        "message": "The user aborted a request.",
+        "code": 20
+      },
+      "sameReason": false,
+      "sameCustom": false
+    },
+    {
+      "stage": "during-read",
+      "reasonKind": "string",
+      "error": {
+        "name": "AbortError",
+        "message": "The user aborted a request.",
+        "code": 20
+      },
+      "sameReason": false,
+      "sameCustom": false
+    }
+  ],
+  "requests": [
+    {
+      "path": "/top",
+      "authorization": null
+    },
+    {
+      "path": "/favicon.ico",
+      "authorization": null
+    },
+    {
+      "path": "/worker.js",
+      "authorization": null
+    },
+    {
+      "path": "/slow-body?stage=before-read&reason=default",
+      "authorization": null
+    },
+    {
+      "path": "/slow-body?stage=before-read&reason=object",
+      "authorization": null
+    },
+    {
+      "path": "/slow-body?stage=before-read&reason=string",
+      "authorization": null
+    },
+    {
+      "path": "/slow-body?stage=during-read&reason=default",
+      "authorization": null
+    },
+    {
+      "path": "/slow-body?stage=during-read&reason=object",
+      "authorization": null
+    },
+    {
+      "path": "/slow-body?stage=during-read&reason=string",
+      "authorization": null
+    }
+  ],
+  "fixture": "Same-origin /worker.js. /slow-body flushes 200 text/plain headers and start immediately, then sends end after 150ms. Worker either aborts immediately after fetch resolves or begins text() and aborts 10ms later."
+}

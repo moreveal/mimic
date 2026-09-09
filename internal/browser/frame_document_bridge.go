@@ -1,0 +1,500 @@
+package browser
+
+import (
+	"context"
+	"fmt"
+	"strconv"
+
+	"github.com/moreveal/mimic/internal/engine"
+)
+
+func (r *Realm) installFrameDocumentBridge(host map[string]any) {
+	r.installFrameReflection(host)
+	host["installFrameReferenceBridge"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		if r.frameReferenceImport != nil {
+			return nil, fmt.Errorf("frame reference bridge already installed")
+		}
+		r.frameReferenceImport, r.frameReferenceDescribe = args[0], args[1]
+		return nil, nil
+	})
+	host["frameReference"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		value := args[0]
+		return r.crossFrameResult(r, func(context.Context) (engine.Value, error) { return value, nil })
+	})
+	host["frameResolve"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		if strarg(args, 1) != r.ID {
+			return nil, fmt.Errorf("cross-realm object is no longer available")
+		}
+		value := r.crossValues[int64(numarg(args, 0))]
+		if value == nil {
+			return nil, fmt.Errorf("cross-realm object is no longer available")
+		}
+		return value, nil
+	})
+	host["frameConstruct"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		frame := r.agent.Page().frame(strarg(args, 0))
+		if !r.canAccess(frame) {
+			return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
+		}
+		target := frame.Realm
+		function := target.crossValues[int64(numarg(args, 1))]
+		if function == nil || strarg(args, 4) != target.ID {
+			return nil, fmt.Errorf("cross-realm constructor is no longer available")
+		}
+		raw, _ := arg(args, 2).([]any)
+		rawNewTarget, _ := arg(args, 3).(map[string]any)
+		if rawNewTarget["kind"] != "reference" || rawNewTarget["type"] != "function" {
+			return nil, fmt.Errorf("NotSupportedError: cross-realm construction requires a remote newTarget")
+		}
+		return r.crossFrameData(func(ctx context.Context) (any, error) {
+			newTarget, err := target.decodeFrameArgument(rawNewTarget)
+			if err != nil {
+				return nil, err
+			}
+			// Build the argument array in its owning realm; exporting native
+			// values here would lose object identity and invoke user getters.
+			arguments, err := target.callFrameReflection(ctx, "array", nil, nil, nil)
+			if err != nil {
+				return nil, err
+			}
+			for index, encoded := range raw {
+				value, err := target.decodeFrameArgument(encoded)
+				if err != nil {
+					return nil, err
+				}
+				if _, err := target.callFrameReflection(ctx, "set", arguments, target.val(strconv.Itoa(index)), value); err != nil {
+					return nil, err
+				}
+			}
+			restore := r.enterFrameDocumentEntry(target)
+			defer restore()
+			record, err := target.callFrameReflection(ctx, "construct", function, arguments, newTarget)
+			if err != nil {
+				return nil, err
+			}
+			encoded, err := target.encodeReflectedValue(record)
+			if err != nil {
+				return nil, err
+			}
+			return map[string]any{"threw": target.runtime.GetProperty(record, "threw").Export(), "value": encoded}, nil
+		})
+	})
+	host["frameDocumentGet"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		frame := r.agent.Page().frame(strarg(args, 0))
+		if !r.canAccess(frame) {
+			return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
+		}
+		target := frame.Realm
+		property := strarg(args, 1)
+		return r.crossFrameResult(target, func(context.Context) (engine.Value, error) {
+			return target.runtime.GetProperty(target.runtime.Get("document"), property), nil
+		})
+	})
+	host["frameDocumentSet"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		frame := r.agent.Page().frame(strarg(args, 0))
+		if !r.canAccess(frame) {
+			return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
+		}
+		target := frame.Realm
+		value, err := target.decodeFrameArgument(arg(args, 2))
+		if err != nil {
+			return nil, err
+		}
+		return nil, target.runtime.SetProperty(target.runtime.Get("document"), strarg(args, 1), value)
+	})
+	host["frameSet"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		frame := r.agent.Page().frame(strarg(args, 0))
+		if !r.canAccess(frame) {
+			return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
+		}
+		target := frame.Realm
+		if strarg(args, 4) != target.ID {
+			return nil, fmt.Errorf("cross-realm object is no longer available")
+		}
+		object := target.crossValues[int64(numarg(args, 1))]
+		if object == nil {
+			return nil, fmt.Errorf("cross-realm object is no longer available")
+		}
+		rawKey, rawValue := arg(args, 2), arg(args, 3)
+		return r.crossFrameData(func(ctx context.Context) (any, error) {
+			key, err := target.decodeFrameKey(ctx, rawKey)
+			if err != nil {
+				return nil, err
+			}
+			value, err := target.decodeFrameArgument(rawValue)
+			if err != nil {
+				return nil, err
+			}
+			result, err := target.callFrameReflection(ctx, "set", object, key, value)
+			if err != nil {
+				return nil, err
+			}
+			return result.Export(), nil
+		})
+	})
+}
+
+// Arguments use an envelope created from private proxy slots. User objects are
+// carried as values; their properties cannot masquerade as a browser handle.
+func (r *Realm) decodeFrameArgument(raw any) (engine.Value, error) {
+	argument, ok := raw.(map[string]any)
+	if !ok {
+		return nil, fmt.Errorf("invalid cross-realm argument")
+	}
+	switch argument["kind"] {
+	case "symbol":
+		return r.decodeFrameKey(context.Background(), argument["key"])
+	case "bigint":
+		return r.callFrameReflection(context.Background(), "bigint", nil, r.val(argument["value"]), nil)
+	case "undefined":
+		return r.runtime.Get("undefined"), nil
+	case "value":
+		return r.runtime.Value(argument["value"]), nil
+	case "reference":
+		if argument["frame"] != r.agent.ContextID() {
+			frameID, _ := argument["frame"].(string)
+			source := r.agent.Page().frame(frameID)
+			if !r.canAccess(source) {
+				return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
+			}
+			if argument["type"] == "document" || argument["type"] == "window" {
+				if r.frameReferenceImport == nil {
+					return nil, fmt.Errorf("frame reference bridge is not initialized")
+				}
+				return r.runtime.Call(context.Background(), r.frameReferenceImport, nil, r.val(map[string]any{"__mimicCrossRealm": argument["type"], "frame": frameID}))
+			}
+			if source.Realm.ID != argument["realm"] {
+				return nil, fmt.Errorf("cross-realm object is no longer available")
+			}
+			value := source.Realm.crossValues[int64(numberValue(argument["handle"]))]
+			if value == nil {
+				return nil, fmt.Errorf("cross-realm object is no longer available")
+			}
+			if r.frameReferenceImport == nil {
+				return nil, fmt.Errorf("frame reference bridge is not initialized")
+			}
+			encoded, err := source.Realm.crossRealmValue(value)
+			if err != nil {
+				return nil, err
+			}
+			return r.runtime.Call(context.Background(), r.frameReferenceImport, nil, r.val(encoded))
+		}
+		switch argument["type"] {
+		case "document":
+			return r.runtime.Get("document"), nil
+		case "window":
+			return r.runtime.Get("globalThis"), nil
+		}
+		if argument["realm"] != r.ID {
+			return nil, fmt.Errorf("cross-realm reference is no longer available")
+		}
+		value := r.crossValues[int64(numberValue(argument["handle"]))]
+		if value == nil {
+			return nil, fmt.Errorf("cross-realm reference is no longer available")
+		}
+		return value, nil
+	default:
+		return nil, fmt.Errorf("invalid cross-realm argument kind")
+	}
+}
+
+func (r *Realm) callFrameReference(args []engine.Value) (engine.Value, error) {
+	frame := r.agent.Page().frame(strarg(args, 0))
+	if !r.canAccess(frame) {
+		return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
+	}
+	target := frame.Realm
+	function := target.crossValues[int64(numarg(args, 1))]
+	if function == nil || strarg(args, 4) != target.ID {
+		return nil, fmt.Errorf("cross-realm function is no longer available")
+	}
+	raw, _ := arg(args, 2).([]any)
+	rawReceiver := arg(args, 3)
+	return r.crossFrameResult(target, func(ctx context.Context) (engine.Value, error) {
+		receiver, err := target.decodeFrameArgument(rawReceiver)
+		if err != nil {
+			return nil, err
+		}
+		arguments := make([]engine.Value, len(raw))
+		for index := range raw {
+			arguments[index], err = target.decodeFrameArgument(raw[index])
+			if err != nil {
+				return nil, err
+			}
+		}
+		restore := r.enterFrameDocumentEntry(target)
+		defer restore()
+		return target.runtime.Call(ctx, function, receiver, arguments...)
+	})
+}
+
+func (r *Realm) crossFrameResult(target *Realm, operation func(context.Context) (engine.Value, error)) (engine.Value, error) {
+	var encoded map[string]any
+	run := func(ctx context.Context) error {
+		value, err := operation(ctx)
+		if err != nil {
+			return err
+		}
+		encoded, err = target.crossRealmValue(value)
+		return err
+	}
+	var err error
+	if nested, ok := r.runtime.(engine.ReentrantRuntime); ok {
+		err = nested.RunNested(context.Background(), run)
+	} else {
+		err = run(context.Background())
+	}
+	if err != nil {
+		return nil, err
+	}
+	return r.val(encoded), nil
+}
+
+// The entry document follows the synchronous cross-realm call stack. Restore
+// it before separately scheduled jobs run, so a later child timer is not
+// attributed to the parent that previously evaluated code in the child.
+func (r *Realm) enterFrameDocumentEntry(target *Realm) func() {
+	entry := r.documentEntry
+	if entry == nil {
+		entry = r
+	}
+	previous := target.documentEntry
+	target.documentEntry = entry
+	return func() { target.documentEntry = previous }
+}
+
+type frameReflection struct {
+	operation     engine.Value
+	err           error
+	symbolSources map[string]int64
+	symbolOrigins map[int64]map[string]any
+}
+
+// Capture intrinsics before document scripts can replace Reflect or Symbol.
+// Reflection uses the remote canonical object, never exported object copies.
+const frameReflectionSource = `(()=>{
+ const ids=new WeakMap(),weakGet=WeakMap.prototype.get,weakSet=WeakMap.prototype.set,P=Proxy,isArray=Array.isArray,integer=BigInt,keys=Reflect.ownKeys,descriptor=Reflect.getOwnPropertyDescriptor,get=Reflect.get,set=Reflect.set,contains=Reflect.has,prototype=Reflect.getPrototypeOf,construct=Reflect.construct,apply=Reflect.apply,has=Object.prototype.hasOwnProperty,S=Symbol,forKey=Symbol.for,keyFor=Symbol.keyFor,description=descriptor(Symbol.prototype,'description').get;
+ const wellKnown=[],names=keys(Symbol);for(let i=0;i<names.length;i++){const name=names[i];if(typeof Symbol[name]==='symbol')wellKnown[wellKnown.length]=[name,Symbol[name]]}
+ const info=key=>{if(typeof key==='string')return{kind:'string',value:key};const result={kind:'symbol',key,description:apply(description,key,[])};for(let i=0;i<wellKnown.length;i++)if(wellKnown[i][1]===key){result.wellKnown=wellKnown[i][0];return result}const global=keyFor(key);if(global!==undefined)result.global=global;return result};
+ return(op,object,key,value)=>{
+  if(op==='handle'){let id=apply(weakGet,ids,[object]);if(id===undefined){id=key;apply(weakSet,ids,[object,id])}return id}
+  if(op==='array')return [];
+  if(op==='shape'){if(typeof object!=='function')return{array:isArray(object)};let constructable=true;try{construct(new P(object,{construct(){return {}}}),[])}catch(error){constructable=false}return{constructable}}
+  if(op==='bigint')return integer(key);
+  if(op==='prototype')return prototype(object);
+  if(op==='construct'){let result,threw=false;try{result=construct(object,key,value)}catch(error){result=error;threw=true}return{threw,value:result,valueType:typeof result,symbol:typeof result==='symbol'?info(result):null}}
+  if(op==='key'){if(key.wellKnown!==undefined){for(let i=0;i<wellKnown.length;i++)if(wellKnown[i][0]===key.wellKnown)return wellKnown[i][1]}if(key.global!==undefined)return forKey(key.global);return S(key.description)}
+  if(op==='symbol')return info(object);
+  if(op==='keys'){const source=keys(object),out=[];for(let i=0;i<source.length;i++)out[i]=info(source[i]);return out}
+  if(op==='get'){const value=get(object,key);return{value,valueType:typeof value,symbol:typeof value==='symbol'?info(value):null}}
+  if(op==='set')return set(object,key,value);
+  if(op==='has')return contains(object,key);
+  const d=descriptor(object,key);if(d===undefined)return{exists:false};const accessor=!apply(has,d,['value']);return accessor?{exists:true,accessor:true,enumerable:d.enumerable,configurable:d.configurable,get:d.get,set:d.set}:{exists:true,accessor:false,enumerable:d.enumerable,configurable:d.configurable,writable:d.writable,value:d.value,valueType:typeof d.value,symbol:typeof d.value==='symbol'?info(d.value):null}
+ }
+})()`
+
+func (r *Realm) installFrameReflection(host map[string]any) {
+	operation, err := r.runtime.Eval(context.Background(), frameReflectionSource, "mimic:frame-reflection")
+	r.frameReflection = &frameReflection{operation: operation, err: err, symbolSources: make(map[string]int64), symbolOrigins: make(map[int64]map[string]any)}
+	for _, name := range []string{"frameOwnKeys", "frameDescriptor", "frameHas"} {
+		name := name
+		host[name] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+			frame := r.agent.Page().frame(strarg(args, 0))
+			if !r.canAccess(frame) {
+				return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
+			}
+			target := frame.Realm
+			realmIndex := 2
+			if name != "frameOwnKeys" {
+				realmIndex = 3
+			}
+			if strarg(args, realmIndex) != target.ID {
+				return nil, fmt.Errorf("cross-realm object is no longer available")
+			}
+			object := target.crossValues[int64(numarg(args, 1))]
+			if object == nil {
+				return nil, fmt.Errorf("cross-realm object is no longer available")
+			}
+			var rawKey any
+			if name != "frameOwnKeys" {
+				rawKey = arg(args, 2)
+			}
+			return r.crossFrameData(func(ctx context.Context) (any, error) {
+				if name == "frameOwnKeys" {
+					keys, err := target.callFrameReflection(ctx, "keys", object, nil, nil)
+					if err != nil {
+						return nil, err
+					}
+					length := int(numberValue(target.runtime.GetProperty(keys, "length").Export()))
+					result := make([]any, 0, length)
+					for index := 0; index < length; index++ {
+						result = append(result, target.encodeFrameKey(target.runtime.GetProperty(keys, strconv.Itoa(index))))
+					}
+					return result, nil
+				}
+				key, err := target.decodeFrameKey(ctx, rawKey)
+				if err != nil {
+					return nil, err
+				}
+				if name == "frameHas" {
+					result, err := target.callFrameReflection(ctx, "has", object, key, nil)
+					if err != nil {
+						return nil, err
+					}
+					return result.Export(), nil
+				}
+				desc, err := target.callFrameReflection(ctx, "descriptor", object, key, nil)
+				if err != nil {
+					return nil, err
+				}
+				field := func(name string) engine.Value { return target.runtime.GetProperty(desc, name) }
+				if field("exists").Export() != true {
+					return map[string]any{"exists": false}, nil
+				}
+				accessor := field("accessor").Export() == true
+				out := map[string]any{"exists": true, "accessor": accessor, "enumerable": field("enumerable").Export(), "configurable": field("configurable").Export()}
+				if accessor {
+					out["get"], err = target.crossRealmValue(field("get"))
+					if err != nil {
+						return nil, err
+					}
+					out["set"], err = target.crossRealmValue(field("set"))
+				} else {
+					out["writable"] = field("writable").Export()
+					out["value"], err = target.encodeReflectedValue(desc)
+				}
+				return out, err
+			})
+		})
+	}
+}
+
+func (r *Realm) callFrameReflection(ctx context.Context, operation string, object, key, value engine.Value) (engine.Value, error) {
+	if r.frameReflection == nil {
+		return nil, fmt.Errorf("frame reflection is not initialized")
+	}
+	if r.frameReflection.err != nil {
+		return nil, r.frameReflection.err
+	}
+	if object == nil {
+		object = r.runtime.Get("undefined")
+	}
+	if key == nil {
+		key = r.runtime.Get("undefined")
+	}
+	if value == nil {
+		value = r.runtime.Get("undefined")
+	}
+	return r.runtime.Call(ctx, r.frameReflection.operation, nil, r.val(operation), object, key, value)
+}
+
+func (r *Realm) encodeFrameKey(info engine.Value) map[string]any {
+	field := func(name string) engine.Value { return r.runtime.GetProperty(info, name) }
+	if field("kind").String() == "string" {
+		return map[string]any{"kind": "string", "value": field("value").Export()}
+	}
+	key := field("key")
+	var handle int64
+	for id, existing := range r.crossValues {
+		if r.runtime.StrictEqual(key, existing) {
+			handle = id
+			break
+		}
+	}
+	if handle == 0 {
+		r.crossValueSeq++
+		handle = r.crossValueSeq
+		r.crossValues[handle] = key
+	}
+	out := map[string]any{"kind": "symbol", "realm": r.ID, "handle": handle}
+	for key, value := range r.frameReflection.symbolOrigins[handle] {
+		out[key] = value
+	}
+	for _, name := range []string{"wellKnown", "global", "description"} {
+		value := field(name)
+		if r.runtime.TypeOf(value) != "undefined" {
+			out[name] = value.Export()
+		}
+	}
+	return out
+}
+
+func (r *Realm) decodeFrameKey(ctx context.Context, raw any) (engine.Value, error) {
+	if key, ok := raw.(string); ok {
+		return r.val(key), nil
+	}
+	key, ok := raw.(map[string]any)
+	if !ok {
+		return nil, fmt.Errorf("invalid cross-realm property key")
+	}
+	if key["kind"] == "string" {
+		return r.val(key["value"]), nil
+	}
+	if key["kind"] != "symbol" {
+		return nil, fmt.Errorf("invalid cross-realm property key kind")
+	}
+	if realm, ok := key["realm"].(string); ok && realm != "" {
+		if realm != r.ID {
+			return nil, fmt.Errorf("cross-realm symbol belongs to another realm")
+		}
+		value := r.crossValues[int64(numberValue(key["handle"]))]
+		if value == nil {
+			return nil, fmt.Errorf("cross-realm symbol is no longer available")
+		}
+		return value, nil
+	}
+	var sourceKey string
+	if source, ok := key["sourceRealm"].(string); ok && source != "" {
+		sourceKey = source + ":" + strconv.FormatInt(int64(numberValue(key["localID"])), 10)
+		if id := r.frameReflection.symbolSources[sourceKey]; id != 0 {
+			return r.crossValues[id], nil
+		}
+	}
+	value, err := r.callFrameReflection(ctx, "key", nil, r.val(key), nil)
+	if err == nil && sourceKey != "" {
+		r.crossValueSeq++
+		id := r.crossValueSeq
+		r.crossValues[id] = value
+		r.frameReflection.symbolSources[sourceKey] = id
+		r.frameReflection.symbolOrigins[id] = map[string]any{"sourceRealm": key["sourceRealm"], "localID": key["localID"]}
+	}
+	return value, err
+}
+
+func (r *Realm) encodeReflectedValue(record engine.Value) (map[string]any, error) {
+	if r.runtime.GetProperty(record, "valueType").String() == "symbol" {
+		encoded := r.encodeFrameKey(r.runtime.GetProperty(record, "symbol"))
+		encoded["__mimicCrossRealm"] = "symbol"
+		return encoded, nil
+	}
+	return r.crossRealmValue(r.runtime.GetProperty(record, "value"))
+}
+
+func (r *Realm) reflectFrameGet(target *Realm, object engine.Value, rawKey any) (engine.Value, error) {
+	return r.crossFrameData(func(ctx context.Context) (any, error) {
+		key, err := target.decodeFrameKey(ctx, rawKey)
+		if err != nil {
+			return nil, err
+		}
+		record, err := target.callFrameReflection(ctx, "get", object, key, nil)
+		if err != nil {
+			return nil, err
+		}
+		return target.encodeReflectedValue(record)
+	})
+}
+
+func (r *Realm) crossFrameData(operation func(context.Context) (any, error)) (engine.Value, error) {
+	var data any
+	run := func(ctx context.Context) error { var err error; data, err = operation(ctx); return err }
+	var err error
+	if nested, ok := r.runtime.(engine.ReentrantRuntime); ok {
+		err = nested.RunNested(context.Background(), run)
+	} else {
+		err = run(context.Background())
+	}
+	if err != nil {
+		return nil, err
+	}
+	return r.val(data), nil
+}

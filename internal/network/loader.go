@@ -58,6 +58,8 @@ type Request struct {
 	// default request mode (for example, a crossorigin classic script).
 	Mode        string
 	Destination string
+	// Redirect is the Fetch redirect mode; the empty value means follow.
+	Redirect string
 	// PerformanceInitiatorType is the Resource Timing projection. It is kept
 	// separate from Initiator because CDP may classify a browser-owned favicon
 	// lookup as Other while PerformanceResourceTiming exposes "img".
@@ -66,8 +68,11 @@ type Request struct {
 	// malformed or changing response from causing an unbounded internal retry.
 	criticalCHRestarted bool
 	navigationStarted   time.Time
+	redirectCount       int
 }
 type Response struct {
+	Redirected      bool
+	Type            string
 	Status          int
 	Headers         http.Header
 	Body            []byte
@@ -138,6 +143,9 @@ func (l *Loader) Use(i Interceptor) func() {
 	}
 }
 func (l *Loader) Load(ctx context.Context, r Request) (Response, error) {
+	if err := ctx.Err(); err != nil {
+		return Response{}, err
+	}
 	if r.Initiator == Navigation && r.navigationStarted.IsZero() {
 		r.navigationStarted = time.Now()
 	}
@@ -462,17 +470,70 @@ func (l *Loader) after(ctx context.Context, r Request, res Response) (Response, 
 	l.trace.Add(trace.Network, "response", map[string]any{"id": r.ID, "url": r.URL.String(), "status": res.Status, "headers": headerStrings(res.Headers), "mimeType": strings.Split(res.Headers.Get("Content-Type"), ";")[0], "encodedDataLength": len(res.Body), "encodedBodySize": encodedBodySize, "decodedBodySize": len(res.Body), "transferSize": transferSize, "durationMs": float64(res.Duration) / float64(time.Millisecond), "protocol": res.Protocol, "transportTiming": res.TransportTiming, "browserVisibleTiming": res.BrowserVisibleTiming, "connectionReused": res.TransportTiming.Reused, "connectionId": res.TransportTiming.ConnectionID, "fromCache": res.FromCache, "initiator": r.Initiator, "performanceInitiatorType": performanceInitiatorType, "synthetic": res.Synthetic, "context": r.ContextID})
 	l.remember(r.ID, res)
 	l.trace.Add(trace.Resource, "loadEnd", map[string]any{"id": r.ID, "url": r.URL.String(), "status": res.Status, "type": r.Initiator})
-	if res.Status >= 300 && res.Status < 400 {
+	if isRedirectStatus(res.Status) {
+		if r.Redirect == "manual" {
+			return Response{Status: 0, Type: "opaqueredirect", URL: r.URL, Headers: make(http.Header)}, nil
+		}
 		if loc := res.Headers.Get("Location"); loc != "" {
+			if r.Redirect == "error" {
+				return Response{}, fmt.Errorf("redirect forbidden by request redirect mode")
+			}
+			if r.redirectCount >= 20 {
+				return Response{}, fmt.Errorf("too many redirects")
+			}
 			u, err := r.URL.Parse(loc)
 			if err != nil {
 				return Response{}, err
 			}
+			if u.Scheme != "http" && u.Scheme != "https" {
+				return Response{}, fmt.Errorf("redirect to unsupported scheme %q", u.Scheme)
+			}
+			if (r.Initiator == Fetch || r.Initiator == XHR) && u.User != nil {
+				return Response{}, fmt.Errorf("redirect URL contains credentials")
+			}
+			if !strings.Contains(loc, "#") {
+				u.Fragment, u.RawFragment = r.URL.Fragment, r.URL.RawFragment
+			}
+			r.Headers = r.Headers.Clone()
+			if !sameRedirectOrigin(r.URL, u) {
+				r.Headers.Del("Authorization")
+				r.Headers.Del("Proxy-Authorization")
+			}
+			if (res.Status == 301 || res.Status == 302) && r.Method == http.MethodPost || res.Status == 303 && r.Method != http.MethodGet && r.Method != http.MethodHead {
+				r.Method, r.Body = http.MethodGet, nil
+				for _, name := range []string{"Content-Encoding", "Content-Language", "Content-Location", "Content-Type", "Content-Length"} {
+					r.Headers.Del(name)
+				}
+			}
+			// These fields belong to the new request, not to the previous hop.
+			// In particular, do not forward the source host's cookie jar entry.
+			for _, name := range []string{"Cookie", "Referer", "Origin", "Sec-Fetch-Site"} {
+				r.Headers.Del(name)
+			}
 			r.URL = u
+			r.redirectCount++
 			return l.Load(ctx, r)
 		}
 	}
+	res.Redirected = r.redirectCount > 0
 	return res, nil
+}
+
+func isRedirectStatus(status int) bool {
+	return status == 301 || status == 302 || status == 303 || status == 307 || status == 308
+}
+
+func sameRedirectOrigin(a, b *url.URL) bool {
+	port := func(u *url.URL) string {
+		if p := u.Port(); p != "" {
+			return p
+		}
+		if strings.EqualFold(u.Scheme, "https") {
+			return "443"
+		}
+		return "80"
+	}
+	return strings.EqualFold(a.Scheme, b.Scheme) && strings.EqualFold(a.Hostname(), b.Hostname()) && port(a) == port(b)
 }
 func headerStrings(h http.Header) map[string]string {
 	out := make(map[string]string, len(h))

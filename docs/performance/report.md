@@ -1132,3 +1132,51 @@ forecast placeholders. Live teardown also stalled. Neither the successful local
 gate nor the CSS profile establishes that live hydration, load completion, or
 teardown is resolved. See the [investigation and limitations](../compatibility/callback-style-20260909/report.md)
 and [measurement receipt](../compatibility/callback-style-20260909/performance.json).
+
+## 2026-09-09 — Incremental document parser diagnostic
+
+`BenchmarkDocumentParser` compares ordinary batch parsing with one streamed
+write plus close of the same 2,178-byte HTML fixture (24 sections with text and
+tables). The stream case includes initial blank-Document creation and teardown.
+On the local Windows amd64 i7-14700KF, one 300 ms benchmark sample measured:
+
+| Path | Time/op | Throughput | Bytes/op | Allocations/op |
+| --- | ---: | ---: | ---: | ---: |
+| Batch | 55.7 µs | 39.09 MB/s | 103,035 | 1,096 |
+| Stream | 273.5 µs | 7.96 MB/s | 171,276 | 4,938 |
+
+This is a local diagnostic, not a reportable browser-workload comparison or a
+performance improvement. The canonical DOM adapter currently reconstructs node
+projections, including attributes, for tree-builder reads; it also crosses a
+stream-local channel at tokenizer starvation and script boundaries. These are
+known overheads to profile before optimizing. The implementation prioritizes
+canonical node identity, reentrant insertion, and parser correctness. No frozen
+workload, baseline, or performance harness was changed; no full matrix was run.
+
+## 2026-09-09 — Cross-realm object identity lookup
+
+A live navigation reached a 30-second DOM-task deadline while making steady
+progress through hundreds of remote Window properties. The canonical handle
+lookup scanned retained objects and performed one native equality check per
+candidate. A bounded diagnostic measured 100 repeated object encodings:
+
+| Retained objects | V8 linear scan | V8 identity index |
+| --- | ---: | ---: |
+| 10 | 29.75 ms | 30.79 ms |
+| 100 | 76.28 ms | 31.60 ms |
+| 500 | 292.01 ms | 27.33 ms |
+
+The replacement uses a captured, realm-owned WeakMap to index canonical object
+identity. The existing Go handle table still owns retained values; object
+contents are not copied or cached. Goja measured about 1 ms in both paths.
+These single local samples isolate lookup scaling, not end-to-end browser
+speedup. Symbol lookup still scans retained handles. Raw diagnostic logs are
+`.build/frame-handle-probe.log` and `.build/frame-handle-probe-after.log`.
+
+The fresh-build fast gate passed all six mandatory workloads, eight static
+concurrency waves (10/25 pages), and both memory waves. Its build receipt and
+raw measurements are in `.build/worker-reference-indexed-fast-gate/`. Warm
+completion medians were 159.53 ms (DOM), 57.99 ms (static), and 114.24 ms (React).
+Other validation and a live navigation ran concurrently, so these are unpaired
+health checks, not a browser speedup comparison. The frozen harness and baseline
+were unchanged; no full matrix was run.

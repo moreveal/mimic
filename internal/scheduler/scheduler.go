@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"reflect"
 	"sync"
 	"time"
 )
@@ -146,6 +147,52 @@ func (s *Scheduler) Wait(ctx context.Context) error {
 	case <-ctx.Done():
 		return ctx.Err()
 	}
+}
+
+// WaitAny waits for work in any queue owned by one browser event loop. A
+// Promise evaluated in one realm may depend on a task in a sibling or child
+// realm, so waiting on only the evaluated realm's wake channel is insufficient.
+// The caller serializes event-loop turns; posting from transport goroutines is
+// safe. No goroutines or polling are needed to combine the wake channels.
+func WaitAny(ctx context.Context, queues []*Scheduler) error {
+	cases := []reflect.SelectCase{{Dir: reflect.SelectRecv, Chan: reflect.ValueOf(ctx.Done())}}
+	var delay time.Duration
+	hasDeadline := false
+	for _, s := range queues {
+		cases = append(cases, reflect.SelectCase{Dir: reflect.SelectRecv, Chan: reflect.ValueOf(s.wake)})
+		s.mu.Lock()
+		if !s.paused && len(s.tasks) > 0 {
+			remaining := s.tasks[0].due.Sub(s.nowLocked())
+			if remaining <= 0 {
+				s.mu.Unlock()
+				return ctx.Err()
+			}
+			remaining = time.Duration(float64(remaining) / s.executionScale)
+			if !hasDeadline || remaining < delay {
+				delay, hasDeadline = remaining, true
+			}
+		}
+		s.mu.Unlock()
+	}
+	start := time.Now()
+	if hasDeadline {
+		timer := time.NewTimer(delay)
+		defer timer.Stop()
+		cases = append(cases, reflect.SelectCase{Dir: reflect.SelectRecv, Chan: reflect.ValueOf(timer.C)})
+	}
+	selected, _, _ := reflect.Select(cases)
+	// Every realm observes the same elapsed wait. Advancing only the queue
+	// owning the earliest timer would leave another realm's clock frozen.
+	elapsed := time.Since(start)
+	for _, s := range queues {
+		s.mu.Lock()
+		s.now = s.now.Add(time.Duration(float64(elapsed) * s.executionScale))
+		s.mu.Unlock()
+	}
+	if selected == 0 {
+		return ctx.Err()
+	}
+	return nil
 }
 func (s *Scheduler) Cancel(id uint64) {
 	s.mu.Lock()

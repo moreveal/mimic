@@ -34,6 +34,7 @@ type DedicatedWorker struct {
 	errorCallback     engine.Value
 	messageReceiver   engine.Value
 	url               *url.URL
+	securityURL       *url.URL // inherited creator URL for blob workers; independent of URL base
 	closed            bool
 	started           bool
 	pending           []any
@@ -41,6 +42,8 @@ type DedicatedWorker struct {
 	done              chan struct{}
 	wake              chan struct{}
 	performanceOrigin time.Time
+	fetchCancels      map[string]context.CancelFunc // worker task/host callbacks only
+	fetchWG           sync.WaitGroup
 }
 
 func (r *Realm) hostCreateWorker(_ engine.Value, args []engine.Value) (engine.Value, error) {
@@ -53,7 +56,7 @@ func (r *Realm) hostCreateWorker(_ engine.Value, args []engine.Value) (engine.Va
 	if err != nil {
 		return nil, err
 	}
-	w := &DedicatedWorker{id: id, parent: r, deliverCallback: args[0], errorCallback: args[1], url: workerURL, done: make(chan struct{}), wake: make(chan struct{}, 1), performanceOrigin: r.scheduler.Now()}
+	w := &DedicatedWorker{id: id, parent: r, deliverCallback: args[0], errorCallback: args[1], url: workerURL, securityURL: r.documentURL(), done: make(chan struct{}), wake: make(chan struct{}, 1), performanceOrigin: r.scheduler.Now()}
 	r.workers[id] = w
 	source := strarg(args, 3)
 	r.agent.Page().trace.Add(trace.Lifecycle, "workerCreated", map[string]any{"url": workerURL.String(), "worker": id, "realm": r.ID})
@@ -107,7 +110,17 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 	w.runtime = runtime
 	w.scheduler = workerScheduler
 	w.mu.Unlock()
-	defer runtime.Close()
+	defer func() {
+		w.stopFetches()
+		_ = runtime.Close()
+		// A terminated Worker object can remain reachable from its creating
+		// document. Do not retain its abandoned task queue or response bodies.
+		w.mu.Lock()
+		w.closed = true
+		w.runtime, w.scheduler, w.messageReceiver = nil, nil, nil
+		w.pending = nil
+		w.mu.Unlock()
+	}()
 	workerScheduler.SetObserver(func(t scheduler.Transition) {
 		p.trace.Add(trace.Scheduler, t.Name, map[string]any{"taskId": t.TaskID, "source": t.Source, "due": t.Due, "worker": w.id})
 	})
@@ -119,6 +132,21 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 		}
 	})
 	host := map[string]any{}
+	installURLHost(host, runtime, func() *url.URL { return w.url })
+	host["createObjectURL"] = runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		source := w.url
+		if source.Scheme == "blob" {
+			source = w.securityURL
+		}
+		raw := "blob:" + originOf(source.String()) + "/" + uuid.NewString()
+		p.ctx.network.PutBlob(raw, byteSlice(arg(args, 0)), strarg(args, 1))
+		return runtime.Value(raw), nil
+	})
+	host["revokeObjectURL"] = runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		p.ctx.network.RevokeBlob(strarg(args, 0))
+		return nil, nil
+	})
+	w.installFetch(host, ctx)
 	workerToken := uuid.NewString()
 	host["token"] = runtime.Function(func(engine.Value, []engine.Value) (engine.Value, error) {
 		return runtime.Value(workerToken), nil
@@ -286,10 +314,14 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 		_ = w.reportError(err)
 		return
 	}
+	if err := installEvalSourceResolver(runtime); err != nil {
+		_ = w.reportError(err)
+		return
+	}
 	w.mu.Lock()
 	w.messageReceiver = runtime.Get("__deliver")
 	w.mu.Unlock()
-	if _, err := runtime.Eval(ctx, `delete globalThis.__deliver;delete globalThis.__workerHost`, "mimic:hide-worker-internals"); err != nil {
+	if _, err := runtime.Eval(ctx, `delete globalThis.__deliver;delete globalThis.__workerHost;delete globalThis.__mimicEvalSourceResolver`, "mimic:hide-worker-internals"); err != nil {
 		_ = w.reportError(err)
 		return
 	}
@@ -304,6 +336,9 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 				return loadErr
 			}
 			source = string(res.Body)
+			if res.URL != nil {
+				w.url = res.URL
+			}
 		}
 		p.trace.Add(trace.JS, "scriptStart", map[string]any{"url": w.url.String(), "worker": w.id})
 		_, err := runtime.Eval(taskContext, source, w.url.String())

@@ -1,0 +1,91 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1257,
+      "height": 1281,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 10,
+      "top": 10,
+      "width": 1265,
+      "height": 1372,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "visibilityState": "hidden",
+    "hasFocus": false
+  },
+  "fixture": {
+    "path": "/dir/parent",
+    "html": "<!doctype html><title>Document stream probe</title><body>Parent"
+  },
+  "probes": {
+    "identityLifecycle": {
+      "source": "(()=>{globalThis.events=[];const f=document.createElement('iframe');document.body.appendChild(f);globalThis.f=f;const w=f.contentWindow,d=w.document;globalThis.oldD=d;w.kept=77;d.kept=88;w.addEventListener('probe',()=>events.push('old-window-listener'));d.addEventListener('probe',()=>events.push('old-document-listener'));f.onload=()=>events.push('frame-load');const initial={url:d.URL,base:d.baseURI,ready:d.readyState};const opened=d.open();const afterOpen={same:opened===d,sameWindow:f.contentWindow===w,sameDocument:f.contentDocument===d,windowGlobal:w.kept,documentProperty:d.kept,ready:d.readyState,html:d.documentElement?.outerHTML};w.dispatchEvent(new w.Event('probe'));d.dispatchEvent(new w.Event('probe'));d.write('<!doctype html><html><head><title>Written</title></head><body><p id=\"x\">hello</p><script>parent.events.push(\"script\");window.ran=42;document.addEventListener(\"DOMContentLoaded\",()=>parent.events.push(\"dom-ready\"));window.addEventListener(\"load\",()=>parent.events.push(\"window-load\"));<\\/script><a id=\"a\" href=\"relative\">link</a>');const afterWrite={ran:w.ran,text:d.getElementById('x')?.textContent,href:d.getElementById('a')?.href,ready:d.readyState,url:d.URL,base:d.baseURI,events:events.slice()};d.close();const afterClose={ran:w.ran,ready:d.readyState,events:events.slice(),sameDocument:f.contentDocument===d};return {initial,afterOpen,afterWrite,afterClose}})()",
+      "result": {
+        "initial": {
+          "url": "about:blank",
+          "base": "http://127.0.0.1:18127/dir/parent",
+          "ready": "complete"
+        },
+        "afterOpen": {
+          "same": true,
+          "sameWindow": true,
+          "sameDocument": true,
+          "windowGlobal": 77,
+          "documentProperty": 88,
+          "ready": "loading"
+        },
+        "afterWrite": {
+          "ran": 42,
+          "text": "hello",
+          "href": "http://127.0.0.1:18127/dir/relative",
+          "ready": "loading",
+          "url": "http://127.0.0.1:18127/dir/parent",
+          "base": "http://127.0.0.1:18127/dir/parent",
+          "events": [
+            "script"
+          ]
+        },
+        "afterClose": {
+          "ran": 42,
+          "ready": "complete",
+          "events": [
+            "script",
+            "dom-ready",
+            "window-load",
+            "frame-load"
+          ],
+          "sameDocument": true
+        }
+      }
+    },
+    "splitReentrant": {
+      "source": "(()=>{const f=document.createElement('iframe');document.body.appendChild(f);globalThis.f=f;globalThis.oldD=f.contentDocument;globalThis.events=[];const d=f.contentDocument;d.open();d.write('<div id=\"x\">a');const x=d.getElementById('x');d.write('b</div><scr');const middle={text:x?.textContent,script:f.contentWindow.ran};d.write('ipt>window.ran=42;document.write(\\'<i id=y>nested</i>\\');<\\/script>');const after={same:d.getElementById('x')===x,text:x?.textContent,ran:f.contentWindow.ran,nested:d.getElementById('y')?.textContent};d.close();return {middle,after,html:d.documentElement?.outerHTML}})()",
+      "result": {
+        "middle": {
+          "text": "ab"
+        },
+        "after": {
+          "same": true,
+          "text": "ab",
+          "ran": 42,
+          "nested": "nested"
+        },
+        "html": "<html><head></head><body><div id=\"x\">ab</div><script>window.ran=42;document.write('<i id=y>nested</i>');</script><i id=\"y\">nested</i></body></html>"
+      }
+    }
+  }
+}

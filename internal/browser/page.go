@@ -41,7 +41,7 @@ type Page struct {
 	performanceOrigin time.Time
 	proxy             *WindowProxy
 	current           *url.URL
-	history           []*url.URL
+	history           []*sessionHistoryEntry
 	historyIndex      int
 	initScripts       []InitScript
 	sessionStorage    map[string]map[string]string
@@ -91,7 +91,7 @@ func (p *Page) initBlank() error {
 	p.Top.Realm = r
 	p.loaderID = uuid.NewString()
 	p.current = u
-	p.history = []*url.URL{u}
+	p.history = []*sessionHistoryEntry{{URL: u, frames: map[string]*historyFrameState{p.Top.ID: {url: u, realmID: r.ID}}}}
 	p.historyIndex = 0
 	p.loadEventEnded = true
 	return nil
@@ -106,6 +106,8 @@ func (p *Page) Close() error {
 	p.Top.Realm = nil
 	retired := p.retiredRealms
 	p.retiredRealms = nil
+	p.history = nil
+	p.historyIndex = -1
 	p.mu.Unlock()
 	if realm != nil {
 		_ = realm.Close()
@@ -235,7 +237,7 @@ func (p *Page) ReserveNavigation() string {
 func (p *Page) NavigateReserved(ctx context.Context, raw, loaderID string) error {
 	return p.navigate(ctx, raw, loaderID)
 }
-func (p *Page) navigate(ctx context.Context, raw, loaderID string) error {
+func (p *Page) navigate(ctx context.Context, raw, loaderID string, replace ...bool) error {
 	u, err := url.Parse(raw)
 	if err != nil {
 		return err
@@ -264,6 +266,11 @@ func (p *Page) navigate(ctx context.Context, raw, loaderID string) error {
 	if err != nil {
 		return err
 	}
+	// The response URL is the committed document URL after redirects. Use it
+	// for the realm origin, history, policy checks and relative resource URLs.
+	if res.URL != nil {
+		u = res.URL
+	}
 	navigationScale := p.Environment().Time.NavigationScale
 	p.mu.Lock()
 	responseTime := performanceOrigin.Add(time.Duration(float64(res.Duration) * navigationScale))
@@ -272,6 +279,11 @@ func (p *Page) navigate(ctx context.Context, raw, loaderID string) error {
 	}
 	p.mu.Unlock()
 	doc, err := dom.Parse(string(res.Body))
+	if err != nil {
+		return err
+	}
+	navigationMetaPolicies := doc.MetaHTTPEquiv("content-security-policy")
+	doc, err = dom.Parse("")
 	if err != nil {
 		return err
 	}
@@ -295,11 +307,16 @@ func (p *Page) navigate(ctx context.Context, raw, loaderID string) error {
 	old := p.Top.Realm
 	p.Top.Realm = realm
 	p.current = u
-	p.history = p.history[:p.historyIndex+1]
-	p.history = append(p.history, u)
-	p.historyIndex++
+	entry := &sessionHistoryEntry{URL: u, frames: map[string]*historyFrameState{p.Top.ID: {url: u, realmID: realm.ID}}}
+	if len(replace) > 0 && replace[0] && p.historyIndex >= 0 {
+		p.history[p.historyIndex] = entry
+	} else {
+		p.history = p.history[:p.historyIndex+1]
+		p.history = append(p.history, entry)
+		p.historyIndex++
+	}
 	policies := append([]string(nil), res.Headers.Values("Content-Security-Policy")...)
-	policies = append(policies, doc.MetaHTTPEquiv("content-security-policy")...)
+	policies = append(policies, navigationMetaPolicies...)
 	p.policy = csp.Parse(policies...)
 	p.mu.Unlock()
 	if old != nil {
@@ -308,29 +325,33 @@ func (p *Page) navigate(ctx context.Context, raw, loaderID string) error {
 		p.mu.Unlock()
 	}
 	p.trace.Add(trace.Lifecycle, "frameNavigated", map[string]any{"url": u.String(), "realm": realm.ID})
+	streamState, err := realm.initializeNavigationStream()
+	if err != nil {
+		return err
+	}
 	p.runInitScripts(ctx, realm)
-	realm.preloadModules()
 	type deferredModule struct {
 		code string
 		name string
 	}
 	modules := make([]deferredModule, 0)
-	for _, s := range doc.Scripts() {
+	streamState.onScript = func(s dom.Node) error {
+		realm.preloadModules()
 		kind := scriptExecutionKind(s.Attributes["type"], s.Attributes["language"])
 		if kind == "" {
-			continue
+			return nil
 		}
 		doc.MarkScriptStarted(s.ID)
-		code := s.Text
+		code := doc.TextContent(s.ID)
 		name := u.String()
 		if src := s.Attributes["src"]; src != "" {
 			su, err := u.Parse(src)
 			if err != nil {
 				p.trace.Add(trace.Error, "scriptURL", map[string]any{"src": src, "error": err.Error()})
-				continue
+				return nil
 			}
 			if !p.allowsScript(su, false, false, s.Attributes["nonce"]) {
-				continue
+				return nil
 			}
 			request := network.Request{ContextID: p.Top.ID, URL: su, Referrer: u, SourceURL: u, Initiator: network.Script}
 			if _, crossOrigin := s.Attributes["crossorigin"]; crossOrigin || kind == "module" {
@@ -353,21 +374,23 @@ func (p *Page) navigate(ctx context.Context, raw, loaderID string) error {
 				realm.scheduler.Post(scheduler.DOM, 0, func(eventContext context.Context) error {
 					return realm.dispatchResourceEvent(eventContext, scriptID, "error")
 				})
-				if eventErr := realm.RunReady(ctx); eventErr != nil {
-					p.trace.Add(trace.Error, "scriptErrorEvent", map[string]any{"url": su.String(), "error": eventErr.Error()})
+				if !streamState.insideScript {
+					if eventErr := realm.RunReady(ctx); eventErr != nil {
+						p.trace.Add(trace.Error, "scriptErrorEvent", map[string]any{"url": su.String(), "error": eventErr.Error()})
+					}
 				}
-				continue
+				return nil
 			}
 			code = string(rr.Body)
 			name = su.String()
 		} else if !p.allowsScript(nil, true, false, s.Attributes["nonce"]) {
-			continue
+			return nil
 		}
 		if kind == "module" {
 			if code != "" {
 				modules = append(modules, deferredModule{code: code, name: name})
 			}
-			continue
+			return nil
 		}
 		if code != "" {
 			// Parser scripts are browser-observable tasks too. Running them directly
@@ -375,8 +398,11 @@ func (p *Page) navigate(ctx context.Context, raw, loaderID string) error {
 			// microtasks escape the scheduler. Queue each parser-blocking script and
 			// drain the ready turn before the parser proceeds to the next script.
 			scriptCode, scriptName, scriptID := code, name, s.ID
-			realm.scheduler.Post(scheduler.DOM, 0, func(taskContext context.Context) error {
+			runScript := func(taskContext context.Context) error {
 				p.trace.Add(trace.JS, "scriptStart", map[string]any{"url": scriptName, "realm": realm.ID})
+				previous := streamState.insideScript
+				streamState.insideScript = true
+				defer func() { streamState.insideScript = previous }()
 				evalErr := realm.evaluateClassicScript(taskContext, scriptCode, scriptName, scriptID)
 				if evalErr != nil {
 					p.trace.Add(trace.Exception, "script", map[string]any{"url": scriptName, "error": evalErr.Error()})
@@ -385,12 +411,27 @@ func (p *Page) navigate(ctx context.Context, raw, loaderID string) error {
 				}
 				p.trace.Add(trace.JS, "scriptEnd", map[string]any{"url": scriptName, "realm": realm.ID})
 				return nil
-			})
-			if err := realm.RunReady(ctx); err != nil {
-				p.trace.Add(trace.Error, "parserScriptTask", map[string]any{"url": scriptName, "error": err.Error()})
+			}
+			if streamState.insideScript {
+				// document.write executes inserted classic scripts synchronously
+				// within this parser task; the outer task owns its checkpoint.
+				_ = runScript(ctx)
+			} else {
+				realm.scheduler.Post(scheduler.DOM, 0, runScript)
+				if err := realm.RunReady(ctx); err != nil {
+					p.trace.Add(trace.Error, "parserScriptTask", map[string]any{"url": scriptName, "error": err.Error()})
+				}
 			}
 		}
+		return nil
 	}
+	if err := realm.writeDocumentStream(realm, string(res.Body)); err != nil {
+		return err
+	}
+	if err := realm.closeDocumentStream(); err != nil {
+		return err
+	}
+	realm.preloadModules()
 	// Module scripts are deferred by default: fetch begins at parser discovery,
 	// while evaluation happens after parsing and before DOMContentLoaded.
 	for _, module := range modules {
@@ -622,7 +663,7 @@ func (p *Page) evaluateRealm(ctx context.Context, r *Realm, source string) (any,
 	if err := r.checkpoint(ctx); err != nil {
 		return nil, err
 	}
-	if err := r.RunReady(ctx); err != nil {
+	if err := p.runEvaluationTasks(ctx, r); err != nil {
 		p.trace.Add(trace.Error, "scheduler", map[string]any{"error": err.Error(), "during": "Runtime.evaluate"})
 	}
 	if resolved, done, err := r.runtime.Await(v); err != nil {
@@ -643,10 +684,15 @@ func (p *Page) evaluateRealm(ctx context.Context, r *Realm, source string) (any,
 		return resolved.Export(), nil
 	}
 	for {
-		if err := r.scheduler.Wait(ctx); err != nil {
+		realms := p.evaluationRealms(r)
+		queues := make([]*scheduler.Scheduler, 0, len(realms))
+		for _, realm := range realms {
+			queues = append(queues, realm.scheduler)
+		}
+		if err := scheduler.WaitAny(ctx, queues); err != nil {
 			return nil, err
 		}
-		if err := r.RunReady(ctx); err != nil {
+		if err := p.runEvaluationTasks(ctx, r); err != nil {
 			p.trace.Add(trace.Error, "scheduler", map[string]any{"error": err.Error(), "during": "Runtime.awaitPromise wake"})
 		}
 		if resolved, done, err := r.runtime.Await(v); err != nil {
@@ -655,6 +701,47 @@ func (p *Page) evaluateRealm(ctx context.Context, r *Realm, source string) (any,
 			return resolved.Export(), nil
 		}
 	}
+}
+
+// Evaluation awaits work across the Page, not just the realm owning its
+// Promise. Keep the existing realm queues and their microtask checkpoints,
+// but include siblings and newly created frames at each task boundary.
+func (p *Page) evaluationRealms(evaluating *Realm) []*Realm {
+	p.mu.RLock()
+	defer p.mu.RUnlock()
+	realms := make([]*Realm, 0, len(p.frames)+1)
+	found := false
+	for _, frame := range p.frames {
+		if frame.Realm != nil {
+			realms = append(realms, frame.Realm)
+			found = found || frame.Realm == evaluating
+		}
+	}
+	if !found {
+		realms = append(realms, evaluating)
+	}
+	return realms
+}
+
+func (p *Page) runEvaluationTasks(ctx context.Context, evaluating *Realm) error {
+	p.mu.RLock()
+	top := p.Top.Realm
+	active := false
+	for _, frame := range p.frames {
+		active = active || frame.Realm == evaluating
+	}
+	p.mu.RUnlock()
+	// Preserve the established parent/child/parent drain order, including
+	// messages posted back to the parent during a child's task.
+	if top != nil {
+		if err := top.RunReady(ctx); err != nil {
+			return err
+		}
+	}
+	if !active {
+		return evaluating.RunReady(ctx)
+	}
+	return nil
 }
 func (p *Page) Document() (*dom.Document, bool) {
 	p.mu.RLock()
@@ -751,32 +838,6 @@ func (p *Page) resolve(raw string) (*url.URL, error) {
 		return base.ResolveReference(u), nil
 	}
 	return u, nil
-}
-func (p *Page) historyPush(raw string, replace bool) error {
-	u, err := p.resolve(raw)
-	if err != nil {
-		return err
-	}
-	p.mu.Lock()
-	defer p.mu.Unlock()
-	if replace && p.historyIndex >= 0 {
-		p.history[p.historyIndex] = u
-	} else {
-		p.history = p.history[:p.historyIndex+1]
-		p.history = append(p.history, u)
-		p.historyIndex++
-	}
-	p.current = u
-	return nil
-}
-func (p *Page) historyGo(delta int) {
-	p.mu.Lock()
-	defer p.mu.Unlock()
-	n := p.historyIndex + delta
-	if n >= 0 && n < len(p.history) {
-		p.historyIndex = n
-		p.current = p.history[n]
-	}
 }
 func (p *Page) historyLength() int { p.mu.RLock(); defer p.mu.RUnlock(); return len(p.history) }
 func headerMap(v any) http.Header {

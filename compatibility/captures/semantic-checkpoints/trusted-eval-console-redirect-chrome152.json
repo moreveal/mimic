@@ -1,0 +1,138 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 10,
+      "top": 10,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "visibilityState": "visible",
+    "hasFocus": false
+  },
+  "trustedEval": {
+    "source": "internal/browser/testdata/trusted_eval.js",
+    "sha256": "44ba5f8ef1677f00072fcb1648cfae2b87ad237749a8cb985f25dbb133ede775",
+    "result": {
+      "direct": 8,
+      "ordinary": 9,
+      "localFunction": 19,
+      "localStayedLocal": true,
+      "globalFunction": 23,
+      "object": true,
+      "boxed": true,
+      "html": true,
+      "forged": true,
+      "proxy": true,
+      "number": true,
+      "empty": true,
+      "brand": true,
+      "tamperedResult": 42,
+      "intrinsicResult": 42,
+      "sameException": true,
+      "syntaxError": true,
+      "resolverHidden": true
+    }
+  },
+  "consoleGroups": {
+    "source": "(()=>{const returns=[console.group('outer'),console.groupCollapsed('inner'),console.log('inside'),console.groupEnd('ignored'),console.groupEnd(),console.groupEnd()];return {returnsUndefined:returns.every(v=>v===undefined),lengths:[console.group.length,console.groupCollapsed.length,console.groupEnd.length],names:[console.group.name,console.groupCollapsed.name,console.groupEnd.name]}})()",
+    "returnsUndefined": true,
+    "lengths": [
+      0,
+      0,
+      0
+    ],
+    "names": [
+      "group",
+      "groupCollapsed",
+      "groupEnd"
+    ],
+    "events": [
+      {
+        "type": "startGroup",
+        "args": [
+          "outer"
+        ]
+      },
+      {
+        "type": "startGroupCollapsed",
+        "args": [
+          "inner"
+        ]
+      },
+      {
+        "type": "log",
+        "args": [
+          "inside"
+        ]
+      },
+      {
+        "type": "endGroup",
+        "args": [
+          "ignored"
+        ]
+      },
+      {
+        "type": "endGroup",
+        "args": [
+          "console.groupEnd"
+        ]
+      },
+      {
+        "type": "endGroup",
+        "args": [
+          "console.groupEnd"
+        ]
+      }
+    ]
+  },
+  "redirects": {
+    "301": {
+      "url": "http://127.0.0.1:8512/dir/final",
+      "documentURL": "http://127.0.0.1:8512/dir/final",
+      "origin": "http://127.0.0.1:8512",
+      "relativeLoaded": "http://127.0.0.1:8512/dir/final"
+    },
+    "302": {
+      "url": "http://127.0.0.1:8512/dir/final",
+      "documentURL": "http://127.0.0.1:8512/dir/final",
+      "origin": "http://127.0.0.1:8512",
+      "relativeLoaded": "http://127.0.0.1:8512/dir/final"
+    },
+    "303": {
+      "url": "http://127.0.0.1:8512/dir/final",
+      "documentURL": "http://127.0.0.1:8512/dir/final",
+      "origin": "http://127.0.0.1:8512",
+      "relativeLoaded": "http://127.0.0.1:8512/dir/final"
+    },
+    "307": {
+      "url": "http://127.0.0.1:8512/dir/final",
+      "documentURL": "http://127.0.0.1:8512/dir/final",
+      "origin": "http://127.0.0.1:8512",
+      "relativeLoaded": "http://127.0.0.1:8512/dir/final"
+    },
+    "308": {
+      "url": "http://127.0.0.1:8512/dir/final",
+      "documentURL": "http://127.0.0.1:8512/dir/final",
+      "origin": "http://127.0.0.1:8512",
+      "relativeLoaded": "http://127.0.0.1:8512/dir/final"
+    }
+  }
+}

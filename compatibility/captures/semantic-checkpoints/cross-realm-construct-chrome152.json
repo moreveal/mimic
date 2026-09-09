@@ -1,0 +1,87 @@
+{
+  "browser": "152.0.7977.82",
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "secureContextState": false,
+    "isolationState": false,
+    "visibilityState": "visible",
+    "hasFocus": true,
+    "window": {
+      "left": 10,
+      "top": 10,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "reused-controlled"
+  },
+  "source": "internal/browser/testdata/cross_realm_construct_oracle.js",
+  "sourceSHA256": "2a30cd463ff29e0a07aaa8de229342c80eddc85cb20b77248ef7fd386f8bdc79",
+  "fixture": "Fresh about:blank with same-origin iframe; construction invoked from parent.",
+  "result": {
+    "builtins": {
+      "Object": {
+        "instance": true,
+        "prototype": true,
+        "tag": "[object Object]"
+      },
+      "Array": {
+        "instance": true,
+        "prototype": true,
+        "tag": "[object Array]"
+      },
+      "Error": {
+        "instance": true,
+        "prototype": true,
+        "tag": "[object Error]"
+      }
+    },
+    "user": {
+      "value": 17,
+      "target": true,
+      "instance": true,
+      "prototype": true
+    },
+    "changed": {
+      "value": 23,
+      "target": true,
+      "instance": true,
+      "prototype": true
+    },
+    "returnIdentity": true,
+    "error": {
+      "identity": true,
+      "instance": true,
+      "message": "sentinel"
+    },
+    "primitive": 19,
+    "localSubclass": {
+      "value": 31,
+      "target": true,
+      "instance": true,
+      "prototype": true
+    },
+    "nonConstructor": "TypeError",
+    "sideEffects": {
+      "keys": [
+        "toString",
+        "dangerous"
+      ],
+      "accessor": "function",
+      "counter": 0
+    }
+  }
+}

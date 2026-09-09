@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"net/url"
 	"sort"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/moreveal/mimic/internal/dom"
@@ -88,6 +89,7 @@ func (r *Realm) ensureChildFrameInternal(elementID int64, shadowConnected, sched
 	parent.children[frame.ID] = frame
 	page.mu.Unlock()
 	r.childFrames[elementID] = frame
+	page.commitHistory(frame, blank, true, nil)
 	page.trace.Add(trace.Lifecycle, "frameAttached", map[string]any{"frameId": frame.ID, "parentFrameId": parent.ID, "elementNodeId": elementID, "realm": realm.ID, "initialContext": scheduleNavigation})
 	if scheduleNavigation {
 		r.scheduleChildFrameNavigation(frame, elementID)
@@ -110,6 +112,16 @@ func (r *Realm) scheduleChildFrameNavigation(frame *Frame, elementID int64) {
 	target, err := r.resolveDocument(src)
 	blank := err == nil && target.Scheme == "about" && target.Opaque == "blank"
 	if err != nil || (!blank && target.Scheme != "http" && target.Scheme != "https") {
+		return
+	}
+	r.scheduleChildNavigationTo(frame, target, frame.loaderID == "")
+}
+
+// The embedding realm owns the child navigation lifecycle, irrespective of
+// whether navigation was requested by an iframe attribute or child Location.
+func (r *Realm) scheduleChildNavigationTo(frame *Frame, target *url.URL, replace bool) {
+	blank := target.Scheme == "about" && target.Opaque == "blank"
+	if !blank && target.Scheme != "http" && target.Scheme != "https" {
 		return
 	}
 	if frame.navigationCancel != nil {
@@ -147,26 +159,26 @@ func (r *Realm) scheduleChildFrameNavigation(frame *Frame, elementID int64) {
 	}
 	r.scheduler.Post(scheduler.Navigation, 0, func(ctx context.Context) error {
 		if blank {
-			navigation := &childNavigation{embeddingRealm: r, frame: frame, target: target, sequence: sequence, loaderID: loaderID, blockerReason: blockerReason, blocksLoad: blocksLoad}
+			navigation := &childNavigation{embeddingRealm: r, frame: frame, target: target, sequence: sequence, loaderID: loaderID, blockerReason: blockerReason, blocksLoad: blocksLoad, replace: replace}
 			return r.commitChildFrameNavigation(ctx, navigation, network.Response{URL: target, Body: []byte("<!doctype html><html><head></head><body></body></html>")}, nil)
 		}
-		r.startChildFrameNavigation(frame, target, sequence, loaderID, blockerReason, blocksLoad)
+		r.startChildFrameNavigation(frame, target, sequence, loaderID, blockerReason, blocksLoad, replace)
 		return nil
 	})
 }
 
 type childNavigation struct {
-	embeddingRealm *Realm
-	frame          *Frame
-	target         *url.URL
-	sequence       uint64
-	loaderID       string
-	blockerReason  string
-	blocksLoad     bool
-	document       *dom.Document
-	realm          *Realm
-	scripts        []dom.Node
-	nextScript     int
+	performanceOrigin time.Time
+	embeddingRealm    *Realm
+	frame             *Frame
+	target            *url.URL
+	sequence          uint64
+	loaderID          string
+	blockerReason     string
+	blocksLoad        bool
+	replace           bool
+	document          *dom.Document
+	realm             *Realm
 }
 
 func (r *Realm) browserEventLoop() *scheduler.Scheduler {
@@ -228,9 +240,11 @@ func (r *Realm) prepareChildFrameRemoval(elementID int64) bool {
 	return true
 }
 
-func (r *Realm) startChildFrameNavigation(frame *Frame, target *url.URL, sequence uint64, loaderID, blockerReason string, blocksLoad bool) {
+func (r *Realm) startChildFrameNavigation(frame *Frame, target *url.URL, sequence uint64, loaderID, blockerReason string, blocksLoad, replace bool) {
 	p := r.agent.Page()
-	navigation := &childNavigation{embeddingRealm: r, frame: frame, target: target, sequence: sequence, loaderID: loaderID, blockerReason: blockerReason, blocksLoad: blocksLoad}
+	performanceOrigin := p.ClockNow()
+	navigation := &childNavigation{embeddingRealm: r, frame: frame, target: target, sequence: sequence, loaderID: loaderID, blockerReason: blockerReason, blocksLoad: blocksLoad, replace: replace}
+	navigation.performanceOrigin = performanceOrigin
 	if !r.childNavigationCurrent(navigation) {
 		r.finishChildNavigation(navigation)
 		return
@@ -268,12 +282,15 @@ func (r *Realm) commitChildFrameNavigation(ctx context.Context, navigation *chil
 	if res.URL != nil {
 		documentURL = res.URL
 	}
-	document, err := dom.Parse(string(res.Body))
+	document, err := dom.Parse("")
 	if err != nil {
 		r.finishChildNavigation(navigation)
 		return err
 	}
-	realm, err := newRealm(p, navigation.frame, document, documentURL)
+	if navigation.performanceOrigin.IsZero() {
+		navigation.performanceOrigin = p.ClockNow()
+	}
+	realm, err := newRealmStateWithNavigation(p, navigation.frame, document, documentURL, false, navigation.performanceOrigin, navigation.loaderID)
 	if err != nil {
 		r.finishChildNavigation(navigation)
 		return err
@@ -286,39 +303,35 @@ func (r *Realm) commitChildFrameNavigation(ctx context.Context, navigation *chil
 	old := navigation.frame.Realm
 	navigation.frame.Realm = realm
 	navigation.frame.loaderID = navigation.loaderID
+	p.commitHistory(navigation.frame, documentURL, navigation.replace, nil)
 	if old != nil {
 		_ = old.Close()
 	}
 	navigation.document = document
 	navigation.realm = realm
-	navigation.scripts = document.Scripts()
+	streamState, err := realm.initializeNavigationStream()
+	if err != nil {
+		r.finishChildNavigation(navigation)
+		return err
+	}
+	streamState.onScript = func(node dom.Node) error {
+		return r.executeChildNavigationScript(streamState.ctx, navigation, streamState, node)
+	}
+	streamState.onFinished = func() error { return r.finishChildFrameParsing(streamState.ctx, navigation) }
 	p.trace.Add(trace.Lifecycle, "frameNavigated", map[string]any{"frameId": navigation.frame.ID, "parentFrameId": navigation.frame.parent.ID, "loaderId": navigation.loaderID, "url": documentURL.String(), "realm": realm.ID})
 	p.runInitScripts(ctx, realm)
-	return r.runChildFrameScripts(ctx, navigation)
+	if err := realm.writeDocumentStream(realm, string(res.Body)); err != nil {
+		return err
+	}
+	return realm.closeDocumentStream()
 }
 
-func (r *Realm) runChildFrameScripts(ctx context.Context, navigation *childNavigation) error {
+func (r *Realm) finishChildFrameParsing(ctx context.Context, navigation *childNavigation) error {
 	if !r.childNavigationCurrent(navigation) || navigation.frame.Realm != navigation.realm {
 		r.finishChildNavigation(navigation)
 		return nil
 	}
 	p := r.agent.Page()
-	for navigation.nextScript < len(navigation.scripts) {
-		script := navigation.scripts[navigation.nextScript]
-		navigation.nextScript++
-		code, name := script.Text, navigation.realm.documentURL().String()
-		if src := script.Attributes["src"]; src != "" {
-			scriptURL, parseErr := navigation.realm.documentURL().Parse(src)
-			if parseErr != nil {
-				continue
-			}
-			r.startChildFrameScriptLoad(navigation, scriptURL, script.ID)
-			return nil
-		}
-		if err := r.executeChildFrameScript(ctx, navigation, code, name); err != nil {
-			return err
-		}
-	}
 	navigation.frame.navigationPending = false
 	for _, message := range navigation.frame.pendingMessages {
 		r.queueFrameMessage(navigation.frame.ID, message)
@@ -347,50 +360,6 @@ func (r *Realm) runChildFrameScripts(ctx context.Context, navigation *childNavig
 	return nil
 }
 
-func (r *Realm) startChildFrameScriptLoad(navigation *childNavigation, scriptURL *url.URL, scriptID int64) {
-	p := r.agent.Page()
-	eventLoop := r.browserEventLoop()
-	navigation.realm.resourceWG.Add(1)
-	go func() {
-		defer navigation.realm.resourceWG.Done()
-		response, err := p.loader.Load(navigation.realm.resourceContext, network.Request{ContextID: navigation.frame.ID, URL: scriptURL, Referrer: navigation.realm.documentURL(), SourceURL: navigation.realm.documentURL(), Initiator: network.Script})
-		if navigation.realm.resourceContext.Err() != nil {
-			return
-		}
-		if err == nil {
-			err = scriptResponseError(response)
-		}
-		eventLoop.Post(scheduler.Network, 0, func(ctx context.Context) error {
-			if !r.childNavigationCurrent(navigation) || navigation.frame.Realm != navigation.realm {
-				r.finishChildNavigation(navigation)
-				return nil
-			}
-			if err != nil {
-				p.trace.Add(trace.Error, "frameScriptLoad", map[string]any{"frameId": navigation.frame.ID, "url": scriptURL.String(), "error": err.Error()})
-				if eventErr := navigation.realm.dispatchResourceEvent(ctx, scriptID, "error"); eventErr != nil {
-					return eventErr
-				}
-			} else if executeErr := r.executeChildFrameScript(ctx, navigation, string(response.Body), scriptURL.String()); executeErr != nil {
-				return executeErr
-			}
-			return r.runChildFrameScripts(ctx, navigation)
-		})
-	}()
-}
-
-func (r *Realm) executeChildFrameScript(ctx context.Context, navigation *childNavigation, code, name string) error {
-	if code == "" {
-		return nil
-	}
-	p := r.agent.Page()
-	p.trace.Add(trace.JS, "scriptStart", map[string]any{"frameId": navigation.frame.ID, "url": name, "realm": navigation.realm.ID})
-	if evalErr := navigation.realm.evaluateClassicScript(ctx, code, name, navigation.scripts[navigation.nextScript-1].ID); evalErr != nil {
-		p.trace.Add(trace.Exception, "frameScript", map[string]any{"frameId": navigation.frame.ID, "url": name, "error": evalErr.Error()})
-		return nil
-	}
-	return nil
-}
-
 func (r *Realm) completeChildFrameLoad(ctx context.Context, navigation *childNavigation) error {
 	if !r.childNavigationCurrent(navigation) || navigation.frame.Realm != navigation.realm {
 		r.finishChildNavigation(navigation)
@@ -406,7 +375,9 @@ func (r *Realm) completeChildFrameLoad(ctx context.Context, navigation *childNav
 		r.finishChildNavigation(navigation)
 		return checkpointErr
 	}
+	navigation.realm.navigationLoadEnd = navigation.realm.scheduler.Now()
 	p.trace.Add(trace.Lifecycle, "load", map[string]any{"frameId": navigation.frame.ID, "loaderId": navigation.loaderID, "url": navigation.realm.documentURL().String(), "realm": navigation.realm.ID})
+	navigation.realm.notifyPerformanceObservers(ctx)
 	if r.frameLoadDispatcher != nil {
 		p.trace.Add(trace.Lifecycle, "iframeOwnerLoad", map[string]any{"frameId": navigation.frame.ID, "elementNodeId": navigation.frame.elementID, "realm": r.ID})
 		if _, err := r.runtime.Call(ctx, r.frameLoadDispatcher, r.runtime.Get("window"), r.runtime.Value(navigation.frame.elementID)); err != nil {
@@ -454,58 +425,103 @@ func (r *Realm) evalInFrame(ctx context.Context, frameID, source string) (engine
 		return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
 	}
 	r.agent.Page().trace.Add(trace.JS, "frameEvalStart", map[string]any{"frameId": frameID, "realm": frame.Realm.ID, "sourceLength": len(source)})
-	value, err := frame.Realm.Evaluate(ctx, source, "frame-eval")
+	value, err := func() (engine.Value, error) {
+		restore := r.enterFrameDocumentEntry(frame.Realm)
+		defer restore()
+		return frame.Realm.Evaluate(ctx, source, "frame-eval")
+	}()
 	if err != nil {
 		return nil, err
 	}
 	r.agent.Page().trace.Add(trace.JS, "frameEvalResult", map[string]any{"frameId": frameID, "realm": frame.Realm.ID, "type": frame.Realm.runtime.TypeOf(value), "sourceLength": len(source)})
-	if err := frame.Realm.RunReady(ctx); err != nil {
-		return nil, err
-	}
-	if resolved, done, awaitErr := frame.Realm.runtime.Await(value); awaitErr != nil {
-		return nil, awaitErr
-	} else if done {
-		return resolved, nil
-	}
-	if err := frame.Realm.RunUntilIdle(ctx); err != nil {
-		return nil, err
-	}
-	if resolved, done, awaitErr := frame.Realm.runtime.Await(value); awaitErr != nil {
-		return nil, awaitErr
-	} else if done {
-		return resolved, nil
-	}
+	// Native eval returns synchronously, including when the result is a Promise.
+	// The Page event loop owns subsequent jobs; pumping it here can reenter a
+	// scheduler that is already running the caller's script task.
 	return value, nil
 }
 
-func (r *Realm) crossRealmValue(value engine.Value) map[string]any {
-	if value == nil || value.String() == "undefined" {
-		return map[string]any{"__mimicCrossRealm": "undefined"}
+func (r *Realm) crossRealmValue(value engine.Value) (map[string]any, error) {
+	if value == nil {
+		return map[string]any{"__mimicCrossRealm": "undefined"}, nil
 	}
-	if value.String() == "null" && r.runtime.TypeOf(value) == "object" {
-		return map[string]any{"__mimicCrossRealm": "null"}
+	typeName := r.runtime.TypeOf(value)
+	if typeName == "undefined" {
+		return map[string]any{"__mimicCrossRealm": "undefined"}, nil
+	}
+	if typeName == "object" && r.runtime.StrictEqual(value, r.val(nil)) {
+		return map[string]any{"__mimicCrossRealm": "null"}, nil
+	}
+	if typeName == "symbol" {
+		info, err := r.callFrameReflection(context.Background(), "symbol", value, nil, nil)
+		if err != nil {
+			return nil, err
+		}
+		{
+			encoded := r.encodeFrameKey(info)
+			encoded["__mimicCrossRealm"] = "symbol"
+			return encoded, nil
+		}
+	}
+	if typeName == "bigint" {
+		return map[string]any{"__mimicCrossRealm": "bigint", "value": value.String()}, nil
+	}
+	if (typeName == "object" || typeName == "function") && r.frameReferenceDescribe != nil {
+		info, err := r.runtime.Call(context.Background(), r.frameReferenceDescribe, nil, value)
+		if err != nil {
+			return nil, err
+		}
+		if r.runtime.TypeOf(info) == "object" && !r.runtime.StrictEqual(info, r.val(nil)) {
+			if reference, ok := info.Export().(map[string]any); ok {
+				if reference["__mimicCrossRealm"] == nil {
+					reference["__mimicCrossRealm"] = reference["type"]
+				}
+				return reference, nil
+			}
+		}
 	}
 	if r.runtime.StrictEqual(value, r.runtime.Get("globalThis")) {
-		return map[string]any{"__mimicCrossRealm": "window", "frame": r.agent.ContextID()}
+		return map[string]any{"__mimicCrossRealm": "window", "frame": r.agent.ContextID()}, nil
+	}
+	if r.runtime.StrictEqual(value, r.runtime.Get("document")) {
+		return map[string]any{"__mimicCrossRealm": "document", "frame": r.agent.ContextID()}, nil
 	}
 	if r.runtime.StrictEqual(value, r.runtime.Get("parent")) {
 		frame, _ := r.agent.(*Frame)
 		if frame != nil && frame.parent != nil {
-			return map[string]any{"__mimicCrossRealm": "window", "frame": frame.parent.ID}
+			return map[string]any{"__mimicCrossRealm": "window", "frame": frame.parent.ID}, nil
 		}
 	}
-	typeName := r.runtime.TypeOf(value)
 	if typeName != "object" && typeName != "function" {
-		return map[string]any{"__mimicCrossRealm": "value", "value": value.Export()}
+		return map[string]any{"__mimicCrossRealm": "value", "value": value.Export()}, nil
 	}
-	for id, existing := range r.crossValues {
-		if r.runtime.StrictEqual(value, existing) {
-			return map[string]any{"__mimicCrossRealm": typeName, "realm": r.ID, "handle": id}
+	shape := func(id int64) (map[string]any, error) {
+		out := map[string]any{"__mimicCrossRealm": typeName, "frame": r.agent.ContextID(), "realm": r.ID, "handle": id}
+		metadata, err := r.callFrameReflection(context.Background(), "shape", value, nil, nil)
+		if err != nil {
+			return nil, err
 		}
+		{
+			name := "array"
+			if typeName == "function" {
+				name = "constructable"
+			}
+			out[name] = r.runtime.GetProperty(metadata, name).Export()
+		}
+		return out, nil
 	}
-	r.crossValueSeq++
-	r.crossValues[r.crossValueSeq] = value
-	return map[string]any{"__mimicCrossRealm": typeName, "realm": r.ID, "handle": r.crossValueSeq}
+	// The captured WeakMap indexes identity inside the owning JS realm. A Go
+	// scan would make every lookup perform O(n) native isolate crossings.
+	candidate := r.crossValueSeq + 1
+	r.crossValueSeq = candidate
+	identity, err := r.callFrameReflection(context.Background(), "handle", value, r.val(candidate), nil)
+	if err != nil {
+		return nil, err
+	}
+	id := int64(numberValue(identity.Export()))
+	if r.crossValues[id] == nil {
+		r.crossValues[id] = value
+	}
+	return shape(id)
 }
 
 func (r *Realm) postToFrame(frameID string, data any, targetOrigin string, portIDs []string) error {

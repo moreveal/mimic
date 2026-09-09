@@ -1,0 +1,92 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 10,
+      "top": 10,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": false,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "visibilityState": "visible",
+    "hasFocus": false
+  },
+  "fixture": "<script nonce=\"good\">const s=document.createElement('script');s.nonce='good';s.onload=()=>window.dynamicLoadState=document.readyState;s.src='/dynamic.js';document.querySelector('body').appendChild(s)</script>",
+  "bodyFixture": "<body><script nonce=\"good\">const s=document.createElement('script');s.nonce='good';s.onload=()=>window.dynamicLoadState=document.readyState;s.src='/dynamic.js';document.querySelector('body').appendChild(s)</script>",
+  "result": {
+    "/head": {
+      "ran": false,
+      "loadState": null,
+      "body": true,
+      "exceptions": [
+        {
+          "exceptionId": 1,
+          "text": "Uncaught",
+          "lineNumber": 0,
+          "columnNumber": 184,
+          "scriptId": "4",
+          "url": "http://127.0.0.1:23705/head",
+          "stackTrace": {
+            "callFrames": [
+              {
+                "functionName": "",
+                "scriptId": "4",
+                "url": "http://127.0.0.1:23705/head",
+                "lineNumber": 0,
+                "columnNumber": 184
+              }
+            ]
+          },
+          "exception": {
+            "type": "object",
+            "subtype": "error",
+            "className": "TypeError",
+            "description": "TypeError: Cannot read properties of null (reading 'appendChild')\n    at http://127.0.0.1:23705/head:1:185",
+            "objectId": "-5259125645342103580.2.1",
+            "preview": {
+              "type": "object",
+              "subtype": "error",
+              "description": "TypeError: Cannot read properties of null (reading 'appendChild')\n    at http://127.0.0.1:23705/head:1:185",
+              "overflow": false,
+              "properties": [
+                {
+                  "name": "stack",
+                  "type": "string",
+                  "value": "TypeError: Cannot read properties of null (reading\u2026dChild')\n    at http://127.0.0.1:23705/head:1:185"
+                },
+                {
+                  "name": "message",
+                  "type": "string",
+                  "value": "Cannot read properties of null (reading 'appendChild')"
+                }
+              ]
+            }
+          },
+          "executionContextId": 2
+        }
+      ]
+    },
+    "/body": {
+      "ran": true,
+      "loadState": "interactive",
+      "body": true,
+      "exceptions": []
+    }
+  }
+}

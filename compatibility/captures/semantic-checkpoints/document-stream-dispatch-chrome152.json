@@ -1,0 +1,166 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 709,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 10,
+      "top": 10,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "visibilityState": "hidden",
+    "hasFocus": false
+  },
+  "source": "(async()=>{\n  const make=async(src)=>{const f=document.createElement('iframe');if(src){f.src=src;await new Promise(r=>{f.onload=r;document.body.appendChild(f)})}else document.body.appendChild(f);return f};\n  const out={};\n  {\n    const f=await make(),w=f.contentWindow,d=w.document,events=[];\n    const attached=d.createElement('button'),detached=d.createElement('button'),removed=d.createElement('button'),host=d.createElement('div');\n    d.body.append(attached,removed,host);removed.remove();\n    const shadow=host.attachShadow({mode:'open'}),shadowButton=d.createElement('button');shadow.append(shadowButton);\n    const template=d.createElement('template'),templateButton=d.createElement('button');template.content.append(templateButton);d.body.append(template);\n    const standalone=new w.EventTarget();\n    for(const [key,target] of [['window',w],['document',d],['attached',attached],['detached',detached],['removed',removed],['shadow',shadowButton],['template',templateButton],['standalone',standalone]]){target.addEventListener('audit',()=>events.push(key));target.onclick=()=>events.push(key+'-onclick')}\n    attached.setAttribute('onmousedown','parent.attrFired=true');\n    const same=d.open()===d;\n    for(const [key,target] of [['window',w],['document',d],['attached',attached],['detached',detached],['removed',removed],['shadow',shadowButton],['template',templateButton],['standalone',standalone]]){target.dispatchEvent(new w.Event('audit'));target.dispatchEvent(new w.Event('click'))}\n    out.listeners={same,events,attachedClick:attached.onclick===null,detachedClick:typeof detached.onclick,attribute:attached.getAttribute('onmousedown'),attributeHandler:attached.onmousedown===null};\n    d.close();f.remove();\n  }\n  {\n    const f=await make(),w=f.contentWindow,d=w.document,events=[],b=d.createElement('button');d.body.append(b);\n    b.addEventListener('audit',()=>{events.push('first');d.open();events.push('opened')});b.addEventListener('audit',()=>events.push('second'));\n    b.dispatchEvent(new w.Event('audit'));out.inflight=events;d.close();f.remove();\n  }\n  {\n    const base=document.createElement('base');base.href='/base/';document.head.append(base);\n    history.replaceState(null,'','/dir/parent?query#fragment');\n    const read=d=>({url:d.URL,base:d.baseURI,location:d.location.href});\n    const f=await make('/other/child?child#childFragment'),d=f.contentDocument;\n    const before=read(d);d.open();const after=read(d);d.write('<a href=\"relative\">relative</a>');d.close();out.remoteOpen={parent:read(document),before,after,link:d.querySelector('a').href};f.remove();\n    const f2=await make('/other/local?child#childFragment');out.localOpen=JSON.parse(f2.contentWindow.eval(\"(()=>{const before={url:document.URL,base:document.baseURI};document.open();document.write('<a href=relative>relative</a>');document.close();return JSON.stringify({before,after:{url:document.URL,base:document.baseURI},link:document.querySelector('a').href})})()\"));f2.remove();\n    const f3=await make('/other/implicit?child#childFragment'),d3=f3.contentDocument;const implicitBefore=read(d3);d3.write('<a href=relative>relative</a>');const implicitAfter=read(d3);d3.close();out.implicitWrite={before:implicitBefore,after:implicitAfter,link:d3.querySelector('a').href};f3.remove();base.remove();\n  }\n  {\n    const f=await make(),w=f.contentWindow,d=w.document;w.events=[];d.open();d.write('<p id=before>before</p><script>events.push({step:\"start\",before:!!document.getElementById(\"before\")});document.open();events.push({step:\"open\",before:!!document.getElementById(\"before\")});document.write(\"<p id=nested>nested</p>\");document.close();events.push({step:\"close\",ready:document.readyState});<\\/script><p id=after>after</p>');const afterWrite={events:w.events,html:d.body.innerHTML,ready:d.readyState};d.close();out.nested={afterWrite,afterClose:{html:d.body.innerHTML,ready:d.readyState}};f.remove();\n  }\n  {\n    const f=await make(),w=f.contentWindow,d=w.document;globalThis.externalEvents=[];\n    const loaded=new Promise(resolve=>f.onload=()=>{externalEvents.push('owner-load');resolve()});\n    d.open();d.write('<script src=\"/external.js\"><\\/script><p id=first-tail>first-tail</p><script>parent.externalEvents.push(\"inline-tail\")<\\/script>');\n    const snap=()=>({ready:d.readyState,external:!!d.getElementById('external-written'),firstTail:!!d.getElementById('first-tail'),secondTail:!!d.getElementById('second-tail'),events:externalEvents.slice(),text:d.body?.textContent});\n    const afterFirst=snap();d.write('<p id=second-tail>second-tail</p>');const afterSecond=snap();d.close();const afterClose=snap();await loaded;out.external={afterFirst,afterSecond,afterClose,afterLoad:snap(),order:[...d.querySelectorAll('p')].map(n=>n.id)};f.remove();\n  }\n  {\n    const f=await make('/other/call?child#fragment');const fn=f.contentWindow.eval('(function(){document.open();document.close();return document.URL})');out.callOpen=fn();f.remove();\n    const timerFrame=await make('/other/timer?child#fragment');const reported=new Promise(resolve=>addEventListener('message',event=>resolve(event.data),{once:true}));\n    timerFrame.contentWindow.eval(\"setTimeout(()=>{document.open();document.close();parent.postMessage(document.URL,'*')},0)\");out.timerOpen=await reported;timerFrame.remove();\n  }\n  return out;\n})()\n",
+  "fixture": {
+    "html": "<!doctype html><title>Document dispatch fixture</title><body>Fixture",
+    "externalScript": "parent.externalEvents.push('external-script');document.write('<p id=external-written>external-written</p>')",
+    "externalScriptDelayMs": 120
+  },
+  "result": {
+    "listeners": {
+      "same": true,
+      "events": [
+        "detached",
+        "detached-onclick",
+        "removed",
+        "removed-onclick",
+        "template",
+        "template-onclick",
+        "standalone"
+      ],
+      "attachedClick": true,
+      "detachedClick": "function",
+      "attribute": "parent.attrFired=true",
+      "attributeHandler": true
+    },
+    "inflight": [
+      "first",
+      "opened"
+    ],
+    "remoteOpen": {
+      "parent": {
+        "url": "http://127.0.0.1:57624/dir/parent?query#fragment",
+        "base": "http://127.0.0.1:57624/base/",
+        "location": "http://127.0.0.1:57624/dir/parent?query#fragment"
+      },
+      "before": {
+        "url": "http://127.0.0.1:57624/other/child?child#childFragment",
+        "base": "http://127.0.0.1:57624/other/child?child#childFragment",
+        "location": "http://127.0.0.1:57624/other/child?child#childFragment"
+      },
+      "after": {
+        "url": "http://127.0.0.1:57624/dir/parent?query",
+        "base": "http://127.0.0.1:57624/dir/parent?query",
+        "location": "http://127.0.0.1:57624/dir/parent?query"
+      },
+      "link": "http://127.0.0.1:57624/dir/relative"
+    },
+    "localOpen": {
+      "before": {
+        "url": "http://127.0.0.1:57624/other/local?child#childFragment",
+        "base": "http://127.0.0.1:57624/other/local?child#childFragment"
+      },
+      "after": {
+        "url": "http://127.0.0.1:57624/dir/parent?query",
+        "base": "http://127.0.0.1:57624/dir/parent?query"
+      },
+      "link": "http://127.0.0.1:57624/dir/relative"
+    },
+    "implicitWrite": {
+      "before": {
+        "url": "http://127.0.0.1:57624/other/implicit?child#childFragment",
+        "base": "http://127.0.0.1:57624/other/implicit?child#childFragment",
+        "location": "http://127.0.0.1:57624/other/implicit?child#childFragment"
+      },
+      "after": {
+        "url": "http://127.0.0.1:57624/dir/parent?query",
+        "base": "http://127.0.0.1:57624/dir/parent?query",
+        "location": "http://127.0.0.1:57624/dir/parent?query"
+      },
+      "link": "http://127.0.0.1:57624/dir/relative"
+    },
+    "nested": {
+      "afterWrite": {
+        "events": [
+          {
+            "step": "start",
+            "before": true
+          },
+          {
+            "step": "open",
+            "before": true
+          },
+          {
+            "step": "close",
+            "ready": "loading"
+          }
+        ],
+        "html": "<p id=\"before\">before</p><script>events.push({step:\"start\",before:!!document.getElementById(\"before\")});document.open();events.push({step:\"open\",before:!!document.getElementById(\"before\")});document.write(\"<p id=nested>nested</p>\");document.close();events.push({step:\"close\",ready:document.readyState});</script><p id=\"nested\">nested</p><p id=\"after\">after</p>",
+        "ready": "complete"
+      },
+      "afterClose": {
+        "html": "<p id=\"before\">before</p><script>events.push({step:\"start\",before:!!document.getElementById(\"before\")});document.open();events.push({step:\"open\",before:!!document.getElementById(\"before\")});document.write(\"<p id=nested>nested</p>\");document.close();events.push({step:\"close\",ready:document.readyState});</script><p id=\"nested\">nested</p><p id=\"after\">after</p>",
+        "ready": "complete"
+      }
+    },
+    "external": {
+      "afterFirst": {
+        "ready": "loading",
+        "external": false,
+        "firstTail": false,
+        "secondTail": false,
+        "events": []
+      },
+      "afterSecond": {
+        "ready": "loading",
+        "external": false,
+        "firstTail": false,
+        "secondTail": false,
+        "events": []
+      },
+      "afterClose": {
+        "ready": "loading",
+        "external": false,
+        "firstTail": false,
+        "secondTail": false,
+        "events": []
+      },
+      "afterLoad": {
+        "ready": "complete",
+        "external": true,
+        "firstTail": true,
+        "secondTail": true,
+        "events": [
+          "external-script",
+          "inline-tail",
+          "owner-load"
+        ],
+        "text": "external-writtenfirst-tailparent.externalEvents.push(\"inline-tail\")second-tail"
+      },
+      "order": [
+        "external-written",
+        "first-tail",
+        "second-tail"
+      ]
+    },
+    "callOpen": "http://127.0.0.1:57624/dir/parent?query",
+    "timerOpen": "http://127.0.0.1:57624/other/timer?child#fragment"
+  }
+}
