@@ -1,0 +1,19 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "fixture": "internal/browser/testdata/canvas_relations_oracle.js",
+    "fixtureSHA256": "fcf8c5545bdf40b742f74ec2f66684e607e04e10c91079a656a1661bacd857ca",
+    "fixtureHashNormalization": "LF"
+  },
+  "result": {
+    "repeat": true,
+    "local": true,
+    "changed": true,
+    "gradientSnapshot": true,
+    "gradientMutation": true,
+    "textCopyOutside": true,
+    "textClip": true
+  }
+}

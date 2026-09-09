@@ -1,0 +1,64 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "fixture": "internal/browser/testdata/webgl_geometry_oracle.js",
+    "fixtureSHA256": "14c3bb04ec8bc0f314bf0318b80f734d518886cf831080b53850f584be94295e",
+    "fixtureHashNormalization": "LF"
+  },
+  "result": {
+    "webgl": {
+      "link": true,
+      "current": true,
+      "active": [
+        "p",
+        "u"
+      ],
+      "uniform": 1,
+      "first": [
+        255,
+        191,
+        127,
+        255,
+        255,
+        191,
+        127,
+        255
+      ],
+      "repeat": true,
+      "local": true,
+      "changed": true,
+      "error": 0,
+      "attachedDeleted": true,
+      "currentDeleted": true,
+      "released": true
+    },
+    "webgl2": {
+      "link": true,
+      "current": true,
+      "active": [
+        "p",
+        "u"
+      ],
+      "uniform": 1,
+      "first": [
+        255,
+        191,
+        127,
+        255,
+        255,
+        191,
+        127,
+        255
+      ],
+      "repeat": true,
+      "local": true,
+      "changed": true,
+      "error": 0,
+      "attachedDeleted": true,
+      "currentDeleted": true,
+      "released": true
+    }
+  }
+}

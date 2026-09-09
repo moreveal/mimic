@@ -1,0 +1,38 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "fixture": "internal/browser/testdata/webgl_validation_oracle.js",
+    "fixtureSHA256": "39e1e218cacf7d331fcf944029a14e6887a3e0bf8f7ce3a8a27f2beb32249fe4",
+    "fixtureHashNormalization": "LF"
+  },
+  "result": {
+    "invalid": [
+      false,
+      false,
+      false,
+      false,
+      false
+    ],
+    "active": [
+      1,
+      1,
+      -1,
+      null
+    ],
+    "wrongWidth": [
+      1282,
+      [
+        0,
+        0
+      ]
+    ],
+    "wrongType": 1282,
+    "value": [
+      0.25,
+      0.75
+    ],
+    "oldLocation": 1282
+  }
+}

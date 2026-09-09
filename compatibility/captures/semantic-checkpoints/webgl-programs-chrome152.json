@@ -1,0 +1,64 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "fixture": "internal/browser/testdata/webgl_programs_oracle.js",
+    "fixtureSHA256": "0a624a47b44f95291b73a90405967afc7149d3d3b0c80ead0b5ba7994e247514",
+    "fixtureHashNormalization": "LF"
+  },
+  "result": {
+    "webgl": {
+      "link": true,
+      "current": true,
+      "active": [
+        "p",
+        "u"
+      ],
+      "uniform": 1,
+      "first": [
+        255,
+        127,
+        16,
+        255,
+        255,
+        127,
+        239,
+        255
+      ],
+      "repeat": true,
+      "local": true,
+      "changed": true,
+      "error": 0,
+      "attachedDeleted": true,
+      "currentDeleted": true,
+      "released": true
+    },
+    "webgl2": {
+      "link": true,
+      "current": true,
+      "active": [
+        "p",
+        "u"
+      ],
+      "uniform": 1,
+      "first": [
+        255,
+        127,
+        16,
+        255,
+        255,
+        127,
+        239,
+        255
+      ],
+      "repeat": true,
+      "local": true,
+      "changed": true,
+      "error": 0,
+      "attachedDeleted": true,
+      "currentDeleted": true,
+      "released": true
+    }
+  }
+}
