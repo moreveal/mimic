@@ -1,0 +1,134 @@
+{
+  "chrome": {
+    "receipt": {
+      "binary": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "url": "https://github.com/moreveal/AuthMeReloaded",
+      "endpoint": "http://127.0.0.1:19611",
+      "oracle": true,
+      "metadata": {
+        "schemaVersion": 1,
+        "chromeVersion": "152.0.7977.82",
+        "chromiumRevision": 1669021,
+        "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+        "v8Version": "15.2.124.21",
+        "platform": "windows-x64",
+        "browserMode": "headful",
+        "commandLineFeatureOverrides": [],
+        "viewport": {
+          "width": 1272,
+          "height": 653,
+          "deviceScaleFactor": 1
+        },
+        "window": {
+          "left": 0,
+          "top": 0,
+          "width": 1280,
+          "height": 800,
+          "windowState": "normal"
+        },
+        "secureContextState": true,
+        "isolationState": false,
+        "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+        "profileFreshness": "fresh-controlled",
+        "visibilityState": "visible",
+        "hasFocus": true
+      }
+    },
+    "skeletons": 0,
+    "relative_time_elements": 23,
+    "react_error_fallback": false,
+    "commit_message": true,
+    "row_message": true,
+    "exceptions": [],
+    "failed_responses": [],
+    "repository_responses": [
+      {
+        "url": "https://raw.githubusercontent.com/moreveal/AuthMeReloaded/master/wallpaper.png",
+        "status": 200
+      },
+      {
+        "url": "https://github.com/moreveal/AuthMeReloaded/latest-commit",
+        "status": 200
+      },
+      {
+        "url": "https://github.com/moreveal/AuthMeReloaded/recently-touched-branches",
+        "status": 200
+      },
+      {
+        "url": "https://github.com/moreveal/AuthMeReloaded/branch-and-tag-count",
+        "status": 200
+      },
+      {
+        "url": "https://github.com/moreveal/AuthMeReloaded/branch-infobar/master",
+        "status": 200
+      },
+      {
+        "url": "https://github.com/moreveal/AuthMeReloaded/overview-files/master",
+        "status": 200
+      },
+      {
+        "url": "https://github.com/moreveal/AuthMeReloaded/_sidebar",
+        "status": 200
+      },
+      {
+        "url": "https://github.com/moreveal/AuthMeReloaded/tree-commit-info",
+        "status": 200
+      },
+      {
+        "url": "https://github.com/moreveal/AuthMeReloaded/refs?type=branch",
+        "status": 200
+      }
+    ]
+  },
+  "mimic": {
+    "receipt": {
+      "binary": "E:\\GitHub\\mimic\\.build\\hydration-complete\\final.exe",
+      "sha256": "f58fff2043ab801f0bf608f8626bd981c38848aa1fc976a7a3ca6f410b878f24",
+      "url": "https://github.com/moreveal/AuthMeReloaded",
+      "endpoint": "http://127.0.0.1:19612",
+      "oracle": false
+    },
+    "skeletons": 0,
+    "relative_time_elements": 23,
+    "react_error_fallback": false,
+    "commit_message": true,
+    "row_message": true,
+    "exceptions": [],
+    "failed_responses": [],
+    "repository_responses": [
+      {
+        "url": "https://github.com/moreveal/AuthMeReloaded/branch-and-tag-count",
+        "status": 200
+      },
+      {
+        "url": "https://github.com/moreveal/AuthMeReloaded/recently-touched-branches",
+        "status": 200
+      },
+      {
+        "url": "https://github.com/moreveal/AuthMeReloaded/latest-commit",
+        "status": 200
+      },
+      {
+        "url": "https://github.com/moreveal/AuthMeReloaded/tree-commit-info",
+        "status": 200
+      },
+      {
+        "url": "https://github.com/moreveal/AuthMeReloaded/refs?type=branch",
+        "status": 200
+      },
+      {
+        "url": "https://github.com/moreveal/AuthMeReloaded/branch-infobar/master",
+        "status": 200
+      },
+      {
+        "url": "https://github.com/moreveal/AuthMeReloaded/overview-files/master",
+        "status": 200
+      },
+      {
+        "url": "https://github.com/moreveal/AuthMeReloaded/_sidebar",
+        "status": 200
+      }
+    ]
+  }
+}

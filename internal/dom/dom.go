@@ -3,6 +3,7 @@ package dom
 import (
 	"bytes"
 	"fmt"
+	"sort"
 	"strings"
 	"sync"
 
@@ -11,14 +12,20 @@ import (
 )
 
 type Node struct {
-	ID         int64             `json:"nodeId"`
-	Type       string            `json:"type"`
-	TagName    string            `json:"tagName,omitempty"`
-	Namespace  string            `json:"namespaceURI,omitempty"`
-	Text       string            `json:"text,omitempty"`
-	Attributes map[string]string `json:"attributes,omitempty"`
-	Parent     int64             `json:"parentId,omitempty"`
-	Children   []int64           `json:"children,omitempty"`
+	ID        int64  `json:"nodeId"`
+	Type      string `json:"type"`
+	TagName   string `json:"tagName,omitempty"`
+	Namespace string `json:"namespaceURI,omitempty"`
+	Text      string `json:"text,omitempty"`
+	// TextJSON preserves DOMString code units that cannot cross a UTF-8 string
+	// boundary (unpaired UTF-16 surrogates). Text is its scalar projection.
+	TextJSON             string            `json:"-"`
+	Attributes           map[string]string `json:"attributes,omitempty"`
+	Parent               int64             `json:"parentId,omitempty"`
+	Children             []int64           `json:"children,omitempty"`
+	TemplateContent      int64             `json:"templateContent,omitempty"`
+	TemplateHost         int64             `json:"templateHost,omitempty"`
+	ScriptAlreadyStarted bool              `json:"-"`
 }
 type Document struct {
 	mu               sync.RWMutex
@@ -60,6 +67,13 @@ func Parse(source string) (*Document, error) {
 		case html.TextNode:
 			node.Type = "text"
 			node.Text = n.Data
+		case html.CommentNode:
+			node.Type, node.Text = "comment", n.Data
+		case html.DoctypeNode:
+			node.Type, node.TagName = "doctype", n.Data
+			for _, a := range n.Attr {
+				node.Attributes[a.Key] = a.Val
+			}
 		default:
 			node.Type = "other"
 		}
@@ -70,11 +84,15 @@ func Parse(source string) (*Document, error) {
 		} else {
 			d.nodes[parent].Children = append(d.nodes[parent].Children, id)
 		}
-		if node.TagName == "TITLE" && n.FirstChild != nil {
+		if node.TagName == "TITLE" && n.FirstChild != nil && d.isConnectedLocked(id) {
 			d.title = n.FirstChild.Data
 		}
+		childParent := id
+		if node.TagName == "TEMPLATE" && node.Namespace == "http://www.w3.org/1999/xhtml" {
+			childParent = d.newTemplateContentLocked(node).ID
+		}
 		for c := n.FirstChild; c != nil; c = c.NextSibling {
-			walk(c, id)
+			walk(c, childParent)
 		}
 	}
 	walk(root, 0)
@@ -230,7 +248,7 @@ func (d *Document) Find(selector string) (Node, bool) {
 		if n == nil {
 			continue
 		}
-		if matchesSelector(n, selector) {
+		if d.matchesSelector(n, selector) {
 			return *n, true
 		}
 	}
@@ -249,7 +267,7 @@ func (d *Document) FindWithin(parent int64, selector string) (Node, bool) {
 		if n == nil {
 			return nil, false
 		}
-		if matchesSelector(n, selector) {
+		if d.matchesSelector(n, selector) {
 			return n, true
 		}
 		for _, child := range n.Children {
@@ -289,7 +307,7 @@ func (d *Document) findAllWithin(parent int64, selector string) []Node {
 		if n == nil {
 			return
 		}
-		if matchesSelector(n, selector) {
+		if d.matchesSelector(n, selector) {
 			copy := *n
 			copy.Attributes = cloneAttributes(n.Attributes)
 			copy.Children = append([]int64(nil), n.Children...)
@@ -323,7 +341,7 @@ func (d *Document) FindAllIDs(parent int64, selector string) []int64 {
 		if n == nil {
 			return
 		}
-		if matchesSelector(n, selector) {
+		if d.matchesSelector(n, selector) {
 			out = append(out, id)
 		}
 		for _, child := range n.Children {
@@ -336,37 +354,8 @@ func (d *Document) FindAllIDs(parent int64, selector string) []int64 {
 	return out
 }
 
-func matchesSelector(n *Node, selector string) bool {
-	selector = strings.TrimSpace(strings.Split(selector, ",")[0])
-	if n == nil || n.Type != "element" || selector == "" {
-		return false
-	}
-	if strings.ContainsAny(selector, " >+~:") {
-		return false
-	}
-	if strings.HasPrefix(selector, "#") {
-		return n.Attributes["id"] == selector[1:]
-	}
-	if strings.HasPrefix(selector, ".") {
-		return hasClass(n.Attributes["class"], selector[1:])
-	}
-	if strings.HasPrefix(selector, "[") && strings.HasSuffix(selector, "]") {
-		inside := strings.TrimSpace(selector[1 : len(selector)-1])
-		name, value, hasValue := strings.Cut(inside, "=")
-		actual, exists := n.Attributes[strings.ToLower(strings.TrimSpace(name))]
-		if !hasValue {
-			return exists
-		}
-		value = strings.Trim(strings.TrimSpace(value), `"'`)
-		return exists && actual == value
-	}
-	if dot := strings.IndexByte(selector, '.'); dot >= 0 {
-		return strings.EqualFold(n.TagName, selector[:dot]) && hasClass(n.Attributes["class"], selector[dot+1:])
-	}
-	return selector == "*" || strings.EqualFold(n.TagName, selector)
-}
 func hasClass(classes, wanted string) bool {
-	for _, class := range strings.Fields(classes) {
+	for _, class := range strings.FieldsFunc(classes, func(r rune) bool { return r == ' ' || r == '\t' || r == '\n' || r == '\r' || r == '\f' }) {
 		if class == wanted {
 			return true
 		}
@@ -421,6 +410,9 @@ func (d *Document) CreateElementNS(namespace, tag string) Node {
 	n := &Node{ID: d.next, Type: "element", TagName: strings.ToUpper(tag), Namespace: namespace, Attributes: map[string]string{}}
 	d.nodes[n.ID] = n
 	d.hasFrameElements = d.hasFrameElements || n.TagName == "IFRAME"
+	if n.TagName == "TEMPLATE" && n.Namespace == "http://www.w3.org/1999/xhtml" {
+		d.newTemplateContentLocked(n)
+	}
 	return *n
 }
 func (d *Document) CreateComment(data string) Node {
@@ -445,6 +437,9 @@ func (d *Document) InsertNode(parent, child, before int64) error {
 	p, c := d.nodes[parent], d.nodes[child]
 	if p == nil || c == nil {
 		return fmt.Errorf("insert nodes do not exist: parent=%d child=%d", parent, child)
+	}
+	if d.hostIncludingContainsLocked(child, parent) {
+		return fmt.Errorf("insertion would create a host-inclusive cycle")
 	}
 	if c.Parent != 0 {
 		if old := d.nodes[c.Parent]; old != nil {
@@ -508,6 +503,27 @@ func (d *Document) Children(id int64) []Node {
 		}
 	}
 	return out
+}
+func (d *Document) ChildCount(id int64) int {
+	d.mu.RLock()
+	defer d.mu.RUnlock()
+	if n := d.nodes[id]; n != nil {
+		return len(n.Children)
+	}
+	return 0
+}
+func (d *Document) ChildAt(id int64, index int) (Node, bool) {
+	d.mu.RLock()
+	defer d.mu.RUnlock()
+	n := d.nodes[id]
+	if n == nil || index < 0 || index >= len(n.Children) {
+		return Node{}, false
+	}
+	child := d.nodes[n.Children[index]]
+	if child == nil {
+		return Node{}, false
+	}
+	return *child, true
 }
 func (d *Document) Parent(id int64) (Node, bool) {
 	d.mu.RLock()
@@ -596,6 +612,7 @@ func (d *Document) SetTextContent(id int64, value string) error {
 	}
 	if n.Type == "text" || n.Type == "comment" {
 		n.Text = value
+		n.TextJSON = ""
 		return nil
 	}
 	for _, child := range n.Children {
@@ -620,7 +637,11 @@ func (d *Document) InnerHTML(id int64) (string, error) {
 		return "", fmt.Errorf("node %d does not exist", id)
 	}
 	var b bytes.Buffer
-	for _, child := range n.Children {
+	children := n.Children
+	if n.TemplateContent != 0 {
+		children = d.nodes[n.TemplateContent].Children
+	}
+	for _, child := range children {
 		if err := html.Render(&b, d.htmlNode(child)); err != nil {
 			return "", err
 		}
@@ -634,10 +655,24 @@ func (d *Document) htmlNode(id int64) *html.Node {
 	}
 	out := &html.Node{}
 	switch n.Type {
+	case "document", "fragment":
+		out.Type = html.DocumentNode
+	case "doctype":
+		out.Type, out.Data = html.DoctypeNode, n.TagName
+		for _, key := range []string{"public", "system"} {
+			if value, ok := n.Attributes[key]; ok {
+				out.Attr = append(out.Attr, html.Attribute{Key: key, Val: value})
+			}
+		}
 	case "element":
 		out.Type, out.Data, out.DataAtom = html.ElementNode, strings.ToLower(n.TagName), atom.Lookup([]byte(strings.ToLower(n.TagName)))
-		for k, v := range n.Attributes {
-			out.Attr = append(out.Attr, html.Attribute{Key: k, Val: v})
+		keys := make([]string, 0, len(n.Attributes))
+		for key := range n.Attributes {
+			keys = append(keys, key)
+		}
+		sort.Strings(keys)
+		for _, key := range keys {
+			out.Attr = append(out.Attr, html.Attribute{Key: key, Val: n.Attributes[key]})
 		}
 	case "text":
 		out.Type, out.Data = html.TextNode, n.Text
@@ -646,12 +681,31 @@ func (d *Document) htmlNode(id int64) *html.Node {
 	default:
 		out.Type = html.CommentNode
 	}
-	for _, child := range n.Children {
+	children := n.Children
+	if n.TemplateContent != 0 {
+		children = d.nodes[n.TemplateContent].Children
+	}
+	for _, child := range children {
 		if c := d.htmlNode(child); c != nil {
 			out.AppendChild(c)
 		}
 	}
 	return out
+}
+
+// OuterHTML serializes the current canonical tree, including detached nodes.
+// Source is intentionally not consulted: it predates all script mutations.
+func (d *Document) OuterHTML(id int64) (string, error) {
+	d.mu.RLock()
+	defer d.mu.RUnlock()
+	if d.nodes[id] == nil {
+		return "", fmt.Errorf("node %d does not exist", id)
+	}
+	var out bytes.Buffer
+	if err := html.Render(&out, d.htmlNode(id)); err != nil {
+		return "", err
+	}
+	return out.String(), nil
 }
 func (d *Document) SetInnerHTML(id int64, source string) error {
 	d.mu.Lock()
@@ -664,6 +718,9 @@ func (d *Document) SetInnerHTML(id int64, source string) error {
 	fragments, err := html.ParseFragment(strings.NewReader(source), contextNode)
 	if err != nil {
 		return err
+	}
+	if parent.TemplateContent != 0 {
+		parent = d.nodes[parent.TemplateContent]
 	}
 	for _, child := range parent.Children {
 		if detached := d.nodes[child]; detached != nil {
@@ -678,6 +735,15 @@ func (d *Document) SetInnerHTML(id int64, source string) error {
 		switch raw.Type {
 		case html.ElementNode:
 			n.Type, n.TagName = "element", strings.ToUpper(raw.Data)
+			n.ScriptAlreadyStarted = n.TagName == "SCRIPT"
+			switch raw.Namespace {
+			case "svg":
+				n.Namespace = "http://www.w3.org/2000/svg"
+			case "math":
+				n.Namespace = "http://www.w3.org/1998/Math/MathML"
+			default:
+				n.Namespace = "http://www.w3.org/1999/xhtml"
+			}
 			for _, attr := range raw.Attr {
 				n.Attributes[attr.Key] = attr.Val
 			}
@@ -691,12 +757,16 @@ func (d *Document) SetInnerHTML(id int64, source string) error {
 		d.nodes[n.ID] = n
 		d.hasFrameElements = d.hasFrameElements || n.TagName == "IFRAME"
 		d.nodes[parentID].Children = append(d.nodes[parentID].Children, n.ID)
+		childParent := n.ID
+		if n.TagName == "TEMPLATE" && n.Namespace == "http://www.w3.org/1999/xhtml" {
+			childParent = d.newTemplateContentLocked(n).ID
+		}
 		for child := raw.FirstChild; child != nil; child = child.NextSibling {
-			add(child, n.ID)
+			add(child, childParent)
 		}
 	}
 	for _, fragment := range fragments {
-		add(fragment, id)
+		add(fragment, parent.ID)
 	}
 	return nil
 }
@@ -706,7 +776,7 @@ func (d *Document) Scripts() []Node {
 	var out []Node
 	for i := int64(1); i <= d.next; i++ {
 		n := d.nodes[i]
-		if n != nil && n.TagName == "SCRIPT" {
+		if n != nil && n.TagName == "SCRIPT" && d.isConnectedLocked(i) {
 			copy := *n
 			for _, cid := range n.Children {
 				if c := d.nodes[cid]; c != nil && c.Type == "text" {
@@ -724,7 +794,7 @@ func (d *Document) MetaHTTPEquiv(name string) []string {
 	var out []string
 	for i := int64(1); i <= d.next; i++ {
 		n := d.nodes[i]
-		if n != nil && n.TagName == "META" && strings.EqualFold(n.Attributes["http-equiv"], name) {
+		if n != nil && n.TagName == "META" && d.isConnectedLocked(i) && strings.EqualFold(n.Attributes["http-equiv"], name) {
 			out = append(out, n.Attributes["content"])
 		}
 	}

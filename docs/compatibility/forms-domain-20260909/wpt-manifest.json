@@ -1,0 +1,11 @@
+{
+  "revision": "b46e71b2f22c73fbcecaf26009e3082fddbaa744",
+  "files": {
+    "html/semantics/forms/the-input-element/valueMode.html": "7feb7d5df1a9ed96b19aced07a833a8dba231e4f650f1b6d88815089cdc80ef4",
+    "html/semantics/forms/the-input-element/input-value-invalidstateerr.html": "d9236c8823c683520e6c2ea4ee54259fc29da3b6bf61ca06b541c11ab296c42e",
+    "html/semantics/forms/the-input-element/email-set-value.html": "233a5b78c3a61f01460040430e797de3a98d0a31764f0746938fa3928a74a26d",
+    "html/semantics/forms/the-textarea-element/value-defaultValue-textContent.html": "5a5545d6b73e0f0043b586fa5c05951ba66b0220643ea5c9a2ca8ac6dff71f13",
+    "html/semantics/forms/the-select-element/select-value.html": "99eb542ec722130b89cb24db8e832218df64c99abe209369dd59992ca9d37735",
+    "html/semantics/forms/the-select-element/selected-index.html": "2ea6b4806cd0c3827c5235be5604b612162cad94904b0980a974fa15f5701afc"
+  }
+}

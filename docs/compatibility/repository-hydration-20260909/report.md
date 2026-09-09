@@ -1,4 +1,52 @@
-# Repository hydration: first generic module blocker
+# Repository hydration: generic compatibility investigation
+
+## Completed workload checkpoint — 2026-09-09
+
+The current source resolves the repository metadata/file-row placeholders and
+preserves relative dates in the user's static exporter. The historical first
+blocker investigation below is retained, but is no longer the current outcome.
+
+A fresh pinned headful Chrome 152 profile and a separately hash/PID-verified
+Mimic executable both reached **zero skeleton elements, 23 relative-time
+elements, populated commit/file metadata, and no React error fallback**. Neither
+capture reported a JavaScript exception or an HTTP failure; all eight repository
+metadata endpoints returned 200. Samples cover navigation through load +10 s.
+Evidence: `final-comparison.json`; raw network/DOM/trace artifacts remain in
+`.build/hydration-complete/{chrome-final-site,final-site}`. Network scheduling
+order differs; no artificial sleep, response replacement, or task-order override
+was needed to make the data populate.
+
+The causal chain after the original module URL fix crossed generic domains:
+custom-element reactions and mutation delivery, selectors for embedded data,
+Fetch body/stream semantics, and form-control values. The final React boundary
+was an input returning `null` for an unset value instead of `""`: a component
+copied that value into state and a later `.length` access threw. Independent
+form probes and a bounded unchanged WPT subset establish the correction.
+
+The absolute-date mismatch was a separate export defect. Live custom elements
+already computed relative strings inside Shadow DOM. The snapshot omitted that
+tree and exposed the absolute light-DOM fallback. Generic declarative shadow
+serialization now preserves open, closed and nested roots and named slots;
+23/23 live relative-date values survive export and replay in Chrome 152.
+The unchanged user `main.py`, with its default zero extra settling, produced
+`C:/Users/moreveal/Desktop/test-mimic/snapshots/authme-fixed-20260909/index.html`.
+See [shadow evidence](../shadow-snapshot-20260909/report.md).
+
+**Measurement correction:** earlier Mimic `DOM.getOuterHTML` captures returned
+original source, not the mutated canonical tree. Their skeleton counts and
+unchanged hashes below are not valid post-hydration measurements. The original
+module exception/network evidence remains valid. CDP now serializes the requested
+canonical node, with independent regression tests. A zero skeleton count alone
+is insufficient because a React error page also removes placeholders.
+
+Reusable selector parsing/matching and Streams implementations replaced the
+corresponding handwritten algorithms. The [coverage matrix](../coverage.md)
+separates observed/registered/expected WPT counts and explicitly records blocked
+domains. This checkpoint completes this workload, not the entire web platform.
+The separate [reuse audit](../standards-reuse-audit.md) covers the nine requested
+subsystems, licenses, adapters, migration cost and performance expectations.
+
+## Historical first blocker checkpoint
 
 Workload: <https://github.com/moreveal/AuthMeReloaded>, observed 2026-09-09.
 Production source before the change: `5c0be11524f802ce3c18ec4f95a53637055c4369`.

@@ -1,0 +1,20 @@
+{
+  "chrome": [
+    "a",
+    "a",
+    null,
+    true,
+    true,
+    true,
+    true
+  ],
+  "mimic": [
+    "a",
+    "a",
+    null,
+    true,
+    true,
+    true,
+    true
+  ]
+}

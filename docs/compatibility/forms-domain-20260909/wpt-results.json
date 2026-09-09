@@ -1,0 +1,834 @@
+{
+  "chrome": {
+    "email-set-value.html": {
+      "done": true,
+      "status": {
+        "status": 0,
+        "message": null
+      },
+      "results": [
+        {
+          "name": "setValue(sanitizedValue) is reflected in visible text field content",
+          "status": 1,
+          "message": "promise_test: Unhandled rejection with value: object \"ReferenceError: test_driver is not defined\""
+        }
+      ]
+    },
+    "input-value-invalidstateerr.html": {
+      "done": true,
+      "status": {
+        "status": 0,
+        "message": null
+      },
+      "results": [
+        {
+          "name": "Forms",
+          "status": 0,
+          "message": null
+        }
+      ]
+    },
+    "select-value.html": {
+      "done": true,
+      "status": {
+        "status": 0,
+        "message": null
+      },
+      "results": [
+        {
+          "name": "options",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "optgroups",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "option is child of div",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "no options",
+          "status": 0,
+          "message": null
+        }
+      ]
+    },
+    "selected-index.html": {
+      "done": true,
+      "status": {
+        "status": 0,
+        "message": null
+      },
+      "results": [
+        {
+          "name": "get empty",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "get default",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "get disabled",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "get unselected",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "set empty (HTMLSelectElement)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "set empty (HTMLOptionsCollection)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "set (HTMLSelectElement)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "set (HTMLOptionsCollection)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "set and reset (HTMLSelectElement)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "set and reset (HTMLOptionsCollection)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "get display:none",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "reset to display:none",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "set selectedIndex=-1",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "removing a non-selected option with nothing selected asks for a reset",
+          "status": 0,
+          "message": null
+        }
+      ]
+    },
+    "value-defaultValue-textContent.html": {
+      "done": true,
+      "status": {
+        "status": 0,
+        "message": null
+      },
+      "results": [
+        {
+          "name": "defaultValue and value are the empty string by default",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "defaultValue and value are affected by setting textContent",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "defaultValue and value are affected by setting nodeValue on a child text node",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "defaultValue and value are affected by setting data on a child text node",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "defaultValue and value are affected by textContent in combination with appending a text node",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "defaultValue and value are affected by textContent in combination with appending a DocumentFragment",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "defaultValue and value reflect child text content, not textContent",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Setting defaultValue wipes out any children, including elements (just like setting textContent)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "defaultValue and value treat CRLF differently",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value normalizes CRLF even spread over multiple text nodes",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "tests for the value setter",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "tests for U+0000 NULL",
+          "status": 0,
+          "message": null
+        }
+      ]
+    },
+    "valueMode.html": {
+      "done": true,
+      "status": {
+        "status": 0,
+        "message": null
+      },
+      "results": [
+        {
+          "name": "value IDL attribute of input type hidden without value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type hidden with value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type submit without value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type submit with value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type image without value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type image with value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type reset without value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type reset with value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type button without value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type button with value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type checkbox without value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type checkbox with value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type radio without value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type radio with value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type text without value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type text with value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type search without value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type search with value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type tel without value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type tel with value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type url without value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type url with value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type email without value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type email with value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type password without value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type password with value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type datetime-local without value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type datetime-local with value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type date without value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type date with value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type time without value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type time with value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type number without value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type number with value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type range without value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type range with value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type color without value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type color with value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type file without value attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "value IDL attribute of input type file with value attribute",
+          "status": 0,
+          "message": null
+        }
+      ]
+    }
+  },
+  "mimic-patched": {
+    "email-set-value.html": {
+      "done": true,
+      "results": [
+        {
+          "message": "promise_test: Unhandled rejection with value: object \"ReferenceError: test_driver is not defined\"",
+          "name": "setValue(sanitizedValue) is reflected in visible text field content",
+          "status": 1
+        }
+      ],
+      "status": {
+        "message": null,
+        "status": 0
+      }
+    },
+    "input-value-invalidstateerr.html": {
+      "done": true,
+      "results": [
+        {
+          "message": null,
+          "name": "Forms",
+          "status": 0
+        }
+      ],
+      "status": {
+        "message": null,
+        "status": 0
+      }
+    },
+    "select-value.html": {
+      "done": true,
+      "results": [
+        {
+          "message": null,
+          "name": "options",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "optgroups",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "option is child of div",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "no options",
+          "status": 0
+        }
+      ],
+      "status": {
+        "message": null,
+        "status": 0
+      }
+    },
+    "selected-index.html": {
+      "done": true,
+      "results": [
+        {
+          "message": null,
+          "name": "get empty",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "get default",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "get disabled",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "get unselected",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "set empty (HTMLSelectElement)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "set empty (HTMLOptionsCollection)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "set (HTMLSelectElement)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "set (HTMLOptionsCollection)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "set and reset (HTMLSelectElement)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "set and reset (HTMLOptionsCollection)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "get display:none",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "reset to display:none",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "set selectedIndex=-1",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "removing a non-selected option with nothing selected asks for a reset",
+          "status": 0
+        }
+      ],
+      "status": {
+        "message": null,
+        "status": 0
+      }
+    },
+    "value-defaultValue-textContent.html": {
+      "done": true,
+      "results": [
+        {
+          "message": null,
+          "name": "defaultValue and value are the empty string by default",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "defaultValue and value are affected by setting textContent",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "defaultValue and value are affected by setting nodeValue on a child text node",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "defaultValue and value are affected by setting data on a child text node",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "defaultValue and value are affected by textContent in combination with appending a text node",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "defaultValue and value are affected by textContent in combination with appending a DocumentFragment",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "defaultValue and value reflect child text content, not textContent",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Setting defaultValue wipes out any children, including elements (just like setting textContent)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "defaultValue and value treat CRLF differently",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value normalizes CRLF even spread over multiple text nodes",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "tests for the value setter",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "tests for U+0000 NULL",
+          "status": 0
+        }
+      ],
+      "status": {
+        "message": null,
+        "status": 0
+      }
+    },
+    "valueMode.html": {
+      "done": true,
+      "results": [
+        {
+          "message": null,
+          "name": "value IDL attribute of input type hidden without value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type hidden with value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type submit without value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type submit with value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type image without value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type image with value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type reset without value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type reset with value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type button without value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type button with value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type checkbox without value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type checkbox with value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type radio without value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type radio with value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type text without value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type text with value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type search without value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type search with value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type tel without value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type tel with value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type url without value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type url with value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type email without value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type email with value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type password without value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type password with value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type datetime-local without value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type datetime-local with value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type date without value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type date with value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type time without value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type time with value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type number without value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type number with value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type range without value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type range with value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type color without value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type color with value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type file without value attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "value IDL attribute of input type file with value attribute",
+          "status": 0
+        }
+      ],
+      "status": {
+        "message": null,
+        "status": 0
+      }
+    }
+  }
+}

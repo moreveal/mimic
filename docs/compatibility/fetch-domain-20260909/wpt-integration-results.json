@@ -1,0 +1,295 @@
+{
+  "chrome": {
+    "response-consume-empty.any.js": {
+      "done": true,
+      "status": {
+        "status": 0,
+        "message": null
+      },
+      "results": [
+        {
+          "name": "Consume response's body as text",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Consume response's body as blob",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Consume response's body as arrayBuffer",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Consume response's body as json (error case)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Consume response's body as formData with correct multipart type (error case)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Consume response's body as formData with correct urlencoded type",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Consume response's body as formData without correct type (error case)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Consume empty blob response body as arrayBuffer",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Consume empty text response body as arrayBuffer",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Consume empty blob response body as text",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Consume empty text response body as text",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Consume empty URLSearchParams response body as text",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Consume empty FormData response body as text",
+          "status": 1,
+          "message": "assert_equals: Resolved value should be empty expected 0 but got 44"
+        },
+        {
+          "name": "Consume empty ArrayBuffer response body as text",
+          "status": 0,
+          "message": null
+        }
+      ]
+    },
+    "response-consume-stream.any.js": {
+      "done": true,
+      "status": {
+        "status": 0,
+        "message": null
+      },
+      "results": [
+        {
+          "name": "Getting an error Response stream",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting a redirect Response stream",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Read empty text response's body as readableStream",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Read empty blob response's body as readableStream",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Read blob response's body as readableStream with mode=undefined",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Read text response's body as readableStream with mode=undefined",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Read URLSearchParams response's body as readableStream with mode=undefined",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Read array buffer response's body as readableStream with mode=undefined",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Read form data response's body as readableStream with mode=undefined",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Read blob response's body as readableStream with mode=byob",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Read text response's body as readableStream with mode=byob",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Read URLSearchParams response's body as readableStream with mode=byob",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Read array buffer response's body as readableStream with mode=byob",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Read form data response's body as readableStream with mode=byob",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Reading with offset from Response stream",
+          "status": 0,
+          "message": null
+        }
+      ]
+    },
+    "request-constructor-init-body-override.any.js": {
+      "done": true,
+      "status": {
+        "status": 0,
+        "message": null
+      },
+      "results": [
+        {
+          "name": "Check that the body of a new request can be overridden when created from an existing Request object",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Check that the body of a new request can be duplicated from an existing Request object",
+          "status": 0,
+          "message": null
+        }
+      ]
+    }
+  },
+  "mimic": {
+    "response-consume-empty.any.js": {
+      "done": true,
+      "results": [
+        {
+          "message": null,
+          "name": "Consume response's body as text",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Consume response's body as blob",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Consume response's body as arrayBuffer",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Consume response's body as json (error case)",
+          "status": 0
+        },
+        {
+          "message": "response.formData is not a function",
+          "name": "Consume response's body as formData with correct multipart type (error case)",
+          "status": 1
+        },
+        {
+          "message": "response.formData is not a function",
+          "name": "Consume response's body as formData with correct urlencoded type",
+          "status": 1
+        },
+        {
+          "message": "response.formData is not a function",
+          "name": "Consume response's body as formData without correct type (error case)",
+          "status": 1
+        },
+        {
+          "message": null,
+          "name": "Consume empty blob response body as arrayBuffer",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Consume empty text response body as arrayBuffer",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Consume empty blob response body as text",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Consume empty text response body as text",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Consume empty URLSearchParams response body as text",
+          "status": 0
+        }
+      ],
+      "status": {
+        "message": null,
+        "status": 0
+      }
+    },
+    "response-consume-stream.any.js": {
+      "done": true,
+      "results": [
+        {
+          "message": null,
+          "name": "Read empty text response's body as readableStream",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Read empty blob response's body as readableStream",
+          "status": 0
+        }
+      ],
+      "status": {
+        "message": null,
+        "status": 0
+      }
+    },
+    "request-constructor-init-body-override.any.js": {
+      "done": true,
+      "results": [
+        {
+          "message": null,
+          "name": "Check that the body of a new request can be overridden when created from an existing Request object",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Check that the body of a new request can be duplicated from an existing Request object",
+          "status": 0
+        }
+      ],
+      "status": {
+        "message": null,
+        "status": 0
+      }
+    }
+  }
+}

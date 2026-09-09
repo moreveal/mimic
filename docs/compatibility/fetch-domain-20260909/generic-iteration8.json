@@ -1,0 +1,238 @@
+{
+  "chrome": {
+    "constructor": {
+      "0": "RangeError",
+      "199": "RangeError",
+      "200": 200,
+      "204": "TypeError",
+      "205": "TypeError",
+      "304": "TypeError",
+      "600": "RangeError"
+    },
+    "body-types": {
+      "string": {
+        "body": "stream",
+        "type": "text/plain;charset=UTF-8",
+        "text": "h\u00e9",
+        "used": true
+      },
+      "bytes": {
+        "body": "stream",
+        "type": null,
+        "text": "AB",
+        "used": true
+      },
+      "blob": {
+        "body": "stream",
+        "type": null,
+        "text": "abc",
+        "used": true
+      },
+      "params": {
+        "body": "stream",
+        "type": "application/x-www-form-urlencoded;charset=UTF-8",
+        "text": "a=b+c",
+        "used": true
+      },
+      "null": {
+        "body": "null",
+        "type": null,
+        "text": "",
+        "used": false
+      }
+    },
+    "consume": {
+      "before": false,
+      "immediate": true,
+      "text": "abc",
+      "second": "TypeError"
+    },
+    "clone": [
+      false,
+      "abc",
+      "abc",
+      "one",
+      "two"
+    ],
+    "locked-body": {
+      "clone": "TypeError",
+      "consume": "TypeError",
+      "used": false,
+      "text": "abc"
+    },
+    "json-error": [
+      "SyntaxError",
+      true
+    ],
+    "request": {
+      "GET": "TypeError",
+      "HEAD": "TypeError",
+      "POST": "POST",
+      "CONNECT": "TypeError",
+      "signal": [
+        false,
+        true,
+        "cause"
+      ]
+    },
+    "abort-events": [
+      1,
+      1,
+      "cause"
+    ],
+    "fetch": {
+      "status": 200,
+      "type": "basic",
+      "url": true,
+      "body": true,
+      "json": {
+        "value": 7
+      },
+      "clone": "{\"value\":7}",
+      "used": true
+    },
+    "fetch-aborted": "cause",
+    "fetch-abort-flight": "cause",
+    "stream-byob": [
+      "ReadableStreamBYOBReader",
+      [
+        1,
+        2
+      ],
+      false
+    ],
+    "stream-backpressure": [
+      3,
+      1
+    ],
+    "writer-serialization": {
+      "before": [
+        "start1"
+      ],
+      "after": [
+        "start1",
+        "end1",
+        "start2",
+        "end2"
+      ]
+    }
+  },
+  "mimic": {
+    "constructor": {
+      "0": "RangeError",
+      "199": "RangeError",
+      "200": 200,
+      "204": "TypeError",
+      "205": "TypeError",
+      "304": "TypeError",
+      "600": "RangeError"
+    },
+    "body-types": {
+      "blob": {
+        "body": "stream",
+        "text": "abc",
+        "type": null,
+        "used": true
+      },
+      "bytes": {
+        "body": "stream",
+        "text": "AB",
+        "type": null,
+        "used": true
+      },
+      "null": {
+        "body": "null",
+        "text": "",
+        "type": null,
+        "used": false
+      },
+      "params": {
+        "body": "stream",
+        "text": "a=b+c",
+        "type": "application/x-www-form-urlencoded;charset=UTF-8",
+        "used": true
+      },
+      "string": {
+        "body": "stream",
+        "text": "h\u00e9",
+        "type": "text/plain;charset=UTF-8",
+        "used": true
+      }
+    },
+    "consume": {
+      "before": false,
+      "immediate": true,
+      "second": "TypeError",
+      "text": "abc"
+    },
+    "clone": [
+      false,
+      "abc",
+      "abc",
+      "one",
+      "two"
+    ],
+    "locked-body": {
+      "clone": "TypeError",
+      "consume": "TypeError",
+      "text": "abc",
+      "used": false
+    },
+    "json-error": [
+      "SyntaxError",
+      true
+    ],
+    "request": {
+      "CONNECT": "TypeError",
+      "GET": "TypeError",
+      "HEAD": "TypeError",
+      "POST": "POST",
+      "signal": [
+        false,
+        true,
+        "cause"
+      ]
+    },
+    "abort-events": [
+      2,
+      1,
+      "cause"
+    ],
+    "fetch": {
+      "body": true,
+      "clone": "{\"value\":7}",
+      "json": {
+        "value": 7
+      },
+      "status": 200,
+      "type": "basic",
+      "url": true,
+      "used": true
+    },
+    "fetch-aborted": "cause",
+    "fetch-abort-flight": "cause",
+    "stream-byob": [
+      "ReadableStreamBYOBReader",
+      [
+        1,
+        2
+      ],
+      false
+    ],
+    "stream-backpressure": [
+      3,
+      1
+    ],
+    "writer-serialization": {
+      "after": [
+        "start1",
+        "end1",
+        "start2",
+        "end2"
+      ],
+      "before": [
+        "start1"
+      ]
+    }
+  }
+}

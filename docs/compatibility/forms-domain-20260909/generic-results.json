@@ -1,0 +1,306 @@
+{
+  "chrome": {
+    "checkbox-radio": [
+      [
+        "on",
+        true,
+        true,
+        true,
+        false
+      ],
+      [
+        false,
+        true,
+        false,
+        true
+      ],
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    "input-types": {
+      "text": [
+        "text",
+        "",
+        " AB ",
+        null,
+        null
+      ],
+      "search": [
+        "search",
+        "",
+        " AB ",
+        null,
+        null
+      ],
+      "email": [
+        "email",
+        "",
+        "AB",
+        null,
+        null
+      ],
+      "url": [
+        "url",
+        "",
+        "AB",
+        null,
+        null
+      ],
+      "number": [
+        "number",
+        "",
+        "",
+        null,
+        null
+      ],
+      "checkbox": [
+        "checkbox",
+        "on",
+        " A\nB ",
+        " A\nB ",
+        null
+      ],
+      "radio": [
+        "radio",
+        "on",
+        " A\nB ",
+        " A\nB ",
+        null
+      ],
+      "file": [
+        "file",
+        "",
+        "",
+        null,
+        "InvalidStateError"
+      ],
+      "hidden": [
+        "hidden",
+        "",
+        " A\nB ",
+        " A\nB ",
+        null
+      ],
+      "bad": [
+        "text",
+        "",
+        " AB ",
+        null,
+        null
+      ]
+    },
+    "textarea": [
+      [
+        "a\nb",
+        "a\r\nb",
+        "a\r\nb"
+      ],
+      [
+        "edit\nvalue",
+        "new",
+        "new"
+      ],
+      [
+        "",
+        "new"
+      ]
+    ],
+    "select": [
+      [
+        "b",
+        1,
+        1
+      ],
+      [
+        "c",
+        2,
+        false,
+        true
+      ],
+      [
+        "",
+        -1
+      ],
+      [
+        "A",
+        0
+      ]
+    ],
+    "select-multiple-reset": [
+      [
+        "A",
+        2
+      ],
+      [
+        "B",
+        1
+      ],
+      [
+        "A",
+        2
+      ]
+    ],
+    "selection": [
+      2,
+      5,
+      "backward",
+      null,
+      "InvalidStateError"
+    ]
+  },
+  "mimic-patched": {
+    "checkbox-radio": [
+      [
+        "on",
+        true,
+        true,
+        true,
+        false
+      ],
+      [
+        false,
+        true,
+        false,
+        true
+      ],
+      [
+        true,
+        true,
+        false
+      ]
+    ],
+    "input-types": {
+      "bad": [
+        "text",
+        "",
+        " AB ",
+        null,
+        null
+      ],
+      "checkbox": [
+        "checkbox",
+        "on",
+        " A\nB ",
+        " A\nB ",
+        null
+      ],
+      "email": [
+        "email",
+        "",
+        "AB",
+        null,
+        null
+      ],
+      "file": [
+        "file",
+        "",
+        "",
+        null,
+        "InvalidStateError"
+      ],
+      "hidden": [
+        "hidden",
+        "",
+        " A\nB ",
+        " A\nB ",
+        null
+      ],
+      "number": [
+        "number",
+        "",
+        "",
+        null,
+        null
+      ],
+      "radio": [
+        "radio",
+        "on",
+        " A\nB ",
+        " A\nB ",
+        null
+      ],
+      "search": [
+        "search",
+        "",
+        " AB ",
+        null,
+        null
+      ],
+      "text": [
+        "text",
+        "",
+        " AB ",
+        null,
+        null
+      ],
+      "url": [
+        "url",
+        "",
+        "AB",
+        null,
+        null
+      ]
+    },
+    "textarea": [
+      [
+        "a\nb",
+        "a\r\nb",
+        "a\r\nb"
+      ],
+      [
+        "edit\nvalue",
+        "new",
+        "new"
+      ],
+      [
+        "",
+        "new"
+      ]
+    ],
+    "select": [
+      [
+        "b",
+        1,
+        1
+      ],
+      [
+        "c",
+        2,
+        false,
+        true
+      ],
+      [
+        "",
+        -1
+      ],
+      [
+        "A",
+        0
+      ]
+    ],
+    "select-multiple-reset": [
+      [
+        "A",
+        2
+      ],
+      [
+        "B",
+        1
+      ],
+      [
+        "A",
+        2
+      ]
+    ],
+    "selection": [
+      2,
+      5,
+      "backward",
+      null,
+      "InvalidStateError"
+    ]
+  }
+}

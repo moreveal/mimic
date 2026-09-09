@@ -319,6 +319,7 @@ func (p *Page) navigate(ctx context.Context, raw, loaderID string) error {
 		if kind == "" {
 			continue
 		}
+		doc.MarkScriptStarted(s.ID)
 		code := s.Text
 		name := u.String()
 		if src := s.Attributes["src"]; src != "" {

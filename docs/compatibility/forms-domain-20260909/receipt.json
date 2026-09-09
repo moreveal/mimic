@@ -1,0 +1,11 @@
+{
+  "mode": "Page.addScriptToEvaluateOnNewDocument on iteration9, not final embedded build",
+  "endpoint": "http://127.0.0.1:19601",
+  "sourceSha256": "81966b0e0f490f062e4aaf239aee3e731333c140f88ea77e8242afa5554315a6",
+  "mimicExeSha256": "c1c5bd84def0b89beca43b6ca96714ed101c4b986d84d2feb9da17f75978286f",
+  "chromeExeSha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+  "originalVerifiedEndpointReceipt": {
+    "Id": 45508,
+    "Path": "E:\\GitHub\\mimic\\.build\\hydration-complete\\iteration9.exe"
+  }
+}

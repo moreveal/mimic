@@ -947,3 +947,55 @@ performance benefit is attributed to this compatibility fix. No full-matrix
 milestone is claimed for this one scoped change.
 
 [Investigation, limitations and raw gates](../compatibility/repository-hydration-20260909/report.md).
+
+## Generic hydration domains and shadow export — 2026-09-09
+
+The repository workload now populates metadata/file rows and its static export
+retains all 23 relative dates. Changes cover canonical DOM/CharacterData/templates,
+mutation reactions/custom elements, mature selector parsing/matching and Streams,
+Fetch bodies, form values, canonical CDP serialization and Shadow DOM export.
+There is no site-specific production path. Independent reproductions and the
+[domain coverage matrix](../compatibility/coverage.md) record substantial remaining
+WPT gaps; API presence is not counted as semantic coverage.
+
+Fresh profiles preceded the selector, DOM, reactions, forms and final serialization
+change classes. An initial fetch profile failed its DOM timeout while exposing an
+O(N²) live childNodes bridge; that failure is retained rather than called a pass.
+The resulting canonical ChildCount/ChildAt access and measured selector adapter
+changes removed unnecessary projections/crossings. A later DOM host profile fell
+from 60,489 crossings / 129.47 ms execution to 54,491 / 79.49 ms, versus baseline
+54,485 / 72.22 ms. Final integration changed between these profiles, so the last
+step is not a clean isolated attribution. See
+[profile receipts](../compatibility/selectors-domain-20260909/perf-attribution.json).
+
+The isolated release fast gate and source baseline `93656f5` both passed all six
+frozen correctness workloads. Warm medians (five samples, excluded warm-up):
+
+| Metric | Baseline | Release | Delta |
+|---|---:|---:|---:|
+| DOM completion, ms | 110.046 | 125.897 | +14.40% |
+| Static completion, ms | 57.615 | 52.905 | −8.17% |
+| React completion, ms | 85.203 | 99.600 | +16.90% |
+| Static N10 throughput, Pages/s | 56.791 | 55.596 | −2.10% |
+| Static N25 throughput, Pages/s | 89.404 | 75.038 | −16.07% |
+| Static marginal RSS/Page, MiB | 24.380 | 26.118 | +1.739 |
+| React marginal RSS/Page, MiB | 28.771 | 30.854 | +2.083 |
+| Static retained RSS after teardown +250 ms, MiB | 68.254 | 78.070 | +9.816 |
+| React retained RSS after teardown +250 ms, MiB | 86.051 | 91.219 | +5.168 |
+
+Compatibility improved at a measurable cost: remaining bootstrap/execution and
+memory regressions are not hidden or described as performance wins. No new
+global runtime lock was introduced. These are single paired gates with OS variance,
+not confidence intervals. The earlier `gate-integrated` ran alongside Go tests
+and is explicitly excluded from final performance conclusions.
+
+Build/per-launch executable hashes and unchanged frozen harness hashes are in
+[release fast-gate evidence](../compatibility/repository-hydration-20260909/performance-comparison.json).
+Raw gates and profiles remain under `.build/hydration-complete/`. The full matrix
+was interrupted at the user's explicit request to finalize and commit. All 12
+Chrome/Mimic correctness gates and 360 measured cold/warm single-page samples
+completed successfully. Completed concurrency waves also passed correctness;
+Chrome CPU N100 stopped under the frozen sustained-paging rule. The final React
+N100 series/startup calibration did not finish, so this is not a completed full
+matrix. [Partial results and launch receipts](../compatibility/repository-hydration-20260909/full-matrix-summary.json)
+are retained; the original baseline is immutable.

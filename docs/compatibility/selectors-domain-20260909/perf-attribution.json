@@ -1,0 +1,1118 @@
+{
+  "baseline": {
+    "navigate": {
+      "warm_ms": [
+        39.9425,
+        38.952,
+        40.7821,
+        39.6065
+      ],
+      "median_ms": 39.7745
+    },
+    "execute": {
+      "warm_ms": [
+        74.6275,
+        71.986,
+        72.4481,
+        69.7577
+      ],
+      "median_ms": 72.21705
+    },
+    "host_crossings": 54485,
+    "host_costs": {
+      "compile:__pyppeteer_evaluation_script__": {
+        "count": 1,
+        "ns": 0
+      },
+      "compile:http://127.0.0.1:59942/workload.js": {
+        "count": 1,
+        "ns": 0
+      },
+      "compile:mimic-clock.js": {
+        "count": 1,
+        "ns": 0
+      },
+      "compile:mimic-promise-factory.js": {
+        "count": 1,
+        "ns": 0
+      },
+      "compile:mimic:dom-content-loaded": {
+        "count": 1,
+        "ns": 0
+      },
+      "compile:mimic:hide-input": {
+        "count": 1,
+        "ns": 0
+      },
+      "compile:mimic:hide-internals": {
+        "count": 1,
+        "ns": 0
+      },
+      "compile:mimic:load": {
+        "count": 1,
+        "ns": 0
+      },
+      "compile:mimic:webapi-surface": {
+        "count": 1,
+        "ns": 5599500
+      },
+      "execute:__pyppeteer_evaluation_script__": {
+        "count": 1,
+        "ns": 71986000
+      },
+      "execute:http://127.0.0.1:59942/workload.js": {
+        "count": 1,
+        "ns": 0
+      },
+      "execute:mimic-clock.js": {
+        "count": 1,
+        "ns": 0
+      },
+      "execute:mimic-promise-factory.js": {
+        "count": 1,
+        "ns": 0
+      },
+      "execute:mimic:dom-content-loaded": {
+        "count": 1,
+        "ns": 0
+      },
+      "execute:mimic:hide-input": {
+        "count": 1,
+        "ns": 0
+      },
+      "execute:mimic:hide-internals": {
+        "count": 1,
+        "ns": 0
+      },
+      "execute:mimic:load": {
+        "count": 1,
+        "ns": 0
+      },
+      "execute:mimic:webapi-surface": {
+        "count": 1,
+        "ns": 29742700
+      },
+      "factory:context": {
+        "count": 1,
+        "ns": 509400
+      },
+      "factory:isolate": {
+        "count": 1,
+        "ns": 1023300
+      },
+      "host:apiAccess": {
+        "count": 29,
+        "ns": 0
+      },
+      "host:capabilityState": {
+        "count": 410,
+        "ns": 516200
+      },
+      "host:catalogJSON": {
+        "count": 1,
+        "ns": 521700
+      },
+      "host:contains": {
+        "count": 3001,
+        "ns": 509500
+      },
+      "host:create": {
+        "count": 3001,
+        "ns": 1060700
+      },
+      "host:createComment": {
+        "count": 3000,
+        "ns": 1033600
+      },
+      "host:createText": {
+        "count": 3000,
+        "ns": 507100
+      },
+      "host:documentSecurity": {
+        "count": 2,
+        "ns": 0
+      },
+      "host:exposureJSON": {
+        "count": 1,
+        "ns": 1390200
+      },
+      "host:getAttribute": {
+        "count": 2,
+        "ns": 0
+      },
+      "host:insertPlain": {
+        "count": 9001,
+        "ns": 6104300
+      },
+      "host:intlEnvironment": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:nodeChildren": {
+        "count": 1,
+        "ns": 583000
+      },
+      "host:parentNode": {
+        "count": 3003,
+        "ns": 519600
+      },
+      "host:performanceNow": {
+        "count": 2,
+        "ns": 0
+      },
+      "host:permissionsPolicy": {
+        "count": 1,
+        "ns": 552000
+      },
+      "host:query": {
+        "count": 2,
+        "ns": 0
+      },
+      "host:queryAllWithin": {
+        "count": 6,
+        "ns": 3206900
+      },
+      "host:queryWithin": {
+        "count": 2,
+        "ns": 0
+      },
+      "host:ready": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:screen": {
+        "count": 2,
+        "ns": 0
+      },
+      "host:setAttribute": {
+        "count": 18000,
+        "ns": 7701800
+      },
+      "host:setInnerHTML": {
+        "count": 2,
+        "ns": 0
+      },
+      "host:storageGet": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:storageSet": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:textContent": {
+        "count": 2,
+        "ns": 0
+      },
+      "host:toggleToken": {
+        "count": 12000,
+        "ns": 11381200
+      },
+      "host:token": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:viewport": {
+        "count": 8,
+        "ns": 0
+      },
+      "host:windowRelations": {
+        "count": 1,
+        "ns": 0
+      }
+    },
+    "build": {
+      "command": [
+        "go",
+        "test",
+        "-c",
+        "-o",
+        "E:\\GitHub\\mimic\\.build\\selector-library-audit\\profile-baseline-hosts\\browser.test.exe",
+        "./internal/browser"
+      ],
+      "executable": "E:\\GitHub\\mimic\\.build\\selector-library-audit\\profile-baseline-hosts\\browser.test.exe",
+      "sha256": "ba06575a338a8d9a6db23b979d50ee5a716638001bce69103e851196871d7dc5",
+      "revision": "93656f59f2b9a49a67efe20a399ef6513b63f81a",
+      "status": "",
+      "harness_sha256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7",
+      "harness_files": {
+        "compare.py": "274b156ee88e67085f5e556ef79629146f5e7287ee54af844476a0c005e65a5b",
+        "report.py": "f12e393341c00e9e03748a06913fa639c1069f66dc7acb71959cffd51647f214",
+        "requirements.txt": "06e6d87d17f39a59fe7b2576545231fe65d5a1940d22e63fc2b32b6cfa12123b",
+        "run.ps1": "6c50b0a55886278de7c1e4d92b77b42bf2cfad59fa451dbaa766b0e0eae84fa6",
+        "run.py": "67718e844bce74b7757f2238716233b9d8683a17294f2b02017667b9c1e44cd3",
+        "test_harness.py": "ddb8dcf74a192d3403971833cf5e011dd8578a9acd9a060b3b265cc6d79aef2a",
+        "v8_version.go": "669a669b0545ba599edb2f7923617f154b976e7377de89d8b2e1f477bdb12f09",
+        "windows_metrics.py": "57ba1e10dfb1f1cb439a52ad5f7f5795c3ba4eef25ae22c9514ecfe115434cd5",
+        "fixtures/workload.js": "484019063e33e131756f67ab6f3076ad2c18e3959072fbae42f540455448c214",
+        "fixtures/vendor/react-dom.production.min.js": "35f4f974f4b2bcd44da73963347f8952e341f83909e4498227d4e26b98f66f0d",
+        "fixtures/vendor/REACT-LICENSE.txt": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85",
+        "fixtures/vendor/react.production.min.js": "d949f1c3687aedadcedac85261865f29b17cd273997e7f6b2bfc53b2f9d4c4dd"
+      }
+    },
+    "launches": [
+      {
+        "command": [
+          "E:\\GitHub\\mimic\\.build\\selector-library-audit\\profile-baseline-hosts\\browser.test.exe",
+          "-test.run=^TestPerformanceProfile$",
+          "-test.v",
+          "-test.timeout=180s",
+          "-test.memprofile=E:\\GitHub\\mimic\\.build\\selector-library-audit\\profile-baseline-hosts\\dom\\alloc.pprof",
+          "-test.mutexprofile=E:\\GitHub\\mimic\\.build\\selector-library-audit\\profile-baseline-hosts\\dom\\mutex.pprof",
+          "-test.blockprofile=E:\\GitHub\\mimic\\.build\\selector-library-audit\\profile-baseline-hosts\\dom\\block.pprof"
+        ],
+        "sha256": "ba06575a338a8d9a6db23b979d50ee5a716638001bce69103e851196871d7dc5",
+        "workload": "dom",
+        "verified_at": "2026-09-09T05:29:22.316032+04:00"
+      }
+    ]
+  },
+  "before": {
+    "navigate": {
+      "warm_ms": [
+        48.774,
+        48.4463,
+        48.499,
+        46.8653
+      ],
+      "median_ms": 48.47265
+    },
+    "execute": {
+      "warm_ms": [
+        128.2363,
+        129.4947,
+        129.4459,
+        131.5383
+      ],
+      "median_ms": 129.4703
+    },
+    "host_crossings": 60489,
+    "host_costs": {
+      "compile:__pyppeteer_evaluation_script__": {
+        "count": 1,
+        "ns": 0
+      },
+      "compile:http://127.0.0.1:29474/workload.js": {
+        "count": 1,
+        "ns": 0
+      },
+      "compile:mimic-clock.js": {
+        "count": 1,
+        "ns": 0
+      },
+      "compile:mimic-promise-factory.js": {
+        "count": 1,
+        "ns": 511500
+      },
+      "compile:mimic:dom-content-loaded": {
+        "count": 1,
+        "ns": 0
+      },
+      "compile:mimic:hide-input": {
+        "count": 1,
+        "ns": 0
+      },
+      "compile:mimic:hide-internals": {
+        "count": 1,
+        "ns": 0
+      },
+      "compile:mimic:load": {
+        "count": 1,
+        "ns": 0
+      },
+      "compile:mimic:webapi-surface": {
+        "count": 1,
+        "ns": 10757800
+      },
+      "execute:__pyppeteer_evaluation_script__": {
+        "count": 1,
+        "ns": 129494700
+      },
+      "execute:http://127.0.0.1:29474/workload.js": {
+        "count": 1,
+        "ns": 0
+      },
+      "execute:mimic-clock.js": {
+        "count": 1,
+        "ns": 0
+      },
+      "execute:mimic-promise-factory.js": {
+        "count": 1,
+        "ns": 0
+      },
+      "execute:mimic:dom-content-loaded": {
+        "count": 1,
+        "ns": 513500
+      },
+      "execute:mimic:hide-input": {
+        "count": 1,
+        "ns": 0
+      },
+      "execute:mimic:hide-internals": {
+        "count": 1,
+        "ns": 0
+      },
+      "execute:mimic:load": {
+        "count": 1,
+        "ns": 0
+      },
+      "execute:mimic:webapi-surface": {
+        "count": 1,
+        "ns": 33590600
+      },
+      "factory:context": {
+        "count": 1,
+        "ns": 0
+      },
+      "factory:isolate": {
+        "count": 1,
+        "ns": 1026500
+      },
+      "host:apiAccess": {
+        "count": 30,
+        "ns": 0
+      },
+      "host:capabilityState": {
+        "count": 410,
+        "ns": 517000
+      },
+      "host:catalogJSON": {
+        "count": 1,
+        "ns": 1012900
+      },
+      "host:contains": {
+        "count": 3001,
+        "ns": 0
+      },
+      "host:create": {
+        "count": 3001,
+        "ns": 2540800
+      },
+      "host:createComment": {
+        "count": 3000,
+        "ns": 0
+      },
+      "host:createText": {
+        "count": 3000,
+        "ns": 1541700
+      },
+      "host:documentRootID": {
+        "count": 2,
+        "ns": 0
+      },
+      "host:documentSecurity": {
+        "count": 2,
+        "ns": 0
+      },
+      "host:exposureJSON": {
+        "count": 1,
+        "ns": 519400
+      },
+      "host:getAttribute": {
+        "count": 3002,
+        "ns": 2038800
+      },
+      "host:insertPlain": {
+        "count": 9001,
+        "ns": 1537500
+      },
+      "host:intlEnvironment": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:nodeChildCount": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:nodeChildren": {
+        "count": 3000,
+        "ns": 31990600
+      },
+      "host:parentNode": {
+        "count": 3003,
+        "ns": 508200
+      },
+      "host:performanceNow": {
+        "count": 2,
+        "ns": 0
+      },
+      "host:permissionsPolicy": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:query": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:queryAllWithin": {
+        "count": 6,
+        "ns": 6249100
+      },
+      "host:queryWithin": {
+        "count": 2,
+        "ns": 0
+      },
+      "host:ready": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:screen": {
+        "count": 2,
+        "ns": 0
+      },
+      "host:semanticMissing": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:setAttribute": {
+        "count": 18000,
+        "ns": 5155600
+      },
+      "host:setDOMQueryCallback": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:setInnerHTML": {
+        "count": 2,
+        "ns": 0
+      },
+      "host:storageGet": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:storageSet": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:textContent": {
+        "count": 2,
+        "ns": 1028400
+      },
+      "host:toggleToken": {
+        "count": 12000,
+        "ns": 4170700
+      },
+      "host:token": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:viewport": {
+        "count": 8,
+        "ns": 0
+      },
+      "host:windowRelations": {
+        "count": 1,
+        "ns": 0
+      }
+    },
+    "build": {
+      "command": [
+        "go",
+        "test",
+        "-c",
+        "-o",
+        "E:\\GitHub\\mimic\\.build\\selector-library-audit\\profile-perf-hosts\\browser.test.exe",
+        "./internal/browser"
+      ],
+      "executable": "E:\\GitHub\\mimic\\.build\\selector-library-audit\\profile-perf-hosts\\browser.test.exe",
+      "sha256": "bb76e8df88f91833fecce1dd504d6411f2042d07afcb474faa94469b129cba63",
+      "revision": "93656f59f2b9a49a67efe20a399ef6513b63f81a",
+      "status": " M internal/browser/page.go\n M internal/browser/page_test.go\n M internal/browser/realm.go\n M internal/cdp/server.go\n M internal/dom/dom.go\n M internal/webapi/surface.go\n M internal/webapi/surface.js\n?? compatibility/domain_tests.py\n?? compatibility/probes-mutations-reactions.expected.json\n?? compatibility/probes-mutations-reactions.json\n?? compatibility/probes-templates.expected.json\n?? compatibility/probes-templates.json\n?? docs/compatibility/coverage.md\n?? docs/compatibility/fetch-domain-20260909/\n?? docs/compatibility/forms-domain-20260909/\n?? docs/compatibility/mutations-reactions-20260909.md\n?? docs/compatibility/selectors-domain-20260909/\n?? docs/compatibility/shadow-snapshot-20260909/\n?? docs/compatibility/standards-reuse-audit.md\n?? internal/browser/dom_nodes_semantics_test.go\n?? internal/browser/dom_query.go\n?? internal/browser/fetch_semantics_test.go\n?? internal/browser/form_controls_test.go\n?? internal/browser/mutation_reaction_test.go\n?? internal/browser/selector_state.go\n?? internal/browser/selector_state_test.go\n?? internal/browser/selectors_semantics_test.go\n?? internal/browser/template_semantics_test.go\n?? internal/cdp/dom_query_test.go\n?? internal/cdp/dom_serialization_test.go\n?? internal/dom/character_data.go\n?? internal/dom/character_data_test.go\n?? internal/dom/selectors.go\n?? internal/dom/template.go\n?? internal/dom/template_test.go\n?? internal/webapi/dom_compatibility.js\n?? internal/webapi/fetch_compatibility.js\n?? internal/webapi/form_controls.js\n?? internal/webapi/selectors_compatibility.js\n?? internal/webapi/selectors_vendor.js\n?? internal/webapi/streams_vendor.js\n?? internal/webapi/templates_compatibility.js\n?? internal/webapi/vendor/\n",
+      "harness_sha256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7",
+      "harness_files": {
+        "compare.py": "274b156ee88e67085f5e556ef79629146f5e7287ee54af844476a0c005e65a5b",
+        "report.py": "f12e393341c00e9e03748a06913fa639c1069f66dc7acb71959cffd51647f214",
+        "requirements.txt": "06e6d87d17f39a59fe7b2576545231fe65d5a1940d22e63fc2b32b6cfa12123b",
+        "run.ps1": "6c50b0a55886278de7c1e4d92b77b42bf2cfad59fa451dbaa766b0e0eae84fa6",
+        "run.py": "67718e844bce74b7757f2238716233b9d8683a17294f2b02017667b9c1e44cd3",
+        "test_harness.py": "ddb8dcf74a192d3403971833cf5e011dd8578a9acd9a060b3b265cc6d79aef2a",
+        "v8_version.go": "669a669b0545ba599edb2f7923617f154b976e7377de89d8b2e1f477bdb12f09",
+        "windows_metrics.py": "57ba1e10dfb1f1cb439a52ad5f7f5795c3ba4eef25ae22c9514ecfe115434cd5",
+        "fixtures/workload.js": "484019063e33e131756f67ab6f3076ad2c18e3959072fbae42f540455448c214",
+        "fixtures/vendor/react-dom.production.min.js": "35f4f974f4b2bcd44da73963347f8952e341f83909e4498227d4e26b98f66f0d",
+        "fixtures/vendor/REACT-LICENSE.txt": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85",
+        "fixtures/vendor/react.production.min.js": "d949f1c3687aedadcedac85261865f29b17cd273997e7f6b2bfc53b2f9d4c4dd"
+      }
+    },
+    "launches": [
+      {
+        "command": [
+          "E:\\GitHub\\mimic\\.build\\selector-library-audit\\profile-perf-hosts\\browser.test.exe",
+          "-test.run=^TestPerformanceProfile$",
+          "-test.v",
+          "-test.timeout=180s",
+          "-test.memprofile=E:\\GitHub\\mimic\\.build\\selector-library-audit\\profile-perf-hosts\\dom\\alloc.pprof",
+          "-test.mutexprofile=E:\\GitHub\\mimic\\.build\\selector-library-audit\\profile-perf-hosts\\dom\\mutex.pprof",
+          "-test.blockprofile=E:\\GitHub\\mimic\\.build\\selector-library-audit\\profile-perf-hosts\\dom\\block.pprof"
+        ],
+        "sha256": "bb76e8df88f91833fecce1dd504d6411f2042d07afcb474faa94469b129cba63",
+        "workload": "dom",
+        "verified_at": "2026-09-09T05:27:37.040233+04:00"
+      }
+    ]
+  },
+  "attribute_route": {
+    "navigate": {
+      "warm_ms": [
+        47.7399,
+        48.0795,
+        49.4829,
+        46.9104
+      ],
+      "median_ms": 47.9097
+    },
+    "execute": {
+      "warm_ms": [
+        82.4644,
+        86.3784,
+        86.9225,
+        85.9109
+      ],
+      "median_ms": 86.14465
+    },
+    "host_crossings": 54490,
+    "host_costs": {
+      "compile:__pyppeteer_evaluation_script__": {
+        "count": 1,
+        "ns": 0
+      },
+      "compile:http://127.0.0.1:64384/workload.js": {
+        "count": 1,
+        "ns": 521700
+      },
+      "compile:mimic-clock.js": {
+        "count": 1,
+        "ns": 511900
+      },
+      "compile:mimic-promise-factory.js": {
+        "count": 1,
+        "ns": 0
+      },
+      "compile:mimic:dom-content-loaded": {
+        "count": 1,
+        "ns": 0
+      },
+      "compile:mimic:hide-input": {
+        "count": 1,
+        "ns": 0
+      },
+      "compile:mimic:hide-internals": {
+        "count": 1,
+        "ns": 0
+      },
+      "compile:mimic:load": {
+        "count": 1,
+        "ns": 0
+      },
+      "compile:mimic:webapi-surface": {
+        "count": 1,
+        "ns": 10850700
+      },
+      "execute:__pyppeteer_evaluation_script__": {
+        "count": 1,
+        "ns": 85863700
+      },
+      "execute:http://127.0.0.1:64384/workload.js": {
+        "count": 1,
+        "ns": 0
+      },
+      "execute:mimic-clock.js": {
+        "count": 1,
+        "ns": 0
+      },
+      "execute:mimic-promise-factory.js": {
+        "count": 1,
+        "ns": 0
+      },
+      "execute:mimic:dom-content-loaded": {
+        "count": 1,
+        "ns": 0
+      },
+      "execute:mimic:hide-input": {
+        "count": 1,
+        "ns": 0
+      },
+      "execute:mimic:hide-internals": {
+        "count": 1,
+        "ns": 0
+      },
+      "execute:mimic:load": {
+        "count": 1,
+        "ns": 0
+      },
+      "execute:mimic:webapi-surface": {
+        "count": 1,
+        "ns": 33100500
+      },
+      "factory:context": {
+        "count": 1,
+        "ns": 0
+      },
+      "factory:isolate": {
+        "count": 1,
+        "ns": 1033700
+      },
+      "host:apiAccess": {
+        "count": 30,
+        "ns": 0
+      },
+      "host:capabilityState": {
+        "count": 410,
+        "ns": 512300
+      },
+      "host:catalogJSON": {
+        "count": 1,
+        "ns": 1015700
+      },
+      "host:contains": {
+        "count": 3001,
+        "ns": 602500
+      },
+      "host:create": {
+        "count": 3001,
+        "ns": 2095300
+      },
+      "host:createComment": {
+        "count": 3000,
+        "ns": 2564700
+      },
+      "host:createText": {
+        "count": 3000,
+        "ns": 1532300
+      },
+      "host:documentRootID": {
+        "count": 2,
+        "ns": 0
+      },
+      "host:documentSecurity": {
+        "count": 2,
+        "ns": 0
+      },
+      "host:exposureJSON": {
+        "count": 1,
+        "ns": 543300
+      },
+      "host:getAttribute": {
+        "count": 2,
+        "ns": 0
+      },
+      "host:insertPlain": {
+        "count": 9001,
+        "ns": 3057400
+      },
+      "host:intlEnvironment": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:nodeChildCount": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:parentNode": {
+        "count": 3003,
+        "ns": 1024600
+      },
+      "host:performanceNow": {
+        "count": 2,
+        "ns": 0
+      },
+      "host:permissionsPolicy": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:query": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:queryAllWithin": {
+        "count": 6,
+        "ns": 5077300
+      },
+      "host:queryWithin": {
+        "count": 3,
+        "ns": 0
+      },
+      "host:ready": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:screen": {
+        "count": 2,
+        "ns": 0
+      },
+      "host:semanticMissing": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:setAttribute": {
+        "count": 18000,
+        "ns": 7220600
+      },
+      "host:setDOMQueryCallback": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:setInnerHTML": {
+        "count": 2,
+        "ns": 0
+      },
+      "host:storageGet": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:storageSet": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:textContent": {
+        "count": 2,
+        "ns": 1510700
+      },
+      "host:toggleToken": {
+        "count": 12000,
+        "ns": 7249800
+      },
+      "host:token": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:viewport": {
+        "count": 8,
+        "ns": 0
+      },
+      "host:windowRelations": {
+        "count": 1,
+        "ns": 0
+      }
+    },
+    "build": {
+      "command": [
+        "go",
+        "test",
+        "-c",
+        "-o",
+        "E:\\GitHub\\mimic\\.build\\selector-library-audit\\profile-after-attribute-route\\browser.test.exe",
+        "./internal/browser"
+      ],
+      "executable": "E:\\GitHub\\mimic\\.build\\selector-library-audit\\profile-after-attribute-route\\browser.test.exe",
+      "sha256": "da412de782bb2ff9769d6d02a6702afda5da44963363cf27d02c4a7301f0164f",
+      "revision": "93656f59f2b9a49a67efe20a399ef6513b63f81a",
+      "status": " M internal/browser/page.go\n M internal/browser/page_test.go\n M internal/browser/realm.go\n M internal/cdp/server.go\n M internal/dom/dom.go\n M internal/webapi/surface.go\n M internal/webapi/surface.js\n?? compatibility/domain_tests.py\n?? compatibility/probes-mutations-reactions.expected.json\n?? compatibility/probes-mutations-reactions.json\n?? compatibility/probes-templates.expected.json\n?? compatibility/probes-templates.json\n?? docs/compatibility/coverage.md\n?? docs/compatibility/fetch-domain-20260909/\n?? docs/compatibility/forms-domain-20260909/\n?? docs/compatibility/mutations-reactions-20260909.md\n?? docs/compatibility/selectors-domain-20260909/\n?? docs/compatibility/shadow-snapshot-20260909/\n?? docs/compatibility/standards-reuse-audit.md\n?? internal/browser/dom_nodes_semantics_test.go\n?? internal/browser/dom_query.go\n?? internal/browser/fetch_semantics_test.go\n?? internal/browser/form_controls_test.go\n?? internal/browser/mutation_reaction_test.go\n?? internal/browser/selector_state.go\n?? internal/browser/selector_state_test.go\n?? internal/browser/selectors_semantics_test.go\n?? internal/browser/template_semantics_test.go\n?? internal/cdp/dom_query_test.go\n?? internal/cdp/dom_serialization_test.go\n?? internal/dom/character_data.go\n?? internal/dom/character_data_test.go\n?? internal/dom/selectors.go\n?? internal/dom/template.go\n?? internal/dom/template_test.go\n?? internal/webapi/dom_compatibility.js\n?? internal/webapi/fetch_compatibility.js\n?? internal/webapi/form_controls.js\n?? internal/webapi/selectors_compatibility.js\n?? internal/webapi/selectors_vendor.js\n?? internal/webapi/streams_vendor.js\n?? internal/webapi/templates_compatibility.js\n?? internal/webapi/vendor/\n",
+      "harness_sha256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7",
+      "harness_files": {
+        "compare.py": "274b156ee88e67085f5e556ef79629146f5e7287ee54af844476a0c005e65a5b",
+        "report.py": "f12e393341c00e9e03748a06913fa639c1069f66dc7acb71959cffd51647f214",
+        "requirements.txt": "06e6d87d17f39a59fe7b2576545231fe65d5a1940d22e63fc2b32b6cfa12123b",
+        "run.ps1": "6c50b0a55886278de7c1e4d92b77b42bf2cfad59fa451dbaa766b0e0eae84fa6",
+        "run.py": "67718e844bce74b7757f2238716233b9d8683a17294f2b02017667b9c1e44cd3",
+        "test_harness.py": "ddb8dcf74a192d3403971833cf5e011dd8578a9acd9a060b3b265cc6d79aef2a",
+        "v8_version.go": "669a669b0545ba599edb2f7923617f154b976e7377de89d8b2e1f477bdb12f09",
+        "windows_metrics.py": "57ba1e10dfb1f1cb439a52ad5f7f5795c3ba4eef25ae22c9514ecfe115434cd5",
+        "fixtures/workload.js": "484019063e33e131756f67ab6f3076ad2c18e3959072fbae42f540455448c214",
+        "fixtures/vendor/react-dom.production.min.js": "35f4f974f4b2bcd44da73963347f8952e341f83909e4498227d4e26b98f66f0d",
+        "fixtures/vendor/REACT-LICENSE.txt": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85",
+        "fixtures/vendor/react.production.min.js": "d949f1c3687aedadcedac85261865f29b17cd273997e7f6b2bfc53b2f9d4c4dd"
+      }
+    },
+    "launches": [
+      {
+        "command": [
+          "E:\\GitHub\\mimic\\.build\\selector-library-audit\\profile-after-attribute-route\\browser.test.exe",
+          "-test.run=^TestPerformanceProfile$",
+          "-test.v",
+          "-test.timeout=180s",
+          "-test.memprofile=E:\\GitHub\\mimic\\.build\\selector-library-audit\\profile-after-attribute-route\\dom\\alloc.pprof",
+          "-test.mutexprofile=E:\\GitHub\\mimic\\.build\\selector-library-audit\\profile-after-attribute-route\\dom\\mutex.pprof",
+          "-test.blockprofile=E:\\GitHub\\mimic\\.build\\selector-library-audit\\profile-after-attribute-route\\dom\\block.pprof"
+        ],
+        "sha256": "da412de782bb2ff9769d6d02a6702afda5da44963363cf27d02c4a7301f0164f",
+        "workload": "dom",
+        "verified_at": "2026-09-09T05:30:46.460316+04:00"
+      }
+    ]
+  },
+  "after_result_projection": {
+    "navigate": {
+      "warm_ms": [
+        46.9341,
+        47.3472,
+        49.0391,
+        46.4491
+      ],
+      "median_ms": 47.14065
+    },
+    "execute": {
+      "warm_ms": [
+        79.1752,
+        81.5054,
+        78.4792,
+        79.8133
+      ],
+      "median_ms": 79.49425
+    },
+    "host_crossings": 54491,
+    "host_costs": {
+      "compile:__pyppeteer_evaluation_script__": {
+        "count": 1,
+        "ns": 0
+      },
+      "compile:http://127.0.0.1:60975/workload.js": {
+        "count": 1,
+        "ns": 0
+      },
+      "compile:mimic-clock.js": {
+        "count": 1,
+        "ns": 0
+      },
+      "compile:mimic-promise-factory.js": {
+        "count": 1,
+        "ns": 0
+      },
+      "compile:mimic:dom-content-loaded": {
+        "count": 1,
+        "ns": 0
+      },
+      "compile:mimic:hide-input": {
+        "count": 1,
+        "ns": 0
+      },
+      "compile:mimic:hide-internals": {
+        "count": 1,
+        "ns": 0
+      },
+      "compile:mimic:load": {
+        "count": 1,
+        "ns": 0
+      },
+      "compile:mimic:webapi-surface": {
+        "count": 1,
+        "ns": 10938100
+      },
+      "execute:__pyppeteer_evaluation_script__": {
+        "count": 1,
+        "ns": 81505400
+      },
+      "execute:http://127.0.0.1:60975/workload.js": {
+        "count": 1,
+        "ns": 0
+      },
+      "execute:mimic-clock.js": {
+        "count": 1,
+        "ns": 0
+      },
+      "execute:mimic-promise-factory.js": {
+        "count": 1,
+        "ns": 0
+      },
+      "execute:mimic:dom-content-loaded": {
+        "count": 1,
+        "ns": 0
+      },
+      "execute:mimic:hide-input": {
+        "count": 1,
+        "ns": 0
+      },
+      "execute:mimic:hide-internals": {
+        "count": 1,
+        "ns": 0
+      },
+      "execute:mimic:load": {
+        "count": 1,
+        "ns": 0
+      },
+      "execute:mimic:webapi-surface": {
+        "count": 1,
+        "ns": 33251300
+      },
+      "factory:context": {
+        "count": 1,
+        "ns": 531200
+      },
+      "factory:isolate": {
+        "count": 1,
+        "ns": 523200
+      },
+      "host:apiAccess": {
+        "count": 30,
+        "ns": 0
+      },
+      "host:capabilityState": {
+        "count": 410,
+        "ns": 0
+      },
+      "host:catalogJSON": {
+        "count": 1,
+        "ns": 534400
+      },
+      "host:contains": {
+        "count": 3001,
+        "ns": 3028200
+      },
+      "host:create": {
+        "count": 3001,
+        "ns": 1037100
+      },
+      "host:createComment": {
+        "count": 3000,
+        "ns": 1567600
+      },
+      "host:createText": {
+        "count": 3000,
+        "ns": 2097600
+      },
+      "host:documentRootID": {
+        "count": 2,
+        "ns": 0
+      },
+      "host:documentSecurity": {
+        "count": 2,
+        "ns": 0
+      },
+      "host:exposureJSON": {
+        "count": 1,
+        "ns": 533200
+      },
+      "host:getAttribute": {
+        "count": 2,
+        "ns": 0
+      },
+      "host:insertPlain": {
+        "count": 9001,
+        "ns": 4199400
+      },
+      "host:intlEnvironment": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:nodeChildCount": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:parentNode": {
+        "count": 3003,
+        "ns": 0
+      },
+      "host:performanceNow": {
+        "count": 2,
+        "ns": 0
+      },
+      "host:permissionsPolicy": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:query": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:queryAllWithin": {
+        "count": 6,
+        "ns": 4711700
+      },
+      "host:queryWithin": {
+        "count": 3,
+        "ns": 1012700
+      },
+      "host:ready": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:registerShadowSnapshot": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:screen": {
+        "count": 2,
+        "ns": 0
+      },
+      "host:semanticMissing": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:setAttribute": {
+        "count": 18000,
+        "ns": 5177600
+      },
+      "host:setDOMQueryCallback": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:setInnerHTML": {
+        "count": 2,
+        "ns": 0
+      },
+      "host:storageGet": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:storageSet": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:textContent": {
+        "count": 2,
+        "ns": 0
+      },
+      "host:toggleToken": {
+        "count": 12000,
+        "ns": 6774100
+      },
+      "host:token": {
+        "count": 1,
+        "ns": 0
+      },
+      "host:viewport": {
+        "count": 8,
+        "ns": 0
+      },
+      "host:windowRelations": {
+        "count": 1,
+        "ns": 0
+      }
+    },
+    "build": {
+      "command": [
+        "go",
+        "test",
+        "-c",
+        "-o",
+        "E:\\GitHub\\mimic\\.build\\selector-library-audit\\profile-after-result-projection-ready\\browser.test.exe",
+        "./internal/browser"
+      ],
+      "executable": "E:\\GitHub\\mimic\\.build\\selector-library-audit\\profile-after-result-projection-ready\\browser.test.exe",
+      "sha256": "eab0b35e1816478f16f2e989531de5882ccc5aa8bf9552c1c9776737db5a8005",
+      "revision": "93656f59f2b9a49a67efe20a399ef6513b63f81a",
+      "status": " M docs/compatibility/repository-hydration-20260909/report.md\n M internal/browser/page.go\n M internal/browser/page_test.go\n M internal/browser/realm.go\n M internal/browser/snapshot.go\n M internal/cdp/server.go\n M internal/dom/dom.go\n M internal/webapi/surface.go\n M internal/webapi/surface.js\n?? compatibility/domain_tests.py\n?? compatibility/probes-mutations-reactions.expected.json\n?? compatibility/probes-mutations-reactions.json\n?? compatibility/probes-templates.expected.json\n?? compatibility/probes-templates.json\n?? docs/compatibility/coverage.md\n?? docs/compatibility/fetch-domain-20260909/\n?? docs/compatibility/forms-domain-20260909/\n?? docs/compatibility/mutations-reactions-20260909.md\n?? docs/compatibility/repository-hydration-20260909/final-comparison.json\n?? docs/compatibility/selectors-domain-20260909/\n?? docs/compatibility/shadow-snapshot-20260909/\n?? docs/compatibility/standards-reuse-audit.md\n?? docs/compatibility/templates-domain-20260909.md\n?? internal/browser/dom_nodes_semantics_test.go\n?? internal/browser/dom_query.go\n?? internal/browser/fetch_semantics_test.go\n?? internal/browser/form_controls_test.go\n?? internal/browser/mutation_reaction_test.go\n?? internal/browser/selector_state.go\n?? internal/browser/selector_state_test.go\n?? internal/browser/selectors_semantics_test.go\n?? internal/browser/shadow_snapshot.go\n?? internal/browser/shadow_snapshot_test.go\n?? internal/browser/template_semantics_test.go\n?? internal/cdp/dom_query_test.go\n?? internal/cdp/dom_serialization_test.go\n?? internal/dom/character_data.go\n?? internal/dom/character_data_test.go\n?? internal/dom/selectors.go\n?? internal/dom/shadow_serialization.go\n?? internal/dom/shadow_serialization_test.go\n?? internal/dom/template.go\n?? internal/dom/template_test.go\n?? internal/webapi/dom_compatibility.js\n?? internal/webapi/fetch_compatibility.js\n?? internal/webapi/form_controls.js\n?? internal/webapi/selectors_compatibility.js\n?? internal/webapi/selectors_vendor.js\n?? internal/webapi/shadow_serialization.js\n?? internal/webapi/streams_vendor.js\n?? internal/webapi/templates_compatibility.js\n?? internal/webapi/vendor/\n",
+      "harness_sha256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7",
+      "harness_files": {
+        "compare.py": "274b156ee88e67085f5e556ef79629146f5e7287ee54af844476a0c005e65a5b",
+        "report.py": "f12e393341c00e9e03748a06913fa639c1069f66dc7acb71959cffd51647f214",
+        "requirements.txt": "06e6d87d17f39a59fe7b2576545231fe65d5a1940d22e63fc2b32b6cfa12123b",
+        "run.ps1": "6c50b0a55886278de7c1e4d92b77b42bf2cfad59fa451dbaa766b0e0eae84fa6",
+        "run.py": "67718e844bce74b7757f2238716233b9d8683a17294f2b02017667b9c1e44cd3",
+        "test_harness.py": "ddb8dcf74a192d3403971833cf5e011dd8578a9acd9a060b3b265cc6d79aef2a",
+        "v8_version.go": "669a669b0545ba599edb2f7923617f154b976e7377de89d8b2e1f477bdb12f09",
+        "windows_metrics.py": "57ba1e10dfb1f1cb439a52ad5f7f5795c3ba4eef25ae22c9514ecfe115434cd5",
+        "fixtures/workload.js": "484019063e33e131756f67ab6f3076ad2c18e3959072fbae42f540455448c214",
+        "fixtures/vendor/react-dom.production.min.js": "35f4f974f4b2bcd44da73963347f8952e341f83909e4498227d4e26b98f66f0d",
+        "fixtures/vendor/REACT-LICENSE.txt": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85",
+        "fixtures/vendor/react.production.min.js": "d949f1c3687aedadcedac85261865f29b17cd273997e7f6b2bfc53b2f9d4c4dd"
+      }
+    },
+    "launches": [
+      {
+        "command": [
+          "E:\\GitHub\\mimic\\.build\\selector-library-audit\\profile-after-result-projection-ready\\browser.test.exe",
+          "-test.run=^TestPerformanceProfile$",
+          "-test.v",
+          "-test.timeout=180s",
+          "-test.memprofile=E:\\GitHub\\mimic\\.build\\selector-library-audit\\profile-after-result-projection-ready\\dom\\alloc.pprof",
+          "-test.mutexprofile=E:\\GitHub\\mimic\\.build\\selector-library-audit\\profile-after-result-projection-ready\\dom\\mutex.pprof",
+          "-test.blockprofile=E:\\GitHub\\mimic\\.build\\selector-library-audit\\profile-after-result-projection-ready\\dom\\block.pprof"
+        ],
+        "sha256": "eab0b35e1816478f16f2e989531de5882ccc5aa8bf9552c1c9776737db5a8005",
+        "workload": "dom",
+        "verified_at": "2026-09-09T05:41:13.142837+04:00"
+      }
+    ]
+  }
+}

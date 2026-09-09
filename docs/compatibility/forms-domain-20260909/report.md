@@ -1,0 +1,19 @@
+# HTML form values и текущая React граница
+
+2026-09-09. Независимый repro в before.json: `input.value` без атрибута возвращал null вместо пустой строки, `defaultValue/checked/defaultChecked` также null. Присвоение value игнорировалось generated stub. Dirty-value/default-value separation не существовал.
+
+Это подтвердило текущий GitHub blocker по стеку, а не по одному имени API: FilesSearchBox layout effect сравнивает DOM input.value с query="" и вызывает setter с DOM value. Null попадал в React query state, затем FileResultsList вычислял query.length и падал. Stack: zy-c855f0bf7926778a.js:2:2500. Независимый repro воспроизводит тот же переход без GitHub и React.
+
+Одновременно найден отдельный CDP bug: DOM.getOuterHTML возвращал исходный d.Source, поэтому прежние post-hydration DOM snapshots не измеряли mutations. Actual documentElement.innerHTML и Mimic.captureSnapshot показали Skeleton0, но error fallback 'Unable to load page'. Исчезновение skeleton само по себе не является успехом. CDP исправление выполняет родительская задача отдельно.
+
+form_controls.js реализует coherent value state layer поверх canonical element identity и attrs: input modes/defaultValue/dirty value/checked, checkbox/radio; textarea direct child text/default/dirty value; select/option selectedness/value/index/options; reset и form association; text selection APIs. WeakMap stores содержат только живое IDL состояние, не вторую копию DOM.
+
+До изменений снят fresh forms-profile-before (DOM/static/React native1 PASS). Generic after:6 групп полностью совпадают с Chrome152 плюс исходные3 repro groups. WPT files не изменялись, revision и hash в manifest. Запуск Window с обычной загрузкой HTML, testharness и collector вместо визуального testharnessreport.
+
+Пять WPT файлов:71/71 assertions PASS в Chrome152 и Mimic iteration9 с form_controls.js, инъецированным через Page.addScriptToEvaluateOnNewDocument. Это не финальная собранная интеграция; ее повторный запуск выполняет родительская задача. Это valueMode40, input-value-invalidstateerr1, select-value4, selected-index14, textarea value/defaultValue/textContent12. Шестой email-set-value требует test_driver, отсутствующий в этом ограниченном runner:1 infrastructure failure на обеих сторонах, исключен из pass count. Нельзя представлять это полным forms WPT coverage.
+
+Ограничения: month/week validation, date/time valueAsNumber/valueAsDate/step, range step rounding, constraint validation/submission/FormData, полноценные file lists и control renderer не завершены. Type/attribute transitions через прямой setAttribute нуждаются в расширенном корпусе. Selection event timing и form controls внутри ShadowRoot также требуют отдельного сравнения. Current fixes не содержат GitHub-specific behavior.
+
+Дополнительная проверка зрелых Streams выявила ложный старый smoke test: await writer.write перед первым TransformStream read зависает и в Chrome из-за backpressure. Нефиксированный benchmark не менялся; обычный TestReadableWritableAndTransformStreams исправлен на concurrent read, сохраняя проверку результата. TestTimerAndFetchUseScheduler не ослаблялся: его пустые bytes оказались вызовом generated structuredClone stub в Goja fallback polyfill, что исправляется на integration boundary родительской задачей.
+
+Финальный embedded checkpoint:71/71 PASS, все5 harness завершились, без инъекции production JS. Бинарник SHA-256 `F58FFF2043AB801F0BF608F8626BD981C38848AA1FC976A7A3CA6F410B878F24`, endpoint19546 проверен против PID27400 и executable path. Runner проверил исходные bytes по immutable WPT revision `b46e71b2f22c73fbcecaf26009e3082fddbaa744` и manifest hashes. [Полный receipt](final-embedded.json). Chrome71/71 — предыдущий oracle тех же manifest files; новый повтор во время isolated performance окна не запускался. Этот checkpoint предшествует отдельному восстановлению внутреннего Find lookup, которое не меняет public DOM selectors.

@@ -1,0 +1,24 @@
+{
+  "chrome": {
+    "light": "light & safe",
+    "shadow": "two weeks ago",
+    "html": "<strong>two weeks ago</strong><slot name=\"name\"></slot><div id=\"nested\"></div>",
+    "closed": true
+  },
+  "mimic": {
+    "closed": true,
+    "html": "<strong>two weeks ago</strong><slot name=\"name\"></slot><div id=\"nested\"></div>",
+    "light": "light & safe",
+    "shadow": "two weeks ago"
+  },
+  "exportChrome": {
+    "light": "light & safe",
+    "shadow": "two weeks ago",
+    "html": "<strong>two weeks ago</strong><slot name=\"name\"></slot><div id=\"nested\"></div>",
+    "closed": true,
+    "assigned": [
+      "light & safe"
+    ],
+    "visible": "light & safe"
+  }
+}

@@ -1,0 +1,236 @@
+{
+  "baseline": {
+    "build": {
+      "command": [
+        "go",
+        "build",
+        "-o",
+        "E:\\GitHub\\mimic\\.build\\hydration-complete\\gate-baseline\\mimic.exe",
+        "./cmd/mimic"
+      ],
+      "source": "E:\\GitHub\\mimic\\.build\\hydration-baseline",
+      "revision": "93656f59f2b9a49a67efe20a399ef6513b63f81a",
+      "status": "",
+      "executable": "E:\\GitHub\\mimic\\.build\\hydration-complete\\gate-baseline\\mimic.exe",
+      "sha256": "cccdda817a0a58da455f5e6bd4e3c5c1c6d7b8a0164ea9a0f06b0eebfe3cfd42",
+      "harness_sha256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7",
+      "harness_files": {
+        "compare.py": "274b156ee88e67085f5e556ef79629146f5e7287ee54af844476a0c005e65a5b",
+        "report.py": "f12e393341c00e9e03748a06913fa639c1069f66dc7acb71959cffd51647f214",
+        "requirements.txt": "06e6d87d17f39a59fe7b2576545231fe65d5a1940d22e63fc2b32b6cfa12123b",
+        "run.ps1": "6c50b0a55886278de7c1e4d92b77b42bf2cfad59fa451dbaa766b0e0eae84fa6",
+        "run.py": "67718e844bce74b7757f2238716233b9d8683a17294f2b02017667b9c1e44cd3",
+        "test_harness.py": "ddb8dcf74a192d3403971833cf5e011dd8578a9acd9a060b3b265cc6d79aef2a",
+        "v8_version.go": "669a669b0545ba599edb2f7923617f154b976e7377de89d8b2e1f477bdb12f09",
+        "windows_metrics.py": "57ba1e10dfb1f1cb439a52ad5f7f5795c3ba4eef25ae22c9514ecfe115434cd5",
+        "fixtures/workload.js": "484019063e33e131756f67ab6f3076ad2c18e3959072fbae42f540455448c214",
+        "fixtures/vendor/react-dom.production.min.js": "35f4f974f4b2bcd44da73963347f8952e341f83909e4498227d4e26b98f66f0d",
+        "fixtures/vendor/REACT-LICENSE.txt": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85",
+        "fixtures/vendor/react.production.min.js": "d949f1c3687aedadcedac85261865f29b17cd273997e7f6b2bfc53b2f9d4c4dd"
+      },
+      "built_at": "2026-09-09T05:08:25.109651+04:00"
+    },
+    "summary": {
+      "dom": {
+        "session_create_ms": 12.243099998158868,
+        "execution_ms": 68.45140000223182,
+        "completion_ms": 110.04580000007991
+      },
+      "static": {
+        "session_create_ms": 2.747099999396596,
+        "execution_ms": 2.2934999942663126,
+        "completion_ms": 57.61489999713376
+      },
+      "react": {
+        "session_create_ms": 2.8549999988172203,
+        "execution_ms": 31.885999997030012,
+        "completion_ms": 85.20259999932023
+      }
+    },
+    "throughput": {
+      "10": 56.79072221332272,
+      "25": 89.40404692783424
+    },
+    "memory": {
+      "static": {
+        "marginal_rss_mib": 24.3796875,
+        "marginal_private_mib": 24.58125,
+        "retained_rss_mib": 68.25390625,
+        "retained_private_mib": 49.53125
+      },
+      "react": {
+        "marginal_rss_mib": 28.77109375,
+        "marginal_private_mib": 28.698828125,
+        "retained_rss_mib": 86.05078125,
+        "retained_private_mib": 66.953125
+      }
+    },
+    "launches": [
+      {
+        "label": "correctness",
+        "executable": "E:\\GitHub\\mimic\\.build\\hydration-complete\\gate-baseline\\mimic.exe",
+        "sha256": "cccdda817a0a58da455f5e6bd4e3c5c1c6d7b8a0164ea9a0f06b0eebfe3cfd42",
+        "verified_at": "2026-09-09T05:08:25.165683+04:00"
+      },
+      {
+        "label": "warm dom",
+        "executable": "E:\\GitHub\\mimic\\.build\\hydration-complete\\gate-baseline\\mimic.exe",
+        "sha256": "cccdda817a0a58da455f5e6bd4e3c5c1c6d7b8a0164ea9a0f06b0eebfe3cfd42",
+        "verified_at": "2026-09-09T05:08:26.318155+04:00"
+      },
+      {
+        "label": "warm static",
+        "executable": "E:\\GitHub\\mimic\\.build\\hydration-complete\\gate-baseline\\mimic.exe",
+        "sha256": "cccdda817a0a58da455f5e6bd4e3c5c1c6d7b8a0164ea9a0f06b0eebfe3cfd42",
+        "verified_at": "2026-09-09T05:08:29.102880+04:00"
+      },
+      {
+        "label": "warm react",
+        "executable": "E:\\GitHub\\mimic\\.build\\hydration-complete\\gate-baseline\\mimic.exe",
+        "sha256": "cccdda817a0a58da455f5e6bd4e3c5c1c6d7b8a0164ea9a0f06b0eebfe3cfd42",
+        "verified_at": "2026-09-09T05:08:31.630004+04:00"
+      },
+      {
+        "label": "static concurrency 10",
+        "executable": "E:\\GitHub\\mimic\\.build\\hydration-complete\\gate-baseline\\mimic.exe",
+        "sha256": "cccdda817a0a58da455f5e6bd4e3c5c1c6d7b8a0164ea9a0f06b0eebfe3cfd42",
+        "verified_at": "2026-09-09T05:08:34.250494+04:00"
+      },
+      {
+        "label": "static concurrency 25",
+        "executable": "E:\\GitHub\\mimic\\.build\\hydration-complete\\gate-baseline\\mimic.exe",
+        "sha256": "cccdda817a0a58da455f5e6bd4e3c5c1c6d7b8a0164ea9a0f06b0eebfe3cfd42",
+        "verified_at": "2026-09-09T05:08:36.853483+04:00"
+      },
+      {
+        "label": "memory 10 static",
+        "executable": "E:\\GitHub\\mimic\\.build\\hydration-complete\\gate-baseline\\mimic.exe",
+        "sha256": "cccdda817a0a58da455f5e6bd4e3c5c1c6d7b8a0164ea9a0f06b0eebfe3cfd42",
+        "verified_at": "2026-09-09T05:08:40.722950+04:00"
+      },
+      {
+        "label": "memory 10 react",
+        "executable": "E:\\GitHub\\mimic\\.build\\hydration-complete\\gate-baseline\\mimic.exe",
+        "sha256": "cccdda817a0a58da455f5e6bd4e3c5c1c6d7b8a0164ea9a0f06b0eebfe3cfd42",
+        "verified_at": "2026-09-09T05:08:41.742878+04:00"
+      }
+    ]
+  },
+  "final": {
+    "build": {
+      "command": [
+        "go",
+        "build",
+        "-o",
+        "E:\\GitHub\\mimic\\.build\\hydration-complete\\gate-release\\mimic.exe",
+        "./cmd/mimic"
+      ],
+      "source": "E:\\GitHub\\mimic",
+      "revision": "93656f59f2b9a49a67efe20a399ef6513b63f81a",
+      "status": " M docs/compatibility/repository-hydration-20260909/report.md\n M internal/browser/page.go\n M internal/browser/page_test.go\n M internal/browser/realm.go\n M internal/browser/snapshot.go\n M internal/cdp/server.go\n M internal/dom/dom.go\n M internal/webapi/surface.go\n M internal/webapi/surface.js\n?? compatibility/domain_tests.py\n?? compatibility/probes-mutations-reactions.expected.json\n?? compatibility/probes-mutations-reactions.json\n?? compatibility/probes-templates.expected.json\n?? compatibility/probes-templates.json\n?? docs/compatibility/coverage.md\n?? docs/compatibility/fetch-domain-20260909/\n?? docs/compatibility/forms-domain-20260909/\n?? docs/compatibility/mutations-reactions-20260909.md\n?? docs/compatibility/nodes-domain-20260909/\n?? docs/compatibility/repository-hydration-20260909/final-comparison.json\n?? docs/compatibility/selectors-domain-20260909/\n?? docs/compatibility/shadow-snapshot-20260909/\n?? docs/compatibility/standards-reuse-audit.md\n?? docs/compatibility/templates-domain-20260909.md\n?? internal/browser/dom_nodes_semantics_test.go\n?? internal/browser/dom_query.go\n?? internal/browser/fetch_semantics_test.go\n?? internal/browser/form_controls_test.go\n?? internal/browser/mutation_reaction_test.go\n?? internal/browser/selector_state.go\n?? internal/browser/selector_state_test.go\n?? internal/browser/selectors_semantics_test.go\n?? internal/browser/shadow_snapshot.go\n?? internal/browser/shadow_snapshot_test.go\n?? internal/browser/template_semantics_test.go\n?? internal/cdp/dom_query_test.go\n?? internal/cdp/dom_serialization_test.go\n?? internal/dom/character_data.go\n?? internal/dom/character_data_test.go\n?? internal/dom/selectors.go\n?? internal/dom/shadow_serialization.go\n?? internal/dom/shadow_serialization_test.go\n?? internal/dom/template.go\n?? internal/dom/template_test.go\n?? internal/webapi/dom_compatibility.js\n?? internal/webapi/fetch_compatibility.js\n?? internal/webapi/form_controls.js\n?? internal/webapi/selectors_compatibility.js\n?? internal/webapi/selectors_vendor.js\n?? internal/webapi/shadow_serialization.js\n?? internal/webapi/streams_vendor.js\n?? internal/webapi/templates_compatibility.js\n?? internal/webapi/vendor/\n",
+      "executable": "E:\\GitHub\\mimic\\.build\\hydration-complete\\gate-release\\mimic.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "harness_sha256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7",
+      "harness_files": {
+        "compare.py": "274b156ee88e67085f5e556ef79629146f5e7287ee54af844476a0c005e65a5b",
+        "report.py": "f12e393341c00e9e03748a06913fa639c1069f66dc7acb71959cffd51647f214",
+        "requirements.txt": "06e6d87d17f39a59fe7b2576545231fe65d5a1940d22e63fc2b32b6cfa12123b",
+        "run.ps1": "6c50b0a55886278de7c1e4d92b77b42bf2cfad59fa451dbaa766b0e0eae84fa6",
+        "run.py": "67718e844bce74b7757f2238716233b9d8683a17294f2b02017667b9c1e44cd3",
+        "test_harness.py": "ddb8dcf74a192d3403971833cf5e011dd8578a9acd9a060b3b265cc6d79aef2a",
+        "v8_version.go": "669a669b0545ba599edb2f7923617f154b976e7377de89d8b2e1f477bdb12f09",
+        "windows_metrics.py": "57ba1e10dfb1f1cb439a52ad5f7f5795c3ba4eef25ae22c9514ecfe115434cd5",
+        "fixtures/workload.js": "484019063e33e131756f67ab6f3076ad2c18e3959072fbae42f540455448c214",
+        "fixtures/vendor/react-dom.production.min.js": "35f4f974f4b2bcd44da73963347f8952e341f83909e4498227d4e26b98f66f0d",
+        "fixtures/vendor/REACT-LICENSE.txt": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85",
+        "fixtures/vendor/react.production.min.js": "d949f1c3687aedadcedac85261865f29b17cd273997e7f6b2bfc53b2f9d4c4dd"
+      },
+      "built_at": "2026-09-09T05:42:38.469281+04:00"
+    },
+    "summary": {
+      "dom": {
+        "session_create_ms": 2.18019999738317,
+        "execution_ms": 74.89979999809293,
+        "completion_ms": 125.89670000306796
+      },
+      "static": {
+        "session_create_ms": 12.328799995884765,
+        "execution_ms": 2.4416999949608,
+        "completion_ms": 52.905399999872316
+      },
+      "react": {
+        "session_create_ms": 12.064499998814426,
+        "execution_ms": 41.78160000446951,
+        "completion_ms": 99.60030000365805
+      }
+    },
+    "throughput": {
+      "10": 55.59617164892121,
+      "25": 75.03780404580975
+    },
+    "memory": {
+      "static": {
+        "marginal_rss_mib": 26.118359375,
+        "marginal_private_mib": 25.66796875,
+        "retained_rss_mib": 78.0703125,
+        "retained_private_mib": 59.0546875
+      },
+      "react": {
+        "marginal_rss_mib": 30.85390625,
+        "marginal_private_mib": 31.24296875,
+        "retained_rss_mib": 91.21875,
+        "retained_private_mib": 71.359375
+      }
+    },
+    "launches": [
+      {
+        "label": "correctness",
+        "executable": "E:\\GitHub\\mimic\\.build\\hydration-complete\\gate-release\\mimic.exe",
+        "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+        "verified_at": "2026-09-09T05:42:38.527032+04:00"
+      },
+      {
+        "label": "warm dom",
+        "executable": "E:\\GitHub\\mimic\\.build\\hydration-complete\\gate-release\\mimic.exe",
+        "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+        "verified_at": "2026-09-09T05:42:39.706835+04:00"
+      },
+      {
+        "label": "warm static",
+        "executable": "E:\\GitHub\\mimic\\.build\\hydration-complete\\gate-release\\mimic.exe",
+        "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+        "verified_at": "2026-09-09T05:42:42.659972+04:00"
+      },
+      {
+        "label": "warm react",
+        "executable": "E:\\GitHub\\mimic\\.build\\hydration-complete\\gate-release\\mimic.exe",
+        "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+        "verified_at": "2026-09-09T05:42:45.121717+04:00"
+      },
+      {
+        "label": "static concurrency 10",
+        "executable": "E:\\GitHub\\mimic\\.build\\hydration-complete\\gate-release\\mimic.exe",
+        "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+        "verified_at": "2026-09-09T05:42:47.858514+04:00"
+      },
+      {
+        "label": "static concurrency 25",
+        "executable": "E:\\GitHub\\mimic\\.build\\hydration-complete\\gate-release\\mimic.exe",
+        "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+        "verified_at": "2026-09-09T05:42:50.549637+04:00"
+      },
+      {
+        "label": "memory 10 static",
+        "executable": "E:\\GitHub\\mimic\\.build\\hydration-complete\\gate-release\\mimic.exe",
+        "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+        "verified_at": "2026-09-09T05:42:54.527475+04:00"
+      },
+      {
+        "label": "memory 10 react",
+        "executable": "E:\\GitHub\\mimic\\.build\\hydration-complete\\gate-release\\mimic.exe",
+        "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+        "verified_at": "2026-09-09T05:42:55.520841+04:00"
+      }
+    ]
+  }
+}

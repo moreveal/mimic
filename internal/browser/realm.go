@@ -9,6 +9,7 @@ import (
 	"crypto/sha256"
 	"crypto/sha512"
 	"crypto/x509"
+	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
@@ -30,43 +31,47 @@ import (
 )
 
 type Realm struct {
-	profileWrappers     uint64
-	profilePhases       map[string]float64
-	ID                  string
-	activationAt        time.Time
-	inputDispatcher     engine.Value
-	permissionNotifier  engine.Value
-	agent               ExecutionAgent
-	runtime             engine.Runtime
-	scheduler           *scheduler.Scheduler
-	document            *dom.Document
-	url                 *url.URL
-	token               string
-	detached            map[int64]dom.Node
-	apiSeen             map[string]bool
-	readyState          string
-	apiTracking         bool
-	workers             map[int64]*DedicatedWorker
-	workerSeq           int64
-	childFrames         map[int64]*Frame
-	retainedFrames      map[string]*Frame
-	crossValues         map[int64]engine.Value
-	crossValueSeq       int64
-	origin              string
-	currentScript       int64
-	messageReceiver     engine.Value
-	messagePortReceiver engine.Value
-	frameLoadDispatcher engine.Value
-	performanceNotifier engine.Value
-	loadBlockers        int
-	loadRequested       bool
-	loadScheduled       bool
-	loadCompleted       bool
-	loadCallback        func(context.Context)
-	resourceContext     context.Context
-	cancelResources     context.CancelFunc
-	resourceWG          sync.WaitGroup
-	nativePollQueued    bool
+	profileWrappers        uint64
+	profilePhases          map[string]float64
+	ID                     string
+	activationAt           time.Time
+	inputDispatcher        engine.Value
+	permissionNotifier     engine.Value
+	agent                  ExecutionAgent
+	runtime                engine.Runtime
+	scheduler              *scheduler.Scheduler
+	document               *dom.Document
+	url                    *url.URL
+	token                  string
+	detached               map[int64]dom.Node
+	apiSeen                map[string]bool
+	readyState             string
+	apiTracking            bool
+	workers                map[int64]*DedicatedWorker
+	workerSeq              int64
+	childFrames            map[int64]*Frame
+	retainedFrames         map[string]*Frame
+	crossValues            map[int64]engine.Value
+	crossValueSeq          int64
+	origin                 string
+	currentScript          int64
+	messageReceiver        engine.Value
+	messagePortReceiver    engine.Value
+	frameLoadDispatcher    engine.Value
+	performanceNotifier    engine.Value
+	domQueryCallback       engine.Value
+	shadowSnapshotCallback engine.Value
+	selectorTargetID       int64
+	loadBlockers           int
+	loadRequested          bool
+	loadScheduled          bool
+	loadCompleted          bool
+	loadCallback           func(context.Context)
+	resourceContext        context.Context
+	cancelResources        context.CancelFunc
+	resourceWG             sync.WaitGroup
+	fetchCancels           map[string]context.CancelFunc
+	nativePollQueued       bool
 }
 
 // documentURL is the URL observed by this realm. For the top-level realm it
@@ -117,6 +122,7 @@ func newRealm(p *Page, agent ExecutionAgent, d *dom.Document, u *url.URL) (*Real
 func newRealmState(p *Page, agent ExecutionAgent, d *dom.Document, u *url.URL, deferred bool) (*Realm, error) {
 	resourceContext, cancelResources := context.WithCancel(p.ctx.lifetime)
 	r := &Realm{ID: uuid.NewString(), agent: agent, document: d, url: u, origin: originOf(u.String()), token: uuid.NewString(), detached: map[int64]dom.Node{}, apiSeen: map[string]bool{}, readyState: "loading", workers: map[int64]*DedicatedWorker{}, childFrames: map[int64]*Frame{}, retainedFrames: map[string]*Frame{}, crossValues: map[int64]engine.Value{}, resourceContext: resourceContext, cancelResources: cancelResources}
+	r.updateSelectorTarget(u.Fragment)
 	if deferred {
 		r.runtime = &deferredRuntime{realm: r, factory: p.ctx.browser.factory}
 	} else {
@@ -915,12 +921,61 @@ func (r *Realm) install() error {
 	host["queryAllWithin"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(r.document.FindAllIDs(int64(numarg(a, 0)), strarg(a, 1))), nil
 	}, "ns")
+	host["matches"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return r.val(r.document.Matches(int64(numarg(a, 0)), strarg(a, 1))), nil
+	}, "ns")
 	host["nodeData"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		n, ok := r.document.Get(int64(numarg(a, 0)))
 		if !ok {
 			return r.val(nil), nil
 		}
 		return r.val(nodeData(n)), nil
+	})
+	host["setDOMQueryCallback"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		if len(a) > 0 {
+			r.domQueryCallback = a[0]
+		}
+		return nil, nil
+	})
+	host["registerShadowSnapshot"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		if len(a) > 0 {
+			r.shadowSnapshotCallback = a[0]
+		}
+		return nil, nil
+	})
+	host["serializeNodeList"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		encoded, err := json.Marshal(arg(a, 0))
+		if err != nil {
+			return nil, err
+		}
+		var ids []int64
+		if err := json.Unmarshal(encoded, &ids); err != nil {
+			return nil, err
+		}
+		markup, err := r.document.SerializeNodeList(ids)
+		return r.val(markup), err
+	})
+	host["selectorTargetID"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) { return r.val(r.selectorTargetID), nil })
+	host["templateContent"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		n, ok := r.document.TemplateContent(int64(numarg(a, 0)))
+		if !ok {
+			return nil, nil
+		}
+		return r.val(nodeData(n)), nil
+	})
+	host["hostIncludingContains"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return r.val(r.document.HostIncludingContains(int64(numarg(a, 0)), int64(numarg(a, 1)))), nil
+	}, "nn")
+	host["nodeMarkup"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		markup, err := r.document.OuterHTML(int64(numarg(a, 0)))
+		return r.val(markup), err
+	}, "n")
+	host["copyNodeState"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		r.document.CopyNodeState(int64(numarg(a, 0)), int64(numarg(a, 1)))
+		return nil, nil
+	}, "nn")
+	host["documentRootID"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return r.val(r.document.Root().ID), nil
 	})
 	host["getAttribute"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		value, ok := r.document.GetAttribute(int64(numarg(a, 0)), strarg(a, 1))
@@ -1019,6 +1074,16 @@ func (r *Realm) install() error {
 	host["nodeChildren"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(nodesData(r.document.Children(int64(numarg(a, 0))))), nil
 	})
+	host["nodeChildCount"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return r.val(r.document.ChildCount(int64(numarg(a, 0)))), nil
+	}, "n")
+	host["nodeChildAt"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		n, ok := r.document.ChildAt(int64(numarg(a, 0)), int(numarg(a, 1)))
+		if !ok {
+			return nil, nil
+		}
+		return r.val(nodeData(n)), nil
+	})
 	host["parentNode"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		n, ok := r.document.Parent(int64(numarg(a, 0)))
 		if !ok {
@@ -1059,6 +1124,12 @@ func (r *Realm) install() error {
 	host["textContent"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(r.document.TextContent(int64(numarg(a, 0)))), nil
 	}, "n")
+	host["textContentJSON"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return r.val(r.document.TextContentJSON(int64(numarg(a, 0)))), nil
+	}, "n")
+	host["setCharacterDataJSON"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return nil, r.document.SetCharacterDataJSON(int64(numarg(a, 0)), strarg(a, 1))
+	}, "ns")
 	host["setTextContent"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return nil, r.document.SetTextContent(int64(numarg(a, 0)), strarg(a, 1))
 	})
@@ -1173,7 +1244,14 @@ func (r *Realm) install() error {
 		case "href":
 			return nil, r.postNavigate(v)
 		case "hash":
-			u.Fragment = strings.TrimPrefix(v, "#")
+			reference, err := url.Parse("#" + strings.TrimPrefix(v, "#"))
+			if err != nil {
+				return nil, err
+			}
+			if reference.Fragment != u.Fragment {
+				r.updateSelectorTarget(reference.Fragment)
+			}
+			u.Fragment, u.RawFragment = reference.Fragment, reference.RawFragment
 		case "search":
 			u.RawQuery = strings.TrimPrefix(v, "?")
 		case "pathname":
@@ -1227,6 +1305,12 @@ func (r *Realm) install() error {
 		return nil, nil
 	})
 	host["fetch"] = r.fn(r.hostFetch)
+	host["abortFetch"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		if cancel := r.fetchCancels[strarg(a, 0)]; cancel != nil {
+			cancel()
+		}
+		return nil, nil
+	})
 	host["xhr"] = r.fn(r.hostXHR)
 	host["console"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		p.trace.Add(trace.Console, strarg(a, 0), map[string]any{"args": arg(a, 1), "realm": r.ID})
@@ -1529,7 +1613,8 @@ func (r *Realm) hostTimer(_ engine.Value, a []engine.Value) (engine.Value, error
 }
 func (r *Realm) hostFetch(_ engine.Value, a []engine.Value) (engine.Value, error) {
 	promise := r.runtime.NewPromise()
-	raw, method, body := strarg(a, 0), strarg(a, 1), []byte(strarg(a, 3))
+	raw, method, body := strarg(a, 0), strarg(a, 1), byteSlice(arg(a, 3))
+	requestID := strarg(a, 4)
 	u, err := r.resolveDocument(raw)
 	if err != nil {
 		_ = promise.Reject(err.Error())
@@ -1537,23 +1622,42 @@ func (r *Realm) hostFetch(_ engine.Value, a []engine.Value) (engine.Value, error
 	}
 	headers := headerMap(arg(a, 2))
 	request := network.Request{ContextID: r.agent.ContextID(), URL: u, Referrer: r.documentURL(), SourceURL: r.documentURL(), Method: method, Headers: headers, Body: body, Initiator: network.Fetch}
+	if options, ok := arg(a, 5).(map[string]any); ok {
+		if mode, ok := options["mode"].(string); ok {
+			request.Mode = mode
+		}
+	}
+	loadContext, cancel := context.WithCancel(r.resourceContext)
+	if requestID != "" {
+		if r.fetchCancels == nil {
+			r.fetchCancels = make(map[string]context.CancelFunc)
+		}
+		r.fetchCancels[requestID] = cancel
+	}
 	r.scheduler.Post(scheduler.Network, 0, func(context.Context) error {
 		if r.resourceContext.Err() != nil {
+			cancel()
 			return nil
 		}
 		r.resourceWG.Add(1)
 		go func() {
 			defer r.resourceWG.Done()
-			res, loadErr := r.agent.Page().loader.Load(r.resourceContext, request)
+			res, loadErr := r.agent.Page().loader.Load(loadContext, request)
+			cancel()
 			if r.resourceContext.Err() != nil {
 				return
 			}
 			r.scheduler.Post(scheduler.Network, 0, func(ctx context.Context) error {
+				delete(r.fetchCancels, requestID)
 				if loadErr != nil {
 					return promise.Reject(loadErr.Error())
 				}
 				r.notifyPerformanceObservers(ctx)
-				return promise.Resolve(map[string]any{"status": res.Status, "url": res.URL.String(), "headers": res.Headers, "body": string(res.Body)})
+				bytes := make([]int, len(res.Body))
+				for i, b := range res.Body {
+					bytes[i] = int(b)
+				}
+				return promise.Resolve(map[string]any{"status": res.Status, "statusText": http.StatusText(res.Status), "url": res.URL.String(), "headers": res.Headers, "body": string(res.Body), "bodyBytes": bytes, "type": "basic"})
 			})
 		}()
 		return nil
@@ -1643,13 +1747,32 @@ func (r *Realm) hostInsertArgs(a []engine.Value, hasBefore bool) (engine.Value, 
 		return nil, err
 	}
 	delete(r.detached, childID)
-	tag := strings.ToUpper(fmt.Sprint(m["tagName"]))
-	attrs, _ := m["attributes"].(map[string]any)
+	if !r.document.IsConnected(childID) {
+		return nil, nil
+	}
+	node, exists := r.document.Get(childID)
+	if !exists {
+		return nil, nil
+	}
+	tag := node.TagName
+	attrs := make(map[string]any, len(node.Attributes))
+	for key, value := range node.Attributes {
+		attrs[key] = value
+	}
 	src := fmt.Sprint(attrs["src"])
 	if tag == "LINK" {
 		src = fmt.Sprint(attrs["href"])
 	}
-	code := fmt.Sprint(m["text"])
+	code := r.document.TextContent(childID)
+	if tag == "SCRIPT" {
+		if r.document.ScriptStarted(childID) || scriptExecutionKind(node.Attributes["type"], node.Attributes["language"]) == "" {
+			return nil, nil
+		}
+		if (src == "" || src == "<nil>") && code == "" {
+			return nil, nil
+		}
+		r.document.MarkScriptStarted(childID)
+	}
 	nonce, _ := attrs["nonce"].(string)
 	loadCallback, errorCallback := engine.Value(nil), engine.Value(nil)
 	if len(a) > callbackOffset {

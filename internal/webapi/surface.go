@@ -21,6 +21,30 @@ var handwrittenWorkerSurface string
 //go:embed capabilities.js
 var capabilitySurface string
 
+//go:embed dom_compatibility.js
+var domCompatibilitySurface string
+
+//go:embed templates_compatibility.js
+var templatesCompatibilitySurface string
+
+//go:embed shadow_serialization.js
+var shadowSerializationSurface string
+
+//go:embed selectors_vendor.js
+var selectorsVendorSurface string
+
+//go:embed selectors_compatibility.js
+var selectorsCompatibilitySurface string
+
+//go:embed streams_vendor.js
+var streamsVendorSurface string
+
+//go:embed fetch_compatibility.js
+var fetchCompatibilitySurface string
+
+//go:embed form_controls.js
+var formControlsSurface string
+
 type surfaceKey struct {
 	surface  *compatibility.WebAPISurface
 	exposure string
@@ -91,7 +115,15 @@ func buildSurface(generated string, exposure *compatibility.RealmExposure) strin
 func composeSurface(generated, exposureSource string) string {
 	marker := "known=new Set(Reflect.ownKeys(globalThis));host.ready();"
 	semanticFixups := `Object.defineProperty(CharacterData.prototype,'nodeName',{get(){const slot=elementSlot(this);return slot&&slot.type==='comment'?'#comment':'#text'},enumerable:true,configurable:true});Object.defineProperty(DocumentFragment.prototype,'nodeName',{get(){return'#document-fragment'},enumerable:true,configurable:true});`
-	return strings.Replace(handwrittenSurface, marker, capabilitySurface+"\n"+generated+"\nfinalizeBindings();\n"+exposureSource+"installNavigatorCapabilities();\n"+semanticFixups+"\n"+marker, 1)
+	// Generated shape alone does not establish transferable structured cloning.
+	// Keep the upstream stream bundle unchanged, and select only a functioning
+	// transfer primitive for its fallback path (engines without one copy bytes).
+	streamPrelude := `{let structuredClone;try{const input=new ArrayBuffer(1),clone=globalThis.structuredClone;if(typeof clone==='function'){const output=clone(input,{transfer:[input]});if(output instanceof ArrayBuffer&&output.byteLength===1&&input.byteLength===0)structuredClone=clone}}catch{}`
+	parts := []string{capabilitySurface, generated, "finalizeBindings();", exposureSource,
+		"installNavigatorCapabilities();", semanticFixups, domCompatibilitySurface,
+		templatesCompatibilitySurface, selectorsVendorSurface, selectorsCompatibilitySurface, streamPrelude,
+		streamsVendorSurface, "}", fetchCompatibilitySurface, formControlsSurface, shadowSerializationSurface, marker}
+	return strings.Replace(handwrittenSurface, marker, strings.Join(parts, "\n"), 1)
 }
 
 func WorkerSurface(generated string, exposure *compatibility.RealmExposure) string {

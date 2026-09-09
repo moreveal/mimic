@@ -1,0 +1,582 @@
+{
+  "domain": "selectors",
+  "product": "Mimic/152.0.7977.82",
+  "chromium_commit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+  "wpt_tree": "5251311032215fe14bbd74cd0867e14cb4b58e3f",
+  "binary": {
+    "path": "E:\\GitHub\\mimic\\.build\\hydration-complete\\selectors-small.exe",
+    "sha256": "4546ce1fbe65675092641a159e7261a4b7057993c1b3da0e211bff4e916b03f2",
+    "listener": {
+      "ProcessId": 52724,
+      "ExecutablePath": "E:\\GitHub\\mimic\\.build\\hydration-complete\\selectors-small.exe",
+      "CreationDate": "/Date(1788916290667)/"
+    }
+  },
+  "harness_output": false,
+  "tests": [
+    {
+      "path": "dom/nodes/ParentNode-querySelector-All.html",
+      "done": {
+        "message": null,
+        "status": 0
+      },
+      "results": [
+        {
+          "message": "Cannot read properties of null (reading 'appendChild')",
+          "name": "Selectors-API Test Suite: HTML",
+          "status": 1
+        }
+      ]
+    },
+    {
+      "path": "dom/nodes/ParentNode-querySelector-escapes.html",
+      "done": {
+        "message": null,
+        "status": 0
+      },
+      "results": [
+        {
+          "message": null,
+          "name": "\"nonescaped\" should match with \"#nonescaped\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"0nextIsWhiteSpace\" should match with \"#\\\\30 nextIsWhiteSpace\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"0nextIsNotHexLetters\" should match with \"#\\\\30nextIsNotHexLetters\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"0connectHexMoreThan6Hex\" should match with \"#\\\\000030connectHexMoreThan6Hex\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"0spaceMoreThan6Hex\" should match with \"#\\\\000030 spaceMoreThan6Hex\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"zero\ufffd\" should match with \"#zero\\\\0\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"zero\\u0000\" should never match with \"#zero\\\\0\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"zero\ufffd\" should match with \"#zero\\\\000000\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"zero\\u0000\" should never match with \"#zero\\\\000000\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"\ufffdsurrogateFirst\" should match with \"#\\\\d83d surrogateFirst\"",
+          "status": 0
+        },
+        {
+          "message": "assert_equals: expected null but got Element node <span id=\"\ufffdsurrogateFirst\"></span>",
+          "name": "\"\\ud83dsurrogateFirst\" should never match with \"#\\\\d83d surrogateFirst\"",
+          "status": 1
+        },
+        {
+          "message": null,
+          "name": "\"surrogateSecond\ufffd\" should match with \"#surrogateSecond\\\\dd11\"",
+          "status": 0
+        },
+        {
+          "message": "assert_equals: expected null but got Element node <span id=\"surrogateSecond\ufffd\"></span>",
+          "name": "\"surrogateSecond\\udd11\" should never match with \"#surrogateSecond\\\\dd11\"",
+          "status": 1
+        },
+        {
+          "message": null,
+          "name": "\"surrogatePair\ufffd\ufffd\" should match with \"#surrogatePair\\\\d83d\\\\dd11\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"surrogatePair\ud83d\udd11\" should never match with \"#surrogatePair\\\\d83d\\\\dd11\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"outOfRange\ufffd\" should match with \"#outOfRange\\\\110000\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"outOfRange\ufffd\" should match with \"#outOfRange\\\\110030\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"outOfRange0\" should never match with \"#outOfRange\\\\110030\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"outOfRange\ufffd\" should match with \"#outOfRange\\\\555555\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"outOfRange\ufffd\" should match with \"#outOfRange\\\\ffffff\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"eof\\\\\" should never match with \"#eof\\\\\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\".comma\" should match with \"#\\\\.comma\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"-minus\" should match with \"#\\\\-minus\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"g\" should match with \"#\\\\g\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"aBMPRegular\" should match with \"#\\\\61 BMPRegular\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"\ud83d\udd11nonBMP\" should match with \"#\\\\1f511 nonBMP\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"00continueEscapes\" should match with \"#\\\\30\\\\30 continueEscapes\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"00continueEscapes\" should match with \"#\\\\30 \\\\30 continueEscapes\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"continueEscapes00\" should match with \"#continueEscapes\\\\30 \\\\30 \"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"continueEscapes00\" should match with \"#continueEscapes\\\\30 \\\\30\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"continueEscapes00\" should match with \"#continueEscapes\\\\30\\\\30 \"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"continueEscapes00\" should match with \"#continueEscapes\\\\30\\\\30\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"hello\" should match with \"#hel\\\\6Co\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"&B\" should match with \"#\\\\26 B\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"hello\" should match with \"#hel\\\\6C o\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"spaces\" should match with \"#spac\\\\65\\r\\ns\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"spaces\" should match with \"#sp\\\\61\\tc\\\\65\\fs\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"test\ud799\" should match with \"#test\\\\D799\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"\ue000\" should match with \"#\\\\E000\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"test\" should match with \"#te\\\\s\\\\t\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"spaces in\\tident\" should match with \"#spaces\\\\ in\\\\\\tident\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\".,:!\" should match with \"#\\\\.\\\\,\\\\:\\\\!\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"null\ufffd\" should match with \"#null\\\\0\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"null\ufffd\" should match with \"#null\\\\0000\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"large\ufffd\" should match with \"#large\\\\110000\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"large\ufffd\" should match with \"#large\\\\23456a\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"surrogate\ufffd\" should match with \"#surrogate\\\\D800\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"surrogate\ufffd\" should match with \"#surrogate\\\\0DBAC\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"\ufffdsurrogate\" should match with \"#\\\\00DFFFsurrogate\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"\udbff\udfff\" should match with \"#\\\\10fFfF\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"\udbff\udfff0\" should match with \"#\\\\10fFfF0\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"\udbc0\udc0000\" should match with \"#\\\\10000000\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"eof\ufffd\" should match with \"#eof\\\\\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"simple-ident\" should match with \"#simple-ident\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"testing123\" should match with \"#testing123\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"_underscore\" should match with \"#_underscore\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"-text\" should match with \"#-text\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"-m\" should match with \"#-\\\\6d\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"--abc\" should match with \"#--abc\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"--\" should match with \"#--\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"--11\" should match with \"#--11\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"---\" should match with \"#---\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"\u2003\" should match with \"#\u2003\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"\u00a0\" should match with \"#\u00a0\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"\u1234\" should match with \"#\u1234\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"\ud808\udf45\" should match with \"#\ud808\udf45\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"\ufffd\" should match with \"#\\u0000\"",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "\"ab\ufffdc\" should match with \"#ab\\u0000c\"",
+          "status": 0
+        }
+      ]
+    },
+    {
+      "path": "dom/nodes/ParentNode-querySelector-scope.html",
+      "done": {
+        "message": null,
+        "status": 0
+      },
+      "results": [
+        {
+          "message": null,
+          "name": "querySelector with :scope",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "querySelector with id and sibling",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "querySelectorAll with :scope",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "querySelectorAll with id and sibling",
+          "status": 0
+        }
+      ]
+    },
+    {
+      "path": "dom/nodes/ParentNode-querySelectors-exclusive.html",
+      "done": {
+        "message": null,
+        "status": 0
+      },
+      "results": [
+        {
+          "message": null,
+          "name": "querySelector/querySelectorAll should not include their thisArg",
+          "status": 0
+        }
+      ]
+    },
+    {
+      "path": "dom/nodes/ParentNode-querySelectors-space-and-dash-attribute-value.html",
+      "done": {
+        "message": null,
+        "status": 0
+      },
+      "results": [
+        {
+          "message": null,
+          "name": "querySelector",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "querySelectorAll",
+          "status": 0
+        }
+      ]
+    },
+    {
+      "path": "dom/nodes/ParentNode-querySelectorAll-removed-elements.html",
+      "done": {
+        "message": null,
+        "status": 0
+      },
+      "results": [
+        {
+          "message": null,
+          "name": "querySelectorAll must not return removed elements",
+          "status": 0
+        }
+      ]
+    },
+    {
+      "path": "dom/nodes/querySelector-empty-id.html",
+      "done": {
+        "message": null,
+        "status": 0
+      },
+      "results": [
+        {
+          "message": "root is not defined",
+          "name": "querySelector attribute matching empty id",
+          "status": 1
+        }
+      ]
+    },
+    {
+      "path": "dom/nodes/querySelector-id-nth-child.html",
+      "done": {
+        "message": null,
+        "status": 0
+      },
+      "results": [
+        {
+          "message": "target is not defined",
+          "name": "querySelector matching #id + constant nth-child()",
+          "status": 1
+        },
+        {
+          "message": null,
+          "name": "querySelectorAll matching #id + constant nth-child()",
+          "status": 0
+        }
+      ]
+    },
+    {
+      "path": "dom/nodes/DocumentFragment-querySelectorAll-after-modification.html",
+      "done": {
+        "message": null,
+        "status": 0
+      },
+      "results": [
+        {
+          "message": null,
+          "name": "querySelectorAll should still work on DocumentFragments after they are modified",
+          "status": 0
+        }
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "path": "dom/nodes/ParentNode-querySelector-All.html",
+      "sha256": "6c357bec5c25f26250866ca6592e781527f76331302102ecced05e4a4a468d53",
+      "source": "https://chromium.googlesource.com/chromium/src/+/d04cdb24d67b081f6cf80200ffc5233f44b61109/third_party/blink/web_tests/external/wpt/dom/nodes/ParentNode-querySelector-All.html"
+    },
+    {
+      "path": "resources/testharness.js",
+      "sha256": "d2399236c2a09c429804ff2299ad6629e17e2b53f17a74dd341e936adb11ae3e",
+      "source": "https://chromium.googlesource.com/chromium/src/+/d04cdb24d67b081f6cf80200ffc5233f44b61109/third_party/blink/web_tests/external/wpt/resources/testharness.js"
+    },
+    {
+      "path": "resources/testharnessreport.js",
+      "sha256": "3777176fc736b0a78cf7617b9613b220f635daae7536ec7ebb99c61dbb525aae",
+      "source": "https://chromium.googlesource.com/chromium/src/+/d04cdb24d67b081f6cf80200ffc5233f44b61109/third_party/blink/web_tests/external/wpt/resources/testharnessreport.js"
+    },
+    {
+      "path": "dom/nodes/selectors.js",
+      "sha256": "cffc3f46deb933d63d4cb2cfd811d3ec21ec7804faab4826c8aba1868459e8d1",
+      "source": "https://chromium.googlesource.com/chromium/src/+/d04cdb24d67b081f6cf80200ffc5233f44b61109/third_party/blink/web_tests/external/wpt/dom/nodes/selectors.js"
+    },
+    {
+      "path": "dom/nodes/ParentNode-querySelector-All.js",
+      "sha256": "39fc48041ffc3fc998664251da1d56e8920f203688916b9b3cf9718fc62a4afe",
+      "source": "https://chromium.googlesource.com/chromium/src/+/d04cdb24d67b081f6cf80200ffc5233f44b61109/third_party/blink/web_tests/external/wpt/dom/nodes/ParentNode-querySelector-All.js"
+    },
+    {
+      "path": "dom/nodes/ParentNode-querySelector-All-content.html",
+      "sha256": "40eff9f6df0986178d2e138c256369fd22f09a8d15ba03fd1bef2ac2c104f9e2",
+      "source": "https://chromium.googlesource.com/chromium/src/+/d04cdb24d67b081f6cf80200ffc5233f44b61109/third_party/blink/web_tests/external/wpt/dom/nodes/ParentNode-querySelector-All-content.html"
+    },
+    {
+      "path": "dom/nodes/ParentNode-querySelector-escapes.html",
+      "sha256": "fa1e02eec0cc18cd335c07e25a8ee83dc14e091fcfd93e99bdfc8c774001d915",
+      "source": "https://chromium.googlesource.com/chromium/src/+/d04cdb24d67b081f6cf80200ffc5233f44b61109/third_party/blink/web_tests/external/wpt/dom/nodes/ParentNode-querySelector-escapes.html"
+    },
+    {
+      "path": "dom/nodes/ParentNode-querySelector-scope.html",
+      "sha256": "c4e9845879103662af728a7165ee303c1cb53ffbef9ec32d04a28084ce7773bc",
+      "source": "https://chromium.googlesource.com/chromium/src/+/d04cdb24d67b081f6cf80200ffc5233f44b61109/third_party/blink/web_tests/external/wpt/dom/nodes/ParentNode-querySelector-scope.html"
+    },
+    {
+      "path": "dom/nodes/ParentNode-querySelectors-exclusive.html",
+      "sha256": "6fa4f34eb38ee9f2c66f67453b2aaa270991eabdc6416a33a3f691de14e3375b",
+      "source": "https://chromium.googlesource.com/chromium/src/+/d04cdb24d67b081f6cf80200ffc5233f44b61109/third_party/blink/web_tests/external/wpt/dom/nodes/ParentNode-querySelectors-exclusive.html"
+    },
+    {
+      "path": "dom/nodes/ParentNode-querySelectors-space-and-dash-attribute-value.html",
+      "sha256": "673cfb0411f3817af5ec96ed0e4ff8518600131ab21c2b61beafa394b8a88582",
+      "source": "https://chromium.googlesource.com/chromium/src/+/d04cdb24d67b081f6cf80200ffc5233f44b61109/third_party/blink/web_tests/external/wpt/dom/nodes/ParentNode-querySelectors-space-and-dash-attribute-value.html"
+    },
+    {
+      "path": "dom/nodes/ParentNode-querySelectorAll-removed-elements.html",
+      "sha256": "312262f5497da7e53922e1e198196d80eb9a6fe2d4558ea2ae91e650e227b898",
+      "source": "https://chromium.googlesource.com/chromium/src/+/d04cdb24d67b081f6cf80200ffc5233f44b61109/third_party/blink/web_tests/external/wpt/dom/nodes/ParentNode-querySelectorAll-removed-elements.html"
+    },
+    {
+      "path": "dom/nodes/querySelector-empty-id.html",
+      "sha256": "38cdd8e2090ffcb67f89c605ac56b68ebae810a1e65d861b4b28ef761db90ff4",
+      "source": "https://chromium.googlesource.com/chromium/src/+/d04cdb24d67b081f6cf80200ffc5233f44b61109/third_party/blink/web_tests/external/wpt/dom/nodes/querySelector-empty-id.html"
+    },
+    {
+      "path": "dom/nodes/querySelector-id-nth-child.html",
+      "sha256": "b6a580f97d930bbf601b6c80ff194ea4ad3960565f058e1d2b950f82c4026b46",
+      "source": "https://chromium.googlesource.com/chromium/src/+/d04cdb24d67b081f6cf80200ffc5233f44b61109/third_party/blink/web_tests/external/wpt/dom/nodes/querySelector-id-nth-child.html"
+    },
+    {
+      "path": "dom/nodes/DocumentFragment-querySelectorAll-after-modification.html",
+      "sha256": "22d51b1306a2f32023a01f9905af80d5945e4b8ac2a6420c14e457d369485263",
+      "source": "https://chromium.googlesource.com/chromium/src/+/d04cdb24d67b081f6cf80200ffc5233f44b61109/third_party/blink/web_tests/external/wpt/dom/nodes/DocumentFragment-querySelectorAll-after-modification.html"
+    }
+  ],
+  "summary": {
+    "files": 9,
+    "harness_ok": 9,
+    "passed": 76,
+    "failed": 5
+  }
+}

@@ -1,0 +1,86 @@
+{
+  "parsed-topology": [
+    true,
+    0,
+    "",
+    true,
+    11,
+    true,
+    true,
+    true,
+    false,
+    false,
+    true
+  ],
+  "parser-script-inert": [
+    0,
+    true
+  ],
+  "created-innerhtml": [
+    0,
+    2,
+    "A&B",
+    "<span>A&amp;B</span><!--c-->",
+    "",
+    true
+  ],
+  "nested-content": [
+    0,
+    "AC",
+    0,
+    "B",
+    "<div>A<template><b>B</b></template>C</div>",
+    "<b>B</b>"
+  ],
+  "clone-and-import": [
+    true,
+    true,
+    0,
+    2,
+    0,
+    true,
+    true,
+    true
+  ],
+  "content-mutations": [
+    true,
+    true,
+    "b",
+    "<b>y</b>",
+    0
+  ],
+  "content-observer": [
+    [
+      true,
+      1,
+      1
+    ]
+  ],
+  "host-inclusive-cycles": [
+    "HierarchyRequestError",
+    "HierarchyRequestError"
+  ],
+  "ordinary-template-children": [
+    1,
+    "ordinary",
+    "content",
+    "<i>content</i>",
+    "ordinary",
+    "content"
+  ],
+  "activate-parsed-content": 1,
+  "activate-innerhtml-content": 0,
+  "inert-custom-elements": [
+    [
+      false,
+      false,
+      false,
+      []
+    ],
+    true,
+    [
+      "ctor",
+      "connected"
+    ]
+  ]
+}
