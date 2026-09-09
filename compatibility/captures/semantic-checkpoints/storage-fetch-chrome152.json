@@ -1,0 +1,46 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": false,
+    "localHeaderEcho": true,
+    "fixture": "internal/browser/testdata/storage_fetch_oracle.js",
+    "fixtureSHA256": "2f9e1e17caffd97c24b3ceb08ad8f69aa6bc1a46ca372e6276c7046f341bf87d",
+    "fixtureHashNormalization": "LF"
+  },
+  "result": {
+    "omit": {
+      "accept-language": "ru-RU,ru;q=0.9",
+      "sec-fetch-site": "cross-site",
+      "sec-fetch-mode": "cors",
+      "sec-fetch-dest": "empty"
+    },
+    "same-origin": {
+      "accept-language": "ru-RU,ru;q=0.9",
+      "sec-fetch-site": "cross-site",
+      "sec-fetch-mode": "cors",
+      "sec-fetch-dest": "empty"
+    },
+    "include": {
+      "accept-language": "ru-RU,ru;q=0.9",
+      "sec-fetch-site": "cross-site",
+      "sec-fetch-mode": "cors",
+      "sec-fetch-dest": "empty",
+      "sec-fetch-storage-access": "active"
+    },
+    "xhr-false": {
+      "accept-language": "ru-RU,ru;q=0.9",
+      "sec-fetch-site": "cross-site",
+      "sec-fetch-mode": "cors",
+      "sec-fetch-dest": "empty"
+    },
+    "xhr-true": {
+      "accept-language": "ru-RU,ru;q=0.9",
+      "sec-fetch-site": "cross-site",
+      "sec-fetch-mode": "cors",
+      "sec-fetch-dest": "empty",
+      "sec-fetch-storage-access": "active"
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": false,
+    "localHeaderEcho": true,
+    "fixture": "internal/browser/testdata/language_network_oracle.js",
+    "fixtureSHA256": "1284df7aec0b67bb7b5dc413f6508b7bfa2d776686fed55d5de1aec7cc77167e",
+    "fixtureHashNormalization": "LF"
+  },
+  "result": {
+    "window": {
+      "accept-language": "ru-RU,ru;q=0.9",
+      "sec-fetch-site": "same-origin",
+      "sec-fetch-mode": "cors",
+      "sec-fetch-dest": "empty"
+    },
+    "worker": {
+      "sec-fetch-site": "same-origin",
+      "sec-fetch-mode": "cors",
+      "sec-fetch-dest": "empty",
+      "accept-language": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7"
+    }
+  }
+}

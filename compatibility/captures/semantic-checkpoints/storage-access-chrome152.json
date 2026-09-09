@@ -1,0 +1,32 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": false,
+    "localHeaderEcho": true,
+    "fixture": "internal/browser/testdata/storage_access_oracle.js",
+    "fixtureSHA256": "705b1092c8f1b7d40210c1ebcd363ad0f59966ba4dda6866a7f184aa4fb93f6d",
+    "fixtureHashNormalization": "LF"
+  },
+  "result": {
+    "same": true,
+    "frame": {
+      "navigation": {
+        "accept-language": "ru-RU,ru;q=0.9",
+        "sec-fetch-site": "cross-site",
+        "sec-fetch-mode": "navigate",
+        "sec-fetch-dest": "iframe",
+        "sec-fetch-storage-access": "active"
+      },
+      "fetch": {
+        "accept-language": "ru-RU,ru;q=0.9",
+        "sec-fetch-site": "same-origin",
+        "sec-fetch-mode": "cors",
+        "sec-fetch-dest": "empty",
+        "sec-fetch-storage-access": "active"
+      },
+      "access": true
+    }
+  }
+}

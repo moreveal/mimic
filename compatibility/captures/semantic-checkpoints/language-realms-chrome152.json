@@ -1,0 +1,25 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "fixture": "internal/browser/testdata/language_realms_oracle.js",
+    "fixtureSHA256": "3b7cd1a872e468cd077c37a8b6a9a7ebaf847afd1b21856c62ec91d9fc5d99f2",
+    "fixtureHashNormalization": "LF"
+  },
+  "result": {
+    "window": {
+      "language": "ru-RU",
+      "languages": [
+        "ru-RU"
+      ]
+    },
+    "worker": {
+      "language": "ru-RU",
+      "languages": [
+        "ru-RU"
+      ]
+    }
+  }
+}

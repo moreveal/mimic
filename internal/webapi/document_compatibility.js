@@ -149,3 +149,5 @@ function wrapDocumentNode(data) {
   Object.defineProperty(DOMParser.prototype,Symbol.toStringTag,{value:'DOMParser',configurable:true});markNative(DOMParser,'DOMParser');markNative(DOMParser.prototype.parseFromString,'parseFromString');Object.defineProperty(DOMParser.prototype,'parseFromString',{enumerable:true});Object.defineProperty(globalThis,'DOMParser',{value:DOMParser,writable:true,configurable:true});
 
 }
+
+for(const name of ['hasStorageAccess','hasUnpartitionedCookieAccess'])if(name in Document.prototype){const method=function(){if(!(this instanceof Document))throw new TypeError('Illegal invocation');if(this!==document)return Promise.reject(new DOMException('Document is not fully active','InvalidStateError'));return Promise.resolve(host.hasStorageAccess())};Object.defineProperty(method,'name',{value:name,configurable:true});if(typeof markNative==='function')markNative(method,name);Object.defineProperty(Document.prototype,name,{value:method,writable:true,enumerable:true,configurable:true})}

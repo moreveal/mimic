@@ -18,6 +18,8 @@ func (w *DedicatedWorker) installFetch(host map[string]any, lifetime context.Con
 		}
 		request := fetchRequest(w.parent.agent.ContextID(), target, w.url, args)
 		request.OmitClientHints = true
+		request.ClientIsWorker = true
+		request.TopLevelURL = w.topLevelURL
 		if w.url.Scheme == "blob" {
 			request.SourceURL = w.securityURL
 		}

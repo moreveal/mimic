@@ -64,7 +64,8 @@ func environment(mode state.BrowserMode) state.Environment {
 	environment.Window.OuterHeight = 800
 	environment.Window.ViewportWidth = 1272
 	environment.Window.ViewportHeight = 653
-	environment.Locale.Languages = []string{"ru-RU"}
+	environment.Locale.Languages = []string{"ru-RU", "ru", "en-US", "en"}
+	environment.Locale.ReduceAcceptLanguage = true
 	environment.Locale.IntlLocale = "ru"
 	environment.Locale.Timezone = "Asia/Tbilisi"
 	// Live transport phases are measured, not rescaled to match one capture.
