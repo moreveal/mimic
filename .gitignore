@@ -40,6 +40,8 @@ node_modules/
 *.p12
 *.pfx
 /secrets/
+# Native browsing captures contain live cookies, tokens and private response data.
+/compatibility/private-captures/
 # Editor and OS metadata
 .vscode/
 .idea/

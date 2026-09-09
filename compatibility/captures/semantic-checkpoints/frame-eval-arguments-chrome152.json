@@ -1,0 +1,10 @@
+{
+  "version": "152.0.7977.82",
+  "value": {
+    "identity": true,
+    "reads": 0,
+    "script": 42,
+    "global": 41,
+    "boxed": true
+  }
+}

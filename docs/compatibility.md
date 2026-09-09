@@ -136,6 +136,27 @@ completion. The remaining unsupported API observations are diagnostic leads,
 not established causes; identifying the next blocker requires a corresponding
 Chrome comparison rather than adding every API encountered during enumeration.
 
+Follow-up inspection of caught console exceptions found a reproducible
+`undefined.call` failure that an error-kind-only trace filter missed. Replaying
+the same recorded response bodies in native Chrome 152 and Mimic isolates a
+function-versus-string argument divergence before a `charCodeAt` invocation.
+Native pause-on-all-exceptions confirms it does not throw the matching error;
+this is not simply different console reporting. The browser operation responsible
+for the upstream value divergence is still under investigation. Function-source,
+console-coercion and frame-eval corrections are independently measured fixes,
+not evidence that this challenge now completes.
+
+A successful native capture of `iroshop.tech/mimic-e2e` is retained locally under
+`compatibility/private-captures/iroshop-2026-09-09-chrome152`: initial challenge
+403, then `cf_clearance` and an application response without the challenge header.
+The application itself returned Next.js 404. All 98 parsed script sources and
+31 retrieved response bodies were saved without retrieval errors; global browser
+Tracing was intentionally omitted because the existing browser had unrelated
+tabs. The separate `voxel-replay-2026-09-09` private fixture preserves the failing
+program and offline replay helpers. These token-bearing artifacts are gitignored;
+the reusable capture tool and its limitations are documented in
+[`tools/compatibility`](../tools/compatibility/README.md).
+
 Classic V8 scripts retain their supplied resource names. Callback diagnostics
 include engine-owned source coordinates without reading an application's
 `stack` getter or invoking `Error.prepareStackTrace`.
@@ -165,3 +186,30 @@ ordering when several documents change in one traversal remains incomplete.
 Initial-load entry replacement, detached-frame history pruning, empty trailing
 fragment serialization, and the existing remote WindowProxy Location facade
 remain incomplete.
+
+`Function.prototype.toString` preserves the engine's original source for
+unmarked functions; only explicitly marked platform functions receive the
+Chrome native-function text. It does not normalize user source containing
+`[native code]` or read a callable's `name` to synthesize source. The
+[Chrome 152 callable-source capture](../compatibility/captures/semantic-checkpoints/function-source-chrome152.json)
+also covers bound functions, callable/revoked proxies and throwing name getters.
+V8 passes that complete fixture. Goja and QuickJS still have an independent
+intrinsic limitation: their own function stringification can read a bound
+function's `name` getter. The overlay does not conceal that backend discrepancy.
+
+Console formatting converts only arguments consumed by `%s`, `%d`, `%i` and
+`%f`, preserving conversion exceptions. `%o`, `%O` and `%c` consume an argument
+without converting it; `%%` and unknown specifiers consume none. Plain object
+logging does not call application getters or conversion hooks. Trace output
+retains its string-argument schema and uses `[object]` / `[function]` diagnostic
+placeholders; interactive object inspection and CDP object handles are not
+implemented by this formatter. These semantics are covered by the
+[Chrome console matrix](../compatibility/captures/semantic-checkpoints/console-format-chrome152.json)
+and its [argument-consumption cases](../compatibility/captures/semantic-checkpoints/console-format-edges-chrome152.json).
+
+Same-origin frame `eval` preserves non-string argument identity, including
+functions, boxed strings and objects with throwing conversion hooks. Locally
+branded TrustedScript values use their internal source and evaluate in the
+target frame without invoking public `toString`. The bridge retains its origin
+validation even when there is no source to execute. See the
+[Chrome 152 eval-argument capture](../compatibility/captures/semantic-checkpoints/frame-eval-arguments-chrome152.json).

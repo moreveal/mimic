@@ -1,0 +1,39 @@
+{
+  "browser": "152.0.7977.82",
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "profileFreshness": "fresh-isolated-context",
+    "browserProfileFreshness": "unavailable: reused existing browser process",
+    "unavailable": [
+      "commandLineFeatureOverrides",
+      "environmentProfileId",
+      "chromiumRevision",
+      "chromiumCommit",
+      "v8Version",
+      "window",
+      "hasFocus"
+    ],
+    "viewport": {
+      "width": 1280,
+      "height": 720,
+      "deviceScaleFactor": 1
+    },
+    "secureContextState": false,
+    "isolationState": false,
+    "visibilityState": "visible",
+    "provenance": "Existing Chrome at port9343; new isolated context per runner, closed after capture. Version read by primary console/function capture; edge capture reused the same browser process. Command line and browser profile were not inspected."
+  },
+  "source": "internal/browser/testdata/function_source_oracle.js",
+  "sourceSHA256": "5321bd7e1dc1b4cd1d12818c5ed8600c558fbe0be84fad91a5c71cfe4bce0979",
+  "result": {
+    "source": "function sample() {\n  return \"[native code]  keep spacing\";\n}",
+    "bound": "function () { [native code] }",
+    "proxy": "function () { [native code] }",
+    "revoked": "function () { [native code] }",
+    "reads": 0,
+    "nonCallable": "TypeError",
+    "platform": "function createElement() { [native code] }"
+  },
+  "fixture": "Fresh isolated browser context in existing Chrome152 headful process; own context closed after capture, existing contexts and browser retained."
+}
