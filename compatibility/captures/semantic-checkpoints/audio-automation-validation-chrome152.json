@@ -1,0 +1,31 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/audio_automation_validation_oracle.js",
+    "fixtureSHA256": "e084dc033376b6c9793691e6ab74d98734d8e9673312703cdc208b9cdbd5f09c",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "invalid": [
+      "RangeError",
+      "RangeError",
+      null,
+      "InvalidStateError",
+      "InvalidStateError",
+      "RangeError",
+      null
+    ],
+    "overlap": [
+      "NotSupportedError",
+      null,
+      "NotSupportedError",
+      "NotSupportedError"
+    ]
+  }
+}

@@ -27,10 +27,38 @@
  for(const key of ['defaultValue','minValue','maxValue'])getter('AudioParam',key,params);
  getter('AudioParam','value',params,'value',function(value){requireSlot(params,this).value=float(value)});
  getter('AudioParam','automationRate',params,'automationRate',function(value){const s=requireSlot(params,this);value=String(value);if(!['a-rate','k-rate'].includes(value))throw new TypeError('Invalid automation rate');if(s.fixedRate&&value!==s.automationRate)throw exception('InvalidStateError');s.automationRate=value});
- method('AudioParam','setValueAtTime',function setValueAtTime(value,when){const s=requireSlot(params,this);if(arguments.length<2)throw new TypeError('Expected value and time');value=float(value);when=time(when);s.timeline=s.timeline.filter(e=>e.time!==when);s.timeline.push({time:when,value});s.timeline.sort((a,b)=>a.time-b.time);return this});
- method('AudioParam','cancelScheduledValues',function cancelScheduledValues(when){const s=requireSlot(params,this);when=time(when);s.timeline=s.timeline.filter(e=>e.time<when);return this});
- for(const name of ['linearRampToValueAtTime','exponentialRampToValueAtTime','setTargetAtTime','setValueCurveAtTime','cancelAndHoldAtTime'])method('AudioParam',name,function(){requireSlot(params,this);unsupported(name)});
- const parameterAt=(object,frame,rate)=>{const s=requireSlot(params,object);if(s.automationRate==='k-rate')frame=Math.floor(frame/128)*128;let value=s.value;for(const e of s.timeline){if(e.time>frame/rate)break;value=e.value}return value};
+ const curveAt=(event,when,rate,frame=when*rate)=>{const position=Math.max(0,Math.min(event.values.length-1,(frame-event.time*rate)*((event.values.length-1)/(event.duration*rate)))),index=Math.min(event.values.length-2,Math.floor(position));return Math.fround(event.values[index]+(event.values[index+1]-event.values[index])*(position-index))};
+ const eventEnd=event=>event.kind==='curve'?Math.min(event.time+event.duration,event.clip??Infinity):event.time;
+ function timelineValue(s,when,frame){
+  const rate=contexts.get(s.context).sampleRate,events=s.timeline;
+  // Stable time ordering preserves insertion order for unlike events at the
+  // same instant. Find the active segment without rescanning every past event
+  // for every output sample.
+  let left=0,right=events.length;
+  while(left<right){const middle=(left+right)>>>1;if(events[middle].time<=when)left=middle+1;else right=middle}
+  const previous=events[left-1],next=events[left];let value=s.value,start=0;
+  if(previous){
+   if(previous.kind==='curve'){const end=eventEnd(previous);if(when<end)return curveAt(previous,when,rate,frame);value=curveAt(previous,end,rate);start=end}
+   else {value=previous.value;start=previous.time}
+  }
+  if(next&&(next.kind==='linear'||next.kind==='exponential')){
+   const fraction=Math.max(0,(when-start)/(next.time-start));
+   if(next.kind==='linear')return Math.fround(value+(next.value-value)*fraction);
+   return value*next.value<=0?value:Math.fround(value*Math.pow(next.value/value,fraction));
+  }
+  return value;
+ }
+ function addAutomation(s,event){
+  const next=s.timeline.filter(e=>e.time!==event.time||e.kind!==event.kind);
+  if(next.some(e=>e.kind==='curve'&&event.time>=e.time&&event.time<eventEnd(e)||event.kind==='curve'&&e.time>=event.time&&e.time<eventEnd(event)))throw exception('NotSupportedError','Overlapping automation curve');
+  next.push(event);next.sort((a,b)=>a.time-b.time);s.timeline=next;
+ }
+ for(const [name,kind]of [['setValueAtTime','set'],['linearRampToValueAtTime','linear'],['exponentialRampToValueAtTime','exponential']])method('AudioParam',name,function(value,when){const s=requireSlot(params,this);if(arguments.length<2)throw new TypeError('Expected value and time');value=float(value);when=time(when);if(kind==='exponential'&&value===0)throw new RangeError('Zero exponential target');addAutomation(s,{kind,time:when,value});return this});
+ method('AudioParam','setValueCurveAtTime',function setValueCurveAtTime(values,when,duration){const s=requireSlot(params,this);if(arguments.length<3)throw new TypeError('Expected curve, time and duration');values=Float32Array.from(values,float);when=time(when);duration=time(duration);if(duration===0)throw new RangeError('Zero curve duration');if(values.length<2)throw exception('InvalidStateError','Curve requires two values');addAutomation(s,{kind:'curve',time:when,duration,values});return this});
+ method('AudioParam','cancelScheduledValues',function cancelScheduledValues(when){const s=requireSlot(params,this);when=time(when);s.timeline=s.timeline.filter(e=>e.time<when&&!(e.kind==='curve'&&eventEnd(e)>when));return this});
+ method('AudioParam','cancelAndHoldAtTime',function cancelAndHoldAtTime(when){const s=requireSlot(params,this);when=time(when);const value=timelineValue(s,when),next=s.timeline.find(e=>e.time>when),active=s.timeline.find(e=>e.kind==='curve'&&e.time<when&&eventEnd(e)>when);s.timeline=s.timeline.filter(e=>e.time<when);if(active)active.clip=when;s.timeline.push({kind:!active&&next&&['linear','exponential'].includes(next.kind)?next.kind:'set',time:when,value});return this});
+ method('AudioParam','setTargetAtTime',function setTargetAtTime(){requireSlot(params,this);unsupported('setTargetAtTime')});
+ const parameterAt=(object,frame,rate)=>{const s=requireSlot(params,object);if(s.automationRate==='k-rate')frame=Math.floor(frame/128)*128;return timelineValue(s,frame/rate,frame)};
  for(const key of ['context','numberOfInputs','numberOfOutputs'])getter('AudioNode',key,nodes);
  getter('AudioNode','channelCount',nodes,'channelCount',function(value){const s=requireSlot(nodes,this);value=Number(value)>>>0;if(value<1||value>32)throw exception('NotSupportedError');s.channelCount=value});
  for(const [key,values]of [['channelCountMode',['max','clamped-max','explicit']],['channelInterpretation',['speakers','discrete']]])getter('AudioNode',key,nodes,key,function(value){const s=requireSlot(nodes,this);value=String(value);if(!values.includes(value))throw new TypeError('Invalid channel mode');s[key]=value});
@@ -69,21 +97,21 @@
    const n=nodes.get(object);n.ended=false;if(!n.started)return;
    const b=n.buffer&&buffers.get(n.buffer),start=n.startTime*c.sampleRate,first=Math.ceil(start),stop=Math.ceil(n.stopTime*c.sampleRate);
    if(!b){n.ended=first<processedFrames;return}
-   if(params.get(n.playbackRate).timeline.length||params.get(n.detune).timeline.length)unsupported('scheduled source resampling');
    // The rate ratio is formed before scaling: reassociation changes rounding
    // observed by the mixed-rate phase oracle near Float32 midpoints.
-   const speed=n.playbackRate.value*Math.pow(2,n.detune.value/1200),step=(b.sampleRate/c.sampleRate)*speed;
+   const stepAt=frame=>{const speed=parameterAt(n.playbackRate,frame,c.sampleRate)*Math.pow(2,parameterAt(n.detune,frame,c.sampleRate)/1200),value=(b.sampleRate/c.sampleRate)*speed;if(!Number.isFinite(value)||Math.abs(value)>1024)unsupported('resampling ratio limit');if(n.loop&&value<0)unsupported('reverse loop');return value};
+   let step=stepAt(first);
    if(!Number.isFinite(step)||Math.abs(step)>1024)unsupported('resampling ratio limit');
    const offset=Math.min(b.length,Math.round(n.offset*b.sampleRate)),duration=n.duration*b.sampleRate;
    const loopStart=Math.max(0,n.loopStart*b.sampleRate),loopEnd=n.loopEnd>0?Math.min(b.length,n.loopEnd*b.sampleRate):b.length;
    if(n.loop&&(step<0||!Number.isInteger(loopStart)||!Number.isInteger(loopEnd)||loopStart>=loopEnd||loopStart>=b.length||offset>=b.length))unsupported('loop interval');
    // Starts occur at ceil(frame), while their fractional remainder advances the
    // source phase. Offset itself is rounded to the nearest source sample.
-   let position=offset+(first-start)*step;
+   let position=offset+(first-start)*step,consumed=(first-start)*Math.abs(step);
    for(let frame=first;frame<=processedFrames;frame++){
     if(++work>16*1024*1024)unsupported('source evaluation limit');
-    const elapsed=frame-start;
-    if(frame>=stop||elapsed*Math.abs(step)>=duration){n.ended=true;break}
+    if(frame<processedFrames&&frame%128===0)step=stepAt(frame);
+    if(frame>=stop||consumed>=duration){n.ended=true;break}
     if(n.loop&&position>=loopEnd)position=loopStart+(position-loopStart)%(loopEnd-loopStart);
     if(position<0||position>=b.length){n.ended=true;break}
     if(frame===processedFrames)break;
@@ -98,7 +126,7 @@
     }
     // Carry phase across frames and render quanta; recomputing from elapsed
     // time loses observable rounding, even when the difference is tiny.
-    position+=step;
+    position+=step;consumed+=Math.abs(step);
    }
   }
   function nodeOutput(object){

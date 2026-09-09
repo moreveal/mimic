@@ -11,7 +11,7 @@ import (
 )
 
 func TestOfflineAudioOracles(t *testing.T) {
-	for _, name := range []string{"audio_buffers", "offline_audio", "audio_graph", "audio_relations", "audio_lifecycle", "audio_validation", "audio_channels", "audio_fractional", "audio_interpolation", "audio_rates", "audio_reverse", "audio_phase", "audio_source_events"} {
+	for _, name := range []string{"audio_buffers", "offline_audio", "audio_graph", "audio_relations", "audio_lifecycle", "audio_validation", "audio_channels", "audio_fractional", "audio_interpolation", "audio_rates", "audio_reverse", "audio_phase", "audio_source_events", "audio_ramps", "audio_automation_validation", "audio_scheduled_rate", "audio_automation_cancel", "audio_scheduled_duration", "audio_automation_edges"} {
 		t.Run(name, func(t *testing.T) {
 			source, err := os.ReadFile("testdata/" + name + "_oracle.js")
 			if err != nil {
@@ -65,7 +65,7 @@ func TestOfflineAudioUnsupportedGraphRejects(t *testing.T) {
 		defer cancel()
 		value, err := p.Evaluate(ctx, `(async()=>{
  const c=new OfflineAudioContext(1,8,8000),source=c.createBufferSource();
- source.buffer=c.createBuffer(1,4,8000);source.connect(c.destination);source.playbackRate.setValueAtTime(2,0);source.start(.5/8000);
+ source.buffer=c.createBuffer(1,4,8000);const gain=c.createGain();source.connect(gain);gain.connect(gain);gain.connect(c.destination);source.playbackRate.setValueAtTime(2,0);source.start(.5/8000,0,1/8000);
  let complete=false;c.oncomplete=()=>{complete=true};
  if(await c.startRendering().then(()=>'',e=>e.name)!=='NotSupportedError'||complete||c.state!=='closed')return false;
  if(await c.startRendering().then(()=>'',e=>e.name)!=='InvalidStateError')return false;

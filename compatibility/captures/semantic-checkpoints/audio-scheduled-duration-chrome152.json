@@ -1,0 +1,28 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/audio_scheduled_duration_oracle.js",
+    "fixtureSHA256": "fa03e6ede84be2001c253de39e3d2b1c8eaedd3d0a7d5a118d5001b0647d0fa3",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "0": [
+      512,
+      false
+    ],
+    "2": [
+      192,
+      true
+    ],
+    "0.5": [
+      384,
+      true
+    ]
+  }
+}
