@@ -1,0 +1,94 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 20,
+      "top": 20,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": false,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "visibilityState": "hidden",
+    "hasFocus": true
+  },
+  "source": "internal/browser/testdata/webgl_state_oracle.js",
+  "sourceSHA256": "79f80dec5eb39900beae87cb73c8f97fd3dbbe8e6b62136eefc8bbd7763c7f1b",
+  "result": {
+    "created": false,
+    "bound": true,
+    "bytes": [
+      1,
+      8,
+      9,
+      4
+    ],
+    "size": 4,
+    "pixels": [
+      255,
+      0,
+      0,
+      255,
+      255,
+      0,
+      0,
+      255,
+      255,
+      0,
+      0,
+      255,
+      255,
+      0,
+      0,
+      255
+    ],
+    "clearAfterResize": [
+      1,
+      0,
+      0,
+      1
+    ],
+    "viewport": [
+      0,
+      0,
+      2,
+      2
+    ],
+    "resizePixels": [
+      255,
+      0,
+      0,
+      255,
+      255,
+      0,
+      0,
+      255,
+      255,
+      0,
+      0,
+      255,
+      255,
+      0,
+      0,
+      255
+    ],
+    "bufferSurvives": 4,
+    "deleted": false,
+    "binding": null
+  }
+}
