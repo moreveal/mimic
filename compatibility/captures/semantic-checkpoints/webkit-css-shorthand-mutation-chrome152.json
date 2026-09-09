@@ -1,0 +1,79 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/webkit_css_shorthand_mutation_oracle.js",
+    "fixtureSHA256": "f48dda618a40c22977ee5ed1dc05cbced110fca13faebfca787cbd0a61dcf7c9",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "initial": {
+      "text": "flex-grow: 2; flex-shrink: initial; flex-basis: initial;",
+      "value": "",
+      "components": [
+        [
+          "flex-grow",
+          "2"
+        ],
+        [
+          "flex-shrink",
+          "initial"
+        ],
+        [
+          "flex-basis",
+          "initial"
+        ]
+      ]
+    },
+    "inherit": {
+      "text": "flex-grow: 2; flex-shrink: inherit; flex-basis: inherit;",
+      "value": "",
+      "components": [
+        [
+          "flex-grow",
+          "2"
+        ],
+        [
+          "flex-shrink",
+          "inherit"
+        ],
+        [
+          "flex-basis",
+          "inherit"
+        ]
+      ]
+    },
+    "var(--choice)": {
+      "text": "flex-grow: 2; flex-shrink: ; flex-basis: ;",
+      "value": "",
+      "components": [
+        [
+          "flex-grow",
+          "2"
+        ],
+        [
+          "flex-shrink",
+          ""
+        ],
+        [
+          "flex-basis",
+          ""
+        ]
+      ]
+    },
+    "priority": [
+      "important",
+      "important"
+    ],
+    "mixed": [
+      "flex-grow: initial; flex-shrink: initial !important; flex-basis: initial !important;",
+      "",
+      ""
+    ]
+  }
+}

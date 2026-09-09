@@ -1180,3 +1180,14 @@ completion medians were 159.53 ms (DOM), 57.99 ms (static), and 114.24 ms (React
 Other validation and a live navigation ran concurrently, so these are unpaired
 health checks, not a browser speedup comparison. The frozen harness and baseline
 were unchanged; no full matrix was run.
+## WebKit CSS parsed-state checkpoint (2026-09-10)
+
+The iterative fast gate passes all six frozen correctness workloads after moving
+inline parsed declaration state onto its owning DOM node. Current-run median
+completion times are DOM 176.24 ms, static 65.01 ms and React 125.51 ms. The three
+measured 25-session static waves reach 65.69, 66.78 and 65.40 sessions/s.
+These are checkpoint measurements, not a paired before/after speedup claim.
+The gate verifies the freshly built executable hash on every launch and leaves
+the frozen harness unchanged. Raw workload, concurrency and memory observations
+and the build receipt are in `webkit-css-state-20260910/`. Full ordinary tests
+and focused browser/DOM race tests also pass.

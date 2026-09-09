@@ -24,7 +24,7 @@ const attributeCompatibility=(()=>{
   member(Element.prototype,'setAttributeNS',function(namespace,name,value){
     if(!(this instanceof Element))throw new TypeError('Illegal invocation');if(arguments.length<3)throw new TypeError('Not enough arguments');
     namespace=namespace==null?'':String(namespace);name=String(name);value=String(value);
-    if(!/^[\p{L}_:][\p{L}\p{N}_.:\-\u00b7\p{M}]*$/u.test(name))throw new DOMException('Invalid XML name','InvalidCharacterError');
+    if(!/^[A-Za-z_:][A-Za-z0-9_.:\-]*$/.test(name)&&!/^[\p{L}_:][\p{L}\p{N}_.:\-\u00b7\p{M}]*$/u.test(name))throw new DOMException('Invalid XML name','InvalidCharacterError');
     const prefix=name.includes(':')?name.split(':')[0]:null;
     if(prefix&&!namespace||prefix==='xml'&&namespace!=='http://www.w3.org/XML/1998/namespace'||(name==='xmlns'||prefix==='xmlns')&&namespace!=='http://www.w3.org/2000/xmlns/'||namespace==='http://www.w3.org/2000/xmlns/'&&name!=='xmlns'&&prefix!=='xmlns')throw new DOMException('Invalid namespace','NamespaceError');
     host.setAttributeNS(elementSlot(this).nodeId,namespace,name,value);

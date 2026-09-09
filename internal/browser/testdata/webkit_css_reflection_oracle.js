@@ -1,0 +1,1 @@
+(()=>{const s=document.createElement('div').style;s.webkitFlex='initial';return {names:Object.getOwnPropertyNames(s).filter(n=>/webkit/i.test(n)).sort(),indices:Object.keys(s).filter(n=>/^\d+$/.test(n)),index:Object.getOwnPropertyDescriptor(s,'0'),present:['0' in s,'2' in s,'3' in s],alias:Object.getOwnPropertyDescriptor(s,'webkitFlex')};})()

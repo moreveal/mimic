@@ -20,9 +20,14 @@ const constructedStyleSheets = (() => {
     if(block)block.children.forEach(node=>{if(node.type==='Declaration')values.push(node)});
     return values;
   }
-  function declarationText(block) {
-    return serializeCSS(parseCSS(declarations(block).map(node=>node.property+': '+generate(node.value).trim()+(node.important?' !important':'')+';').join(' ')));
-  }
+  const blockDeclarations=new WeakMap();
+  const entriesForBlock=block=>{
+    if(!block)return [];
+    let entries=blockDeclarations.get(block);
+    if(!entries){entries=parseCSS(declarations(block).map(node=>node.property+': '+generate(node.value).trim()+(node.important?' !important':'')+';').join(' '));blockDeclarations.set(block,entries)}
+    return entries;
+  };
+  function declarationText(block) {return serializeCSS(entriesForBlock(block));}
   function preludeText(node) {
     if(!node)return '';
     const children=()=>Array.from(node.children,preludeText);
@@ -40,28 +45,27 @@ const constructedStyleSheets = (() => {
   }
   function makeStyle(state) {
     const target=Object.create(CSSStyleDeclaration.prototype);
-    const setText=text=>{const ast=parse(String(text),{context:'declarationList'});state.node.block.children=ast.children;};
-    const names=()=>Array.from(parse(declarationText(state.node.block),{context:'declarationList'}).children);
-    const get=name=>names().find(node=>node.property===cssName(name));
+    const setText=text=>blockDeclarations.set(state.node.block,parseCSS(String(text)));
+    const names=()=>entriesForBlock(state.node.block);
     Object.defineProperties(target,{
       cssText:{get:()=>declarationText(state.node.block),set:setText,configurable:true},
       length:{get:()=>names().length,configurable:true},
       parentRule:{get:()=>state.rule,configurable:true},
-      item:{value:index=>names()[Number(index)]?.property||''},
-      getPropertyValue:{value:name=>{const node=get(name);return node?generate(node.value):''}},
-      getPropertyPriority:{value:name=>get(name)?.important?'important':''},
+      item:{value:index=>names()[Number(index)]?.name||''},
+      getPropertyValue:{value:name=>readCSSDeclaration(names(),cssName(name))},
+      getPropertyPriority:{value:name=>{name=cssName(name);const components=cssShorthandComponents[name]||[name];return components.every(n=>names().find(e=>e.name===n)?.priority==='important')?'important':''}},
       setProperty:{value:(name,value,priority='')=>{
         name=cssName(name);if(/^webkit/i.test(name))return;value=normalizeCSSValue(name,value);if(value===null)return;priority=String(priority).toLowerCase();
         if(priority&&priority!=='important')return;
-        const replacement=value?name+':'+value+(priority?' !important':'')+';':'';
-        let found=false;
-        const next=names().map(node=>{if(node.property!==name)return generate(node)+';';found=true;return replacement}).join('');
-        setText(next+(!found?replacement:''));
+        const entries=names().slice(),components=cssShorthandComponents[name]||[name];
+        if(value===''){for(let i=entries.length-1;i>=0;i--)if(components.includes(entries[i].name)||entries[i].name===name)entries.splice(i,1)}
+        else for(const entry of expandCSSDeclaration({name,value,priority})){const index=entries.findIndex(e=>e.name===entry.name);if(index<0)entries.push(entry);else entries[index]=entry}
+        blockDeclarations.set(state.node.block,entries);
       }},
-      removeProperty:{value:name=>{const old=target.getPropertyValue(name);target.setProperty(name,'');return webkitCSSLegacyBreakShorthands.has(String(name).toLowerCase())?'':old;}}
+      removeProperty:{value:name=>{const old=target.getPropertyValue(name);target.setProperty(name,'');return webkitCSSLegacyBreakShorthands.has(String(name).toLowerCase())||cssShorthandComponents[cssName(name)]?'':old;}}
     });
     return new Proxy(target,{
-      get(object,key,receiver){if(typeof key==='string'&&/^\d+$/.test(key))return names()[Number(key)]?.property; if(typeof key==='string'&&!(key in object))return target.getPropertyValue(cssJSName(key));return Reflect.get(object,key,receiver)},
+      get(object,key,receiver){if(typeof key==='string'&&/^\d+$/.test(key))return names()[Number(key)]?.name; if(typeof key==='string'&&!(key in object))return target.getPropertyValue(cssJSName(key));return Reflect.get(object,key,receiver)},
       set(object,key,value,receiver){if(typeof key==='string'&&key!=='cssText'&&!(key in object)){target.setProperty(cssJSName(key),value);return true}return Reflect.set(object,key,value,receiver)}
     });
   }

@@ -1,0 +1,2352 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/webkit_css_shorthand_wide_oracle.js",
+    "fixtureSHA256": "56fdfb7192b960d69dc1468f6b12b4d3547d13349dd4b5cbdae086f9f0242998",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "webkitAnimation": {
+      "initial": {
+        "text": "animation: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "animation-duration",
+            "initial"
+          ],
+          [
+            "animation-timing-function",
+            "initial"
+          ],
+          [
+            "animation-delay",
+            "initial"
+          ],
+          [
+            "animation-iteration-count",
+            "initial"
+          ],
+          [
+            "animation-direction",
+            "initial"
+          ],
+          [
+            "animation-fill-mode",
+            "initial"
+          ],
+          [
+            "animation-play-state",
+            "initial"
+          ],
+          [
+            "animation-name",
+            "initial"
+          ],
+          [
+            "animation-timeline",
+            "initial"
+          ],
+          [
+            "animation-range-start",
+            "initial"
+          ],
+          [
+            "animation-range-end",
+            "initial"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "inherit": {
+        "text": "animation: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "animation-duration",
+            "inherit"
+          ],
+          [
+            "animation-timing-function",
+            "inherit"
+          ],
+          [
+            "animation-delay",
+            "inherit"
+          ],
+          [
+            "animation-iteration-count",
+            "inherit"
+          ],
+          [
+            "animation-direction",
+            "inherit"
+          ],
+          [
+            "animation-fill-mode",
+            "inherit"
+          ],
+          [
+            "animation-play-state",
+            "inherit"
+          ],
+          [
+            "animation-name",
+            "inherit"
+          ],
+          [
+            "animation-timeline",
+            "inherit"
+          ],
+          [
+            "animation-range-start",
+            "inherit"
+          ],
+          [
+            "animation-range-end",
+            "inherit"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "unset": {
+        "text": "animation: unset;",
+        "value": "unset",
+        "components": [
+          [
+            "animation-duration",
+            "unset"
+          ],
+          [
+            "animation-timing-function",
+            "unset"
+          ],
+          [
+            "animation-delay",
+            "unset"
+          ],
+          [
+            "animation-iteration-count",
+            "unset"
+          ],
+          [
+            "animation-direction",
+            "unset"
+          ],
+          [
+            "animation-fill-mode",
+            "unset"
+          ],
+          [
+            "animation-play-state",
+            "unset"
+          ],
+          [
+            "animation-name",
+            "unset"
+          ],
+          [
+            "animation-timeline",
+            "unset"
+          ],
+          [
+            "animation-range-start",
+            "unset"
+          ],
+          [
+            "animation-range-end",
+            "unset"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert": {
+        "text": "animation: revert;",
+        "value": "revert",
+        "components": [
+          [
+            "animation-duration",
+            "revert"
+          ],
+          [
+            "animation-timing-function",
+            "revert"
+          ],
+          [
+            "animation-delay",
+            "revert"
+          ],
+          [
+            "animation-iteration-count",
+            "revert"
+          ],
+          [
+            "animation-direction",
+            "revert"
+          ],
+          [
+            "animation-fill-mode",
+            "revert"
+          ],
+          [
+            "animation-play-state",
+            "revert"
+          ],
+          [
+            "animation-name",
+            "revert"
+          ],
+          [
+            "animation-timeline",
+            "revert"
+          ],
+          [
+            "animation-range-start",
+            "revert"
+          ],
+          [
+            "animation-range-end",
+            "revert"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert-layer": {
+        "text": "animation: revert-layer;",
+        "value": "revert-layer",
+        "components": [
+          [
+            "animation-duration",
+            "revert-layer"
+          ],
+          [
+            "animation-timing-function",
+            "revert-layer"
+          ],
+          [
+            "animation-delay",
+            "revert-layer"
+          ],
+          [
+            "animation-iteration-count",
+            "revert-layer"
+          ],
+          [
+            "animation-direction",
+            "revert-layer"
+          ],
+          [
+            "animation-fill-mode",
+            "revert-layer"
+          ],
+          [
+            "animation-play-state",
+            "revert-layer"
+          ],
+          [
+            "animation-name",
+            "revert-layer"
+          ],
+          [
+            "animation-timeline",
+            "revert-layer"
+          ],
+          [
+            "animation-range-start",
+            "revert-layer"
+          ],
+          [
+            "animation-range-end",
+            "revert-layer"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "var(--choice)": {
+        "text": "animation: var(--choice);",
+        "value": "var(--choice)",
+        "components": [
+          [
+            "animation-duration",
+            ""
+          ],
+          [
+            "animation-timing-function",
+            ""
+          ],
+          [
+            "animation-delay",
+            ""
+          ],
+          [
+            "animation-iteration-count",
+            ""
+          ],
+          [
+            "animation-direction",
+            ""
+          ],
+          [
+            "animation-fill-mode",
+            ""
+          ],
+          [
+            "animation-play-state",
+            ""
+          ],
+          [
+            "animation-name",
+            ""
+          ],
+          [
+            "animation-timeline",
+            ""
+          ],
+          [
+            "animation-range-start",
+            ""
+          ],
+          [
+            "animation-range-end",
+            ""
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      }
+    },
+    "webkitBorderAfter": {
+      "initial": {
+        "text": "border-block-end: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "border-block-end-width",
+            "initial"
+          ],
+          [
+            "border-block-end-style",
+            "initial"
+          ],
+          [
+            "border-block-end-color",
+            "initial"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "inherit": {
+        "text": "border-block-end: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "border-block-end-width",
+            "inherit"
+          ],
+          [
+            "border-block-end-style",
+            "inherit"
+          ],
+          [
+            "border-block-end-color",
+            "inherit"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "unset": {
+        "text": "border-block-end: unset;",
+        "value": "unset",
+        "components": [
+          [
+            "border-block-end-width",
+            "unset"
+          ],
+          [
+            "border-block-end-style",
+            "unset"
+          ],
+          [
+            "border-block-end-color",
+            "unset"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert": {
+        "text": "border-block-end: revert;",
+        "value": "revert",
+        "components": [
+          [
+            "border-block-end-width",
+            "revert"
+          ],
+          [
+            "border-block-end-style",
+            "revert"
+          ],
+          [
+            "border-block-end-color",
+            "revert"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert-layer": {
+        "text": "border-block-end: revert-layer;",
+        "value": "revert-layer",
+        "components": [
+          [
+            "border-block-end-width",
+            "revert-layer"
+          ],
+          [
+            "border-block-end-style",
+            "revert-layer"
+          ],
+          [
+            "border-block-end-color",
+            "revert-layer"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "var(--choice)": {
+        "text": "border-block-end: var(--choice);",
+        "value": "var(--choice)",
+        "components": [
+          [
+            "border-block-end-width",
+            ""
+          ],
+          [
+            "border-block-end-style",
+            ""
+          ],
+          [
+            "border-block-end-color",
+            ""
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      }
+    },
+    "webkitBorderBefore": {
+      "initial": {
+        "text": "border-block-start: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "border-block-start-width",
+            "initial"
+          ],
+          [
+            "border-block-start-style",
+            "initial"
+          ],
+          [
+            "border-block-start-color",
+            "initial"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "inherit": {
+        "text": "border-block-start: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "border-block-start-width",
+            "inherit"
+          ],
+          [
+            "border-block-start-style",
+            "inherit"
+          ],
+          [
+            "border-block-start-color",
+            "inherit"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "unset": {
+        "text": "border-block-start: unset;",
+        "value": "unset",
+        "components": [
+          [
+            "border-block-start-width",
+            "unset"
+          ],
+          [
+            "border-block-start-style",
+            "unset"
+          ],
+          [
+            "border-block-start-color",
+            "unset"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert": {
+        "text": "border-block-start: revert;",
+        "value": "revert",
+        "components": [
+          [
+            "border-block-start-width",
+            "revert"
+          ],
+          [
+            "border-block-start-style",
+            "revert"
+          ],
+          [
+            "border-block-start-color",
+            "revert"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert-layer": {
+        "text": "border-block-start: revert-layer;",
+        "value": "revert-layer",
+        "components": [
+          [
+            "border-block-start-width",
+            "revert-layer"
+          ],
+          [
+            "border-block-start-style",
+            "revert-layer"
+          ],
+          [
+            "border-block-start-color",
+            "revert-layer"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "var(--choice)": {
+        "text": "border-block-start: var(--choice);",
+        "value": "var(--choice)",
+        "components": [
+          [
+            "border-block-start-width",
+            ""
+          ],
+          [
+            "border-block-start-style",
+            ""
+          ],
+          [
+            "border-block-start-color",
+            ""
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      }
+    },
+    "webkitBorderEnd": {
+      "initial": {
+        "text": "border-inline-end: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "border-inline-end-width",
+            "initial"
+          ],
+          [
+            "border-inline-end-style",
+            "initial"
+          ],
+          [
+            "border-inline-end-color",
+            "initial"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "inherit": {
+        "text": "border-inline-end: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "border-inline-end-width",
+            "inherit"
+          ],
+          [
+            "border-inline-end-style",
+            "inherit"
+          ],
+          [
+            "border-inline-end-color",
+            "inherit"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "unset": {
+        "text": "border-inline-end: unset;",
+        "value": "unset",
+        "components": [
+          [
+            "border-inline-end-width",
+            "unset"
+          ],
+          [
+            "border-inline-end-style",
+            "unset"
+          ],
+          [
+            "border-inline-end-color",
+            "unset"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert": {
+        "text": "border-inline-end: revert;",
+        "value": "revert",
+        "components": [
+          [
+            "border-inline-end-width",
+            "revert"
+          ],
+          [
+            "border-inline-end-style",
+            "revert"
+          ],
+          [
+            "border-inline-end-color",
+            "revert"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert-layer": {
+        "text": "border-inline-end: revert-layer;",
+        "value": "revert-layer",
+        "components": [
+          [
+            "border-inline-end-width",
+            "revert-layer"
+          ],
+          [
+            "border-inline-end-style",
+            "revert-layer"
+          ],
+          [
+            "border-inline-end-color",
+            "revert-layer"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "var(--choice)": {
+        "text": "border-inline-end: var(--choice);",
+        "value": "var(--choice)",
+        "components": [
+          [
+            "border-inline-end-width",
+            ""
+          ],
+          [
+            "border-inline-end-style",
+            ""
+          ],
+          [
+            "border-inline-end-color",
+            ""
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      }
+    },
+    "webkitBorderRadius": {
+      "initial": {
+        "text": "border-radius: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "border-top-left-radius",
+            "initial"
+          ],
+          [
+            "border-top-right-radius",
+            "initial"
+          ],
+          [
+            "border-bottom-right-radius",
+            "initial"
+          ],
+          [
+            "border-bottom-left-radius",
+            "initial"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "inherit": {
+        "text": "border-radius: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "border-top-left-radius",
+            "inherit"
+          ],
+          [
+            "border-top-right-radius",
+            "inherit"
+          ],
+          [
+            "border-bottom-right-radius",
+            "inherit"
+          ],
+          [
+            "border-bottom-left-radius",
+            "inherit"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "unset": {
+        "text": "border-radius: unset;",
+        "value": "unset",
+        "components": [
+          [
+            "border-top-left-radius",
+            "unset"
+          ],
+          [
+            "border-top-right-radius",
+            "unset"
+          ],
+          [
+            "border-bottom-right-radius",
+            "unset"
+          ],
+          [
+            "border-bottom-left-radius",
+            "unset"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert": {
+        "text": "border-radius: revert;",
+        "value": "revert",
+        "components": [
+          [
+            "border-top-left-radius",
+            "revert"
+          ],
+          [
+            "border-top-right-radius",
+            "revert"
+          ],
+          [
+            "border-bottom-right-radius",
+            "revert"
+          ],
+          [
+            "border-bottom-left-radius",
+            "revert"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert-layer": {
+        "text": "border-radius: revert-layer;",
+        "value": "revert-layer",
+        "components": [
+          [
+            "border-top-left-radius",
+            "revert-layer"
+          ],
+          [
+            "border-top-right-radius",
+            "revert-layer"
+          ],
+          [
+            "border-bottom-right-radius",
+            "revert-layer"
+          ],
+          [
+            "border-bottom-left-radius",
+            "revert-layer"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "var(--choice)": {
+        "text": "border-radius: var(--choice);",
+        "value": "var(--choice)",
+        "components": [
+          [
+            "border-top-left-radius",
+            ""
+          ],
+          [
+            "border-top-right-radius",
+            ""
+          ],
+          [
+            "border-bottom-right-radius",
+            ""
+          ],
+          [
+            "border-bottom-left-radius",
+            ""
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      }
+    },
+    "webkitBorderStart": {
+      "initial": {
+        "text": "border-inline-start: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "border-inline-start-width",
+            "initial"
+          ],
+          [
+            "border-inline-start-style",
+            "initial"
+          ],
+          [
+            "border-inline-start-color",
+            "initial"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "inherit": {
+        "text": "border-inline-start: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "border-inline-start-width",
+            "inherit"
+          ],
+          [
+            "border-inline-start-style",
+            "inherit"
+          ],
+          [
+            "border-inline-start-color",
+            "inherit"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "unset": {
+        "text": "border-inline-start: unset;",
+        "value": "unset",
+        "components": [
+          [
+            "border-inline-start-width",
+            "unset"
+          ],
+          [
+            "border-inline-start-style",
+            "unset"
+          ],
+          [
+            "border-inline-start-color",
+            "unset"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert": {
+        "text": "border-inline-start: revert;",
+        "value": "revert",
+        "components": [
+          [
+            "border-inline-start-width",
+            "revert"
+          ],
+          [
+            "border-inline-start-style",
+            "revert"
+          ],
+          [
+            "border-inline-start-color",
+            "revert"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert-layer": {
+        "text": "border-inline-start: revert-layer;",
+        "value": "revert-layer",
+        "components": [
+          [
+            "border-inline-start-width",
+            "revert-layer"
+          ],
+          [
+            "border-inline-start-style",
+            "revert-layer"
+          ],
+          [
+            "border-inline-start-color",
+            "revert-layer"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "var(--choice)": {
+        "text": "border-inline-start: var(--choice);",
+        "value": "var(--choice)",
+        "components": [
+          [
+            "border-inline-start-width",
+            ""
+          ],
+          [
+            "border-inline-start-style",
+            ""
+          ],
+          [
+            "border-inline-start-color",
+            ""
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      }
+    },
+    "webkitColumnRule": {
+      "initial": {
+        "text": "column-rule: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "column-rule-width",
+            "initial"
+          ],
+          [
+            "column-rule-style",
+            "initial"
+          ],
+          [
+            "column-rule-color",
+            "initial"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "inherit": {
+        "text": "column-rule: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "column-rule-width",
+            "inherit"
+          ],
+          [
+            "column-rule-style",
+            "inherit"
+          ],
+          [
+            "column-rule-color",
+            "inherit"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "unset": {
+        "text": "column-rule: unset;",
+        "value": "unset",
+        "components": [
+          [
+            "column-rule-width",
+            "unset"
+          ],
+          [
+            "column-rule-style",
+            "unset"
+          ],
+          [
+            "column-rule-color",
+            "unset"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert": {
+        "text": "column-rule: revert;",
+        "value": "revert",
+        "components": [
+          [
+            "column-rule-width",
+            "revert"
+          ],
+          [
+            "column-rule-style",
+            "revert"
+          ],
+          [
+            "column-rule-color",
+            "revert"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert-layer": {
+        "text": "column-rule: revert-layer;",
+        "value": "revert-layer",
+        "components": [
+          [
+            "column-rule-width",
+            "revert-layer"
+          ],
+          [
+            "column-rule-style",
+            "revert-layer"
+          ],
+          [
+            "column-rule-color",
+            "revert-layer"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "var(--choice)": {
+        "text": "column-rule: var(--choice);",
+        "value": "var(--choice)",
+        "components": [
+          [
+            "column-rule-width",
+            ""
+          ],
+          [
+            "column-rule-style",
+            ""
+          ],
+          [
+            "column-rule-color",
+            ""
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      }
+    },
+    "webkitColumns": {
+      "initial": {
+        "text": "columns: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "column-width",
+            "initial"
+          ],
+          [
+            "column-count",
+            "initial"
+          ],
+          [
+            "column-height",
+            "initial"
+          ],
+          [
+            "column-wrap",
+            "initial"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "inherit": {
+        "text": "columns: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "column-width",
+            "inherit"
+          ],
+          [
+            "column-count",
+            "inherit"
+          ],
+          [
+            "column-height",
+            "inherit"
+          ],
+          [
+            "column-wrap",
+            "inherit"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "unset": {
+        "text": "columns: unset;",
+        "value": "unset",
+        "components": [
+          [
+            "column-width",
+            "unset"
+          ],
+          [
+            "column-count",
+            "unset"
+          ],
+          [
+            "column-height",
+            "unset"
+          ],
+          [
+            "column-wrap",
+            "unset"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert": {
+        "text": "columns: revert;",
+        "value": "revert",
+        "components": [
+          [
+            "column-width",
+            "revert"
+          ],
+          [
+            "column-count",
+            "revert"
+          ],
+          [
+            "column-height",
+            "revert"
+          ],
+          [
+            "column-wrap",
+            "revert"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert-layer": {
+        "text": "columns: revert-layer;",
+        "value": "revert-layer",
+        "components": [
+          [
+            "column-width",
+            "revert-layer"
+          ],
+          [
+            "column-count",
+            "revert-layer"
+          ],
+          [
+            "column-height",
+            "revert-layer"
+          ],
+          [
+            "column-wrap",
+            "revert-layer"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "var(--choice)": {
+        "text": "columns: var(--choice);",
+        "value": "var(--choice)",
+        "components": [
+          [
+            "column-width",
+            ""
+          ],
+          [
+            "column-count",
+            ""
+          ],
+          [
+            "column-height",
+            ""
+          ],
+          [
+            "column-wrap",
+            ""
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      }
+    },
+    "webkitFlex": {
+      "initial": {
+        "text": "flex: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "flex-grow",
+            "initial"
+          ],
+          [
+            "flex-shrink",
+            "initial"
+          ],
+          [
+            "flex-basis",
+            "initial"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "inherit": {
+        "text": "flex: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "flex-grow",
+            "inherit"
+          ],
+          [
+            "flex-shrink",
+            "inherit"
+          ],
+          [
+            "flex-basis",
+            "inherit"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "unset": {
+        "text": "flex: unset;",
+        "value": "unset",
+        "components": [
+          [
+            "flex-grow",
+            "unset"
+          ],
+          [
+            "flex-shrink",
+            "unset"
+          ],
+          [
+            "flex-basis",
+            "unset"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert": {
+        "text": "flex: revert;",
+        "value": "revert",
+        "components": [
+          [
+            "flex-grow",
+            "revert"
+          ],
+          [
+            "flex-shrink",
+            "revert"
+          ],
+          [
+            "flex-basis",
+            "revert"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert-layer": {
+        "text": "flex: revert-layer;",
+        "value": "revert-layer",
+        "components": [
+          [
+            "flex-grow",
+            "revert-layer"
+          ],
+          [
+            "flex-shrink",
+            "revert-layer"
+          ],
+          [
+            "flex-basis",
+            "revert-layer"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "var(--choice)": {
+        "text": "flex: var(--choice);",
+        "value": "var(--choice)",
+        "components": [
+          [
+            "flex-grow",
+            ""
+          ],
+          [
+            "flex-shrink",
+            ""
+          ],
+          [
+            "flex-basis",
+            ""
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      }
+    },
+    "webkitFlexFlow": {
+      "initial": {
+        "text": "flex-flow: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "flex-direction",
+            "initial"
+          ],
+          [
+            "flex-wrap",
+            "initial"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "inherit": {
+        "text": "flex-flow: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "flex-direction",
+            "inherit"
+          ],
+          [
+            "flex-wrap",
+            "inherit"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "unset": {
+        "text": "flex-flow: unset;",
+        "value": "unset",
+        "components": [
+          [
+            "flex-direction",
+            "unset"
+          ],
+          [
+            "flex-wrap",
+            "unset"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert": {
+        "text": "flex-flow: revert;",
+        "value": "revert",
+        "components": [
+          [
+            "flex-direction",
+            "revert"
+          ],
+          [
+            "flex-wrap",
+            "revert"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert-layer": {
+        "text": "flex-flow: revert-layer;",
+        "value": "revert-layer",
+        "components": [
+          [
+            "flex-direction",
+            "revert-layer"
+          ],
+          [
+            "flex-wrap",
+            "revert-layer"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "var(--choice)": {
+        "text": "flex-flow: var(--choice);",
+        "value": "var(--choice)",
+        "components": [
+          [
+            "flex-direction",
+            ""
+          ],
+          [
+            "flex-wrap",
+            ""
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      }
+    },
+    "webkitMask": {
+      "initial": {
+        "text": "mask: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "mask-image",
+            "initial"
+          ],
+          [
+            "-webkit-mask-position-x",
+            "initial"
+          ],
+          [
+            "-webkit-mask-position-y",
+            "initial"
+          ],
+          [
+            "mask-size",
+            "initial"
+          ],
+          [
+            "mask-repeat",
+            "initial"
+          ],
+          [
+            "mask-origin",
+            "initial"
+          ],
+          [
+            "mask-clip",
+            "initial"
+          ],
+          [
+            "mask-composite",
+            "initial"
+          ],
+          [
+            "mask-mode",
+            "initial"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "inherit": {
+        "text": "mask: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "mask-image",
+            "inherit"
+          ],
+          [
+            "-webkit-mask-position-x",
+            "inherit"
+          ],
+          [
+            "-webkit-mask-position-y",
+            "inherit"
+          ],
+          [
+            "mask-size",
+            "inherit"
+          ],
+          [
+            "mask-repeat",
+            "inherit"
+          ],
+          [
+            "mask-origin",
+            "inherit"
+          ],
+          [
+            "mask-clip",
+            "inherit"
+          ],
+          [
+            "mask-composite",
+            "inherit"
+          ],
+          [
+            "mask-mode",
+            "inherit"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "unset": {
+        "text": "mask: unset;",
+        "value": "unset",
+        "components": [
+          [
+            "mask-image",
+            "unset"
+          ],
+          [
+            "-webkit-mask-position-x",
+            "unset"
+          ],
+          [
+            "-webkit-mask-position-y",
+            "unset"
+          ],
+          [
+            "mask-size",
+            "unset"
+          ],
+          [
+            "mask-repeat",
+            "unset"
+          ],
+          [
+            "mask-origin",
+            "unset"
+          ],
+          [
+            "mask-clip",
+            "unset"
+          ],
+          [
+            "mask-composite",
+            "unset"
+          ],
+          [
+            "mask-mode",
+            "unset"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert": {
+        "text": "mask: revert;",
+        "value": "revert",
+        "components": [
+          [
+            "mask-image",
+            "revert"
+          ],
+          [
+            "-webkit-mask-position-x",
+            "revert"
+          ],
+          [
+            "-webkit-mask-position-y",
+            "revert"
+          ],
+          [
+            "mask-size",
+            "revert"
+          ],
+          [
+            "mask-repeat",
+            "revert"
+          ],
+          [
+            "mask-origin",
+            "revert"
+          ],
+          [
+            "mask-clip",
+            "revert"
+          ],
+          [
+            "mask-composite",
+            "revert"
+          ],
+          [
+            "mask-mode",
+            "revert"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert-layer": {
+        "text": "mask: revert-layer;",
+        "value": "revert-layer",
+        "components": [
+          [
+            "mask-image",
+            "revert-layer"
+          ],
+          [
+            "-webkit-mask-position-x",
+            "revert-layer"
+          ],
+          [
+            "-webkit-mask-position-y",
+            "revert-layer"
+          ],
+          [
+            "mask-size",
+            "revert-layer"
+          ],
+          [
+            "mask-repeat",
+            "revert-layer"
+          ],
+          [
+            "mask-origin",
+            "revert-layer"
+          ],
+          [
+            "mask-clip",
+            "revert-layer"
+          ],
+          [
+            "mask-composite",
+            "revert-layer"
+          ],
+          [
+            "mask-mode",
+            "revert-layer"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "var(--choice)": {
+        "text": "mask: var(--choice);",
+        "value": "var(--choice)",
+        "components": [
+          [
+            "mask-image",
+            ""
+          ],
+          [
+            "-webkit-mask-position-x",
+            ""
+          ],
+          [
+            "-webkit-mask-position-y",
+            ""
+          ],
+          [
+            "mask-size",
+            ""
+          ],
+          [
+            "mask-repeat",
+            ""
+          ],
+          [
+            "mask-origin",
+            ""
+          ],
+          [
+            "mask-clip",
+            ""
+          ],
+          [
+            "mask-composite",
+            ""
+          ],
+          [
+            "mask-mode",
+            ""
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      }
+    },
+    "webkitMaskBoxImage": {
+      "initial": {
+        "text": "-webkit-mask-box-image: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "-webkit-mask-box-image-source",
+            "initial"
+          ],
+          [
+            "-webkit-mask-box-image-slice",
+            "initial"
+          ],
+          [
+            "-webkit-mask-box-image-width",
+            "initial"
+          ],
+          [
+            "-webkit-mask-box-image-outset",
+            "initial"
+          ],
+          [
+            "-webkit-mask-box-image-repeat",
+            "initial"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "inherit": {
+        "text": "-webkit-mask-box-image: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "-webkit-mask-box-image-source",
+            "inherit"
+          ],
+          [
+            "-webkit-mask-box-image-slice",
+            "inherit"
+          ],
+          [
+            "-webkit-mask-box-image-width",
+            "inherit"
+          ],
+          [
+            "-webkit-mask-box-image-outset",
+            "inherit"
+          ],
+          [
+            "-webkit-mask-box-image-repeat",
+            "inherit"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "unset": {
+        "text": "-webkit-mask-box-image: unset;",
+        "value": "unset",
+        "components": [
+          [
+            "-webkit-mask-box-image-source",
+            "unset"
+          ],
+          [
+            "-webkit-mask-box-image-slice",
+            "unset"
+          ],
+          [
+            "-webkit-mask-box-image-width",
+            "unset"
+          ],
+          [
+            "-webkit-mask-box-image-outset",
+            "unset"
+          ],
+          [
+            "-webkit-mask-box-image-repeat",
+            "unset"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert": {
+        "text": "-webkit-mask-box-image: revert;",
+        "value": "revert",
+        "components": [
+          [
+            "-webkit-mask-box-image-source",
+            "revert"
+          ],
+          [
+            "-webkit-mask-box-image-slice",
+            "revert"
+          ],
+          [
+            "-webkit-mask-box-image-width",
+            "revert"
+          ],
+          [
+            "-webkit-mask-box-image-outset",
+            "revert"
+          ],
+          [
+            "-webkit-mask-box-image-repeat",
+            "revert"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert-layer": {
+        "text": "-webkit-mask-box-image: revert-layer;",
+        "value": "revert-layer",
+        "components": [
+          [
+            "-webkit-mask-box-image-source",
+            "revert-layer"
+          ],
+          [
+            "-webkit-mask-box-image-slice",
+            "revert-layer"
+          ],
+          [
+            "-webkit-mask-box-image-width",
+            "revert-layer"
+          ],
+          [
+            "-webkit-mask-box-image-outset",
+            "revert-layer"
+          ],
+          [
+            "-webkit-mask-box-image-repeat",
+            "revert-layer"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "var(--choice)": {
+        "text": "-webkit-mask-box-image: var(--choice);",
+        "value": "var(--choice)",
+        "components": [
+          [
+            "-webkit-mask-box-image-source",
+            ""
+          ],
+          [
+            "-webkit-mask-box-image-slice",
+            ""
+          ],
+          [
+            "-webkit-mask-box-image-width",
+            ""
+          ],
+          [
+            "-webkit-mask-box-image-outset",
+            ""
+          ],
+          [
+            "-webkit-mask-box-image-repeat",
+            ""
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      }
+    },
+    "webkitMaskPosition": {
+      "initial": {
+        "text": "mask-position: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "-webkit-mask-position-x",
+            "initial"
+          ],
+          [
+            "-webkit-mask-position-y",
+            "initial"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "inherit": {
+        "text": "mask-position: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "-webkit-mask-position-x",
+            "inherit"
+          ],
+          [
+            "-webkit-mask-position-y",
+            "inherit"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "unset": {
+        "text": "mask-position: unset;",
+        "value": "unset",
+        "components": [
+          [
+            "-webkit-mask-position-x",
+            "unset"
+          ],
+          [
+            "-webkit-mask-position-y",
+            "unset"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert": {
+        "text": "mask-position: revert;",
+        "value": "revert",
+        "components": [
+          [
+            "-webkit-mask-position-x",
+            "revert"
+          ],
+          [
+            "-webkit-mask-position-y",
+            "revert"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert-layer": {
+        "text": "mask-position: revert-layer;",
+        "value": "revert-layer",
+        "components": [
+          [
+            "-webkit-mask-position-x",
+            "revert-layer"
+          ],
+          [
+            "-webkit-mask-position-y",
+            "revert-layer"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "var(--choice)": {
+        "text": "mask-position: var(--choice);",
+        "value": "var(--choice)",
+        "components": [
+          [
+            "-webkit-mask-position-x",
+            ""
+          ],
+          [
+            "-webkit-mask-position-y",
+            ""
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      }
+    },
+    "webkitTextEmphasis": {
+      "initial": {
+        "text": "text-emphasis: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "text-emphasis-style",
+            "initial"
+          ],
+          [
+            "text-emphasis-color",
+            "initial"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "inherit": {
+        "text": "text-emphasis: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "text-emphasis-style",
+            "inherit"
+          ],
+          [
+            "text-emphasis-color",
+            "inherit"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "unset": {
+        "text": "text-emphasis: unset;",
+        "value": "unset",
+        "components": [
+          [
+            "text-emphasis-style",
+            "unset"
+          ],
+          [
+            "text-emphasis-color",
+            "unset"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert": {
+        "text": "text-emphasis: revert;",
+        "value": "revert",
+        "components": [
+          [
+            "text-emphasis-style",
+            "revert"
+          ],
+          [
+            "text-emphasis-color",
+            "revert"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert-layer": {
+        "text": "text-emphasis: revert-layer;",
+        "value": "revert-layer",
+        "components": [
+          [
+            "text-emphasis-style",
+            "revert-layer"
+          ],
+          [
+            "text-emphasis-color",
+            "revert-layer"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "var(--choice)": {
+        "text": "text-emphasis: var(--choice);",
+        "value": "var(--choice)",
+        "components": [
+          [
+            "text-emphasis-style",
+            ""
+          ],
+          [
+            "text-emphasis-color",
+            ""
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      }
+    },
+    "webkitTextStroke": {
+      "initial": {
+        "text": "-webkit-text-stroke: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "-webkit-text-stroke-width",
+            "initial"
+          ],
+          [
+            "-webkit-text-stroke-color",
+            "initial"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "inherit": {
+        "text": "-webkit-text-stroke: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "-webkit-text-stroke-width",
+            "inherit"
+          ],
+          [
+            "-webkit-text-stroke-color",
+            "inherit"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "unset": {
+        "text": "-webkit-text-stroke: unset;",
+        "value": "unset",
+        "components": [
+          [
+            "-webkit-text-stroke-width",
+            "unset"
+          ],
+          [
+            "-webkit-text-stroke-color",
+            "unset"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert": {
+        "text": "-webkit-text-stroke: revert;",
+        "value": "revert",
+        "components": [
+          [
+            "-webkit-text-stroke-width",
+            "revert"
+          ],
+          [
+            "-webkit-text-stroke-color",
+            "revert"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert-layer": {
+        "text": "-webkit-text-stroke: revert-layer;",
+        "value": "revert-layer",
+        "components": [
+          [
+            "-webkit-text-stroke-width",
+            "revert-layer"
+          ],
+          [
+            "-webkit-text-stroke-color",
+            "revert-layer"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "var(--choice)": {
+        "text": "-webkit-text-stroke: var(--choice);",
+        "value": "var(--choice)",
+        "components": [
+          [
+            "-webkit-text-stroke-width",
+            ""
+          ],
+          [
+            "-webkit-text-stroke-color",
+            ""
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      }
+    },
+    "webkitTransition": {
+      "initial": {
+        "text": "transition: initial;",
+        "value": "initial",
+        "components": [
+          [
+            "transition-property",
+            "initial"
+          ],
+          [
+            "transition-duration",
+            "initial"
+          ],
+          [
+            "transition-timing-function",
+            "initial"
+          ],
+          [
+            "transition-delay",
+            "initial"
+          ],
+          [
+            "transition-behavior",
+            "initial"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "inherit": {
+        "text": "transition: inherit;",
+        "value": "inherit",
+        "components": [
+          [
+            "transition-property",
+            "inherit"
+          ],
+          [
+            "transition-duration",
+            "inherit"
+          ],
+          [
+            "transition-timing-function",
+            "inherit"
+          ],
+          [
+            "transition-delay",
+            "inherit"
+          ],
+          [
+            "transition-behavior",
+            "inherit"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "unset": {
+        "text": "transition: unset;",
+        "value": "unset",
+        "components": [
+          [
+            "transition-property",
+            "unset"
+          ],
+          [
+            "transition-duration",
+            "unset"
+          ],
+          [
+            "transition-timing-function",
+            "unset"
+          ],
+          [
+            "transition-delay",
+            "unset"
+          ],
+          [
+            "transition-behavior",
+            "unset"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert": {
+        "text": "transition: revert;",
+        "value": "revert",
+        "components": [
+          [
+            "transition-property",
+            "revert"
+          ],
+          [
+            "transition-duration",
+            "revert"
+          ],
+          [
+            "transition-timing-function",
+            "revert"
+          ],
+          [
+            "transition-delay",
+            "revert"
+          ],
+          [
+            "transition-behavior",
+            "revert"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "revert-layer": {
+        "text": "transition: revert-layer;",
+        "value": "revert-layer",
+        "components": [
+          [
+            "transition-property",
+            "revert-layer"
+          ],
+          [
+            "transition-duration",
+            "revert-layer"
+          ],
+          [
+            "transition-timing-function",
+            "revert-layer"
+          ],
+          [
+            "transition-delay",
+            "revert-layer"
+          ],
+          [
+            "transition-behavior",
+            "revert-layer"
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      },
+      "var(--choice)": {
+        "text": "transition: var(--choice);",
+        "value": "var(--choice)",
+        "components": [
+          [
+            "transition-property",
+            ""
+          ],
+          [
+            "transition-duration",
+            ""
+          ],
+          [
+            "transition-timing-function",
+            ""
+          ],
+          [
+            "transition-delay",
+            ""
+          ],
+          [
+            "transition-behavior",
+            ""
+          ]
+        ],
+        "removed": "",
+        "empty": ""
+      }
+    }
+  }
+}
