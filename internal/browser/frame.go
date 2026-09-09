@@ -45,6 +45,17 @@ func (p *Page) frame(id string) *Frame {
 	return nil
 }
 
+// A committed document replaces its descendant browsing contexts. The old
+// Realm retains its own childFrames until deferred teardown, but those frames
+// must no longer appear in the active Page tree or event-loop enumeration.
+func (p *Page) removeDescendantFramesLocked(frame *Frame) {
+	for _, child := range frame.children {
+		p.removeDescendantFramesLocked(child)
+		delete(p.frames, child.ID)
+	}
+	frame.children = make(map[string]*Frame)
+}
+
 func (r *Realm) ensureChildFrame(elementID int64, connectedThroughShadow ...bool) (*Frame, error) {
 	shadowConnected := len(connectedThroughShadow) != 0 && connectedThroughShadow[0]
 	return r.ensureChildFrameInternal(elementID, shadowConnected, true)
@@ -301,8 +312,11 @@ func (r *Realm) commitChildFrameNavigation(ctx context.Context, navigation *chil
 		p.ctx.mu.Unlock()
 	}
 	old := navigation.frame.Realm
+	p.mu.Lock()
+	p.removeDescendantFramesLocked(navigation.frame)
 	navigation.frame.Realm = realm
 	navigation.frame.loaderID = navigation.loaderID
+	p.mu.Unlock()
 	p.commitHistory(navigation.frame, documentURL, navigation.replace, nil)
 	if old != nil {
 		_ = old.Close()

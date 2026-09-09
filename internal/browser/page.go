@@ -305,6 +305,7 @@ func (p *Page) navigate(ctx context.Context, raw, loaderID string, replace ...bo
 	}
 	p.mu.Lock()
 	old := p.Top.Realm
+	p.removeDescendantFramesLocked(p.Top)
 	p.Top.Realm = realm
 	p.current = u
 	entry := &sessionHistoryEntry{URL: u, frames: map[string]*historyFrameState{p.Top.ID: {url: u, realmID: realm.ID}}}
@@ -770,6 +771,15 @@ func (p *Page) AdvanceTime(ctx context.Context, delta time.Duration) error {
 	}
 	p.mu.Unlock()
 	for _, realm := range realms {
+		// A task from an earlier snapshot entry can commit navigation and
+		// retire later entries. Only drive realms still in the active tree.
+		p.mu.RLock()
+		frame := p.frames[realm.agent.ContextID()]
+		active := frame != nil && frame.Realm == realm
+		p.mu.RUnlock()
+		if !active {
+			continue
+		}
 		if err := realm.AdvanceBy(ctx, delta); err != nil {
 			p.closeRetiredRealms()
 			return err
