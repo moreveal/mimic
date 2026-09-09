@@ -23,6 +23,11 @@
       method('getExtension',(s,name)=>{if(String(name).toLowerCase()!=='webgl_debug_renderer_info'||typeof host.graphics!=='function')return null;return s.debug||(s.debug={UNMASKED_VENDOR_WEBGL:37445,UNMASKED_RENDERER_WEBGL:37446})});
       method('getParameter',(s,p)=>{
         p=Number(p);if(p===34964)return s.bindings.get(34962)||null;if(p===34965)return s.bindings.get(34963)||null;
+        // Chrome's masked API identification is independent of the selected GPU.
+        // Unmasked machine identity continues to come from Environment.Graphics.
+        if(p===7936)return 'WebKit';if(p===7937)return 'WebKit WebGL';
+        if(p===7938)return kind==='webgl2'?'WebGL 2.0 (OpenGL ES 3.0 Chromium)':'WebGL 1.0 (OpenGL ES 2.0 Chromium)';
+        if(p===35724)return kind==='webgl2'?'WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)':'WebGL GLSL ES 1.0 (OpenGL ES GLSL ES 1.0 Chromium)';
         if(p===3106)return new Float32Array(s.color);if(p===3107)return s.mask.slice();if(p===2978)return new Int32Array(s.viewport);if(p===3088)return new Int32Array(s.scissor);if(p===3333)return s.pack;if(p===2931)return s.depthClear;if(p===2961)return s.stencilClear;if(p===2930)return s.depthMask;
         if(p===3379&&typeof host.graphics==='function')return host.graphics().maxTextureSize;
         if((p===37445||p===37446)&&s.debug)return host.graphics()[p===37445?'vendor':'renderer'];

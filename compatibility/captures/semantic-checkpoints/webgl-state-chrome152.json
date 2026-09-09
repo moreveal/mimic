@@ -28,7 +28,7 @@
     "hasFocus": true
   },
   "source": "internal/browser/testdata/webgl_state_oracle.js",
-  "sourceSHA256": "79f80dec5eb39900beae87cb73c8f97fd3dbbe8e6b62136eefc8bbd7763c7f1b",
+  "sourceSHA256": "adf5dfc5b5b98e4f572c76ba23cc12b14c109785cbd5fc93196e0da7bf922422",
   "result": {
     "created": false,
     "bound": true,
@@ -89,6 +89,20 @@
     ],
     "bufferSurvives": 4,
     "deleted": false,
-    "binding": null
+    "binding": null,
+    "identification": [
+      [
+        "WebKit",
+        "WebKit WebGL",
+        "WebGL 1.0 (OpenGL ES 2.0 Chromium)",
+        "WebGL GLSL ES 1.0 (OpenGL ES GLSL ES 1.0 Chromium)"
+      ],
+      [
+        "WebKit",
+        "WebKit WebGL",
+        "WebGL 2.0 (OpenGL ES 3.0 Chromium)",
+        "WebGL GLSL ES 3.00 (OpenGL ES GLSL ES 3.0 Chromium)"
+      ]
+    ]
   }
 }
