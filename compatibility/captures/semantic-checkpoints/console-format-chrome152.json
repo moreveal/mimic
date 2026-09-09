@@ -1,0 +1,936 @@
+{
+  "browser": "152.0.7977.82",
+  "results": [
+    {
+      "format": null,
+      "kind": "object",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": null,
+      "kind": "throw",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": null,
+      "kind": "symbol",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": null,
+      "kind": "proxy",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": null,
+      "kind": "native",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%s",
+      "kind": "object",
+      "effects": [
+        "string"
+      ],
+      "error": null
+    },
+    {
+      "format": "%s",
+      "kind": "throw",
+      "effects": [
+        "string"
+      ],
+      "error": {
+        "name": "Error",
+        "message": "sentinel"
+      }
+    },
+    {
+      "format": "%s",
+      "kind": "symbol",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%s",
+      "kind": "proxy",
+      "effects": [
+        "get:Symbol(Symbol.toPrimitive)"
+      ],
+      "error": {
+        "name": "Error",
+        "message": "proxy"
+      }
+    },
+    {
+      "format": "%s",
+      "kind": "native",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%d",
+      "kind": "object",
+      "effects": [
+        "string"
+      ],
+      "error": null
+    },
+    {
+      "format": "%d",
+      "kind": "throw",
+      "effects": [
+        "string"
+      ],
+      "error": {
+        "name": "Error",
+        "message": "sentinel"
+      }
+    },
+    {
+      "format": "%d",
+      "kind": "symbol",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%d",
+      "kind": "proxy",
+      "effects": [
+        "get:Symbol(Symbol.toPrimitive)"
+      ],
+      "error": {
+        "name": "Error",
+        "message": "proxy"
+      }
+    },
+    {
+      "format": "%d",
+      "kind": "native",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%i",
+      "kind": "object",
+      "effects": [
+        "string"
+      ],
+      "error": null
+    },
+    {
+      "format": "%i",
+      "kind": "throw",
+      "effects": [
+        "string"
+      ],
+      "error": {
+        "name": "Error",
+        "message": "sentinel"
+      }
+    },
+    {
+      "format": "%i",
+      "kind": "symbol",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%i",
+      "kind": "proxy",
+      "effects": [
+        "get:Symbol(Symbol.toPrimitive)"
+      ],
+      "error": {
+        "name": "Error",
+        "message": "proxy"
+      }
+    },
+    {
+      "format": "%i",
+      "kind": "native",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%f",
+      "kind": "object",
+      "effects": [
+        "string"
+      ],
+      "error": null
+    },
+    {
+      "format": "%f",
+      "kind": "throw",
+      "effects": [
+        "string"
+      ],
+      "error": {
+        "name": "Error",
+        "message": "sentinel"
+      }
+    },
+    {
+      "format": "%f",
+      "kind": "symbol",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%f",
+      "kind": "proxy",
+      "effects": [
+        "get:Symbol(Symbol.toPrimitive)"
+      ],
+      "error": {
+        "name": "Error",
+        "message": "proxy"
+      }
+    },
+    {
+      "format": "%f",
+      "kind": "native",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%o",
+      "kind": "object",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%o",
+      "kind": "throw",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%o",
+      "kind": "symbol",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%o",
+      "kind": "proxy",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%o",
+      "kind": "native",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%O",
+      "kind": "object",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%O",
+      "kind": "throw",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%O",
+      "kind": "symbol",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%O",
+      "kind": "proxy",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%O",
+      "kind": "native",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%c",
+      "kind": "object",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%c",
+      "kind": "throw",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%c",
+      "kind": "symbol",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%c",
+      "kind": "proxy",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%c",
+      "kind": "native",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%%",
+      "kind": "object",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%%",
+      "kind": "throw",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%%",
+      "kind": "symbol",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%%",
+      "kind": "proxy",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%%",
+      "kind": "native",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%s %d",
+      "kind": "object",
+      "effects": [
+        "string"
+      ],
+      "error": null
+    },
+    {
+      "format": "%s %d",
+      "kind": "throw",
+      "effects": [
+        "string"
+      ],
+      "error": {
+        "name": "Error",
+        "message": "sentinel"
+      }
+    },
+    {
+      "format": "%s %d",
+      "kind": "symbol",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%s %d",
+      "kind": "proxy",
+      "effects": [
+        "get:Symbol(Symbol.toPrimitive)"
+      ],
+      "error": {
+        "name": "Error",
+        "message": "proxy"
+      }
+    },
+    {
+      "format": "%s %d",
+      "kind": "native",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "x %s y",
+      "kind": "object",
+      "effects": [
+        "string"
+      ],
+      "error": null
+    },
+    {
+      "format": "x %s y",
+      "kind": "throw",
+      "effects": [
+        "string"
+      ],
+      "error": {
+        "name": "Error",
+        "message": "sentinel"
+      }
+    },
+    {
+      "format": "x %s y",
+      "kind": "symbol",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "x %s y",
+      "kind": "proxy",
+      "effects": [
+        "get:Symbol(Symbol.toPrimitive)"
+      ],
+      "error": {
+        "name": "Error",
+        "message": "proxy"
+      }
+    },
+    {
+      "format": "x %s y",
+      "kind": "native",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%q",
+      "kind": "object",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%q",
+      "kind": "throw",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%q",
+      "kind": "symbol",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%q",
+      "kind": "proxy",
+      "effects": [],
+      "error": null
+    },
+    {
+      "format": "%q",
+      "kind": "native",
+      "effects": [],
+      "error": null
+    }
+  ],
+  "events": [
+    [
+      {
+        "type": "object",
+        "description": "Object"
+      }
+    ],
+    [
+      {
+        "type": "object",
+        "description": "Object"
+      }
+    ],
+    [
+      {
+        "type": "symbol",
+        "description": "Symbol(token)"
+      }
+    ],
+    [
+      {
+        "type": "object",
+        "subtype": "proxy",
+        "description": "Proxy(Object)"
+      }
+    ],
+    [
+      {
+        "type": "object",
+        "subtype": "node",
+        "description": "body"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%s"
+      },
+      {
+        "type": "string",
+        "value": "12.75"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%s"
+      },
+      {
+        "type": "string",
+        "value": "Symbol(token)"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%s"
+      },
+      {
+        "type": "string",
+        "value": "[object HTMLBodyElement]"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%d"
+      },
+      {
+        "type": "number",
+        "value": 12,
+        "description": "12"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%d"
+      },
+      {
+        "type": "number",
+        "description": "NaN"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%d"
+      },
+      {
+        "type": "number",
+        "description": "NaN"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%i"
+      },
+      {
+        "type": "number",
+        "value": 12,
+        "description": "12"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%i"
+      },
+      {
+        "type": "number",
+        "description": "NaN"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%i"
+      },
+      {
+        "type": "number",
+        "description": "NaN"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%f"
+      },
+      {
+        "type": "number",
+        "value": 12.75,
+        "description": "12.75"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%f"
+      },
+      {
+        "type": "number",
+        "description": "NaN"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%f"
+      },
+      {
+        "type": "number",
+        "description": "NaN"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%o"
+      },
+      {
+        "type": "object",
+        "description": "Object"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%o"
+      },
+      {
+        "type": "object",
+        "description": "Object"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%o"
+      },
+      {
+        "type": "symbol",
+        "description": "Symbol(token)"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%o"
+      },
+      {
+        "type": "object",
+        "subtype": "proxy",
+        "description": "Proxy(Object)"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%o"
+      },
+      {
+        "type": "object",
+        "subtype": "node",
+        "description": "body"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%O"
+      },
+      {
+        "type": "object",
+        "description": "Object"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%O"
+      },
+      {
+        "type": "object",
+        "description": "Object"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%O"
+      },
+      {
+        "type": "symbol",
+        "description": "Symbol(token)"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%O"
+      },
+      {
+        "type": "object",
+        "subtype": "proxy",
+        "description": "Proxy(Object)"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%O"
+      },
+      {
+        "type": "object",
+        "subtype": "node",
+        "description": "body"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%c"
+      },
+      {
+        "type": "object",
+        "description": "Object"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%c"
+      },
+      {
+        "type": "object",
+        "description": "Object"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%c"
+      },
+      {
+        "type": "symbol",
+        "description": "Symbol(token)"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%c"
+      },
+      {
+        "type": "object",
+        "subtype": "proxy",
+        "description": "Proxy(Object)"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%c"
+      },
+      {
+        "type": "object",
+        "subtype": "node",
+        "description": "body"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%%"
+      },
+      {
+        "type": "object",
+        "description": "Object"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%%"
+      },
+      {
+        "type": "object",
+        "description": "Object"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%%"
+      },
+      {
+        "type": "symbol",
+        "description": "Symbol(token)"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%%"
+      },
+      {
+        "type": "object",
+        "subtype": "proxy",
+        "description": "Proxy(Object)"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%%"
+      },
+      {
+        "type": "object",
+        "subtype": "node",
+        "description": "body"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%s %d"
+      },
+      {
+        "type": "string",
+        "value": "12.75"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%s %d"
+      },
+      {
+        "type": "string",
+        "value": "Symbol(token)"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%s %d"
+      },
+      {
+        "type": "string",
+        "value": "[object HTMLBodyElement]"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "x %s y"
+      },
+      {
+        "type": "string",
+        "value": "12.75"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "x %s y"
+      },
+      {
+        "type": "string",
+        "value": "Symbol(token)"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "x %s y"
+      },
+      {
+        "type": "string",
+        "value": "[object HTMLBodyElement]"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%q"
+      },
+      {
+        "type": "object",
+        "description": "Object"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%q"
+      },
+      {
+        "type": "object",
+        "description": "Object"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%q"
+      },
+      {
+        "type": "symbol",
+        "description": "Symbol(token)"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%q"
+      },
+      {
+        "type": "object",
+        "subtype": "proxy",
+        "description": "Proxy(Object)"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%q"
+      },
+      {
+        "type": "object",
+        "subtype": "node",
+        "description": "body"
+      }
+    ]
+  ],
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "profileFreshness": "fresh-isolated-context",
+    "browserProfileFreshness": "unavailable: reused existing browser process",
+    "unavailable": [
+      "commandLineFeatureOverrides",
+      "environmentProfileId",
+      "chromiumRevision",
+      "chromiumCommit",
+      "v8Version",
+      "window",
+      "hasFocus",
+      "viewport",
+      "secureContextState",
+      "isolationState",
+      "visibilityState"
+    ],
+    "provenance": "Existing Chrome at port9343; new isolated context per runner, closed after capture. Version read by primary console/function capture; edge capture reused the same browser process. Command line and browser profile were not inspected."
+  },
+  "source": "internal/browser/testdata/console_format_oracle.js",
+  "sourceSHA256": "5dd96378ddc9710ae46b0a5464d027d04838795b861fb69787d038c8ef87210d"
+}

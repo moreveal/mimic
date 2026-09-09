@@ -1,0 +1,364 @@
+{
+  "results": [
+    {
+      "format": "%% %s",
+      "effects": [
+        "a"
+      ]
+    },
+    {
+      "format": "%c %s",
+      "effects": [
+        "b"
+      ]
+    },
+    {
+      "format": "%o %s",
+      "effects": [
+        "b"
+      ]
+    },
+    {
+      "format": "%q %s",
+      "effects": [
+        "a"
+      ]
+    },
+    {
+      "format": "%s %s",
+      "effects": [
+        "a",
+        "b"
+      ]
+    },
+    {
+      "format": "%d",
+      "effects": [
+        "a"
+      ]
+    },
+    {
+      "format": "%i",
+      "effects": [
+        "a"
+      ]
+    },
+    {
+      "format": "%f",
+      "effects": [
+        "a"
+      ]
+    }
+  ],
+  "events": [
+    [
+      {
+        "type": "string",
+        "value": "%% %s"
+      },
+      {
+        "type": "string",
+        "value": "12"
+      },
+      {
+        "type": "object",
+        "description": "Object"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%c %s"
+      },
+      {
+        "type": "object",
+        "description": "Object"
+      },
+      {
+        "type": "string",
+        "value": "23"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%o %s"
+      },
+      {
+        "type": "object",
+        "description": "Object"
+      },
+      {
+        "type": "string",
+        "value": "23"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%q %s"
+      },
+      {
+        "type": "string",
+        "value": "12"
+      },
+      {
+        "type": "object",
+        "description": "Object"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%s %s"
+      },
+      {
+        "type": "string",
+        "value": "12"
+      },
+      {
+        "type": "string",
+        "value": "23"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%d"
+      },
+      {
+        "type": "number",
+        "value": 12,
+        "description": "12"
+      },
+      {
+        "type": "object",
+        "description": "Object"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%i"
+      },
+      {
+        "type": "number",
+        "value": 12,
+        "description": "12"
+      },
+      {
+        "type": "object",
+        "description": "Object"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%f"
+      },
+      {
+        "type": "number",
+        "value": 12,
+        "description": "12"
+      },
+      {
+        "type": "object",
+        "description": "Object"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%s"
+      },
+      {
+        "type": "string",
+        "value": "12.75"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%s"
+      },
+      {
+        "type": "string",
+        "value": "0"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%s"
+      },
+      {
+        "type": "string",
+        "value": "15"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%s"
+      },
+      {
+        "type": "string",
+        "value": "Symbol(x)"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%d"
+      },
+      {
+        "type": "number",
+        "value": 12,
+        "description": "12"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%d"
+      },
+      {
+        "type": "number",
+        "value": 0,
+        "description": "0"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%d"
+      },
+      {
+        "type": "number",
+        "value": 15,
+        "description": "15"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%d"
+      },
+      {
+        "type": "number",
+        "unserializableValue": "NaN",
+        "description": "NaN"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%i"
+      },
+      {
+        "type": "number",
+        "value": 12,
+        "description": "12"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%i"
+      },
+      {
+        "type": "number",
+        "value": 0,
+        "description": "0"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%i"
+      },
+      {
+        "type": "number",
+        "value": 15,
+        "description": "15"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%i"
+      },
+      {
+        "type": "number",
+        "unserializableValue": "NaN",
+        "description": "NaN"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%f"
+      },
+      {
+        "type": "number",
+        "value": 12.75,
+        "description": "12.75"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%f"
+      },
+      {
+        "type": "number",
+        "value": 0,
+        "description": "0"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%f"
+      },
+      {
+        "type": "number",
+        "value": 15,
+        "description": "15"
+      }
+    ],
+    [
+      {
+        "type": "string",
+        "value": "%f"
+      },
+      {
+        "type": "number",
+        "unserializableValue": "NaN",
+        "description": "NaN"
+      }
+    ]
+  ],
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "profileFreshness": "fresh-isolated-context",
+    "browserProfileFreshness": "unavailable: reused existing browser process",
+    "unavailable": [
+      "commandLineFeatureOverrides",
+      "environmentProfileId",
+      "chromiumRevision",
+      "chromiumCommit",
+      "v8Version",
+      "window",
+      "hasFocus",
+      "viewport",
+      "secureContextState",
+      "isolationState",
+      "visibilityState"
+    ],
+    "provenance": "Existing Chrome at port9343; new isolated context per runner, closed after capture. Version read by primary console/function capture; edge capture reused the same browser process. Command line and browser profile were not inspected."
+  },
+  "source": "internal/browser/testdata/console_format_edges_oracle.js",
+  "sourceSHA256": "4a5c193621329fc305a11ced37ca1a6dcfb7e95e661fa4242508d2b9727e78a6"
+}

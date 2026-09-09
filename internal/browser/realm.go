@@ -467,11 +467,17 @@ func (r *Realm) install() error {
 		return r.val(frame.ID), nil
 	})
 	host["frameEval"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		id, source := strarg(a, 0), strarg(a, 1)
+		id := strarg(a, 0)
 		frame := p.frame(id)
 		if !r.canAccess(frame) {
 			return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
 		}
+		// Non-string eval arguments return unchanged in the calling realm. The
+		// bridge still validates access, without evaluating or coercing them.
+		if len(a) < 2 {
+			return nil, nil
+		}
+		source := strarg(a, 1)
 		return r.crossFrameResult(frame.Realm, func(ctx context.Context) (engine.Value, error) { return r.evalInFrame(ctx, id, source) })
 	})
 	host["frameCall"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
