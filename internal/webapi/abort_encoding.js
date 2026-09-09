@@ -1,4 +1,4 @@
-// Shared cancellation and UTF-8 decoder semantics.
+// Shared cancellation and text decoder semantics for Window and Worker.
     const abortSlots=new WeakMap(),controllerSlots=new WeakMap();
     const abort=(signal,reason)=>{const s=abortSlots.get(signal);if(s.aborted)return;s.aborted=true;s.reason=reason===undefined?new DOMException('signal is aborted without reason','AbortError'):reason;dispatchTrusted(signal,new Event('abort'))};
     class AbortSignal extends EventTarget {
@@ -13,21 +13,27 @@
     class AbortController {constructor(){controllerSlots.set(this,new AbortSignal(hostToken))}get signal(){return controllerSlots.get(this)}abort(reason){abort(this.signal,reason)}}
     expose('AbortSignal',AbortSignal);expose('AbortController',AbortController);
     const decoderSlots=new WeakMap();
+    const decoderLabels=new Map([['utf-8','utf-8'],['utf8','utf-8'],['unicode-1-1-utf-8','utf-8']]);
+    for(const label of ['ansi_x3.4-1968','ascii','cp1252','cp819','csisolatin1','ibm819','iso-8859-1','iso-ir-100','iso8859-1','iso88591','iso_8859-1','iso_8859-1:1987','l1','latin1','us-ascii','windows-1252','x-cp1252'])decoderLabels.set(label,'windows-1252');
+    // The web's Latin-1 and ASCII labels use Windows-1252, including its C1
+    // mappings. Undefined legacy positions retain their control code points.
+    const windows1252C1=[0x20ac,0x81,0x201a,0x192,0x201e,0x2026,0x2020,0x2021,0x2c6,0x2030,0x160,0x2039,0x152,0x8d,0x17d,0x8f,0x90,0x2018,0x2019,0x201c,0x201d,0x2022,0x2013,0x2014,0x2dc,0x2122,0x161,0x203a,0x153,0x9d,0x17e,0x178];
     class TextDecoder {
-      constructor(label='utf-8',options={}){label=String(label).trim().toLowerCase();if(!['utf-8','utf8','unicode-1-1-utf-8'].includes(label))throw new RangeError('Unsupported encoding: '+label);decoderSlots.set(this,{fatal:!!options.fatal,ignoreBOM:!!options.ignoreBOM,bytes:[],bom:false})}
-      get encoding(){return 'utf-8'}get fatal(){return decoderSlots.get(this).fatal}get ignoreBOM(){return decoderSlots.get(this).ignoreBOM}
+      constructor(label='utf-8',options={}){label=String(label).replace(/^[\t\n\f\r ]+|[\t\n\f\r ]+$/g,'').toLowerCase();const encoding=decoderLabels.get(label);if(!encoding)throw new RangeError('Unsupported encoding: '+label);decoderSlots.set(this,{encoding,fatal:!!options.fatal,ignoreBOM:!!options.ignoreBOM,bytes:[],bom:false})}
+      get encoding(){return decoderSlots.get(this).encoding}get fatal(){return decoderSlots.get(this).fatal}get ignoreBOM(){return decoderSlots.get(this).ignoreBOM}
       decode(input,options={}){
-        const s=decoderSlots.get(this),bytes=s.bytes.concat(input==null?[]:Array.from(ArrayBuffer.isView(input)?new Uint8Array(input.buffer,input.byteOffset,input.byteLength):new Uint8Array(input)));s.bytes=[];let output='';
+        const s=decoderSlots.get(this),stream=!!options.stream,bytes=s.bytes.concat(input==null?[]:Array.from(ArrayBuffer.isView(input)?new Uint8Array(input.buffer,input.byteOffset,input.byteLength):new Uint8Array(input)));s.bytes=[];let output='';
+        if(s.encoding==='windows-1252'){for(const byte of bytes)output+=String.fromCodePoint(byte>=0x80&&byte<=0x9f?windows1252C1[byte-0x80]:byte);return output}
         const emit=point=>{if(!s.bom){s.bom=true;if(point===0xfeff&&!s.ignoreBOM)return}output+=String.fromCodePoint(point)};
         const error=()=>{if(s.fatal)throw new TypeError('Invalid encoded data');emit(0xfffd)};
         for(let i=0;i<bytes.length;){const start=i,b=bytes[i++];if(b<128){emit(b);continue}const count=b>=0xc2&&b<=0xdf?1:b>=0xe0&&b<=0xef?2:b>=0xf0&&b<=0xf4?3:0;if(!count){error();continue}
           let point=b&((1<<(6-count))-1),valid=true;
           for(let j=0;j<count;j++){
-            if(i===bytes.length){if(options.stream){s.bytes=bytes.slice(start);valid=false;i=bytes.length}else{error();valid=false}break}
+            if(i===bytes.length){if(stream){s.bytes=bytes.slice(start);valid=false;i=bytes.length}else{error();valid=false}break}
             const c=bytes[i],min=j===0&&b===0xe0?0xa0:j===0&&b===0xf0?0x90:0x80,max=j===0&&b===0xed?0x9f:j===0&&b===0xf4?0x8f:0xbf;
             if(c<min||c>max){error();valid=false;break}i++;point=(point<<6)|(c&63);
           }if(valid)emit(point);
-        }if(!options.stream)s.bom=false;return output;
+        }if(!stream)s.bom=false;return output;
       }
     }
     expose('TextDecoder',TextDecoder);
