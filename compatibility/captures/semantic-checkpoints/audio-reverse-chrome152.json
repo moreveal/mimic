@@ -1,0 +1,100 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/audio_reverse_oracle.js",
+    "fixtureSHA256": "691da95008a694424f5e7d5b6a4d80fd26be3a68b077398fb35b1ab3657545b4",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "-1:0": [
+      10,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "-1:4": [
+      50,
+      40,
+      5,
+      20,
+      10,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "-0.5:0": [
+      10,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "-0.5:4": [
+      50,
+      45,
+      40,
+      22.5,
+      5,
+      12.5,
+      20,
+      15,
+      10,
+      0,
+      0,
+      0
+    ],
+    "-1.5:0": [
+      10,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ],
+    "-1.5:4": [
+      50,
+      22.5,
+      20,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0,
+      0
+    ]
+  }
+}

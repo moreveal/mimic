@@ -15,8 +15,10 @@ Implemented observations:
 - AudioBufferSourceNode and GainNode construction, branded node/parameter state,
   single-input/output connections, duplicate connection suppression, and basic
   disconnection. Sources and gains can be mixed through an acyclic graph.
-- Equal-rate PCM playback at integer sample boundaries, buffer offsets, stop and
-  duration limits, valid loop intervals, and source end notifications. The final
+- PCM playback with constant rates, detune and source/context rate conversion,
+  fractional starts, rounded buffer offsets, stop/duration limits, supported loop
+  intervals, and source end notifications. Zero rate holds the source sample;
+  negative rates support non-looping reverse playback. The final
   partial render quantum advances currentTime to a 128-frame boundary. A source
   can end within that quantum even if its end is beyond the output buffer length;
   an infinite loop does not end merely because offline rendering completed.
@@ -25,8 +27,11 @@ Implemented observations:
   discrete channel mapping share the same PCM samples. Stereo downmix scales
   before adding, preserving the measured finite result near Float32 limits.
 
-Seven focused Chrome 152 fixtures cover buffers, empty rendering, connected
-graphs, relational sample changes, lifecycle, validation, and channel conversion.
+Thirteen focused Chrome 152 fixtures cover buffers, empty rendering, connected
+graphs, relational sample changes, lifecycle, validation, channel conversion,
+interpolation, playback rates, reverse playback, phase accumulation and source
+completion. Disconnected sources are not pulled by the destination and do not
+produce a synthetic ended event merely because the context completes.
 `go test ./internal/browser -run TestOfflineAudio` compares them on V8 and Goja
 and checks explicit rejection at unsupported boundaries. Repeat inputs produce
 equal output; changing one source sample changes only its dependent output
@@ -37,21 +42,29 @@ generation is used.
 
 This is not complete Web Audio support. Oscillators, filters, compressors,
 convolution, analyzers, ramps/curves/targets, AudioParam connections, decoding,
-sample-rate/playback-rate conversion, fractional source timing, feedback graphs,
+scheduled playback-rate/detune changes, reverse loops, fractional loop boundaries,
+feedback graphs,
 destination channel reconfiguration and complex speaker conversion remain
 unsupported. Node creation or rendering reports NotSupportedError instead of
 returning a fabricated successful result. Suspension/resumption and real-time
 AudioContext execution are not implemented. All WebIDL overload/conversion
 corners and graph changes concurrent with rendering are not yet covered.
 
-The separate `audio-fractional-chrome152.json` fixture is diagnostic evidence for
-future interpolation work, not a passing conformance test. Native fractional
-start times affect interpolation; rounding them to integer frames would be
-incorrect. The saved fixture also records that mutations through a channel view
-after source.start and before startRendering are observed by native playback.
+The formerly diagnostic `audio-fractional-chrome152.json` capture is now a passing
+conformance test; its original source and expectations are unchanged. Native
+fractional start times affect interpolation, while buffer offsets are rounded to
+the nearest source sample. Interpolation at a non-looping trailing edge uses the
+last pair of samples to extrapolate; loops interpolate toward the loop start.
+The source-rate ratio is formed before scaling and source phase is accumulated
+frame by frame, including across 128-frame quanta. Replacing that accumulation
+with a direct elapsed-time formula fails exact native comparisons at 44.1/48 kHz.
+The saved fixture also records that mutations through a channel view after
+source.start and before startRendering are observed by native playback.
 
 PCM allocation is bounded to 16 million samples per buffer and per evaluated
-graph; mixing is bounded to 16 million sample contributions. Unsupported resource
+graph; source evaluation steps and mixing contributions share a 16-million work
+budget. Effective resampling ratios above 1024 in magnitude, nonfinite ratios,
+and unsupported loop intervals are rejected explicitly. Unsupported resource
 limits remain explicit. These guards are implementation limits, not advertised
 Chrome hardware limits. More exact floating-point/denormal behavior and additional
 graph semantics require further native measurements.

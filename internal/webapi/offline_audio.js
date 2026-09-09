@@ -64,16 +64,48 @@
  function render(context){
   const c=requireSlot(contexts,context),cache=new Map(),visiting=new Set();if(nodes.get(c.destination).channelCount!==c.numberOfChannels)unsupported('destination channel reconfiguration');let storage=0,work=0;
   const allocate=count=>{storage+=count*c.length;if(storage>16*1024*1024)unsupported('graph storage limit');return Array.from({length:count},()=>new Float32Array(c.length))};
-  const exactFrame=value=>{const frame=value*c.sampleRate;if(!Number.isInteger(frame))unsupported('fractional source timing');return frame};
+  const processedFrames=Math.ceil(c.length/128)*128;
+  function sourceOutput(object,output){
+   const n=nodes.get(object);n.ended=false;if(!n.started)return;
+   const b=n.buffer&&buffers.get(n.buffer),start=n.startTime*c.sampleRate,first=Math.ceil(start),stop=Math.ceil(n.stopTime*c.sampleRate);
+   if(!b){n.ended=first<processedFrames;return}
+   if(params.get(n.playbackRate).timeline.length||params.get(n.detune).timeline.length)unsupported('scheduled source resampling');
+   // The rate ratio is formed before scaling: reassociation changes rounding
+   // observed by the mixed-rate phase oracle near Float32 midpoints.
+   const speed=n.playbackRate.value*Math.pow(2,n.detune.value/1200),step=(b.sampleRate/c.sampleRate)*speed;
+   if(!Number.isFinite(step)||Math.abs(step)>1024)unsupported('resampling ratio limit');
+   const offset=Math.min(b.length,Math.round(n.offset*b.sampleRate)),duration=n.duration*b.sampleRate;
+   const loopStart=Math.max(0,n.loopStart*b.sampleRate),loopEnd=n.loopEnd>0?Math.min(b.length,n.loopEnd*b.sampleRate):b.length;
+   if(n.loop&&(step<0||!Number.isInteger(loopStart)||!Number.isInteger(loopEnd)||loopStart>=loopEnd||loopStart>=b.length||offset>=b.length))unsupported('loop interval');
+   // Starts occur at ceil(frame), while their fractional remainder advances the
+   // source phase. Offset itself is rounded to the nearest source sample.
+   let position=offset+(first-start)*step;
+   for(let frame=first;frame<=processedFrames;frame++){
+    if(++work>16*1024*1024)unsupported('source evaluation limit');
+    const elapsed=frame-start;
+    if(frame>=stop||elapsed*Math.abs(step)>=duration){n.ended=true;break}
+    if(n.loop&&position>=loopEnd)position=loopStart+(position-loopStart)%(loopEnd-loopStart);
+    if(position<0||position>=b.length){n.ended=true;break}
+    if(frame===processedFrames)break;
+    if(output&&frame<c.length){
+    let lower=Math.floor(position),upper=lower+1;
+    if(n.loop&&upper>=loopEnd)upper=loopStart;
+    // Native linear interpolation extrapolates the last pair at the non-loop
+    // edge; a loop instead interpolates toward its first sample.
+    else if(upper>=b.length){lower=Math.max(0,b.length-2);upper=b.length-1}
+    const fraction=position-lower;
+    for(let ch=0;ch<output.length;ch++){const values=b.channels[ch],a=values[lower];output[ch][frame]=fraction===0?a:a+(values[upper]-a)*fraction}
+    }
+    // Carry phase across frames and render quanta; recomputing from elapsed
+    // time loses observable rounding, even when the difference is tiny.
+    position+=step;
+   }
+  }
   function nodeOutput(object){
    if(cache.has(object))return cache.get(object);if(visiting.has(object))unsupported('feedback graphs');visiting.add(object);const n=nodes.get(object);let result;
    if(n.type==='AudioBufferSourceNode'){
     const b=n.buffer&&buffers.get(n.buffer);result=allocate(b?b.numberOfChannels:1);
-    if(n.started&&b){if(b.sampleRate!==c.sampleRate||params.get(n.playbackRate).timeline.length||params.get(n.detune).timeline.length||n.playbackRate.value!==1||n.detune.value!==0)unsupported('source resampling');
-     const start=exactFrame(n.startTime),offset=exactFrame(n.offset),stop=n.stopTime===Infinity?Infinity:exactFrame(n.stopTime),duration=n.duration===Infinity?Infinity:exactFrame(n.duration),loopStart=exactFrame(Math.max(0,n.loopStart)),loopEnd=n.loopEnd>0?Math.min(b.length,exactFrame(n.loopEnd)):b.length;
-     if(n.loop&&(loopStart>=loopEnd||loopStart>=b.length))unsupported('loop interval');
-     for(let frame=start;frame<c.length&&frame<stop&&frame-start<duration;frame++){let index=offset+frame-start;if(n.loop&&index>=loopEnd)index=loopStart+(index-loopStart)%(loopEnd-loopStart);if(index>=b.length)break;for(let ch=0;ch<result.length;ch++)result[ch][frame]=b.channels[ch][index]}
-    }
+    sourceOutput(object,result);
    }else{
     const inputs=n.incoming.map(nodeOutput),maximum=Math.max(1,...inputs.map(v=>v.length));let count=n.channelCountMode==='explicit'?n.channelCount:n.channelCountMode==='clamped-max'?Math.min(n.channelCount,maximum):maximum;
     if(n.channelInterpretation==='speakers'&&inputs.some(v=>v.length!==count&&(count>2||v.length>2)))unsupported('multichannel speaker conversion');result=allocate(count);
@@ -88,6 +120,6 @@
   const samples=nodeOutput(c.destination),buffer=new AudioBuffer({numberOfChannels:c.numberOfChannels,length:c.length,sampleRate:c.sampleRate});for(let ch=0;ch<samples.length;ch++)buffer.copyToChannel(samples[ch],ch);return buffer;
  }
  method('OfflineAudioContext','startRendering',function startRendering(){try{const c=requireSlot(contexts,this);if(c.started)throw exception('InvalidStateError');c.started=true;c.state='running';return new Promise((resolve,reject)=>{setTimeout(()=>{
-  emit(this,'statechange');try{const buffer=render(this);c.currentTime=Math.ceil(c.length/128)*128/c.sampleRate;c.state='closed';for(const object of c.nodes){const n=nodes.get(object);if(n.type==='AudioBufferSourceNode'&&n.started){const b=n.buffer&&buffers.get(n.buffer),natural=n.loop?Infinity:n.startTime+Math.max(0,(b?b.length/b.sampleRate:0)-n.offset),end=Math.min(n.stopTime,n.startTime+n.duration,natural);if(end<=c.currentTime)emit(object,'ended')}}emit(this,'complete',buffer);resolve(buffer)}catch(e){c.state='closed';reject(e)}setTimeout(()=>emit(this,'statechange'),0);
+  emit(this,'statechange');try{const buffer=render(this);c.currentTime=Math.ceil(c.length/128)*128/c.sampleRate;c.state='closed';for(const object of c.nodes){const n=nodes.get(object);if(n.type==='AudioBufferSourceNode'&&n.ended)emit(object,'ended')}emit(this,'complete',buffer);resolve(buffer)}catch(e){c.state='closed';reject(e)}setTimeout(()=>emit(this,'statechange'),0);
  },0)})}catch(e){return Promise.reject(e)}});
 })();
