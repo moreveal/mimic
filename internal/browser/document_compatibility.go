@@ -3,6 +3,12 @@ package browser
 import "github.com/moreveal/mimic/internal/engine"
 
 func (r *Realm) installDocumentCompatibility(host map[string]any) {
+	host["attributeNameNS"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		return r.val(r.document.AttributeNameNS(int64(numarg(args, 0)), strarg(args, 1), strarg(args, 2))), nil
+	})
+	host["setAttributeNS"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		return nil, r.document.SetAttributeNS(int64(numarg(args, 0)), strarg(args, 1), strarg(args, 2), strarg(args, 3))
+	})
 	host["elementByID"] = r.packedFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		return r.val(r.document.ElementByID(int64(numarg(args, 0)), strarg(args, 1))), nil
 	}, "ns")

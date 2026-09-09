@@ -23,6 +23,7 @@ type Node struct {
 	// boundary (unpaired UTF-16 surrogates). Text is its scalar projection.
 	TextJSON             string            `json:"-"`
 	Attributes           map[string]string `json:"attributes,omitempty"`
+	AttributeNamespaces  map[string]string `json:"attributeNamespaces,omitempty"`
 	AttributeNames       []string          `json:"attributeNames,omitempty"`
 	Parent               int64             `json:"parentId,omitempty"`
 	Children             []int64           `json:"children,omitempty"`
@@ -65,8 +66,11 @@ func Parse(source string) (*Document, error) {
 			default:
 				node.Namespace = "http://www.w3.org/1999/xhtml"
 			}
+			if n.Namespace != "" {
+				node.QualifiedName = n.Data
+			}
 			for _, a := range n.Attr {
-				node.setAttribute(a.Key, a.Val)
+				node.setParsedAttribute(a)
 			}
 		case html.TextNode:
 			node.Type = "text"
@@ -166,7 +170,7 @@ func (d *Document) GetAttribute(id int64, name string) (string, bool) {
 	if n == nil {
 		return "", false
 	}
-	v, ok := n.Attributes[strings.ToLower(name)]
+	v, ok := n.Attributes[n.attributeName(name)]
 	return v, ok
 }
 func (d *Document) SetAttribute(id int64, name, value string) error {
@@ -179,7 +183,7 @@ func (d *Document) SetAttribute(id int64, name, value string) error {
 	if n.Attributes == nil {
 		n.Attributes = map[string]string{}
 	}
-	n.setAttribute(strings.ToLower(name), value)
+	n.setAttribute(n.attributeName(name), value)
 	return nil
 }
 
@@ -242,7 +246,8 @@ func (d *Document) RemoveAttribute(id int64, name string) error {
 	if n == nil || n.Type != "element" {
 		return fmt.Errorf("element node %d does not exist", id)
 	}
-	name = strings.ToLower(name)
+	name = n.attributeName(name)
+	delete(n.AttributeNamespaces, name)
 	delete(n.Attributes, name)
 	for i, item := range n.AttributeNames {
 		if item == name {
@@ -293,6 +298,7 @@ func (d *Document) FindWithin(parent int64, selector string) (Node, bool) {
 		if found, ok := visit(child); ok {
 			copy := *found
 			copy.Attributes = cloneAttributes(found.Attributes)
+			copy.AttributeNamespaces = cloneAttributes(found.AttributeNamespaces)
 			copy.AttributeNames = append([]string(nil), found.AttributeNames...)
 			copy.Children = append([]int64(nil), found.Children...)
 			return copy, true
@@ -323,6 +329,7 @@ func (d *Document) findAllWithin(parent int64, selector string) []Node {
 		if d.matchesSelector(n, selector) {
 			copy := *n
 			copy.Attributes = cloneAttributes(n.Attributes)
+			copy.AttributeNamespaces = cloneAttributes(n.AttributeNamespaces)
 			copy.AttributeNames = append([]string(nil), n.AttributeNames...)
 			copy.Children = append([]int64(nil), n.Children...)
 			out = append(out, copy)
@@ -388,6 +395,7 @@ func (d *Document) FindAllByTagName(tag string) []Node {
 		}
 		copy := *n
 		copy.Attributes = cloneAttributes(n.Attributes)
+		copy.AttributeNamespaces = cloneAttributes(n.AttributeNamespaces)
 		copy.AttributeNames = append([]string(nil), n.AttributeNames...)
 		copy.Children = append([]int64(nil), n.Children...)
 		out = append(out, copy)
@@ -439,6 +447,9 @@ func (d *Document) CreateElementNS(namespace, tag string) Node {
 	defer d.mu.Unlock()
 	d.next++
 	n := &Node{ID: d.next, Type: "element", TagName: strings.ToUpper(tag), Namespace: namespace, Attributes: map[string]string{}}
+	if namespace != "http://www.w3.org/1999/xhtml" {
+		n.QualifiedName = tag
+	}
 	d.nodes[n.ID] = n
 	d.hasFrameElements = d.hasFrameElements || n.TagName == "IFRAME"
 	if n.TagName == "TEMPLATE" && n.Namespace == "http://www.w3.org/1999/xhtml" {
@@ -698,6 +709,11 @@ func (d *Document) htmlNode(id int64) *html.Node {
 		}
 	case "element":
 		out.Type, out.Data, out.DataAtom = html.ElementNode, strings.ToLower(n.TagName), atom.Lookup([]byte(strings.ToLower(n.TagName)))
+		out.Namespace = parserNamespace(n.Namespace)
+		if n.QualifiedName != "" {
+			out.Data = n.QualifiedName
+			out.DataAtom = atom.Lookup([]byte(out.Data))
+		}
 		for _, key := range n.AttributeNames {
 			out.Attr = append(out.Attr, html.Attribute{Key: key, Val: n.Attributes[key]})
 		}
@@ -741,7 +757,11 @@ func (d *Document) SetInnerHTML(id int64, source string) error {
 	if parent == nil || parent.Type != "element" {
 		return fmt.Errorf("element node %d does not exist", id)
 	}
-	contextNode := &html.Node{Type: html.ElementNode, Data: strings.ToLower(parent.TagName), DataAtom: atom.Lookup([]byte(strings.ToLower(parent.TagName)))}
+	contextName := strings.ToLower(parent.TagName)
+	if parent.QualifiedName != "" {
+		contextName = parent.QualifiedName
+	}
+	contextNode := &html.Node{Type: html.ElementNode, Data: contextName, DataAtom: atom.Lookup([]byte(contextName)), Namespace: parserNamespace(parent.Namespace)}
 	fragments, err := html.ParseFragment(strings.NewReader(source), contextNode)
 	if err != nil {
 		return err
@@ -771,8 +791,11 @@ func (d *Document) SetInnerHTML(id int64, source string) error {
 			default:
 				n.Namespace = "http://www.w3.org/1999/xhtml"
 			}
+			if raw.Namespace != "" {
+				n.QualifiedName = raw.Data
+			}
 			for _, attr := range raw.Attr {
-				n.setAttribute(attr.Key, attr.Val)
+				n.setParsedAttribute(attr)
 			}
 		case html.TextNode:
 			n.Type, n.Text = "text", raw.Data

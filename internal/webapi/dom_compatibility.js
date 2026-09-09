@@ -191,7 +191,7 @@ const compatibilityElementState={};
       const original=Element.prototype[name];
       Object.defineProperty(Element.prototype,name,{value:function(key,value){
         if(!observers.size&&!definitions.size&&!compatibilityElementState.hasModal?.())return original.apply(this,arguments);
-        key=String(key).toLowerCase();const old=this.getAttribute(key);
+        key=this.namespaceURI==='http://www.w3.org/1999/xhtml'?String(key).toLowerCase():String(key);const old=this.getAttribute(key);
         const result=original.apply(this,arguments);
         if(name==='setAttribute'||old!==null)attributeChanged(this,key,old);
         return result;
@@ -288,7 +288,7 @@ const compatibilityElementState={};
     member(Element.prototype,'getAttributeNS',function(namespace,name){return namespace==null||namespace===''?this.getAttribute(name):namespaceGet.call(this,namespace,name)});
     member(Element.prototype,'hasAttributeNS',function(namespace,name){return namespace==null||namespace===''?this.hasAttribute(name):namespaceHas.call(this,namespace,name)});
     const namespaceSet=Element.prototype.setAttributeNS,namespaceRemove=Element.prototype.removeAttributeNS;
-    member(Element.prototype,'setAttributeNS',function(namespace,name,value){if(namespace==null||namespace===''){if(String(name).includes(':'))throw new DOMException('Prefix without namespace','NamespaceError');return this.setAttribute(name,value)}return namespaceSet.call(this,namespace,name,value)});
+    member(Element.prototype,'setAttributeNS',function(namespace,name,value){namespace=namespace==null?'':String(namespace);name=String(name);const local=namespace?name.split(':').at(-1):name,old=this.getAttributeNS(namespace,local);const result=namespaceSet.call(this,namespace,name,value);queueRecord('attributes',this,{attributeName:local,attributeNamespace:namespace||null,oldValue:old});const definition=upgraded.get(this);if(definition&&definition.attributes.includes(local))reaction(this,'attributeChangedCallback',[local,old,this.getAttributeNS(namespace,local),namespace||null]);return result});
     member(Element.prototype,'removeAttributeNS',function(namespace,name){return namespace==null||namespace===''?this.removeAttribute(name):namespaceRemove.call(this,namespace,name)});
     const checkedTokens=tokens=>tokens.map(value=>{const token=String(value);if(!token)throw new DOMException('Empty token','SyntaxError');if(/[\t\n\f\r ]/.test(token))throw new DOMException('Whitespace in token','InvalidCharacterError');return token});
     member(DOMTokenList.prototype,'add',function(...values){const tokens=checkedTokens(values);writeDOMTokens(this,domTokens(this).concat(tokens))});
@@ -387,7 +387,7 @@ const compatibilityElementState={};
     Object.defineProperty(Node.prototype,'getRootNode',{value:function(options={}){let node=this;while(node.parentNode)node=node.parentNode;if(options.composed&&node instanceof ShadowRoot)return node.host.getRootNode(options);return node},writable:true,configurable:true,enumerable:true});
     Object.defineProperty(Node.prototype,'cloneNode',{value:function(deep=false){
       let copy;
-      if(this.nodeType===1){copy=this.namespaceURI&&this.namespaceURI!=='http://www.w3.org/1999/xhtml'?document.createElementNS(this.namespaceURI,this.localName):document.createElement(this.localName);for(const name of this.getAttributeNames())copy.setAttribute(name,this.getAttribute(name))}
+      if(this.nodeType===1){copy=this.namespaceURI&&this.namespaceURI!=='http://www.w3.org/1999/xhtml'?document.createElementNS(this.namespaceURI,this.localName):document.createElement(this.localName);for(const name of this.getAttributeNames()){const attr=this.getAttributeNode(name);if(attr.namespaceURI)copy.setAttributeNS(attr.namespaceURI,name,attr.value);else copy.setAttribute(name,attr.value)}}
       else if(this.nodeType===3)copy=document.createTextNode(this.textContent);
       else if(this.nodeType===8)copy=document.createComment(this.textContent);
       else if(this.nodeType===11)copy=document.createDocumentFragment();

@@ -1,0 +1,54 @@
+{
+  "build": {
+    "revision": "66fae540bfcdf7cf7ebcbc45f6b7fbe0b9161d60",
+    "sha256": "20dc1a9218c06a22ce798d360816c5209c465cb1f5a7d2a2bfdaf3aef2a24b55",
+    "harness_sha256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7"
+  },
+  "finished": "2026-09-09T14:38:52.542111+04:00",
+  "failure": null,
+  "correctness": {
+    "static": "VALID",
+    "cpu": "VALID",
+    "dom": "VALID",
+    "async": "VALID",
+    "react": "VALID",
+    "wasm": "VALID"
+  },
+  "warm": {
+    "dom": {
+      "session_create_ms": 11.789199998020194,
+      "execution_ms": 108.25479999766685,
+      "completion_ms": 161.13700000278186
+    },
+    "static": {
+      "session_create_ms": 12.255800000275485,
+      "execution_ms": 2.6254999975208193,
+      "completion_ms": 55.33450000802986
+    },
+    "react": {
+      "session_create_ms": 1.9185999990440905,
+      "execution_ms": 54.48360000445973,
+      "completion_ms": 114.04739999852609
+    }
+  },
+  "concurrency": {
+    "10": 56.33948823484183,
+    "25": 76.68598744703613
+  },
+  "memory": [
+    {
+      "workload": "static",
+      "marginal_rss_mib": 26.60703125,
+      "marginal_private_mib": 26.398046875,
+      "stop_reason": null,
+      "recovered_rss_mib": 103.34765625
+    },
+    {
+      "workload": "react",
+      "marginal_rss_mib": 32.08046875,
+      "marginal_private_mib": 32.26796875,
+      "stop_reason": null,
+      "recovered_rss_mib": 121.1484375
+    }
+  ]
+}
