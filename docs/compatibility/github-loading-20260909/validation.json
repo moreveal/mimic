@@ -1,0 +1,157 @@
+{
+  "build": {
+    "revision": "74a280fed20ca3510448e90391494ff31f31a971",
+    "sha256": "8b2960aab5eec138709ed1b4ea970ce9354bd29c3ed6c2865f29150c69b74e79",
+    "harness_sha256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7",
+    "harness_files": {
+      "compare.py": "274b156ee88e67085f5e556ef79629146f5e7287ee54af844476a0c005e65a5b",
+      "report.py": "f12e393341c00e9e03748a06913fa639c1069f66dc7acb71959cffd51647f214",
+      "requirements.txt": "06e6d87d17f39a59fe7b2576545231fe65d5a1940d22e63fc2b32b6cfa12123b",
+      "run.ps1": "6c50b0a55886278de7c1e4d92b77b42bf2cfad59fa451dbaa766b0e0eae84fa6",
+      "run.py": "67718e844bce74b7757f2238716233b9d8683a17294f2b02017667b9c1e44cd3",
+      "test_harness.py": "ddb8dcf74a192d3403971833cf5e011dd8578a9acd9a060b3b265cc6d79aef2a",
+      "v8_version.go": "669a669b0545ba599edb2f7923617f154b976e7377de89d8b2e1f477bdb12f09",
+      "windows_metrics.py": "57ba1e10dfb1f1cb439a52ad5f7f5795c3ba4eef25ae22c9514ecfe115434cd5",
+      "fixtures/workload.js": "484019063e33e131756f67ab6f3076ad2c18e3959072fbae42f540455448c214",
+      "fixtures/vendor/react-dom.production.min.js": "35f4f974f4b2bcd44da73963347f8952e341f83909e4498227d4e26b98f66f0d",
+      "fixtures/vendor/REACT-LICENSE.txt": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85",
+      "fixtures/vendor/react.production.min.js": "d949f1c3687aedadcedac85261865f29b17cd273997e7f6b2bfc53b2f9d4c4dd"
+    }
+  },
+  "finished": "2026-09-09T13:58:57.272976+04:00",
+  "failure": null,
+  "correctness": {
+    "static": "VALID",
+    "cpu": "VALID",
+    "dom": "VALID",
+    "async": "VALID",
+    "react": "VALID",
+    "wasm": "VALID"
+  },
+  "warm_medians": {
+    "dom": {
+      "session_create_ms": 11.448899997049011,
+      "execution_ms": 109.98409999592695,
+      "completion_ms": 162.308099999791
+    },
+    "static": {
+      "session_create_ms": 11.349199994583614,
+      "execution_ms": 2.634899996337481,
+      "completion_ms": 55.32379999931436
+    },
+    "react": {
+      "session_create_ms": 12.610199992195703,
+      "execution_ms": 53.28900000313297,
+      "completion_ms": 113.25569999462459
+    }
+  },
+  "concurrency": {
+    "10": 56.2829818264352,
+    "25": 75.94534486869577
+  },
+  "memory": [
+    {
+      "workload": "static",
+      "n": 10,
+      "marginal_rss_mib": 26.786328125,
+      "marginal_private_mib": 26.693359375,
+      "stop_reason": null,
+      "recovered_rss_mib": 103.4453125
+    },
+    {
+      "workload": "react",
+      "n": 10,
+      "marginal_rss_mib": 31.959375,
+      "marginal_private_mib": 32.01328125,
+      "stop_reason": null,
+      "recovered_rss_mib": 120.77734375
+    }
+  ],
+  "browserscan": {
+    "before": [
+      {
+        "nav": 2248.642100006691,
+        "capture": 513.8184999959776,
+        "errors": []
+      },
+      {
+        "nav": 444.0305000025546,
+        "capture": 342.9774999967776,
+        "errors": []
+      },
+      {
+        "nav": 455.653800003347,
+        "capture": 331.1547000048449,
+        "errors": []
+      }
+    ],
+    "after": [
+      {
+        "nav": 1787.469599992619,
+        "capture": 593.8845999917248,
+        "errors": []
+      },
+      {
+        "nav": 432.26220000360627,
+        "capture": 352.5364999950398,
+        "errors": []
+      },
+      {
+        "nav": 420.95050000352785,
+        "capture": 341.19700000155717,
+        "errors": []
+      }
+    ]
+  },
+  "github_navigation": [
+    {
+      "url": "https://github.com/moreveal/hash-resolver",
+      "nav": 11504.2695000011,
+      "naverror": null,
+      "errors": [],
+      "console": []
+    },
+    {
+      "url": "https://github.com/moreveal",
+      "nav": 12054.92760000925,
+      "naverror": null,
+      "errors": [],
+      "console": []
+    }
+  ],
+  "export": {
+    "fallback": false,
+    "article": "\ud83d\udd0d Hash Resolver\n\nResolve hashed API names by performing a hasher function rather than trying to guess it. Two approaches are used to resolve hashed symbols:\n\nEmulation using Unicorn Engine\nRuntime execution - stopping at OEP and running individual, especially complex, non-autonomous functions\n\nDesi",
+    "files": [
+      "assets",
+      "assets",
+      "cli",
+      "cli",
+      "hash_resolver",
+      "hash_resolver",
+      "ida_plugin",
+      "ida_plugin",
+      "resources",
+      "resources",
+      "scripts",
+      "scripts",
+      "tests",
+      "tests",
+      ".gitignore",
+      ".gitignore",
+      "CONTRIBUTING.md",
+      "CONTRIBUTING.md",
+      "LICENSE",
+      "LICENSE"
+    ]
+  },
+  "profile_export": {
+    "navigation_ms": 14811.73,
+    "capture_ms": 10885.83,
+    "state": {
+      "fallback": false,
+      "article": "\ud83d\udc4b Hi there\n\nI'm a software engineer working mostly with Python and C++.\n\nI build backend systems, automation, developer tools, integrations, and other software that usually involves a bit more than just wiring a few APIs together.\n\nA lot of my background is in reverse engineering and security resea",
+      "files": []
+    }
+  }
+}

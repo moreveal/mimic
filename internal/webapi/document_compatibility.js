@@ -6,7 +6,7 @@ const fragmentOwnerDocuments = new WeakMap();
 function wrapDocumentNode(data) {
   if(data.nodeId===host.documentRootID())return document;
   let value=documentWrappers.get(data.nodeId);
-  if(!value){value=Object.create(Document.prototype);elementData.set(value,data);documentWrappers.set(data.nodeId,value)}
+  if(!value){value=Object.create((data.contentType?globalThis.XMLDocument:Document).prototype);elementData.set(value,data);documentWrappers.set(data.nodeId,value)}
   return value;
 }
 {
@@ -14,6 +14,13 @@ function wrapDocumentNode(data) {
   const accessor=(prototype,name,get,set)=>{markNative(get,name,'get ');markNative(set,name,'set ');Object.defineProperty(prototype,name,{get,set,enumerable:true,configurable:true})};
   const docID=value=>value===document?host.documentRootID():elementSlot(value)?.nodeId;
   const validDocument=value=>{if(!(value instanceof Document))throw new TypeError('Illegal invocation');return docID(value)};
+  const contentType=value=>elementSlot(value)?.contentType||'text/html';
+  const xmlName=name=>{if(!/^[\p{L}_:][\p{L}\p{N}_.:\-\u00b7\p{M}]*$/u.test(name))throw new DOMException('Invalid XML name','InvalidCharacterError');return name};
+  const qualifiedName=(namespace,name)=>{
+    xmlName(name);const parts=name.split(':'),prefix=parts.length>1?parts[0]:null,local=parts.length>1?parts[1]:name;
+    if(prefix&&!namespace||prefix==='xml'&&namespace!=='http://www.w3.org/XML/1998/namespace'||(name==='xmlns'||prefix==='xmlns')&&namespace!=='http://www.w3.org/2000/xmlns/'||namespace==='http://www.w3.org/2000/xmlns/'&&name!=='xmlns'&&prefix!=='xmlns')throw new DOMException('Invalid namespace','NamespaceError');
+    return prefix?prefix+':'+local:local;
+  };
   const ownerOf=value=>{
     if(value instanceof Document)return null;
     const slot=elementSlot(value);
@@ -40,9 +47,22 @@ function wrapDocumentNode(data) {
   };
   for(const name of ['createElement','createElementNS','createTextNode','createComment','createDocumentFragment']){
     const original=Document.prototype[name];
-    member(Document.prototype,name,function(...args){validDocument(this);return adopt(original.apply(this,args),this)});
+    member(Document.prototype,name,function(...args){validDocument(this);
+      if(contentType(this)!=='text/html'&&(name==='createElement'||name==='createElementNS')){
+        if(args.length<(name==='createElement'?1:2))throw new TypeError('Not enough arguments');
+        const namespace=name==='createElement'?(contentType(this)==='application/xhtml+xml'?'http://www.w3.org/1999/xhtml':''):(args[0]==null?'':String(args[0]));
+        const local=name==='createElement'?xmlName(String(args[0])):qualifiedName(namespace,String(args[1]));
+        return wrap(host.createDocumentElement(docID(this),namespace,local));
+      }
+      return adopt(original.apply(this,args),this)});
   }
-  for(const name of ['documentElement','head','body'])accessor(Document.prototype,name,function(){validDocument(this);return this.querySelector(name==='documentElement'?'html':name)});
+  accessor(Document.prototype,'documentElement',function(){validDocument(this);return Array.from(this.childNodes).find(node=>node.nodeType===1)||null});
+  accessor(Document.prototype,'firstChild',function(){validDocument(this);return this.childNodes.item(0)});
+  for(const name of ['head','body'])accessor(Document.prototype,name,function(){validDocument(this);const root=this.documentElement;if(root?.namespaceURI!=='http://www.w3.org/1999/xhtml'||root.localName!=='html')return null;return Array.from(root.children).find(node=>node.namespaceURI==='http://www.w3.org/1999/xhtml'&&(node.localName===name||name==='body'&&node.localName==='frameset'))||null});
+  const tagName=Object.getOwnPropertyDescriptor(Element.prototype,'tagName').get;
+  accessor(Element.prototype,'tagName',function(){return elementSlot(this)?.qualifiedName||tagName.call(this)});
+  accessor(Element.prototype,'localName',function(){const name=elementSlot(this)?.qualifiedName;return name?name.split(':').at(-1):tagName.call(this).toLowerCase()});
+  accessor(Element.prototype,'prefix',function(){const name=elementSlot(this)?.qualifiedName;return name?.includes(':')?name.split(':')[0]:null});
   for(const prototype of [Document.prototype,Element.prototype])member(prototype,'getElementsByTagName',function(name){
     if(!(this instanceof Document)&&!(this instanceof Element))throw new TypeError('Illegal invocation');
     name=String(name);const lower=name.toLowerCase(),root=this;
@@ -56,7 +76,7 @@ function wrapDocumentNode(data) {
   accessor(Document.prototype,'readyState',function(){validDocument(this);return this===document?ready.call(this):'complete'});
   accessor(Document.prototype,'compatMode',function(){validDocument(this);return this===document&&!Array.from(this.childNodes).some(node=>node.nodeType===10)?'BackCompat':'CSS1Compat'});
   accessor(Document.prototype,'doctype',function(){validDocument(this);return Array.from(this.childNodes).find(node=>node.nodeType===10)||null});
-  accessor(Document.prototype,'contentType',function(){validDocument(this);return 'text/html'});
+  accessor(Document.prototype,'contentType',function(){validDocument(this);return contentType(this)});
   for(const name of ['characterSet','charset','inputEncoding'])accessor(Document.prototype,name,function(){validDocument(this);return 'UTF-8'});
   const current=Object.getOwnPropertyDescriptor(Document.prototype,'currentScript').get;
   accessor(Document.prototype,'currentScript',function(){validDocument(this);return this===document?current.call(this):null});
@@ -66,11 +86,18 @@ function wrapDocumentNode(data) {
   class DOMImplementation {
     constructor(token){if(token!==hostToken)throw new TypeError('Illegal constructor');implSlots.add(this)}
     createHTMLDocument(title){if(!implSlots.has(this))throw new TypeError('Illegal invocation');return wrap(host.createHTMLDocument(...(title!==undefined?[String(title)]:[])))}
+    createDocument(namespace,name,doctype=null){
+      if(!implSlots.has(this))throw new TypeError('Illegal invocation');if(arguments.length<2)throw new TypeError('Not enough arguments');
+      namespace=namespace==null?'':String(namespace);name=String(name);
+      if(doctype!==null&&!(doctype instanceof globalThis.DocumentType))throw new TypeError('Expected DocumentType');
+      if(name)name=qualifiedName(namespace,name);
+      const result=wrap(host.createXMLDocument(namespace,name));if(doctype)result.insertBefore(doctype,result.firstChild);return result;
+    }
     hasFeature(){if(!implSlots.has(this))throw new TypeError('Illegal invocation');return true}
   }
   Object.defineProperty(DOMImplementation.prototype,Symbol.toStringTag,{value:'DOMImplementation',configurable:true});
   markNative(DOMImplementation,'DOMImplementation');
-  for(const name of ['createHTMLDocument','hasFeature'])markNative(DOMImplementation.prototype[name],name);
+  for(const name of ['createHTMLDocument','createDocument','hasFeature'])markNative(DOMImplementation.prototype[name],name);
   Object.defineProperty(globalThis,'DOMImplementation',{value:DOMImplementation,writable:true,configurable:true});
   accessor(Document.prototype,'implementation',function(){validDocument(this);let value=documentImplementations.get(this);if(!value){value=new DOMImplementation(hostToken);documentImplementations.set(this,value)}return value});
   member(Document.prototype,'adoptNode',function(node){validDocument(this);if(!(node instanceof Node))throw new TypeError('Expected a Node');if(node instanceof Document||node instanceof ShadowRoot)throw new DOMException('Node cannot be adopted','NotSupportedError');if(node.parentNode)node.parentNode.removeChild(node);return adopt(node,this)});

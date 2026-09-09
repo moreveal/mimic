@@ -1,0 +1,132 @@
+{
+  "null": {
+    "tag": "[object XMLDocument]",
+    "ctor": "XMLDocument",
+    "type": "application/xml",
+    "root": [
+      "Root",
+      "Root",
+      null,
+      null
+    ],
+    "element": [
+      "MiXeD",
+      "MiXeD",
+      null
+    ],
+    "url": "about:blank",
+    "ready": "complete",
+    "head": null,
+    "body": null,
+    "view": null,
+    "html": "<Root/>"
+  },
+  "": {
+    "tag": "[object XMLDocument]",
+    "ctor": "XMLDocument",
+    "type": "application/xml",
+    "root": [
+      "Root",
+      "Root",
+      null,
+      null
+    ],
+    "element": [
+      "MiXeD",
+      "MiXeD",
+      null
+    ],
+    "url": "about:blank",
+    "ready": "complete",
+    "head": null,
+    "body": null,
+    "view": null,
+    "html": "<Root/>"
+  },
+  "urn:test": {
+    "tag": "[object XMLDocument]",
+    "ctor": "XMLDocument",
+    "type": "application/xml",
+    "root": [
+      "Root",
+      "Root",
+      null,
+      "urn:test"
+    ],
+    "element": [
+      "MiXeD",
+      "MiXeD",
+      null
+    ],
+    "url": "about:blank",
+    "ready": "complete",
+    "head": null,
+    "body": null,
+    "view": null,
+    "html": "<Root xmlns=\"urn:test\"/>"
+  },
+  "http://www.w3.org/1999/xhtml": {
+    "tag": "[object XMLDocument]",
+    "ctor": "XMLDocument",
+    "type": "application/xhtml+xml",
+    "root": [
+      "Root",
+      "Root",
+      null,
+      "http://www.w3.org/1999/xhtml"
+    ],
+    "element": [
+      "MiXeD",
+      "MiXeD",
+      "http://www.w3.org/1999/xhtml"
+    ],
+    "url": "about:blank",
+    "ready": "complete",
+    "head": null,
+    "body": null,
+    "view": null,
+    "html": "<Root xmlns=\"http://www.w3.org/1999/xhtml\"></Root>"
+  },
+  "http://www.w3.org/2000/svg": {
+    "tag": "[object XMLDocument]",
+    "ctor": "XMLDocument",
+    "type": "image/svg+xml",
+    "root": [
+      "Root",
+      "Root",
+      null,
+      "http://www.w3.org/2000/svg"
+    ],
+    "element": [
+      "MiXeD",
+      "MiXeD",
+      null
+    ],
+    "url": "about:blank",
+    "ready": "complete",
+    "head": null,
+    "body": null,
+    "view": null,
+    "html": "<Root xmlns=\"http://www.w3.org/2000/svg\"/>"
+  },
+  "errors": [
+    "TypeError",
+    "TypeError",
+    "NamespaceError",
+    "a:b",
+    "InvalidCharacterError",
+    null,
+    "NamespaceError",
+    "NamespaceError"
+  ],
+  "modal": [
+    false,
+    "InvalidStateError",
+    true,
+    false,
+    true,
+    true,
+    true,
+    false
+  ]
+}

@@ -41,3 +41,75 @@ func TestInertHTMLDocumentOwnershipChrome152(t *testing.T) {
 		t.Fatalf("inert document semantics: %v %v", value, err)
 	}
 }
+
+func TestXMLDocumentFactoryChrome152(t *testing.T) {
+	b, err := New(v8engine.Factory{}, chrome152.New())
+	if err != nil {
+		t.Fatal(err)
+	}
+	c := b.NewContext()
+	defer c.Close()
+	p, err := c.NewPage()
+	if err != nil {
+		t.Fatal(err)
+	}
+	value, err := p.Evaluate(context.Background(), `(()=>{
+ const impl=document.implementation,d=impl.createDocument('http://www.w3.org/1999/xhtml','html',null),body=d.createElement('body');
+ d.documentElement.appendChild(body);body.appendChild(d.createElement('MiXeD'));
+ const x=impl.createDocument('urn:test','p:Root',null),child=x.createElement('Case');x.documentElement.appendChild(child);
+ const checks=[d instanceof XMLDocument,d instanceof Document,d.contentType==='application/xhtml+xml',d.body===body,d.head===null,d.defaultView===null,d.URL==='about:blank',d.readyState==='complete',body.firstChild.localName==='MiXeD',body.ownerDocument===d,x.contentType==='application/xml',x.documentElement.localName==='Root',x.documentElement.prefix==='p',x.documentElement.nodeName==='p:Root',child.localName==='Case',child.namespaceURI===null,child.ownerDocument===x,child.isConnected,impl.createDocument(null,'',null).documentElement===null];
+ for(const [args,want] of [[[],'TypeError'],[[null,'a:b'],'NamespaceError'],[['urn:x','a b'],'InvalidCharacterError']]){try{impl.createDocument(...args);checks.push(false)}catch(e){checks.push(e.name===want)}}
+ document.body.appendChild(child);checks.push(child.ownerDocument===document,child===document.body.lastChild);
+ return checks.every(Boolean)?'ok':JSON.stringify(checks);
+})()`)
+	if err != nil || value != "ok" {
+		t.Fatalf("XML factory: %v %v", value, err)
+	}
+}
+
+func TestDialogModalSelectorStateChrome152(t *testing.T) {
+	b, err := New(v8engine.Factory{}, chrome152.New())
+	if err != nil {
+		t.Fatal(err)
+	}
+	c := b.NewContext()
+	defer c.Close()
+	p, err := c.NewPage()
+	if err != nil {
+		t.Fatal(err)
+	}
+	value, err := p.Evaluate(context.Background(), `(()=>{
+ const d=document.createElement('dialog'),out=[d.matches(':modal')];try{d.showModal()}catch(e){out.push(e.name)}
+ document.body.append(d);d.show();out.push(d.open,d.matches(':modal'));d.close();d.showModal();out.push(d.open,d.matches(':modal'));
+ d.removeAttribute('open');out.push(d.matches(':modal'));d.remove();out.push(d.matches(':modal'));document.body.append(d);out.push(d.matches(':modal'));
+ return JSON.stringify(out);
+})()`)
+	if err != nil || value != `[false,"InvalidStateError",true,false,true,true,true,false,false]` {
+		t.Fatalf("modal state: %v %v", value, err)
+	}
+}
+
+func TestGetElementByIDLiteralOrderAndRootBoundaries(t *testing.T) {
+	b, err := New(v8engine.Factory{}, chrome152.New())
+	if err != nil {
+		t.Fatal(err)
+	}
+	c := b.NewContext()
+	defer c.Close()
+	p, err := c.NewPage()
+	if err != nil {
+		t.Fatal(err)
+	}
+	value, err := p.Evaluate(context.Background(), `(()=>{
+ const id='a:b [c], d',a=document.createElement('i'),b=document.createElement('b');a.id=b.id=id;document.body.append(a,b);
+ const checks=[document.getElementById(id)===a,document.getElementById('')===null];
+ document.body.insertBefore(b,a);checks.push(document.getElementById(id)===b);b.remove();checks.push(document.getElementById(id)===a);
+ const d=document.implementation.createHTMLDocument();d.body.append(b);checks.push(d.getElementById(id)===b,document.getElementById(id)===a);
+ const f=document.createDocumentFragment();f.append(a);checks.push(f.getElementById(id)===a,document.getElementById(id)===null);
+ const t=document.createElement('template');t.innerHTML='<i id="hidden"></i>';document.body.append(t);checks.push(document.getElementById('hidden')===null,t.content.getElementById('hidden')!==null);
+ return checks.every(Boolean)?'ok':JSON.stringify(checks);
+})()`)
+	if err != nil || value != "ok" {
+		t.Fatalf("ID lookup: %v %v", value, err)
+	}
+}
