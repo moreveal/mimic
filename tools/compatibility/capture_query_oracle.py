@@ -48,9 +48,14 @@ async def main():
     await call('Fetch.enable',{'patterns':[{'urlPattern':'http://mimic-test.localhost/*'}]},session)
     await call('Page.navigate',{'url':'http://mimic-test.localhost/'},session)
    fixture=pathlib.Path(sys.argv[1] if len(sys.argv)>1 else 'internal/browser/testdata/webgl_capabilities_oracle.js')
-   value=await asyncio.wait_for(call('Runtime.evaluate',{'expression':fixture.read_text(encoding='utf8'),'returnByValue':True,'awaitPromise':True},session),30)
+   expression=fixture.read_text(encoding='utf8')
+   if '--worker' in sys.argv:
+    code='onmessage=async()=>{try{postMessage({result:await '+expression+'})}catch(e){postMessage({error:String(e)})}}'
+    expression='new Promise((resolve,reject)=>{const u=URL.createObjectURL(new Blob(['+json.dumps(code)+'])),w=new Worker(u);w.onmessage=e=>{w.terminate();URL.revokeObjectURL(u);e.data.error?reject(Error(e.data.error)):resolve(e.data.result)};w.onerror=e=>{w.terminate();URL.revokeObjectURL(u);reject(Error(e.message))};w.postMessage(null)})'
+   value=await asyncio.wait_for(call('Runtime.evaluate',{'expression':expression,'returnByValue':True,'awaitPromise':True},session),30)
    if 'exceptionDetails' in value:raise RuntimeError(value['exceptionDetails'])
    out={'browser':version['Browser'],'metadata':{'existingBrowser':True,'isolatedBrowserContext':True,'syntheticSecureContext':'--secure-context' in sys.argv,'localHeaderEcho':'--local-echo' in sys.argv,'cookieEcho':'--cookie-echo' in sys.argv,'fixture':str(fixture).replace('\\','/'),'fixtureSHA256':hashlib.sha256(fixture.read_text(encoding='utf8').encode('utf8')).hexdigest(),'fixtureHashNormalization':'LF'},'result':value['result']['value']}
+   out['metadata']['worker']='--worker' in sys.argv
    pathlib.Path(sys.argv[2] if len(sys.argv)>2 else 'compatibility/captures/semantic-checkpoints/webgl-capabilities-chrome152.json').write_text(json.dumps(out,indent=2),encoding='utf8')
    print('Captured',version['Browser'],list(out['result']))
   finally:

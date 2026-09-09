@@ -1,0 +1,144 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/font_collections_oracle.js",
+    "fixtureSHA256": "45bbf1a0bd76bfe9d310b4e728725f9c2602d245e3cf2ada2b13a8ddb34280d5",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "set": [
+      "[object FontFaceSet]",
+      true,
+      0,
+      "loaded",
+      true,
+      true,
+      true
+    ],
+    "constructors": [
+      "TypeError",
+      "TypeError",
+      "TypeError",
+      null
+    ],
+    "defaults": [
+      [
+        "family",
+        "\"Test Family\""
+      ],
+      [
+        "style",
+        "normal"
+      ],
+      [
+        "weight",
+        "normal"
+      ],
+      [
+        "stretch",
+        "normal"
+      ],
+      [
+        "unicodeRange",
+        "U+0-10FFFF"
+      ],
+      [
+        "variant",
+        "normal"
+      ],
+      [
+        "featureSettings",
+        "normal"
+      ],
+      [
+        "variationSettings",
+        "normal"
+      ],
+      [
+        "display",
+        "auto"
+      ],
+      [
+        "ascentOverride",
+        "normal"
+      ],
+      [
+        "descentOverride",
+        "normal"
+      ],
+      [
+        "lineGapOverride",
+        "normal"
+      ],
+      [
+        "sizeAdjust",
+        "100%"
+      ],
+      [
+        "status",
+        "unloaded"
+      ]
+    ],
+    "face": [
+      "[object FontFace]",
+      true,
+      true
+    ],
+    "add": [
+      true,
+      true,
+      true,
+      2,
+      true,
+      [
+        "\"Test Family\"",
+        "Other"
+      ],
+      [
+        true,
+        true
+      ]
+    ],
+    "forEach": [
+      [
+        "\"Test Family\"",
+        true,
+        true,
+        true
+      ],
+      [
+        "Other",
+        true,
+        true,
+        true
+      ]
+    ],
+    "delete": [
+      true,
+      false,
+      1
+    ],
+    "clear": [
+      0,
+      false
+    ],
+    "emptyCheck": [
+      true,
+      true,
+      true,
+      "SyntaxError",
+      "SyntaxError"
+    ],
+    "emptyLoad": 0,
+    "badLoad": "SyntaxError",
+    "binaryStatus": "error",
+    "binaryError": "SyntaxError",
+    "brandRejection": "TypeError"
+  }
+}

@@ -326,3 +326,9 @@ Chrome's reduced Navigator/document view. Worker headers, Fetch/XHR credentials,
 Set-Cookie acceptance and credentialed storage-access metadata share explicit
 request context. See [request storage context](compatibility/request-storage-context.md)
 for the local Chrome oracles and remaining cookie-policy boundaries.
+
+FontFace descriptors and per-document/worker FontFaceSet collections now retain
+canonical state and measured empty-set readiness differences. Font resource
+loading and nonempty-set matching remain explicit unsupported boundaries; see
+[font collections](compatibility/font-collections.md) for the scoped oracles and
+remaining CSS grammar and lifecycle limitations.
