@@ -160,6 +160,22 @@ the OffscreenCanvas constructor is insufficient for this workload. Standalone
 Skia/ANGLE feasibility experiments were not adopted and are not production
 dependencies.
 
+After the observation/state layer was added, the saved replay reached a later
+`vS is not a function` failure. Native inspector scopes identified an escaping
+WebGL `VENDOR` query before the next register-restoration failure. Implementing
+the four Chrome-measured masked WebGL identification strings removed both console
+TypeErrors from that replay; it subsequently reached uncaptured network responses.
+This is a runtime progression checkpoint, not a live clearance result.
+
+A fresh Mimic run on `iroshop.tech/mimic-e2e` then completed both challenge flow
+legs and received `cf_clearance`. Four following navigations sent that cookie
+unchanged but received a network HTTP 403 with `cf-mitigated: challenge`.
+The responses were not local cache hits. The server's reason for rejecting the
+subsequent document is not established by those observations. The 65-second
+capture, response bodies, trace, helper and binary SHA-256 are retained privately
+under `compatibility/private-captures/iroshop-2026-09-09-mimic-observation-state`.
+Neither cookie issuance nor a completed challenge POST alone establishes passage.
+
 A successful native capture of `iroshop.tech/mimic-e2e` is retained locally under
 `compatibility/private-captures/iroshop-2026-09-09-chrome152`: initial challenge
 403, then `cf_clearance` and an application response without the challenge header.
