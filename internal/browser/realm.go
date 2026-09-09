@@ -31,47 +31,49 @@ import (
 )
 
 type Realm struct {
-	profileWrappers        uint64
-	profilePhases          map[string]float64
-	ID                     string
-	activationAt           time.Time
-	inputDispatcher        engine.Value
-	permissionNotifier     engine.Value
-	agent                  ExecutionAgent
-	runtime                engine.Runtime
-	scheduler              *scheduler.Scheduler
-	document               *dom.Document
-	url                    *url.URL
-	token                  string
-	detached               map[int64]dom.Node
-	apiSeen                map[string]bool
-	readyState             string
-	apiTracking            bool
-	workers                map[int64]*DedicatedWorker
-	workerSeq              int64
-	childFrames            map[int64]*Frame
-	retainedFrames         map[string]*Frame
-	crossValues            map[int64]engine.Value
-	crossValueSeq          int64
-	origin                 string
-	currentScript          int64
-	messageReceiver        engine.Value
-	messagePortReceiver    engine.Value
-	frameLoadDispatcher    engine.Value
-	performanceNotifier    engine.Value
-	domQueryCallback       engine.Value
-	shadowSnapshotCallback engine.Value
-	selectorTargetID       int64
-	loadBlockers           int
-	loadRequested          bool
-	loadScheduled          bool
-	loadCompleted          bool
-	loadCallback           func(context.Context)
-	resourceContext        context.Context
-	cancelResources        context.CancelFunc
-	resourceWG             sync.WaitGroup
-	fetchCancels           map[string]context.CancelFunc
-	nativePollQueued       bool
+	profileWrappers         uint64
+	profilePhases           map[string]float64
+	ID                      string
+	activationAt            time.Time
+	inputDispatcher         engine.Value
+	permissionNotifier      engine.Value
+	agent                   ExecutionAgent
+	runtime                 engine.Runtime
+	scheduler               *scheduler.Scheduler
+	document                *dom.Document
+	url                     *url.URL
+	token                   string
+	detached                map[int64]dom.Node
+	apiSeen                 map[string]bool
+	readyState              string
+	apiTracking             bool
+	workers                 map[int64]*DedicatedWorker
+	workerSeq               int64
+	childFrames             map[int64]*Frame
+	retainedFrames          map[string]*Frame
+	crossValues             map[int64]engine.Value
+	crossValueSeq           int64
+	origin                  string
+	currentScript           int64
+	messageReceiver         engine.Value
+	messagePortReceiver     engine.Value
+	frameLoadDispatcher     engine.Value
+	resourceEventDispatcher engine.Value
+	performanceNotifier     engine.Value
+	domQueryCallback        engine.Value
+	shadowSnapshotCallback  engine.Value
+	formSnapshotCallback    engine.Value
+	selectorTargetID        int64
+	loadBlockers            int
+	loadRequested           bool
+	loadScheduled           bool
+	loadCompleted           bool
+	loadCallback            func(context.Context)
+	resourceContext         context.Context
+	cancelResources         context.CancelFunc
+	resourceWG              sync.WaitGroup
+	fetchCancels            map[string]context.CancelFunc
+	nativePollQueued        bool
 }
 
 // documentURL is the URL observed by this realm. For the top-level realm it
@@ -182,6 +184,17 @@ func (r *Realm) checkpoint(ctx context.Context) error {
 		})
 	}
 	return nil
+}
+
+// A classic script's cleanup checkpoint runs before restoring currentScript.
+// Promise reactions at that checkpoint still observe the executing script in
+// Chrome; subsequent tasks (including its load event) must not observe it.
+func (r *Realm) evaluateClassicScript(ctx context.Context, source, name string, scriptID int64) error {
+	previous := r.currentScript
+	r.currentScript = scriptID
+	defer func() { r.currentScript = previous }()
+	_, evalErr := r.Evaluate(ctx, source, name)
+	return errors.Join(evalErr, r.checkpoint(ctx))
 }
 
 func (r *Realm) Close() error {
@@ -943,6 +956,12 @@ func (r *Realm) install() error {
 		}
 		return nil, nil
 	})
+	host["registerFormSnapshot"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		if len(a) > 0 {
+			r.formSnapshotCallback = a[0]
+		}
+		return nil, nil
+	})
 	host["serializeNodeList"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		encoded, err := json.Marshal(arg(a, 0))
 		if err != nil {
@@ -1387,11 +1406,10 @@ func (r *Realm) install() error {
 		if !p.Environment().Network.CookiesEnabled {
 			return nil, nil
 		}
-		h := http.Header{}
-		h.Add("Set-Cookie", strarg(a, 0))
-		p.ctx.cookies.SetFromResponse(r.documentURL(), h)
+		p.ctx.cookies.SetFromDocument(r.documentURL(), strarg(a, 0))
 		return nil, nil
 	})
+	r.installDocumentCompatibility(host)
 	addStorageHosts(r, host)
 	addCapabilityHosts(r, host)
 	profiling := false
@@ -1477,8 +1495,9 @@ func (r *Realm) install() error {
 	}
 	r.messagePortReceiver = r.runtime.Get("__receiveMessagePort")
 	r.frameLoadDispatcher = r.runtime.Get("__mimicDispatchFrameLoad")
+	r.resourceEventDispatcher = r.runtime.Get("__mimicDispatchResourceEvent")
 	r.performanceNotifier = r.runtime.Get("__mimicNotifyPerformanceObservers")
-	_, err = r.runtime.Eval(context.Background(), `delete globalThis.__mimic;delete globalThis.__mimicUnsupportedProbe;delete globalThis.__receiveFrameMessage;delete globalThis.__receiveMessagePort;delete globalThis.__mimicDispatchFrameLoad;delete globalThis.__mimicNotifyPerformanceObservers`, "mimic:hide-internals")
+	_, err = r.runtime.Eval(context.Background(), `delete globalThis.__mimic;delete globalThis.__mimicUnsupportedProbe;delete globalThis.__receiveFrameMessage;delete globalThis.__receiveMessagePort;delete globalThis.__mimicDispatchFrameLoad;delete globalThis.__mimicDispatchResourceEvent;delete globalThis.__mimicNotifyPerformanceObservers`, "mimic:hide-internals")
 	return err
 }
 
@@ -1511,7 +1530,7 @@ func nodeData(n dom.Node) map[string]any {
 	for k, v := range n.Attributes {
 		attrs[k] = v
 	}
-	return map[string]any{"nodeId": n.ID, "type": n.Type, "tagName": n.TagName, "namespaceURI": n.Namespace, "text": n.Text, "attributes": attrs, "parentId": n.Parent, "children": n.Children}
+	return map[string]any{"nodeId": n.ID, "type": n.Type, "tagName": n.TagName, "namespaceURI": n.Namespace, "text": n.Text, "attributes": attrs, "attributeNames": n.AttributeNames, "parentId": n.Parent, "children": n.Children}
 }
 func nodesData(nodes []dom.Node) []map[string]any {
 	out := make([]map[string]any, 0, len(nodes))
@@ -1790,18 +1809,9 @@ func (r *Realm) hostInsertArgs(a []engine.Value, hasBefore bool) (engine.Value, 
 	}
 	if tag != "SCRIPT" && tag != "IMG" && tag != "LINK" {
 		if tag == "IFRAME" {
-			frame, err := r.ensureChildFrame(childID)
+			_, err := r.ensureChildFrame(childID)
 			if err != nil {
 				return nil, err
-			}
-			if frame != nil && (src == "" || src == "<nil>") {
-				// Creating the browsing context and completing its navigation are
-				// enough for the initial about:blank document. A non-blank child is
-				// dispatched by navigateChildFrame after that document completes.
-				r.scheduler.Post(scheduler.DOM, 0, func(ctx context.Context) error {
-					r.agent.Page().trace.Add(trace.Lifecycle, "iframeOwnerLoad", map[string]any{"frameId": frame.ID, "elementNodeId": childID, "realm": r.ID})
-					return fire(ctx, loadCallback)
-				})
 			}
 			return nil, nil
 		}
@@ -1850,6 +1860,9 @@ func (r *Realm) hostInsertArgs(a []engine.Value, hasBefore bool) (engine.Value, 
 				}
 				return fire(ctx, loadCallback)
 			}
+			if loadErr == nil {
+				loadErr = scriptResponseError(*res)
+			}
 			if loadErr != nil {
 				r.agent.Page().trace.Add(trace.Error, "dynamicScriptLoad", map[string]any{"url": u.String(), "error": loadErr.Error()})
 				return fire(ctx, errorCallback)
@@ -1861,18 +1874,21 @@ func (r *Realm) hostInsertArgs(a []engine.Value, hasBefore bool) (engine.Value, 
 		}
 		if tag == "SCRIPT" && code != "" {
 			r.agent.Page().trace.Add(trace.JS, "scriptStart", map[string]any{"url": name, "realm": r.ID, "dynamic": true})
-			r.currentScript = childID
-			_, err := r.Evaluate(ctx, code, name)
-			r.currentScript = 0
+			err := r.evaluateClassicScript(ctx, code, name, childID)
 			if err != nil {
 				r.agent.Page().trace.Add(trace.Error, "dynamicScriptExecution", map[string]any{"url": name, "error": err.Error()})
 				r.agent.Page().trace.Add(trace.JS, "scriptEnd", map[string]any{"url": name, "realm": r.ID, "dynamic": true, "error": err.Error()})
+				if src == "" || src == "<nil>" {
+					return nil
+				}
 				return fire(ctx, errorCallback)
 			}
 			r.agent.Page().trace.Add(trace.JS, "scriptEnd", map[string]any{"url": name, "realm": r.ID, "dynamic": true})
-			if err := r.checkpoint(ctx); err != nil {
-				return err
-			}
+		}
+		// Inline classic scripts have no fetched resource whose completion
+		// would dispatch a load event (including when execution throws).
+		if tag == "SCRIPT" && (src == "" || src == "<nil>") {
+			return nil
 		}
 		return fire(ctx, loadCallback)
 	}

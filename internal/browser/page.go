@@ -338,8 +338,18 @@ func (p *Page) navigate(ctx context.Context, raw, loaderID string) error {
 				request.Headers.Set("Origin", originOf(u.String()))
 			}
 			rr, err := p.loader.Load(ctx, request)
+			if err == nil {
+				err = scriptResponseError(rr)
+			}
 			if err != nil {
 				p.trace.Add(trace.Error, "scriptLoad", map[string]any{"url": su.String(), "error": err.Error()})
+				scriptID := s.ID
+				realm.scheduler.Post(scheduler.DOM, 0, func(eventContext context.Context) error {
+					return realm.dispatchResourceEvent(eventContext, scriptID, "error")
+				})
+				if eventErr := realm.RunReady(ctx); eventErr != nil {
+					p.trace.Add(trace.Error, "scriptErrorEvent", map[string]any{"url": su.String(), "error": eventErr.Error()})
+				}
 				continue
 			}
 			code = string(rr.Body)
@@ -361,9 +371,7 @@ func (p *Page) navigate(ctx context.Context, raw, loaderID string) error {
 			scriptCode, scriptName, scriptID := code, name, s.ID
 			realm.scheduler.Post(scheduler.DOM, 0, func(taskContext context.Context) error {
 				p.trace.Add(trace.JS, "scriptStart", map[string]any{"url": scriptName, "realm": realm.ID})
-				realm.currentScript = scriptID
-				_, evalErr := realm.Evaluate(taskContext, scriptCode, scriptName)
-				realm.currentScript = 0
+				evalErr := realm.evaluateClassicScript(taskContext, scriptCode, scriptName, scriptID)
 				if evalErr != nil {
 					p.trace.Add(trace.Exception, "script", map[string]any{"url": scriptName, "error": evalErr.Error()})
 					p.trace.Add(trace.JS, "scriptEnd", map[string]any{"url": scriptName, "realm": realm.ID, "error": evalErr.Error()})
@@ -398,6 +406,9 @@ func (p *Page) navigate(ctx context.Context, raw, loaderID string) error {
 				// module-evaluation task has completed. Network work belongs to the
 				// document realm and remains live until that realm is discarded.
 				response, loadErr := p.loader.Load(realm.resourceContext, request)
+				if loadErr == nil {
+					loadErr = scriptResponseError(response)
+				}
 				if loadErr != nil {
 					return "", "", loadErr
 				}

@@ -14,6 +14,10 @@ without bundling CSS declaration grammar/MDN property data. The build does not p
 upstream algorithms. Third-party copyright and license notices are in
 `THIRD_PARTY_LICENSES.txt`.
 
+The bundle also exports CSS-tree's full stylesheet parser and serializer for
+constructed CSSStyleSheet rules. It shares tokenizer/AST modules with selectors;
+the CSS property validation database is still excluded.
+
 The runtime adapter reads canonical Mimic node wrappers and host state. It retains
 no second DOM. A synchronous query owns a temporary lazy memo of primitive reads;
 AST and predicate caches are bounded and realm-local, with weak scope keys.

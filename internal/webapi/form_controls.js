@@ -92,4 +92,18 @@
     if(control.localName==='textarea'){const s=textareaState(control);s.dirty=false;s.value=''}
     if(control.localName==='select'){for(const option of optionList(control)){const s=optionState(option);s.dirty=false;s.selected=false}selectState(control).noSelection=false}
   }},writable:true});
+  // Export is an immutable projection of these same dirty-state slots. Never
+  // rewrite default attributes or call public value/checked setters to take it.
+  host.registerFormSnapshot(()=>{
+    const result=[];
+    for(const element of elementWrappers.values()){
+      const slot=elementSlot(element);if(!slot)continue;
+      const record={nodeID:slot.nodeId},input=inputs.get(element),textarea=textareas.get(element),option=options.get(element);
+      if(input){if(input.dirty&&mode(element)==='value')record.value=inputValue(element);if(input.dirtyChecked)record.checked=input.checked}
+      if(textarea?.dirty)record.value=textarea.value;
+      if(option?.dirty){const owner=selectOwner(element);record.selected=owner?selection(owner).selected.includes(element):option.selected}
+      if(Object.keys(record).length>1)result.push(record);
+    }
+    return JSON.stringify(result);
+  });
 }

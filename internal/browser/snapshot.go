@@ -42,7 +42,11 @@ func (p *Page) CaptureSnapshot(ctx context.Context) (*Snapshot, error) {
 	if err != nil {
 		return nil, err
 	}
-	root, err := d.SnapshotTree(d.Root().ID, shadows)
+	forms, err := p.Top.Realm.FormSnapshots(ctx)
+	if err != nil {
+		return nil, err
+	}
+	root, err := d.SnapshotTreeWithFormState(d.Root().ID, shadows, forms)
 	if err != nil {
 		return nil, err
 	}
@@ -133,6 +137,12 @@ func (b *snapshotBuilder) asset(raw string, base *url.URL, css bool) string {
 	if len(ext) > 10 || strings.ContainsAny(ext, "\\/:") {
 		ext = ""
 	}
+	// Dynamic resource endpoints need the response's media type in a portable
+	// filename. Static servers cannot infer SVG image MIME from a .php URL.
+	mediaType := strings.ToLower(strings.TrimSpace(strings.Split(response.Headers.Get("Content-Type"), ";")[0]))
+	if mediaExt := snapshotMediaExtensions[mediaType]; mediaExt != "" {
+		ext = mediaExt
+	}
 	css = css || strings.Contains(response.Headers.Get("Content-Type"), "text/css")
 	if css {
 		ext = ".css"
@@ -154,6 +164,13 @@ func (b *snapshotBuilder) asset(raw string, base *url.URL, css bool) string {
 	return name
 }
 
+var snapshotMediaExtensions = map[string]string{
+	"image/svg+xml": ".svg", "image/png": ".png", "image/jpeg": ".jpg",
+	"image/gif": ".gif", "image/webp": ".webp", "image/avif": ".avif",
+	"image/x-icon": ".ico", "image/vnd.microsoft.icon": ".ico",
+	"font/woff": ".woff", "font/woff2": ".woff2", "font/ttf": ".ttf", "font/otf": ".otf",
+}
+
 // Match ordinary CSS url() and quoted @import forms. Exotic escaped CSS URLs
 // are outside the current snapshot contract.
 var snapshotCSSURL = regexp.MustCompile(`(?i)url\(\s*(?:"([^"\r\n]*)"|'([^'\r\n]*)'|([^)'"\s]*))\s*\)|@import\s+(?:"([^"\r\n]*)"|'([^'\r\n]*)')`)
@@ -167,6 +184,12 @@ func (b *snapshotBuilder) rewriteCSS(source string, base *url.URL, external bool
 				raw = v
 				break
 			}
+		}
+		// Self-contained URLs need no relocation. Preserve their CSS quoting:
+		// an SVG data URL may contain literal double quotes inside a single-
+		// quoted url(), which would become invalid if blindly wrapped in "".
+		if strings.HasPrefix(strings.ToLower(strings.TrimSpace(raw)), "data:") || strings.HasPrefix(strings.TrimSpace(raw), "#") {
+			return match
 		}
 		imported := strings.HasPrefix(strings.ToLower(match), "@import")
 		name := b.asset(raw, base, imported)

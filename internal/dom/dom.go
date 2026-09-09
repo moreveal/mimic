@@ -21,11 +21,13 @@ type Node struct {
 	// boundary (unpaired UTF-16 surrogates). Text is its scalar projection.
 	TextJSON             string            `json:"-"`
 	Attributes           map[string]string `json:"attributes,omitempty"`
+	AttributeNames       []string          `json:"attributeNames,omitempty"`
 	Parent               int64             `json:"parentId,omitempty"`
 	Children             []int64           `json:"children,omitempty"`
 	TemplateContent      int64             `json:"templateContent,omitempty"`
 	TemplateHost         int64             `json:"templateHost,omitempty"`
 	ScriptAlreadyStarted bool              `json:"-"`
+	OwnerDocument        int64             `json:"ownerDocumentId,omitempty"`
 }
 type Document struct {
 	mu               sync.RWMutex
@@ -62,7 +64,7 @@ func Parse(source string) (*Document, error) {
 				node.Namespace = "http://www.w3.org/1999/xhtml"
 			}
 			for _, a := range n.Attr {
-				node.Attributes[a.Key] = a.Val
+				node.setAttribute(a.Key, a.Val)
 			}
 		case html.TextNode:
 			node.Type = "text"
@@ -72,7 +74,7 @@ func Parse(source string) (*Document, error) {
 		case html.DoctypeNode:
 			node.Type, node.TagName = "doctype", n.Data
 			for _, a := range n.Attr {
-				node.Attributes[a.Key] = a.Val
+				node.setAttribute(a.Key, a.Val)
 			}
 		default:
 			node.Type = "other"
@@ -118,6 +120,7 @@ func (d *Document) Get(id int64) (Node, bool) {
 		return Node{}, false
 	}
 	copy := *n
+	copy.AttributeNames = append([]string(nil), n.AttributeNames...)
 	copy.Children = append([]int64(nil), n.Children...)
 	return copy, true
 }
@@ -174,7 +177,7 @@ func (d *Document) SetAttribute(id int64, name, value string) error {
 	if n.Attributes == nil {
 		n.Attributes = map[string]string{}
 	}
-	n.Attributes[strings.ToLower(name)] = value
+	n.setAttribute(strings.ToLower(name), value)
 	return nil
 }
 
@@ -218,7 +221,7 @@ func (d *Document) ToggleToken(id int64, attribute, token string, force int) (bo
 	if n.Attributes == nil {
 		n.Attributes = map[string]string{}
 	}
-	n.Attributes[attribute] = strings.Join(result, " ")
+	n.setAttribute(attribute, strings.Join(result, " "))
 	return add, nil
 }
 
@@ -237,7 +240,14 @@ func (d *Document) RemoveAttribute(id int64, name string) error {
 	if n == nil || n.Type != "element" {
 		return fmt.Errorf("element node %d does not exist", id)
 	}
-	delete(n.Attributes, strings.ToLower(name))
+	name = strings.ToLower(name)
+	delete(n.Attributes, name)
+	for i, item := range n.AttributeNames {
+		if item == name {
+			n.AttributeNames = append(n.AttributeNames[:i], n.AttributeNames[i+1:]...)
+			break
+		}
+	}
 	return nil
 }
 func (d *Document) Find(selector string) (Node, bool) {
@@ -281,6 +291,7 @@ func (d *Document) FindWithin(parent int64, selector string) (Node, bool) {
 		if found, ok := visit(child); ok {
 			copy := *found
 			copy.Attributes = cloneAttributes(found.Attributes)
+			copy.AttributeNames = append([]string(nil), found.AttributeNames...)
 			copy.Children = append([]int64(nil), found.Children...)
 			return copy, true
 		}
@@ -310,6 +321,7 @@ func (d *Document) findAllWithin(parent int64, selector string) []Node {
 		if d.matchesSelector(n, selector) {
 			copy := *n
 			copy.Attributes = cloneAttributes(n.Attributes)
+			copy.AttributeNames = append([]string(nil), n.AttributeNames...)
 			copy.Children = append([]int64(nil), n.Children...)
 			out = append(out, copy)
 		}
@@ -374,6 +386,7 @@ func (d *Document) FindAllByTagName(tag string) []Node {
 		}
 		copy := *n
 		copy.Attributes = cloneAttributes(n.Attributes)
+		copy.AttributeNames = append([]string(nil), n.AttributeNames...)
 		copy.Children = append([]int64(nil), n.Children...)
 		out = append(out, copy)
 	}
@@ -387,6 +400,18 @@ func cloneAttributes(in map[string]string) map[string]string {
 	}
 	return out
 }
+
+// Attribute values are indexed for lookup, while the ordered names preserve
+// parser/insertion order for DOM enumeration and HTML serialization.
+func (n *Node) setAttribute(name, value string) {
+	if n.Attributes == nil {
+		n.Attributes = map[string]string{}
+	}
+	if _, exists := n.Attributes[name]; !exists {
+		n.AttributeNames = append(n.AttributeNames, name)
+	}
+	n.Attributes[name] = value
+}
 func (d *Document) AppendElement(parent int64, tag string, attrs map[string]string) (Node, error) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
@@ -395,6 +420,10 @@ func (d *Document) AppendElement(parent int64, tag string, attrs map[string]stri
 	}
 	d.next++
 	n := &Node{ID: d.next, Type: "element", TagName: strings.ToUpper(tag), Attributes: attrs, Parent: parent}
+	for name := range attrs {
+		n.AttributeNames = append(n.AttributeNames, name)
+	}
+	sort.Strings(n.AttributeNames) // This internal map-based caller has no source order.
 	d.nodes[n.ID] = n
 	d.hasFrameElements = d.hasFrameElements || n.TagName == "IFRAME"
 	d.nodes[parent].Children = append(d.nodes[parent].Children, n.ID)
@@ -447,6 +476,7 @@ func (d *Document) InsertNode(parent, child, before int64) error {
 		}
 	}
 	c.Parent = parent
+	d.adoptNodeLocked(child, d.ownerDocumentLocked(parent))
 	if before == 0 {
 		p.Children = append(p.Children, child)
 		return nil
@@ -623,7 +653,7 @@ func (d *Document) SetTextContent(id int64, value string) error {
 	n.Children = nil
 	if value != "" {
 		d.next++
-		text := &Node{ID: d.next, Type: "text", Text: value, Parent: id, Attributes: map[string]string{}}
+		text := &Node{ID: d.next, Type: "text", Text: value, Parent: id, OwnerDocument: d.ownerDocumentLocked(id), Attributes: map[string]string{}}
 		d.nodes[text.ID] = text
 		n.Children = append(n.Children, text.ID)
 	}
@@ -666,12 +696,7 @@ func (d *Document) htmlNode(id int64) *html.Node {
 		}
 	case "element":
 		out.Type, out.Data, out.DataAtom = html.ElementNode, strings.ToLower(n.TagName), atom.Lookup([]byte(strings.ToLower(n.TagName)))
-		keys := make([]string, 0, len(n.Attributes))
-		for key := range n.Attributes {
-			keys = append(keys, key)
-		}
-		sort.Strings(keys)
-		for _, key := range keys {
+		for _, key := range n.AttributeNames {
 			out.Attr = append(out.Attr, html.Attribute{Key: key, Val: n.Attributes[key]})
 		}
 	case "text":
@@ -731,7 +756,7 @@ func (d *Document) SetInnerHTML(id int64, source string) error {
 	var add func(*html.Node, int64)
 	add = func(raw *html.Node, parentID int64) {
 		d.next++
-		n := &Node{ID: d.next, Parent: parentID, Attributes: map[string]string{}}
+		n := &Node{ID: d.next, Parent: parentID, OwnerDocument: d.ownerDocumentLocked(parentID), Attributes: map[string]string{}}
 		switch raw.Type {
 		case html.ElementNode:
 			n.Type, n.TagName = "element", strings.ToUpper(raw.Data)
@@ -745,7 +770,7 @@ func (d *Document) SetInnerHTML(id int64, source string) error {
 				n.Namespace = "http://www.w3.org/1999/xhtml"
 			}
 			for _, attr := range raw.Attr {
-				n.Attributes[attr.Key] = attr.Val
+				n.setAttribute(attr.Key, attr.Val)
 			}
 		case html.TextNode:
 			n.Type, n.Text = "text", raw.Data

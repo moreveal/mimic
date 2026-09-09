@@ -5,9 +5,54 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"net/url"
 	"strings"
 	"testing"
 )
+
+func TestSnapshotPreservesSelfContainedCSSURLQuoting(t *testing.T) {
+	base, _ := url.Parse("https://example.test/styles/main.css")
+	b := &snapshotBuilder{}
+	for _, source := range []string{
+		`.icon { mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg"><path d="M0 0h20v20z"/></svg>'); }`,
+		`.icon { background: url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg'/>"); }`,
+		`.icon { mask: url('#local-mask'); }`,
+	} {
+		for _, external := range []bool{false, true} {
+			if got := b.rewriteCSS(source, base, external); got != source {
+				t.Fatalf("self-contained CSS changed: %s", got)
+			}
+		}
+	}
+}
+
+func TestSnapshotUsesResponseMediaTypeForDynamicImages(t *testing.T) {
+	const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><path d="M0 0h20v20H0z"/></svg>`
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/image.php" {
+			w.Header().Set("Content-Type", "image/svg+xml; charset=utf-8")
+			fmt.Fprint(w, svg)
+			return
+		}
+		fmt.Fprint(w, `<style>.icon { mask-image: url('/image.php?name=menu'); }</style><span class="icon"></span>`)
+	}))
+	defer ts.Close()
+	p := testPage(t)
+	defer p.Close()
+	if err := p.Navigate(context.Background(), ts.URL); err != nil {
+		t.Fatal(err)
+	}
+	snapshot, err := p.CaptureSnapshot(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	for name, body := range snapshot.Files {
+		if strings.HasSuffix(name, ".svg") && string(body) == svg && strings.Contains(string(snapshot.Files["index.html"]), name) {
+			return
+		}
+	}
+	t.Fatalf("dynamic SVG did not retain its media type: %v", snapshot.Files)
+}
 
 func TestSnapshotPortableAssetsAndCurrentDOM(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

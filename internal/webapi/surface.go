@@ -30,6 +30,21 @@ var templatesCompatibilitySurface string
 //go:embed shadow_serialization.js
 var shadowSerializationSurface string
 
+//go:embed cssom_compatibility.js
+var cssomCompatibilitySurface string
+
+//go:embed traversal_compatibility.js
+var traversalCompatibilitySurface string
+
+//go:embed document_compatibility.js
+var documentCompatibilitySurface string
+
+//go:embed attributes_compatibility.js
+var attributesCompatibilitySurface string
+
+//go:embed events_compatibility.js
+var eventsCompatibilitySurface string
+
 //go:embed selectors_vendor.js
 var selectorsVendorSurface string
 
@@ -121,8 +136,8 @@ func composeSurface(generated, exposureSource string) string {
 	streamPrelude := `{let structuredClone;try{const input=new ArrayBuffer(1),clone=globalThis.structuredClone;if(typeof clone==='function'){const output=clone(input,{transfer:[input]});if(output instanceof ArrayBuffer&&output.byteLength===1&&input.byteLength===0)structuredClone=clone}}catch{}`
 	parts := []string{capabilitySurface, generated, "finalizeBindings();", exposureSource,
 		"installNavigatorCapabilities();", semanticFixups, domCompatibilitySurface,
-		templatesCompatibilitySurface, selectorsVendorSurface, selectorsCompatibilitySurface, streamPrelude,
-		streamsVendorSurface, "}", fetchCompatibilitySurface, formControlsSurface, shadowSerializationSurface, marker}
+		templatesCompatibilitySurface, selectorsVendorSurface, selectorsCompatibilitySurface, cssomCompatibilitySurface, streamPrelude,
+		streamsVendorSurface, "}", fetchCompatibilitySurface, formControlsSurface, traversalCompatibilitySurface, documentCompatibilitySurface, attributesCompatibilitySurface, eventsCompatibilitySurface, shadowSerializationSurface, marker}
 	return strings.Replace(handwrittenSurface, marker, strings.Join(parts, "\n"), 1)
 }
 
