@@ -1,0 +1,84 @@
+{
+  "browser": "152.0.7977.82",
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1280,
+      "height": 720,
+      "deviceScaleFactor": 1
+    },
+    "secureContextState": false,
+    "isolationState": false,
+    "visibilityState": "visible",
+    "hasFocus": true,
+    "window": {
+      "left": 10,
+      "top": 10,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-isolated-context"
+  },
+  "source": "internal/browser/testdata/adjacent_html_lifecycle_oracle.js",
+  "sourceSHA256": "8a4f5ca835eda6b7eec38af4b781965775dabcf25c115b8ad2c2d59dfb4f6aa3",
+  "result": {
+    "synchronous": [
+      "connect:before",
+      "connect:inside",
+      "connect:replacement",
+      "disconnect:old",
+      "disconnect:inside"
+    ],
+    "records": [
+      {
+        "target": "box",
+        "added": [
+          "before"
+        ],
+        "removed": [],
+        "previous": "I",
+        "next": "old"
+      },
+      {
+        "target": "old",
+        "added": [
+          "inside"
+        ],
+        "removed": [],
+        "previous": null,
+        "next": null
+      },
+      {
+        "target": "box",
+        "added": [
+          "replacement"
+        ],
+        "removed": [
+          "old"
+        ],
+        "previous": "before",
+        "next": "B"
+      },
+      {
+        "target": "old",
+        "added": [
+          "EM"
+        ],
+        "removed": [],
+        "previous": "inside",
+        "next": null
+      }
+    ],
+    "oldDetached": true,
+    "oldChildren": 2
+  }
+}

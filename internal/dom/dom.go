@@ -764,22 +764,31 @@ func (d *Document) SetInnerHTML(id int64, source string) error {
 	if parent == nil || parent.Type != "element" {
 		return fmt.Errorf("element node %d does not exist", id)
 	}
-	contextName := strings.ToLower(parent.TagName)
-	if parent.QualifiedName != "" {
-		contextName = parent.QualifiedName
+	contextNode := parent
+	if parent.TemplateContent != 0 {
+		parent = d.nodes[parent.TemplateContent]
 	}
-	contextNode := &html.Node{Type: html.ElementNode, Data: contextName, DataAtom: atom.Lookup([]byte(contextName)), Namespace: parserNamespace(parent.Namespace)}
+	return d.insertHTMLLocked(parent, contextNode, source, 0, true)
+}
+
+// insertHTMLLocked shares fragment parsing and inert script ownership across
+// markup setters. Existing sibling identities are retained for insertion.
+func (d *Document) insertHTMLLocked(parent, contextElement *Node, source string, before int64, replace bool) error {
+	contextName := strings.ToLower(contextElement.TagName)
+	if contextElement.QualifiedName != "" {
+		contextName = contextElement.QualifiedName
+	}
+	contextNode := &html.Node{Type: html.ElementNode, Data: contextName, DataAtom: atom.Lookup([]byte(contextName)), Namespace: parserNamespace(contextElement.Namespace)}
 	fragments, err := html.ParseFragment(strings.NewReader(source), contextNode)
 	if err != nil {
 		return err
 	}
-	if parent.TemplateContent != 0 {
-		parent = d.nodes[parent.TemplateContent]
-	}
-	for _, child := range parent.Children {
-		if detached := d.nodes[child]; detached != nil {
-			detached.Parent = 0
+	previous := append([]int64(nil), parent.Children...)
+	if replace {
+		for _, child := range previous {
+			d.nodes[child].Parent = 0
 		}
+		previous = nil
 	}
 	parent.Children = nil
 	var add func(*html.Node, int64)
@@ -825,6 +834,15 @@ func (d *Document) SetInnerHTML(id int64, source string) error {
 	for _, fragment := range fragments {
 		add(fragment, parent.ID)
 	}
+	inserted := parent.Children
+	index := len(previous)
+	for i, child := range previous {
+		if child == before {
+			index = i
+			break
+		}
+	}
+	parent.Children = append(append(append([]int64(nil), previous[:index]...), inserted...), previous[index:]...)
 	return nil
 }
 func (d *Document) Scripts() []Node {

@@ -1193,6 +1193,18 @@ func (r *Realm) install() error {
 		value, err := r.document.InnerHTML(int64(numarg(a, 0)))
 		return r.val(value), err
 	})
+	host["outerHTML"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		value, err := r.document.OuterHTML(int64(numarg(a, 0)))
+		return r.val(value), err
+	})
+	host["setOuterHTML"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		name, err := r.document.SetOuterHTML(int64(numarg(a, 0)), strarg(a, 1))
+		return r.val(name), err
+	})
+	host["insertAdjacentHTML"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		name, err := r.document.InsertAdjacentHTML(int64(numarg(a, 0)), strarg(a, 1), strarg(a, 2))
+		return r.val(name), err
+	})
 	host["setInnerHTML"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return nil, r.document.SetInnerHTML(int64(numarg(a, 0)), strarg(a, 1))
 	})

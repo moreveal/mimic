@@ -260,6 +260,34 @@ const compatibilityElementState={};
         }finally{reactionDepth--;flushReactions()}
       }});
     }
+    // Markup insertion shares the child-list transaction and CE reaction queue
+    // with ordinary node mutations; the host parser remains the tree authority.
+    const markupMutation=(parent,removed,invoke)=>{
+      if(!parent||mutationDepth||!observers.size&&!definitions.size&&!compatibilityElementState.hasModal?.())return invoke();
+      const before=Array.from(parent.childNodes),prior=new Set(before),entry=removed?nodeSnapshot(removed):null;
+      if(removed)retainRemoved(removed);
+      mutationDepth++;reactionDepth++;
+      try{invoke()}catch(error){reactionDepth--;throw error}finally{mutationDepth--}
+      try{
+        const added=Array.from(parent.childNodes).filter(node=>!prior.has(node));
+        const gone=removed&&removed.parentNode!==parent?[removed]:[];
+        if(added.length||gone.length)queueRecord('childList',parent,{addedNodes:added,removedNodes:gone,previousSibling:added.length?added[0].previousSibling:entry?.previousSibling||null,nextSibling:added.length?added[added.length-1].nextSibling:entry?.nextSibling||null});
+        for(const node of added)insertedReaction(node);
+        if(gone.length)detachedReaction(entry);
+      }finally{reactionDepth--;flushReactions()}
+    };
+    const adjacentHTML=Element.prototype.insertAdjacentHTML;
+    member(Element.prototype,'insertAdjacentHTML',function(position,text){
+      if(arguments.length<2)return adjacentHTML.apply(this,arguments);
+      position=String(position).toLowerCase();text=String(text);
+      const parent=position==='beforebegin'||position==='afterend'?this.parentNode:this;
+      return markupMutation(parent,null,()=>adjacentHTML.call(this,position,text));
+    });
+    const outerHTML=Object.getOwnPropertyDescriptor(Element.prototype,'outerHTML');
+    Object.defineProperty(Element.prototype,'outerHTML',{...outerHTML,set(value){
+      value=value==null?'':String(value);
+      return markupMutation(this.parentNode,this,()=>outerHTML.set.call(this,value));
+    }});
     const convertMutationNodes=values=>{
       const nodes=values.map(value=>value instanceof Node?value:document.createTextNode(String(value)));
       if(nodes.length===1)return nodes[0];
