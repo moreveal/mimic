@@ -317,7 +317,18 @@
   const gpuLimitDefaults={maxTextureDimension1D:8192,maxTextureDimension2D:8192,maxTextureDimension3D:2048,maxTextureArrayLayers:256,maxBindGroups:4,maxBindGroupsPlusVertexBuffers:24,maxBindingsPerBindGroup:1000,maxDynamicUniformBuffersPerPipelineLayout:8,maxDynamicStorageBuffersPerPipelineLayout:4,maxSampledTexturesPerShaderStage:16,maxSamplersPerShaderStage:16,maxStorageBuffersPerShaderStage:8,maxStorageTexturesPerShaderStage:4,maxUniformBuffersPerShaderStage:12,maxUniformBufferBindingSize:65536,maxStorageBufferBindingSize:134217728,minUniformBufferOffsetAlignment:256,minStorageBufferOffsetAlignment:256,maxVertexBuffers:8,maxBufferSize:268435456,maxVertexAttributes:16,maxVertexBufferArrayStride:2048,maxInterStageShaderVariables:16,maxColorAttachments:8,maxColorAttachmentBytesPerSample:32,maxComputeWorkgroupStorageSize:16384,maxComputeInvocationsPerWorkgroup:256,maxComputeWorkgroupSizeX:256,maxComputeWorkgroupSizeY:256,maxComputeWorkgroupSizeZ:64,maxComputeWorkgroupsPerDimension:65535};
   for(const name of Object.keys(gpuLimitDefaults))Object.defineProperty(GPUSupportedLimits.prototype,name,{get:function(){return gpuLimitSlots.get(this)[name]},enumerable:true,configurable:true});
   class GPUAdapter { constructor(info){gpuAdapterSlots.set(this,{info:new GPUAdapterInfo(hostToken,info),features:new GPUSupportedFeatures(hostToken,info.features||[]),limits:new GPUSupportedLimits(hostToken,Object.assign({},gpuLimitDefaults,{maxTextureDimension2D:info.maxTextureSize}))})} get info(){recordAPIAccess('GPUAdapter.info',true);return gpuAdapterSlots.get(this).info} get features(){recordAPIAccess('GPUAdapter.features',true);return gpuAdapterSlots.get(this).features} get limits(){recordAPIAccess('GPUAdapter.limits',true);return gpuAdapterSlots.get(this).limits} get isFallbackAdapter(){recordAPIAccess('GPUAdapter.isFallbackAdapter',true);return false} requestDevice(){recordAPIAccess('GPUAdapter.requestDevice',true);return Promise.resolve(new GPUDevice(this))} }
-  class GPUDevice extends EventTarget { constructor(adapter){super();this.adapterInfo=adapter.info;this.features=new Set(adapter.features);this.limits=adapter.limits;this.queue=Object.freeze({submit(){},onSubmittedWorkDone:()=>Promise.resolve(),writeBuffer(){},writeTexture(){},copyExternalImageToTexture(){}});this.lost=new Promise(()=>{});this.onuncapturederror=null} destroy(){} pushErrorScope(){} popErrorScope(){return Promise.resolve(null)} }
+  const gpuDeviceSlots=new WeakMap();
+  class GPUDevice extends EventTarget {
+    constructor(adapter){super();gpuDeviceSlots.set(this,{adapterInfo:adapter.info,features:new Set(adapter.features),limits:adapter.limits,queue:Object.freeze({submit(){},onSubmittedWorkDone:()=>Promise.resolve(),writeBuffer(){},writeTexture(){},copyExternalImageToTexture(){}}),lost:new Promise(()=>{}),onuncapturederror:null})}
+    get adapterInfo(){return gpuDeviceSlots.get(this).adapterInfo}
+    get features(){return gpuDeviceSlots.get(this).features}
+    get limits(){return gpuDeviceSlots.get(this).limits}
+    get queue(){return gpuDeviceSlots.get(this).queue}
+    get lost(){return gpuDeviceSlots.get(this).lost}
+    get onuncapturederror(){return gpuDeviceSlots.get(this).onuncapturederror}
+    set onuncapturederror(value){gpuDeviceSlots.get(this).onuncapturederror=typeof value==='function'?value:null}
+    destroy(){} pushErrorScope(){} popErrorScope(){return Promise.resolve(null)}
+  }
   class GPU { constructor(){illegal('GPU')} requestAdapter(){return host.gpuRequestAdapter().then(g=>new GPUAdapter(g))} getPreferredCanvasFormat(){return'bgra8unorm'} }
   Object.defineProperty(GPU.prototype,Symbol.toStringTag,{value:'GPU',configurable:true});
   Object.defineProperty(GPUAdapter.prototype,Symbol.toStringTag,{value:'GPUAdapter',configurable:true});

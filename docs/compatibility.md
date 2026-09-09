@@ -140,11 +140,25 @@ Follow-up inspection of caught console exceptions found a reproducible
 `undefined.call` failure that an error-kind-only trace filter missed. Replaying
 the same recorded response bodies in native Chrome 152 and Mimic isolates a
 function-versus-string argument divergence before a `charCodeAt` invocation.
-Native pause-on-all-exceptions confirms it does not throw the matching error;
-this is not simply different console reporting. The browser operation responsible
-for the upstream value divergence is still under investigation. Function-source,
+Native pause-on-all-exceptions confirms it does not throw the matching error.
+Tracing all caught exceptions upstream identified unsupported
+`TextDecoder('iso-8859-1')`, followed after its correction by an illegal-constructor
+error for the valid `new OffscreenCanvas(1, 1)` call. These errors unwind the
+challenge's nested VM calls; its register-restoration code is not protected by
+`finally`, leaving a temporary function where a later operation expects a string.
+The `.call` failure is therefore a secondary symptom. Function-source,
 console-coercion and frame-eval corrections are independently measured fixes,
 not evidence that this challenge now completes.
+
+The next native workload requires actual graphics: 335 recorded calls cover
+Canvas2D paths, text, gradients, drawing and pixel readback, ImageBitmap transfer,
+and WebGL1/2 shader/buffer/framebuffer operations. Mimic's architecture does not
+perform actual rendering and must not require a GPU. Further canvas support must
+model observable API objects, metadata, state and lifetimes within that boundary;
+rendered-pixel equivalence is not implied by API availability. Implementing only
+the OffscreenCanvas constructor is insufficient for this workload. Standalone
+Skia/ANGLE feasibility experiments were not adopted and are not production
+dependencies.
 
 A successful native capture of `iroshop.tech/mimic-e2e` is retained locally under
 `compatibility/private-captures/iroshop-2026-09-09-chrome152`: initial challenge
@@ -213,6 +227,19 @@ delete the counter silently, so a second reset warns. Frozen Chrome applies the 
 conversion throws, then propagates the original exception; this unusual order
 is preserved. See the [counter oracle](../compatibility/captures/semantic-checkpoints/console-count-chrome152.json)
 and [conversion-error sequence](../compatibility/captures/semantic-checkpoints/console-count-errors-chrome152.json).
+
+Window and Worker share UTF-8 and Windows-1252 TextDecoder implementations.
+The web's Latin-1 and ASCII labels resolve to Windows-1252, including its C1
+punctuation/control mappings. Label trimming uses ASCII whitespace; streaming,
+BOM handling and typed-view offsets are checked against the
+[all-byte Chrome fixture](../compatibility/captures/semantic-checkpoints/windows1252-decoder-chrome152.json).
+Other encoding families remain unsupported rather than silently decoding as UTF-8.
+
+GPUDevice initialization stores its exposed state in realm-owned slots, with
+readonly prototype getters for adapterInfo, features, limits, queue and lost.
+This avoids assignments into generated readonly IDL accessors. The existing
+GPU surface remains skeletal: this initialization fix does not implement GPU
+rendering, device-loss processing or full device feature negotiation.
 
 Same-origin frame `eval` preserves non-string argument identity, including
 functions, boxed strings and objects with throwing conversion hooks. Locally
