@@ -1,0 +1,130 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/webkit_css_column_count_oracle.js",
+    "fixtureSHA256": "db69a0856577980c9e75f95718ac77fe7b88a4ac241f8f0f3be25e9a84562c53",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "columns": {
+      "0": [
+        "0px",
+        "columns: 0px;",
+        true
+      ],
+      "1": [
+        "1",
+        "columns: 1;",
+        true
+      ],
+      "1000000": [
+        "1000000",
+        "columns: 1000000;",
+        true
+      ],
+      "2147483647": [
+        "2147483647",
+        "columns: 2147483647;",
+        true
+      ],
+      "2147483648": [
+        "2147483647",
+        "columns: 2147483647;",
+        true
+      ],
+      "auto": [
+        "auto",
+        "columns: auto;",
+        true
+      ],
+      "+2": [
+        "2",
+        "columns: 2;",
+        true
+      ],
+      "2.0": [
+        "",
+        "",
+        false
+      ],
+      "2e0": [
+        "",
+        "",
+        false
+      ],
+      "999999999999999999999999999999": [
+        "2147483647",
+        "columns: 2147483647;",
+        true
+      ],
+      "-1": [
+        "",
+        "",
+        false
+      ]
+    },
+    "column-count": {
+      "0": [
+        "",
+        "",
+        false
+      ],
+      "1": [
+        "1",
+        "column-count: 1;",
+        true
+      ],
+      "1000000": [
+        "1000000",
+        "column-count: 1000000;",
+        true
+      ],
+      "2147483647": [
+        "2147483647",
+        "column-count: 2147483647;",
+        true
+      ],
+      "2147483648": [
+        "2147483647",
+        "column-count: 2147483647;",
+        true
+      ],
+      "auto": [
+        "auto",
+        "column-count: auto;",
+        true
+      ],
+      "+2": [
+        "2",
+        "column-count: 2;",
+        true
+      ],
+      "2.0": [
+        "",
+        "",
+        false
+      ],
+      "2e0": [
+        "",
+        "",
+        false
+      ],
+      "999999999999999999999999999999": [
+        "2147483647",
+        "column-count: 2147483647;",
+        true
+      ],
+      "-1": [
+        "",
+        "",
+        false
+      ]
+    }
+  }
+}

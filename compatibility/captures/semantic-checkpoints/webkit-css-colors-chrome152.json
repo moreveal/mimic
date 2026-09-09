@@ -1,0 +1,808 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/webkit_css_colors_oracle.js",
+    "fixtureSHA256": "38eec687e8796abdd1231a1133c2af774c68a11ec8e6424efae2a9b885a81cda",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "aliceblue": [
+      "aliceblue",
+      true
+    ],
+    "antiquewhite": [
+      "antiquewhite",
+      true
+    ],
+    "aqua": [
+      "aqua",
+      true
+    ],
+    "aquamarine": [
+      "aquamarine",
+      true
+    ],
+    "azure": [
+      "azure",
+      true
+    ],
+    "beige": [
+      "beige",
+      true
+    ],
+    "bisque": [
+      "bisque",
+      true
+    ],
+    "black": [
+      "black",
+      true
+    ],
+    "blanchedalmond": [
+      "blanchedalmond",
+      true
+    ],
+    "blue": [
+      "blue",
+      true
+    ],
+    "blueviolet": [
+      "blueviolet",
+      true
+    ],
+    "brown": [
+      "brown",
+      true
+    ],
+    "burlywood": [
+      "burlywood",
+      true
+    ],
+    "cadetblue": [
+      "cadetblue",
+      true
+    ],
+    "chartreuse": [
+      "chartreuse",
+      true
+    ],
+    "chocolate": [
+      "chocolate",
+      true
+    ],
+    "coral": [
+      "coral",
+      true
+    ],
+    "cornflowerblue": [
+      "cornflowerblue",
+      true
+    ],
+    "cornsilk": [
+      "cornsilk",
+      true
+    ],
+    "crimson": [
+      "crimson",
+      true
+    ],
+    "cyan": [
+      "cyan",
+      true
+    ],
+    "darkblue": [
+      "darkblue",
+      true
+    ],
+    "darkcyan": [
+      "darkcyan",
+      true
+    ],
+    "darkgoldenrod": [
+      "darkgoldenrod",
+      true
+    ],
+    "darkgray": [
+      "darkgray",
+      true
+    ],
+    "darkgreen": [
+      "darkgreen",
+      true
+    ],
+    "darkgrey": [
+      "darkgrey",
+      true
+    ],
+    "darkkhaki": [
+      "darkkhaki",
+      true
+    ],
+    "darkmagenta": [
+      "darkmagenta",
+      true
+    ],
+    "darkolivegreen": [
+      "darkolivegreen",
+      true
+    ],
+    "darkorange": [
+      "darkorange",
+      true
+    ],
+    "darkorchid": [
+      "darkorchid",
+      true
+    ],
+    "darkred": [
+      "darkred",
+      true
+    ],
+    "darksalmon": [
+      "darksalmon",
+      true
+    ],
+    "darkseagreen": [
+      "darkseagreen",
+      true
+    ],
+    "darkslateblue": [
+      "darkslateblue",
+      true
+    ],
+    "darkslategray": [
+      "darkslategray",
+      true
+    ],
+    "darkslategrey": [
+      "darkslategrey",
+      true
+    ],
+    "darkturquoise": [
+      "darkturquoise",
+      true
+    ],
+    "darkviolet": [
+      "darkviolet",
+      true
+    ],
+    "deeppink": [
+      "deeppink",
+      true
+    ],
+    "deepskyblue": [
+      "deepskyblue",
+      true
+    ],
+    "dimgray": [
+      "dimgray",
+      true
+    ],
+    "dimgrey": [
+      "dimgrey",
+      true
+    ],
+    "dodgerblue": [
+      "dodgerblue",
+      true
+    ],
+    "firebrick": [
+      "firebrick",
+      true
+    ],
+    "floralwhite": [
+      "floralwhite",
+      true
+    ],
+    "forestgreen": [
+      "forestgreen",
+      true
+    ],
+    "fuchsia": [
+      "fuchsia",
+      true
+    ],
+    "gainsboro": [
+      "gainsboro",
+      true
+    ],
+    "ghostwhite": [
+      "ghostwhite",
+      true
+    ],
+    "gold": [
+      "gold",
+      true
+    ],
+    "goldenrod": [
+      "goldenrod",
+      true
+    ],
+    "gray": [
+      "gray",
+      true
+    ],
+    "green": [
+      "green",
+      true
+    ],
+    "greenyellow": [
+      "greenyellow",
+      true
+    ],
+    "grey": [
+      "grey",
+      true
+    ],
+    "honeydew": [
+      "honeydew",
+      true
+    ],
+    "hotpink": [
+      "hotpink",
+      true
+    ],
+    "indianred": [
+      "indianred",
+      true
+    ],
+    "indigo": [
+      "indigo",
+      true
+    ],
+    "ivory": [
+      "ivory",
+      true
+    ],
+    "khaki": [
+      "khaki",
+      true
+    ],
+    "lavender": [
+      "lavender",
+      true
+    ],
+    "lavenderblush": [
+      "lavenderblush",
+      true
+    ],
+    "lawngreen": [
+      "lawngreen",
+      true
+    ],
+    "lemonchiffon": [
+      "lemonchiffon",
+      true
+    ],
+    "lightblue": [
+      "lightblue",
+      true
+    ],
+    "lightcoral": [
+      "lightcoral",
+      true
+    ],
+    "lightcyan": [
+      "lightcyan",
+      true
+    ],
+    "lightgoldenrodyellow": [
+      "lightgoldenrodyellow",
+      true
+    ],
+    "lightgray": [
+      "lightgray",
+      true
+    ],
+    "lightgreen": [
+      "lightgreen",
+      true
+    ],
+    "lightgrey": [
+      "lightgrey",
+      true
+    ],
+    "lightpink": [
+      "lightpink",
+      true
+    ],
+    "lightsalmon": [
+      "lightsalmon",
+      true
+    ],
+    "lightseagreen": [
+      "lightseagreen",
+      true
+    ],
+    "lightskyblue": [
+      "lightskyblue",
+      true
+    ],
+    "lightslategray": [
+      "lightslategray",
+      true
+    ],
+    "lightslategrey": [
+      "lightslategrey",
+      true
+    ],
+    "lightsteelblue": [
+      "lightsteelblue",
+      true
+    ],
+    "lightyellow": [
+      "lightyellow",
+      true
+    ],
+    "lime": [
+      "lime",
+      true
+    ],
+    "limegreen": [
+      "limegreen",
+      true
+    ],
+    "linen": [
+      "linen",
+      true
+    ],
+    "magenta": [
+      "magenta",
+      true
+    ],
+    "maroon": [
+      "maroon",
+      true
+    ],
+    "mediumaquamarine": [
+      "mediumaquamarine",
+      true
+    ],
+    "mediumblue": [
+      "mediumblue",
+      true
+    ],
+    "mediumorchid": [
+      "mediumorchid",
+      true
+    ],
+    "mediumpurple": [
+      "mediumpurple",
+      true
+    ],
+    "mediumseagreen": [
+      "mediumseagreen",
+      true
+    ],
+    "mediumslateblue": [
+      "mediumslateblue",
+      true
+    ],
+    "mediumspringgreen": [
+      "mediumspringgreen",
+      true
+    ],
+    "mediumturquoise": [
+      "mediumturquoise",
+      true
+    ],
+    "mediumvioletred": [
+      "mediumvioletred",
+      true
+    ],
+    "midnightblue": [
+      "midnightblue",
+      true
+    ],
+    "mintcream": [
+      "mintcream",
+      true
+    ],
+    "mistyrose": [
+      "mistyrose",
+      true
+    ],
+    "moccasin": [
+      "moccasin",
+      true
+    ],
+    "navajowhite": [
+      "navajowhite",
+      true
+    ],
+    "navy": [
+      "navy",
+      true
+    ],
+    "oldlace": [
+      "oldlace",
+      true
+    ],
+    "olive": [
+      "olive",
+      true
+    ],
+    "olivedrab": [
+      "olivedrab",
+      true
+    ],
+    "orange": [
+      "orange",
+      true
+    ],
+    "orangered": [
+      "orangered",
+      true
+    ],
+    "orchid": [
+      "orchid",
+      true
+    ],
+    "palegoldenrod": [
+      "palegoldenrod",
+      true
+    ],
+    "palegreen": [
+      "palegreen",
+      true
+    ],
+    "paleturquoise": [
+      "paleturquoise",
+      true
+    ],
+    "palevioletred": [
+      "palevioletred",
+      true
+    ],
+    "papayawhip": [
+      "papayawhip",
+      true
+    ],
+    "peachpuff": [
+      "peachpuff",
+      true
+    ],
+    "peru": [
+      "peru",
+      true
+    ],
+    "pink": [
+      "pink",
+      true
+    ],
+    "plum": [
+      "plum",
+      true
+    ],
+    "powderblue": [
+      "powderblue",
+      true
+    ],
+    "purple": [
+      "purple",
+      true
+    ],
+    "rebeccapurple": [
+      "rebeccapurple",
+      true
+    ],
+    "red": [
+      "red",
+      true
+    ],
+    "rosybrown": [
+      "rosybrown",
+      true
+    ],
+    "royalblue": [
+      "royalblue",
+      true
+    ],
+    "saddlebrown": [
+      "saddlebrown",
+      true
+    ],
+    "salmon": [
+      "salmon",
+      true
+    ],
+    "sandybrown": [
+      "sandybrown",
+      true
+    ],
+    "seagreen": [
+      "seagreen",
+      true
+    ],
+    "seashell": [
+      "seashell",
+      true
+    ],
+    "sienna": [
+      "sienna",
+      true
+    ],
+    "silver": [
+      "silver",
+      true
+    ],
+    "skyblue": [
+      "skyblue",
+      true
+    ],
+    "slateblue": [
+      "slateblue",
+      true
+    ],
+    "slategray": [
+      "slategray",
+      true
+    ],
+    "slategrey": [
+      "slategrey",
+      true
+    ],
+    "snow": [
+      "snow",
+      true
+    ],
+    "springgreen": [
+      "springgreen",
+      true
+    ],
+    "steelblue": [
+      "steelblue",
+      true
+    ],
+    "tan": [
+      "tan",
+      true
+    ],
+    "teal": [
+      "teal",
+      true
+    ],
+    "thistle": [
+      "thistle",
+      true
+    ],
+    "tomato": [
+      "tomato",
+      true
+    ],
+    "turquoise": [
+      "turquoise",
+      true
+    ],
+    "violet": [
+      "violet",
+      true
+    ],
+    "wheat": [
+      "wheat",
+      true
+    ],
+    "white": [
+      "white",
+      true
+    ],
+    "whitesmoke": [
+      "whitesmoke",
+      true
+    ],
+    "yellow": [
+      "yellow",
+      true
+    ],
+    "yellowgreen": [
+      "yellowgreen",
+      true
+    ],
+    "transparent": [
+      "transparent",
+      true
+    ],
+    "currentcolor": [
+      "currentcolor",
+      true
+    ],
+    "ActiveText": [
+      "activetext",
+      true
+    ],
+    "ButtonBorder": [
+      "buttonborder",
+      true
+    ],
+    "ButtonFace": [
+      "buttonface",
+      true
+    ],
+    "ButtonText": [
+      "buttontext",
+      true
+    ],
+    "Canvas": [
+      "canvas",
+      true
+    ],
+    "CanvasText": [
+      "canvastext",
+      true
+    ],
+    "Field": [
+      "field",
+      true
+    ],
+    "FieldText": [
+      "fieldtext",
+      true
+    ],
+    "GrayText": [
+      "graytext",
+      true
+    ],
+    "Highlight": [
+      "highlight",
+      true
+    ],
+    "HighlightText": [
+      "highlighttext",
+      true
+    ],
+    "LinkText": [
+      "linktext",
+      true
+    ],
+    "Mark": [
+      "mark",
+      true
+    ],
+    "MarkText": [
+      "marktext",
+      true
+    ],
+    "SelectedItem": [
+      "selecteditem",
+      true
+    ],
+    "SelectedItemText": [
+      "selecteditemtext",
+      true
+    ],
+    "VisitedText": [
+      "visitedtext",
+      true
+    ],
+    "AccentColor": [
+      "accentcolor",
+      true
+    ],
+    "AccentColorText": [
+      "accentcolortext",
+      true
+    ],
+    "ActiveBorder": [
+      "activeborder",
+      true
+    ],
+    "ActiveCaption": [
+      "activecaption",
+      true
+    ],
+    "AppWorkspace": [
+      "appworkspace",
+      true
+    ],
+    "Background": [
+      "background",
+      true
+    ],
+    "ButtonHighlight": [
+      "buttonhighlight",
+      true
+    ],
+    "ButtonShadow": [
+      "buttonshadow",
+      true
+    ],
+    "CaptionText": [
+      "captiontext",
+      true
+    ],
+    "InactiveBorder": [
+      "inactiveborder",
+      true
+    ],
+    "InactiveCaption": [
+      "inactivecaption",
+      true
+    ],
+    "InactiveCaptionText": [
+      "inactivecaptiontext",
+      true
+    ],
+    "InfoBackground": [
+      "infobackground",
+      true
+    ],
+    "InfoText": [
+      "infotext",
+      true
+    ],
+    "Menu": [
+      "menu",
+      true
+    ],
+    "MenuText": [
+      "menutext",
+      true
+    ],
+    "Scrollbar": [
+      "scrollbar",
+      true
+    ],
+    "ThreeDDarkShadow": [
+      "threeddarkshadow",
+      true
+    ],
+    "ThreeDFace": [
+      "threedface",
+      true
+    ],
+    "ThreeDHighlight": [
+      "threedhighlight",
+      true
+    ],
+    "ThreeDLightShadow": [
+      "threedlightshadow",
+      true
+    ],
+    "ThreeDShadow": [
+      "threedshadow",
+      true
+    ],
+    "Window": [
+      "window",
+      true
+    ],
+    "WindowFrame": [
+      "windowframe",
+      true
+    ],
+    "WindowText": [
+      "windowtext",
+      true
+    ],
+    "-webkit-focus-ring-color": [
+      "",
+      false
+    ],
+    "rgb(50%, 0%, 100%)": [
+      "rgb(128, 0, 255)",
+      true
+    ],
+    "rgba(10, 20, 30, 50%)": [
+      "rgba(10, 20, 30, 0.5)",
+      true
+    ],
+    "rgb(10, 20, 30, 0.5)": [
+      "rgba(10, 20, 30, 0.5)",
+      true
+    ],
+    "rgba(10, 20, 30)": [
+      "rgb(10, 20, 30)",
+      true
+    ],
+    "bogus": [
+      "",
+      false
+    ]
+  }
+}

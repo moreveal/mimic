@@ -1,0 +1,25 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/webkit_css_supports_reflection_oracle.js",
+    "fixtureSHA256": "8c92dc374f937a9c43eb3e4909b9912ed17c12cf891298721d30fb23d052f555",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "name": "supports",
+    "length": 1,
+    "keys": [
+      "length",
+      "name"
+    ],
+    "source": "function supports() { [native code] }",
+    "detached": true,
+    "error": "TypeError"
+  }
+}

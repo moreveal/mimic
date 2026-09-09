@@ -1,0 +1,628 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/webkit_css_flex_edges_oracle.js",
+    "fixtureSHA256": "edebfe29dd3b56a672e3ee1ebf6d9ceb3ea67f509966255c682edd1fb5cb4f74",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "flex": {
+      "0": [
+        "flex: 0 1 0%;",
+        "0 1 0%",
+        true
+      ],
+      "INITIAL": [
+        "flex: initial;",
+        "initial",
+        true
+      ],
+      "INHERIT": [
+        "flex: inherit;",
+        "inherit",
+        true
+      ],
+      "UNSET": [
+        "flex: unset;",
+        "unset",
+        true
+      ],
+      "-0": [
+        "flex: 0 1 0%;",
+        "0 1 0%",
+        true
+      ],
+      "+2.5": [
+        "flex: 2.5 1 0%;",
+        "2.5 1 0%",
+        true
+      ],
+      "1e-2": [
+        "flex: 0.01 1 0%;",
+        "0.01 1 0%",
+        true
+      ],
+      "-0px": [
+        "flex: 1 1 0px;",
+        "1 1 0px",
+        true
+      ],
+      "1.": [
+        "",
+        "",
+        false
+      ],
+      "NaN": [
+        "",
+        "",
+        false
+      ],
+      "Infinity": [
+        "",
+        "",
+        false
+      ],
+      "1e999": [
+        "flex: 3.40282e+38 1 0%;",
+        "3.40282e+38 1 0%",
+        true
+      ],
+      "-2px": [
+        "",
+        "",
+        false
+      ],
+      "0em": [
+        "flex: 1 1 0em;",
+        "1 1 0em",
+        true
+      ],
+      "2rem": [
+        "flex: 1 1 2rem;",
+        "1 1 2rem",
+        true
+      ],
+      "calc(2px + 3px)": [
+        "flex: 1 1 calc(5px);",
+        "1 1 calc(5px)",
+        true
+      ],
+      "calc(10px - 20px)": [
+        "flex: 1 1 calc(-10px);",
+        "1 1 calc(-10px)",
+        true
+      ],
+      "calc(10px+2%)": [
+        "",
+        "",
+        false
+      ],
+      "calc(2% - 10px)": [
+        "flex: 1 1 calc(2% - 10px);",
+        "1 1 calc(2% - 10px)",
+        true
+      ],
+      "bogus": [
+        "",
+        "",
+        false
+      ]
+    },
+    "flex-grow": {
+      "0": [
+        "flex-grow: 0;",
+        "0",
+        true
+      ],
+      "INITIAL": [
+        "flex-grow: initial;",
+        "initial",
+        true
+      ],
+      "INHERIT": [
+        "flex-grow: inherit;",
+        "inherit",
+        true
+      ],
+      "UNSET": [
+        "flex-grow: unset;",
+        "unset",
+        true
+      ],
+      "-0": [
+        "flex-grow: 0;",
+        "0",
+        true
+      ],
+      "+2.5": [
+        "flex-grow: 2.5;",
+        "2.5",
+        true
+      ],
+      "1e-2": [
+        "flex-grow: 0.01;",
+        "0.01",
+        true
+      ],
+      "-0px": [
+        "",
+        "",
+        false
+      ],
+      "1.": [
+        "",
+        "",
+        false
+      ],
+      "NaN": [
+        "",
+        "",
+        false
+      ],
+      "Infinity": [
+        "",
+        "",
+        false
+      ],
+      "1e999": [
+        "flex-grow: 3.40282e+38;",
+        "3.40282e+38",
+        true
+      ],
+      "-2px": [
+        "",
+        "",
+        false
+      ],
+      "0em": [
+        "",
+        "",
+        false
+      ],
+      "2rem": [
+        "",
+        "",
+        false
+      ],
+      "calc(2px + 3px)": [
+        "",
+        "",
+        false
+      ],
+      "calc(10px - 20px)": [
+        "",
+        "",
+        false
+      ],
+      "calc(10px+2%)": [
+        "",
+        "",
+        false
+      ],
+      "calc(2% - 10px)": [
+        "",
+        "",
+        false
+      ],
+      "bogus": [
+        "",
+        "",
+        false
+      ]
+    },
+    "flex-shrink": {
+      "0": [
+        "flex-shrink: 0;",
+        "0",
+        true
+      ],
+      "INITIAL": [
+        "flex-shrink: initial;",
+        "initial",
+        true
+      ],
+      "INHERIT": [
+        "flex-shrink: inherit;",
+        "inherit",
+        true
+      ],
+      "UNSET": [
+        "flex-shrink: unset;",
+        "unset",
+        true
+      ],
+      "-0": [
+        "flex-shrink: 0;",
+        "0",
+        true
+      ],
+      "+2.5": [
+        "flex-shrink: 2.5;",
+        "2.5",
+        true
+      ],
+      "1e-2": [
+        "flex-shrink: 0.01;",
+        "0.01",
+        true
+      ],
+      "-0px": [
+        "",
+        "",
+        false
+      ],
+      "1.": [
+        "",
+        "",
+        false
+      ],
+      "NaN": [
+        "",
+        "",
+        false
+      ],
+      "Infinity": [
+        "",
+        "",
+        false
+      ],
+      "1e999": [
+        "flex-shrink: 3.40282e+38;",
+        "3.40282e+38",
+        true
+      ],
+      "-2px": [
+        "",
+        "",
+        false
+      ],
+      "0em": [
+        "",
+        "",
+        false
+      ],
+      "2rem": [
+        "",
+        "",
+        false
+      ],
+      "calc(2px + 3px)": [
+        "",
+        "",
+        false
+      ],
+      "calc(10px - 20px)": [
+        "",
+        "",
+        false
+      ],
+      "calc(10px+2%)": [
+        "",
+        "",
+        false
+      ],
+      "calc(2% - 10px)": [
+        "",
+        "",
+        false
+      ],
+      "bogus": [
+        "",
+        "",
+        false
+      ]
+    },
+    "flex-basis": {
+      "0": [
+        "flex-basis: 0px;",
+        "0px",
+        true
+      ],
+      "INITIAL": [
+        "flex-basis: initial;",
+        "initial",
+        true
+      ],
+      "INHERIT": [
+        "flex-basis: inherit;",
+        "inherit",
+        true
+      ],
+      "UNSET": [
+        "flex-basis: unset;",
+        "unset",
+        true
+      ],
+      "-0": [
+        "flex-basis: 0px;",
+        "0px",
+        true
+      ],
+      "+2.5": [
+        "",
+        "",
+        false
+      ],
+      "1e-2": [
+        "",
+        "",
+        false
+      ],
+      "-0px": [
+        "flex-basis: 0px;",
+        "0px",
+        true
+      ],
+      "1.": [
+        "",
+        "",
+        false
+      ],
+      "NaN": [
+        "",
+        "",
+        false
+      ],
+      "Infinity": [
+        "",
+        "",
+        false
+      ],
+      "1e999": [
+        "",
+        "",
+        false
+      ],
+      "-2px": [
+        "",
+        "",
+        false
+      ],
+      "0em": [
+        "flex-basis: 0em;",
+        "0em",
+        true
+      ],
+      "2rem": [
+        "flex-basis: 2rem;",
+        "2rem",
+        true
+      ],
+      "calc(2px + 3px)": [
+        "flex-basis: calc(5px);",
+        "calc(5px)",
+        true
+      ],
+      "calc(10px - 20px)": [
+        "flex-basis: calc(-10px);",
+        "calc(-10px)",
+        true
+      ],
+      "calc(10px+2%)": [
+        "",
+        "",
+        false
+      ],
+      "calc(2% - 10px)": [
+        "flex-basis: calc(2% - 10px);",
+        "calc(2% - 10px)",
+        true
+      ],
+      "bogus": [
+        "",
+        "",
+        false
+      ]
+    },
+    "flex-direction": {
+      "0": [
+        "",
+        "",
+        false
+      ],
+      "INITIAL": [
+        "flex-direction: initial;",
+        "initial",
+        true
+      ],
+      "INHERIT": [
+        "flex-direction: inherit;",
+        "inherit",
+        true
+      ],
+      "UNSET": [
+        "flex-direction: unset;",
+        "unset",
+        true
+      ],
+      "-0": [
+        "",
+        "",
+        false
+      ],
+      "+2.5": [
+        "",
+        "",
+        false
+      ],
+      "1e-2": [
+        "",
+        "",
+        false
+      ],
+      "-0px": [
+        "",
+        "",
+        false
+      ],
+      "1.": [
+        "",
+        "",
+        false
+      ],
+      "NaN": [
+        "",
+        "",
+        false
+      ],
+      "Infinity": [
+        "",
+        "",
+        false
+      ],
+      "1e999": [
+        "",
+        "",
+        false
+      ],
+      "-2px": [
+        "",
+        "",
+        false
+      ],
+      "0em": [
+        "",
+        "",
+        false
+      ],
+      "2rem": [
+        "",
+        "",
+        false
+      ],
+      "calc(2px + 3px)": [
+        "",
+        "",
+        false
+      ],
+      "calc(10px - 20px)": [
+        "",
+        "",
+        false
+      ],
+      "calc(10px+2%)": [
+        "",
+        "",
+        false
+      ],
+      "calc(2% - 10px)": [
+        "",
+        "",
+        false
+      ],
+      "bogus": [
+        "",
+        "",
+        false
+      ]
+    },
+    "flex-wrap": {
+      "0": [
+        "",
+        "",
+        false
+      ],
+      "INITIAL": [
+        "flex-wrap: initial;",
+        "initial",
+        true
+      ],
+      "INHERIT": [
+        "flex-wrap: inherit;",
+        "inherit",
+        true
+      ],
+      "UNSET": [
+        "flex-wrap: unset;",
+        "unset",
+        true
+      ],
+      "-0": [
+        "",
+        "",
+        false
+      ],
+      "+2.5": [
+        "",
+        "",
+        false
+      ],
+      "1e-2": [
+        "",
+        "",
+        false
+      ],
+      "-0px": [
+        "",
+        "",
+        false
+      ],
+      "1.": [
+        "",
+        "",
+        false
+      ],
+      "NaN": [
+        "",
+        "",
+        false
+      ],
+      "Infinity": [
+        "",
+        "",
+        false
+      ],
+      "1e999": [
+        "",
+        "",
+        false
+      ],
+      "-2px": [
+        "",
+        "",
+        false
+      ],
+      "0em": [
+        "",
+        "",
+        false
+      ],
+      "2rem": [
+        "",
+        "",
+        false
+      ],
+      "calc(2px + 3px)": [
+        "",
+        "",
+        false
+      ],
+      "calc(10px - 20px)": [
+        "",
+        "",
+        false
+      ],
+      "calc(10px+2%)": [
+        "",
+        "",
+        false
+      ],
+      "calc(2% - 10px)": [
+        "",
+        "",
+        false
+      ],
+      "bogus": [
+        "",
+        "",
+        false
+      ]
+    }
+  }
+}

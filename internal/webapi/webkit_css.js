@@ -37,8 +37,15 @@ const webkitCSSKeywords=new Map(Object.entries({
  'backface-visibility':'visible hidden',
  'transform-style':'flat preserve-3d'
 }).map(([name,values])=>[name,new Set(values.split(' '))]));
-const normalizeCSSValue=(name,value)=>{
- value=String(value).trim();if(!value)return '';const keywords=webkitCSSKeywords.get(name);
+const normalizeCSSValue=(name,value,inputName=name)=>{
+ value=String(value).trim();if(!value)return '';
+ value=cssAliasInputValue(name,value,inputName);
+ const parser=cssShorthandParsers.get(name)||cssLonghandParsers.get(name);
+ if(parser&&cssWideValue(value.toLowerCase()))return value.toLowerCase();
+ if(parser&&!cssWideValue(value.toLowerCase())&&!/^var\(/.test(value)){
+  const parsed=parser(value);return parsed===null?null:Array.isArray(parsed)?serializeOrdinaryCSSShorthand(name,parsed):parsed;
+ }
+ const keywords=webkitCSSKeywords.get(name);
  if(!keywords)return value;
  const lower=value.toLowerCase();
  if(keywords.has(lower)||['initial','inherit','unset','revert','revert-layer'].includes(lower))return lower;

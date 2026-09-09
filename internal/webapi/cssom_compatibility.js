@@ -55,7 +55,7 @@ const constructedStyleSheets = (() => {
       getPropertyValue:{value:name=>readCSSDeclaration(names(),cssName(name))},
       getPropertyPriority:{value:name=>{name=cssName(name);const components=cssShorthandComponents[name]||[name];return components.every(n=>names().find(e=>e.name===n)?.priority==='important')?'important':''}},
       setProperty:{value:(name,value,priority='')=>{
-        name=cssName(name);if(/^webkit/i.test(name))return;value=normalizeCSSValue(name,value);if(value===null)return;priority=String(priority).toLowerCase();
+        const inputName=name;name=cssName(name);if(/^webkit/i.test(name))return;value=normalizeCSSValue(name,value,inputName);if(value===null)return;priority=String(priority).toLowerCase();
         if(priority&&priority!=='important')return;
         const entries=names().slice(),components=cssShorthandComponents[name]||[name];
         if(value===''){for(let i=entries.length-1;i>=0;i--)if(components.includes(entries[i].name)||entries[i].name===name)entries.splice(i,1)}
@@ -66,7 +66,7 @@ const constructedStyleSheets = (() => {
     });
     return new Proxy(target,{
       get(object,key,receiver){if(typeof key==='string'&&/^\d+$/.test(key))return names()[Number(key)]?.name; if(typeof key==='string'&&!(key in object))return target.getPropertyValue(cssJSName(key));return Reflect.get(object,key,receiver)},
-      set(object,key,value,receiver){if(typeof key==='string'&&key!=='cssText'&&!(key in object)){target.setProperty(cssJSName(key),value);return true}return Reflect.set(object,key,value,receiver)}
+      set(object,key,value,receiver){if(typeof key==='string'&&key!=='cssText'&&!(key in object)){target.setProperty(cssJSInputName(key),value);return true}return Reflect.set(object,key,value,receiver)}
     });
   }
   function makeRule(node,sheet,parent=null) {

@@ -30,6 +30,12 @@ var cssSupportsSurface string
 //go:embed css_shorthands.js
 var cssShorthandsSurface string
 
+//go:embed css_value_grammar.js
+var cssValueGrammarSurface string
+
+//go:embed css_animation_grammar.js
+var cssAnimationGrammarSurface string
+
 //go:embed worker.js
 var handwrittenWorkerSurface string
 
@@ -198,7 +204,7 @@ func composeSurface(generated, exposureSource string) string {
 		streamsVendorSurface, "}", fetchCompatibilitySurface, formControlsSurface, traversalCompatibilitySurface, documentCompatibilitySurface, attributesCompatibilitySurface, eventsCompatibilitySurface, documentStreamSurface, shadowSerializationSurface, strings.Replace(canvasStateSurface, "/* shared_canvas_paths */", canvasPathObservationsSurface, 1), webglObservationsSource(), webgpuStateSurface, fontFacesSurface, offlineAudioSurface, marker}
 	base := strings.Replace(handwrittenSurface, "/* shared_fetch_primitives */", fetchPrimitivesSurface, 1)
 	base = strings.Replace(base, "/* shared_native_functions */", nativeFunctionsSurface, 1)
-	base = strings.Replace(base, "/* shared_webkit_css */", webkitCSSNamesSurface+webkitCSSSurface+cssShorthandsSurface, 1)
+	base = strings.Replace(base, "/* shared_webkit_css */", webkitCSSNamesSurface+webkitCSSSurface+cssShorthandsSurface+cssValueGrammarSurface+cssAnimationGrammarSurface, 1)
 	base = strings.Replace(base, "/* shared_dom_matrix */", domMatrixSurface, 1)
 	return strings.Replace(base, marker, strings.Join(parts, "\n"), 1)
 }

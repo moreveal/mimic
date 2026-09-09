@@ -1,0 +1,284 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/webkit_css_animation_longhands_oracle.js",
+    "fixtureSHA256": "a81b13706193aea3d486ae18c5dc4baff30278c6f06b20da6bea5adabebae3ea",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "-webkit-animation-duration": {
+      "auto": [
+        "animation-duration: auto;",
+        "auto",
+        true
+      ],
+      "1s": [
+        "animation-duration: 1s;",
+        "1s",
+        true
+      ],
+      "1000ms": [
+        "animation-duration: 1000ms;",
+        "1000ms",
+        true
+      ],
+      "-1s": [
+        "",
+        "",
+        false
+      ],
+      "1s, 2s": [
+        "animation-duration: 1s, 2s;",
+        "1s, 2s",
+        true
+      ]
+    },
+    "-webkit-animation-delay": {
+      "-1s": [
+        "animation-delay: -1s;",
+        "-1s",
+        true
+      ],
+      "0ms": [
+        "animation-delay: 0ms;",
+        "0ms",
+        true
+      ],
+      "1s, -2s": [
+        "animation-delay: 1s, -2s;",
+        "1s, -2s",
+        true
+      ]
+    },
+    "-webkit-animation-timing-function": {
+      "ease": [
+        "animation-timing-function: ease;",
+        "ease",
+        true
+      ],
+      "steps(2, jump-start)": [
+        "animation-timing-function: steps(2, jump-start);",
+        "steps(2, jump-start)",
+        true
+      ],
+      "steps(1, jump-none)": [
+        "",
+        "",
+        false
+      ],
+      "cubic-bezier(2, 0, 0, 1)": [
+        "",
+        "",
+        false
+      ]
+    },
+    "-webkit-animation-iteration-count": {
+      "0": [
+        "animation-iteration-count: 0;",
+        "0",
+        true
+      ],
+      "infinite": [
+        "animation-iteration-count: infinite;",
+        "infinite",
+        true
+      ],
+      "2.5": [
+        "animation-iteration-count: 2.5;",
+        "2.5",
+        true
+      ],
+      "-1": [
+        "",
+        "",
+        false
+      ]
+    },
+    "-webkit-animation-direction": {
+      "alternate": [
+        "animation-direction: alternate;",
+        "alternate",
+        true
+      ],
+      "reverse, normal": [
+        "animation-direction: reverse, normal;",
+        "reverse, normal",
+        true
+      ],
+      "bogus": [
+        "",
+        "",
+        false
+      ]
+    },
+    "-webkit-animation-fill-mode": {
+      "both": [
+        "animation-fill-mode: both;",
+        "both",
+        true
+      ],
+      "none, forwards": [
+        "animation-fill-mode: none, forwards;",
+        "none, forwards",
+        true
+      ],
+      "bogus": [
+        "",
+        "",
+        false
+      ]
+    },
+    "-webkit-animation-play-state": {
+      "paused": [
+        "animation-play-state: paused;",
+        "paused",
+        true
+      ],
+      "running, paused": [
+        "animation-play-state: running, paused;",
+        "running, paused",
+        true
+      ],
+      "bogus": [
+        "",
+        "",
+        false
+      ]
+    },
+    "-webkit-animation-name": {
+      "Spin": [
+        "animation-name: Spin;",
+        "Spin",
+        true
+      ],
+      "NONE": [
+        "animation-name: none;",
+        "none",
+        true
+      ],
+      "\"Slide\"": [
+        "animation-name: Slide;",
+        "Slide",
+        true
+      ],
+      "default": [
+        "",
+        "",
+        false
+      ],
+      "-": [
+        "",
+        "",
+        false
+      ],
+      "--x": [
+        "animation-name: --x;",
+        "--x",
+        true
+      ],
+      "spin, fade": [
+        "animation-name: spin, fade;",
+        "spin, fade",
+        true
+      ]
+    },
+    "-webkit-transition-property": {
+      "all": [
+        "transition-property: all;",
+        "all",
+        true
+      ],
+      "opacity, transform": [
+        "transition-property: opacity, transform;",
+        "opacity, transform",
+        true
+      ],
+      "none, opacity": [
+        "",
+        "",
+        false
+      ],
+      "default": [
+        "",
+        "",
+        false
+      ],
+      "-": [
+        "",
+        "",
+        false
+      ]
+    },
+    "-webkit-transition-duration": {
+      "auto": [
+        "",
+        "",
+        false
+      ],
+      "1s": [
+        "transition-duration: 1s;",
+        "1s",
+        true
+      ],
+      "-1s": [
+        "",
+        "",
+        false
+      ],
+      "1s, 2s": [
+        "transition-duration: 1s, 2s;",
+        "1s, 2s",
+        true
+      ]
+    },
+    "-webkit-transition-delay": {
+      "-1s": [
+        "transition-delay: -1s;",
+        "-1s",
+        true
+      ],
+      "0ms": [
+        "transition-delay: 0ms;",
+        "0ms",
+        true
+      ]
+    },
+    "-webkit-transition-timing-function": {
+      "ease-in": [
+        "transition-timing-function: ease-in;",
+        "ease-in",
+        true
+      ],
+      "steps(3)": [
+        "transition-timing-function: steps(3);",
+        "steps(3)",
+        true
+      ],
+      "steps(0)": [
+        "",
+        "",
+        false
+      ],
+      "cubic-bezier(0, 1, 1, 0)": [
+        "transition-timing-function: cubic-bezier(0, 1, 1, 0);",
+        "cubic-bezier(0, 1, 1, 0)",
+        true
+      ]
+    },
+    "animation": [
+      "animation: 1s ease 2s 1 normal none running Spin;",
+      "1s ease 2s 1 normal none running Spin"
+    ],
+    "invalid": "animation: 1s ease 2s 1 normal none running Spin;",
+    "transition": [
+      "transition: opacity 2s;",
+      "opacity 2s"
+    ]
+  }
+}

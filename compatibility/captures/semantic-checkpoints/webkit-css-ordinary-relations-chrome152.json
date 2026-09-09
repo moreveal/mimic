@@ -1,0 +1,179 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/webkit_css_ordinary_relations_oracle.js",
+    "fixtureSHA256": "a97cac430cb4fcb9d744060c3ae092e01637b5e044302f4405f4963ed964c930",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "inline": {
+      "-webkit-flex": [
+        "flex: 3 1 auto;",
+        "3 1 auto",
+        3,
+        [
+          "flex-grow",
+          "flex-shrink",
+          "flex-basis"
+        ]
+      ],
+      "-webkit-flex-flow": [
+        "flex-flow: column wrap;",
+        "column wrap",
+        2,
+        [
+          "flex-direction",
+          "flex-wrap"
+        ]
+      ],
+      "-webkit-border-before": [
+        "border-block-start: 3px solid red;",
+        "3px solid red",
+        3,
+        [
+          "border-block-start-width",
+          "border-block-start-style",
+          "border-block-start-color"
+        ]
+      ],
+      "-webkit-text-stroke": [
+        "-webkit-text-stroke: 1px blue;",
+        "1px blue",
+        2,
+        [
+          "-webkit-text-stroke-width",
+          "-webkit-text-stroke-color"
+        ]
+      ],
+      "-webkit-column-rule": [
+        "column-rule: 2px solid red;",
+        "2px solid red",
+        3,
+        [
+          "column-rule-width",
+          "column-rule-style",
+          "column-rule-color"
+        ]
+      ],
+      "-webkit-columns": [
+        "columns: 10px 4;",
+        "10px 4",
+        4,
+        [
+          "column-width",
+          "column-count",
+          "column-height",
+          "column-wrap"
+        ]
+      ],
+      "-webkit-text-emphasis": [
+        "text-emphasis: open circle blue;",
+        "open circle blue",
+        2,
+        [
+          "text-emphasis-style",
+          "text-emphasis-color"
+        ]
+      ],
+      "-webkit-border-radius": [
+        "border-radius: 5px 2px 2px / 6px 4px 4px;",
+        "5px 2px 2px / 6px 4px 4px",
+        4,
+        [
+          "border-top-left-radius",
+          "border-top-right-radius",
+          "border-bottom-right-radius",
+          "border-bottom-left-radius"
+        ]
+      ]
+    },
+    "rule": {
+      "-webkit-flex": [
+        "flex: 3 1 auto;",
+        "3 1 auto",
+        3,
+        [
+          "flex-grow",
+          "flex-shrink",
+          "flex-basis"
+        ]
+      ],
+      "-webkit-flex-flow": [
+        "flex-flow: column wrap;",
+        "column wrap",
+        2,
+        [
+          "flex-direction",
+          "flex-wrap"
+        ]
+      ],
+      "-webkit-border-before": [
+        "border-block-start: 3px solid red;",
+        "3px solid red",
+        3,
+        [
+          "border-block-start-width",
+          "border-block-start-style",
+          "border-block-start-color"
+        ]
+      ],
+      "-webkit-text-stroke": [
+        "-webkit-text-stroke: 1px blue;",
+        "1px blue",
+        2,
+        [
+          "-webkit-text-stroke-width",
+          "-webkit-text-stroke-color"
+        ]
+      ],
+      "-webkit-column-rule": [
+        "column-rule: 2px solid red;",
+        "2px solid red",
+        3,
+        [
+          "column-rule-width",
+          "column-rule-style",
+          "column-rule-color"
+        ]
+      ],
+      "-webkit-columns": [
+        "columns: 10px 4;",
+        "10px 4",
+        4,
+        [
+          "column-width",
+          "column-count",
+          "column-height",
+          "column-wrap"
+        ]
+      ],
+      "-webkit-text-emphasis": [
+        "text-emphasis: open circle blue;",
+        "open circle blue",
+        2,
+        [
+          "text-emphasis-style",
+          "text-emphasis-color"
+        ]
+      ],
+      "-webkit-border-radius": [
+        "border-radius: 5px 2px 2px / 6px 4px 4px;",
+        "5px 2px 2px / 6px 4px 4px",
+        4,
+        [
+          "border-top-left-radius",
+          "border-top-right-radius",
+          "border-bottom-right-radius",
+          "border-bottom-left-radius"
+        ]
+      ]
+    },
+    "bracket": "border-radius: 2px / 4px;"
+  }
+}

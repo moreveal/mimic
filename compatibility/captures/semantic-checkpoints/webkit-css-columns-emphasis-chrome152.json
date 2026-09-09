@@ -1,0 +1,940 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/webkit_css_columns_emphasis_oracle.js",
+    "fixtureSHA256": "774d1798e037270c87c20118ab96c5527b59ba387088afc9852e9b55356f98ba",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "-webkit-column-rule": {
+      "0": {
+        "text": "column-rule: 0px;",
+        "value": "0px",
+        "supported": true,
+        "components": [
+          [
+            "column-rule-width",
+            "0px"
+          ],
+          [
+            "column-rule-style",
+            "none"
+          ],
+          [
+            "column-rule-color",
+            "currentcolor"
+          ]
+        ]
+      },
+      "2": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "none": {
+        "text": "column-rule: medium;",
+        "value": "medium",
+        "supported": true,
+        "components": [
+          [
+            "column-rule-width",
+            "medium"
+          ],
+          [
+            "column-rule-style",
+            "none"
+          ],
+          [
+            "column-rule-color",
+            "currentcolor"
+          ]
+        ]
+      },
+      "auto": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "initial": {
+        "text": "column-rule: initial;",
+        "value": "initial",
+        "supported": true,
+        "components": [
+          [
+            "column-rule-width",
+            "initial"
+          ],
+          [
+            "column-rule-style",
+            "initial"
+          ],
+          [
+            "column-rule-color",
+            "initial"
+          ]
+        ]
+      },
+      "1px solid red": {
+        "text": "column-rule: 1px solid red;",
+        "value": "1px solid red",
+        "supported": true,
+        "components": [
+          [
+            "column-rule-width",
+            "1px"
+          ],
+          [
+            "column-rule-style",
+            "solid"
+          ],
+          [
+            "column-rule-color",
+            "red"
+          ]
+        ]
+      },
+      "2px": {
+        "text": "column-rule: 2px;",
+        "value": "2px",
+        "supported": true,
+        "components": [
+          [
+            "column-rule-width",
+            "2px"
+          ],
+          [
+            "column-rule-style",
+            "none"
+          ],
+          [
+            "column-rule-color",
+            "currentcolor"
+          ]
+        ]
+      },
+      "auto auto": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "auto 2": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "2 auto": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "10px 3": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "3 10px": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "2 3": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "2.0": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "-1": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "20%": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "red": {
+        "text": "column-rule: red;",
+        "value": "red",
+        "supported": true,
+        "components": [
+          [
+            "column-rule-width",
+            "medium"
+          ],
+          [
+            "column-rule-style",
+            "none"
+          ],
+          [
+            "column-rule-color",
+            "red"
+          ]
+        ]
+      },
+      "currentcolor": {
+        "text": "column-rule: medium;",
+        "value": "medium",
+        "supported": true,
+        "components": [
+          [
+            "column-rule-width",
+            "medium"
+          ],
+          [
+            "column-rule-style",
+            "none"
+          ],
+          [
+            "column-rule-color",
+            "currentcolor"
+          ]
+        ]
+      },
+      "circle": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "filled": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "open": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "filled circle": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "open sesame": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "open red triangle": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "\"*\"": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "\"abc\" red": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "'x'": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "\"a\\22 b\"": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "solid dotted": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "bogus": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      }
+    },
+    "-webkit-columns": {
+      "0": {
+        "text": "columns: 0px;",
+        "value": "0px",
+        "supported": true,
+        "components": [
+          [
+            "column-width",
+            "0px"
+          ],
+          [
+            "column-count",
+            "auto"
+          ],
+          [
+            "column-height",
+            "auto"
+          ],
+          [
+            "column-wrap",
+            "auto"
+          ]
+        ]
+      },
+      "2": {
+        "text": "columns: 2;",
+        "value": "2",
+        "supported": true,
+        "components": [
+          [
+            "column-width",
+            "auto"
+          ],
+          [
+            "column-count",
+            "2"
+          ],
+          [
+            "column-height",
+            "auto"
+          ],
+          [
+            "column-wrap",
+            "auto"
+          ]
+        ]
+      },
+      "none": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "auto": {
+        "text": "columns: auto;",
+        "value": "auto",
+        "supported": true,
+        "components": [
+          [
+            "column-width",
+            "auto"
+          ],
+          [
+            "column-count",
+            "auto"
+          ],
+          [
+            "column-height",
+            "auto"
+          ],
+          [
+            "column-wrap",
+            "auto"
+          ]
+        ]
+      },
+      "initial": {
+        "text": "columns: initial;",
+        "value": "initial",
+        "supported": true,
+        "components": [
+          [
+            "column-width",
+            "initial"
+          ],
+          [
+            "column-count",
+            "initial"
+          ],
+          [
+            "column-height",
+            "initial"
+          ],
+          [
+            "column-wrap",
+            "initial"
+          ]
+        ]
+      },
+      "1px solid red": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "2px": {
+        "text": "columns: 2px;",
+        "value": "2px",
+        "supported": true,
+        "components": [
+          [
+            "column-width",
+            "2px"
+          ],
+          [
+            "column-count",
+            "auto"
+          ],
+          [
+            "column-height",
+            "auto"
+          ],
+          [
+            "column-wrap",
+            "auto"
+          ]
+        ]
+      },
+      "auto auto": {
+        "text": "columns: auto;",
+        "value": "auto",
+        "supported": true,
+        "components": [
+          [
+            "column-width",
+            "auto"
+          ],
+          [
+            "column-count",
+            "auto"
+          ],
+          [
+            "column-height",
+            "auto"
+          ],
+          [
+            "column-wrap",
+            "auto"
+          ]
+        ]
+      },
+      "auto 2": {
+        "text": "columns: 2;",
+        "value": "2",
+        "supported": true,
+        "components": [
+          [
+            "column-width",
+            "auto"
+          ],
+          [
+            "column-count",
+            "2"
+          ],
+          [
+            "column-height",
+            "auto"
+          ],
+          [
+            "column-wrap",
+            "auto"
+          ]
+        ]
+      },
+      "2 auto": {
+        "text": "columns: 2;",
+        "value": "2",
+        "supported": true,
+        "components": [
+          [
+            "column-width",
+            "auto"
+          ],
+          [
+            "column-count",
+            "2"
+          ],
+          [
+            "column-height",
+            "auto"
+          ],
+          [
+            "column-wrap",
+            "auto"
+          ]
+        ]
+      },
+      "10px 3": {
+        "text": "columns: 10px 3;",
+        "value": "10px 3",
+        "supported": true,
+        "components": [
+          [
+            "column-width",
+            "10px"
+          ],
+          [
+            "column-count",
+            "3"
+          ],
+          [
+            "column-height",
+            "auto"
+          ],
+          [
+            "column-wrap",
+            "auto"
+          ]
+        ]
+      },
+      "3 10px": {
+        "text": "columns: 10px 3;",
+        "value": "10px 3",
+        "supported": true,
+        "components": [
+          [
+            "column-width",
+            "10px"
+          ],
+          [
+            "column-count",
+            "3"
+          ],
+          [
+            "column-height",
+            "auto"
+          ],
+          [
+            "column-wrap",
+            "auto"
+          ]
+        ]
+      },
+      "2 3": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "2.0": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "-1": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "20%": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "red": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "currentcolor": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "circle": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "filled": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "open": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "filled circle": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "open sesame": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "open red triangle": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "\"*\"": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "\"abc\" red": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "'x'": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "\"a\\22 b\"": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "solid dotted": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "bogus": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      }
+    },
+    "-webkit-text-emphasis": {
+      "0": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "2": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "none": {
+        "text": "text-emphasis: none;",
+        "value": "none",
+        "supported": true,
+        "components": [
+          [
+            "text-emphasis-style",
+            "none"
+          ],
+          [
+            "text-emphasis-color",
+            "initial"
+          ]
+        ]
+      },
+      "auto": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "initial": {
+        "text": "text-emphasis: initial;",
+        "value": "initial",
+        "supported": true,
+        "components": [
+          [
+            "text-emphasis-style",
+            "initial"
+          ],
+          [
+            "text-emphasis-color",
+            "initial"
+          ]
+        ]
+      },
+      "1px solid red": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "2px": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "auto auto": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "auto 2": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "2 auto": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "10px 3": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "3 10px": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "2 3": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "2.0": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "-1": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "20%": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "red": {
+        "text": "text-emphasis: red;",
+        "value": "red",
+        "supported": true,
+        "components": [
+          [
+            "text-emphasis-style",
+            "initial"
+          ],
+          [
+            "text-emphasis-color",
+            "red"
+          ]
+        ]
+      },
+      "currentcolor": {
+        "text": "text-emphasis: currentcolor;",
+        "value": "currentcolor",
+        "supported": true,
+        "components": [
+          [
+            "text-emphasis-style",
+            "initial"
+          ],
+          [
+            "text-emphasis-color",
+            "currentcolor"
+          ]
+        ]
+      },
+      "circle": {
+        "text": "text-emphasis: circle;",
+        "value": "circle",
+        "supported": true,
+        "components": [
+          [
+            "text-emphasis-style",
+            "circle"
+          ],
+          [
+            "text-emphasis-color",
+            "initial"
+          ]
+        ]
+      },
+      "filled": {
+        "text": "text-emphasis: filled;",
+        "value": "filled",
+        "supported": true,
+        "components": [
+          [
+            "text-emphasis-style",
+            "filled"
+          ],
+          [
+            "text-emphasis-color",
+            "initial"
+          ]
+        ]
+      },
+      "open": {
+        "text": "text-emphasis: open;",
+        "value": "open",
+        "supported": true,
+        "components": [
+          [
+            "text-emphasis-style",
+            "open"
+          ],
+          [
+            "text-emphasis-color",
+            "initial"
+          ]
+        ]
+      },
+      "filled circle": {
+        "text": "text-emphasis: filled circle;",
+        "value": "filled circle",
+        "supported": true,
+        "components": [
+          [
+            "text-emphasis-style",
+            "filled circle"
+          ],
+          [
+            "text-emphasis-color",
+            "initial"
+          ]
+        ]
+      },
+      "open sesame": {
+        "text": "text-emphasis: open sesame;",
+        "value": "open sesame",
+        "supported": true,
+        "components": [
+          [
+            "text-emphasis-style",
+            "open sesame"
+          ],
+          [
+            "text-emphasis-color",
+            "initial"
+          ]
+        ]
+      },
+      "open red triangle": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "\"*\"": {
+        "text": "text-emphasis: \"*\";",
+        "value": "\"*\"",
+        "supported": true,
+        "components": [
+          [
+            "text-emphasis-style",
+            "\"*\""
+          ],
+          [
+            "text-emphasis-color",
+            "initial"
+          ]
+        ]
+      },
+      "\"abc\" red": {
+        "text": "text-emphasis: \"abc\" red;",
+        "value": "\"abc\" red",
+        "supported": true,
+        "components": [
+          [
+            "text-emphasis-style",
+            "\"abc\""
+          ],
+          [
+            "text-emphasis-color",
+            "red"
+          ]
+        ]
+      },
+      "'x'": {
+        "text": "text-emphasis: \"x\";",
+        "value": "\"x\"",
+        "supported": true,
+        "components": [
+          [
+            "text-emphasis-style",
+            "\"x\""
+          ],
+          [
+            "text-emphasis-color",
+            "initial"
+          ]
+        ]
+      },
+      "\"a\\22 b\"": {
+        "text": "text-emphasis: \"a\\\"b\";",
+        "value": "\"a\\\"b\"",
+        "supported": true,
+        "components": [
+          [
+            "text-emphasis-style",
+            "\"a\\\"b\""
+          ],
+          [
+            "text-emphasis-color",
+            "initial"
+          ]
+        ]
+      },
+      "solid dotted": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "bogus": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      }
+    }
+  }
+}
