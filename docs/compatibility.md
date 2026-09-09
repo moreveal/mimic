@@ -332,3 +332,9 @@ canonical state and measured empty-set readiness differences. Font resource
 loading and nonempty-set matching remain explicit unsupported boundaries; see
 [font collections](compatibility/font-collections.md) for the scoped oracles and
 remaining CSS grammar and lifecycle limitations.
+
+OfflineAudioContext now evaluates bounded PCM source/gain graphs on the Page
+event loop, preserving shared AudioBuffer views, sample relationships and
+measured completion ordering without an audio device. See
+[offline audio](compatibility/offline-audio.md) for the Chrome captures and
+explicit DSP, interpolation and scheduling boundaries.

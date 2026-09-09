@@ -1,0 +1,44 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/audio_lifecycle_oracle.js",
+    "fixtureSHA256": "189d7796a68250a15691c61378b13157ccfce40074c85332d4385b4a61ee1b0c",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "lengths": [
+      1,
+      1,
+      1,
+      1,
+      2
+    ],
+    "paramBefore": [
+      1,
+      1,
+      -3.4028234663852886e+38,
+      3.4028234663852886e+38,
+      "a-rate"
+    ],
+    "events": [
+      "running",
+      "state:running",
+      "complete",
+      "promise",
+      "state:closed"
+    ],
+    "completion": [
+      "[object OfflineAudioCompletionEvent]",
+      true,
+      true,
+      false
+    ],
+    "paramAfter": 1
+  }
+}

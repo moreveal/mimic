@@ -1,0 +1,62 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/audio_graph_oracle.js",
+    "fixtureSHA256": "2eab51247a138bbc55a8d5d78aa6b73a9cf5809b8b42f4e7e2fbd32003c5d314",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "nodes": [
+      true,
+      true,
+      0,
+      1,
+      1,
+      1,
+      2,
+      2,
+      true,
+      1,
+      0,
+      false,
+      true
+    ],
+    "connections": [
+      true,
+      true
+    ],
+    "afterStart": [
+      8,
+      true
+    ],
+    "samples": [
+      0,
+      0,
+      0.5,
+      0.25,
+      -0.25,
+      -0.5,
+      0.125,
+      0,
+      1,
+      -1,
+      0,
+      0,
+      0,
+      0
+    ],
+    "ended": 1,
+    "errors": [
+      "InvalidStateError",
+      "RangeError",
+      "InvalidAccessError",
+      "RangeError"
+    ]
+  }
+}

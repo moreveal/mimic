@@ -1,0 +1,66 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/audio_buffers_oracle.js",
+    "fixtureSHA256": "b6ec15e7d29b23d319487a649275f3c78197053d104470854271266203bdc076",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "invalid": [
+      "TypeError",
+      "NotSupportedError",
+      "NotSupportedError",
+      "NotSupportedError",
+      "NotSupportedError"
+    ],
+    "buffer": [
+      "[object AudioBuffer]",
+      5,
+      44100,
+      2,
+      0.00011337868480725624,
+      true,
+      false,
+      [
+        0,
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "shared": [
+      1,
+      0.5,
+      -0.5,
+      2,
+      -2
+    ],
+    "copyTo": [
+      0,
+      0,
+      0,
+      3,
+      4
+    ],
+    "copyFrom": [
+      2,
+      -2,
+      9,
+      9
+    ],
+    "errors": [
+      "IndexSizeError",
+      "IndexSizeError",
+      null,
+      "TypeError",
+      null
+    ]
+  }
+}
