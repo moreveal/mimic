@@ -63,6 +63,28 @@ composed per realm with the selected bundle's generated Blink WebIDL surface.
 Generated bindings describe known shape and route operations to semantic hosts;
 they never own independent browser state.
 
+### Graphics observations without rendering
+
+Mimic does not render a display and must not require a GPU or an embedded graphics
+engine. Canvas and graphics support models script-observable state and queries,
+rather than reconstructing an image for its own sake. Capability values remain
+projections of the selected Environment, not properties of the host's GPU.
+
+Readback is not an independent random or precomputed fingerprint. It must derive
+from the same state as dimensions, context settings, metrics and operations.
+Identical operations in identical state must produce identical observations;
+local changes must preserve unaffected regions, and overlapping reads, explicit
+pixel writes, copies, resets and transfers must agree. For example, repeating
+`AAAA` must agree with its previous result, while replacing its final character
+with `B` must not perturb unrelated regions. Exact glyph pixels are not required
+by that relational contract.
+
+Approximate observations must be identified as approximations and checked for
+these relationships. They must not be presented as measured Chrome pixel
+equivalence. Unsupported behavior remains a documented boundary; implementation
+must not inspect website identity or recognize fingerprinting scripts to choose
+answers. The same observable model applies to ordinary application code.
+
 ## Ownership and execution invariants
 
 - Browser environment is a validated construction template. Page environment is

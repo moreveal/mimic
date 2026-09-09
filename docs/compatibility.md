@@ -150,7 +150,7 @@ The `.call` failure is therefore a secondary symptom. Function-source,
 console-coercion and frame-eval corrections are independently measured fixes,
 not evidence that this challenge now completes.
 
-The next native workload requires actual graphics: 335 recorded calls cover
+The next native workload exercises graphics APIs: 335 recorded calls cover
 Canvas2D paths, text, gradients, drawing and pixel readback, ImageBitmap transfer,
 and WebGL1/2 shader/buffer/framebuffer operations. Mimic's architecture does not
 perform actual rendering and must not require a GPU. Further canvas support must
