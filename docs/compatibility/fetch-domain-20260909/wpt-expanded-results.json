@@ -1,0 +1,1335 @@
+{
+  "chrome": {
+    "response-init-001.any.js": {
+      "done": true,
+      "status": {
+        "status": 0,
+        "message": null
+      },
+      "results": [
+        {
+          "name": "Check default value for type attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Check default value for url attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Check default value for ok attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Check default value for status attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Check default value for statusText attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Check default value for body attribute",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Check status init values and associated getter",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Check statusText init values and associated getter",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Test that Response.headers has the [SameObject] extended attribute",
+          "status": 0,
+          "message": null
+        }
+      ]
+    },
+    "response-init-002.any.js": {
+      "done": true,
+      "status": {
+        "status": 0,
+        "message": null
+      },
+      "results": [
+        {
+          "name": "Initialize Response with headers values",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Testing null Response body",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Initialize Response's body with application/octet-binary",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Initialize Response's body with multipart/form-data",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Initialize Response's body with application/x-www-form-urlencoded;charset=UTF-8",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Initialize Response's body with text/plain;charset=UTF-8",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Read Response's body as readableStream",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Testing empty Response Content-Type header",
+          "status": 0,
+          "message": null
+        }
+      ]
+    },
+    "response-static-error.any.js": {
+      "done": true,
+      "status": {
+        "status": 0,
+        "message": null
+      },
+      "results": [
+        {
+          "name": "Check response returned by static method error()",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "the 'guard' of the Headers instance should be immutable",
+          "status": 0,
+          "message": null
+        }
+      ]
+    },
+    "response-stream-disturbed-1.any.js": {
+      "done": true,
+      "status": {
+        "status": 0,
+        "message": null
+      },
+      "results": [
+        {
+          "name": "Getting blob after getting the Response body - not disturbed, not locked (body source: fetch)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting text after getting the Response body - not disturbed, not locked (body source: fetch)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting json after getting the Response body - not disturbed, not locked (body source: fetch)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting arrayBuffer after getting the Response body - not disturbed, not locked (body source: fetch)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting blob after getting the Response body - not disturbed, not locked (body source: stream)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting text after getting the Response body - not disturbed, not locked (body source: stream)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting json after getting the Response body - not disturbed, not locked (body source: stream)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting arrayBuffer after getting the Response body - not disturbed, not locked (body source: stream)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting blob after getting the Response body - not disturbed, not locked (body source: string)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting text after getting the Response body - not disturbed, not locked (body source: string)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting json after getting the Response body - not disturbed, not locked (body source: string)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting arrayBuffer after getting the Response body - not disturbed, not locked (body source: string)",
+          "status": 0,
+          "message": null
+        }
+      ]
+    },
+    "response-stream-disturbed-2.any.js": {
+      "done": true,
+      "status": {
+        "status": 0,
+        "message": null
+      },
+      "results": [
+        {
+          "name": "Getting blob after getting a locked Response body (body source: fetch)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting text after getting a locked Response body (body source: fetch)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting json after getting a locked Response body (body source: fetch)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting arrayBuffer after getting a locked Response body (body source: fetch)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting blob after getting a locked Response body (body source: stream)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting text after getting a locked Response body (body source: stream)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting json after getting a locked Response body (body source: stream)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting arrayBuffer after getting a locked Response body (body source: stream)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting blob after getting a locked Response body (body source: string)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting text after getting a locked Response body (body source: string)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting json after getting a locked Response body (body source: string)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting arrayBuffer after getting a locked Response body (body source: string)",
+          "status": 0,
+          "message": null
+        }
+      ]
+    },
+    "response-stream-disturbed-3.any.js": {
+      "done": true,
+      "status": {
+        "status": 0,
+        "message": null
+      },
+      "results": [
+        {
+          "name": "Getting blob after reading the Response body (body source: fetch)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting text after reading the Response body (body source: fetch)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting json after reading the Response body (body source: fetch)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting arrayBuffer after reading the Response body (body source: fetch)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting blob after reading the Response body (body source: stream)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting text after reading the Response body (body source: stream)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting json after reading the Response body (body source: stream)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting arrayBuffer after reading the Response body (body source: stream)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting blob after reading the Response body (body source: string)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting text after reading the Response body (body source: string)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting json after reading the Response body (body source: string)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting arrayBuffer after reading the Response body (body source: string)",
+          "status": 0,
+          "message": null
+        }
+      ]
+    },
+    "response-stream-disturbed-4.any.js": {
+      "done": true,
+      "status": {
+        "status": 0,
+        "message": null
+      },
+      "results": [
+        {
+          "name": "Getting blob after cancelling the Response body (body source: fetch)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting text after cancelling the Response body (body source: fetch)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting json after cancelling the Response body (body source: fetch)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting arrayBuffer after cancelling the Response body (body source: fetch)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting blob after cancelling the Response body (body source: stream)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting text after cancelling the Response body (body source: stream)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting json after cancelling the Response body (body source: stream)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting arrayBuffer after cancelling the Response body (body source: stream)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting blob after cancelling the Response body (body source: string)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting text after cancelling the Response body (body source: string)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting json after cancelling the Response body (body source: string)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting arrayBuffer after cancelling the Response body (body source: string)",
+          "status": 0,
+          "message": null
+        }
+      ]
+    },
+    "response-stream-disturbed-5.any.js": {
+      "done": true,
+      "status": {
+        "status": 0,
+        "message": null
+      },
+      "results": [
+        {
+          "name": "Getting a body reader after consuming as blob (body source: fetch)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting a body reader after consuming as text (body source: fetch)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting a body reader after consuming as json (body source: fetch)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting a body reader after consuming as arrayBuffer (body source: fetch)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting a body reader after consuming as blob (body source: stream)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting a body reader after consuming as text (body source: stream)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting a body reader after consuming as json (body source: stream)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting a body reader after consuming as arrayBuffer (body source: stream)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting a body reader after consuming as blob (body source: string)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting a body reader after consuming as text (body source: string)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting a body reader after consuming as json (body source: string)",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Getting a body reader after consuming as arrayBuffer (body source: string)",
+          "status": 0,
+          "message": null
+        }
+      ]
+    },
+    "response-stream-disturbed-6.any.js": {
+      "done": true,
+      "status": {
+        "status": 0,
+        "message": null
+      },
+      "results": [
+        {
+          "name": "A non-closed stream on which read() has been called",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "A non-closed stream on which cancel() has been called",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "A closed stream on which read() has been called",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "An errored stream on which read() has been called",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "An errored stream on which cancel() has been called",
+          "status": 0,
+          "message": null
+        }
+      ]
+    },
+    "response-stream-disturbed-by-pipe.any.js": {
+      "done": true,
+      "status": {
+        "status": 0,
+        "message": null
+      },
+      "results": [
+        {
+          "name": "using pipeTo on Response body should disturb it synchronously",
+          "status": 1,
+          "message": "assert_true: bodyUsed should be true expected true got false"
+        },
+        {
+          "name": "using pipeThrough on Response body should disturb it synchronously",
+          "status": 1,
+          "message": "assert_true: bodyUsed should be true expected true got false"
+        }
+      ]
+    },
+    "response-cancel-stream.any.js": {
+      "done": true,
+      "status": {
+        "status": 0,
+        "message": null
+      },
+      "results": [
+        {
+          "name": "Cancelling a starting blob Response stream",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Cancelling a loading blob Response stream",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Cancelling a closed blob Response stream",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Cancelling a starting Response stream",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Cancelling a loading Response stream",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Cancelling a closed Response stream",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Accessing .body after canceling it",
+          "status": 0,
+          "message": null
+        }
+      ]
+    },
+    "response-error-from-stream.any.js": {
+      "done": true,
+      "status": {
+        "status": 0,
+        "message": null
+      },
+      "results": [
+        {
+          "name": "ReadableStreamDefaultReader Promise receives ReadableStream start() Error",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "ReadableStreamDefaultReader Promise receives ReadableStream pull() Error",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "ReadableStream start() Error propagates to Response.arrayBuffer() Promise",
+          "status": 1,
+          "message": "promise_rejects_exactly: CustomTestError should propagate function \"function() { throw e; }\" threw object \"TypeError: Failed to fetch\" but we expected it to throw object \"Error: Start error\""
+        },
+        {
+          "name": "ReadableStream start() Error propagates to Response.blob() Promise",
+          "status": 1,
+          "message": "promise_rejects_exactly: CustomTestError should propagate function \"function() { throw e; }\" threw object \"TypeError: Failed to fetch\" but we expected it to throw object \"Error: Start error\""
+        },
+        {
+          "name": "ReadableStream start() Error propagates to Response.bytes() Promise",
+          "status": 1,
+          "message": "promise_rejects_exactly: CustomTestError should propagate function \"function() { throw e; }\" threw object \"TypeError: Failed to fetch\" but we expected it to throw object \"Error: Start error\""
+        },
+        {
+          "name": "ReadableStream start() Error propagates to Response.formData() Promise",
+          "status": 1,
+          "message": "promise_rejects_exactly: CustomTestError should propagate function \"function() { throw e; }\" threw object \"TypeError: Failed to fetch\" but we expected it to throw object \"Error: Start error\""
+        },
+        {
+          "name": "ReadableStream start() Error propagates to Response.json() Promise",
+          "status": 1,
+          "message": "promise_rejects_exactly: CustomTestError should propagate function \"function() { throw e; }\" threw object \"TypeError: Failed to fetch\" but we expected it to throw object \"Error: Start error\""
+        },
+        {
+          "name": "ReadableStream start() Error propagates to Response.text() Promise",
+          "status": 1,
+          "message": "promise_rejects_exactly: CustomTestError should propagate function \"function() { throw e; }\" threw object \"TypeError: Failed to fetch\" but we expected it to throw object \"Error: Start error\""
+        },
+        {
+          "name": "ReadableStream pull() Error propagates to Response.arrayBuffer() Promise",
+          "status": 1,
+          "message": "promise_rejects_exactly: CustomTestError should propagate function \"function() { throw e; }\" threw object \"TypeError: Failed to fetch\" but we expected it to throw object \"Error: Pull error\""
+        },
+        {
+          "name": "ReadableStream pull() Error propagates to Response.blob() Promise",
+          "status": 1,
+          "message": "promise_rejects_exactly: CustomTestError should propagate function \"function() { throw e; }\" threw object \"TypeError: Failed to fetch\" but we expected it to throw object \"Error: Pull error\""
+        },
+        {
+          "name": "ReadableStream pull() Error propagates to Response.bytes() Promise",
+          "status": 1,
+          "message": "promise_rejects_exactly: CustomTestError should propagate function \"function() { throw e; }\" threw object \"TypeError: Failed to fetch\" but we expected it to throw object \"Error: Pull error\""
+        },
+        {
+          "name": "ReadableStream pull() Error propagates to Response.formData() Promise",
+          "status": 1,
+          "message": "promise_rejects_exactly: CustomTestError should propagate function \"function() { throw e; }\" threw object \"TypeError: Failed to fetch\" but we expected it to throw object \"Error: Pull error\""
+        },
+        {
+          "name": "ReadableStream pull() Error propagates to Response.json() Promise",
+          "status": 1,
+          "message": "promise_rejects_exactly: CustomTestError should propagate function \"function() { throw e; }\" threw object \"TypeError: Failed to fetch\" but we expected it to throw object \"Error: Pull error\""
+        },
+        {
+          "name": "ReadableStream pull() Error propagates to Response.text() Promise",
+          "status": 1,
+          "message": "promise_rejects_exactly: CustomTestError should propagate function \"function() { throw e; }\" threw object \"TypeError: Failed to fetch\" but we expected it to throw object \"Error: Pull error\""
+        }
+      ]
+    },
+    "response-stream-bad-chunk.any.js": {
+      "done": true,
+      "status": {
+        "status": 0,
+        "message": null
+      },
+      "results": [
+        {
+          "name": "ReadableStream with non-Uint8Array chunk passed to Response.arrayBuffer() causes TypeError",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "ReadableStream with non-Uint8Array chunk passed to Response.blob() causes TypeError",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "ReadableStream with non-Uint8Array chunk passed to Response.bytes() causes TypeError",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "ReadableStream with non-Uint8Array chunk passed to Response.formData() causes TypeError",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "ReadableStream with non-Uint8Array chunk passed to Response.json() causes TypeError",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "ReadableStream with non-Uint8Array chunk passed to Response.text() causes TypeError",
+          "status": 0,
+          "message": null
+        }
+      ]
+    }
+  },
+  "mimic": {
+    "response-init-001.any.js": {
+      "done": true,
+      "results": [
+        {
+          "message": null,
+          "name": "Check default value for type attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Check default value for url attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Check default value for ok attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Check default value for status attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Check default value for statusText attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Check default value for body attribute",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Check status init values and associated getter",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Check statusText init values and associated getter",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Test that Response.headers has the [SameObject] extended attribute",
+          "status": 0
+        }
+      ],
+      "status": {
+        "message": null,
+        "status": 0
+      }
+    },
+    "response-init-002.any.js": {
+      "done": true,
+      "results": [
+        {
+          "message": null,
+          "name": "Initialize Response with headers values",
+          "status": 0
+        }
+      ],
+      "status": {
+        "message": null,
+        "status": 0
+      }
+    },
+    "response-static-error.any.js": {
+      "done": true,
+      "results": [
+        {
+          "message": null,
+          "name": "Check response returned by static method error()",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "the 'guard' of the Headers instance should be immutable",
+          "status": 0
+        }
+      ],
+      "status": {
+        "message": null,
+        "status": 0
+      }
+    },
+    "response-stream-disturbed-1.any.js": {
+      "done": true,
+      "results": [
+        {
+          "message": null,
+          "name": "Getting blob after getting the Response body - not disturbed, not locked (body source: fetch)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting text after getting the Response body - not disturbed, not locked (body source: fetch)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting json after getting the Response body - not disturbed, not locked (body source: fetch)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting arrayBuffer after getting the Response body - not disturbed, not locked (body source: fetch)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting blob after getting the Response body - not disturbed, not locked (body source: stream)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting text after getting the Response body - not disturbed, not locked (body source: stream)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting json after getting the Response body - not disturbed, not locked (body source: stream)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting arrayBuffer after getting the Response body - not disturbed, not locked (body source: stream)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting blob after getting the Response body - not disturbed, not locked (body source: string)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting text after getting the Response body - not disturbed, not locked (body source: string)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting json after getting the Response body - not disturbed, not locked (body source: string)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting arrayBuffer after getting the Response body - not disturbed, not locked (body source: string)",
+          "status": 0
+        }
+      ],
+      "status": {
+        "message": null,
+        "status": 0
+      }
+    },
+    "response-stream-disturbed-2.any.js": {
+      "done": true,
+      "results": [
+        {
+          "message": null,
+          "name": "Getting blob after getting a locked Response body (body source: fetch)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting text after getting a locked Response body (body source: fetch)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting json after getting a locked Response body (body source: fetch)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting arrayBuffer after getting a locked Response body (body source: fetch)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting blob after getting a locked Response body (body source: stream)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting text after getting a locked Response body (body source: stream)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting json after getting a locked Response body (body source: stream)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting arrayBuffer after getting a locked Response body (body source: stream)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting blob after getting a locked Response body (body source: string)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting text after getting a locked Response body (body source: string)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting json after getting a locked Response body (body source: string)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting arrayBuffer after getting a locked Response body (body source: string)",
+          "status": 0
+        }
+      ],
+      "status": {
+        "message": null,
+        "status": 0
+      }
+    },
+    "response-stream-disturbed-3.any.js": {
+      "done": true,
+      "results": [
+        {
+          "message": null,
+          "name": "Getting blob after reading the Response body (body source: fetch)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting text after reading the Response body (body source: fetch)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting json after reading the Response body (body source: fetch)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting arrayBuffer after reading the Response body (body source: fetch)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting blob after reading the Response body (body source: stream)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting text after reading the Response body (body source: stream)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting json after reading the Response body (body source: stream)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting arrayBuffer after reading the Response body (body source: stream)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting blob after reading the Response body (body source: string)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting text after reading the Response body (body source: string)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting json after reading the Response body (body source: string)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting arrayBuffer after reading the Response body (body source: string)",
+          "status": 0
+        }
+      ],
+      "status": {
+        "message": null,
+        "status": 0
+      }
+    },
+    "response-stream-disturbed-4.any.js": {
+      "done": true,
+      "results": [
+        {
+          "message": null,
+          "name": "Getting blob after cancelling the Response body (body source: fetch)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting text after cancelling the Response body (body source: fetch)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting json after cancelling the Response body (body source: fetch)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting arrayBuffer after cancelling the Response body (body source: fetch)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting blob after cancelling the Response body (body source: stream)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting text after cancelling the Response body (body source: stream)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting json after cancelling the Response body (body source: stream)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting arrayBuffer after cancelling the Response body (body source: stream)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting blob after cancelling the Response body (body source: string)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting text after cancelling the Response body (body source: string)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting json after cancelling the Response body (body source: string)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting arrayBuffer after cancelling the Response body (body source: string)",
+          "status": 0
+        }
+      ],
+      "status": {
+        "message": null,
+        "status": 0
+      }
+    },
+    "response-stream-disturbed-5.any.js": {
+      "done": true,
+      "results": [
+        {
+          "message": null,
+          "name": "Getting a body reader after consuming as blob (body source: fetch)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting a body reader after consuming as text (body source: fetch)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting a body reader after consuming as json (body source: fetch)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting a body reader after consuming as arrayBuffer (body source: fetch)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting a body reader after consuming as blob (body source: stream)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting a body reader after consuming as text (body source: stream)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting a body reader after consuming as json (body source: stream)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting a body reader after consuming as arrayBuffer (body source: stream)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting a body reader after consuming as blob (body source: string)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting a body reader after consuming as text (body source: string)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting a body reader after consuming as json (body source: string)",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Getting a body reader after consuming as arrayBuffer (body source: string)",
+          "status": 0
+        }
+      ],
+      "status": {
+        "message": null,
+        "status": 0
+      }
+    },
+    "response-stream-disturbed-6.any.js": {
+      "done": true,
+      "results": [
+        {
+          "message": null,
+          "name": "A non-closed stream on which read() has been called",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "A non-closed stream on which cancel() has been called",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "A closed stream on which read() has been called",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "An errored stream on which read() has been called",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "An errored stream on which cancel() has been called",
+          "status": 0
+        }
+      ],
+      "status": {
+        "message": null,
+        "status": 0
+      }
+    },
+    "response-stream-disturbed-by-pipe.any.js": {
+      "done": true,
+      "results": [
+        {
+          "message": null,
+          "name": "using pipeTo on Response body should disturb it synchronously",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "using pipeThrough on Response body should disturb it synchronously",
+          "status": 0
+        }
+      ],
+      "status": {
+        "message": null,
+        "status": 0
+      }
+    },
+    "response-cancel-stream.any.js": {
+      "done": true,
+      "results": [
+        {
+          "message": null,
+          "name": "Cancelling a starting blob Response stream",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Cancelling a loading blob Response stream",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Cancelling a closed blob Response stream",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Cancelling a starting Response stream",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Cancelling a loading Response stream",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Cancelling a closed Response stream",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "Accessing .body after canceling it",
+          "status": 0
+        }
+      ],
+      "status": {
+        "message": null,
+        "status": 0
+      }
+    },
+    "response-error-from-stream.any.js": {
+      "done": true,
+      "results": [
+        {
+          "message": null,
+          "name": "ReadableStreamDefaultReader Promise receives ReadableStream start() Error",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "ReadableStreamDefaultReader Promise receives ReadableStream pull() Error",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "ReadableStream start() Error propagates to Response.arrayBuffer() Promise",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "ReadableStream start() Error propagates to Response.blob() Promise",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "ReadableStream start() Error propagates to Response.bytes() Promise",
+          "status": 0
+        },
+        {
+          "message": "(intermediate value)[responseReaderMethod] is not a function",
+          "name": "ReadableStream start() Error propagates to Response.formData() Promise",
+          "status": 1
+        },
+        {
+          "message": null,
+          "name": "ReadableStream start() Error propagates to Response.json() Promise",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "ReadableStream start() Error propagates to Response.text() Promise",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "ReadableStream pull() Error propagates to Response.arrayBuffer() Promise",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "ReadableStream pull() Error propagates to Response.blob() Promise",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "ReadableStream pull() Error propagates to Response.bytes() Promise",
+          "status": 0
+        },
+        {
+          "message": "(intermediate value)[responseReaderMethod] is not a function",
+          "name": "ReadableStream pull() Error propagates to Response.formData() Promise",
+          "status": 1
+        },
+        {
+          "message": null,
+          "name": "ReadableStream pull() Error propagates to Response.json() Promise",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "ReadableStream pull() Error propagates to Response.text() Promise",
+          "status": 0
+        }
+      ],
+      "status": {
+        "message": null,
+        "status": 0
+      }
+    },
+    "response-stream-bad-chunk.any.js": {
+      "done": true,
+      "results": [
+        {
+          "message": null,
+          "name": "ReadableStream with non-Uint8Array chunk passed to Response.arrayBuffer() causes TypeError",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "ReadableStream with non-Uint8Array chunk passed to Response.blob() causes TypeError",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "ReadableStream with non-Uint8Array chunk passed to Response.bytes() causes TypeError",
+          "status": 0
+        },
+        {
+          "message": "(intermediate value)[responseReaderMethod] is not a function",
+          "name": "ReadableStream with non-Uint8Array chunk passed to Response.formData() causes TypeError",
+          "status": 1
+        },
+        {
+          "message": null,
+          "name": "ReadableStream with non-Uint8Array chunk passed to Response.json() causes TypeError",
+          "status": 0
+        },
+        {
+          "message": null,
+          "name": "ReadableStream with non-Uint8Array chunk passed to Response.text() causes TypeError",
+          "status": 0
+        }
+      ],
+      "status": {
+        "message": null,
+        "status": 0
+      }
+    }
+  }
+}

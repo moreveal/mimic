@@ -1,0 +1,128 @@
+{
+  "move-records": [
+    [
+      0,
+      1,
+      null,
+      "b"
+    ],
+    [
+      1,
+      0,
+      "b",
+      null
+    ]
+  ],
+  "fragment-records": [
+    [
+      true,
+      0,
+      2
+    ],
+    [
+      false,
+      2,
+      0
+    ]
+  ],
+  "record-interface": [
+    true,
+    true,
+    true,
+    true,
+    false,
+    true
+  ],
+  "removed-subtree": [
+    "childList:",
+    "attributes:a"
+  ],
+  "notify-order": [
+    "a",
+    "b",
+    "microtask"
+  ],
+  "callback-snapshot": [
+    "old:1"
+  ],
+  "upgrade-order": [
+    "ctor:a",
+    "attr:a",
+    "connect:a",
+    "ctor:b",
+    "attr:b",
+    "connect:b"
+  ],
+  "upgrade-removal": [
+    "ctor",
+    "connected"
+  ],
+  "upgrade-insertion": [
+    "ctor"
+  ],
+  "shadow-lifecycle": [
+    "connected",
+    "disconnected"
+  ],
+  "parentnode-batch": [
+    [
+      [
+        2,
+        0
+      ]
+    ],
+    [
+      [
+        1,
+        2
+      ]
+    ],
+    "a"
+  ],
+  "tokens-fast-and-observed": [
+    [
+      true,
+      "a",
+      false,
+      "",
+      true,
+      "a",
+      false,
+      "",
+      true,
+      "a",
+      false,
+      "",
+      true,
+      "a",
+      false,
+      "",
+      "SyntaxError",
+      12,
+      "InvalidCharacterError",
+      5
+    ],
+    [
+      true,
+      "a",
+      false,
+      "",
+      true,
+      "a",
+      false,
+      "",
+      true,
+      "a",
+      false,
+      "",
+      true,
+      "a",
+      false,
+      "",
+      "SyntaxError",
+      12,
+      "InvalidCharacterError",
+      5
+    ]
+  ]
+}

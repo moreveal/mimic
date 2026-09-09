@@ -1,0 +1,16 @@
+{
+  "name": "mimic-css-select-vendor",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "build": "node build.mjs"
+  },
+  "dependencies": {
+    "@asamuzakjp/dom-selector": "9.1.1",
+    "css-select": "6.0.0",
+    "css-tree": "3.2.1"
+  },
+  "devDependencies": {
+    "esbuild": "0.25.12"
+  }
+}

@@ -1,0 +1,122 @@
+{
+  "domain": "selectors",
+  "product": "Chrome/152.0.7977.82",
+  "chromium_commit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+  "wpt_tree": "5251311032215fe14bbd74cd0867e14cb4b58e3f",
+  "binary": {
+    "path": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+    "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+    "listener": {
+      "ProcessId": 20264,
+      "ExecutablePath": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "CreationDate": "/Date(1788913397773)/"
+    }
+  },
+  "harness_output": false,
+  "tests": [
+    {
+      "path": "dom/nodes/../../css/selectors/focus-in-focus-event-001.html",
+      "done": {
+        "status": 0,
+        "message": null
+      },
+      "results": [
+        {
+          "name": "Checks that ':focus' pseudo-class matches inside 'focus' event handler",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Checks that ':focus-visible' pseudo-class matches inside 'focus' event handler",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Checks that ':focus-within' pseudo-class matches inside 'focus' event handler",
+          "status": 0,
+          "message": null
+        }
+      ]
+    },
+    {
+      "path": "dom/nodes/../../css/selectors/focus-in-focusin-event-001.html",
+      "done": {
+        "status": 0,
+        "message": null
+      },
+      "results": [
+        {
+          "name": "Checks that ':focus' pseudo-class matches inside 'focusin' event handler",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Checks that ':focus-visible' pseudo-class matches inside 'focusin' event handler",
+          "status": 0,
+          "message": null
+        },
+        {
+          "name": "Checks that ':focus-within' pseudo-class matches inside 'focusin' event handler",
+          "status": 0,
+          "message": null
+        }
+      ]
+    }
+  ],
+  "oracle": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 10,
+      "top": 10,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": false,
+    "isolationState": false,
+    "environmentProfileId": "chrome152-domain-tests-reused",
+    "profileFreshness": "reused-controlled",
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "sources": [
+    {
+      "path": "css/selectors/focus-in-focus-event-001.html",
+      "sha256": "87aac161f416147530a37e63619c39fdd3b5eacb29ae71d8dc1ca9a58a78872b",
+      "source": "https://chromium.googlesource.com/chromium/src/+/d04cdb24d67b081f6cf80200ffc5233f44b61109/third_party/blink/web_tests/external/wpt/css/selectors/focus-in-focus-event-001.html"
+    },
+    {
+      "path": "resources/testharness.js",
+      "sha256": "d2399236c2a09c429804ff2299ad6629e17e2b53f17a74dd341e936adb11ae3e",
+      "source": "https://chromium.googlesource.com/chromium/src/+/d04cdb24d67b081f6cf80200ffc5233f44b61109/third_party/blink/web_tests/external/wpt/resources/testharness.js"
+    },
+    {
+      "path": "resources/testharnessreport.js",
+      "sha256": "3777176fc736b0a78cf7617b9613b220f635daae7536ec7ebb99c61dbb525aae",
+      "source": "https://chromium.googlesource.com/chromium/src/+/d04cdb24d67b081f6cf80200ffc5233f44b61109/third_party/blink/web_tests/external/wpt/resources/testharnessreport.js"
+    },
+    {
+      "path": "css/selectors/focus-in-focusin-event-001.html",
+      "sha256": "97420d255cbd09f1cecf3931e4b5bafb9d4b99f638b09d36df29b649dce9f16f",
+      "source": "https://chromium.googlesource.com/chromium/src/+/d04cdb24d67b081f6cf80200ffc5233f44b61109/third_party/blink/web_tests/external/wpt/css/selectors/focus-in-focusin-event-001.html"
+    }
+  ],
+  "summary": {
+    "files": 2,
+    "harness_ok": 2,
+    "passed": 6,
+    "failed": 0
+  }
+}

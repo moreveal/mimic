@@ -536,13 +536,35 @@ func (s *session) handleRouted(m message, route string) {
 		} else {
 			result = map[string]any{"root": cdpNode(d, d.Root(), intValue(p["depth"], 1))}
 		}
+	case "DOM.querySelector", "DOM.querySelectorAll":
+		var ids []int64
+		ids, err = s.page.QueryDOM(s.ctx, int64(intValue(p["nodeId"], 0)), stringValue(p["selector"]), m.Method == "DOM.querySelectorAll")
+		if err == nil {
+			if m.Method == "DOM.querySelectorAll" {
+				result = map[string]any{"nodeIds": ids}
+			} else {
+				var id int64
+				if len(ids) > 0 {
+					id = ids[0]
+				}
+				result = map[string]any{"nodeId": id}
+			}
+		}
 	case "DOM.getOuterHTML":
 		var d *dom.Document
 		var ok bool
 		if d, ok = s.page.Document(); !ok {
 			err = fmt.Errorf("no document")
 		} else {
-			result = map[string]any{"outerHTML": d.Source()}
+			id := int64(intValue(p["nodeId"], 0))
+			if id == 0 {
+				id = int64(intValue(p["backendNodeId"], 0))
+			}
+			var markup string
+			markup, err = d.OuterHTML(id)
+			if err == nil {
+				result = map[string]any{"outerHTML": markup}
+			}
 		}
 	case "Network.getAllCookies":
 		result = map[string]any{"cookies": s.pageCookies()}
@@ -898,7 +920,18 @@ func cdpNode(d *dom.Document, n dom.Node, depth int) map[string]any {
 	for k, v := range n.Attributes {
 		attrs = append(attrs, k, v)
 	}
-	out := map[string]any{"nodeId": n.ID, "backendNodeId": n.ID, "nodeType": 1, "nodeName": n.TagName, "localName": n.TagName, "nodeValue": n.Text, "attributes": attrs, "childNodeCount": len(n.Children)}
+	nodeType, nodeName, localName := 1, n.TagName, strings.ToLower(n.TagName)
+	switch n.Type {
+	case "document":
+		nodeType, nodeName, localName = 9, "#document", ""
+	case "text":
+		nodeType, nodeName, localName = 3, "#text", ""
+	case "comment":
+		nodeType, nodeName, localName = 8, "#comment", ""
+	case "doctype":
+		nodeType, localName = 10, ""
+	}
+	out := map[string]any{"nodeId": n.ID, "backendNodeId": n.ID, "nodeType": nodeType, "nodeName": nodeName, "localName": localName, "nodeValue": n.Text, "attributes": attrs, "childNodeCount": len(n.Children)}
 	if depth != 0 {
 		children := []any{}
 		for _, id := range n.Children {

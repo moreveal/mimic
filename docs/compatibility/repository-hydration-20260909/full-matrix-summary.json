@@ -1,0 +1,2265 @@
+{
+  "finished": null,
+  "metadata": {
+    "harness_sha256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7",
+    "harness_files": {
+      "compare.py": "274b156ee88e67085f5e556ef79629146f5e7287ee54af844476a0c005e65a5b",
+      "report.py": "f12e393341c00e9e03748a06913fa639c1069f66dc7acb71959cffd51647f214",
+      "requirements.txt": "06e6d87d17f39a59fe7b2576545231fe65d5a1940d22e63fc2b32b6cfa12123b",
+      "run.ps1": "6c50b0a55886278de7c1e4d92b77b42bf2cfad59fa451dbaa766b0e0eae84fa6",
+      "run.py": "67718e844bce74b7757f2238716233b9d8683a17294f2b02017667b9c1e44cd3",
+      "test_harness.py": "ddb8dcf74a192d3403971833cf5e011dd8578a9acd9a060b3b265cc6d79aef2a",
+      "v8_version.go": "669a669b0545ba599edb2f7923617f154b976e7377de89d8b2e1f477bdb12f09",
+      "windows_metrics.py": "57ba1e10dfb1f1cb439a52ad5f7f5795c3ba4eef25ae22c9514ecfe115434cd5",
+      "fixtures/workload.js": "484019063e33e131756f67ab6f3076ad2c18e3959072fbae42f540455448c214",
+      "fixtures/vendor/react-dom.production.min.js": "35f4f974f4b2bcd44da73963347f8952e341f83909e4498227d4e26b98f66f0d",
+      "fixtures/vendor/REACT-LICENSE.txt": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85",
+      "fixtures/vendor/react.production.min.js": "d949f1c3687aedadcedac85261865f29b17cd273997e7f6b2bfc53b2f9d4c4dd"
+    },
+    "harness_commit": "01cd701026376ca386f21379fcf4be03be0d8022",
+    "date": "2026-09-09T05:43:13.461107+04:00",
+    "os": "Windows-11-10.0.26200-SP0",
+    "machine": "AMD64",
+    "python": "3.14.2 (tags/v3.14.2:df79316, Dec  5 2025, 17:18:21) [MSC v.1944 64 bit (AMD64)]",
+    "cpu": "{\"Name\":\"Intel(R) Core(TM) i7-14700KF\",\"NumberOfCores\":20,\"NumberOfLogicalProcessors\":28}",
+    "logical_cpus": 28,
+    "physical_cpus": 20,
+    "total_ram": 34177138688,
+    "power_mode": "GUID \u0421\u0403\u0421\u2026\u0420\u00b5\u0420\u0458\u0421\u2039 \u0420\u0457\u0420\u0451\u0421\u201a\u0420\u00b0\u0420\u0405\u0420\u0451\u0421\u040f: 381b4222-f694-41f0-9685-ff5bb260df2e  (\u0420\u040e\u0420\u00b1\u0420\u00b0\u0420\u00bb\u0420\u00b0\u0420\u0405\u0421\u0403\u0420\u0451\u0421\u0402\u0420\u0455\u0420\u0406\u0420\u00b0\u0420\u0405\u0420\u0405\u0420\u00b0\u0421\u040f)",
+    "power_overlay": "0\n00000000-0000-0000-0000-000000000000",
+    "antivirus": "{\"displayName\":\"Windows Defender\",\"productState\":397568}",
+    "background_processes": [
+      "AppActions.exe",
+      "CC_Engine_x64.exe",
+      "ChatGPT.exe",
+      "Cloudflare WARP.exe",
+      "Code.exe",
+      "CodeSetup-stable-88e44fa0e00b08f7758b4f6d05632e4fd5e4df6f.exe",
+      "CodeSetup-stable-88e44fa0e00b08f7758b4f6d05632e4fd5e4df6f.tmp",
+      "CrossDeviceResume.exe",
+      "Discord.exe",
+      "DiscordSystemHelper.exe",
+      "Everything.exe",
+      "ExitLagPmService.exe",
+      "LsaIso.exe",
+      "MSI.CentralServer.exe",
+      "MSI_Case_Service.exe",
+      "MSI_Central_Service.exe",
+      "MemCompression",
+      "MicrosoftStartFeedProvider.exe",
+      "MoNotificationUx.exe",
+      "MpDefenderCoreService.exe",
+      "MsMpEng.exe",
+      "NVDisplay.Container.exe",
+      "NgcIso.exe",
+      "NisSrv.exe",
+      "OfficeClickToRun.exe",
+      "OneDrive.Sync.Service.exe",
+      "OpenConsole.exe",
+      "RTUWPSrvcMain.exe",
+      "Registry",
+      "RiotClientCrashHandler.exe",
+      "RiotClientServices.exe",
+      "RuntimeBroker.exe",
+      "RvControlSvc.exe",
+      "RvRvpnGui.exe",
+      "SDXHelper.exe",
+      "SbieSvc.exe",
+      "Scheduler.exe",
+      "SearchHost.exe",
+      "SearchIndexer.exe",
+      "SearchProtocolHost.exe",
+      "SecurityHealthService.exe",
+      "SecurityHealthSystray.exe",
+      "ShareX.exe",
+      "ShellExperienceHost.exe",
+      "ShellHost.exe",
+      "StartMenuExperienceHost.exe",
+      "SteamService.exe",
+      "System",
+      "System Idle Process",
+      "Telegram.exe",
+      "TextInputHost.exe",
+      "UserOOBEBroker.exe",
+      "WMIRegistrationService.exe",
+      "WUDFHost.exe",
+      "WidgetBoard.exe",
+      "WidgetService.exe",
+      "WifiAutoInstallSrv.exe",
+      "WindowsTerminal.exe",
+      "WmiPrvSE.exe",
+      "Xonar Audio Center.exe",
+      "XtuService.exe",
+      "audiodg.exe",
+      "backgroundTaskHost.exe",
+      "buywell-edge.exe",
+      "chrome.exe",
+      "cmd.exe",
+      "codex-code-mode-host.exe",
+      "codex.exe",
+      "conhost.exe",
+      "csrss.exe",
+      "ctfmon.exe",
+      "dasHost.exe",
+      "dllhost.exe",
+      "dom-forms-final.exe",
+      "dwm.exe",
+      "explorer.exe",
+      "extension-host.exe",
+      "figma_agent.exe",
+      "final.exe",
+      "fontdrvhost.exe",
+      "go.exe",
+      "idalib-mcp.exe",
+      "iteration10.exe",
+      "jhi_service.exe",
+      "jusched.exe",
+      "lghub_agent.exe",
+      "lghub_gl.exe",
+      "lghub_system_tray.exe",
+      "lghub_updater.exe",
+      "logi_lamparray_service.AMD64.exe",
+      "lsass.exe",
+      "mariadbd.exe",
+      "memurai.exe",
+      "mimic-final.exe",
+      "mimic.exe",
+      "msedgewebview2.exe",
+      "mutations1.exe",
+      "mutations2.exe",
+      "mutations3.exe",
+      "node.exe",
+      "node_repl.exe",
+      "nvcontainer.exe",
+      "obs-browser-page.exe",
+      "obs64.exe",
+      "pet.exe",
+      "pg_ctl.exe",
+      "postgres.exe",
+      "powershell.exe",
+      "pwsh.exe",
+      "python.exe",
+      "selectors-final.exe",
+      "selectors-small.exe",
+      "selectors-state.exe",
+      "selectors-tree.exe",
+      "service_update.exe",
+      "services.exe",
+      "shadow-export.exe",
+      "sihost.exe",
+      "smss.exe",
+      "spoolsv.exe",
+      "sqlceip.exe",
+      "sqlservr.exe",
+      "sqlwriter.exe",
+      "steam.exe",
+      "steamwebhelper.exe",
+      "svchost.exe",
+      "taskhostw.exe",
+      "templates-final.exe",
+      "templates1.exe",
+      "templates2.exe",
+      "unsecapp.exe",
+      "uv.exe",
+      "vgtray.exe",
+      "vmcompute.exe",
+      "vmnat.exe",
+      "vmnetdhcp.exe",
+      "vmware-authd.exe",
+      "vmware-tray.exe",
+      "vmware-usbarbitrator64.exe",
+      "wallpaper64.exe",
+      "warp-svc.exe",
+      "windhawk.exe",
+      "wininit.exe",
+      "winlogon.exe",
+      "wlanext.exe",
+      "wslservice.exe",
+      "\u0420\u0407\u0420\u0405\u0420\u0491\u0420\u00b5\u0420\u0454\u0421\u0403 \u0420\u045a\u0421\u0453\u0420\u00b7\u0421\u2039\u0420\u0454\u0420\u00b0.exe"
+    ],
+    "background_caveat": "Interactive workstation; antivirus and other processes remain enabled and may affect results.",
+    "mimic_commit": "93656f59f2b9a49a67efe20a399ef6513b63f81a",
+    "git_status": "M docs/compatibility/repository-hydration-20260909/report.md\n M internal/browser/page.go\n M internal/browser/page_test.go\n M internal/browser/realm.go\n M internal/browser/snapshot.go\n M internal/cdp/server.go\n M internal/dom/dom.go\n M internal/webapi/surface.go\n M internal/webapi/surface.js\n?? compatibility/domain_tests.py\n?? compatibility/probes-mutations-reactions.expected.json\n?? compatibility/probes-mutations-reactions.json\n?? compatibility/probes-templates.expected.json\n?? compatibility/probes-templates.json\n?? docs/compatibility/coverage.md\n?? docs/compatibility/fetch-domain-20260909/\n?? docs/compatibility/forms-domain-20260909/\n?? docs/compatibility/mutations-reactions-20260909.md\n?? docs/compatibility/nodes-domain-20260909/\n?? docs/compatibility/repository-hydration-20260909/final-comparison.json\n?? docs/compatibility/selectors-domain-20260909/\n?? docs/compatibility/shadow-snapshot-20260909/\n?? docs/compatibility/standards-reuse-audit.md\n?? docs/compatibility/templates-domain-20260909.md\n?? internal/browser/dom_nodes_semantics_test.go\n?? internal/browser/dom_query.go\n?? internal/browser/fetch_semantics_test.go\n?? internal/browser/form_controls_test.go\n?? internal/browser/mutation_reaction_test.go\n?? internal/browser/selector_state.go\n?? internal/browser/selector_state_test.go\n?? internal/browser/selectors_semantics_test.go\n?? internal/browser/shadow_snapshot.go\n?? internal/browser/shadow_snapshot_test.go\n?? internal/browser/template_semantics_test.go\n?? internal/cdp/dom_query_test.go\n?? internal/cdp/dom_serialization_test.go\n?? internal/dom/character_data.go\n?? internal/dom/character_data_test.go\n?? internal/dom/selectors.go\n?? internal/dom/shadow_serialization.go\n?? internal/dom/shadow_serialization_test.go\n?? internal/dom/template.go\n?? internal/dom/template_test.go\n?? internal/webapi/dom_compatibility.js\n?? internal/webapi/fetch_compatibility.js\n?? internal/webapi/form_controls.js\n?? internal/webapi/selectors_compatibility.js\n?? internal/webapi/selectors_vendor.js\n?? internal/webapi/shadow_serialization.js\n?? internal/webapi/streams_vendor.js\n?? internal/webapi/templates_compatibility.js\n?? internal/webapi/vendor/",
+    "go": "go version go1.26.1 windows/amd64",
+    "mimic_build": "<repo>\\.build\\milestone-full-release.exe: go1.26.1\n\tpath\tgithub.com/moreveal/mimic/cmd/mimic\n\tmod\tgithub.com/moreveal/mimic\tv0.0.0-20260909002132-93656f59f2b9+dirty\t\n\tdep\tgithub.com/andybalholm/brotli\tv1.2.0\th1:ukwgCxwYrmACq68yiUqwIWnGY0cTPox/M94sVwToPjQ=\n\tdep\tgithub.com/bdandy/go-errors\tv1.2.2\th1:WdFv/oukjTJCLa79UfkGmwX7ZxONAihKu4V0mLIs11Q=\n\tdep\tgithub.com/bdandy/go-socks4\tv1.2.3\th1:Q6Y2heY1GRjCtHbmlKfnwrKVU/k81LS8mRGLRlmDlic=\n\tdep\tgithub.com/bogdanfinn/fhttp\tv0.6.9\th1:F9MsWR1K6JMRlXN4Q/MfjYmptr29nCdycQo+OPBG5U0=\n\tdep\tgithub.com/bogdanfinn/quic-go-utls\tv1.0.10-utls\th1:oZN+J3OKMmWaVbI/sx4ULvHiAXbWJKVcvEFW4fkybMU=\n\tdep\tgithub.com/bogdanfinn/tls-client\tv1.16.0\n\t=>\t./third_party/tls-client\t(devel)\t\n\t\n\tdep\tgithub.com/bogdanfinn/utls\tv1.7.8-barnius\th1:wRT83mP4hmuMM1/lIpLKKhzaEuyEKjux7VSj7XHFXdg=\n\tdep\tgithub.com/bogdanfinn/websocket\tv1.5.6-barnius\th1:QpdWVEZ9rKtcT7C2pU19uE2KQw2XevuKTDTzLxfDi/I=\n\tdep\tgithub.com/buke/quickjs-go\tv0.7.7\th1:kuG3d0Vnn7LBvO64vgW+fwSZ5E3XK5pcYDttiIYmatw=\n\tdep\tgithub.com/cloudflare/circl\tv1.6.2\th1:hL7VBpHHKzrV5WTfHCaBsgx/HGbBYlgrwvNXEVDYYsQ=\n\tdep\tgithub.com/dlclark/regexp2/v2\tv2.5.2\th1:HAsucWRhsqcDzl6Ua9aR8JwYOTzrZyPrF0/FNxJVAI0=\n\tdep\tgithub.com/dop251/goja\tv0.0.0-20260906210903-70ad66ec7ce4\th1:GsWm9G80nlJAmJE/r9qdyqQWieJVdJObCMxmu4cZ5dQ=\n\tdep\tgithub.com/go-sourcemap/sourcemap\tv2.1.3+incompatible\th1:W1iEw64niKVGogNgBN3ePyLFfuisuzeidWPMPWmECqU=\n\tdep\tgithub.com/google/pprof\tv0.0.0-20230207041349-798e818bf904\th1:4/hN5RUoecvl+RmJRE2YxKWtnnQls6rQjjW5oV7qg2U=\n\tdep\tgithub.com/google/uuid\tv1.6.0\th1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=\n\tdep\tgithub.com/gorilla/websocket\tv1.5.3\th1:saDtZ6Pbx/0u+bgYQ3q96pZgCzfhKXGPqt7kZ72aNNg=\n\tdep\tgithub.com/klauspost/compress\tv1.18.2\th1:iiPHWW0YrcFgpBYhsA6D1+fqHssJscY/Tm/y2Uqnapk=\n\tdep\tgithub.com/maclof/gov8\tv0.1.1\th1:zvxy8mW8g2EL11ESrs1HrZSZj4bzJ+JuDU3cAKBTmCs=\n\tdep\tgithub.com/quic-go/qpack\tv0.6.0\th1:g7W+BMYynC1LbYLSqRt8PBg5Tgwxn214ZZR34VIOjz8=\n\tdep\tgithub.com/tam7t/hpkp\tv0.0.0-20160821193359-2b70b4024ed5\th1:YqAladjX7xpA6BM04leXMWAEjS0mTZ5kUU9KRBriQJc=\n\tdep\tgolang.org/x/crypto\tv0.48.0\th1:/VRzVqiRSggnhY7gNRxPauEQ5Drw9haKdM0jqfcCFts=\n\tdep\tgolang.org/x/net\tv0.51.0\th1:94R/GTO7mt3/4wIKpcR5gkGmRLOuE/2hNGeWq/GBIFo=\n\tdep\tgolang.org/x/sys\tv0.41.0\th1:Ivj+2Cp/ylzLiEU89QhWblYnOE9zerudt9Ftecq2C6k=\n\tdep\tgolang.org/x/text\tv0.34.0\th1:oL/Qq0Kdaqxa1KbNeMKwQq0reLCCaFtqu2eNuSeNHbk=\n\tbuild\t-buildmode=exe\n\tbuild\t-compiler=gc\n\tbuild\tCGO_ENABLED=1\n\tbuild\tCGO_CFLAGS=\n\tbuild\tCGO_CPPFLAGS=\n\tbuild\tCGO_CXXFLAGS=\n\tbuild\tCGO_LDFLAGS=\n\tbuild\tGOARCH=amd64\n\tbuild\tGOOS=windows\n\tbuild\tGOAMD64=v1\n\tbuild\tvcs=git\n\tbuild\tvcs.revision=93656f59f2b9a49a67efe20a399ef6513b63f81a\n\tbuild\tvcs.time=2026-09-09T00:21:32Z\n\tbuild\tvcs.modified=true",
+    "mimic_v8": "15.2.124.1-rusty",
+    "binaries": {
+      "chrome": {
+        "path": "<repo>\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+        "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9"
+      },
+      "mimic": {
+        "path": "<repo>\\.build\\milestone-full-release.exe",
+        "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5"
+      }
+    },
+    "target": {
+      "milestone": 152,
+      "chrome_version": "152.0.7977.82",
+      "channel": "stable",
+      "platform": "windows-x64",
+      "chromium_ref": "refs/tags/152.0.7977.82",
+      "chromium_commit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+      "chromium_tree": "a1234efb76bffd5133c982cac4bef312c411da6a",
+      "main_branch_revision": 1669021,
+      "main_branch_commit": "b7fe14017379ddffae396d944fb8b59a5896c261",
+      "v8_revision": "4323497a6a73839e6d5260f6acd7ec0212cb3321",
+      "blink_idl_roots": {
+        "third_party/blink/renderer/core": "fdf0a40ab4ad3836cabdd27aa6fc661c525aeebe",
+        "third_party/blink/renderer/modules": "e811037541f58934bd12fe71c69b65ee6be4e73a"
+      },
+      "browser_protocol_json": "third_party/blink/public/devtools_protocol/browser_protocol-1.3.json",
+      "wpt_revision_source": "third_party/blink/web_tests/external/wpt",
+      "wpt_revision": "5251311032215fe14bbd74cd0867e14cb4b58e3f",
+      "generated_dir": "chrome/152/generated",
+      "differential_browser": {
+        "product": "Chrome",
+        "version": "152.0.7977.82",
+        "channel": "stable",
+        "platform": "windows-x64",
+        "v8_version": "15.2.124.21",
+        "browser_mode": "headful",
+        "environment_profile_id": "chrome-152-windows-x64-headful-controlled-v1",
+        "fresh_profile": true,
+        "window_size": "1280x800",
+        "authoritative": true
+      }
+    },
+    "fixture_sha256": {
+      "workload.js": "484019063e33e131756f67ab6f3076ad2c18e3959072fbae42f540455448c214",
+      "vendor\\react-dom.production.min.js": "35f4f974f4b2bcd44da73963347f8952e341f83909e4498227d4e26b98f66f0d",
+      "vendor\\REACT-LICENSE.txt": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85",
+      "vendor\\react.production.min.js": "d949f1c3687aedadcedac85261865f29b17cd273997e7f6b2bfc53b2f9d4c4dd"
+    },
+    "arguments": {
+      "chrome": "<repo>\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "mimic": "<repo>\\.build\\milestone-full-release.exe",
+      "output": "<repo>\\.build\\hydration-complete\\full-release",
+      "smoke": false,
+      "gate_only": false,
+      "resume": false,
+      "timeout": 30,
+      "skip_build": true
+    },
+    "timer": "time.perf_counter (Windows QPC)",
+    "readiness_probe": "WebSocket Target.getTargets reply",
+    "cpu_method": "Windows Job Object accounting, including exited descendants; percent of one logical CPU",
+    "memory": "sum of instantaneous Windows working sets/private bytes for job members, sampled every 50 ms; shared pages may be counted more than once",
+    "chrome_version": {
+      "protocolVersion": "1.3",
+      "product": "Chrome/152.0.7977.82",
+      "revision": "@d04cdb24d67b081f6cf80200ffc5233f44b61109",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+      "jsVersion": "15.2.124.21"
+    },
+    "mimic_version": {
+      "Browser": "Mimic/152.0.7977.82",
+      "Protocol-Version": "1.3",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+      "V8-Version": "virtual",
+      "webSocketDebuggerUrl": "ws://127.0.0.1:11955/devtools/page/f0f97286-5a6e-4817-8a72-99fd7ef17bcf"
+    }
+  },
+  "gates": {
+    "chrome/static": "VALID",
+    "chrome/cpu": "VALID",
+    "chrome/dom": "VALID",
+    "chrome/async": "VALID",
+    "chrome/react": "VALID",
+    "chrome/wasm": "VALID",
+    "mimic/static": "VALID",
+    "mimic/cpu": "VALID",
+    "mimic/dom": "VALID",
+    "mimic/async": "VALID",
+    "mimic/react": "VALID",
+    "mimic/wasm": "VALID"
+  },
+  "single_runs": [
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "cold",
+      "count": 10,
+      "statuses": {
+        "VALID": 10
+      },
+      "completion_median_ms": 25.251499995647464
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "warm",
+      "count": 20,
+      "statuses": {
+        "VALID": 20
+      },
+      "completion_median_ms": 21.16655000281753
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "cold",
+      "count": 10,
+      "statuses": {
+        "VALID": 10
+      },
+      "completion_median_ms": 52.007800000865245
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "warm",
+      "count": 20,
+      "statuses": {
+        "VALID": 20
+      },
+      "completion_median_ms": 46.03485000188812
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "cold",
+      "count": 10,
+      "statuses": {
+        "VALID": 10
+      },
+      "completion_median_ms": 36.24670000135666
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "warm",
+      "count": 20,
+      "statuses": {
+        "VALID": 20
+      },
+      "completion_median_ms": 47.420500002772314
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "cold",
+      "count": 10,
+      "statuses": {
+        "VALID": 10
+      },
+      "completion_median_ms": 49.29065000033006
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "warm",
+      "count": 20,
+      "statuses": {
+        "VALID": 20
+      },
+      "completion_median_ms": 43.836149998242036
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "cold",
+      "count": 10,
+      "statuses": {
+        "VALID": 10
+      },
+      "completion_median_ms": 38.86939999938477
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "warm",
+      "count": 20,
+      "statuses": {
+        "VALID": 20
+      },
+      "completion_median_ms": 41.06410000167671
+    },
+    {
+      "system": "chrome",
+      "workload": "wasm",
+      "mode": "cold",
+      "count": 10,
+      "statuses": {
+        "VALID": 10
+      },
+      "completion_median_ms": 29.325600000447594
+    },
+    {
+      "system": "chrome",
+      "workload": "wasm",
+      "mode": "warm",
+      "count": 20,
+      "statuses": {
+        "VALID": 20
+      },
+      "completion_median_ms": 23.13874999890686
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "cold",
+      "count": 10,
+      "statuses": {
+        "VALID": 10
+      },
+      "completion_median_ms": 174.13414999828092
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "warm",
+      "count": 20,
+      "statuses": {
+        "VALID": 20
+      },
+      "completion_median_ms": 52.32964999595424
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "cold",
+      "count": 10,
+      "statuses": {
+        "VALID": 10
+      },
+      "completion_median_ms": 207.94430000023567
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "warm",
+      "count": 20,
+      "statuses": {
+        "VALID": 20
+      },
+      "completion_median_ms": 85.58064999670023
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "cold",
+      "count": 10,
+      "statuses": {
+        "VALID": 10
+      },
+      "completion_median_ms": 245.62130000049365
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "warm",
+      "count": 20,
+      "statuses": {
+        "VALID": 20
+      },
+      "completion_median_ms": 122.99639999764622
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "cold",
+      "count": 10,
+      "statuses": {
+        "VALID": 10
+      },
+      "completion_median_ms": 222.55289999884553
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "warm",
+      "count": 20,
+      "statuses": {
+        "VALID": 20
+      },
+      "completion_median_ms": 98.55530000277213
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "cold",
+      "count": 10,
+      "statuses": {
+        "VALID": 10
+      },
+      "completion_median_ms": 220.63154999705148
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "warm",
+      "count": 20,
+      "statuses": {
+        "VALID": 20
+      },
+      "completion_median_ms": 88.07344999877387
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "cold",
+      "count": 10,
+      "statuses": {
+        "VALID": 10
+      },
+      "completion_median_ms": 179.3267500033835
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "warm",
+      "count": 20,
+      "statuses": {
+        "VALID": 20
+      },
+      "completion_median_ms": 57.1041500006686
+    }
+  ],
+  "concurrency": [
+    {
+      "system": "chrome",
+      "workload": "static",
+      "n": 1,
+      "waves": 20,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 15.49698290976032
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "n": 1,
+      "waves": 20,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 9.41893640932328
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "n": 5,
+      "waves": 5,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 20.983267522793295
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "n": 5,
+      "waves": 5,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 43.071293327898694
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "n": 10,
+      "waves": 5,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 26.34813527637657
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "n": 10,
+      "waves": 5,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 55.29939646319903
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "n": 25,
+      "waves": 5,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 26.335954498140865
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "n": 25,
+      "waves": 5,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 74.90275375550374
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "n": 50,
+      "waves": 5,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 25.970279508247597
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "n": 50,
+      "waves": 5,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 80.01444100635787
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "n": 100,
+      "waves": 5,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 23.79976307334853
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "n": 100,
+      "waves": 5,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 82.46607881518639
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "n": 1,
+      "waves": 20,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 8.671928977144024
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "n": 1,
+      "waves": 20,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 9.2789213025331
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "n": 5,
+      "waves": 5,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 16.562455695500372
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "n": 5,
+      "waves": 5,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 29.0060721310302
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "n": 10,
+      "waves": 5,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 22.732082628967827
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "n": 10,
+      "waves": 5,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 40.64097317291413
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "n": 25,
+      "waves": 5,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 25.21766374283019
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "n": 25,
+      "waves": 5,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 43.14678848123421
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "n": 50,
+      "waves": 5,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 19.067815677972813
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "n": 50,
+      "waves": 5,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 47.78023994653708
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "n": 100,
+      "waves": 4,
+      "stop_reason": "sustained paging (>1024 pages/s for 3 seconds)",
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 18.40821417420241
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "n": 100,
+      "waves": 5,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 47.91971645721565
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "n": 1,
+      "waves": 20,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 8.498771607140139
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "n": 1,
+      "waves": 20,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 9.329089130154252
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "n": 5,
+      "waves": 5,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 16.625667769696026
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "n": 5,
+      "waves": 5,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 29.494174899622692
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "n": 10,
+      "waves": 5,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 12.42053805526542
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "n": 10,
+      "waves": 5,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 33.479303094385266
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "n": 25,
+      "waves": 5,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 18.406392230771
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "n": 25,
+      "waves": 5,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 47.8423208966506
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "n": 50,
+      "waves": 5,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 19.292399543149607
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "n": 50,
+      "waves": 5,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 55.76824946253683
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "n": 100,
+      "waves": 5,
+      "stop_reason": null,
+      "success_rates": [
+        1.0,
+        1.0,
+        1.0,
+        1.0,
+        1.0
+      ],
+      "throughput_median": 22.486981443168588
+    }
+  ],
+  "notes": [],
+  "build": {
+    "command": [
+      "go",
+      "build",
+      "-o",
+      "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "./cmd/mimic"
+    ],
+    "revision": "93656f59f2b9a49a67efe20a399ef6513b63f81a",
+    "status": " M docs/compatibility/repository-hydration-20260909/report.md\n M internal/browser/page.go\n M internal/browser/page_test.go\n M internal/browser/realm.go\n M internal/browser/snapshot.go\n M internal/cdp/server.go\n M internal/dom/dom.go\n M internal/webapi/surface.go\n M internal/webapi/surface.js\n?? compatibility/domain_tests.py\n?? compatibility/probes-mutations-reactions.expected.json\n?? compatibility/probes-mutations-reactions.json\n?? compatibility/probes-templates.expected.json\n?? compatibility/probes-templates.json\n?? docs/compatibility/coverage.md\n?? docs/compatibility/fetch-domain-20260909/\n?? docs/compatibility/forms-domain-20260909/\n?? docs/compatibility/mutations-reactions-20260909.md\n?? docs/compatibility/nodes-domain-20260909/\n?? docs/compatibility/repository-hydration-20260909/final-comparison.json\n?? docs/compatibility/selectors-domain-20260909/\n?? docs/compatibility/shadow-snapshot-20260909/\n?? docs/compatibility/standards-reuse-audit.md\n?? docs/compatibility/templates-domain-20260909.md\n?? internal/browser/dom_nodes_semantics_test.go\n?? internal/browser/dom_query.go\n?? internal/browser/fetch_semantics_test.go\n?? internal/browser/form_controls_test.go\n?? internal/browser/mutation_reaction_test.go\n?? internal/browser/selector_state.go\n?? internal/browser/selector_state_test.go\n?? internal/browser/selectors_semantics_test.go\n?? internal/browser/shadow_snapshot.go\n?? internal/browser/shadow_snapshot_test.go\n?? internal/browser/template_semantics_test.go\n?? internal/cdp/dom_query_test.go\n?? internal/cdp/dom_serialization_test.go\n?? internal/dom/character_data.go\n?? internal/dom/character_data_test.go\n?? internal/dom/selectors.go\n?? internal/dom/shadow_serialization.go\n?? internal/dom/shadow_serialization_test.go\n?? internal/dom/template.go\n?? internal/dom/template_test.go\n?? internal/webapi/dom_compatibility.js\n?? internal/webapi/fetch_compatibility.js\n?? internal/webapi/form_controls.js\n?? internal/webapi/selectors_compatibility.js\n?? internal/webapi/selectors_vendor.js\n?? internal/webapi/shadow_serialization.js\n?? internal/webapi/streams_vendor.js\n?? internal/webapi/templates_compatibility.js\n?? internal/webapi/vendor/\n",
+    "sha256": {
+      "mimic": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "chrome": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9"
+    },
+    "executables": {
+      "mimic": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "chrome": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe"
+    },
+    "harness_sha256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7",
+    "harness_files": {
+      "compare.py": "274b156ee88e67085f5e556ef79629146f5e7287ee54af844476a0c005e65a5b",
+      "report.py": "f12e393341c00e9e03748a06913fa639c1069f66dc7acb71959cffd51647f214",
+      "requirements.txt": "06e6d87d17f39a59fe7b2576545231fe65d5a1940d22e63fc2b32b6cfa12123b",
+      "run.ps1": "6c50b0a55886278de7c1e4d92b77b42bf2cfad59fa451dbaa766b0e0eae84fa6",
+      "run.py": "67718e844bce74b7757f2238716233b9d8683a17294f2b02017667b9c1e44cd3",
+      "test_harness.py": "ddb8dcf74a192d3403971833cf5e011dd8578a9acd9a060b3b265cc6d79aef2a",
+      "v8_version.go": "669a669b0545ba599edb2f7923617f154b976e7377de89d8b2e1f477bdb12f09",
+      "windows_metrics.py": "57ba1e10dfb1f1cb439a52ad5f7f5795c3ba4eef25ae22c9514ecfe115434cd5",
+      "fixtures/workload.js": "484019063e33e131756f67ab6f3076ad2c18e3959072fbae42f540455448c214",
+      "fixtures/vendor/react-dom.production.min.js": "35f4f974f4b2bcd44da73963347f8952e341f83909e4498227d4e26b98f66f0d",
+      "fixtures/vendor/REACT-LICENSE.txt": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85",
+      "fixtures/vendor/react.production.min.js": "d949f1c3687aedadcedac85261865f29b17cd273997e7f6b2bfc53b2f9d4c4dd"
+    },
+    "built_at": "2026-09-09T05:43:13.373727+04:00"
+  },
+  "launch_verifications": [
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:43:16.257406+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:43:17.436884+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:43:18.509736+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:43:18.985262+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:43:19.497165+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:43:19.981684+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:43:20.491531+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:43:20.984328+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:43:21.490876+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:43:21.998765+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:43:22.509121+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:43:23.002997+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:43:23.460049+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:43:24.001359+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:43:24.545217+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:43:25.110999+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:43:25.661479+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:43:26.204467+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:43:26.752567+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:43:27.286248+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:43:27.834099+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:43:28.382371+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:43:28.916421+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:43:29.463501+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:43:29.970294+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:43:37.484466+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:43:44.987403+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:43:45.580006+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:43:46.192810+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:43:46.795635+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:43:47.387992+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:43:47.979635+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:43:48.563467+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:43:49.166882+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:43:49.779716+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:43:50.369915+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:43:50.953204+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:43:51.479539+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:43:52.033432+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:43:52.582524+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:43:53.191079+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:43:53.698020+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:43:54.262249+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:43:54.799618+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:43:55.345995+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:43:55.868389+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:43:56.400924+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:43:56.962484+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:43:57.557426+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:44:05.979177+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:44:14.148180+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:44:14.666179+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:44:15.202508+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:44:15.760664+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:44:16.304665+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:44:16.833135+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:44:17.379192+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:44:17.939108+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:44:18.498767+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:44:18.990231+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:44:19.587570+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:44:20.158565+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:44:20.809550+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:44:21.425327+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:44:22.052725+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:44:22.700316+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:44:23.336159+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:44:23.965543+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:44:24.580301+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:44:25.232241+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:44:25.858794+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:44:26.496967+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:44:27.097116+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:44:35.632552+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:44:45.268768+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:44:45.883077+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:44:46.509327+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:44:47.113867+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:44:47.733938+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:44:48.339594+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:44:49.012640+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:44:49.629732+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:44:50.235030+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:44:50.851549+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:44:51.465943+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:44:52.023077+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:44:52.587096+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:44:53.190363+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:44:53.760444+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:44:54.279545+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:44:54.828514+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:44:55.403578+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:44:55.974338+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:44:56.565927+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:44:57.109088+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:44:57.644624+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:44:58.261261+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:45:07.378687+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:45:16.224025+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:45:16.790165+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:45:17.363956+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:45:17.985196+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:45:18.527521+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:45:19.051645+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:45:19.577385+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:45:20.163181+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:45:20.789156+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:45:21.382129+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:45:22.441336+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:45:23.110783+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:45:23.761351+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:45:24.392615+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:45:25.042846+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:45:25.675345+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:45:26.319002+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:45:26.959171+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:45:27.605210+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:45:28.245080+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:45:28.897861+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:45:29.507011+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:45:30.057662+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:45:39.004678+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:45:48.404519+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:45:48.988751+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:45:49.573757+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:45:50.192060+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:45:50.787111+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:45:51.372697+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:45:51.971760+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:45:52.555417+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:45:53.171400+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:45:53.781945+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:45:54.382709+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:45:54.922418+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:45:55.470223+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:45:55.984206+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:45:56.557335+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:45:57.147032+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:45:57.729232+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:45:58.289557+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:45:58.861061+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:45:59.416751+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:45:59.958922+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:46:00.485659+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:46:01.103964+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:46:09.957178+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:46:18.724242+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:46:27.857874+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:46:37.601942+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:46:41.922710+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:46:45.429294+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:46:51.282302+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:46:55.470435+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:47:05.461734+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:47:11.947354+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:47:30.031120+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:47:40.690231+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:48:17.214364+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:48:35.906751+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:48:49.578830+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:49:03.037780+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:49:08.842907+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:49:13.908804+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:49:21.062550+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:49:26.910559+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:49:38.660204+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:49:47.908948+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:50:11.937731+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:50:30.445380+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:51:11.033016+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:51:41.632635+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:52:04.980252+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:52:22.336852+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:52:29.731384+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:52:39.259359+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:52:55.047345+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:53:06.772402+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:53:27.409955+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:53:42.343738+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:54:07.663609+04:00"
+    },
+    {
+      "system": "chrome",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "verified_at": "2026-09-09T05:54:22.551242+04:00"
+    },
+    {
+      "system": "mimic",
+      "executable": "E:\\GitHub\\mimic\\.build\\milestone-full-release.exe",
+      "sha256": "cf1e8e1eba334b27e3ee641bc11255880ba6d1a0935877d084ecd0eee1f447b5",
+      "verified_at": "2026-09-09T05:55:04.419534+04:00"
+    }
+  ]
+}

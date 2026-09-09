@@ -1,0 +1,80 @@
+{
+  "chrome": {
+    "input-initial": {
+      "before": {
+        "value": "",
+        "defaultValue": "",
+        "checked": false,
+        "defaultChecked": false
+      },
+      "query": "",
+      "result": 0
+    },
+    "input-dirty-value": [
+      [
+        "server",
+        "server",
+        "server"
+      ],
+      [
+        "edit",
+        "server",
+        "server"
+      ],
+      [
+        "edit",
+        "new-default",
+        "new-default"
+      ],
+      [
+        "edit",
+        "other",
+        "other"
+      ]
+    ],
+    "input-value-null": [
+      "",
+      "",
+      null
+    ]
+  },
+  "mimic": {
+    "input-initial": {
+      "before": {
+        "checked": null,
+        "defaultChecked": null,
+        "defaultValue": null,
+        "value": null
+      },
+      "query": null,
+      "result": "TypeError"
+    },
+    "input-dirty-value": [
+      [
+        null,
+        null,
+        "server"
+      ],
+      [
+        null,
+        null,
+        "server"
+      ],
+      [
+        null,
+        null,
+        "new-default"
+      ],
+      [
+        null,
+        null,
+        "new-default"
+      ]
+    ],
+    "input-value-null": [
+      null,
+      null,
+      null
+    ]
+  }
+}

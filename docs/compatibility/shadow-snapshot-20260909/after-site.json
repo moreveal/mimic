@@ -1,0 +1,240 @@
+{
+  "live": [
+    {
+      "datetime": "2026-08-26T06:53:51.000Z",
+      "light": "Aug 26, 2026",
+      "shadow": "2 weeks ago"
+    },
+    {
+      "datetime": "2026-08-26T06:53:51.000Z",
+      "light": "Aug 26, 2026",
+      "shadow": "2 weeks ago"
+    },
+    {
+      "datetime": "2026-04-22T19:43:22.000Z",
+      "light": "Apr 22, 2026",
+      "shadow": "5 months ago"
+    },
+    {
+      "datetime": "2016-10-07T17:51:10.000Z",
+      "light": "Oct 7, 2016",
+      "shadow": "10 years ago"
+    },
+    {
+      "datetime": "2026-05-27T03:54:18.000Z",
+      "light": "May 27, 2026",
+      "shadow": "4 months ago"
+    },
+    {
+      "datetime": "2026-08-26T06:53:51.000Z",
+      "light": "Aug 26, 2026",
+      "shadow": "2 weeks ago"
+    },
+    {
+      "datetime": "2026-06-27T18:42:36.000Z",
+      "light": "Jun 27, 2026",
+      "shadow": "3 months ago"
+    },
+    {
+      "datetime": "2026-08-26T06:39:19.000Z",
+      "light": "Aug 26, 2026",
+      "shadow": "2 weeks ago"
+    },
+    {
+      "datetime": "2026-06-27T18:42:36.000Z",
+      "light": "Jun 27, 2026",
+      "shadow": "3 months ago"
+    },
+    {
+      "datetime": "2026-05-13T00:40:37.000Z",
+      "light": "May 13, 2026",
+      "shadow": "4 months ago"
+    },
+    {
+      "datetime": "2026-05-13T00:40:37.000Z",
+      "light": "May 13, 2026",
+      "shadow": "4 months ago"
+    },
+    {
+      "datetime": "2026-05-13T00:40:37.000Z",
+      "light": "May 13, 2026",
+      "shadow": "4 months ago"
+    },
+    {
+      "datetime": "2026-06-27T18:42:36.000Z",
+      "light": "Jun 27, 2026",
+      "shadow": "3 months ago"
+    },
+    {
+      "datetime": "2026-05-27T03:54:18.000Z",
+      "light": "May 27, 2026",
+      "shadow": "4 months ago"
+    },
+    {
+      "datetime": "2024-04-26T00:07:41.000Z",
+      "light": "Apr 26, 2024",
+      "shadow": "2 years ago"
+    },
+    {
+      "datetime": "2022-08-20T23:12:57.000Z",
+      "light": "Aug 20, 2022",
+      "shadow": "4 years ago"
+    },
+    {
+      "datetime": "2026-04-18T21:55:21.000Z",
+      "light": "Apr 18, 2026",
+      "shadow": "5 months ago"
+    },
+    {
+      "datetime": "2015-11-23T19:43:25.000Z",
+      "light": "Nov 23, 2015",
+      "shadow": "11 years ago"
+    },
+    {
+      "datetime": "2026-04-22T19:43:22.000Z",
+      "light": "Apr 22, 2026",
+      "shadow": "5 months ago"
+    },
+    {
+      "datetime": "2015-08-12T18:18:38.000Z",
+      "light": "Aug 12, 2015",
+      "shadow": "11 years ago"
+    },
+    {
+      "datetime": "2026-05-07T19:53:50.000Z",
+      "light": "May 7, 2026",
+      "shadow": "4 months ago"
+    },
+    {
+      "datetime": "2026-05-27T03:54:18.000Z",
+      "light": "May 27, 2026",
+      "shadow": "4 months ago"
+    },
+    {
+      "datetime": "2020-11-22T13:21:54.000Z",
+      "light": "Nov 22, 2020",
+      "shadow": "6 years ago"
+    }
+  ],
+  "exportChrome": [
+    {
+      "datetime": "2026-08-26T06:53:51.000Z",
+      "light": "Aug 26, 2026",
+      "shadow": "2 weeks ago"
+    },
+    {
+      "datetime": "2026-08-26T06:53:51.000Z",
+      "light": "Aug 26, 2026",
+      "shadow": "2 weeks ago"
+    },
+    {
+      "datetime": "2026-04-22T19:43:22.000Z",
+      "light": "Apr 22, 2026",
+      "shadow": "5 months ago"
+    },
+    {
+      "datetime": "2016-10-07T17:51:10.000Z",
+      "light": "Oct 7, 2016",
+      "shadow": "10 years ago"
+    },
+    {
+      "datetime": "2026-05-27T03:54:18.000Z",
+      "light": "May 27, 2026",
+      "shadow": "4 months ago"
+    },
+    {
+      "datetime": "2026-08-26T06:53:51.000Z",
+      "light": "Aug 26, 2026",
+      "shadow": "2 weeks ago"
+    },
+    {
+      "datetime": "2026-06-27T18:42:36.000Z",
+      "light": "Jun 27, 2026",
+      "shadow": "3 months ago"
+    },
+    {
+      "datetime": "2026-08-26T06:39:19.000Z",
+      "light": "Aug 26, 2026",
+      "shadow": "2 weeks ago"
+    },
+    {
+      "datetime": "2026-06-27T18:42:36.000Z",
+      "light": "Jun 27, 2026",
+      "shadow": "3 months ago"
+    },
+    {
+      "datetime": "2026-05-13T00:40:37.000Z",
+      "light": "May 13, 2026",
+      "shadow": "4 months ago"
+    },
+    {
+      "datetime": "2026-05-13T00:40:37.000Z",
+      "light": "May 13, 2026",
+      "shadow": "4 months ago"
+    },
+    {
+      "datetime": "2026-05-13T00:40:37.000Z",
+      "light": "May 13, 2026",
+      "shadow": "4 months ago"
+    },
+    {
+      "datetime": "2026-06-27T18:42:36.000Z",
+      "light": "Jun 27, 2026",
+      "shadow": "3 months ago"
+    },
+    {
+      "datetime": "2026-05-27T03:54:18.000Z",
+      "light": "May 27, 2026",
+      "shadow": "4 months ago"
+    },
+    {
+      "datetime": "2024-04-26T00:07:41.000Z",
+      "light": "Apr 26, 2024",
+      "shadow": "2 years ago"
+    },
+    {
+      "datetime": "2022-08-20T23:12:57.000Z",
+      "light": "Aug 20, 2022",
+      "shadow": "4 years ago"
+    },
+    {
+      "datetime": "2026-04-18T21:55:21.000Z",
+      "light": "Apr 18, 2026",
+      "shadow": "5 months ago"
+    },
+    {
+      "datetime": "2015-11-23T19:43:25.000Z",
+      "light": "Nov 23, 2015",
+      "shadow": "11 years ago"
+    },
+    {
+      "datetime": "2026-04-22T19:43:22.000Z",
+      "light": "Apr 22, 2026",
+      "shadow": "5 months ago"
+    },
+    {
+      "datetime": "2015-08-12T18:18:38.000Z",
+      "light": "Aug 12, 2015",
+      "shadow": "11 years ago"
+    },
+    {
+      "datetime": "2026-05-07T19:53:50.000Z",
+      "light": "May 7, 2026",
+      "shadow": "4 months ago"
+    },
+    {
+      "datetime": "2026-05-27T03:54:18.000Z",
+      "light": "May 27, 2026",
+      "shadow": "4 months ago"
+    },
+    {
+      "datetime": "2020-11-22T13:21:54.000Z",
+      "light": "Nov 22, 2020",
+      "shadow": "6 years ago"
+    }
+  ],
+  "equal": true,
+  "warnings": [
+    "Resource unavailable: https://github.githubassets.com/assets/images/modules/signup/icons/alert-fill-12.svg (status 404, error <nil>)"
+  ]
+}

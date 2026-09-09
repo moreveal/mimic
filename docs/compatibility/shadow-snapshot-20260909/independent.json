@@ -1,0 +1,14 @@
+{
+  "chrome": {
+    "light": "Aug 26, 2026",
+    "shadow": "2 weeks ago",
+    "relative": "2 weeks ago",
+    "defaultLocale": "ru"
+  },
+  "mimic": {
+    "defaultLocale": "ru",
+    "light": "Aug 26, 2026",
+    "relative": "2 weeks ago",
+    "shadow": "2 weeks ago"
+  }
+}

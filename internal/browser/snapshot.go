@@ -38,11 +38,11 @@ func (p *Page) CaptureSnapshot(ctx context.Context) (*Snapshot, error) {
 	if !ok {
 		return nil, fmt.Errorf("page has no document")
 	}
-	source, err := d.InnerHTML(d.Root().ID)
+	shadows, err := p.Top.Realm.ShadowSnapshots(ctx)
 	if err != nil {
 		return nil, err
 	}
-	root, err := html.Parse(strings.NewReader(source))
+	root, err := d.SnapshotTree(d.Root().ID, shadows)
 	if err != nil {
 		return nil, err
 	}
@@ -73,6 +73,15 @@ func (p *Page) CaptureSnapshot(ctx context.Context) (*Snapshot, error) {
 	findBase(root)
 	b.rewriteHTML(root, base)
 	var output bytes.Buffer
+	// Portable snapshots use the historical HTML5 preamble exactly once.
+	// Remove only the immutable projection's doctype, not canonical DOM state.
+	for c := root.FirstChild; c != nil; {
+		next := c.NextSibling
+		if c.Type == html.DoctypeNode {
+			root.RemoveChild(c)
+		}
+		c = next
+	}
 	output.WriteString("<!doctype html>\n")
 	if err := html.Render(&output, root); err != nil {
 		return nil, err

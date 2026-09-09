@@ -1,0 +1,17 @@
+{
+  "chrome": {
+    "html": "x",
+    "error": {
+      "type": "object",
+      "name": "TypeError",
+      "isTypeError": true
+    }
+  },
+  "mimic": {
+    "error": {
+      "isTypeError": false,
+      "type": "string"
+    },
+    "html": "<tr><td>x</td></tr>"
+  }
+}

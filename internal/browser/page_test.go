@@ -1676,7 +1676,7 @@ func TestSameOriginWindowProxyForwardsRealmGlobalsAfterDetach(t *testing.T) {
 
 func TestReadableWritableAndTransformStreams(t *testing.T) {
 	p := testPage(t)
-	v, err := p.Evaluate(context.Background(), `(async()=>{const blob=new Blob(['abc']),reader=blob.stream().getReader(),first=await reader.read(),last=await reader.read(),written=[];const writable=new WritableStream({write(v){written.push(v)}}),transform=new TransformStream({transform(v,c){c.enqueue(v*2)}}),transformedReader=transform.readable.getReader(),writer=transform.writable.getWriter();await writer.write(3);await writer.close();const transformed=await transformedReader.read();const source=new ReadableStream({start(c){c.enqueue('x');c.close()}});await source.pipeTo(writable);return {instance:blob.stream() instanceof ReadableStream,text:String.fromCharCode(...first.value),done:last.done,written:written.join(''),transformed:transformed.value}})()`)
+	v, err := p.Evaluate(context.Background(), `(async()=>{const blob=new Blob(['abc']),reader=blob.stream().getReader(),first=await reader.read(),last=await reader.read(),written=[];const writable=new WritableStream({write(v){written.push(v)}}),transform=new TransformStream({transform(v,c){c.enqueue(v*2)}}),transformedReader=transform.readable.getReader(),writer=transform.writable.getWriter();const transformedRead=transformedReader.read();await writer.write(3);await writer.close();const transformed=await transformedRead;const source=new ReadableStream({start(c){c.enqueue('x');c.close()}});await source.pipeTo(writable);return {instance:blob.stream() instanceof ReadableStream,text:String.fromCharCode(...first.value),done:last.done,written:written.join(''),transformed:transformed.value}})()`)
 	if err != nil {
 		t.Fatal(err)
 	}
