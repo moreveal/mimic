@@ -28,6 +28,14 @@ deterministic random seeds and replayable server decisions are not captured.
 Tokens expire, and the output is not a guarantee of deterministic offline replay.
 No fresh-process or profile hash is claimed when attaching to an existing browser.
 
+`summarize_trace.py` reads either Mimic trace JSON or native CDP events JSONL.
+It includes console errors/warnings as well as runtime exceptions and network
+failures; filtering only Mimic's `kind=error` misses caught exceptions logged by
+the page. Use `--output` to keep its UTF-8 JSON alongside the private input.
+The summary records redirects and native document responses but does not infer
+challenge passage from the absence of exceptions or from an HTTP status alone.
+Caught exceptions that are never logged still require a separate inspector run.
+
 For the private iroshop capture made on 2026-09-09, successful **Cloudflare passage**
 means the initial HTTP 403 `cf-mitigated: challenge` was followed by the application
 document without that header and a `cf_clearance` cookie. The requested
