@@ -11,7 +11,7 @@ Declarations store canonical names, so aliases share values and priority.
 CSSOM method arguments are case-insensitive CSS spellings; camelCase spellings
 are only accepted through JavaScript property access.
 
-Eleven oracle fixtures run on both V8 and Goja:
+Twenty-three oracle fixtures run on both V8 and Goja:
 
 - `values`: accepted and rejected keyword values for appearance and twelve
   related families, including CSS-wide values and specified variable references;
@@ -29,6 +29,18 @@ Eleven oracle fixtures run on both V8 and Goja:
 - `state`: cloning, same-value attribute writes, cssText reparsing, namespace/Attr
   writes, removal and custom-element reaction visibility.
 - `reflection`: WebKit name enumeration and indexed/alias property descriptors.
+- `flex`, `flex-edges`, `numbers`: ordinary flex/flex-flow grammar, component
+  validation, numeric saturation and specified-value number formatting;
+- `border-text`, `colors`: logical borders and text stroke, named/system colors,
+  hexadecimal colors and comma-separated RGB(A) forms;
+- `columns-emphasis`, `column-count`: column rule/legacy columns and text emphasis,
+  including integer limits and quoted CSS strings;
+- `radius`: standard and prefixed radii, including their distinct two-value forms;
+- `ordinary-relations`: recombination after component edits in inline and rule state;
+- `supports-reflection`: native function shape and detached invocation.
+- `animation-transition`, `animation-longhands`: ordinary animation/transition
+  shorthand and component declarations, comma lists, delays, keyword/cubic-bezier/
+  steps easing, iteration/direction/fill/play state, transition behavior and edits.
 
 Inline parsed declarations belong to the canonical DOM node, alongside their
 attribute serialization. They cannot always be reconstructed from that string:
@@ -43,17 +55,22 @@ must not trigger extra inheritance traversal or geometry work. Declaration
 splitting respects quoted strings, comments and nested token blocks, including
 semicolons inside custom property values.
 
-## Remaining work
+## Deferred boundaries
 
-The inventory and ordinary shorthand-values oracles remain diagnostic, not
-passing conformance fixtures. The 16 multi-component declarations still need
-ordinary value grammar and component-specific recombination beyond CSS-wide and
-pending values. The grammar and computed-value behavior
+The inventory and aggregate ordinary shorthand-values oracles remain diagnostic,
+not passing conformance fixtures. Ordinary grammar is now modeled for flex,
+flex-flow, four logical border shorthands, border-radius, column-rule, legacy
+columns, text-emphasis, text-stroke, animation and transition. Mask families
+still require ordinary grammar. The grammar and computed-value behavior
 of the remaining properties are not established merely by the alias table.
 Examples include legacy mask/break value conversion, colors, lengths,
-transforms, animations, transitions, border and text shorthands.
+transforms and computed lengths/colors. Animation and transition support here
+describes declarations; it does not introduce an animation playback engine.
 
-CSS escapes, full variable substitution/cycle handling, arbitrary support
+The new shared value parser covers lexical numbers, dimensions, quoted-string
+escapes and bounded linear length calculations. Arbitrary math functions,
+modern color/easing functions, general identifier escapes and the extended columns
+height/wrap syntax remain incomplete. Full variable substitution/cycle handling, arbitrary support
 conditions, and cascade layers are not yet implemented comprehensively. The
 keyword computed-value helper does not claim complete UA stylesheet behavior
 for form controls or pseudo-elements. Non-CSS `webkit*` APIs require a separate

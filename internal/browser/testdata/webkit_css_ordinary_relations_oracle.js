@@ -1,0 +1,5 @@
+(()=>{
+ const cases=[['-webkit-flex','auto','flex-grow','3'],['-webkit-flex-flow','row wrap','flex-direction','column'],['-webkit-border-before','1px solid red','border-block-start-width','3px'],['-webkit-text-stroke','1px red','-webkit-text-stroke-color','blue'],['-webkit-column-rule','1px solid red','column-rule-width','2px'],['-webkit-columns','10px 3','column-count','4'],['-webkit-text-emphasis','open circle red','text-emphasis-color','blue'],['-webkit-border-radius','2px 4px','border-top-left-radius','5px 6px']];
+ const out={};for(const mode of ['inline','rule']){out[mode]={};for(const [property,value,component,replacement] of cases){let s;if(mode==='inline')s=document.createElement('div').style;else {const sheet=new CSSStyleSheet();sheet.replaceSync('div{}');s=sheet.cssRules[0].style}s.setProperty(property,value);s.setProperty(component,replacement);out[mode][property]=[s.cssText,s.getPropertyValue(property),s.length,Array.from({length:s.length},(_,i)=>s.item(i))];}}
+ const s=document.createElement('div').style;s['-webkit-border-radius']='2px 4px';out.bracket=s.cssText;return out;
+})()

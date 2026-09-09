@@ -1,0 +1,1929 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/webkit_css_border_text_oracle.js",
+    "fixtureSHA256": "92d9401b40380ec35b582e4e233798e507f71d86a4ea88445ddc999c95471d49",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "-webkit-border-before": {
+      "0": {
+        "text": "border-block-start: 0px;",
+        "value": "0px",
+        "supported": true,
+        "components": [
+          [
+            "border-block-start-width",
+            "0px"
+          ],
+          [
+            "border-block-start-style",
+            "initial"
+          ],
+          [
+            "border-block-start-color",
+            "initial"
+          ]
+        ]
+      },
+      "none": {
+        "text": "border-block-start: none;",
+        "value": "none",
+        "supported": true,
+        "components": [
+          [
+            "border-block-start-width",
+            "initial"
+          ],
+          [
+            "border-block-start-style",
+            "none"
+          ],
+          [
+            "border-block-start-color",
+            "initial"
+          ]
+        ]
+      },
+      "auto": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "initial": {
+        "text": "border-block-start: initial;",
+        "value": "initial",
+        "supported": true,
+        "components": [
+          [
+            "border-block-start-width",
+            "initial"
+          ],
+          [
+            "border-block-start-style",
+            "initial"
+          ],
+          [
+            "border-block-start-color",
+            "initial"
+          ]
+        ]
+      },
+      "1px solid red": {
+        "text": "border-block-start: 1px solid red;",
+        "value": "1px solid red",
+        "supported": true,
+        "components": [
+          [
+            "border-block-start-width",
+            "1px"
+          ],
+          [
+            "border-block-start-style",
+            "solid"
+          ],
+          [
+            "border-block-start-color",
+            "red"
+          ]
+        ]
+      },
+      "red solid 1px": {
+        "text": "border-block-start: 1px solid red;",
+        "value": "1px solid red",
+        "supported": true,
+        "components": [
+          [
+            "border-block-start-width",
+            "1px"
+          ],
+          [
+            "border-block-start-style",
+            "solid"
+          ],
+          [
+            "border-block-start-color",
+            "red"
+          ]
+        ]
+      },
+      "2px": {
+        "text": "border-block-start: 2px;",
+        "value": "2px",
+        "supported": true,
+        "components": [
+          [
+            "border-block-start-width",
+            "2px"
+          ],
+          [
+            "border-block-start-style",
+            "initial"
+          ],
+          [
+            "border-block-start-color",
+            "initial"
+          ]
+        ]
+      },
+      "thin": {
+        "text": "border-block-start: thin;",
+        "value": "thin",
+        "supported": true,
+        "components": [
+          [
+            "border-block-start-width",
+            "thin"
+          ],
+          [
+            "border-block-start-style",
+            "initial"
+          ],
+          [
+            "border-block-start-color",
+            "initial"
+          ]
+        ]
+      },
+      "medium": {
+        "text": "border-block-start: medium;",
+        "value": "medium",
+        "supported": true,
+        "components": [
+          [
+            "border-block-start-width",
+            "medium"
+          ],
+          [
+            "border-block-start-style",
+            "initial"
+          ],
+          [
+            "border-block-start-color",
+            "initial"
+          ]
+        ]
+      },
+      "thick": {
+        "text": "border-block-start: thick;",
+        "value": "thick",
+        "supported": true,
+        "components": [
+          [
+            "border-block-start-width",
+            "thick"
+          ],
+          [
+            "border-block-start-style",
+            "initial"
+          ],
+          [
+            "border-block-start-color",
+            "initial"
+          ]
+        ]
+      },
+      "-1px": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "20%": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "red": {
+        "text": "border-block-start: red;",
+        "value": "red",
+        "supported": true,
+        "components": [
+          [
+            "border-block-start-width",
+            "initial"
+          ],
+          [
+            "border-block-start-style",
+            "initial"
+          ],
+          [
+            "border-block-start-color",
+            "red"
+          ]
+        ]
+      },
+      "transparent": {
+        "text": "border-block-start: transparent;",
+        "value": "transparent",
+        "supported": true,
+        "components": [
+          [
+            "border-block-start-width",
+            "initial"
+          ],
+          [
+            "border-block-start-style",
+            "initial"
+          ],
+          [
+            "border-block-start-color",
+            "transparent"
+          ]
+        ]
+      },
+      "currentcolor": {
+        "text": "border-block-start: currentcolor;",
+        "value": "currentcolor",
+        "supported": true,
+        "components": [
+          [
+            "border-block-start-width",
+            "initial"
+          ],
+          [
+            "border-block-start-style",
+            "initial"
+          ],
+          [
+            "border-block-start-color",
+            "currentcolor"
+          ]
+        ]
+      },
+      "rebeccapurple": {
+        "text": "border-block-start: rebeccapurple;",
+        "value": "rebeccapurple",
+        "supported": true,
+        "components": [
+          [
+            "border-block-start-width",
+            "initial"
+          ],
+          [
+            "border-block-start-style",
+            "initial"
+          ],
+          [
+            "border-block-start-color",
+            "rebeccapurple"
+          ]
+        ]
+      },
+      "#f00": {
+        "text": "border-block-start: rgb(255, 0, 0);",
+        "value": "rgb(255, 0, 0)",
+        "supported": true,
+        "components": [
+          [
+            "border-block-start-width",
+            "initial"
+          ],
+          [
+            "border-block-start-style",
+            "initial"
+          ],
+          [
+            "border-block-start-color",
+            "rgb(255, 0, 0)"
+          ]
+        ]
+      },
+      "#abcd": {
+        "text": "border-block-start: rgba(170, 187, 204, 0.867);",
+        "value": "rgba(170, 187, 204, 0.867)",
+        "supported": true,
+        "components": [
+          [
+            "border-block-start-width",
+            "initial"
+          ],
+          [
+            "border-block-start-style",
+            "initial"
+          ],
+          [
+            "border-block-start-color",
+            "rgba(170, 187, 204, 0.867)"
+          ]
+        ]
+      },
+      "#12345678": {
+        "text": "border-block-start: rgba(18, 52, 86, 0.47);",
+        "value": "rgba(18, 52, 86, 0.47)",
+        "supported": true,
+        "components": [
+          [
+            "border-block-start-width",
+            "initial"
+          ],
+          [
+            "border-block-start-style",
+            "initial"
+          ],
+          [
+            "border-block-start-color",
+            "rgba(18, 52, 86, 0.47)"
+          ]
+        ]
+      },
+      "rgb(10, 20, 30)": {
+        "text": "border-block-start: rgb(10, 20, 30);",
+        "value": "rgb(10, 20, 30)",
+        "supported": true,
+        "components": [
+          [
+            "border-block-start-width",
+            "initial"
+          ],
+          [
+            "border-block-start-style",
+            "initial"
+          ],
+          [
+            "border-block-start-color",
+            "rgb(10, 20, 30)"
+          ]
+        ]
+      },
+      "rgba(10, 20, 30, 0.5)": {
+        "text": "border-block-start: rgba(10, 20, 30, 0.5);",
+        "value": "rgba(10, 20, 30, 0.5)",
+        "supported": true,
+        "components": [
+          [
+            "border-block-start-width",
+            "initial"
+          ],
+          [
+            "border-block-start-style",
+            "initial"
+          ],
+          [
+            "border-block-start-color",
+            "rgba(10, 20, 30, 0.5)"
+          ]
+        ]
+      },
+      "dashed blue": {
+        "text": "border-block-start: dashed blue;",
+        "value": "dashed blue",
+        "supported": true,
+        "components": [
+          [
+            "border-block-start-width",
+            "initial"
+          ],
+          [
+            "border-block-start-style",
+            "dashed"
+          ],
+          [
+            "border-block-start-color",
+            "blue"
+          ]
+        ]
+      },
+      "solid dotted": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "red blue": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "1px 2px": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "bogus": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      }
+    },
+    "-webkit-border-after": {
+      "0": {
+        "text": "border-block-end: 0px;",
+        "value": "0px",
+        "supported": true,
+        "components": [
+          [
+            "border-block-end-width",
+            "0px"
+          ],
+          [
+            "border-block-end-style",
+            "initial"
+          ],
+          [
+            "border-block-end-color",
+            "initial"
+          ]
+        ]
+      },
+      "none": {
+        "text": "border-block-end: none;",
+        "value": "none",
+        "supported": true,
+        "components": [
+          [
+            "border-block-end-width",
+            "initial"
+          ],
+          [
+            "border-block-end-style",
+            "none"
+          ],
+          [
+            "border-block-end-color",
+            "initial"
+          ]
+        ]
+      },
+      "auto": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "initial": {
+        "text": "border-block-end: initial;",
+        "value": "initial",
+        "supported": true,
+        "components": [
+          [
+            "border-block-end-width",
+            "initial"
+          ],
+          [
+            "border-block-end-style",
+            "initial"
+          ],
+          [
+            "border-block-end-color",
+            "initial"
+          ]
+        ]
+      },
+      "1px solid red": {
+        "text": "border-block-end: 1px solid red;",
+        "value": "1px solid red",
+        "supported": true,
+        "components": [
+          [
+            "border-block-end-width",
+            "1px"
+          ],
+          [
+            "border-block-end-style",
+            "solid"
+          ],
+          [
+            "border-block-end-color",
+            "red"
+          ]
+        ]
+      },
+      "red solid 1px": {
+        "text": "border-block-end: 1px solid red;",
+        "value": "1px solid red",
+        "supported": true,
+        "components": [
+          [
+            "border-block-end-width",
+            "1px"
+          ],
+          [
+            "border-block-end-style",
+            "solid"
+          ],
+          [
+            "border-block-end-color",
+            "red"
+          ]
+        ]
+      },
+      "2px": {
+        "text": "border-block-end: 2px;",
+        "value": "2px",
+        "supported": true,
+        "components": [
+          [
+            "border-block-end-width",
+            "2px"
+          ],
+          [
+            "border-block-end-style",
+            "initial"
+          ],
+          [
+            "border-block-end-color",
+            "initial"
+          ]
+        ]
+      },
+      "thin": {
+        "text": "border-block-end: thin;",
+        "value": "thin",
+        "supported": true,
+        "components": [
+          [
+            "border-block-end-width",
+            "thin"
+          ],
+          [
+            "border-block-end-style",
+            "initial"
+          ],
+          [
+            "border-block-end-color",
+            "initial"
+          ]
+        ]
+      },
+      "medium": {
+        "text": "border-block-end: medium;",
+        "value": "medium",
+        "supported": true,
+        "components": [
+          [
+            "border-block-end-width",
+            "medium"
+          ],
+          [
+            "border-block-end-style",
+            "initial"
+          ],
+          [
+            "border-block-end-color",
+            "initial"
+          ]
+        ]
+      },
+      "thick": {
+        "text": "border-block-end: thick;",
+        "value": "thick",
+        "supported": true,
+        "components": [
+          [
+            "border-block-end-width",
+            "thick"
+          ],
+          [
+            "border-block-end-style",
+            "initial"
+          ],
+          [
+            "border-block-end-color",
+            "initial"
+          ]
+        ]
+      },
+      "-1px": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "20%": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "red": {
+        "text": "border-block-end: red;",
+        "value": "red",
+        "supported": true,
+        "components": [
+          [
+            "border-block-end-width",
+            "initial"
+          ],
+          [
+            "border-block-end-style",
+            "initial"
+          ],
+          [
+            "border-block-end-color",
+            "red"
+          ]
+        ]
+      },
+      "transparent": {
+        "text": "border-block-end: transparent;",
+        "value": "transparent",
+        "supported": true,
+        "components": [
+          [
+            "border-block-end-width",
+            "initial"
+          ],
+          [
+            "border-block-end-style",
+            "initial"
+          ],
+          [
+            "border-block-end-color",
+            "transparent"
+          ]
+        ]
+      },
+      "currentcolor": {
+        "text": "border-block-end: currentcolor;",
+        "value": "currentcolor",
+        "supported": true,
+        "components": [
+          [
+            "border-block-end-width",
+            "initial"
+          ],
+          [
+            "border-block-end-style",
+            "initial"
+          ],
+          [
+            "border-block-end-color",
+            "currentcolor"
+          ]
+        ]
+      },
+      "rebeccapurple": {
+        "text": "border-block-end: rebeccapurple;",
+        "value": "rebeccapurple",
+        "supported": true,
+        "components": [
+          [
+            "border-block-end-width",
+            "initial"
+          ],
+          [
+            "border-block-end-style",
+            "initial"
+          ],
+          [
+            "border-block-end-color",
+            "rebeccapurple"
+          ]
+        ]
+      },
+      "#f00": {
+        "text": "border-block-end: rgb(255, 0, 0);",
+        "value": "rgb(255, 0, 0)",
+        "supported": true,
+        "components": [
+          [
+            "border-block-end-width",
+            "initial"
+          ],
+          [
+            "border-block-end-style",
+            "initial"
+          ],
+          [
+            "border-block-end-color",
+            "rgb(255, 0, 0)"
+          ]
+        ]
+      },
+      "#abcd": {
+        "text": "border-block-end: rgba(170, 187, 204, 0.867);",
+        "value": "rgba(170, 187, 204, 0.867)",
+        "supported": true,
+        "components": [
+          [
+            "border-block-end-width",
+            "initial"
+          ],
+          [
+            "border-block-end-style",
+            "initial"
+          ],
+          [
+            "border-block-end-color",
+            "rgba(170, 187, 204, 0.867)"
+          ]
+        ]
+      },
+      "#12345678": {
+        "text": "border-block-end: rgba(18, 52, 86, 0.47);",
+        "value": "rgba(18, 52, 86, 0.47)",
+        "supported": true,
+        "components": [
+          [
+            "border-block-end-width",
+            "initial"
+          ],
+          [
+            "border-block-end-style",
+            "initial"
+          ],
+          [
+            "border-block-end-color",
+            "rgba(18, 52, 86, 0.47)"
+          ]
+        ]
+      },
+      "rgb(10, 20, 30)": {
+        "text": "border-block-end: rgb(10, 20, 30);",
+        "value": "rgb(10, 20, 30)",
+        "supported": true,
+        "components": [
+          [
+            "border-block-end-width",
+            "initial"
+          ],
+          [
+            "border-block-end-style",
+            "initial"
+          ],
+          [
+            "border-block-end-color",
+            "rgb(10, 20, 30)"
+          ]
+        ]
+      },
+      "rgba(10, 20, 30, 0.5)": {
+        "text": "border-block-end: rgba(10, 20, 30, 0.5);",
+        "value": "rgba(10, 20, 30, 0.5)",
+        "supported": true,
+        "components": [
+          [
+            "border-block-end-width",
+            "initial"
+          ],
+          [
+            "border-block-end-style",
+            "initial"
+          ],
+          [
+            "border-block-end-color",
+            "rgba(10, 20, 30, 0.5)"
+          ]
+        ]
+      },
+      "dashed blue": {
+        "text": "border-block-end: dashed blue;",
+        "value": "dashed blue",
+        "supported": true,
+        "components": [
+          [
+            "border-block-end-width",
+            "initial"
+          ],
+          [
+            "border-block-end-style",
+            "dashed"
+          ],
+          [
+            "border-block-end-color",
+            "blue"
+          ]
+        ]
+      },
+      "solid dotted": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "red blue": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "1px 2px": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "bogus": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      }
+    },
+    "-webkit-border-start": {
+      "0": {
+        "text": "border-inline-start: 0px;",
+        "value": "0px",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-start-width",
+            "0px"
+          ],
+          [
+            "border-inline-start-style",
+            "initial"
+          ],
+          [
+            "border-inline-start-color",
+            "initial"
+          ]
+        ]
+      },
+      "none": {
+        "text": "border-inline-start: none;",
+        "value": "none",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-start-width",
+            "initial"
+          ],
+          [
+            "border-inline-start-style",
+            "none"
+          ],
+          [
+            "border-inline-start-color",
+            "initial"
+          ]
+        ]
+      },
+      "auto": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "initial": {
+        "text": "border-inline-start: initial;",
+        "value": "initial",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-start-width",
+            "initial"
+          ],
+          [
+            "border-inline-start-style",
+            "initial"
+          ],
+          [
+            "border-inline-start-color",
+            "initial"
+          ]
+        ]
+      },
+      "1px solid red": {
+        "text": "border-inline-start: 1px solid red;",
+        "value": "1px solid red",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-start-width",
+            "1px"
+          ],
+          [
+            "border-inline-start-style",
+            "solid"
+          ],
+          [
+            "border-inline-start-color",
+            "red"
+          ]
+        ]
+      },
+      "red solid 1px": {
+        "text": "border-inline-start: 1px solid red;",
+        "value": "1px solid red",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-start-width",
+            "1px"
+          ],
+          [
+            "border-inline-start-style",
+            "solid"
+          ],
+          [
+            "border-inline-start-color",
+            "red"
+          ]
+        ]
+      },
+      "2px": {
+        "text": "border-inline-start: 2px;",
+        "value": "2px",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-start-width",
+            "2px"
+          ],
+          [
+            "border-inline-start-style",
+            "initial"
+          ],
+          [
+            "border-inline-start-color",
+            "initial"
+          ]
+        ]
+      },
+      "thin": {
+        "text": "border-inline-start: thin;",
+        "value": "thin",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-start-width",
+            "thin"
+          ],
+          [
+            "border-inline-start-style",
+            "initial"
+          ],
+          [
+            "border-inline-start-color",
+            "initial"
+          ]
+        ]
+      },
+      "medium": {
+        "text": "border-inline-start: medium;",
+        "value": "medium",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-start-width",
+            "medium"
+          ],
+          [
+            "border-inline-start-style",
+            "initial"
+          ],
+          [
+            "border-inline-start-color",
+            "initial"
+          ]
+        ]
+      },
+      "thick": {
+        "text": "border-inline-start: thick;",
+        "value": "thick",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-start-width",
+            "thick"
+          ],
+          [
+            "border-inline-start-style",
+            "initial"
+          ],
+          [
+            "border-inline-start-color",
+            "initial"
+          ]
+        ]
+      },
+      "-1px": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "20%": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "red": {
+        "text": "border-inline-start: red;",
+        "value": "red",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-start-width",
+            "initial"
+          ],
+          [
+            "border-inline-start-style",
+            "initial"
+          ],
+          [
+            "border-inline-start-color",
+            "red"
+          ]
+        ]
+      },
+      "transparent": {
+        "text": "border-inline-start: transparent;",
+        "value": "transparent",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-start-width",
+            "initial"
+          ],
+          [
+            "border-inline-start-style",
+            "initial"
+          ],
+          [
+            "border-inline-start-color",
+            "transparent"
+          ]
+        ]
+      },
+      "currentcolor": {
+        "text": "border-inline-start: currentcolor;",
+        "value": "currentcolor",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-start-width",
+            "initial"
+          ],
+          [
+            "border-inline-start-style",
+            "initial"
+          ],
+          [
+            "border-inline-start-color",
+            "currentcolor"
+          ]
+        ]
+      },
+      "rebeccapurple": {
+        "text": "border-inline-start: rebeccapurple;",
+        "value": "rebeccapurple",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-start-width",
+            "initial"
+          ],
+          [
+            "border-inline-start-style",
+            "initial"
+          ],
+          [
+            "border-inline-start-color",
+            "rebeccapurple"
+          ]
+        ]
+      },
+      "#f00": {
+        "text": "border-inline-start: rgb(255, 0, 0);",
+        "value": "rgb(255, 0, 0)",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-start-width",
+            "initial"
+          ],
+          [
+            "border-inline-start-style",
+            "initial"
+          ],
+          [
+            "border-inline-start-color",
+            "rgb(255, 0, 0)"
+          ]
+        ]
+      },
+      "#abcd": {
+        "text": "border-inline-start: rgba(170, 187, 204, 0.867);",
+        "value": "rgba(170, 187, 204, 0.867)",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-start-width",
+            "initial"
+          ],
+          [
+            "border-inline-start-style",
+            "initial"
+          ],
+          [
+            "border-inline-start-color",
+            "rgba(170, 187, 204, 0.867)"
+          ]
+        ]
+      },
+      "#12345678": {
+        "text": "border-inline-start: rgba(18, 52, 86, 0.47);",
+        "value": "rgba(18, 52, 86, 0.47)",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-start-width",
+            "initial"
+          ],
+          [
+            "border-inline-start-style",
+            "initial"
+          ],
+          [
+            "border-inline-start-color",
+            "rgba(18, 52, 86, 0.47)"
+          ]
+        ]
+      },
+      "rgb(10, 20, 30)": {
+        "text": "border-inline-start: rgb(10, 20, 30);",
+        "value": "rgb(10, 20, 30)",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-start-width",
+            "initial"
+          ],
+          [
+            "border-inline-start-style",
+            "initial"
+          ],
+          [
+            "border-inline-start-color",
+            "rgb(10, 20, 30)"
+          ]
+        ]
+      },
+      "rgba(10, 20, 30, 0.5)": {
+        "text": "border-inline-start: rgba(10, 20, 30, 0.5);",
+        "value": "rgba(10, 20, 30, 0.5)",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-start-width",
+            "initial"
+          ],
+          [
+            "border-inline-start-style",
+            "initial"
+          ],
+          [
+            "border-inline-start-color",
+            "rgba(10, 20, 30, 0.5)"
+          ]
+        ]
+      },
+      "dashed blue": {
+        "text": "border-inline-start: dashed blue;",
+        "value": "dashed blue",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-start-width",
+            "initial"
+          ],
+          [
+            "border-inline-start-style",
+            "dashed"
+          ],
+          [
+            "border-inline-start-color",
+            "blue"
+          ]
+        ]
+      },
+      "solid dotted": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "red blue": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "1px 2px": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "bogus": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      }
+    },
+    "-webkit-border-end": {
+      "0": {
+        "text": "border-inline-end: 0px;",
+        "value": "0px",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-end-width",
+            "0px"
+          ],
+          [
+            "border-inline-end-style",
+            "initial"
+          ],
+          [
+            "border-inline-end-color",
+            "initial"
+          ]
+        ]
+      },
+      "none": {
+        "text": "border-inline-end: none;",
+        "value": "none",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-end-width",
+            "initial"
+          ],
+          [
+            "border-inline-end-style",
+            "none"
+          ],
+          [
+            "border-inline-end-color",
+            "initial"
+          ]
+        ]
+      },
+      "auto": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "initial": {
+        "text": "border-inline-end: initial;",
+        "value": "initial",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-end-width",
+            "initial"
+          ],
+          [
+            "border-inline-end-style",
+            "initial"
+          ],
+          [
+            "border-inline-end-color",
+            "initial"
+          ]
+        ]
+      },
+      "1px solid red": {
+        "text": "border-inline-end: 1px solid red;",
+        "value": "1px solid red",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-end-width",
+            "1px"
+          ],
+          [
+            "border-inline-end-style",
+            "solid"
+          ],
+          [
+            "border-inline-end-color",
+            "red"
+          ]
+        ]
+      },
+      "red solid 1px": {
+        "text": "border-inline-end: 1px solid red;",
+        "value": "1px solid red",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-end-width",
+            "1px"
+          ],
+          [
+            "border-inline-end-style",
+            "solid"
+          ],
+          [
+            "border-inline-end-color",
+            "red"
+          ]
+        ]
+      },
+      "2px": {
+        "text": "border-inline-end: 2px;",
+        "value": "2px",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-end-width",
+            "2px"
+          ],
+          [
+            "border-inline-end-style",
+            "initial"
+          ],
+          [
+            "border-inline-end-color",
+            "initial"
+          ]
+        ]
+      },
+      "thin": {
+        "text": "border-inline-end: thin;",
+        "value": "thin",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-end-width",
+            "thin"
+          ],
+          [
+            "border-inline-end-style",
+            "initial"
+          ],
+          [
+            "border-inline-end-color",
+            "initial"
+          ]
+        ]
+      },
+      "medium": {
+        "text": "border-inline-end: medium;",
+        "value": "medium",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-end-width",
+            "medium"
+          ],
+          [
+            "border-inline-end-style",
+            "initial"
+          ],
+          [
+            "border-inline-end-color",
+            "initial"
+          ]
+        ]
+      },
+      "thick": {
+        "text": "border-inline-end: thick;",
+        "value": "thick",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-end-width",
+            "thick"
+          ],
+          [
+            "border-inline-end-style",
+            "initial"
+          ],
+          [
+            "border-inline-end-color",
+            "initial"
+          ]
+        ]
+      },
+      "-1px": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "20%": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "red": {
+        "text": "border-inline-end: red;",
+        "value": "red",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-end-width",
+            "initial"
+          ],
+          [
+            "border-inline-end-style",
+            "initial"
+          ],
+          [
+            "border-inline-end-color",
+            "red"
+          ]
+        ]
+      },
+      "transparent": {
+        "text": "border-inline-end: transparent;",
+        "value": "transparent",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-end-width",
+            "initial"
+          ],
+          [
+            "border-inline-end-style",
+            "initial"
+          ],
+          [
+            "border-inline-end-color",
+            "transparent"
+          ]
+        ]
+      },
+      "currentcolor": {
+        "text": "border-inline-end: currentcolor;",
+        "value": "currentcolor",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-end-width",
+            "initial"
+          ],
+          [
+            "border-inline-end-style",
+            "initial"
+          ],
+          [
+            "border-inline-end-color",
+            "currentcolor"
+          ]
+        ]
+      },
+      "rebeccapurple": {
+        "text": "border-inline-end: rebeccapurple;",
+        "value": "rebeccapurple",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-end-width",
+            "initial"
+          ],
+          [
+            "border-inline-end-style",
+            "initial"
+          ],
+          [
+            "border-inline-end-color",
+            "rebeccapurple"
+          ]
+        ]
+      },
+      "#f00": {
+        "text": "border-inline-end: rgb(255, 0, 0);",
+        "value": "rgb(255, 0, 0)",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-end-width",
+            "initial"
+          ],
+          [
+            "border-inline-end-style",
+            "initial"
+          ],
+          [
+            "border-inline-end-color",
+            "rgb(255, 0, 0)"
+          ]
+        ]
+      },
+      "#abcd": {
+        "text": "border-inline-end: rgba(170, 187, 204, 0.867);",
+        "value": "rgba(170, 187, 204, 0.867)",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-end-width",
+            "initial"
+          ],
+          [
+            "border-inline-end-style",
+            "initial"
+          ],
+          [
+            "border-inline-end-color",
+            "rgba(170, 187, 204, 0.867)"
+          ]
+        ]
+      },
+      "#12345678": {
+        "text": "border-inline-end: rgba(18, 52, 86, 0.47);",
+        "value": "rgba(18, 52, 86, 0.47)",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-end-width",
+            "initial"
+          ],
+          [
+            "border-inline-end-style",
+            "initial"
+          ],
+          [
+            "border-inline-end-color",
+            "rgba(18, 52, 86, 0.47)"
+          ]
+        ]
+      },
+      "rgb(10, 20, 30)": {
+        "text": "border-inline-end: rgb(10, 20, 30);",
+        "value": "rgb(10, 20, 30)",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-end-width",
+            "initial"
+          ],
+          [
+            "border-inline-end-style",
+            "initial"
+          ],
+          [
+            "border-inline-end-color",
+            "rgb(10, 20, 30)"
+          ]
+        ]
+      },
+      "rgba(10, 20, 30, 0.5)": {
+        "text": "border-inline-end: rgba(10, 20, 30, 0.5);",
+        "value": "rgba(10, 20, 30, 0.5)",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-end-width",
+            "initial"
+          ],
+          [
+            "border-inline-end-style",
+            "initial"
+          ],
+          [
+            "border-inline-end-color",
+            "rgba(10, 20, 30, 0.5)"
+          ]
+        ]
+      },
+      "dashed blue": {
+        "text": "border-inline-end: dashed blue;",
+        "value": "dashed blue",
+        "supported": true,
+        "components": [
+          [
+            "border-inline-end-width",
+            "initial"
+          ],
+          [
+            "border-inline-end-style",
+            "dashed"
+          ],
+          [
+            "border-inline-end-color",
+            "blue"
+          ]
+        ]
+      },
+      "solid dotted": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "red blue": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "1px 2px": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "bogus": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      }
+    },
+    "-webkit-text-stroke": {
+      "0": {
+        "text": "-webkit-text-stroke: 0px;",
+        "value": "0px",
+        "supported": true,
+        "components": [
+          [
+            "-webkit-text-stroke-width",
+            "0px"
+          ],
+          [
+            "-webkit-text-stroke-color",
+            "initial"
+          ]
+        ]
+      },
+      "none": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "auto": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "initial": {
+        "text": "-webkit-text-stroke: initial;",
+        "value": "initial",
+        "supported": true,
+        "components": [
+          [
+            "-webkit-text-stroke-width",
+            "initial"
+          ],
+          [
+            "-webkit-text-stroke-color",
+            "initial"
+          ]
+        ]
+      },
+      "1px solid red": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "red solid 1px": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "2px": {
+        "text": "-webkit-text-stroke: 2px;",
+        "value": "2px",
+        "supported": true,
+        "components": [
+          [
+            "-webkit-text-stroke-width",
+            "2px"
+          ],
+          [
+            "-webkit-text-stroke-color",
+            "initial"
+          ]
+        ]
+      },
+      "thin": {
+        "text": "-webkit-text-stroke: thin;",
+        "value": "thin",
+        "supported": true,
+        "components": [
+          [
+            "-webkit-text-stroke-width",
+            "thin"
+          ],
+          [
+            "-webkit-text-stroke-color",
+            "initial"
+          ]
+        ]
+      },
+      "medium": {
+        "text": "-webkit-text-stroke: medium;",
+        "value": "medium",
+        "supported": true,
+        "components": [
+          [
+            "-webkit-text-stroke-width",
+            "medium"
+          ],
+          [
+            "-webkit-text-stroke-color",
+            "initial"
+          ]
+        ]
+      },
+      "thick": {
+        "text": "-webkit-text-stroke: thick;",
+        "value": "thick",
+        "supported": true,
+        "components": [
+          [
+            "-webkit-text-stroke-width",
+            "thick"
+          ],
+          [
+            "-webkit-text-stroke-color",
+            "initial"
+          ]
+        ]
+      },
+      "-1px": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "20%": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "red": {
+        "text": "-webkit-text-stroke: red;",
+        "value": "red",
+        "supported": true,
+        "components": [
+          [
+            "-webkit-text-stroke-width",
+            "initial"
+          ],
+          [
+            "-webkit-text-stroke-color",
+            "red"
+          ]
+        ]
+      },
+      "transparent": {
+        "text": "-webkit-text-stroke: transparent;",
+        "value": "transparent",
+        "supported": true,
+        "components": [
+          [
+            "-webkit-text-stroke-width",
+            "initial"
+          ],
+          [
+            "-webkit-text-stroke-color",
+            "transparent"
+          ]
+        ]
+      },
+      "currentcolor": {
+        "text": "-webkit-text-stroke: currentcolor;",
+        "value": "currentcolor",
+        "supported": true,
+        "components": [
+          [
+            "-webkit-text-stroke-width",
+            "initial"
+          ],
+          [
+            "-webkit-text-stroke-color",
+            "currentcolor"
+          ]
+        ]
+      },
+      "rebeccapurple": {
+        "text": "-webkit-text-stroke: rebeccapurple;",
+        "value": "rebeccapurple",
+        "supported": true,
+        "components": [
+          [
+            "-webkit-text-stroke-width",
+            "initial"
+          ],
+          [
+            "-webkit-text-stroke-color",
+            "rebeccapurple"
+          ]
+        ]
+      },
+      "#f00": {
+        "text": "-webkit-text-stroke: rgb(255, 0, 0);",
+        "value": "rgb(255, 0, 0)",
+        "supported": true,
+        "components": [
+          [
+            "-webkit-text-stroke-width",
+            "initial"
+          ],
+          [
+            "-webkit-text-stroke-color",
+            "rgb(255, 0, 0)"
+          ]
+        ]
+      },
+      "#abcd": {
+        "text": "-webkit-text-stroke: rgba(170, 187, 204, 0.867);",
+        "value": "rgba(170, 187, 204, 0.867)",
+        "supported": true,
+        "components": [
+          [
+            "-webkit-text-stroke-width",
+            "initial"
+          ],
+          [
+            "-webkit-text-stroke-color",
+            "rgba(170, 187, 204, 0.867)"
+          ]
+        ]
+      },
+      "#12345678": {
+        "text": "-webkit-text-stroke: rgba(18, 52, 86, 0.47);",
+        "value": "rgba(18, 52, 86, 0.47)",
+        "supported": true,
+        "components": [
+          [
+            "-webkit-text-stroke-width",
+            "initial"
+          ],
+          [
+            "-webkit-text-stroke-color",
+            "rgba(18, 52, 86, 0.47)"
+          ]
+        ]
+      },
+      "rgb(10, 20, 30)": {
+        "text": "-webkit-text-stroke: rgb(10, 20, 30);",
+        "value": "rgb(10, 20, 30)",
+        "supported": true,
+        "components": [
+          [
+            "-webkit-text-stroke-width",
+            "initial"
+          ],
+          [
+            "-webkit-text-stroke-color",
+            "rgb(10, 20, 30)"
+          ]
+        ]
+      },
+      "rgba(10, 20, 30, 0.5)": {
+        "text": "-webkit-text-stroke: rgba(10, 20, 30, 0.5);",
+        "value": "rgba(10, 20, 30, 0.5)",
+        "supported": true,
+        "components": [
+          [
+            "-webkit-text-stroke-width",
+            "initial"
+          ],
+          [
+            "-webkit-text-stroke-color",
+            "rgba(10, 20, 30, 0.5)"
+          ]
+        ]
+      },
+      "dashed blue": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "solid dotted": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "red blue": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "1px 2px": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "bogus": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      }
+    }
+  }
+}

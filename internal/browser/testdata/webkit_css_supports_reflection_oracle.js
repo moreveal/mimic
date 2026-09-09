@@ -1,0 +1,1 @@
+(()=>{const fn=CSS.supports;let error;try{fn()}catch(e){error=e.name}return {name:fn.name,length:fn.length,keys:Reflect.ownKeys(fn),source:Function.prototype.toString.call(fn),detached:fn.call({},'-webkit-appearance','none'),error}})()

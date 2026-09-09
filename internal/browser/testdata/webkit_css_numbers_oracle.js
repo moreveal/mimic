@@ -1,0 +1,1 @@
+(()=>{const out={};for(const input of ['1.23456789','12345678','0.00000123456789','1e20','1e30','1e38','3.4028234663852886e38','1e39','1e999','1e-999','1e-40','0.00001','1000000','999999.9']){const s=document.createElement('div').style;s.flexGrow=input;out[input]=s.flexGrow}return out})()

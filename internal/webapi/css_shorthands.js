@@ -102,6 +102,8 @@ const expandCSSDeclaration=entry=>{
  const components=cssShorthandComponents[entry.name];if(!components)return [entry];
  if(cssWideValue(entry.value))return components.map(name=>({...entry,name}));
  if(/^var\(/.test(entry.value))return components.map(name=>({name,value:'',priority:entry.priority,pending:{name:entry.name,value:entry.value}}));
+ const parser=cssShorthandParsers.get(entry.name);
+ if(parser){const values=parser(entry.value);return values?(cssOrdinaryShorthandOrder[entry.name]||components).map(name=>({name,value:values[components.indexOf(name)],priority:entry.priority})):[]}
  return [entry];
 };
 const readCSSDeclaration=(entries,name)=>{
@@ -110,7 +112,8 @@ const readCSSDeclaration=(entries,name)=>{
  const selected=components.map(n=>entries.find(e=>e.name===n));if(selected.some(e=>!e)||selected.some(e=>e.priority!==selected[0].priority))return '';
  if(selected.every(e=>e.pending?.name===name&&e.pending.value===selected[0].pending.value))return selected[0].pending.value;
  if(selected.every(e=>e.value===selected[0].value)&&cssWideValue(selected[0].value))return selected[0].value;
- return '';
+ if(selected.some(e=>e.pending))return '';
+ return serializeOrdinaryCSSShorthand(name,selected.map(e=>e.value));
 };
 const serializeCSSDeclarations=entries=>{
  const emitted=new Set(),out=[];

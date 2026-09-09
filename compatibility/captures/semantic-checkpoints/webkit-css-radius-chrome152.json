@@ -1,0 +1,475 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/webkit_css_radius_oracle.js",
+    "fixtureSHA256": "4e6419a00a683444956fc86e2a7bfc85733d92c665262d2338770b5d614c3fd7",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "border-radius": {
+      "0": {
+        "text": "border-radius: 0px;",
+        "value": "0px",
+        "supported": true,
+        "components": [
+          [
+            "border-top-left-radius",
+            "0px"
+          ],
+          [
+            "border-top-right-radius",
+            "0px"
+          ],
+          [
+            "border-bottom-right-radius",
+            "0px"
+          ],
+          [
+            "border-bottom-left-radius",
+            "0px"
+          ]
+        ]
+      },
+      "initial": {
+        "text": "border-radius: initial;",
+        "value": "initial",
+        "supported": true,
+        "components": [
+          [
+            "border-top-left-radius",
+            "initial"
+          ],
+          [
+            "border-top-right-radius",
+            "initial"
+          ],
+          [
+            "border-bottom-right-radius",
+            "initial"
+          ],
+          [
+            "border-bottom-left-radius",
+            "initial"
+          ]
+        ]
+      },
+      "2px": {
+        "text": "border-radius: 2px;",
+        "value": "2px",
+        "supported": true,
+        "components": [
+          [
+            "border-top-left-radius",
+            "2px"
+          ],
+          [
+            "border-top-right-radius",
+            "2px"
+          ],
+          [
+            "border-bottom-right-radius",
+            "2px"
+          ],
+          [
+            "border-bottom-left-radius",
+            "2px"
+          ]
+        ]
+      },
+      "2px 4px": {
+        "text": "border-radius: 2px 4px;",
+        "value": "2px 4px",
+        "supported": true,
+        "components": [
+          [
+            "border-top-left-radius",
+            "2px"
+          ],
+          [
+            "border-top-right-radius",
+            "4px"
+          ],
+          [
+            "border-bottom-right-radius",
+            "2px"
+          ],
+          [
+            "border-bottom-left-radius",
+            "4px"
+          ]
+        ]
+      },
+      "1px 2px 3px": {
+        "text": "border-radius: 1px 2px 3px;",
+        "value": "1px 2px 3px",
+        "supported": true,
+        "components": [
+          [
+            "border-top-left-radius",
+            "1px"
+          ],
+          [
+            "border-top-right-radius",
+            "2px"
+          ],
+          [
+            "border-bottom-right-radius",
+            "3px"
+          ],
+          [
+            "border-bottom-left-radius",
+            "2px"
+          ]
+        ]
+      },
+      "1px 2px 3px 4px": {
+        "text": "border-radius: 1px 2px 3px 4px;",
+        "value": "1px 2px 3px 4px",
+        "supported": true,
+        "components": [
+          [
+            "border-top-left-radius",
+            "1px"
+          ],
+          [
+            "border-top-right-radius",
+            "2px"
+          ],
+          [
+            "border-bottom-right-radius",
+            "3px"
+          ],
+          [
+            "border-bottom-left-radius",
+            "4px"
+          ]
+        ]
+      },
+      "1px 2px 3px 4px 5px": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "10% 20%": {
+        "text": "border-radius: 10% 20%;",
+        "value": "10% 20%",
+        "supported": true,
+        "components": [
+          [
+            "border-top-left-radius",
+            "10%"
+          ],
+          [
+            "border-top-right-radius",
+            "20%"
+          ],
+          [
+            "border-bottom-right-radius",
+            "10%"
+          ],
+          [
+            "border-bottom-left-radius",
+            "20%"
+          ]
+        ]
+      },
+      "2px / 4px": {
+        "text": "border-radius: 2px / 4px;",
+        "value": "2px / 4px",
+        "supported": true,
+        "components": [
+          [
+            "border-top-left-radius",
+            "2px 4px"
+          ],
+          [
+            "border-top-right-radius",
+            "2px 4px"
+          ],
+          [
+            "border-bottom-right-radius",
+            "2px 4px"
+          ],
+          [
+            "border-bottom-left-radius",
+            "2px 4px"
+          ]
+        ]
+      },
+      "1px 2px / 3px 4px": {
+        "text": "border-radius: 1px 2px / 3px 4px;",
+        "value": "1px 2px / 3px 4px",
+        "supported": true,
+        "components": [
+          [
+            "border-top-left-radius",
+            "1px 3px"
+          ],
+          [
+            "border-top-right-radius",
+            "2px 4px"
+          ],
+          [
+            "border-bottom-right-radius",
+            "1px 3px"
+          ],
+          [
+            "border-bottom-left-radius",
+            "2px 4px"
+          ]
+        ]
+      },
+      "-1px": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "auto": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      }
+    },
+    "-webkit-border-radius": {
+      "0": {
+        "text": "border-radius: 0px;",
+        "value": "0px",
+        "supported": true,
+        "components": [
+          [
+            "border-top-left-radius",
+            "0px"
+          ],
+          [
+            "border-top-right-radius",
+            "0px"
+          ],
+          [
+            "border-bottom-right-radius",
+            "0px"
+          ],
+          [
+            "border-bottom-left-radius",
+            "0px"
+          ]
+        ]
+      },
+      "initial": {
+        "text": "border-radius: initial;",
+        "value": "initial",
+        "supported": true,
+        "components": [
+          [
+            "border-top-left-radius",
+            "initial"
+          ],
+          [
+            "border-top-right-radius",
+            "initial"
+          ],
+          [
+            "border-bottom-right-radius",
+            "initial"
+          ],
+          [
+            "border-bottom-left-radius",
+            "initial"
+          ]
+        ]
+      },
+      "2px": {
+        "text": "border-radius: 2px;",
+        "value": "2px",
+        "supported": true,
+        "components": [
+          [
+            "border-top-left-radius",
+            "2px"
+          ],
+          [
+            "border-top-right-radius",
+            "2px"
+          ],
+          [
+            "border-bottom-right-radius",
+            "2px"
+          ],
+          [
+            "border-bottom-left-radius",
+            "2px"
+          ]
+        ]
+      },
+      "2px 4px": {
+        "text": "border-radius: 2px / 4px;",
+        "value": "2px / 4px",
+        "supported": true,
+        "components": [
+          [
+            "border-top-left-radius",
+            "2px 4px"
+          ],
+          [
+            "border-top-right-radius",
+            "2px 4px"
+          ],
+          [
+            "border-bottom-right-radius",
+            "2px 4px"
+          ],
+          [
+            "border-bottom-left-radius",
+            "2px 4px"
+          ]
+        ]
+      },
+      "1px 2px 3px": {
+        "text": "border-radius: 1px 2px 3px;",
+        "value": "1px 2px 3px",
+        "supported": true,
+        "components": [
+          [
+            "border-top-left-radius",
+            "1px"
+          ],
+          [
+            "border-top-right-radius",
+            "2px"
+          ],
+          [
+            "border-bottom-right-radius",
+            "3px"
+          ],
+          [
+            "border-bottom-left-radius",
+            "2px"
+          ]
+        ]
+      },
+      "1px 2px 3px 4px": {
+        "text": "border-radius: 1px 2px 3px 4px;",
+        "value": "1px 2px 3px 4px",
+        "supported": true,
+        "components": [
+          [
+            "border-top-left-radius",
+            "1px"
+          ],
+          [
+            "border-top-right-radius",
+            "2px"
+          ],
+          [
+            "border-bottom-right-radius",
+            "3px"
+          ],
+          [
+            "border-bottom-left-radius",
+            "4px"
+          ]
+        ]
+      },
+      "1px 2px 3px 4px 5px": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "10% 20%": {
+        "text": "border-radius: 10% / 20%;",
+        "value": "10% / 20%",
+        "supported": true,
+        "components": [
+          [
+            "border-top-left-radius",
+            "10% 20%"
+          ],
+          [
+            "border-top-right-radius",
+            "10% 20%"
+          ],
+          [
+            "border-bottom-right-radius",
+            "10% 20%"
+          ],
+          [
+            "border-bottom-left-radius",
+            "10% 20%"
+          ]
+        ]
+      },
+      "2px / 4px": {
+        "text": "border-radius: 2px / 4px;",
+        "value": "2px / 4px",
+        "supported": true,
+        "components": [
+          [
+            "border-top-left-radius",
+            "2px 4px"
+          ],
+          [
+            "border-top-right-radius",
+            "2px 4px"
+          ],
+          [
+            "border-bottom-right-radius",
+            "2px 4px"
+          ],
+          [
+            "border-bottom-left-radius",
+            "2px 4px"
+          ]
+        ]
+      },
+      "1px 2px / 3px 4px": {
+        "text": "border-radius: 1px 2px / 3px 4px;",
+        "value": "1px 2px / 3px 4px",
+        "supported": true,
+        "components": [
+          [
+            "border-top-left-radius",
+            "1px 3px"
+          ],
+          [
+            "border-top-right-radius",
+            "2px 4px"
+          ],
+          [
+            "border-bottom-right-radius",
+            "1px 3px"
+          ],
+          [
+            "border-bottom-left-radius",
+            "2px 4px"
+          ]
+        ]
+      },
+      "-1px": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "auto": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      }
+    },
+    "js": [
+      "border-radius: 2px / 4px;",
+      "2px / 4px",
+      "2px / 4px"
+    ]
+  }
+}

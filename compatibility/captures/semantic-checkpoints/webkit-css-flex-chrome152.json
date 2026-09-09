@@ -1,0 +1,1593 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/webkit_css_flex_oracle.js",
+    "fixtureSHA256": "663fdb875e1b702afe5a0202df2e02870ac40edec7ad717d21dcc8fdda6a371b",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "flex": {
+      "0": {
+        "text": "flex: 0 1 0%;",
+        "value": "0 1 0%",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "0"
+          ],
+          [
+            "flex-shrink",
+            "1"
+          ],
+          [
+            "flex-basis",
+            "0%"
+          ]
+        ]
+      },
+      "1": {
+        "text": "flex: 1 1 0%;",
+        "value": "1 1 0%",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "1"
+          ],
+          [
+            "flex-shrink",
+            "1"
+          ],
+          [
+            "flex-basis",
+            "0%"
+          ]
+        ]
+      },
+      "none": {
+        "text": "flex: 0 0 auto;",
+        "value": "0 0 auto",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "0"
+          ],
+          [
+            "flex-shrink",
+            "0"
+          ],
+          [
+            "flex-basis",
+            "auto"
+          ]
+        ]
+      },
+      "auto": {
+        "text": "flex: 1 1 auto;",
+        "value": "1 1 auto",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "1"
+          ],
+          [
+            "flex-shrink",
+            "1"
+          ],
+          [
+            "flex-basis",
+            "auto"
+          ]
+        ]
+      },
+      "initial": {
+        "text": "flex: initial;",
+        "value": "initial",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "initial"
+          ],
+          [
+            "flex-shrink",
+            "initial"
+          ],
+          [
+            "flex-basis",
+            "initial"
+          ]
+        ]
+      },
+      "inherit": {
+        "text": "flex: inherit;",
+        "value": "inherit",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "inherit"
+          ],
+          [
+            "flex-shrink",
+            "inherit"
+          ],
+          [
+            "flex-basis",
+            "inherit"
+          ]
+        ]
+      },
+      "2 3": {
+        "text": "flex: 2 3 0%;",
+        "value": "2 3 0%",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "2"
+          ],
+          [
+            "flex-shrink",
+            "3"
+          ],
+          [
+            "flex-basis",
+            "0%"
+          ]
+        ]
+      },
+      "1 0 auto": {
+        "text": "flex: 1 0 auto;",
+        "value": "1 0 auto",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "1"
+          ],
+          [
+            "flex-shrink",
+            "0"
+          ],
+          [
+            "flex-basis",
+            "auto"
+          ]
+        ]
+      },
+      "auto 2": {
+        "text": "flex: 2 1 auto;",
+        "value": "2 1 auto",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "2"
+          ],
+          [
+            "flex-shrink",
+            "1"
+          ],
+          [
+            "flex-basis",
+            "auto"
+          ]
+        ]
+      },
+      "2 auto 3": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "1 2 0": {
+        "text": "flex: 1 2 0px;",
+        "value": "1 2 0px",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "1"
+          ],
+          [
+            "flex-shrink",
+            "2"
+          ],
+          [
+            "flex-basis",
+            "0px"
+          ]
+        ]
+      },
+      "0 0 0": {
+        "text": "flex: 0 0 0px;",
+        "value": "0 0 0px",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "0"
+          ],
+          [
+            "flex-shrink",
+            "0"
+          ],
+          [
+            "flex-basis",
+            "0px"
+          ]
+        ]
+      },
+      "2px": {
+        "text": "flex: 1 1 2px;",
+        "value": "1 1 2px",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "1"
+          ],
+          [
+            "flex-shrink",
+            "1"
+          ],
+          [
+            "flex-basis",
+            "2px"
+          ]
+        ]
+      },
+      "20%": {
+        "text": "flex: 1 1 20%;",
+        "value": "1 1 20%",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "1"
+          ],
+          [
+            "flex-shrink",
+            "1"
+          ],
+          [
+            "flex-basis",
+            "20%"
+          ]
+        ]
+      },
+      "content": {
+        "text": "flex: 1 1 content;",
+        "value": "1 1 content",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "1"
+          ],
+          [
+            "flex-shrink",
+            "1"
+          ],
+          [
+            "flex-basis",
+            "content"
+          ]
+        ]
+      },
+      "min-content": {
+        "text": "flex: 1 1 min-content;",
+        "value": "1 1 min-content",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "1"
+          ],
+          [
+            "flex-shrink",
+            "1"
+          ],
+          [
+            "flex-basis",
+            "min-content"
+          ]
+        ]
+      },
+      "max-content": {
+        "text": "flex: 1 1 max-content;",
+        "value": "1 1 max-content",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "1"
+          ],
+          [
+            "flex-shrink",
+            "1"
+          ],
+          [
+            "flex-basis",
+            "max-content"
+          ]
+        ]
+      },
+      "fit-content": {
+        "text": "flex: 1 1 fit-content;",
+        "value": "1 1 fit-content",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "1"
+          ],
+          [
+            "flex-shrink",
+            "1"
+          ],
+          [
+            "flex-basis",
+            "fit-content"
+          ]
+        ]
+      },
+      "stretch": {
+        "text": "flex: 1 1 stretch;",
+        "value": "1 1 stretch",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "1"
+          ],
+          [
+            "flex-shrink",
+            "1"
+          ],
+          [
+            "flex-basis",
+            "stretch"
+          ]
+        ]
+      },
+      "calc(10px + 2%)": {
+        "text": "flex: 1 1 calc(2% + 10px);",
+        "value": "1 1 calc(2% + 10px)",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "1"
+          ],
+          [
+            "flex-shrink",
+            "1"
+          ],
+          [
+            "flex-basis",
+            "calc(2% + 10px)"
+          ]
+        ]
+      },
+      "-1": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "1 -1": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "1 2 -3px": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "1 2 3 4": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "bogus": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "row": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "row nowrap": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "row wrap": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "wrap row-reverse": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "column wrap-reverse": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "wrap": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "nowrap": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "row column": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "wrap nowrap": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "ROW WRAP": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "1e2 2.50 10PX": {
+        "text": "flex: 100 2.5 10px;",
+        "value": "100 2.5 10px",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "100"
+          ],
+          [
+            "flex-shrink",
+            "2.5"
+          ],
+          [
+            "flex-basis",
+            "10px"
+          ]
+        ]
+      }
+    },
+    "-webkit-flex": {
+      "0": {
+        "text": "flex: 0 1 0%;",
+        "value": "0 1 0%",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "0"
+          ],
+          [
+            "flex-shrink",
+            "1"
+          ],
+          [
+            "flex-basis",
+            "0%"
+          ]
+        ]
+      },
+      "1": {
+        "text": "flex: 1 1 0%;",
+        "value": "1 1 0%",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "1"
+          ],
+          [
+            "flex-shrink",
+            "1"
+          ],
+          [
+            "flex-basis",
+            "0%"
+          ]
+        ]
+      },
+      "none": {
+        "text": "flex: 0 0 auto;",
+        "value": "0 0 auto",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "0"
+          ],
+          [
+            "flex-shrink",
+            "0"
+          ],
+          [
+            "flex-basis",
+            "auto"
+          ]
+        ]
+      },
+      "auto": {
+        "text": "flex: 1 1 auto;",
+        "value": "1 1 auto",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "1"
+          ],
+          [
+            "flex-shrink",
+            "1"
+          ],
+          [
+            "flex-basis",
+            "auto"
+          ]
+        ]
+      },
+      "initial": {
+        "text": "flex: initial;",
+        "value": "initial",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "initial"
+          ],
+          [
+            "flex-shrink",
+            "initial"
+          ],
+          [
+            "flex-basis",
+            "initial"
+          ]
+        ]
+      },
+      "inherit": {
+        "text": "flex: inherit;",
+        "value": "inherit",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "inherit"
+          ],
+          [
+            "flex-shrink",
+            "inherit"
+          ],
+          [
+            "flex-basis",
+            "inherit"
+          ]
+        ]
+      },
+      "2 3": {
+        "text": "flex: 2 3 0%;",
+        "value": "2 3 0%",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "2"
+          ],
+          [
+            "flex-shrink",
+            "3"
+          ],
+          [
+            "flex-basis",
+            "0%"
+          ]
+        ]
+      },
+      "1 0 auto": {
+        "text": "flex: 1 0 auto;",
+        "value": "1 0 auto",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "1"
+          ],
+          [
+            "flex-shrink",
+            "0"
+          ],
+          [
+            "flex-basis",
+            "auto"
+          ]
+        ]
+      },
+      "auto 2": {
+        "text": "flex: 2 1 auto;",
+        "value": "2 1 auto",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "2"
+          ],
+          [
+            "flex-shrink",
+            "1"
+          ],
+          [
+            "flex-basis",
+            "auto"
+          ]
+        ]
+      },
+      "2 auto 3": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "1 2 0": {
+        "text": "flex: 1 2 0px;",
+        "value": "1 2 0px",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "1"
+          ],
+          [
+            "flex-shrink",
+            "2"
+          ],
+          [
+            "flex-basis",
+            "0px"
+          ]
+        ]
+      },
+      "0 0 0": {
+        "text": "flex: 0 0 0px;",
+        "value": "0 0 0px",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "0"
+          ],
+          [
+            "flex-shrink",
+            "0"
+          ],
+          [
+            "flex-basis",
+            "0px"
+          ]
+        ]
+      },
+      "2px": {
+        "text": "flex: 1 1 2px;",
+        "value": "1 1 2px",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "1"
+          ],
+          [
+            "flex-shrink",
+            "1"
+          ],
+          [
+            "flex-basis",
+            "2px"
+          ]
+        ]
+      },
+      "20%": {
+        "text": "flex: 1 1 20%;",
+        "value": "1 1 20%",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "1"
+          ],
+          [
+            "flex-shrink",
+            "1"
+          ],
+          [
+            "flex-basis",
+            "20%"
+          ]
+        ]
+      },
+      "content": {
+        "text": "flex: 1 1 content;",
+        "value": "1 1 content",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "1"
+          ],
+          [
+            "flex-shrink",
+            "1"
+          ],
+          [
+            "flex-basis",
+            "content"
+          ]
+        ]
+      },
+      "min-content": {
+        "text": "flex: 1 1 min-content;",
+        "value": "1 1 min-content",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "1"
+          ],
+          [
+            "flex-shrink",
+            "1"
+          ],
+          [
+            "flex-basis",
+            "min-content"
+          ]
+        ]
+      },
+      "max-content": {
+        "text": "flex: 1 1 max-content;",
+        "value": "1 1 max-content",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "1"
+          ],
+          [
+            "flex-shrink",
+            "1"
+          ],
+          [
+            "flex-basis",
+            "max-content"
+          ]
+        ]
+      },
+      "fit-content": {
+        "text": "flex: 1 1 fit-content;",
+        "value": "1 1 fit-content",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "1"
+          ],
+          [
+            "flex-shrink",
+            "1"
+          ],
+          [
+            "flex-basis",
+            "fit-content"
+          ]
+        ]
+      },
+      "stretch": {
+        "text": "flex: 1 1 stretch;",
+        "value": "1 1 stretch",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "1"
+          ],
+          [
+            "flex-shrink",
+            "1"
+          ],
+          [
+            "flex-basis",
+            "stretch"
+          ]
+        ]
+      },
+      "calc(10px + 2%)": {
+        "text": "flex: 1 1 calc(2% + 10px);",
+        "value": "1 1 calc(2% + 10px)",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "1"
+          ],
+          [
+            "flex-shrink",
+            "1"
+          ],
+          [
+            "flex-basis",
+            "calc(2% + 10px)"
+          ]
+        ]
+      },
+      "-1": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "1 -1": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "1 2 -3px": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "1 2 3 4": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "bogus": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "row": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "row nowrap": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "row wrap": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "wrap row-reverse": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "column wrap-reverse": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "wrap": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "nowrap": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "row column": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "wrap nowrap": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "ROW WRAP": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "1e2 2.50 10PX": {
+        "text": "flex: 100 2.5 10px;",
+        "value": "100 2.5 10px",
+        "supported": true,
+        "components": [
+          [
+            "flex-grow",
+            "100"
+          ],
+          [
+            "flex-shrink",
+            "2.5"
+          ],
+          [
+            "flex-basis",
+            "10px"
+          ]
+        ]
+      }
+    },
+    "flex-flow": {
+      "0": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "1": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "none": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "auto": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "initial": {
+        "text": "flex-flow: initial;",
+        "value": "initial",
+        "supported": true,
+        "components": [
+          [
+            "flex-direction",
+            "initial"
+          ],
+          [
+            "flex-wrap",
+            "initial"
+          ]
+        ]
+      },
+      "inherit": {
+        "text": "flex-flow: inherit;",
+        "value": "inherit",
+        "supported": true,
+        "components": [
+          [
+            "flex-direction",
+            "inherit"
+          ],
+          [
+            "flex-wrap",
+            "inherit"
+          ]
+        ]
+      },
+      "2 3": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "1 0 auto": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "auto 2": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "2 auto 3": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "1 2 0": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "0 0 0": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "2px": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "20%": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "content": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "min-content": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "max-content": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "fit-content": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "stretch": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "calc(10px + 2%)": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "-1": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "1 -1": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "1 2 -3px": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "1 2 3 4": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "bogus": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "row": {
+        "text": "flex-flow: row;",
+        "value": "row",
+        "supported": true,
+        "components": [
+          [
+            "flex-direction",
+            "row"
+          ],
+          [
+            "flex-wrap",
+            "nowrap"
+          ]
+        ]
+      },
+      "row nowrap": {
+        "text": "flex-flow: row;",
+        "value": "row",
+        "supported": true,
+        "components": [
+          [
+            "flex-direction",
+            "row"
+          ],
+          [
+            "flex-wrap",
+            "nowrap"
+          ]
+        ]
+      },
+      "row wrap": {
+        "text": "flex-flow: wrap;",
+        "value": "wrap",
+        "supported": true,
+        "components": [
+          [
+            "flex-direction",
+            "row"
+          ],
+          [
+            "flex-wrap",
+            "wrap"
+          ]
+        ]
+      },
+      "wrap row-reverse": {
+        "text": "flex-flow: row-reverse wrap;",
+        "value": "row-reverse wrap",
+        "supported": true,
+        "components": [
+          [
+            "flex-direction",
+            "row-reverse"
+          ],
+          [
+            "flex-wrap",
+            "wrap"
+          ]
+        ]
+      },
+      "column wrap-reverse": {
+        "text": "flex-flow: column wrap-reverse;",
+        "value": "column wrap-reverse",
+        "supported": true,
+        "components": [
+          [
+            "flex-direction",
+            "column"
+          ],
+          [
+            "flex-wrap",
+            "wrap-reverse"
+          ]
+        ]
+      },
+      "wrap": {
+        "text": "flex-flow: wrap;",
+        "value": "wrap",
+        "supported": true,
+        "components": [
+          [
+            "flex-direction",
+            "row"
+          ],
+          [
+            "flex-wrap",
+            "wrap"
+          ]
+        ]
+      },
+      "nowrap": {
+        "text": "flex-flow: row;",
+        "value": "row",
+        "supported": true,
+        "components": [
+          [
+            "flex-direction",
+            "row"
+          ],
+          [
+            "flex-wrap",
+            "nowrap"
+          ]
+        ]
+      },
+      "row column": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "wrap nowrap": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "ROW WRAP": {
+        "text": "flex-flow: wrap;",
+        "value": "wrap",
+        "supported": true,
+        "components": [
+          [
+            "flex-direction",
+            "row"
+          ],
+          [
+            "flex-wrap",
+            "wrap"
+          ]
+        ]
+      },
+      "1e2 2.50 10PX": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      }
+    },
+    "-webkit-flex-flow": {
+      "0": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "1": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "none": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "auto": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "initial": {
+        "text": "flex-flow: initial;",
+        "value": "initial",
+        "supported": true,
+        "components": [
+          [
+            "flex-direction",
+            "initial"
+          ],
+          [
+            "flex-wrap",
+            "initial"
+          ]
+        ]
+      },
+      "inherit": {
+        "text": "flex-flow: inherit;",
+        "value": "inherit",
+        "supported": true,
+        "components": [
+          [
+            "flex-direction",
+            "inherit"
+          ],
+          [
+            "flex-wrap",
+            "inherit"
+          ]
+        ]
+      },
+      "2 3": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "1 0 auto": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "auto 2": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "2 auto 3": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "1 2 0": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "0 0 0": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "2px": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "20%": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "content": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "min-content": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "max-content": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "fit-content": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "stretch": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "calc(10px + 2%)": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "-1": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "1 -1": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "1 2 -3px": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "1 2 3 4": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "bogus": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "row": {
+        "text": "flex-flow: row;",
+        "value": "row",
+        "supported": true,
+        "components": [
+          [
+            "flex-direction",
+            "row"
+          ],
+          [
+            "flex-wrap",
+            "nowrap"
+          ]
+        ]
+      },
+      "row nowrap": {
+        "text": "flex-flow: row;",
+        "value": "row",
+        "supported": true,
+        "components": [
+          [
+            "flex-direction",
+            "row"
+          ],
+          [
+            "flex-wrap",
+            "nowrap"
+          ]
+        ]
+      },
+      "row wrap": {
+        "text": "flex-flow: wrap;",
+        "value": "wrap",
+        "supported": true,
+        "components": [
+          [
+            "flex-direction",
+            "row"
+          ],
+          [
+            "flex-wrap",
+            "wrap"
+          ]
+        ]
+      },
+      "wrap row-reverse": {
+        "text": "flex-flow: row-reverse wrap;",
+        "value": "row-reverse wrap",
+        "supported": true,
+        "components": [
+          [
+            "flex-direction",
+            "row-reverse"
+          ],
+          [
+            "flex-wrap",
+            "wrap"
+          ]
+        ]
+      },
+      "column wrap-reverse": {
+        "text": "flex-flow: column wrap-reverse;",
+        "value": "column wrap-reverse",
+        "supported": true,
+        "components": [
+          [
+            "flex-direction",
+            "column"
+          ],
+          [
+            "flex-wrap",
+            "wrap-reverse"
+          ]
+        ]
+      },
+      "wrap": {
+        "text": "flex-flow: wrap;",
+        "value": "wrap",
+        "supported": true,
+        "components": [
+          [
+            "flex-direction",
+            "row"
+          ],
+          [
+            "flex-wrap",
+            "wrap"
+          ]
+        ]
+      },
+      "nowrap": {
+        "text": "flex-flow: row;",
+        "value": "row",
+        "supported": true,
+        "components": [
+          [
+            "flex-direction",
+            "row"
+          ],
+          [
+            "flex-wrap",
+            "nowrap"
+          ]
+        ]
+      },
+      "row column": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "wrap nowrap": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      },
+      "ROW WRAP": {
+        "text": "flex-flow: wrap;",
+        "value": "wrap",
+        "supported": true,
+        "components": [
+          [
+            "flex-direction",
+            "row"
+          ],
+          [
+            "flex-wrap",
+            "wrap"
+          ]
+        ]
+      },
+      "1e2 2.50 10PX": {
+        "text": "",
+        "value": "",
+        "supported": false,
+        "components": []
+      }
+    },
+    "mutation": [
+      "flex: 3 1 auto;",
+      "3 1 auto"
+    ],
+    "invalidPreserves": "flex: 3 1 auto;"
+  }
+}

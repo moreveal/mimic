@@ -3,7 +3,8 @@
  const prior=CSS.supports;
  const declaration=(property,value)=>{
   const name=cssName(property);
-  if(webkitCSSKeywords.has(name)){const normalized=normalizeCSSValue(name,value);return normalized!==null&&normalized!==''}
+  if(cssShorthandParsers.has(name)||cssLonghandParsers.has(name)){const normalized=normalizeCSSValue(name,value,property);return normalized!==null&&normalized!==''}
+  if(webkitCSSKeywords.has(name)){const normalized=normalizeCSSValue(name,value,property);return normalized!==null&&normalized!==''}
   if(webkitCSSAliases.has(String(property).toLowerCase())&&['initial','inherit','unset','revert','revert-layer'].includes(String(value).trim().toLowerCase()))return true;
   return typeof prior==='function'?prior.call(CSS,property,value):false;
  };
@@ -25,5 +26,5 @@
   return match?declaration(match[1],match[2].replace(/\s*!important\s*$/i,'')):(condition(inner)??false);
  };
  const supports={supports(property,value){if(arguments.length===0)throw new TypeError('Not enough arguments');return arguments.length>1?declaration(String(property),String(value)):condition(String(property))===true}}.supports;
- markNative(supports,'supports');Object.defineProperty(CSS,'supports',{value:supports,writable:true,enumerable:true,configurable:true});
+ Object.defineProperty(supports,'length',{value:1,configurable:true});markNative(supports,'supports');Object.defineProperty(CSS,'supports',{value:supports,writable:true,enumerable:true,configurable:true});
 })();

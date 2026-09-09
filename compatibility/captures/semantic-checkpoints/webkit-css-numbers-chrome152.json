@@ -1,0 +1,30 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/webkit_css_numbers_oracle.js",
+    "fixtureSHA256": "c41b00eb95dabe0204620afd352461be08aa68d7e77b999d99773a88598ca9b1",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "1000000": "1e+06",
+    "12345678": "1.23457e+07",
+    "1.23456789": "1.23457",
+    "0.00000123456789": "1.23457e-06",
+    "1e20": "1e+20",
+    "1e30": "1e+30",
+    "1e38": "1e+38",
+    "3.4028234663852886e38": "3.40282e+38",
+    "1e39": "3.40282e+38",
+    "1e999": "3.40282e+38",
+    "1e-999": "0",
+    "1e-40": "1e-40",
+    "0.00001": "1e-05",
+    "999999.9": "1e+06"
+  }
+}
