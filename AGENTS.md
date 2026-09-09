@@ -24,6 +24,13 @@ the current behavioral reference.
   navigation, networking, and other projections should observe the same
   underlying state rather than maintain independently synchronized copies.
 
+- Mimic does not render images and must not require a GPU or a native graphics
+  backend. Model the observations scripts can make, including consistent
+  metrics, readbacks, local changes, resets and copies. Do not substitute
+  independent random buffers or a fingerprint derived from the entire command
+  sequence; repeated and overlapping observations must agree. See
+  `docs/architecture.md` for the graphics observation boundary.
+
 - Do not implement behavior specifically for individual websites, tests, or
   benchmarks. Fix the underlying browser semantic or architectural cause.
 
@@ -32,7 +39,7 @@ the current behavioral reference.
   dependencies.
 
 - Prefer the smallest implementation that reproduces the required observable
-  behavior. Do not introduce renderer, layout, media, device, or other browser
+  behavior. Do not introduce layout, media, device, or other browser
   subsystems unless their observable behavior is actually required.
 
 ## Correctness

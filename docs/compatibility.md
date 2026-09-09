@@ -175,6 +175,11 @@ subsequent document is not established by those observations. The 65-second
 capture, response bodies, trace, helper and binary SHA-256 are retained privately
 under `compatibility/private-captures/iroshop-2026-09-09-mimic-observation-state`.
 Neither cookie issuance nor a completed challenge POST alone establishes passage.
+The retained message trace places the first iframe `fail` event, code `600010`,
+at 5.07 seconds, before the top-level flow response issues the cookie. Cloudflare
+documents `600*` as generic challenge failure; its internal suffix does not expose
+the exact rejected observation. See the
+[official error table](https://developers.cloudflare.com/turnstile/troubleshooting/client-side-errors/error-codes/).
 
 A successful native capture of `iroshop.tech/mimic-e2e` is retained locally under
 `compatibility/private-captures/iroshop-2026-09-09-chrome152`: initial challenge
