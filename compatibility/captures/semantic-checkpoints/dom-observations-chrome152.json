@@ -1,0 +1,153 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "fixture": "internal/browser/testdata/dom_observations_oracle.js",
+    "fixtureSHA256": "fbe90dd5478b106a8e305c9de384c6b7b7c3365a65ae74d34113503cf62d5379"
+  },
+  "result": {
+    "position": [
+      0,
+      20,
+      10,
+      4,
+      2,
+      20,
+      10,
+      36,
+      34,
+      4,
+      2
+    ],
+    "collections": {
+      "children": {
+        "type": "[object HTMLCollection]",
+        "length": 1,
+        "same": true
+      },
+      "links": {
+        "type": "[object HTMLCollection]",
+        "length": 2,
+        "same": true
+      },
+      "anchors": {
+        "type": "[object HTMLCollection]",
+        "length": 1,
+        "same": true
+      },
+      "forms": {
+        "type": "[object HTMLCollection]",
+        "length": 1,
+        "same": true
+      },
+      "images": {
+        "type": "[object HTMLCollection]",
+        "length": 1,
+        "same": true
+      },
+      "embeds": {
+        "type": "[object HTMLCollection]",
+        "length": 1,
+        "same": true
+      },
+      "plugins": {
+        "type": "[object HTMLCollection]",
+        "length": 1,
+        "same": true
+      },
+      "applets": {
+        "type": "[object HTMLCollection]",
+        "length": 0,
+        "same": true
+      },
+      "scripts": {
+        "type": "[object HTMLCollection]",
+        "length": 0,
+        "same": true
+      }
+    },
+    "pluginsSame": true,
+    "childElements": [
+      1,
+      true,
+      true
+    ],
+    "live": 2,
+    "parsed": [
+      {
+        "type": "text/html",
+        "node": "html",
+        "ns": "http://www.w3.org/1999/xhtml",
+        "body": "helloglobalThis.parserExecuted=1",
+        "url": "about:blank",
+        "location": null,
+        "view": null,
+        "ready": "complete",
+        "compat": "BackCompat",
+        "owner": true,
+        "connected": true,
+        "html": "<p id=\"p\">hello</p><script>globalThis.parserExecuted=1</script>"
+      },
+      {
+        "type": "text/html",
+        "node": "html",
+        "ns": "http://www.w3.org/1999/xhtml",
+        "body": "ok",
+        "url": "about:blank",
+        "location": null,
+        "view": null,
+        "ready": "complete",
+        "compat": "CSS1Compat",
+        "owner": true,
+        "connected": true,
+        "html": "<p>ok</p>"
+      },
+      {
+        "type": "application/xml",
+        "node": "root",
+        "ns": "urn:test",
+        "body": null,
+        "url": "about:blank",
+        "location": null,
+        "view": null,
+        "ready": "complete",
+        "compat": "CSS1Compat",
+        "owner": true,
+        "connected": true,
+        "html": null
+      },
+      {
+        "type": "text/xml",
+        "node": "root",
+        "ns": null,
+        "body": null,
+        "url": "about:blank",
+        "location": null,
+        "view": null,
+        "ready": "complete",
+        "compat": "CSS1Compat",
+        "owner": true,
+        "connected": true,
+        "html": null
+      },
+      {
+        "type": "image/svg+xml",
+        "node": "svg",
+        "ns": "http://www.w3.org/2000/svg",
+        "body": null,
+        "url": "about:blank",
+        "location": null,
+        "view": null,
+        "ready": "complete",
+        "compat": "CSS1Compat",
+        "owner": true,
+        "connected": true,
+        "html": null
+      }
+    ],
+    "inert": true,
+    "invalidType": "TypeError",
+    "invalidReceiver": "TypeError"
+  }
+}

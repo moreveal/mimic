@@ -1,0 +1,531 @@
+{
+  "webgl": {
+    "parameters": {
+      "3386": {
+        "type": "Int32Array",
+        "value": [
+          32767,
+          32767
+        ]
+      },
+      "3408": {
+        "type": "Number",
+        "value": 4
+      },
+      "33901": {
+        "type": "Float32Array",
+        "value": [
+          1,
+          1024
+        ]
+      },
+      "33902": {
+        "type": "Float32Array",
+        "value": [
+          1,
+          1
+        ]
+      },
+      "34024": {
+        "type": "Number",
+        "value": 16384
+      },
+      "34076": {
+        "type": "Number",
+        "value": 16384
+      },
+      "34921": {
+        "type": "Number",
+        "value": 16
+      },
+      "34930": {
+        "type": "Number",
+        "value": 16
+      },
+      "35660": {
+        "type": "Number",
+        "value": 16
+      },
+      "35661": {
+        "type": "Number",
+        "value": 32
+      },
+      "36347": {
+        "type": "Number",
+        "value": 4095
+      },
+      "36348": {
+        "type": "Number",
+        "value": 30
+      },
+      "36349": {
+        "type": "Number",
+        "value": 1024
+      }
+    },
+    "samples": {},
+    "floatSamples": {},
+    "anisotropy": 16,
+    "precision": {
+      "35632,36336": {
+        "rangeMin": 127,
+        "rangeMax": 127,
+        "precision": 23
+      },
+      "35632,36337": {
+        "rangeMin": 127,
+        "rangeMax": 127,
+        "precision": 23
+      },
+      "35632,36338": {
+        "rangeMin": 127,
+        "rangeMax": 127,
+        "precision": 23
+      },
+      "35632,36339": {
+        "rangeMin": 31,
+        "rangeMax": 30,
+        "precision": 0
+      },
+      "35632,36340": {
+        "rangeMin": 31,
+        "rangeMax": 30,
+        "precision": 0
+      },
+      "35632,36341": {
+        "rangeMin": 31,
+        "rangeMax": 30,
+        "precision": 0
+      },
+      "35633,36336": {
+        "rangeMin": 127,
+        "rangeMax": 127,
+        "precision": 23
+      },
+      "35633,36337": {
+        "rangeMin": 127,
+        "rangeMax": 127,
+        "precision": 23
+      },
+      "35633,36338": {
+        "rangeMin": 127,
+        "rangeMax": 127,
+        "precision": 23
+      },
+      "35633,36339": {
+        "rangeMin": 31,
+        "rangeMax": 30,
+        "precision": 0
+      },
+      "35633,36340": {
+        "rangeMin": 31,
+        "rangeMax": 30,
+        "precision": 0
+      },
+      "35633,36341": {
+        "rangeMin": 31,
+        "rangeMax": 30,
+        "precision": 0
+      }
+    }
+  },
+  "webgl2": {
+    "parameters": {
+      "3386": {
+        "type": "Int32Array",
+        "value": [
+          32767,
+          32767
+        ]
+      },
+      "3408": {
+        "type": "Number",
+        "value": 4
+      },
+      "32883": {
+        "type": "Number",
+        "value": 2048
+      },
+      "33000": {
+        "type": "Number",
+        "value": 2147483647
+      },
+      "33001": {
+        "type": "Number",
+        "value": 2147483647
+      },
+      "33901": {
+        "type": "Float32Array",
+        "value": [
+          1,
+          1024
+        ]
+      },
+      "33902": {
+        "type": "Float32Array",
+        "value": [
+          1,
+          1
+        ]
+      },
+      "34024": {
+        "type": "Number",
+        "value": 16384
+      },
+      "34045": {
+        "type": "Number",
+        "value": 2
+      },
+      "34076": {
+        "type": "Number",
+        "value": 16384
+      },
+      "34852": {
+        "type": "Number",
+        "value": 8
+      },
+      "34921": {
+        "type": "Number",
+        "value": 16
+      },
+      "34930": {
+        "type": "Number",
+        "value": 16
+      },
+      "35071": {
+        "type": "Number",
+        "value": 2048
+      },
+      "35076": {
+        "type": "Number",
+        "value": -8
+      },
+      "35077": {
+        "type": "Number",
+        "value": 7
+      },
+      "35371": {
+        "type": "Number",
+        "value": 12
+      },
+      "35373": {
+        "type": "Number",
+        "value": 12
+      },
+      "35374": {
+        "type": "Number",
+        "value": 24
+      },
+      "35375": {
+        "type": "Number",
+        "value": 24
+      },
+      "35376": {
+        "type": "Number",
+        "value": 65536
+      },
+      "35377": {
+        "type": "Number",
+        "value": 212988
+      },
+      "35379": {
+        "type": "Number",
+        "value": 200704
+      },
+      "35380": {
+        "type": "Number",
+        "value": 256
+      },
+      "35657": {
+        "type": "Number",
+        "value": 4096
+      },
+      "35658": {
+        "type": "Number",
+        "value": 16380
+      },
+      "35659": {
+        "type": "Number",
+        "value": 120
+      },
+      "35660": {
+        "type": "Number",
+        "value": 16
+      },
+      "35661": {
+        "type": "Number",
+        "value": 32
+      },
+      "35968": {
+        "type": "Number",
+        "value": 4
+      },
+      "35978": {
+        "type": "Number",
+        "value": 120
+      },
+      "35979": {
+        "type": "Number",
+        "value": 4
+      },
+      "36063": {
+        "type": "Number",
+        "value": 8
+      },
+      "36183": {
+        "type": "Number",
+        "value": 8
+      },
+      "36203": {
+        "type": "Number",
+        "value": 4294967294
+      },
+      "36347": {
+        "type": "Number",
+        "value": 4095
+      },
+      "36348": {
+        "type": "Number",
+        "value": 30
+      },
+      "36349": {
+        "type": "Number",
+        "value": 1024
+      },
+      "37137": {
+        "type": "Number",
+        "value": 0
+      },
+      "37154": {
+        "type": "Number",
+        "value": 120
+      },
+      "37157": {
+        "type": "Number",
+        "value": 120
+      },
+      "37447": {
+        "type": "Number",
+        "value": 0
+      }
+    },
+    "samples": {
+      "32849": [
+        8,
+        4,
+        2,
+        1
+      ],
+      "32854": [
+        8,
+        4,
+        2,
+        1
+      ],
+      "32855": [
+        8,
+        4,
+        2,
+        1
+      ],
+      "32856": [
+        8,
+        4,
+        2,
+        1
+      ],
+      "32857": [
+        8,
+        4,
+        2,
+        1
+      ],
+      "33189": [
+        8,
+        4,
+        2,
+        1
+      ],
+      "33190": [
+        8,
+        4,
+        2,
+        1
+      ],
+      "33321": [
+        8,
+        4,
+        2,
+        1
+      ],
+      "33323": [
+        8,
+        4,
+        2,
+        1
+      ],
+      "33329": [],
+      "33330": [],
+      "33331": [],
+      "33332": [],
+      "33333": [],
+      "33334": [],
+      "33335": [],
+      "33336": [],
+      "33337": [],
+      "33338": [],
+      "33339": [],
+      "33340": [],
+      "35056": [
+        8,
+        4,
+        2,
+        1
+      ],
+      "35907": [
+        8,
+        4,
+        2,
+        1
+      ],
+      "36012": [
+        8,
+        4,
+        2,
+        1
+      ],
+      "36013": [
+        8,
+        4,
+        2,
+        1
+      ],
+      "36168": [
+        8,
+        4,
+        2,
+        1
+      ],
+      "36194": [
+        8,
+        4,
+        2,
+        1
+      ],
+      "36208": [],
+      "36214": [],
+      "36220": [],
+      "36226": [],
+      "36232": [],
+      "36238": [],
+      "36975": []
+    },
+    "floatSamples": {
+      "33325": [
+        8,
+        4,
+        2,
+        1
+      ],
+      "33326": [
+        8,
+        4,
+        2,
+        1
+      ],
+      "33327": [
+        8,
+        4,
+        2,
+        1
+      ],
+      "33328": [
+        8,
+        4,
+        2,
+        1
+      ],
+      "34836": [
+        8,
+        4,
+        2,
+        1
+      ],
+      "34842": [
+        8,
+        4,
+        2,
+        1
+      ],
+      "35898": [
+        8,
+        4,
+        2,
+        1
+      ]
+    },
+    "anisotropy": 16,
+    "precision": {
+      "35632,36336": {
+        "rangeMin": 127,
+        "rangeMax": 127,
+        "precision": 23
+      },
+      "35632,36337": {
+        "rangeMin": 127,
+        "rangeMax": 127,
+        "precision": 23
+      },
+      "35632,36338": {
+        "rangeMin": 127,
+        "rangeMax": 127,
+        "precision": 23
+      },
+      "35632,36339": {
+        "rangeMin": 31,
+        "rangeMax": 30,
+        "precision": 0
+      },
+      "35632,36340": {
+        "rangeMin": 31,
+        "rangeMax": 30,
+        "precision": 0
+      },
+      "35632,36341": {
+        "rangeMin": 31,
+        "rangeMax": 30,
+        "precision": 0
+      },
+      "35633,36336": {
+        "rangeMin": 127,
+        "rangeMax": 127,
+        "precision": 23
+      },
+      "35633,36337": {
+        "rangeMin": 127,
+        "rangeMax": 127,
+        "precision": 23
+      },
+      "35633,36338": {
+        "rangeMin": 127,
+        "rangeMax": 127,
+        "precision": 23
+      },
+      "35633,36339": {
+        "rangeMin": 31,
+        "rangeMax": 30,
+        "precision": 0
+      },
+      "35633,36340": {
+        "rangeMin": 31,
+        "rangeMax": 30,
+        "precision": 0
+      },
+      "35633,36341": {
+        "rangeMin": 31,
+        "rangeMax": 30,
+        "precision": 0
+      }
+    }
+  }
+}

@@ -193,6 +193,15 @@ The failed `brunhild.challenges.cloudflare.com` Fetch DNS lookup also occurs in
 the successful native capture, so it alone does not explain rejection.
 These fixes narrow observable differences; the server's decision remains unresolved.
 
+The first ranked correction batch adds WebGL capability/format/precision queries
+and canonical DOM collections, node positions and inert DOMParser documents.
+Both groups have retained Chrome 152 oracles and Window/Worker query checks where
+applicable. The next clean 25-second live capture still receives challenge 403,
+but no longer reports the targeted WebGL queries or DOM operations as missing.
+The remaining WebGL execution boundaries are compileShader and createFramebuffer;
+they belong to the later execution-model batch. Capture and binary hash are in
+`compatibility/private-captures/iroshop-2026-09-09-mimic-batch12`.
+
 A successful native capture of `iroshop.tech/mimic-e2e` is retained locally under
 `compatibility/private-captures/iroshop-2026-09-09-chrome152`: initial challenge
 403, then `cf_clearance` and an application response without the challenge header.

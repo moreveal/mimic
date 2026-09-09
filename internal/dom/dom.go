@@ -12,13 +12,15 @@ import (
 )
 
 type Node struct {
-	ID            int64  `json:"nodeId"`
-	Type          string `json:"type"`
-	TagName       string `json:"tagName,omitempty"`
-	Namespace     string `json:"namespaceURI,omitempty"`
-	QualifiedName string `json:"qualifiedName,omitempty"`
-	ContentType   string `json:"contentType,omitempty"`
-	Text          string `json:"text,omitempty"`
+	ID             int64  `json:"nodeId"`
+	Type           string `json:"type"`
+	TagName        string `json:"tagName,omitempty"`
+	Namespace      string `json:"namespaceURI,omitempty"`
+	QualifiedName  string `json:"qualifiedName,omitempty"`
+	ContentType    string `json:"contentType,omitempty"`
+	DocumentURL    string `json:"documentURL,omitempty"`
+	ParsedDocument bool   `json:"parsedDocument,omitempty"`
+	Text           string `json:"text,omitempty"`
 	// TextJSON preserves DOMString code units that cannot cross a UTF-8 string
 	// boundary (unpaired UTF-16 surrogates). Text is its scalar projection.
 	TextJSON             string            `json:"-"`

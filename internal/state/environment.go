@@ -33,7 +33,9 @@ type Window struct{ X, Y, OuterWidth, OuterHeight, ViewportWidth, ViewportHeight
 type Graphics struct {
 	Vendor, Renderer string
 	MaxTextureSize   int
-	WebGPU           GPUAdapter
+	// Immutable serialized query profile; empty selects the measured default.
+	WebGLCapabilitiesJSON string
+	WebGPU                GPUAdapter
 }
 type GPUAdapter struct {
 	Vendor, Architecture, Device, Description string
