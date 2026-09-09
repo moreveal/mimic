@@ -424,6 +424,21 @@
     return args;
   };
   class Console { group(...a){host.console('startGroup',a.length?consoleArguments(a):['console.group'])} groupCollapsed(...a){host.console('startGroupCollapsed',a.length?consoleArguments(a):['console.groupCollapsed'])} groupEnd(...a){host.console('endGroup',a.length?consoleArguments(a):['console.groupEnd'])} debug(...a){host.console('debug',consoleArguments(a))} log(...a){host.console('log',consoleArguments(a))} info(...a){host.console('info',consoleArguments(a))} warn(...a){host.console('warn',consoleArguments(a))} error(...a){host.console('error',consoleArguments(a))} }
+  const consoleCounts=new Map();
+  const consoleCountGet=Function.prototype.call.bind(Map.prototype.get),consoleCountSet=Function.prototype.call.bind(Map.prototype.set),consoleCountDelete=Function.prototype.call.bind(Map.prototype.delete);
+  const consoleCount=(label,reset)=>{
+    let key='default',failure,failed=false;
+    try{if(label!==undefined){if(typeof label==='symbol')throw new TypeError('Cannot convert a Symbol value to a string');key=consoleString(label)}}catch(error){failure=error;failed=true}
+    // Chrome applies the operation to the default label even if conversion
+    // fails, then propagates the original exception.
+    if(reset){if(!consoleCountDelete(consoleCounts,key))host.console('warning',["Count for '"+key+"' does not exist"])}
+    else{const count=(consoleCountGet(consoleCounts,key)||0)+1;consoleCountSet(consoleCounts,key,count);host.console('count',[key+': '+count])}
+    if(failed)throw failure;
+  };
+  Object.defineProperties(Console.prototype,{
+    count:{value:function count(label=undefined){consoleCount(label,false)},writable:true,configurable:true},
+    countReset:{value:function countReset(label=undefined){consoleCount(label,true)},writable:true,configurable:true}
+  });
   const document=observe('Document',new Document(hostToken));
   Object.defineProperty(document,'location',{get:()=>loc,enumerable:true,configurable:false});
   let frameElementCache;

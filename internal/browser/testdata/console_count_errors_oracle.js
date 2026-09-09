@@ -1,0 +1,1 @@
+(()=>{let rows=[];console.count('default');try{console.count(Symbol('x'))}catch(e){rows.push(e.name)}console.count();try{console.countReset(Symbol('x'))}catch(e){rows.push(e.name)}console.count();try{console.count({toString(){throw 17}})}catch(e){rows.push(e)}console.count();return rows})()

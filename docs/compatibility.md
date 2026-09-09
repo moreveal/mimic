@@ -207,6 +207,13 @@ implemented by this formatter. These semantics are covered by the
 [Chrome console matrix](../compatibility/captures/semantic-checkpoints/console-format-chrome152.json)
 and its [argument-consumption cases](../compatibility/captures/semantic-checkpoints/console-format-edges-chrome152.json).
 
+`console.count` and `console.countReset` keep label counters per realm and
+support detached calls. Missing reset labels emit a warning; successful resets
+delete the counter silently, so a second reset warns. Frozen Chrome applies the operation to the default label when label
+conversion throws, then propagates the original exception; this unusual order
+is preserved. See the [counter oracle](../compatibility/captures/semantic-checkpoints/console-count-chrome152.json)
+and [conversion-error sequence](../compatibility/captures/semantic-checkpoints/console-count-errors-chrome152.json).
+
 Same-origin frame `eval` preserves non-string argument identity, including
 functions, boxed strings and objects with throwing conversion hooks. Locally
 branded TrustedScript values use their internal source and evaluate in the

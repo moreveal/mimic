@@ -1,0 +1,83 @@
+{
+  "browser": "152.0.7977.82",
+  "results": [
+    "TypeError",
+    "TypeError",
+    17
+  ],
+  "events": [
+    {
+      "type": "count",
+      "args": [
+        {
+          "type": "string",
+          "value": "default: 1"
+        }
+      ]
+    },
+    {
+      "type": "count",
+      "args": [
+        {
+          "type": "string",
+          "value": "default: 2"
+        }
+      ]
+    },
+    {
+      "type": "count",
+      "args": [
+        {
+          "type": "string",
+          "value": "default: 3"
+        }
+      ]
+    },
+    {
+      "type": "count",
+      "args": [
+        {
+          "type": "string",
+          "value": "default: 1"
+        }
+      ]
+    },
+    {
+      "type": "count",
+      "args": [
+        {
+          "type": "string",
+          "value": "default: 2"
+        }
+      ]
+    },
+    {
+      "type": "count",
+      "args": [
+        {
+          "type": "string",
+          "value": "default: 3"
+        }
+      ]
+    }
+  ],
+  "source": "internal/browser/testdata/console_count_errors_oracle.js",
+  "sourceSHA256": "4957794ae575d22a9dc0f78965d653d1de612a834a3093f20d1d994e7b5ba798",
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "profileFreshness": "fresh-isolated-context",
+    "browserProfileFreshness": "unavailable: existing process",
+    "unavailable": [
+      "commandLineFeatureOverrides",
+      "environmentProfileId",
+      "window",
+      "hasFocus",
+      "viewport",
+      "secureContextState",
+      "isolationState",
+      "visibilityState"
+    ],
+    "provenance": "Own isolated context in existing Chrome9343; context closed, existing browser retained."
+  }
+}
