@@ -66,8 +66,24 @@ var fetchPrimitivesSurface string
 //go:embed abort_encoding.js
 var abortEncodingSurface string
 
+//go:embed canvas_path_observations.js
+var canvasPathObservationsSurface string
+
 //go:embed canvas_state.js
 var canvasStateSurface string
+
+//go:embed glsl_observations.js
+var glslObservationsSurface string
+
+//go:embed webgl_framebuffer_observations.js
+var webglFramebufferObservationsSurface string
+
+//go:embed webgl_program_observations.js
+var webglProgramObservationsSurface string
+
+func webglObservationsSource() string {
+	return strings.NewReplacer("/* shared_glsl_observations */", glslObservationsSurface, "/* shared_webgl_programs */", webglProgramObservationsSurface, "/* shared_webgl_framebuffers */", webglFramebufferObservationsSurface).Replace(webglStateSurface)
+}
 
 //go:embed webgl_state.js
 var webglStateSurface string
@@ -155,7 +171,7 @@ func composeSurface(generated, exposureSource string) string {
 	parts := []string{capabilitySurface, generated, "finalizeBindings();", exposureSource,
 		"installNavigatorCapabilities();", semanticFixups, strings.Replace(domCompatibilitySurface, "/* shared_abort_encoding */", abortEncodingSurface, 1),
 		templatesCompatibilitySurface, selectorsVendorSurface, selectorsCompatibilitySurface, cssomCompatibilitySurface, streamPrelude,
-		streamsVendorSurface, "}", fetchCompatibilitySurface, formControlsSurface, traversalCompatibilitySurface, documentCompatibilitySurface, attributesCompatibilitySurface, eventsCompatibilitySurface, documentStreamSurface, shadowSerializationSurface, canvasStateSurface, webglStateSurface, marker}
+		streamsVendorSurface, "}", fetchCompatibilitySurface, formControlsSurface, traversalCompatibilitySurface, documentCompatibilitySurface, attributesCompatibilitySurface, eventsCompatibilitySurface, documentStreamSurface, shadowSerializationSurface, strings.Replace(canvasStateSurface, "/* shared_canvas_paths */", canvasPathObservationsSurface, 1), webglObservationsSource(), marker}
 	base := strings.Replace(handwrittenSurface, "/* shared_fetch_primitives */", fetchPrimitivesSurface, 1)
 	base = strings.Replace(base, "/* shared_dom_matrix */", domMatrixSurface, 1)
 	return strings.Replace(base, marker, strings.Join(parts, "\n"), 1)
@@ -172,5 +188,5 @@ func WorkerSurface(generated string, exposure *compatibility.RealmExposure) stri
 	}
 	shared := fetchPrimitivesSurface + "\nObject.assign(globalThis,{TextEncoder,DOMException,URL,URLSearchParams,Blob,File,Headers});\n" + abortEncodingSurface + "\n{let structuredClone;\n" + streamsVendorSurface + "\n}\n" + fetchCompatibilitySurface
 	base := strings.Replace(handwrittenWorkerSurface, "/* shared_worker_fetch */", shared, 1)
-	return base + "\n" + generated + "\n" + exposureSource + "__finishWorkerSurface();if(typeof __workerExposure!=='undefined')__applyWorkerPrototypeExposure(__workerExposure);delete globalThis.__applyWorkerExposure;delete globalThis.__applyWorkerPrototypeExposure;delete globalThis.__finishWorkerSurface;delete globalThis.__mimic;delete globalThis.__mimicIDLExposure;\n{const host=__workerHost;\n" + domMatrixSurface + "\n" + canvasStateSurface + "\n" + webglStateSurface + "\n}"
+	return base + "\n" + generated + "\n" + exposureSource + "__finishWorkerSurface();if(typeof __workerExposure!=='undefined')__applyWorkerPrototypeExposure(__workerExposure);delete globalThis.__applyWorkerExposure;delete globalThis.__applyWorkerPrototypeExposure;delete globalThis.__finishWorkerSurface;delete globalThis.__mimic;delete globalThis.__mimicIDLExposure;\n{const host=__workerHost;\n" + domMatrixSurface + "\n" + strings.Replace(canvasStateSurface, "/* shared_canvas_paths */", canvasPathObservationsSurface, 1) + "\n" + webglObservationsSource() + "\n}"
 }

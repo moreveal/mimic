@@ -298,7 +298,7 @@ metrics use the same coverage extents and character advances. Ordered lazy
 materialization makes repeated and overlapping reads consistent and preserves
 clear/write/reset/copy relationships; replacing the last character affects only
 its local coverage region. This is not Chrome glyph shape, metric or pixel
-equivalence. Font fallback/shaping, arbitrary paths/clips/gradients, image decoding,
+equivalence. Font fallback/shaping, exact curve-edge coverage, image decoding,
 general resampling and cross-worker transferable canvas/bitmap messaging remain
 unimplemented. Unmodeled drawing operations retain bounded primitive operation
 metadata and do not fabricate a full rendered image; readbacks reflect only
@@ -311,3 +311,10 @@ branded TrustedScript values use their internal source and evaluate in the
 target frame without invoking public `toString`. The bridge retains its origin
 validation even when there is no source to execute. See the
 [Chrome 152 eval-argument capture](../compatibility/captures/semantic-checkpoints/frame-eval-arguments-chrome152.json).
+
+
+Canvas path, clip, gradient and compositing observations now share ordered
+operation snapshots with text. A bounded WebGL arithmetic evaluator preserves
+program/resource state and relational readbacks without GPU execution. The
+[graphics observation checkpoint](compatibility/graphics-observations.md)
+distinguishes measured Chrome agreement from approximate or unsupported behavior.

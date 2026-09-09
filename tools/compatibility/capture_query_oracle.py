@@ -21,7 +21,7 @@ async def main():
    fixture=pathlib.Path(sys.argv[1] if len(sys.argv)>1 else 'internal/browser/testdata/webgl_capabilities_oracle.js')
    value=await call('Runtime.evaluate',{'expression':fixture.read_text(encoding='utf8'),'returnByValue':True},session)
    if 'exceptionDetails' in value:raise RuntimeError(value['exceptionDetails'])
-   out={'browser':version['Browser'],'metadata':{'existingBrowser':True,'isolatedBrowserContext':True,'fixture':str(fixture).replace('\\','/'),'fixtureSHA256':hashlib.sha256(fixture.read_bytes()).hexdigest()},'result':value['result']['value']}
+   out={'browser':version['Browser'],'metadata':{'existingBrowser':True,'isolatedBrowserContext':True,'fixture':str(fixture).replace('\\','/'),'fixtureSHA256':hashlib.sha256(fixture.read_text(encoding='utf8').encode('utf8')).hexdigest(),'fixtureHashNormalization':'LF'},'result':value['result']['value']}
    pathlib.Path(sys.argv[2] if len(sys.argv)>2 else 'compatibility/captures/semantic-checkpoints/webgl-capabilities-chrome152.json').write_text(json.dumps(out,indent=2),encoding='utf8')
    print('Captured',version['Browser'],list(out['result']))
   finally:await call('Target.disposeBrowserContext',{'browserContextId':context})

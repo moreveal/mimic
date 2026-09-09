@@ -1,0 +1,77 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "fixture": "internal/browser/testdata/canvas_paths_oracle.js",
+    "fixtureSHA256": "db265969fbd93989db98f6431553f68f7fbb8ac3966df550f5c8c1dcc48a7502",
+    "fixtureHashNormalization": "LF"
+  },
+  "result": {
+    "rect": [
+      [
+        255,
+        0,
+        0,
+        255
+      ],
+      [
+        0,
+        0,
+        0,
+        0
+      ]
+    ],
+    "clip": [
+      [
+        0,
+        0,
+        255,
+        255
+      ],
+      [
+        255,
+        0,
+        0,
+        255
+      ]
+    ],
+    "evenodd": [
+      0,
+      255,
+      0
+    ],
+    "point": [
+      true,
+      false
+    ],
+    "pathNotSaved": [
+      false,
+      true
+    ],
+    "gradient": true,
+    "copy": [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        255,
+        255
+      ]
+    ],
+    "triangle": [
+      255,
+      0
+    ],
+    "transform": [
+      255,
+      0
+    ],
+    "resizePath": false
+  }
+}

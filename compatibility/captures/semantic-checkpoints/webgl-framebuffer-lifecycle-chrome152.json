@@ -1,0 +1,17 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "fixture": "internal/browser/testdata/webgl_framebuffer_lifecycle_oracle.js",
+    "fixtureSHA256": "8c3645975ab2c7f397b45ecaa36cfb1f9155afa018a7cd8094cefa1acf411e68",
+    "fixtureHashNormalization": "LF"
+  },
+  "result": {
+    "status": 36053,
+    "name": true,
+    "type": 36161,
+    "is": false,
+    "error": 0
+  }
+}

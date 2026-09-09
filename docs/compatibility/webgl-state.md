@@ -17,15 +17,12 @@ they do not imply shader execution is implemented. Contexts use a single sample;
 multisampling fails. The state-only layer has no presentation/compositor task and
 does not discard a drawing buffer on presentation.
 
-Shader compilation, program linking, drawing, textures and framebuffer attachment
-evaluation are explicit NotSupportedError boundaries with semantic diagnostics.
-Generated operations outside the implemented state subset also fail explicitly.
-The presence of a WebGL context does not assert that arbitrary shaders can run.
-In particular, no shader-derived pixels, precision values, extensions or GPU
-limits are fabricated. Unmodeled recognized parameter queries fail explicitly;
-values outside the generated enum inventory produce INVALID_ENUM and null.
-Typed-array offset overloads, non-RGBA/UNSIGNED_BYTE pixel reads and large storage
-allocations also remain explicit boundaries.
+Program/shader ownership, linking, active inputs, uniforms and lazy draw/readback
+observations now cover a bounded arithmetic GLSL subset. Renderbuffer attachment
+state also has a shared implementation. See `graphics-observations.md` for the
+measured cases and explicit limits. This does not make arbitrary shaders or a
+native graphics backend available. Texture execution, multisampling, typed-array
+offset overloads and non-RGBA/UNSIGNED_BYTE readbacks remain unsupported.
 
 The supported storage/clear/reset fixture is retained in
 `internal/browser/testdata/webgl_state_oracle.js`, with a frozen headful Chrome 152
@@ -33,5 +30,5 @@ capture and environment metadata in
 `compatibility/captures/semantic-checkpoints/webgl-state-chrome152.json`.
 Browser tests execute that same source, and separately check ownership, uploads,
 scissor changes, repeated reads, Window/Worker profile parity, snapshot orientation
-and the unsupported shader boundary. This work does not establish compatibility
-with workloads that consume shader-derived pixels.
+and the unsupported shader boundary. Additional arithmetic and attachment oracles establish only their covered
+observations, not arbitrary shader or GPU numerical equivalence.

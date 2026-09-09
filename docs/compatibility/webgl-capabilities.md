@@ -20,7 +20,8 @@ return a valid empty Int32Array. Unsupported enums return null and INVALID_ENUM,
 not a JavaScript exception. The exposed extension subset covers the implemented
 query semantics. It is intentionally smaller than the native extension list.
 
-Shader execution, framebuffer/texture operations and multisampled drawing remain
-explicit unsupported boundaries. Querying supported sample counts does not add
+Bounded arithmetic shader observations and renderbuffer attachment queries are
+described in `graphics-observations.md`. Texture execution and multisampled
+drawing remain explicit unsupported boundaries. Querying supported sample counts does not add
 a multisampled renderer. Default context antialiasing remains the existing
 disabled boundary; this oracle does not establish default native context parity.
