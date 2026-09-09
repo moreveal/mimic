@@ -15,6 +15,31 @@
     "checkpoint-race.jsonl.gz": "47649cd7d71f64a5ba49ed308da6c7684ed817360bf71141d835c8990334e9f1",
     "checkpoint-snapshot-race.jsonl.gz": "5fd6954a5d3e538ca2682688c628048076a66727beb6bfe867ccdc71852097c8",
     "checkpoint.md": "f59b64c1162263d7594528fbf0061677ad835d60fd5f403c9b41cbb97e1bb33e",
+    "commits.txt": "f56fc02e699a1f7c2f443f31cbda08c0faa8712db4d93f6273e7ce50e3bf5286",
+    "page-bootstrap.blob.gz": "90565cc4d6caf31320c83ae3147920dc4bc1b4891c960836f687ecdde13d4a5a",
+    "snapshot-page-builder.log": "52ce9d89708863fd1d4bdaf7c7fbe0cb6e05acb4e9812f599406310d8b8c09f6",
+    "snapshot-page-builder.sha256": "011f2357ddd01d5c8df1a78e8cc3e5a4ab6a389bcaa89ba94b28f6062ee7a433",
+    "snapshot-page.patch": "bc7bb3d1bd3c50272cfacd67f8046de3063d1050dbfd0730bc3e8eacb51c186a",
+    "summary.json": "ab5a21888cfcaec145212c1bf9e82cc8607afa981631d0b06011cbd18504e69e",
+    "validation.json": "6ed68da1a420278630a4a938b917dee97123d10824dce5d1e3eda578efeec0d7",
+    "control\\build.json": "b30fa47b651e51ba6e266f9fb64830a1e864fc6234e6e1456db828c13585f35b",
+    "control\\raw.json": "5c9789980a1e59d1e5e35c6031359794841fb7f27cc4e61728dc61c77b308dfb",
+    "snapshot\\build.json": "e0ae68332a4d2175360ecf449e59a5d791a72219593414ea4d7ebd17c7a5cf46",
+    "snapshot\\raw.json": "4e014fec739f13231d6f0c0d00b58ddb872c58e28599e4e141bef06d30bfc65f",
+    "snapshot-page-first-gate\\build.json": "27057c0ca8a3a919c0e4d3cb8a58ea0345420f3e9ec39cf94c2b46f427a34650",
+    "snapshot-page-first-gate\\raw.json.gz": "8913785781ff49dd2ea7dab1ed6fdf0302ec76a2be3a4554a98b9e16287a6862",
+    "snapshot-page-second-gate\\build.json": "de01e3cc124370f924b2a52de9f5fb9b1b5857c29a9562075f16799b7aab7d27",
+    "snapshot-page-second-gate\\raw.json.gz": "6b26af42e8bf9ce305af1758cf7d3cb3a3dc705a7d4a78db1cb07cf8b803a217",
+    "snapshot-page-third-gate\\build.json": "acaa8015ca81672877eb0cc3a832cf30ff5bdb4fb4bdf5437815def417bcb13a",
+    "snapshot-page-third-gate\\raw.json.gz": "6cdfdd44583d990297aa3c57eaa0bc9ff0f9343c1c120e402144f6e320b32692"
+  },
+  "original_worktree_files": {
+    "bootstrap-capture.js.gz": "779d240cbe407f52a92de932edd3306edf6da2906541dd8fceaad2ae52c08b4c",
+    "bootstrap-capture.json.gz": "c3927ed2a630b079d19df212d7be12dcb809c07856e69e04aebc6812baf2fe1b",
+    "checkpoint-correctness.jsonl.gz": "efb44bba3d3f3879c6f86d80d48e54388b3f7286d03fdfd3ac0725d21d7319f1",
+    "checkpoint-race.jsonl.gz": "47649cd7d71f64a5ba49ed308da6c7684ed817360bf71141d835c8990334e9f1",
+    "checkpoint-snapshot-race.jsonl.gz": "5fd6954a5d3e538ca2682688c628048076a66727beb6bfe867ccdc71852097c8",
+    "checkpoint.md": "f59b64c1162263d7594528fbf0061677ad835d60fd5f403c9b41cbb97e1bb33e",
     "commits.txt": "3825b8d1a8c367c62b762d1f6a42f725bfba6398d818dff2d15b075388a5b187",
     "page-bootstrap.blob.gz": "90565cc4d6caf31320c83ae3147920dc4bc1b4891c960836f687ecdde13d4a5a",
     "snapshot-page-builder.log": "52ce9d89708863fd1d4bdaf7c7fbe0cb6e05acb4e9812f599406310d8b8c09f6",
@@ -32,5 +57,6 @@
     "snapshot-page-second-gate\\raw.json.gz": "6b26af42e8bf9ce305af1758cf7d3cb3a3dc705a7d4a78db1cb07cf8b803a217",
     "snapshot-page-third-gate\\build.json": "11ea286b4fa1f65d91eb801c4d7474c53de61b2e1199d332479772bb3a6cef4e",
     "snapshot-page-third-gate\\raw.json.gz": "6cdfdd44583d990297aa3c57eaa0bc9ff0f9343c1c120e402144f6e320b32692"
-  }
+  },
+  "hash_scope": "files hashes refer to committed Git blob bytes; original_worktree_files preserves pre-checkout hashes, including original line endings"
 }
