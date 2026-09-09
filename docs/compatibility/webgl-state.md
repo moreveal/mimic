@@ -11,7 +11,9 @@ measured in Chrome 152 (this differs from the 2D context reset).
 
 Environment.Graphics remains authoritative for vendor, renderer and maximum
 texture size in Window and Worker. No native machine fingerprint was copied into
-the implementation. Contexts use a single sample; explicitly requesting
+the implementation. Masked VENDOR/RENDERER and API/GLSL version strings are the
+measured Chrome WebGL 1/2 interface identifiers, independent of machine identity;
+they do not imply shader execution is implemented. Contexts use a single sample; explicitly requesting
 multisampling fails. The state-only layer has no presentation/compositor task and
 does not discard a drawing buffer on presentation.
 
