@@ -6,7 +6,7 @@ const fragmentOwnerDocuments = new WeakMap();
 function wrapDocumentNode(data) {
   if(data.nodeId===host.documentRootID())return document;
   let value=documentWrappers.get(data.nodeId);
-  if(!value){value=Object.create((data.contentType&&data.contentType!=='text/html'?globalThis.XMLDocument:Document).prototype);elementData.set(value,data);documentWrappers.set(data.nodeId,value)}
+  if(!value){value=Object.create((data.contentType&&data.contentType!=='text/html'?globalThis.XMLDocument:HTMLDocument).prototype);elementData.set(value,data);documentWrappers.set(data.nodeId,value)}
   return value;
 }
 {
@@ -74,7 +74,7 @@ function wrapDocumentNode(data) {
   for(const prototype of [Document.prototype,Element.prototype])member(prototype,'getElementsByTagName',function(name){
     if(!(this instanceof Document)&&!(this instanceof Element))throw new TypeError('Illegal invocation');
     name=String(name);const lower=name.toLowerCase(),root=this;
-    return htmlCollection(()=>Array.from(root.querySelectorAll('*')).filter(node=>name==='*'||node.localName===(node.namespaceURI==='http://www.w3.org/1999/xhtml'?lower:name)).map(node=>elementSlot(node).nodeId));
+    return cachedHTMLCollection(root,'tag',name,()=>Array.from(root.querySelectorAll('*')).filter(node=>name==='*'||node.localName===(node.namespaceURI==='http://www.w3.org/1999/xhtml'?lower:name)).map(node=>elementSlot(node).nodeId));
   });
   accessor(Document.prototype,'defaultView',function(){validDocument(this);return this===document?window:null});
   accessor(Document.prototype,'textContent',function(){validDocument(this);return null},function(){validDocument(this)});

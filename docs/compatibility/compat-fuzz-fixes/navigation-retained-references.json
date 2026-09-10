@@ -1,0 +1,76 @@
+{
+  "chrome": {
+    "status": "ok",
+    "value": {
+      "windowSame": true,
+      "documentReplaced": true,
+      "oldDocumentValue": {
+        "ok": {
+          "type": "number",
+          "value": 23
+        }
+      },
+      "newDocumentValue": {
+        "ok": {
+          "type": "undefined"
+        }
+      },
+      "oldObjectValue": {
+        "ok": {
+          "type": "number",
+          "value": 17
+        }
+      }
+    }
+  },
+  "mimic": {
+    "status": "ok",
+    "value": {
+      "documentReplaced": false,
+      "newDocumentValue": {
+        "ok": {
+          "type": "undefined"
+        }
+      },
+      "oldDocumentValue": {
+        "ok": {
+          "type": "undefined"
+        }
+      },
+      "oldObjectValue": {
+        "class": "[object Error]",
+        "exception": "Error",
+        "messageCategory": "other"
+      },
+      "windowSame": true
+    }
+  },
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-compat-fixes-fresh",
+    "profileFreshness": "caller-declared",
+    "visibilityState": "visible",
+    "hasFocus": true
+  }
+}

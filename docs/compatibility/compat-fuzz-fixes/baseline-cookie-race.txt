@@ -1,0 +1,8 @@
+--- FAIL: TestPartitionCookiesFrameAndWorkerTransport (13.67s)
+    --- FAIL: TestPartitionCookiesFrameAndWorkerTransport/goja (12.82s)
+        cookie_context_test.go:49: debug: {"top":"http://127.0.0.1:30918","child":null,"length":2,"childLength":null}
+        cookie_context_test.go:49: history evaluation: value=<nil> expected=true err=context deadline exceeded
+            new Promise(resolve=>{const f=document.createElement('iframe');const listener=e=>{if(e.source!==f.contentWindow)return;removeEventListener('message',listener);const v=e.data;f.remove();resolve(v.before==='shared=1'&&v.documentValue==='shared=1; id=nested'&&v.wire==='shared=1; id=nested'&&v.workerValue.script===v.wire&&v.workerValue.fetch===v.wire&&document.cookie==='id=top; shared=1')};addEventListener('message',listener);f.src="http://localhost:30918/middle";document.body.append(f)})
+FAIL
+FAIL	github.com/moreveal/mimic/internal/browser	13.966s
+FAIL
