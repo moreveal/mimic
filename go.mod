@@ -7,6 +7,9 @@ go 1.26
 // observable second connection for the next same-origin resource.
 replace github.com/bogdanfinn/tls-client => ./third_party/tls-client
 
+// Expose connection-only HTTP/3 setup so protocol selection cannot replay requests.
+replace github.com/bogdanfinn/quic-go-utls => ./third_party/quic-go-utls
+
 require (
 	github.com/andybalholm/brotli v1.2.0
 	github.com/bogdanfinn/fhttp v0.6.9

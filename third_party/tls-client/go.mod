@@ -31,7 +31,7 @@ require (
 
 //replace github.com/bogdanfinn/utls => ../utls
 
-//replace github.com/bogdanfinn/quic-go-utls => ../quic-go-utls
+replace github.com/bogdanfinn/quic-go-utls => ../quic-go-utls
 
 //replace github.com/bogdanfinn/websocket => ../websocket
 

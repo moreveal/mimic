@@ -169,14 +169,23 @@ func (rt *roundTripper) dropCachedTransport(addr string, stale http.RoundTripper
 
 func (rt *roundTripper) CloseIdleConnections() {
 	rt.cachedTransportsLck.Lock()
-	defer rt.cachedTransportsLck.Unlock()
-
-	type closeIdler interface {
-		CloseIdleConnections()
-	}
-
+	transports := make([]http.RoundTripper, 0, len(rt.cachedTransports))
 	for _, transport := range rt.cachedTransports {
-		if tr, ok := transport.(closeIdler); ok {
+		transports = append(transports, transport)
+	}
+	rt.cachedTransportsLck.Unlock()
+
+	// Connection selection can leave a completed TCP handshake waiting for
+	// its first request. These sockets are not yet owned by an HTTP idle pool.
+	rt.Lock()
+	pending := rt.cachedConnections
+	rt.cachedConnections = make(map[string]net.Conn)
+	rt.Unlock()
+	for _, conn := range pending {
+		_ = conn.Close()
+	}
+	for _, transport := range transports {
+		if tr, ok := transport.(interface{ CloseIdleConnections() }); ok {
 			tr.CloseIdleConnections()
 		}
 	}

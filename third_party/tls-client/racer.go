@@ -14,8 +14,9 @@ import (
 )
 
 type protocolRacer struct {
-	protocolCache   map[string]string
-	protocolCacheMu sync.RWMutex
+	protocolCache        map[string]string
+	protocolCacheMu      sync.RWMutex
+	connectionSelections map[string]chan struct{}
 
 	clientSessionCache  tls.ClientSessionCache
 	insecureSkipVerify  bool
@@ -85,40 +86,47 @@ func newProtocolRacer(
 	}
 }
 
-// race races HTTP/3 and HTTP/2 connections and uses whichever responds first.
-// Similar to Chrome's "Happy Eyeballs" approach.
+// race selects a connected protocol before submitting the application request.
+// Racing responses would execute a slow request twice, including POST bodies.
 func (pr *protocolRacer) race(req *http.Request, addr string, getTransportFunc func(*http.Request, string) error) (*http.Response, error) {
-	// Try cached protocol first if available
-	if resp, shouldRace := pr.tryUseCachedProtocol(req, addr, getTransportFunc); !shouldRace {
-		return resp, nil
-	}
-
-	// No cached protocol or it failed - start racing
-	return pr.startRace(req, addr, getTransportFunc)
-}
-
-func (pr *protocolRacer) tryUseCachedProtocol(req *http.Request, addr string, getTransportFunc func(*http.Request, string) error) (*http.Response, bool) {
 	pr.protocolCacheMu.RLock()
-	cachedProtocol, found := pr.protocolCache[addr]
+	protocol, found := pr.protocolCache[addr]
 	pr.protocolCacheMu.RUnlock()
-
-	if !found {
-		return nil, true // No cache, proceed to racing
+	if found {
+		transport, err := pr.getOrCreateTransport(protocol, addr, req, getTransportFunc)
+		if err == nil {
+			resp, tripErr := pr.roundTrip(transport, req, addr)
+			if tripErr == nil {
+				return resp, nil
+			}
+			// This sentinel is emitted by the TCP dialer before any HTTP write.
+			// All other errors may follow a successful server-side operation.
+			if !errors.Is(tripErr, errProtocolChanged) {
+				return resp, tripErr
+			}
+			pr.clearProtocolCache(addr)
+			if req.Body != nil && req.Body != http.NoBody {
+				// A failed RoundTrip may already have closed the body even
+				// though this dial failure guarantees it wrote no bytes.
+				if req.GetBody == nil {
+					return resp, tripErr
+				}
+				body, err := req.GetBody()
+				if err != nil {
+					return nil, err
+				}
+				req = req.Clone(req.Context())
+				req.Body = body
+			}
+		} else {
+			pr.handleCachedProtocolError(err, addr, req)
+			if errors.Is(err, ErrBadPinDetected) {
+				closeRequestBody(req)
+				return nil, err
+			}
+		}
 	}
-
-	transport, err := pr.getOrCreateTransport(cachedProtocol, addr, req, getTransportFunc)
-	if err != nil {
-		pr.handleCachedProtocolError(err, addr, req)
-		return nil, true // Cached protocol failed, proceed to racing
-	}
-
-	resp, err := pr.roundTrip(transport, req, addr)
-	if err == nil {
-		return resp, false // Success!
-	}
-
-	pr.clearProtocolCache(addr)
-	return nil, true
+	return pr.startRace(req, addr, getTransportFunc)
 }
 
 func (pr *protocolRacer) getOrCreateTransport(protocol, addr string, req *http.Request, getTransportFunc func(*http.Request, string) error) (http.RoundTripper, error) {
@@ -155,76 +163,159 @@ func (pr *protocolRacer) createTransportForProtocol(protocol, addr string, req *
 }
 
 func (pr *protocolRacer) startRace(req *http.Request, addr string, getTransportFunc func(*http.Request, string) error) (*http.Response, error) {
-	resultCh := make(chan racingResult, 2)
-	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+	// Share only connection selection. Application requests remain concurrent.
+	for {
+		pr.protocolCacheMu.Lock()
+		if protocol, ok := pr.protocolCache[addr]; ok {
+			pr.protocolCacheMu.Unlock()
+			transport, err := pr.getOrCreateTransport(protocol, addr, req, getTransportFunc)
+			if err != nil {
+				closeRequestBody(req)
+				return nil, err
+			}
+			return pr.selectedRoundTrip(transport, req, addr)
+		}
+		if pending := pr.connectionSelections[addr]; pending != nil {
+			pr.protocolCacheMu.Unlock()
+			select {
+			case <-pending:
+			case <-req.Context().Done():
+				closeRequestBody(req)
+				return nil, req.Context().Err()
+			}
+			pr.protocolCacheMu.RLock()
+			protocol, ok := pr.protocolCache[addr]
+			pr.protocolCacheMu.RUnlock()
+			if ok {
+				transport, err := pr.getOrCreateTransport(protocol, addr, req, getTransportFunc)
+				if err != nil {
+					closeRequestBody(req)
+					return nil, err
+				}
+				return pr.selectedRoundTrip(transport, req, addr)
+			}
+			continue
+		}
+		if pr.connectionSelections == nil {
+			pr.connectionSelections = make(map[string]chan struct{})
+		}
+		done := make(chan struct{})
+		pr.connectionSelections[addr] = done
+		pr.protocolCacheMu.Unlock()
+		h3, _ := buildHTTP3Transport(pr.getHTTP3Config())
+		// An unavailable HTTP/3 route (for example a TCP-only proxy) must
+		// still allow the TCP candidate to connect.
+		transport, err := pr.selectConnection(req, addr, h3, getTransportFunc)
+		pr.protocolCacheMu.Lock()
+		delete(pr.connectionSelections, addr)
+		close(done)
+		pr.protocolCacheMu.Unlock()
+		if err != nil {
+			return nil, err
+		}
+		resp, err := pr.roundTrip(transport, req, addr)
+		if errors.Is(err, errProtocolChanged) {
+			pr.clearProtocolCache(addr)
+		}
+		return resp, err
+	}
+}
+
+func (pr *protocolRacer) selectedRoundTrip(transport http.RoundTripper, req *http.Request, addr string) (*http.Response, error) {
+	resp, err := pr.roundTrip(transport, req, addr)
+	if errors.Is(err, errProtocolChanged) {
+		pr.clearProtocolCache(addr)
+	}
+	return resp, err
+}
+
+// The HTTP/3 candidate is private until it wins. The TCP candidate belongs to
+// the shared pool: canceled dials stop, but completed idle connections stay in
+// that pool and can serve other concurrent requests.
+func (pr *protocolRacer) raceConnections(req *http.Request, addr string, h3 http.RoundTripper, getTransportFunc func(*http.Request, string) error) (*http.Response, error) {
+	transport, err := pr.selectConnection(req, addr, h3, getTransportFunc)
+	if err != nil {
+		return nil, err
+	}
+	return pr.selectedRoundTrip(transport, req, addr)
+}
+
+func (pr *protocolRacer) selectConnection(req *http.Request, addr string, h3 http.RoundTripper, getTransportFunc func(*http.Request, string) error) (http.RoundTripper, error) {
+	ctx, cancel := context.WithTimeout(req.Context(), 10*time.Second)
 	defer cancel()
-
-	go pr.attemptHTTP3(req, resultCh)
-	go pr.attemptHTTP2(req, addr, getTransportFunc, resultCh)
-
-	return pr.waitForRaceWinner(ctx, addr, resultCh, cancel)
-}
-
-func (pr *protocolRacer) attemptHTTP3(req *http.Request, resultCh chan<- racingResult) {
-	h3Transport, err := buildHTTP3Transport(pr.getHTTP3Config())
-	if err != nil {
-		resultCh <- racingResult{protocol: "h3", err: fmt.Errorf("failed to build HTTP/3 transport: %w", err)}
-		return
-	}
-
-	resp, err := h3Transport.RoundTrip(req)
-	if err != nil {
-		resultCh <- racingResult{protocol: "h3", transport: h3Transport, err: fmt.Errorf("HTTP/3 request failed: %w", err)}
-	} else {
-		resultCh <- racingResult{protocol: "h3", transport: h3Transport, response: resp}
-	}
-}
-
-func (pr *protocolRacer) attemptHTTP2(req *http.Request, addr string, getTransportFunc func(*http.Request, string) error, resultCh chan<- racingResult) {
-	// Chrome-like 300ms delay before starting HTTP/2
-	// https://groups.google.com/a/chromium.org/g/proto-quic/c/igD7dLSct24
-	time.Sleep(300 * time.Millisecond)
-
-	pr.cachedTransportsLck.Lock()
-	if _, ok := pr.cachedTransports[addr]; !ok {
-		if err := getTransportFunc(req, addr); err != nil {
-			pr.cachedTransportsLck.Unlock()
-			resultCh <- racingResult{protocol: "h2", err: err}
+	results := make(chan racingResult, 2)
+	h3ctx, cancelH3 := context.WithCancel(ctx)
+	defer cancelH3()
+	h3Done := make(chan struct{})
+	go func() {
+		defer close(h3Done)
+		preconnector, ok := h3.(interface {
+			Preconnect(context.Context, string) error
+		})
+		var err error
+		if !ok {
+			err = errors.New("HTTP/3 transport cannot preconnect")
+		} else {
+			err = preconnector.Preconnect(h3ctx, addr)
+		}
+		results <- racingResult{protocol: "h3", transport: h3, err: err}
+	}()
+	go func() {
+		timer := time.NewTimer(300 * time.Millisecond)
+		defer timer.Stop()
+		select {
+		case <-timer.C:
+		case <-ctx.Done():
+			results <- racingResult{protocol: "h2", err: ctx.Err()}
 			return
 		}
+		transport, err := pr.getOrCreateTransport("h2", addr, req.WithContext(ctx), getTransportFunc)
+		results <- racingResult{protocol: "h2", transport: transport, err: err}
+	}()
+	closeH3 := func() {
+		cancelH3()
+		// Do not race Close against transport initialization.
+		<-h3Done
+		if closer, ok := h3.(interface{ Close() error }); ok {
+			_ = closer.Close()
+		}
 	}
-	h2Transport := pr.cachedTransports[addr]
-	pr.cachedTransportsLck.Unlock()
-
-	resp, err := pr.roundTrip(h2Transport, req, addr)
-	resultCh <- racingResult{protocol: "h2", transport: h2Transport, response: resp, err: err}
-}
-
-func (pr *protocolRacer) waitForRaceWinner(ctx context.Context, addr string, resultCh <-chan racingResult, cancel context.CancelFunc) (*http.Response, error) {
 	var lastErr error
-
 	for i := 0; i < 2; i++ {
 		select {
-		case result := <-resultCh:
-			if result.err == nil && result.response != nil {
-				pr.cacheWinningProtocol(addr, result.protocol, result.transport)
-				cancel()
-				return result.response, nil
+		case result := <-results:
+			if result.err != nil {
+				lastErr = result.err
+				continue
 			}
-			lastErr = result.err
-
+			if err := req.Context().Err(); err != nil {
+				closeH3()
+				closeRequestBody(req)
+				return nil, err
+			}
+			if result.protocol != "h3" {
+				closeH3()
+			}
+			pr.cacheWinningProtocol(addr, result.protocol, result.transport)
+			// These contexts govern connection establishment only. The application
+			// request and its response body retain the original caller's lifetime.
+			cancel()
+			return result.transport, nil
 		case <-ctx.Done():
-			if lastErr != nil {
-				return nil, lastErr
-			}
+			closeH3()
+			closeRequestBody(req)
 			return nil, ctx.Err()
 		}
 	}
+	closeH3()
+	closeRequestBody(req)
+	return nil, fmt.Errorf("protocol connection race failed: %w", lastErr)
+}
 
-	if lastErr != nil {
-		return nil, lastErr
+func closeRequestBody(req *http.Request) {
+	if req.Body != nil {
+		_ = req.Body.Close()
 	}
-	return nil, errors.New("http3 racing: both protocols failed to connect")
 }
 
 // roundTrip sends the request over transport and, when the dial underneath
@@ -261,19 +352,19 @@ func (pr *protocolRacer) clearProtocolCache(addr string) {
 }
 
 func (pr *protocolRacer) cacheWinningProtocol(addr, protocol string, transport http.RoundTripper) {
-	pr.protocolCacheMu.Lock()
-	pr.protocolCache[addr] = protocol
-	pr.protocolCacheMu.Unlock()
-
+	// Publish the connected transport before advertising its protocol; otherwise
+	// a concurrent request could build and leak a second HTTP/3 transport.
 	if protocol == "h3" {
 		if transport == nil {
 			return
 		}
-
 		pr.cachedTransportsLck.Lock()
 		pr.cachedTransports[addr+":h3"] = transport
 		pr.cachedTransportsLck.Unlock()
 	}
+	pr.protocolCacheMu.Lock()
+	pr.protocolCache[addr] = protocol
+	pr.protocolCacheMu.Unlock()
 }
 
 func (pr *protocolRacer) handleCachedProtocolError(err error, addr string, req *http.Request) {
@@ -301,6 +392,5 @@ func (pr *protocolRacer) getHTTP3Config() *http3Config {
 type racingResult struct {
 	protocol  string
 	transport http.RoundTripper
-	response  *http.Response
 	err       error
 }
