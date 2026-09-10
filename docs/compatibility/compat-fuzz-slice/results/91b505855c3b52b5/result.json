@@ -1,0 +1,24 @@
+{
+  "id": "91b505855c3b52b5",
+  "category": "surface",
+  "members": [
+    "property.screen.__proto__"
+  ],
+  "path": [
+    "value",
+    "ownKeys",
+    0
+  ],
+  "chrome": "availWidth",
+  "mimic": "constructor",
+  "probe": {
+    "id": "property.screen.__proto__",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(screen[\"__proto__\"])"
+  },
+  "originalSetupStatements": 0,
+  "minimality": "1-minimal setup deletion for fixed observation and exact result pair; not global JS minimum",
+  "fixtureOrigin": "http://127.0.0.1:54524",
+  "crossOrigin": "http://localhost:54524"
+}

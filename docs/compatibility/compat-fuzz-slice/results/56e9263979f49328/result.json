@@ -1,0 +1,34 @@
+{
+  "id": "56e9263979f49328",
+  "category": "descriptor",
+  "members": [
+    "descriptor.location.ancestorOrigins"
+  ],
+  "path": [
+    "value"
+  ],
+  "chrome": {
+    "depth": 0,
+    "configurable": false,
+    "enumerable": true,
+    "kind": "accessor",
+    "get": {
+      "type": "function",
+      "tag": "[object Function]"
+    },
+    "set": {
+      "type": "undefined"
+    }
+  },
+  "mimic": null,
+  "probe": {
+    "id": "descriptor.location.ancestorOrigins",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(location,\"ancestorOrigins\")"
+  },
+  "originalSetupStatements": 0,
+  "minimality": "1-minimal setup deletion for fixed observation and exact result pair; not global JS minimum",
+  "fixtureOrigin": "http://127.0.0.1:54524",
+  "crossOrigin": "http://localhost:54524"
+}

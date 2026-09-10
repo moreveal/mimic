@@ -1,0 +1,25 @@
+{
+  "id": "4055936baf635d06",
+  "category": "legacy",
+  "members": [
+    "legacy.live-collection"
+  ],
+  "path": [
+    "value",
+    "identity"
+  ],
+  "chrome": true,
+  "mimic": false,
+  "probe": {
+    "id": "legacy.live-collection",
+    "category": "legacy",
+    "setup": [
+      "const live=document.getElementsByTagName('span');const fixed=document.querySelectorAll('span');const liveBefore=live.length;const staticBefore=fixed.length;"
+    ],
+    "expression": "({liveBefore,staticBefore,liveAfter:live.length,staticAfter:fixed.length,identity:live===document.getElementsByTagName('span')})"
+  },
+  "originalSetupStatements": 2,
+  "minimality": "1-minimal setup deletion for fixed observation and exact result pair; not global JS minimum",
+  "fixtureOrigin": "http://127.0.0.1:54524",
+  "crossOrigin": "http://localhost:54524"
+}

@@ -1,0 +1,34 @@
+{
+  "id": "4c01ec91c8369240",
+  "category": "brand-check",
+  "members": [
+    "call.performance.getEntriesByName.object.missing",
+    "call.performance.getEntriesByName.object.undefined",
+    "call.performance.getEntriesByName.object.null",
+    "call.performance.getEntriesByName.object.primitive",
+    "call.performance.getEntriesByName.object.object",
+    "call.performance.getEntriesByName.object.symbol",
+    "call.performance.getEntriesByName.foreign.missing",
+    "call.performance.getEntriesByName.foreign.undefined",
+    "call.performance.getEntriesByName.foreign.null",
+    "call.performance.getEntriesByName.foreign.primitive",
+    "call.performance.getEntriesByName.foreign.object",
+    "call.performance.getEntriesByName.foreign.symbol"
+  ],
+  "path": [
+    "value",
+    "messageCategory"
+  ],
+  "chrome": "illegal-receiver",
+  "mimic": "not-callable",
+  "probe": {
+    "id": "call.performance.getEntriesByName.object.missing",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(performance.getEntriesByName,{},[]))"
+  },
+  "originalSetupStatements": 0,
+  "minimality": "1-minimal setup deletion for fixed observation and exact result pair; not global JS minimum",
+  "fixtureOrigin": "http://127.0.0.1:54524",
+  "crossOrigin": "http://localhost:54524"
+}
