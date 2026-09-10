@@ -11,6 +11,22 @@ import (
 	"github.com/moreveal/mimic/internal/engine"
 )
 
+func TestGetReentersHostCallback(t *testing.T) {
+	runtime := (Factory{}).New()
+	defer runtime.Close()
+	if err := runtime.Set("hostGet", runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		return runtime.Get(args[0].String()), nil
+	})); err != nil {
+		t.Fatal(err)
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	value, err := runtime.Eval(ctx, `globalThis.identity={};globalThis.reads=0;Object.defineProperty(globalThis,'answer',{get(){reads++;return identity}});hostGet('answer')===identity&&reads===1&&hostGet('absent')===undefined`, "reentrant-get.js")
+	if err != nil || value.Export() != true {
+		t.Fatalf("callback global lookup: %v %v", value, err)
+	}
+}
+
 func TestEvalReentersHostCallbackWithoutMicrotaskCheckpoint(t *testing.T) {
 	runtime := (Factory{}).New()
 	defer runtime.Close()

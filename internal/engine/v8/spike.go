@@ -125,6 +125,13 @@ func (r *Runtime) executeCommand(command command, outerOnly bool) (any, error) {
 		return nil, errors.New("V8 runtime is closed")
 	default:
 	}
+	if currentThreadID() == r.actorTID {
+		if outerOnly {
+			return nil, errors.New("cannot dispose V8 runtime from its active owner operation")
+		}
+		result := command(r.actorState)
+		return result.value, result.err
+	}
 	replies := make(chan response, 1)
 	select {
 	case r.commands <- actorCommand{run: func(s *state) response {

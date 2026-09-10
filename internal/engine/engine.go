@@ -47,6 +47,21 @@ type ReentrantRuntime interface {
 	RunNested(context.Context, func(context.Context) error) error
 }
 
+// OwnerRuntime groups synchronous engine operations on their owning thread.
+// It does not pump tasks or perform a microtask checkpoint. The operation must
+// not close the runtime or retain thread-local state after returning.
+type OwnerRuntime interface {
+	RunOnOwner(context.Context, func(context.Context) error) error
+}
+
+// BootstrapRuntime may reuse a compiled embedder function body across runtimes.
+// Only immutable code is shared; execution and all objects remain realm-local.
+// The body must install state explicitly on globalThis (no global var bindings).
+// Page scripts must use Eval, even if they choose an internal-looking filename.
+type BootstrapRuntime interface {
+	EvalBootstrap(context.Context, string, string) (Value, error)
+}
+
 // ModuleLoader resolves one static module request. referrer is the canonical
 // resource name supplied for the importing module; resourceName becomes the
 // identity and base URL of the returned source.
