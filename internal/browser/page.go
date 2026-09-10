@@ -30,27 +30,28 @@ type documentSecurity struct {
 	permissionsPolicy   string
 }
 type Page struct {
-	commandMu         sync.Mutex
-	taskSequence      atomic.Uint64
-	mu                sync.RWMutex
-	ID                string
-	ctx               *Context
-	env               state.Environment
-	loader            *network.Loader
-	trace             *trace.Recorder
-	Top               *Frame
-	loaderID          string
-	clock             time.Time
-	performanceOrigin time.Time
-	proxy             *WindowProxy
-	current           *url.URL
-	history           []*sessionHistoryEntry
-	historyIndex      int
-	initScripts       []InitScript
-	sessionStorage    map[string]map[string]string
-	policy            csp.PolicySet
-	bypassCSP         bool
-	frames            map[string]*Frame
+	performanceClamper performanceClamper
+	commandMu          sync.Mutex
+	taskSequence       atomic.Uint64
+	mu                 sync.RWMutex
+	ID                 string
+	ctx                *Context
+	env                state.Environment
+	loader             *network.Loader
+	trace              *trace.Recorder
+	Top                *Frame
+	loaderID           string
+	clock              time.Time
+	performanceOrigin  time.Time
+	proxy              *WindowProxy
+	current            *url.URL
+	history            []*sessionHistoryEntry
+	historyIndex       int
+	initScripts        []InitScript
+	sessionStorage     map[string]map[string]string
+	policy             csp.PolicySet
+	bypassCSP          bool
+	frames             map[string]*Frame
 	// retiredRealms keeps document realms alive until the browser task which
 	// initiated a navigation has unwound. Closing the old JS runtime while one
 	// of its callbacks is still on the stack is observably different from
@@ -75,7 +76,7 @@ func (p *Page) UnlockCommands() { p.commandMu.Unlock() }
 
 func newPage(c *Context) (*Page, error) {
 	environment := c.browser.Environment()
-	p := &Page{ID: uuid.NewString(), ctx: c, env: environment, trace: trace.New(), historyIndex: -1, clock: environment.Time.WallOrigin, performanceOrigin: environment.Time.WallOrigin, sessionStorage: map[string]map[string]string{}, frames: map[string]*Frame{}, messagePorts: map[string]*messagePortState{}}
+	p := &Page{performanceClamper: newPerformanceClamper(), ID: uuid.NewString(), ctx: c, env: environment, trace: trace.New(), historyIndex: -1, clock: environment.Time.WallOrigin, performanceOrigin: environment.Time.WallOrigin, sessionStorage: map[string]map[string]string{}, frames: map[string]*Frame{}, messagePorts: map[string]*messagePortState{}}
 	p.loader = network.NewLoaderWithSession(func() state.Environment { p.mu.RLock(); defer p.mu.RUnlock(); return p.env }, c.cookies, c.network, p.trace)
 	if c.transport != nil {
 		p.loader.SetTransport(c.transport)

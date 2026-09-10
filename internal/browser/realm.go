@@ -709,8 +709,9 @@ func (r *Realm) installBindings() error {
 		})
 		return promise.Value, nil
 	})
+	performanceIsolated := r.securityState().crossOriginIsolated
 	host["performanceNow"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
-		return r.val(float64(r.scheduler.Now().Sub(r.performanceOrigin)) / float64(time.Millisecond)), nil
+		return r.val(p.performanceClamper.now(r.scheduler.Now(), r.performanceOrigin, performanceIsolated)), nil
 	})
 	host["performanceTimeOrigin"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		return r.val(float64(r.performanceOrigin.UnixNano()) / float64(time.Millisecond)), nil
@@ -1053,8 +1054,8 @@ func (r *Realm) installBindings() error {
 		return nil, nil
 	})
 	host["query"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		p.trace.Add(trace.API, "Document.querySelector", map[string]any{"selector": strarg(a, 0), "realm": r.ID})
 		n, ok := r.document.FindWithin(r.document.Root().ID, strarg(a, 0))
+		p.trace.Add(trace.API, "Document.querySelector", map[string]any{"selector": strarg(a, 0), "realm": r.ID, "result": queryTraceResult(n, ok)})
 		if !ok {
 			return r.val(nil), nil
 		}
@@ -1062,18 +1063,22 @@ func (r *Realm) installBindings() error {
 	})
 	host["queryWithin"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		selector := strarg(a, 1)
-		p.trace.Add(trace.API, "Element.querySelector", map[string]any{"nodeId": int64(numarg(a, 0)), "selector": selector, "realm": r.ID})
 		n, ok := r.document.FindWithin(int64(numarg(a, 0)), selector)
+		p.trace.Add(trace.API, "Element.querySelector", map[string]any{"nodeId": int64(numarg(a, 0)), "selector": selector, "realm": r.ID, "result": queryTraceResult(n, ok)})
 		if !ok {
 			return r.val(nil), nil
 		}
 		return r.val(nodeData(n)), nil
 	}, "ns")
 	host["queryAll"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		return r.val(r.document.FindAllIDs(0, strarg(a, 0))), nil
+		ids := r.document.FindAllIDs(0, strarg(a, 0))
+		p.trace.Add(trace.API, "Document.querySelectorAll", map[string]any{"selector": strarg(a, 0), "realm": r.ID, "resultNodeIds": append([]int64{}, ids...)})
+		return r.val(ids), nil
 	})
 	host["queryAllWithin"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		return r.val(r.document.FindAllIDs(int64(numarg(a, 0)), strarg(a, 1))), nil
+		ids := r.document.FindAllIDs(int64(numarg(a, 0)), strarg(a, 1))
+		p.trace.Add(trace.API, "Element.querySelectorAll", map[string]any{"nodeId": int64(numarg(a, 0)), "selector": strarg(a, 1), "realm": r.ID, "resultNodeIds": append([]int64{}, ids...)})
+		return r.val(ids), nil
 	}, "ns")
 	host["matches"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(r.document.Matches(int64(numarg(a, 0)), strarg(a, 1))), nil
