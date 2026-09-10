@@ -1251,3 +1251,38 @@ The gate verifies the freshly built executable hash on every launch and leaves
 the frozen harness unchanged. Raw workload, concurrency and memory observations
 and the build receipt are in `webkit-css-state-20260910/`. Full ordinary tests
 and focused browser/DOM race tests also pass.
+
+
+## 2026-09-10 — Integrated window bootstrap snapshots
+
+The current implementation caches complete preinitialized window surfaces per
+browser Context, retaining separate isolates and ordinary cross-frame bridges.
+It starts from restored `2a3f362`; historical shared-parent experiment timings
+are not its baseline. Cache admission is bounded to four entries / 32 MiB.
+
+A bounded ten-Page memory probe passed 111 runtime-close assertions. The final
+four-stage seed is 5,220,080 bytes (4.978 MiB), down from the initial 13,954,264
+bytes. With eleven live isolates after GC, private memory was 340.816 MiB versus
+268.664 MiB with snapshots disabled; Go heap was 71.071 versus 11.723 MiB.
+After Page.Close the snapshot cache remains intentionally. After Context.Close
+and GC, Go heap was 10.557 versus 10.570 MiB in control, with no remaining
+consumer snapshot roots, handles or contexts. This establishes a material live
+copy cost and recovery at full closure, not complete native allocator attribution.
+
+The final creation-phase diagnostic attributes 8.425 ms of a 15.148 ms
+instrumented mean to native isolate creation and Context deserialization; restore
+publication/rebinding is 0.867 ms. Nonoverlap was verified, but uninstrumented
+medians around 16.2 ms show process/code-layout variation. See the
+[breakdown, method and limitations](bootstrap-snapshot-20260910.md#remaining-iframe-creation-cost)
+and [implementation and memory data](bootstrap-snapshot-20260910.md).
+The unchanged complete frame probe measures 130.35–139.82 ms with ordinary
+bootstrap versus 97.98–105.24 ms with snapshots in final A/B/B/A runs (24.8%
+lower two-run mean). Both final fast gates pass all six semantic workloads,
+concurrency and memory waves. Warm static completion is 72.29 versus 25.38 ms;
+React is 150.24 versus 106.68 ms. Cold cache admission remains real work.
+The full test checkpoint passes 1,071 test/subtest events; the final source also
+passes the snapshot race corpus, including exact exception-stack regression.
+One earlier process exit did not reproduce in subsequent gates and dedicated
+stress runs; its cause remains undetermined and is documented in the detailed
+report rather than presented as fixed. Final build and raw measurement receipts
+are linked there.

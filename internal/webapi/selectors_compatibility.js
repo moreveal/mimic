@@ -64,7 +64,7 @@ const compatibilitySelectors = (() => {
     if (!record.has(key)) record.set(key,read());
     return record.get(key);
   }
-  const documentID=host.documentRootID();
+  let documentID=host.documentRootID();bootstrapRestoreHooks.push(()=>{documentID=host.documentRootID()});
   const children = node => memo(node,'children',()=>{
     const slot=elementSlot(node);
     if(node===document||slot)return host.nodeChildren(node===document?documentID:slot.nodeId).map(wrap);
@@ -192,7 +192,7 @@ for (const prototype of [Document.prototype,DocumentFragment.prototype]) {
 
 // CDP calls the same closed-over engine instead of evaluating page-controlled
 // querySelector properties or maintaining an independent native CSS grammar.
-host.setDOMQueryCallback((nodeID,selector,all)=>{
+registerBootstrapCallback('setDOMQueryCallback',(nodeID,selector,all)=>{
   try {
     const root=nodeID===host.documentRootID()?document:wrap(nodeID);
     const result=compatibilitySelectors.query(root,selector,!all);

@@ -41,6 +41,7 @@ type state struct {
 type Runtime struct {
 	commands   chan actorCommand
 	done       chan struct{}
+	snapshot   *gov8.StartupData // consumer copy, released after isolate disposal
 	once       sync.Once
 	actorTID   uint32
 	actorState *state         // actor-thread only after initialization
@@ -56,11 +57,13 @@ var initialize = sync.OnceValues(func() (bool, error) {
 	return true, gov8.Initialize()
 })
 
-func NewRuntime() (*Runtime, error) {
+func NewRuntime() (*Runtime, error) { return newRuntime(nil) }
+
+func newRuntime(snapshot *gov8.StartupData) (*Runtime, error) {
 	if _, err := initialize(); err != nil {
 		return nil, err
 	}
-	r := &Runtime{commands: make(chan actorCommand), done: make(chan struct{})}
+	r := &Runtime{commands: make(chan actorCommand), done: make(chan struct{}), snapshot: snapshot}
 	ready := make(chan error, 1)
 	go r.loop(ready)
 	if err := <-ready; err != nil {
@@ -73,8 +76,20 @@ func (r *Runtime) loop(ready chan<- error) {
 	// Each Page has an independent isolate. Process-sized nursery defaults
 	// retain 16 MiB per tiny Page after bootstrap with under 2 MiB in use.
 	// Bound only the young generation; the old generation keeps V8 defaults.
-	iso, err := gov8.NewIsolateWithParams(gov8.NewCreateParams().SetMaxYoungGenerationSizeInBytes(4 << 20))
+	var iso *gov8.Isolate
+	var err error
+	if r.snapshot == nil {
+		iso, err = gov8.NewIsolateWithParams(gov8.NewCreateParams().SetMaxYoungGenerationSizeInBytes(4 << 20))
+	} else {
+		var params *gov8.SnapshotCreateParams
+		params, err = gov8.NewSnapshotCreateParams(r.snapshot)
+		if err == nil {
+			params.SetMaxYoungGenerationSizeInBytes(4 << 20)
+			iso, err = gov8.NewIsolateWithSnapshotParams(params)
+		}
+	}
 	if err != nil {
+		err = errors.Join(err, r.releaseSnapshot())
 		ready <- err
 		close(r.done)
 		return
@@ -87,6 +102,7 @@ func (r *Runtime) loop(ready chan<- error) {
 	// APIs whose completion is queued as a browser task.
 	if err := iso.SetMicrotasksPolicy(gov8.PolicyExplicit); err != nil {
 		_ = iso.Close()
+		err = errors.Join(err, r.releaseSnapshot())
 		ready <- err
 		close(r.done)
 		return
@@ -307,6 +323,7 @@ func (r *Runtime) Dispose() error {
 			if err := s.isolate.Close(); err != nil && disposeErr == nil {
 				disposeErr = err
 			}
+			disposeErr = errors.Join(disposeErr, r.releaseSnapshot())
 			return response{err: errDispose}
 		}, true)
 		if dispatchErr != nil && !errors.Is(dispatchErr, errDispose) && disposeErr == nil {
@@ -411,4 +428,16 @@ func setCallbackResult(cs *gov8.CallbackScope, rv gov8.ReturnValue, value any) {
 		exception, _ := cs.NewError(fmt.Sprintf("unsupported host return %T", value))
 		_ = cs.ThrowException(exception)
 	}
+}
+
+// StartupData retains the native per-isolate copy until explicit Release.
+func (r *Runtime) releaseSnapshot() error {
+	if r.snapshot == nil {
+		return nil
+	}
+	err := r.snapshot.Release()
+	if err == nil {
+		r.snapshot = nil
+	}
+	return err
 }

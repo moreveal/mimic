@@ -1,18 +1,23 @@
 (function(host) {
   'use strict';
-  const hostToken=host.token();
+  let hostToken=host.token();
+  // Snapshot restoration rebinds host state without replacing canonical objects.
+  const bootstrapRestoreHooks=[];
+  const bootstrapCallbacks=[];
+  const registerBootstrapCallback=(name,...callbacks)=>{bootstrapCallbacks.push([name,callbacks]);host[name](...callbacks)};
   // Match the realm trace's once-per-(name,supported) contract before FFI.
   const tracedAccesses=new Map();
   const recordAPIAccess=(name,supported)=>{const bit=supported?1:2,seen=tracedAccesses.get(name)||0;if(seen&bit)return;tracedAccesses.set(name,seen|bit);host.apiAccess(name,supported)};
   Object.defineProperty(globalThis,'__mimicAttributeUnsafeInterfaces',{value:new Set(['WritableStream','WritableStreamDefaultWriter','TransformStream','TransformStreamDefaultController','RTCDataChannel','RTCPeerConnection','GPUDevice','Plugin','PluginArray','MimeType','MimeTypeArray']),configurable:true});
-  const engineGlobals=new Set(Reflect.ownKeys(globalThis));
+  const snapshotPublication=globalThis.__mimicSnapshotPublication;
+  const engineGlobals=new Set(snapshotPublication?snapshotPublication.engineKeys:Reflect.ownKeys(globalThis));
   const illegal = n => { throw new TypeError('Illegal constructor: ' + n); };
   const def = (o,n,d) => Object.defineProperty(o,n,Object.assign({enumerable:true,configurable:true},d));
   /* shared_native_functions */
   // QuickJS intentionally keeps ECMA-402 optional. Chrome does not, so expose
   // the target profile's locale/time-zone through a small deterministic Intl
   // layer while richer CLDR-backed semantics are added behind the same API.
-  const intlEnvironment=host.intlEnvironment();
+  let intlEnvironment=host.intlEnvironment();
   if(typeof globalThis.Intl==='undefined'){
     const canonicalLocale=value=>String(value||intlEnvironment.locale).replace(/_/g,'-');
     // ECMA-402 locale availability comes from Chrome's bundled ICU data, not
@@ -561,7 +566,7 @@
     if(result.nodeId){const data=host.nodeData(result.nodeId);if(data){elementData.set(proxy,data);elementWrappers.set(String(result.nodeId),proxy)}}
     referenceSet(proxy,{frame:id,realm:result.realm,handle:result.handle,type:kind,array:result.array,constructable:result.constructable,nodeId:result.nodeId});crossRealmCache.set(key,proxy);return proxy;
   };
-  host.installFrameReferenceBridge(
+  registerBootstrapCallback('installFrameReferenceBridge',
     encoded=>unwrapCrossRealm(encoded.frame,encoded),
     value=>{
       if(value===null||(typeof value!=='object'&&typeof value!=='function'))return null;
@@ -586,7 +591,16 @@
   globalThis.Image=function Image(width,height){const element=document.createElement('img');if(width!==undefined)element.width=Number(width);if(height!==undefined)element.height=Number(height);return element};
   globalThis.Audio=function Audio(src){const element=document.createElement('audio');if(src!==undefined)element.src=String(src);return element};
   globalThis.Option=function Option(text='',value,defaultSelected=false,selected=false){const element=document.createElement('option');element.text=String(text);if(value!==undefined)element.value=String(value);element.defaultSelected=Boolean(defaultSelected);element.selected=Boolean(selected);return element};
-  const window=globalThis;listenersFor(window);window.addEventListener=(...a)=>EventTarget.prototype.addEventListener.apply(window,a);window.removeEventListener=(...a)=>EventTarget.prototype.removeEventListener.apply(window,a);window.dispatchEvent=(...a)=>EventTarget.prototype.dispatchEvent.apply(window,a);window.onmessage=null;window.onerror=null;const NodeFilter=Object.freeze({FILTER_ACCEPT:1,FILTER_REJECT:2,FILTER_SKIP:3,SHOW_ALL:0xffffffff,SHOW_ELEMENT:1,SHOW_ATTRIBUTE:2,SHOW_TEXT:4,SHOW_CDATA_SECTION:8,SHOW_ENTITY_REFERENCE:16,SHOW_ENTITY:32,SHOW_PROCESSING_INSTRUCTION:64,SHOW_COMMENT:128,SHOW_DOCUMENT:256,SHOW_DOCUMENT_TYPE:512,SHOW_DOCUMENT_FRAGMENT:1024,SHOW_NOTATION:2048});Object.assign(window,{window:null,self:null,top:null,parent:null,document,navigator:nav,screen:scr,location:loc,history:hist,localStorage:storage,sessionStorage,crypto,trustedTypes,console:new Console(),atob,btoa,TextEncoder,Headers,Request,Response,Event,MessageEvent,ErrorEvent,EventTarget,Node,DocumentFragment,ShadowRoot,Element,HTMLElement,SVGElement,HTMLScriptElement,HTMLImageElement,HTMLIFrameElement,HTMLAnchorElement,HTMLCollection,NodeList,DOMTokenList,CSSStyleDeclaration,Crypto,DOMException,PermissionsPolicy,FeaturePolicy,TrustedHTML,TrustedScript,TrustedScriptURL,TrustedTypePolicy,TrustedTypePolicyFactory,URL,URLSearchParams,ReadableStream,ReadableStreamDefaultReader,ReadableStreamDefaultController,WritableStream,WritableStreamDefaultWriter,TransformStream,TransformStreamDefaultController,Blob,File,Worker,Document,Navigator,NavigatorUAData,Screen,Location,History,Storage,XMLHttpRequest,GPU,GPUAdapter,GPUAdapterInfo,GPUSupportedFeatures,GPUSupportedLimits,GPUDevice,RTCPeerConnection,RTCSessionDescription,RTCIceCandidate,PerformanceEntry,PerformanceServerTiming,PerformanceResourceTiming,PerformanceNavigationTiming,NodeFilter});const security=host.documentSecurity();for(const [name,value] of Object.entries({isSecureContext:security.secureContext,crossOriginIsolated:security.crossOriginIsolated,credentialless:security.credentialless,originAgentCluster:security.originAgentCluster}))Object.defineProperty(window,name,{get:()=>value,enumerable:true,configurable:true});const relations=host.windowRelations();window.window=window;window.self=window;window.top=relations.top===relations.self?window:remoteWindow(relations.top);window.parent=relations.parent===relations.self?window:remoteWindow(relations.parent);window.__receiveFrameMessage=(data,origin,sourceId)=>dispatchTrusted(window,new MessageEvent('message',{data,origin,source:remoteWindow(sourceId)}));globalThis.__receiveFrameMessage=window.__receiveFrameMessage;
+  const window=globalThis;listenersFor(window);window.addEventListener=(...a)=>EventTarget.prototype.addEventListener.apply(window,a);window.removeEventListener=(...a)=>EventTarget.prototype.removeEventListener.apply(window,a);window.dispatchEvent=(...a)=>EventTarget.prototype.dispatchEvent.apply(window,a);window.onmessage=null;window.onerror=null;const NodeFilter=Object.freeze({FILTER_ACCEPT:1,FILTER_REJECT:2,FILTER_SKIP:3,SHOW_ALL:0xffffffff,SHOW_ELEMENT:1,SHOW_ATTRIBUTE:2,SHOW_TEXT:4,SHOW_CDATA_SECTION:8,SHOW_ENTITY_REFERENCE:16,SHOW_ENTITY:32,SHOW_PROCESSING_INSTRUCTION:64,SHOW_COMMENT:128,SHOW_DOCUMENT:256,SHOW_DOCUMENT_TYPE:512,SHOW_DOCUMENT_FRAGMENT:1024,SHOW_NOTATION:2048});Object.assign(window,{window:null,self:null,top:null,parent:null,document,navigator:nav,screen:scr,location:loc,history:hist,localStorage:storage,sessionStorage,crypto,trustedTypes,console:new Console(),atob,btoa,TextEncoder,Headers,Request,Response,Event,MessageEvent,ErrorEvent,EventTarget,Node,DocumentFragment,ShadowRoot,Element,HTMLElement,SVGElement,HTMLScriptElement,HTMLImageElement,HTMLIFrameElement,HTMLAnchorElement,HTMLCollection,NodeList,DOMTokenList,CSSStyleDeclaration,Crypto,DOMException,PermissionsPolicy,FeaturePolicy,TrustedHTML,TrustedScript,TrustedScriptURL,TrustedTypePolicy,TrustedTypePolicyFactory,URL,URLSearchParams,ReadableStream,ReadableStreamDefaultReader,ReadableStreamDefaultController,WritableStream,WritableStreamDefaultWriter,TransformStream,TransformStreamDefaultController,Blob,File,Worker,Document,Navigator,NavigatorUAData,Screen,Location,History,Storage,XMLHttpRequest,GPU,GPUAdapter,GPUAdapterInfo,GPUSupportedFeatures,GPUSupportedLimits,GPUDevice,RTCPeerConnection,RTCSessionDescription,RTCIceCandidate,PerformanceEntry,PerformanceServerTiming,PerformanceResourceTiming,PerformanceNavigationTiming,NodeFilter});let security=host.documentSecurity();for(const [name,key] of Object.entries({isSecureContext:'secureContext',crossOriginIsolated:'crossOriginIsolated',credentialless:'credentialless',originAgentCluster:'originAgentCluster'}))Object.defineProperty(window,name,{get:()=>security[key],enumerable:true,configurable:true});const relations=host.windowRelations();window.window=window;window.self=window;let windowTop=relations.top===relations.self?window:remoteWindow(relations.top),windowParent=relations.parent===relations.self?window:remoteWindow(relations.parent);
+  // Top stays an unforgeable accessor after exposure normalization. Parent is
+  // replaceable: assignment creates an own data property, as in Chrome.
+  const getWindowTop=()=>windowTop,getWindowParent=()=>windowParent;
+  const setWindowParent=({set(value){Object.defineProperty(this,'parent',{value,writable:true,enumerable:true,configurable:true})}}).set;
+  for(const [fn,name,prefix] of [[getWindowTop,'top','get '],[getWindowParent,'parent','get '],[setWindowParent,'parent','set ']]){
+    Object.defineProperty(fn,'name',{value:prefix+name,configurable:true});markNative(fn,name,prefix);
+  }
+  Object.defineProperties(window,{top:{get:getWindowTop,enumerable:true,configurable:true},parent:{get:getWindowParent,set:setWindowParent,enumerable:true,configurable:true}});
+  window.__receiveFrameMessage=(data,origin,sourceId)=>dispatchTrusted(window,new MessageEvent('message',{data,origin,source:remoteWindow(sourceId)}));globalThis.__receiveFrameMessage=window.__receiveFrameMessage;
   Object.assign(window,{CharacterData,Text,Comment,SVGSVGElement,SVGRect,HTMLLinkElement,HTMLMetaElement,IntersectionObserver,BroadcastChannel,CryptoKey,SubtleCrypto,PerformanceMark,PerformanceTiming});
   window.__receiveFrameMessage=(data,origin,sourceId,portIds=[])=>dispatchTrusted(window,new MessageEvent('message',{data,origin,source:remoteWindow(sourceId),ports:Array.from(portIds,wrapBrowserMessagePort)}));globalThis.__receiveFrameMessage=window.__receiveFrameMessage;
   Object.assign(window,{MessagePort,MessageChannel,DOMRectReadOnly,DOMRect,DOMMatrix});
@@ -614,6 +628,7 @@
       if(!expected.has(name)){const descriptor=Object.getOwnPropertyDescriptor(globalThis,name);if(descriptor&&descriptor.configurable)delete globalThis[name]}
     }
     for(const property of properties){
+      if(snapshotPublication&&snapshotPublication.lateEngineKeys.has(property.name))continue;
       const propertyName=property.name;
       const descriptor={enumerable:property.enumerable,configurable:property.configurable};
       const current=Object.getOwnPropertyDescriptor(globalThis,property.name);
@@ -638,7 +653,12 @@
         }
         descriptor.value=value;descriptor.writable=property.writable!==false;
       }
-      if(!current||current.configurable)Object.defineProperty(globalThis,property.name,descriptor);
+      if(!current||current.configurable){
+        if(snapshotPublication&&!descriptor.configurable){
+          snapshotPublication.descriptors.set(property.name,descriptor);
+          Object.defineProperty(globalThis,property.name,Object.assign({},descriptor,{configurable:true}));
+        }else Object.defineProperty(globalThis,property.name,descriptor);
+      }
     }
     for(const [interfaceName,members] of Object.entries(exposure.prototypes||{})){
       // ECMAScript intrinsics already own their engine-defined descriptors.
@@ -796,16 +816,36 @@
     }
   }
   if(globalThis.Window&&globalThis.Window.prototype){
-    const target=window,oldTop=target.top,oldParent=target.parent;
+    const target=window;
     // The realm global is the local WindowProxy identity.  Wrapping it in a
     // second ECMAScript Proxy makes `window === globalThis` appear correct but
     // breaks dynamic code: a sloppy Function receives the engine realm global
     // as `this`, not that wrapper.  Keep one identity at the engine boundary;
     // cross-frame WindowProxy objects remain explicit remoteWindow proxies.
     for(const name of ['window','self','globalThis'])Object.defineProperty(target,name,{value:target,writable:true,enumerable:true,configurable:true});
-    if(oldTop===target)target.top=target;
-    if(oldParent===target)target.parent=target;
+
   }
+  };
+  // Called only on a fresh deserialized, pre-script realm. Seed DOM must be
+  // empty: preserving user-created wrappers across a host change is invalid.
+  globalThis.__mimicRestoreBootstrap=freshHost=>{
+    host=freshHost;hostToken=host.token();intlEnvironment=host.intlEnvironment();
+    security=host.documentSecurity();
+    const policy=permissionsPolicySlots.get(new PermissionsPolicy(hostToken,host.permissionsPolicy()));
+    Object.assign(permissionsPolicySlots.get(documentPolicy),policy);
+    remoteWindowCache.clear();remoteDocumentCache.clear();crossRealmCache.clear();
+    crossRealmSymbols.clear();crossRealmSymbolReferences.clear();localCrossRealmSymbols.clear();nextCrossRealmSymbolID=0;
+    elementWrappers.clear();documentWrappers.clear();frameElementCache=undefined;uaData=undefined;
+    const relations=host.windowRelations();
+    windowTop=relations.top===relations.self?window:remoteWindow(relations.top);
+    windowParent=relations.parent===relations.self?window:remoteWindow(relations.parent);
+    for(const restore of bootstrapRestoreHooks)restore();
+    tracedAccesses.clear();
+    // Conditional V8 intrinsics were absent in the serializing context and
+    // are now installed alongside the published surface.
+    known=new Set(Reflect.ownKeys(globalThis));
+    for(const [name,callbacks] of bootstrapCallbacks)host[name](...callbacks);
+    host.ready();
   };
   globalThis.__mimicEvalSourceResolver=evalSourceResolver;known=new Set(Reflect.ownKeys(globalThis));host.ready();globalThis.__mimicUnsupportedProbe=n=>{if(!known.has(n))host.unsupported(String(n))};
 })(__mimic);

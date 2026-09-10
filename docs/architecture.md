@@ -123,6 +123,14 @@ answers. The same observable model applies to ordinary application code.
 - V8 cancellation watchers are joined before the next isolate operation; persistent
   values and modules are released on the isolate thread at Close. Values currently
   remain rooted until realm teardown; long-lived realm memory is technical debt.
+- Window bootstrap snapshots are immutable, bounded artifacts owned by the browser
+  Context. Repeated compatible profiles admit asynchronous construction; restoration
+  creates an independent isolate and rebinds native callbacks and realm state before
+  user script. Page teardown releases consumer copies; Context teardown cancels and
+  joins builders and releases the cache. Workers retain ordinary initialization.
+  Snapshot failure falls back to ordinary bootstrap with diagnostics. See
+  [bootstrap snapshot measurements](performance/bootstrap-snapshot-20260910.md)
+  for admission, profiling bypass and the live-memory tradeoff.
 - Keep runtime behavior target-blind. Domain names, vendor tokens, challenge
   patterns and captured payload structures must never select runtime semantics.
 

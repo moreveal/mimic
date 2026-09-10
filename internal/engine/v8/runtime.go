@@ -33,12 +33,21 @@ func (Factory) New() engine.Runtime {
 	}
 	if profile != nil {
 		profile.Costs["factory:isolate"] = diagnosticCost{Count: 1, Nanoseconds: time.Since(started).Nanoseconds()}
-		started = time.Now()
 	}
+	backend, err := newAdapter(owner, profile)
+	if err != nil {
+		panic(err)
+	}
+	return backend
+}
+
+// Both ordinary and restored isolates install the same adapter-owned hooks.
+func newAdapter(owner *Runtime, profile *diagnosticState) (*adapter, error) {
+	started := time.Now()
 	realm, err := owner.NewRealm()
 	if err != nil {
 		_ = owner.Dispose()
-		panic(fmt.Sprintf("create V8 realm: %v", err))
+		return nil, fmt.Errorf("create V8 realm: %w", err)
 	}
 	backend := &adapter{owner: owner, realm: realm, moduleCache: map[string]*gov8.Module{}, moduleNames: map[*gov8.Module]string{}, profile: profile}
 	if os.Getenv("MIMIC_PROFILE_PROCESSORS") == "1" {
@@ -50,10 +59,10 @@ func (Factory) New() engine.Runtime {
 	factory, err := backend.Eval(context.Background(), `(()=>{let resolve,reject;const promise=new Promise((a,b)=>{resolve=a;reject=b});return[promise,resolve,reject]})`, "mimic-promise-factory.js")
 	if err != nil {
 		_ = backend.Close()
-		panic(fmt.Sprintf("create V8 promise factory: %v", err))
+		return nil, fmt.Errorf("create V8 promise factory: %w", err)
 	}
 	backend.promiseFactory = factory
-	return backend
+	return backend, nil
 }
 
 type hostFunction struct {
