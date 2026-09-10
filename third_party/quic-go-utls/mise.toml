@@ -1,0 +1,7 @@
+[tools]
+golang = "1.24.1"
+
+[env]
+# testing/synctest is behind GOEXPERIMENT on Go 1.24 (stable from Go 1.25).
+# The CI workflows set the same flag for the 1.24.x matrix entry.
+GOEXPERIMENT = "synctest"
