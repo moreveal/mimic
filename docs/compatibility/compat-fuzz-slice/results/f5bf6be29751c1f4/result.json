@@ -1,0 +1,23 @@
+{
+  "id": "f5bf6be29751c1f4",
+  "category": "surface",
+  "members": [
+    "property.location.ancestorOrigins"
+  ],
+  "path": [
+    "value",
+    "boolean"
+  ],
+  "chrome": true,
+  "mimic": false,
+  "probe": {
+    "id": "property.location.ancestorOrigins",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(location[\"ancestorOrigins\"])"
+  },
+  "originalSetupStatements": 0,
+  "minimality": "1-minimal setup deletion for fixed observation and exact result pair; not global JS minimum",
+  "fixtureOrigin": "http://127.0.0.1:54524",
+  "crossOrigin": "http://localhost:54524"
+}

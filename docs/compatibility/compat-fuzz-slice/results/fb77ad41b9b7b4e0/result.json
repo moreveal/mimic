@@ -1,0 +1,28 @@
+{
+  "id": "fb77ad41b9b7b4e0",
+  "category": "realm",
+  "members": [
+    "realm.cross-origin"
+  ],
+  "path": [
+    "value",
+    "document",
+    "class"
+  ],
+  "chrome": "[object DOMException]",
+  "mimic": "[object Error]",
+  "probe": {
+    "id": "realm.cross-origin",
+    "category": "realm",
+    "setup": [
+      "const frame=document.createElement('iframe');frame.src='http://localhost:54524/';",
+      "await new Promise((resolve,reject)=>{frame.onload=resolve;frame.onerror=()=>reject(new Error('iframe load failed'));document.body.appendChild(frame);});",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "({document:attempt(()=>other.document),location:attempt(()=>other.location.href),postMessage:attempt(()=>typeof other.postMessage),self:attempt(()=>other===frame.contentWindow),tag:attempt(()=>tag(other))})"
+  },
+  "originalSetupStatements": 3,
+  "minimality": "1-minimal setup deletion for fixed observation and exact result pair; not global JS minimum",
+  "fixtureOrigin": "http://127.0.0.1:54524",
+  "crossOrigin": "http://localhost:54524"
+}

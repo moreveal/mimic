@@ -1,0 +1,330 @@
+{
+  "schemaVersion": 1,
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-compat-fuzz-fresh",
+    "profileFreshness": "caller-declared",
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "mimicProduct": "Mimic/152.0.7977.82",
+  "summary": {
+    "checks": 236,
+    "matched": 120,
+    "unstable": 0,
+    "errors": 0,
+    "divergences": 116,
+    "uniqueGroups": 28,
+    "surfaceGenerated": 3533,
+    "surfaceLimit": 100
+  },
+  "groups": [
+    {
+      "id": "d4c44ff9b4314406",
+      "category": "descriptor",
+      "members": [
+        "legacy.document-all-descriptor"
+      ]
+    },
+    {
+      "id": "6dad37e5c7073bd2",
+      "category": "realm",
+      "members": [
+        "realm.window-proxy-navigation"
+      ]
+    },
+    {
+      "id": "931e39fff24f9387",
+      "category": "legacy",
+      "members": [
+        "legacy.window-named"
+      ]
+    },
+    {
+      "id": "261de7a21e7145d7",
+      "category": "legacy",
+      "members": [
+        "legacy.collection-indexed-named"
+      ]
+    },
+    {
+      "id": "4055936baf635d06",
+      "category": "legacy",
+      "members": [
+        "legacy.live-collection"
+      ]
+    },
+    {
+      "id": "c035c36945679951",
+      "category": "realm",
+      "members": [
+        "realm.same-origin"
+      ]
+    },
+    {
+      "id": "8279f9ac1a699ee3",
+      "category": "realm",
+      "members": [
+        "realm.inside-iframe"
+      ]
+    },
+    {
+      "id": "fb77ad41b9b7b4e0",
+      "category": "realm",
+      "members": [
+        "realm.cross-origin"
+      ]
+    },
+    {
+      "id": "babc848f0fbe86db",
+      "category": "brand-check",
+      "members": [
+        "call.document.hasFocus.correct.missing",
+        "call.document.hasFocus.correct.undefined",
+        "call.document.hasFocus.correct.null",
+        "call.document.hasFocus.correct.primitive",
+        "call.document.hasFocus.correct.object",
+        "call.document.hasFocus.correct.symbol"
+      ]
+    },
+    {
+      "id": "76be3fd8e5525b76",
+      "category": "brand-check",
+      "members": [
+        "call.document.hasFocus.object.missing",
+        "call.document.hasFocus.object.undefined",
+        "call.document.hasFocus.object.null",
+        "call.document.hasFocus.object.primitive",
+        "call.document.hasFocus.object.object",
+        "call.document.hasFocus.object.symbol",
+        "call.document.hasFocus.null.missing",
+        "call.document.hasFocus.null.undefined",
+        "call.document.hasFocus.null.null",
+        "call.document.hasFocus.null.primitive",
+        "call.document.hasFocus.null.object",
+        "call.document.hasFocus.null.symbol",
+        "call.document.hasFocus.foreign.missing",
+        "call.document.hasFocus.foreign.undefined",
+        "call.document.hasFocus.foreign.null",
+        "call.document.hasFocus.foreign.primitive",
+        "call.document.hasFocus.foreign.object",
+        "call.document.hasFocus.foreign.symbol",
+        "call.document.getElementById.correct.missing",
+        "call.document.getElementById.correct.symbol",
+        "call.document.getElementById.object.missing",
+        "call.document.getElementById.object.undefined",
+        "call.document.getElementById.object.null",
+        "call.document.getElementById.object.primitive",
+        "call.document.getElementById.object.object",
+        "call.document.getElementById.object.symbol",
+        "call.document.getElementById.foreign.missing",
+        "call.document.getElementById.foreign.undefined",
+        "call.document.getElementById.foreign.null",
+        "call.document.getElementById.foreign.primitive",
+        "call.document.getElementById.foreign.object",
+        "call.document.getElementById.foreign.symbol",
+        "call.document.querySelector.correct.missing",
+        "call.document.querySelector.object.missing",
+        "call.document.querySelector.object.undefined",
+        "call.document.querySelector.object.null",
+        "call.document.querySelector.object.primitive",
+        "call.document.querySelector.foreign.missing",
+        "call.document.querySelector.foreign.undefined",
+        "call.document.querySelector.foreign.null",
+        "call.document.querySelector.foreign.primitive",
+        "call.performance.getEntriesByName.correct.missing",
+        "call.performance.getEntriesByName.correct.symbol"
+      ]
+    },
+    {
+      "id": "4d8f2d7aa415e51f",
+      "category": "brand-check",
+      "members": [
+        "call.document.getElementById.null.missing",
+        "call.document.getElementById.null.undefined",
+        "call.document.getElementById.null.null",
+        "call.document.getElementById.null.primitive",
+        "call.document.getElementById.null.object",
+        "call.document.getElementById.null.symbol",
+        "call.document.querySelector.null.missing",
+        "call.document.querySelector.null.undefined",
+        "call.document.querySelector.null.null",
+        "call.document.querySelector.null.primitive",
+        "call.performance.getEntriesByName.null.missing",
+        "call.performance.getEntriesByName.null.undefined",
+        "call.performance.getEntriesByName.null.null",
+        "call.performance.getEntriesByName.null.primitive",
+        "call.performance.getEntriesByName.null.object",
+        "call.performance.getEntriesByName.null.symbol"
+      ]
+    },
+    {
+      "id": "90dd2730882e2b50",
+      "category": "brand-check",
+      "members": [
+        "call.document.querySelector.correct.symbol",
+        "call.document.querySelector.object.object",
+        "call.document.querySelector.object.symbol",
+        "call.document.querySelector.null.object",
+        "call.document.querySelector.null.symbol",
+        "call.document.querySelector.foreign.object",
+        "call.document.querySelector.foreign.symbol"
+      ]
+    },
+    {
+      "id": "4c01ec91c8369240",
+      "category": "brand-check",
+      "members": [
+        "call.performance.getEntriesByName.object.missing",
+        "call.performance.getEntriesByName.object.undefined",
+        "call.performance.getEntriesByName.object.null",
+        "call.performance.getEntriesByName.object.primitive",
+        "call.performance.getEntriesByName.object.object",
+        "call.performance.getEntriesByName.object.symbol",
+        "call.performance.getEntriesByName.foreign.missing",
+        "call.performance.getEntriesByName.foreign.undefined",
+        "call.performance.getEntriesByName.foreign.null",
+        "call.performance.getEntriesByName.foreign.primitive",
+        "call.performance.getEntriesByName.foreign.object",
+        "call.performance.getEntriesByName.foreign.symbol"
+      ]
+    },
+    {
+      "id": "2f13fa24fe6af546",
+      "category": "surface",
+      "members": [
+        "surface.window"
+      ]
+    },
+    {
+      "id": "16623006f5e14633",
+      "category": "surface",
+      "members": [
+        "surface.document"
+      ]
+    },
+    {
+      "id": "d7352700b9d1b6e4",
+      "category": "surface",
+      "members": [
+        "surface.location"
+      ]
+    },
+    {
+      "id": "040b06ea0edd0d8b",
+      "category": "descriptor",
+      "members": [
+        "descriptor.document.ATTRIBUTE_NODE",
+        "descriptor.document.CDATA_SECTION_NODE",
+        "descriptor.document.COMMENT_NODE",
+        "descriptor.document.DOCUMENT_FRAGMENT_NODE",
+        "descriptor.document.DOCUMENT_NODE",
+        "descriptor.document.DOCUMENT_POSITION_CONTAINED_BY",
+        "descriptor.document.DOCUMENT_POSITION_CONTAINS"
+      ]
+    },
+    {
+      "id": "21a81b154f26e799",
+      "category": "surface",
+      "members": [
+        "property.window.AbortController"
+      ]
+    },
+    {
+      "id": "c5a808c0f491bb2b",
+      "category": "surface",
+      "members": [
+        "property.window.AbortSignal"
+      ]
+    },
+    {
+      "id": "7ce0490158dc72b8",
+      "category": "surface",
+      "members": [
+        "property.window.AbsoluteOrientationSensor",
+        "property.window.Accelerometer",
+        "property.window.AnalyserNode"
+      ]
+    },
+    {
+      "id": "a9a67828d18d5d5b",
+      "category": "surface",
+      "members": [
+        "property.navigator.__proto__"
+      ]
+    },
+    {
+      "id": "a99b7b19d5053e5d",
+      "category": "surface",
+      "members": [
+        "property.performance.__proto__"
+      ]
+    },
+    {
+      "id": "91b505855c3b52b5",
+      "category": "surface",
+      "members": [
+        "property.screen.__proto__"
+      ]
+    },
+    {
+      "id": "2e3fa5c55a4a766c",
+      "category": "surface",
+      "members": [
+        "property.history.__proto__"
+      ]
+    },
+    {
+      "id": "56e9263979f49328",
+      "category": "descriptor",
+      "members": [
+        "descriptor.location.ancestorOrigins"
+      ]
+    },
+    {
+      "id": "a6c93c3a079303c5",
+      "category": "surface",
+      "members": [
+        "property.performance.addEventListener",
+        "property.screen.addEventListener"
+      ]
+    },
+    {
+      "id": "f5bf6be29751c1f4",
+      "category": "surface",
+      "members": [
+        "property.location.ancestorOrigins"
+      ]
+    },
+    {
+      "id": "98f341941429c165",
+      "category": "descriptor",
+      "members": [
+        "descriptor.location.assign"
+      ]
+    }
+  ],
+  "errors": [],
+  "fixtureOrigin": "http://127.0.0.1:54524"
+}

@@ -1,0 +1,23 @@
+{
+  "id": "98f341941429c165",
+  "category": "descriptor",
+  "members": [
+    "descriptor.location.assign"
+  ],
+  "path": [
+    "value",
+    "writable"
+  ],
+  "chrome": false,
+  "mimic": true,
+  "probe": {
+    "id": "descriptor.location.assign",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(location,\"assign\")"
+  },
+  "originalSetupStatements": 0,
+  "minimality": "1-minimal setup deletion for fixed observation and exact result pair; not global JS minimum",
+  "fixtureOrigin": "http://127.0.0.1:54524",
+  "crossOrigin": "http://localhost:54524"
+}

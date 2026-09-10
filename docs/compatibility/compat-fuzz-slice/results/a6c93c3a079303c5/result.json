@@ -1,0 +1,27 @@
+{
+  "id": "a6c93c3a079303c5",
+  "category": "surface",
+  "members": [
+    "property.performance.addEventListener",
+    "property.screen.addEventListener"
+  ],
+  "path": [
+    "value",
+    "functionShape",
+    "length",
+    "ok",
+    "value"
+  ],
+  "chrome": 2,
+  "mimic": 3,
+  "probe": {
+    "id": "property.performance.addEventListener",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(performance[\"addEventListener\"])"
+  },
+  "originalSetupStatements": 0,
+  "minimality": "1-minimal setup deletion for fixed observation and exact result pair; not global JS minimum",
+  "fixtureOrigin": "http://127.0.0.1:54524",
+  "crossOrigin": "http://localhost:54524"
+}
