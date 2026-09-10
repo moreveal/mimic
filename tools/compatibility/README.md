@@ -1,5 +1,64 @@
 # Private native captures
 
+## Shared differential corpus
+
+`differential.py` executes `compatibility/corpus/index.json` in both runtimes.
+It creates a loopback HTTP fixture server, disposable Chrome contexts and new
+Mimic targets. **Use a dedicated Mimic process**: Mimic's cookies outlive targets,
+so the runner clears that process's cookies between cases. It never launches
+either browser. Supply an existing CDP endpoint for each:
+
+```text
+python tools/compatibility/differential.py --chrome http://127.0.0.1:9343 --mimic http://127.0.0.1:9349 --output compatibility/private-captures/corpus-new
+```
+
+The default reference is exactly 152.0.7977.82. An explicit alternate, for example
+`--reference-version 152.0.7977.83`, is accepted and marked `frozenReference:false`.
+Google Chrome branding, locale, font installation and graphics backend can differ
+from the frozen Chromium profile; these differences are preserved in the report.
+Use `--only partition temporal` for selected cases. Exit 1 means differences,
+incomplete probes or harness errors; it does not mean the tool failed to run.
+
+Each corpus file is a JS expression returning a plain observation or a Promise.
+Cases may contain sequential navigation steps sharing storage. Compare causal
+ordering, monotonicity and relations, not exact wall-clock durations. Expected
+exceptions must be caught inside the probe. An uncaught top-level probe exception
+is recorded as incomplete coverage even when both sides throw. Capture independent
+subprobes separately so a missing method does not hide unrelated observations.
+
+The normalizer tags undefined, NaN, infinities, negative zero, bigint and array
+holes before CDP serialization. `$jsValue` is reserved. Functions, symbols and
+cyclic identity must be described explicitly by probes. It does not flatten
+exceptions, sort observation arrays, round numeric values or suppress missing keys.
+`value-normalization` checks this contract in both runtimes.
+
+Outputs:
+
+* `report.json`: versions, corpus/fixture hashes, normalized observations and
+  JSON-pointer differences; `incomplete` and `harnessError` distinguish bad probes.
+* `received-http.json`: server-observed method, path, ordered headers, body,
+  HTTP version, connection identity and timestamps, independently of CDP.
+* `cdp-events.json`: raw diagnostic events. Mimic can nest target events inside
+  `Target.receivedMessageFromTarget`; decode its `params.message` before analysis.
+
+The serial network case additionally compares redirect/method/body sequences and
+connection reuse with first-use ordinals. Raw headers stay in the wire artifact.
+This measures **loopback HTTP/1.1**, not TLS, HTTP/2 or QUIC serialization. Do not
+generalize its transport findings to HTTPS or claim CDP projections are wire proof.
+Cookie observations retain domain/path, Secure, HttpOnly, SameSite, session and
+partition key. Clock-dependent expiry timestamps and unimplemented CDP metadata
+such as source port are not part of that normalized comparison.
+
+Run helper tests with:
+
+```text
+python -m unittest discover -s tools/compatibility -p test_differential.py
+```
+
+See `docs/compatibility/differential-2026-09-10.md` for measured results and limits.
+
+## Native page capture
+
 `capture_native.py` records a new disposable browser context in an already running
 Chrome CDP instance. It does not launch the browser, inspect existing tabs or
 storage, or close the browser. Only the new context and its recursively attached

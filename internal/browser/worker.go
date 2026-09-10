@@ -36,6 +36,7 @@ type DedicatedWorker struct {
 	messageReceiver   engine.Value
 	url               *url.URL
 	topLevelURL       *url.URL
+	cookieContext     network.CookieContext
 	securityURL       *url.URL // inherited creator URL for blob workers; independent of URL base
 	closed            bool
 	started           bool
@@ -59,6 +60,7 @@ func (r *Realm) hostCreateWorker(_ engine.Value, args []engine.Value) (engine.Va
 		return nil, err
 	}
 	w := &DedicatedWorker{id: id, parent: r, deliverCallback: args[0], errorCallback: args[1], url: workerURL, securityURL: r.documentURL(), topLevelURL: r.requestTopLevelURL(), done: make(chan struct{}), wake: make(chan struct{}, 1), performanceOrigin: r.scheduler.Now()}
+	w.cookieContext = r.cookieContext()
 	r.workers[id] = w
 	source := strarg(args, 3)
 	r.agent.Page().trace.Add(trace.Lifecycle, "workerCreated", map[string]any{"url": workerURL.String(), "worker": id, "realm": r.ID})
@@ -364,7 +366,7 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 		// structured JS trace so protocol subscribers do not misroute it.
 		p.trace.Add(trace.JS, "workerStart", map[string]any{"url": w.url.String(), "worker": w.id})
 		if source == "" {
-			res, loadErr := p.loader.Load(taskContext, network.Request{ContextID: w.parent.agent.ContextID(), URL: w.url, Referrer: w.securityURL, SourceURL: w.securityURL, Initiator: network.Worker, OmitClientHints: true})
+			res, loadErr := p.loader.Load(taskContext, network.Request{ContextID: w.parent.agent.ContextID(), URL: w.url, Referrer: w.securityURL, SourceURL: w.securityURL, TopLevelURL: w.topLevelURL, HasCrossSiteAncestor: w.cookieContext.HasCrossSiteAncestor, Initiator: network.Worker, OmitClientHints: true})
 			if loadErr != nil {
 				return loadErr
 			}

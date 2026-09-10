@@ -40,10 +40,11 @@ const (
 type Request struct {
 	// ClientIsWorker identifies the initiating realm, not the resource type:
 	// a worker script loaded by a document still has a document client.
-	ClientIsWorker bool
-	TopLevelURL    *url.URL
-	Credentials    string
-	OpaqueOrigin   bool
+	ClientIsWorker       bool
+	TopLevelURL          *url.URL
+	Credentials          string
+	OpaqueOrigin         bool
+	HasCrossSiteAncestor bool
 	// Worker script and worker Fetch requests do not acquire document hints.
 	OmitClientHints bool
 	ClientHints     *ClientHintsContext
@@ -248,7 +249,7 @@ func (l *Loader) Load(ctx context.Context, r Request) (Response, error) {
 	}
 	var cookiePairs []string
 	if l.env().Network.CookiesEnabled && requestIncludesCredentials(r) {
-		for _, c := range l.cookies.ForURL(r.URL) {
+		for _, c := range l.cookies.ForURL(r.URL, r.cookieContext()) {
 			cookiePairs = append(cookiePairs, c.Name+"="+c.Value)
 		}
 	}
@@ -344,7 +345,7 @@ func (l *Loader) Load(ctx context.Context, r Request) (Response, error) {
 	acceptedBefore := l.session.ClientHints(r.URL)
 	l.session.AcceptClientHints(r.URL, res.Headers.Get("Accept-CH"))
 	if l.env().Network.CookiesEnabled && requestIncludesCredentials(r) {
-		l.cookies.SetFromResponse(r.URL, res.Headers)
+		l.cookies.SetFromResponse(r.URL, res.Headers, r.cookieContext())
 	}
 	if missing := criticalClientHintsForRestart(l.env(), r, res, acceptedBefore); len(missing) != 0 {
 		l.trace.Add(trace.Network, "criticalClientHintsRestart", map[string]any{"id": r.ID, "url": r.URL.String(), "missing": missing, "connectionId": timingSnapshot.ConnectionID})

@@ -118,6 +118,7 @@ func (r *Realm) frameClientHintsContainer(frame *Frame, target string) map[strin
 func (r *Realm) applyClientHints(request *network.Request) {
 	request.TopLevelURL = r.requestTopLevelURL()
 	request.OpaqueOrigin = r.origin == "null"
+	request.HasCrossSiteAncestor = r.cookieContext().HasCrossSiteAncestor
 	if r.clientHints == nil {
 		return
 	}
