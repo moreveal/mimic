@@ -93,6 +93,11 @@ type Realm struct {
 	moduleFetches           map[string]*moduleFetch
 	preloadedModuleLinks    map[int64]bool
 	imageLoads              map[int64]*imageLoad
+	preloads                map[preloadKey]*resourcePreload
+	preloadsMu              sync.Mutex
+	preloadContext          context.Context
+	cancelPreloads          context.CancelFunc
+	preloadedLinks          map[int64]bool
 	fetchCancels            map[string]context.CancelFunc
 	nativePollQueued        bool
 	checkpointQueued        bool
@@ -316,6 +321,7 @@ func (r *Realm) Close() error {
 	r.resourceWG.Wait()
 	r.moduleFetches = nil
 	r.imageLoads = nil
+	r.preloads = nil
 	for _, worker := range r.workers {
 		_ = worker.Close()
 	}
@@ -1819,7 +1825,7 @@ func (r *Realm) hostFetch(_ engine.Value, a []engine.Value) (engine.Value, error
 		r.resourceWG.Add(1)
 		go func() {
 			defer r.resourceWG.Done()
-			res, loadErr := r.agent.Page().loader.Load(loadContext, request)
+			res, loadErr := r.loadResource(loadContext, request)
 			cancel()
 			if r.resourceContext.Err() != nil {
 				return
@@ -1871,7 +1877,7 @@ func (r *Realm) hostXHR(_ engine.Value, a []engine.Value) (engine.Value, error) 
 				loadContext, cancel = context.WithTimeout(loadContext, timeout)
 			}
 			defer cancel()
-			res, loadErr := r.agent.Page().loader.Load(loadContext, request)
+			res, loadErr := r.loadResource(loadContext, request)
 			if r.resourceContext.Err() != nil {
 				return
 			}
@@ -1979,6 +1985,14 @@ func (r *Realm) hostInsertArgs(a []engine.Value, hasBefore bool) (engine.Value, 
 		r.updateImage(childID, false)
 		return nil, nil
 	}
+	if tag == "LINK" && hasLinkRelation(node.Attributes["rel"], "preload") {
+		r.preloadResource(childID, node.Attributes)
+		return nil, nil
+	}
+	if tag == "LINK" && hasLinkRelation(node.Attributes["rel"], "modulepreload") {
+		r.preloadModules()
+		return nil, nil
+	}
 	blockerReason := strings.ToLower(tag) + ":" + src
 	blocksLoad := r.beginLoadBlocker(blockerReason)
 	r.agent.Page().trace.Add(trace.DOM, "dynamicResourceInsertion", map[string]any{"tag": tag, "src": src, "attributes": attrs, "realm": r.ID})
@@ -2017,7 +2031,7 @@ func (r *Realm) hostInsertArgs(a []engine.Value, hasBefore bool) (engine.Value, 
 				return fire(ctx, loadCallback)
 			}
 			if tag == "LINK" {
-				if loadErr != nil {
+				if loadErr != nil || res != nil && (res.Status < 200 || res.Status >= 300) {
 					return fire(ctx, errorCallback)
 				}
 				return fire(ctx, loadCallback)
@@ -2083,23 +2097,12 @@ func (r *Realm) hostInsertArgs(a []engine.Value, hasBefore bool) (engine.Value, 
 			initiator = network.Other
 		}
 	}
-	referrer := r.documentURL()
-	if strings.EqualFold(fmt.Sprint(attrs["referrerpolicy"]), "no-referrer") {
-		referrer = nil
-	}
-	headers := make(http.Header)
-	mode := ""
-	if crossOrigin := fmt.Sprint(attrs["crossorigin"]); crossOrigin != "" && crossOrigin != "<nil>" {
-		headers.Set("Origin", r.origin)
-		mode = "cors"
-	}
-	request := network.Request{ContextID: r.agent.ContextID(), URL: u, Referrer: referrer, SourceURL: r.documentURL(), Headers: headers, Initiator: initiator, Mode: mode}
-	r.applyClientHints(&request)
+	request := r.elementRequest(u, node.Attributes, initiator)
 	r.scheduler.Post(resourceSource, resourceDelay, func(context.Context) error {
 		r.resourceWG.Add(1)
 		go func() {
 			defer r.resourceWG.Done()
-			res, loadErr := r.agent.Page().loader.Load(r.resourceContext, request)
+			res, loadErr := r.loadResource(r.resourceContext, request)
 			if r.resourceContext.Err() != nil {
 				return
 			}

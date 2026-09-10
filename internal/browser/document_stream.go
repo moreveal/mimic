@@ -82,6 +82,7 @@ func (r *Realm) openDocumentStream(caller *Realm) error {
 	if r.documentStream != nil && r.documentStream.insideScript {
 		return nil
 	}
+	r.resetPreloads()
 	if r.documentStream != nil {
 		r.documentStream.cancel()
 		r.documentStream.parser.Abort()
@@ -159,6 +160,8 @@ func (r *Realm) closeDocumentStream() error {
 }
 
 func (r *Realm) executeStreamScript(s *documentStream, node dom.Node) error {
+	r.preloadResources()
+	r.startDocumentImages()
 	if s.onScript != nil {
 		return s.onScript(node)
 	}
@@ -184,13 +187,12 @@ func (r *Realm) executeStreamScript(s *documentStream, node dom.Node) error {
 		if loaded == nil {
 			loaded = &streamScriptResponse{}
 			s.scripts[node.ID] = loaded
-			request := network.Request{ContextID: r.agent.ContextID(), URL: u, Referrer: r.documentURL(), SourceURL: r.documentURL(), Initiator: network.Script}
-			r.applyClientHints(&request)
+			request := r.elementRequest(u, node.Attributes, network.Script)
 			eventLoop := r.browserEventLoop()
 			r.resourceWG.Add(1)
 			go func() {
 				defer r.resourceWG.Done()
-				response, loadErr := r.agent.Page().loader.Load(ctx, request)
+				response, loadErr := r.loadResource(ctx, request)
 				if loadErr == nil {
 					loadErr = scriptResponseError(response)
 				}
@@ -263,6 +265,8 @@ func (r *Realm) finishDocumentStream(s *documentStream) error {
 		return nil
 	}
 	s.finished = true
+	r.preloadResources()
+	r.startDocumentImages()
 	if s.navigation {
 		r.updateSelectorTarget(r.documentURL().Fragment)
 		if s.onFinished != nil {

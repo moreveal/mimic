@@ -3,7 +3,6 @@ package browser
 import (
 	"context"
 	"fmt"
-	"net/http"
 	"net/url"
 	"strings"
 
@@ -20,6 +19,12 @@ type imageLoad struct {
 	queued      bool
 	cancel      context.CancelFunc
 	blocks      bool
+}
+
+func (r *Realm) startDocumentImages() {
+	for _, node := range r.document.FindAllByTagName("img") {
+		r.updateImage(node.ID, false)
+	}
 }
 
 // Image requests belong to their document even before the element is inserted.
@@ -86,56 +91,26 @@ func (r *Realm) updateImage(id int64, changed bool) {
 		if err != nil {
 			return finish(ctx, "error")
 		}
-		referrer := r.documentURL()
-		if strings.EqualFold(node.Attributes["referrerpolicy"], "no-referrer") {
-			referrer = nil
-		}
-		headers := make(http.Header)
-		mode := ""
-		if _, ok := node.Attributes["crossorigin"]; ok {
-			headers.Set("Origin", r.origin)
-			mode = "cors"
-		}
-		credentials := "include"
-		if mode == "cors" && !strings.EqualFold(node.Attributes["crossorigin"], "use-credentials") {
-			credentials = "same-origin"
-		}
-		request := network.Request{Credentials: credentials, ContextID: r.agent.ContextID(), URL: u, Referrer: referrer, SourceURL: r.documentURL(), Headers: headers, Initiator: network.Image, Mode: mode}
-		r.applyClientHints(&request)
+		request := r.elementRequest(u, node.Attributes, network.Image)
 		resourceContext, cancel := context.WithCancel(r.resourceContext)
 		current.cancel = cancel
 		r.resourceWG.Add(1)
 		go func() {
 			defer r.resourceWG.Done()
 			defer cancel()
-			response, err := r.agent.Page().loader.Load(resourceContext, request)
+			response, err := r.loadResource(resourceContext, request)
 			if resourceContext.Err() != nil {
 				return
 			}
 			var decoded *imageresource.Image
 			kind := "load"
-			finalURL := response.URL
-			if finalURL == nil {
-				finalURL = u
+			originClean, corsErr := r.imageResponseOrigin(request, response)
+			if err == nil {
+				err = corsErr
 			}
-			originURL := finalURL
-			if finalURL.Scheme == "blob" {
-				if parsed, e := url.Parse(strings.TrimPrefix(finalURL.String(), "blob:")); e == nil {
-					originURL = parsed
-				}
-			}
-			originClean := finalURL.Scheme == "data" || originURL.Scheme == request.SourceURL.Scheme && originURL.Host == request.SourceURL.Host
-			if mode == "cors" && !originClean && err == nil {
-				allow := response.Headers.Get("Access-Control-Allow-Origin")
-				originClean = allow == r.origin || allow == "*" && credentials != "include"
-				if credentials == "include" {
-					originClean = originClean && response.Headers.Get("Access-Control-Allow-Credentials") == "true"
-				}
-				if !originClean {
-					err = fmt.Errorf("image CORS response disallowed")
-				}
-			}
-			if err != nil || response.Status < 200 || response.Status >= 300 {
+			// Chrome decodes an image response even with an HTTP error status.
+			// Transport/CORS failures and invalid image bytes determine failure.
+			if err != nil {
 				kind = "error"
 			} else {
 				decoded, err = imageresource.Decode(response.Body, response.Headers.Get("Content-Type"))
@@ -156,4 +131,29 @@ func (r *Realm) updateImage(id int64, changed bool) {
 		}()
 		return nil
 	})
+}
+
+func (r *Realm) imageResponseOrigin(request network.Request, response network.Response) (bool, error) {
+	finalURL := response.URL
+	if finalURL == nil {
+		finalURL = request.URL
+	}
+	originURL := finalURL
+	if finalURL.Scheme == "blob" {
+		if parsed, err := url.Parse(strings.TrimPrefix(finalURL.String(), "blob:")); err == nil {
+			originURL = parsed
+		}
+	}
+	clean := finalURL.Scheme == "data" || originURL.Scheme == request.SourceURL.Scheme && originURL.Host == request.SourceURL.Host
+	if request.Mode == "cors" && !clean {
+		allow := response.Headers.Get("Access-Control-Allow-Origin")
+		clean = allow == request.Headers.Get("Origin") || allow == "*" && request.Credentials != "include"
+		if request.Credentials == "include" {
+			clean = clean && response.Headers.Get("Access-Control-Allow-Credentials") == "true"
+		}
+		if !clean {
+			return false, fmt.Errorf("image CORS response disallowed")
+		}
+	}
+	return clean, nil
 }

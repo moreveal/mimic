@@ -359,6 +359,7 @@ func (p *Page) navigateRequest(ctx context.Context, raw, loaderID string, reques
 	modules := make([]deferredModule, 0)
 	streamState.onScript = func(s dom.Node) error {
 		realm.preloadModules()
+		realm.preloadResources()
 		kind := scriptExecutionKind(s.Attributes["type"], s.Attributes["language"])
 		if kind == "" {
 			return nil
@@ -375,10 +376,12 @@ func (p *Page) navigateRequest(ctx context.Context, raw, loaderID string, reques
 			if !p.allowsScript(su, false, false, s.Attributes["nonce"]) {
 				return nil
 			}
-			request := network.Request{ContextID: p.Top.ID, URL: su, Referrer: u, SourceURL: u, Initiator: network.Script}
-			realm.applyClientHints(&request)
+			request := realm.elementRequest(su, s.Attributes, network.Script)
 			if _, crossOrigin := s.Attributes["crossorigin"]; crossOrigin || kind == "module" {
 				request.Mode = "cors"
+				if !strings.EqualFold(s.Attributes["crossorigin"], "use-credentials") {
+					request.Credentials = "same-origin"
+				}
 				request.Headers = make(http.Header)
 				request.Headers.Set("Origin", originOf(u.String()))
 			}
@@ -386,7 +389,7 @@ func (p *Page) navigateRequest(ctx context.Context, raw, loaderID string, reques
 			if kind == "module" {
 				rr, err = realm.fetchModule(request).wait(ctx)
 			} else {
-				rr, err = p.loader.Load(ctx, request)
+				rr, err = realm.loadResource(ctx, request)
 			}
 			if err == nil {
 				err = scriptResponseError(rr)
@@ -455,6 +458,7 @@ func (p *Page) navigateRequest(ctx context.Context, raw, loaderID string, reques
 		return err
 	}
 	realm.preloadModules()
+	realm.preloadResources()
 	// Module scripts are deferred by default: fetch begins at parser discovery,
 	// while evaluation happens after parsing and before DOMContentLoaded.
 	for _, module := range modules {
@@ -509,9 +513,8 @@ func (p *Page) navigateRequest(ctx context.Context, raw, loaderID string, reques
 			p.trace.Add(trace.Error, "stylesheetURL", map[string]any{"href": link.Attributes["href"], "error": parseErr.Error()})
 			continue
 		}
-		request := network.Request{ContextID: p.Top.ID, URL: stylesheetURL, Referrer: u, SourceURL: u, Initiator: network.Stylesheet}
-		realm.applyClientHints(&request)
-		if _, loadErr := p.loader.Load(ctx, request); loadErr != nil {
+		request := realm.elementRequest(stylesheetURL, link.Attributes, network.Stylesheet)
+		if _, loadErr := realm.loadResource(ctx, request); loadErr != nil {
 			p.trace.Add(trace.Error, "stylesheetLoad", map[string]any{"url": stylesheetURL.String(), "error": loadErr.Error()})
 		}
 	}

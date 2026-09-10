@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/moreveal/mimic/internal/network"
 	"github.com/moreveal/mimic/internal/scheduler"
@@ -32,7 +33,7 @@ func (r *Realm) fetchModule(request network.Request) *moduleFetch {
 	go func() {
 		defer r.resourceWG.Done()
 		defer close(pending.done)
-		pending.response, pending.err = r.agent.Page().loader.Load(r.resourceContext, request)
+		pending.response, pending.err = r.loadResource(r.resourceContext, request)
 		if pending.err == nil {
 			pending.err = scriptResponseError(pending.response)
 		}
@@ -52,7 +53,7 @@ func (m *moduleFetch) wait(ctx context.Context) (network.Response, error) {
 func (r *Realm) moduleRequest(target, referrer *url.URL) network.Request {
 	headers := make(http.Header)
 	headers.Set("Origin", r.origin)
-	request := network.Request{ContextID: r.agent.ContextID(), URL: target, Referrer: referrer, SourceURL: referrer, Initiator: network.Script, Mode: "cors", Headers: headers}
+	request := network.Request{ContextID: r.agent.ContextID(), URL: target, Referrer: referrer, SourceURL: referrer, Initiator: network.Script, Mode: "cors", Credentials: "same-origin", Headers: headers}
 	r.applyClientHints(&request)
 	return request
 }
@@ -78,6 +79,9 @@ func (r *Realm) preloadModules() {
 			continue
 		}
 		request := r.moduleRequest(target, base)
+		if strings.EqualFold(link.Attributes["crossorigin"], "use-credentials") {
+			request.Credentials = "include"
+		}
 		r.preloadedModuleLinks[link.ID] = true
 		request.PerformanceInitiatorType = "link"
 		pending := r.fetchModule(request)
