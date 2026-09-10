@@ -70,6 +70,7 @@ type Scheduler struct {
 	runningBase    time.Time
 	wake           chan struct{}
 	executionScale float64
+	sequenceSource func() uint64
 }
 
 func New(start time.Time, checkpoint func(context.Context) error) *Scheduler {
@@ -78,6 +79,14 @@ func New(start time.Time, checkpoint func(context.Context) error) *Scheduler {
 	return s
 }
 func (s *Scheduler) SetObserver(f func(Transition)) { s.mu.Lock(); s.observer = f; s.mu.Unlock() }
+
+// SetSequenceSource supplies an event-loop-local enqueue order shared by realm
+// queues. Configure it before posting tasks; standalone/worker queues use IDs.
+func (s *Scheduler) SetSequenceSource(next func() uint64) {
+	s.mu.Lock()
+	s.sequenceSource = next
+	s.mu.Unlock()
+}
 func (s *Scheduler) SetExecutionScale(scale float64) {
 	if scale <= 0 {
 		scale = 1
@@ -90,6 +99,9 @@ func (s *Scheduler) Post(source Source, delay time.Duration, callback Callback) 
 	s.mu.Lock()
 	s.seq++
 	t := &task{s.seq, s.seq, s.nowLocked().Add(delay), source, callback, false}
+	if s.sequenceSource != nil {
+		t.sequence = s.sequenceSource()
+	}
 	heap.Push(&s.tasks, t)
 	s.byID[t.id] = t
 	observer := s.observer
@@ -205,12 +217,69 @@ func (s *Scheduler) Cancel(id uint64) {
 func (s *Scheduler) Pause()  { s.mu.Lock(); s.paused = true; s.mu.Unlock() }
 func (s *Scheduler) Resume() { s.mu.Lock(); s.paused = false; s.mu.Unlock() }
 func (s *Scheduler) RunUntilIdle(ctx context.Context, maxTasks int) error {
-	return s.run(ctx, maxTasks, true)
+	return s.run(ctx, maxTasks, true, true)
 }
 func (s *Scheduler) RunReady(ctx context.Context, maxTasks int) error {
-	return s.run(ctx, maxTasks, false)
+	return s.run(ctx, maxTasks, false, true)
 }
-func (s *Scheduler) run(ctx context.Context, maxTasks int, advance bool) error {
+
+// RunReadyStep executes at most one task, including its microtask checkpoint.
+// A Page uses this boundary to service other realm queues before returning to
+// a realm which posts more work from every callback. It never advances time to
+// a future timer. A cancelled queue entry also counts as progress.
+func (s *Scheduler) RunReadyStep(ctx context.Context) (bool, error) {
+	s.mu.Lock()
+	ready := !s.paused && len(s.tasks) > 0 && !s.tasks[0].due.After(s.now)
+	s.mu.Unlock()
+	if !ready {
+		return false, nil
+	}
+	return true, s.run(ctx, 1, false, false)
+}
+
+// RunReadyAcross selects one task across the realm queues of a single Page.
+// Compare the same due times and source priorities used within each queue;
+// merely alternating realms can let a newer timer overtake an older message.
+// The caller serializes Page turns. Workers are separate event loops.
+func RunReadyAcross(ctx context.Context, queues []*Scheduler) (bool, error) {
+	// All realms of a Page observe time spent in the preceding task. Keep
+	// absolute due times comparable before selecting work from another queue.
+	var now time.Time
+	for _, queue := range queues {
+		if observed := queue.Now(); observed.After(now) {
+			now = observed
+		}
+	}
+	for _, queue := range queues {
+		queue.mu.Lock()
+		if now.After(queue.now) {
+			queue.now = now
+		}
+		queue.mu.Unlock()
+	}
+	var selected *Scheduler
+	var best task
+	for _, queue := range queues {
+		queue.mu.Lock()
+		if !queue.paused {
+			for _, candidate := range queue.tasks {
+				if candidate.due.After(queue.now) {
+					continue
+				}
+				if selected == nil || taskBefore(candidate, &best) {
+					selected, best = queue, *candidate
+				}
+			}
+		}
+		queue.mu.Unlock()
+	}
+	if selected == nil {
+		return false, nil
+	}
+	return selected.RunReadyStep(ctx)
+}
+
+func (s *Scheduler) run(ctx context.Context, maxTasks int, advance, limitError bool) error {
 	// Multiple Go goroutines may wake or drive one browsing context (for
 	// example navigation and a CDP clock pump), but Chrome still has one event
 	// loop per agent. Serialize complete turns so callbacks and their microtask
@@ -279,7 +348,9 @@ func (s *Scheduler) run(ctx context.Context, maxTasks int, advance bool) error {
 			observer(Transition{"end", t.id, t.source, t.due})
 		}
 	}
-	taskErrors = append(taskErrors, fmt.Errorf("scheduler task limit %d exceeded", maxTasks))
+	if limitError {
+		taskErrors = append(taskErrors, fmt.Errorf("scheduler task limit %d exceeded", maxTasks))
+	}
 	return errors.Join(taskErrors...)
 }
 

@@ -7,6 +7,7 @@ import (
 	"net/url"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/google/uuid"
@@ -30,6 +31,7 @@ type documentSecurity struct {
 }
 type Page struct {
 	commandMu         sync.Mutex
+	taskSequence      atomic.Uint64
 	mu                sync.RWMutex
 	ID                string
 	ctx               *Context
@@ -58,6 +60,11 @@ type Page struct {
 	loadEventEnded   bool
 	messagePorts     map[string]*messagePortState
 	textMetrics      *textmetrics.Engine // Page event-loop owned; lazy local font resources.
+	// Cross-realm calls can enqueue jobs in an isolate other than the caller's.
+	// These fields are owned by the Page event loop, never by network goroutines.
+	pendingCheckpoints []*Realm
+	checkpointDraining bool
+	crossRealmDepth    int
 }
 
 // LockCommands serializes an external command and its complete event-loop turn.
@@ -118,6 +125,7 @@ func (p *Page) Close() error {
 		_ = old.Close()
 	}
 	p.textMetrics = nil
+	p.pendingCheckpoints = nil
 	return nil
 }
 func (p *Page) URL() string {
@@ -749,8 +757,8 @@ func (p *Page) runEvaluationTasks(ctx context.Context, evaluating *Realm) error 
 		active = active || frame.Realm == evaluating
 	}
 	p.mu.RUnlock()
-	// Preserve the established parent/child/parent drain order, including
-	// messages posted back to the parent during a child's task.
+	// Service realm queues at task boundaries, including messages posted back
+	// to the parent during a child's task.
 	if top != nil {
 		if err := top.RunReady(ctx); err != nil {
 			return err
@@ -788,22 +796,28 @@ func (p *Page) AdvanceTime(ctx context.Context, delta time.Duration) error {
 	}
 	p.mu.Unlock()
 	for _, realm := range realms {
-		// A task from an earlier snapshot entry can commit navigation and
-		// retire later entries. Only drive realms still in the active tree.
+		// Advance all clocks before executing anything. Draining each realm
+		// here would bypass the shared Page task-selection boundary.
+		realm.scheduler.AdvanceBy(delta)
+	}
+	defer p.closeRetiredRealms()
+	for turn := 0; turn < 10000; turn++ {
+		// A callback can commit navigation. Rebuild from the active tree at
+		// every task boundary so retired queues are never driven afterward.
 		p.mu.RLock()
-		frame := p.frames[realm.agent.ContextID()]
-		active := frame != nil && frame.Realm == realm
-		p.mu.RUnlock()
-		if !active {
-			continue
+		queues := make([]*scheduler.Scheduler, 0, len(p.frames))
+		for _, frame := range p.frames {
+			if frame.Realm != nil {
+				queues = append(queues, frame.Realm.scheduler)
+			}
 		}
-		if err := realm.AdvanceBy(ctx, delta); err != nil {
-			p.closeRetiredRealms()
+		p.mu.RUnlock()
+		progress, err := scheduler.RunReadyAcross(ctx, queues)
+		if err != nil || !progress {
 			return err
 		}
 	}
-	p.closeRetiredRealms()
-	return nil
+	return fmt.Errorf("page scheduler task limit exceeded")
 }
 
 func (p *Page) closeRetiredRealms() {
