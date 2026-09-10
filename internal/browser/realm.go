@@ -52,6 +52,9 @@ type Realm struct {
 	frameReflection         *frameReflection
 	frameReferenceImport    engine.Value
 	frameReferenceDescribe  engine.Value
+	frameValueEncoder       engine.Value
+	frameValueRetain        engine.Value
+	frameValueEncoderJSON   bool
 	frameNodeDescribe       engine.Value
 	documentStreamEvent     engine.Value
 	url                     *url.URL
@@ -1579,7 +1582,12 @@ func (r *Realm) install() error {
 		}
 		source = strings.Replace(source, "elementWrappers.set(key,proxy)", "host.profileWrapper();elementWrappers.set(key,proxy)", 1)
 	}
-	_, err := r.runtime.Eval(context.Background(), source, "mimic:webapi-surface")
+	var err error
+	if bootstrap, ok := r.runtime.(engine.BootstrapRuntime); ok {
+		_, err = bootstrap.EvalBootstrap(context.Background(), source, "mimic:webapi-surface")
+	} else {
+		_, err = r.runtime.Eval(context.Background(), source, "mimic:webapi-surface")
+	}
 	if err != nil {
 		return err
 	}

@@ -1,5 +1,65 @@
 # Performance architecture pass
 
+## Frame bridge and bootstrap code reuse, 2026-09-10
+
+The [implementation and measurements](bridge-bootstrap-20260910.md) reduce
+the same iframe probe from the previous approximately 222 ms phase breakdown
+to 90.5 ms (41.0 ms setup, 49.4 ms mixed operations). Remote operations and
+encoding are batched on their owner; identity/shape descriptions now run in
+JavaScript, with Go retention only on first export. Bootstrap reuses bounded,
+immutable function code caches across independent isolates. Warm bootstrap
+compile time is about 2.9 ms; its realm-local execution still takes about 37 ms.
+
+The full suite, focused race checks and fresh-build fast gate pass. Host
+crossings fall from roughly 2500 to 1500 per probe and persistent-handle growth
+from 17101 to 6902. The two memory waves show 9–13 MiB higher private memory
+after recovery than the previous gate; the bounded process code cache is an
+intentional retention tradeoff, and the measurements do not isolate its share.
+This is a reduction of bridge and compilation overhead, not the shared-isolate
+rewrite or Chrome parity. Remaining actor/envelope costs and bootstrap object
+construction are documented in the linked report. Frozen harnesses are unchanged.
+
+## Remaining bridge cost and ownership alternatives, 2026-09-10
+
+The [ownership breakdown](frame-bridge-ownership-20260910.md) measures about
+69 ms iframe setup and 153 ms bridge execution for the existing 100-iteration
+probe, using QPC medians after warm-up. About 4,609 actor dispatches, 2,500
+host callbacks and 17,101 additional persistent handles are observed per loop.
+A two-context/single-isolate Go+V8 experiment runs the same checksum kernel
+in 0.147 ms, while preserving distinct constructors and child prototype identity.
+It excludes browser DOM/security/lifecycle machinery and therefore does not
+establish full iframe parity. With unchanged bootstrap, eliminating the loop
+overhead would leave roughly 69–70 ms overall; Chrome-like whole-probe latency
+also requires bootstrap work. An owner-batching candidate yielded only ~15%
+and was withdrawn; its patch and measurements remain private. No production
+ownership rewrite is retained from this experiment.
+
+## Cross-realm reference description, 2026-09-10
+
+The [task-profile investigation](../compatibility/task-profile-2026-09-10.md)
+finds repeated V8 actor crossings in remote prototype, call and property
+operations. One sampled 10.94-second task attributes about 10.18 seconds to
+Mimic surface wrappers, including time waiting for remote isolates. A shared
+100-iteration probe returns checksum 6050 in Chrome and Mimic; warm Mimic
+executions fall from 492–535 ms to 192–197 ms when reference descriptions
+execute in a single owner-side host invocation. System Chrome .83 takes
+4.5–5.1 ms including CDP overhead. These are small diagnostic samples, not a
+frozen performance checkpoint. There is substantial remaining bridge cost.
+
+The live before/after profiles use different server programs and sampling
+intervals, so their timing difference is not a controlled speedup measurement.
+The post-change protected run still receives a repeated challenge; no complete
+control-flow equivalence or successful passage is claimed. Private profiles,
+source instrumentation and capture limitations are linked from the investigation.
+Subsequent sequential controls without CPU sampling or host counters observe
+a first flow interval of 15.454 s before and 6.962 s after. The same message
+listener is installed in both. Different server programs still prevent a
+control-flow equivalence claim; both controls receive a repeated challenge.
+The fast gate passed on a freshly built, hash-verified binary, including all
+six correctness workloads, concurrent waves and teardown/memory checks.
+The complete browser suite and focused race checks also passed; see the
+investigation for timings, commands and the initial suite deadline.
+
 ## Current evaluation criteria
 
 The frozen Chrome 152 measurements are the reference. Absolute millisecond milestones are retired and are not stopping criteria. Every workload must report Mimic/Chrome ratios for creation, navigation and execution, together with attributed remaining overhead. Startup and Page creation should beat Chrome; navigation, DOM and CPU work should approach or beat its measured costs. Fixed memory, marginal Page memory and density should provide a substantial advantage, not merely parity.

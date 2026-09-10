@@ -174,6 +174,19 @@ func (a *adapter) RunNested(ctx context.Context, operation func(context.Context)
 	}
 }
 
+func (a *adapter) RunOnOwner(ctx context.Context, operation func(context.Context) error) error {
+	if err := ctx.Err(); err != nil {
+		return err
+	}
+	_, err := a.owner.execute(func(*state) response {
+		if err := ctx.Err(); err != nil {
+			return response{err: err}
+		}
+		return response{err: operation(ctx)}
+	})
+	return err
+}
+
 func (a *adapter) Eval(ctx context.Context, source, name string) (engine.Value, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, err
@@ -214,6 +227,16 @@ func (a *adapter) Eval(ctx context.Context, source, name string) (engine.Value, 
 }
 
 func (a *adapter) evalScoped(isolate *gov8.Isolate, realm *gov8.Context, scope *gov8.Scope, source, name string) (engine.Value, error) {
+	return a.evalScopedCode(isolate, realm, scope, source, name, false)
+}
+
+func (a *adapter) EvalBootstrap(ctx context.Context, source, name string) (engine.Value, error) {
+	return a.runContext(ctx, func(s *state, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
+		return a.evalScopedCode(s.isolate, realm, scope, source, name, true)
+	})
+}
+
+func (a *adapter) evalScopedCode(isolate *gov8.Isolate, realm *gov8.Context, scope *gov8.Scope, source, name string, reusable bool) (engine.Value, error) {
 	if a.profile != nil && os.Getenv("MIMIC_V8_CPU_PROFILE") == "1" && (name == "mimic:webapi-surface" || name == "__pyppeteer_evaluation_script__") {
 		finish, err := startNativeProfile(isolate, realm)
 		if err != nil {
@@ -242,20 +265,47 @@ func (a *adapter) evalScoped(isolate *gov8.Isolate, realm *gov8.Context, scope *
 	if err != nil {
 		return nil, err
 	}
-	script, err := realm.CompileScriptCompilerSource(scope,
-		gov8.NewScriptCompilerSource(source, &gov8.ScriptCompilerOrigin{ResourceName: resourceName, ScriptID: -1}),
-		gov8.OptNoCompileOptions, gov8.NoCacheNoReason, catcher)
+	var script *gov8.Script
+	var bootstrap *gov8.Function
+	var key bootstrapKey
+	var cached bool
+	if reusable {
+		key = bootstrapKeyFor(source, name)
+		data := bootstrapCode.get(key)
+		var rejected bool
+		bootstrap, rejected, err = realm.CompileFunctionAdvanced(scope, source+"\n//# sourceURL="+name, nil, data, catcher)
+		cached = data != nil && !rejected
+	} else {
+		script, err = realm.CompileScriptCompilerSource(scope,
+			gov8.NewScriptCompilerSource(source, &gov8.ScriptCompilerOrigin{ResourceName: resourceName, ScriptID: -1}),
+			gov8.OptNoCompileOptions, gov8.NoCacheNoReason, catcher)
+	}
 	if a.profile != nil {
 		a.recordCost("compile:"+name, started)
 	}
 	if err != nil {
 		return nil, a.evalError(catcher, scope, realm, name, err)
 	}
-	defer script.Close()
+	if script != nil {
+		defer script.Close()
+	}
 	if a.profile != nil {
 		started = time.Now()
 	}
-	result, err := script.Run(scope, catcher)
+	var result gov8.Value
+	if bootstrap != nil {
+		var ok bool
+		global, globalErr := realm.GlobalObject(scope)
+		if globalErr != nil {
+			return nil, globalErr
+		}
+		result, ok, err = bootstrap.Call(scope, global.Value)
+		if err == nil && !ok {
+			err = errors.New("bootstrap execution failed")
+		}
+	} else {
+		result, err = script.Run(scope, catcher)
+	}
 	if a.profile != nil {
 		a.recordCost("execute:"+name, started)
 		heap, _ := isolate.GetHeapStatistics()
@@ -263,6 +313,13 @@ func (a *adapter) evalScoped(isolate *gov8.Isolate, realm *gov8.Context, scope *
 	}
 	if err != nil {
 		return nil, a.evalError(catcher, scope, realm, name, err)
+	}
+	// Produce after execution, so functions reached during bootstrap are
+	// included rather than lazily compiled again in every new realm.
+	if reusable && !cached {
+		if data, cacheErr := bootstrap.CreateCodeCache(); cacheErr == nil {
+			bootstrapCode.put(key, data)
+		}
 	}
 	return a.persist(scope, result)
 }
@@ -448,6 +505,19 @@ func (a *adapter) Set(name string, value any) error {
 }
 
 func (a *adapter) Get(name string) engine.Value {
+	if callback := a.onCallback(); callback != nil {
+		scope := callback.scope.Scope()
+		global, err := callback.ctx.GlobalObject(scope)
+		if err != nil {
+			return nil
+		}
+		local, ok, err := global.GetByName(scope, callback.ctx, name)
+		if err != nil || !ok {
+			return nil
+		}
+		value, _ := a.persist(scope, local)
+		return value
+	}
 	value, _ := a.run(func(s *state, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
 		global, err := realm.GlobalObject(scope)
 		if err != nil {
@@ -946,6 +1016,9 @@ func (a *adapter) runContext(ctx context.Context, operation realmOperation) (eng
 		previousContext := a.activeContext
 		a.activeContext = ctx
 		defer func() { a.activeContext = previousContext }()
+		if ctx.Done() == nil {
+			return operation(s, realm, scope)
+		}
 		// Join the watcher on the isolate thread before another operation or
 		// disposal can begin. Failed dispatch creates no watcher at all.
 		finished, watcherDone := make(chan struct{}), make(chan struct{})

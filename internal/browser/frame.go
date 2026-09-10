@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"math"
 	"net/http"
 	"net/url"
 	"sort"
@@ -480,6 +481,41 @@ func (r *Realm) evalInFrame(ctx context.Context, frameID, source string) (engine
 }
 
 func (r *Realm) crossRealmValue(value engine.Value) (map[string]any, error) {
+	if value == nil || r.frameValueEncoder == nil {
+		return r.describeCrossRealmValue(value)
+	}
+	encoded, err := r.runtime.Call(context.Background(), r.frameValueEncoder, nil, value)
+	if err != nil {
+		return nil, err
+	}
+	var data map[string]any
+	if r.frameValueEncoderJSON {
+		if err := json.Unmarshal([]byte(encoded.String()), &data); err != nil {
+			return nil, fmt.Errorf("invalid cross-realm value description: %w", err)
+		}
+		if data["__mimicCrossRealm"] == "special-number" {
+			switch data["value"] {
+			case "NaN":
+				data["value"] = math.NaN()
+			case "Infinity":
+				data["value"] = math.Inf(1)
+			case "-Infinity":
+				data["value"] = math.Inf(-1)
+			case "-0":
+				data["value"] = math.Copysign(0, -1)
+			}
+			data["__mimicCrossRealm"] = "value"
+		}
+		return data, nil
+	}
+	data, ok := encoded.Export().(map[string]any)
+	if !ok {
+		return nil, fmt.Errorf("invalid cross-realm value description")
+	}
+	return data, nil
+}
+
+func (r *Realm) describeCrossRealmValue(value engine.Value) (map[string]any, error) {
 	if value == nil {
 		return map[string]any{"__mimicCrossRealm": "undefined"}, nil
 	}

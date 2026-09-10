@@ -10,6 +10,21 @@ import (
 
 func (r *Realm) installFrameDocumentBridge(host map[string]any) {
 	r.installFrameReflection(host)
+	// Describe references in one invocation on their owner. Otherwise every
+	// type/identity/shape query makes a separate round trip to the V8 actor.
+	// This private function is never exposed to document scripts.
+	r.frameValueEncoder = r.val(r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		encoded, err := r.describeCrossRealmValue(args[0])
+		if err != nil {
+			return nil, err
+		}
+		return r.val(encoded), nil
+	}))
+	r.frameValueRetain = r.val(r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		r.crossValueSeq++
+		r.crossValues[r.crossValueSeq] = args[0]
+		return r.val(r.crossValueSeq), nil
+	}))
 	host["installFrameReferenceBridge"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		if r.frameReferenceImport != nil {
 			return nil, fmt.Errorf("frame reference bridge already installed")
@@ -17,6 +32,9 @@ func (r *Realm) installFrameDocumentBridge(host map[string]any) {
 		r.frameReferenceImport, r.frameReferenceDescribe = args[0], args[1]
 		if len(args) > 2 {
 			r.frameNodeDescribe = args[2]
+		}
+		if err := r.installFrameValueEncoder(); err != nil {
+			return nil, err
 		}
 		return nil, nil
 	})
@@ -241,17 +259,23 @@ func (r *Realm) callFrameReference(args []engine.Value) (engine.Value, error) {
 func (r *Realm) crossFrameResult(target *Realm, operation func(context.Context) (engine.Value, error)) (engine.Value, error) {
 	var encoded map[string]any
 	run := func(ctx context.Context) error {
-		restore := r.enterFrameDocumentEntry(target)
-		defer restore()
-		value, err := operation(ctx)
-		if err != nil {
+		return target.runOnOwner(ctx, func(ctx context.Context) error {
+			restore := r.enterFrameDocumentEntry(target)
+			defer restore()
+			value, err := operation(ctx)
+			if err != nil {
+				return err
+			}
+			encoded, err = target.crossRealmValue(value)
 			return err
-		}
-		encoded, err = target.crossRealmValue(value)
-		return err
+		})
 	}
 	var err error
-	if nested, ok := r.runtime.(engine.ReentrantRuntime); ok {
+	if target == r {
+		// Local argument references already execute on this owner. Suspending
+		// its callback and starting a cooperating goroutine adds no ordering.
+		err = run(context.Background())
+	} else if nested, ok := r.runtime.(engine.ReentrantRuntime); ok {
 		err = nested.RunNested(context.Background(), run)
 	} else {
 		err = run(context.Background())
@@ -260,6 +284,13 @@ func (r *Realm) crossFrameResult(target *Realm, operation func(context.Context) 
 		return nil, err
 	}
 	return r.val(encoded), nil
+}
+
+func (r *Realm) runOnOwner(ctx context.Context, operation func(context.Context) error) error {
+	if owner, ok := r.runtime.(engine.OwnerRuntime); ok {
+		return owner.RunOnOwner(ctx, operation)
+	}
+	return operation(ctx)
 }
 
 // The entry document follows the synchronous cross-realm call stack. Restore
@@ -295,6 +326,7 @@ const frameReflectionSource = `(()=>{
  const wellKnown=[],names=keys(Symbol);for(let i=0;i<names.length;i++){const name=names[i];if(typeof Symbol[name]==='symbol')wellKnown[wellKnown.length]=[name,Symbol[name]]}
  const info=key=>{if(typeof key==='string')return{kind:'string',value:key};const result={kind:'symbol',key,description:apply(description,key,[])};for(let i=0;i<wellKnown.length;i++)if(wellKnown[i][1]===key){result.wellKnown=wellKnown[i][0];return result}const global=keyFor(key);if(global!==undefined)result.global=global;return result};
  return(op,object,key,value)=>{
+  if(op==='lookup')return apply(weakGet,ids,[object]);
   if(op==='handle'){let id=apply(weakGet,ids,[object]);if(id===undefined){id=key;apply(weakSet,ids,[object,id])}return id}
   if(op==='array')return [];
   if(op==='shape'){if(typeof object!=='function')return{array:isArray(object)};let constructable=true;try{construct(new P(object,{construct(){return {}}}),[])}catch(error){constructable=false}return{constructable}}
@@ -310,6 +342,53 @@ const frameReflectionSource = `(()=>{
   const d=descriptor(object,key);if(d===undefined)return{exists:false};const accessor=!apply(has,d,['value']);return accessor?{exists:true,accessor:true,enumerable:d.enumerable,configurable:d.configurable,get:d.get,set:d.set}:{exists:true,accessor:false,enumerable:d.enumerable,configurable:d.configurable,writable:d.writable,value:d.value,valueType:typeof d.value,symbol:typeof d.value==='symbol'?info(d.value):null}
  }
 })()`
+
+// Classify references in JavaScript, where the canonical WeakMap, intrinsics
+// and wrappers live. Only the first export of an object needs a host retention
+// callback. Repeated reads still inspect live shape (including revoked proxies)
+// and never cache property values, prototypes or access checks.
+const frameValueEncoderSource = `((describe,node,reflect,retain,symbol,frame,realm,parent)=>{
+ const global=globalThis,stringify=JSON.stringify,create=Object.create,keys=Object.keys;
+ const encode=value=>{
+  const type=typeof value;
+  if(type==='undefined')return {__mimicCrossRealm:'undefined'};
+  if(value===null)return {__mimicCrossRealm:'null'};
+  if(type==='symbol')return symbol(value);
+  if(type==='bigint')return {__mimicCrossRealm:'bigint',value:''+value};
+  if(type==='number'&&(value!==value||value===Infinity||value===-Infinity||value===0&&1/value===-Infinity))return {__mimicCrossRealm:'special-number',value:value!==value?'NaN':value===0?'-0':value>0?'Infinity':'-Infinity'};
+  if(type!=='object'&&type!=='function')return {__mimicCrossRealm:'value',value};
+  const reference=describe(value);
+  if(reference!==null&&typeof reference==='object')return reference;
+  if(value===global)return {__mimicCrossRealm:'window',frame};
+  if(value===global.document)return {__mimicCrossRealm:'document',frame};
+  if(parent&&value===global.parent)return {__mimicCrossRealm:'window',frame:parent};
+  let id=reflect('lookup',value);
+  if(id===undefined)id=reflect('handle',value,retain(value));
+  const out={__mimicCrossRealm:type,frame,realm,handle:id};
+  if(type==='object'){const nodeId=node(value);if(nodeId)out.nodeId=nodeId;out.array=reflect('shape',value).array}
+  else out.constructable=reflect('shape',value).constructable;
+  return out;
+ };
+ return value=>{const data=encode(value),out=create(null);const names=keys(data);for(let i=0;i<names.length;i++){const key=names[i];out[key]=data[key]}return stringify(out)};
+})`
+
+func (r *Realm) installFrameValueEncoder() error {
+	factory, err := r.runtime.Eval(context.Background(), frameValueEncoderSource, "mimic:frame-value-encoder")
+	if err != nil {
+		return err
+	}
+
+	parent := ""
+	if frame, ok := r.agent.(*Frame); ok && frame.parent != nil {
+		parent = frame.parent.ID
+	}
+	encoder, err := r.runtime.Call(context.Background(), factory, nil, r.frameReferenceDescribe, r.frameNodeDescribe, r.frameReflection.operation, r.frameValueRetain, r.frameValueEncoder, r.val(r.agent.ContextID()), r.val(r.ID), r.val(parent))
+	if err == nil {
+		r.frameValueEncoder = encoder
+		r.frameValueEncoderJSON = true
+	}
+	return err
+}
 
 func (r *Realm) installFrameReflection(host map[string]any) {
 	operation, err := r.runtime.Eval(context.Background(), frameReflectionSource, "mimic:frame-reflection")
@@ -496,15 +575,20 @@ func (r *Realm) encodeReflectedValue(record engine.Value) (map[string]any, error
 
 func (r *Realm) reflectFrameGet(target *Realm, object engine.Value, rawKey any) (engine.Value, error) {
 	return r.crossFrameData(func(ctx context.Context) (any, error) {
-		key, err := target.decodeFrameKey(ctx, rawKey)
-		if err != nil {
-			return nil, err
-		}
-		record, err := target.callFrameReflection(ctx, "get", object, key, nil)
-		if err != nil {
-			return nil, err
-		}
-		return target.encodeReflectedValue(record)
+		var encoded map[string]any
+		err := target.runOnOwner(ctx, func(ctx context.Context) error {
+			key, err := target.decodeFrameKey(ctx, rawKey)
+			if err != nil {
+				return err
+			}
+			record, err := target.callFrameReflection(ctx, "get", object, key, nil)
+			if err != nil {
+				return err
+			}
+			encoded, err = target.encodeReflectedValue(record)
+			return err
+		})
+		return encoded, err
 	})
 }
 
