@@ -36,6 +36,9 @@ var cssShorthandsSurface string
 //go:embed css_value_grammar.js
 var cssValueGrammarSurface string
 
+//go:embed css_font_metrics.js
+var cssFontMetricsSurface string
+
 //go:embed css_animation_grammar.js
 var cssAnimationGrammarSurface string
 
@@ -68,6 +71,36 @@ var attributesCompatibilitySurface string
 
 //go:embed svg_geometry.js
 var svgGeometrySurface string
+
+//go:embed svg_text.js
+var svgTextSurface string
+
+//go:embed svg_boundaries.js
+var svgBoundariesSurface string
+
+//go:embed svg_types.js
+var svgTypesSurface string
+
+//go:embed svg_coordinates.js
+var svgCoordinatesSurface string
+
+//go:embed svg_path_metrics.js
+var svgPathMetricsSurface string
+
+//go:embed svg_use.js
+var svgUseSurface string
+
+//go:embed svg_attribute_defaults.js
+var svgAttributeDefaultsSurface string
+
+//go:embed svg_attribute_semantics.js
+var svgAttributeSemanticsSurface string
+
+//go:embed svg_reflections.js
+var svgReflectionsSurface string
+
+//go:embed svg_css_transform.js
+var svgCSSTransformSurface string
 
 //go:embed events_compatibility.js
 var eventsCompatibilitySurface string
@@ -206,12 +239,12 @@ func composeSurface(generated, exposureSource string) string {
 	streamPrelude := `{let structuredClone;try{const input=new ArrayBuffer(1),clone=globalThis.structuredClone;if(typeof clone==='function'){const output=clone(input,{transfer:[input]});if(output instanceof ArrayBuffer&&output.byteLength===1&&input.byteLength===0)structuredClone=clone}}catch{}`
 	parts := []string{capabilitySurface, generated, "finalizeBindings();", exposureSource,
 		"installNavigatorCapabilities();", cssSupportsSurface, semanticFixups, strings.Replace(domCompatibilitySurface, "/* shared_abort_encoding */", abortEncodingSurface, 1),
-		templatesCompatibilitySurface, selectorsVendorSurface, selectorsCompatibilitySurface, cssomCompatibilitySurface, svgGeometrySurface, streamPrelude,
+		templatesCompatibilitySurface, selectorsVendorSurface, selectorsCompatibilitySurface, cssomCompatibilitySurface, strings.Replace(strings.Replace(strings.Replace(strings.Replace(svgGeometrySurface, "/* shared_svg_boundaries */", svgBoundariesSurface, 1), "/* shared_svg_text */", svgTextSurface, 1), "/* shared_svg_css_transform */", svgCSSTransformSurface, 1), "/* shared_svg_types */", svgTypesSurface+svgCoordinatesSurface+svgReflectionsSurface+svgPathMetricsSurface+svgUseSurface+svgAttributeDefaultsSurface+svgAttributeSemanticsSurface, 1), streamPrelude,
 		streamsVendorSurface, "}", fetchCompatibilitySurface, formControlsSurface, traversalCompatibilitySurface, documentCompatibilitySurface, attributesCompatibilitySurface, eventsCompatibilitySurface, documentStreamSurface, shadowSerializationSurface, strings.Replace(canvasStateSurface, "/* shared_canvas_paths */", canvasPathObservationsSurface, 1), webglObservationsSource(), webgpuStateSurface, fontFacesSurface, offlineAudioSurface, marker}
 	base := strings.Replace(handwrittenSurface, "/* shared_fetch_primitives */", fetchPrimitivesSurface, 1)
 	base = strings.Replace(base, "/* shared_native_functions */", nativeFunctionsSurface, 1)
 	base = strings.Replace(base, "/* shared_base64 */", base64Surface, 1)
-	base = strings.Replace(base, "/* shared_webkit_css */", webkitCSSNamesSurface+webkitCSSSurface+cssShorthandsSurface+cssValueGrammarSurface+cssAnimationGrammarSurface, 1)
+	base = strings.Replace(base, "/* shared_webkit_css */", webkitCSSNamesSurface+webkitCSSSurface+cssShorthandsSurface+cssValueGrammarSurface+cssAnimationGrammarSurface+cssFontMetricsSurface, 1)
 	base = strings.Replace(base, "/* shared_dom_matrix */", domMatrixSurface, 1)
 	return strings.Replace(base, marker, strings.Join(parts, "\n"), 1)
 }

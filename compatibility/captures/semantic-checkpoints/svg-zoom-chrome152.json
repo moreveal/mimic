@@ -1,0 +1,161 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/svg_zoom_oracle.js",
+    "fixtureSHA256": "9ed39b738eb4511b7bb10cf2b22ccb04d1d01bd0642f3c42ce454ccbdb70bf91",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "initial": [
+      1,
+      0,
+      0,
+      [
+        2,
+        0,
+        0,
+        2,
+        0,
+        0
+      ],
+      [
+        2,
+        0,
+        0,
+        2,
+        8,
+        8
+      ],
+      [
+        2,
+        0,
+        0,
+        2,
+        0,
+        0
+      ]
+    ],
+    "zoom": [
+      3,
+      4,
+      5,
+      [
+        2,
+        0,
+        0,
+        2,
+        0,
+        0
+      ],
+      [
+        6,
+        0,
+        0,
+        6,
+        12,
+        13
+      ],
+      [
+        2,
+        0,
+        0,
+        2,
+        0,
+        0
+      ]
+    ],
+    "zero": [
+      0,
+      4,
+      5,
+      [
+        2,
+        0,
+        0,
+        2,
+        0,
+        0
+      ],
+      [
+        0,
+        0,
+        0,
+        0,
+        12,
+        13
+      ],
+      [
+        2,
+        0,
+        0,
+        2,
+        0,
+        0
+      ]
+    ],
+    "negative": [
+      -2,
+      4,
+      5,
+      [
+        2,
+        0,
+        0,
+        2,
+        0,
+        0
+      ],
+      [
+        -4,
+        0,
+        0,
+        -4,
+        12,
+        13
+      ],
+      [
+        2,
+        0,
+        0,
+        2,
+        0,
+        0
+      ]
+    ],
+    "detached": [
+      1,
+      4,
+      5,
+      [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0
+      ]
+    ]
+  }
+}

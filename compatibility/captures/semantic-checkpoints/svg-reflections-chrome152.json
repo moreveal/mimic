@@ -1,0 +1,81 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/svg_reflections_oracle.js",
+    "fixtureSHA256": "1cd9f4541a3df42e4c1f28a6f342c6c46e7f83f81ec2d0b18f5972cf651e7fd4",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "identities": [
+      true,
+      true,
+      true,
+      false
+    ],
+    "attribute": [
+      100,
+      "50%",
+      100
+    ],
+    "write": [
+      "10%",
+      "10%"
+    ],
+    "readonly": "NoModificationAllowedError",
+    "invalid": [
+      0,
+      1,
+      "0"
+    ],
+    "list": [
+      2,
+      2,
+      true,
+      false,
+      1,
+      2,
+      false
+    ],
+    "itemWrite": "7 2 3 4",
+    "reparse": [
+      7,
+      10,
+      false
+    ],
+    "append": [
+      false,
+      3,
+      "10 20 30 40 8 9"
+    ],
+    "move": [
+      false,
+      4,
+      "10 20 30 40 8 9 10 20"
+    ],
+    "listReadonly": "NoModificationAllowedError",
+    "index-1": "IndexSizeError",
+    "index99": "IndexSizeError",
+    "indexNaN": 10,
+    "indexundefined": 10,
+    "transforms": [
+      2,
+      2,
+      5,
+      6
+    ],
+    "matrixWrite": "matrix(1 0 0 1 9 6) scale(2 2)",
+    "consolidate": [
+      1,
+      false,
+      1,
+      2,
+      9
+    ]
+  }
+}

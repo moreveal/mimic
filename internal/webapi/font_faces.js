@@ -5,7 +5,7 @@
  if(typeof globalThis.FontFace!=='function'||typeof globalThis.FontFaceSet!=='function')return;
  const faces=new WeakMap(),sets=new WeakMap(),owners=new WeakMap();
  const syntax=()=>new DOMException('Invalid font descriptor','SyntaxError');
- const unsupported=()=>{host.semanticMissing('FontFace.fontResourceLoading');return new DOMException('Font resource loading is not supported','NotSupportedError')};
+ const unsupported=()=>{host.semanticMissingAt('font_faces.js:8','FontFace.fontResourceLoading');return new DOMException('Font resource loading is not supported','NotSupportedError')};
  const requireFace=value=>{const s=faces.get(value);if(!s)throw new TypeError('Illegal invocation');return s};
  const requireSet=value=>{const s=sets.get(value);if(!s)throw new TypeError('Illegal invocation');return s};
  const defaults={style:'normal',weight:'normal',stretch:'normal',unicodeRange:'U+0-10FFFF',variant:'normal',featureSettings:'normal',variationSettings:'normal',display:'auto',ascentOverride:'normal',descentOverride:'normal',lineGapOverride:'normal',sizeAdjust:'100%'};

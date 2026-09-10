@@ -1,0 +1,384 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/svg_values_oracle.js",
+    "fixtureSHA256": "b28c3b20e43cd6dec0a855892ca5feb12000f607e3c71ff832af3885ac0b5c9f",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "createSVGNumber": {
+      "type": "[object SVGNumber]",
+      "proto": "SVGNumber",
+      "keys": [],
+      "values": {
+        "value": 0
+      }
+    },
+    "createSVGLength": {
+      "type": "[object SVGLength]",
+      "proto": "SVGLength",
+      "keys": [],
+      "values": {
+        "value": 0,
+        "valueInSpecifiedUnits": 0,
+        "valueAsString": "0",
+        "unitType": 1
+      }
+    },
+    "createSVGAngle": {
+      "type": "[object SVGAngle]",
+      "proto": "SVGAngle",
+      "keys": [],
+      "values": {
+        "value": 0,
+        "valueInSpecifiedUnits": 0,
+        "valueAsString": "0",
+        "unitType": 1
+      }
+    },
+    "createSVGPoint": {
+      "type": "[object SVGPoint]",
+      "proto": "SVGPoint",
+      "keys": [],
+      "values": {
+        "x": 0,
+        "y": 0
+      }
+    },
+    "createSVGRect": {
+      "type": "[object SVGRect]",
+      "proto": "SVGRect",
+      "keys": [],
+      "values": {
+        "x": 0,
+        "y": 0,
+        "width": 0,
+        "height": 0
+      }
+    },
+    "createSVGMatrix": {
+      "type": "[object SVGMatrix]",
+      "proto": "SVGMatrix",
+      "keys": [],
+      "values": {
+        "a": 1,
+        "b": 0,
+        "c": 0,
+        "d": 1,
+        "e": 0,
+        "f": 0
+      }
+    },
+    "createSVGTransform": {
+      "type": "[object SVGTransform]",
+      "proto": "SVGTransform",
+      "keys": [],
+      "values": {
+        "type": 1,
+        "angle": 0
+      }
+    },
+    "matrixOps": [
+      [
+        2,
+        0,
+        0,
+        3,
+        14,
+        18
+      ],
+      [
+        4,
+        0,
+        0,
+        6,
+        4,
+        0
+      ],
+      [
+        0.5,
+        0,
+        0,
+        0.3333333333333333,
+        -2,
+        0
+      ],
+      [
+        1.2246467991473532e-16,
+        3,
+        -2,
+        1.8369701987210297e-16,
+        4,
+        0
+      ],
+      false
+    ],
+    "point": [
+      2,
+      3,
+      7,
+      9,
+      false
+    ],
+    "length": [
+      [
+        5,
+        12,
+        12,
+        "12px"
+      ],
+      [
+        6,
+        96,
+        2.5399999618530273,
+        "2.54cm"
+      ],
+      "NotSupportedError",
+      "NotSupportedError",
+      "SyntaxError",
+      [
+        5,
+        -3,
+        -3,
+        "-3px"
+      ]
+    ],
+    "angle": [
+      [
+        2,
+        90,
+        90,
+        "90deg"
+      ],
+      [
+        3,
+        85.94366455078125,
+        1.5,
+        "1.5rad"
+      ],
+      [
+        4,
+        90,
+        100,
+        "100grad"
+      ],
+      "SyntaxError",
+      "SyntaxError"
+    ],
+    "transform": [
+      true,
+      2,
+      0,
+      5,
+      6
+    ],
+    "reflect-rect": {
+      "x": [
+        "[object SVGAnimatedLength]",
+        true,
+        true,
+        "object",
+        0
+      ],
+      "y": [
+        "[object SVGAnimatedLength]",
+        true,
+        true,
+        "object",
+        0
+      ],
+      "width": [
+        "[object SVGAnimatedLength]",
+        true,
+        true,
+        "object",
+        0
+      ],
+      "height": [
+        "[object SVGAnimatedLength]",
+        true,
+        true,
+        "object",
+        0
+      ],
+      "rx": [
+        "[object SVGAnimatedLength]",
+        true,
+        true,
+        "object",
+        0
+      ],
+      "ry": [
+        "[object SVGAnimatedLength]",
+        true,
+        true,
+        "object",
+        0
+      ],
+      "pathLength": [
+        "[object SVGAnimatedNumber]",
+        true,
+        true,
+        "number",
+        null
+      ],
+      "transform": [
+        "[object SVGAnimatedTransformList]",
+        true,
+        true,
+        "object",
+        null
+      ],
+      "className": [
+        "[object SVGAnimatedString]",
+        true,
+        true,
+        "string",
+        null
+      ]
+    },
+    "reflect-text": {
+      "x": [
+        "[object SVGAnimatedLengthList]",
+        true,
+        true,
+        "object",
+        null
+      ],
+      "y": [
+        "[object SVGAnimatedLengthList]",
+        true,
+        true,
+        "object",
+        null
+      ],
+      "transform": [
+        "[object SVGAnimatedTransformList]",
+        true,
+        true,
+        "object",
+        null
+      ],
+      "className": [
+        "[object SVGAnimatedString]",
+        true,
+        true,
+        "string",
+        null
+      ]
+    },
+    "reflect-svg": {
+      "error": "NotSupportedError"
+    },
+    "reflect-use": {
+      "x": [
+        "[object SVGAnimatedLength]",
+        true,
+        true,
+        "object",
+        0
+      ],
+      "y": [
+        "[object SVGAnimatedLength]",
+        true,
+        true,
+        "object",
+        0
+      ],
+      "width": [
+        "[object SVGAnimatedLength]",
+        true,
+        true,
+        "object",
+        0
+      ],
+      "height": [
+        "[object SVGAnimatedLength]",
+        true,
+        true,
+        "object",
+        0
+      ],
+      "href": [
+        "[object SVGAnimatedString]",
+        true,
+        true,
+        "string",
+        null
+      ],
+      "transform": [
+        "[object SVGAnimatedTransformList]",
+        true,
+        true,
+        "object",
+        null
+      ],
+      "className": [
+        "[object SVGAnimatedString]",
+        true,
+        true,
+        "string",
+        null
+      ]
+    },
+    "reflect-path": {
+      "pathLength": [
+        "[object SVGAnimatedNumber]",
+        true,
+        true,
+        "number",
+        null
+      ],
+      "transform": [
+        "[object SVGAnimatedTransformList]",
+        true,
+        true,
+        "object",
+        null
+      ],
+      "className": [
+        "[object SVGAnimatedString]",
+        true,
+        true,
+        "string",
+        null
+      ]
+    },
+    "reflect-polygon": {
+      "pathLength": [
+        "[object SVGAnimatedNumber]",
+        true,
+        true,
+        "number",
+        null
+      ],
+      "points": [
+        "[object SVGPointList]",
+        true,
+        true,
+        "undefined",
+        null
+      ],
+      "transform": [
+        "[object SVGAnimatedTransformList]",
+        true,
+        true,
+        "object",
+        null
+      ],
+      "className": [
+        "[object SVGAnimatedString]",
+        true,
+        true,
+        "string",
+        null
+      ]
+    }
+  }
+}

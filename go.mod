@@ -13,6 +13,7 @@ require (
 	github.com/bogdanfinn/tls-client v1.16.0
 	github.com/bogdanfinn/utls v1.7.8-barnius
 	github.com/dop251/goja v0.0.0-20260906210903-70ad66ec7ce4
+	github.com/go-text/typesetting v0.3.4
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/websocket v1.5.3
 	github.com/klauspost/compress v1.18.2
@@ -29,6 +30,7 @@ require (
 	github.com/quic-go/qpack v0.6.0 // indirect
 	github.com/tam7t/hpkp v0.0.0-20160821193359-2b70b4024ed5 // indirect
 	golang.org/x/crypto v0.48.0 // indirect
+	golang.org/x/image v0.23.0 // indirect
 	golang.org/x/sys v0.41.0 // indirect
 )
 

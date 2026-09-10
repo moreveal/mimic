@@ -6,7 +6,7 @@
     /* shared_glsl_observations */
     if(typeof WebGLShaderPrecisionFormat==='function')for(const name of ['rangeMin','rangeMax','precision']){const get=function(){const data=precisionFormats.get(this);if(!data)throw new TypeError('Illegal invocation');return data[name]};if(typeof markNative==='function')markNative(get,name,'get ');Object.defineProperty(WebGLShaderPrecisionFormat.prototype,name,{get,enumerable:true,configurable:true})}
     const graphics=typeof host.graphics==='function'?host.graphics():{},capabilities=JSON.parse(graphics.capabilitiesJSON||'{}');
-    const fail=name=>{host.semanticMissing('WebGL.'+name);throw new DOMException('WebGL '+name+' requires an unsupported graphics operation.','NotSupportedError')};
+    const fail=name=>{host.semanticMissingAt('webgl_state.js:9','WebGL.'+name);throw new DOMException('WebGL '+name+' requires an unsupported graphics operation.','NotSupportedError')};
     const check=value=>{const s=slots.get(value);if(!s)throw new TypeError('Illegal invocation');return s};
     const error=(s,code)=>{if(!s.error)s.error=code};
     const resource=(s,value,type)=>{const r=resources.get(value);if(!r||r.type!==type)throw new TypeError('Expected '+type);if(r.owner!==s||r.deleted){error(s,1282);return null}return r};
