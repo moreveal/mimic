@@ -83,6 +83,13 @@ type EvalSourceRuntime interface {
 
 type Factory interface{ New() Runtime }
 
+// UndetectableRuntime creates a native callable object with HTMLDDA operator
+// semantics. Property operations are delegated to realm-owned JS handlers;
+// an ordinary JS Proxy cannot preserve the native undetectable flag.
+type UndetectableRuntime interface {
+	NewUndetectableObject(handlers Value) (Value, error)
+}
+
 // ArrayBufferDetacher supplies real backing-store detachment where the engine
 // does not expose ArrayBuffer.prototype.transfer. Call only on the realm actor.
 type ArrayBufferDetacher interface {

@@ -1,0 +1,14 @@
+/build/
+/.idea/
+/rust-oracle/target/
+/rust-oracle/tmp-*.txt
+
+*.exe
+*.dll
+*.lib
+*.obj
+*.pdb
+*.out
+*.prof
+*.pprof
+*.trace

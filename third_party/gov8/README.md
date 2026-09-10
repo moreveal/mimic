@@ -1,0 +1,371 @@
+# gov8 — Go bindings for V8
+
+[![Go Reference](https://pkg.go.dev/badge/github.com/maclof/gov8.svg)](https://pkg.go.dev/github.com/maclof/gov8)
+[![windows-amd64](https://github.com/maclof/gov8/actions/workflows/windows-amd64.yml/badge.svg?branch=master)](https://github.com/maclof/gov8/actions/workflows/windows-amd64.yml)
+
+Embed Google's V8 JavaScript engine in Go with a typed API and a packaged
+Windows runtime. Applications install with `go get` and run without requiring
+Rust, Visual Studio, a C/C++ compiler, or a separate V8 download.
+
+## Highlights
+
+- **Real V8** — execute JavaScript and WebAssembly using the engine from Chrome.
+- **Go and JavaScript interop** — expose Go callbacks to JavaScript and call
+  JavaScript functions from Go.
+- **Zero-build application setup** — the verified Windows amd64 runtime is
+  included in the Go module and extracted automatically.
+- **Audited behavior** — a pinned `rusty_v8` oracle runs matching fixtures and
+  benchmarks against the Go implementation.
+- **Broad safe API coverage** — isolates, contexts, handle scopes, scripts,
+  callbacks, promises, modules, WebAssembly, snapshots, and Inspector.
+
+The public API follows the safe executable surface of the pinned Rust
+[`v8`](https://crates.io/crates/v8) crate while preserving V8's explicit
+ownership, lifetime, and thread-affinity rules.
+
+## Requirements
+
+`gov8` currently supports **Windows amd64 only**. It uses the same pinned MSVC
+V8 artifact as the Rust reference; Windows arm64, MinGW, macOS, and Linux are
+not supported.
+
+Applications using `gov8` need only:
+
+- Go 1.24 or newer
+
+The current engine is V8 `15.2.124.1-rusty`, from Rust `v8 = 152.2.0`.
+
+## Install
+
+Add the module, then run your program normally:
+
+```powershell
+go get github.com/maclof/gov8@latest
+go run .
+```
+
+No Rust, Visual Studio, C compiler, PowerShell setup script, or runtime download
+is needed by applications. The module contains a gzip-compressed, pinned
+Windows amd64 shim. On first use it verifies and extracts that DLL to a
+content-addressed directory below the user's OS cache; later runs verify and
+reuse the same file. The module adds about 18 MB to a program binary and uses
+about 46 MB in the per-user cache.
+
+`GOV8_SHIM_DLL` remains available as a trusted developer override. The file
+must be a matching Windows amd64 shim with the module's exact ABI:
+
+```powershell
+$env:GOV8_SHIM_DLL = 'C:\path\to\gov8\build\shim\gov8_shim.dll'
+go run .
+```
+
+Maintainers who need to rebuild the native shim or run the Rust oracle also
+need Rust 1.98, Visual Studio with the MSVC C++ x64 build tools, and PowerShell:
+
+```powershell
+git clone https://github.com/maclof/gov8.git
+Set-Location gov8
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\setup_windows.ps1
+$env:GOV8_SHIM_DLL = (Resolve-Path build\shim\gov8_shim.dll)
+go test ./...
+```
+
+The setup script downloads or reuses the pinned inputs, verifies their SHA-256
+digests, and atomically writes `build\shim\gov8_shim.dll`.
+
+When intentionally updating the packaged shim after a source change, rebuild
+it and regenerate the deterministic gzip asset:
+
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File scripts\setup_windows.ps1
+go run ./internal/cmd/package-shim
+```
+
+## Run JavaScript
+
+An isolate is the closest V8 equivalent to a standalone VM. A context supplies
+its global environment, and a scope owns temporary V8 values:
+
+```go
+package main
+
+import (
+	"fmt"
+	"log"
+
+	gov8 "github.com/maclof/gov8"
+)
+
+func run() error {
+	if err := gov8.Initialize(); err != nil {
+		return err
+	}
+	defer gov8.Shutdown()
+
+	iso, err := gov8.NewIsolate()
+	if err != nil {
+		return err
+	}
+	defer iso.Close()
+	defer gov8.ReleaseIsolateHostState(iso)
+
+	ctx, err := iso.NewContext()
+	if err != nil {
+		return err
+	}
+	defer ctx.Close()
+
+	scope, err := iso.NewScope()
+	if err != nil {
+		return err
+	}
+	defer scope.Close()
+
+	script, err := ctx.Compile(scope, `21 * 2`, nil)
+	if err != nil {
+		return err
+	}
+	defer script.Close()
+
+	result, err := script.Run(scope, nil)
+	if err != nil {
+		return err
+	}
+	n, ok, err := result.IntegerValue(ctx)
+	if err != nil {
+		return err
+	}
+	if !ok {
+		return fmt.Errorf("JavaScript result is not an integer")
+	}
+	fmt.Println(n) // 42
+	return nil
+}
+
+func main() {
+	if err := run(); err != nil {
+		log.Fatal(err)
+	}
+}
+```
+
+The same program lives in [`examples/basic/main.go`](examples/basic/main.go).
+
+## Call Go from JavaScript
+
+Create a V8 function backed by a Go callback, then put it on the context's
+global object. This snippet assumes the `iso`, `ctx`, and `scope` from the
+previous example:
+
+```go
+add, err := iso.NewFunction(scope, ctx,
+	func(cs *gov8.CallbackScope, args gov8.FunctionCallbackArguments, rv gov8.ReturnValue) {
+		if args.Length() < 2 {
+			return // an unset return slot becomes JavaScript undefined
+		}
+		a, err := args.Get(0)
+		if err != nil {
+			return
+		}
+		b, err := args.Get(1)
+		if err != nil {
+			return
+		}
+		av, aok, err := cs.IntegerValue(a)
+		if err != nil || !aok {
+			return
+		}
+		bv, bok, err := cs.IntegerValue(b)
+		if err != nil || !bok {
+			return
+		}
+		_ = rv.SetInt32(int32(av + bv))
+	}, nil)
+if err != nil {
+	return err
+}
+
+global, err := ctx.GlobalObject(scope)
+if err != nil {
+	return err
+}
+set, err := global.SetByName(scope, ctx, "add", add.Value)
+if err != nil {
+	return err
+}
+if !set {
+	return fmt.Errorf("could not define global add")
+}
+
+script, err := ctx.Compile(scope, `add(20, 22)`, nil)
+if err != nil {
+	return err
+}
+defer script.Close()
+sum, err := script.Run(scope, nil)
+if err != nil {
+	return err
+}
+sumText, err := sum.ToString(ctx)
+if err != nil {
+	return err
+}
+fmt.Println(sumText) // 42
+```
+
+Callback arguments, return values, and values created through `CallbackScope`
+are borrowed views valid only during that callback. Do not retain them. To turn
+a callback failure into a JavaScript exception, create an error with
+`cs.NewError` and pass it to `cs.ThrowException`.
+
+## Call JavaScript from Go
+
+Evaluate a function, check its type, and call it with a receiver and arguments:
+
+```go
+script, err := ctx.Compile(scope,
+	`(function (name) { return "Hello, " + name + "!" })`, nil)
+if err != nil {
+	return err
+}
+defer script.Close()
+
+value, err := script.Run(scope, nil)
+if err != nil {
+	return err
+}
+fn, ok, err := gov8.AsFunction(value, ctx)
+if err != nil {
+	return err
+}
+if !ok {
+	return fmt.Errorf("script did not return a function")
+}
+
+receiver, err := scope.Undefined()
+if err != nil {
+	return err
+}
+name, err := scope.NewString("Go")
+if err != nil {
+	return err
+}
+greeting, called, err := fn.Call(scope, receiver, name)
+if err != nil {
+	return err
+}
+if !called {
+	return fmt.Errorf("JavaScript function threw")
+}
+text, err := greeting.ToString(ctx) // "Hello, Go!"
+if err != nil {
+	return err
+}
+fmt.Println(text)
+```
+
+## Exceptions and errors
+
+Ordinary misuse, lifecycle failures, and uncaught JavaScript exceptions are
+returned as Go errors. APIs such as `Compile` and `Run` take an optional
+`*gov8.TryCatch`: pass `nil` when the error is enough, or pass a catcher when
+you need the JavaScript exception or message.
+
+```go
+tc, err := iso.NewTryCatch()
+if err != nil {
+	return err
+}
+defer tc.Close()
+
+script, err := ctx.Compile(scope, `throw new Error("boom")`, tc)
+if err != nil {
+	return err
+}
+defer script.Close()
+
+if _, err := script.Run(scope, tc); err != nil {
+	caught, catchErr := tc.HasCaught()
+	if catchErr != nil {
+		return catchErr
+	}
+	if caught {
+		message, catchErr := tc.ExceptionText(scope, ctx)
+		if catchErr != nil {
+			return catchErr
+		}
+		fmt.Println(message) // Error: boom
+	}
+}
+```
+
+## Lifetimes and threads
+
+V8's ownership rules are visible in the API:
+
+- Call `Initialize` once before creating isolates, then call `Shutdown` only
+  after every isolate is closed.
+- `NewIsolate` locks the creating goroutine to its OS thread. Use the isolate
+  and close it from that same goroutine; a different isolate can run on its own
+  goroutine.
+- Close resources in dependency order: scripts and scopes, contexts,
+  `ReleaseIsolateHostState`, isolate, then the global platform.
+- Scopes must nest. Closing a scope invalidates every local `Value` created in
+  it. Use persistent handles such as `Global` when a value must survive a scope.
+- Never retain callback-borrowed arguments, return slots, or callback-scope
+  values after the callback returns.
+- Check every `error`, and check accompanying `ok` booleans where an operation
+  can fail without a Go error or JavaScript can throw.
+
+## Verify and benchmark
+
+From the repository root:
+
+```powershell
+go test ./... -count=1
+go test -race ./... -count=1
+go vet ./...
+
+# One quick Go benchmark smoke run.
+go test . -run '^$' -bench '^BenchmarkScriptRunPrecompiledWorkload$' -benchtime=1x
+
+# Rust oracle and benchmark smoke run.
+Push-Location rust-oracle
+cargo test --locked
+cargo bench --locked --bench script -- --test
+Pop-Location
+```
+
+Matched benchmark reports and their environment metadata are kept in
+[`rust-oracle/bench-results`](rust-oracle/bench-results/).
+
+## Project status
+
+The current suite contains 526 normalized cross-language fixture checks: 525
+are exact and 1 uses a documented safety normalization. The declaration ledger
+records 1,698 direct matches, 10 intentional Go-shape differences, no safe
+executable gaps, and 149 intentionally unexposed
+raw/borrowed/generic Rust shapes.
+
+This does not mean every Rust ownership or generic type has a literal Go
+spelling, and it is not a performance-parity claim. The audited safe executable
+surface has feature and behavioral parity; intentional Go safety shapes and
+measured performance gaps are tracked openly. The raw CreateParams stack-limit
+pointer is omitted, and the oracle confirms pinned V8 overwrites it before
+JavaScript execution.
+
+- [`PARITY.md`](PARITY.md) - feature coverage, behavior notes, and performance
+  evidence
+- [`API_AUDIT.md`](API_AUDIT.md) - declaration-level API audit
+- [`rust-oracle/README.md`](rust-oracle/README.md) - pinned versions, oracle
+  workflow, and reproducibility details
+
+Contributions should include tests for success, failure, exception, lifetime,
+and concurrency behavior where applicable, plus matched benchmarks for hot
+paths.
+
+## License
+
+gov8 is available under the [MIT License](LICENSE). The packaged native shim
+also contains third-party software covered by the notices in
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

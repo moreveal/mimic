@@ -492,7 +492,7 @@
     if(value===undefined)return{kind:'undefined'};
     if(typeof value==='symbol')return{kind:'symbol',key:encodeCrossRealmKey(value)};
     if(typeof value==='bigint')return{kind:'bigint',value:String(value)};
-    if((typeof value==='object'&&value!==null)||typeof value==='function'){
+    if((typeof value==='object'&&value!==null)||typeof value==='function'||typeof value==='undefined'){
       const reference=referenceGet(value);if(reference)return{kind:'reference',...reference};
       const local=host.frameReference(value);
       return{kind:'reference',frame:local.frame,realm:local.realm,handle:local.handle,type:local.__mimicCrossRealm,array:local.array,constructable:local.constructable};
@@ -523,7 +523,7 @@
     if(kind==='symbol')return decodeCrossRealmKey(result);
     if(kind==='bigint')return BigInt(result.value);
     if(kind==='window')return remoteWindow(result.frame);if(kind==='document')return remoteDocument(result.frame);
-    if(kind!=='object'&&kind!=='function')return result;
+    if(kind!=='object'&&kind!=='function'&&kind!=='undetectable')return result;
     if(id===host.selfFrameID())return host.frameResolve(result.handle,result.realm);
     const key=id+':'+String(result.realm||'')+':'+result.handle;if(crossRealmCache.has(key))return crossRealmCache.get(key);
     // Bound callables have no nonconfigurable prototype/caller/arguments of
@@ -531,7 +531,7 @@
     const target=kind==='function'?(result.constructable?(function(){}).bind(null):()=>{}):result.array?[]:Object.create(null);
     for(const name of Reflect.ownKeys(target))if(Object.getOwnPropertyDescriptor(target,name).configurable)delete target[name];
     const unsupported=operation=>{host.semanticMissingAt('surface.js:513','CrossRealm.'+operation);throw new DOMException('Cross-realm '+operation+' is not implemented','NotSupportedError')};
-    const proxy=new Proxy(target,{
+    const traps={
       get(_target,property){return unwrapCrossRealm(id,host.frameGet(id,result.handle,encodeCrossRealmKey(property),result.realm))},
       set(_target,property,value){return host.frameSet(id,result.handle,encodeCrossRealmKey(property),encodeCrossRealmArgument(value),result.realm)},
       has(_target,property){return host.frameHas(id,result.handle,encodeCrossRealmKey(property),result.realm)},
@@ -562,18 +562,37 @@
         if(!descriptor.configurable)Object.defineProperty(target,property,descriptor);
         return descriptor;
       }
-    });
+    };
+    // A Proxy cannot preserve [[IsHTMLDDA]]. Import an engine-native
+    // undetectable object while retaining the original realm's identity.
+    const proxy=kind==='undetectable'?host.createUndetectable({
+      __proto__:null,
+      call(args,construct,receiver){if(construct)throw new TypeError('Illegal constructor');return traps.apply(target,receiver,args)},
+      get(property){return traps.has(target,property)?[true,traps.get(target,property)]:[false]},
+      set(property,value){return[true,traps.set(target,property,value)]},
+      deleteProperty(property){return[true,traps.deleteProperty(target,property)]},
+      defineProperty(property,descriptor){return[true,traps.defineProperty(target,property,descriptor)]},
+      getOwnPropertyDescriptor(property){const descriptor=traps.getOwnPropertyDescriptor(target,property);return descriptor===undefined?[false]:[true,descriptor]},
+      ownKeys(){return traps.ownKeys()}
+    }):new Proxy(target,traps);
     if(result.nodeId){const data=host.nodeData(result.nodeId);if(data){elementData.set(proxy,data);elementWrappers.set(String(result.nodeId),proxy)}}
-    referenceSet(proxy,{frame:id,realm:result.realm,handle:result.handle,type:kind,array:result.array,constructable:result.constructable,nodeId:result.nodeId});crossRealmCache.set(key,proxy);return proxy;
+    referenceSet(proxy,{frame:id,realm:result.realm,handle:result.handle,type:kind,array:result.array,constructable:result.constructable,nodeId:result.nodeId});crossRealmCache.set(key,proxy);
+    // Native undetectable objects cannot intercept [[GetPrototypeOf]]. This
+    // preserves the initial remote prototype identity, but later replacement
+    // of the owner's prototype is not reflected by this bridge wrapper.
+    if(kind==='undetectable')Object.setPrototypeOf(proxy,traps.getPrototypeOf());
+    return proxy;
   };
+  const bridgeOriginalEval=eval;let bridgeOriginalPostMessage;
   registerBootstrapCallback('installFrameReferenceBridge',
     encoded=>unwrapCrossRealm(encoded.frame,encoded),
     value=>{
-      if(value===null||(typeof value!=='object'&&typeof value!=='function'))return null;
+      if(value===null||value===undefined||(typeof value!=='object'&&typeof value!=='function'&&typeof value!=='undefined'))return null;
       const reference=referenceGet(value);if(reference)return{...reference,__mimicCrossRealm:reference.type};
       return null;
-    },value=>bridgeApply(bridgeWeakGet,elementData,[value])?.nodeId||0);
-  const remoteWindow=id=>{if(id===host.selfFrameID())return globalThis;if(remoteWindowCache.has(id))return remoteWindowCache.get(id);let proxy;const frameEval=new Proxy(eval,{apply(_target,_this,args){const value=args[0],source=typeof value==='string'?value:evalSourceResolver(value);if(source===undefined){host.frameEval(id);return value}return unwrapCrossRealm(id,host.frameEval(id,source))}}),framePost=new Proxy(function postMessage(){},{apply(_target,_this,args){return host.framePost(id,args[0],args[1]===undefined?'/':String(args[1]),takeMessagePorts(args[2]))}});markNative(frameEval,'eval');markNative(framePost,'postMessage');const target={eval:frameEval,postMessage:framePost};Object.defineProperty(target,Symbol.toStringTag,{value:'Window'});proxy=new Proxy(target,{get(t,p,r){if(p==='window'||p==='self')return proxy;if(p==='document')return remoteDocument(id);if(p==='location')return Object.freeze({href:host.frameLocation(id),toString(){return this.href}});if(p==='parent'||p==='top')return remoteWindow(host.frameRelation(id,p));if(Reflect.has(t,p)){if(typeof p==='string')recordAPIAccess('WindowProxy.'+p,true);return Reflect.get(t,p,r)}if(typeof p!=='string')return undefined;const value=unwrapCrossRealm(id,host.frameGlobalGet(id,p));recordAPIAccess('WindowProxy.'+p,value!==undefined);return value},set(t,p,v,r){host.semanticMissingAt('surface.js:556','WindowProxy.'+String(p)+' setter');return Reflect.set(t,p,v,r)}});remoteWindowCache.set(id,proxy);return proxy};
+    },value=>bridgeApply(bridgeWeakGet,elementData,[value])?.nodeId||0,
+    key=>{const value=Reflect.get(globalThis,key);return{value,intrinsic:key==='eval'&&value===bridgeOriginalEval||key==='postMessage'&&value===bridgeOriginalPostMessage}});
+  const remoteWindow=id=>{if(id===host.selfFrameID())return globalThis;if(remoteWindowCache.has(id))return remoteWindowCache.get(id);let proxy;const frameEval=new Proxy(eval,{apply(_target,_this,args){const value=args[0],source=typeof value==='string'?value:evalSourceResolver(value);if(source===undefined){host.frameEval(id);return value}return unwrapCrossRealm(id,host.frameEval(id,source))}}),framePost=new Proxy(function postMessage(){},{apply(_target,_this,args){return host.framePost(id,args[0],args[1]===undefined?'/':String(args[1]),takeMessagePorts(args[2]))}});markNative(frameEval,'eval');markNative(framePost,'postMessage');const target={eval:frameEval,postMessage:framePost};Object.defineProperty(target,Symbol.toStringTag,{value:'Window'});proxy=new Proxy(target,{get(t,p,r){if(p==='window'||p==='self')return proxy;if(p==='document')return remoteDocument(id);if(p==='location')return Object.freeze({href:host.frameLocation(id),toString(){return this.href}});if(p==='parent'||p==='top')return remoteWindow(host.frameRelation(id,p));if(p===Symbol.toStringTag)return'Window';const encoded=host.frameGlobalGet(id,encodeCrossRealmKey(p));if(encoded.intrinsic&&(p==='eval'||p==='postMessage'))return Reflect.get(t,p,r);const value=unwrapCrossRealm(id,encoded);if(typeof p==='string')recordAPIAccess('WindowProxy.'+p,value!==undefined);return value},set(t,p,v,r){return unwrapCrossRealm(id,host.frameGlobalSet(id,encodeCrossRealmKey(p),encodeCrossRealmArgument(v)))}});remoteWindowCache.set(id,proxy);return proxy};
   const xhrSlots=new WeakMap(),xhrState=xhr=>xhrSlots.get(xhr);
   const fireXHREvent=(xhr,type)=>dispatchTrusted(xhr,new Event(type)),setXHRState=(xhr,value)=>{xhrState(xhr).readyState=value;fireXHREvent(xhr,'readystatechange')};
   class XMLHttpRequest extends EventTarget { constructor(){super();xhrSlots.set(this,{readyState:0,status:0,statusText:'',responseText:'',responseURL:'',responseType:'',timeout:0,withCredentials:false,onreadystatechange:null,onload:null,onerror:null,ontimeout:null,onloadend:null,requestHeaders:{},requestHeaderOrder:[],responseHeaders:{},sent:false,method:'GET',url:'',async:true})} open(method,url,async=true,user,password){method=String(method).toUpperCase();if(!method||/[^A-Z-]/.test(method))throw new DOMException('Invalid HTTP method','SyntaxError');const state=xhrState(this);state.method=method;state.url=String(url);state.async=Boolean(async);state.sent=false;state.requestHeaders={};state.requestHeaderOrder=[];state.status=0;state.responseText='';state.responseURL='';setXHRState(this,1)} setRequestHeader(name,value){const state=xhrState(this);if(state.readyState!==1||state.sent)throw new DOMException("The object's state must be OPENED.",'InvalidStateError');name=String(name).trim().toLowerCase();value=String(value).trim();if(!name||/[^!#$%&'*+.^_`|~0-9a-z-]/i.test(name)||/[\0\r\n]/.test(value))throw new DOMException('Invalid HTTP header','SyntaxError');if(state.requestHeaders[name]===undefined)state.requestHeaderOrder.push(name);state.requestHeaders[name]=state.requestHeaders[name]?state.requestHeaders[name]+', '+value:value} getResponseHeader(name){const state=xhrState(this);if(state.readyState<2)return null;const value=state.responseHeaders[String(name).toLowerCase()];return value===undefined?null:value} getAllResponseHeaders(){const state=xhrState(this);if(state.readyState<2)return'';return Object.keys(state.responseHeaders).sort().map(k=>k+': '+state.responseHeaders[k]+'\r\n').join('')} send(body=null){const state=xhrState(this);if(state.readyState!==1||state.sent)throw new DOMException("The object's state must be OPENED.",'InvalidStateError');state.sent=true;host.xhr(result=>{if(result.error){state.status=0;setXHRState(this,4);fireXHREvent(this,result.error);fireXHREvent(this,'loadend');return}state.status=result.status;state.statusText=result.statusText;state.responseURL=result.responseURL;state.responseHeaders=result.responseHeaders||{};setXHRState(this,2);setXHRState(this,3);state.responseText=result.responseText||'';setXHRState(this,4);fireXHREvent(this,'load');fireXHREvent(this,'loadend')},state.method,state.url,state.requestHeaders,body==null?'':String(body),Number(state.timeout)||0,state.requestHeaderOrder,Boolean(state.withCredentials))} abort(){const state=xhrState(this);state.sent=false;state.status=0;state.responseText='';setXHRState(this,0)} }
@@ -611,7 +630,7 @@
   window.chrome={loadTimes:chromeLoadTimes,csi:chromeCSI,app:chromeApp};
   def(window,'innerWidth',{get:()=>host.viewport().width});def(window,'innerHeight',{get:()=>host.viewport().height});def(window,'outerWidth',{get:()=>host.viewport().outerWidth});def(window,'outerHeight',{get:()=>host.viewport().outerHeight});def(window,'devicePixelRatio',{get:()=>host.screen().devicePixelRatio});
   const timerHandler=(handler,args)=>typeof handler==='function'?()=>handler(...args):(()=>{const source=String(handler);return()=>eval(source)})();window.setTimeout=function setTimeout(handler,timeout=0,...args){return host.setTimer(timerHandler(handler,args),Number(timeout),false)};window.setInterval=function setInterval(handler,timeout=0,...args){return host.setTimer(timerHandler(handler,args),Number(timeout),true)};window.clearTimeout=function clearTimeout(id){return host.clearTimer(Number(id))};window.clearInterval=function clearInterval(id){return host.clearTimer(Number(id))};window.requestAnimationFrame=function requestAnimationFrame(callback){if(typeof callback!=='function')throw new TypeError('callback is not a function');return host.setTimer(()=>callback(performance.now()),16,false)};window.cancelAnimationFrame=function cancelAnimationFrame(id){return host.clearTimer(Number(id))};
-  window.postMessage=function postMessage(message,targetOrigin='/',transfer=[]){if(targetOrigin&&typeof targetOrigin==='object'){transfer=targetOrigin.transfer||[];targetOrigin=targetOrigin.targetOrigin===undefined?'/':targetOrigin.targetOrigin}return host.framePost(host.selfFrameID(),message,String(targetOrigin),takeMessagePorts(transfer))};
+  window.postMessage=bridgeOriginalPostMessage=function postMessage(message,targetOrigin='/',transfer=[]){if(targetOrigin&&typeof targetOrigin==='object'){transfer=targetOrigin.transfer||[];targetOrigin=targetOrigin.targetOrigin===undefined?'/':targetOrigin.targetOrigin}return host.framePost(host.selfFrameID(),message,String(targetOrigin),takeMessagePorts(transfer))};
   window.queueMicrotask=function queueMicrotask(callback){if(typeof callback!=='function')throw new TypeError('callback is not a function');Promise.resolve().then(callback)};
   window.fetch=function fetch(input,init={}){const request=input instanceof Request?new Request(input,init):new Request(input,init);return host.fetch(request.url,request.method,Object.fromEntries(request.headers),request.body==null?'':String(request.body)).then(r=>{const response=new Response(r.body,{status:r.status,headers:r.headers});const state=responseSlots.get(response);state.url=r.url;return response})};
   window.performance=Object.create(Performance.prototype);window.Performance=Performance;window.PerformanceEntry=PerformanceEntry;window.PerformanceServerTiming=PerformanceServerTiming;window.PerformanceResourceTiming=PerformanceResourceTiming;window.PerformanceNavigationTiming=PerformanceNavigationTiming;window.PerformanceObserverEntryList=PerformanceObserverEntryList;window.PerformanceObserver=PerformanceObserver;

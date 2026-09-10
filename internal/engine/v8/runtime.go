@@ -628,31 +628,20 @@ func (a *adapter) SetProperty(object engine.Value, name string, value any) error
 }
 
 func (a *adapter) TypeOf(value engine.Value) string {
-	operation := func(local gov8.Value) string {
-		if yes, _ := local.IsUndefined(); yes {
+	operation := func(scope *gov8.Scope, local gov8.Value) string {
+		// IsFunction classifies callable HTMLDDA objects as functions even though
+		// JavaScript typeof must return undefined. Ask V8 for the actual operator.
+		kind, err := local.TypeOf(scope)
+		if err != nil {
 			return "undefined"
 		}
-		if yes, _ := local.IsFunction(); yes {
-			return "function"
+		text, err := kind.StringValue()
+		if err != nil {
+			return "undefined"
 		}
-		if yes, _ := local.IsBoolean(); yes {
-			return "boolean"
-		}
-		if yes, _ := local.IsString(); yes {
-			return "string"
-		}
-		if yes, _ := local.IsNumber(); yes {
-			return "number"
-		}
-		if yes, _ := local.IsBigInt(); yes {
-			return "bigint"
-		}
-		if yes, _ := local.IsSymbol(); yes {
-			return "symbol"
-		}
-		return "object"
+		return text
 	}
-	if a.onCallback() != nil {
+	if callback := a.onCallback(); callback != nil {
 		if v, ok := value.(*runtimeValue); ok && v.hostSet {
 			return goTypeOf(v.host)
 		}
@@ -660,13 +649,13 @@ func (a *adapter) TypeOf(value engine.Value) string {
 		if err != nil {
 			return "undefined"
 		}
-		return operation(local)
+		return operation(callback.scope.Scope(), local)
 	}
 	var result = "undefined"
 	_, _ = a.run(func(s *state, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
 		local, err := a.local(scope, value)
 		if err == nil {
-			result = operation(local)
+			result = operation(scope, local)
 		}
 		return nil, err
 	})

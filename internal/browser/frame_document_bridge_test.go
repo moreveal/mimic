@@ -69,9 +69,32 @@ func TestFrameDocumentBridgeRejectsCrossOriginRead(t *testing.T) {
 		t.Fatal(err)
 	}
 	childURL := strings.Replace(server.URL, "127.0.0.1", "localhost", 1)
-	value, err := page.Evaluate(ctx, `new Promise(resolve=>{const f=document.createElement('iframe');f.src=`+fmt.Sprintf("%q", childURL)+`;f.onload=()=>{try{void f.contentWindow.document.body;resolve(false)}catch(error){resolve(String(error).includes('SecurityError'))}};document.body.appendChild(f)})`)
+	value, err := page.Evaluate(ctx, `new Promise(resolve=>{const f=document.createElement('iframe');f.src=`+fmt.Sprintf("%q", childURL)+`;f.onload=()=>{let read=false,write=false;try{void f.contentWindow.document.body}catch(error){read=String(error).includes('SecurityError')}try{f.contentWindow.remoteValue={}}catch(error){write=String(error).includes('SecurityError')}resolve(read&&write)};document.body.appendChild(f)})`)
 	if err != nil || value != true {
 		t.Fatalf("cross-origin document access: %v %v", value, err)
+	}
+}
+
+func TestFrameCrossOriginPostMessageRemainsAvailable(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		_, _ = fmt.Fprint(w, `<!doctype html><script>addEventListener('message',e=>{if(e.data==='ping')e.source.postMessage('pong',e.origin)})</script>`)
+	}))
+	defer server.Close()
+	page := testPage(t)
+	ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+	defer cancel()
+	if err := page.Navigate(ctx, server.URL); err != nil {
+		t.Fatal(err)
+	}
+	childURL := strings.Replace(server.URL, "127.0.0.1", "localhost", 1)
+	value, err := page.Evaluate(ctx, `new Promise(resolve=>{
+		const f=document.createElement('iframe');f.src=`+fmt.Sprintf("%q", childURL)+`;
+		addEventListener('message',e=>{if(e.data==='pong')resolve(e.source===f.contentWindow&&e.origin===`+fmt.Sprintf("%q", childURL)+`)});
+		f.onload=()=>{try{f.contentWindow.postMessage('ping',`+fmt.Sprintf("%q", childURL)+`)}catch(e){resolve(String(e))}};
+		document.body.appendChild(f);
+	})`)
+	if err != nil || value != true {
+		t.Fatalf("cross-origin postMessage: %v %v", value, err)
 	}
 }
 

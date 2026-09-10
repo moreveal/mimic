@@ -1,0 +1,597 @@
+{
+  "version": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/152.0.7977.82",
+    "revision": "@d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "jsVersion": "15.2.124.21"
+  },
+  "result": {
+    "result": {
+      "type": "object",
+      "value": {
+        "operators": {
+          "type": "undefined",
+          "boolean": false,
+          "equalNull": true,
+          "equalUndefined": true,
+          "strictUndefined": false,
+          "strictNull": false,
+          "tag": "[object HTMLAllCollection]",
+          "same": true,
+          "instance": true,
+          "object": true,
+          "string": "[object HTMLAllCollection]",
+          "nullish": true,
+          "or": "fallback"
+        },
+        "prototype": {
+          "own": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "one",
+            "dup",
+            "inputName",
+            "imageName",
+            "anchorName",
+            "01",
+            "item"
+          ],
+          "prototype": [
+            "length",
+            "item",
+            "namedItem",
+            "constructor",
+            "Symbol(Symbol.toStringTag)",
+            "Symbol(Symbol.iterator)"
+          ],
+          "parent": true,
+          "constructor": {
+            "enumerable": false,
+            "configurable": true,
+            "writable": true,
+            "get": "undefined",
+            "set": "undefined",
+            "value": {
+              "type": "function",
+              "name": "HTMLAllCollection",
+              "length": 0
+            }
+          },
+          "length": {
+            "enumerable": true,
+            "configurable": true,
+            "get": "function",
+            "set": "undefined"
+          },
+          "item": {
+            "enumerable": true,
+            "configurable": true,
+            "writable": true,
+            "get": "undefined",
+            "set": "undefined",
+            "value": {
+              "type": "function",
+              "name": "item",
+              "length": 0
+            }
+          },
+          "namedItem": {
+            "enumerable": true,
+            "configurable": true,
+            "writable": true,
+            "get": "undefined",
+            "set": "undefined",
+            "value": {
+              "type": "function",
+              "name": "namedItem",
+              "length": 1
+            }
+          },
+          "iterator": {
+            "enumerable": false,
+            "configurable": true,
+            "writable": true,
+            "get": "undefined",
+            "set": "undefined",
+            "value": {
+              "type": "function",
+              "name": "values",
+              "length": 0
+            }
+          },
+          "tag": {
+            "enumerable": false,
+            "configurable": true,
+            "writable": false,
+            "get": "undefined",
+            "set": "undefined",
+            "value": "HTMLAllCollection"
+          },
+          "document": {
+            "enumerable": true,
+            "configurable": true,
+            "get": "function",
+            "set": "undefined"
+          }
+        },
+        "constructor": {
+          "error": "TypeError"
+        },
+        "staticMethods": {
+          "constructor": {
+            "keys": [
+              "length",
+              "name",
+              "prototype"
+            ],
+            "name": "HTMLAllCollection",
+            "length": 0,
+            "constructable": true,
+            "prototype": {
+              "writable": false,
+              "enumerable": false,
+              "configurable": false,
+              "isInterfacePrototype": true
+            }
+          },
+          "item": {
+            "keys": [
+              "length",
+              "name"
+            ],
+            "name": "item",
+            "length": 0,
+            "constructable": "TypeError",
+            "prototype": null
+          },
+          "namedItem": {
+            "keys": [
+              "length",
+              "name"
+            ],
+            "name": "namedItem",
+            "length": 1,
+            "constructable": "TypeError",
+            "prototype": null
+          },
+          "allGetter": {
+            "keys": [
+              "length",
+              "name"
+            ],
+            "name": "get all",
+            "length": 0,
+            "constructable": "TypeError",
+            "prototype": null
+          },
+          "lengthGetter": {
+            "keys": [
+              "length",
+              "name"
+            ],
+            "name": "get length",
+            "length": 0,
+            "constructable": "TypeError",
+            "prototype": null
+          }
+        },
+        "elements": {
+          "tag": "[object HTMLAllCollection]",
+          "length": 10,
+          "elements": [
+            "HTML:",
+            "HEAD:",
+            "TITLE:",
+            "BODY:",
+            "DIV:one",
+            "INPUT:dup",
+            "IMG:dup",
+            "A:anchorName",
+            "SPAN:01",
+            "DIV:item"
+          ]
+        },
+        "call-none": null,
+        "item-none": null,
+        "namedItem-none": {
+          "error": "TypeError"
+        },
+        "call-undefined": null,
+        "item-undefined": null,
+        "namedItem-undefined": null,
+        "call-null": null,
+        "item-null": null,
+        "namedItem-null": null,
+        "call-zero": "HTML:",
+        "item-zero": "HTML:",
+        "namedItem-zero": null,
+        "call-stringZero": "HTML:",
+        "item-stringZero": "HTML:",
+        "namedItem-stringZero": null,
+        "call-negative": null,
+        "item-negative": null,
+        "namedItem-negative": null,
+        "call-fraction": null,
+        "item-fraction": null,
+        "namedItem-fraction": null,
+        "call-leadingZero": "SPAN:01",
+        "item-leadingZero": "SPAN:01",
+        "namedItem-leadingZero": "SPAN:01",
+        "call-missing": null,
+        "item-missing": null,
+        "namedItem-missing": null,
+        "call-dup": {
+          "tag": "[object HTMLCollection]",
+          "length": 2,
+          "elements": [
+            "INPUT:dup",
+            "IMG:dup"
+          ]
+        },
+        "item-dup": {
+          "tag": "[object HTMLCollection]",
+          "length": 2,
+          "elements": [
+            "INPUT:dup",
+            "IMG:dup"
+          ]
+        },
+        "namedItem-dup": {
+          "tag": "[object HTMLCollection]",
+          "length": 2,
+          "elements": [
+            "INPUT:dup",
+            "IMG:dup"
+          ]
+        },
+        "call-dupZero": {
+          "tag": "[object HTMLCollection]",
+          "length": 2,
+          "elements": [
+            "INPUT:dup",
+            "IMG:dup"
+          ]
+        },
+        "item-dupZero": {
+          "tag": "[object HTMLCollection]",
+          "length": 2,
+          "elements": [
+            "INPUT:dup",
+            "IMG:dup"
+          ]
+        },
+        "namedItem-dupZero": {
+          "tag": "[object HTMLCollection]",
+          "length": 2,
+          "elements": [
+            "INPUT:dup",
+            "IMG:dup"
+          ]
+        },
+        "call-dupOne": {
+          "tag": "[object HTMLCollection]",
+          "length": 2,
+          "elements": [
+            "INPUT:dup",
+            "IMG:dup"
+          ]
+        },
+        "item-dupOne": {
+          "tag": "[object HTMLCollection]",
+          "length": 2,
+          "elements": [
+            "INPUT:dup",
+            "IMG:dup"
+          ]
+        },
+        "namedItem-dupOne": {
+          "tag": "[object HTMLCollection]",
+          "length": 2,
+          "elements": [
+            "INPUT:dup",
+            "IMG:dup"
+          ]
+        },
+        "call-dupMissing": {
+          "tag": "[object HTMLCollection]",
+          "length": 2,
+          "elements": [
+            "INPUT:dup",
+            "IMG:dup"
+          ]
+        },
+        "item-dupMissing": {
+          "tag": "[object HTMLCollection]",
+          "length": 2,
+          "elements": [
+            "INPUT:dup",
+            "IMG:dup"
+          ]
+        },
+        "namedItem-dupMissing": {
+          "tag": "[object HTMLCollection]",
+          "length": 2,
+          "elements": [
+            "INPUT:dup",
+            "IMG:dup"
+          ]
+        },
+        "call-one": "DIV:one",
+        "item-one": "DIV:one",
+        "namedItem-one": "DIV:one",
+        "call-oneZero": "DIV:one",
+        "item-oneZero": "DIV:one",
+        "namedItem-oneZero": "DIV:one",
+        "call-symbol": {
+          "error": "TypeError"
+        },
+        "item-symbol": {
+          "error": "TypeError"
+        },
+        "namedItem-symbol": {
+          "error": "TypeError"
+        },
+        "names": {
+          "divName": {
+            "property": "undefined",
+            "named": null,
+            "own": false,
+            "descriptor": null
+          },
+          "inputName": {
+            "property": "INPUT:dup",
+            "named": "INPUT:dup",
+            "own": true,
+            "descriptor": {
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "get": "undefined",
+              "set": "undefined",
+              "value": "INPUT:dup"
+            }
+          },
+          "imageName": {
+            "property": "IMG:dup",
+            "named": "IMG:dup",
+            "own": true,
+            "descriptor": {
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "get": "undefined",
+              "set": "undefined",
+              "value": "IMG:dup"
+            }
+          },
+          "anchorName": {
+            "property": "A:anchorName",
+            "named": "A:anchorName",
+            "own": true,
+            "descriptor": {
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "get": "undefined",
+              "set": "undefined",
+              "value": "A:anchorName"
+            }
+          },
+          "dup": {
+            "property": {
+              "tag": "[object HTMLCollection]",
+              "length": 2,
+              "elements": [
+                "INPUT:dup",
+                "IMG:dup"
+              ]
+            },
+            "named": {
+              "tag": "[object HTMLCollection]",
+              "length": 2,
+              "elements": [
+                "INPUT:dup",
+                "IMG:dup"
+              ]
+            },
+            "own": true,
+            "descriptor": {
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "get": "undefined",
+              "set": "undefined",
+              "value": {
+                "tag": "[object HTMLCollection]",
+                "length": 2,
+                "elements": [
+                  "INPUT:dup",
+                  "IMG:dup"
+                ]
+              }
+            }
+          },
+          "item": {
+            "property": "function",
+            "named": "DIV:item",
+            "own": false,
+            "descriptor": null
+          },
+          "missing": {
+            "property": "undefined",
+            "named": null,
+            "own": false,
+            "descriptor": null
+          },
+          "01": {
+            "property": "SPAN:01",
+            "named": "SPAN:01",
+            "own": true,
+            "descriptor": {
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "get": "undefined",
+              "set": "undefined",
+              "value": "SPAN:01"
+            }
+          }
+        },
+        "enumeration": {
+          "keys": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9"
+          ],
+          "forIn": [
+            "0",
+            "1",
+            "2",
+            "3",
+            "4",
+            "5",
+            "6",
+            "7",
+            "8",
+            "9",
+            "length",
+            "item",
+            "namedItem"
+          ],
+          "index": {
+            "enumerable": true,
+            "configurable": true,
+            "writable": false,
+            "get": "undefined",
+            "set": "undefined",
+            "value": "HTML:"
+          },
+          "missing": null
+        },
+        "illegalReceiver": {
+          "error": "TypeError"
+        },
+        "live": {
+          "add": [
+            1,
+            true,
+            true
+          ],
+          "remove": true,
+          "missing": true
+        },
+        "duplicateLive": {
+          "same": true,
+          "tag": "[object HTMLCollection]",
+          "after": 3,
+          "removed": 2
+        },
+        "nameEligibility": {
+          "a": true,
+          "applet": false,
+          "area": false,
+          "audio": false,
+          "button": true,
+          "div": false,
+          "embed": true,
+          "fieldset": false,
+          "form": true,
+          "iframe": true,
+          "img": true,
+          "input": true,
+          "map": true,
+          "meta": true,
+          "object": true,
+          "output": false,
+          "param": false,
+          "select": true,
+          "textarea": true,
+          "video": false,
+          "svg": false
+        },
+        "propertyMutations": {
+          "0": {
+            "set": true,
+            "afterSet": false,
+            "define": true,
+            "afterDefine": false,
+            "remove": false,
+            "afterDelete": false
+          },
+          "999": {
+            "set": true,
+            "afterSet": false,
+            "define": true,
+            "afterDefine": false,
+            "remove": true,
+            "afterDelete": true
+          },
+          "one": {
+            "set": true,
+            "afterSet": false,
+            "define": true,
+            "afterDefine": false,
+            "remove": false,
+            "afterDelete": false
+          },
+          "missing": {
+            "set": true,
+            "afterSet": true,
+            "define": true,
+            "afterDefine": true,
+            "remove": true,
+            "afterDelete": true
+          },
+          "4294967295": {
+            "set": true,
+            "afterSet": true,
+            "define": true,
+            "afterDefine": true,
+            "remove": true,
+            "afterDelete": true
+          }
+        },
+        "expandoPrecedence": {
+          "before": "expando",
+          "named": true,
+          "after": true
+        },
+        "frame": {
+          "different": true,
+          "prototype": true,
+          "notParent": true,
+          "same": true,
+          "type": "undefined",
+          "bool": false,
+          "equalNull": true,
+          "strictUndefined": false,
+          "roundTrip": true,
+          "local": {
+            "type": "undefined",
+            "bool": false,
+            "equalNull": true,
+            "strictUndefined": false,
+            "same": true,
+            "instance": true
+          }
+        }
+      }
+    }
+  }
+}

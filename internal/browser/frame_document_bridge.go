@@ -30,6 +30,9 @@ func (r *Realm) installFrameDocumentBridge(host map[string]any) {
 			return nil, fmt.Errorf("frame reference bridge already installed")
 		}
 		r.frameReferenceImport, r.frameReferenceDescribe = args[0], args[1]
+		if len(args) > 3 {
+			r.frameGlobalRead = args[3]
+		}
 		if len(args) > 2 {
 			r.frameNodeDescribe = args[2]
 		}
@@ -129,6 +132,25 @@ func (r *Realm) installFrameDocumentBridge(host map[string]any) {
 			return nil, err
 		}
 		return nil, target.runtime.SetProperty(target.runtime.Get("document"), strarg(args, 1), value)
+	})
+	host["frameGlobalSet"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		frame := r.agent.Page().frame(strarg(args, 0))
+		if !r.canAccess(frame) {
+			return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
+		}
+		target := frame.Realm
+		rawKey, rawValue := arg(args, 1), arg(args, 2)
+		return r.crossFrameResult(target, func(ctx context.Context) (engine.Value, error) {
+			key, err := target.decodeFrameKey(ctx, rawKey)
+			if err != nil {
+				return nil, err
+			}
+			value, err := target.decodeFrameArgument(rawValue)
+			if err != nil {
+				return nil, err
+			}
+			return target.callFrameReflection(ctx, "set", target.runtime.Get("globalThis"), key, value)
+		})
 	})
 	host["frameSet"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		frame := r.agent.Page().frame(strarg(args, 0))
@@ -252,6 +274,18 @@ func (r *Realm) callFrameReference(args []engine.Value) (engine.Value, error) {
 		}
 		restore := r.enterFrameDocumentEntry(target)
 		defer restore()
+		if target.runtime.TypeOf(function) == "undefined" {
+			array, err := target.callFrameReflection(ctx, "array", nil, nil, nil)
+			if err != nil {
+				return nil, err
+			}
+			for index, argument := range arguments {
+				if err := target.runtime.SetProperty(array, strconv.Itoa(index), argument); err != nil {
+					return nil, err
+				}
+			}
+			return target.callFrameReflection(ctx, "apply", function, receiver, array)
+		}
 		return target.runtime.Call(ctx, function, receiver, arguments...)
 	})
 }
@@ -332,6 +366,7 @@ const frameReflectionSource = `(()=>{
   if(op==='shape'){if(typeof object!=='function')return{array:isArray(object)};let constructable=true;try{construct(new P(object,{construct(){return {}}}),[])}catch(error){constructable=false}return{constructable}}
   if(op==='bigint')return integer(key);
   if(op==='prototype')return prototype(object);
+  if(op==='apply')return apply(object,key,value);
   if(op==='construct'){let result,threw=false;try{result=construct(object,key,value)}catch(error){result=error;threw=true}return{threw,value:result,valueType:typeof result,symbol:typeof result==='symbol'?info(result):null}}
   if(op==='key'){if(key.wellKnown!==undefined){for(let i=0;i<wellKnown.length;i++)if(wellKnown[i][0]===key.wellKnown)return wellKnown[i][1]}if(key.global!==undefined)return forKey(key.global);return S(key.description)}
   if(op==='symbol')return info(object);
@@ -351,12 +386,12 @@ const frameValueEncoderSource = `((describe,node,reflect,retain,symbol,frame,rea
  const global=globalThis,stringify=JSON.stringify,create=Object.create,keys=Object.keys;
  const encode=value=>{
   const type=typeof value;
-  if(type==='undefined')return {__mimicCrossRealm:'undefined'};
+  if(value===undefined)return {__mimicCrossRealm:'undefined'};
   if(value===null)return {__mimicCrossRealm:'null'};
   if(type==='symbol')return symbol(value);
   if(type==='bigint')return {__mimicCrossRealm:'bigint',value:''+value};
   if(type==='number'&&(value!==value||value===Infinity||value===-Infinity||value===0&&1/value===-Infinity))return {__mimicCrossRealm:'special-number',value:value!==value?'NaN':value===0?'-0':value>0?'Infinity':'-Infinity'};
-  if(type!=='object'&&type!=='function')return {__mimicCrossRealm:'value',value};
+  if(type!=='object'&&type!=='function'&&type!=='undefined')return {__mimicCrossRealm:'value',value};
   const reference=describe(value);
   if(reference!==null&&typeof reference==='object')return reference;
   if(value===global)return {__mimicCrossRealm:'window',frame};
@@ -364,9 +399,9 @@ const frameValueEncoderSource = `((describe,node,reflect,retain,symbol,frame,rea
   if(parent&&value===global.parent)return {__mimicCrossRealm:'window',frame:parent};
   let id=reflect('lookup',value);
   if(id===undefined)id=reflect('handle',value,retain(value));
-  const out={__mimicCrossRealm:type,frame,realm,handle:id};
+  const out={__mimicCrossRealm:type==='undefined'?'undetectable':type,frame,realm,handle:id};
   if(type==='object'){const nodeId=node(value);if(nodeId)out.nodeId=nodeId;out.array=reflect('shape',value).array}
-  else out.constructable=reflect('shape',value).constructable;
+  else if(type==='function')out.constructable=reflect('shape',value).constructable;
   return out;
  };
  return value=>{const data=encode(value),out=create(null);const names=keys(data);for(let i=0;i<names.length;i++){const key=names[i];out[key]=data[key]}return stringify(out)};

@@ -520,8 +520,11 @@ func (r *Realm) describeCrossRealmValue(value engine.Value) (map[string]any, err
 		return map[string]any{"__mimicCrossRealm": "undefined"}, nil
 	}
 	typeName := r.runtime.TypeOf(value)
-	if typeName == "undefined" {
+	if typeName == "undefined" && r.runtime.StrictEqual(value, r.runtime.Get("undefined")) {
 		return map[string]any{"__mimicCrossRealm": "undefined"}, nil
+	}
+	if typeName == "undefined" {
+		typeName = "undetectable"
 	}
 	if typeName == "object" && r.runtime.StrictEqual(value, r.val(nil)) {
 		return map[string]any{"__mimicCrossRealm": "null"}, nil
@@ -540,7 +543,7 @@ func (r *Realm) describeCrossRealmValue(value engine.Value) (map[string]any, err
 	if typeName == "bigint" {
 		return map[string]any{"__mimicCrossRealm": "bigint", "value": value.String()}, nil
 	}
-	if (typeName == "object" || typeName == "function") && r.frameReferenceDescribe != nil {
+	if (typeName == "object" || typeName == "function" || typeName == "undetectable") && r.frameReferenceDescribe != nil {
 		info, err := r.runtime.Call(context.Background(), r.frameReferenceDescribe, nil, value)
 		if err != nil {
 			return nil, err
@@ -566,7 +569,7 @@ func (r *Realm) describeCrossRealmValue(value engine.Value) (map[string]any, err
 			return map[string]any{"__mimicCrossRealm": "window", "frame": frame.parent.ID}, nil
 		}
 	}
-	if typeName != "object" && typeName != "function" {
+	if typeName != "object" && typeName != "function" && typeName != "undetectable" {
 		return map[string]any{"__mimicCrossRealm": "value", "value": value.Export()}, nil
 	}
 	shape := func(id int64) (map[string]any, error) {
