@@ -1,0 +1,529 @@
+{
+  "reference": "Google Chrome 152.0.7977.83",
+  "frozenReference": false,
+  "baselineRevision": "e69fc6d (runtime binary ff24540; e69fc6d is documentation only)",
+  "normalizationBoundary": "Before has eight browser cases; after adds tagged-value normalization and its self-test. Shared fixture hashes are retained. Fresh rebuilt baseline launch was rejected before execution.",
+  "beforeCorpusSHA256": "73ebbd307bc35371aa48d885876ae40df6b446ed3a139065c296f300e5699888",
+  "afterCorpusSHA256": "064e980d07555cce8f37ef99f8bb01d463f9d2e633cd1fc02e69550a357b154d",
+  "beforeFixtures": {
+    "compatibility/corpus/network.js": "0cd46d6dea3f38f439083cc79e28f43b4256707d04585492f566f3fa6658ea27",
+    "compatibility/corpus/observations.js": "5771269022a17956af106be508280bdd0fed58a760b2ac68491fe5f38100e5d8",
+    "compatibility/corpus/partition-revisit.js": "c6a149ed1ec9940c02c3af85f0fcdf8d02e4ff1aa6fc18cb6336f0519ae66474",
+    "compatibility/corpus/partition.js": "51019a0bc140f4f991f642b2262ab443c2d9e93f2a0de50f57892465bfa13adf",
+    "compatibility/corpus/samesite.js": "87ca9ba49f4374401e263c4c746b448e9b434ae83fb8b1186b4d82a7c3b789c9",
+    "compatibility/corpus/surface.js": "485dd5ad89a7e79488f746d192744c06d345590913e7937c0a2209ddf6fac9a3",
+    "compatibility/corpus/temporal.js": "4b66cbe9ca5a4edef041dbca867b5cb440eb9e68c8cbe21a9951f9c641d47503",
+    "internal/browser/testdata/svg_values_oracle.js": "b28c3b20e43cd6dec0a855892ca5feb12000f607e3c71ff832af3885ac0b5c9f",
+    "internal/browser/testdata/webgpu_lifecycle_oracle.js": "c0918bc66a4cf1cb5d4e0a7d22da73734499dafd81835f8ae8bcc25d39263428"
+  },
+  "afterFixtures": {
+    "compatibility/corpus/network.js": "0cd46d6dea3f38f439083cc79e28f43b4256707d04585492f566f3fa6658ea27",
+    "compatibility/corpus/normalize.js": "160591c37d3ea64e3b80f690fc64ded8f6c811cf7aaa68eaf50f0fed8d1fde20",
+    "compatibility/corpus/observations.js": "5771269022a17956af106be508280bdd0fed58a760b2ac68491fe5f38100e5d8",
+    "compatibility/corpus/partition-revisit.js": "c6a149ed1ec9940c02c3af85f0fcdf8d02e4ff1aa6fc18cb6336f0519ae66474",
+    "compatibility/corpus/partition.js": "51019a0bc140f4f991f642b2262ab443c2d9e93f2a0de50f57892465bfa13adf",
+    "compatibility/corpus/samesite.js": "87ca9ba49f4374401e263c4c746b448e9b434ae83fb8b1186b4d82a7c3b789c9",
+    "compatibility/corpus/surface.js": "485dd5ad89a7e79488f746d192744c06d345590913e7937c0a2209ddf6fac9a3",
+    "compatibility/corpus/temporal.js": "4b66cbe9ca5a4edef041dbca867b5cb440eb9e68c8cbe21a9951f9c641d47503",
+    "compatibility/corpus/values.js": "14733ae3f7e30fd20569f43f2733829efd45f56300ec095177a9820b40f0c73a",
+    "internal/browser/testdata/svg_values_oracle.js": "b28c3b20e43cd6dec0a855892ca5feb12000f607e3c71ff832af3885ac0b5c9f",
+    "internal/browser/testdata/webgpu_lifecycle_oracle.js": "c0918bc66a4cf1cb5d4e0a7d22da73734499dafd81835f8ae8bcc25d39263428"
+  },
+  "cases": [
+    {
+      "id": "value-normalization",
+      "category": "harness-self-test",
+      "beforeCount": null,
+      "afterCount": 0,
+      "valid": true,
+      "incomplete": {},
+      "remainingDifferences": []
+    },
+    {
+      "id": "network",
+      "category": "network",
+      "beforeCount": 24,
+      "afterCount": 24,
+      "valid": true,
+      "incomplete": {},
+      "remainingDifferences": [
+        {
+          "path": "/observations/0/value/0/received/headers/accept-language",
+          "chrome": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
+          "mimic": "ru-RU,ru;q=0.9"
+        },
+        {
+          "path": "/observations/0/value/0/received/headers/connection",
+          "chrome": "keep-alive",
+          "mimic": null,
+          "missing": "mimic"
+        },
+        {
+          "path": "/observations/0/value/0/received/headers/priority",
+          "chrome": null,
+          "mimic": "u=1, i",
+          "missing": "chrome"
+        },
+        {
+          "path": "/observations/0/value/0/received/headers/sec-ch-ua",
+          "chrome": "\"Chromium\";v=\"152\", \"Not?A_Brand\";v=\"24\", \"Google Chrome\";v=\"152\"",
+          "mimic": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\""
+        },
+        {
+          "path": "/observations/0/value/1/received/headers/accept-language",
+          "chrome": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
+          "mimic": "ru-RU,ru;q=0.9"
+        },
+        {
+          "path": "/observations/0/value/1/received/headers/connection",
+          "chrome": "keep-alive",
+          "mimic": null,
+          "missing": "mimic"
+        },
+        {
+          "path": "/observations/0/value/1/received/headers/priority",
+          "chrome": null,
+          "mimic": "u=1, i",
+          "missing": "chrome"
+        },
+        {
+          "path": "/observations/0/value/1/received/headers/sec-ch-ua",
+          "chrome": "\"Chromium\";v=\"152\", \"Not?A_Brand\";v=\"24\", \"Google Chrome\";v=\"152\"",
+          "mimic": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\""
+        },
+        {
+          "path": "/observations/0/value/2/received/headers/accept-language",
+          "chrome": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
+          "mimic": "ru-RU,ru;q=0.9"
+        },
+        {
+          "path": "/observations/0/value/2/received/headers/connection",
+          "chrome": "keep-alive",
+          "mimic": null,
+          "missing": "mimic"
+        },
+        {
+          "path": "/observations/0/value/2/received/headers/priority",
+          "chrome": null,
+          "mimic": "u=1, i",
+          "missing": "chrome"
+        },
+        {
+          "path": "/observations/0/value/2/received/headers/sec-ch-ua",
+          "chrome": "\"Chromium\";v=\"152\", \"Not?A_Brand\";v=\"24\", \"Google Chrome\";v=\"152\"",
+          "mimic": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\""
+        },
+        {
+          "path": "/observations/0/value/3/received/headers/accept-language",
+          "chrome": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
+          "mimic": "ru-RU,ru;q=0.9"
+        },
+        {
+          "path": "/observations/0/value/3/received/headers/connection",
+          "chrome": "keep-alive",
+          "mimic": null,
+          "missing": "mimic"
+        },
+        {
+          "path": "/observations/0/value/3/received/headers/priority",
+          "chrome": null,
+          "mimic": "u=1, i",
+          "missing": "chrome"
+        },
+        {
+          "path": "/observations/0/value/3/received/headers/sec-ch-ua",
+          "chrome": "\"Chromium\";v=\"152\", \"Not?A_Brand\";v=\"24\", \"Google Chrome\";v=\"152\"",
+          "mimic": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\""
+        },
+        {
+          "path": "/observations/0/value/4/received/headers/accept-language",
+          "chrome": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
+          "mimic": "ru-RU,ru;q=0.9"
+        },
+        {
+          "path": "/observations/0/value/4/received/headers/connection",
+          "chrome": "keep-alive",
+          "mimic": null,
+          "missing": "mimic"
+        },
+        {
+          "path": "/observations/0/value/4/received/headers/priority",
+          "chrome": null,
+          "mimic": "u=1, i",
+          "missing": "chrome"
+        },
+        {
+          "path": "/observations/0/value/4/received/headers/sec-ch-ua",
+          "chrome": "\"Chromium\";v=\"152\", \"Not?A_Brand\";v=\"24\", \"Google Chrome\";v=\"152\"",
+          "mimic": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\""
+        },
+        {
+          "path": "/observations/0/value/5/received/headers/accept-language",
+          "chrome": "ru-RU,ru;q=0.9,en-US;q=0.8,en;q=0.7",
+          "mimic": "ru-RU,ru;q=0.9"
+        },
+        {
+          "path": "/observations/0/value/5/received/headers/connection",
+          "chrome": "keep-alive",
+          "mimic": null,
+          "missing": "mimic"
+        },
+        {
+          "path": "/observations/0/value/5/received/headers/priority",
+          "chrome": null,
+          "mimic": "u=1, i",
+          "missing": "chrome"
+        },
+        {
+          "path": "/observations/0/value/5/received/headers/sec-ch-ua",
+          "chrome": "\"Chromium\";v=\"152\", \"Not?A_Brand\";v=\"24\", \"Google Chrome\";v=\"152\"",
+          "mimic": "\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\""
+        }
+      ]
+    },
+    {
+      "id": "temporal",
+      "category": "timing-lifecycle",
+      "beforeCount": 2,
+      "afterCount": 2,
+      "valid": true,
+      "incomplete": {},
+      "remainingDifferences": [
+        {
+          "path": "/observations/0/value/workerOrder/exception",
+          "chrome": null,
+          "mimic": {
+            "message": "dom task: JavaScript callback: TypeError: queueMicrotask is not a function (blob:http://127.0.0.1:<port>/48c052f0-00f2-48e9-a046-e99b40388091:1:36)"
+          },
+          "missing": "chrome"
+        },
+        {
+          "path": "/observations/0/value/workerOrder/value",
+          "chrome": [
+            "message",
+            "microtask",
+            "timer"
+          ],
+          "mimic": null,
+          "missing": "mimic"
+        }
+      ]
+    },
+    {
+      "id": "surface",
+      "category": "interface-surface",
+      "beforeCount": 8,
+      "afterCount": 8,
+      "valid": true,
+      "incomplete": {},
+      "remainingDifferences": [
+        {
+          "path": "/observations/0/value/CanvasRenderingContext2D/props/createConicGradient",
+          "chrome": {
+            "enumerable": true,
+            "configurable": true,
+            "writable": true,
+            "type": "function",
+            "name": "createConicGradient",
+            "length": 3
+          },
+          "mimic": null,
+          "missing": "mimic"
+        },
+        {
+          "path": "/observations/0/value/CanvasRenderingContext2D/props/createPattern",
+          "chrome": {
+            "enumerable": true,
+            "configurable": true,
+            "writable": true,
+            "type": "function",
+            "name": "createPattern",
+            "length": 2
+          },
+          "mimic": null,
+          "missing": "mimic"
+        },
+        {
+          "path": "/observations/0/value/CanvasRenderingContext2D/props/drawFocusIfNeeded",
+          "chrome": {
+            "enumerable": true,
+            "configurable": true,
+            "writable": true,
+            "type": "function",
+            "name": "drawFocusIfNeeded",
+            "length": 1
+          },
+          "mimic": null,
+          "missing": "mimic"
+        },
+        {
+          "path": "/observations/0/value/CanvasRenderingContext2D/props/lang",
+          "chrome": {
+            "enumerable": true,
+            "configurable": true,
+            "get": "function",
+            "set": "function"
+          },
+          "mimic": null,
+          "missing": "mimic"
+        },
+        {
+          "path": "/observations/0/value/FontFaceSet/props/forEach/length",
+          "chrome": 1,
+          "mimic": 2
+        },
+        {
+          "path": "/observations/0/value/GPUAdapter/props/isFallbackAdapter",
+          "chrome": null,
+          "mimic": {
+            "configurable": true,
+            "enumerable": true,
+            "get": "function",
+            "set": "undefined"
+          },
+          "missing": "chrome"
+        },
+        {
+          "path": "/observations/0/value/HTMLIFrameElement/props/sharedStorageWritable",
+          "chrome": {
+            "enumerable": true,
+            "configurable": true,
+            "get": "function",
+            "set": "function"
+          },
+          "mimic": null,
+          "missing": "mimic"
+        },
+        {
+          "path": "/observations/0/value/HTMLMediaElement/props/controlsList/set",
+          "chrome": "function",
+          "mimic": "undefined"
+        }
+      ]
+    },
+    {
+      "id": "samesite",
+      "category": "cookie-storage",
+      "beforeCount": 7,
+      "afterCount": 5,
+      "valid": true,
+      "incomplete": {},
+      "remainingDifferences": [
+        {
+          "path": "/observations/0/value/after/document",
+          "chrome": "ss_none=1; ss_lax=1; ss_strict=1; ss_default=1",
+          "mimic": "ss_none=1; ss_lax=1; ss_strict=1; ss_default=1; ss_nested_lax=1"
+        },
+        {
+          "path": "/observations/0/value/after/wire",
+          "chrome": "ss_none=1; ss_lax=1; ss_strict=1; ss_default=1",
+          "mimic": "ss_none=1; ss_lax=1; ss_strict=1; ss_default=1; ss_nested_lax=1"
+        },
+        {
+          "path": "/observations/0/value/nested/value/value/after",
+          "chrome": "ss_none=1",
+          "mimic": "ss_none=1; ss_lax=1; ss_strict=1; ss_default=1; ss_nested_lax=1"
+        },
+        {
+          "path": "/observations/0/value/nested/value/value/before",
+          "chrome": "ss_none=1",
+          "mimic": "ss_none=1; ss_lax=1; ss_strict=1; ss_default=1"
+        },
+        {
+          "path": "/observations/0/value/nested/value/value/wire",
+          "chrome": "ss_none=1",
+          "mimic": "ss_none=1; ss_lax=1; ss_strict=1; ss_default=1; ss_nested_lax=1"
+        }
+      ]
+    },
+    {
+      "id": "partition",
+      "category": "cookie-storage",
+      "beforeCount": 11,
+      "afterCount": 0,
+      "valid": true,
+      "incomplete": {},
+      "remainingDifferences": []
+    },
+    {
+      "id": "svg-values",
+      "category": "geometry",
+      "beforeCount": 0,
+      "afterCount": 0,
+      "valid": true,
+      "incomplete": {},
+      "remainingDifferences": []
+    },
+    {
+      "id": "observations",
+      "category": "fonts-canvas-media-rtc",
+      "beforeCount": 22,
+      "afterCount": 22,
+      "valid": true,
+      "incomplete": {},
+      "remainingDifferences": [
+        {
+          "path": "/observations/0/value/canvas/invalid/exception/message",
+          "chrome": "Failed to execute 'getImageData' on 'CanvasRenderingContext2D': The source width is 0.",
+          "mimic": "ImageData dimensions must be nonzero"
+        },
+        {
+          "path": "/observations/0/value/fonts/metrics/value/ascent",
+          "chrome": 12,
+          "mimic": 12.8
+        },
+        {
+          "path": "/observations/0/value/fonts/metrics/value/descent",
+          "chrome": 0,
+          "mimic": 3.2
+        },
+        {
+          "path": "/observations/0/value/fonts/metrics/value/left",
+          "chrome": 1,
+          "mimic": {
+            "$jsValue": "-0"
+          }
+        },
+        {
+          "path": "/observations/0/value/fonts/metrics/value/right",
+          "chrome": 43.015625,
+          "mimic": 36.959999999999994
+        },
+        {
+          "path": "/observations/0/value/fonts/metrics/value/width",
+          "chrome": 42.6875,
+          "mimic": 38.4
+        },
+        {
+          "path": "/observations/0/value/media/0/1/exception",
+          "chrome": null,
+          "mimic": {
+            "message": "audio.canPlayType is not a function",
+            "name": "TypeError"
+          },
+          "missing": "chrome"
+        },
+        {
+          "path": "/observations/0/value/media/0/1/value",
+          "chrome": "probably",
+          "mimic": null,
+          "missing": "mimic"
+        },
+        {
+          "path": "/observations/0/value/media/0/2/exception",
+          "chrome": null,
+          "mimic": {
+            "message": "video.canPlayType is not a function",
+            "name": "TypeError"
+          },
+          "missing": "chrome"
+        },
+        {
+          "path": "/observations/0/value/media/0/2/value",
+          "chrome": "probably",
+          "mimic": null,
+          "missing": "mimic"
+        },
+        {
+          "path": "/observations/0/value/media/1/1/exception",
+          "chrome": null,
+          "mimic": {
+            "message": "audio.canPlayType is not a function",
+            "name": "TypeError"
+          },
+          "missing": "chrome"
+        },
+        {
+          "path": "/observations/0/value/media/1/1/value",
+          "chrome": "probably",
+          "mimic": null,
+          "missing": "mimic"
+        },
+        {
+          "path": "/observations/0/value/media/1/2/exception",
+          "chrome": null,
+          "mimic": {
+            "message": "video.canPlayType is not a function",
+            "name": "TypeError"
+          },
+          "missing": "chrome"
+        },
+        {
+          "path": "/observations/0/value/media/1/2/value",
+          "chrome": "probably",
+          "mimic": null,
+          "missing": "mimic"
+        },
+        {
+          "path": "/observations/0/value/media/2/1/exception",
+          "chrome": null,
+          "mimic": {
+            "message": "audio.canPlayType is not a function",
+            "name": "TypeError"
+          },
+          "missing": "chrome"
+        },
+        {
+          "path": "/observations/0/value/media/2/1/value",
+          "chrome": "probably",
+          "mimic": null,
+          "missing": "mimic"
+        },
+        {
+          "path": "/observations/0/value/media/2/2/exception",
+          "chrome": null,
+          "mimic": {
+            "message": "video.canPlayType is not a function",
+            "name": "TypeError"
+          },
+          "missing": "chrome"
+        },
+        {
+          "path": "/observations/0/value/media/2/2/value",
+          "chrome": "probably",
+          "mimic": null,
+          "missing": "mimic"
+        },
+        {
+          "path": "/observations/0/value/media/3/1/exception",
+          "chrome": null,
+          "mimic": {
+            "message": "audio.canPlayType is not a function",
+            "name": "TypeError"
+          },
+          "missing": "chrome"
+        },
+        {
+          "path": "/observations/0/value/media/3/1/value",
+          "chrome": "probably",
+          "mimic": null,
+          "missing": "mimic"
+        },
+        {
+          "path": "/observations/0/value/media/3/2/exception",
+          "chrome": null,
+          "mimic": {
+            "message": "video.canPlayType is not a function",
+            "name": "TypeError"
+          },
+          "missing": "chrome"
+        },
+        {
+          "path": "/observations/0/value/media/3/2/value",
+          "chrome": "probably",
+          "mimic": null,
+          "missing": "mimic"
+        }
+      ]
+    },
+    {
+      "id": "webgpu-lifecycle",
+      "category": "graphics",
+      "beforeCount": 0,
+      "afterCount": 0,
+      "valid": true,
+      "incomplete": {},
+      "remainingDifferences": []
+    }
+  ]
+}

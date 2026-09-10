@@ -1438,7 +1438,7 @@ func (r *Realm) install() error {
 			return r.val(""), nil
 		}
 		pairs := []string{}
-		for _, c := range p.ctx.cookies.ForURL(r.documentURL()) {
+		for _, c := range p.ctx.cookies.ForURL(r.documentURL(), r.cookieContext()) {
 			if !c.HttpOnly {
 				pairs = append(pairs, c.Name+"="+c.Value)
 			}
@@ -1449,7 +1449,7 @@ func (r *Realm) install() error {
 		if !p.Environment().Network.CookiesEnabled {
 			return nil, nil
 		}
-		p.ctx.cookies.SetFromDocument(r.documentURL(), strarg(a, 0))
+		p.ctx.cookies.SetFromDocument(r.documentURL(), strarg(a, 0), r.cookieContext())
 		return nil, nil
 	})
 	r.installDocumentCompatibility(host)

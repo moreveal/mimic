@@ -115,6 +115,10 @@ Treat enabled traces as private: application sources may contain credentials.
 
 ## Limits and next discriminating evidence
 
+The later [controlled differential investigation](differential-2026-09-10.md)
+supersedes the owner-log-first next step below. It adds a shared local corpus,
+fixes CHIPS isolation and records fresh system Chrome/Mimic completion results.
+
 A follow-up instrumented Chrome capture is **not a valid success reference**:
 the experimental capture attempted Fetch.enable on worker targets, which do not
 support that domain, leaving worker setup incomplete. Its 403 cannot be

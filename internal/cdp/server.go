@@ -571,15 +571,12 @@ func (s *session) handleRouted(m message, route string) {
 	case "Storage.getCookies":
 		result = map[string]any{"cookies": s.pageCookies()}
 	case "Network.setCookie":
-		u, parseErr := url.Parse(stringValue(p["url"]))
-		if parseErr != nil || u.Host == "" {
-			err = fmt.Errorf("valid url is required")
-		} else {
-			s.page.Cookies().Set(u, &http.Cookie{Name: stringValue(p["name"]), Value: stringValue(p["value"]), Domain: stringValue(p["domain"]), Path: stringValue(p["path"])})
+		err = s.setCookie(p)
+		if err == nil {
 			result = map[string]any{"success": true}
 		}
 	case "Network.deleteCookies":
-		s.page.Cookies().Delete(stringValue(p["domain"]), stringValue(p["name"]))
+		err = s.deleteCookies(p)
 	case "Network.clearBrowserCookies":
 		s.page.Cookies().Clear()
 	case "Network.setCacheDisabled":
@@ -621,9 +618,8 @@ func (s *session) handleRouted(m message, route string) {
 		if list, ok := p["cookies"].([]any); ok {
 			for _, item := range list {
 				if c, ok := item.(map[string]any); ok {
-					u, _ := url.Parse(stringValue(c["url"]))
-					if u != nil && u.Host != "" {
-						s.page.Cookies().Set(u, &http.Cookie{Name: stringValue(c["name"]), Value: stringValue(c["value"]), Domain: stringValue(c["domain"]), Path: stringValue(c["path"])})
+					if err = s.setCookie(c); err != nil {
+						break
 					}
 				}
 			}
@@ -988,8 +984,30 @@ func parseRawResponse(encoded string) (interceptAnswer, error) {
 }
 func (s *session) pageCookies() []any {
 	out := []any{}
-	for _, c := range s.page.Cookies().All() {
-		out = append(out, map[string]any{"name": c.Name, "value": c.Value, "domain": c.Domain, "path": c.Path, "secure": c.Secure, "httpOnly": c.HttpOnly})
+	for _, snapshot := range s.page.Cookies().Snapshots() {
+		c := snapshot.Cookie
+		domain := c.Domain
+		if !snapshot.HostOnly && !strings.HasPrefix(domain, ".") {
+			domain = "." + domain
+		}
+		expires := float64(-1)
+		if !c.Expires.IsZero() {
+			expires = float64(c.Expires.UnixNano()) / 1e9
+		}
+		row := map[string]any{"name": c.Name, "value": c.Value, "domain": domain, "path": c.Path, "secure": c.Secure, "httpOnly": c.HttpOnly,
+			"expires": expires, "session": c.Expires.IsZero(), "size": len(c.Name) + len(c.Value)}
+		if snapshot.PartitionKey != nil {
+			row["partitionKey"] = snapshot.PartitionKey
+		}
+		switch c.SameSite {
+		case http.SameSiteNoneMode:
+			row["sameSite"] = "None"
+		case http.SameSiteLaxMode:
+			row["sameSite"] = "Lax"
+		case http.SameSiteStrictMode:
+			row["sameSite"] = "Strict"
+		}
+		out = append(out, row)
 	}
 	return out
 }

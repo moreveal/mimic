@@ -20,6 +20,7 @@ func (w *DedicatedWorker) installFetch(host map[string]any, lifetime context.Con
 		request.OmitClientHints = true
 		request.ClientIsWorker = true
 		request.TopLevelURL = w.topLevelURL
+		request.HasCrossSiteAncestor = w.cookieContext.HasCrossSiteAncestor
 		if w.url.Scheme == "blob" {
 			request.SourceURL = w.securityURL
 		}
