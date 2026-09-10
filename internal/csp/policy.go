@@ -8,6 +8,26 @@ import (
 type Policy struct{ directives map[string][]string }
 type PolicySet []Policy
 
+func (set PolicySet) AllowsFormAction(documentURL, target *url.URL) bool {
+	for _, policy := range set {
+		sources, present := policy.directives["form-action"]
+		if !present {
+			continue
+		} // form-action has no default-src fallback.
+		allowed := false
+		for _, source := range sources {
+			if sourceMatches(source, documentURL, target) {
+				allowed = true
+				break
+			}
+		}
+		if !allowed {
+			return false
+		}
+	}
+	return true
+}
+
 func Parse(values ...string) PolicySet {
 	set := PolicySet{}
 	for _, value := range values {

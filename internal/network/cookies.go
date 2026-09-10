@@ -22,6 +22,7 @@ type storedCookie struct {
 	hostOnly  bool
 	order     uint64
 	partition CookiePartitionKey
+	created   time.Time
 }
 
 type CookieStore struct {
@@ -91,6 +92,13 @@ func (s *CookieStore) setWithPartition(u *url.URL, c *http.Cookie, script bool, 
 	if c.SameSite == http.SameSiteNoneMode && !c.Secure {
 		return
 	}
+	// Subresource responses and script writes cannot create SameSite cookies
+	// in a cross-site context. Main-frame responses may set them for the new
+	// document even when its initiating request could not send them.
+	if c.SameSite != http.SameSiteNoneMode && cookieAccess(u, context) == CookieAccessCrossSite &&
+		!(len(context) != 0 && context[0].MainFrameNavigation && !script) {
+		return
+	}
 	domain, hostOnly := host, c.Domain == ""
 	if !hostOnly {
 		domain = cookieHost(strings.TrimPrefix(c.Domain, "."))
@@ -144,7 +152,11 @@ func (s *CookieStore) setWithPartition(u *url.URL, c *http.Cookie, script bool, 
 	// the same path length (including document.cookie replacements).
 	order := s.nextOrder
 	s.nextOrder++
-	s.jar[key] = storedCookie{copy, hostOnly, order, partition}
+	created := now
+	if exists && (old.cookie.Expires.IsZero() || old.cookie.Expires.After(now)) {
+		created = old.created
+	}
+	s.jar[key] = storedCookie{copy, hostOnly, order, partition, created}
 }
 func (s *CookieStore) SetFromResponse(u *url.URL, h http.Header, context ...CookieContext) {
 	for _, c := range (&http.Response{Header: h}).Cookies() {
@@ -178,6 +190,24 @@ func (s *CookieStore) matching(u *url.URL, context ...CookieContext) []storedCoo
 			continue
 		}
 		if u != nil {
+			access := cookieAccess(u, context)
+			switch c.SameSite {
+			case http.SameSiteNoneMode:
+			case http.SameSiteStrictMode:
+				if access != CookieAccessStrict {
+					continue
+				}
+			case http.SameSiteLaxMode:
+				if access < CookieAccessLax {
+					continue
+				}
+			default:
+				// Chrome's default-Lax compatibility window applies only to
+				// recent cookies lacking an explicit SameSite value.
+				if access < CookieAccessLax && !(access == CookieAccessLaxUnsafe && now.Sub(entry.created) <= 2*time.Minute) {
+					continue
+				}
+			}
 			if c.Partitioned && entry.partition != cookiePartition(u, context) {
 				continue
 			}

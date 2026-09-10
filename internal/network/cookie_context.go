@@ -2,6 +2,7 @@ package network
 
 import (
 	"net"
+	"net/http"
 	"net/url"
 	"strings"
 
@@ -20,6 +21,34 @@ type CookiePartitionKey struct {
 type CookieContext struct {
 	TopLevelSite         string
 	HasCrossSiteAncestor bool
+	// Access is separate from CHIPS identity. A cross-site main navigation
+	// selects its destination partition but does not acquire Strict access.
+	Access              CookieSameSiteAccess
+	MainFrameNavigation bool
+}
+
+type CookieSameSiteAccess uint8
+
+const (
+	CookieAccessFromSite CookieSameSiteAccess = iota
+	CookieAccessCrossSite
+	CookieAccessLaxUnsafe
+	CookieAccessLax
+	CookieAccessStrict
+)
+
+func cookieAccess(u *url.URL, contexts []CookieContext) CookieSameSiteAccess {
+	if len(contexts) == 0 {
+		return CookieAccessStrict
+	}
+	c := contexts[0]
+	if c.Access != CookieAccessFromSite {
+		return c.Access
+	}
+	if c.HasCrossSiteAncestor || c.TopLevelSite == "" || c.TopLevelSite != SchemefulSite(u) {
+		return CookieAccessCrossSite
+	}
+	return CookieAccessStrict
 }
 
 func SchemefulSite(u *url.URL) string {
@@ -54,7 +83,19 @@ func (r Request) cookieContext() CookieContext {
 	if r.Initiator == Navigation {
 		// Each main-frame redirect establishes a destination partition; there
 		// are no ancestors. Its initiator still governs Fetch/SameSite semantics.
-		return CookieContext{TopLevelSite: SchemefulSite(r.URL)}
+		context := CookieContext{TopLevelSite: SchemefulSite(r.URL), MainFrameNavigation: true, Access: CookieAccessStrict}
+		source := r.SourceURL
+		if source == nil {
+			source = r.Referrer
+		}
+		if r.OpaqueOrigin || source != nil && SchemefulSite(source) != context.TopLevelSite {
+			context.Access = CookieAccessLaxUnsafe
+			switch r.Method {
+			case "", http.MethodGet, http.MethodHead, http.MethodOptions, http.MethodTrace:
+				context.Access = CookieAccessLax
+			}
+		}
+		return context
 	}
 	top := r.TopLevelURL
 	if top == nil {

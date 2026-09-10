@@ -136,6 +136,10 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 		}
 	})
 	host := map[string]any{}
+	installExceptionDescription(host, runtime)
+	host["reportUnhandledException"] = runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		return nil, w.reportError(fmt.Errorf("%s", strarg(args, 0)))
+	})
 	var workerFonts *textmetrics.Engine
 	installFontResourceHosts(host, runtime, func() *textmetrics.Engine {
 		if workerFonts == nil {

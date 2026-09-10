@@ -731,7 +731,14 @@ func (r *Realm) install() error {
 				if event.Time.Before(origin) || event.Kind != trace.Network || event.Name != "response" || event.Data["initiator"] == network.Navigation || strings.HasPrefix(resourceURL, "blob:") {
 					continue
 				}
-				owner := requestContexts[fmt.Sprint(event.Data["id"])]
+				// A parent request may begin before this realm's time origin and
+				// complete afterwards. Its response still has an authoritative
+				// owner; absence from requestStarts must never make it public to
+				// every newer realm on the Page.
+				owner, _ := event.Data["context"].(string)
+				if owner == "" {
+					owner = requestContexts[fmt.Sprint(event.Data["id"])]
+				}
 				// An iframe document fetch is a resource of its embedding
 				// document; other resources belong to their initiating context.
 				if event.Data["initiator"] == network.Iframe && owner != "" {
@@ -1013,6 +1020,7 @@ func (r *Realm) install() error {
 		}
 		return nil, nil
 	})
+	r.installFormNavigation(host)
 	host["registerFormSnapshot"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		if len(a) > 0 {
 			r.formSnapshotCallback = a[0]

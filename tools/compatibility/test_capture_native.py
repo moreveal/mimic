@@ -50,6 +50,38 @@ class CaptureTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(m.errors[0]['method'], 'Network.getResponseBody')
         self.assertEqual(m.pending, {})
 
+    async def test_preload_runs_in_frames_before_resume_and_not_workers(self):
+        m = self.module
+        m.preload_source = "/* diagnostic */"
+        calls = []
+
+        async def call(method, params, session):
+            calls.append((session, method, params))
+            return {'result': {}}
+
+        m.call = call
+        for kind in ('iframe', 'worker'):
+            await m.initialize({'sessionId': kind, 'targetInfo': {'targetId': kind, 'type': kind}})
+        frame = [item for item in calls if item[0] == 'iframe']
+        self.assertEqual(frame[-2][1], 'Page.addScriptToEvaluateOnNewDocument')
+        self.assertTrue(frame[-2][2]['runImmediately'])
+        self.assertEqual(frame[-1][1], 'Runtime.runIfWaitingForDebugger')
+        self.assertFalse(any(item[1].startswith('Page.') for item in calls if item[0] == 'worker'))
+
+    async def test_preload_failure_still_resumes_owned_target(self):
+        m = self.module
+        m.preload_source = "/* diagnostic */"
+        calls = []
+
+        async def call(method, params, session):
+            calls.append(method)
+            return {} if method == 'Page.addScriptToEvaluateOnNewDocument' else {'result': {}}
+
+        m.call = call
+        with self.assertRaises(RuntimeError):
+            await m.initialize({'sessionId': 'frame', 'targetInfo': {'targetId': 'frame', 'type': 'iframe'}})
+        self.assertEqual(calls[-1], 'Runtime.runIfWaitingForDebugger')
+
     async def test_reused_script_id_preserves_both_navigation_sources(self):
         m = self.module
         source = 'first document'

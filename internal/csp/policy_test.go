@@ -5,6 +5,23 @@ import (
 	"testing"
 )
 
+func TestFormActionHasNoDefaultSourceFallback(t *testing.T) {
+	doc, _ := url.Parse("https://example.test/index")
+	other, _ := url.Parse("https://other.test/submit")
+	if !Parse("default-src 'none'").AllowsFormAction(doc, other) {
+		t.Fatal("default-src incorrectly blocked form navigation")
+	}
+	if Parse("form-action 'self'").AllowsFormAction(doc, other) {
+		t.Fatal("cross-origin form action accepted")
+	}
+	if !Parse("form-action 'self'").AllowsFormAction(doc, doc) {
+		t.Fatal("same-origin form action rejected")
+	}
+	if append(Parse("form-action *"), Parse("form-action 'none'")...).AllowsFormAction(doc, doc) {
+		t.Fatal("multiple policies did not intersect")
+	}
+}
+
 func TestScriptPolicy(t *testing.T) {
 	doc, _ := url.Parse("https://example.test/index")
 	self, _ := url.Parse("https://example.test/app.js")

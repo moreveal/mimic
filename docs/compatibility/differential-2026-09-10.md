@@ -1,5 +1,10 @@
 # Controlled differential investigation, 2026-09-10
 
+Follow-up: [continuation state investigation](continuation-state-2026-09-10.md)
+records the later SameSite/worker/form fixes, consumed Resource Timing defects,
+fresh verification and the widget's `fail: 600010` before the final top-level /fo.
+The remaining-defects list below describes the earlier dfc383d checkpoint.
+
 ## Outcome and reference
 
 The general cookie partition defect is fixed. It did **not** resolve the protected

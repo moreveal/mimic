@@ -268,7 +268,10 @@ func (p *Page) navigateRequest(ctx context.Context, raw, loaderID string, reques
 	// CDP defines the main resource request id as the navigation loader id.
 	// Puppeteer/Pyppeteer use this equality (together with type=Document) to
 	// recognize the navigation request and return its Response from goto().
-	request.ID, request.ContextID, request.URL, request.Method, request.Initiator = loaderID, p.Top.ID, u, http.MethodGet, network.Navigation
+	request.ID, request.ContextID, request.URL, request.Initiator = loaderID, p.Top.ID, u, network.Navigation
+	if request.Method == "" {
+		request.Method = http.MethodGet
+	}
 	res, err := p.loader.Load(ctx, request)
 	if err != nil {
 		return err
