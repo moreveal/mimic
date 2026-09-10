@@ -8,6 +8,8 @@ import (
 	"reflect"
 	"sync"
 	"time"
+
+	"github.com/moreveal/mimic/internal/monotime"
 )
 
 type Source string
@@ -186,7 +188,7 @@ func WaitAny(ctx context.Context, queues []*Scheduler) error {
 		}
 		s.mu.Unlock()
 	}
-	start := time.Now()
+	start := monotime.Now()
 	if hasDeadline {
 		timer := time.NewTimer(delay)
 		defer timer.Stop()
@@ -195,7 +197,7 @@ func WaitAny(ctx context.Context, queues []*Scheduler) error {
 	selected, _, _ := reflect.Select(cases)
 	// Every realm observes the same elapsed wait. Advancing only the queue
 	// owning the earliest timer would leave another realm's clock frozen.
-	elapsed := time.Since(start)
+	elapsed := monotime.Since(start)
 	for _, s := range queues {
 		s.mu.Lock()
 		s.now = s.now.Add(time.Duration(float64(elapsed) * s.executionScale))
@@ -315,7 +317,7 @@ func (s *Scheduler) run(ctx context.Context, maxTasks int, advance, limitError b
 		}
 		s.mu.Lock()
 		s.runningBase = s.now
-		s.runningAt = time.Now()
+		s.runningAt = monotime.Now()
 		s.mu.Unlock()
 		callbackErr := t.callback(ctx)
 		if callbackErr != nil {
@@ -339,7 +341,7 @@ func (s *Scheduler) run(ctx context.Context, maxTasks int, advance, limitError b
 		// infinite one.
 		s.mu.Lock()
 		if !s.runningAt.IsZero() {
-			s.now = s.runningBase.Add(time.Duration(float64(time.Since(s.runningAt)) * s.executionScale))
+			s.now = s.runningBase.Add(time.Duration(float64(monotime.Since(s.runningAt)) * s.executionScale))
 			s.runningAt = time.Time{}
 			s.runningBase = time.Time{}
 		}
@@ -401,7 +403,7 @@ func sourcePriority(source Source) int {
 }
 func (s *Scheduler) nowLocked() time.Time {
 	if !s.runningAt.IsZero() {
-		return s.runningBase.Add(time.Duration(float64(time.Since(s.runningAt)) * s.executionScale))
+		return s.runningBase.Add(time.Duration(float64(monotime.Since(s.runningAt)) * s.executionScale))
 	}
 	return s.now
 }

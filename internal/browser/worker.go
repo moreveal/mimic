@@ -15,6 +15,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/moreveal/mimic/compatibility"
 	"github.com/moreveal/mimic/internal/engine"
+	"github.com/moreveal/mimic/internal/monotime"
 	"github.com/moreveal/mimic/internal/network"
 	"github.com/moreveal/mimic/internal/scheduler"
 	"github.com/moreveal/mimic/internal/textmetrics"
@@ -414,11 +415,11 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 		}
 		return nil
 	})
-	last := time.Now()
+	last := monotime.Now()
 	ticker := time.NewTicker(2 * time.Millisecond)
 	defer ticker.Stop()
 	for {
-		now := time.Now()
+		now := monotime.Now()
 		workerScheduler.AdvanceBy(now.Sub(last))
 		last = now
 		if err := workerScheduler.RunReady(ctx, 10000); err != nil && ctx.Err() == nil {
