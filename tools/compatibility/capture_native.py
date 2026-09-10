@@ -84,9 +84,12 @@ async def body(sid, p):
 
 async def script(sid, p):
     r = await call('Debugger.getScriptSource', {'scriptId': p['scriptId']}, sid)
-    name = 'script-' + hashlib.sha256((sid + ':' + p['scriptId']).encode()).hexdigest()[:20] + '.json'
+    # Inspector script ids can be reused after navigation in the same target.
+    # Keep the original challenge sources when the destination parses new code.
+    identity = ':'.join(str(v) for v in (sid, p['scriptId'], p.get('executionContextId'), p.get('hash')))
+    name = 'script-' + hashlib.sha256(identity.encode()).hexdigest()[:20] + '.json'
     save(name, r)
-    scripts.append({'session': sid, 'scriptId': p['scriptId'], 'url': p.get('url'), 'hash': p.get('hash'), 'file': name})
+    scripts.append({'session': sid, 'scriptId': p['scriptId'], 'executionContextId': p.get('executionContextId'), 'url': p.get('url'), 'hash': p.get('hash'), 'file': name})
 
 async def post(sid, p):
     r = await call('Network.getRequestPostData', {'requestId': p['requestId']}, sid)

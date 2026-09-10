@@ -1664,6 +1664,7 @@ func (r *Realm) recordAPIAccess(name string, supported bool) {
 	}
 }
 func (r *Realm) postNavigate(raw string, replaceOption ...bool) error {
+	r.recordNavigationDiagnostic(raw, replaceOption)
 	u, err := r.resolveDocument(raw)
 	if err != nil {
 		return err
