@@ -30,6 +30,7 @@ import (
 )
 
 type Realm struct {
+	historyCloneFunction    engine.Value
 	bootstrapPlan           *bootstrapSource
 	bootstrapCapture        *bootstrapSnapshotEntry
 	bootstrapRestored       bool
@@ -1457,11 +1458,42 @@ func (r *Realm) installBindings() error {
 		reload, _ := arg(a, 2).(bool)
 		return nil, r.postNavigate(strarg(a, 0), replace, reload)
 	})
+	host["installHistoryClone"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		r.historyCloneFunction = a[0]
+		return nil, nil
+	})
+	if detector, ok := r.runtime.(engine.StructuredCloneProxyRuntime); ok {
+		host["historyCloneIsProxy"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+			return r.val(detector.IsStructuredCloneProxy(a[0])), nil
+		})
+	}
+	if cloner, ok := r.runtime.(engine.StructuredCloneRuntime); ok {
+		host["cloneHistoryValue"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+			value, err := cloner.StructuredClone(a[0], a[1])
+			var cloneError *engine.DataCloneError
+			if errors.As(err, &cloneError) {
+				return r.val([]any{false, cloneError.Message}), nil
+			}
+			if err != nil {
+				return nil, err
+			}
+			reply, err := r.runtime.Eval(context.Background(), "[true,null]", "mimic:history-clone-result")
+			if err != nil {
+				return nil, err
+			}
+			if err := r.runtime.SetProperty(reply, "1", value); err != nil {
+				return nil, err
+			}
+			return reply, nil
+		})
+	}
 	host["historyPush"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		return r.val(r.historyPush(strarg(a, 0), false, a[1])), nil
+		message, err := r.historyPush(strarg(a, 0), false, a[1])
+		return r.val(message), err
 	})
 	host["historyReplace"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		return r.val(r.historyPush(strarg(a, 0), true, a[1])), nil
+		message, err := r.historyPush(strarg(a, 0), true, a[1])
+		return r.val(message), err
 	})
 	host["historyState"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.historyState(), nil })
 	host["historyGo"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {

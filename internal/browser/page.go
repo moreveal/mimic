@@ -14,6 +14,7 @@ import (
 	"github.com/moreveal/mimic/compatibility"
 	"github.com/moreveal/mimic/internal/csp"
 	"github.com/moreveal/mimic/internal/dom"
+	"github.com/moreveal/mimic/internal/engine"
 	"github.com/moreveal/mimic/internal/network"
 	"github.com/moreveal/mimic/internal/scheduler"
 	"github.com/moreveal/mimic/internal/state"
@@ -684,13 +685,15 @@ func (p *Page) evaluateRealm(ctx context.Context, r *Realm, source string) (any,
 	if r == nil {
 		return nil, fmt.Errorf("page has no realm; navigate first")
 	}
-	v, err := r.Evaluate(ctx, source, "__pyppeteer_evaluation_script__")
-	if err != nil {
-		return nil, err
-	}
 	// Runtime.evaluate is itself a browser-observable task boundary. Promise
-	// reactions queued by its synchronous body run before any timer task.
-	if err := r.checkpoint(ctx); err != nil {
+	// reactions queued by its synchronous body run before any timer task, with
+	// the same live canonical clock as a task dequeued by the event loop.
+	var v engine.Value
+	if err := r.scheduler.RunInline(ctx, func(ctx context.Context) error {
+		var err error
+		v, err = r.Evaluate(ctx, source, "__pyppeteer_evaluation_script__")
+		return err
+	}); err != nil {
 		return nil, err
 	}
 	if err := p.runEvaluationTasks(ctx, r); err != nil {
@@ -705,7 +708,7 @@ func (p *Page) evaluateRealm(ctx context.Context, r *Realm, source string) (any,
 	// reading an internal slot. Give that reaction the same microtask checkpoint
 	// that Chrome performs at the end of Runtime.evaluate before deciding that
 	// external work is required.
-	if err := r.checkpoint(ctx); err != nil {
+	if err := r.scheduler.RunInline(ctx, nil); err != nil {
 		return nil, err
 	}
 	if resolved, done, err := r.runtime.Await(v); err != nil {

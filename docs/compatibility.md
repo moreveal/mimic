@@ -59,10 +59,15 @@ Fetch promise resolves preserves the supplied signal reason, as measured in the
 
 Fetch remains bounded in both realms: the transport buffers the complete body
 before resolving, so headers-first responses and incremental network body reads
-are not implemented. CORS response filtering/enforcement and the credentials,
-cache and referrer options are incomplete; accepting those options in Request
-does not imply transport conformance. Worker Resource Timing and nested workers
-also remain incomplete.
+are not implemented. Window and Worker Fetch enforce same-origin mode, CORS
+response/credential checks, preflight permission checks, exposed response headers
+and opaque no-cors responses. Redirect URL history supplies the shared SameSite,
+Fetch Metadata, credentials and tainted-Origin projections, including a return
+to the original origin after a cross-site hop. Preflight caching, the aggregate
+1024-byte safelist limit and the no-cors author-header guard remain incomplete;
+XHR/module consumers are outside this Fetch enforcement path. Cache/referrer
+options, Worker Resource Timing and nested workers also remain incomplete. See
+the [audit follow-up](compatibility/audit-fixes-2026-09-11.md).
 
 Document streaming uses a persistent HTML5 tree builder over canonical DOM node
 handles. `document.open()` retains the Document, Window and application globals,
@@ -235,8 +240,10 @@ and Goja/V8 regressions.
 
 History support is still bounded: cross-document restoration/BFCache is not
 implemented and emits `history.crossDocumentTraversal` instead of relabeling a
-live document. State retains realm-owned values and does not yet perform
-structured serialization. Traversal events currently use the generic Event
+live document. State now uses a private structured copy and a separately cached
+exposed value; traversal reconstructs the exposed value from that private copy.
+See [history state](compatibility/history-state.md) for covered types and limits.
+Traversal events currently use the generic Event
 implementation rather than complete PopStateEvent/HashChangeEvent semantics;
 ordering when several documents change in one traversal remains incomplete.
 Initial-load entry replacement, detached-frame history pruning, empty trailing

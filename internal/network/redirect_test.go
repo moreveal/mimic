@@ -111,6 +111,9 @@ func TestRedirectLimitModesAndNonRedirectStatus(t *testing.T) {
 
 func TestRedirectRecomputesCredentialsAndPreservesFragment(t *testing.T) {
 	target := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))
+		w.Header().Set("Access-Control-Allow-Credentials", "true")
+		w.Header().Set("Access-Control-Expose-Headers", "X-Authorization, X-Cookie, X-Site")
 		w.Header().Set("X-Authorization", r.Header.Get("Authorization"))
 		w.Header().Set("X-Cookie", r.Header.Get("Cookie"))
 		w.Header().Set("X-Site", r.Header.Get("Sec-Fetch-Site"))

@@ -30,7 +30,7 @@ func requestIncludesCredentials(r Request) bool {
 	case "omit":
 		return false
 	case "same-origin":
-		return !r.OpaqueOrigin && sameRequestOrigin(r.SourceURL, r.URL)
+		return !r.OpaqueOrigin && sameRequestOrigin(r.SourceURL, r.URL) && r.chainSite() == "same-origin"
 	default:
 		return true
 	}

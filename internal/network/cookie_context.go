@@ -88,7 +88,7 @@ func (r Request) cookieContext() CookieContext {
 		if source == nil {
 			source = r.Referrer
 		}
-		if r.OpaqueOrigin || source != nil && SchemefulSite(source) != context.TopLevelSite {
+		if r.OpaqueOrigin || r.chainSite() == "cross-site" || source != nil && SchemefulSite(source) != context.TopLevelSite {
 			context.Access = CookieAccessLaxUnsafe
 			switch r.Method {
 			case "", http.MethodGet, http.MethodHead, http.MethodOptions, http.MethodTrace:
@@ -104,5 +104,9 @@ func (r Request) cookieContext() CookieContext {
 	if top == nil {
 		top = r.URL
 	}
-	return CookieContext{TopLevelSite: SchemefulSite(top), HasCrossSiteAncestor: r.HasCrossSiteAncestor || r.OpaqueOrigin}
+	context := CookieContext{TopLevelSite: SchemefulSite(top), HasCrossSiteAncestor: r.HasCrossSiteAncestor || r.OpaqueOrigin}
+	if r.chainSite() == "cross-site" {
+		context.Access = CookieAccessCrossSite
+	}
+	return context
 }
