@@ -26,27 +26,28 @@ import (
 // Cross-agent callbacks are always posted as tasks; neither runtime calls into the
 // other directly while executing observable JavaScript.
 type DedicatedWorker struct {
-	mu                sync.Mutex
-	id                int64
-	parent            *Realm
-	runtime           engine.Runtime
-	scheduler         *scheduler.Scheduler
-	deliverCallback   engine.Value
-	errorCallback     engine.Value
-	messageReceiver   engine.Value
-	url               *url.URL
-	topLevelURL       *url.URL
-	cookieContext     network.CookieContext
-	securityURL       *url.URL // inherited creator URL for blob workers; independent of URL base
-	closed            bool
-	started           bool
-	pending           []any
-	cancel            context.CancelFunc
-	done              chan struct{}
-	wake              chan struct{}
-	performanceOrigin time.Time
-	fetchCancels      map[string]context.CancelFunc // worker task/host callbacks only
-	fetchWG           sync.WaitGroup
+	mu                  sync.Mutex
+	id                  int64
+	parent              *Realm
+	runtime             engine.Runtime
+	scheduler           *scheduler.Scheduler
+	deliverCallback     engine.Value
+	errorCallback       engine.Value
+	messageReceiver     engine.Value
+	url                 *url.URL
+	topLevelURL         *url.URL
+	cookieContext       network.CookieContext
+	securityURL         *url.URL // inherited creator URL for blob workers; independent of URL base
+	closed              bool
+	started             bool
+	pending             []any
+	cancel              context.CancelFunc
+	done                chan struct{}
+	wake                chan struct{}
+	performanceOrigin   time.Time
+	performanceIsolated bool
+	fetchCancels        map[string]context.CancelFunc // worker task/host callbacks only
+	fetchWG             sync.WaitGroup
 }
 
 func (r *Realm) hostCreateWorker(_ engine.Value, args []engine.Value) (engine.Value, error) {
@@ -60,6 +61,7 @@ func (r *Realm) hostCreateWorker(_ engine.Value, args []engine.Value) (engine.Va
 		return nil, err
 	}
 	w := &DedicatedWorker{id: id, parent: r, deliverCallback: args[0], errorCallback: args[1], url: workerURL, securityURL: r.documentURL(), topLevelURL: r.requestTopLevelURL(), done: make(chan struct{}), wake: make(chan struct{}, 1), performanceOrigin: r.scheduler.Now()}
+	w.performanceIsolated = r.securityState().crossOriginIsolated
 	w.cookieContext = r.cookieContext()
 	r.workers[id] = w
 	source := strarg(args, 3)
@@ -103,11 +105,29 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 	}
 	p := w.parent.agent.Page()
 	runtime := p.ctx.browser.factory.New()
-	workerScheduler := scheduler.New(w.performanceOrigin, func(ctx context.Context) error {
+	var workerScheduler *scheduler.Scheduler
+	var nativePollQueued bool // Owned by the worker event loop.
+	workerScheduler = scheduler.New(w.performanceOrigin, func(ctx context.Context) error {
+		var err error
 		if checkpoint, ok := runtime.(interface{ MicrotaskCheckpointContext(context.Context) error }); ok {
-			return checkpoint.MicrotaskCheckpointContext(ctx)
+			err = checkpoint.MicrotaskCheckpointContext(ctx)
+		} else {
+			err = runtime.MicrotaskCheckpoint()
 		}
-		return runtime.MicrotaskCheckpoint()
+		if err != nil {
+			return err
+		}
+		// Native compilation posts foreground work outside the Promise queue.
+		// An otherwise idle worker must service it without waiting for an
+		// unrelated message or timer, just like a Window realm does.
+		if native, ok := runtime.(interface{ NativeTasksPending() bool }); ok && native.NativeTasksPending() && !nativePollQueued {
+			nativePollQueued = true
+			workerScheduler.Post(scheduler.Control, time.Millisecond, func(context.Context) error {
+				nativePollQueued = false
+				return nil // Service native work at this task's checkpoint.
+			})
+		}
+		return nil
 	})
 	workerScheduler.SetExecutionScale(p.Environment().Time.ExecutionScale)
 	w.mu.Lock()
@@ -305,7 +325,7 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 		return runtime.Value(out), nil
 	})
 	host["performanceNow"] = runtime.Function(func(engine.Value, []engine.Value) (engine.Value, error) {
-		return runtime.Value(float64(workerScheduler.Now().Sub(w.performanceOrigin)) / float64(time.Millisecond)), nil
+		return runtime.Value(p.performanceClamper.now(workerScheduler.Now(), w.performanceOrigin, w.performanceIsolated)), nil
 	})
 	host["performanceTimeOrigin"] = runtime.Function(func(engine.Value, []engine.Value) (engine.Value, error) {
 		return runtime.Value(float64(w.performanceOrigin.UnixNano()) / float64(time.Millisecond)), nil
@@ -379,7 +399,7 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 				w.url = res.URL
 			}
 		}
-		p.trace.Add(trace.JS, "scriptStart", map[string]any{"url": w.url.String(), "worker": w.id})
+		p.trace.Add(trace.JS, "scriptStart", map[string]any{"url": w.url.String(), "worker": w.id, "source": source})
 		_, err := runtime.Eval(taskContext, source, w.url.String())
 		p.trace.Add(trace.JS, "scriptEnd", map[string]any{"url": w.url.String(), "worker": w.id, "error": errorString(err)})
 		if err != nil {
@@ -417,7 +437,7 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 }
 
 func (w *DedicatedWorker) PostMessage(data any) {
-	w.parent.agent.Page().trace.Add(trace.Scheduler, "workerMessageQueued", map[string]any{"direction": "parent-to-worker", "worker": w.id})
+	w.parent.agent.Page().trace.Add(trace.Scheduler, "workerMessageQueued", workerMessageTrace(w.id, "parent-to-worker", data))
 	w.mu.Lock()
 	if w.closed {
 		w.mu.Unlock()
@@ -457,7 +477,7 @@ func (w *DedicatedWorker) deliverToParent(data any) {
 	if w.isClosed() {
 		return
 	}
-	w.parent.agent.Page().trace.Add(trace.Scheduler, "workerMessageQueued", map[string]any{"direction": "worker-to-parent", "worker": w.id})
+	w.parent.agent.Page().trace.Add(trace.Scheduler, "workerMessageQueued", workerMessageTrace(w.id, "worker-to-parent", data))
 	w.parent.scheduler.Post(scheduler.DOM, 0, func(ctx context.Context) error {
 		w.parent.agent.Page().trace.Add(trace.Scheduler, "workerMessageDispatch", map[string]any{"direction": "worker-to-parent", "worker": w.id})
 		if w.isClosed() || w.parent.resourceContext.Err() != nil {

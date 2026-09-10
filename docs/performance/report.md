@@ -1286,3 +1286,59 @@ One earlier process exit did not reproduce in subsequent gates and dedicated
 stress runs; its cause remains undetermined and is documented in the detailed
 report rather than presented as fixed. Final build and raw measurement receipts
 are linked there.
+## 2026-09-11: dedicated-worker native completion starvation
+
+A local V8 regression starts `WebAssembly.instantiate` in a Blob worker with
+no timers or subsequent messages. Before the fix it failed to deliver a result
+within 3 seconds. The worker runner woke every 2 ms, but an empty scheduler did
+not perform a checkpoint, so completed native foreground work remained pending.
+Window realms already scheduled a Control task while native work was pending;
+dedicated workers now use the same mechanism. No JavaScript enters the isolate
+from another goroutine and no unrelated browser task is required for completion.
+
+The private 014358 capture corroborates the cause: worker task 14 ended at
+21:44:06.2717582 UTC (sequence 2660), and its next task was an unrelated timer at
+21:44:08.8094005 (2811), a 2537.6423 ms gap. The timer's checkpoint (2814) then ran
+the WASM reaction, whose 69.8967 ms workload posted its result at 08.8792972
+(2819). The reported instantiate-to-reaction interval was 2539.7027 ms. These
+observations localize the seconds to idle native-task servicing, not compilation.
+
+After the fix, three local regression runs measured 2.0401–2.0984 ms from worker
+script start to result posting, excluding bootstrap. Total worker creation and
+delivery was 116–139 ms in those runs; this is a small correctness fixture, not
+the captured SIMD workload or a new Chrome benchmark. The worker/native-WASM,
+microtask ordering and immediate-termination focused tests passed three times;
+the new regression also passed with `-race`. The protected workload was not
+replayed and no conclusion about its server decision follows from this fix.
+
+### Performance clock quantization
+
+Frozen Chrome152.0.7977.82 local worker probes (20,000 reads) observed a100us
+non-isolated grid and a5us isolated grid; both were monotonic and repeated
+values within a bucket. The implementation now uses stable per-bucket random
+transition thresholds, clamps the absolute timestamp and origin separately,
+and shares an immutable Page-owned seed with its realms/workers. It preserves
+scheduler time ownership and adds no global browser lock. The algorithm was
+checked against [Chrome152 TimeClamper](https://raw.githubusercontent.com/chromium/chromium/152.0.7977.82/third_party/blink/renderer/core/timing/time_clamper.cc)
+and its Performance timestamp conversion. Window and worker tests cover both
+security modes on V8 and Goja, monotonicity, repeatability and zero origin.
+
+A fresh `.build/mimic-timing.exe` loopback run of the captured SIMD worker code
+reported8.7ms instantiate-to-reaction and67.7ms workload execution, compared
+with the earlier isolated live binary7.8893/69.8623ms and Chrome1.9/66.7ms.
+These individual runs show no claim of compilation speedup; the fixed defect
+is completion starvation when the worker is otherwise idle. The observed
+minimum adjacent clock-read delta was0.4ms despite100us quantization: host-call
+cost remains and is not a clock-resolution measurement. Only performance.now
+was coarsened here; timeOrigin and other timing-entry producers were not migrated.
+Private oracle and build-probe data: vm-stages-014358/chrome-clock-*.json and
+mimic-fixed-worker-probe.json. Existing worker/capture/performance tests pass.
+
+Correction after independent clock-source probes: the0.4–0.5ms adjacent-read
+minimum above was incorrectly attributed to host-call cost. A native Go loop
+without V8 returned999,993 identical adjacent timestamps out of1,000,000reads,
+minimum positive512.5us, while QPC on the same host returned minimum0.1us.
+Scheduler.nowLocked currently uses time.Since, backed by Windows interrupt time
+in this Go runtime. The coarsener therefore receives a source coarser than its
+100us/5us target. No precision-source fix is included yet. Evidence and probe
+sources: private-captures/vm-stages-015815/report.md.
