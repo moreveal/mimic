@@ -26,6 +26,28 @@ func validateConfig(config *Config) error {
 	if config == nil {
 		return nil
 	}
+	if p := config.ClientTransportParameters; p != nil {
+		if p.InitialPacketSizeIPv6 != 0 && (p.InitialPacketSizeIPv6 < 1200 || p.InitialPacketSizeIPv6 > protocol.MaxPacketBufferSize) {
+			return fmt.Errorf("invalid IPv6 initial packet size")
+		}
+		if p.MaxUDPPayloadSize < 1200 || p.MaxUDPPayloadSize > protocol.MaxPacketBufferSize {
+			return fmt.Errorf("client UDP receive limit must fit the packet buffer")
+		}
+		if p.MaxDatagramFrameSize > quicvarint.Max {
+			return fmt.Errorf("invalid client datagram limit")
+		}
+		if p.ActiveConnectionIDLimit < 2 || p.ActiveConnectionIDLimit > protocol.MaxActiveConnectionIDs {
+			return fmt.Errorf("client connection ID limit exceeds supported capacity")
+		}
+		if p.MaxAckDelay < protocol.MaxAckDelay || p.MaxAckDelay >= 1<<14*time.Millisecond {
+			return fmt.Errorf("client ACK delay is outside supported bounds")
+		}
+		for id := range p.Additional {
+			if id <= 0x20 || id > quicvarint.Max {
+				return fmt.Errorf("additional client parameter %#x overlaps managed transport state", id)
+			}
+		}
+	}
 	const maxStreams = 1 << 60
 	if config.MaxIncomingStreams > maxStreams {
 		config.MaxIncomingStreams = maxStreams
@@ -106,6 +128,8 @@ func populateConfig(config *Config) *Config {
 	}
 
 	return &Config{
+		ClientTransportParameters:        config.ClientTransportParameters,
+		ClientHelloSpec:                  config.ClientHelloSpec,
 		GetConfigForClient:               config.GetConfigForClient,
 		Versions:                         versions,
 		HandshakeIdleTimeout:             handshakeIdleTimeout,

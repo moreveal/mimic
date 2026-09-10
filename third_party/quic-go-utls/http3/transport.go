@@ -6,8 +6,11 @@ import (
 	"fmt"
 	"io"
 	"log/slog"
+	"maps"
+	mathrand "math/rand/v2"
 	"net"
 	"net/url"
+	"slices"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -63,6 +66,11 @@ func (r *roundTripperWithCount) Close() error {
 
 // Transport implements the http.RoundTripper interface
 type Transport struct {
+	// GreaseSettings adds fresh randomized SETTINGS values for each connection.
+	GreaseSettings bool
+	// SingleUseConnections gives each QUIC connection its own UDP socket and
+	// zero-length source CID, while retaining the normal resolver and tracing.
+	SingleUseConnections bool
 	// TLSClientConfig specifies the TLS configuration to use with
 	// tls.Client. If nil, the default configuration is used.
 	TLSClientConfig *tls.Config
@@ -148,20 +156,7 @@ var (
 func (t *Transport) init() error {
 	if t.newClientConn == nil {
 		t.newClientConn = func(conn *quic.Conn) clientConn {
-			return newClientConn(
-				conn,
-				t.EnableDatagrams,
-				t.AdditionalSettings,
-				t.AdditionalSettingsOrder,
-				t.PseudoHeaderOrder,
-				t.SendGreaseFrames,
-				t.PriorityParam,
-				t.StreamHijacker,
-				t.UniStreamHijacker,
-				t.MaxResponseHeaderBytes,
-				t.DisableCompression,
-				t.Logger,
-			)
+			return t.NewClientConn(conn)
 		}
 	}
 	if t.QUICConfig == nil {
@@ -181,7 +176,7 @@ func (t *Transport) init() error {
 	if t.QUICConfig.MaxIncomingStreams == 0 {
 		t.QUICConfig.MaxIncomingStreams = -1 // don't allow any bidirectional streams
 	}
-	if t.Dial == nil {
+	if t.Dial == nil && !t.SingleUseConnections {
 		udpConn, err := net.ListenUDP("udp", nil)
 		if err != nil {
 			return err
@@ -405,7 +400,16 @@ func (t *Transport) dial(ctx context.Context, hostname string) (*quic.Conn, clie
 			trace := httptrace.ContextClientTrace(ctx)
 			traceConnectStart(trace, network, udpAddr.String())
 			traceTLSHandshakeStart(trace)
-			conn, err := t.transport.DialEarly(ctx, udpAddr, tlsCfg, cfg)
+			var conn *quic.Conn
+			if t.SingleUseConnections {
+				if p := cfg.ClientTransportParameters; p != nil && udpAddr.IP.To4() == nil && p.InitialPacketSizeIPv6 != 0 {
+					cfg = cfg.Clone()
+					cfg.InitialPacketSize = p.InitialPacketSizeIPv6
+				}
+				conn, err = quic.DialAddrEarly(ctx, udpAddr.String(), tlsCfg, cfg)
+			} else {
+				conn, err = t.transport.DialEarly(ctx, udpAddr, tlsCfg, cfg)
+			}
 			var state tls.ConnectionState
 			if conn != nil {
 				state = conn.ConnectionState().TLS
@@ -462,11 +466,22 @@ func (t *Transport) removeClient(hostname string) {
 // Obtaining a ClientConn is only needed for more advanced use cases, such as
 // using Extended CONNECT for WebTransport or the various MASQUE protocols.
 func (t *Transport) NewClientConn(conn *quic.Conn) *ClientConn {
+	settings := t.AdditionalSettings
+	order := t.AdditionalSettingsOrder
+	if t.GreaseSettings {
+		settings = maps.Clone(settings)
+		if settings == nil {
+			settings = make(map[uint64]uint64)
+		}
+		id := generateGREASEFrameType()
+		settings[id] = uint64(mathrand.Uint32())
+		order = append(slices.Clone(order), id)
+	}
 	return newClientConn(
 		conn,
 		t.EnableDatagrams,
-		t.AdditionalSettings,
-		t.AdditionalSettingsOrder,
+		settings,
+		order,
 		t.PseudoHeaderOrder,
 		t.SendGreaseFrames,
 		t.PriorityParam,

@@ -25,6 +25,7 @@ import (
 const bodyCopyBufferSize = 8 * 1024
 
 type requestWriter struct {
+	writePriority     func(*http.Request, quic.StreamID) error
 	mutex             sync.Mutex
 	encoder           *qpack.Encoder
 	headerBuf         *bytes.Buffer
@@ -64,6 +65,11 @@ func (w *requestWriter) WriteRequestHeader(wr io.Writer, req *http.Request, gzip
 	buf := &bytes.Buffer{}
 	if err := w.writeHeaders(buf, req, gzip, streamID, qlogger); err != nil {
 		return err
+	}
+	if w.writePriority != nil {
+		if err := w.writePriority(req, streamID); err != nil {
+			return err
+		}
 	}
 	if _, err := wr.Write(buf.Bytes()); err != nil {
 		return err
@@ -201,10 +207,6 @@ func (w *requestWriter) encodeHeaders(req *http.Request, addGzipHeader bool, tra
 		}
 		if _, ok := headers["accept-encoding"]; !ok && addGzipHeader {
 			headers["accept-encoding"] = []string{"gzip"}
-		}
-		if _, ok := headers["priority"]; !ok && w.priorityParam > 0 {
-			// Send standard Chrome priority format if priorityParam is set (RFC 9218).
-			headers["priority"] = []string{"u=0, i"}
 		}
 		if _, ok := headers["trailer"]; !ok && trailers != "" {
 			headers["trailer"] = []string{trailers}

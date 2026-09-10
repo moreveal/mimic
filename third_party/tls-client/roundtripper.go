@@ -12,6 +12,7 @@ import (
 
 	http "github.com/bogdanfinn/fhttp"
 	"github.com/bogdanfinn/fhttp/http2"
+	quic "github.com/bogdanfinn/quic-go-utls"
 	"github.com/bogdanfinn/quic-go-utls/http3"
 	"github.com/bogdanfinn/tls-client/bandwidth"
 	"github.com/bogdanfinn/tls-client/profiles"
@@ -25,6 +26,7 @@ const CHROME_MAX_FIELD_SECTION_SIZE = 262144
 var errProtocolNegotiated = errors.New("protocol negotiated")
 
 type roundTripper struct {
+	quicConfig        *quic.Config
 	initialStreamID   uint32
 	allowHTTP         bool
 	clientHelloId     tls.ClientHelloID
@@ -91,6 +93,7 @@ type roundTripper struct {
 
 // http3Config contains all parameters needed to build an HTTP/3 transport
 type http3Config struct {
+	quicConfig             *quic.Config
 	clientSessionCache     tls.ClientSessionCache
 	insecureSkipVerify     bool
 	serverNameOverwrite    string
@@ -219,6 +222,7 @@ func buildHTTP3Transport(cfg *http3Config) (http.RoundTripper, error) {
 	if cfg.transportOptions != nil {
 		utlsConfig.RootCAs = cfg.transportOptions.RootCAs
 		utlsConfig.Certificates = cfg.transportOptions.Certificates
+		utlsConfig.KeyLogWriter = cfg.transportOptions.KeyLogWriter
 	}
 
 	if cfg.serverNameOverwrite != "" {
@@ -228,6 +232,12 @@ func buildHTTP3Transport(cfg *http3Config) (http.RoundTripper, error) {
 	t3 := &http3.Transport{
 		TLSClientConfig: utlsConfig,
 		EnableDatagrams: true, // Chrome enables H3_DATAGRAM (setting 0x33)
+	}
+	if cfg.quicConfig != nil {
+		t3.QUICConfig = cfg.quicConfig.Clone()
+		// A socket owned by each connection permits Chrome's zero-length source
+		// CID without mixing independent origins in a shared socket's CID map.
+		t3.SingleUseConnections = true
 	}
 
 	if cfg.proxyURL != "" {
@@ -256,31 +266,9 @@ func buildHTTP3Transport(cfg *http3Config) (http.RoundTripper, error) {
 		http3Settings = settingsCopy
 	}
 
-	// Add random GREASE setting only for browsers that send it (Chrome)
-	// Firefox sends GREASE frames but not random GREASE settings
-	// Use priority parameter as identification: Chrome has it, Firefox doesn't
-	if cfg.http3PriorityParam > 0 {
-		greaseID := generateGREASESettingID()
-		greaseValue := generateGREASESettingValue()
-
-		if http3Settings == nil {
-			http3Settings = make(map[uint64]uint64)
-		}
-		http3Settings[greaseID] = greaseValue
-
-		// Set the order if available, and append GREASE at the end
-		if len(cfg.http3SettingsOrder) > 0 {
-			orderWithGrease := make([]uint64, len(cfg.http3SettingsOrder)+1)
-			copy(orderWithGrease, cfg.http3SettingsOrder)
-			orderWithGrease[len(cfg.http3SettingsOrder)] = greaseID
-			t3.AdditionalSettingsOrder = orderWithGrease
-		}
-	} else {
-		// Just use the settings order as-is without random GREASE
-		if len(cfg.http3SettingsOrder) > 0 {
-			t3.AdditionalSettingsOrder = cfg.http3SettingsOrder
-		}
-	}
+	// GREASE belongs to each connection, including resumed connections.
+	t3.GreaseSettings = cfg.http3PriorityParam > 0
+	t3.AdditionalSettingsOrder = append([]uint64(nil), cfg.http3SettingsOrder...)
 
 	t3.AdditionalSettings = http3Settings
 
@@ -550,6 +538,7 @@ func (rt *roundTripper) dialTLS(ctx context.Context, network, addr string) (net.
 		rt.setCachedKind(addr, transportHTTP2)
 	case http3.NextProtoH3:
 		t3, err := buildHTTP3Transport(&http3Config{
+			quicConfig:             rt.quicConfig,
 			clientSessionCache:     rt.clientSessionCache,
 			insecureSkipVerify:     rt.insecureSkipVerify,
 			serverNameOverwrite:    rt.serverNameOverwrite,
@@ -705,6 +694,7 @@ func newRoundTripper(clientProfile profiles.ClientProfile, transportOptions *Tra
 	}
 
 	rt := &roundTripper{
+		quicConfig:                  clientProfile.GetQUICConfig(),
 		dialer:                      dialer[0],
 		certificatePinner:           pinner,
 		badPinHandlerFunc:           badPinHandlerFunc,
@@ -759,6 +749,7 @@ func newRoundTripper(clientProfile profiles.ClientProfile, transportOptions *Tra
 			clientProfile.GetHttp3SendGreaseFrames(),
 			proxyURL,
 		)
+		rt.racer.quicConfig = rt.quicConfig
 	}
 
 	if len(dialer) > 0 {

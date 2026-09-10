@@ -27,8 +27,9 @@ var QUICVersionContextKey = &quicVersionContextKey{}
 const clientSessionStateRevision = 5
 
 type cryptoSetup struct {
-	tlsConf *tls.Config
-	conn    *tls.QUICConn
+	tlsConf           *tls.Config
+	conn              quicTLSConn
+	initializationErr error
 
 	events []Event
 
@@ -67,6 +68,18 @@ type cryptoSetup struct {
 
 var _ CryptoSetup = &cryptoSetup{}
 
+// Standard servers and profiled clients use the same TLS event contract.
+type quicTLSConn interface {
+	Start(context.Context) error
+	NextEvent() tls.QUICEvent
+	Close() error
+	HandleData(tls.QUICEncryptionLevel, []byte) error
+	SetTransportParameters([]byte)
+	StoreSession(*tls.SessionState) error
+	SendSessionTicket(tls.QUICSessionTicketOptions) error
+	ConnectionState() tls.ConnectionState
+}
+
 // NewCryptoSetupClient creates a new crypto setup for the client
 func NewCryptoSetupClient(
 	connID protocol.ConnectionID,
@@ -77,6 +90,7 @@ func NewCryptoSetupClient(
 	qlogger qlogwriter.Recorder,
 	logger utils.Logger,
 	version protocol.Version,
+	specFactories ...func() (tls.ClientHelloSpec, error),
 ) CryptoSetup {
 	cs := newCryptoSetup(
 		connID,
@@ -93,10 +107,17 @@ func NewCryptoSetupClient(
 	cs.tlsConf = tlsConf
 	cs.allow0RTT = enable0RTT
 
-	cs.conn = tls.QUICClient(&tls.QUICConfig{
-		TLSConfig:           tlsConf,
-		EnableSessionEvents: true,
-	})
+	if len(specFactories) > 0 && specFactories[0] != nil {
+		profiled := tls.UQUICClient(&tls.QUICConfig{TLSConfig: tlsConf, EnableSessionEvents: true}, tls.HelloCustom)
+		cs.conn = profiled
+		spec, err := specFactories[0]()
+		if err == nil {
+			err = profiled.ApplyPreset(&spec)
+		}
+		cs.initializationErr = err
+	} else {
+		cs.conn = tls.QUICClient(&tls.QUICConfig{TLSConfig: tlsConf, EnableSessionEvents: true})
+	}
 	cs.conn.SetTransportParameters(cs.ourParams.Marshal(protocol.PerspectiveClient))
 
 	return cs
@@ -190,6 +211,9 @@ func (h *cryptoSetup) SetLargest1RTTAcked(pn protocol.PacketNumber) error {
 }
 
 func (h *cryptoSetup) StartHandshake(ctx context.Context) error {
+	if h.initializationErr != nil {
+		return wrapError(h.initializationErr)
+	}
 	err := h.conn.Start(context.WithValue(ctx, QUICVersionContextKey, h.version))
 	if err != nil {
 		return wrapError(err)

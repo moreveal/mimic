@@ -7,7 +7,9 @@ import (
 	"io"
 	"log/slog"
 	"maps"
+	mathrand "math/rand/v2"
 	"net/textproto"
+	"sync"
 	"time"
 
 	http "github.com/bogdanfinn/fhttp"
@@ -48,7 +50,11 @@ var defaultQuicConfig = &quic.Config{
 
 // ClientConn is an HTTP/3 client doing requests to a single remote server.
 type ClientConn struct {
-	conn *Conn
+	controlReady  chan struct{}
+	controlStream *quic.SendStream
+	controlErr    error
+	controlMu     sync.Mutex
+	conn          *Conn
 
 	// Enable support for HTTP/3 datagrams (RFC 9297).
 	// If a QUICConfig is set, datagram support also needs to be enabled on the QUIC layer by setting enableDatagrams.
@@ -106,6 +112,7 @@ func newClientConn(
 	logger *slog.Logger,
 ) *ClientConn {
 	c := &ClientConn{
+		controlReady:            make(chan struct{}),
 		enableDatagrams:         enableDatagrams,
 		additionalSettings:      additionalSettings,
 		additionalSettingsOrder: additionalSettingsOrder,
@@ -127,6 +134,9 @@ func newClientConn(
 	}
 	c.decoder = qpack.NewDecoder()
 	c.requestWriter = newRequestWriterWithPseudoHeaderOrder(c.pseudoHeaderOrder, c.priorityParam)
+	if c.priorityParam > 0 {
+		c.requestWriter.writePriority = c.writeRequestPriority
+	}
 	c.conn = newConnection(
 		conn.Context(),
 		conn,
@@ -137,7 +147,9 @@ func newClientConn(
 	)
 	// send the SETTINGs frame, using 0-RTT data, if possible
 	go func() {
-		if err := c.setupConn(); err != nil {
+		c.controlErr = c.setupConn()
+		close(c.controlReady)
+		if err := c.controlErr; err != nil {
 			if c.logger != nil {
 				c.logger.Debug("Setting up connection failed", "error", err)
 			}
@@ -162,6 +174,7 @@ func (c *ClientConn) setupConn() error {
 	if err != nil {
 		return err
 	}
+	c.controlStream = str
 	b := make([]byte, 0, 64)
 	b = quicvarint.Append(b, streamTypeControlStream)
 	// send the SETTINGS frame
@@ -186,18 +199,6 @@ func (c *ClientConn) setupConn() error {
 		})
 	}
 
-	// Send PRIORITY_UPDATE frame if priorityParam is set (Chrome behavior)
-	// Chrome sends priority information on the control stream
-	// Must be sent BEFORE GREASE frames
-	if c.priorityParam > 0 {
-		if c.logger != nil {
-			c.logger.Debug("Sending PRIORITY_UPDATE frame", "priorityParam", c.priorityParam)
-		}
-		b = appendPriorityUpdateFrame(b, c.priorityParam)
-	} else if c.logger != nil {
-		c.logger.Debug("NOT sending PRIORITY_UPDATE frame", "priorityParam", c.priorityParam)
-	}
-
 	// Send GREASE frames if enabled (Chrome behavior)
 	if c.sendGreaseFrames {
 		b = appendGreaseFrame(b)
@@ -212,14 +213,19 @@ func (c *ClientConn) setupConn() error {
 // Chrome sends GREASE frames on the control stream after SETTINGS.
 func appendGreaseFrame(b []byte) []byte {
 	// Generate GREASE frame type: 0x1f * N + 0x21
-	// Chrome uses large N values (1-10 billion range)
+	// Keep the randomized frame type independent for each connection.
 	greaseFrameType := generateGREASEFrameType()
 
 	// Append frame type
 	b = quicvarint.Append(b, greaseFrameType)
 
-	// Append frame length (0 for empty payload, which is common)
-	b = quicvarint.Append(b, 0)
+	// The pinned captures use 0..3 bytes, correlated with the random N in
+	// the frame type (QUICHE HttpEncoder::SerializeGreasingFrame).
+	n := (greaseFrameType - 0x21) / 0x1f % 4
+	b = quicvarint.Append(b, n)
+	for range n {
+		b = append(b, byte(mathrand.Uint32()))
+	}
 
 	return b
 }
@@ -227,17 +233,16 @@ func appendGreaseFrame(b []byte) []byte {
 // generateGREASEFrameType generates a GREASE frame type.
 // GREASE frame types are of the form 0x1f * N + 0x21 where N is a large random number.
 func generateGREASEFrameType() uint64 {
-	// Chrome uses N in range 1-10 billion
-	// This produces frame types like 31000000033, 62000000033, etc.
-	n := uint64(1000000000)
+	// Use a fresh 32-bit N, matching the range observed in the pinned captures.
+	n := uint64(mathrand.Uint32())
 	return 0x1f*n + 0x21
 }
 
 // appendPriorityUpdateFrame appends a PRIORITY_UPDATE frame to the buffer.
 // Chrome sends priority information on the control stream.
-// Frame type 0xF0800 (984832) with priority "u=0, i" for request streams.
-func appendPriorityUpdateFrame(b []byte, priorityParam uint32) []byte {
-	// Frame type: 0xF0800 (984832) for Chrome
+// Frame type 0xF0700 (984832) carries the actual request stream's priority.
+func appendPriorityUpdateFrame(b []byte, priorityParam uint32, streamID quic.StreamID, priority string) []byte {
+	// Frame type: 0xF0700 (984832) for Chrome
 	frameType := uint64(priorityParam)
 
 	// Build payload: prioritized_stream_id + priority_field_value
@@ -245,10 +250,10 @@ func appendPriorityUpdateFrame(b []byte, priorityParam uint32) []byte {
 
 	// Prioritized Element ID: first client-initiated bidirectional stream is always 0
 	// (subsequent streams: 4, 8, 12, ...)
-	priorityPayload = quicvarint.Append(priorityPayload, 0)
+	priorityPayload = quicvarint.Append(priorityPayload, uint64(streamID))
 
-	// Priority Field Value: "u=0, i" as ASCII bytes
-	priorityPayload = append(priorityPayload, []byte("u=0, i")...)
+	// Priority Field Value from this request, as ASCII bytes.
+	priorityPayload = append(priorityPayload, []byte(priority)...)
 
 	// Append frame type
 	b = quicvarint.Append(b, frameType)
@@ -260,6 +265,26 @@ func appendPriorityUpdateFrame(b []byte, priorityParam uint32) []byte {
 	b = append(b, priorityPayload...)
 
 	return b
+}
+
+func (c *ClientConn) writeRequestPriority(req *http.Request, streamID quic.StreamID) error {
+	select {
+	case <-c.controlReady:
+	case <-req.Context().Done():
+		return req.Context().Err()
+	}
+	if c.controlErr != nil {
+		return c.controlErr
+	}
+	priority := req.Header.Get("Priority")
+	if priority == "" {
+		priority = "u=3"
+	}
+	b := appendPriorityUpdateFrame(nil, c.priorityParam, streamID, priority)
+	c.controlMu.Lock()
+	defer c.controlMu.Unlock()
+	_, err := c.controlStream.Write(b)
+	return err
 }
 
 func (c *ClientConn) handleBidirectionalStreams(streamHijacker func(FrameType, quic.ConnectionTracingID, *quic.Stream, error) (hijacked bool, err error)) {
