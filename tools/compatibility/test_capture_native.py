@@ -50,6 +50,26 @@ class CaptureTests(unittest.IsolatedAsyncioTestCase):
         self.assertEqual(m.errors[0]['method'], 'Network.getResponseBody')
         self.assertEqual(m.pending, {})
 
+    async def test_reused_script_id_preserves_both_navigation_sources(self):
+        m = self.module
+        source = 'first document'
+
+        async def call(method, params, session):
+            return {'result': {'scriptSource': source}}
+
+        m.call = call
+        with tempfile.TemporaryDirectory() as directory:
+            m.OUT = pathlib.Path(directory)
+            await m.script('session', {'scriptId': '3', 'executionContextId': 1,
+                                      'hash': 'first', 'url': 'https://example.test/'})
+            source = 'second document'
+            await m.script('session', {'scriptId': '3', 'executionContextId': 2,
+                                      'hash': 'second', 'url': 'https://example.test/'})
+            files = [entry['file'] for entry in m.scripts]
+            self.assertNotEqual(files[0], files[1])
+            self.assertEqual([json.loads((m.OUT / file).read_text())['result']['scriptSource']
+                              for file in files], ['first document', 'second document'])
+
     async def test_drain_includes_tasks_spawned_during_wait(self):
         m = self.module
         done = []

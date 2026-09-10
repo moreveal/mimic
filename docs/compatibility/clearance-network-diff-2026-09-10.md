@@ -4,6 +4,11 @@ Scope: network state around the final same-origin `/fo` response and the next
 navigation. No browser API implementations changed during this investigation.
 Cookie values and challenge proofs are intentionally excluded from this report.
 
+Follow-up: [completion-program investigation](clearance-completion-2026-09-10.md)
+shows that the captured Mimic server response itself installs a retry/reload
+continuation, while Chrome receives a form continuation. It also corrects the
+source-file overwrite in the recorder and checks cold Client Hints explicitly.
+
 ## Captures
 
 * Mimic: `compatibility/private-captures/manual-20260910-061345`.
