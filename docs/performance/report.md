@@ -1342,3 +1342,28 @@ Scheduler.nowLocked currently uses time.Since, backed by Windows interrupt time
 in this Go runtime. The coarsener therefore receives a source coarser than its
 100us/5us target. No precision-source fix is included yet. Evidence and probe
 sources: private-captures/vm-stages-015815/report.md.
+
+## 2026-09-11: QPC source for scheduler elapsed time
+
+Windows scheduler task start, in-task clock reads, task completion and WaitAny
+elapsed accounting now use QueryPerformanceCounter through internal/monotime.
+The worker loop uses the same source when advancing idle virtual time. QPC is
+anchored once and read without changing system timer resolution or introducing
+browser-wide serialization; Page/realm virtual clocks and execution scaling
+remain authoritative. Other platforms retain Go monotonic time.
+
+A fresh .build/mimic-qpc.exe measured0.1000ms in the same5000-pair worker clock
+probe, matching Chrome152's0.1000ms; the preceding coarsened interrupt-time
+build measured0.4ms. The underlying QPC source test checks monotonic reads and
+positive increments finer than100us. The captured WASM workload on that local
+page measured8.8ms instantiate-to-reaction and66.3ms execution (single run,
+not a compilation speedup claim). Private receipt: vm-stages-014358/
+mimic-qpc-worker-probe.json. These local probes do not imply that a protected
+site's server decision changes. Scheduler and browser timing/worker tests were
+run alongside the clock-source regression.
+
+Validation: internal/monotime and the full scheduler suite passed, including
+-race. Focused browser clock-grid, timer/fetch, worker microtask/native-WASM
+and capture regressions passed with -race (27.5s). A broader -race selection
+also included performance profiles and was stopped before completion; no full
+performance-matrix or full browser race-suite result is claimed.
