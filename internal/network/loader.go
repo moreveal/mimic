@@ -83,6 +83,10 @@ type Request struct {
 	criticalCHRestarted bool
 	navigationStarted   time.Time
 	redirectCount       int
+	corsPrepared        bool
+	corsPreflight       bool
+	corsUnsafeHeaders   []string
+	chain               requestChain
 }
 type Response struct {
 	Redirected      bool
@@ -171,6 +175,10 @@ func (l *Loader) Load(ctx context.Context, r Request) (Response, error) {
 	}
 	if r.Headers == nil {
 		r.Headers = make(http.Header)
+	}
+	r.beginChain()
+	if err := l.prepareFetchCORS(ctx, &r); err != nil {
+		return Response{}, err
 	}
 	snapshot := l.session.Snapshot()
 	if snapshot.Offline {
@@ -429,19 +437,10 @@ func applyBrowserRequestHeaders(r *Request) {
 			r.Headers.Set(name, value)
 		}
 	}
-	site := "none"
+	site := r.chainSite()
 	source := r.SourceURL
 	if source == nil {
 		source = r.Referrer
-	}
-	if source != nil {
-		if !r.OpaqueOrigin && sameRequestOrigin(source, r.URL) {
-			site = "same-origin"
-		} else if !r.OpaqueOrigin && requestSameSite(source, r.URL) {
-			site = "same-site"
-		} else {
-			site = "cross-site"
-		}
 	}
 	mode, destination := "no-cors", "empty"
 	switch r.Initiator {
@@ -451,7 +450,7 @@ func applyBrowserRequestHeaders(r *Request) {
 			origin := source.Scheme + "://" + source.Host
 			policy := strings.ToLower(r.ReferrerPolicy)
 			downgrade := source.Scheme == "https" && r.URL.Scheme != "https"
-			if r.OpaqueOrigin || source.Scheme != "http" && source.Scheme != "https" || policy == "no-referrer" || policy == "same-origin" && !sameRequestOrigin(source, r.URL) || downgrade && (policy == "strict-origin" || policy == "strict-origin-when-cross-origin" || policy == "no-referrer-when-downgrade" || policy == "") {
+			if r.OpaqueOrigin || r.redirectTaintedOrigin() || source.Scheme != "http" && source.Scheme != "https" || policy == "no-referrer" || policy == "same-origin" && !sameRequestOrigin(source, r.URL) || downgrade && (policy == "strict-origin" || policy == "strict-origin-when-cross-origin" || policy == "no-referrer-when-downgrade" || policy == "") {
 				origin = "null"
 			}
 			setDefault("Origin", origin)
@@ -487,7 +486,7 @@ func applyBrowserRequestHeaders(r *Request) {
 		setDefault("Accept", "*/*")
 		if source != nil && r.Method != http.MethodGet && r.Method != http.MethodHead {
 			origin := source.Scheme + "://" + source.Host
-			if r.OpaqueOrigin || source.Scheme == "file" || source.Scheme == "data" {
+			if r.OpaqueOrigin || r.redirectTaintedOrigin() || source.Scheme == "file" || source.Scheme == "data" {
 				origin = "null"
 			}
 			setDefault("Origin", origin)
@@ -545,6 +544,9 @@ func (l *Loader) after(ctx context.Context, r Request, res Response) (Response, 
 	l.trace.Add(trace.Network, "response", map[string]any{"id": r.ID, "url": r.URL.String(), "status": res.Status, "headers": headerStrings(res.Headers), "mimeType": strings.Split(res.Headers.Get("Content-Type"), ";")[0], "encodedDataLength": len(res.Body), "encodedBodySize": encodedBodySize, "decodedBodySize": len(res.Body), "transferSize": transferSize, "durationMs": float64(res.Duration) / float64(time.Millisecond), "protocol": res.Protocol, "transportTiming": res.TransportTiming, "browserVisibleTiming": res.BrowserVisibleTiming, "connectionReused": res.TransportTiming.Reused, "connectionId": res.TransportTiming.ConnectionID, "fromCache": res.FromCache, "initiator": r.Initiator, "performanceInitiatorType": performanceInitiatorType, "synthetic": res.Synthetic, "context": r.ContextID})
 	l.remember(r.ID, res)
 	l.trace.Add(trace.Resource, "loadEnd", map[string]any{"id": r.ID, "url": r.URL.String(), "status": res.Status, "type": r.Initiator})
+	if fetchCrossOrigin(r) && !r.corsPreflight && r.Mode != "no-cors" && !corsResponseAllowed(r, res.Headers) {
+		return Response{}, fmt.Errorf("CORS response denied")
+	}
 	if isRedirectStatus(res.Status) {
 		if r.Redirect == "manual" {
 			return Response{Status: 0, Type: "opaqueredirect", URL: r.URL, Headers: make(http.Header)}, nil
@@ -588,13 +590,14 @@ func (l *Loader) after(ctx context.Context, r Request, res Response) (Response, 
 			for _, name := range []string{"Cookie", "Referer", "Origin", "Sec-Fetch-Site", "Sec-Fetch-Storage-Access"} {
 				r.Headers.Del(name)
 			}
+			r.redirectChain(u)
 			r.URL = u
 			r.redirectCount++
 			return l.Load(ctx, r)
 		}
 	}
 	res.Redirected = r.redirectCount > 0
-	return res, nil
+	return filterFetchResponse(r, res), nil
 }
 
 func isRedirectStatus(status int) bool {

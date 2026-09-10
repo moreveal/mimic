@@ -162,9 +162,14 @@ func jsError(err error) error {
 		return fmt.Errorf("JavaScript execution interrupted: %v", interrupted.Value())
 	}
 	if exception, ok := err.(*goja.Exception); ok {
-		return errors.New(strings.TrimSpace(exception.String()))
+		return &callException{error: errors.New(strings.TrimSpace(exception.String())), value: exception.Value()}
 	}
 	return err
+}
+
+type callException struct {
+	error
+	value goja.Value
 }
 
 func (r *runtime) Function(fn engine.Function) any {
@@ -175,6 +180,10 @@ func (r *runtime) Function(fn engine.Function) any {
 		}
 		v, err := fn(value{call.This}, args)
 		if err != nil {
+			var thrown *callException
+			if errors.As(err, &thrown) {
+				panic(thrown.value)
+			}
 			panic(r.vm.NewTypeError("%s", err))
 		}
 		return unwrap(v)

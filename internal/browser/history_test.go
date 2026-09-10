@@ -84,6 +84,53 @@ func TestHistoryRejectsCrossOriginWithoutMutation(t *testing.T) {
 	})
 }
 
+// The audit's Chrome 152 relations oracle records copied input/nested identity,
+// a stable repeated history.state identity, and DataCloneError for functions.
+func TestHistoryStructuredState(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) { fmt.Fprint(w, "<!doctype html><body></body>") }))
+	defer server.Close()
+	historyTestPages(t, func(t *testing.T, p *Page) {
+		if err := p.Navigate(context.Background(), server.URL+"/state"); err != nil {
+			t.Fatal(err)
+		}
+		historyEval(t, p, `(()=>{
+          for(const method of ['pushState','replaceState']){
+            let reads=0;const input={nested:{n:1},get observed(){reads++;return {x:7}}};input.self=input;
+            history[method](input,'');const saved=history.state;input.nested.n=2;
+            if(saved===input||saved.nested===input.nested||saved.nested.n!==1||saved.self!==saved||saved!==history.state||reads!==1||saved.observed.x!==7)return 'copy';
+            const length=history.length,url=location.href;
+            for(const invalid of [()=>{},Symbol('x'),new WeakMap(),document.body,{node:document.body},new Map([[1,document.body]]),new Proxy({},{ownKeys(){throw Error('proxy trap')}})]){
+              try{history[method](invalid,'','#bad');return 'accepted'}catch(e){if(e.name!=='DataCloneError')return e.name}
+              if(history.state!==saved||history.length!==length||location.href!==url)return 'mutated';
+            }
+            const exception={marker:1};try{history[method]({get fail(){throw exception}},'');return 'getter accepted'}catch(e){if(e!==exception)return 'exception identity'}
+            if(history.state!==saved)return 'getter mutated';
+          }
+          const buffer=new Uint8Array([1,2,3]).buffer,key={k:1};history.replaceState({date:new Date(123),regexp:/a/gi,map:new Map([[key,key]]),set:new Set([key]),buffer,view:new Uint8Array(buffer),big:123n},'');
+          const s=history.state,k=[...s.map.keys()][0];
+          return s.date.getTime()===123&&s.regexp.source==='a'&&s.regexp.flags==='gi'&&s.map.get(k)===k&&s.set.has(k)&&s.buffer===s.view.buffer&&s.view[1]===2&&s.big===123n&&s.buffer!==buffer;
+        })()`, true)
+		historyEval(t, p, `(()=>{history.replaceState({n:1},'');globalThis.oldState=history.state;oldState.n=9;history.pushState({n:2},'');return new Promise(resolve=>{addEventListener('popstate',function handler(e){removeEventListener('popstate',handler);resolve(e.state===history.state&&history.state.n===1&&history.state!==oldState)});history.back()})})()`, true)
+	})
+}
+
+// Blob/File are cloneable in Chrome, but need platform serialization hooks.
+// Until those exist, reject explicitly rather than silently storing an empty object.
+func TestHistoryUnsupportedPlatformStorage(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) { fmt.Fprint(w, "<!doctype html><body></body>") }))
+	defer server.Close()
+	historyTestPages(t, func(t *testing.T, p *Page) {
+		if err := p.Navigate(context.Background(), server.URL+"/state"); err != nil {
+			t.Fatal(err)
+		}
+		historyEval(t, p, `(()=>{history.replaceState({n:1},'');const state=history.state,url=location.href,length=history.length;const blob=new Blob(['abc']),file=new File(['abc'],'a.txt');
+          for(const method of ['pushState','replaceState'])for(const value of [blob,file,{blob},new Map([[1,file]])]){
+            try{history[method](value,'','#bad');return 'accepted'}catch(e){if(e.name!=='NotSupportedError')return e.name}
+            if(history.state!==state||location.href!==url||history.length!==length)return 'mutated';
+          }return true})()`, true)
+	})
+}
+
 func TestChildLocationNavigatesOnlyChildAndResolvesFromHistoryURL(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		fmt.Fprint(w, "<!doctype html><body><script>globalThis.loadedPath=location.pathname+location.search</script></body>")

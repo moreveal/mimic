@@ -1853,6 +1853,7 @@ func TestPerformanceObserverBufferedDelivery(t *testing.T) {
 
 func TestPerformanceObserverReceivesResourceWithoutPollingTimers(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Cache-Control", "no-store")
 		_, _ = fmt.Fprint(w, "ok")
 	}))
@@ -1870,6 +1871,7 @@ func TestPerformanceObserverReceivesResourceWithoutPollingTimers(t *testing.T) {
 
 func TestPerformanceResourceEntriesAreOrderedByFetchStart(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, request *http.Request) {
+		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Cache-Control", "no-store")
 		if request.URL.Path == "/first-slow" {
 			time.Sleep(40 * time.Millisecond)

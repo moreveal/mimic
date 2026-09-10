@@ -21,9 +21,10 @@ type sessionHistoryEntry struct {
 }
 
 type historyFrameState struct {
-	url     *url.URL
-	realmID string
-	state   engine.Value
+	url          *url.URL
+	realmID      string
+	state        engine.Value
+	storageState engine.Value // private clone, never exposed to application code
 }
 
 func historyOrigin(u *url.URL) string {
@@ -49,22 +50,33 @@ func historyURLAllowed(current, target *url.URL) bool {
 	return current.Scheme == "file" || (current.RawQuery == target.RawQuery && current.ForceQuery == target.ForceQuery)
 }
 
-func (r *Realm) historyPush(raw string, replace bool, state engine.Value) string {
+func (r *Realm) historyPush(raw string, replace bool, state engine.Value) (string, error) {
 	frame, ok := r.agent.(*Frame)
 	if !ok || !r.activeHistoryDocument() {
-		return "The document is not fully active."
+		return "The document is not fully active.", nil
+	}
+	stored, err := r.runtime.Call(context.Background(), r.historyCloneFunction, nil, state)
+	if err != nil {
+		return "", err
+	}
+	exposed, err := r.runtime.Call(context.Background(), r.historyCloneFunction, nil, stored)
+	if err != nil {
+		return "", err
 	}
 	current := r.documentURL()
 	target := current
-	var err error
 	if raw != "" {
 		target, err = r.resolveDocument(raw)
 	}
 	if err != nil || !historyURLAllowed(current, target) {
-		return "A history state object cannot be created with this URL in the current document."
+		return "A history state object cannot be created with this URL in the current document.", nil
 	}
-	r.agent.Page().commitHistory(frame, target, replace, state)
-	return ""
+	r.agent.Page().commitHistory(frame, target, replace, exposed)
+	p := r.agent.Page()
+	p.mu.Lock()
+	p.history[p.historyIndex].frames[frame.ID].storageState = stored
+	p.mu.Unlock()
+	return "", nil
 }
 
 func (p *Page) commitHistory(frame *Frame, target *url.URL, replace bool, state engine.Value) {
@@ -151,6 +163,16 @@ func (r *Realm) historyGo(delta int) {
 			realm := change.realm
 			if !realm.activeHistoryDocument() {
 				continue
+			}
+			state := entry.frames[realm.agent.ContextID()]
+			if state.storageState != nil {
+				cloned, err := realm.runtime.Call(ctx, realm.historyCloneFunction, nil, state.storageState)
+				if err != nil {
+					return err
+				}
+				p.mu.Lock()
+				state.state = cloned
+				p.mu.Unlock()
 			}
 			// Dispatch in the document whose active history entry changed, even
 			// when traversal was requested by its parent or a sibling.

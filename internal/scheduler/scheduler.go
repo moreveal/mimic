@@ -225,6 +225,43 @@ func (s *Scheduler) RunReady(ctx context.Context, maxTasks int) error {
 	return s.run(ctx, maxTasks, false, true)
 }
 
+// RunInline executes an externally initiated turn (such as debugger evaluation)
+// without dequeuing unrelated work. Its clock and microtask checkpoint obey the
+// same boundaries as queued tasks. Like RunReady, it must not be called from a
+// callback already running on this scheduler.
+func (s *Scheduler) RunInline(ctx context.Context, callback Callback) error {
+	s.runMu.Lock()
+	defer s.runMu.Unlock()
+	if err := ctx.Err(); err != nil {
+		return err
+	}
+	s.beginExecution()
+	defer s.endExecution()
+	var err error
+	if callback != nil {
+		err = callback(ctx)
+	}
+	if s.checkpoint != nil {
+		err = errors.Join(err, s.checkpoint(ctx))
+	}
+	return err
+}
+
+func (s *Scheduler) beginExecution() {
+	s.mu.Lock()
+	s.runningBase = s.now
+	s.runningAt = monotime.Now()
+	s.mu.Unlock()
+}
+
+func (s *Scheduler) endExecution() {
+	s.mu.Lock()
+	s.now = s.nowLocked()
+	s.runningAt = time.Time{}
+	s.runningBase = time.Time{}
+	s.mu.Unlock()
+}
+
 // RunReadyStep executes at most one task, including its microtask checkpoint.
 // A Page uses this boundary to service other realm queues before returning to
 // a realm which posts more work from every callback. It never advances time to
@@ -315,10 +352,7 @@ func (s *Scheduler) run(ctx context.Context, maxTasks int, advance, limitError b
 		if err := ctx.Err(); err != nil {
 			return errors.Join(append(taskErrors, err)...)
 		}
-		s.mu.Lock()
-		s.runningBase = s.now
-		s.runningAt = monotime.Now()
-		s.mu.Unlock()
+		s.beginExecution()
 		callbackErr := t.callback(ctx)
 		if callbackErr != nil {
 			if observer != nil {
@@ -339,13 +373,7 @@ func (s *Scheduler) run(ctx context.Context, maxTasks int, advance, limitError b
 		// Promise job has run: JavaScript may observe time from a microtask, and
 		// freezing it here can turn an otherwise finite polling chain into an
 		// infinite one.
-		s.mu.Lock()
-		if !s.runningAt.IsZero() {
-			s.now = s.runningBase.Add(time.Duration(float64(monotime.Since(s.runningAt)) * s.executionScale))
-			s.runningAt = time.Time{}
-			s.runningBase = time.Time{}
-		}
-		s.mu.Unlock()
+		s.endExecution()
 		if observer != nil {
 			observer(Transition{"end", t.id, t.source, t.due})
 		}

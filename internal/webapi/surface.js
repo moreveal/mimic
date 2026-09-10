@@ -261,6 +261,46 @@
   class Screen { constructor(){illegal('Screen')} }
   class Location { constructor(){illegal('Location')} assign(v){host.navigate(String(v))} replace(v){host.navigate(String(v),true)} reload(){host.navigate(host.location(),true,true)} toString(){return this.href} }
   const historySlots=new WeakMap();
+  // History keeps a private storage copy and a separate cached state object.
+  // Native V8 cloning handles ECMAScript exotic objects without invoking proxy traps.
+  const historyUncloneableHost=value=>{
+    if(blobSlots.has(value)||fileSlots.has(value))throw new DOMException('History storage of Blob and File requires platform serialization support.','NotSupportedError');
+    return value===globalThis||value===document||elementData.has(value)||documentWrappers.has(value)||eventSlots.has(value);
+  };
+  const cloneHistoryState=value=>{
+    const fail=()=>{throw new DOMException('The value could not be cloned.','DataCloneError')};
+    if(historyUncloneableHost(value))fail();
+    if(typeof host.cloneHistoryValue==='function'){
+      const reply=host.cloneHistoryValue(value,historyUncloneableHost);if(!reply[0])throw new DOMException(reply[1],'DataCloneError');return reply[1];
+    }
+    // Non-native engines have no serializer. This bounded graph copy supports
+    // ordinary data and common builtins; unsupported brands fail explicitly.
+    const seen=new Map(),copy=input=>{
+      if(typeof input==='function'||typeof input==='symbol')fail();
+      if(input===null||typeof input!=='object')return input;
+      if(typeof host.historyCloneIsProxy==='function'&&host.historyCloneIsProxy(input))fail();
+      if(seen.has(input))return seen.get(input);
+      if(historyUncloneableHost(input))fail();
+      let output;
+      if(Array.isArray(input))output=new Array(input.length);
+      else if(input instanceof Date)output=new Date(Date.prototype.getTime.call(input));
+      else if(input instanceof RegExp)output=new RegExp(input.source,input.flags);
+      else if(input instanceof Map)output=new Map();
+      else if(input instanceof Set)output=new Set();
+      else if(input instanceof ArrayBuffer)output=input.slice(0);
+      else if(ArrayBuffer.isView(input)){
+        const buffer=copy(input.buffer);output=input instanceof DataView?new DataView(buffer,input.byteOffset,input.byteLength):new input.constructor(buffer,input.byteOffset,input.length);
+      }else if(Object.prototype.toString.call(input)==='[object Object]')output={};
+      else fail();
+      seen.set(input,output);
+      if(input instanceof Map){Map.prototype.forEach.call(input,(v,k)=>output.set(copy(k),copy(v)));return output}
+      if(input instanceof Set){Set.prototype.forEach.call(input,v=>output.add(copy(v)));return output}
+      if(Array.isArray(input)||Object.prototype.toString.call(input)==='[object Object]')for(const key of Object.keys(input))Object.defineProperty(output,key,{value:copy(input[key]),writable:true,enumerable:true,configurable:true});
+      return output;
+    };
+    return copy(value);
+  };
+  registerBootstrapCallback('installHistoryClone',cloneHistoryState);
   class History { constructor(){illegal('History')} pushState(s,t,u){const error=host.historyPush(u==null?'':String(u),s);if(error)throw new DOMException(error,'SecurityError')} replaceState(s,t,u){const error=host.historyReplace(u==null?'':String(u),s);if(error)throw new DOMException(error,'SecurityError')} back(){host.historyGo(-1)} forward(){host.historyGo(1)} go(n=0){host.historyGo(Number(n)|0)} get length(){return host.historyLength()} get state(){return host.historyState()} get scrollRestoration(){return historySlots.get(this).scrollRestoration} set scrollRestoration(value){value=String(value);if(value==='auto'||value==='manual')historySlots.get(this).scrollRestoration=value} }
   const storageAreas=new WeakMap();
   class Storage { constructor(){illegal('Storage')} get length(){return host.storageLength(storageAreas.get(this))} key(i){return host.storageKey(storageAreas.get(this),Number(i)|0)} getItem(k){return host.storageGet(storageAreas.get(this),String(k))} setItem(k,v){host.storageSet(storageAreas.get(this),String(k),String(v))} removeItem(k){host.storageRemove(storageAreas.get(this),String(k))} clear(){host.storageClear(storageAreas.get(this))} }

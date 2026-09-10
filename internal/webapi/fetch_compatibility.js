@@ -122,7 +122,7 @@
         if(signal.aborted)throw signal.reason;
         const bodyBytes=raw.bodyBytes!==undefined?new Uint8Array(raw.bodyBytes):new Encoder().encode(raw.body??'');
         const list=headers(raw.headers,'response');guards.set(list,'immutable');
-        return createResponse({status:raw.status,statusText:raw.statusText||'',url:raw.url||request.url,headers:list,type:raw.type||'basic',redirected:Boolean(raw.redirected)},nullBodyStatus(raw.status)||request.method==='HEAD'||['opaque','opaqueredirect','error'].includes(raw.type)?{stream:null,type:null}:responseBody(bodyBytes,signal,list.get('content-type')));
+        return createResponse({status:raw.status,statusText:raw.statusText||'',url:raw.type==='opaque'?'':raw.url||request.url,headers:list,type:raw.type||'basic',redirected:Boolean(raw.redirected)},nullBodyStatus(raw.status)||request.method==='HEAD'||['opaque','opaqueredirect','error'].includes(raw.type)?{stream:null,type:null}:responseBody(bodyBytes,signal,list.get('content-type')));
       })();
       return await Promise.race([operation,aborted]);
     }finally{signal.removeEventListener('abort',abortListener)}
