@@ -1,0 +1,1023 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+  "fixtureSHA256": "12c504d45b4b2add8f185e5741ca353b8796f2ec607734f8e5b669076187a397",
+  "mode": "headful",
+  "cacheControl": "no-store",
+  "cycles": [
+    {
+      "options": {
+        "name": "inflight-0"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 2,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "completed-0",
+        "completed": true
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 2,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "anonymous-0",
+        "linkCrossOrigin": "",
+        "imageCrossOrigin": "anonymous"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 2,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "mismatch-0",
+        "imageCrossOrigin": "anonymous"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 2,
+        "timing": [
+          "link",
+          "img"
+        ]
+      },
+      "requests": 2
+    },
+    {
+      "options": {
+        "name": "credentials-mismatch-0",
+        "linkCrossOrigin": "anonymous",
+        "imageCrossOrigin": "use-credentials"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 2,
+        "timing": [
+          "link",
+          "img"
+        ]
+      },
+      "requests": 2
+    },
+    {
+      "options": {
+        "name": "destination-mismatch-0",
+        "preloadAs": "fetch"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 2,
+        "timing": [
+          "link",
+          "img"
+        ]
+      },
+      "requests": 2
+    },
+    {
+      "options": {
+        "name": "script-0",
+        "destination": "script"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 0,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "style-0",
+        "destination": "style"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 0,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "fetch-0",
+        "destination": "fetch",
+        "linkCrossOrigin": "anonymous"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 0,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "fetch-mismatch-0",
+        "destination": "fetch"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 0,
+        "timing": [
+          "link",
+          "fetch"
+        ]
+      },
+      "requests": 2
+    },
+    {
+      "options": {
+        "name": "xhr-0",
+        "destination": "xhr",
+        "preloadAs": "fetch",
+        "linkCrossOrigin": "anonymous"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 0,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "script-completed-0",
+        "destination": "script",
+        "completed": true
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 0,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "style-completed-0",
+        "destination": "style",
+        "completed": true
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 0,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "fetch-completed-0",
+        "destination": "fetch",
+        "completed": true,
+        "linkCrossOrigin": "anonymous"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 0,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "image-status404-0",
+        "fail": true
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 2,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "image-status404-completed-0",
+        "fail": true,
+        "completed": true
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 2,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "image-invalid-0",
+        "invalid": true
+      },
+      "result": {
+        "events": [
+          "image:error",
+          "link:error"
+        ],
+        "complete": true,
+        "width": 0,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "image-invalid-completed-0",
+        "invalid": true,
+        "completed": true
+      },
+      "result": {
+        "events": [
+          "image:error",
+          "link:error"
+        ],
+        "complete": true,
+        "width": 0,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "inflight-1"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 2,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "completed-1",
+        "completed": true
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 2,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "anonymous-1",
+        "linkCrossOrigin": "",
+        "imageCrossOrigin": "anonymous"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 2,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "mismatch-1",
+        "imageCrossOrigin": "anonymous"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 2,
+        "timing": [
+          "link",
+          "img"
+        ]
+      },
+      "requests": 2
+    },
+    {
+      "options": {
+        "name": "credentials-mismatch-1",
+        "linkCrossOrigin": "anonymous",
+        "imageCrossOrigin": "use-credentials"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 2,
+        "timing": [
+          "link",
+          "img"
+        ]
+      },
+      "requests": 2
+    },
+    {
+      "options": {
+        "name": "destination-mismatch-1",
+        "preloadAs": "fetch"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 2,
+        "timing": [
+          "link",
+          "img"
+        ]
+      },
+      "requests": 2
+    },
+    {
+      "options": {
+        "name": "script-1",
+        "destination": "script"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 0,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "style-1",
+        "destination": "style"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 0,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "fetch-1",
+        "destination": "fetch",
+        "linkCrossOrigin": "anonymous"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 0,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "fetch-mismatch-1",
+        "destination": "fetch"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 0,
+        "timing": [
+          "link",
+          "fetch"
+        ]
+      },
+      "requests": 2
+    },
+    {
+      "options": {
+        "name": "xhr-1",
+        "destination": "xhr",
+        "preloadAs": "fetch",
+        "linkCrossOrigin": "anonymous"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 0,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "script-completed-1",
+        "destination": "script",
+        "completed": true
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 0,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "style-completed-1",
+        "destination": "style",
+        "completed": true
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 0,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "fetch-completed-1",
+        "destination": "fetch",
+        "completed": true,
+        "linkCrossOrigin": "anonymous"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 0,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "image-status404-1",
+        "fail": true
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 2,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "image-status404-completed-1",
+        "fail": true,
+        "completed": true
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 2,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "image-invalid-1",
+        "invalid": true
+      },
+      "result": {
+        "events": [
+          "image:error",
+          "link:error"
+        ],
+        "complete": true,
+        "width": 0,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "image-invalid-completed-1",
+        "invalid": true,
+        "completed": true
+      },
+      "result": {
+        "events": [
+          "image:error",
+          "link:error"
+        ],
+        "complete": true,
+        "width": 0,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "inflight-2"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 2,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "completed-2",
+        "completed": true
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 2,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "anonymous-2",
+        "linkCrossOrigin": "",
+        "imageCrossOrigin": "anonymous"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 2,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "mismatch-2",
+        "imageCrossOrigin": "anonymous"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 2,
+        "timing": [
+          "link",
+          "img"
+        ]
+      },
+      "requests": 2
+    },
+    {
+      "options": {
+        "name": "credentials-mismatch-2",
+        "linkCrossOrigin": "anonymous",
+        "imageCrossOrigin": "use-credentials"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 2,
+        "timing": [
+          "link",
+          "img"
+        ]
+      },
+      "requests": 2
+    },
+    {
+      "options": {
+        "name": "destination-mismatch-2",
+        "preloadAs": "fetch"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 2,
+        "timing": [
+          "link",
+          "img"
+        ]
+      },
+      "requests": 2
+    },
+    {
+      "options": {
+        "name": "script-2",
+        "destination": "script"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 0,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "style-2",
+        "destination": "style"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 0,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "fetch-2",
+        "destination": "fetch",
+        "linkCrossOrigin": "anonymous"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 0,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "fetch-mismatch-2",
+        "destination": "fetch"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 0,
+        "timing": [
+          "link",
+          "fetch"
+        ]
+      },
+      "requests": 2
+    },
+    {
+      "options": {
+        "name": "xhr-2",
+        "destination": "xhr",
+        "preloadAs": "fetch",
+        "linkCrossOrigin": "anonymous"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 0,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "script-completed-2",
+        "destination": "script",
+        "completed": true
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 0,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "style-completed-2",
+        "destination": "style",
+        "completed": true
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 0,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "fetch-completed-2",
+        "destination": "fetch",
+        "completed": true,
+        "linkCrossOrigin": "anonymous"
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 0,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "image-status404-2",
+        "fail": true
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 2,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "image-status404-completed-2",
+        "fail": true,
+        "completed": true
+      },
+      "result": {
+        "events": [
+          "image:load",
+          "link:load"
+        ],
+        "complete": true,
+        "width": 2,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "image-invalid-2",
+        "invalid": true
+      },
+      "result": {
+        "events": [
+          "image:error",
+          "link:error"
+        ],
+        "complete": true,
+        "width": 0,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "options": {
+        "name": "image-invalid-completed-2",
+        "invalid": true,
+        "completed": true
+      },
+      "result": {
+        "events": [
+          "image:error",
+          "link:error"
+        ],
+        "complete": true,
+        "width": 0,
+        "timing": [
+          "link"
+        ]
+      },
+      "requests": 1
+    }
+  ]
+}

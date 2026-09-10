@@ -25,6 +25,7 @@ func (r *Realm) initializeNavigationStream() (*documentStream, error) {
 
 func (r *Realm) executeChildNavigationScript(ctx context.Context, navigation *childNavigation, stream *documentStream, node dom.Node) error {
 	realm := navigation.realm
+	realm.preloadResources()
 	if !r.childNavigationCurrent(navigation) || realm.documentStream != stream || realm.document.ScriptStarted(node.ID) {
 		return nil
 	}
@@ -42,13 +43,11 @@ func (r *Realm) executeChildNavigationScript(ctx context.Context, navigation *ch
 			loaded = &streamScriptResponse{}
 			stream.scripts[node.ID] = loaded
 			eventLoop := r.browserEventLoop()
-			referrer := realm.documentURL()
-			request := network.Request{ContextID: navigation.frame.ID, URL: target, Referrer: referrer, SourceURL: referrer, Initiator: network.Script}
-			realm.applyClientHints(&request)
+			request := realm.elementRequest(target, node.Attributes, network.Script)
 			realm.resourceWG.Add(1)
 			go func() {
 				defer realm.resourceWG.Done()
-				response, loadErr := r.agent.Page().loader.Load(stream.ctx, request)
+				response, loadErr := realm.loadResource(stream.ctx, request)
 				if loadErr == nil {
 					loadErr = scriptResponseError(response)
 				}
