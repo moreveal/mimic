@@ -447,6 +447,15 @@ func applyBrowserRequestHeaders(r *Request) {
 	switch r.Initiator {
 	case Navigation, Iframe:
 		mode, destination = "navigate", "document"
+		if source != nil && r.Method != http.MethodGet && r.Method != http.MethodHead {
+			origin := source.Scheme + "://" + source.Host
+			policy := strings.ToLower(r.ReferrerPolicy)
+			downgrade := source.Scheme == "https" && r.URL.Scheme != "https"
+			if r.OpaqueOrigin || source.Scheme != "http" && source.Scheme != "https" || policy == "no-referrer" || policy == "same-origin" && !sameRequestOrigin(source, r.URL) || downgrade && (policy == "strict-origin" || policy == "strict-origin-when-cross-origin" || policy == "no-referrer-when-downgrade" || policy == "") {
+				origin = "null"
+			}
+			setDefault("Origin", origin)
+		}
 		if r.Initiator == Iframe {
 			destination = "iframe"
 		}

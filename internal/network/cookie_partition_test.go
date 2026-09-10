@@ -42,6 +42,10 @@ func TestCookiePartitionIdentityAndDeletion(t *testing.T) {
 	// A document in one partition cannot remove the other partitions or the
 	// unpartitioned cookie with the same name/domain/path.
 	s.SetFromDocument(u, "id=; Max-Age=0; Secure; Partitioned; Path=/", nested)
+	if len(s.All()) != 4 {
+		t.Fatal("cross-site default-Lax deletion must be rejected")
+	}
+	s.SetFromDocument(u, "id=; Max-Age=0; Secure; SameSite=None; Partitioned; Path=/", nested)
 	if got := cookiePairs(s.ForURL(u, nested)); !reflect.DeepEqual(got, []string{"id=shared"}) {
 		t.Fatal(got)
 	}
@@ -63,8 +67,8 @@ func TestCookiePartitionSecurityAndSnapshots(t *testing.T) {
 		t.Fatal("invalid partition accepted")
 	}
 	s.SetFromResponse(u, http.Header{"Set-Cookie": {"id=secret; Secure; HttpOnly; SameSite=None; Partitioned; Path=/"}}, ctx)
-	s.SetFromDocument(u, "id=changed; Secure; Partitioned; Path=/", ctx)
-	s.SetFromDocument(u, "id=; Max-Age=0; Secure; Partitioned; Path=/", ctx)
+	s.SetFromDocument(u, "id=changed; Secure; SameSite=None; Partitioned; Path=/", ctx)
+	s.SetFromDocument(u, "id=; Max-Age=0; Secure; SameSite=None; Partitioned; Path=/", ctx)
 	rows := s.Snapshots()
 	if len(rows) != 1 || rows[0].Cookie.Value != "secret" || !rows[0].HostOnly || rows[0].PartitionKey == nil || !rows[0].PartitionKey.HasCrossSiteAncestor {
 		t.Fatalf("%+v", rows)

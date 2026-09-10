@@ -136,6 +136,8 @@ class Handler(BaseHTTPRequestHandler):
         status, headers = 200, {}
         content_type = 'text/html; charset=utf-8'
         if path.path == '/echo':
+            if query.get('delay'):
+                time.sleep(min(1.0, max(0.0, float(query['delay'][0]))))
             # Exclude transport-dependent header ordering from the semantic value;
             # the independent raw record above retains it in full.
             content_type = 'application/json'
@@ -156,6 +158,17 @@ class Handler(BaseHTTPRequestHandler):
         elif path.path == '/set':
             headers['Set-Cookie'] = query.get('cookie', [''])[0]
             payload = b'ok'
+        elif path.path == '/cookie-redirect':
+            status = int(query.get('status', ['302'])[0])
+            headers['Location'] = query.get('to', ['/navigation'])[0]
+            payload = b''
+        elif path.path == '/navigation':
+            value = dict(method=self.command, cookie=self.headers.get('Cookie', ''),
+                         origin=self.headers.get('Origin', ''), site=self.headers.get('Sec-Fetch-Site', ''))
+            if 'set' in query:
+                headers['Set-Cookie'] = query['set'][0]
+            payload = ('<!doctype html><body><script>globalThis.receivedNavigation=' +
+                       json.dumps(value).replace('<', '\\u003c') + '</script>').encode()
         else:
             payload = b'<!doctype html><html><head><title>Compatibility fixture</title></head><body></body></html>'
         self.send_response(status)
@@ -184,6 +197,7 @@ async def run_case(client, native, case, server):
             # Cookie scope outlives a target in Mimic. The CLI explicitly requires
             # a dedicated process so this cannot erase a user's browsing session.
             await client.call('Network.clearBrowserCookies', session=session)
+            await client.call('Network.clearBrowserCache', session=session)
         for step in case.get('steps', [case]):
             host = step.get('host', '127.0.0.1')
             url = f'http://{host}:{server.server_port}/'
@@ -195,6 +209,32 @@ async def run_case(client, native, case, server):
                 await asyncio.sleep(.02)
             else:
                 raise TimeoutError('document did not complete')
+            if 'scriptNavigation' in step:
+                nav = step['scriptNavigation']
+                destination = f"http://{nav.get('host', '127.0.0.1')}:{server.server_port}/navigation"
+                if nav.get('set'):
+                    destination += '?' + urllib.parse.urlencode({'set': nav['set']})
+                action = destination
+                if nav.get('via'):
+                    action = f"http://{nav['via']}:{server.server_port}/cookie-redirect?" + urllib.parse.urlencode({'status': nav.get('status', 302), 'to': destination})
+                method = nav.get('method', 'GET')
+                surface = await client.call('Runtime.evaluate', {'expression': 'typeof document.createElement("form").submit', 'returnByValue': True}, session)
+                if surface.get('result', {}).get('value') != 'function':
+                    raise RuntimeError('HTMLFormElement.submit is unavailable; script-navigation probe cannot run')
+                script = ('setTimeout(()=>{const f=document.createElement("form");f.method=' + json.dumps(method) +
+                          ';f.action=' + json.dumps(action) + ';if(f.method==="get")for(const [name,value] of new URL(f.action).searchParams){const input=document.createElement("input");input.name=name;input.value=value;f.append(input)}document.body.append(f);f.submit()},10);true')
+                await client.call('Runtime.evaluate', {'expression': script}, session)
+                for _ in range(300):
+                    try:
+                        ready = await client.call('Runtime.evaluate', {'expression': 'location.hostname===' + json.dumps(nav.get('host', '127.0.0.1')) + '&&location.pathname==="/navigation"&&document.readyState==="complete"', 'returnByValue': True}, session)
+                        if ready.get('result', {}).get('value') is True:
+                            break
+                    except RuntimeError as error:
+                        if not any(word in str(error) for word in ('context', 'navigat')):
+                            raise
+                    await asyncio.sleep(.02)
+                else:
+                    raise TimeoutError('script navigation did not complete')
             source = (ROOT / step['file']).read_text(encoding='utf8')
             normalize = (ROOT / 'compatibility/corpus/normalize.js').read_text(encoding='utf8')
             wrapped = '(async()=>{try{const value=await (' + source + ');return {value:(' + normalize + ')(value)}}catch(e){return {exception:{name:e.name,message:e.message}}}})()'
@@ -211,6 +251,13 @@ async def run_case(client, native, case, server):
             results.append(observation)
     except Exception as error:
         outcome = {'harnessError': str(error), 'partialObservations': results}
+        if not native and target:
+            try:
+                trace = await client.call('Mimic.getTrace', session=session)
+                outcome['diagnostics'] = [event for event in trace.get('events', [])
+                                          if event.get('kind') in ('error', 'exception', 'semantic-missing', 'unsupported')][-20:]
+            except Exception:
+                pass  # Keep the original failure when the diagnostic channel is gone.
     finally:
         try:
             if context:

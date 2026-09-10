@@ -19,6 +19,7 @@ main_target = None
 main_ready = None
 capture_active = True
 revisit = False
+preload_source = None
 
 def save(name, obj):
     (OUT / name).write_text(json.dumps(obj, ensure_ascii=False, indent=2), encoding='utf8')
@@ -61,17 +62,28 @@ async def initialize(p):
     is_main = info['targetId'] == main_target
     if is_main:
         main_session = sid
+    resume_attempted = False
     try:
         for method, args in [('Network.enable', {'maxTotalBufferSize': 200000000, 'maxResourceBufferSize': 50000000, 'maxPostDataSize': 50000000, 'enableDurableMessages': True}), ('Runtime.enable', {}), ('Debugger.enable', {'maxScriptsCacheSize': 100000000}), ('Target.setAutoAttach', {'autoAttach': True, 'waitForDebuggerOnStart': True, 'flatten': True})]:
             response = await call(method, args, sid)
             if 'result' not in response:
                 raise RuntimeError(f'{method} failed for {sid}')
+        if preload_source is not None and info['type'] in ('page', 'iframe'):
+            response = await call('Page.enable', {}, sid)
+            if 'result' not in response:
+                raise RuntimeError(f'Page.enable failed for {sid}')
+            response = await call('Page.addScriptToEvaluateOnNewDocument', {'source': preload_source, 'runImmediately': True}, sid)
+            if 'result' not in response:
+                raise RuntimeError(f'Preload failed for {sid}')
+        resume_attempted = True
         response = await call('Runtime.runIfWaitingForDebugger', {}, sid)
         if 'result' not in response:
             raise RuntimeError(f'Failed to resume {sid}')
         if is_main and not main_ready.done():
             main_ready.set_result(sid)
     except Exception as error:
+        if not resume_attempted:
+            await call('Runtime.runIfWaitingForDebugger', {}, sid)
         if is_main and not main_ready.done():
             main_ready.set_exception(error)
         raise
@@ -201,24 +213,29 @@ async def main():
             'endpoint': endpoint, 'sessions': sessions, 'scripts': scripts,
             'bodies': bodies, 'errors': errors, 'navigation': nav,
             'revisitSameURL': revisit,
+            'preloadSHA256': hashlib.sha256(preload_source.encode()).hexdigest() if preload_source is not None else None,
             'limitations': ['Browser-wide Tracing omitted to avoid recording unrelated targets'],
             'files': [{'name': p.name, 'size': p.stat().st_size,
                        'sha256': hashlib.sha256(p.read_bytes()).hexdigest()}
                       for p in OUT.iterdir() if p.is_file()]})
 
 def cli():
-    global OUT, PORT, URL, events, revisit
+    global OUT, PORT, URL, events, revisit, preload_source
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('output', type=pathlib.Path, help='New private output directory')
     parser.add_argument('port', type=int, help='Existing local Chrome CDP port')
     parser.add_argument('url', help='Explicit URL to capture')
     parser.add_argument('--revisit', action='store_true', help='After 30 seconds, navigate to the same URL by GET with the same context cookies')
+    parser.add_argument('--preload', type=pathlib.Path, help='Optional diagnostic JS, applied only in owned page/frame targets; changes execution and requires an uninstrumented control')
     args = parser.parse_args()
     OUT, PORT, URL = args.output, args.port, args.url
     revisit = args.revisit
     if OUT.exists() and any(OUT.iterdir()):
         parser.error('Output directory must be empty; existing captures are never overwritten')
     OUT.mkdir(parents=True, exist_ok=True)
+    if args.preload:
+        preload_source = args.preload.read_text(encoding='utf8')
+        (OUT / 'diagnostic-preload.js').write_text(preload_source, encoding='utf8')
     events = (OUT / 'events.jsonl').open('w', encoding='utf8')
     asyncio.run(main())
 

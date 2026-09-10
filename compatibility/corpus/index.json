@@ -2,8 +2,21 @@
   {"id":"value-normalization","category":"harness-self-test","file":"compatibility/corpus/values.js"},
   {"id":"network","category":"network","file":"compatibility/corpus/network.js"},
   {"id":"temporal","category":"timing-lifecycle","file":"compatibility/corpus/temporal.js"},
+  {"id":"resource-realm-isolation","category":"timing-lifecycle","file":"compatibility/corpus/resource-realm-isolation.js"},
+  {"id":"resource-json","category":"timing-lifecycle","file":"compatibility/corpus/resource-json.js"},
+  {"id":"worker-microtasks","category":"timing-lifecycle","file":"compatibility/corpus/worker-microtasks.js"},
   {"id":"surface","category":"interface-surface","file":"compatibility/corpus/surface.js"},
   {"id":"samesite","category":"cookie-storage","file":"compatibility/corpus/samesite.js"},
+  {"id":"samesite-navigation","category":"cookie-storage","steps":[
+    {"file":"compatibility/corpus/samesite-init.js"},
+    {"file":"compatibility/corpus/samesite-navigation.js","scriptNavigation":{"method":"GET"}},
+    {"file":"compatibility/corpus/samesite-navigation.js","scriptNavigation":{"method":"POST"}},
+    {"host":"localhost","file":"compatibility/corpus/samesite-navigation.js","scriptNavigation":{"method":"GET"}},
+    {"host":"localhost","file":"compatibility/corpus/samesite-navigation.js","scriptNavigation":{"method":"POST"}},
+    {"file":"compatibility/corpus/samesite-navigation.js","scriptNavigation":{"method":"GET","via":"localhost","status":302}},
+    {"file":"compatibility/corpus/samesite-navigation.js","scriptNavigation":{"method":"POST","via":"localhost","status":303}},
+    {"file":"compatibility/corpus/samesite-navigation.js","scriptNavigation":{"method":"POST","via":"localhost","status":307}}
+  ]},
   {"id":"partition","category":"cookie-storage","cookies":true,"steps":[
     {"host":"127.0.0.1","file":"compatibility/corpus/partition.js"},
     {"host":"localhost","file":"compatibility/corpus/partition-revisit.js"},

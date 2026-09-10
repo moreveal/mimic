@@ -4,6 +4,32 @@ package v8
 
 import "github.com/moreveal/mimic/internal/engine"
 
+func (a *adapter) DescribeException(value engine.Value) (engine.ExceptionDetails, bool) {
+	var out engine.ExceptionDetails
+	callback := a.onCallback()
+	if callback == nil {
+		return out, false
+	}
+	local, err := a.localCallbackOrUndefined(callback.scope, value)
+	if err != nil {
+		return out, false
+	}
+	message, err := callback.ctx.CreateMessage(callback.scope.Scope(), local)
+	if err != nil {
+		return out, false
+	}
+	out.Message, err = message.Text(callback.ctx)
+	if err != nil {
+		return out, false
+	}
+	out.Filename, _ = message.ResourceName(callback.ctx)
+	line, _, _ := message.LineNumber(callback.ctx)
+	column, _ := message.StartColumn()
+	out.Line = max(int(line), 0)
+	out.Column = max(int(column)+1, 0)
+	return out, true
+}
+
 func (a *adapter) CaptureNativeStack(limit int, sources bool) []engine.NativeStackFrame {
 	callback := a.onCallback()
 	if callback == nil {

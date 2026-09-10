@@ -1,5 +1,18 @@
 package engine
 
+// ExceptionDetails uses engine metadata rather than script-visible Error.stack.
+// The value itself stays in its originating realm for ErrorEvent.error identity.
+type ExceptionDetails struct {
+	Message  string `json:"message"`
+	Filename string `json:"filename"`
+	Line     int    `json:"lineno"`
+	Column   int    `json:"colno"`
+}
+
+type ExceptionInspector interface {
+	DescribeException(Value) (ExceptionDetails, bool)
+}
+
 // NativeStackFrame is diagnostic data copied from the engine, without reading
 // application Error.stack or invoking application formatting hooks.
 type NativeStackFrame struct {
