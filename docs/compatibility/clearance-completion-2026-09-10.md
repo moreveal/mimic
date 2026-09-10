@@ -53,6 +53,22 @@ Thus the retry counter and GET are consequences of the received Mimic
 continuation, rather than evidence that form submission was attempted and lost.
 The actual server-side reason remains unknown.
 
+### Available owner-side Security Event
+
+The local export `firewall-event-a38aeb206cb1a893.json` matches the earlier
+manual capture's repeated GET at `2026-09-10T02:14:18Z`. It records
+`action: jschallenge`, `source: firewallCustom`, description `e2e-test`, and
+HTTP/3. The rule ID, ruleset ID, ruleset version 6, rule version 2, client IP,
+and User-Agent match the two older owner exports. The client IP is not copied
+into this report.
+
+This supports an unchanged test rule and stable client identity across those
+three exported requests. It contains neither bot score, JA4, Cookie headers,
+nor the challenge-platform decision reason. It therefore does not explain the
+retry, prove continuity with Chrome's client address, or replace the missing
+comparison of submitted observations. No stronger server verdict should be
+inferred from `jschallenge` alone.
+
 ## Network comparison
 
 Merging native `requestWillBeSentExtraInfo` with the corresponding request
