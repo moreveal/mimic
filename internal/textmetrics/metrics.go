@@ -15,6 +15,7 @@ import (
 
 	"github.com/go-text/typesetting/font"
 	ot "github.com/go-text/typesetting/font/opentype"
+	"github.com/go-text/typesetting/font/opentype/tables"
 	"github.com/go-text/typesetting/harfbuzz"
 	"github.com/go-text/typesetting/segmenter"
 )
@@ -33,11 +34,13 @@ type loaded struct {
 }
 
 type Engine struct {
-	dirs    []string
-	catalog []resource
-	scanned bool
-	faces   map[string]*loaded
-	bytes   int
+	resources  map[string]resource
+	localNames map[string]resource
+	dirs       []string
+	catalog    []resource
+	scanned    bool
+	faces      map[string]*loaded
+	bytes      int
 }
 
 func New() *Engine {
@@ -56,7 +59,7 @@ func New() *Engine {
 // NewDirectories permits explicit font resources on a non-Windows host. The
 // installed Windows reference fonts themselves are not distributed by Mimic.
 func NewDirectories(dirs []string) *Engine {
-	return &Engine{dirs: append([]string(nil), dirs...), faces: map[string]*loaded{}}
+	return &Engine{dirs: append([]string(nil), dirs...), faces: map[string]*loaded{}, resources: map[string]resource{}, localNames: map[string]resource{}}
 }
 
 func (e *Engine) scan() {
@@ -88,6 +91,16 @@ func (e *Engine) scan() {
 					d.Aspect.SetDefaults()
 					if d.Family != "" {
 						e.catalog = append(e.catalog, resource{path, index, strings.ToLower(d.Family), d.Aspect})
+						if raw, err := loader.RawTable(ot.MustNewTag("name")); err == nil {
+							if names, _, err := tables.ParseName(raw); err == nil {
+								for _, id := range []tables.NameID{4, 6} {
+									if name := names.Name(id); name != "" {
+										e.localNames[strings.ToLower(name)] = e.catalog[len(e.catalog)-1]
+									}
+								}
+							}
+						}
+
 					}
 				}
 			}
@@ -96,7 +109,7 @@ func (e *Engine) scan() {
 	}
 }
 
-func (e *Engine) selectResource(families string, weight float64, italic bool) (resource, error) {
+func (e *Engine) selectResource(families string, weight float64, italic bool, choices []FontReference) (resource, error) {
 	e.scan()
 	names := strings.Split(families, ",")
 	names = append(names, "serif")
@@ -104,6 +117,31 @@ func (e *Engine) selectResource(families string, weight float64, italic bool) (r
 		name = strings.TrimSpace(name)
 		quoted := strings.HasPrefix(name, "\"") || strings.HasPrefix(name, "'")
 		name = strings.ToLower(strings.Trim(name, "\"'"))
+		bestChoice := -1
+		choiceScore := math.Inf(1)
+		for i, choice := range choices {
+			if strings.ToLower(strings.Trim(choice.Family, "\"'")) != name {
+				continue
+			}
+			if _, ok := e.resources[choice.ID]; !ok {
+				continue
+			}
+			score := math.Abs(choice.Weight - weight)
+			if (choice.Style != "normal") != italic {
+				score += 10000
+			}
+			if score <= choiceScore {
+				choiceScore = score
+				bestChoice = i
+			}
+		}
+		if bestChoice >= 0 {
+			if reason := choices[bestChoice].Unsupported; reason != "" {
+				return resource{}, fmt.Errorf("font descriptor semantics unsupported: %s", reason)
+			}
+			return e.resources[choices[bestChoice].ID], nil
+		}
+
 		if !quoted {
 			switch name {
 			case "serif":
@@ -211,6 +249,9 @@ type Result struct {
 }
 
 func (e *Engine) Shape(text, families string, size, weight float64, italic, noKern, noLigatures bool) (Result, error) {
+	return e.ShapeWithFonts(text, families, size, weight, italic, noKern, noLigatures, nil)
+}
+func (e *Engine) ShapeWithFonts(text, families string, size, weight float64, italic, noKern, noLigatures bool, choices []FontReference) (Result, error) {
 	if !finite(size) || size <= 0 || size > 4096 || !finite(weight) {
 		return Result{}, fmt.Errorf("unsupported font size or weight")
 	}
@@ -218,7 +259,7 @@ func (e *Engine) Shape(text, families string, size, weight float64, italic, noKe
 	if len(runes) > 16384 {
 		return Result{}, fmt.Errorf("text complexity limit")
 	}
-	r, err := e.selectResource(families, weight, italic)
+	r, err := e.selectResource(families, weight, italic, choices)
 	if err != nil {
 		return Result{}, err
 	}
@@ -241,7 +282,7 @@ func (e *Engine) Shape(text, families string, size, weight float64, italic, noKe
 		key := string(cluster.Text)
 		selected := fallbackCache[key]
 		if selected == nil {
-			selected, err = e.fallbackFace(f, cluster.Text, families, weight, italic)
+			selected, err = e.fallbackFace(f, cluster.Text, families, weight, italic, choices)
 			if err == nil {
 				fallbackCache[key] = selected
 			}

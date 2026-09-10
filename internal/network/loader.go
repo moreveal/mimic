@@ -175,6 +175,15 @@ func (l *Loader) Load(ctx context.Context, r Request) (Response, error) {
 	if snapshot.Offline {
 		return Response{}, fmt.Errorf("network is offline")
 	}
+	if r.URL.Scheme == "data" {
+		body, contentType, err := decodeDataURL(r.URL)
+		if err != nil {
+			return Response{}, err
+		}
+		headers := make(http.Header)
+		headers.Set("Content-Type", contentType)
+		return l.after(ctx, r, Response{Status: http.StatusOK, Headers: headers, Body: body, URL: r.URL, Synthetic: true})
+	}
 	if r.URL.Scheme == "blob" {
 		if r.Headers.Get("Accept") == "" {
 			r.Headers.Set("Accept", "*/*")

@@ -3,6 +3,31 @@ package browser
 import "github.com/moreveal/mimic/internal/engine"
 
 func (r *Realm) installDocumentCompatibility(host map[string]any) {
+	host["stylesheetResource"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		u, err := r.resolveDocument(strarg(args, 0))
+		if err != nil {
+			return nil, nil
+		}
+		res, ok := r.agent.Page().loader.CompletedURL(u.String())
+		if !ok || res.URL == nil || res.Status < 200 || res.Status >= 300 {
+			return nil, nil
+		}
+		return r.val(map[string]any{"body": string(res.Body), "url": res.URL.String(), "crossOrigin": res.URL.Scheme != r.documentURL().Scheme || res.URL.Host != r.documentURL().Host}), nil
+	})
+
+	host["notificationPermission"] = r.fn(func(_ engine.Value, _ []engine.Value) (engine.Value, error) {
+		permission := r.agent.Page().Environment().Permissions["notifications"]
+		if permission != "granted" && permission != "denied" {
+			permission = "default"
+		}
+		return r.val(permission), nil
+	})
+	host["documentLastModified"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		if r.lastModified.IsZero() {
+			return r.val(0), nil
+		}
+		return r.val(r.lastModified.UnixMilli()), nil
+	})
 	host["createDocumentFragment"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		return r.val(nodeData(r.document.CreateDocumentFragment())), nil
 	})

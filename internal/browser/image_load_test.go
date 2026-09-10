@@ -2,9 +2,11 @@ package browser
 
 import (
 	"context"
+	"encoding/base64"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"strconv"
 	"sync/atomic"
 	"testing"
 	"time"
@@ -12,6 +14,28 @@ import (
 	chrome152 "github.com/moreveal/mimic/chrome/152"
 	v8engine "github.com/moreveal/mimic/internal/engine/v8"
 )
+
+func TestImageReadbackOriginPropagatesAndResets(t *testing.T) {
+	pixels, _ := base64.StdEncoding.DecodeString("iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAYAAAD0In+KAAAADklEQVR4nGP4z8DwHwQBEPgD/U6VwW8AAAAASUVORK5CYII=")
+	images := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "image/png")
+		if r.URL.Path == "/cors" {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+		}
+		w.Write(pixels)
+	}))
+	defer images.Close()
+	historyTestPages(t, func(t *testing.T, p *Page) {
+		navigateCapabilityFixture(t, p)
+		expression := `(async()=>{const url=` + strconv.Quote(images.URL) + `;const image=new Image();image.src=url+'/opaque';await image.decode();const a=new OffscreenCanvas(2,1),x=a.getContext('2d');x.drawImage(image,0,0);const read=c=>{try{c.getImageData(0,0,1,1);return 'ok'}catch(e){return e.name}};if(read(x)!=='SecurityError')return 'image taint';const bitmap=await createImageBitmap(a),b=new OffscreenCanvas(2,1),y=b.getContext('2d');y.drawImage(bitmap,0,0);if(read(y)!=='SecurityError')return 'bitmap taint';b.width=2;if(read(y)!=='ok')return 'reset';const allowed=new Image();allowed.crossOrigin='anonymous';allowed.src=url+'/cors';await allowed.decode();y.drawImage(allowed,0,0);if(String(y.getImageData(0,0,2,1).data)!=='255,0,0,255,0,255,0,255')return 'cors pixels';const denied=new Image();denied.crossOrigin='anonymous';denied.src=url+'/denied';return await denied.decode().then(()=> 'cors accepted',e=>e.name==='EncodingError'?'ok':e.name)})()`
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+		value, err := p.Evaluate(ctx, expression)
+		if err != nil || value != "ok" {
+			t.Fatalf("readback: %v %v", value, err)
+		}
+	})
+}
 
 func TestDetachedImageLoadCoalescesAndBlocksDocumentLoad(t *testing.T) {
 	var obsolete, images atomic.Int32

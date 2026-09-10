@@ -1,0 +1,220 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/document_state_mutations_oracle.js",
+    "fixtureSHA256": "3b62ea7d26d84f8445e3707b4b39acf34d9d0d89b82477dc35d7524f0ede3d14",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "active.mutate.designMode": [
+      [
+        "on",
+        null
+      ],
+      [
+        "on",
+        null
+      ],
+      [
+        "on",
+        null
+      ],
+      [
+        "off",
+        null
+      ],
+      [
+        "off",
+        null
+      ]
+    ],
+    "active.mutate.xmlVersion": [
+      [
+        "1.0",
+        null
+      ],
+      "NotSupportedError",
+      "NotSupportedError"
+    ],
+    "active.mutate.xmlStandalone": [
+      [
+        true,
+        null
+      ],
+      [
+        false,
+        null
+      ]
+    ],
+    "active.mutate.fgColor": [
+      [
+        "red",
+        "red"
+      ],
+      [
+        "#abcdef",
+        "#abcdef"
+      ],
+      [
+        "garbage",
+        "garbage"
+      ],
+      [
+        "",
+        ""
+      ]
+    ],
+    "active.mutate.bgColor": [
+      [
+        "blue",
+        "blue"
+      ],
+      [
+        "",
+        ""
+      ]
+    ],
+    "inert.mutate.designMode": [
+      [
+        "on",
+        null
+      ],
+      [
+        "on",
+        null
+      ],
+      [
+        "on",
+        null
+      ],
+      [
+        "off",
+        null
+      ],
+      [
+        "off",
+        null
+      ]
+    ],
+    "inert.mutate.xmlVersion": [
+      [
+        "1.0",
+        null
+      ],
+      "NotSupportedError",
+      "NotSupportedError"
+    ],
+    "inert.mutate.xmlStandalone": [
+      [
+        true,
+        null
+      ],
+      [
+        false,
+        null
+      ]
+    ],
+    "inert.mutate.fgColor": [
+      [
+        "red",
+        "red"
+      ],
+      [
+        "#abcdef",
+        "#abcdef"
+      ],
+      [
+        "garbage",
+        "garbage"
+      ],
+      [
+        "",
+        ""
+      ]
+    ],
+    "inert.mutate.bgColor": [
+      [
+        "blue",
+        "blue"
+      ],
+      [
+        "",
+        ""
+      ]
+    ],
+    "xml.mutate.designMode": [
+      [
+        "on",
+        null
+      ],
+      [
+        "on",
+        null
+      ],
+      [
+        "on",
+        null
+      ],
+      [
+        "off",
+        null
+      ],
+      [
+        "off",
+        null
+      ]
+    ],
+    "xml.mutate.xmlVersion": [
+      [
+        "1.0",
+        null
+      ],
+      "NotSupportedError",
+      "NotSupportedError"
+    ],
+    "xml.mutate.xmlStandalone": [
+      [
+        true,
+        null
+      ],
+      [
+        false,
+        null
+      ]
+    ],
+    "xml.mutate.fgColor": [
+      [
+        "",
+        null
+      ],
+      [
+        "",
+        null
+      ],
+      [
+        "",
+        null
+      ],
+      [
+        "",
+        null
+      ]
+    ],
+    "xml.mutate.bgColor": [
+      [
+        "",
+        null
+      ],
+      [
+        "",
+        null
+      ]
+    ]
+  }
+}

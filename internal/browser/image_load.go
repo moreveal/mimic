@@ -2,17 +2,24 @@ package browser
 
 import (
 	"context"
+	"fmt"
 	"net/http"
+	"net/url"
 	"strings"
 
+	"github.com/moreveal/mimic/internal/imageresource"
 	"github.com/moreveal/mimic/internal/network"
 	"github.com/moreveal/mimic/internal/scheduler"
 )
 
 type imageLoad struct {
-	queued bool
-	cancel context.CancelFunc
-	blocks bool
+	complete    bool
+	currentSrc  string
+	decoded     *imageresource.Image
+	originClean bool
+	queued      bool
+	cancel      context.CancelFunc
+	blocks      bool
 }
 
 // Image requests belong to their document even before the element is inserted.
@@ -30,7 +37,12 @@ func (r *Realm) updateImage(id int64, changed bool) {
 		previous.cancel()
 	}
 	reason := "image"
-	current := &imageLoad{queued: true, blocks: r.beginLoadBlocker(reason)}
+	current := &imageLoad{originClean: true, queued: true, blocks: r.beginLoadBlocker(reason)}
+	if previous != nil {
+		current.decoded = previous.decoded
+		current.currentSrc = previous.currentSrc
+		current.originClean = previous.originClean
+	}
 	r.imageLoads[id] = current
 	if previous != nil && previous.blocks {
 		previous.blocks = false
@@ -39,6 +51,10 @@ func (r *Realm) updateImage(id int64, changed bool) {
 	finish := func(ctx context.Context, kind string) error {
 		if r.imageLoads[id] != current {
 			return nil
+		}
+		current.complete = true
+		if kind != "load" {
+			current.decoded = nil
 		}
 		defer func() {
 			if current.blocks {
@@ -80,7 +96,11 @@ func (r *Realm) updateImage(id int64, changed bool) {
 			headers.Set("Origin", r.origin)
 			mode = "cors"
 		}
-		request := network.Request{ContextID: r.agent.ContextID(), URL: u, Referrer: referrer, SourceURL: r.documentURL(), Headers: headers, Initiator: network.Image, Mode: mode}
+		credentials := "include"
+		if mode == "cors" && !strings.EqualFold(node.Attributes["crossorigin"], "use-credentials") {
+			credentials = "same-origin"
+		}
+		request := network.Request{Credentials: credentials, ContextID: r.agent.ContextID(), URL: u, Referrer: referrer, SourceURL: r.documentURL(), Headers: headers, Initiator: network.Image, Mode: mode}
 		r.applyClientHints(&request)
 		resourceContext, cancel := context.WithCancel(r.resourceContext)
 		current.cancel = cancel
@@ -92,11 +112,47 @@ func (r *Realm) updateImage(id int64, changed bool) {
 			if resourceContext.Err() != nil {
 				return
 			}
+			var decoded *imageresource.Image
 			kind := "load"
+			finalURL := response.URL
+			if finalURL == nil {
+				finalURL = u
+			}
+			originURL := finalURL
+			if finalURL.Scheme == "blob" {
+				if parsed, e := url.Parse(strings.TrimPrefix(finalURL.String(), "blob:")); e == nil {
+					originURL = parsed
+				}
+			}
+			originClean := finalURL.Scheme == "data" || originURL.Scheme == request.SourceURL.Scheme && originURL.Host == request.SourceURL.Host
+			if mode == "cors" && !originClean && err == nil {
+				allow := response.Headers.Get("Access-Control-Allow-Origin")
+				originClean = allow == r.origin || allow == "*" && credentials != "include"
+				if credentials == "include" {
+					originClean = originClean && response.Headers.Get("Access-Control-Allow-Credentials") == "true"
+				}
+				if !originClean {
+					err = fmt.Errorf("image CORS response disallowed")
+				}
+			}
 			if err != nil || response.Status < 200 || response.Status >= 300 {
 				kind = "error"
+			} else {
+				decoded, err = imageresource.Decode(response.Body, response.Headers.Get("Content-Type"))
+				if err != nil {
+					kind = "error"
+				}
 			}
-			r.scheduler.Post(scheduler.Network, 0, func(ctx context.Context) error { r.notifyPerformanceObservers(ctx); return finish(ctx, kind) })
+			r.scheduler.Post(scheduler.Network, 0, func(ctx context.Context) error {
+				if r.imageLoads[id] != current {
+					return nil
+				}
+				current.currentSrc = u.String()
+				current.decoded = decoded
+				current.originClean = originClean
+				r.notifyPerformanceObservers(ctx)
+				return finish(ctx, kind)
+			})
 		}()
 		return nil
 	})

@@ -44,7 +44,7 @@ func TestBase64WorkerChrome(t *testing.T) {
 }
 
 func TestDocumentCompatibilityOracle(t *testing.T) {
-	for _, name := range []string{"document-visibility", "html-enumerated", "form-reflection", "webgl-color-space", "document-handlers", "element-handlers", "base64", "navigator-power", "cross-realm-nodes", "svg-bbox", "css-font-size", "css-priority", "svg-css-transform"} {
+	for _, name := range []string{"image-intrinsic", "screen-focus", "font-events", "data-resources", "image-resources", "font-metrics-loading", "css-named-colors", "owned-stylesheets", "platform-state", "document-state-mutations", "document-visibility", "html-enumerated", "form-reflection", "webgl-color-space", "document-handlers", "element-handlers", "base64", "navigator-power", "cross-realm-nodes", "svg-bbox", "css-font-size", "css-priority", "svg-css-transform"} {
 		t.Run(name, func(t *testing.T) {
 			source, err := os.ReadFile("testdata/" + strings.ReplaceAll(name, "-", "_") + "_oracle.js")
 			if err != nil {
@@ -63,7 +63,7 @@ func TestDocumentCompatibilityOracle(t *testing.T) {
 			historyTestPages(t, func(t *testing.T, p *Page) {
 				navigateCapabilityFixture(t, p)
 				expression := "JSON.stringify(" + string(source) + ")"
-				if name == "navigator-power" {
+				if name == "image-intrinsic" || name == "font-events" || name == "data-resources" || name == "navigator-power" || name == "font-metrics-loading" || name == "image-resources" {
 					expression = "Promise.resolve(" + string(source) + ").then(JSON.stringify)"
 				}
 				value, err := p.Evaluate(context.Background(), expression)

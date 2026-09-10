@@ -11,7 +11,7 @@ import (
 )
 
 func TestFontCollectionsOracle(t *testing.T) {
-	for _, name := range []string{"collections", "descriptors", "constructor", "documents"} {
+	for _, name := range []string{"loading", "collections", "descriptors", "constructor", "documents"} {
 		t.Run(name, func(t *testing.T) { fontOracle(t, name) })
 	}
 }
@@ -66,15 +66,15 @@ func TestFontResourceBoundaryAndDocumentOwnership(t *testing.T) {
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		value, err := p.Evaluate(context.Background(), `(async()=>{
  const a=document.implementation.createHTMLDocument('a'),b=document.implementation.createHTMLDocument('b');
- const face=new FontFace('Example','local(Example)');
+ const face=new FontFace('Example','local(mimic-no-such-font-98347)');
  a.fonts.add(face);
  if(a.fonts===b.fonts||a.fonts.size!==1||b.fonts.size!==0||document.fonts.size!==0)return false;
  const promise=face.load();
  if(promise!==face.loaded||face.status==='loaded')return false;
- if(await promise.then(()=>'',e=>e.name)!=='NotSupportedError')return false;
+ if(await promise.then(()=>'',e=>e.name)!=='NetworkError')return false;
  if(a.fonts.size!==1||!a.fonts.has(face))return false;
- try{a.fonts.check('12px Example');return false}catch(e){if(e.name!=='NotSupportedError')return false}
- return await a.fonts.load('12px Example').then(()=>false,e=>e.name==='NotSupportedError');
+ if(a.fonts.check('12px Example')!==false)return false;
+ return await a.fonts.load('12px Example').then(()=>false,e=>e.name==='NetworkError');
 })()`)
 		if err != nil || value != true {
 			t.Fatalf("value=%v error=%v", value, err)

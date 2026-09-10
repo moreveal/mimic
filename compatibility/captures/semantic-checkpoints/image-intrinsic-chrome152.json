@@ -1,0 +1,56 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/image_intrinsic_oracle.js",
+    "fixtureSHA256": "705800d8b1bcf4cb294689d6462d6c088d9fd3140e04dd86c216697501866a83",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "": [
+      300,
+      150
+    ],
+    "width=\"100\"": [
+      100,
+      150
+    ],
+    "height=\"100\"": [
+      300,
+      100
+    ],
+    "viewBox=\"0 0 10 20\"": [
+      75,
+      150
+    ],
+    "width=\"100\" viewBox=\"0 0 10 20\"": [
+      100,
+      200
+    ],
+    "height=\"100\" viewBox=\"0 0 10 20\"": [
+      50,
+      100
+    ],
+    "width=\"50%\" height=\"50%\" viewBox=\"0 0 10 20\"": [
+      75,
+      150
+    ],
+    "width=\"1in\" height=\"2cm\"": [
+      96,
+      76
+    ],
+    "width=\"0\" height=\"0\"": [
+      0,
+      0
+    ],
+    "width=\"-1\" height=\"7\"": [
+      0,
+      7
+    ]
+  }
+}

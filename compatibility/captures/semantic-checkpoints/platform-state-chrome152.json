@@ -1,0 +1,515 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/platform_state_oracle.js",
+    "fixtureSHA256": "a519498ddf600ee7ac0ad0f9784b3a595fff728d22f6586a3940876b312da2db",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "active.xmlEncoding": [
+      null,
+      true,
+      false,
+      false
+    ],
+    "active.xmlVersion": [
+      null,
+      true,
+      false,
+      false
+    ],
+    "active.xmlStandalone": [
+      false,
+      true,
+      false,
+      false
+    ],
+    "active.designMode": [
+      "off",
+      true,
+      false,
+      false
+    ],
+    "active.fgColor": [
+      "",
+      true,
+      false,
+      false
+    ],
+    "active.linkColor": [
+      "",
+      true,
+      false,
+      false
+    ],
+    "active.vlinkColor": [
+      "",
+      true,
+      false,
+      false
+    ],
+    "active.alinkColor": [
+      "",
+      true,
+      false,
+      false
+    ],
+    "active.bgColor": [
+      "",
+      true,
+      false,
+      false
+    ],
+    "active.scrollingElement": [
+      [
+        "[object HTMLHtmlElement]"
+      ],
+      true,
+      true,
+      false
+    ],
+    "active.fragmentDirective": [
+      [
+        "[object FragmentDirective]"
+      ],
+      true,
+      false,
+      false
+    ],
+    "active.timeline": [
+      [
+        "[object DocumentTimeline]"
+      ],
+      true,
+      false,
+      false
+    ],
+    "active.fullscreenEnabled": [
+      true,
+      true,
+      false,
+      false
+    ],
+    "active.fullscreen": [
+      false,
+      true,
+      false,
+      false
+    ],
+    "active.webkitIsFullScreen": [
+      false,
+      true,
+      false,
+      false
+    ],
+    "active.webkitCurrentFullScreenElement": [
+      null,
+      true,
+      false,
+      false
+    ],
+    "active.webkitFullscreenEnabled": [
+      true,
+      true,
+      false,
+      false
+    ],
+    "active.webkitFullscreenElement": [
+      null,
+      true,
+      false,
+      false
+    ],
+    "active.modelContext": [
+      [
+        "[object ModelContext]"
+      ],
+      true,
+      false,
+      false
+    ],
+    "active.rootElement": [
+      null,
+      true,
+      false,
+      false
+    ],
+    "active.activeViewTransition": [
+      null,
+      true,
+      false,
+      false
+    ],
+    "active.pictureInPictureEnabled": [
+      true,
+      true,
+      false,
+      false
+    ],
+    "active.pointerLockElement": [
+      null,
+      true,
+      false,
+      false
+    ],
+    "active.fullscreenElement": [
+      null,
+      true,
+      false,
+      false
+    ],
+    "active.pictureInPictureElement": [
+      null,
+      true,
+      false,
+      false
+    ],
+    "active.customElementRegistry": [
+      [
+        "[object CustomElementRegistry]"
+      ],
+      true,
+      false,
+      false
+    ],
+    "active.lastModified": true,
+    "inert.xmlEncoding": [
+      null,
+      true,
+      false,
+      false
+    ],
+    "inert.xmlVersion": [
+      null,
+      true,
+      false,
+      false
+    ],
+    "inert.xmlStandalone": [
+      false,
+      true,
+      false,
+      false
+    ],
+    "inert.designMode": [
+      "off",
+      true,
+      false,
+      false
+    ],
+    "inert.fgColor": [
+      "",
+      true,
+      false,
+      false
+    ],
+    "inert.linkColor": [
+      "",
+      true,
+      false,
+      false
+    ],
+    "inert.vlinkColor": [
+      "",
+      true,
+      false,
+      false
+    ],
+    "inert.alinkColor": [
+      "",
+      true,
+      false,
+      false
+    ],
+    "inert.bgColor": [
+      "",
+      true,
+      false,
+      false
+    ],
+    "inert.scrollingElement": [
+      [
+        "[object HTMLHtmlElement]"
+      ],
+      true,
+      true,
+      false
+    ],
+    "inert.fragmentDirective": [
+      [
+        "[object FragmentDirective]"
+      ],
+      true,
+      false,
+      false
+    ],
+    "inert.timeline": [
+      [
+        "[object DocumentTimeline]"
+      ],
+      true,
+      false,
+      false
+    ],
+    "inert.fullscreenEnabled": [
+      false,
+      true,
+      false,
+      false
+    ],
+    "inert.fullscreen": [
+      false,
+      true,
+      false,
+      false
+    ],
+    "inert.webkitIsFullScreen": [
+      false,
+      true,
+      false,
+      false
+    ],
+    "inert.webkitCurrentFullScreenElement": [
+      null,
+      true,
+      false,
+      false
+    ],
+    "inert.webkitFullscreenEnabled": [
+      false,
+      true,
+      false,
+      false
+    ],
+    "inert.webkitFullscreenElement": [
+      null,
+      true,
+      false,
+      false
+    ],
+    "inert.modelContext": [
+      [
+        "[object ModelContext]"
+      ],
+      true,
+      false,
+      false
+    ],
+    "inert.rootElement": [
+      null,
+      true,
+      false,
+      false
+    ],
+    "inert.activeViewTransition": [
+      null,
+      true,
+      false,
+      false
+    ],
+    "inert.pictureInPictureEnabled": [
+      false,
+      true,
+      false,
+      false
+    ],
+    "inert.pointerLockElement": [
+      null,
+      true,
+      false,
+      false
+    ],
+    "inert.fullscreenElement": [
+      null,
+      true,
+      false,
+      false
+    ],
+    "inert.pictureInPictureElement": [
+      null,
+      true,
+      false,
+      false
+    ],
+    "inert.customElementRegistry": [
+      null,
+      true,
+      false,
+      false
+    ],
+    "inert.lastModified": true,
+    "xml.xmlEncoding": [
+      null,
+      true,
+      false,
+      true
+    ],
+    "xml.xmlVersion": [
+      "1.0",
+      true,
+      false,
+      false
+    ],
+    "xml.xmlStandalone": [
+      false,
+      true,
+      false,
+      false
+    ],
+    "xml.designMode": [
+      "off",
+      true,
+      false,
+      false
+    ],
+    "xml.fgColor": [
+      "",
+      true,
+      false,
+      false
+    ],
+    "xml.linkColor": [
+      "",
+      true,
+      false,
+      false
+    ],
+    "xml.vlinkColor": [
+      "",
+      true,
+      false,
+      false
+    ],
+    "xml.alinkColor": [
+      "",
+      true,
+      false,
+      false
+    ],
+    "xml.bgColor": [
+      "",
+      true,
+      false,
+      false
+    ],
+    "xml.scrollingElement": [
+      [
+        "[object SVGSVGElement]"
+      ],
+      true,
+      true,
+      false
+    ],
+    "xml.fragmentDirective": [
+      [
+        "[object FragmentDirective]"
+      ],
+      true,
+      false,
+      false
+    ],
+    "xml.timeline": [
+      [
+        "[object DocumentTimeline]"
+      ],
+      true,
+      false,
+      false
+    ],
+    "xml.fullscreenEnabled": [
+      false,
+      true,
+      false,
+      false
+    ],
+    "xml.fullscreen": [
+      false,
+      true,
+      false,
+      false
+    ],
+    "xml.webkitIsFullScreen": [
+      false,
+      true,
+      false,
+      false
+    ],
+    "xml.webkitCurrentFullScreenElement": [
+      null,
+      true,
+      false,
+      true
+    ],
+    "xml.webkitFullscreenEnabled": [
+      false,
+      true,
+      false,
+      false
+    ],
+    "xml.webkitFullscreenElement": [
+      null,
+      true,
+      false,
+      true
+    ],
+    "xml.modelContext": [
+      [
+        "[object ModelContext]"
+      ],
+      true,
+      false,
+      false
+    ],
+    "xml.rootElement": [
+      [
+        "[object SVGSVGElement]"
+      ],
+      true,
+      true,
+      false
+    ],
+    "xml.activeViewTransition": [
+      null,
+      true,
+      false,
+      true
+    ],
+    "xml.pictureInPictureEnabled": [
+      false,
+      true,
+      false,
+      false
+    ],
+    "xml.pointerLockElement": [
+      null,
+      true,
+      false,
+      true
+    ],
+    "xml.fullscreenElement": [
+      null,
+      true,
+      false,
+      true
+    ],
+    "xml.pictureInPictureElement": [
+      null,
+      true,
+      false,
+      true
+    ],
+    "xml.customElementRegistry": [
+      null,
+      true,
+      false,
+      true
+    ],
+    "xml.lastModified": true
+  }
+}

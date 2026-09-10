@@ -149,6 +149,7 @@ function wrapDocumentNode(data) {
     return Array.from(parent.childNodes).indexOf(left)<Array.from(parent.childNodes).indexOf(right)?4:2;
   });
 
+  /* shared_document_state */
   const parserSlots=new WeakSet();
   class DOMParser {
     constructor(){parserSlots.add(this)}

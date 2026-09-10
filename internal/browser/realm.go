@@ -26,11 +26,14 @@ import (
 	"github.com/moreveal/mimic/internal/engine"
 	"github.com/moreveal/mimic/internal/network"
 	"github.com/moreveal/mimic/internal/scheduler"
+	"github.com/moreveal/mimic/internal/textmetrics"
 	"github.com/moreveal/mimic/internal/trace"
 	"github.com/moreveal/mimic/internal/webapi"
 )
 
 type Realm struct {
+	fontChoices             []textmetrics.FontReference
+	lastModified            time.Time
 	clientHints             *clientHintsDocument
 	documentSecurity        *documentSecurity
 	profileWrappers         uint64
@@ -1451,6 +1454,7 @@ func (r *Realm) install() error {
 	})
 	r.installDocumentCompatibility(host)
 	r.installTextMetrics(host)
+	r.installImageResources(host)
 	addStorageHosts(r, host)
 	addCapabilityHosts(r, host)
 	profiling := false
