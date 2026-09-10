@@ -1,0 +1,120 @@
+--- FAIL: TestPartitionCookiesFrameAndWorkerTransport (14.15s)
+    --- FAIL: TestPartitionCookiesFrameAndWorkerTransport/goja (13.45s)
+        cookie_context_test.go:49: debug: {"top":"http://127.0.0.1:33123","child":null,"length":2,"childLength":null}
+        cookie_context_test.go:49: history evaluation: value=<nil> expected=true err=context deadline exceeded
+            new Promise(resolve=>{const f=document.createElement('iframe');const listener=e=>{if(e.source!==f.contentWindow)return;removeEventListener('message',listener);const v=e.data;f.remove();resolve(v.before==='shared=1'&&v.documentValue==='shared=1; id=nested'&&v.wire==='shared=1; id=nested'&&v.workerValue.script===v.wire&&v.workerValue.fetch===v.wire&&document.cookie==='id=top; shared=1')};addEventListener('message',listener);f.src="http://localhost:33123/middle";document.body.append(f)})
+panic: test timed out after 10m0s
+	running tests:
+		TestFrameReflectionPreservesDescriptorsAndKeys (2s)
+		TestFrameReflectionPreservesDescriptorsAndKeys/goja (1s)
+
+goroutine 10842 [running]:
+testing.(*M).startAlarm.func1()
+	C:/Program Files/Go/src/testing/testing.go:2802 +0x605
+created by time.goFunc
+	C:/Program Files/Go/src/time/sleep.go:215 +0x45
+
+goroutine 1 [chan receive]:
+testing.(*T).Run(0xc000002400, {0x14386a32c, 0x2e}, 0x143abe388)
+	C:/Program Files/Go/src/testing/testing.go:2109 +0xb56
+testing.runTests.func1(0xc000002400)
+	C:/Program Files/Go/src/testing/testing.go:2585 +0x86
+testing.tRunner(0xc000002400, 0xc00026bad0)
+	C:/Program Files/Go/src/testing/testing.go:2036 +0x1cb
+testing.runTests({0x14383ed31, 0x19}, {0x1438636dd, 0x2a}, 0xc00000a618, {0x14352e340, 0x137, 0x137}, {0xc2a0ecf04c37c3d0, 0x8bb33a0069, ...})
+	C:/Program Files/Go/src/testing/testing.go:2583 +0x9f8
+testing.(*M).Run(0xc00028e000)
+	C:/Program Files/Go/src/testing/testing.go:2443 +0xf4c
+main.main()
+	_testmain.go:670 +0x165
+
+goroutine 10839 [select]:
+github.com/moreveal/mimic/internal/engine/goja.(*runtime).Eval.func1()
+	E:/GitHub/mimic-compat-fuzz/internal/engine/goja/runtime.go:35 +0x135
+created by github.com/moreveal/mimic/internal/engine/goja.(*runtime).Eval in goroutine 10837
+	E:/GitHub/mimic-compat-fuzz/internal/engine/goja/runtime.go:33 +0x1f0
+
+goroutine 10314 [chan receive]:
+testing.(*T).Run(0xc000002200, {0x14381a868, 0x4}, 0xc0002c68c0)
+	C:/Program Files/Go/src/testing/testing.go:2109 +0xb56
+github.com/moreveal/mimic/internal/browser.historyTestPages(0xc000002200, 0x143abeb60)
+	E:/GitHub/mimic-compat-fuzz/internal/browser/history_test.go:21 +0x206
+github.com/moreveal/mimic/internal/browser.TestFrameReflectionPreservesDescriptorsAndKeys(0xc000002200)
+	E:/GitHub/mimic-compat-fuzz/internal/browser/frame_reflection_test.go:11 +0x2e
+testing.tRunner(0xc000002200, 0x143abe388)
+	C:/Program Files/Go/src/testing/testing.go:2036 +0x1cb
+created by testing.(*T).Run in goroutine 1
+	C:/Program Files/Go/src/testing/testing.go:2101 +0xb2b
+
+goroutine 10837 [runnable]:
+encoding/json.(*Decoder).peek(0xc0002be780)
+	C:/Program Files/Go/src/encoding/json/stream.go:490 +0x165
+encoding/json.(*Decoder).Token(0xc0002be780)
+	C:/Program Files/Go/src/encoding/json/stream.go:372 +0x3c
+github.com/dop251/goja.(*Runtime).builtinJSON_decodeObjectKey(0xc002db15e0?, 0xc0002be780)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/builtin_json.go:103 +0x3c
+github.com/dop251/goja.(*Runtime).builtinJSON_decodeObject(0xc000d8b408, 0xc0002be780)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/builtin_json.go:85 +0x354
+github.com/dop251/goja.(*Runtime).builtinJSON_decodeToken(0xc000d8b408, 0xc0002be780, {0x1436283c0, 0x143ac5ea0})
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/builtin_json.go:55 +0x1a5
+github.com/dop251/goja.(*Runtime).builtinJSON_decodeArray(0xc000d8b408, 0xc0002be780)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/builtin_json.go:131 +0xd7
+github.com/dop251/goja.(*Runtime).builtinJSON_decodeToken(0xc000d8b408, 0xc0002be780, {0x1436283c0, 0x143ac27f8})
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/builtin_json.go:57 +0x1ed
+github.com/dop251/goja.(*Runtime).builtinJSON_decodeValue(0xc000d8b408, 0xc0002be780)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/builtin_json.go:79 +0x6e
+github.com/dop251/goja.(*Runtime).builtinJSON_decodeObject(0xc000d8b408, 0xc0002be780)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/builtin_json.go:92 +0x37c
+github.com/dop251/goja.(*Runtime).builtinJSON_decodeToken(0xc000d8b408, 0xc0002be780, {0x1436283c0, 0x143ac5ea0})
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/builtin_json.go:55 +0x1a5
+github.com/dop251/goja.(*Runtime).builtinJSON_decodeValue(0xc000d8b408, 0xc0002be780)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/builtin_json.go:79 +0x6e
+github.com/dop251/goja.(*Runtime).builtinJSON_decodeObject(0xc000d8b408, 0xc0002be780)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/builtin_json.go:92 +0x37c
+github.com/dop251/goja.(*Runtime).builtinJSON_decodeToken(0xc000d8b408, 0xc0002be780, {0x1436283c0, 0x143ac5ea0})
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/builtin_json.go:55 +0x1a5
+github.com/dop251/goja.(*Runtime).builtinJSON_decodeValue(0xc000d8b408, 0xc0002be780)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/builtin_json.go:79 +0x6e
+github.com/dop251/goja.(*Runtime).builtinJSON_parse(0xc000d8b408, {{0x143aef2b0, 0xc004bb0138}, {0xc0037db060, 0x1, 0x1a}})
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/builtin_json.go:23 +0x258
+github.com/dop251/goja.(*nativeFuncObject).vmCall(0xc000718320, 0xc000af3440, 0x1)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/func.go:571 +0x32b
+github.com/dop251/goja.call.exec(0x1, 0xc000af3440)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/vm.go:3642 +0xe8
+github.com/dop251/goja.(*vm).run(0xc000af3440)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/vm.go:635 +0xbf
+github.com/dop251/goja.(*vm).runTryInner(0xc000af3440)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/vm.go:887 +0x99
+github.com/dop251/goja.(*vm).runTry(0xc000af3440)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/vm.go:873 +0x38e
+github.com/dop251/goja.(*Runtime).RunProgram(0xc000d8b408, 0xc00177b4f0)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/runtime.go:1475 +0x7a5
+github.com/dop251/goja.(*Runtime).RunScript(0xc000d8b408, {0x143834161, 0x14}, {0xc0013ea000, 0xff625})
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/runtime.go:1411 +0xb5
+github.com/moreveal/mimic/internal/engine/goja.(*runtime).Eval(0xc001a3a1d0, {0x143adf138, 0x1447c9140}, {0xc0013ea000, 0xff625}, {0x143834161, 0x14})
+	E:/GitHub/mimic-compat-fuzz/internal/engine/goja/runtime.go:46 +0x22f
+github.com/moreveal/mimic/internal/browser.(*Realm).installBindings(0xc000d8b008)
+	E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:1670 +0xb45b
+github.com/moreveal/mimic/internal/browser.(*Realm).install(0xc000d8b008)
+	E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:501 +0x2f
+github.com/moreveal/mimic/internal/browser.(*deferredRuntime).ready(0xc00964d8c0)
+	E:/GitHub/mimic-compat-fuzz/internal/browser/deferred_runtime.go:43 +0x33f
+github.com/moreveal/mimic/internal/browser.(*deferredRuntime).Eval(0xc00964d8c0, {0x143adf2d0, 0xc0048690a0}, {0x1438c33c0, 0x1009}, {0x14384c4d3, 0x1f})
+	E:/GitHub/mimic-compat-fuzz/internal/browser/deferred_runtime.go:54 +0x5b
+github.com/moreveal/mimic/internal/browser.(*Realm).Evaluate(0xc000d8b008, {0x143adf2d0, 0xc0048690a0}, {0x1438c33c0, 0x1009}, {0x14384c4d3, 0x1f})
+	E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:342 +0xc3
+github.com/moreveal/mimic/internal/browser.(*Page).evaluateRealm(0xc006c54588, {0x143adf2d0, 0xc0048690a0}, 0xc000d8b008, {0x1438c33c0, 0x1009})
+	E:/GitHub/mimic-compat-fuzz/internal/browser/page.go:687 +0x9d
+github.com/moreveal/mimic/internal/browser.(*Page).Evaluate(0xc006c54588, {0x143adf2d0, 0xc0048690a0}, {0x1438c33c0, 0x1009})
+	E:/GitHub/mimic-compat-fuzz/internal/browser/page.go:665 +0xdc
+github.com/moreveal/mimic/internal/browser.TestFrameReflectionPreservesDescriptorsAndKeys.func1(0xc000002800, 0xc006c54588)
+	E:/GitHub/mimic-compat-fuzz/internal/browser/frame_reflection_test.go:14 +0x96
+github.com/moreveal/mimic/internal/browser.historyTestPages.func1(0xc000002800)
+	E:/GitHub/mimic-compat-fuzz/internal/browser/history_test.go:31 +0x222
+testing.tRunner(0xc000002800, 0xc0002c68c0)
+	C:/Program Files/Go/src/testing/testing.go:2036 +0x1cb
+created by testing.(*T).Run in goroutine 10314
+	C:/Program Files/Go/src/testing/testing.go:2101 +0xb2b
+FAIL	github.com/moreveal/mimic/internal/browser	600.305s
+ok  	github.com/moreveal/mimic/internal/webapi	2.211s
+FAIL
