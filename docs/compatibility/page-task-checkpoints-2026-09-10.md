@@ -74,14 +74,15 @@ that the entire browser package was run under race instrumentation.
 
 `.build/mimic-scheduler.exe` was built from this candidate; its SHA-256 is
 `5d2d1cee77a4d2600533dafc94e1bf530e7caced2649c5f6e7e7b15e3baed19e`.
-It contains the production changes described here. The running CDP instance
-still needs the user-requested restart before fresh-executable comparisons.
-An earlier automatic review blocked launching a new Mimic process, so it was
-not retried through another mechanism.
+It contains the production changes described here. After the user restarted
+the CDP instance, the shared harness completed both local probes successfully:
+`frame-task-interleaving` and `frame-microtask-checkpoint` are valid, complete
+and have zero differences against system Chrome 152.0.7977.83. The latter
+matches all five entry modes (eval, getter, call, construct and throw).
+The private report is
+`compatibility/private-captures/page-checkpoints-after-20260910/report.json`.
+This is a system Chrome comparison, not the frozen 152.0.7977.82 reference.
 
-Fresh-executable differential/protected controls are pending that restart.
-Completion-path effect remains unmeasured; this document does not claim that
-Mimic reaches the target page. Run `frame-task-interleaving` and
-`frame-microtask-checkpoint` through the shared harness first, then the ordinary
-cold protected controls for Chrome and Mimic. Retain a no-observed-verdict-effect
-finding if the semantic probes improve but the completion path does not change.
+No new protected-site control was performed after this restart. Completion-path
+effect remains unmeasured; this document does not claim that Mimic reaches the
+target page or that either scheduler defect caused the previous rejection.
