@@ -6,6 +6,7 @@ import (
 )
 
 var Chrome_152_PSK = ClientProfile{
+	quicConfigFactory: chrome152QUICConfig,
 	clientHelloId: tls.ClientHelloID{
 		Client:               "Chrome",
 		RandomExtensionOrder: true,
@@ -94,10 +95,10 @@ var Chrome_152_PSK = ClientProfile{
 						"h2",
 						"http/1.1",
 					}},
-					// server_padding (0x12e0) is present in the externally observed
-					// ClientHello of the pinned 152.0.7977.82 Windows build.
-					&tls.GenericExtension{Id: 0x12e0, Data: []byte{0x0f, 0xa0}},
-					&tls.GenericExtension{Id: 0xca34, Data: chrome152TrustAnchors}, // https://source.chromium.org/search?q=TLSEXT_TYPE_trust_anchors https://issues.chromium.org/issues/398275713
+					// The fresh controlled Windows 152.0.7977.82 capture requests
+					// zero server padding; the older external capture differed.
+					&tls.GenericExtension{Id: 0x12e0, Data: []byte{0, 0}},
+					&tls.GenericExtension{Id: 0xca34, Data: chrome152WindowsTrustAnchors}, // https://source.chromium.org/search?q=TLSEXT_TYPE_trust_anchors https://issues.chromium.org/issues/398275713
 					&tls.UtlsGREASEExtension{},
 					&tls.UtlsPreSharedKeyExtension{},
 				},
@@ -144,6 +145,7 @@ var Chrome_152_PSK = ClientProfile{
 }
 
 var Chrome_152 = ClientProfile{
+	quicConfigFactory: chrome152QUICConfig,
 	clientHelloId: tls.ClientHelloID{
 		Client:               "Chrome",
 		RandomExtensionOrder: true,
@@ -232,10 +234,9 @@ var Chrome_152 = ClientProfile{
 					&tls.PSKKeyExchangeModesExtension{Modes: []uint8{
 						tls.PskModeDHE,
 					}},
-					// server_padding (0x12e0) is present in the externally observed
-					// ClientHello of the pinned 152.0.7977.82 Windows build.
-					&tls.GenericExtension{Id: 0x12e0, Data: []byte{0x0f, 0xa0}},
-					&tls.GenericExtension{Id: 0xca34, Data: chrome152TrustAnchors}, // https://source.chromium.org/search?q=TLSEXT_TYPE_trust_anchors https://issues.chromium.org/issues/398275713
+					// Fresh controlled Windows 152.0.7977.82 reference.
+					&tls.GenericExtension{Id: 0x12e0, Data: []byte{0, 0}},
+					&tls.GenericExtension{Id: 0xca34, Data: chrome152WindowsTrustAnchors}, // https://source.chromium.org/search?q=TLSEXT_TYPE_trust_anchors https://issues.chromium.org/issues/398275713
 					&tls.UtlsGREASEExtension{},
 				},
 			}, nil

@@ -109,6 +109,9 @@ type ConnectionIDGenerator interface {
 
 // Config contains all configuration data needed for a QUIC server or client.
 type Config struct {
+	ClientTransportParameters *ClientTransportParameters
+	// ClientHelloSpec supplies a fresh client preset. QUIC owns transport parameters.
+	ClientHelloSpec func() (tls.ClientHelloSpec, error)
 	// GetConfigForClient is called for incoming connections.
 	// If the error is not nil, the connection attempt is refused.
 	GetConfigForClient func(info *ClientInfo) (*Config, error)
@@ -192,6 +195,20 @@ type Config struct {
 	EnableStreamResetPartialDelivery bool
 
 	Tracer func(ctx context.Context, isClient bool, connID ConnectionID) qlogwriter.Trace
+}
+
+// ClientTransportParameters configures observations not covered by flow-control
+// windows in Config. Numeric values are also used by the connection itself.
+type ClientTransportParameters struct {
+	InitialRTTCache             *ClientRTTCache
+	InitialPacketSizeIPv6       uint16
+	MaxUDPPayloadSize           uint64
+	MaxDatagramFrameSize        uint64
+	ActiveConnectionIDLimit     uint64
+	MaxAckDelay                 time.Duration
+	AdvertiseVersionInformation bool
+	Additional                  map[uint64][]byte
+	RandomizeOrder              bool
 }
 
 // ClientHelloInfo contains information about an incoming connection attempt.

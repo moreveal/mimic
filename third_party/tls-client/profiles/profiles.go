@@ -2,6 +2,7 @@ package profiles
 
 import (
 	"github.com/bogdanfinn/fhttp/http2"
+	quic "github.com/bogdanfinn/quic-go-utls"
 	tls "github.com/bogdanfinn/utls"
 )
 
@@ -94,6 +95,7 @@ var MappedTLSClients = map[string]ClientProfile{
 }
 
 type ClientProfile struct {
+	quicConfigFactory      func() *quic.Config
 	clientHelloId          tls.ClientHelloID
 	headerPriority         *http2.PriorityParam
 	settings               map[http2.SettingID]uint32
@@ -108,6 +110,14 @@ type ClientProfile struct {
 	http3PriorityParam     uint32
 	http3PseudoHeaderOrder []string
 	http3SendGreaseFrames  bool
+}
+
+func (c ClientProfile) GetQUICClientHelloSpec() func() (tls.ClientHelloSpec, error) {
+	config := c.GetQUICConfig()
+	if config == nil {
+		return nil
+	}
+	return config.ClientHelloSpec
 }
 
 func NewClientProfile(clientHelloId tls.ClientHelloID, settings map[http2.SettingID]uint32, settingsOrder []http2.SettingID, pseudoHeaderOrder []string, connectionFlow uint32, priorities []http2.Priority, headerPriority *http2.PriorityParam, streamID uint32, allowHTTP bool, http3Settings map[uint64]uint64, http3SettingsOrder []uint64, http3PriorityParam uint32, http3PseudoHeaderOrder []string, http3SendGreaseFrames bool) ClientProfile {
@@ -191,4 +201,11 @@ func (c ClientProfile) GetHttp3PseudoHeaderOrder() []string {
 
 func (c ClientProfile) GetHttp3SendGreaseFrames() bool {
 	return c.http3SendGreaseFrames
+}
+
+func (c ClientProfile) GetQUICConfig() *quic.Config {
+	if c.quicConfigFactory == nil {
+		return nil
+	}
+	return c.quicConfigFactory()
 }

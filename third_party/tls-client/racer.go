@@ -9,11 +9,13 @@ import (
 
 	http "github.com/bogdanfinn/fhttp"
 	"github.com/bogdanfinn/fhttp/http2"
+	quic "github.com/bogdanfinn/quic-go-utls"
 	"github.com/bogdanfinn/tls-client/bandwidth"
 	tls "github.com/bogdanfinn/utls"
 )
 
 type protocolRacer struct {
+	quicConfig           *quic.Config
 	protocolCache        map[string]string
 	protocolCacheMu      sync.RWMutex
 	connectionSelections map[string]chan struct{}
@@ -376,6 +378,7 @@ func (pr *protocolRacer) handleCachedProtocolError(err error, addr string, req *
 
 func (pr *protocolRacer) getHTTP3Config() *http3Config {
 	return &http3Config{
+		quicConfig:             pr.quicConfig,
 		clientSessionCache:     pr.clientSessionCache,
 		insecureSkipVerify:     pr.insecureSkipVerify,
 		serverNameOverwrite:    pr.serverNameOverwrite,

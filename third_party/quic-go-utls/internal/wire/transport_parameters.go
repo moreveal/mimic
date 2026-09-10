@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"io"
 	"math"
+	mathrand "math/rand/v2"
 	"net/netip"
 	"slices"
 	"time"
@@ -61,6 +62,8 @@ type PreferredAddress struct {
 
 // TransportParameters are parameters sent to the peer during the handshake
 type TransportParameters struct {
+	Additional                     map[uint64][]byte
+	RandomizeOrder                 bool
 	InitialMaxStreamDataBidiLocal  protocol.ByteCount
 	InitialMaxStreamDataBidiRemote protocol.ByteCount
 	InitialMaxStreamDataUni        protocol.ByteCount
@@ -360,7 +363,11 @@ func (p *TransportParameters) Marshal(pers protocol.Perspective) []byte {
 	// add a greased value
 	random := make([]byte, 18)
 	rand.Read(random)
-	b = quicvarint.Append(b, 27+31*uint64(random[0]))
+	greaseID := 27 + 31*uint64(random[0])
+	if p.RandomizeOrder {
+		greaseID = 27 + 31*(binary.BigEndian.Uint64(random[2:10])%((1<<62-28)/31))
+	}
+	b = quicvarint.Append(b, greaseID)
 	length := random[1] % 16
 	b = quicvarint.Append(b, uint64(length))
 	b = append(b, random[2:2+length]...)
@@ -464,6 +471,26 @@ func (p *TransportParameters) Marshal(pers protocol.Perspective) []byte {
 			b = quicvarint.Append(b, k)
 			b = quicvarint.Append(b, uint64(len(v)))
 			b = append(b, v...)
+		}
+	}
+	for id, value := range p.Additional {
+		b = quicvarint.Append(b, id)
+		b = quicvarint.Append(b, uint64(len(value)))
+		b = append(b, value...)
+	}
+	if p.RandomizeOrder {
+		var fields [][]byte
+		for rest := b; len(rest) > 0; {
+			_, n, _ := quicvarint.Parse(rest)
+			length, m, _ := quicvarint.Parse(rest[n:])
+			end := n + m + int(length)
+			fields = append(fields, rest[:end])
+			rest = rest[end:]
+		}
+		mathrand.Shuffle(len(fields), func(i, j int) { fields[i], fields[j] = fields[j], fields[i] })
+		b = make([]byte, 0, len(b))
+		for _, field := range fields {
+			b = append(b, field...)
 		}
 	}
 

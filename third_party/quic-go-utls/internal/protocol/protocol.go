@@ -107,11 +107,10 @@ const InvalidByteCount ByteCount = -1
 // A StatelessResetToken is a stateless reset token.
 type StatelessResetToken [16]byte
 
-// MaxPacketBufferSize maximum packet size of any QUIC packet, based on
-// ethernet's max size, minus the IP and UDP headers. IPv6 has a 40 byte header,
-// UDP adds an additional 8 bytes.  This is a total overhead of 48 bytes.
-// Ethernet's max packet size is 1500 bytes,  1500 - 48 = 1452.
-const MaxPacketBufferSize = 1452
+// MaxPacketBufferSize accommodates the advertised IPv4 UDP receive limit:
+// Ethernet MTU 1500 minus IPv4 (20) and UDP (8). Sending still uses path MTU
+// discovery, including the smaller payload appropriate to IPv6.
+const MaxPacketBufferSize = 1472
 
 // MaxLargePacketBufferSize is used when using GSO
 const MaxLargePacketBufferSize = 20 * 1024

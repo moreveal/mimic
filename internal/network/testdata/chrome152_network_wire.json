@@ -1,0 +1,839 @@
+{
+  "reference": {
+    "product": "Chrome/152.0.7977.82",
+    "platform": "windows-x64",
+    "mode": "headful",
+    "profile": "fresh per capture",
+    "origin": "https://localhost:19453/",
+    "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+    "quicMetadata": {
+      "version": {
+        "Browser": "Chrome/152.0.7977.82",
+        "Protocol-Version": "1.3",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+        "V8-Version": "15.2.124.21",
+        "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+        "webSocketDebuggerUrl": "ws://127.0.0.1:19454/devtools/browser/4704bf94-fda1-42e0-9057-599a8ddbf61b"
+      },
+      "browserVersion": {
+        "protocolVersion": "1.3",
+        "product": "Chrome/152.0.7977.82",
+        "revision": "@d04cdb24d67b081f6cf80200ffc5233f44b61109",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+        "jsVersion": "15.2.124.21"
+      },
+      "flags": [
+        "--user-data-dir=E:\\GitHub\\mimic\\.build\\networkprobe-verified-h3\\profile",
+        "--remote-debugging-port=19454",
+        "--no-first-run",
+        "--no-default-browser-check",
+        "--window-size=1280,800",
+        "--log-net-log=E:\\GitHub\\mimic\\.build\\networkprobe-verified-h3\\netlog.json",
+        "--net-log-capture-mode=Everything",
+        "--origin-to-force-quic-on=localhost:19453"
+      ],
+      "origin": "https://localhost:19453/",
+      "browserMode": "headful",
+      "observations": {
+        "viewport": {
+          "width": 1272,
+          "height": 653,
+          "deviceScaleFactor": 1
+        },
+        "window": {
+          "width": 1280,
+          "height": 800
+        },
+        "secureContextState": true,
+        "isolationState": false,
+        "visibilityState": "visible",
+        "hasFocus": true,
+        "origin": "https://localhost:19453"
+      },
+      "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "probeSHA256": "3021acdff4d70d41e379756f682b344bba17a8c1d478e4905ac036987e0b4d36"
+    },
+    "tcpMetadata": {
+      "version": {
+        "Browser": "Chrome/152.0.7977.82",
+        "Protocol-Version": "1.3",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+        "V8-Version": "15.2.124.21",
+        "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+        "webSocketDebuggerUrl": "ws://127.0.0.1:19454/devtools/browser/adc8e436-55b2-430b-9c5e-ccb991623681"
+      },
+      "browserVersion": {
+        "protocolVersion": "1.3",
+        "product": "Chrome/152.0.7977.82",
+        "revision": "@d04cdb24d67b081f6cf80200ffc5233f44b61109",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+        "jsVersion": "15.2.124.21"
+      },
+      "flags": [
+        "--user-data-dir=E:\\GitHub\\mimic\\.build\\networkprobe-final-tls\\profile",
+        "--remote-debugging-port=19454",
+        "--no-first-run",
+        "--no-default-browser-check",
+        "--window-size=1280,800",
+        "--log-net-log=E:\\GitHub\\mimic\\.build\\networkprobe-final-tls\\netlog.json",
+        "--net-log-capture-mode=Everything"
+      ],
+      "origin": "https://localhost:19453/",
+      "browserMode": "headful",
+      "observations": {
+        "viewport": {
+          "width": 1272,
+          "height": 653,
+          "deviceScaleFactor": 1
+        },
+        "window": {
+          "width": 1280,
+          "height": 800
+        },
+        "secureContextState": true,
+        "isolationState": false,
+        "visibilityState": "visible",
+        "hasFocus": true,
+        "origin": "https://localhost:19453"
+      },
+      "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "probeSHA256": "01bfe8b81ce23ec756ea11554dfd38e3f85742ecac83d50b1d99f2dbe0469896"
+    },
+    "limitations": [
+      "Loopback certificate is temporarily trusted in CurrentUser Root.",
+      "QUIC uses origin-to-force-quic-on because Chrome rejects local roots for ordinary QUIC.",
+      "Volatile key material, PSK identities/binders, extension permutations and GREASE values are normalized.",
+      "No claims about loss, migration, proxies or arbitrary feature/experiment configurations."
+    ]
+  },
+  "http3Control": [
+    {
+      "settings": [
+        [
+          1,
+          65536
+        ],
+        [
+          6,
+          262144
+        ],
+        [
+          7,
+          100
+        ],
+        [
+          51,
+          1
+        ],
+        [
+          "GREASE",
+          "random"
+        ]
+      ],
+      "frames": [
+        "SETTINGS",
+        "GREASE",
+        "PRIORITY_UPDATE",
+        "PRIORITY_UPDATE",
+        "PRIORITY_UPDATE"
+      ],
+      "priorities": [
+        [
+          0,
+          "u=0, i"
+        ],
+        [
+          4,
+          "u=1, i"
+        ],
+        [
+          8,
+          "u=1, i"
+        ]
+      ]
+    },
+    {
+      "settings": [
+        [
+          1,
+          65536
+        ],
+        [
+          6,
+          262144
+        ],
+        [
+          7,
+          100
+        ],
+        [
+          51,
+          1
+        ],
+        [
+          "GREASE",
+          "random"
+        ]
+      ],
+      "frames": [
+        "SETTINGS",
+        "GREASE",
+        "PRIORITY_UPDATE",
+        "PRIORITY_UPDATE",
+        "PRIORITY_UPDATE"
+      ],
+      "priorities": [
+        [
+          0,
+          "u=1, i"
+        ],
+        [
+          4,
+          "u=1, i"
+        ],
+        [
+          8,
+          "u=1, i"
+        ]
+      ]
+    },
+    {
+      "settings": [
+        [
+          1,
+          65536
+        ],
+        [
+          6,
+          262144
+        ],
+        [
+          7,
+          100
+        ],
+        [
+          51,
+          1
+        ],
+        [
+          "GREASE",
+          "random"
+        ]
+      ],
+      "frames": [
+        "SETTINGS",
+        "GREASE",
+        "PRIORITY_UPDATE",
+        "PRIORITY_UPDATE",
+        "PRIORITY_UPDATE"
+      ],
+      "priorities": [
+        [
+          0,
+          "u=1, i"
+        ],
+        [
+          4,
+          "u=1, i"
+        ],
+        [
+          8,
+          "u=1, i"
+        ]
+      ]
+    },
+    {
+      "settings": [
+        [
+          1,
+          65536
+        ],
+        [
+          6,
+          262144
+        ],
+        [
+          7,
+          100
+        ],
+        [
+          51,
+          1
+        ],
+        [
+          "GREASE",
+          "random"
+        ]
+      ],
+      "frames": [
+        "SETTINGS",
+        "GREASE",
+        "PRIORITY_UPDATE",
+        "PRIORITY_UPDATE",
+        "PRIORITY_UPDATE"
+      ],
+      "priorities": [
+        [
+          0,
+          "u=1, i"
+        ],
+        [
+          4,
+          "u=1, i"
+        ],
+        [
+          8,
+          "u=1, i"
+        ]
+      ]
+    },
+    {
+      "settings": [
+        [
+          1,
+          65536
+        ],
+        [
+          6,
+          262144
+        ],
+        [
+          7,
+          100
+        ],
+        [
+          51,
+          1
+        ],
+        [
+          "GREASE",
+          "random"
+        ]
+      ],
+      "frames": [
+        "SETTINGS",
+        "GREASE",
+        "PRIORITY_UPDATE",
+        "PRIORITY_UPDATE",
+        "PRIORITY_UPDATE"
+      ],
+      "priorities": [
+        [
+          0,
+          "u=1, i"
+        ],
+        [
+          4,
+          "u=1, i"
+        ],
+        [
+          8,
+          "u=1, i"
+        ]
+      ]
+    },
+    {
+      "settings": [
+        [
+          1,
+          65536
+        ],
+        [
+          6,
+          262144
+        ],
+        [
+          7,
+          100
+        ],
+        [
+          51,
+          1
+        ],
+        [
+          "GREASE",
+          "random"
+        ]
+      ],
+      "frames": [
+        "SETTINGS",
+        "GREASE",
+        "PRIORITY_UPDATE",
+        "PRIORITY_UPDATE"
+      ],
+      "priorities": [
+        [
+          0,
+          "u=1, i"
+        ],
+        [
+          4,
+          "u=1, i"
+        ]
+      ]
+    }
+  ],
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [
+      "--origin-to-force-quic-on=localhost:19453"
+    ],
+    "environmentProfileId": "chrome-152-windows-x64-headful-loopback-wire-v1",
+    "profileFreshness": "fresh-controlled",
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "width": 1280,
+      "height": 800
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "visibilityState": "visible",
+    "hasFocus": true,
+    "origin": "https://localhost:19453"
+  },
+  "tls": [
+    {
+      "resumed": false,
+      "ja4": "t13d1518h2_8daaf6152771_4980c97edce0",
+      "hello": {
+        "sessionIDLength": 32,
+        "ciphers": [
+          "1301",
+          "1302",
+          "1303",
+          "c02b",
+          "c02f",
+          "c02c",
+          "c030",
+          "cca9",
+          "cca8",
+          "c013",
+          "c014",
+          "009c",
+          "009d",
+          "002f",
+          "0035"
+        ],
+        "extensions": {
+          "35": "",
+          "18": "",
+          "4832": "0000",
+          "13": [
+            2308,
+            2309,
+            2310,
+            1027,
+            2052,
+            1025,
+            1283,
+            2053,
+            1281,
+            2054,
+            1537
+          ],
+          "5": "0100000000",
+          "0": "000c0000096c6f63616c686f7374",
+          "45": "0101",
+          "65281": "00",
+          "16": "000c02683208687474702f312e31",
+          "23": "",
+          "51": [
+            [
+              4588,
+              1216
+            ],
+            [
+              29,
+              32
+            ]
+          ],
+          "43": [
+            772,
+            771
+          ],
+          "51764": [
+            "82df130201",
+            "82df130206",
+            "82df13020d",
+            "82df13020e",
+            "82df13020f",
+            "82df130212",
+            "82df130213",
+            "82df130214",
+            "839a648c9b2d0107",
+            "839a648c9b2d0108",
+            "839a648c9b2d0109",
+            "839a648c9b2d010a",
+            "839a648c9b2d010b",
+            "839a648c9b2d010c",
+            "839a648c9b2d010d",
+            "839a648c9b2d0112",
+            "839a648c9b2d0113",
+            "d6790901",
+            "d6790902",
+            "d6790903",
+            "d6790904",
+            "d6790905",
+            "d6790906",
+            "d6790907",
+            "d6790908",
+            "d6790909",
+            "d679090a",
+            "d679090b",
+            "d679090c",
+            "d679090d",
+            "d679090e",
+            "d679090f"
+          ],
+          "27": "020002",
+          "11": "0100",
+          "10": [
+            4588,
+            29,
+            23,
+            24
+          ],
+          "65037": {
+            "kdfAEAD": "0000010001"
+          },
+          "17613": "0003026832"
+        }
+      }
+    },
+    {
+      "resumed": true,
+      "ja4": "t13d1519h2_8daaf6152771_3d1b1b7bef36",
+      "hello": {
+        "sessionIDLength": 32,
+        "ciphers": [
+          "1301",
+          "1302",
+          "1303",
+          "c02b",
+          "c02f",
+          "c02c",
+          "c030",
+          "cca9",
+          "cca8",
+          "c013",
+          "c014",
+          "009c",
+          "009d",
+          "002f",
+          "0035"
+        ],
+        "extensions": {
+          "45": "0101",
+          "5": "0100000000",
+          "65281": "00",
+          "13": [
+            2308,
+            2309,
+            2310,
+            1027,
+            2052,
+            1025,
+            1283,
+            2053,
+            1281,
+            2054,
+            1537
+          ],
+          "65037": {
+            "kdfAEAD": "0000010001"
+          },
+          "0": "000c0000096c6f63616c686f7374",
+          "16": "000c02683208687474702f312e31",
+          "35": "",
+          "43": [
+            772,
+            771
+          ],
+          "17613": "0003026832",
+          "11": "0100",
+          "18": "",
+          "51": [
+            [
+              4588,
+              1216
+            ],
+            [
+              29,
+              32
+            ]
+          ],
+          "4832": "0000",
+          "27": "020002",
+          "10": [
+            4588,
+            29,
+            23,
+            24
+          ],
+          "51764": [
+            "82df130201",
+            "82df130206",
+            "82df13020d",
+            "82df13020e",
+            "82df13020f",
+            "82df130212",
+            "82df130213",
+            "82df130214",
+            "839a648c9b2d0107",
+            "839a648c9b2d0108",
+            "839a648c9b2d0109",
+            "839a648c9b2d010a",
+            "839a648c9b2d010b",
+            "839a648c9b2d010c",
+            "839a648c9b2d010d",
+            "839a648c9b2d0112",
+            "839a648c9b2d0113",
+            "d6790901",
+            "d6790902",
+            "d6790903",
+            "d6790904",
+            "d6790905",
+            "d6790906",
+            "d6790907",
+            "d6790908",
+            "d6790909",
+            "d679090a",
+            "d679090b",
+            "d679090c",
+            "d679090d",
+            "d679090e",
+            "d679090f"
+          ],
+          "23": "",
+          "41": "session-specific PSK"
+        }
+      }
+    }
+  ],
+  "quic": [
+    {
+      "resumed": false,
+      "ja4": "q13d0313h3_55b375c5d22e_eb028bd37c08",
+      "hello": {
+        "sessionIDLength": 0,
+        "ciphers": [
+          "1301",
+          "1302",
+          "1303"
+        ],
+        "extensions": {
+          "27": "020002",
+          "57": {
+            "1": "800493e0",
+            "6": "80600000",
+            "9": "4067",
+            "8": "4064",
+            "5": "80600000",
+            "3": "45c0",
+            "17": {
+              "chosen": 1,
+              "available": [
+                1
+              ]
+            },
+            "7": "80600000",
+            "12584": "4f5249474e4f4950",
+            "32": "80010000",
+            "15": "",
+            "4": "80f00000"
+          },
+          "51764": [
+            "82df130201",
+            "82df130206",
+            "82df13020d",
+            "82df13020e",
+            "82df13020f",
+            "82df130212",
+            "82df130213",
+            "82df130214",
+            "839a648c9b2d0107",
+            "839a648c9b2d0108",
+            "839a648c9b2d0109",
+            "839a648c9b2d010a",
+            "839a648c9b2d010b",
+            "839a648c9b2d010c",
+            "839a648c9b2d010d",
+            "839a648c9b2d0112",
+            "839a648c9b2d0113",
+            "d6790901",
+            "d6790902",
+            "d6790903",
+            "d6790904",
+            "d6790905",
+            "d6790906",
+            "d6790907",
+            "d6790908",
+            "d6790909",
+            "d679090a",
+            "d679090b",
+            "d679090c",
+            "d679090d",
+            "d679090e",
+            "d679090f"
+          ],
+          "65037": {
+            "kdfAEAD": "0000010001"
+          },
+          "17613": "0003026833",
+          "45": "0101",
+          "51": [
+            [
+              4588,
+              1216
+            ],
+            [
+              29,
+              32
+            ]
+          ],
+          "4832": "0000",
+          "10": [
+            4588,
+            29,
+            23,
+            24
+          ],
+          "43": [
+            772
+          ],
+          "13": [
+            1027,
+            2052,
+            1025,
+            1283,
+            2053,
+            1281,
+            2054,
+            1537,
+            513
+          ],
+          "0": "000c0000096c6f63616c686f7374",
+          "16": "0003026833"
+        }
+      }
+    },
+    {
+      "resumed": true,
+      "ja4": "q13d0314h3_55b375c5d22e_40246181ac92",
+      "hello": {
+        "sessionIDLength": 0,
+        "ciphers": [
+          "1301",
+          "1302",
+          "1303"
+        ],
+        "extensions": {
+          "17613": "0003026833",
+          "4832": "0000",
+          "27": "020002",
+          "57": {
+            "15": "",
+            "12583": "measured RTT (microseconds)",
+            "32": "80010000",
+            "8": "4064",
+            "3": "45c0",
+            "1": "800493e0",
+            "12584": "4f5249474e4f4950",
+            "9": "4067",
+            "4": "80f00000",
+            "17": {
+              "chosen": 1,
+              "available": [
+                1
+              ]
+            },
+            "6": "80600000",
+            "5": "80600000",
+            "7": "80600000"
+          },
+          "0": "000c0000096c6f63616c686f7374",
+          "65037": {
+            "kdfAEAD": "0000010001"
+          },
+          "43": [
+            772
+          ],
+          "51764": [
+            "82df130201",
+            "82df130206",
+            "82df13020d",
+            "82df13020e",
+            "82df13020f",
+            "82df130212",
+            "82df130213",
+            "82df130214",
+            "839a648c9b2d0107",
+            "839a648c9b2d0108",
+            "839a648c9b2d0109",
+            "839a648c9b2d010a",
+            "839a648c9b2d010b",
+            "839a648c9b2d010c",
+            "839a648c9b2d010d",
+            "839a648c9b2d0112",
+            "839a648c9b2d0113",
+            "d6790901",
+            "d6790902",
+            "d6790903",
+            "d6790904",
+            "d6790905",
+            "d6790906",
+            "d6790907",
+            "d6790908",
+            "d6790909",
+            "d679090a",
+            "d679090b",
+            "d679090c",
+            "d679090d",
+            "d679090e",
+            "d679090f"
+          ],
+          "13": [
+            1027,
+            2052,
+            1025,
+            1283,
+            2053,
+            1281,
+            2054,
+            1537,
+            513
+          ],
+          "16": "0003026833",
+          "10": [
+            4588,
+            29,
+            23,
+            24
+          ],
+          "51": [
+            [
+              4588,
+              1216
+            ],
+            [
+              29,
+              32
+            ]
+          ],
+          "45": "0101",
+          "41": "session-specific PSK"
+        }
+      }
+    }
+  ]
+}

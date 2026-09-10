@@ -31,6 +31,9 @@ const chrome152TrustAnchorsCapture = "00b80582df13020108839a648c9b2d010c08839a64
 
 var chrome152TrustAnchors = shuffleTrustAnchors(mustSplitTrustAnchors(chrome152TrustAnchorsCapture))
 
+// Frozen Windows 152.0.7977.82 loopback capture: 32 anchor IDs.
+var chrome152WindowsTrustAnchors = shuffleTrustAnchors(mustSplitTrustAnchors("00cc08839a648c9b2d010704d679090f04d679090108839a648c9b2d010d0582df1302060582df1302130582df13021404d679090d04d679090808839a648c9b2d01080582df13020104d679090504d679090e08839a648c9b2d01090582df13020d04d679090904d679090608839a648c9b2d010a0582df13020f04d67909040582df13021204d679090704d679090a08839a648c9b2d011308839a648c9b2d010b08839a648c9b2d011204d67909020582df13020e08839a648c9b2d010c04d679090b04d679090c04d6790903"))
+
 // mustDecodeHex converts a wire-format hex string into extension data. It
 // panics on malformed input, which can only come from a literal in this
 // package.

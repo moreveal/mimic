@@ -3,9 +3,11 @@ package quic
 import (
 	"bytes"
 	"context"
+	"encoding/binary"
 	"errors"
 	"fmt"
 	"io"
+	mathrand "math/rand/v2"
 	"net"
 	"reflect"
 	"slices"
@@ -26,6 +28,7 @@ import (
 	"github.com/bogdanfinn/quic-go-utls/internal/wire"
 	"github.com/bogdanfinn/quic-go-utls/qlog"
 	"github.com/bogdanfinn/quic-go-utls/qlogwriter"
+	"github.com/bogdanfinn/quic-go-utls/quicvarint"
 )
 
 type unpacker interface {
@@ -152,8 +155,9 @@ type Conn struct {
 	connIDManager   *connIDManager
 	connIDGenerator *connIDGenerator
 
-	rttStats  *utils.RTTStats
-	connStats utils.ConnectionStats
+	rttStats     *utils.RTTStats
+	clientRTTKey string
+	connStats    utils.ConnectionStats
 
 	cryptoStreamManager   *cryptoStreamManager
 	sentPacketHandler     ackhandler.SentPacketHandler
@@ -482,6 +486,40 @@ var newClientConnection = func(
 	} else {
 		params.MaxDatagramFrameSize = protocol.InvalidByteCount
 	}
+	if profile := conf.ClientTransportParameters; profile != nil {
+		s.clientRTTKey = conn.RemoteAddr().String()
+		if _, port, err := net.SplitHostPort(s.clientRTTKey); err == nil && tlsConf.ServerName != "" {
+			s.clientRTTKey = net.JoinHostPort(tlsConf.ServerName, port)
+		}
+		params.MaxUDPPayloadSize = protocol.ByteCount(profile.MaxUDPPayloadSize)
+		params.MaxDatagramFrameSize = protocol.ByteCount(profile.MaxDatagramFrameSize)
+		params.MaxAckDelay = profile.MaxAckDelay
+		params.ActiveConnectionIDLimit = profile.ActiveConnectionIDLimit
+		s.connIDManager.activeLimit = int(profile.ActiveConnectionIDLimit)
+		params.RandomizeOrder = profile.RandomizeOrder
+		params.Additional = make(map[uint64][]byte, len(profile.Additional)+1)
+		for id, value := range profile.Additional {
+			params.Additional[id] = slices.Clone(value)
+		}
+		if rtt := profile.InitialRTTCache.get(s.clientRTTKey); rtt >= time.Microsecond {
+			s.rttStats.SetInitialRTT(rtt)
+			// Google's initial_rtt parameter is an actual remembered estimate,
+			// in microseconds, also used by this connection's loss recovery.
+			params.Additional[0x3127] = quicvarint.Append(nil, uint64(rtt.Microseconds()))
+		}
+		if profile.AdvertiseVersionInformation {
+			data := binary.BigEndian.AppendUint32(nil, uint32(s.version))
+			versions := []uint32{(mathrand.Uint32() & 0xf0f0f0f0) | 0x0a0a0a0a}
+			for _, version := range conf.Versions {
+				versions = append(versions, uint32(version))
+			}
+			mathrand.Shuffle(len(versions), func(i, j int) { versions[i], versions[j] = versions[j], versions[i] })
+			for _, version := range versions {
+				data = binary.BigEndian.AppendUint32(data, version)
+			}
+			params.Additional[0x11] = data
+		}
+	}
 	if s.qlogger != nil {
 		s.qlogTransportParameters(params, protocol.PerspectiveClient, false)
 	}
@@ -494,6 +532,7 @@ var newClientConnection = func(
 		s.qlogger,
 		logger,
 		s.version,
+		conf.ClientHelloSpec,
 	)
 	s.cryptoStreamHandler = cs
 	s.cryptoStreamManager = newCryptoStreamManager(s.initialStream, s.handshakeStream, oneRTTStream)
@@ -567,6 +606,13 @@ func (c *Conn) preSetup() {
 // run the connection main loop
 func (c *Conn) run() (err error) {
 	defer func() { c.ctxCancel(err) }()
+	defer func() {
+		if c.perspective == protocol.PerspectiveClient && c.handshakeComplete {
+			if profile := c.config.ClientTransportParameters; profile != nil {
+				profile.InitialRTTCache.put(c.clientRTTKey, c.rttStats.SmoothedRTT())
+			}
+		}
+	}()
 
 	defer func() {
 		// drain queued packets that will never be processed
@@ -2135,7 +2181,11 @@ func (c *Conn) handleAckFrame(frame *wire.AckFrame, encLevel protocol.Encryption
 }
 
 func (c *Conn) handleDatagramFrame(f *wire.DatagramFrame) error {
-	if f.Length(c.version) > wire.MaxDatagramSize {
+	limit := wire.MaxDatagramSize
+	if c.perspective == protocol.PerspectiveClient && c.config.ClientTransportParameters != nil {
+		limit = protocol.ByteCount(c.config.ClientTransportParameters.MaxDatagramFrameSize)
+	}
+	if f.Length(c.version) > limit {
 		return &qerr.TransportError{
 			ErrorCode:    qerr.ProtocolViolation,
 			ErrorMessage: "DATAGRAM frame too large",

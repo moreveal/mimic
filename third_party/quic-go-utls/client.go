@@ -24,10 +24,12 @@ func DialAddr(ctx context.Context, addr string, tlsConf *tls.Config, conf *Confi
 	}
 	udpAddr, err := net.ResolveUDPAddr("udp", addr)
 	if err != nil {
+		udpConn.Close()
 		return nil, err
 	}
 	tr, err := setupTransport(udpConn, tlsConf, true)
 	if err != nil {
+		udpConn.Close()
 		return nil, err
 	}
 	conn, err := tr.dial(ctx, udpAddr, addr, tlsConf, conf, false)
@@ -47,10 +49,12 @@ func DialAddrEarly(ctx context.Context, addr string, tlsConf *tls.Config, conf *
 	}
 	udpAddr, err := net.ResolveUDPAddr("udp", addr)
 	if err != nil {
+		udpConn.Close()
 		return nil, err
 	}
 	tr, err := setupTransport(udpConn, tlsConf, true)
 	if err != nil {
+		udpConn.Close()
 		return nil, err
 	}
 	conn, err := tr.dial(ctx, udpAddr, addr, tlsConf, conf, true)
