@@ -254,6 +254,11 @@ this inventory. Worker participation is recorded in Mimic but the exact
 contribution of each worker/realm remains unknown. No first causal point is
 asserted from hashes, property-name traces or temporal adjacency alone.
 
+Follow-up: [child task boundary investigation](child-task-boundary-2026-09-10.md)
+locates the elapsed-time monitor and reproduces child-queue starvation of parent
+messages independently of the protected scenario. Its scheduler candidate was
+withdrawn after existing V8 child-fetch regressions; no post-fix verdict is claimed.
+
 Next evidence should stay at the `extraParams` → child execution → third /fo
 boundary, comparing consumed values and task ordering with equivalent cache
 state. Record no observed verdict effect for an unsuccessful intervention,

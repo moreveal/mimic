@@ -2,6 +2,7 @@
   {"id":"value-normalization","category":"harness-self-test","file":"compatibility/corpus/values.js"},
   {"id":"network","category":"network","file":"compatibility/corpus/network.js"},
   {"id":"temporal","category":"timing-lifecycle","file":"compatibility/corpus/temporal.js"},
+  {"id":"frame-task-interleaving","category":"timing-lifecycle","file":"compatibility/corpus/frame-task-interleaving.js"},
   {"id":"resource-realm-isolation","category":"timing-lifecycle","file":"compatibility/corpus/resource-realm-isolation.js"},
   {"id":"resource-json","category":"timing-lifecycle","file":"compatibility/corpus/resource-json.js"},
   {"id":"worker-microtasks","category":"timing-lifecycle","file":"compatibility/corpus/worker-microtasks.js"},
