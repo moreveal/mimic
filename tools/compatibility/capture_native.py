@@ -18,6 +18,7 @@ main_session = None
 main_target = None
 main_ready = None
 capture_active = True
+revisit = False
 
 def save(name, obj):
     (OUT / name).write_text(json.dumps(obj, ensure_ascii=False, indent=2), encoding='utf8')
@@ -159,6 +160,11 @@ async def main():
                     state = await call('Runtime.evaluate', {'expression': 'JSON.stringify({url:location.href,title:document.title,ready:document.readyState,text:document.body?.innerText,html:document.documentElement?.outerHTML})', 'returnByValue': True}, main_session)
                     save(f'state-{seconds}.json', state)
                     checkpoints.append(state)
+                if revisit:
+                    save('cookies-before-revisit.json', await call('Storage.getCookies', {'browserContextId': owned}))
+                    save('revisit-navigation.json', await call('Page.navigate', {'url': URL}, main_session))
+                    await asyncio.sleep(10)
+                    save('state-after-revisit.json', await call('Runtime.evaluate', {'expression': 'JSON.stringify({url:location.href,title:document.title,ready:document.readyState,text:document.body?.innerText})', 'returnByValue': True}, main_session))
                 for sid, info in list(sessions.items()):
                     if info['type'] in ('page', 'iframe'):
                         save('dom-' + sid + '.json', await call('DOMSnapshot.captureSnapshot', {'computedStyles': [], 'includeDOMRects': True, 'includePaintOrder': True}, sid))
@@ -191,19 +197,22 @@ async def main():
             'url': URL, 'version': version, 'commandLine': command,
             'endpoint': endpoint, 'sessions': sessions, 'scripts': scripts,
             'bodies': bodies, 'errors': errors, 'navigation': nav,
+            'revisitSameURL': revisit,
             'limitations': ['Browser-wide Tracing omitted to avoid recording unrelated targets'],
             'files': [{'name': p.name, 'size': p.stat().st_size,
                        'sha256': hashlib.sha256(p.read_bytes()).hexdigest()}
                       for p in OUT.iterdir() if p.is_file()]})
 
 def cli():
-    global OUT, PORT, URL, events
+    global OUT, PORT, URL, events, revisit
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('output', type=pathlib.Path, help='New private output directory')
     parser.add_argument('port', type=int, help='Existing local Chrome CDP port')
     parser.add_argument('url', help='Explicit URL to capture')
+    parser.add_argument('--revisit', action='store_true', help='After 30 seconds, navigate to the same URL by GET with the same context cookies')
     args = parser.parse_args()
     OUT, PORT, URL = args.output, args.port, args.url
+    revisit = args.revisit
     if OUT.exists() and any(OUT.iterdir()):
         parser.error('Output directory must be empty; existing captures are never overwritten')
     OUT.mkdir(parents=True, exist_ok=True)
