@@ -38,7 +38,7 @@ const webkitCSSKeywords=new Map(Object.entries({
  'transform-style':'flat preserve-3d'
 }).map(([name,values])=>[name,new Set(values.split(' '))]));
 const normalizeCSSValue=(name,value,inputName=name)=>{
- value=String(value).trim();if(!value)return '';
+ value=String(value).trim();if(!value)return '';if(cssTopLevelBang(value)>=0)return null;
  value=cssAliasInputValue(name,value,inputName);
  const parser=cssShorthandParsers.get(name)||cssLonghandParsers.get(name);
  if(parser&&cssWideValue(value.toLowerCase()))return value.toLowerCase();

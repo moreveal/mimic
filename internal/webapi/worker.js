@@ -71,7 +71,7 @@
       let value;
       if(property.valueType==='function'){
         const functionName=property.functionName||property.name;
-        value={[functionName]:function(){return host.semanticMissing('DedicatedWorkerGlobalScope.'+property.name)}}[functionName];
+        value={[functionName]:function(){return host.semanticMissingAt('worker.js:74','DedicatedWorkerGlobalScope.'+property.name)}}[functionName];
         if(property.functionLength!==null&&property.functionLength!==undefined)Object.defineProperty(value,'length',{value:property.functionLength,configurable:true});
       }else if(property.valueType==='boolean')value=false;
       else if(property.valueType==='number')value=0;

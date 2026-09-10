@@ -1,0 +1,232 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/svg_states_oracle.js",
+    "fixtureSHA256": "c18369ad608e936e7f8b887bb6ae9a87980ce82b570dbbd1eef25081b63c4a3e",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "rectDetached": [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      null
+    ],
+    "rectAttached": [
+      [
+        0,
+        0,
+        10,
+        20
+      ],
+      null
+    ],
+    "rectVisibility": [
+      [
+        0,
+        0,
+        10,
+        20
+      ],
+      null
+    ],
+    "rectOwnNone": [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      null
+    ],
+    "rectParentNone": [
+      [
+        0,
+        0,
+        10,
+        20
+      ],
+      null
+    ],
+    "rectRootNone": [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      null
+    ],
+    "pathDetached": [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      null
+    ],
+    "pathAttached": [
+      [
+        0,
+        0,
+        10,
+        0
+      ],
+      null
+    ],
+    "pathVisibility": [
+      [
+        0,
+        0,
+        10,
+        0
+      ],
+      null
+    ],
+    "pathOwnNone": [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      null
+    ],
+    "pathParentNone": [
+      [
+        0,
+        0,
+        10,
+        0
+      ],
+      null
+    ],
+    "pathRootNone": [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      null
+    ],
+    "textDetached": [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      0
+    ],
+    "textAttached": [
+      [
+        -1,
+        -14,
+        22.34375,
+        17
+      ],
+      2
+    ],
+    "textVisibility": [
+      [
+        -1,
+        -14,
+        22.34375,
+        17
+      ],
+      2
+    ],
+    "textOwnNone": [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      0
+    ],
+    "textParentNone": [
+      [
+        -1,
+        -14,
+        22.34375,
+        17
+      ],
+      2
+    ],
+    "textRootNone": [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      0
+    ],
+    "gDetached": [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      null
+    ],
+    "gAttached": [
+      [
+        0,
+        0,
+        10,
+        20
+      ],
+      null
+    ],
+    "gVisibility": [
+      [
+        0,
+        0,
+        10,
+        20
+      ],
+      null
+    ],
+    "gOwnNone": [
+      [
+        0,
+        0,
+        10,
+        20
+      ],
+      null
+    ],
+    "gParentNone": [
+      [
+        0,
+        0,
+        10,
+        20
+      ],
+      null
+    ],
+    "gRootNone": [
+      [
+        0,
+        0,
+        0,
+        0
+      ],
+      null
+    ]
+  }
+}

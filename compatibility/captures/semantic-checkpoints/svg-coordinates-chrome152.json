@@ -1,0 +1,159 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/svg_coordinates_oracle.js",
+    "fixtureSHA256": "3b128ccafa0bc6fe7351a76a391cd4ca455fdfa8a3050fcc0c85297f0b267e27",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "detached": [
+      [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0
+      ]
+    ],
+    "connected": [
+      [
+        2,
+        0,
+        0,
+        2,
+        0,
+        0
+      ],
+      [
+        2,
+        0,
+        0,
+        2,
+        20,
+        40
+      ],
+      [
+        4,
+        0,
+        0,
+        4,
+        20,
+        40
+      ],
+      [
+        4,
+        0,
+        0,
+        4,
+        28,
+        48
+      ]
+    ],
+    "owners": [
+      true,
+      true,
+      null,
+      null
+    ],
+    "hidden": [
+      2,
+      0,
+      0,
+      2,
+      20,
+      40
+    ],
+    "hiddenGroup": [
+      2,
+      0,
+      0,
+      2,
+      20,
+      40
+    ],
+    "nested": [
+      [
+        4,
+        0,
+        0,
+        4,
+        30,
+        54
+      ],
+      [
+        2,
+        0,
+        0,
+        2,
+        7,
+        11
+      ],
+      [
+        4,
+        0,
+        0,
+        4,
+        42,
+        70
+      ],
+      true
+    ],
+    "css": [
+      2,
+      0,
+      0,
+      2,
+      26,
+      48
+    ],
+    "removed": [
+      [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0
+      ],
+      [
+        1,
+        0,
+        0,
+        1,
+        0,
+        0
+      ]
+    ]
+  }
+}

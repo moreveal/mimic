@@ -1,0 +1,412 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/font_fallback_oracle.js",
+    "fixtureSHA256": "299b232021374964d7118fb977f7ce9697386ae8296fb4b868b09188ac61cb81",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "serif|A": {
+      "length": 11.5625,
+      "box": [
+        -1,
+        -14,
+        13,
+        17
+      ]
+    },
+    "serif|\ud83d\ude00": {
+      "length": 21.96875,
+      "box": [
+        0,
+        -14,
+        21.96875,
+        17
+      ]
+    },
+    "serif|A\ud83d\ude00B": {
+      "length": 44.203125,
+      "box": [
+        -1,
+        -14,
+        45.203125,
+        17
+      ]
+    },
+    "serif|\ud83d\ude00\ud83d\ude00": {
+      "length": 43.9375,
+      "box": [
+        0,
+        -14,
+        43.9375,
+        17
+      ]
+    },
+    "serif|\ud83d\udc69\u200d\ud83d\udcbb": {
+      "length": 21.96875,
+      "box": [
+        0,
+        -14,
+        21.96875,
+        17
+      ]
+    },
+    "serif|\u2764\ufe0f": {
+      "length": 21.96875,
+      "box": [
+        0,
+        -14,
+        21.96875,
+        17
+      ]
+    },
+    "serif|e\u0301": {
+      "length": 7.109375,
+      "box": [
+        0,
+        -14,
+        7.109375,
+        17
+      ]
+    },
+    "serif|A\ud83d\udc69\u200d\ud83d\udcbbB": {
+      "length": 44.203125,
+      "box": [
+        -1,
+        -14,
+        45.203125,
+        17
+      ]
+    },
+    "serif|\u263a\ufe0f": {
+      "length": 21.96875,
+      "box": [
+        0,
+        -14,
+        21.96875,
+        17
+      ]
+    },
+    "serif|\u263a\ufe0e": {
+      "length": 16.34375,
+      "box": [
+        0,
+        -14,
+        16.34375,
+        17
+      ]
+    },
+    "serif|\ud83d\udc4d\ud83c\udffd": {
+      "length": 21.96875,
+      "box": [
+        0,
+        -14,
+        21.96875,
+        17
+      ]
+    },
+    "\"Segoe UI Emoji\"|A": {
+      "length": 10.328125,
+      "box": [
+        -1,
+        -17,
+        12,
+        21
+      ]
+    },
+    "\"Segoe UI Emoji\"|\ud83d\ude00": {
+      "length": 21.96875,
+      "box": [
+        0,
+        -17,
+        21.96875,
+        21
+      ]
+    },
+    "\"Segoe UI Emoji\"|A\ud83d\ude00B": {
+      "length": 41.46875,
+      "box": [
+        -1,
+        -17,
+        42.46875,
+        21
+      ]
+    },
+    "\"Segoe UI Emoji\"|\ud83d\ude00\ud83d\ude00": {
+      "length": 43.9375,
+      "box": [
+        0,
+        -17,
+        43.9375,
+        21
+      ]
+    },
+    "\"Segoe UI Emoji\"|\ud83d\udc69\u200d\ud83d\udcbb": {
+      "length": 21.96875,
+      "box": [
+        0,
+        -17,
+        21.96875,
+        21
+      ]
+    },
+    "\"Segoe UI Emoji\"|\u2764\ufe0f": {
+      "length": 21.96875,
+      "box": [
+        0,
+        -17,
+        21.96875,
+        21
+      ]
+    },
+    "\"Segoe UI Emoji\"|e\u0301": {
+      "length": 8.375,
+      "box": [
+        0,
+        -17,
+        8.375,
+        21
+      ]
+    },
+    "\"Segoe UI Emoji\"|A\ud83d\udc69\u200d\ud83d\udcbbB": {
+      "length": 41.46875,
+      "box": [
+        -1,
+        -17,
+        42.46875,
+        21
+      ]
+    },
+    "\"Segoe UI Emoji\"|\u263a\ufe0f": {
+      "length": 21.96875,
+      "box": [
+        0,
+        -17,
+        21.96875,
+        21
+      ]
+    },
+    "\"Segoe UI Emoji\"|\u263a\ufe0e": {
+      "length": 16.34375,
+      "box": [
+        0,
+        -17,
+        16.34375,
+        21
+      ]
+    },
+    "\"Segoe UI Emoji\"|\ud83d\udc4d\ud83c\udffd": {
+      "length": 21.96875,
+      "box": [
+        0,
+        -17,
+        21.96875,
+        21
+      ]
+    },
+    "serif, \"Segoe UI Emoji\"|A": {
+      "length": 11.5625,
+      "box": [
+        -1,
+        -14,
+        13,
+        17
+      ]
+    },
+    "serif, \"Segoe UI Emoji\"|\ud83d\ude00": {
+      "length": 21.96875,
+      "box": [
+        0,
+        -14,
+        21.96875,
+        17
+      ]
+    },
+    "serif, \"Segoe UI Emoji\"|A\ud83d\ude00B": {
+      "length": 44.203125,
+      "box": [
+        -1,
+        -14,
+        45.203125,
+        17
+      ]
+    },
+    "serif, \"Segoe UI Emoji\"|\ud83d\ude00\ud83d\ude00": {
+      "length": 43.9375,
+      "box": [
+        0,
+        -14,
+        43.9375,
+        17
+      ]
+    },
+    "serif, \"Segoe UI Emoji\"|\ud83d\udc69\u200d\ud83d\udcbb": {
+      "length": 21.96875,
+      "box": [
+        0,
+        -14,
+        21.96875,
+        17
+      ]
+    },
+    "serif, \"Segoe UI Emoji\"|\u2764\ufe0f": {
+      "length": 21.96875,
+      "box": [
+        0,
+        -14,
+        21.96875,
+        17
+      ]
+    },
+    "serif, \"Segoe UI Emoji\"|e\u0301": {
+      "length": 7.109375,
+      "box": [
+        0,
+        -14,
+        7.109375,
+        17
+      ]
+    },
+    "serif, \"Segoe UI Emoji\"|A\ud83d\udc69\u200d\ud83d\udcbbB": {
+      "length": 44.203125,
+      "box": [
+        -1,
+        -14,
+        45.203125,
+        17
+      ]
+    },
+    "serif, \"Segoe UI Emoji\"|\u263a\ufe0f": {
+      "length": 21.96875,
+      "box": [
+        0,
+        -14,
+        21.96875,
+        17
+      ]
+    },
+    "serif, \"Segoe UI Emoji\"|\u263a\ufe0e": {
+      "length": 16.34375,
+      "box": [
+        0,
+        -14,
+        16.34375,
+        17
+      ]
+    },
+    "serif, \"Segoe UI Emoji\"|\ud83d\udc4d\ud83c\udffd": {
+      "length": 21.96875,
+      "box": [
+        0,
+        -14,
+        21.96875,
+        17
+      ]
+    },
+    "\"Arial\", serif|A": {
+      "length": 10.671875,
+      "box": [
+        -1,
+        -14,
+        12,
+        17
+      ]
+    },
+    "\"Arial\", serif|\ud83d\ude00": {
+      "length": 21.96875,
+      "box": [
+        0,
+        -14,
+        21.96875,
+        17
+      ]
+    },
+    "\"Arial\", serif|A\ud83d\ude00B": {
+      "length": 43.3125,
+      "box": [
+        -1,
+        -14,
+        44.3125,
+        17
+      ]
+    },
+    "\"Arial\", serif|\ud83d\ude00\ud83d\ude00": {
+      "length": 43.9375,
+      "box": [
+        0,
+        -14,
+        43.9375,
+        17
+      ]
+    },
+    "\"Arial\", serif|\ud83d\udc69\u200d\ud83d\udcbb": {
+      "length": 21.96875,
+      "box": [
+        0,
+        -14,
+        21.96875,
+        17
+      ]
+    },
+    "\"Arial\", serif|\u2764\ufe0f": {
+      "length": 21.96875,
+      "box": [
+        0,
+        -14,
+        21.96875,
+        17
+      ]
+    },
+    "\"Arial\", serif|e\u0301": {
+      "length": 8.90625,
+      "box": [
+        0,
+        -14,
+        9,
+        17
+      ]
+    },
+    "\"Arial\", serif|A\ud83d\udc69\u200d\ud83d\udcbbB": {
+      "length": 43.3125,
+      "box": [
+        -1,
+        -14,
+        44.3125,
+        17
+      ]
+    },
+    "\"Arial\", serif|\u263a\ufe0f": {
+      "length": 21.96875,
+      "box": [
+        0,
+        -14,
+        21.96875,
+        17
+      ]
+    },
+    "\"Arial\", serif|\u263a\ufe0e": {
+      "length": 16.34375,
+      "box": [
+        0,
+        -14,
+        16.34375,
+        17
+      ]
+    },
+    "\"Arial\", serif|\ud83d\udc4d\ud83c\udffd": {
+      "length": 21.96875,
+      "box": [
+        0,
+        -14,
+        21.96875,
+        17
+      ]
+    }
+  }
+}

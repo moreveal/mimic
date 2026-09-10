@@ -1,0 +1,70 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/svg_use_oracle.js",
+    "fixtureSHA256": "ed2cb63c0279988e726ebfbb81b09f7a74ec6e771d6e8ec6892b12a973268734",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "basic": [
+      15,
+      27,
+      30,
+      40
+    ],
+    "targetTransform": [
+      25,
+      47,
+      60,
+      80
+    ],
+    "ownTransform": [
+      25,
+      47,
+      60,
+      80
+    ],
+    "parent": [
+      125,
+      247,
+      60,
+      80
+    ],
+    "mutation": [
+      25,
+      47,
+      100,
+      80
+    ],
+    "missing": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "hidden": [
+      0,
+      0,
+      0,
+      0
+    ],
+    "symbol": [
+      5,
+      12,
+      40,
+      20
+    ],
+    "cycle": [
+      0,
+      0,
+      0,
+      0
+    ]
+  }
+}

@@ -16,6 +16,7 @@ import (
 	"github.com/moreveal/mimic/internal/network"
 	"github.com/moreveal/mimic/internal/scheduler"
 	"github.com/moreveal/mimic/internal/state"
+	"github.com/moreveal/mimic/internal/textmetrics"
 	"github.com/moreveal/mimic/internal/trace"
 )
 
@@ -56,6 +57,7 @@ type Page struct {
 	documentSecurity documentSecurity
 	loadEventEnded   bool
 	messagePorts     map[string]*messagePortState
+	textMetrics      *textmetrics.Engine // Page event-loop owned; lazy local font resources.
 }
 
 // LockCommands serializes an external command and its complete event-loop turn.
@@ -115,6 +117,7 @@ func (p *Page) Close() error {
 	for _, old := range retired {
 		_ = old.Close()
 	}
+	p.textMetrics = nil
 	return nil
 }
 func (p *Page) URL() string {

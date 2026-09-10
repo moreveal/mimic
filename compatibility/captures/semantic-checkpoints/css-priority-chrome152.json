@@ -1,0 +1,48 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/css_priority_oracle.js",
+    "fixtureSHA256": "ed41b898f714a80ea5778b3844d012ca69cdbafd1620029b07458e3f4b85f7a7",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "font-size": [
+      "12px",
+      ""
+    ],
+    "font-sizeValid": [
+      "150px",
+      "important"
+    ],
+    "width": [
+      "12px",
+      ""
+    ],
+    "widthValid": [
+      "150px",
+      "important"
+    ],
+    "--custom": [
+      "12px",
+      ""
+    ],
+    "--customValid": [
+      "150px",
+      "important"
+    ],
+    "text": [
+      "150px",
+      "important",
+      "20px",
+      "important",
+      "\"!important\""
+    ],
+    "assignment": "12px"
+  }
+}

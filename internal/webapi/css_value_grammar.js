@@ -173,3 +173,23 @@ const serializeOrdinaryCSSShorthand=(name,values)=>{
  if(name==='border-radius'){const pairs=values.map(cssValueTokens);if(pairs.some(v=>!v||!v.length||v.length>2))return '';const x=pairs.map(v=>v[0]),y=pairs.map(v=>v[1]??v[0]),a=cssCompressFour(x),b=cssCompressFour(y);return a+(a===b?'':' / '+b)}
  return '';
 };
+
+// Priority is declaration metadata, never part of a CSSOM property value.
+// Ignore bangs inside strings, comments and nested component values.
+const cssTopLevelBang=value=>{
+ let quote='',depth=0;
+ for(let i=0;i<value.length;i++){const c=value[i];
+  if(c==='\\'){i++;continue}
+  if(quote){if(c===quote)quote='';continue}
+  if(c==='"'||c==="'"){quote=c;continue}
+  if(c==='/'&&value[i+1]==='*'){const end=value.indexOf('*/',i+2);if(end<0)return -1;i=end+1;continue}
+  if('([{'.includes(c))depth++;else if(')]}'.includes(c))depth--;
+  else if(c==='!'&&depth===0)return i;
+ }
+ return -1;
+};
+const cssExtractPriority=value=>{
+ const index=cssTopLevelBang(value);if(index<0)return {value,priority:''};
+ const suffix=value.slice(index+1).replace(/\/\*[\s\S]*?\*\//g,' ').trim();
+ return /^important$/i.test(suffix)?{value:value.slice(0,index).trim(),priority:'important'}:null;
+};

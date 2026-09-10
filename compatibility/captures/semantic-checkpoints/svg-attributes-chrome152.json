@@ -1,0 +1,3205 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/svg_attributes_oracle.js",
+    "fixtureSHA256": "d7241abfee07d20c69a18f2db0688934f6e1987593786716759503d7776cc6b8",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "svg": {
+      "x": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "width": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 200,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "height": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 100,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "currentScale": {
+        "primitive": 1
+      },
+      "currentTranslate": {
+        "type": "SVGPoint"
+      },
+      "viewBox": {
+        "type": "SVGAnimatedRect",
+        "base": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "preserveAspectRatio": {
+        "type": "SVGAnimatedPreserveAspectRatio",
+        "base": {
+          "align": 6,
+          "meetOrSlice": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "zoomAndPan": {
+        "primitive": 2
+      },
+      "transform": {
+        "type": "SVGAnimatedTransformList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "nearestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "farthestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "requiredExtensions": {
+        "type": "SVGStringList"
+      },
+      "systemLanguage": {
+        "type": "SVGStringList"
+      }
+    },
+    "g": {
+      "transform": {
+        "type": "SVGAnimatedTransformList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "nearestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "farthestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "requiredExtensions": {
+        "type": "SVGStringList"
+      },
+      "systemLanguage": {
+        "type": "SVGStringList"
+      }
+    },
+    "defs": {
+      "transform": {
+        "type": "SVGAnimatedTransformList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "nearestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "farthestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "requiredExtensions": {
+        "type": "SVGStringList"
+      },
+      "systemLanguage": {
+        "type": "SVGStringList"
+      }
+    },
+    "desc": {},
+    "title": {},
+    "symbol": {
+      "viewBox": {
+        "type": "SVGAnimatedRect",
+        "base": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "preserveAspectRatio": {
+        "type": "SVGAnimatedPreserveAspectRatio",
+        "base": {
+          "align": 6,
+          "meetOrSlice": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "transform": {
+        "type": "SVGAnimatedTransformList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "nearestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "farthestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "requiredExtensions": {
+        "type": "SVGStringList"
+      },
+      "systemLanguage": {
+        "type": "SVGStringList"
+      }
+    },
+    "use": {
+      "x": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "width": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "height": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "href": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      },
+      "transform": {
+        "type": "SVGAnimatedTransformList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "nearestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "farthestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "requiredExtensions": {
+        "type": "SVGStringList"
+      },
+      "systemLanguage": {
+        "type": "SVGStringList"
+      }
+    },
+    "image": {
+      "x": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "width": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "height": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "preserveAspectRatio": {
+        "type": "SVGAnimatedPreserveAspectRatio",
+        "base": {
+          "align": 6,
+          "meetOrSlice": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "decoding": {
+        "primitive": "auto"
+      },
+      "crossOrigin": {
+        "primitive": null
+      },
+      "href": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      },
+      "transform": {
+        "type": "SVGAnimatedTransformList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "nearestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "farthestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "requiredExtensions": {
+        "type": "SVGStringList"
+      },
+      "systemLanguage": {
+        "type": "SVGStringList"
+      }
+    },
+    "switch": {
+      "transform": {
+        "type": "SVGAnimatedTransformList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "nearestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "farthestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "requiredExtensions": {
+        "type": "SVGStringList"
+      },
+      "systemLanguage": {
+        "type": "SVGStringList"
+      }
+    },
+    "style": {
+      "type": {
+        "primitive": ""
+      },
+      "media": {
+        "primitive": ""
+      },
+      "title": {
+        "primitive": ""
+      },
+      "sheet": {
+        "type": "CSSStyleSheet"
+      },
+      "disabled": {
+        "primitive": false
+      }
+    },
+    "path": {
+      "pathLength": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "transform": {
+        "type": "SVGAnimatedTransformList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "nearestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "farthestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "requiredExtensions": {
+        "type": "SVGStringList"
+      },
+      "systemLanguage": {
+        "type": "SVGStringList"
+      }
+    },
+    "rect": {
+      "x": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "width": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "height": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "rx": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "ry": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "pathLength": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "transform": {
+        "type": "SVGAnimatedTransformList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "nearestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "farthestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "requiredExtensions": {
+        "type": "SVGStringList"
+      },
+      "systemLanguage": {
+        "type": "SVGStringList"
+      }
+    },
+    "circle": {
+      "cx": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "cy": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "r": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "pathLength": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "transform": {
+        "type": "SVGAnimatedTransformList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "nearestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "farthestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "requiredExtensions": {
+        "type": "SVGStringList"
+      },
+      "systemLanguage": {
+        "type": "SVGStringList"
+      }
+    },
+    "ellipse": {
+      "cx": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "cy": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "rx": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "ry": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "pathLength": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "transform": {
+        "type": "SVGAnimatedTransformList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "nearestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "farthestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "requiredExtensions": {
+        "type": "SVGStringList"
+      },
+      "systemLanguage": {
+        "type": "SVGStringList"
+      }
+    },
+    "line": {
+      "x1": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y1": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "x2": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y2": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "pathLength": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "transform": {
+        "type": "SVGAnimatedTransformList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "nearestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "farthestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "requiredExtensions": {
+        "type": "SVGStringList"
+      },
+      "systemLanguage": {
+        "type": "SVGStringList"
+      }
+    },
+    "polyline": {
+      "points": {
+        "type": "SVGPointList"
+      },
+      "animatedPoints": {
+        "type": "SVGPointList"
+      },
+      "pathLength": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "transform": {
+        "type": "SVGAnimatedTransformList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "nearestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "farthestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "requiredExtensions": {
+        "type": "SVGStringList"
+      },
+      "systemLanguage": {
+        "type": "SVGStringList"
+      }
+    },
+    "polygon": {
+      "points": {
+        "type": "SVGPointList"
+      },
+      "animatedPoints": {
+        "type": "SVGPointList"
+      },
+      "pathLength": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "transform": {
+        "type": "SVGAnimatedTransformList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "nearestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "farthestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "requiredExtensions": {
+        "type": "SVGStringList"
+      },
+      "systemLanguage": {
+        "type": "SVGStringList"
+      }
+    },
+    "text": {
+      "x": {
+        "type": "SVGAnimatedLengthList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y": {
+        "type": "SVGAnimatedLengthList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "dx": {
+        "type": "SVGAnimatedLengthList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "dy": {
+        "type": "SVGAnimatedLengthList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "rotate": {
+        "type": "SVGAnimatedNumberList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "textLength": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "lengthAdjust": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "transform": {
+        "type": "SVGAnimatedTransformList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "nearestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "farthestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "requiredExtensions": {
+        "type": "SVGStringList"
+      },
+      "systemLanguage": {
+        "type": "SVGStringList"
+      }
+    },
+    "tspan": {
+      "x": {
+        "type": "SVGAnimatedLengthList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y": {
+        "type": "SVGAnimatedLengthList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "dx": {
+        "type": "SVGAnimatedLengthList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "dy": {
+        "type": "SVGAnimatedLengthList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "rotate": {
+        "type": "SVGAnimatedNumberList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "textLength": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "lengthAdjust": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "transform": {
+        "type": "SVGAnimatedTransformList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "nearestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "farthestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "requiredExtensions": {
+        "type": "SVGStringList"
+      },
+      "systemLanguage": {
+        "type": "SVGStringList"
+      }
+    },
+    "textPath": {
+      "startOffset": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "method": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "spacing": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 2,
+        "animSame": true,
+        "stable": true
+      },
+      "href": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      },
+      "textLength": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "lengthAdjust": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "transform": {
+        "type": "SVGAnimatedTransformList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "nearestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "farthestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "requiredExtensions": {
+        "type": "SVGStringList"
+      },
+      "systemLanguage": {
+        "type": "SVGStringList"
+      }
+    },
+    "a": {
+      "target": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      },
+      "download": {
+        "primitive": ""
+      },
+      "ping": {
+        "primitive": ""
+      },
+      "rel": {
+        "primitive": ""
+      },
+      "relList": {
+        "type": "DOMTokenList"
+      },
+      "hreflang": {
+        "primitive": ""
+      },
+      "type": {
+        "primitive": ""
+      },
+      "referrerPolicy": {
+        "primitive": ""
+      },
+      "href": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      },
+      "interestForElement": {
+        "primitive": null
+      },
+      "transform": {
+        "type": "SVGAnimatedTransformList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "nearestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "farthestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "requiredExtensions": {
+        "type": "SVGStringList"
+      },
+      "systemLanguage": {
+        "type": "SVGStringList"
+      }
+    },
+    "marker": {
+      "refX": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "refY": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "markerUnits": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 2,
+        "animSame": true,
+        "stable": true
+      },
+      "markerWidth": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 3,
+          "valueAsString": "3",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "markerHeight": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 3,
+          "valueAsString": "3",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "orientType": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 2,
+        "animSame": true,
+        "stable": true
+      },
+      "orientAngle": {
+        "type": "SVGAnimatedAngle",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "viewBox": {
+        "type": "SVGAnimatedRect",
+        "base": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "preserveAspectRatio": {
+        "type": "SVGAnimatedPreserveAspectRatio",
+        "base": {
+          "align": 6,
+          "meetOrSlice": 1
+        },
+        "animSame": false,
+        "stable": true
+      }
+    },
+    "pattern": {
+      "patternUnits": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 2,
+        "animSame": true,
+        "stable": true
+      },
+      "patternContentUnits": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "patternTransform": {
+        "type": "SVGAnimatedTransformList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "x": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "width": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "height": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "viewBox": {
+        "type": "SVGAnimatedRect",
+        "base": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "preserveAspectRatio": {
+        "type": "SVGAnimatedPreserveAspectRatio",
+        "base": {
+          "align": 6,
+          "meetOrSlice": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "href": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      },
+      "requiredExtensions": {
+        "type": "SVGStringList"
+      },
+      "systemLanguage": {
+        "type": "SVGStringList"
+      }
+    },
+    "mask": {
+      "maskUnits": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 2,
+        "animSame": true,
+        "stable": true
+      },
+      "maskContentUnits": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "x": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": -20,
+          "valueAsString": "-10%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": -10,
+          "valueAsString": "-10%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "width": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 240,
+          "valueAsString": "120%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "height": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 120,
+          "valueAsString": "120%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "requiredExtensions": {
+        "type": "SVGStringList"
+      },
+      "systemLanguage": {
+        "type": "SVGStringList"
+      }
+    },
+    "clipPath": {
+      "clipPathUnits": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "transform": {
+        "type": "SVGAnimatedTransformList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      }
+    },
+    "linearGradient": {
+      "x1": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y1": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "x2": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 200,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y2": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "gradientUnits": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 2,
+        "animSame": true,
+        "stable": true
+      },
+      "gradientTransform": {
+        "type": "SVGAnimatedTransformList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "spreadMethod": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "href": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      }
+    },
+    "radialGradient": {
+      "cx": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 100,
+          "valueAsString": "50%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "cy": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 50,
+          "valueAsString": "50%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "r": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 79.05693817138672,
+          "valueAsString": "50%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "fx": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 100,
+          "valueAsString": "50%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "fy": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 50,
+          "valueAsString": "50%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "fr": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "gradientUnits": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 2,
+        "animSame": true,
+        "stable": true
+      },
+      "gradientTransform": {
+        "type": "SVGAnimatedTransformList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "spreadMethod": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "href": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      }
+    },
+    "stop": {
+      "offset": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      }
+    },
+    "foreignObject": {
+      "x": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "width": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "height": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0",
+          "unitType": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "transform": {
+        "type": "SVGAnimatedTransformList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "nearestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "farthestViewportElement": {
+        "type": "SVGSVGElement"
+      },
+      "requiredExtensions": {
+        "type": "SVGStringList"
+      },
+      "systemLanguage": {
+        "type": "SVGStringList"
+      }
+    },
+    "filter": {
+      "filterUnits": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 2,
+        "animSame": true,
+        "stable": true
+      },
+      "primitiveUnits": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "x": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": -20,
+          "valueAsString": "-10%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": -10,
+          "valueAsString": "-10%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "width": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 240,
+          "valueAsString": "120%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "height": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 120,
+          "valueAsString": "120%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "href": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      }
+    },
+    "feBlend": {
+      "in1": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      },
+      "in2": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      },
+      "mode": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "x": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "width": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "height": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "result": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      }
+    },
+    "feColorMatrix": {
+      "in1": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      },
+      "type": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "values": {
+        "type": "SVGAnimatedNumberList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "x": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "width": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "height": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "result": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      }
+    },
+    "feComponentTransfer": {
+      "in1": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      },
+      "x": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "width": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "height": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "result": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      }
+    },
+    "feComposite": {
+      "in2": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      },
+      "in1": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      },
+      "operator": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "k1": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "k2": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "k3": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "k4": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "x": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "width": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "height": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "result": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      }
+    },
+    "feConvolveMatrix": {
+      "in1": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      },
+      "orderX": {
+        "type": "SVGAnimatedInteger",
+        "base": 3,
+        "animSame": true,
+        "stable": true
+      },
+      "orderY": {
+        "type": "SVGAnimatedInteger",
+        "base": 3,
+        "animSame": true,
+        "stable": true
+      },
+      "kernelMatrix": {
+        "type": "SVGAnimatedNumberList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "divisor": {
+        "type": "SVGAnimatedNumber",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "bias": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "targetX": {
+        "type": "SVGAnimatedInteger",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "targetY": {
+        "type": "SVGAnimatedInteger",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "edgeMode": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "kernelUnitLengthX": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "kernelUnitLengthY": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "preserveAlpha": {
+        "type": "SVGAnimatedBoolean",
+        "base": false,
+        "animSame": true,
+        "stable": true
+      },
+      "x": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "width": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "height": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "result": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      }
+    },
+    "feDiffuseLighting": {
+      "in1": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      },
+      "surfaceScale": {
+        "type": "SVGAnimatedNumber",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "diffuseConstant": {
+        "type": "SVGAnimatedNumber",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "kernelUnitLengthX": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "kernelUnitLengthY": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "x": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "width": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "height": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "result": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      }
+    },
+    "feDisplacementMap": {
+      "in1": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      },
+      "in2": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      },
+      "scale": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "xChannelSelector": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 4,
+        "animSame": true,
+        "stable": true
+      },
+      "yChannelSelector": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 4,
+        "animSame": true,
+        "stable": true
+      },
+      "x": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "width": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "height": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "result": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      }
+    },
+    "feDistantLight": {
+      "azimuth": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "elevation": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      }
+    },
+    "feDropShadow": {
+      "in1": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      },
+      "dx": {
+        "type": "SVGAnimatedNumber",
+        "base": 2,
+        "animSame": true,
+        "stable": true
+      },
+      "dy": {
+        "type": "SVGAnimatedNumber",
+        "base": 2,
+        "animSame": true,
+        "stable": true
+      },
+      "stdDeviationX": {
+        "type": "SVGAnimatedNumber",
+        "base": 2,
+        "animSame": true,
+        "stable": true
+      },
+      "stdDeviationY": {
+        "type": "SVGAnimatedNumber",
+        "base": 2,
+        "animSame": true,
+        "stable": true
+      },
+      "x": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "width": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "height": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "result": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      }
+    },
+    "feFlood": {
+      "x": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "width": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "height": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "result": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      }
+    },
+    "feFuncA": {
+      "type": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "tableValues": {
+        "type": "SVGAnimatedNumberList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "slope": {
+        "type": "SVGAnimatedNumber",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "intercept": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "amplitude": {
+        "type": "SVGAnimatedNumber",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "exponent": {
+        "type": "SVGAnimatedNumber",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "offset": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      }
+    },
+    "feFuncB": {
+      "type": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "tableValues": {
+        "type": "SVGAnimatedNumberList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "slope": {
+        "type": "SVGAnimatedNumber",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "intercept": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "amplitude": {
+        "type": "SVGAnimatedNumber",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "exponent": {
+        "type": "SVGAnimatedNumber",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "offset": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      }
+    },
+    "feFuncG": {
+      "type": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "tableValues": {
+        "type": "SVGAnimatedNumberList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "slope": {
+        "type": "SVGAnimatedNumber",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "intercept": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "amplitude": {
+        "type": "SVGAnimatedNumber",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "exponent": {
+        "type": "SVGAnimatedNumber",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "offset": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      }
+    },
+    "feFuncR": {
+      "type": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "tableValues": {
+        "type": "SVGAnimatedNumberList",
+        "base": {
+          "numberOfItems": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "slope": {
+        "type": "SVGAnimatedNumber",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "intercept": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "amplitude": {
+        "type": "SVGAnimatedNumber",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "exponent": {
+        "type": "SVGAnimatedNumber",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "offset": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      }
+    },
+    "feGaussianBlur": {
+      "in1": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      },
+      "stdDeviationX": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "stdDeviationY": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "x": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "width": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "height": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "result": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      }
+    },
+    "feImage": {
+      "preserveAspectRatio": {
+        "type": "SVGAnimatedPreserveAspectRatio",
+        "base": {
+          "align": 6,
+          "meetOrSlice": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "x": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "width": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "height": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "result": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      },
+      "href": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      }
+    },
+    "feMerge": {
+      "x": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "width": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "height": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "result": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      }
+    },
+    "feMergeNode": {
+      "in1": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      }
+    },
+    "feMorphology": {
+      "in1": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      },
+      "operator": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "radiusX": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "radiusY": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "x": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "width": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "height": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "result": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      }
+    },
+    "feOffset": {
+      "in1": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      },
+      "dx": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "dy": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "x": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "width": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "height": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "result": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      }
+    },
+    "fePointLight": {
+      "x": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "y": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "z": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      }
+    },
+    "feSpecularLighting": {
+      "in1": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      },
+      "surfaceScale": {
+        "type": "SVGAnimatedNumber",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "specularConstant": {
+        "type": "SVGAnimatedNumber",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "specularExponent": {
+        "type": "SVGAnimatedNumber",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "kernelUnitLengthX": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "kernelUnitLengthY": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "x": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "width": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "height": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "result": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      }
+    },
+    "feSpotLight": {
+      "x": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "y": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "z": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "pointsAtX": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "pointsAtY": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "pointsAtZ": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "specularExponent": {
+        "type": "SVGAnimatedNumber",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "limitingConeAngle": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      }
+    },
+    "feTile": {
+      "in1": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      },
+      "x": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "width": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "height": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "result": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      }
+    },
+    "feTurbulence": {
+      "baseFrequencyX": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "baseFrequencyY": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "numOctaves": {
+        "type": "SVGAnimatedInteger",
+        "base": 1,
+        "animSame": true,
+        "stable": true
+      },
+      "seed": {
+        "type": "SVGAnimatedNumber",
+        "base": 0,
+        "animSame": true,
+        "stable": true
+      },
+      "stitchTiles": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 2,
+        "animSame": true,
+        "stable": true
+      },
+      "type": {
+        "type": "SVGAnimatedEnumeration",
+        "base": 2,
+        "animSame": true,
+        "stable": true
+      },
+      "x": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "y": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "0%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "width": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "height": {
+        "type": "SVGAnimatedLength",
+        "base": {
+          "value": 0,
+          "valueAsString": "100%",
+          "unitType": 2
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "result": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      }
+    },
+    "animate": {
+      "targetElement": {
+        "type": "SVGSVGElement"
+      },
+      "onbegin": {
+        "primitive": null
+      },
+      "onend": {
+        "primitive": null
+      },
+      "onrepeat": {
+        "primitive": null
+      },
+      "requiredExtensions": {
+        "type": "SVGStringList"
+      },
+      "systemLanguage": {
+        "type": "SVGStringList"
+      }
+    },
+    "animateMotion": {
+      "targetElement": {
+        "type": "SVGSVGElement"
+      },
+      "onbegin": {
+        "primitive": null
+      },
+      "onend": {
+        "primitive": null
+      },
+      "onrepeat": {
+        "primitive": null
+      },
+      "requiredExtensions": {
+        "type": "SVGStringList"
+      },
+      "systemLanguage": {
+        "type": "SVGStringList"
+      }
+    },
+    "animateTransform": {
+      "targetElement": {
+        "type": "SVGSVGElement"
+      },
+      "onbegin": {
+        "primitive": null
+      },
+      "onend": {
+        "primitive": null
+      },
+      "onrepeat": {
+        "primitive": null
+      },
+      "requiredExtensions": {
+        "type": "SVGStringList"
+      },
+      "systemLanguage": {
+        "type": "SVGStringList"
+      }
+    },
+    "set": {
+      "targetElement": {
+        "type": "SVGSVGElement"
+      },
+      "onbegin": {
+        "primitive": null
+      },
+      "onend": {
+        "primitive": null
+      },
+      "onrepeat": {
+        "primitive": null
+      },
+      "requiredExtensions": {
+        "type": "SVGStringList"
+      },
+      "systemLanguage": {
+        "type": "SVGStringList"
+      }
+    },
+    "mpath": {
+      "href": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      }
+    },
+    "view": {
+      "viewBox": {
+        "type": "SVGAnimatedRect",
+        "base": {
+          "x": 0,
+          "y": 0,
+          "width": 0,
+          "height": 0
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "preserveAspectRatio": {
+        "type": "SVGAnimatedPreserveAspectRatio",
+        "base": {
+          "align": 6,
+          "meetOrSlice": 1
+        },
+        "animSame": false,
+        "stable": true
+      },
+      "zoomAndPan": {
+        "primitive": 2
+      }
+    },
+    "script": {
+      "type": {
+        "primitive": ""
+      },
+      "href": {
+        "type": "SVGAnimatedString",
+        "base": "",
+        "animSame": true,
+        "stable": true
+      },
+      "async": {
+        "primitive": false
+      }
+    }
+  }
+}

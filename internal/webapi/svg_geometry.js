@@ -14,7 +14,7 @@
   const parent=n=>syntheticParents.get(n)||shadowSlots.get(n)?.host||(elementSlot(n)?wrap(host.parentNode(elementSlot(n).nodeId)):null);
   const childElements=n=>host.elementChildren(elementSlot(n).nodeId).map(wrap);
   const check=n=>{const d=elementSlot(n);if(!d||d.namespaceURI!==ns||!graphicsTags.has(tag(n)))throw new TypeError('Illegal invocation');return n};
-  const unsupported=name=>{host.semanticMissing('SVG.getBBox.'+name);throw new DOMException('Unsupported SVG bounding-box observation: '+name,'NotSupportedError')};
+  const unsupported=name=>{host.semanticMissingAt('svg_geometry.js:17','SVG.getBBox.'+name);throw new DOMException('Unsupported SVG bounding-box observation: '+name,'NotSupportedError')};
   const numberPattern='[+-]?(?:\\d*\\.\\d+|\\d+\\.?\\d*)(?:[eE][+-]?\\d+)?';
   const numbers=input=>{const s=String(input||''),token=new RegExp(numberPattern,'y'),space=/[\s,]*/y,out=[];let i=0;while(i<s.length){space.lastIndex=i;i+=space.exec(s)[0].length;if(i===s.length)break;token.lastIndex=i;const m=token.exec(s);if(!m||!Number.isFinite(Number(m[0])))return [];out.push(Number(m[0]));i=token.lastIndex;if(out.length>65536)unsupported('numberListComplexity')}return out};
   const ident=[1,0,0,1,0,0],multiply=(a,b)=>[a[0]*b[0]+a[2]*b[1],a[1]*b[0]+a[3]*b[1],a[0]*b[2]+a[2]*b[3],a[1]*b[2]+a[3]*b[3],a[0]*b[4]+a[2]*b[5]+a[4],a[1]*b[4]+a[3]*b[5]+a[5]];
@@ -22,8 +22,9 @@
   const union=(a,b)=>!a?b:!b?a:[Math.min(a[0],b[0]),Math.min(a[1],b[1]),Math.max(a[2],b[2]),Math.max(a[3],b[3])];
   const pointBox=(x,y)=>[x,y,x,y],rect=(x,y,w,h)=>[x,y,x+w,y+h];
   const transformBox=(b,m)=>{if(!b)return null;let out=null;for(const [x,y] of [[b[0],b[1]],[b[2],b[1]],[b[2],b[3]],[b[0],b[3]]]){const p=point(m,x,y);out=union(out,pointBox(...p))}return out};
-  const transform=n=>{
-   const css=computedCSSDeclarations(n).find(e=>e.name==='transform');if(css&&css.value!=='none')unsupported('cssTransform');
+  /* shared_svg_css_transform */
+  const transform=(n,box)=>{
+   const css=computedCSSDeclarations(n).find(e=>e.name==='transform');if(css)return cssTransform(n,box,css.value);
    const raw=attr(n,'transform')||'';let m=ident,rest=raw;
    const re=/^\s*(matrix|translate|scale|rotate|skewX|skewY)\s*\(([^)]*)\)\s*,?/;
    while(rest.trim()){const match=re.exec(rest);if(!match)return ident;rest=rest.slice(match[0].length);const a=numbers(match[2]);if(!a.every(Number.isFinite))return ident;let v;switch(match[1]){
@@ -32,7 +33,7 @@
     case 'scale':if(a.length<1||a.length>2)return ident;v=[a[0],0,0,a.length===2?a[1]:a[0],0,0];break;
     case 'rotate':{if(a.length!==1&&a.length!==3)return ident;const rad=a[0]*Math.PI/180,c=Math.cos(rad),s=Math.sin(rad),x=a[1]||0,y=a[2]||0;v=[c,s,-s,c,x-c*x+s*y,y-s*x-c*y];break}
     default:if(a.length!==1)return ident;v=match[1]==='skewX'?[1,0,Math.tan(a[0]*Math.PI/180),1,0,0]:[1,Math.tan(a[0]*Math.PI/180),0,1,0,0];
-   }m=multiply(m,v)}return m;
+   }m=multiply(m,v)}return specified(n,'transform-origin')!=null||specified(n,'transform-box')!=null?cssTransform(n,box,m):m;
   };
   const specified=(n,name)=>{const entry=computedCSSDeclarations(n).find(e=>e.name===name);return entry?entry.value:attr(n,name)};
   const viewport=n=>{for(let p=parent(n);isDOMNode(p);p=parent(p))if(tag(p)==='svg'){const v=numbers(attr(p,'viewBox'));if(v.length===4&&v[2]>0&&v[3]>0)return [v[2],v[3]];return [length(p,'width','x',300),length(p,'height','y',150)]}return [300,150]};
@@ -49,17 +50,21 @@
    const at=t=>[center[0]+rx*c*Math.cos(t)-ry*s*Math.sin(t),center[1]+rx*s*Math.cos(t)+ry*c*Math.sin(t)];let b=union(pointBox(...start),pointBox(...end));
    for(const v of [Math.atan2(-ry*s,rx*c),Math.atan2(ry*c,rx*s)])for(const t of [v,v+Math.PI]){const distance=delta>=0?((t-a)%tau+tau)%tau:((a-t)%tau+tau)%tau;if(distance<=Math.abs(delta)+1e-12)b=union(b,pointBox(...at(t)))}return b;
   };
-  const pathBox=source=>{
+  const pathBox=(source,emit)=>{
    source=String(source||'');const token=new RegExp(numberPattern,'y'),space=/[\s,]*/y;let i=0,countSegments=0,cmd='',last='',p=[0,0],start=p,cubic=null,quad=null,b=null;const counts={M:2,L:2,H:1,V:1,C:6,S:4,Q:4,T:2,A:7},skip=()=>{space.lastIndex=i;const m=space.exec(source);i+=m[0].length};
-   while(i<source.length){skip();if(i===source.length)break;if(/[a-zA-Z]/.test(source[i]))cmd=source[i++];const op=cmd.toUpperCase(),relative=cmd!==op;if(!last&&op!=='M')break;if(++countSegments>16384)unsupported('pathComplexity');if(op==='Z'){if(last&&last!=='M')b=union(b,union(pointBox(...p),pointBox(...start)));p=start.slice();cubic=quad=null;last=op;cmd='';continue}const count=counts[op];if(!count)break;const v=[];for(let j=0;j<count;j++){skip();if(op==='A'&&(j===3||j===4)){if(source[i]!=='0'&&source[i]!=='1')break;v.push(Number(source[i++]));continue}token.lastIndex=i;const m=token.exec(source);if(!m)break;v.push(Number(m[0]));i=token.lastIndex}if(v.length!==count||!v.every(Number.isFinite))break;const xy=(x,y)=>[x+(relative?p[0]:0),y+(relative?p[1]:0)];let next=p,cb=null,qb=null;
-    if(op==='M'){next=xy(v[0],v[1]);start=next.slice();cmd=relative?'l':'L'}
-    else if(op==='L'||op==='H'||op==='V'){next=op==='L'?xy(v[0],v[1]):op==='H'?[v[0]+(relative?p[0]:0),p[1]]:[p[0],v[0]+(relative?p[1]:0)];b=union(b,union(pointBox(...p),pointBox(...next)))}
-    else if(op==='C'||op==='S'){const c1=op==='C'?xy(v[0],v[1]):cubic&&['C','S'].includes(last)?[2*p[0]-cubic[0],2*p[1]-cubic[1]]:p,offset=op==='C'?2:0;cb=xy(v[offset],v[offset+1]);next=xy(v[offset+2],v[offset+3]);b=union(b,curveBox([p,c1,cb,next]))}
-    else if(op==='Q'||op==='T'){qb=op==='Q'?xy(v[0],v[1]):quad&&['Q','T'].includes(last)?[2*p[0]-quad[0],2*p[1]-quad[1]]:p;next=op==='Q'?xy(v[2],v[3]):xy(v[0],v[1]);b=union(b,curveBox([p,qb,next]))}
-    else if(op==='A'){if(![0,1].includes(v[3])||![0,1].includes(v[4]))break;next=xy(v[5],v[6]);b=union(b,arcBox(p,next,v[0],v[1],v[2],v[3],v[4]))}
+   while(i<source.length){skip();if(i===source.length)break;if(/[a-zA-Z]/.test(source[i]))cmd=source[i++];const op=cmd.toUpperCase(),relative=cmd!==op;if(!last&&op!=='M')break;if(++countSegments>16384)unsupported('pathComplexity');if(op==='Z'){if(emit)emit('L',[p,start]);if(last&&last!=='M')b=union(b,union(pointBox(...p),pointBox(...start)));p=start.slice();cubic=quad=null;last=op;cmd='';continue}const count=counts[op];if(!count)break;const v=[];for(let j=0;j<count;j++){skip();if(op==='A'&&(j===3||j===4)){if(source[i]!=='0'&&source[i]!=='1')break;v.push(Number(source[i++]));continue}token.lastIndex=i;const m=token.exec(source);if(!m)break;v.push(Number(m[0]));i=token.lastIndex}if(v.length!==count||!v.every(Number.isFinite))break;const xy=(x,y)=>[x+(relative?p[0]:0),y+(relative?p[1]:0)];let next=p,cb=null,qb=null;
+    if(op==='M'){next=xy(v[0],v[1]);start=next.slice();if(emit)emit('M',[next]);cmd=relative?'l':'L'}
+    else if(op==='L'||op==='H'||op==='V'){next=op==='L'?xy(v[0],v[1]):op==='H'?[v[0]+(relative?p[0]:0),p[1]]:[p[0],v[0]+(relative?p[1]:0)];b=union(b,union(pointBox(...p),pointBox(...next)));if(emit)emit('L',[p,next])}
+    else if(op==='C'||op==='S'){const c1=op==='C'?xy(v[0],v[1]):cubic&&['C','S'].includes(last)?[2*p[0]-cubic[0],2*p[1]-cubic[1]]:p,offset=op==='C'?2:0;cb=xy(v[offset],v[offset+1]);next=xy(v[offset+2],v[offset+3]);b=union(b,curveBox([p,c1,cb,next]));if(emit)emit('C',[p,c1,cb,next])}
+    else if(op==='Q'||op==='T'){qb=op==='Q'?xy(v[0],v[1]):quad&&['Q','T'].includes(last)?[2*p[0]-quad[0],2*p[1]-quad[1]]:p;next=op==='Q'?xy(v[2],v[3]):xy(v[0],v[1]);b=union(b,curveBox([p,qb,next]));if(emit)emit('Q',[p,qb,next])}
+    else if(op==='A'){if(![0,1].includes(v[3])||![0,1].includes(v[4]))break;next=xy(v[5],v[6]);b=union(b,arcBox(p,next,v[0],v[1],v[2],v[3],v[4]));if(emit)emit('A',[p,next],v.slice(0,5))}
     p=next;cubic=cb;quad=qb;last=op;
    }return b|| (last?pointBox(...p):null);
   };
+  /* shared_svg_types */
+  /* shared_svg_reflections */
+  /* shared_svg_path_metrics */
+  /* shared_svg_text */
   const bounds=(n,depth=0)=>{
    if(depth>256)unsupported('treeDepth');const kind=tag(n),L=(name,axis,fallback)=>length(n,name,axis,fallback);
    if(['rect','image','foreignObject'].includes(kind)){const x=L('x','x'),y=L('y','y'),w=Math.max(0,L('width','x')),h=Math.max(0,L('height','y'));return rect(x,y,w,h)}
@@ -67,11 +72,14 @@
    if(kind==='line')return union(pointBox(L('x1','x'),L('y1','y')),pointBox(L('x2','x'),L('y2','y')));
    if(kind==='polyline'||kind==='polygon'){const ps=numbers(attr(n,'points')||'');let b=null;for(let i=0;i+1<ps.length;i+=2)b=union(b,pointBox(ps[i],ps[i+1]));return b}
    if(kind==='path'){const css=computedCSSDeclarations(n).find(e=>e.name==='d');if(css)unsupported('cssPath');return pathBox(attr(n,'d'))}
-   if(['text','tspan','textPath','use','switch','symbol'].includes(kind))return unsupported(kind);
-   let b=null;for(const child of childElements(n)){const kind=tag(child);if(!graphicsTags.has(kind)||['defs','symbol'].includes(kind)||displayNone(child))continue;const childBox=bounds(child,depth+1);if(childBox&&['rect','circle','ellipse','image','foreignObject'].includes(kind)&&(childBox[2]===childBox[0]||childBox[3]===childBox[1]))continue;const m=kind==='svg'?multiply(transform(child),viewportTransform(child)):transform(child);b=union(b,transformBox(childBox,m))}return b;
+   if(kind==='text'||kind==='tspan')return textLayout(n).box;
+   if(kind==='use')return svgUseBox(n,depth);
+   if(['textPath','switch','symbol'].includes(kind))return unsupported(kind);
+   let b=null;for(const child of childElements(n)){const kind=tag(child);if(!graphicsTags.has(kind)||['defs','symbol'].includes(kind)||displayNone(child))continue;const childBox=bounds(child,depth+1);if(childBox&&['rect','circle','ellipse','image','foreignObject'].includes(kind)&&(childBox[2]===childBox[0]||childBox[3]===childBox[1]))continue;const m=kind==='svg'?multiply(transform(child,childBox),viewportTransform(child)):transform(child,childBox);b=union(b,transformBox(childBox,m))}return b;
   };
   const measurable=n=>{let connected=false;for(let p=n;isDOMNode(p);p=parent(p)){const d=elementSlot(p);if(p===document||d?.type==='document')connected=true;if(d?.type==='element'&&(d.namespaceURI!==ns||tag(p)==='svg')&&displayNone(p))return false}return connected&&(!displayNone(n)||['g','a','defs','symbol','switch'].includes(tag(n)))};
   const getBBox={getBBox(){const n=check(this),result=new SVGRect(hostToken);const b=measurable(n)?bounds(n):null;if(b){result.x=Math.fround(b[0]);result.y=Math.fround(b[1]);result.width=Math.fround(b[2]-b[0]);result.height=Math.fround(b[3]-b[1])}return result}}.getBBox;
   markNative(getBBox,'getBBox');Object.defineProperty(graphics.prototype,'getBBox',{value:getBBox,writable:true,enumerable:true,configurable:true});
+  /* shared_svg_boundaries */
  }
 }

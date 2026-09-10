@@ -1,0 +1,1547 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/svg_dom_matrix_oracle.js",
+    "fixtureSHA256": "4429d604463c91be3a4b1aaec0a7d2f7322aeb9104536c83ad48981f7d508ca7",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "DOMMatrixSurface": {
+      "parent": "DOMMatrixReadOnly",
+      "members": [
+        [
+          "a",
+          null,
+          true,
+          true,
+          true,
+          true
+        ],
+        [
+          "b",
+          null,
+          true,
+          true,
+          true,
+          true
+        ],
+        [
+          "c",
+          null,
+          true,
+          true,
+          true,
+          true
+        ],
+        [
+          "constructor",
+          0,
+          false,
+          false,
+          false,
+          true
+        ],
+        [
+          "d",
+          null,
+          true,
+          true,
+          true,
+          true
+        ],
+        [
+          "e",
+          null,
+          true,
+          true,
+          true,
+          true
+        ],
+        [
+          "f",
+          null,
+          true,
+          true,
+          true,
+          true
+        ],
+        [
+          "invertSelf",
+          0,
+          false,
+          false,
+          true,
+          true
+        ],
+        [
+          "m11",
+          null,
+          true,
+          true,
+          true,
+          true
+        ],
+        [
+          "m12",
+          null,
+          true,
+          true,
+          true,
+          true
+        ],
+        [
+          "m13",
+          null,
+          true,
+          true,
+          true,
+          true
+        ],
+        [
+          "m14",
+          null,
+          true,
+          true,
+          true,
+          true
+        ],
+        [
+          "m21",
+          null,
+          true,
+          true,
+          true,
+          true
+        ],
+        [
+          "m22",
+          null,
+          true,
+          true,
+          true,
+          true
+        ],
+        [
+          "m23",
+          null,
+          true,
+          true,
+          true,
+          true
+        ],
+        [
+          "m24",
+          null,
+          true,
+          true,
+          true,
+          true
+        ],
+        [
+          "m31",
+          null,
+          true,
+          true,
+          true,
+          true
+        ],
+        [
+          "m32",
+          null,
+          true,
+          true,
+          true,
+          true
+        ],
+        [
+          "m33",
+          null,
+          true,
+          true,
+          true,
+          true
+        ],
+        [
+          "m34",
+          null,
+          true,
+          true,
+          true,
+          true
+        ],
+        [
+          "m41",
+          null,
+          true,
+          true,
+          true,
+          true
+        ],
+        [
+          "m42",
+          null,
+          true,
+          true,
+          true,
+          true
+        ],
+        [
+          "m43",
+          null,
+          true,
+          true,
+          true,
+          true
+        ],
+        [
+          "m44",
+          null,
+          true,
+          true,
+          true,
+          true
+        ],
+        [
+          "multiplySelf",
+          0,
+          false,
+          false,
+          true,
+          true
+        ],
+        [
+          "preMultiplySelf",
+          0,
+          false,
+          false,
+          true,
+          true
+        ],
+        [
+          "rotateAxisAngleSelf",
+          0,
+          false,
+          false,
+          true,
+          true
+        ],
+        [
+          "rotateFromVectorSelf",
+          0,
+          false,
+          false,
+          true,
+          true
+        ],
+        [
+          "rotateSelf",
+          0,
+          false,
+          false,
+          true,
+          true
+        ],
+        [
+          "scale3dSelf",
+          0,
+          false,
+          false,
+          true,
+          true
+        ],
+        [
+          "scaleSelf",
+          0,
+          false,
+          false,
+          true,
+          true
+        ],
+        [
+          "setMatrixValue",
+          1,
+          false,
+          false,
+          true,
+          true
+        ],
+        [
+          "skewXSelf",
+          0,
+          false,
+          false,
+          true,
+          true
+        ],
+        [
+          "skewYSelf",
+          0,
+          false,
+          false,
+          true,
+          true
+        ],
+        [
+          "translateSelf",
+          0,
+          false,
+          false,
+          true,
+          true
+        ]
+      ],
+      "length": 0
+    },
+    "DOMMatrixdefault": {
+      "values": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "two": true,
+      "identity": true,
+      "type": "[object DOMMatrix]"
+    },
+    "DOMMatrixsix": {
+      "values": [
+        1,
+        2,
+        0,
+        0,
+        3,
+        4,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        5,
+        6,
+        0,
+        1
+      ],
+      "two": true,
+      "identity": false,
+      "type": "[object DOMMatrix]"
+    },
+    "DOMMatrixsixteen": {
+      "values": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        2,
+        3,
+        0,
+        1
+      ],
+      "two": false,
+      "identity": false,
+      "type": "[object DOMMatrix]"
+    },
+    "DOMMatrixstring": {
+      "values": [
+        1,
+        2,
+        0,
+        0,
+        3,
+        4,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        5,
+        6,
+        0,
+        1
+      ],
+      "two": true,
+      "identity": false,
+      "type": "[object DOMMatrix]"
+    },
+    "DOMMatrixnone": {
+      "values": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "two": true,
+      "identity": true,
+      "type": "[object DOMMatrix]"
+    },
+    "DOMMatrixtransformList": {
+      "values": [
+        1.732050808,
+        1,
+        0,
+        0,
+        -1.5,
+        2.598076211,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        2,
+        3,
+        0,
+        1
+      ],
+      "two": true,
+      "identity": false,
+      "type": "[object DOMMatrix]"
+    },
+    "DOMMatrixperspective": {
+      "values": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.866025404,
+        0.5,
+        -0.0025,
+        0,
+        -0.5,
+        0.866025404,
+        -0.004330127,
+        0,
+        0,
+        0,
+        1
+      ],
+      "two": false,
+      "identity": false,
+      "type": "[object DOMMatrix]"
+    },
+    "DOMMatrixtranslateZ": {
+      "values": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "two": false,
+      "identity": true,
+      "type": "[object DOMMatrix]"
+    },
+    "DOMMatrixinvalid": "SyntaxError",
+    "DOMMatrixshort": "TypeError",
+    "DOMMatrixnan": {
+      "values": [
+        "NaN",
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "two": true,
+      "identity": false,
+      "type": "[object DOMMatrix]"
+    },
+    "DOMMatrixfromDict": {
+      "values": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        3,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        4,
+        0,
+        0,
+        1
+      ],
+      "two": true,
+      "identity": false,
+      "type": "[object DOMMatrix]"
+    },
+    "DOMMatrixconflict": "TypeError",
+    "DOMMatrixpoint": [
+      12,
+      19,
+      7,
+      2,
+      "[object DOMPoint]"
+    ],
+    "DOMMatrixReadOnlySurface": {
+      "parent": "Object",
+      "members": [
+        [
+          "a",
+          null,
+          true,
+          false,
+          true,
+          true
+        ],
+        [
+          "b",
+          null,
+          true,
+          false,
+          true,
+          true
+        ],
+        [
+          "c",
+          null,
+          true,
+          false,
+          true,
+          true
+        ],
+        [
+          "constructor",
+          0,
+          false,
+          false,
+          false,
+          true
+        ],
+        [
+          "d",
+          null,
+          true,
+          false,
+          true,
+          true
+        ],
+        [
+          "e",
+          null,
+          true,
+          false,
+          true,
+          true
+        ],
+        [
+          "f",
+          null,
+          true,
+          false,
+          true,
+          true
+        ],
+        [
+          "flipX",
+          0,
+          false,
+          false,
+          true,
+          true
+        ],
+        [
+          "flipY",
+          0,
+          false,
+          false,
+          true,
+          true
+        ],
+        [
+          "inverse",
+          0,
+          false,
+          false,
+          true,
+          true
+        ],
+        [
+          "is2D",
+          null,
+          true,
+          false,
+          true,
+          true
+        ],
+        [
+          "isIdentity",
+          null,
+          true,
+          false,
+          true,
+          true
+        ],
+        [
+          "m11",
+          null,
+          true,
+          false,
+          true,
+          true
+        ],
+        [
+          "m12",
+          null,
+          true,
+          false,
+          true,
+          true
+        ],
+        [
+          "m13",
+          null,
+          true,
+          false,
+          true,
+          true
+        ],
+        [
+          "m14",
+          null,
+          true,
+          false,
+          true,
+          true
+        ],
+        [
+          "m21",
+          null,
+          true,
+          false,
+          true,
+          true
+        ],
+        [
+          "m22",
+          null,
+          true,
+          false,
+          true,
+          true
+        ],
+        [
+          "m23",
+          null,
+          true,
+          false,
+          true,
+          true
+        ],
+        [
+          "m24",
+          null,
+          true,
+          false,
+          true,
+          true
+        ],
+        [
+          "m31",
+          null,
+          true,
+          false,
+          true,
+          true
+        ],
+        [
+          "m32",
+          null,
+          true,
+          false,
+          true,
+          true
+        ],
+        [
+          "m33",
+          null,
+          true,
+          false,
+          true,
+          true
+        ],
+        [
+          "m34",
+          null,
+          true,
+          false,
+          true,
+          true
+        ],
+        [
+          "m41",
+          null,
+          true,
+          false,
+          true,
+          true
+        ],
+        [
+          "m42",
+          null,
+          true,
+          false,
+          true,
+          true
+        ],
+        [
+          "m43",
+          null,
+          true,
+          false,
+          true,
+          true
+        ],
+        [
+          "m44",
+          null,
+          true,
+          false,
+          true,
+          true
+        ],
+        [
+          "multiply",
+          0,
+          false,
+          false,
+          true,
+          true
+        ],
+        [
+          "rotate",
+          0,
+          false,
+          false,
+          true,
+          true
+        ],
+        [
+          "rotateAxisAngle",
+          0,
+          false,
+          false,
+          true,
+          true
+        ],
+        [
+          "rotateFromVector",
+          0,
+          false,
+          false,
+          true,
+          true
+        ],
+        [
+          "scale",
+          0,
+          false,
+          false,
+          true,
+          true
+        ],
+        [
+          "scale3d",
+          0,
+          false,
+          false,
+          true,
+          true
+        ],
+        [
+          "scaleNonUniform",
+          0,
+          false,
+          false,
+          true,
+          true
+        ],
+        [
+          "skewX",
+          0,
+          false,
+          false,
+          true,
+          true
+        ],
+        [
+          "skewY",
+          0,
+          false,
+          false,
+          true,
+          true
+        ],
+        [
+          "toFloat32Array",
+          0,
+          false,
+          false,
+          true,
+          true
+        ],
+        [
+          "toFloat64Array",
+          0,
+          false,
+          false,
+          true,
+          true
+        ],
+        [
+          "toJSON",
+          0,
+          false,
+          false,
+          true,
+          true
+        ],
+        [
+          "toString",
+          0,
+          false,
+          false,
+          true,
+          true
+        ],
+        [
+          "transformPoint",
+          0,
+          false,
+          false,
+          true,
+          true
+        ],
+        [
+          "translate",
+          0,
+          false,
+          false,
+          true,
+          true
+        ]
+      ],
+      "length": 0
+    },
+    "DOMMatrixReadOnlydefault": {
+      "values": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "two": true,
+      "identity": true,
+      "type": "[object DOMMatrixReadOnly]"
+    },
+    "DOMMatrixReadOnlysix": {
+      "values": [
+        1,
+        2,
+        0,
+        0,
+        3,
+        4,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        5,
+        6,
+        0,
+        1
+      ],
+      "two": true,
+      "identity": false,
+      "type": "[object DOMMatrixReadOnly]"
+    },
+    "DOMMatrixReadOnlysixteen": {
+      "values": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        2,
+        3,
+        0,
+        1
+      ],
+      "two": false,
+      "identity": false,
+      "type": "[object DOMMatrixReadOnly]"
+    },
+    "DOMMatrixReadOnlystring": {
+      "values": [
+        1,
+        2,
+        0,
+        0,
+        3,
+        4,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        5,
+        6,
+        0,
+        1
+      ],
+      "two": true,
+      "identity": false,
+      "type": "[object DOMMatrixReadOnly]"
+    },
+    "DOMMatrixReadOnlynone": {
+      "values": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "two": true,
+      "identity": true,
+      "type": "[object DOMMatrixReadOnly]"
+    },
+    "DOMMatrixReadOnlytransformList": {
+      "values": [
+        1.732050808,
+        1,
+        0,
+        0,
+        -1.5,
+        2.598076211,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        2,
+        3,
+        0,
+        1
+      ],
+      "two": true,
+      "identity": false,
+      "type": "[object DOMMatrixReadOnly]"
+    },
+    "DOMMatrixReadOnlyperspective": {
+      "values": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        0.866025404,
+        0.5,
+        -0.0025,
+        0,
+        -0.5,
+        0.866025404,
+        -0.004330127,
+        0,
+        0,
+        0,
+        1
+      ],
+      "two": false,
+      "identity": false,
+      "type": "[object DOMMatrixReadOnly]"
+    },
+    "DOMMatrixReadOnlytranslateZ": {
+      "values": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "two": false,
+      "identity": true,
+      "type": "[object DOMMatrixReadOnly]"
+    },
+    "DOMMatrixReadOnlyinvalid": "SyntaxError",
+    "DOMMatrixReadOnlyshort": "TypeError",
+    "DOMMatrixReadOnlynan": {
+      "values": [
+        "NaN",
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "two": true,
+      "identity": false,
+      "type": "[object DOMMatrixReadOnly]"
+    },
+    "DOMMatrixReadOnlyfromDict": {
+      "values": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        3,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        4,
+        0,
+        0,
+        1
+      ],
+      "two": true,
+      "identity": false,
+      "type": "[object DOMMatrixReadOnly]"
+    },
+    "DOMMatrixReadOnlyconflict": "TypeError",
+    "DOMMatrixReadOnlypoint": [
+      12,
+      19,
+      7,
+      2,
+      "[object DOMPoint]"
+    ],
+    "translate2,3": {
+      "values": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        3,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        8,
+        14,
+        0,
+        1
+      ],
+      "two": true,
+      "identity": false,
+      "type": "[object DOMMatrix]"
+    },
+    "translate2,3,4": {
+      "values": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        3,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        8,
+        14,
+        4,
+        1
+      ],
+      "two": false,
+      "identity": false,
+      "type": "[object DOMMatrix]"
+    },
+    "scale2,3": {
+      "values": [
+        4,
+        0,
+        0,
+        0,
+        0,
+        9,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        4,
+        5,
+        0,
+        1
+      ],
+      "two": true,
+      "identity": false,
+      "type": "[object DOMMatrix]"
+    },
+    "scale2,3,4,5,6,7": {
+      "values": [
+        4,
+        0,
+        0,
+        0,
+        0,
+        9,
+        0,
+        0,
+        0,
+        0,
+        4,
+        0,
+        -6,
+        -31,
+        -21,
+        1
+      ],
+      "two": false,
+      "identity": false,
+      "type": "[object DOMMatrix]"
+    },
+    "rotate30": {
+      "values": [
+        1.732050808,
+        1.5,
+        0,
+        0,
+        -1,
+        2.598076211,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        4,
+        5,
+        0,
+        1
+      ],
+      "two": true,
+      "identity": false,
+      "type": "[object DOMMatrix]"
+    },
+    "rotate10,20,30": {
+      "values": [
+        1.627595363,
+        1.409538931,
+        -0.342020143,
+        0,
+        -0.881939221,
+        2.647692358,
+        0.163175911,
+        0,
+        0.757044613,
+        0.054084934,
+        0.925416578,
+        0,
+        4,
+        5,
+        0,
+        1
+      ],
+      "two": false,
+      "identity": false,
+      "type": "[object DOMMatrix]"
+    },
+    "rotateFromVector3,4": {
+      "values": [
+        1.2,
+        2.4,
+        0,
+        0,
+        -1.6,
+        1.8,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        4,
+        5,
+        0,
+        1
+      ],
+      "two": true,
+      "identity": false,
+      "type": "[object DOMMatrix]"
+    },
+    "rotateAxisAngle1,2,3,40": {
+      "values": [
+        1.565511109,
+        1.646396601,
+        -0.293451096,
+        0,
+        -0.963908844,
+        2.498666664,
+        0.272058882,
+        0,
+        0.787435527,
+        -0.214576643,
+        0.916444444,
+        0,
+        4,
+        5,
+        0,
+        1
+      ],
+      "two": false,
+      "identity": false,
+      "type": "[object DOMMatrix]"
+    },
+    "skewX30": {
+      "values": [
+        2,
+        0,
+        0,
+        0,
+        1.154700538,
+        3,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        4,
+        5,
+        0,
+        1
+      ],
+      "two": true,
+      "identity": false,
+      "type": "[object DOMMatrix]"
+    },
+    "skewY30": {
+      "values": [
+        2,
+        1.732050808,
+        0,
+        0,
+        0,
+        3,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        4,
+        5,
+        0,
+        1
+      ],
+      "two": true,
+      "identity": false,
+      "type": "[object DOMMatrix]"
+    },
+    "flipX": {
+      "values": [
+        -2,
+        0,
+        0,
+        0,
+        0,
+        3,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        4,
+        5,
+        0,
+        1
+      ],
+      "two": true,
+      "identity": false,
+      "type": "[object DOMMatrix]"
+    },
+    "flipY": {
+      "values": [
+        2,
+        0,
+        0,
+        0,
+        0,
+        -3,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        4,
+        5,
+        0,
+        1
+      ],
+      "two": true,
+      "identity": false,
+      "type": "[object DOMMatrix]"
+    },
+    "inverse": {
+      "values": [
+        0.5,
+        0,
+        0,
+        0,
+        0,
+        0.333333333,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        -2,
+        -1.666666667,
+        0,
+        1
+      ],
+      "two": true,
+      "identity": false,
+      "type": "[object DOMMatrix]"
+    },
+    "singular": {
+      "values": [
+        "NaN",
+        "NaN",
+        "NaN",
+        "NaN",
+        "NaN",
+        "NaN",
+        "NaN",
+        "NaN",
+        "NaN",
+        "NaN",
+        "NaN",
+        "NaN",
+        "NaN",
+        "NaN",
+        "NaN",
+        "NaN"
+      ],
+      "two": false,
+      "identity": false,
+      "type": "[object DOMMatrix]"
+    },
+    "multiply": {
+      "values": [
+        4,
+        0,
+        0,
+        0,
+        0,
+        6,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        6,
+        5,
+        0,
+        1
+      ],
+      "two": true,
+      "identity": false,
+      "type": "[object DOMMatrix]"
+    },
+    "preMultiply": {
+      "values": [
+        4,
+        0,
+        0,
+        0,
+        0,
+        6,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        9,
+        10,
+        0,
+        1
+      ],
+      "two": true,
+      "identity": false,
+      "type": "[object DOMMatrix]"
+    },
+    "sticky2D": {
+      "values": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "two": false,
+      "identity": true,
+      "type": "[object DOMMatrix]"
+    },
+    "fromArray2D": {
+      "values": [
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        0,
+        1
+      ],
+      "two": true,
+      "identity": true,
+      "type": "[object DOMMatrix]"
+    },
+    "stringFinite": "InvalidStateError"
+  }
+}

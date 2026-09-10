@@ -31,7 +31,7 @@
  if(typeof globalThis.OfflineAudioContext!=='function'||typeof globalThis.AudioBuffer!=='function')return;
  const buffers=new WeakMap(),contexts=new WeakMap(),nodes=new WeakMap(),params=new WeakMap(),completions=new WeakMap(),waves=new WeakMap();
  const exception=(name,message)=>new DOMException(message||name,name);
- const unsupported=name=>{host.semanticMissing('WebAudio.'+name);throw exception('NotSupportedError','Unsupported audio operation: '+name)};
+ const unsupported=name=>{host.semanticMissingAt('offline_audio.js:34','WebAudio.'+name);throw exception('NotSupportedError','Unsupported audio operation: '+name)};
  const requireSlot=(map,value)=>{const s=map.get(value);if(!s)throw new TypeError('Illegal invocation');return s};
  const finite=value=>{value=Number(value);if(!Number.isFinite(value))throw new TypeError('Expected finite number');return value};
  const float=value=>{value=Math.fround(finite(value));if(!Number.isFinite(value))throw new TypeError('Expected finite float');return value};

@@ -1380,9 +1380,12 @@ func (r *Realm) install() error {
 		return nil, nil
 	})
 	host["semanticMissing"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		name := strarg(a, 0)
-		p.trace.Add(trace.SemanticMissing, name, map[string]any{"realm": r.ID})
-		return r.val(nil), nil
+		recordSemanticBoundary(p.trace, "realm", r.ID, "legacy-host", a)
+		return nil, nil
+	})
+	host["semanticMissingAt"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		recordSemanticBoundary(p.trace, "realm", r.ID, strarg(a, 0), a[1:])
+		return nil, nil
 	})
 	host["media"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		q := strings.ToLower(strarg(a, 0))
@@ -1447,6 +1450,7 @@ func (r *Realm) install() error {
 		return nil, nil
 	})
 	r.installDocumentCompatibility(host)
+	r.installTextMetrics(host)
 	addStorageHosts(r, host)
 	addCapabilityHosts(r, host)
 	profiling := false

@@ -1,0 +1,40 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/css_font_size_oracle.js",
+    "fixtureSHA256": "a9a224aa2c4f705c3685bb264e696ba41758390e6db2441d5c5dce8339e33dc9",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "1rem": "20px",
+    "1.5em": "45px",
+    "50%": "15px",
+    "12pt": "16px",
+    "1pc": "16px",
+    "2.54cm": "96px",
+    "25.4mm": "96px",
+    "101.6q": "96px",
+    "1in": "96px",
+    "medium": "16px",
+    "small": "13px",
+    "large": "18px",
+    "smaller": "25px",
+    "larger": "36px",
+    "inherit": "30px",
+    "initial": "16px",
+    "unset": "30px",
+    "calc(1rem + 2px)": "22px",
+    "svgComputed": "20px",
+    "svgEquivalent": true,
+    "svgRootMutation": true,
+    "svgCSSWins": "12px",
+    "svgZero": 0,
+    "root": "32px"
+  }
+}

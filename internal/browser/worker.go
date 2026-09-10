@@ -185,8 +185,11 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 		return nil, nil
 	})
 	host["semanticMissing"] = runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
-		name := strarg(args, 0)
-		p.trace.Add(trace.SemanticMissing, name, map[string]any{"worker": w.id})
+		recordSemanticBoundary(p.trace, "worker", w.id, "legacy-host", args)
+		return nil, nil
+	})
+	host["semanticMissingAt"] = runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		recordSemanticBoundary(p.trace, "worker", w.id, strarg(args, 0), args[1:])
 		return nil, nil
 	})
 	host["navigator"] = runtime.Function(func(engine.Value, []engine.Value) (engine.Value, error) {

@@ -2,7 +2,7 @@
 (()=>{
  if(typeof globalThis.GPUDevice!=='function'||typeof globalThis.GPUAdapter!=='function')return;
  const slots=new WeakMap(),nativeTransfer=ArrayBuffer.prototype.transfer;
- const unsupported=name=>{host.semanticMissing('WebGPU.'+name);throw new DOMException('Unsupported WebGPU operation: '+name,'NotSupportedError')};
+ const unsupported=name=>{host.semanticMissingAt('webgpu_state.js:5','WebGPU.'+name);throw new DOMException('Unsupported WebGPU operation: '+name,'NotSupportedError')};
  const check=(value,type)=>{const s=slots.get(value);if(!s||s.type!==type)throw new TypeError('Illegal invocation');return s};
  const make=(type,data={})=>{const value=Object.create(globalThis[type].prototype);slots.set(value,{type,label:'',...data});return value};
  const method=(type,name,fn)=>{const proto=globalThis[type]?.prototype;if(!proto)return;const prior=Object.getOwnPropertyDescriptor(proto,name),value={[name](...args){const s=check(this,type);if(args.length<(prior?.value?.length||0))throw new TypeError('Not enough arguments');return fn(s,...args)}}[name];if(prior?.value)Object.defineProperty(value,'length',{value:prior.value.length});if(typeof markNative==='function')markNative(value,name);Object.defineProperty(proto,name,{value,enumerable:true,configurable:true,writable:true})};

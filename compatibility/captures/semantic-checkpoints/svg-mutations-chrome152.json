@@ -1,0 +1,96 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/svg_mutations_oracle.js",
+    "fixtureSHA256": "b1b16c047ffb6b124db2f2bfa1104fa0425cbce6cc77bf2f1fdbfb284940d0d0",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "linearGradientx1": [
+      50,
+      10,
+      "5%",
+      true
+    ],
+    "linearGradientgradientUnits": [
+      1,
+      2,
+      "objectBoundingBox",
+      true
+    ],
+    "linearGradientspreadMethod": [
+      2,
+      2,
+      "reflect",
+      true
+    ],
+    "feColorMatrixtype": [
+      2,
+      2,
+      "saturate",
+      true
+    ],
+    "feCompositeoperator": [
+      6,
+      2,
+      "in",
+      true
+    ],
+    "feTurbulencetype": [
+      1,
+      2,
+      "turbulence",
+      true
+    ],
+    "feMorphologyoperator": [
+      2,
+      2,
+      "dilate",
+      true
+    ],
+    "markermarkerUnits": [
+      1,
+      2,
+      "strokeWidth",
+      true
+    ],
+    "feConvolveMatrixorderY": [
+      5,
+      2,
+      "4 2",
+      true
+    ],
+    "feGaussianBlurstdDeviationY": [
+      3,
+      2,
+      "2",
+      true
+    ],
+    "textlengthAdjust": [
+      2,
+      2,
+      "spacingAndGlyphs",
+      true
+    ],
+    "viewBoxMutation": [
+      "5 2 30 40",
+      5,
+      5
+    ],
+    "aspectMutation": "xMaxYMax slice",
+    "listReadThrough": [
+      "1 9",
+      9
+    ],
+    "stringReflection": [
+      "#two",
+      "#two"
+    ]
+  }
+}
