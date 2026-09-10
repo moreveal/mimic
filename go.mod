@@ -13,6 +13,9 @@ replace github.com/bogdanfinn/quic-go-utls => ./third_party/quic-go-utls
 // QUIC presets retain live transport parameters and TLS session events.
 replace github.com/bogdanfinn/utls => ./third_party/utls
 
+// Native HTMLDDA flags and complete accessor descriptors for document.all.
+replace github.com/maclof/gov8 => ./third_party/gov8
+
 require (
 	github.com/andybalholm/brotli v1.2.0
 	github.com/bogdanfinn/fhttp v0.6.9

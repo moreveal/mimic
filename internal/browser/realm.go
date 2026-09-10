@@ -53,6 +53,7 @@ type Realm struct {
 	frameReflection         *frameReflection
 	frameReferenceImport    engine.Value
 	frameReferenceDescribe  engine.Value
+	frameGlobalRead         engine.Value
 	frameValueEncoder       engine.Value
 	frameValueRetain        engine.Value
 	frameValueEncoderJSON   bool
@@ -598,10 +599,53 @@ func (r *Realm) installBindings() error {
 	host["frameGlobalGet"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		frame := p.frame(strarg(a, 0))
 		if !r.canAccess(frame) {
+			// postMessage is exposed by the cross-origin WindowProxy whitelist,
+			// independently of properties installed by the target document.
+			key, _ := arg(a, 1).(map[string]any)
+			if frame != nil && key["kind"] == "string" && key["value"] == "postMessage" {
+				return r.val(map[string]any{"__mimicCrossRealm": "undefined", "intrinsic": true}), nil
+			}
 			return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
 		}
-		property := strarg(a, 1)
-		return r.crossFrameResult(frame.Realm, func(context.Context) (engine.Value, error) { return frame.Realm.runtime.Get(property), nil })
+		target := frame.Realm
+		rawKey := arg(a, 1)
+		var intrinsic bool
+		result, err := r.crossFrameResult(target, func(ctx context.Context) (engine.Value, error) {
+			if key, ok := rawKey.(map[string]any); ok && key["kind"] == "string" {
+				name, _ := key["value"].(string)
+				if name != "eval" && name != "postMessage" {
+					return target.runtime.Get(name), nil
+				}
+			}
+			key, err := target.decodeFrameKey(ctx, rawKey)
+			if err != nil {
+				return nil, err
+			}
+			if keyData, ok := rawKey.(map[string]any); ok && keyData["kind"] == "symbol" {
+				record, err := target.callFrameReflection(ctx, "get", target.runtime.Get("globalThis"), key, nil)
+				if err != nil {
+					return nil, err
+				}
+				return target.runtime.GetProperty(record, "value"), nil
+			}
+			record, err := target.runtime.Call(ctx, target.frameGlobalRead, nil, key)
+			if err != nil {
+				return nil, err
+			}
+			intrinsic, _ = target.runtime.GetProperty(record, "intrinsic").Export().(bool)
+			return target.runtime.GetProperty(record, "value"), nil
+		})
+		if err != nil {
+			return nil, err
+		}
+		if intrinsic {
+			// crossFrameResult may still be a lazy host map in V8. Mutate
+			// the encoded envelope before conversion, not a temporary object.
+			encoded := result.Export().(map[string]any)
+			encoded["intrinsic"] = true
+			return r.val(encoded), nil
+		}
+		return result, nil
 	})
 	host["framePrototype"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		frame := p.frame(strarg(a, 0))
@@ -1039,6 +1083,14 @@ func (r *Realm) installBindings() error {
 		p.trace.Add(trace.API, "Document.readyStateValue", map[string]any{"value": r.readyState, "realm": r.ID})
 		return r.val(r.readyState), nil
 	})
+	if native, ok := r.runtime.(engine.UndetectableRuntime); ok {
+		host["createUndetectable"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+			if len(args) == 0 {
+				return nil, fmt.Errorf("undetectable handlers are required")
+			}
+			return native.NewUndetectableObject(args[0])
+		})
+	}
 	host["currentScript"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		if r.currentScript == 0 {
 			return r.val(nil), nil

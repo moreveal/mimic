@@ -313,6 +313,7 @@ func (r *Realm) retryBootstrap(err error) error {
 	r.frameReflection = nil
 	r.frameReferenceImport = nil
 	r.frameReferenceDescribe = nil
+	r.frameGlobalRead = nil
 	r.frameValueEncoder = nil
 	r.frameValueRetain = nil
 	r.frameValueEncoderJSON = false
