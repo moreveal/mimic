@@ -241,6 +241,8 @@ func (r *Realm) callFrameReference(args []engine.Value) (engine.Value, error) {
 func (r *Realm) crossFrameResult(target *Realm, operation func(context.Context) (engine.Value, error)) (engine.Value, error) {
 	var encoded map[string]any
 	run := func(ctx context.Context) error {
+		restore := r.enterFrameDocumentEntry(target)
+		defer restore()
 		value, err := operation(ctx)
 		if err != nil {
 			return err
@@ -264,13 +266,19 @@ func (r *Realm) crossFrameResult(target *Realm, operation func(context.Context) 
 // it before separately scheduled jobs run, so a later child timer is not
 // attributed to the parent that previously evaluated code in the child.
 func (r *Realm) enterFrameDocumentEntry(target *Realm) func() {
+	p := r.agent.Page()
+	p.requireCheckpoint(target)
+	p.crossRealmDepth++
 	entry := r.documentEntry
 	if entry == nil {
 		entry = r
 	}
 	previous := target.documentEntry
 	target.documentEntry = entry
-	return func() { target.documentEntry = previous }
+	return func() {
+		target.documentEntry = previous
+		p.crossRealmDepth--
+	}
 }
 
 type frameReflection struct {
@@ -380,6 +388,12 @@ func (r *Realm) installFrameReflection(host map[string]any) {
 }
 
 func (r *Realm) callFrameReflection(ctx context.Context, operation string, object, key, value engine.Value) (engine.Value, error) {
+	// Reflect operations can invoke user accessors or Proxy traps. Their jobs
+	// need the same outer checkpoint as an explicit cross-realm function call.
+	p := r.agent.Page()
+	p.requireCheckpoint(r)
+	p.crossRealmDepth++
+	defer func() { p.crossRealmDepth-- }()
 	if r.frameReflection == nil {
 		return nil, fmt.Errorf("frame reflection is not initialized")
 	}

@@ -8,6 +8,94 @@ import (
 	"time"
 )
 
+func TestRunReadyStepIncludesCheckpointAndYields(t *testing.T) {
+	var order []string
+	s := New(time.Unix(0, 0), func(context.Context) error {
+		order = append(order, "microtask")
+		return nil
+	})
+	s.Post(Timer, 0, func(context.Context) error {
+		order = append(order, "first")
+		s.Post(Timer, 0, func(context.Context) error { order = append(order, "second"); return nil })
+		return nil
+	})
+	if worked, err := s.RunReadyStep(context.Background()); !worked || err != nil {
+		t.Fatalf("step: %v %v", worked, err)
+	}
+	if !reflect.DeepEqual(order, []string{"first", "microtask"}) {
+		t.Fatal(order)
+	}
+	if worked, err := s.RunReadyStep(context.Background()); !worked || err != nil {
+		t.Fatalf("second step: %v %v", worked, err)
+	}
+	if !reflect.DeepEqual(order, []string{"first", "microtask", "second", "microtask"}) {
+		t.Fatal(order)
+	}
+	s.Post(Timer, time.Hour, func(context.Context) error { t.Fatal("future timer fired"); return nil })
+	if worked, err := s.RunReadyStep(context.Background()); worked || err != nil {
+		t.Fatalf("future work: %v %v", worked, err)
+	}
+}
+
+func TestRunReadyAcrossPreservesOrderWithMultipleParentTasks(t *testing.T) {
+	start := time.Unix(0, 0)
+	parent, child := New(start, nil), New(start, nil)
+	var order []string
+	parent.Post(Control, 0, func(context.Context) error { order = append(order, "control"); return nil })
+	parent.Post(PostedMessage, 0, func(context.Context) error { order = append(order, "message"); return nil })
+	child.Post(Timer, time.Millisecond, func(context.Context) error { order = append(order, "timer"); return nil })
+	parent.AdvanceBy(time.Millisecond)
+	child.AdvanceBy(time.Millisecond)
+	for i := 0; i < 3; i++ {
+		if worked, err := RunReadyAcross(context.Background(), []*Scheduler{parent, child}); !worked || err != nil {
+			t.Fatalf("step %d: %v %v", i, worked, err)
+		}
+	}
+	if !reflect.DeepEqual(order, []string{"control", "message", "timer"}) {
+		t.Fatal(order)
+	}
+}
+
+func TestRunReadyAcrossUsesSharedSequence(t *testing.T) {
+	start := time.Unix(0, 0)
+	parent, child := New(start, nil), New(start, nil)
+	var sequence uint64
+	next := func() uint64 { sequence++; return sequence }
+	parent.SetSequenceSource(next)
+	child.SetSequenceSource(next)
+	// Local IDs differ, while the due times tie. A child's smaller local ID
+	// must not let it overtake a message posted earlier in the Page.
+	parent.Post(Control, time.Hour, func(context.Context) error { return nil })
+	var order []string
+	parent.Post(PostedMessage, 0, func(context.Context) error { order = append(order, "message"); return nil })
+	child.Post(Timer, 0, func(context.Context) error { order = append(order, "timer"); return nil })
+	for i := 0; i < 2; i++ {
+		if worked, err := RunReadyAcross(context.Background(), []*Scheduler{child, parent}); !worked || err != nil {
+			t.Fatalf("step %d: %v %v", i, worked, err)
+		}
+	}
+	if !reflect.DeepEqual(order, []string{"message", "timer"}) {
+		t.Fatal(order)
+	}
+}
+
+func TestRunReadyAcrossSynchronizesRealmClocks(t *testing.T) {
+	start := time.Unix(0, 0)
+	parent, child := New(start, nil), New(start, nil)
+	parent.AdvanceBy(20 * time.Millisecond)
+	var observed time.Time
+	child.Post(Timer, 10*time.Millisecond, func(context.Context) error {
+		observed = child.Now()
+		return nil
+	})
+	if worked, err := RunReadyAcross(context.Background(), []*Scheduler{parent, child}); !worked || err != nil {
+		t.Fatalf("shared elapsed time: %v %v", worked, err)
+	}
+	if observed.Before(parent.Now()) {
+		t.Fatalf("child clock %v precedes parent %v", observed, parent.Now())
+	}
+}
+
 func TestDeterministicOrdering(t *testing.T) {
 	s := New(time.Unix(0, 0), nil)
 	var got []int

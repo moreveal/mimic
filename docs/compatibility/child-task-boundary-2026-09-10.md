@@ -1,5 +1,9 @@
 # Child task boundary investigation, 2026-09-10
 
+Follow-up implementation and validation:
+[Page task selection and cross-realm checkpoints](page-task-checkpoints-2026-09-10.md).
+The rejected candidate and evidence below are retained as the investigation record.
+
 The new site-independent reproducer finds a real scheduling difference before
 completion: Mimic drains a child's ready queue before delivering its messages
 to the parent. A scheduler candidate was investigated but **withdrawn after

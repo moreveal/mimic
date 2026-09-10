@@ -91,6 +91,8 @@ type Realm struct {
 	imageLoads              map[int64]*imageLoad
 	fetchCancels            map[string]context.CancelFunc
 	nativePollQueued        bool
+	checkpointQueued        bool
+	checkpointClosed        bool
 	// Navigation timing belongs to the committed document, not the mutable
 	// same-document History URL or another frame's most recent navigation.
 	navigationURL      string
@@ -177,12 +179,10 @@ func newRealmStateWithNavigation(p *Page, agent ExecutionAgent, d *dom.Document,
 		r.runtime = p.ctx.browser.factory.New()
 	}
 	r.scheduler = scheduler.New(p.ClockNow(), func(ctx context.Context) error {
-		if checkpoint, ok := r.runtime.(interface{ MicrotaskCheckpointContext(context.Context) error }); ok {
-			return checkpoint.MicrotaskCheckpointContext(ctx)
-		}
-		return r.runtime.MicrotaskCheckpoint()
+		return r.checkpoint(ctx)
 	})
 	r.scheduler.SetExecutionScale(p.Environment().Time.ExecutionScale)
+	r.scheduler.SetSequenceSource(func() uint64 { return p.taskSequence.Add(1) })
 	r.scheduler.SetObserver(func(t scheduler.Transition) {
 		p.trace.Add(trace.Scheduler, t.Name, map[string]any{"taskId": t.TaskID, "source": t.Source, "due": t.Due, "realm": r.ID})
 	})
@@ -213,6 +213,42 @@ func (r *Realm) registerPermissions() {
 	c.mu.Unlock()
 }
 func (r *Realm) checkpoint(ctx context.Context) error {
+	p := r.agent.Page()
+	if p.crossRealmDepth > 0 || p.checkpointDraining {
+		p.requireCheckpoint(r)
+		return ctx.Err()
+	}
+	p.checkpointDraining = true
+	defer func() { p.checkpointDraining = false }()
+	if err := r.checkpointRuntime(ctx); err != nil {
+		return err
+	}
+	for len(p.pendingCheckpoints) > 0 {
+		if err := ctx.Err(); err != nil {
+			return err
+		}
+		target := p.pendingCheckpoints[0]
+		p.pendingCheckpoints[0] = nil
+		p.pendingCheckpoints = p.pendingCheckpoints[1:]
+		target.checkpointQueued = false
+		if !target.checkpointClosed {
+			if err := target.checkpointRuntime(ctx); err != nil {
+				return err
+			}
+		}
+	}
+	return nil
+}
+
+func (p *Page) requireCheckpoint(r *Realm) {
+	if r.checkpointQueued || r.checkpointClosed {
+		return
+	}
+	r.checkpointQueued = true
+	p.pendingCheckpoints = append(p.pendingCheckpoints, r)
+}
+
+func (r *Realm) checkpointRuntime(ctx context.Context) error {
 	var err error
 	if checkpoint, ok := r.runtime.(interface{ MicrotaskCheckpointContext(context.Context) error }); ok {
 		err = checkpoint.MicrotaskCheckpointContext(ctx)
@@ -244,6 +280,7 @@ func (r *Realm) evaluateClassicScript(ctx context.Context, source, name string, 
 }
 
 func (r *Realm) Close() error {
+	r.checkpointClosed = true
 	c := r.agent.Page().ctx
 	c.mu.Lock()
 	delete(c.permissionRealms, r)
@@ -325,17 +362,23 @@ func (r *Realm) RunUntilIdle(ctx context.Context) error {
 	return r.scheduler.RunUntilIdle(ctx, 10000)
 }
 func (r *Realm) RunReady(ctx context.Context) error {
-	if err := r.scheduler.RunReady(ctx, 10000); err != nil {
-		return err
-	}
-	for _, frame := range r.childFrames {
-		if frame.Realm != nil {
-			if err := frame.Realm.RunReady(ctx); err != nil {
-				return err
-			}
+	for turn := 0; turn < 10000; turn++ {
+		progress, err := scheduler.RunReadyAcross(ctx, r.readyQueues(nil))
+		if err != nil || !progress {
+			return err
 		}
 	}
-	return r.scheduler.RunReady(ctx, 10000)
+	return fmt.Errorf("page scheduler task limit exceeded")
+}
+
+func (r *Realm) readyQueues(queues []*scheduler.Scheduler) []*scheduler.Scheduler {
+	queues = append(queues, r.scheduler)
+	for _, frame := range r.childFrames {
+		if frame.Realm != nil {
+			queues = frame.Realm.readyQueues(queues)
+		}
+	}
+	return queues
 }
 func (r *Realm) AdvanceBy(ctx context.Context, delta time.Duration) error {
 	r.scheduler.AdvanceBy(delta)
