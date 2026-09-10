@@ -1,0 +1,57 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/data_resources_oracle.js",
+    "fixtureSHA256": "409235ac9786985b3149d886635f9424e513bb44f9b4bb4705e29f293220c92f",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "data:,hello+world": [
+      200,
+      "text/plain;charset=US-ASCII",
+      "hello+world"
+    ],
+    "data:,a%20b?c#ignored": [
+      200,
+      "text/plain;charset=US-ASCII",
+      "a b?c"
+    ],
+    "data:;charset=UTF-8,%D0%AF": [
+      200,
+      "text/plain;charset=UTF-8",
+      "\u042f"
+    ],
+    "data:;base64,YQ": [
+      200,
+      "text/plain;charset=US-ASCII",
+      "a"
+    ],
+    "data:text/plain;base64,YQ==": [
+      200,
+      "text/plain",
+      "a"
+    ],
+    "data:text/plain;base64,Y Q ==": [
+      200,
+      "text/plain",
+      "a"
+    ],
+    "data:badtype,a": [
+      200,
+      "text/plain;charset=US-ASCII",
+      "a"
+    ],
+    "data:,100%": [
+      200,
+      "text/plain;charset=US-ASCII",
+      "100%"
+    ],
+    "data:;base64,Y===": "TypeError"
+  }
+}

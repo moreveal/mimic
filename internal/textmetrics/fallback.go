@@ -35,7 +35,24 @@ func coversCluster(face *loaded, cluster []rune) bool {
 	return true
 }
 
-func (e *Engine) fallbackFace(primary *loaded, cluster []rune, families string, weight float64, italic bool) (*loaded, error) {
+func (e *Engine) fallbackFace(primary *loaded, cluster []rune, families string, weight float64, italic bool, choices []FontReference) (*loaded, error) {
+	if len(choices) > 0 {
+		allowed := make([]FontReference, 0, len(choices))
+		for _, choice := range choices {
+			if choice.covers(cluster) {
+				allowed = append(allowed, choice)
+			}
+		}
+		choices = allowed
+		r, err := e.selectResource(families, weight, italic, choices)
+		if err != nil {
+			return nil, err
+		}
+		primary, err = e.load(r)
+		if err != nil {
+			return nil, err
+		}
+	}
 	if coversCluster(primary, cluster) {
 		return primary, nil
 	}
@@ -66,7 +83,7 @@ func (e *Engine) fallbackFace(primary *loaded, cluster []rune, families string, 
 		return nil, nil
 	}
 	for _, name := range names {
-		r, err := e.selectResource(name, weight, italic)
+		r, err := e.selectResource(name, weight, italic, choices)
 		if err != nil {
 			continue
 		}

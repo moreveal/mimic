@@ -311,6 +311,7 @@ func (p *Page) navigateRequest(ctx context.Context, raw, loaderID string, reques
 		return err
 	}
 	realm.referrerPolicy = res.Headers.Get("Referrer-Policy")
+	realm.lastModified, _ = http.ParseTime(res.Headers.Get("Last-Modified"))
 	realm.initializeClientHints(res.Headers.Get("Permissions-Policy"))
 	p.mu.Lock()
 	old := p.Top.Realm

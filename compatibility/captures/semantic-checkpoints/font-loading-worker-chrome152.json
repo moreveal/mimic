@@ -1,0 +1,81 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/font_loading_oracle.js",
+    "fixtureSHA256": "9fd3341d8f6f3679fa6870b182e00efc77b51f1ba8f49bc87acedf99b4418a94",
+    "fixtureHashNormalization": "LF",
+    "worker": true
+  },
+  "result": {
+    "local": [
+      "unloaded",
+      false,
+      "loaded",
+      true,
+      [
+        true,
+        "loaded"
+      ],
+      true,
+      [
+        true
+      ]
+    ],
+    "missing": [
+      "unloaded",
+      false,
+      "error",
+      true,
+      [
+        "NetworkError",
+        "error"
+      ],
+      false,
+      "NetworkError"
+    ],
+    "fallback": [
+      "unloaded",
+      false,
+      "loaded",
+      true,
+      [
+        true,
+        "loaded"
+      ],
+      true,
+      [
+        true
+      ]
+    ],
+    "invalidURL": [
+      "unloaded",
+      false,
+      "loading",
+      true,
+      [
+        "NetworkError",
+        "error"
+      ],
+      false,
+      "NetworkError"
+    ],
+    "unrelated": [
+      true,
+      0,
+      "unloaded"
+    ],
+    "glyphSelection": [
+      [
+        true,
+        false
+      ],
+      0,
+      "unloaded"
+    ]
+  }
+}

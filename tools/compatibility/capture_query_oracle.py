@@ -8,13 +8,18 @@ async def main():
  version=json.load(urllib.request.urlopen('http://127.0.0.1:9343/json/version'))
  async with websockets.connect(version['webSocketDebuggerUrl'],max_size=16*1024*1024) as ws:
   seq=0
+  loaded=set()
   async def call(method,params={},session=None):
-   nonlocal seq
+   nonlocal seq,loaded
+   if method=='__waitForLoad' and params.get('loaderId') in loaded:return {}
    seq+=1;request_id=seq;message={'id':request_id,'method':method,'params':params}
    if session:message['sessionId']=session
-   await ws.send(json.dumps(message))
+   if method!='__waitForLoad':await ws.send(json.dumps(message))
    while True:
     response=json.loads(await ws.recv())
+    if response.get('method')=='Page.lifecycleEvent' and response.get('params',{}).get('name')=='load':
+     loader=response['params'].get('loaderId');loaded.add(loader)
+     if method=='__waitForLoad' and loader==params.get('loaderId'):return {}
     if response.get('method')=='Fetch.requestPaused':
      seq+=1
      await ws.send(json.dumps({'id':seq,'sessionId':response['sessionId'],'method':'Fetch.fulfillRequest','params':{'requestId':response['params']['requestId'],'responseCode':200,'responseHeaders':[{'name':'Content-Type','value':'text/html'}],'body':base64.b64encode(b'<!doctype html><title>Local API oracle</title>').decode()}}))
@@ -26,6 +31,8 @@ async def main():
   try:
    target=(await call('Target.createTarget',{'url':'about:blank','browserContextId':context}))['targetId']
    session=(await call('Target.attachToTarget',{'targetId':target,'flatten':True}))['sessionId']
+   await call('Page.enable',{},session)
+   await call('Page.setLifecycleEventsEnabled',{'enabled':True},session)
    if '--local-echo' in sys.argv:
     class Handler(BaseHTTPRequestHandler):
      def do_GET(self):
@@ -43,10 +50,12 @@ async def main():
       self.send_header('Access-Control-Allow-Origin',self.headers.get('Origin','*'));self.send_header('Access-Control-Allow-Credentials','true');self.send_header('Content-Type','application/json' if self.path.startswith('/echo') else 'text/html');self.send_header('Content-Length',str(len(body)));self.end_headers();self.wfile.write(body)
      def log_message(self,*args):pass
     server=ThreadingHTTPServer(('127.0.0.1',0),Handler);threading.Thread(target=server.serve_forever,daemon=True).start()
-    await call('Page.navigate',{'url':f'http://127.0.0.1:{server.server_port}/'},session)
+    navigation=await call('Page.navigate',{'url':f'http://127.0.0.1:{server.server_port}/'},session)
    if '--secure-context' in sys.argv:
     await call('Fetch.enable',{'patterns':[{'urlPattern':'http://mimic-test.localhost/*'}]},session)
-    await call('Page.navigate',{'url':'http://mimic-test.localhost/'},session)
+    navigation=await call('Page.navigate',{'url':'http://mimic-test.localhost/'},session)
+   if '--secure-context' in sys.argv or '--local-echo' in sys.argv:
+    await asyncio.wait_for(call('__waitForLoad',{'loaderId':navigation.get('loaderId')},session),30)
    fixture=pathlib.Path(sys.argv[1] if len(sys.argv)>1 else 'internal/browser/testdata/webgl_capabilities_oracle.js')
    expression=fixture.read_text(encoding='utf8')
    if '--worker' in sys.argv:

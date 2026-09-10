@@ -1,0 +1,83 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/font_events_oracle.js",
+    "fixtureSHA256": "b407fdc0304d9bf1febba4e278a044493f51eeb5bc08df8027ae2e3c1f2d64b6",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "normal-immediate": [
+      "loading",
+      "loading"
+    ],
+    "normal": [
+      "loaded",
+      [
+        [
+          "loading",
+          "[object FontFaceSetLoadEvent]",
+          0
+        ],
+        [
+          "loadingdone",
+          "[object FontFaceSetLoadEvent]",
+          0
+        ],
+        [
+          "loadingerror",
+          "[object FontFaceSetLoadEvent]",
+          1
+        ]
+      ]
+    ],
+    "delete-immediate": [
+      "loading",
+      "loading"
+    ],
+    "delete": [
+      "loaded",
+      [
+        [
+          "loading",
+          "[object FontFaceSetLoadEvent]",
+          0
+        ],
+        [
+          "loadingdone",
+          "[object FontFaceSetLoadEvent]",
+          0
+        ]
+      ]
+    ],
+    "late-add-immediate": [
+      "loading",
+      "loading"
+    ],
+    "late-add": [
+      "loaded",
+      [
+        [
+          "loading",
+          "[object FontFaceSetLoadEvent]",
+          0
+        ],
+        [
+          "loadingdone",
+          "[object FontFaceSetLoadEvent]",
+          0
+        ],
+        [
+          "loadingerror",
+          "[object FontFaceSetLoadEvent]",
+          2
+        ]
+      ]
+    ]
+  }
+}

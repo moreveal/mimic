@@ -75,12 +75,6 @@ func TestSVGAuditDifferential(t *testing.T) {
 							return
 						}
 					}
-					if path == "svg-attributes/style/sheet" {
-						am, ok := a.(map[string]any)
-						if ok && am["error"] == "NotSupportedError" {
-							return
-						}
-					}
 					if reflect.DeepEqual(a, b) {
 						return
 					}
@@ -137,11 +131,11 @@ func TestSVGAuditDifferential(t *testing.T) {
 func TestSVGAuditExplicitBoundaries(t *testing.T) {
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
-		value, err := p.Evaluate(context.Background(), `(()=>{const ns='http://www.w3.org/2000/svg',out=[];for(const [tag,invoke]of [['style',n=>n.sheet],['animate',n=>n.getStartTime()],['svg',n=>n.getIntersectionList(n.createSVGRect(),null)]]){const n=document.createElementNS(ns,tag);try{invoke(n);out.push('silent success')}catch(e){out.push(e.name)}}return JSON.stringify(out)})()`)
+		value, err := p.Evaluate(context.Background(), `(()=>{const ns='http://www.w3.org/2000/svg',out=[];for(const [tag,invoke]of [['animate',n=>n.getStartTime()],['svg',n=>n.getIntersectionList(n.createSVGRect(),null)]]){const n=document.createElementNS(ns,tag);try{invoke(n);out.push('silent success')}catch(e){out.push(e.name)}}return JSON.stringify(out)})()`)
 		if err != nil {
 			t.Fatal(err)
 		}
-		if value != `["NotSupportedError","NotSupportedError","NotSupportedError"]` {
+		if value != `["NotSupportedError","NotSupportedError"]` {
 			t.Fatalf("unsupported API silently succeeded: %v", value)
 		}
 		seen := map[string]bool{}
@@ -153,7 +147,7 @@ func TestSVGAuditExplicitBoundaries(t *testing.T) {
 				seen[e.Name] = true
 			}
 		}
-		for _, name := range []string{"SVG.styleSheet", "SVG.SVGAnimationElement.getStartTime", "SVG.SVGSVGElement.getIntersectionList"} {
+		for _, name := range []string{"SVG.SVGAnimationElement.getStartTime", "SVG.SVGSVGElement.getIntersectionList"} {
 			if !seen[name] {
 				t.Errorf("missing diagnostic %s", name)
 			}

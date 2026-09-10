@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"net/http"
 	"net/url"
 	"sort"
 	"strings"
@@ -330,6 +331,7 @@ func (r *Realm) commitChildFrameNavigation(ctx context.Context, navigation *chil
 		p.ctx.mu.Unlock()
 	}
 	realm.referrerPolicy = res.Headers.Get("Referrer-Policy")
+	realm.lastModified, _ = http.ParseTime(res.Headers.Get("Last-Modified"))
 	realm.initializeClientHints(res.Headers.Get("Permissions-Policy"))
 	if documentURL.Scheme == "about" {
 		realm.referrerPolicy = r.referrerPolicy

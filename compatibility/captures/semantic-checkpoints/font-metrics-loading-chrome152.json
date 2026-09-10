@@ -1,0 +1,34 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/font_metrics_loading_oracle.js",
+    "fixtureSHA256": "ac0479b94835fe47bda334898510f102dcd12e7fcc2c058106360d315c2fce40",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "reference": 55.578125,
+    "before": 55.578125,
+    "loadedNotAdded": 55.578125,
+    "added": 55.578125,
+    "removed": 55.578125,
+    "inertOnly": 55.578125,
+    "renamed": [
+      55.578125,
+      55.578125
+    ],
+    "rangeA": [
+      13.34375,
+      13.34375
+    ],
+    "rangeB": [
+      13.34375,
+      13.34375
+    ]
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/image_resources_oracle.js",
+    "fixtureSHA256": "5819d1ee31e2d00d67fb4f68d02b03189318379eaa4abe2fba50ca27bab94583",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "initial": [
+      true,
+      0,
+      0,
+      0,
+      0,
+      true
+    ],
+    "png": [
+      [
+        false,
+        0,
+        0,
+        0,
+        0,
+        false
+      ],
+      "load",
+      [
+        true,
+        2,
+        1,
+        2,
+        1,
+        true
+      ]
+    ],
+    "attrs": [
+      [
+        true,
+        2,
+        1,
+        10,
+        20,
+        true
+      ],
+      "10",
+      "20"
+    ],
+    "draw": [
+      255,
+      0,
+      0,
+      255,
+      0,
+      255,
+      0,
+      255
+    ],
+    "broken": [
+      [
+        true,
+        0,
+        0,
+        10,
+        20,
+        true
+      ],
+      "EncodingError"
+    ],
+    "svg": [
+      "load",
+      [
+        true,
+        12,
+        7,
+        10,
+        20,
+        true
+      ]
+    ],
+    "removed": [
+      true,
+      0,
+      0,
+      10,
+      20,
+      true
+    ]
+  }
+}

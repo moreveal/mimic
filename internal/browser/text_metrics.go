@@ -9,12 +9,21 @@ import (
 )
 
 func (r *Realm) installTextMetrics(host map[string]any) {
+	installFontResourceHosts(host, r.runtime, func() *textmetrics.Engine {
+		p := r.agent.Page()
+		if p.textMetrics == nil {
+			p.textMetrics = textmetrics.New()
+		}
+		return p.textMetrics
+	})
+	r.installFontCollection(host)
+
 	host["shapeText"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		p := r.agent.Page()
 		if p.textMetrics == nil {
 			p.textMetrics = textmetrics.New()
 		}
-		result, err := p.textMetrics.Shape(strarg(args, 0), strarg(args, 1), numarg(args, 2), numarg(args, 3), numarg(args, 4) != 0, numarg(args, 5) != 0, numarg(args, 6) != 0)
+		result, err := p.textMetrics.ShapeWithFonts(strarg(args, 0), strarg(args, 1), numarg(args, 2), numarg(args, 3), numarg(args, 4) != 0, numarg(args, 5) != 0, numarg(args, 6) != 0, r.fontChoices)
 		if err != nil {
 			// Private trace only: author-facing exceptions must not expose local paths.
 			bounded := func(value string, limit int) string {

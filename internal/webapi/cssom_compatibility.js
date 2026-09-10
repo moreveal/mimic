@@ -4,7 +4,7 @@
 const constructedStyleSheets = (() => {
   if(typeof globalThis.StyleSheet!=='function'||typeof globalThis.CSSRuleList!=='function')return {snapshot(){return []}};
   const parse = mimicSelectorLibrary.parseStylesheet, generate = mimicSelectorLibrary.generateCSS;
-  const sheets = new WeakMap(), rules = new WeakMap(), adopted = new WeakMap();
+  const sheets = new WeakMap(), rules = new WeakMap(), adopted = new WeakMap(), owners = new WeakMap(), ownerLists=new WeakMap();
   const requireSheet = sheet => { const state=sheets.get(sheet); if(!state)throw new TypeError('Illegal invocation'); return state; };
   const list = values => new Proxy(Object.create(globalThis.CSSRuleList.prototype), {
     get(target,key,receiver) {
@@ -103,24 +103,41 @@ const constructedStyleSheets = (() => {
       const sheet=Object.create(new.target.prototype),state={rules:[],disabled:!!options.disabled,media:String(options.media||''),locked:false};
       sheets.set(sheet,state);state.list=list(state.rules);return sheet;
     }
-    get cssRules(){return requireSheet(this).list}
+    get cssRules(){const s=requireSheet(this);if(s.crossOrigin)throw new DOMException('Cannot access cross-origin stylesheet','SecurityError');return s.list}
     get rules(){return this.cssRules}
-    get ownerNode(){requireSheet(this);return null}
+    get ownerNode(){const s=requireSheet(this);if(!s.owner)return null;return ownerSheet(s.owner)===this?s.owner:null}
     get ownerRule(){requireSheet(this);return null}
-    get href(){requireSheet(this);return null}
+    get href(){return requireSheet(this).href||null}
     get parentStyleSheet(){requireSheet(this);return null}
-    get title(){requireSheet(this);return null}
+    get title(){const s=requireSheet(this);return s.owner?s.owner.getAttribute('title')||null:null}
     get type(){requireSheet(this);return 'text/css'}
     get disabled(){return requireSheet(this).disabled}
     set disabled(value){requireSheet(this).disabled=!!value}
     get media(){const state=requireSheet(this);if(!state.mediaList){const media=Object.create(globalThis.MediaList.prototype);Object.defineProperties(media,{mediaText:{get:()=>state.media,set:value=>{state.media=String(value)}},length:{get:()=>state.media?state.media.split(',').length:0},item:{value:index=>state.media.split(',')[Number(index)]?.trim()||''}});state.mediaList=media}return state.mediaList}
-    replaceSync(text){const state=requireSheet(this);if(state.locked)throw new DOMException('Stylesheet is being replaced','NotAllowedError');state.rules.splice(0,state.rules.length,...parsedRules(text,this))}
-    replace(text){const state=requireSheet(this);if(state.locked)return Promise.reject(new DOMException('Stylesheet is being replaced','NotAllowedError'));text=String(text);state.locked=true;return Promise.resolve().then(()=>{try{state.rules.splice(0,state.rules.length,...parsedRules(text,this));return this}finally{state.locked=false}})}
+    replaceSync(text){const state=requireSheet(this);if(state.owner||state.locked)throw new DOMException('Stylesheet cannot be replaced','NotAllowedError');state.rules.splice(0,state.rules.length,...parsedRules(text,this))}
+    replace(text){const state=requireSheet(this);if(state.owner||state.locked)return Promise.reject(new DOMException('Stylesheet cannot be replaced','NotAllowedError'));text=String(text);state.locked=true;return Promise.resolve().then(()=>{try{state.rules.splice(0,state.rules.length,...parsedRules(text,this));return this}finally{state.locked=false}})}
     insertRule(text,index=0){const state=requireSheet(this);index=Number(index)>>>0;if(state.locked)throw new DOMException('Stylesheet is being replaced','NotAllowedError');if(index>state.rules.length)throw new DOMException('Index exceeds rule count','IndexSizeError');const ast=parse(String(text),{context:'stylesheet'});if(ast.children.size!==1)throw new DOMException('Expected one rule','SyntaxError');if(ast.children.first.type==='Atrule'&&ast.children.first.name==='import')throw new DOMException('Cannot insert @import into a constructed sheet','SyntaxError');const inserted=parsedRules(text,this);if(inserted.length!==1)throw new DOMException('Invalid rule','SyntaxError');state.rules.splice(index,0,inserted[0]);return index}
     deleteRule(index){const state=requireSheet(this);index=Number(index)>>>0;if(state.locked)throw new DOMException('Stylesheet is being replaced','NotAllowedError');if(index>=state.rules.length)throw new DOMException('Index exceeds rule count','IndexSizeError');const old=state.rules.splice(index,1)[0];rules.get(old).sheet=null}
   }
   Object.defineProperty(CSSStyleSheet.prototype,Symbol.toStringTag,{value:'CSSStyleSheet',configurable:true});
   Object.defineProperty(globalThis,'CSSStyleSheet',{value:CSSStyleSheet,writable:true,configurable:true});
+  function ownerSheet(owner){
+    if(!elementSlot(owner))throw new TypeError('Illegal invocation');
+    const prior=owners.get(owner),tag=owner.localName,type=(owner.getAttribute('type')||'').trim().toLowerCase();
+    if(!owner.isConnected||type&&type!=='text/css'||tag==='link'&&!String(owner.getAttribute('rel')||'').toLowerCase().split(/\s+/).includes('stylesheet')){owners.delete(owner);return null}
+    const resource=tag==='link'?host.stylesheetResource(owner.getAttribute('href')||''):null;if(tag==='link'&&!resource){owners.delete(owner);return null}
+    const source=tag==='link'?resource.body:owner.textContent||'',key=tag==='link'?resource.url:source;
+    let sheet=prior?.key===key?prior.sheet:null;
+    if(!sheet){sheet=new CSSStyleSheet();const s=sheets.get(sheet);s.owner=owner;s.href=resource?.url||null;s.crossOrigin=!!resource?.crossOrigin;s.rules.push(...parsedRules(source,sheet));owners.set(owner,{key,sheet})}
+    const state=sheets.get(sheet);state.media=owner.getAttribute('media')||'';return sheet;
+  }
+  for(const type of ['HTMLStyleElement','SVGStyleElement','HTMLLinkElement'])if(globalThis[type]){
+    Object.defineProperty(globalThis[type].prototype,'sheet',{get(){return ownerSheet(this)},enumerable:true,configurable:true});
+    Object.defineProperty(globalThis[type].prototype,'disabled',{get(){const sheet=ownerSheet(this);return sheet?sheets.get(sheet).disabled:false},set(value){const sheet=ownerSheet(this);if(sheet)sheets.get(sheet).disabled=!!value},enumerable:true,configurable:true});
+  }
+  function ownerCollection(root){let list=ownerLists.get(root);if(!list){const values=()=>Array.from(root.querySelectorAll('style,link')).map(ownerSheet).filter(Boolean);list=new Proxy(Object.create(StyleSheetList.prototype),{get(target,key,receiver){const all=values();if(key==='length')return all.length;if(key==='item')return index=>values()[(+index)>>>0]||null;if(key===Symbol.iterator)return all[Symbol.iterator].bind(all);if(typeof key==='string'&&/^\d+$/.test(key))return all[Number(key)];return Reflect.get(target,key,receiver)}});ownerLists.set(root,list)}return list}
+  for(const type of ['Document','ShadowRoot'])if(globalThis[type])Object.defineProperty(globalThis[type].prototype,'styleSheets',{get(){if(!(this instanceof globalThis[type]))throw new TypeError('Illegal invocation');return ownerCollection(this)},enumerable:true,configurable:true});
+  const sourceText=sheet=>{const state=sheets.get(sheet);if(state.disabled)return '';const text=state.rules.map(ruleText).join('\n');return state.media&&!matchMedia(state.media).matches?'':text};
   function adoption(root) {
     if(!(root instanceof Document)&&!shadowSlots.has(root))throw new TypeError('Illegal invocation');
     let value=adopted.get(root);
@@ -130,5 +147,5 @@ const constructedStyleSheets = (() => {
   for(const proto of [Document.prototype,ShadowRoot.prototype])Object.defineProperty(proto,'adoptedStyleSheets',{
     configurable:true,enumerable:true,get(){return adoption(this)},set(value){const next=Array.from(value);for(const sheet of next)if(!sheets.has(sheet))throw new TypeError('Value is not a constructed CSSStyleSheet');const current=adoption(this);current.splice(0,current.length,...next)}
   });
-  return {snapshot(root){return (adopted.get(root)||[]).filter(sheet=>!requireSheet(sheet).disabled).map(sheet=>{const state=requireSheet(sheet),text=state.rules.map(ruleText).join('\n');return state.media?'@media '+state.media+' {\n'+text+'\n}':text})}};
+  return {ownerSheet,sources(root){return Array.from(ownerCollection(root)).concat(adopted.get(root)||[]).map(sourceText)},snapshot(root){return (adopted.get(root)||[]).filter(sheet=>!requireSheet(sheet).disabled).map(sheet=>{const state=requireSheet(sheet),text=state.rules.map(ruleText).join('\n');return state.media?'@media '+state.media+' {\n'+text+'\n}':text})}};
 })();

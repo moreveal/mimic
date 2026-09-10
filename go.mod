@@ -18,7 +18,10 @@ require (
 	github.com/gorilla/websocket v1.5.3
 	github.com/klauspost/compress v1.18.2
 	github.com/maclof/gov8 v0.1.1
+	github.com/tdewolff/font v0.0.0-20241125190050-d899fdc808fc
+	golang.org/x/image v0.23.0
 	golang.org/x/net v0.51.0
+	golang.org/x/sys v0.41.0
 )
 
 require (
@@ -27,11 +30,11 @@ require (
 	github.com/bogdanfinn/quic-go-utls v1.0.10-utls // indirect
 	github.com/bogdanfinn/websocket v1.5.6-barnius // indirect
 	github.com/cloudflare/circl v1.6.2 // indirect
+	github.com/golang/freetype v0.0.0-20170609003504-e2365dfdc4a0 // indirect
 	github.com/quic-go/qpack v0.6.0 // indirect
 	github.com/tam7t/hpkp v0.0.0-20160821193359-2b70b4024ed5 // indirect
+	github.com/tdewolff/parse/v2 v2.7.14-0.20240511005308-a1dd1e88845b // indirect
 	golang.org/x/crypto v0.48.0 // indirect
-	golang.org/x/image v0.23.0 // indirect
-	golang.org/x/sys v0.41.0 // indirect
 )
 
 require (

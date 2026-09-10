@@ -72,7 +72,7 @@ const compatibilityElementState={};
       whenDefined(name){name=String(name);if(!validName(name))return Promise.reject(new DOMException('Invalid custom element name','SyntaxError'));if(definitions.has(name))return Promise.resolve(definitions.get(name).ctor);if(!waiting.has(name)){let resolve;const promise=new Promise(r=>resolve=r);waiting.set(name,{promise,resolve})}return waiting.get(name).promise}
       upgrade(root){walk(root,upgrade)}
     }
-    expose('CustomElementRegistry',CustomElementRegistry);expose('customElements',new CustomElementRegistry(hostToken));
+    Object.defineProperty(CustomElementRegistry.prototype,Symbol.toStringTag,{value:'CustomElementRegistry',configurable:true});expose('CustomElementRegistry',CustomElementRegistry);expose('customElements',new CustomElementRegistry(hostToken));
     Object.defineProperty(Document.prototype,'createElement',{value:function(name,options){const node=rawCreate.call(this,name,options);if(definitions.size&&!customElementCloneInert)upgrade(node);return node},writable:true,configurable:true,enumerable:true});
 
     const observers=new Set(),observerSlots=new WeakMap(),pendingObservers=new Set();let deliveryQueued=false,mutationDepth=0,observerSequence=0;

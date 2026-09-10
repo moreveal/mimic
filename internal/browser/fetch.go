@@ -3,6 +3,7 @@ package browser
 import (
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/moreveal/mimic/internal/engine"
 	"github.com/moreveal/mimic/internal/network"
@@ -29,5 +30,10 @@ func fetchResponse(response network.Response) map[string]any {
 	if typeName == "" {
 		typeName = "basic"
 	}
-	return map[string]any{"status": response.Status, "statusText": http.StatusText(response.Status), "url": urlString(response.URL), "headers": response.Headers, "body": string(response.Body), "bodyBytes": body, "type": typeName, "redirected": response.Redirected}
+	// Do not expose http.Header methods as JavaScript properties in Goja.
+	headers := make(map[string]string, len(response.Headers))
+	for name, values := range response.Headers {
+		headers[name] = strings.Join(values, ", ")
+	}
+	return map[string]any{"status": response.Status, "statusText": http.StatusText(response.Status), "url": urlString(response.URL), "headers": headers, "body": string(response.Body), "bodyBytes": body, "type": typeName, "redirected": response.Redirected}
 }

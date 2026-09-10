@@ -17,6 +17,7 @@ import (
 	"github.com/moreveal/mimic/internal/engine"
 	"github.com/moreveal/mimic/internal/network"
 	"github.com/moreveal/mimic/internal/scheduler"
+	"github.com/moreveal/mimic/internal/textmetrics"
 	"github.com/moreveal/mimic/internal/trace"
 	"github.com/moreveal/mimic/internal/webapi"
 )
@@ -133,6 +134,13 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 		}
 	})
 	host := map[string]any{}
+	var workerFonts *textmetrics.Engine
+	installFontResourceHosts(host, runtime, func() *textmetrics.Engine {
+		if workerFonts == nil {
+			workerFonts = textmetrics.New()
+		}
+		return workerFonts
+	})
 	installURLHost(host, runtime, func() *url.URL { return w.url })
 	host["createObjectURL"] = runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		source := w.url

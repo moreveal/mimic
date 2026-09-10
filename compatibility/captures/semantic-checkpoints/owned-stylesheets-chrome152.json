@@ -1,0 +1,64 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": true,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/owned_stylesheets_oracle.js",
+    "fixtureSHA256": "f038b29e8cf062ff8fcaacabfbe377a890d34dcff4824adfc588d9f1df19cbce",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "detached": true,
+    "initial": [
+      true,
+      true,
+      null,
+      null,
+      "text/css",
+      1,
+      "#owner-target { color: red; }",
+      true
+    ],
+    "insert": [
+      2,
+      "#owner-target { color: red; }",
+      "rgb(0, 0, 255)"
+    ],
+    "ruleMutation": [
+      "green",
+      "rgb(0, 128, 0)"
+    ],
+    "disabled": [
+      true,
+      true,
+      "rgb(0, 0, 0)"
+    ],
+    "replaceSync": "NotAllowedError",
+    "textReset": [
+      false,
+      true,
+      2,
+      1,
+      "rgb(128, 0, 128)"
+    ],
+    "remove": [
+      true,
+      true,
+      0
+    ],
+    "reattach": [
+      false,
+      true,
+      1
+    ],
+    "svgOwner": [
+      true,
+      1,
+      "rgb(255, 165, 0)"
+    ]
+  }
+}
