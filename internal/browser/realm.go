@@ -21,17 +21,18 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/moreveal/mimic/compatibility"
 	"github.com/moreveal/mimic/internal/dom"
 	"github.com/moreveal/mimic/internal/engine"
 	"github.com/moreveal/mimic/internal/network"
 	"github.com/moreveal/mimic/internal/scheduler"
 	"github.com/moreveal/mimic/internal/textmetrics"
 	"github.com/moreveal/mimic/internal/trace"
-	"github.com/moreveal/mimic/internal/webapi"
 )
 
 type Realm struct {
+	bootstrapPlan           *bootstrapSource
+	bootstrapCapture        *bootstrapSnapshotEntry
+	bootstrapRestored       bool
 	fontChoices             []textmetrics.FontReference
 	lastModified            time.Time
 	clientHints             *clientHintsDocument
@@ -174,12 +175,21 @@ func newRealmStateWithNavigation(p *Page, agent ExecutionAgent, d *dom.Document,
 	if len(permissionsPolicy) != 0 {
 		policyHeader = permissionsPolicy[0]
 	}
+	// about:blank inherits its creator's origin before installing realm state.
+	if frame, ok := agent.(*Frame); ok && frame.parent != nil && frame.parent.Realm != nil && u.Scheme == "about" && (u.Opaque == "blank" || u.Opaque == "srcdoc") {
+		r.origin = frame.parent.Realm.origin
+	}
 	r.initializeClientHints(policyHeader)
 	r.updateSelectorTarget(u.Fragment)
 	if deferred {
-		r.runtime = &deferredRuntime{realm: r, factory: p.ctx.browser.factory}
+		r.runtime = &deferredRuntime{realm: r}
 	} else {
-		r.runtime = p.ctx.browser.factory.New()
+		runtime, err := r.newRuntime()
+		if err != nil {
+			cancelResources()
+			return nil, err
+		}
+		r.runtime = runtime
 	}
 	r.scheduler = scheduler.New(p.ClockNow(), func(ctx context.Context) error {
 		return r.checkpoint(ctx)
@@ -481,6 +491,21 @@ func (r *Realm) packedFn(f engine.Function, signature string) any {
 	return r.transientFn(f)
 }
 func (r *Realm) install() error {
+	err := r.installBindings()
+	if err != nil && r.bootstrapRestored && r.agent.Page().ctx.lifetime.Err() == nil {
+		return r.retryBootstrap(err)
+	}
+	return err
+}
+
+func (r *Realm) installBindings() error {
+	defer func() {
+		if r.bootstrapCapture != nil {
+			r.agent.Page().ctx.bootstrapSnapshots.abandon(r.bootstrapCapture)
+			r.bootstrapCapture = nil
+		}
+	}()
+
 	p := r.agent.Page()
 	host := map[string]any{}
 	r.installDocumentStream(host)
@@ -1534,35 +1559,12 @@ func (r *Realm) install() error {
 	if err := r.runtime.Set("__mimic", host); err != nil {
 		return err
 	}
+	plan := r.bootstrapSource()
+	source := plan.source
+	exposureJSON, catalogJSON = plan.exposureJSON, plan.catalogJSON
 	generated := ""
-	var exposure *compatibility.RealmExposure
-	var selectedSurface *compatibility.WebAPISurface
-	var exposureName string
 	if bundle := p.Compatibility(); bundle != nil && bundle.Surface() != nil {
-		surface := bundle.Surface()
-		selectedSurface = surface
-		generated = surface.GeneratedJavaScript
-		catalogJSON = surface.GeneratedCatalogJSON
-		security := r.securityState()
-		if security.secureContext {
-			key := "window.secure.non-isolated"
-			if security.crossOriginIsolated {
-				key = "window.secure.isolated"
-			}
-			if selected, ok := surface.Exposures[key]; ok {
-				exposure = &selected
-				exposureName = key
-			}
-		} else if selected, ok := surface.Exposures["window.insecure.non-isolated"]; ok {
-			exposure = &selected
-			exposureName = "window.insecure.non-isolated"
-		}
-	}
-	var source string
-	if selectedSurface != nil {
-		source, exposureJSON, catalogJSON = webapi.BootstrapFor(selectedSurface, exposureName)
-	} else {
-		source = webapi.Surface(generated, exposure)
+		generated = bundle.Surface().GeneratedJavaScript
 	}
 	if profiling {
 		source = strings.Replace(source, "  'use strict';", "  'use strict';host.profilePhase('begin');", 1)
@@ -1583,10 +1585,29 @@ func (r *Realm) install() error {
 		source = strings.Replace(source, "elementWrappers.set(key,proxy)", "host.profileWrapper();elementWrappers.set(key,proxy)", 1)
 	}
 	var err error
-	if bootstrap, ok := r.runtime.(engine.BootstrapRuntime); ok {
-		_, err = bootstrap.EvalBootstrap(context.Background(), source, "mimic:webapi-surface")
+	if r.bootstrapRestored {
+		restore := r.runtime.Get("__mimicRestoreBootstrap")
+		if r.runtime.TypeOf(restore) != "function" {
+			return fmt.Errorf("bootstrap snapshot has no restore hook")
+		}
+		_, err = r.runtime.Call(context.Background(), restore, nil, r.runtime.Get("__mimic"))
 	} else {
-		_, err = r.runtime.Eval(context.Background(), source, "mimic:webapi-surface")
+		var finish engine.Value
+		// Instrumented profile sources contain diagnostic callbacks and must not
+		// become reusable profile seeds.
+		if profiling {
+			r.agent.Page().ctx.bootstrapSnapshots.captured(r.bootstrapCapture, nil, fmt.Errorf("instrumented bootstrap is not snapshot eligible"))
+			r.bootstrapCapture = nil
+		}
+		finish, err = r.beginBootstrapCapture()
+		if err == nil {
+			if bootstrap, ok := r.runtime.(engine.BootstrapRuntime); ok {
+				_, err = bootstrap.EvalBootstrap(context.Background(), source, "mimic:webapi-surface")
+			} else {
+				_, err = r.runtime.Eval(context.Background(), source, "mimic:webapi-surface")
+			}
+		}
+		r.finishBootstrapCapture(finish, source, err)
 	}
 	if err != nil {
 		return err
@@ -1606,7 +1627,7 @@ func (r *Realm) install() error {
 	r.frameLoadDispatcher = r.runtime.Get("__mimicDispatchFrameLoad")
 	r.resourceEventDispatcher = r.runtime.Get("__mimicDispatchResourceEvent")
 	r.performanceNotifier = r.runtime.Get("__mimicNotifyPerformanceObservers")
-	_, err = r.runtime.Eval(context.Background(), `delete globalThis.__mimic;delete globalThis.__mimicUnsupportedProbe;delete globalThis.__receiveFrameMessage;delete globalThis.__receiveMessagePort;delete globalThis.__mimicDispatchFrameLoad;delete globalThis.__mimicDispatchResourceEvent;delete globalThis.__mimicNotifyPerformanceObservers`, "mimic:hide-internals")
+	_, err = r.runtime.Eval(context.Background(), `delete globalThis.__mimic;delete globalThis.__mimicRestoreBootstrap;delete globalThis.__mimicUnsupportedProbe;delete globalThis.__receiveFrameMessage;delete globalThis.__receiveMessagePort;delete globalThis.__mimicDispatchFrameLoad;delete globalThis.__mimicDispatchResourceEvent;delete globalThis.__mimicNotifyPerformanceObservers`, "mimic:hide-internals")
 	return err
 }
 

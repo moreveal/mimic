@@ -43,19 +43,20 @@ func (b *Browser) Environment() state.Environment      { b.mu.RLock(); defer b.m
 func (b *Browser) Compatibility() compatibility.Bundle { return b.compat }
 
 type Context struct {
-	storageMu        sync.Mutex
-	permissionRealms map[*Realm]struct{}
-	lifetime         context.Context
-	cancel           context.CancelFunc
-	mu               sync.RWMutex
-	ID               string
-	browser          *Browser
-	cookies          *network.CookieStore
-	network          *network.SessionState
-	transport        network.Transport
-	storage          map[string]map[string]string
-	capabilities     map[string]*originCapabilities
-	pages            map[string]*Page
+	bootstrapSnapshots bootstrapSnapshotCache
+	storageMu          sync.Mutex
+	permissionRealms   map[*Realm]struct{}
+	lifetime           context.Context
+	cancel             context.CancelFunc
+	mu                 sync.RWMutex
+	ID                 string
+	browser            *Browser
+	cookies            *network.CookieStore
+	network            *network.SessionState
+	transport          network.Transport
+	storage            map[string]map[string]string
+	capabilities       map[string]*originCapabilities
+	pages              map[string]*Page
 }
 
 func (c *Context) NewPage() (*Page, error) {
@@ -213,12 +214,13 @@ func (c *Context) Close() error {
 	for _, p := range c.Pages() {
 		c.ClosePage(p.ID)
 	}
+	snapshotErr := c.bootstrapSnapshots.close()
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	if closer, ok := c.transport.(interface{ CloseIdleConnections() }); ok {
 		closer.CloseIdleConnections()
 	}
-	return nil
+	return snapshotErr
 }
 
 // Cancel stops external work without touching realm-owned JavaScript state.

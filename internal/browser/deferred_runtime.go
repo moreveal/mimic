@@ -14,7 +14,6 @@ import (
 // access remains inside the existing Page command boundary.
 type deferredRuntime struct {
 	realm    *Realm
-	factory  engine.Factory
 	now      func() time.Time
 	observer func(string, bool)
 	err      error
@@ -31,20 +30,24 @@ func (d *deferredRuntime) ready() (engine.Runtime, error) {
 	if d.realm.runtime != d {
 		return d.realm.runtime, nil
 	}
-	r := d.factory.New()
+	r, err := d.realm.newRuntime()
+	if err != nil {
+		d.err = err
+		return nil, err
+	}
 	// Installation itself calls the engine; publish it on this same Page turn
 	// before installing hosts to avoid recursive initialization.
 	d.realm.runtime = r
 	r.SetTimeSource(d.now)
 	r.SetGlobalAccessObserver(d.observer)
 	if err := d.realm.install(); err != nil {
-		r.Close()
+		d.realm.runtime.Close()
 		d.err = err
 		d.realm.runtime = d
 		return nil, err
 	}
 	d.realm.registerPermissions()
-	return r, nil
+	return d.realm.runtime, nil
 }
 
 func (d *deferredRuntime) Eval(c context.Context, s, n string) (engine.Value, error) {

@@ -126,7 +126,7 @@
   }},writable:true});
   // Export is an immutable projection of these same dirty-state slots. Never
   // rewrite default attributes or call public value/checked setters to take it.
-  host.registerFormSnapshot(()=>{
+  registerBootstrapCallback('registerFormSnapshot',()=>{
     const result=[];
     for(const element of elementWrappers.values()){
       const slot=elementSlot(element);if(!slot)continue;

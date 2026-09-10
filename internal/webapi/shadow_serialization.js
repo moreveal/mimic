@@ -22,7 +22,7 @@
       fragmentState(this).html = '';
     }
   });
-  host.registerShadowSnapshot(() => {
+  registerBootstrapCallback('registerShadowSnapshot',() => {
     const result = [], seen = new Set();
     const documentStyles = constructedStyleSheets.snapshot(document);
     if (documentStyles.length) result.push({hostID:host.documentRootID(), styles:documentStyles});
