@@ -1,0 +1,73 @@
+{
+  "introduced": "3d19e07",
+  "withdrawn": "b5b62e6",
+  "reason": "JS Proxy in Window prototype chain suppresses ReferenceError for an undeclared global identifier. Frozen named-access oracle alone was insufficient. Native interceptor with restore-safe lifetime required.",
+  "runs": {
+    "suite": {
+      "log": "compatibility/private-captures/semantic-plateau-20260911/suite.log",
+      "sha256": "4ec34280f72784649c2ab96164fe50d2eaccb71a0f1114bac750325f698217d7",
+      "failures": [
+        {
+          "Time": "2026-09-11T19:13:22.311567+04:00",
+          "Action": "fail",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestCatalogDataCreatesIndependentRealmObjects/goja",
+          "Elapsed": 0.09
+        },
+        {
+          "Time": "2026-09-11T19:13:22.3583603+04:00",
+          "Action": "fail",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestCatalogDataCreatesIndependentRealmObjects/v8",
+          "Elapsed": 0.05
+        },
+        {
+          "Time": "2026-09-11T19:13:22.3583603+04:00",
+          "Action": "fail",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestCatalogDataCreatesIndependentRealmObjects",
+          "Elapsed": 0.14
+        },
+        {
+          "Time": "2026-09-11T19:15:55.6438698+04:00",
+          "Action": "fail",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestRealmUsesSelectedCompatibilityBundleSurface",
+          "Elapsed": 0.07
+        },
+        {
+          "Time": "2026-09-11T19:16:38.5242617+04:00",
+          "Action": "fail",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestGlobalAccessTracingPreservesWindowSemantics",
+          "Elapsed": 0.4
+        },
+        {
+          "Time": "2026-09-11T19:17:47.2607655+04:00",
+          "Action": "fail",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Elapsed": 294.685
+        }
+      ]
+    },
+    "browser-final": {
+      "log": "compatibility/private-captures/semantic-plateau-20260911/browser-final.log",
+      "sha256": "8300013048f5ded7d8c6194ae28a2f90e696e3232cdae186639f30a64ff59f8b",
+      "failures": [
+        {
+          "Time": "2026-09-11T19:21:10.5282317+04:00",
+          "Action": "fail",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestGlobalAccessTracingPreservesWindowSemantics",
+          "Elapsed": 0.22
+        },
+        {
+          "Time": "2026-09-11T19:22:13.963687+04:00",
+          "Action": "fail",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Elapsed": 249.815
+        }
+      ]
+    }
+  }
+}

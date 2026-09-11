@@ -1,0 +1,97 @@
+{
+  "checks": 1,
+  "beforeMatches": 0,
+  "afterMatches": 0,
+  "beforeDiffRecords": 495,
+  "afterDiffRecords": 493,
+  "beforeExpandedPaths": 495,
+  "afterExpandedPaths": 493,
+  "changedPaths": [
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Storage.length",
+        "exception"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": "TypeError"
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Storage.length",
+        "result"
+      ],
+      "before": "number",
+      "after": {
+        "$missing": true
+      }
+    }
+  ],
+  "newDifferingPaths": [],
+  "chromeDrift": [],
+  "groups": {
+    "before": {
+      "2e1d6047a46db9c1": {
+        "category": "webidl-receivers-and-function-shape",
+        "firstDifference": [
+          [
+            "observations",
+            0,
+            "value",
+            "getters",
+            "CSSStyleDeclaration.cssFloat",
+            "exception"
+          ],
+          "TypeError",
+          {
+            "$missing": true
+          }
+        ],
+        "members": [
+          "brand-matrix"
+        ]
+      }
+    },
+    "after": {
+      "2e1d6047a46db9c1": {
+        "category": "webidl-receivers-and-function-shape",
+        "firstDifference": [
+          [
+            "observations",
+            0,
+            "value",
+            "getters",
+            "CSSStyleDeclaration.cssFloat",
+            "exception"
+          ],
+          "TypeError",
+          {
+            "$missing": true
+          }
+        ],
+        "members": [
+          "brand-matrix"
+        ]
+      }
+    }
+  },
+  "valid": {
+    "before": true,
+    "after": true
+  },
+  "incomplete": {
+    "before": [],
+    "after": []
+  }
+}
