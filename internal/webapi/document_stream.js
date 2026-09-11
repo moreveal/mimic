@@ -30,6 +30,11 @@
     const clear=target=>{
       const listeners=eventListeners.get(target);
       if(listeners){for(const list of listeners.values())for(const record of list)if(record&&typeof record==='object')record.removed=true;listeners.clear()}
+      // Clear the handler attribute and its registration together. Leaving a
+      // detached listener in the record prevents the next assignment from
+      // registering it again. Use private state, never application accessors.
+      const attributes=eventHandlerListeners.get(target);
+      if(attributes){for(const record of attributes.values()){record.value=null;record.listener=null}attributes.clear()}
       const handlers=elementHandlers.get(target);
       if(handlers)for(const key of Object.keys(handlers))delete handlers[key];
       // Event-handler attributes on Window/Document are independent of the

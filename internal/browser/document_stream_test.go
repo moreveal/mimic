@@ -59,6 +59,31 @@ func TestDocumentStreamListenersAndNestedClose(t *testing.T) {
 	})
 }
 
+func TestDocumentStreamResetsHandlerAttributesAndRegistration(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, p *Page) {
+		historyEval(t, p, `(()=>{
+const log=[],button=document.createElement('button'),script=document.createElement('script'),image=document.createElement('img'),detached=document.createElement('button');
+document.body.append(button,script,image);
+const cases=[[window,'click'],[document,'click'],[button,'click'],[script,'load'],[image,'load']];
+for(const [target,type] of cases){target['on'+type]=()=>log.push('old');target.addEventListener(type,()=>log.push('old-listener'))}
+const retained=()=>log.push('detached');detached.onclick=retained;
+let accessorCalls=0;Object.defineProperty(window,'onmessage',{get(){accessorCalls++;return null},set(){accessorCalls++},configurable:true});
+document.open();
+if(accessorCalls!==0||detached.onclick!==retained)throw new Error('public accessor or detached handler touched');
+for(const [target,type] of cases){
+ if(target['on'+type]!==null)throw new Error('stale handler value');
+ target.dispatchEvent(new Event(type));
+ target.addEventListener(type,()=>log.push('before'));
+ target['on'+type]=()=>log.push('new');
+ target.addEventListener(type,()=>log.push('after'));
+ target.dispatchEvent(new Event(type));
+}
+detached.dispatchEvent(new Event('click'));
+return log.join(',')===Array(5).fill('before,new,after').join(',')+',detached';
+})()`, true)
+	})
+}
+
 func TestDocumentStreamExternalScriptSuspendsParser(t *testing.T) {
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		release := make(chan struct{})
