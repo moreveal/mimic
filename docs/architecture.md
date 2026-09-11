@@ -156,3 +156,37 @@ answers. The same observable model applies to ordinary application code.
 Do not remove retained realms, cross-value registries, explicit checkpoints,
 transport session pooling or timer source ordering as apparent duplication.
 Any change to these invariants needs a local regression demonstrating the defect.
+
+## Service ownership and portability
+
+Web service semantics are platform neutral. Compatibility means observable
+values, descriptors, errors, identity, state transitions, event ordering and
+Promise/realm/lifecycle behavior; it does not require Chromium's internal
+mechanisms. Prefer a synthetic Go model when it can reproduce those observations.
+Each service has one authoritative state model; JavaScript objects project it
+and perform Web IDL conversion rather than keep a second mutable service store.
+
+Cache Storage and IndexedDB belong to the browser Context and origin. Cookie
+Store observes the existing network cookie jar. Navigation uses the Frame's
+existing history. Scheduler priorities and task context belong to the Page
+scheduler. Crash annotations, speech utterances and service lifecycle belong to
+their document realm. Document picture-in-picture creates an auxiliary browsing
+context on the existing Page event loop. Launch delivery uses the Page's queue.
+Snapshots contain bindings, never live provider resources or shared service state.
+
+System data and effects cross narrow provider interfaces. Speech uses
+`internal/speech.Provider` through `browser.Options.SpeechProvider`; browser core
+owns utterance properties, queue identities, cancellation and event projection.
+The Windows SAPI implementation is one replaceable provider, isolated behind build
+tags. Its COM thread, handles and installed voice discovery never enter browser
+core. Completion comes from provider events, not estimated-duration timers.
+Other platforms can inject their own provider; without one, synthesis reports
+`synthesis-unavailable` rather than claiming to produce speech. Platform-dependent
+voice catalogs are discovered, never copied from the capture or current machine.
+Provider callbacks enqueue work on the owning Page; teardown closes the provider
+and suppresses late delivery. Regression coverage exercises the same browser
+model with a platform-independent controlled provider.
+
+`navigator.webdriver` is an explicit Mimic invariant: it always returns false,
+including CDP/debug configurations. Debug transport configuration must never
+change this value.
