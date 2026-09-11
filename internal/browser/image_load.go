@@ -9,6 +9,7 @@ import (
 	"github.com/moreveal/mimic/internal/imageresource"
 	"github.com/moreveal/mimic/internal/network"
 	"github.com/moreveal/mimic/internal/scheduler"
+	"github.com/moreveal/mimic/internal/trace"
 )
 
 type imageLoad struct {
@@ -58,6 +59,7 @@ func (r *Realm) updateImage(id int64, changed bool) {
 			return nil
 		}
 		current.complete = true
+		r.resourceRevision.Add(1)
 		if kind != "load" {
 			current.decoded = nil
 		}
@@ -116,6 +118,7 @@ func (r *Realm) updateImage(id int64, changed bool) {
 				decoded, err = imageresource.Decode(response.Body, response.Headers.Get("Content-Type"))
 				if err != nil {
 					kind = "error"
+					r.agent.Page().trace.Add(trace.Error, "imageDecode", map[string]any{"url": u.String(), "error": err.Error(), "realm": r.ID})
 				}
 			}
 			r.scheduler.Post(scheduler.Network, 0, func(ctx context.Context) error {

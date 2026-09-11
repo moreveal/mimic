@@ -168,6 +168,26 @@ func TestWebCryptoRSAOAEPSPKIImportAndEncrypt(t *testing.T) {
 	}
 }
 
+func TestWebCryptoAESGCMRawImportEncryptAndDecrypt(t *testing.T) {
+	b, err := New(v8engine.Factory{}, chrome152.New())
+	if err != nil {
+		t.Fatal(err)
+	}
+	p, err := b.NewContext().NewPage()
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer p.Close()
+	navigateCapabilityFixture(t, p)
+	value, err := p.Evaluate(context.Background(), `(async()=>{const hex=value=>Array.from(new Uint8Array(value),byte=>byte.toString(16).padStart(2,'0')).join(''),key=await crypto.subtle.importKey('raw',new Uint8Array(16),{name:'AES-GCM'},false,['encrypt','decrypt']),iv=new Uint8Array(12),empty=await crypto.subtle.encrypt({name:'AES-GCM',iv},key,new Uint8Array()),plain=new TextEncoder().encode('amazon challenge'),sealed=await crypto.subtle.encrypt({name:'AES-GCM',iv,additionalData:new Uint8Array([1,2,3]),tagLength:128},key,plain),opened=await crypto.subtle.decrypt({name:'AES-GCM',iv,additionalData:new Uint8Array([1,2,3]),tagLength:128},key,sealed);return[Object.prototype.toString.call(key),key.type,key.extractable,key.algorithm.name,key.algorithm.length,key.usages,hex(empty),new TextDecoder().decode(opened)]})()`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got, want := fmt.Sprint(value), `[[object CryptoKey] secret false AES-GCM 128 [encrypt decrypt] 58e2fccefa7e3061367f1d57a4e7455a amazon challenge]`; got != want {
+		t.Fatalf("unexpected AES-GCM result: %s", got)
+	}
+}
+
 func TestFetchValueConstructors(t *testing.T) {
 	p := testPage(t)
 	defer p.Close()
@@ -843,6 +863,38 @@ func TestBlobFileAndObjectURL(t *testing.T) {
 	m := v.(map[string]any)
 	if m["size"] != int64(4) || m["type"] != "text/plain" || m["text"] != "hé!" || m["slice"] != "é!" || m["file"] != "a:b.txt" || m["last"] != int64(42) || m["blobURL"] != true {
 		t.Fatalf("unexpected Blob/File semantics: %#v", m)
+	}
+}
+
+func TestFileReaderReadsBlobAndDispatchesLifecycleEvents(t *testing.T) {
+	p := testPage(t)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	v, err := p.Evaluate(ctx, `new Promise((resolve,reject)=>{const reader=new FileReader(),events=[];for(const name of ['loadstart','progress','load','loadend'])reader.addEventListener(name,()=>events.push(name));reader.onerror=()=>reject(reader.error);reader.onloadend=()=>resolve({tag:Object.prototype.toString.call(reader),state:reader.readyState,result:reader.result,events});reader.readAsDataURL(new Blob(['hello'],{type:'text/plain'}))})`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m := v.(map[string]any)
+	if m["tag"] != "[object FileReader]" || m["state"] != int64(2) || m["result"] != "data:text/plain;base64,aGVsbG8=" || fmt.Sprint(m["events"]) != "[loadstart progress load loadend]" {
+		t.Fatalf("unexpected FileReader semantics: %#v", m)
+	}
+}
+
+func TestFormDataSerializesMultipartRequestBody(t *testing.T) {
+	p := testPage(t)
+	v, err := p.Evaluate(context.Background(), `(async()=>{const data=new FormData();data.append('field','value');data.append('upload',new Blob(['payload'],{type:'application/octet-stream'}),'probe.bin');const request=new Request('https://example.test/upload',{method:'POST',body:data}),body=await request.text();return{tag:Object.prototype.toString.call(data),field:data.get('field'),file:data.get('upload').name,type:request.headers.get('content-type'),body}})()`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	m := v.(map[string]any)
+	if m["tag"] != "[object FormData]" || m["field"] != "value" || m["file"] != "probe.bin" || !strings.HasPrefix(fmt.Sprint(m["type"]), "multipart/form-data; boundary=----WebKitFormBoundaryMimic") {
+		t.Fatalf("unexpected FormData surface: %#v", m)
+	}
+	body := fmt.Sprint(m["body"])
+	for _, fragment := range []string{`name="field"`, "value", `name="upload"; filename="probe.bin"`, "Content-Type: application/octet-stream", "payload"} {
+		if !strings.Contains(body, fragment) {
+			t.Fatalf("multipart body missing %q: %q", fragment, body)
+		}
 	}
 }
 
@@ -1637,6 +1689,55 @@ func TestFrameElementDerivesFromBrowsingContext(t *testing.T) {
 	child := m["child"].(map[string]any)
 	if child["tag"] != "IFRAME" || child["id"] != "child" || child["ownsWindow"] != true {
 		t.Fatalf("child frameElement is not derived from its browsing context: %#v", child)
+	}
+}
+
+func TestWindowFramesReflectsDirectChildBrowsingContexts(t *testing.T) {
+	p := testPage(t)
+	v, err := p.Evaluate(context.Background(), `(()=>{
+		const first=document.createElement('iframe'),second=document.createElement('iframe');
+		document.body.append(first,second);
+		const before={identity:frames===window,length:window.length,first:frames[0]===first.contentWindow,second:window[1]===second.contentWindow};
+		document.body.insertBefore(second,first);
+		const reordered={first:frames[0]===second.contentWindow,second:frames[1]===first.contentWindow};
+		second.remove();
+		return{before,reordered,after:{length:frames.length,first:frames[0]===first.contentWindow,stale:window[1]}};
+	})()`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	got := v.(map[string]any)
+	before := got["before"].(map[string]any)
+	reordered := got["reordered"].(map[string]any)
+	after := got["after"].(map[string]any)
+	if before["identity"] != true || before["length"] != int64(2) || before["first"] != true || before["second"] != true {
+		t.Fatalf("initial Window frames projection = %#v", before)
+	}
+	if reordered["first"] != true || reordered["second"] != true {
+		t.Fatalf("reordered Window frames projection = %#v", reordered)
+	}
+	if after["length"] != int64(1) || after["first"] != true || after["stale"] != nil {
+		t.Fatalf("updated Window frames projection = %#v", after)
+	}
+}
+
+func TestDocumentCreateEventInitializesLegacyCustomEvent(t *testing.T) {
+	p := testPage(t)
+	v, err := p.Evaluate(context.Background(), `(()=>{const event=document.createEvent('CustomEvent');event.initCustomEvent('ready',true,true,{value:7});return{ctor:event.constructor===CustomEvent,type:event.type,bubbles:event.bubbles,cancelable:event.cancelable,detail:event.detail.value}})()`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	got := v.(map[string]any)
+	if got["ctor"] != true || got["type"] != "ready" || got["bubbles"] != true || got["cancelable"] != true || got["detail"] != int64(7) {
+		t.Fatalf("legacy CustomEvent = %#v", got)
+	}
+}
+
+func TestFragmentInsertionDoesNotInvokeOverriddenRemoveChild(t *testing.T) {
+	p := testPage(t)
+	got, err := p.Evaluate(context.Background(), `(()=>{const target=document.createElement('div'),fragment=document.createDocumentFragment(),child=document.createElement('span');fragment.appendChild(child);fragment.removeChild=()=>{throw new Error('observable override')};target.appendChild(fragment);return target.firstChild===child&&fragment.childNodes.length===0})()`)
+	if err != nil || got != true {
+		t.Fatalf("fragment insertion invoked author removeChild: %v %v", got, err)
 	}
 }
 

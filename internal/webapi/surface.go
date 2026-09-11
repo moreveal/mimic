@@ -60,6 +60,9 @@ var shadowSerializationSurface string
 //go:embed cssom_compatibility.js
 var cssomCompatibilitySurface string
 
+//go:embed intersection_observer.js
+var intersectionObserverSurface string
+
 //go:embed traversal_compatibility.js
 var traversalCompatibilitySurface string
 
@@ -260,6 +263,7 @@ func composeSurface(generated, exposureSource string) string {
 	base = strings.Replace(base, "/* shared_base64 */", base64Surface, 1)
 	base = strings.Replace(base, "/* shared_webkit_css */", webkitCSSNamesSurface+webkitCSSSurface+cssShorthandsSurface+cssValueGrammarSurface+cssAnimationGrammarSurface+cssFontMetricsSurface, 1)
 	base = strings.Replace(base, "/* shared_dom_matrix */", cssColorsSurface+domMatrixSurface, 1)
+	base = strings.Replace(base, "/* shared_intersection_observer */", intersectionObserverSurface, 1)
 	return strings.Replace(base, marker, strings.Join(parts, "\n"), 1)
 }
 
@@ -272,7 +276,7 @@ func WorkerSurface(generated string, exposure *compatibility.RealmExposure) stri
 		}
 		exposureSource = "const __workerExposure=" + string(encoded) + ";__applyWorkerExposure(__workerExposure);\n"
 	}
-	shared := fetchPrimitivesSurface + "\nObject.assign(globalThis,{TextEncoder,DOMException,URL,URLSearchParams,Blob,File,Headers});\n" + abortEncodingSurface + "\n{let structuredClone;\n" + streamsVendorSurface + "\n}\n" + fetchCompatibilitySurface
+	shared := fetchPrimitivesSurface + "\ninstallFileReader();Object.assign(globalThis,{TextEncoder,DOMException,URL,URLSearchParams,Blob,File,FormData,FileReader,Headers});\n" + abortEncodingSurface + "\n{let structuredClone;\n" + streamsVendorSurface + "\n}\n" + fetchCompatibilitySurface
 	base := strings.Replace(handwrittenWorkerSurface, "/* shared_worker_fetch */", shared, 1)
 	return base + "\n" + generated + "\n" + exposureSource + "__finishWorkerSurface();if(typeof __workerExposure!=='undefined')__applyWorkerPrototypeExposure(__workerExposure);delete globalThis.__applyWorkerExposure;delete globalThis.__applyWorkerPrototypeExposure;delete globalThis.__finishWorkerSurface;delete globalThis.__mimic;delete globalThis.__mimicIDLExposure;\n{const host=__workerHost;\n" + nativeFunctionsSurface + base64Surface + cssColorsSurface + "\nfor(const [name,value] of Object.entries({atob,btoa}))Object.defineProperty(WorkerGlobalScope.prototype,name,{value,writable:true,enumerable:true,configurable:true});\n" + domMatrixSurface + "\n" + strings.Replace(canvasStateSurface, "/* shared_canvas_paths */", canvasPathObservationsSurface, 1) + "\n" + webglObservationsSource() + "\n" + webgpuStateSurface + "\n" + fontFacesSurface + "\n}"
 }

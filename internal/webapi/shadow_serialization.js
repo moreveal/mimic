@@ -23,23 +23,21 @@
     }
   });
   registerBootstrapCallback('registerShadowSnapshot',() => {
-    const result = [], seen = new Set();
+    const result = [];
     const documentStyles = constructedStyleSheets.snapshot(document);
     if (documentStyles.length) result.push({hostID:host.documentRootID(), styles:documentStyles});
-    const visit = node => {
-      if (seen.has(node)) return;
-      seen.add(node);
+    // Only native attachments belong in declarative shadow templates. Public
+    // polyfill wrappers describe logical light DOM, not a native attachment;
+    // promoting them to real roots changes CSS scope and slot composition.
+    // Their already-composed children remain in the canonical DOM projection.
+    for (const node of shadowHosts) {
       const root = elementShadows.get(node);
-      if (root) {
-        const state = shadowSlots.get(root), children = Array.from(root.childNodes);
-        result.push({hostID:elementSlot(node).nodeId, mode:state.mode, delegatesFocus:state.delegatesFocus,
-          children:children.map(n => elementSlot(n).nodeId), html:children.length ? '' : fragmentState(root).html || '',
-          styles:constructedStyleSheets.snapshot(root)});
-        for (const child of children) visit(child);
-      }
-      for (const child of Array.from(node.childNodes || [])) visit(child);
-    };
-    visit(document);
+      if (!root) continue;
+      const state = shadowSlots.get(root), children = Array.from(root.childNodes);
+      result.push({hostID:elementSlot(node).nodeId, mode:state.mode, delegatesFocus:state.delegatesFocus,
+        children:children.map(n => elementSlot(n).nodeId), html:children.length ? '' : fragmentState(root)?.html || '',
+        styles:constructedStyleSheets.snapshot(root)});
+    }
     return JSON.stringify(result);
   });
 }

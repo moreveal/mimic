@@ -117,14 +117,16 @@ const compatibilitySelectors = (() => {
   const scopeFor = root => root === document ? document.documentElement : root;
   function simpleNative(selector) {
     const groups=parsed(selector);
-    if(groups.length!==1)return null;
+    const leaves=groups.map(simpleNativeGroup);
+    return leaves.length&&leaves.every(Boolean)?leaves.join(','):null;
+  }
+  function simpleNativeGroup(tokens) {
     // Preserve exactly the legacy native leaf grammar. Other compounds use
     // the same upstream matcher as structural selectors.
-    const tokens=groups[0];
     if(tokens.length>2||tokens.length===2&&!(tokens[0].type==='tag'&&tokens[1].type==='attribute'&&tokens[1].name==='class'&&tokens[1].action==='element'))return null;
     let source='';
     const identifier=value=>/^[a-zA-Z0-9_-]+$/.test(value);
-    for(const token of groups[0]) {
+    for(const token of tokens) {
       if(token.type==='universal'&&token.namespace===null)source+='*';
       else if(token.type==='tag'&&token.namespace===null&&identifier(token.name))source+=token.name;
       else if(token.type==='attribute'&&token.namespace===null&&token.ignoreCase==='quirks'&&identifier(token.value)&&
@@ -156,6 +158,26 @@ const compatibilitySelectors = (() => {
     if(simple)return host.matches(elementSlot(node).nodeId,simple);
     return run(()=>predicate(node,selector)(node));
   }
+  // Stylesheet rules outlive individual style reads. Compile each immutable
+  // selector once, without caching DOM match results or retaining an element
+  // as its scope. Explicit :scope selectors keep their per-element semantics.
+  function compileStyle(selector) {
+    try {
+      // A style read matches many rules against the same element. Keep even
+      // leaf predicates in the shared read scope so id/class/attribute facts
+      // cross the host boundary once, not once for every stylesheet rule.
+      const ast=parsed(selector);
+      const scoped=groups=>groups.some(group=>group.some(token=>token.type==='pseudo'&&token.name==='scope'||Array.isArray(token.data)&&scoped(token.data)));
+      if(scoped(ast))return node=>predicate(node,selector)(node);
+      return ast.length?library.compileToken(copy(ast),options(null)):()=>false;
+    } catch(error) {
+      // Invalid/unsupported CSS rules are ignored, but DOM selector methods
+      // continue to throw SyntaxError through their existing boundary.
+      if(error?.name==='SyntaxError')return ()=>false;
+      throw error;
+    }
+  }
+  const matchingStyles=(node,rules)=>run(()=>rules.filter(rule=>rule.matches(node)));
   function closest(node,selector) {
     selector=String(selector);
     return run(()=>{
@@ -171,7 +193,7 @@ const compatibilitySelectors = (() => {
     if(root===document||slot){const found=host.elementByID(root===document?documentID:slot.nodeId,id);return found?wrap(found):null;}
     return run(()=>library.findOne(node=>attribute(node,'id')===id,children(root),options(scopeFor(root))));
   }
-  return {query,matches,closest,getElementById};
+  return {query,matches,closest,getElementById,compileStyle,matchingStyles};
 })();
 // These late semantic replacements are WebIDL operations too. Validate the
 // private brand before arity and conversion, outside selector-parser error

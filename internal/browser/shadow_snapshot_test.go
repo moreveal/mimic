@@ -72,3 +72,36 @@ root.innerHTML='<tr><td>x</td></tr>';return root.innerHTML==='x'&&constructions=
 		t.Fatalf("shadow parsing context: %v %v", got, err)
 	}
 }
+
+func TestSnapshotDoesNotPromotePolyfilledShadowRoot(t *testing.T) {
+	b, err := New(v8engine.Factory{}, chrome152.New())
+	if err != nil {
+		t.Fatal(err)
+	}
+	c := b.NewContext()
+	defer c.Close()
+	p, err := c.NewPage()
+	if err != nil {
+		t.Fatal(err)
+	}
+	ctx := context.Background()
+	got, err := p.Evaluate(ctx, `(()=>{const host=document.createElement('section'),root=document.createDocumentFragment();host.id='polyfill-host';document.body.append(host);const child=document.createElement('strong');child.textContent='polyfilled content';root.appendChild(child);Object.setPrototypeOf(root,ShadowRoot.prototype);Object.defineProperties(root,{host:{value:host},mode:{value:'open'}});globalThis.ShadyDOM={inUse:true,wrap(node){return {shadowRoot:node===host?root:null}}};return root instanceof ShadowRoot})()`)
+	if err != nil || got != true {
+		t.Fatalf("polyfilled root setup: %v %v", got, err)
+	}
+	snapshot, err := p.CaptureSnapshot(ctx)
+	if err != nil {
+		t.Fatal(err)
+	}
+	output := string(snapshot.Files["index.html"])
+	if !strings.Contains(output, `id="polyfill-host"`) {
+		t.Fatal("snapshot lost canonical host")
+	}
+	if strings.Contains(output, "shadowrootmode") || strings.Contains(output, "polyfilled content") {
+		t.Fatal("snapshot invented a native shadow attachment from an author wrapper")
+	}
+	got, err = p.Evaluate(ctx, `document.querySelector('#polyfill-host').shadowRoot === null`)
+	if err != nil || got != true {
+		t.Fatalf("snapshot mutated attachment state: %v %v", got, err)
+	}
+}

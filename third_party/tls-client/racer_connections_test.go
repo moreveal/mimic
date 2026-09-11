@@ -114,6 +114,35 @@ func TestCachedRequestErrorDoesNotReplayConsumedBody(t *testing.T) {
 	}
 }
 
+func TestCachedHTTP3FailureRetriesSafeRequestOverTCP(t *testing.T) {
+	r := testRacer()
+	h3Err := errors.New("http3: invalid response: qpack decode failed")
+	h3 := &connectionCandidate{connect: func(context.Context) error { return nil }, trip: func(*http.Request) (*http.Response, error) {
+		return nil, h3Err
+	}}
+	tcp := &connectionCandidate{connect: func(context.Context) error { return nil }, trip: func(*http.Request) (*http.Response, error) {
+		return &http.Response{StatusCode: 200, Body: io.NopCloser(strings.NewReader("fallback"))}, nil
+	}}
+	r.protocolCache["example.test:443"] = "h3"
+	r.cachedTransports["example.test:443:h3"] = h3
+	req, _ := http.NewRequest("GET", "https://example.test/", nil)
+	resp, err := r.race(req, "example.test:443", func(_ *http.Request, addr string) error {
+		r.cachedTransports[addr] = tcp
+		return nil
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer resp.Body.Close()
+	body, _ := io.ReadAll(resp.Body)
+	if string(body) != "fallback" || h3.calls.Load() != 1 || tcp.calls.Load() != 1 || !h3.closed.Load() {
+		t.Fatalf("body=%q h3=%d tcp=%d h3Closed=%v", body, h3.calls.Load(), tcp.calls.Load(), h3.closed.Load())
+	}
+	if got := r.protocolCache["example.test:443"]; got != "h2" {
+		t.Fatalf("cached protocol = %q, want h2", got)
+	}
+}
+
 func TestConnectionRaceRealQUICSlowPOSTAndStreamingBody(t *testing.T) {
 	certServer := httptest.NewTLSServer(nil)
 	cert := certServer.TLS.Certificates[0]

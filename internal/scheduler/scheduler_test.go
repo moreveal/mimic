@@ -37,6 +37,50 @@ func TestRunReadyStepIncludesCheckpointAndYields(t *testing.T) {
 	}
 }
 
+func TestCancelledRunDoesNotConsumeQueuedTask(t *testing.T) {
+	s := New(time.Unix(0, 0), nil)
+	ran := false
+	s.Post(Timer, 0, func(context.Context) error { ran = true; return nil })
+	ctx, cancel := context.WithCancel(context.Background())
+	cancel()
+	if _, err := s.RunReadyStep(ctx); err == nil {
+		t.Fatal("cancelled run succeeded")
+	}
+	if ran {
+		t.Fatal("cancelled run executed task")
+	}
+	if progress, err := s.RunReadyStep(context.Background()); err != nil || !progress || !ran {
+		t.Fatalf("queued task lost: %v, %v", progress, err)
+	}
+}
+
+func TestExecutionStatusReportsActiveTask(t *testing.T) {
+	s := New(time.Unix(0, 0), nil)
+	started, release := make(chan struct{}), make(chan struct{})
+	taskID := s.Post(Network, 0, func(context.Context) error {
+		close(started)
+		<-release
+		return nil
+	})
+	done := make(chan error, 1)
+	go func() {
+		_, err := s.RunReadyStep(context.Background())
+		done <- err
+	}()
+	<-started
+	status := s.ExecutionStatus()
+	if !status.Running || status.TaskID != taskID || status.Source != Network || status.Phase != "callback" {
+		t.Fatalf("unexpected execution status: %+v", status)
+	}
+	close(release)
+	if err := <-done; err != nil {
+		t.Fatal(err)
+	}
+	if status := s.ExecutionStatus(); status.Running {
+		t.Fatalf("task remained active: %+v", status)
+	}
+}
+
 func TestRunReadyAcrossPreservesOrderWithMultipleParentTasks(t *testing.T) {
 	start := time.Unix(0, 0)
 	parent, child := New(start, nil), New(start, nil)
