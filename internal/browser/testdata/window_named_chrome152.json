@@ -1,0 +1,96 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 222,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "unverified-reused-controlled",
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "probeSHA256": "4b1a21cd5cd1a05be5fe67086b0f8f135d88328547fb22af8980adc24a141d8a",
+  "result": {
+    "result": {
+      "value": {
+        "form": {
+          "windowId": "node:form",
+          "windowName": "node:form"
+        },
+        "img": {
+          "windowId": "node:img",
+          "windowName": "node:img"
+        },
+        "embed": {
+          "windowId": "node:embed",
+          "windowName": "node:embed"
+        },
+        "object": {
+          "windowId": "node:object",
+          "windowName": "node:object"
+        },
+        "div": {
+          "windowId": "node:div",
+          "windowName": "undefined"
+        },
+        "input": {
+          "windowId": "node:input",
+          "windowName": "undefined"
+        },
+        "iframe": {
+          "windowId": "node:iframe",
+          "windowName": "[object Window]"
+        },
+        "layer": {
+          "tag": "[object WindowProperties]",
+          "parent": "[object EventTarget]",
+          "keys": [
+            "Symbol(Symbol.toStringTag)"
+          ]
+        },
+        "descriptors": {
+          "window": null,
+          "layer": {
+            "value": "node:form",
+            "get": "undefined",
+            "set": "undefined",
+            "w": true,
+            "e": false,
+            "c": true
+          }
+        },
+        "dupe": {
+          "window": "[object HTMLCollection]",
+          "stableWindow": true
+        },
+        "shadow": {
+          "set": true,
+          "value": 7,
+          "del": true
+        },
+        "restored": "[object HTMLCollection]",
+        "removed": {
+          "window": "undefined"
+        }
+      }
+    }
+  }
+}

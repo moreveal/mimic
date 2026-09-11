@@ -100,7 +100,7 @@
   formEnum('enctype',['application/x-www-form-urlencoded','multipart/form-data','text/plain'],'application/x-www-form-urlencoded');
   define('HTMLFormElement','encoding',{get(){return this.enctype},set(value){this.enctype=value}});
   define('HTMLFormElement','action',{get(){formCheck(this);const raw=this.getAttribute('action');if(!raw)return document.URL;try{return new URL(raw,document.baseURI).href}catch{return raw}},set(value){formCheck(this);this.setAttribute('action',String(value))}});
-  string('HTMLFormElement','target');string('HTMLFormElement','acceptCharset','accept-charset');
+  string('HTMLFormElement','name');string('HTMLFormElement','target');string('HTMLFormElement','acceptCharset','accept-charset');
   define('HTMLFormElement','submit',{value:function submit(){
     formCheck(this);if(!this.isConnected)return;
     const missing=reason=>{host.semanticMissingAt('form_controls.js:submit','HTMLFormElement.submit',reason);throw new DOMException(reason,'NotSupportedError')};
