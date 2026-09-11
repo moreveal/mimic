@@ -1,0 +1,171 @@
+{
+  "packages": [
+    {
+      "Time": "2026-09-11T15:26:03.5029202+04:00",
+      "Action": "pass",
+      "Package": "github.com/moreveal/mimic/internal/engine/goja",
+      "Elapsed": 0.001
+    },
+    {
+      "Time": "2026-09-11T15:26:03.5039506+04:00",
+      "Action": "pass",
+      "Package": "github.com/moreveal/mimic/internal/scheduler",
+      "Elapsed": 0.001
+    },
+    {
+      "Time": "2026-09-11T15:26:03.5044815+04:00",
+      "Action": "pass",
+      "Package": "github.com/moreveal/mimic/internal/engine/v8",
+      "Elapsed": 0.003
+    },
+    {
+      "Time": "2026-09-11T15:26:03.5055046+04:00",
+      "Action": "pass",
+      "Package": "github.com/moreveal/mimic/internal/network",
+      "Elapsed": 0.003
+    },
+    {
+      "Time": "2026-09-11T15:26:03.720005+04:00",
+      "Action": "fail",
+      "Package": "github.com/moreveal/mimic/internal/webapi",
+      "Elapsed": 0.217
+    },
+    {
+      "Time": "2026-09-11T15:26:05.8620284+04:00",
+      "Action": "pass",
+      "Package": "github.com/moreveal/mimic/internal/cdp",
+      "Elapsed": 2.36
+    },
+    {
+      "Time": "2026-09-11T15:34:04.1366245+04:00",
+      "Action": "pass",
+      "Package": "github.com/moreveal/mimic/internal/browser",
+      "Elapsed": 480.635
+    }
+  ],
+  "failures": [
+    {
+      "Time": "2026-09-11T15:26:03.682957+04:00",
+      "Action": "fail",
+      "Package": "github.com/moreveal/mimic/internal/webapi",
+      "Test": "TestBootstrapWindowTopologyDescriptors",
+      "Elapsed": 0
+    },
+    {
+      "Time": "2026-09-11T15:26:03.720005+04:00",
+      "Action": "fail",
+      "Package": "github.com/moreveal/mimic/internal/webapi",
+      "Elapsed": 0.217
+    }
+  ],
+  "failureOutput": [
+    {
+      "Time": "2026-09-11T15:26:03.6824414+04:00",
+      "Action": "output",
+      "Package": "github.com/moreveal/mimic/internal/webapi",
+      "Test": "TestBootstrapWindowTopologyDescriptors",
+      "Output": "=== RUN   TestBootstrapWindowTopologyDescriptors\n"
+    },
+    {
+      "Time": "2026-09-11T15:26:03.682957+04:00",
+      "Action": "output",
+      "Package": "github.com/moreveal/mimic/internal/webapi",
+      "Test": "TestBootstrapWindowTopologyDescriptors",
+      "Output": "    bootstrap_restore_test.go:87: ReferenceError: host is not defined at getWindowParent (<eval>:9:83(1))\n"
+    },
+    {
+      "Time": "2026-09-11T15:26:03.682957+04:00",
+      "Action": "output",
+      "Package": "github.com/moreveal/mimic/internal/webapi",
+      "Test": "TestBootstrapWindowTopologyDescriptors",
+      "Output": "--- FAIL: TestBootstrapWindowTopologyDescriptors (0.00s)\n"
+    }
+  ],
+  "skips": [
+    {
+      "Time": "2026-09-11T15:26:03.5039506+04:00",
+      "Action": "skip",
+      "Package": "github.com/moreveal/mimic/internal/engine/v8",
+      "Test": "TestOwnerModelProbe",
+      "Elapsed": 0
+    },
+    {
+      "Time": "2026-09-11T15:26:03.5039506+04:00",
+      "Action": "skip",
+      "Package": "github.com/moreveal/mimic/internal/engine/v8",
+      "Test": "TestHostBoundaryProfile",
+      "Elapsed": 0
+    },
+    {
+      "Time": "2026-09-11T15:26:09.7989892+04:00",
+      "Action": "skip",
+      "Package": "github.com/moreveal/mimic/internal/browser",
+      "Test": "TestBootstrapSnapshotConcurrentPageLifecycles",
+      "Elapsed": 0
+    },
+    {
+      "Time": "2026-09-11T15:26:09.7989892+04:00",
+      "Action": "skip",
+      "Package": "github.com/moreveal/mimic/internal/browser",
+      "Test": "TestBootstrapSnapshotBarrierConcurrentBuilders",
+      "Elapsed": 0
+    },
+    {
+      "Time": "2026-09-11T15:26:09.7989892+04:00",
+      "Action": "skip",
+      "Package": "github.com/moreveal/mimic/internal/browser",
+      "Test": "TestBootstrapSnapshotBarrierSequentialBuilders",
+      "Elapsed": 0
+    },
+    {
+      "Time": "2026-09-11T15:26:09.7989892+04:00",
+      "Action": "skip",
+      "Package": "github.com/moreveal/mimic/internal/browser",
+      "Test": "TestBootstrapSnapshotConcurrentPagesSequentialBuilders",
+      "Elapsed": 0
+    },
+    {
+      "Time": "2026-09-11T15:26:09.7989892+04:00",
+      "Action": "skip",
+      "Package": "github.com/moreveal/mimic/internal/browser",
+      "Test": "TestOrdinaryConcurrentPageLifecycles",
+      "Elapsed": 0
+    },
+    {
+      "Time": "2026-09-11T15:28:04.2206999+04:00",
+      "Action": "skip",
+      "Package": "github.com/moreveal/mimic/internal/browser",
+      "Test": "TestFrameBridgeBreakdown",
+      "Elapsed": 0
+    },
+    {
+      "Time": "2026-09-11T15:28:04.9450853+04:00",
+      "Action": "skip",
+      "Package": "github.com/moreveal/mimic/internal/browser",
+      "Test": "TestNativeFrameMicrotasksBeforeNextTask/goja",
+      "Elapsed": 0.72
+    },
+    {
+      "Time": "2026-09-11T15:32:20.7860673+04:00",
+      "Action": "skip",
+      "Package": "github.com/moreveal/mimic/internal/browser",
+      "Test": "TestPerformanceDensityProfile",
+      "Elapsed": 0
+    },
+    {
+      "Time": "2026-09-11T15:32:21.3656286+04:00",
+      "Action": "skip",
+      "Package": "github.com/moreveal/mimic/internal/browser",
+      "Test": "TestPerformanceParallelPages",
+      "Elapsed": 0
+    },
+    {
+      "Time": "2026-09-11T15:32:21.3656286+04:00",
+      "Action": "skip",
+      "Package": "github.com/moreveal/mimic/internal/browser",
+      "Test": "TestPerformanceProfile",
+      "Elapsed": 0
+    }
+  ],
+  "correction": "Complete WebAPI race rerun in webapi-fixture-race.txt"
+}

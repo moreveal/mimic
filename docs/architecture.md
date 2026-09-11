@@ -103,7 +103,11 @@ answers. The same observable model applies to ordinary application code.
   value registries preserve identity; they do not own a second DOM. WebIDL Node
   checks use private brands, including synthetic Attr objects, rather than the
   calling realm's `instanceof`. Removed frames can retain a realm for existing
-  WindowProxy references until the owning realm closes. Arena nodes remain
+  WindowProxy references until the owning realm closes. The detached-frame
+  lookup is not a reachability root: unobserved removed browsing contexts and
+  their descendant Page-tree entries are released after the current JS turn.
+  Exported Window/object references still participate in Page-local tracing.
+  Arena nodes remain
   retained until Page teardown; incremental collection is not implemented.
 - Page clock establishes navigation epochs; scheduler time is authoritative during
   a turn, including microtasks. Worker schedulers have their own agent clock.

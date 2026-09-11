@@ -1609,3 +1609,15 @@ is the next measured ownership task. The current production change fixes Attr
 inheritance/Node borrowing; it does not yet change realm reclamation.
 
 Static/React private memory after recovery is 156.75/166.61 to 157.24/170.47 MiB.
+
+
+## Unobserved detached-frame reclamation (2026-09-11)
+
+[Full evidence](../compatibility/detached-frame-lifetime-2026-09-11.md): after 32
+unobserved iframe removals, live realms improve 33 to one and private memory
+1051.06 to 287.50 MiB. Page-close plus 250 ms private memory improves 533.83 to
+250.56 MiB without forced collection. Both complete paired fast gates pass with
+no native dumps; their throughput/latency results are mixed and do not close the
+broader concurrency concern. Expanded race still hits the pre-existing Goja
+retained-srcdoc setup deadline; full race success is not claimed. Strong bridge
+caches and DOM arena reclamation remain separate boundaries.

@@ -70,7 +70,7 @@ func (r *Realm) ensureChildFrame(elementID int64, connectedThroughShadow ...bool
 }
 
 func (r *Realm) ensureChildFrameInternal(elementID int64, shadowConnected, scheduleNavigation bool) (*Frame, error) {
-	if !r.document.IsConnected(elementID) && !shadowConnected {
+	if r.inactive || !r.document.IsConnected(elementID) && !shadowConnected {
 		return nil, nil
 	}
 	if frame := r.childFrames[elementID]; frame != nil {
@@ -483,6 +483,7 @@ func (r *Realm) detachChildFrame(elementID int64) {
 	delete(r.childFrames, elementID)
 	page := r.agent.Page()
 	page.mu.Lock()
+	page.removeDescendantFramesLocked(frame)
 	delete(page.frames, frame.ID)
 	if frame.parent != nil {
 		delete(frame.parent.children, frame.ID)
@@ -490,7 +491,7 @@ func (r *Realm) detachChildFrame(elementID int64) {
 	page.mu.Unlock()
 	// Removing an iframe detaches its browsing context from the active frame
 	// tree, but references to its WindowProxy/functions keep the Window/Realm
-	// alive. Retain it until the owning Realm is closed.
+	// alive. Index it for lookup; owner collection traces only exported references.
 	r.retainedFrames[frame.ID] = frame
 	page.trace.Add(trace.Lifecycle, "frameDetached", map[string]any{"frameId": frame.ID, "elementNodeId": elementID})
 }

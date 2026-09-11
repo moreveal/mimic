@@ -560,7 +560,7 @@ func (r *Realm) installBindings() error {
 	host["documentActive"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(!r.inactive), nil })
 	host["frameElement"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		frame, ok := r.agent.(*Frame)
-		if !ok || frame.parent == nil || !r.canAccess(frame.parent) {
+		if !ok || r.inactive || frame.parent == nil || !r.canAccess(frame.parent) {
 			return r.val(nil), nil
 		}
 		target := frame.parent.Realm
@@ -582,6 +582,9 @@ func (r *Realm) installBindings() error {
 	host["frameRelation"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		frame := p.frame(strarg(a, 0))
 		if frame == nil {
+			return r.val(nil), nil
+		}
+		if frame.Realm != nil && frame.Realm.inactive {
 			return r.val(nil), nil
 		}
 		switch strarg(a, 1) {
