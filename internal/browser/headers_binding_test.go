@@ -7,3 +7,7 @@ import "testing"
 func TestHeadersBindingMatchesFrozenChrome(t *testing.T) {
 	documentAllOracle(t, "headers_binding")
 }
+
+func TestHeadersBytesMatchFrozenChrome(t *testing.T) {
+	documentAllOracle(t, "headers_bytes")
+}
