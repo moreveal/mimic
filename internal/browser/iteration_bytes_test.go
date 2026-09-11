@@ -15,3 +15,7 @@ func TestFormUTF8MatchesFrozenChrome(t *testing.T) {
 func TestTextEncoderBindingsMatchFrozenChrome(t *testing.T) {
 	documentAllOracle(t, "iteration_encoder")
 }
+
+func TestIterationAndEncodingInWorkersMatchFrozenChrome(t *testing.T) {
+	documentAllOracle(t, "iteration_worker")
+}
