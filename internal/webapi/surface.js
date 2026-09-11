@@ -1038,7 +1038,7 @@
   globalThis.Option=function Option(text='',value,defaultSelected=false,selected=false){const element=document.createElement('option');element.text=String(text);if(value!==undefined)element.value=String(value);element.defaultSelected=Boolean(defaultSelected);element.selected=Boolean(selected);return element};
   Object.defineProperty(globalThis,'FormData',{value:FormData,writable:true,configurable:true});
   installFileReader();
-  const window=globalThis;listenersFor(window);window.addEventListener=(...a)=>EventTarget.prototype.addEventListener.apply(window,a);window.removeEventListener=(...a)=>EventTarget.prototype.removeEventListener.apply(window,a);window.dispatchEvent=(...a)=>EventTarget.prototype.dispatchEvent.apply(window,a);window.onmessage=null;window.onerror=null;const NodeFilter=Object.freeze({FILTER_ACCEPT:1,FILTER_REJECT:2,FILTER_SKIP:3,SHOW_ALL:0xffffffff,SHOW_ELEMENT:1,SHOW_ATTRIBUTE:2,SHOW_TEXT:4,SHOW_CDATA_SECTION:8,SHOW_ENTITY_REFERENCE:16,SHOW_ENTITY:32,SHOW_PROCESSING_INSTRUCTION:64,SHOW_COMMENT:128,SHOW_DOCUMENT:256,SHOW_DOCUMENT_TYPE:512,SHOW_DOCUMENT_FRAGMENT:1024,SHOW_NOTATION:2048});Object.assign(window,{window:null,self:null,top:null,parent:null,document,navigator:nav,screen:scr,location:loc,history:hist,localStorage:storage,sessionStorage,crypto,trustedTypes,console:new Console(),atob,btoa,TextEncoder,Headers,Request,Response,Event,MessageEvent,ErrorEvent,EventTarget,Node,DocumentFragment,ShadowRoot,Element,HTMLElement,SVGElement,HTMLScriptElement,HTMLImageElement,HTMLMediaElement,HTMLAudioElement,HTMLVideoElement,HTMLIFrameElement,HTMLAnchorElement,HTMLCollection,NodeList,DOMTokenList,CSSStyleDeclaration,Crypto,DOMException,PermissionsPolicy,FeaturePolicy,TrustedHTML,TrustedScript,TrustedScriptURL,TrustedTypePolicy,TrustedTypePolicyFactory,URL,URLSearchParams,ReadableStream,ReadableStreamDefaultReader,ReadableStreamDefaultController,WritableStream,WritableStreamDefaultWriter,TransformStream,TransformStreamDefaultController,Blob,File,FileReader,Worker,Document,HTMLDocument,Navigator,NavigatorUAData,Screen,Location,History,Storage,XMLHttpRequestEventTarget,XMLHttpRequest,GPU,GPUAdapter,GPUAdapterInfo,GPUSupportedFeatures,GPUSupportedLimits,GPUDevice,RTCPeerConnection,RTCSessionDescription,RTCIceCandidate,PerformanceEntry,PerformanceServerTiming,PerformanceResourceTiming,PerformanceNavigationTiming,NodeFilter});let security=host.documentSecurity();for(const [name,key] of Object.entries({isSecureContext:'secureContext',crossOriginIsolated:'crossOriginIsolated',credentialless:'credentialless',originAgentCluster:'originAgentCluster'}))Object.defineProperty(window,name,{get:()=>security[key],enumerable:true,configurable:true});const relations=host.windowRelations();window.window=window;window.self=window;let windowTop=relations.top===relations.self?window:remoteWindow(relations.top),windowParent=relations.parent===relations.self?window:remoteWindow(relations.parent);
+  const window=globalThis;listenersFor(window);window.addEventListener=(...a)=>EventTarget.prototype.addEventListener.apply(window,a);window.removeEventListener=(...a)=>EventTarget.prototype.removeEventListener.apply(window,a);window.dispatchEvent=(...a)=>EventTarget.prototype.dispatchEvent.apply(window,a);window.onmessage=null;window.onerror=null;const NodeFilter=Object.freeze({FILTER_ACCEPT:1,FILTER_REJECT:2,FILTER_SKIP:3,SHOW_ALL:0xffffffff,SHOW_ELEMENT:1,SHOW_ATTRIBUTE:2,SHOW_TEXT:4,SHOW_CDATA_SECTION:8,SHOW_ENTITY_REFERENCE:16,SHOW_ENTITY:32,SHOW_PROCESSING_INSTRUCTION:64,SHOW_COMMENT:128,SHOW_DOCUMENT:256,SHOW_DOCUMENT_TYPE:512,SHOW_DOCUMENT_FRAGMENT:1024,SHOW_NOTATION:2048});Object.assign(window,{window:null,self:null,top:null,parent:null,document,navigator:nav,screen:scr,location:loc,history:hist,localStorage:storage,sessionStorage,crypto,trustedTypes,console:new Console(),atob,btoa,TextEncoder,Headers,Request,Response,Event,MessageEvent,ErrorEvent,EventTarget,Node,DocumentFragment,ShadowRoot,Element,HTMLElement,SVGElement,HTMLScriptElement,HTMLImageElement,HTMLMediaElement,HTMLAudioElement,HTMLVideoElement,HTMLIFrameElement,HTMLAnchorElement,HTMLCollection,NodeList,DOMTokenList,CSSStyleDeclaration,Crypto,DOMException,PermissionsPolicy,FeaturePolicy,TrustedHTML,TrustedScript,TrustedScriptURL,TrustedTypePolicy,TrustedTypePolicyFactory,URL,URLSearchParams,ReadableStream,ReadableStreamDefaultReader,ReadableStreamDefaultController,WritableStream,WritableStreamDefaultWriter,TransformStream,TransformStreamDefaultController,Blob,File,FileReader,Worker,Document,HTMLDocument,Navigator,NavigatorUAData,Screen,Location,History,Storage,XMLHttpRequestEventTarget,XMLHttpRequest,GPU,GPUAdapter,GPUAdapterInfo,GPUSupportedFeatures,GPUSupportedLimits,GPUDevice,RTCPeerConnection,RTCSessionDescription,RTCIceCandidate,PerformanceEntry,PerformanceServerTiming,PerformanceResourceTiming,PerformanceNavigationTiming,NodeFilter});let security=host.documentSecurity();for(const [name,key] of Object.entries({isSecureContext:'secureContext',crossOriginIsolated:'crossOriginIsolated',credentialless:'credentialless',originAgentCluster:'originAgentCluster'}))Object.defineProperty(window,name,{get:()=>security[key],enumerable:true,configurable:true});let windowRelations=host.windowRelations();window.window=window;window.self=window;let windowTop,windowParent;
   // Top stays an unforgeable accessor after exposure normalization. Parent is
   // replaceable: assignment creates an own data property, as in Chrome.
   let installedWindowFrameCount=0;
@@ -1053,7 +1053,12 @@
   const getWindowFrames=()=>{syncWindowFrames();return window},getWindowLength=()=>syncWindowFrames().length;
   for(const [fn,name,prefix] of [[getWindowFrames,'frames','get '],[getWindowLength,'length','get ']]){Object.defineProperty(fn,'name',{value:prefix+name,configurable:true});markNative(fn,name,prefix)}
   Object.defineProperties(window,{frames:{get:getWindowFrames,set:replaceableWindowProperty('frames'),enumerable:true,configurable:true},length:{get:getWindowLength,set:replaceableWindowProperty('length'),enumerable:true,configurable:true}});
-  const getWindowTop=()=>host.documentActive()?windowTop:null,getWindowParent=()=>host.documentActive()?windowParent:null;
+  // A profile seed may be captured first in a child realm. Keep only its
+  // relation IDs during bootstrap: native WindowProxy instances cannot be
+  // recorded as JSON or embedded in the pure-JS snapshot. Materialize through
+  // the canonical cache when script first reads the live relation.
+  const getWindowTop=()=>host.documentActive()?(windowTop===undefined?(windowTop=remoteWindow(windowRelations.top)):windowTop):null;
+  const getWindowParent=()=>host.documentActive()?(windowParent===undefined?(windowParent=remoteWindow(windowRelations.parent)):windowParent):null;
   const setWindowParent=({set(value){Object.defineProperty(this,'parent',{value,writable:true,enumerable:true,configurable:true})}}).set;
   for(const [fn,name,prefix] of [[getWindowTop,'top','get '],[getWindowParent,'parent','get '],[setWindowParent,'parent','set ']]){
     Object.defineProperty(fn,'name',{value:prefix+name,configurable:true});markNative(fn,name,prefix);
@@ -1092,7 +1097,10 @@
   };
   window.performance=Object.create(Performance.prototype);registerRealmBinding(window.performance,'Performance',performanceOperations);window.DOMStringList=DOMStringList;window.Performance=Performance;window.PerformanceEntry=PerformanceEntry;window.PerformanceServerTiming=PerformanceServerTiming;window.PerformanceResourceTiming=PerformanceResourceTiming;window.PerformanceNavigationTiming=PerformanceNavigationTiming;window.PerformanceObserverEntryList=PerformanceObserverEntryList;window.PerformanceObserver=PerformanceObserver;
   window.getComputedStyle=e=>cssDeclaration(e,true);window.matchMedia=q=>({matches:host.media(String(q)),media:String(q),onchange:null,addEventListener(){},removeEventListener(){}});
-  const handwrittenInterfaceConstructors=new Set(Object.getOwnPropertyNames(globalThis).map(name=>globalThis[name]).filter(value=>typeof value==='function'));
+  // Constructor discovery is reflection, not a read of every Window getter.
+  // In a cold child, reading top/parent here would instantiate native proxies
+  // before bootstrap capture ends and could traverse a foreign realm.
+  const handwrittenInterfaceConstructors=new Set(Object.getOwnPropertyNames(globalThis).map(name=>Object.getOwnPropertyDescriptor(globalThis,name)?.value).filter(value=>typeof value==='function'));
   const attributeUnsafeInterfaces=globalThis.__mimicAttributeUnsafeInterfaces;
   delete globalThis.__mimicAttributeUnsafeInterfaces;
   let known;
@@ -1416,7 +1424,7 @@
   if(globalThis.HTMLAudioElement)globalThis.Audio.prototype=globalThis.HTMLAudioElement.prototype;
   if(globalThis.HTMLOptionElement)globalThis.Option.prototype=globalThis.HTMLOptionElement.prototype;
   globalThis.globalThis=globalThis;
-  for(const name of Object.getOwnPropertyNames(globalThis)){if(engineGlobals.has(name))continue;const ctor=globalThis[name];if(typeof ctor==='function'&&ctor.prototype&&!Object.prototype.hasOwnProperty.call(ctor.prototype,Symbol.toStringTag))Object.defineProperty(ctor.prototype,Symbol.toStringTag,{value:name,configurable:true})}
+  for(const name of Object.getOwnPropertyNames(globalThis)){if(engineGlobals.has(name))continue;const ctor=Object.getOwnPropertyDescriptor(globalThis,name)?.value;if(typeof ctor==='function'&&ctor.prototype&&!Object.prototype.hasOwnProperty.call(ctor.prototype,Symbol.toStringTag))Object.defineProperty(ctor.prototype,Symbol.toStringTag,{value:name,configurable:true})}
   for(const [name,fn] of [['setTimeout',setTimeout],['setInterval',setInterval],['clearTimeout',clearTimeout],['clearInterval',clearInterval],['fetch',fetch],['atob',atob],['btoa',btoa],['getComputedStyle',getComputedStyle],['matchMedia',matchMedia]])markNative(fn,name);
   // Window-exposed interface objects are non-enumerable data properties;
   // singleton browser objects are enumerable readonly accessors. Object.assign
@@ -1463,9 +1471,8 @@
     remoteWindowCache.clear();remoteDocumentCache.clear();crossRealmCache.clear();
     crossRealmSymbols.clear();crossRealmSymbolReferences.clear();localCrossRealmSymbols.clear();nextCrossRealmSymbolID=0;
     elementWrappers.clear();documentWrappers.clear();frameElementCache=undefined;uaData=undefined;
-    const relations=host.windowRelations();
-    windowTop=relations.top===relations.self?window:remoteWindow(relations.top);
-    windowParent=relations.parent===relations.self?window:remoteWindow(relations.parent);
+    windowRelations=host.windowRelations();
+    windowTop=windowParent=undefined;
     for(const restore of bootstrapRestoreHooks)restore();
     tracedAccesses.clear();
     // Conditional V8 intrinsics were absent in the serializing context and

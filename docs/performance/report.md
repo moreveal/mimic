@@ -1684,3 +1684,13 @@ no new performance claim and does not rerun gates merely to chase a green result
 The unexplained broader native snapshot signatures now have a separate
 [stability-debt disposition](../compatibility/snapshot-stability-debt-2026-09-11.md)
 with immediate P0 reopen on any new native reproduction.
+
+## Cold child snapshot eligibility (2026-09-11)
+
+[Cold child bootstrap capture](../compatibility/bootstrap-cold-child-2026-09-11.md)
+removes eager native WindowProxy creation and incidental getter reads during
+constructor discovery. A bounded offline program replay changes cached snapshot
+failure records from seven to zero. This is a capture correctness observation,
+not a latency, throughput, concurrency or retained-memory measurement. No gate
+was run for this package, as requested by the user. The existing optimization
+backlog and incomplete performance results remain unchanged.
