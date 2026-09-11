@@ -56,19 +56,29 @@ func (r *Realm) installWindowReflection(host map[string]any) {
 			}
 			if operation == "define" {
 				raw, _ := arg(args, 3).(map[string]any)
-				descriptor := make(map[string]any, len(raw))
+				// Keep decoded functions/objects as JS values. Nesting engine
+				// handles in a Go map either leaks wrappers (Goja) or cannot be
+				// marshaled during a reentrant V8 callback.
+				descriptor, err := target.callFrameReflection(ctx, "object", nil, nil, nil)
+				if err != nil {
+					return nil, err
+				}
 				for name, value := range raw {
+					var field engine.Value
 					if name == "value" || name == "get" || name == "set" {
 						decoded, err := target.decodeFrameArgument(value)
 						if err != nil {
 							return nil, err
 						}
-						descriptor[name] = decoded
+						field = decoded
 					} else {
-						descriptor[name] = value
+						field = target.val(value)
+					}
+					if err := target.runtime.SetProperty(descriptor, name, field); err != nil {
+						return nil, err
 					}
 				}
-				value, err := target.callFrameReflection(ctx, operation, global, key, target.val(descriptor))
+				value, err := target.callFrameReflection(ctx, operation, global, key, descriptor)
 				if err != nil {
 					return nil, err
 				}

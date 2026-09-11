@@ -31,6 +31,23 @@ return document.compatMode==='BackCompat'&&document.doctype===null&&d.compatMode
 	})
 }
 
+func TestWindowProxyWritesPreserveAccessorAndReceiver(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, p *Page) {
+		historyEval(t, p, `(()=>{
+const f=document.createElement('iframe');document.body.append(f);const w=f.contentWindow,callback=()=>{};
+if(!Reflect.set(w,'onclick',callback)||w.onclick!==callback)throw new Error('owner accessor write');
+if(!Reflect.set(w,'onclick',callback,window)||window.onclick!==callback)throw new Error('borrowed Window setter');
+try{Reflect.set(w,'onclick',callback,{});throw new Error('invalid receiver accepted')}catch(e){if(e.name!=='TypeError')throw e}
+const other={};Object.defineProperty(w,'custom',{value:1,writable:true,configurable:true});
+if(!Reflect.set(w,'custom',2,other)||other.custom!==2||w.custom!==1)throw new Error('data receiver');
+let receiver;Object.defineProperty(w,'accessor',{set(value){receiver=this;this.received=value},configurable:true});
+if(!Reflect.set(w,'accessor',3,other)||receiver!==other||other.received!==3)throw new Error('custom accessor receiver');
+if(!Reflect.set(w,'absent',4,other)||other.absent!==4||w.absent!==undefined)throw new Error('missing property receiver');
+return !Reflect.set(w,'window',null)&&!Reflect.set(w,'custom',1,null)&&!Reflect.set(w,'missing',1,null);
+})()`, true)
+	})
+}
+
 func TestNodeFilterIsNonConstructibleInterface(t *testing.T) {
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		historyEval(t, p, `(()=>{if(typeof NodeFilter!=='function'||NodeFilter.length!==0||Object.hasOwn(NodeFilter,'prototype')||!Object.isExtensible(NodeFilter))return false;
