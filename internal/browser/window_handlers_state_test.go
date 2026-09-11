@@ -48,6 +48,20 @@ return !Reflect.set(w,'window',null)&&!Reflect.set(w,'custom',1,null)&&!Reflect.
 	})
 }
 
+func TestPostMessageUsesOwningFunctionAndCallingDocument(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, p *Page) {
+		historyEval(t, p, `(async()=>{
+const f=document.createElement('iframe');document.body.append(f);const w=f.contentWindow,post=w.postMessage;
+if(post!==Object.getOwnPropertyDescriptor(w,'postMessage').value||Object.getPrototypeOf(post)!==w.Function.prototype||post.length!==1||Object.hasOwn(post,'prototype'))throw new Error('postMessage ownership/shape');
+try{new post('unused');throw new Error('constructible postMessage')}catch(e){if(e.name!=='TypeError')throw e}
+try{post();throw new Error('missing arity check')}catch(e){if(e.name!=='TypeError')throw e}
+w.eval("addEventListener('message',e=>parent.postMessage({sourceMatches:e.source===parent},'*'))");
+const result=new Promise(resolve=>{const listener=e=>{if(e.source!==w)return;removeEventListener('message',listener);resolve(e.data.sourceMatches)};addEventListener('message',listener)});
+w.postMessage('ping','*');return await result;
+})()`, true)
+	})
+}
+
 func TestNodeFilterIsNonConstructibleInterface(t *testing.T) {
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		historyEval(t, p, `(()=>{if(typeof NodeFilter!=='function'||NodeFilter.length!==0||Object.hasOwn(NodeFilter,'prototype')||!Object.isExtensible(NodeFilter))return false;
