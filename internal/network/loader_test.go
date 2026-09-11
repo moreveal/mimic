@@ -3,6 +3,7 @@ package network
 import (
 	"bytes"
 	"context"
+	"errors"
 	"github.com/moreveal/mimic/internal/state"
 	"github.com/moreveal/mimic/internal/trace"
 	"io"
@@ -11,7 +12,57 @@ import (
 	"net/url"
 	"strings"
 	"testing"
+	"time"
 )
+
+type blockingBody struct {
+	closed chan struct{}
+}
+
+func (b *blockingBody) Read([]byte) (int, error) {
+	<-b.closed
+	return 0, io.ErrClosedPipe
+}
+
+func (b *blockingBody) Close() error {
+	select {
+	case <-b.closed:
+	default:
+		close(b.closed)
+	}
+	return nil
+}
+
+type blockingBodyTransport struct {
+	body *blockingBody
+}
+
+func (t blockingBodyTransport) RoundTrip(req *http.Request) (*http.Response, error) {
+	return &http.Response{StatusCode: 200, Header: make(http.Header), Body: t.body, Request: req}, nil
+}
+
+func TestLoadCancellationInterruptsResponseBody(t *testing.T) {
+	loader := NewLoader(testEnvironment, NewCookieStore(), trace.New())
+	body := &blockingBody{closed: make(chan struct{})}
+	loader.SetTransport(blockingBodyTransport{body: body})
+	resource, _ := url.Parse("https://example.test/stream")
+	ctx, cancel := context.WithCancel(context.Background())
+	done := make(chan error, 1)
+	go func() {
+		_, err := loader.Load(ctx, Request{URL: resource, Initiator: Other})
+		done <- err
+	}()
+	time.Sleep(10 * time.Millisecond)
+	cancel()
+	select {
+	case err := <-done:
+		if !errors.Is(err, context.Canceled) {
+			t.Fatalf("load error = %v, want context cancellation", err)
+		}
+	case <-time.After(time.Second):
+		t.Fatal("cancelled response body remained blocked")
+	}
+}
 
 func testEnvironment() state.Environment {
 	return state.ChromeDesktopWindows(state.Product{Name: "Chrome", Version: "152.0.0.0", FullVersion: "152.0.7977.82"})

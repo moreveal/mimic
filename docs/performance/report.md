@@ -1,5 +1,21 @@
 # Performance architecture pass
 
+## Snapshot hydration and task-boundary capture, 2026-09-11
+
+The [snapshot investigation](snapshot-hydration-20260911.md) fixes inert lazy-load
+observations, stylesheet lifetime/ordering, duplicated polyfill shadow export,
+unsupported AVIF decoding and serial asset capture. It also separates width
+resolution from recursive height work and makes navigation/capture cancellation
+operate at explicit Page task boundaries. Live offline-checked captures include
+YouTube thumbnails and Shorts, Twitch channel cards, and the Amazon storefront.
+Individual totals were 24.2 s, 16.7 s and 14.9 s respectively, with uncontrolled
+online content and host load; these are not faster-than-Chrome claims.
+
+Relevant package suites passed. The first fast gate lost its process in a
+25-Page wave for an unresolved reason; 500 diagnostic sessions and a complete
+fresh-build repeat passed afterward. The linked report retains both outcomes,
+the exact build hash, throughput/memory observations and remaining limitations.
+
 ## Frame bridge and bootstrap code reuse, 2026-09-10
 
 The [implementation and measurements](bridge-bootstrap-20260910.md) reduce

@@ -25,7 +25,7 @@ import (
 func main() {
 	listen := flag.String("listen", "127.0.0.1:9222", "CDP HTTP/WebSocket listen address")
 	milestone := flag.Int("chrome", 152, "installed Chrome compatibility milestone")
-	navigationTimeout := flag.Duration("navigation-timeout", 30*time.Second, "maximum time for one navigation execution")
+	navigationTimeout := flag.Duration("navigation-timeout", 0, "optional navigation execution cap; 0 keeps loading until completion or cancellation")
 	engineName := flag.String("engine", "v8", "ECMAScript engine adapter: v8, quickjs, or goja")
 	browserMode := flag.String("browser-mode", "headful", "selected environment profile: headful or headless")
 	flag.Parse()

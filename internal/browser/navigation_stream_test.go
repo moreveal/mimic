@@ -29,6 +29,24 @@ func TestNavigationHeadScriptCannotSeeUnparsedBody(t *testing.T) {
 	}
 }
 
+func TestNavigateReservedDoesNotDrainApplicationTimerQueue(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		fmt.Fprint(w, `<script>window.timerRuns=0;setInterval(()=>timerRuns++,0)</script><main>ready</main>`)
+	}))
+	defer server.Close()
+
+	page := testPage(t)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := page.NavigateReserved(ctx, server.URL, page.ReserveNavigation()); err != nil {
+		t.Fatal(err)
+	}
+	runs, ok := page.Top.Realm.runtime.Get("timerRuns").Export().(int64)
+	if !ok || runs > 2 {
+		t.Fatalf("navigation drained application timer turns: %v", runs)
+	}
+}
+
 func TestNavigationDocumentWritesPreserveParserInsertion(t *testing.T) {
 	const html = `<!doctype html><p id=before>before</p><script>
 	window.navEvents=[];window.oldD=document;window.sameOpen=document.open()===oldD;

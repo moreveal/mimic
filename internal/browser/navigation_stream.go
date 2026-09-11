@@ -12,13 +12,26 @@ import (
 // Navigation owns its existing lifecycle and history commit. It shares the
 // document insertion stream with document.write without implicitly opening or
 // replacing the already established Document/Window.
-func (r *Realm) initializeNavigationStream() (*documentStream, error) {
+func (r *Realm) initializeNavigationStream(navigationContext ...context.Context) (*documentStream, error) {
 	parser, err := r.document.NewStream()
 	if err != nil {
 		return nil, err
 	}
 	ctx, cancel := context.WithCancel(r.resourceContext)
-	s := &documentStream{parser: parser, ctx: ctx, cancel: cancel, scripts: map[int64]*streamScriptResponse{}, navigation: true}
+	stopNavigationCancel := func() bool { return false }
+	if len(navigationContext) > 0 && navigationContext[0] != nil {
+		stopNavigationCancel = context.AfterFunc(navigationContext[0], cancel)
+	}
+	s := &documentStream{
+		parser: parser,
+		ctx:    ctx,
+		cancel: func() {
+			stopNavigationCancel()
+			cancel()
+		},
+		scripts:    map[int64]*streamScriptResponse{},
+		navigation: true,
+	}
 	r.documentStream = s
 	return s, nil
 }
@@ -26,6 +39,7 @@ func (r *Realm) initializeNavigationStream() (*documentStream, error) {
 func (r *Realm) executeChildNavigationScript(ctx context.Context, navigation *childNavigation, stream *documentStream, node dom.Node) error {
 	realm := navigation.realm
 	realm.preloadResources()
+	stylesheets := realm.startParserStylesheets()
 	if !r.childNavigationCurrent(navigation) || realm.documentStream != stream || realm.document.ScriptStarted(node.ID) {
 		return nil
 	}
@@ -91,6 +105,7 @@ func (r *Realm) executeChildNavigationScript(ctx context.Context, navigation *ch
 	if code == "" {
 		return nil
 	}
+	realm.waitParserStylesheets(ctx, stylesheets)
 	previous := stream.insideScript
 	stream.insideScript = true
 	defer func() { stream.insideScript = previous }()

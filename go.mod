@@ -1,6 +1,6 @@
 module github.com/moreveal/mimic
 
-go 1.26
+go 1.26.4
 
 // Keep the winning HTTP/3 race transport in the browser-session pool. The
 // upstream v1.16.0 racer recreates it after the first response, forcing an
@@ -22,6 +22,7 @@ require (
 	github.com/bogdanfinn/tls-client v1.16.0
 	github.com/bogdanfinn/utls v1.7.8-barnius
 	github.com/dop251/goja v0.0.0-20260906210903-70ad66ec7ce4
+	github.com/gen2brain/gav1d v0.2.5
 	github.com/go-text/typesetting v0.3.4
 	github.com/google/uuid v1.6.0
 	github.com/gorilla/websocket v1.5.3

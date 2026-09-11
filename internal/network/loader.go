@@ -324,8 +324,13 @@ func (l *Loader) Load(ctx context.Context, r Request) (Response, error) {
 		l.trace.Add(trace.Resource, "loadEnd", map[string]any{"id": r.ID, "url": r.URL.String(), "error": err.Error()})
 		return Response{}, err
 	}
+	stopBodyCancellation := context.AfterFunc(ctx, func() { _ = raw.Body.Close() })
 	encodedBody, err := io.ReadAll(io.LimitReader(raw.Body, 32<<20))
+	stopBodyCancellation()
 	closeErr := raw.Body.Close()
+	if contextErr := ctx.Err(); contextErr != nil {
+		return Response{}, contextErr
+	}
 	if err != nil {
 		return Response{}, err
 	}

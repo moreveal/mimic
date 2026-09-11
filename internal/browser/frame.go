@@ -387,7 +387,10 @@ func (r *Realm) commitChildFrameNavigation(ctx context.Context, navigation *chil
 	p.retireRealm(old)
 	navigation.document = document
 	navigation.realm = realm
-	streamState, err := realm.initializeNavigationStream()
+	// The commit callback's pump context ends at its task boundary; the
+	// parser can remain paused on an external script across many later turns.
+	// Its cancellation belongs to the containing navigation/document lifetime.
+	streamState, err := realm.initializeNavigationStream(r.resourceContext)
 	if err != nil {
 		r.finishChildNavigation(navigation)
 		return err

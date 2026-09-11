@@ -8,6 +8,7 @@
   const Encoder = globalThis.TextEncoder;
   const Decoder = globalThis.TextDecoder;
   const bodies = new WeakMap(), requests = new WeakMap(), responses = new WeakMap(), guards = new WeakMap();
+  let multipartSequence = 0;
   const bytes = value => value instanceof ArrayBuffer ? new Uint8Array(value).slice() : new Uint8Array(value.buffer,value.byteOffset,value.byteLength).slice();
   const streamBytes = value => new Streams({type:'bytes',start(controller){if(value.length)controller.enqueue(value.slice());controller.close()}});
   // Pinned web-streams-polyfill exposes this internal slot. Keep this adapter in
@@ -28,7 +29,18 @@
     if(input instanceof Streams){if(input.locked||disturbed(input))throw new TypeError('Body stream is locked or disturbed');return {stream:input,type:null}}
     if(ArrayBuffer.isView(input)||input instanceof ArrayBuffer)return {stream:streamBytes(bytes(input)),type:null};
     if(input instanceof NativeBlob)return {stream:input.stream(),type:input.type||null};
-    if(typeof globalThis.FormData==='function'&&input instanceof globalThis.FormData)throw new DOMException('Multipart FormData bodies are not implemented','NotSupportedError');
+    if(input instanceof globalThis.FormData){
+      const boundary='----WebKitFormBoundaryMimic'+(++multipartSequence).toString(16).padStart(8,'0'),parts=[];
+      const quoted=value=>String(value).replace(/\r|\n/g,' ').replace(/\\/g,'\\\\').replace(/"/g,'%22');
+      for(const [name,value] of input){
+        let header='--'+boundary+'\r\nContent-Disposition: form-data; name="'+quoted(name)+'"';
+        if(value instanceof NativeBlob){header+='; filename="'+quoted(value instanceof globalThis.File?value.name:'blob')+'"\r\nContent-Type: '+(value.type||'application/octet-stream');parts.push(new Encoder().encode(header+'\r\n\r\n'),new Uint8Array(blobState(value).bytes),new Encoder().encode('\r\n'))}
+        else parts.push(new Encoder().encode(header+'\r\n\r\n'+String(value)+'\r\n'));
+      }
+      parts.push(new Encoder().encode('--'+boundary+'--\r\n'));
+      const size=parts.reduce((total,part)=>total+part.byteLength,0),value=new Uint8Array(size);let offset=0;for(const part of parts){value.set(part,offset);offset+=part.byteLength}
+      return {stream:streamBytes(value),type:'multipart/form-data; boundary='+boundary};
+    }
     const type=input instanceof globalThis.URLSearchParams?'application/x-www-form-urlencoded;charset=UTF-8':'text/plain;charset=UTF-8';
     return {stream:streamBytes(new Encoder().encode(String(input))),type};
   }

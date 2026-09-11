@@ -349,7 +349,7 @@ func (p *Page) navigateRequest(ctx context.Context, raw, loaderID string, reques
 	p.mu.Unlock()
 	p.retireRealm(old)
 	p.trace.Add(trace.Lifecycle, "frameNavigated", map[string]any{"url": u.String(), "realm": realm.ID})
-	streamState, err := realm.initializeNavigationStream()
+	streamState, err := realm.initializeNavigationStream(ctx)
 	if err != nil {
 		return err
 	}
@@ -362,6 +362,7 @@ func (p *Page) navigateRequest(ctx context.Context, raw, loaderID string, reques
 	streamState.onScript = func(s dom.Node) error {
 		realm.preloadModules()
 		realm.preloadResources()
+		stylesheets := realm.startParserStylesheets()
 		kind := scriptExecutionKind(s.Attributes["type"], s.Attributes["language"])
 		if kind == "" {
 			return nil
@@ -399,13 +400,15 @@ func (p *Page) navigateRequest(ctx context.Context, raw, loaderID string, reques
 			if err != nil {
 				p.trace.Add(trace.Error, "scriptLoad", map[string]any{"url": su.String(), "error": err.Error()})
 				scriptID := s.ID
-				realm.scheduler.Post(scheduler.DOM, 0, func(eventContext context.Context) error {
+				dispatchError := func(eventContext context.Context) error {
 					return realm.dispatchResourceEvent(eventContext, scriptID, "error")
-				})
+				}
 				if !streamState.insideScript {
-					if eventErr := realm.RunReady(ctx); eventErr != nil {
+					if eventErr := realm.runTask(ctx, scheduler.DOM, dispatchError); eventErr != nil {
 						p.trace.Add(trace.Error, "scriptErrorEvent", map[string]any{"url": su.String(), "error": eventErr.Error()})
 					}
+				} else {
+					_ = dispatchError(ctx)
 				}
 				return nil
 			}
@@ -420,6 +423,7 @@ func (p *Page) navigateRequest(ctx context.Context, raw, loaderID string, reques
 			}
 			return nil
 		}
+		realm.waitParserStylesheets(ctx, stylesheets)
 		if code != "" {
 			// Parser scripts are browser-observable tasks too. Running them directly
 			// from navigation freezes the canonical monotonic clock and lets engine
@@ -445,8 +449,7 @@ func (p *Page) navigateRequest(ctx context.Context, raw, loaderID string, reques
 				// within this parser task; the outer task owns its checkpoint.
 				_ = runScript(ctx)
 			} else {
-				realm.scheduler.Post(scheduler.DOM, 0, runScript)
-				if err := realm.RunReady(ctx); err != nil {
+				if err := realm.runTask(ctx, scheduler.DOM, runScript); err != nil {
 					p.trace.Add(trace.Error, "parserScriptTask", map[string]any{"url": scriptName, "error": err.Error()})
 				}
 			}
@@ -461,11 +464,12 @@ func (p *Page) navigateRequest(ctx context.Context, raw, loaderID string, reques
 	}
 	realm.preloadModules()
 	realm.preloadResources()
+	realm.waitParserStylesheets(ctx, realm.startParserStylesheets())
 	// Module scripts are deferred by default: fetch begins at parser discovery,
 	// while evaluation happens after parsing and before DOMContentLoaded.
 	for _, module := range modules {
 		module := module
-		realm.scheduler.Post(scheduler.DOM, 0, func(taskContext context.Context) error {
+		if err := realm.runTask(ctx, scheduler.DOM, func(taskContext context.Context) error {
 			p.trace.Add(trace.JS, "scriptStart", map[string]any{"url": module.name, "realm": realm.ID, "module": true})
 			_, evalErr := realm.EvaluateModule(taskContext, module.code, module.name, func(specifier, referrer string) (string, string, error) {
 				base, parseErr := url.Parse(referrer)
@@ -498,26 +502,8 @@ func (p *Page) navigateRequest(ctx context.Context, raw, loaderID string, reques
 			}
 			p.trace.Add(trace.JS, "scriptEnd", map[string]any{"url": module.name, "realm": realm.ID, "module": true})
 			return nil
-		})
-		if err := realm.RunReady(ctx); err != nil {
+		}); err != nil {
 			p.trace.Add(trace.Error, "moduleScriptTask", map[string]any{"url": module.name, "error": err.Error()})
-		}
-	}
-	// Parser-discovered external stylesheets are real, load-blocking browser
-	// resources. Fetch them through the shared loader before DOMContentLoaded;
-	// their CSSOM projection remains derived from the owning LINK element.
-	for _, link := range doc.FindAllByTagName("link") {
-		if !hasLinkRelation(link.Attributes["rel"], "stylesheet") || strings.TrimSpace(link.Attributes["href"]) == "" {
-			continue
-		}
-		stylesheetURL, parseErr := u.Parse(link.Attributes["href"])
-		if parseErr != nil {
-			p.trace.Add(trace.Error, "stylesheetURL", map[string]any{"href": link.Attributes["href"], "error": parseErr.Error()})
-			continue
-		}
-		request := realm.elementRequest(stylesheetURL, link.Attributes, network.Stylesheet)
-		if _, loadErr := realm.loadResource(ctx, request); loadErr != nil {
-			p.trace.Add(trace.Error, "stylesheetLoad", map[string]any{"url": stylesheetURL.String(), "error": loadErr.Error()})
 		}
 	}
 	// The HTML parser creates browsing contexts for iframe elements without
@@ -544,7 +530,7 @@ func (p *Page) navigateRequest(ctx context.Context, raw, loaderID string, reques
 	// DOMContentLoaded is a browser task, not merely a CDP notification.  Page
 	// scripts observe it on Document and its Promise jobs checkpoint before the
 	// next lifecycle/resource task is selected.
-	realm.scheduler.Post(scheduler.DOM, 0, func(taskContext context.Context) error {
+	if err := realm.runTask(ctx, scheduler.DOM, func(taskContext context.Context) error {
 		for _, parserFrame := range parserFrames {
 			realm.scheduleChildFrameNavigation(parserFrame.frame, parserFrame.elementID)
 		}
@@ -553,8 +539,7 @@ func (p *Page) navigateRequest(ctx context.Context, raw, loaderID string, reques
 			p.trace.Add(trace.Lifecycle, "DOMContentLoaded", map[string]any{"url": u.String(), "frameId": p.Top.ID, "realm": realm.ID})
 		}
 		return eventErr
-	})
-	if err := realm.RunReady(ctx); err != nil {
+	}); err != nil {
 		p.trace.Add(trace.Error, "domContentLoaded", map[string]any{"url": u.String(), "error": err.Error(), "realm": realm.ID})
 	}
 	// Chrome's browser-owned favicon discovery begins once the parser has a
@@ -589,12 +574,8 @@ func (p *Page) navigateRequest(ctx context.Context, raw, loaderID string, reques
 			}()
 			return nil
 		})
-		// Begin the non-blocking transport at this parser boundary. Network work
-		// remains concurrent, and its completion is observed by the realm only
-		// through the normal scheduler/Performance notification path.
-		if err := realm.RunReady(ctx); err != nil {
-			p.trace.Add(trace.Error, "faviconScheduler", map[string]any{"url": favicon.String(), "error": err.Error()})
-		}
+		// The Page event-loop pump begins this non-blocking transport after the
+		// navigation turn releases ownership of the Page.
 	}
 	// Load is scheduled only after parser-time and transitively inserted
 	// load-blocking resources complete. The realm owns that accounting so DOM,
@@ -609,9 +590,6 @@ func (p *Page) navigateRequest(ctx context.Context, raw, loaderID string, reques
 		// resource-only notifications cannot represent that transition.
 		realm.notifyPerformanceObservers(taskContext)
 	})
-	if err := realm.RunReady(ctx); err != nil {
-		p.trace.Add(trace.Error, "scheduler", map[string]any{"error": err.Error()})
-	}
 	return nil
 }
 func documentIconURLs(document *dom.Document, base *url.URL) []*url.URL {
@@ -663,7 +641,7 @@ func (p *Page) Evaluate(ctx context.Context, source string) (any, error) {
 	p.mu.RLock()
 	r := p.Top.Realm
 	p.mu.RUnlock()
-	return p.evaluateRealm(ctx, r, source)
+	return p.evaluateRealm(ctx, r, source, true)
 }
 
 func (p *Page) Frame(frameID string) (*Frame, bool) {
@@ -678,10 +656,28 @@ func (p *Page) EvaluateFrame(ctx context.Context, frameID, source string) (any, 
 	if !ok || frame.Realm == nil {
 		return nil, fmt.Errorf("unknown frame %q", frameID)
 	}
-	return p.evaluateRealm(ctx, frame.Realm, source)
+	return p.evaluateRealm(ctx, frame.Realm, source, true)
 }
 
-func (p *Page) evaluateRealm(ctx context.Context, r *Realm, source string) (any, error) {
+// EvaluateCommand performs a CDP evaluation without draining unrelated timers
+// after a synchronous result. The embedding Evaluate API retains its historical
+// ready-task drain; CDP has its own Page pump driving those later turns.
+func (p *Page) EvaluateCommand(ctx context.Context, frameID, source string) (any, error) {
+	p.mu.RLock()
+	r := p.Top.Realm
+	if frameID != "" {
+		frame := p.frames[frameID]
+		if frame == nil || frame.Realm == nil {
+			p.mu.RUnlock()
+			return nil, fmt.Errorf("unknown frame %q", frameID)
+		}
+		r = frame.Realm
+	}
+	p.mu.RUnlock()
+	return p.evaluateRealm(ctx, r, source, false)
+}
+
+func (p *Page) evaluateRealm(ctx context.Context, r *Realm, source string, drainReady bool) (any, error) {
 	p.realmEvaluationDepth++
 	defer func() { p.realmEvaluationDepth--; p.collectRealmOwners() }()
 	if r == nil {
@@ -698,8 +694,10 @@ func (p *Page) evaluateRealm(ctx context.Context, r *Realm, source string) (any,
 	}); err != nil {
 		return nil, err
 	}
-	if err := p.runEvaluationTasks(ctx, r); err != nil {
-		p.trace.Add(trace.Error, "scheduler", map[string]any{"error": err.Error(), "during": "Runtime.evaluate"})
+	if drainReady {
+		if err := r.RunReady(ctx); err != nil {
+			p.trace.Add(trace.Error, "scheduler", map[string]any{"error": err.Error(), "during": "Evaluate"})
+		}
 	}
 	if resolved, done, err := r.runtime.Await(v); err != nil {
 		return nil, err
@@ -759,24 +757,14 @@ func (p *Page) evaluationRealms(evaluating *Realm) []*Realm {
 }
 
 func (p *Page) runEvaluationTasks(ctx context.Context, evaluating *Realm) error {
-	p.mu.RLock()
-	top := p.Top.Realm
-	active := false
-	for _, frame := range p.frames {
-		active = active || frame.Realm == evaluating
+	// Check promise settlement between complete tasks. Draining every ready
+	// timer first can starve even an already-settled evaluation indefinitely.
+	var queues []*scheduler.Scheduler
+	for _, realm := range p.evaluationRealms(evaluating) {
+		queues = append(queues, realm.scheduler)
 	}
-	p.mu.RUnlock()
-	// Service realm queues at task boundaries, including messages posted back
-	// to the parent during a child's task.
-	if top != nil {
-		if err := top.RunReady(ctx); err != nil {
-			return err
-		}
-	}
-	if !active {
-		return evaluating.RunReady(ctx)
-	}
-	return nil
+	_, err := scheduler.RunReadyAcross(ctx, queues)
+	return err
 }
 func (p *Page) Document() (*dom.Document, bool) {
 	p.mu.RLock()
@@ -795,6 +783,28 @@ func (p *Page) Pause() {
 	}
 }
 func (p *Page) AdvanceTime(ctx context.Context, delta time.Duration) error {
+	exhausted, err := p.advanceTimeTasks(ctx, delta, 10000)
+	if err != nil {
+		return err
+	}
+	if exhausted {
+		return fmt.Errorf("page scheduler task limit exceeded")
+	}
+	return nil
+}
+
+// AdvanceTimeBudget advances the Page clock and runs at most maxTasks event
+// loop turns. CDP uses a bounded batch so debugger commands can be serviced
+// between independent browser tasks even when a site continuously replenishes
+// its ready queue.
+func (p *Page) AdvanceTimeBudget(ctx context.Context, delta time.Duration, maxTasks int) (bool, error) {
+	if maxTasks < 1 {
+		maxTasks = 1
+	}
+	return p.advanceTimeTasks(ctx, delta, maxTasks)
+}
+
+func (p *Page) advanceTimeTasks(ctx context.Context, delta time.Duration, maxTasks int) (bool, error) {
 	p.mu.Lock()
 	p.clock = p.clock.Add(delta)
 	realms := make([]*Realm, 0, len(p.frames))
@@ -810,7 +820,7 @@ func (p *Page) AdvanceTime(ctx context.Context, delta time.Duration) error {
 		realm.scheduler.AdvanceBy(delta)
 	}
 	defer p.closeRetiredRealms()
-	for turn := 0; turn < 10000; turn++ {
+	for turn := 0; turn < maxTasks; turn++ {
 		// A callback can commit navigation. Rebuild from the active tree at
 		// every task boundary so retired queues are never driven afterward.
 		p.mu.RLock()
@@ -823,10 +833,10 @@ func (p *Page) AdvanceTime(ctx context.Context, delta time.Duration) error {
 		p.mu.RUnlock()
 		progress, err := scheduler.RunReadyAcross(ctx, queues)
 		if err != nil || !progress {
-			return err
+			return false, err
 		}
 	}
-	return fmt.Errorf("page scheduler task limit exceeded")
+	return true, nil
 }
 
 func (p *Page) closeRetiredRealms() { p.collectRealmOwners() }
@@ -837,6 +847,37 @@ func (p *Page) Resume() {
 	if p.Top.Realm != nil {
 		p.Top.Realm.scheduler.Resume()
 	}
+}
+
+func (p *Page) ExecutionStatus() scheduler.ExecutionStatus {
+	p.mu.RLock()
+	queues := make([]*scheduler.Scheduler, 0, len(p.frames))
+	for _, frame := range p.frames {
+		if frame.Realm != nil {
+			queues = append(queues, frame.Realm.scheduler)
+		}
+	}
+	p.mu.RUnlock()
+	var longest scheduler.ExecutionStatus
+	for _, queue := range queues {
+		status := queue.ExecutionStatus()
+		if status.Running && (!longest.Running || status.Elapsed > longest.Elapsed) {
+			longest = status
+		}
+	}
+	return longest
+}
+
+func (p *Page) LiveDiagnostics() any {
+	p.mu.RLock()
+	realm := p.Top.Realm
+	p.mu.RUnlock()
+	if realm != nil {
+		if diagnostic, ok := realm.runtime.(interface{ LiveDiagnostics() any }); ok {
+			return diagnostic.LiveDiagnostics()
+		}
+	}
+	return map[string]any{"enabled": false}
 }
 func (p *Page) locationPart(k string) string {
 	p.mu.RLock()

@@ -34,7 +34,7 @@ func (r *Realm) installDocumentCompatibility(host map[string]any) {
 		if err != nil {
 			return nil, nil
 		}
-		res, ok := r.agent.Page().loader.CompletedURL(u.String())
+		res, ok := r.retainedStylesheet(u.String())
 		if !ok || res.URL == nil || res.Status < 200 || res.Status >= 300 {
 			return nil, nil
 		}
