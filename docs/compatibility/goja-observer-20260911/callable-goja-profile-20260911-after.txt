@@ -1,0 +1,6 @@
+--- FAIL: TestIframeSrcdocRetainsExportedDescendant (23.24s)
+    --- FAIL: TestIframeSrcdocRetainsExportedDescendant/goja (23.23s)
+        iframe_srcdoc_test.go:37: context deadline exceeded
+FAIL
+FAIL    github.com/moreveal/mimic/internal/browser  23.718s
+FAIL

@@ -1,0 +1,4423 @@
+{
+  "brand-final": {
+    "corpusSHA256": "836c268e2f702ac315f59502df89819d2d7e971199dfed08c86bc664b457825a",
+    "frozenReference": true,
+    "cases": [
+      {
+        "id": "brand-matrix",
+        "valid": true,
+        "incomplete": {},
+        "differences": [
+          {
+            "path": "/observations/0/value/getters/Attr.nodeName",
+            "chrome": null,
+            "mimic": {
+              "exception": "TypeError"
+            },
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Attr.nodeType",
+            "chrome": null,
+            "mimic": {
+              "exception": "TypeError"
+            },
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Attr.nodeValue",
+            "chrome": null,
+            "mimic": {
+              "exception": "TypeError"
+            },
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Attr.ownerDocument",
+            "chrome": null,
+            "mimic": {
+              "exception": "TypeError"
+            },
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Attr.parentElement",
+            "chrome": null,
+            "mimic": {
+              "exception": "TypeError"
+            },
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Attr.parentNode",
+            "chrome": null,
+            "mimic": {
+              "exception": "TypeError"
+            },
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Attr.textContent",
+            "chrome": null,
+            "mimic": {
+              "exception": "TypeError"
+            },
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/CSSStyleDeclaration.cssFloat/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/CSSStyleDeclaration.cssFloat/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/CSSStyleDeclaration.parentRule/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/CSSStyleDeclaration.parentRule/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/DOMException.code/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/DOMException.code/result",
+            "chrome": null,
+            "mimic": "number",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Document.activeElement/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Document.activeElement/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Document.cookie/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Document.cookie/result",
+            "chrome": null,
+            "mimic": "string",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Document.domain/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Document.domain/result",
+            "chrome": null,
+            "mimic": "string",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Document.featurePolicy/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Document.featurePolicy/result",
+            "chrome": null,
+            "mimic": "object",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Document.firstChild",
+            "chrome": null,
+            "mimic": {
+              "exception": "TypeError"
+            },
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Document.fullscreen/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Document.fullscreen/result",
+            "chrome": null,
+            "mimic": "boolean",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Document.location",
+            "chrome": null,
+            "mimic": {
+              "exception": "TypeError"
+            },
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Document.onmouseenter/exception",
+            "chrome": null,
+            "mimic": "TypeError",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Document.onmouseenter/result",
+            "chrome": "undefined",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Document.onmouseleave/exception",
+            "chrome": null,
+            "mimic": "TypeError",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Document.onmouseleave/result",
+            "chrome": "undefined",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Document.prerendering/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Document.prerendering/result",
+            "chrome": null,
+            "mimic": "boolean",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Document.referrer/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Document.referrer/result",
+            "chrome": null,
+            "mimic": "string",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Document.textContent",
+            "chrome": null,
+            "mimic": {
+              "exception": "TypeError"
+            },
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Document.wasDiscarded/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Document.wasDiscarded/result",
+            "chrome": null,
+            "mimic": "boolean",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Document.webkitCurrentFullScreenElement/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Document.webkitCurrentFullScreenElement/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Document.webkitFullscreenElement/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Document.webkitFullscreenElement/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Document.webkitIsFullScreen/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Document.webkitIsFullScreen/result",
+            "chrome": null,
+            "mimic": "boolean",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.activeViewTransition/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.activeViewTransition/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaActionsElements/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaActionsElements/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaActiveDescendantElement/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaActiveDescendantElement/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaAutoComplete/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaAutoComplete/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaBrailleLabel/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaBrailleLabel/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaBrailleRoleDescription/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaBrailleRoleDescription/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaBusy/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaBusy/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaChecked/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaChecked/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaColCount/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaColCount/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaColIndex/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaColIndex/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaColIndexText/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaColIndexText/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaColSpan/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaColSpan/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaControlsElements/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaControlsElements/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaCurrent/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaCurrent/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaDescribedByElements/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaDescribedByElements/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaDescription/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaDescription/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaDetailsElements/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaDetailsElements/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaDisabled/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaDisabled/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaErrorMessageElements/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaErrorMessageElements/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaExpanded/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaExpanded/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaFlowToElements/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaFlowToElements/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaHasPopup/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaHasPopup/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaHidden/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaHidden/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaInvalid/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaInvalid/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaKeyShortcuts/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaKeyShortcuts/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaLabel/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaLabel/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaLabelledByElements/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaLabelledByElements/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaLevel/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaLevel/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaModal/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaModal/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaMultiLine/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaMultiLine/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaMultiSelectable/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaMultiSelectable/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaOrientation/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaOrientation/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaPlaceholder/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaPlaceholder/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaPosInSet/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaPosInSet/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaPressed/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaPressed/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaReadOnly/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaReadOnly/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaRelevant/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaRelevant/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaRequired/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaRequired/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaRoleDescription/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaRoleDescription/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaRowCount/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaRowCount/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaRowIndex/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaRowIndex/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaRowIndexText/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaRowIndexText/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaRowSpan/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaRowSpan/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaSelected/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaSelected/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaSetSize/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaSetSize/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaSort/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaSort/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaValueMax/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaValueMax/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaValueMin/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaValueMin/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaValueNow/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaValueNow/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaValueText/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.ariaValueText/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.assignedSlot/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.assignedSlot/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.attributes/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.attributes/result",
+            "chrome": null,
+            "mimic": "object",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.children/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.children/result",
+            "chrome": null,
+            "mimic": "object",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.classList/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.classList/result",
+            "chrome": null,
+            "mimic": "object",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.clientHeight/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.clientHeight/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.clientLeft/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.clientLeft/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.clientTop/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.clientTop/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.clientWidth/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.clientWidth/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.currentCSSZoom/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.currentCSSZoom/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.customElementRegistry/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.customElementRegistry/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.elementTiming/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.elementTiming/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.nextElementSibling/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.nextElementSibling/result",
+            "chrome": null,
+            "mimic": "object",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.nextSibling",
+            "chrome": null,
+            "mimic": {
+              "result": "object"
+            },
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.onbeforecopy/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.onbeforecopy/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.onbeforecut/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.onbeforecut/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.onbeforepaste/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.onbeforepaste/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.onfullscreenchange/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.onfullscreenchange/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.onfullscreenerror/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.onfullscreenerror/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.onsearch/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.onsearch/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.onwebkitfullscreenchange/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.onwebkitfullscreenchange/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.onwebkitfullscreenerror/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.onwebkitfullscreenerror/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.part/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.part/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.prefix/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.prefix/result",
+            "chrome": null,
+            "mimic": "object",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.previousElementSibling/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.previousElementSibling/result",
+            "chrome": null,
+            "mimic": "object",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.previousSibling",
+            "chrome": null,
+            "mimic": {
+              "result": "object"
+            },
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.scrollHeight/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.scrollHeight/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.scrollLeft/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.scrollLeft/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.scrollTop/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.scrollTop/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.scrollWidth/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.scrollWidth/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.shadowRoot/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.shadowRoot/result",
+            "chrome": null,
+            "mimic": "object",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.slot/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Element.slot/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Event.timeStamp/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Event.timeStamp/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/File.lastModifiedDate/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/File.lastModifiedDate/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/File.webkitRelativePath/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/File.webkitRelativePath/result",
+            "chrome": null,
+            "mimic": "string",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLCollection.length/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLCollection.length/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.accessKey/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.accessKey/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.attributeStyleMap/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.attributeStyleMap/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.autocapitalize/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.autocapitalize/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.autofocus/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.autofocus/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.contentEditable/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.contentEditable/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.dataset/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.dataset/result",
+            "chrome": null,
+            "mimic": "object",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.dir/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.dir/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.editContext/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.editContext/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.enterKeyHint/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.enterKeyHint/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.focusGroup/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.focusGroup/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.focusGroupStart/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.focusGroupStart/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.hidden/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.hidden/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.inert/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.inert/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.innerText/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.innerText/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.inputMode/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.inputMode/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.isContentEditable/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.isContentEditable/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.lang/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.lang/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.offsetLeft/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.offsetLeft/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.offsetParent/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.offsetParent/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.offsetTop/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.offsetTop/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.onmouseenter/exception",
+            "chrome": null,
+            "mimic": "TypeError",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.onmouseenter/result",
+            "chrome": "undefined",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.onmouseleave/exception",
+            "chrome": null,
+            "mimic": "TypeError",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.onmouseleave/result",
+            "chrome": "undefined",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.outerText/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.outerText/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.popover/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.popover/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.style/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.style/result",
+            "chrome": null,
+            "mimic": "object",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.virtualKeyboardPolicy/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.virtualKeyboardPolicy/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.writingSuggestions/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLElement.writingSuggestions/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.align/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.align/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.border/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.border/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.browsingTopics/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.browsingTopics/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.decoding/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.decoding/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.fetchPriority/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.fetchPriority/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.hspace/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.hspace/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.isMap/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.isMap/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.loading/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.loading/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.longDesc/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.longDesc/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.lowsrc/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.lowsrc/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.name/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.name/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.sizes/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.sizes/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.srcset/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.srcset/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.useMap/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.useMap/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.vspace/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.vspace/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.x/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.x/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.y/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLImageElement.y/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.accept/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.accept/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.align/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.align/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.alt/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.alt/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.autocomplete/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.autocomplete/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.files/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.files/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.formAction/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.formAction/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.formEnctype/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.formEnctype/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.formMethod/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.formMethod/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.formNoValidate/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.formNoValidate/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.formTarget/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.formTarget/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.height/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.height/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.incremental/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.incremental/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.indeterminate/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.indeterminate/result",
+            "chrome": null,
+            "mimic": "boolean",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.labels/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.labels/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.list/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.list/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.max/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.max/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.min/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.min/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.minLength/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.minLength/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.pattern/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.pattern/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.popoverTargetAction/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.popoverTargetAction/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.popoverTargetElement/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.popoverTargetElement/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.size/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.size/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.src/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.src/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.step/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.step/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.textLength",
+            "chrome": null,
+            "mimic": {
+              "exception": "TypeError"
+            },
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.useMap/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.useMap/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.validationMessage/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.validationMessage/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.validity/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.validity/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.valueAsDate/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.valueAsDate/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.valueAsNumber/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.valueAsNumber/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.webkitEntries/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.webkitEntries/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.webkitdirectory/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.webkitdirectory/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.width/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.width/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.willValidate/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLInputElement.willValidate/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.autoplay/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.autoplay/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.buffered/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.buffered/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.controls/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.controls/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.controlsList/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.controlsList/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.crossOrigin/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.crossOrigin/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.currentSrc/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.currentSrc/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.currentTime/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.currentTime/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.defaultMuted/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.defaultMuted/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.defaultPlaybackRate/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.defaultPlaybackRate/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.disableRemotePlayback/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.disableRemotePlayback/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.duration/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.duration/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.ended/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.ended/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.error/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.error/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.loading/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.loading/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.loop/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.loop/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.mediaKeys/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.mediaKeys/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.muted/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.muted/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.networkState/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.networkState/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.onencrypted/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.onencrypted/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.onwaitingforkey/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.onwaitingforkey/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.paused/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.paused/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.playbackRate/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.playbackRate/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.played/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.played/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.preload/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.preload/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.preservesPitch/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.preservesPitch/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.readyState/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.readyState/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.remote/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.remote/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.seekable/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.seekable/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.seeking/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.seeking/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.sinkId/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.sinkId/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.src/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.src/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.srcObject/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.srcObject/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.textTracks/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.textTracks/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.volume/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.volume/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.webkitAudioDecodedByteCount/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.webkitAudioDecodedByteCount/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.webkitVideoDecodedByteCount/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/HTMLMediaElement.webkitVideoDecodedByteCount/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/History.length/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/History.length/result",
+            "chrome": null,
+            "mimic": "number",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/History.state/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/History.state/result",
+            "chrome": null,
+            "mimic": "object",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.altKey/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.altKey/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.button/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.button/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.buttons/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.buttons/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.clientX/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.clientX/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.clientY/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.clientY/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.ctrlKey/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.ctrlKey/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.fromElement",
+            "chrome": {
+              "exception": "TypeError"
+            },
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.layerX",
+            "chrome": {
+              "exception": "TypeError"
+            },
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.layerY",
+            "chrome": {
+              "exception": "TypeError"
+            },
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.metaKey/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.metaKey/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.movementX/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.movementX/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.movementY/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.movementY/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.offsetX/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.offsetX/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.offsetY/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.offsetY/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.pageX/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.pageX/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.pageY/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.pageY/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.relatedTarget/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.relatedTarget/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.screenX/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.screenX/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.screenY/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.screenY/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.shiftKey/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.shiftKey/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.toElement",
+            "chrome": {
+              "exception": "TypeError"
+            },
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.which",
+            "chrome": null,
+            "mimic": {
+              "result": "number"
+            },
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.x/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.x/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.y/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/MouseEvent.y/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.appName/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.appName/result",
+            "chrome": null,
+            "mimic": "string",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.appVersion/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.appVersion/result",
+            "chrome": null,
+            "mimic": "string",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.cookieEnabled/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.cookieEnabled/result",
+            "chrome": null,
+            "mimic": "boolean",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.cpuPerformance/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.cpuPerformance/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.deviceMemory/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.deviceMemory/result",
+            "chrome": null,
+            "mimic": "number",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.hardwareConcurrency/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.hardwareConcurrency/result",
+            "chrome": null,
+            "mimic": "number",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.language/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.language/result",
+            "chrome": null,
+            "mimic": "string",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.languages/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.languages/result",
+            "chrome": null,
+            "mimic": "object",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.maxTouchPoints/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.maxTouchPoints/result",
+            "chrome": null,
+            "mimic": "number",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.mimeTypes/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.mimeTypes/result",
+            "chrome": null,
+            "mimic": "object",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.onLine/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.onLine/result",
+            "chrome": null,
+            "mimic": "boolean",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.pdfViewerEnabled/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.pdfViewerEnabled/result",
+            "chrome": null,
+            "mimic": "boolean",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.platform/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.platform/result",
+            "chrome": null,
+            "mimic": "string",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.plugins/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.plugins/result",
+            "chrome": null,
+            "mimic": "object",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.product/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.product/result",
+            "chrome": null,
+            "mimic": "string",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.userAgent/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.userAgent/result",
+            "chrome": null,
+            "mimic": "string",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.userAgentData/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.userAgentData/result",
+            "chrome": null,
+            "mimic": "object",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.vendor/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.vendor/result",
+            "chrome": null,
+            "mimic": "string",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.webdriver/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Navigator.webdriver/result",
+            "chrome": null,
+            "mimic": "boolean",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Node.baseURI/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Node.baseURI/result",
+            "chrome": null,
+            "mimic": "string",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Node.childNodes/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Node.childNodes/result",
+            "chrome": null,
+            "mimic": "object",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Node.firstChild/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Node.firstChild/result",
+            "chrome": null,
+            "mimic": "object",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Node.nextSibling/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Node.nextSibling/result",
+            "chrome": null,
+            "mimic": "object",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Node.nodeName/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Node.nodeName/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Node.nodeType/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Node.nodeType/result",
+            "chrome": null,
+            "mimic": "number",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Node.nodeValue/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Node.nodeValue/result",
+            "chrome": null,
+            "mimic": "object",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Node.ownerDocument/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Node.ownerDocument/result",
+            "chrome": null,
+            "mimic": "object",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Node.parentElement/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Node.parentElement/result",
+            "chrome": null,
+            "mimic": "object",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Node.parentNode/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Node.parentNode/result",
+            "chrome": null,
+            "mimic": "object",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Node.previousSibling/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Node.previousSibling/result",
+            "chrome": null,
+            "mimic": "object",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/NodeIterator.filter/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/NodeIterator.filter/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/NodeIterator.pointerBeforeReferenceNode/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/NodeIterator.pointerBeforeReferenceNode/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/NodeIterator.referenceNode/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/NodeIterator.referenceNode/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/NodeIterator.root/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/NodeIterator.root/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/NodeIterator.whatToShow/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/NodeIterator.whatToShow/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/NodeList.length/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/NodeList.length/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/PerformanceResourceTiming.contentEncoding/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/PerformanceResourceTiming.contentEncoding/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/PerformanceResourceTiming.finalResponseHeadersStart/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/PerformanceResourceTiming.finalResponseHeadersStart/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/PerformanceResourceTiming.renderBlockingStatus/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/PerformanceResourceTiming.renderBlockingStatus/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/PerformanceResourceTiming.workerCacheLookupStart/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/PerformanceResourceTiming.workerCacheLookupStart/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/PerformanceResourceTiming.workerFinalSourceType/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/PerformanceResourceTiming.workerFinalSourceType/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/PerformanceResourceTiming.workerMatchedSourceType/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/PerformanceResourceTiming.workerMatchedSourceType/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/PerformanceResourceTiming.workerRouterEvaluationStart/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/PerformanceResourceTiming.workerRouterEvaluationStart/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Range.commonAncestorContainer/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Range.commonAncestorContainer/result",
+            "chrome": null,
+            "mimic": "undefined",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Request.isHistoryNavigation",
+            "chrome": {
+              "exception": "TypeError"
+            },
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Request.isReloadNavigation",
+            "chrome": {
+              "exception": "TypeError"
+            },
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Request.targetAddressSpace",
+            "chrome": {
+              "exception": "TypeError"
+            },
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Screen.availHeight/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Screen.availHeight/result",
+            "chrome": null,
+            "mimic": "number",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Screen.availWidth/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Screen.availWidth/result",
+            "chrome": null,
+            "mimic": "number",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Screen.colorDepth/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Screen.colorDepth/result",
+            "chrome": null,
+            "mimic": "number",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Screen.height/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Screen.height/result",
+            "chrome": null,
+            "mimic": "number",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Screen.pixelDepth/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Screen.pixelDepth/result",
+            "chrome": null,
+            "mimic": "number",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Screen.width/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Screen.width/result",
+            "chrome": null,
+            "mimic": "number",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/getters/Storage.length/exception",
+            "chrome": "TypeError",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/getters/Storage.length/result",
+            "chrome": null,
+            "mimic": "number",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/methods/Attr.cloneNode",
+            "chrome": null,
+            "mimic": {
+              "length": 0,
+              "name": "cloneNode",
+              "newTarget": {
+                "result": "object"
+              },
+              "ownKeys": [
+                "length",
+                "name",
+                "prototype"
+              ]
+            },
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/methods/CSSStyleDeclaration.Symbol(Symbol.iterator)",
+            "chrome": {
+              "name": "values",
+              "length": 0,
+              "newTarget": {
+                "exception": "TypeError"
+              },
+              "ownKeys": [
+                "length",
+                "name"
+              ]
+            },
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/methods/DOMTokenList.Symbol(Symbol.iterator)/name",
+            "chrome": "values",
+            "mimic": "[Symbol.iterator]"
+          },
+          {
+            "path": "/observations/0/value/methods/HTMLCanvasElement.setAttribute",
+            "chrome": null,
+            "mimic": {
+              "length": 2,
+              "name": "value",
+              "newTarget": {
+                "result": "object"
+              },
+              "ownKeys": [
+                "length",
+                "name",
+                "prototype"
+              ]
+            },
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/methods/HTMLCollection.Symbol(Symbol.iterator)",
+            "chrome": {
+              "name": "values",
+              "length": 0,
+              "newTarget": {
+                "exception": "TypeError"
+              },
+              "ownKeys": [
+                "length",
+                "name"
+              ]
+            },
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/methods/Headers.Symbol(Symbol.iterator)",
+            "chrome": {
+              "name": "entries",
+              "length": 0,
+              "newTarget": {
+                "exception": "TypeError"
+              },
+              "ownKeys": [
+                "length",
+                "name"
+              ]
+            },
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/methods/Headers.entries",
+            "chrome": {
+              "name": "entries",
+              "length": 0,
+              "newTarget": {
+                "exception": "TypeError"
+              },
+              "ownKeys": [
+                "length",
+                "name"
+              ]
+            },
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/methods/Headers.forEach",
+            "chrome": {
+              "name": "forEach",
+              "length": 1,
+              "newTarget": {
+                "exception": "TypeError"
+              },
+              "ownKeys": [
+                "length",
+                "name"
+              ]
+            },
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/methods/Headers.get",
+            "chrome": {
+              "name": "get",
+              "length": 1,
+              "newTarget": {
+                "exception": "TypeError"
+              },
+              "ownKeys": [
+                "length",
+                "name"
+              ]
+            },
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/methods/Headers.getSetCookie",
+            "chrome": {
+              "name": "getSetCookie",
+              "length": 0,
+              "newTarget": {
+                "exception": "TypeError"
+              },
+              "ownKeys": [
+                "length",
+                "name"
+              ]
+            },
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/methods/Headers.has",
+            "chrome": {
+              "name": "has",
+              "length": 1,
+              "newTarget": {
+                "exception": "TypeError"
+              },
+              "ownKeys": [
+                "length",
+                "name"
+              ]
+            },
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/methods/Headers.keys",
+            "chrome": {
+              "name": "keys",
+              "length": 0,
+              "newTarget": {
+                "exception": "TypeError"
+              },
+              "ownKeys": [
+                "length",
+                "name"
+              ]
+            },
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/methods/Headers.values",
+            "chrome": {
+              "name": "values",
+              "length": 0,
+              "newTarget": {
+                "exception": "TypeError"
+              },
+              "ownKeys": [
+                "length",
+                "name"
+              ]
+            },
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/methods/MouseEvent.initMouseEvent",
+            "chrome": {
+              "name": "initMouseEvent",
+              "length": 1,
+              "newTarget": {
+                "exception": "TypeError"
+              },
+              "ownKeys": [
+                "length",
+                "name"
+              ]
+            },
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/methods/NodeList.Symbol(Symbol.iterator)",
+            "chrome": {
+              "name": "values",
+              "length": 0,
+              "newTarget": {
+                "exception": "TypeError"
+              },
+              "ownKeys": [
+                "length",
+                "name"
+              ]
+            },
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/methods/Request.formData",
+            "chrome": {
+              "name": "formData",
+              "length": 0,
+              "newTarget": {
+                "exception": "TypeError"
+              },
+              "ownKeys": [
+                "length",
+                "name"
+              ]
+            },
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/methods/Request.textStream",
+            "chrome": {
+              "name": "textStream",
+              "length": 0,
+              "newTarget": {
+                "exception": "TypeError"
+              },
+              "ownKeys": [
+                "length",
+                "name"
+              ]
+            },
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/methods/Response.formData",
+            "chrome": {
+              "name": "formData",
+              "length": 0,
+              "newTarget": {
+                "exception": "TypeError"
+              },
+              "ownKeys": [
+                "length",
+                "name"
+              ]
+            },
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/methods/Response.textStream",
+            "chrome": {
+              "name": "textStream",
+              "length": 0,
+              "newTarget": {
+                "exception": "TypeError"
+              },
+              "ownKeys": [
+                "length",
+                "name"
+              ]
+            },
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/methods/URLSearchParams.Symbol(Symbol.iterator)/name",
+            "chrome": "entries",
+            "mimic": "[Symbol.iterator]"
+          }
+        ]
+      }
+    ]
+  },
+  "brand-final-control": {
+    "corpusSHA256": "836c268e2f702ac315f59502df89819d2d7e971199dfed08c86bc664b457825a",
+    "frozenReference": true,
+    "cases": [
+      {
+        "id": "brand-matrix",
+        "valid": true,
+        "incomplete": {},
+        "differences": []
+      }
+    ]
+  },
+  "corpus-final": {
+    "corpusSHA256": "12d4f3bd616f19f3aa6dbc4f9bf2f987f0686eb0d4044ce09b738bc2635b4928",
+    "frozenReference": true,
+    "cases": [
+      {
+        "id": "value-normalization",
+        "valid": true,
+        "incomplete": {},
+        "differences": []
+      },
+      {
+        "id": "network",
+        "valid": true,
+        "incomplete": {},
+        "differences": [
+          {
+            "path": "/observations/0/value/0/received/headers/connection",
+            "chrome": "keep-alive",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/0/received/headers/priority",
+            "chrome": null,
+            "mimic": "u=1, i",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/1/received/headers/connection",
+            "chrome": "keep-alive",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/1/received/headers/priority",
+            "chrome": null,
+            "mimic": "u=1, i",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/2/received/headers/connection",
+            "chrome": "keep-alive",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/2/received/headers/priority",
+            "chrome": null,
+            "mimic": "u=1, i",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/3/received/headers/connection",
+            "chrome": "keep-alive",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/3/received/headers/priority",
+            "chrome": null,
+            "mimic": "u=1, i",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/4/received/headers/connection",
+            "chrome": "keep-alive",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/4/received/headers/priority",
+            "chrome": null,
+            "mimic": "u=1, i",
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/5/received/headers/connection",
+            "chrome": "keep-alive",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/5/received/headers/priority",
+            "chrome": null,
+            "mimic": "u=1, i",
+            "missing": "chrome"
+          }
+        ]
+      },
+      {
+        "id": "temporal",
+        "valid": true,
+        "incomplete": {},
+        "differences": []
+      },
+      {
+        "id": "frame-task-interleaving",
+        "valid": true,
+        "incomplete": {},
+        "differences": []
+      },
+      {
+        "id": "frame-microtask-checkpoint",
+        "valid": true,
+        "incomplete": {},
+        "differences": []
+      },
+      {
+        "id": "resource-realm-isolation",
+        "valid": true,
+        "incomplete": {},
+        "differences": []
+      },
+      {
+        "id": "resource-json",
+        "valid": true,
+        "incomplete": {},
+        "differences": []
+      },
+      {
+        "id": "worker-microtasks",
+        "valid": true,
+        "incomplete": {},
+        "differences": []
+      },
+      {
+        "id": "surface",
+        "valid": true,
+        "incomplete": {},
+        "differences": [
+          {
+            "path": "/observations/0/value/CanvasRenderingContext2D/props/createConicGradient",
+            "chrome": {
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "type": "function",
+              "name": "createConicGradient",
+              "length": 3
+            },
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/CanvasRenderingContext2D/props/createPattern",
+            "chrome": {
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "type": "function",
+              "name": "createPattern",
+              "length": 2
+            },
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/CanvasRenderingContext2D/props/drawFocusIfNeeded",
+            "chrome": {
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "type": "function",
+              "name": "drawFocusIfNeeded",
+              "length": 1
+            },
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/CanvasRenderingContext2D/props/lang",
+            "chrome": {
+              "enumerable": true,
+              "configurable": true,
+              "get": "function",
+              "set": "function"
+            },
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/GPUAdapter/props/isFallbackAdapter",
+            "chrome": null,
+            "mimic": {
+              "configurable": true,
+              "enumerable": true,
+              "get": "function",
+              "set": "undefined"
+            },
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/HTMLMediaElement/props/controlsList/set",
+            "chrome": "function",
+            "mimic": "undefined"
+          }
+        ]
+      },
+      {
+        "id": "samesite",
+        "valid": true,
+        "incomplete": {},
+        "differences": []
+      },
+      {
+        "id": "samesite-navigation",
+        "valid": true,
+        "incomplete": {},
+        "differences": []
+      },
+      {
+        "id": "partition",
+        "valid": true,
+        "incomplete": {},
+        "differences": []
+      },
+      {
+        "id": "svg-values",
+        "valid": true,
+        "incomplete": {},
+        "differences": []
+      },
+      {
+        "id": "observations",
+        "valid": true,
+        "incomplete": {},
+        "differences": [
+          {
+            "path": "/observations/0/value/canvas/invalid/exception/message",
+            "chrome": "Failed to execute 'getImageData' on 'CanvasRenderingContext2D': The source width is 0.",
+            "mimic": "ImageData dimensions must be nonzero"
+          },
+          {
+            "path": "/observations/0/value/fonts/metrics/value/ascent",
+            "chrome": 12,
+            "mimic": 12.8
+          },
+          {
+            "path": "/observations/0/value/fonts/metrics/value/descent",
+            "chrome": 0,
+            "mimic": 3.2
+          },
+          {
+            "path": "/observations/0/value/fonts/metrics/value/left",
+            "chrome": 1,
+            "mimic": {
+              "$jsValue": "-0"
+            }
+          },
+          {
+            "path": "/observations/0/value/fonts/metrics/value/right",
+            "chrome": 43.015625,
+            "mimic": 36.959999999999994
+          },
+          {
+            "path": "/observations/0/value/fonts/metrics/value/width",
+            "chrome": 42.6875,
+            "mimic": 38.4
+          },
+          {
+            "path": "/observations/0/value/media/0/1/exception",
+            "chrome": null,
+            "mimic": {
+              "message": "audio.canPlayType is not a function",
+              "name": "TypeError"
+            },
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/media/0/1/value",
+            "chrome": "probably",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/media/0/2/exception",
+            "chrome": null,
+            "mimic": {
+              "message": "video.canPlayType is not a function",
+              "name": "TypeError"
+            },
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/media/0/2/value",
+            "chrome": "probably",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/media/1/1/exception",
+            "chrome": null,
+            "mimic": {
+              "message": "audio.canPlayType is not a function",
+              "name": "TypeError"
+            },
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/media/1/1/value",
+            "chrome": "probably",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/media/1/2/exception",
+            "chrome": null,
+            "mimic": {
+              "message": "video.canPlayType is not a function",
+              "name": "TypeError"
+            },
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/media/1/2/value",
+            "chrome": "probably",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/media/2/1/exception",
+            "chrome": null,
+            "mimic": {
+              "message": "audio.canPlayType is not a function",
+              "name": "TypeError"
+            },
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/media/2/1/value",
+            "chrome": "probably",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/media/2/2/exception",
+            "chrome": null,
+            "mimic": {
+              "message": "video.canPlayType is not a function",
+              "name": "TypeError"
+            },
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/media/2/2/value",
+            "chrome": "probably",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/media/3/1/exception",
+            "chrome": null,
+            "mimic": {
+              "message": "audio.canPlayType is not a function",
+              "name": "TypeError"
+            },
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/media/3/1/value",
+            "chrome": "probably",
+            "mimic": null,
+            "missing": "mimic"
+          },
+          {
+            "path": "/observations/0/value/media/3/2/exception",
+            "chrome": null,
+            "mimic": {
+              "message": "video.canPlayType is not a function",
+              "name": "TypeError"
+            },
+            "missing": "chrome"
+          },
+          {
+            "path": "/observations/0/value/media/3/2/value",
+            "chrome": "probably",
+            "mimic": null,
+            "missing": "mimic"
+          }
+        ]
+      },
+      {
+        "id": "webgpu-lifecycle",
+        "valid": true,
+        "incomplete": {},
+        "differences": []
+      }
+    ]
+  },
+  "corpus-final-control": {
+    "corpusSHA256": "12d4f3bd616f19f3aa6dbc4f9bf2f987f0686eb0d4044ce09b738bc2635b4928",
+    "frozenReference": true,
+    "cases": [
+      {
+        "id": "value-normalization",
+        "valid": true,
+        "incomplete": {},
+        "differences": []
+      },
+      {
+        "id": "network",
+        "valid": true,
+        "incomplete": {},
+        "differences": []
+      },
+      {
+        "id": "temporal",
+        "valid": true,
+        "incomplete": {},
+        "differences": []
+      },
+      {
+        "id": "frame-task-interleaving",
+        "valid": true,
+        "incomplete": {},
+        "differences": []
+      },
+      {
+        "id": "frame-microtask-checkpoint",
+        "valid": true,
+        "incomplete": {},
+        "differences": []
+      },
+      {
+        "id": "resource-realm-isolation",
+        "valid": true,
+        "incomplete": {},
+        "differences": []
+      },
+      {
+        "id": "resource-json",
+        "valid": true,
+        "incomplete": {},
+        "differences": []
+      },
+      {
+        "id": "worker-microtasks",
+        "valid": true,
+        "incomplete": {},
+        "differences": []
+      },
+      {
+        "id": "surface",
+        "valid": true,
+        "incomplete": {},
+        "differences": []
+      },
+      {
+        "id": "samesite",
+        "valid": true,
+        "incomplete": {},
+        "differences": []
+      },
+      {
+        "id": "samesite-navigation",
+        "valid": true,
+        "incomplete": {},
+        "differences": []
+      },
+      {
+        "id": "partition",
+        "valid": true,
+        "incomplete": {},
+        "differences": []
+      },
+      {
+        "id": "svg-values",
+        "valid": true,
+        "incomplete": {},
+        "differences": []
+      },
+      {
+        "id": "observations",
+        "valid": true,
+        "incomplete": {},
+        "differences": []
+      },
+      {
+        "id": "webgpu-lifecycle",
+        "valid": true,
+        "incomplete": {},
+        "differences": []
+      }
+    ]
+  },
+  "relations-final": {
+    "corpusSHA256": "14322bffa0d6e65b5905847d7463e5e0523cb932fd95b53c691f8955ad5b2b39",
+    "frozenReference": true,
+    "cases": [
+      {
+        "id": "state-relations",
+        "valid": true,
+        "incomplete": {},
+        "differences": [
+          {
+            "path": "/observations/0/value/remotePrototypeMutation/changed",
+            "chrome": true,
+            "mimic": false
+          },
+          {
+            "path": "/observations/0/value/remotePrototypeMutation/marker",
+            "chrome": true,
+            "mimic": false
+          }
+        ]
+      }
+    ]
+  },
+  "relations-final-control": {
+    "corpusSHA256": "14322bffa0d6e65b5905847d7463e5e0523cb932fd95b53c691f8955ad5b2b39",
+    "frozenReference": true,
+    "cases": [
+      {
+        "id": "state-relations",
+        "valid": true,
+        "incomplete": {},
+        "differences": []
+      }
+    ]
+  }
+}

@@ -1555,3 +1555,17 @@ passed; the separate prior Goja deadline issue is not closed by that filter.
 
 [Complete receipts](../compatibility/callable-metadata-20260911/gates.json) and
 [semantic coverage and limits](../compatibility/callable-metadata-2026-09-11.md).
+
+
+## Goja observer profiling checkpoint (2026-09-11)
+
+[Detailed results and limitations](../compatibility/goja-observer-2026-09-11.md)
+record the completed native/density profile pair and a measured redundant
+Reflect.has path in Goja global observation. Deduplicate support queries before
+calling Reflect.has; preserve live membership, accessor receiver and exception
+identity. Corrected baseline regression fails and changed engine race passes.
+Both retained-srcdoc race/CPU-profile runs still exceed the original deadline
+(25.59/23.53 s); no timeout resolution or complete workload speedup is claimed.
+Full browser passes. V8 fixed differential/control and corpora are unchanged.
+The earlier concurrency throughput concern and unreduced snapshot signatures
+remain open; diagnostic forced Go reclamation is not a production workaround.

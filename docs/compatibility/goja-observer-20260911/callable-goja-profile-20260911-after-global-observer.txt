@@ -1,0 +1,34 @@
+Total: 25.25s
+ROUTINE ======================== github.com/moreveal/mimic/internal/engine/goja.(*runtime).SetGlobalAccessObserver.func1 in E:\GitHub\mimic\internal\engine\goja\runtime.go
+         0      110ms (flat, cum)  0.44% of Total
+         .          .    196:   report := func(property string, supported bool) {
+         .      110ms    197:       if _, ok := seen[property]; ok {
+         .          .    198:           return
+         .          .    199:       }
+         .          .    200:       seen[property] = struct{}{}
+         .          .    201:       observer(property, supported)
+         .          .    202:   }
+ROUTINE ======================== github.com/moreveal/mimic/internal/engine/goja.(*runtime).SetGlobalAccessObserver.func2 in E:\GitHub\mimic\internal\engine\goja\runtime.go
+      50ms      880ms (flat, cum)  3.49% of Total
+      30ms       40ms    206:   has := func(property string) bool {
+         .      820ms    207:       v, err := hasFn(goja.Undefined(), target, r.vm.ToValue(property))
+      20ms       20ms    208:       return err == nil && v.ToBoolean()
+         .          .    209:   }
+         .          .    210:   proxy := r.vm.NewProxy(target, &goja.ProxyTrapConfig{
+         .          .    211:       Has: func(_ *goja.Object, property string) bool {
+         .          .    212:           supported := has(property)
+         .          .    213:           report(property, supported)
+ROUTINE ======================== github.com/moreveal/mimic/internal/engine/goja.(*runtime).SetGlobalAccessObserver.func4 in E:\GitHub\mimic\internal\engine\goja\runtime.go
+      40ms      1.57s (flat, cum)  6.22% of Total
+      10ms       10ms    216:       Get: func(_ *goja.Object, property string, receiver goja.Value) goja.Value {
+         .      880ms    217:           supported := has(property)
+         .      110ms    218:           report(property, supported)
+         .          .    219:           // Observation must preserve accessor receivers, including inherited
+         .          .    220:           // access through an object whose prototype is the global proxy.
+      20ms      560ms    221:           v, err := getFn(goja.Undefined(), target, r.vm.ToValue(property), receiver)
+      10ms       10ms    222:           if err != nil {
+         .          .    223:               panic(err)
+         .          .    224:           }
+         .          .    225:           return v
+         .          .    226:       },
+         .          .    227:   })
