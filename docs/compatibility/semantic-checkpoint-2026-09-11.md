@@ -43,9 +43,9 @@ grouping, not as proof of root causes.
 | --- | --- | --- |
 | Original 236 probes | 210 / 210 | 88 / 88 |
 | Original 28 representatives | 24 / 24 | 10 / 10 |
-| Brand matrix | see receipt | 495 / 493 |
-| State relations | see receipt | 2 / 2 |
-| General 15 cases | see receipt | 40 / 40 |
+| Brand matrix | 0 / 0 | 495 / 493 |
+| State relations | 0 / 0 | 2 / 2 |
+| General 15 cases | 12 / 12 | 40 / 40 |
 
 New discovery is separate: History/Storage **62 to 0** differing records;
 form name reflection **4 to 0**. Both focused Chrome controls have zero drift.
@@ -110,3 +110,28 @@ The user-directed stability disposition is documented separately in
 is in the [optimization backlog](../performance/report.md); unchanged prior
 baselines remain authoritative, including incomplete gates. No target-site
 outcome or maximal compatibility claim is inferred from passing probes.
+
+
+## Final Unicode-preservation follow-up
+
+Final diff review caught an accidental encoding change to two existing Intl
+fallback formatter literals. `bd0408a` restores those two lines byte-for-byte to
+`d889379`; it is not an additional compatibility gain. The production diff now
+contains only the intended History/Storage bindings and form name reflection.
+
+A clean executable from `1a6652c` was then checked again. The full browser and
+WebAPI run passes (290.332 s command, 1169 pass events, 14 skips). Fresh browser
+snapshot stress passes three repetitions (126 pass events, zero skips, 52.150 s)
+and fresh V8 snapshot stress passes three repetitions (42 pass events, zero
+skips, 1.966 s). The earlier targeted browser/core race results remain recorded;
+race was not rerun for this literal restoration.
+
+The 236 fixed probes and 28 representatives were freshly replayed against Chrome
+and the final executable, retaining the original d889379 before observations.
+All Chrome and after observations are unchanged from the preceding checkpoint.
+Fresh brand, relations and 15-case general captures are likewise unchanged at
+every compared observation, and the fresh 15-case Chrome control has zero
+differences. No invalid/incomplete cases were observed. Exact build/test identities,
+commands, logs and comparisons are in
+[the final receipt](semantic-checkpoint-20260911/post-unicode-validation.json).
+Documentation-only commits after this run do not change the tested implementation.
