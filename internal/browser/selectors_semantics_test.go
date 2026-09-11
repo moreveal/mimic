@@ -70,3 +70,23 @@ func TestSelectorNativeLeafPreservesAttributeCasePolicy(t *testing.T) {
 		t.Fatalf("attribute policy: %v %v", value, err)
 	}
 }
+
+func TestSelectorCandidatesPreserveOrderScopeAndFallback(t *testing.T) {
+	p := testPage(t)
+	v, err := p.Evaluate(context.Background(), `(()=>{
+ const root=document.createElement('section');root.className='outside';
+ root.innerHTML='<div class="group"><a id="a" data-k="MiXeD"></a><span id="b"></span><a id="c"></a></div><a id="d"></a>';
+ document.body.appendChild(root);
+ const ids=s=>Array.from(root.querySelectorAll(s),n=>n.id).join(',');
+ if(ids('.group a, .group > span, a#a')!=='a,b,c')return 'union order and dedup';
+ if(ids(':scope > a')!=='d'||ids('.outside > .group > a')!=='a,c')return 'scope';
+ if(ids('a[data-k="mixed" i]')!=='a'||ids(':is(a,span):not(#c)')!=='a,b,d')return 'fallback';
+ if(ids('a:has(+ span)')!=='a'||ids('.group > :last-child')!=='c')return 'structural';
+ if(root.querySelector('.group a')!==document.getElementById('a'))return 'identity';
+ const list=root.querySelectorAll('.group a');root.firstChild.lastChild.remove();
+ return list.length===2&&ids('.group a')==='a'&&root.querySelector('article a')===null;
+})()`)
+	if err != nil || v != true {
+		t.Fatalf("candidate filtering: %v %v", v, err)
+	}
+}

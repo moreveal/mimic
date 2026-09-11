@@ -10,6 +10,7 @@ import (
 	"math"
 	"os"
 	"reflect"
+	"strings"
 	"sync"
 	"time"
 
@@ -246,7 +247,12 @@ func (a *adapter) EvalBootstrap(ctx context.Context, source, name string) (engin
 }
 
 func (a *adapter) evalScopedCode(isolate *gov8.Isolate, realm *gov8.Context, scope *gov8.Scope, source, name string, reusable bool) (engine.Value, error) {
-	if a.profile != nil && os.Getenv("MIMIC_V8_CPU_PROFILE") == "1" && (name == "mimic:webapi-surface" || name == "__pyppeteer_evaluation_script__") {
+	profileThis := false
+	if a.profile != nil && os.Getenv("MIMIC_V8_CPU_PROFILE") == "1" {
+		filter := os.Getenv("MIMIC_V8_CPU_PROFILE_FILTER")
+		profileThis = filter != "" && strings.Contains(name, filter) || filter == "" && (name == "mimic:webapi-surface" || name == "__pyppeteer_evaluation_script__")
+	}
+	if profileThis {
 		finish, err := startNativeProfile(isolate, realm)
 		if err != nil {
 			return nil, err
