@@ -1433,6 +1433,17 @@ proof of leak absence. No performance improvement is claimed from this pair.
 The frozen runner and workloads are unchanged. A diagnostic wrapper copies each
 process log and records its exit status before the runner removes temporary files.
 Receipts: `compatibility/private-captures/cleanup-20260911/gate-{before,final}/`.
+
+### Srcdoc navigation validation, 2026-09-11
+
+The unchanged complete fast gate passed for the srcdoc navigation package,
+including 10/25 concurrent Pages and static/React retained-memory waves after
+teardown. A first-chance ProcDump collector monitored each owned process and
+produced no exception dump. Debugger timing precludes a performance improvement
+claim. This finite pass does not close P0: clean 037f8ff separately reproduced
+a native StringTable failure with a full dump. See the
+[srcdoc validation receipt](../compatibility/iframe-srcdoc-20260911/gate.json)
+and [native investigation](../compatibility/snapshot-firstchance-2026-09-11.md).
 Final tested executable SHA256:
 `2c951f5c4a8c393c4a0c26f44aa25c9599478d3f897495441cb63dc18b80b7e0`.
 See [semantic coverage](../compatibility/cleanup-2026-09-11.md) and the
