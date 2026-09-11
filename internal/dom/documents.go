@@ -143,36 +143,3 @@ func (d *Document) CreateDocumentElement(owner int64, namespace, name string) No
 	defer d.mu.Unlock()
 	return *d.createDocumentElementLocked(owner, namespace, name)
 }
-
-// WindowNamedElements reads the canonical connected tree in one traversal.
-// It deliberately excludes detached nodes and shadow/template contents.
-func (d *Document) WindowNamedElements(name string) []int64 {
-	d.mu.RLock()
-	defer d.mu.RUnlock()
-	ids := []int64{}
-	if name == "" {
-		return ids
-	}
-	var visit func(int64)
-	visit = func(id int64) {
-		n := d.nodes[id]
-		if n == nil {
-			return
-		}
-		named := false
-		if n.Namespace == "http://www.w3.org/1999/xhtml" {
-			switch n.TagName {
-			case "EMBED", "FORM", "IMG", "OBJECT", "IFRAME":
-				named = n.Attributes["name"] == name
-			}
-		}
-		if n.Type == "element" && (n.Attributes["id"] == name || named) {
-			ids = append(ids, id)
-		}
-		for _, child := range n.Children {
-			visit(child)
-		}
-	}
-	visit(d.root)
-	return ids
-}
