@@ -1,0 +1,19 @@
+--- FAIL: TestConcurrentBootstrapSnapshotSerialization (0.13s)
+    bootstrap_snapshot_serialization_test.go:25: concurrent serializer child: exit status 2
+        === RUN   TestConcurrentBootstrapSnapshotSerialization
+            bootstrap_snapshot_serialization_test.go:35: serialization round 0
+        Exception 0xc0000005 0x1 0xe54bcd4828 0x7ffc86afe4be
+        PC=0x7ffc86afe4be
+
+        runtime.cgocall(0x7ff77e3621e0, 0x51304980358)
+            C:/Program Files/Go/src/runtime/cgocall.go:167 +0x3e fp=0x513044f7d10 sp=0x513044f7ca8 pc=0x7ff77e3d28be
+        syscall.syscalln(0x51304980008?, 0x51304b10000?, {0x51304b10000?, 0x7ff77e3d32cc?, 0x5130454a5e0?})
+            C:/Program Files/Go/src/runtime/syscall_windows.go:431 +0x4e fp=0x513044f7d30 sp=0x513044f7d10 pc=0x7ff77e3d8c8e
+        syscall.SyscallN(0x7ff77e4e670f?, {0x51304b10000?, 0x7ff77e36f4a5?, 0x28?})
+            C:/Program Files/Go/src/syscall/dll_windows.go:99 +0x1e fp=0x513044f7d68 sp=0x513044f7d30 pc=0x7ff77e3ef1de
+        syscall.(*Proc).Call(0x7ff77e5e6d75?, {0x51304b10000?, 0x7ff77e4e6701?, 0x5130450fe78?})
+            C:/Program Files/Go/src/syscall/dll_windows.go:256 +0x1c fp=0x513044f7da8 sp=0x513044f7d68 pc=0x7ff77e3ef6fc
+        github.com/maclof/gov8.(*SnapshotCreator).CreateBlob
+FAIL
+FAIL    github.com/moreveal/mimic/internal/engine/v8    0.291s
+FAIL

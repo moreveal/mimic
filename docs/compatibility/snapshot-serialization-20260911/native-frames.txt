@@ -1,0 +1,7 @@
+text hashes a36943141cfa80d45bda17dc9ce6c3b72a793ef05f7cc5ff664c650990206114 a36943141cfa80d45bda17dc9ce6c3b72a793ef05f7cc5ff664c650990206114
+FRAME 0 0x7ffc86afe4be 0x4af37ff720 ?CreateFillerObjectAt@Heap@internal@v8@@QEAAX_KHV?$StrongAlias@UClearFreedMemoryModeTag@internal@v8@@_N@base@3@V?$optional@W4AllocationType@internal@v8@@@__Cr@std@@@Z 0xae
+FRAME 1 0x7ffc87019f09 0x4af37ff7c0 ?RepairFreeSpacesBeforeSerialization@ReadOnlySpace@internal@v8@@QEAAXXZ 0xa9
+FRAME 2 0x7ffc86d22a4d 0x4af37ff810 ?OnCreateHeapObjectsComplete@ReadOnlyHeap@internal@v8@@QEAAXPEAVIsolate@23@@Z 0x2d
+FRAME 3 0x7ffc86b270c9 0x4af37ff850 ?CreateBlob@SnapshotCreatorImpl@internal@v8@@QEAA?AVStartupData@3@W4FunctionCodeHandling@SnapshotCreator@3@V?$Flags@W4SerializerFlag@Snapshot@internal@v8@@HH@base@3@@Z 0x449
+FRAME 4 0x7ffc88775251 0x4af37ff9d0 gov8_snapshot_create_blob 0xe1
+STOP outside module 0x7ff7317bfaa9 0x4af37ffa30

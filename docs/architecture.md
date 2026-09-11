@@ -131,6 +131,13 @@ answers. The same observable model applies to ordinary application code.
   Snapshot failure falls back to ordinary bootstrap with diagnostics. See
   [bootstrap snapshot measurements](performance/bootstrap-snapshot-20260910.md)
   for admission, profiling bypass and the live-memory tradeoff.
+  The pinned native engine must keep the stock shared read-only heap sealed
+  (`--no-extensible-ro-snapshot` before initialization). Custom snapshot objects
+  remain in private serialized heaps. Independent custom read-only layouts can
+  corrupt restoration; concurrent late read-only finalization can write to an
+  already protected page. This requirement preserves concurrent builders and
+  Pages without a runtime lock. See the
+  [serialization regression](compatibility/snapshot-serialization-2026-09-11.md).
 - Keep runtime behavior target-blind. Domain names, vendor tokens, challenge
   patterns and captured payload structures must never select runtime semantics.
 
