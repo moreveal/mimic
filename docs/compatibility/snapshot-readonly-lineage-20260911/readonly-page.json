@@ -1,0 +1,51 @@
+{
+  "dump": "compatibility\\private-captures\\p0-layout-gate-before-20260911\\dumps\\52114.dmp",
+  "pointer": "0x30fa2404fc9",
+  "page": "0x30fa2400000",
+  "pageHeader": "0004000000000000507d16a0190200004902f8b00a0200004ed539da17000000",
+  "region": {
+    "base": "0x30fa2400000",
+    "allocationBase": "0x30fa2400000",
+    "size": 262144,
+    "state": "0x1000",
+    "protection": "0x4",
+    "type": "0x20000"
+  },
+  "containsSymbol": [
+    2632336,
+    "?Contains@ReadOnlyHeap@internal@v8@@SA_NV?$Tagged@VHeapObject@internal@v8@@@23@@Z"
+  ],
+  "containsInstructions": [
+    {
+      "address": "0x7ffc86d22a90",
+      "mnemonic": "dec",
+      "operands": "rcx"
+    },
+    {
+      "address": "0x7ffc86d22a93",
+      "mnemonic": "and",
+      "operands": "rcx, 0xfffffffffffc0000"
+    },
+    {
+      "address": "0x7ffc86d22a9a",
+      "mnemonic": "movzx",
+      "operands": "eax, byte ptr [rcx + 1]"
+    },
+    {
+      "address": "0x7ffc86d22a9e",
+      "mnemonic": "and",
+      "operands": "al, 4"
+    },
+    {
+      "address": "0x7ffc86d22aa0",
+      "mnemonic": "shr",
+      "operands": "al, 2"
+    },
+    {
+      "address": "0x7ffc86d22aa3",
+      "mnemonic": "ret",
+      "operands": ""
+    }
+  ],
+  "interpretation": "Loaded native Contains masks to a 256 KiB page and tests flag bit 0x400. This page has that bit. This establishes read-only-heap membership, not the writer or cause of the invalid reference."
+}

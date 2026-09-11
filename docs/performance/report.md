@@ -1486,3 +1486,31 @@ attempted topologies.
 [semantic validation](../compatibility/location-owner-reflection-2026-09-11.md).
 Tested executable SHA256:
 `cc97570c06cf010f6525cd41c946a935f603bfab1d71061105eb1403724ee88d`.
+
+
+## Distinct snapshot read-only layouts — 2026-09-11
+
+The P0 ownership correction retains snapshots and concurrent Pages while
+preventing custom objects from extending the isolate group's shared read-only
+layout. A clean 71d54f0 complete gate failed natively in the first measured
+10-Page static wave. Three predeclared changed gates completed every mandatory
+workload, 10/25-Page concurrency and teardown-memory wave, with no native dump.
+Both sides used the same first-chance debugger collector and frozen harness.
+
+| Metric | Baseline (incomplete gate) | After 1 | After 2 | After 3 |
+|---|---:|---:|---:|---:|
+| DOM warm execution / completion ms | 447.20 / 476.13 | 450.92 / 487.70 | 444.13 / 475.45 | 440.52 / 465.51 |
+| Static warm execution / completion ms | 2.89 / 26.17 | 2.94 / 31.01 | 2.80 / 27.83 | 2.78 / 24.74 |
+| React warm execution / completion ms | 53.83 / 81.73 | 53.58 / 84.96 | 54.18 / 83.86 | 47.96 / 79.02 |
+| Throughput, 10 Pages, sessions/s | incomplete | 66.46 | 76.41 | 73.20 |
+| Throughput, 25 Pages, sessions/s | not reached | 72.75 | 87.58 | 86.32 |
+| Static private memory after recovery, MiB | not reached | 159.97 | 159.31 | 156.77 |
+| React private memory after recovery, MiB | not reached | 172.91 | 166.72 | 164.44 |
+
+A failed wave's zero throughput is not a performance measurement. This is not
+three successful pairs and does not establish performance neutrality or close
+all historical native signatures. The Goja-only retained-srcdoc race test also
+timed out on the changed tree; the V8 flag is not executed in that subtest.
+The independent timing concern remains open without deadline changes.
+[Native scope and validation](../compatibility/snapshot-readonly-lineage-2026-09-11.md);
+[full gate receipts](../compatibility/snapshot-readonly-lineage-20260911/gates.json).

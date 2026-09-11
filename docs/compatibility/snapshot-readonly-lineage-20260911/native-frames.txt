@@ -1,0 +1,9 @@
+text hashes a36943141cfa80d45bda17dc9ce6c3b72a793ef05f7cc5ff664c650990206114 a36943141cfa80d45bda17dc9ce6c3b72a793ef05f7cc5ff664c650990206114
+FRAME 0 0x7ffc86bcd99c 0xef62dfe110 ?LookupString@StringTable@internal@v8@@QEAA?AV?$DirectHandle@VInternalizedString@internal@v8@@@23@PEAVIsolate@23@V?$DirectHandle@VString@internal@v8@@@23@@Z 0x5c
+FRAME 1 0x7ffc86b9d65b 0xef62dfe1c0 ??$?0VObject@internal@v8@@VHandle@12@@PropertyKey@internal@v8@@QEAA@PEAVIsolate@12@V?$Handle@VObject@internal@v8@@@12@@Z 0x18b
+FRAME 2 0x7ffc86be3eee 0xef62dfe220 ?OrdinaryDefineOwnProperty@JSReceiver@internal@v8@@SA?AV?$Maybe@_N@3@PEAVIsolate@23@V?$DirectHandle@VJSObject@internal@v8@@@23@V?$DirectHandle@VObject@internal@v8@@@23@PEAVPropertyDescriptor@23@V?$Maybe@W4ShouldThrow@internal@v8@@@3@@Z 0x3e
+FRAME 3 0x7ffc86be398d 0xef62dfe2b0 ?DefineOwnProperty@JSReceiver@internal@v8@@SA?AV?$Maybe@_N@3@PEAVIsolate@23@V?$DirectHandle@VJSReceiver@internal@v8@@@23@V?$DirectHandle@VObject@internal@v8@@@23@PEAVPropertyDescriptor@23@V?$Maybe@W4ShouldThrow@internal@v8@@@3@@Z 0x18d
+FRAME 4 0x7ffc86be370a 0xef62dfe320 ?DefineProperty@JSReceiver@internal@v8@@SA?AV?$Tagged@VObject@internal@v8@@@23@PEAVIsolate@23@V?$DirectHandle@VObject@internal@v8@@@23@1V?$Handle@VObject@internal@v8@@@23@@Z 0xda
+FRAME 5 0x7ffc871e0295 0xef62dfe3d0 ?Builtin_ObjectDefineProperty@internal@v8@@YA_KHPEA_KPEAVIsolate@12@@Z 0x65
+FRAME 6 0x7ffc885b293a 0xef62dfe430 Builtins_CEntry_Return1_ArgvOnStack_BuiltinExit 0x3a
+STOP outside module 0x219700e817e 0xef62dfe478
