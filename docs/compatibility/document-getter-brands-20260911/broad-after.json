@@ -1,0 +1,113 @@
+{
+  "probeSHA256": "2eda1df3672bb3367ba751afd5549877be62c6ba1be4c150c4fc185f2b6e9c2c",
+  "differenceCount": 3,
+  "controlDifferenceCount": 0,
+  "differences": [
+    [
+      [
+        "invalid",
+        "firstChild"
+      ],
+      {
+        "$missing": true
+      },
+      {
+        "documentPrototype": {
+          "exception": "TypeError"
+        },
+        "element": {
+          "exception": "TypeError"
+        },
+        "htmlDocumentPrototype": {
+          "exception": "TypeError"
+        },
+        "null": {
+          "exception": "TypeError"
+        },
+        "object": {
+          "exception": "TypeError"
+        },
+        "primitive": {
+          "exception": "TypeError"
+        },
+        "undefined": {
+          "exception": "TypeError"
+        },
+        "window": {
+          "exception": "TypeError"
+        }
+      }
+    ],
+    [
+      [
+        "invalid",
+        "location"
+      ],
+      {
+        "$missing": true
+      },
+      {
+        "documentPrototype": {
+          "exception": "TypeError"
+        },
+        "element": {
+          "exception": "TypeError"
+        },
+        "htmlDocumentPrototype": {
+          "exception": "TypeError"
+        },
+        "null": {
+          "exception": "TypeError"
+        },
+        "object": {
+          "exception": "TypeError"
+        },
+        "primitive": {
+          "exception": "TypeError"
+        },
+        "undefined": {
+          "exception": "TypeError"
+        },
+        "window": {
+          "exception": "TypeError"
+        }
+      }
+    ],
+    [
+      [
+        "invalid",
+        "textContent"
+      ],
+      {
+        "$missing": true
+      },
+      {
+        "documentPrototype": {
+          "exception": "TypeError"
+        },
+        "element": {
+          "exception": "TypeError"
+        },
+        "htmlDocumentPrototype": {
+          "exception": "TypeError"
+        },
+        "null": {
+          "exception": "TypeError"
+        },
+        "object": {
+          "exception": "TypeError"
+        },
+        "primitive": {
+          "exception": "TypeError"
+        },
+        "undefined": {
+          "exception": "TypeError"
+        },
+        "window": {
+          "exception": "TypeError"
+        }
+      }
+    ]
+  ],
+  "rawSHA256": "9da37e22d74b54e928d512ae5a814110fa6db3278fa6dae875035a387b4dd191"
+}

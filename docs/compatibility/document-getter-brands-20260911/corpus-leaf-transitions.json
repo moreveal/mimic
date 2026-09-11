@@ -1,0 +1,128 @@
+{
+  "brand": {
+    "before": 609,
+    "after": 583,
+    "removed": [
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Document.activeElement/exception"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Document.webkitIsFullScreen/result"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Document.webkitCurrentFullScreenElement/exception"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Document.webkitFullscreenElement/result"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Document.wasDiscarded/exception"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Document.activeElement/result"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Document.prerendering/result"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Document.domain/result"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Document.cookie/exception"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Document.featurePolicy/result"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Document.referrer/exception"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Document.featurePolicy/exception"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Document.cookie/result"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Document.onmouseenter/exception"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Document.fullscreen/exception"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Document.prerendering/exception"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Document.webkitCurrentFullScreenElement/result"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Document.wasDiscarded/result"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Document.domain/exception"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Document.referrer/result"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Document.onmouseenter/result"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Document.webkitFullscreenElement/exception"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Document.fullscreen/result"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Document.onmouseleave/result"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Document.onmouseleave/exception"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Document.webkitIsFullScreen/exception"
+      ]
+    ],
+    "added": [],
+    "changed": []
+  },
+  "relations": {
+    "before": 2,
+    "after": 2,
+    "removed": [],
+    "added": [],
+    "changed": []
+  },
+  "corpus": {
+    "before": 40,
+    "after": 40,
+    "removed": [],
+    "added": [],
+    "changed": []
+  }
+}

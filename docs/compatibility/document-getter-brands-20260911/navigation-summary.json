@@ -1,0 +1,86 @@
+[
+  {
+    "probe": "internal\\browser\\testdata\\navigation_cross_window_reflection_oracle.js",
+    "sha256": "95a72922c1b2b0d3198d0d666227dc4416dc0d547b20acb85e6c39fa27e8d70a",
+    "differences": [],
+    "controlDifferences": [],
+    "harnessErrors": []
+  },
+  {
+    "probe": "internal\\browser\\testdata\\navigation_nested_window_oracle.js",
+    "sha256": "4b0d2dd989877d89b7c770c3c98ddc3869212119c9637637029bf67519862e44",
+    "differences": [],
+    "controlDifferences": [],
+    "harnessErrors": []
+  },
+  {
+    "probe": "internal\\browser\\testdata\\navigation_realm_lifecycle_oracle.js",
+    "sha256": "746dbc08a8417847725baeae9b841cf239cf02668d72da92e129f8b3a45cbb57",
+    "differences": [],
+    "controlDifferences": [],
+    "harnessErrors": []
+  },
+  {
+    "probe": "internal\\browser\\testdata\\navigation_realm_ownership_oracle.js",
+    "sha256": "f408ce661cdf9645d0b45f9f4f16d48aab4564a99c791e8bf77241ebc825f865",
+    "differences": [
+      [
+        [
+          "value",
+          "crossOrigin",
+          "oldFunctionGlobal"
+        ],
+        {
+          "error": "SecurityError"
+        },
+        false
+      ],
+      [
+        [
+          "value",
+          "sameOrigin",
+          "oldFunctionGlobal"
+        ],
+        true,
+        false
+      ]
+    ],
+    "controlDifferences": [],
+    "harnessErrors": []
+  },
+  {
+    "probe": "internal\\browser\\testdata\\navigation_window_edges_oracle.js",
+    "sha256": "5fef19b92d54db1fd8fa88eb0d4fa55f9b582cfda7bdc8732ea6d644f5125150",
+    "differences": [
+      [
+        [
+          "value",
+          "eval",
+          "apply"
+        ],
+        "undefined",
+        17
+      ],
+      [
+        [
+          "value",
+          "eval",
+          "bound"
+        ],
+        "undefined",
+        17
+      ],
+      [
+        [
+          "value",
+          "eval",
+          "call"
+        ],
+        "undefined",
+        17
+      ]
+    ],
+    "controlDifferences": [],
+    "harnessErrors": []
+  }
+]

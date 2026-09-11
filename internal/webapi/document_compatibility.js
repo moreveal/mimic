@@ -168,6 +168,9 @@ for(const name of ['hasStorageAccess','hasUnpartitionedCookieAccess'])if(name in
 // mistake a foreign active document for a local inert document. Public property
 // and prototype replacements must not change a previously borrowed accessor.
 function finalizeDocumentGetterBindings() {
+  // Frozen Document WebIDL marks only these three attributes LegacyLenientThis.
+  // Their getter returns undefined for a receiver without the Document brand.
+  const lenientThis=new Set(['onreadystatechange','onmouseenter','onmouseleave']);
   const getters=new Map();
   for(const name of Reflect.ownKeys(Document.prototype)){
     const descriptor=Object.getOwnPropertyDescriptor(Document.prototype,name);
@@ -177,8 +180,10 @@ function finalizeDocumentGetterBindings() {
     descriptor.get=function(){
       const reference=referenceGet(this);
       if(reference?.binding?.kind==='Document')return callRealmBinding(this,reference,'get',[name]);
-      // Preserve each local accessor's existing receiver policy, including
-      // LegacyLenientThis. Strict receiver cleanup is a separate concern.
+      if(this!==document&&elementSlot(this)?.type!=='document'){
+        if(lenientThis.has(name))return undefined;
+        throw new TypeError('Illegal invocation');
+      }
       return functionSourceApply(original,this,[]);
     };
     Object.defineProperty(Document.prototype,name,descriptor);

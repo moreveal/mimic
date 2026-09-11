@@ -1,0 +1,12 @@
+{
+  "reason": "User requested important work only; small receiver-only change does not justify repeating the unchanged V8 performance gate. Cancelled scheduler before gate execution.",
+  "processes": [
+    {
+      "pid": 73852,
+      "command": [
+        "C:\\Users\\moreveal\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+        ".build/document_brand_race_gates.py"
+      ]
+    }
+  ]
+}

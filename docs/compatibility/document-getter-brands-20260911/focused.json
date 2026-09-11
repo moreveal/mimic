@@ -1,0 +1,4227 @@
+{
+  "sha256": "940e794b11574feac09f3952208faa9c9374408a066a5f4ce178ff21f395338b",
+  "chrome": {
+    "activeElement": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "cookie": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "domain": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "referrer": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "lastModified": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "visibilityState": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "fullscreen": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "webkitIsFullScreen": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "pointerLockElement": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "onabort": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "onreadystatechange": {
+      "object": {
+        "type": "undefined"
+      },
+      "null": {
+        "type": "undefined"
+      },
+      "undefined": {
+        "type": "undefined"
+      },
+      "primitive": {
+        "type": "undefined"
+      },
+      "documentPrototype": {
+        "type": "undefined"
+      },
+      "htmlDocumentPrototype": {
+        "type": "undefined"
+      },
+      "element": {
+        "type": "undefined"
+      },
+      "window": {
+        "type": "undefined"
+      },
+      "proxy": {
+        "type": "undefined"
+      },
+      "derived": {
+        "type": "undefined"
+      }
+    },
+    "onmouseenter": {
+      "object": {
+        "type": "undefined"
+      },
+      "null": {
+        "type": "undefined"
+      },
+      "undefined": {
+        "type": "undefined"
+      },
+      "primitive": {
+        "type": "undefined"
+      },
+      "documentPrototype": {
+        "type": "undefined"
+      },
+      "htmlDocumentPrototype": {
+        "type": "undefined"
+      },
+      "element": {
+        "type": "undefined"
+      },
+      "window": {
+        "type": "undefined"
+      },
+      "proxy": {
+        "type": "undefined"
+      },
+      "derived": {
+        "type": "undefined"
+      }
+    },
+    "onmouseleave": {
+      "object": {
+        "type": "undefined"
+      },
+      "null": {
+        "type": "undefined"
+      },
+      "undefined": {
+        "type": "undefined"
+      },
+      "primitive": {
+        "type": "undefined"
+      },
+      "documentPrototype": {
+        "type": "undefined"
+      },
+      "htmlDocumentPrototype": {
+        "type": "undefined"
+      },
+      "element": {
+        "type": "undefined"
+      },
+      "window": {
+        "type": "undefined"
+      },
+      "proxy": {
+        "type": "undefined"
+      },
+      "derived": {
+        "type": "undefined"
+      }
+    },
+    "title": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "body": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "URL": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "defaultView": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "fonts": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "styleSheets": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "adoptedStyleSheets": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "privateBrandSurvivesPrototypeMutation": true
+  },
+  "mimic": {
+    "URL": {
+      "derived": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      }
+    },
+    "activeElement": {
+      "derived": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "type": "undefined"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "type": "undefined"
+      },
+      "primitive": {
+        "type": "undefined"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "type": "undefined"
+      }
+    },
+    "adoptedStyleSheets": {
+      "derived": {
+        "type": "object"
+      },
+      "documentPrototype": {
+        "type": "object"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "type": "object"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "type": "object"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      }
+    },
+    "body": {
+      "derived": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      }
+    },
+    "cookie": {
+      "derived": {
+        "type": "string"
+      },
+      "documentPrototype": {
+        "type": "string"
+      },
+      "element": {
+        "type": "string"
+      },
+      "htmlDocumentPrototype": {
+        "type": "string"
+      },
+      "null": {
+        "type": "string"
+      },
+      "object": {
+        "type": "string"
+      },
+      "primitive": {
+        "type": "string"
+      },
+      "proxy": {
+        "type": "string"
+      },
+      "undefined": {
+        "type": "string"
+      },
+      "window": {
+        "type": "string"
+      }
+    },
+    "defaultView": {
+      "derived": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      }
+    },
+    "domain": {
+      "derived": {
+        "type": "string"
+      },
+      "documentPrototype": {
+        "type": "string"
+      },
+      "element": {
+        "type": "string"
+      },
+      "htmlDocumentPrototype": {
+        "type": "string"
+      },
+      "null": {
+        "type": "string"
+      },
+      "object": {
+        "type": "string"
+      },
+      "primitive": {
+        "type": "string"
+      },
+      "proxy": {
+        "type": "string"
+      },
+      "undefined": {
+        "type": "string"
+      },
+      "window": {
+        "type": "string"
+      }
+    },
+    "fonts": {
+      "derived": {
+        "type": "object"
+      },
+      "documentPrototype": {
+        "type": "object"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "type": "object"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "type": "object"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      }
+    },
+    "fullscreen": {
+      "derived": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "type": "boolean"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "type": "boolean"
+      },
+      "primitive": {
+        "type": "boolean"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "type": "boolean"
+      }
+    },
+    "lastModified": {
+      "derived": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      }
+    },
+    "onabort": {
+      "derived": {
+        "type": "object"
+      },
+      "documentPrototype": {
+        "type": "object"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "type": "object"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "type": "object"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      }
+    },
+    "onmouseenter": {
+      "derived": {
+        "type": "object"
+      },
+      "documentPrototype": {
+        "type": "object"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "type": "object"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "type": "object"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      }
+    },
+    "onmouseleave": {
+      "derived": {
+        "type": "object"
+      },
+      "documentPrototype": {
+        "type": "object"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "type": "object"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "type": "object"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      }
+    },
+    "onreadystatechange": {
+      "derived": {
+        "type": "object"
+      },
+      "documentPrototype": {
+        "type": "object"
+      },
+      "element": {
+        "type": "undefined"
+      },
+      "htmlDocumentPrototype": {
+        "type": "object"
+      },
+      "null": {
+        "type": "undefined"
+      },
+      "object": {
+        "type": "undefined"
+      },
+      "primitive": {
+        "type": "undefined"
+      },
+      "proxy": {
+        "type": "object"
+      },
+      "undefined": {
+        "type": "undefined"
+      },
+      "window": {
+        "type": "undefined"
+      }
+    },
+    "pointerLockElement": {
+      "derived": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      }
+    },
+    "privateBrandSurvivesPrototypeMutation": true,
+    "referrer": {
+      "derived": {
+        "type": "string"
+      },
+      "documentPrototype": {
+        "type": "string"
+      },
+      "element": {
+        "type": "string"
+      },
+      "htmlDocumentPrototype": {
+        "type": "string"
+      },
+      "null": {
+        "type": "string"
+      },
+      "object": {
+        "type": "string"
+      },
+      "primitive": {
+        "type": "string"
+      },
+      "proxy": {
+        "type": "string"
+      },
+      "undefined": {
+        "type": "string"
+      },
+      "window": {
+        "type": "string"
+      }
+    },
+    "styleSheets": {
+      "derived": {
+        "type": "object"
+      },
+      "documentPrototype": {
+        "type": "object"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "type": "object"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "type": "object"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      }
+    },
+    "title": {
+      "derived": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      }
+    },
+    "visibilityState": {
+      "derived": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      }
+    },
+    "webkitIsFullScreen": {
+      "derived": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "type": "boolean"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "type": "boolean"
+      },
+      "primitive": {
+        "type": "boolean"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "type": "boolean"
+      }
+    }
+  },
+  "after": {
+    "URL": {
+      "derived": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      }
+    },
+    "activeElement": {
+      "derived": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      }
+    },
+    "adoptedStyleSheets": {
+      "derived": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      }
+    },
+    "body": {
+      "derived": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      }
+    },
+    "cookie": {
+      "derived": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      }
+    },
+    "defaultView": {
+      "derived": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      }
+    },
+    "domain": {
+      "derived": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      }
+    },
+    "fonts": {
+      "derived": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      }
+    },
+    "fullscreen": {
+      "derived": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      }
+    },
+    "lastModified": {
+      "derived": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      }
+    },
+    "onabort": {
+      "derived": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      }
+    },
+    "onmouseenter": {
+      "derived": {
+        "type": "undefined"
+      },
+      "documentPrototype": {
+        "type": "undefined"
+      },
+      "element": {
+        "type": "undefined"
+      },
+      "htmlDocumentPrototype": {
+        "type": "undefined"
+      },
+      "null": {
+        "type": "undefined"
+      },
+      "object": {
+        "type": "undefined"
+      },
+      "primitive": {
+        "type": "undefined"
+      },
+      "proxy": {
+        "type": "undefined"
+      },
+      "undefined": {
+        "type": "undefined"
+      },
+      "window": {
+        "type": "undefined"
+      }
+    },
+    "onmouseleave": {
+      "derived": {
+        "type": "undefined"
+      },
+      "documentPrototype": {
+        "type": "undefined"
+      },
+      "element": {
+        "type": "undefined"
+      },
+      "htmlDocumentPrototype": {
+        "type": "undefined"
+      },
+      "null": {
+        "type": "undefined"
+      },
+      "object": {
+        "type": "undefined"
+      },
+      "primitive": {
+        "type": "undefined"
+      },
+      "proxy": {
+        "type": "undefined"
+      },
+      "undefined": {
+        "type": "undefined"
+      },
+      "window": {
+        "type": "undefined"
+      }
+    },
+    "onreadystatechange": {
+      "derived": {
+        "type": "undefined"
+      },
+      "documentPrototype": {
+        "type": "undefined"
+      },
+      "element": {
+        "type": "undefined"
+      },
+      "htmlDocumentPrototype": {
+        "type": "undefined"
+      },
+      "null": {
+        "type": "undefined"
+      },
+      "object": {
+        "type": "undefined"
+      },
+      "primitive": {
+        "type": "undefined"
+      },
+      "proxy": {
+        "type": "undefined"
+      },
+      "undefined": {
+        "type": "undefined"
+      },
+      "window": {
+        "type": "undefined"
+      }
+    },
+    "pointerLockElement": {
+      "derived": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      }
+    },
+    "privateBrandSurvivesPrototypeMutation": true,
+    "referrer": {
+      "derived": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      }
+    },
+    "styleSheets": {
+      "derived": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      }
+    },
+    "title": {
+      "derived": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      }
+    },
+    "visibilityState": {
+      "derived": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      }
+    },
+    "webkitIsFullScreen": {
+      "derived": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "object": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      }
+    }
+  },
+  "control": {
+    "activeElement": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "cookie": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "domain": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "referrer": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "lastModified": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "visibilityState": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "fullscreen": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "webkitIsFullScreen": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "pointerLockElement": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "onabort": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "onreadystatechange": {
+      "object": {
+        "type": "undefined"
+      },
+      "null": {
+        "type": "undefined"
+      },
+      "undefined": {
+        "type": "undefined"
+      },
+      "primitive": {
+        "type": "undefined"
+      },
+      "documentPrototype": {
+        "type": "undefined"
+      },
+      "htmlDocumentPrototype": {
+        "type": "undefined"
+      },
+      "element": {
+        "type": "undefined"
+      },
+      "window": {
+        "type": "undefined"
+      },
+      "proxy": {
+        "type": "undefined"
+      },
+      "derived": {
+        "type": "undefined"
+      }
+    },
+    "onmouseenter": {
+      "object": {
+        "type": "undefined"
+      },
+      "null": {
+        "type": "undefined"
+      },
+      "undefined": {
+        "type": "undefined"
+      },
+      "primitive": {
+        "type": "undefined"
+      },
+      "documentPrototype": {
+        "type": "undefined"
+      },
+      "htmlDocumentPrototype": {
+        "type": "undefined"
+      },
+      "element": {
+        "type": "undefined"
+      },
+      "window": {
+        "type": "undefined"
+      },
+      "proxy": {
+        "type": "undefined"
+      },
+      "derived": {
+        "type": "undefined"
+      }
+    },
+    "onmouseleave": {
+      "object": {
+        "type": "undefined"
+      },
+      "null": {
+        "type": "undefined"
+      },
+      "undefined": {
+        "type": "undefined"
+      },
+      "primitive": {
+        "type": "undefined"
+      },
+      "documentPrototype": {
+        "type": "undefined"
+      },
+      "htmlDocumentPrototype": {
+        "type": "undefined"
+      },
+      "element": {
+        "type": "undefined"
+      },
+      "window": {
+        "type": "undefined"
+      },
+      "proxy": {
+        "type": "undefined"
+      },
+      "derived": {
+        "type": "undefined"
+      }
+    },
+    "title": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "body": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "URL": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "defaultView": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "fonts": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "styleSheets": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "adoptedStyleSheets": {
+      "object": {
+        "exception": "TypeError"
+      },
+      "null": {
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "exception": "TypeError"
+      },
+      "documentPrototype": {
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError"
+      },
+      "element": {
+        "exception": "TypeError"
+      },
+      "window": {
+        "exception": "TypeError"
+      },
+      "proxy": {
+        "exception": "TypeError"
+      },
+      "derived": {
+        "exception": "TypeError"
+      }
+    },
+    "privateBrandSurvivesPrototypeMutation": true
+  },
+  "differences": [
+    [
+      [
+        "activeElement",
+        "element",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "activeElement",
+        "element",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "undefined"
+    ],
+    [
+      [
+        "activeElement",
+        "object",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "activeElement",
+        "object",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "undefined"
+    ],
+    [
+      [
+        "activeElement",
+        "primitive",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "activeElement",
+        "primitive",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "undefined"
+    ],
+    [
+      [
+        "activeElement",
+        "window",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "activeElement",
+        "window",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "undefined"
+    ],
+    [
+      [
+        "adoptedStyleSheets",
+        "derived",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "adoptedStyleSheets",
+        "derived",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "adoptedStyleSheets",
+        "documentPrototype",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "adoptedStyleSheets",
+        "documentPrototype",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "adoptedStyleSheets",
+        "htmlDocumentPrototype",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "adoptedStyleSheets",
+        "htmlDocumentPrototype",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "adoptedStyleSheets",
+        "proxy",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "adoptedStyleSheets",
+        "proxy",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "cookie",
+        "derived",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "cookie",
+        "derived",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "cookie",
+        "documentPrototype",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "cookie",
+        "documentPrototype",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "cookie",
+        "element",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "cookie",
+        "element",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "cookie",
+        "htmlDocumentPrototype",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "cookie",
+        "htmlDocumentPrototype",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "cookie",
+        "null",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "cookie",
+        "null",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "cookie",
+        "object",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "cookie",
+        "object",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "cookie",
+        "primitive",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "cookie",
+        "primitive",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "cookie",
+        "proxy",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "cookie",
+        "proxy",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "cookie",
+        "undefined",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "cookie",
+        "undefined",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "cookie",
+        "window",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "cookie",
+        "window",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "domain",
+        "derived",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "domain",
+        "derived",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "domain",
+        "documentPrototype",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "domain",
+        "documentPrototype",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "domain",
+        "element",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "domain",
+        "element",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "domain",
+        "htmlDocumentPrototype",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "domain",
+        "htmlDocumentPrototype",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "domain",
+        "null",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "domain",
+        "null",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "domain",
+        "object",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "domain",
+        "object",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "domain",
+        "primitive",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "domain",
+        "primitive",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "domain",
+        "proxy",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "domain",
+        "proxy",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "domain",
+        "undefined",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "domain",
+        "undefined",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "domain",
+        "window",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "domain",
+        "window",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "fonts",
+        "derived",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "fonts",
+        "derived",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "fonts",
+        "documentPrototype",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "fonts",
+        "documentPrototype",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "fonts",
+        "htmlDocumentPrototype",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "fonts",
+        "htmlDocumentPrototype",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "fonts",
+        "proxy",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "fonts",
+        "proxy",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "fullscreen",
+        "element",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "fullscreen",
+        "element",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "boolean"
+    ],
+    [
+      [
+        "fullscreen",
+        "object",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "fullscreen",
+        "object",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "boolean"
+    ],
+    [
+      [
+        "fullscreen",
+        "primitive",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "fullscreen",
+        "primitive",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "boolean"
+    ],
+    [
+      [
+        "fullscreen",
+        "window",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "fullscreen",
+        "window",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "boolean"
+    ],
+    [
+      [
+        "onabort",
+        "derived",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "onabort",
+        "derived",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "onabort",
+        "documentPrototype",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "onabort",
+        "documentPrototype",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "onabort",
+        "htmlDocumentPrototype",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "onabort",
+        "htmlDocumentPrototype",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "onabort",
+        "proxy",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "onabort",
+        "proxy",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "onmouseenter",
+        "derived",
+        "type"
+      ],
+      "undefined",
+      "object"
+    ],
+    [
+      [
+        "onmouseenter",
+        "documentPrototype",
+        "type"
+      ],
+      "undefined",
+      "object"
+    ],
+    [
+      [
+        "onmouseenter",
+        "element",
+        "exception"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "onmouseenter",
+        "element",
+        "type"
+      ],
+      "undefined",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "onmouseenter",
+        "htmlDocumentPrototype",
+        "type"
+      ],
+      "undefined",
+      "object"
+    ],
+    [
+      [
+        "onmouseenter",
+        "null",
+        "exception"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "onmouseenter",
+        "null",
+        "type"
+      ],
+      "undefined",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "onmouseenter",
+        "object",
+        "exception"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "onmouseenter",
+        "object",
+        "type"
+      ],
+      "undefined",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "onmouseenter",
+        "primitive",
+        "exception"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "onmouseenter",
+        "primitive",
+        "type"
+      ],
+      "undefined",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "onmouseenter",
+        "proxy",
+        "type"
+      ],
+      "undefined",
+      "object"
+    ],
+    [
+      [
+        "onmouseenter",
+        "undefined",
+        "exception"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "onmouseenter",
+        "undefined",
+        "type"
+      ],
+      "undefined",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "onmouseenter",
+        "window",
+        "exception"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "onmouseenter",
+        "window",
+        "type"
+      ],
+      "undefined",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "onmouseleave",
+        "derived",
+        "type"
+      ],
+      "undefined",
+      "object"
+    ],
+    [
+      [
+        "onmouseleave",
+        "documentPrototype",
+        "type"
+      ],
+      "undefined",
+      "object"
+    ],
+    [
+      [
+        "onmouseleave",
+        "element",
+        "exception"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "onmouseleave",
+        "element",
+        "type"
+      ],
+      "undefined",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "onmouseleave",
+        "htmlDocumentPrototype",
+        "type"
+      ],
+      "undefined",
+      "object"
+    ],
+    [
+      [
+        "onmouseleave",
+        "null",
+        "exception"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "onmouseleave",
+        "null",
+        "type"
+      ],
+      "undefined",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "onmouseleave",
+        "object",
+        "exception"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "onmouseleave",
+        "object",
+        "type"
+      ],
+      "undefined",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "onmouseleave",
+        "primitive",
+        "exception"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "onmouseleave",
+        "primitive",
+        "type"
+      ],
+      "undefined",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "onmouseleave",
+        "proxy",
+        "type"
+      ],
+      "undefined",
+      "object"
+    ],
+    [
+      [
+        "onmouseleave",
+        "undefined",
+        "exception"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "onmouseleave",
+        "undefined",
+        "type"
+      ],
+      "undefined",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "onmouseleave",
+        "window",
+        "exception"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "onmouseleave",
+        "window",
+        "type"
+      ],
+      "undefined",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "onreadystatechange",
+        "derived",
+        "type"
+      ],
+      "undefined",
+      "object"
+    ],
+    [
+      [
+        "onreadystatechange",
+        "documentPrototype",
+        "type"
+      ],
+      "undefined",
+      "object"
+    ],
+    [
+      [
+        "onreadystatechange",
+        "htmlDocumentPrototype",
+        "type"
+      ],
+      "undefined",
+      "object"
+    ],
+    [
+      [
+        "onreadystatechange",
+        "proxy",
+        "type"
+      ],
+      "undefined",
+      "object"
+    ],
+    [
+      [
+        "referrer",
+        "derived",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "referrer",
+        "derived",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "referrer",
+        "documentPrototype",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "referrer",
+        "documentPrototype",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "referrer",
+        "element",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "referrer",
+        "element",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "referrer",
+        "htmlDocumentPrototype",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "referrer",
+        "htmlDocumentPrototype",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "referrer",
+        "null",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "referrer",
+        "null",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "referrer",
+        "object",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "referrer",
+        "object",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "referrer",
+        "primitive",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "referrer",
+        "primitive",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "referrer",
+        "proxy",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "referrer",
+        "proxy",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "referrer",
+        "undefined",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "referrer",
+        "undefined",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "referrer",
+        "window",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "referrer",
+        "window",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "styleSheets",
+        "derived",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "styleSheets",
+        "derived",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "styleSheets",
+        "documentPrototype",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "styleSheets",
+        "documentPrototype",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "styleSheets",
+        "htmlDocumentPrototype",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "styleSheets",
+        "htmlDocumentPrototype",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "styleSheets",
+        "proxy",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "styleSheets",
+        "proxy",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "webkitIsFullScreen",
+        "element",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "webkitIsFullScreen",
+        "element",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "boolean"
+    ],
+    [
+      [
+        "webkitIsFullScreen",
+        "object",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "webkitIsFullScreen",
+        "object",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "boolean"
+    ],
+    [
+      [
+        "webkitIsFullScreen",
+        "primitive",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "webkitIsFullScreen",
+        "primitive",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "boolean"
+    ],
+    [
+      [
+        "webkitIsFullScreen",
+        "window",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "webkitIsFullScreen",
+        "window",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "boolean"
+    ]
+  ],
+  "afterDifferences": [],
+  "controlDifferences": []
+}
