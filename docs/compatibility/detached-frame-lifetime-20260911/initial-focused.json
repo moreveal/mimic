@@ -1,0 +1,122 @@
+{
+  "sha256": "1aa0b1457a1d5363db420a51cf433fd33c1531bd1c3dccaf188d4816a3b2239f",
+  "chrome": {
+    "parentNull": true,
+    "topNull": true,
+    "selfParent": false,
+    "selfTop": false,
+    "parentIsTop": false,
+    "parentBody": false,
+    "frameElement": true,
+    "childContent": true,
+    "outerContent": true
+  },
+  "mimic": {
+    "childContent": false,
+    "frameElement": false,
+    "outerContent": true,
+    "parentBody": true,
+    "parentIsTop": false,
+    "parentNull": false,
+    "selfParent": false,
+    "selfTop": false,
+    "topNull": false
+  },
+  "after": {
+    "childContent": false,
+    "frameElement": false,
+    "outerContent": true,
+    "parentBody": true,
+    "parentIsTop": false,
+    "parentNull": false,
+    "selfParent": false,
+    "selfTop": false,
+    "topNull": false
+  },
+  "control": {
+    "parentNull": true,
+    "topNull": true,
+    "selfParent": false,
+    "selfTop": false,
+    "parentIsTop": false,
+    "parentBody": false,
+    "frameElement": true,
+    "childContent": true,
+    "outerContent": true
+  },
+  "differences": [
+    [
+      [
+        "childContent"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "frameElement"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "parentBody"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "parentNull"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "topNull"
+      ],
+      true,
+      false
+    ]
+  ],
+  "afterDifferences": [
+    [
+      [
+        "childContent"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "frameElement"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "parentBody"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "parentNull"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "topNull"
+      ],
+      true,
+      false
+    ]
+  ],
+  "controlDifferences": []
+}

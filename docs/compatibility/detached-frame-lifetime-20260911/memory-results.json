@@ -1,0 +1,30 @@
+[
+  {
+    "side": "before",
+    "command": [
+      "go",
+      "test",
+      "./internal/browser",
+      "-run",
+      "^TestDetachedFrameMemoryProfile$",
+      "-count=1"
+    ],
+    "exitCode": 0,
+    "cwd": "E:\\GitHub\\mimic\\.build\\detached-lifetime-baseline",
+    "sourceSHA256": "0a6591c3acd6e7fce9956e313d5902f48894ed3062e2c5c32d5dcf50ebaea432"
+  },
+  {
+    "side": "after",
+    "command": [
+      "go",
+      "test",
+      "./internal/browser",
+      "-run",
+      "^TestDetachedFrameMemoryProfile$",
+      "-count=1"
+    ],
+    "exitCode": 0,
+    "cwd": "E:\\GitHub\\mimic",
+    "sourceSHA256": "0a6591c3acd6e7fce9956e313d5902f48894ed3062e2c5c32d5dcf50ebaea432"
+  }
+]
