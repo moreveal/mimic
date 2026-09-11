@@ -33,6 +33,8 @@ import (
 )
 
 type Realm struct {
+	speech                  *speechSynthesisState
+	speechNotifier          engine.Value
 	cookieNotifier          engine.Value
 	launchNotifier          engine.Value
 	cookieUnsubscribe       func()
@@ -364,6 +366,11 @@ func (r *Realm) Close() error {
 		return nil
 	}
 	r.closed = true
+	if r.speech != nil && r.speech.backend != nil {
+		r.speech.backend.Close()
+	}
+	r.speech = nil
+	r.speechNotifier = nil
 	if r.cookieUnsubscribe != nil {
 		r.cookieUnsubscribe()
 		r.cookieUnsubscribe = nil
