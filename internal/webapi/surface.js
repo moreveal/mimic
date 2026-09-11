@@ -51,8 +51,8 @@
     const intlLanguageBases=new Set('af am ar as az be bg bn bo br bs ca cs cy da de dsb el en es et eu fa fi fil fo fr ga gd gl gu ha haw he hi hr hsb hu hy id ig is it ja ka kk km kn ko ky lb lo lt lv mk ml mn mr ms mt my nb ne nl nn no or pa pl ps pt ro ru si sk sl sq sr sv sw ta te th tk tr uk ur uz vi wo xh yo zh zu'.split(' '));
     const supportedLocales=locales=>Intl.getCanonicalLocales(locales).filter(locale=>intlLanguageBases.has(locale.split('-')[0].toLowerCase()));
     class Collator { constructor(locales,options={}){this.__locale=canonicalLocale(Array.isArray(locales)?locales[0]:locales);this.__options=options} compare(a,b){return String(a).localeCompare(String(b))} resolvedOptions(){return{locale:this.__locale,usage:'sort',sensitivity:this.__options.sensitivity||'variant',ignorePunctuation:false,collation:'default',numeric:!!this.__options.numeric,caseFirst:'false'}} static supportedLocalesOf(locales){return supportedLocales(locales)} }
-    class NumberFormat { constructor(locales,options={}){this.__locale=canonicalLocale(Array.isArray(locales)?locales[0]:locales);this.__options=options} format(value){const n=Number(value);return Number.isFinite(n)?String(n):String(n)} formatToParts(value){return[{type:'integer',value:this.format(value)}]} formatRange(a,b){return this.format(a)+'вЂ“'+this.format(b)} formatRangeToParts(a,b){return[{type:'shared',source:'startRange',value:this.format(a)},{type:'literal',source:'shared',value:'вЂ“'},{type:'shared',source:'endRange',value:this.format(b)}]} resolvedOptions(){return{locale:this.__locale,numberingSystem:'latn',style:this.__options.style||'decimal',minimumIntegerDigits:1,minimumFractionDigits:0,maximumFractionDigits:3,useGrouping:'auto',notation:'standard',signDisplay:'auto',roundingIncrement:1,roundingMode:'halfExpand',roundingPriority:'auto',trailingZeroDisplay:'auto'}} static supportedLocalesOf(locales){return supportedLocales(locales)} }
-    class DateTimeFormat { constructor(locales,options={}){this.__locale=canonicalLocale(Array.isArray(locales)?locales[0]:locales);this.__options=options} format(value=Date.now()){const d=new Date(value);return d.toLocaleString?d.toLocaleString():d.toString()} formatToParts(value=Date.now()){return[{type:'literal',value:this.format(value)}]} formatRange(a,b){return this.format(a)+' вЂ“ '+this.format(b)} formatRangeToParts(a,b){return[{type:'shared',source:'startRange',value:this.format(a)},{type:'literal',source:'shared',value:' вЂ“ '},{type:'shared',source:'endRange',value:this.format(b)}]} resolvedOptions(){const dateFields=this.__options.dateStyle||this.__options.timeStyle||['weekday','era','year','month','day','dayPeriod','hour','minute','second','fractionalSecondDigits','timeZoneName'].some(key=>this.__options[key]!==undefined)?{}:{year:'numeric',month:'2-digit',day:'2-digit'};return{locale:this.__locale,calendar:'gregory',numberingSystem:'latn',timeZone:this.__options.timeZone||intlEnvironment.timeZone,...dateFields,...(this.__options.hour12===undefined?{}:{hourCycle:this.__options.hour12?'h12':'h23',hour12:!!this.__options.hour12})}} static supportedLocalesOf(locales){return supportedLocales(locales)} }
+    class NumberFormat { constructor(locales,options={}){this.__locale=canonicalLocale(Array.isArray(locales)?locales[0]:locales);this.__options=options} format(value){const n=Number(value);return Number.isFinite(n)?String(n):String(n)} formatToParts(value){return[{type:'integer',value:this.format(value)}]} formatRange(a,b){return this.format(a)+'РІР‚вЂњ'+this.format(b)} formatRangeToParts(a,b){return[{type:'shared',source:'startRange',value:this.format(a)},{type:'literal',source:'shared',value:'РІР‚вЂњ'},{type:'shared',source:'endRange',value:this.format(b)}]} resolvedOptions(){return{locale:this.__locale,numberingSystem:'latn',style:this.__options.style||'decimal',minimumIntegerDigits:1,minimumFractionDigits:0,maximumFractionDigits:3,useGrouping:'auto',notation:'standard',signDisplay:'auto',roundingIncrement:1,roundingMode:'halfExpand',roundingPriority:'auto',trailingZeroDisplay:'auto'}} static supportedLocalesOf(locales){return supportedLocales(locales)} }
+    class DateTimeFormat { constructor(locales,options={}){this.__locale=canonicalLocale(Array.isArray(locales)?locales[0]:locales);this.__options=options} format(value=Date.now()){const d=new Date(value);return d.toLocaleString?d.toLocaleString():d.toString()} formatToParts(value=Date.now()){return[{type:'literal',value:this.format(value)}]} formatRange(a,b){return this.format(a)+' РІР‚вЂњ '+this.format(b)} formatRangeToParts(a,b){return[{type:'shared',source:'startRange',value:this.format(a)},{type:'literal',source:'shared',value:' РІР‚вЂњ '},{type:'shared',source:'endRange',value:this.format(b)}]} resolvedOptions(){const dateFields=this.__options.dateStyle||this.__options.timeStyle||['weekday','era','year','month','day','dayPeriod','hour','minute','second','fractionalSecondDigits','timeZoneName'].some(key=>this.__options[key]!==undefined)?{}:{year:'numeric',month:'2-digit',day:'2-digit'};return{locale:this.__locale,calendar:'gregory',numberingSystem:'latn',timeZone:this.__options.timeZone||intlEnvironment.timeZone,...dateFields,...(this.__options.hour12===undefined?{}:{hourCycle:this.__options.hour12?'h12':'h23',hour12:!!this.__options.hour12})}} static supportedLocalesOf(locales){return supportedLocales(locales)} }
     class PluralRules { constructor(locales,options={}){this.__locale=canonicalLocale(Array.isArray(locales)?locales[0]:locales);this.__options=options} select(value){return Number(value)===1?'one':'other'} selectRange(){return'other'} resolvedOptions(){return{locale:this.__locale,type:this.__options.type||'cardinal',minimumIntegerDigits:1,minimumFractionDigits:0,maximumFractionDigits:3,pluralCategories:['one','other']}} static supportedLocalesOf(locales){return Intl.getCanonicalLocales(locales)} }
     class RelativeTimeFormat { constructor(locales,options={}){this.__locale=canonicalLocale(Array.isArray(locales)?locales[0]:locales);this.__options=options} format(value,unit){return String(value)+' '+String(unit)} formatToParts(value,unit){return[{type:'integer',value:String(value),unit:String(unit)}]} resolvedOptions(){return{locale:this.__locale,style:this.__options.style||'long',numeric:this.__options.numeric||'always',numberingSystem:'latn'}} static supportedLocalesOf(locales){return Intl.getCanonicalLocales(locales)} }
     class ListFormat { constructor(locales,options={}){this.__locale=canonicalLocale(Array.isArray(locales)?locales[0]:locales);this.__options=options} format(values){return Array.from(values,String).join(', ')} formatToParts(values){return Array.from(values,String).map((value,index)=>({type:index?'literal':'element',value}))} resolvedOptions(){return{locale:this.__locale,type:this.__options.type||'conjunction',style:this.__options.style||'long'}} static supportedLocalesOf(locales){return Intl.getCanonicalLocales(locales)} }
@@ -391,9 +391,29 @@
     return copy(value);
   };
   registerBootstrapCallback('installHistoryClone',cloneHistoryState);
-  class History { constructor(){illegal('History')} pushState(s,t,u){const error=host.historyPush(u==null?'':String(u),s);if(error)throw new DOMException(error,'SecurityError')} replaceState(s,t,u){const error=host.historyReplace(u==null?'':String(u),s);if(error)throw new DOMException(error,'SecurityError')} back(){host.historyGo(-1)} forward(){host.historyGo(1)} go(n=0){host.historyGo(Number(n)|0)} get length(){return host.historyLength()} get state(){return host.historyState()} get scrollRestoration(){return historySlots.get(this).scrollRestoration} set scrollRestoration(value){value=String(value);if(value==='auto'||value==='manual')historySlots.get(this).scrollRestoration=value} }
+  const requireActiveHistory=()=>{if(!host.historyIsActive())throw new DOMException('The document is not fully active.','SecurityError')};
+  class History {
+    constructor(){illegal('History')}
+    pushState(s,t,u){const binding=requireRealmBinding(this,'History');if(arguments.length<2)throw new TypeError('2 arguments required');bindingString(t);u=u==null?'':bindingString(u);return callRealmBinding(this,binding,'update',[s,u,false])}
+    replaceState(s,t,u){const binding=requireRealmBinding(this,'History');if(arguments.length<2)throw new TypeError('2 arguments required');bindingString(t);u=u==null?'':bindingString(u);return callRealmBinding(this,binding,'update',[s,u,true])}
+    back(){const binding=requireRealmBinding(this,'History');return callRealmBinding(this,binding,'go',[-1])}
+    forward(){const binding=requireRealmBinding(this,'History');return callRealmBinding(this,binding,'go',[1])}
+    go(n=0){const binding=requireRealmBinding(this,'History');n=(+n)|0;return callRealmBinding(this,binding,'go',[n])}
+    get length(){requireActiveHistory();return host.historyLength()}
+    get state(){requireActiveHistory();return host.historyState()}
+    get scrollRestoration(){requireActiveHistory();return historySlots.get(this).scrollRestoration}
+    set scrollRestoration(value){value=String(value);if(value==='auto'||value==='manual'){requireActiveHistory();historySlots.get(this).scrollRestoration=value}}
+  }
   const storageAreas=new WeakMap();
-  class Storage { constructor(){illegal('Storage')} get length(){return host.storageLength(storageAreas.get(this))} key(i){return host.storageKey(storageAreas.get(this),Number(i)|0)} getItem(k){return host.storageGet(storageAreas.get(this),String(k))} setItem(k,v){host.storageSet(storageAreas.get(this),String(k),String(v))} removeItem(k){host.storageRemove(storageAreas.get(this),String(k))} clear(){host.storageClear(storageAreas.get(this))} }
+  class Storage {
+    constructor(){illegal('Storage')}
+    get length(){return host.storageLength(storageAreas.get(this))}
+    key(i){const binding=requireRealmBinding(this,'Storage');if(!arguments.length)throw new TypeError('1 argument required');i=(+i)>>>0;return callRealmBinding(this,binding,'key',[i])}
+    getItem(k){const binding=requireRealmBinding(this,'Storage');if(!arguments.length)throw new TypeError('1 argument required');k=bindingString(k);return callRealmBinding(this,binding,'getItem',[k])}
+    setItem(k,v){const binding=requireRealmBinding(this,'Storage');if(arguments.length<2)throw new TypeError('2 arguments required');k=bindingString(k);v=bindingString(v);return callRealmBinding(this,binding,'setItem',[k,v])}
+    removeItem(k){const binding=requireRealmBinding(this,'Storage');if(!arguments.length)throw new TypeError('1 argument required');k=bindingString(k);return callRealmBinding(this,binding,'removeItem',[k])}
+    clear(){const binding=requireRealmBinding(this,'Storage');return callRealmBinding(this,binding,'clear',[])}
+  }
   const trustedValueSlots=new WeakMap(),trustedPolicySlots=new WeakMap(),trustedFactorySlots=new WeakMap();
   const trustedValue=(Ctor,value)=>{const result=Object.create(Ctor.prototype);trustedValueSlots.set(result,{type:Ctor,value:String(value)});return result};
   class TrustedHTML { constructor(){illegal('TrustedHTML')} toString(){return trustedValueSlots.get(this)?.value} toJSON(){return this.toString()} }
@@ -1055,7 +1075,7 @@
     // These platform objects belong to a Window. Borrowed accessors must use
     // the receiver's owner, including across realms and after prototype edits.
     // Reuse the private owner binding used by Document, Location and Performance.
-    for(const [kind,prototype,instance] of [['Navigator',Navigator.prototype,nav],['Screen',Screen.prototype,scr],['History',History.prototype,hist]]){
+    for(const [kind,prototype,instance] of [['Navigator',Navigator.prototype,nav],['Screen',Screen.prototype,scr],['History',History.prototype,hist],['Storage',Storage.prototype,storage]]){
       const getters=new Map(),setters=new Map();
       for(const name of Reflect.ownKeys(prototype)){
         const descriptor=Object.getOwnPropertyDescriptor(prototype,name);
@@ -1070,10 +1090,25 @@
         }
         Object.defineProperty(prototype,name,descriptor);
       }
-      registerRealmBinding(instance,kind,{
-        get:name=>functionSourceApply(getters.get(name),instance,[]),
-        set:(name,value)=>functionSourceApply(setters.get(name),instance,[value])
-      });
+      for(const owner of kind==='Storage'?[storage,sessionStorage]:[instance]){
+        const operations={
+          get:name=>functionSourceApply(getters.get(name),owner,[]),
+          set:(name,value)=>functionSourceApply(setters.get(name),owner,[value])
+        };
+        if(kind==='History'){
+          operations.go=n=>{requireActiveHistory();host.historyGo(n)};
+          operations.update=(state,url,replace)=>{const error=replace?host.historyReplace(url,state):host.historyPush(url,state);if(error)throw new DOMException(error,'SecurityError')};
+        }
+        if(kind==='Storage'){
+          const area=storageAreas.get(owner);
+          operations.key=i=>host.storageKey(area,i);
+          operations.getItem=k=>host.storageGet(area,k);
+          operations.setItem=(k,v)=>host.storageSet(area,k,v);
+          operations.removeItem=k=>host.storageRemove(area,k);
+          operations.clear=()=>host.storageClear(area);
+        }
+        registerRealmBinding(owner,kind,operations);
+      }
     }
   };
   const finalizeCallableBindings=()=>{
