@@ -101,6 +101,9 @@ func (pr *protocolRacer) race(req *http.Request, addr string, getTransportFunc f
 			if tripErr == nil {
 				return resp, nil
 			}
+			if protocol == "h3" && resp == nil && replayableAfterHTTP3Failure(req) {
+				return pr.retryOverTCP(req, addr, transport, tripErr, getTransportFunc)
+			}
 			// This sentinel is emitted by the TCP dialer before any HTTP write.
 			// All other errors may follow a successful server-side operation.
 			if !errors.Is(tripErr, errProtocolChanged) {
@@ -175,7 +178,7 @@ func (pr *protocolRacer) startRace(req *http.Request, addr string, getTransportF
 				closeRequestBody(req)
 				return nil, err
 			}
-			return pr.selectedRoundTrip(transport, req, addr)
+			return pr.selectedRoundTrip(transport, req, addr, protocol, getTransportFunc)
 		}
 		if pending := pr.connectionSelections[addr]; pending != nil {
 			pr.protocolCacheMu.Unlock()
@@ -194,7 +197,7 @@ func (pr *protocolRacer) startRace(req *http.Request, addr string, getTransportF
 					closeRequestBody(req)
 					return nil, err
 				}
-				return pr.selectedRoundTrip(transport, req, addr)
+				return pr.selectedRoundTrip(transport, req, addr, protocol, getTransportFunc)
 			}
 			continue
 		}
@@ -215,7 +218,13 @@ func (pr *protocolRacer) startRace(req *http.Request, addr string, getTransportF
 		if err != nil {
 			return nil, err
 		}
+		pr.cachedTransportsLck.Lock()
+		selectedHTTP3 := pr.cachedTransports[addr+":h3"] == transport
+		pr.cachedTransportsLck.Unlock()
 		resp, err := pr.roundTrip(transport, req, addr)
+		if err != nil && selectedHTTP3 && resp == nil && replayableAfterHTTP3Failure(req) {
+			return pr.retryOverTCP(req, addr, transport, err, getTransportFunc)
+		}
 		if errors.Is(err, errProtocolChanged) {
 			pr.clearProtocolCache(addr)
 		}
@@ -223,8 +232,57 @@ func (pr *protocolRacer) startRace(req *http.Request, addr string, getTransportF
 	}
 }
 
-func (pr *protocolRacer) selectedRoundTrip(transport http.RoundTripper, req *http.Request, addr string) (*http.Response, error) {
+func replayableAfterHTTP3Failure(req *http.Request) bool {
+	if req == nil || req.Context().Err() != nil || (req.Body != nil && req.Body != http.NoBody) {
+		return false
+	}
+	switch req.Method {
+	case http.MethodGet, http.MethodHead, http.MethodOptions, http.MethodTrace:
+		return true
+	default:
+		return false
+	}
+}
+
+// A successful QUIC handshake doesn't guarantee that the selected HTTP/3
+// connection can decode the peer's response. Browsers retry safe navigations
+// over TCP when QUIC fails before response headers; keeping the failed protocol
+// cached instead makes every request to that origin fail identically.
+func (pr *protocolRacer) retryOverTCP(req *http.Request, addr string, h3 http.RoundTripper, h3Err error, getTransportFunc func(*http.Request, string) error) (*http.Response, error) {
+	pr.clearProtocolCacheIf(addr, "h3")
+	pr.cachedTransportsLck.Lock()
+	if pr.cachedTransports[addr+":h3"] == h3 {
+		delete(pr.cachedTransports, addr+":h3")
+	}
+	pr.cachedTransportsLck.Unlock()
+	if closer, ok := h3.(interface{ Close() error }); ok {
+		_ = closer.Close()
+	}
+	tcp, err := pr.getOrCreateTransport("h2", addr, req, getTransportFunc)
+	if err != nil {
+		return nil, fmt.Errorf("HTTP/3 failed (%v); TCP fallback failed: %w", h3Err, err)
+	}
+	resp, err := pr.roundTrip(tcp, req, addr)
+	if err != nil {
+		return resp, err
+	}
+	pr.cacheWinningProtocol(addr, "h2", tcp)
+	return resp, nil
+}
+
+func (pr *protocolRacer) clearProtocolCacheIf(addr, protocol string) {
+	pr.protocolCacheMu.Lock()
+	if pr.protocolCache[addr] == protocol {
+		delete(pr.protocolCache, addr)
+	}
+	pr.protocolCacheMu.Unlock()
+}
+
+func (pr *protocolRacer) selectedRoundTrip(transport http.RoundTripper, req *http.Request, addr, protocol string, getTransportFunc func(*http.Request, string) error) (*http.Response, error) {
 	resp, err := pr.roundTrip(transport, req, addr)
+	if err != nil && protocol == "h3" && resp == nil && replayableAfterHTTP3Failure(req) {
+		return pr.retryOverTCP(req, addr, transport, err, getTransportFunc)
+	}
 	if errors.Is(err, errProtocolChanged) {
 		pr.clearProtocolCache(addr)
 	}
@@ -239,7 +297,10 @@ func (pr *protocolRacer) raceConnections(req *http.Request, addr string, h3 http
 	if err != nil {
 		return nil, err
 	}
-	return pr.selectedRoundTrip(transport, req, addr)
+	pr.protocolCacheMu.RLock()
+	protocol := pr.protocolCache[addr]
+	pr.protocolCacheMu.RUnlock()
+	return pr.selectedRoundTrip(transport, req, addr, protocol, getTransportFunc)
 }
 
 func (pr *protocolRacer) selectConnection(req *http.Request, addr string, h3 http.RoundTripper, getTransportFunc func(*http.Request, string) error) (http.RoundTripper, error) {

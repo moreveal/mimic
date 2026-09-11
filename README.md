@@ -58,6 +58,13 @@ accepts `--timeout` in milliseconds for that wait.
 with Pyppeteer 2.0.0 installed. It may load referenced resources and does not
 capture canvas pixels, live form state or embedded frames.
 
+For navigation and capture in one command, use
+`python tools/mimic_snapshot.py URL OUTPUT --settle-ms 2500`. Its `--timeout`
+is a no-progress threshold rather than a hard navigation deadline: while the
+network or DOM is changing it keeps waiting, and if progress stops it preserves
+the current DOM with diagnostics in `snapshot.json`. `--max-wait` supplies a
+separate absolute safety cap.
+
 ## Architecture and target
 
 `CDP -> browser commands -> canonical state / scheduler / resource loader -> engine`.
