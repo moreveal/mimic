@@ -5,6 +5,30 @@
   const bootstrapRestoreHooks=[];
   const bootstrapCallbacks=[];
   const registerBootstrapCallback=(name,...callbacks)=>{bootstrapCallbacks.push([name,callbacks]);host[name](...callbacks)};
+  // Private brands and captured operations travel with owner references. Public
+  // methods/prototypes are mutable and cannot validate or dispatch a borrowed
+  // WebIDL operation. Conversion still runs in the calling method's realm.
+  const realmBindings=new WeakMap();
+  const bindingGet=Function.prototype.call.bind(WeakMap.prototype.get,realmBindings);
+  const bindingSet=Function.prototype.call.bind(WeakMap.prototype.set,realmBindings);
+  const registerRealmBinding=(value,kind,operations)=>{
+    const invoke=(receiver,operation,args)=>{
+      const binding=bindingGet(receiver);
+      if(!binding||binding.kind!==kind)throw new TypeError('Illegal invocation');
+      return binding.operations[operation](...args);
+    };
+    bindingSet(value,{kind,operations,invoke});
+  };
+  const requireRealmBinding=(value,kind)=>{
+    const local=bindingGet(value);
+    if(local?.kind===kind)return local;
+    const reference=referenceGet(value);
+    if(reference?.binding?.kind===kind)return reference;
+    throw new TypeError('Illegal invocation');
+  };
+  const callRealmBinding=(receiver,binding,operation,args)=>bindingGet(receiver)===binding?
+    binding.operations[operation](...args):unwrapCrossRealm(binding.frame,binding.binding.invoke)(receiver,operation,args);
+  const bindingString=value=>{if(typeof value==='symbol')throw new TypeError('Cannot convert a Symbol value to a string');return String(value)};
   // Match the realm trace's once-per-(name,supported) contract before FFI.
   const tracedAccesses=new Map();
   const recordAPIAccess=(name,supported)=>{const bit=supported?1:2,seen=tracedAccesses.get(name)||0;if(seen&bit)return;tracedAccesses.set(name,seen|bit);host.apiAccess(name,supported)};
@@ -394,7 +418,7 @@
   class IntersectionObserver { constructor(callback,options={}){if(typeof callback!=='function')throw new TypeError("Failed to construct 'IntersectionObserver': parameter 1 is not of type 'IntersectionObserverCallback'.");const thresholds=(options.threshold===undefined?[0]:(Array.isArray(options.threshold)?options.threshold:[options.threshold])).map(Number).sort((a,b)=>a-b);if(thresholds.some(value=>!Number.isFinite(value)||value<0||value>1))throw new RangeError('Threshold values must be numbers between 0 and 1');intersectionObserverSlots.set(this,{callback,root:options.root||null,rootMargin:String(options.rootMargin||'0px 0px 0px 0px'),scrollMargin:String(options.scrollMargin||'0px 0px 0px 0px'),thresholds:[...new Set(thresholds)],records:[],targets:new Set()})} get root(){return intersectionObserverSlots.get(this).root} get rootMargin(){return intersectionObserverSlots.get(this).rootMargin} get scrollMargin(){return intersectionObserverSlots.get(this).scrollMargin} get thresholds(){return intersectionObserverSlots.get(this).thresholds.slice()} observe(target){if(!(target instanceof Element))throw new TypeError("Failed to execute 'observe' on 'IntersectionObserver': parameter 1 is not of type 'Element'.");intersectionObserverSlots.get(this).targets.add(target)} unobserve(target){intersectionObserverSlots.get(this).targets.delete(target)} disconnect(){const state=intersectionObserverSlots.get(this);state.targets.clear();state.records.length=0} takeRecords(){return intersectionObserverSlots.get(this).records.splice(0)} }
   Object.defineProperty(globalThis,'__mimicNotifyPerformanceObservers',{value:finalized=>{navigationFinalized=!!finalized;for(const observer of performanceObservers){const state=performanceObserverSlots.get(observer);if(!state||!state.active)continue;for(const entry of host.performanceEntries(state.types,false)){const id=performanceEntryKey(entry);if(!state.seen.has(id)){state.seen.add(id);state.records.push(entry)}}queuePerformanceDelivery(observer)}},configurable:true});
   const performanceMarks=[];
-  class Performance { constructor(){illegal('Performance')} get timeOrigin(){return host.performanceTimeOrigin()} get timing(){const value=Object.create(PerformanceTiming.prototype),origin=Math.trunc(this.timeOrigin);for(const name of ['navigationStart','unloadEventStart','unloadEventEnd','redirectStart','redirectEnd','fetchStart','domainLookupStart','domainLookupEnd','connectStart','connectEnd','secureConnectionStart','requestStart','responseStart','responseEnd','domLoading','domInteractive','domContentLoadedEventStart','domContentLoadedEventEnd','domComplete','loadEventStart','loadEventEnd'])Object.defineProperty(value,name,{value:name==='navigationStart'||name==='fetchStart'?origin:0,enumerable:true});return value} now(){return host.performanceNow()} mark(name,options={}){const mark=new PerformanceMark(hostToken,{name:String(name),entryType:'mark',startTime:options.startTime===undefined?this.now():Number(options.startTime),duration:0,detail:options.detail??null});performanceMarks.push(mark);return mark} getEntries(){return host.performanceEntries([],true).map(makePerformanceEntry).concat(performanceMarks)} getEntriesByType(type){type=String(type);return host.performanceEntries([type],true).map(makePerformanceEntry).concat(type==='mark'?performanceMarks:[])} getEntriesByName(name,type){name=String(name);return this.getEntries().filter(entry=>entry.name===name&&(type===undefined||entry.entryType===String(type)))} }
+  class Performance { constructor(){illegal('Performance')} get timeOrigin(){const binding=requireRealmBinding(this,'Performance');return callRealmBinding(this,binding,'timeOrigin',[])} get timing(){const value=Object.create(PerformanceTiming.prototype),origin=Math.trunc(this.timeOrigin);for(const name of ['navigationStart','unloadEventStart','unloadEventEnd','redirectStart','redirectEnd','fetchStart','domainLookupStart','domainLookupEnd','connectStart','connectEnd','secureConnectionStart','requestStart','responseStart','responseEnd','domLoading','domInteractive','domContentLoadedEventStart','domContentLoadedEventEnd','domComplete','loadEventStart','loadEventEnd'])Object.defineProperty(value,name,{value:name==='navigationStart'||name==='fetchStart'?origin:0,enumerable:true});return value} now(){const binding=requireRealmBinding(this,'Performance');return callRealmBinding(this,binding,'now',[])} mark(name,options={}){const mark=new PerformanceMark(hostToken,{name:String(name),entryType:'mark',startTime:options.startTime===undefined?this.now():Number(options.startTime),duration:0,detail:options.detail??null});performanceMarks.push(mark);return mark} getEntries(){const binding=requireRealmBinding(this,'Performance');return callRealmBinding(this,binding,'entries',[])} getEntriesByType(type){const binding=requireRealmBinding(this,'Performance');if(!arguments.length)throw new TypeError('Not enough arguments');type=bindingString(type);return callRealmBinding(this,binding,'entriesByType',[type])} getEntriesByName(name,type=undefined){const binding=requireRealmBinding(this,'Performance');if(!arguments.length)throw new TypeError('Not enough arguments');name=bindingString(name);if(type!==undefined)type=bindingString(type);return callRealmBinding(this,binding,'entriesByName',[name,type])} }
   class GPUAdapterInfo { constructor(){illegal("GPUAdapterInfo")}}
   class GPUSupportedFeatures { constructor(){illegal("GPUSupportedFeatures")}}
   class GPUSupportedLimits { constructor(){illegal("GPUSupportedLimits")}}
@@ -646,7 +670,7 @@
     if(iteratorFields)bridgeApply(bridgeWeakSet,freshIteratorFields,[proxy,iteratorFields]);
     if(result.eval)markNative(proxy,'eval');
     if(result.nodeId){const data=host.nodeData(result.nodeId);if(data){elementData.set(proxy,data);elementWrappers.set(String(result.nodeId),proxy)}}
-    referenceSet(proxy,{frame:id,realm:result.realm,handle:result.handle,type:kind,array:result.array,constructable:result.constructable,nodeId:result.nodeId,document:result.document,eval:result.eval});crossRealmCache.set(key,proxy);
+    referenceSet(proxy,{frame:id,realm:result.realm,handle:result.handle,type:kind,array:result.array,constructable:result.constructable,nodeId:result.nodeId,document:result.document,eval:result.eval,binding:result.binding});crossRealmCache.set(key,proxy);
     if(result.document){remoteDocumentCache.set(result.realm,proxy);if(result.nodeId)documentWrappers.set(result.nodeId,proxy)}
     // Native undetectable objects cannot intercept [[GetPrototypeOf]]. This
     // preserves the initial remote prototype identity, but later replacement
@@ -662,7 +686,8 @@
       const reference=referenceGet(value);if(reference){invalidateIteratorFields(value);return{...reference,__mimicCrossRealm:reference.type}}
       return null;
     },(value,importNode=false)=>importNode?wrap(host.nodeData(value)):value===document?host.documentRootID():bridgeApply(bridgeWeakGet,elementData,[value])?.nodeId||0,
-    key=>{const value=Reflect.get(globalThis,key);return{value,intrinsic:key==='eval'&&value===bridgeOriginalEval||key==='postMessage'&&value===bridgeOriginalPostMessage}});
+    key=>{const value=Reflect.get(globalThis,key);return{value,intrinsic:key==='eval'&&value===bridgeOriginalEval||key==='postMessage'&&value===bridgeOriginalPostMessage}},
+    value=>{const binding=bindingGet(value);return binding?{kind:binding.kind,invoke:binding.invoke}:null});
   const remoteWindow=id=>{
     if(id===host.selfFrameID())return globalThis;
     if(remoteWindowCache.has(id))return remoteWindowCache.get(id);
@@ -758,7 +783,13 @@
   window.postMessage=bridgeOriginalPostMessage=function postMessage(message,targetOrigin='/',transfer=[]){if(targetOrigin&&typeof targetOrigin==='object'){transfer=targetOrigin.transfer||[];targetOrigin=targetOrigin.targetOrigin===undefined?'/':targetOrigin.targetOrigin}return host.framePost(host.selfFrameID(),message,String(targetOrigin),takeMessagePorts(transfer))};
   window.queueMicrotask=function queueMicrotask(callback){if(typeof callback!=='function')throw new TypeError('callback is not a function');Promise.resolve().then(callback)};
   window.fetch=function fetch(input,init={}){const request=input instanceof Request?new Request(input,init):new Request(input,init);return host.fetch(request.url,request.method,Object.fromEntries(request.headers),request.body==null?'':String(request.body)).then(r=>{const response=new Response(r.body,{status:r.status,headers:r.headers});const state=responseSlots.get(response);state.url=r.url;return response})};
-  window.performance=Object.create(Performance.prototype);window.Performance=Performance;window.PerformanceEntry=PerformanceEntry;window.PerformanceServerTiming=PerformanceServerTiming;window.PerformanceResourceTiming=PerformanceResourceTiming;window.PerformanceNavigationTiming=PerformanceNavigationTiming;window.PerformanceObserverEntryList=PerformanceObserverEntryList;window.PerformanceObserver=PerformanceObserver;
+  const performanceEntries=()=>host.performanceEntries([],true).map(makePerformanceEntry).concat(performanceMarks);
+  const performanceOperations={
+    timeOrigin:()=>host.performanceTimeOrigin(),now:()=>host.performanceNow(),entries:performanceEntries,
+    entriesByType:type=>host.performanceEntries([type],true).map(makePerformanceEntry).concat(type==='mark'?performanceMarks:[]),
+    entriesByName:(name,type)=>performanceEntries().filter(entry=>entry.name===name&&(type===undefined||entry.entryType===type))
+  };
+  window.performance=Object.create(Performance.prototype);registerRealmBinding(window.performance,'Performance',performanceOperations);window.Performance=Performance;window.PerformanceEntry=PerformanceEntry;window.PerformanceServerTiming=PerformanceServerTiming;window.PerformanceResourceTiming=PerformanceResourceTiming;window.PerformanceNavigationTiming=PerformanceNavigationTiming;window.PerformanceObserverEntryList=PerformanceObserverEntryList;window.PerformanceObserver=PerformanceObserver;
   window.getComputedStyle=e=>cssDeclaration(e,true);window.matchMedia=q=>({matches:host.media(String(q)),media:String(q),onchange:null,addEventListener(){},removeEventListener(){}});
   const handwrittenInterfaceConstructors=new Set(Object.getOwnPropertyNames(globalThis).map(name=>globalThis[name]).filter(value=>typeof value==='function'));
   const attributeUnsafeInterfaces=globalThis.__mimicAttributeUnsafeInterfaces;

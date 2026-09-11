@@ -63,6 +63,7 @@ type Realm struct {
 	frameValueRetain        engine.Value
 	frameValueEncoderJSON   bool
 	frameNodeDescribe       engine.Value
+	frameBindingDescribe    engine.Value
 	documentStreamEvent     engine.Value
 	url                     *url.URL
 	token                   string
