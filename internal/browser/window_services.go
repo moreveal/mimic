@@ -134,6 +134,7 @@ func (p *Page) CrashReports() map[string]string {
 func addWindowServiceHosts(r *Realm, h map[string]any) {
 	addPictureInPictureHosts(r, h)
 	addNavigationHosts(r, h)
+	addIndexedDBHosts(r, h)
 	addCacheHosts(r, h)
 	addCookieStoreHosts(r, h)
 	addLaunchHosts(r, h)

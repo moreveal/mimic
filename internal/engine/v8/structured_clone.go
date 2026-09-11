@@ -116,3 +116,24 @@ func (a *adapter) StructuredClone(value engine.Value, rejectHostObject engine.Va
 		return clone(s.isolate, realm, scope)
 	})
 }
+
+// A storage graph must reject proxies without invoking author traps. This also
+// lets browser-owned serializers support platform values (Blob/File) while
+// retaining the same native exotic-object check as V8's structured clone.
+func (a *adapter) IsStructuredCloneProxy(value engine.Value) bool {
+	var proxy bool
+	check := func(scope *gov8.Scope) (engine.Value, error) {
+		v, err := a.local(scope, value)
+		if err != nil {
+			return nil, err
+		}
+		proxy, err = v.IsProxy()
+		return nil, err
+	}
+	if callback := a.onCallback(); callback != nil {
+		_, _ = check(callback.scope.Scope())
+	} else {
+		_, _ = a.run(func(_ *state, _ *gov8.Context, scope *gov8.Scope) (engine.Value, error) { return check(scope) })
+	}
+	return proxy
+}

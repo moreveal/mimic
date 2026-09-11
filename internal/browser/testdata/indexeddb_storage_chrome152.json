@@ -1,0 +1,173 @@
+{
+  "factory": [
+    "[object IDBFactory]",
+    true,
+    true
+  ],
+  "keys": [
+    -1,
+    -1,
+    -1,
+    -1,
+    -1,
+    "DataError"
+  ],
+  "range": [
+    false,
+    true
+  ],
+  "pending": [
+    "pending",
+    "InvalidStateError",
+    null,
+    null
+  ],
+  "open": [
+    [
+      [
+        "upgrade",
+        0,
+        1,
+        1,
+        "versionchange"
+      ],
+      [
+        "complete"
+      ]
+    ],
+    "vertical",
+    1,
+    [
+      "items"
+    ],
+    null,
+    "done"
+  ],
+  "rows": [
+    3,
+    [
+      {
+        "tag": "a",
+        "labels": [
+          "x",
+          "y"
+        ],
+        "id": 1
+      },
+      {
+        "tag": "b",
+        "labels": [
+          "y"
+        ],
+        "id": 2
+      },
+      {
+        "tag": "c",
+        "labels": [
+          "z"
+        ],
+        "id": 3
+      }
+    ],
+    true,
+    true
+  ],
+  "reads": [
+    [
+      1,
+      2
+    ],
+    {
+      "tag": "c",
+      "labels": [
+        "z"
+      ],
+      "id": 3
+    },
+    3,
+    [
+      {
+        "tag": "b",
+        "labels": [
+          "y"
+        ],
+        "id": 2
+      },
+      {
+        "tag": "c",
+        "labels": [
+          "z"
+        ],
+        "id": 3
+      }
+    ]
+  ],
+  "duplicate": [
+    "ConstraintError",
+    true,
+    true,
+    true
+  ],
+  "cursor": [
+    [
+      "a",
+      1,
+      "a",
+      true
+    ],
+    [
+      "b",
+      2,
+      "b",
+      true
+    ],
+    [
+      "c",
+      3,
+      "c",
+      true
+    ],
+    [
+      "d",
+      4,
+      "d",
+      true
+    ]
+  ],
+  "rollback": 4,
+  "databases": [
+    [
+      "vertical",
+      1
+    ]
+  ],
+  "upgrade": [
+    [
+      [
+        "change",
+        1,
+        2
+      ],
+      [
+        "upgrade"
+      ]
+    ],
+    2,
+    [
+      "blob",
+      "items"
+    ]
+  ],
+  "clone": [
+    true,
+    12,
+    [
+      12,
+      13
+    ],
+    1,
+    true,
+    "hey"
+  ],
+  "deleted": []
+}
