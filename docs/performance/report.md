@@ -1444,6 +1444,21 @@ claim. This finite pass does not close P0: clean 037f8ff separately reproduced
 a native StringTable failure with a full dump. See the
 [srcdoc validation receipt](../compatibility/iframe-srcdoc-20260911/gate.json)
 and [native investigation](../compatibility/snapshot-firstchance-2026-09-11.md).
+
+### Captured owner bindings, 2026-09-11
+
+Two complete monitored baseline/changed gate pairs passed all mandatory
+workloads, 10/25-Page concurrency and retained-memory waves. The latest pair
+has warm completion medians DOM 497.91→534.20 ms, static 26.65→26.86 ms,
+React 89.35→84.39 ms. DOM execution itself is 468.17→463.99 ms.
+Throughput medians are 73.71→66.41 sessions/s (10 Pages) and 71.98→71.14
+(25 Pages); the initial 25-Page baseline was 89.15, demonstrating substantial
+run variation. Post-recovery private memory is static 158.29→162.10 MiB and
+React 169.94→170.50 MiB. The 10-Page decrease/static memory increment are
+not dismissed or claimed neutral; their cause needs profiling. First-chance
+debugger overhead and two pairs do not support an improvement claim.
+No native exception was captured; P0 remains open.
+[All receipts](../compatibility/owner-bindings-20260911/gates.json).
 Final tested executable SHA256:
 `2c951f5c4a8c393c4a0c26f44aa25c9599478d3f897495441cb63dc18b80b7e0`.
 See [semantic coverage](../compatibility/cleanup-2026-09-11.md) and the

@@ -2,11 +2,10 @@
 // typeof, truthiness and abstract equality. Allocate the native object lazily
 // so the bootstrap snapshot contains only realm-local prototypes and methods.
 {
-  const collections = new WeakMap(), owners = new WeakMap();
+  const collections = new WeakMap();
   const namedTags = new Set(['A','BUTTON','EMBED','FORM','IFRAME','IMG','INPUT','MAP','META','OBJECT','SELECT','TEXTAREA']);
   const indexed = key => typeof key === 'string' && /^(0|[1-9]\d*)$/.test(key) && Number(key) < 4294967295;
   const string = value => { if (typeof value === 'symbol') throw new TypeError('Cannot convert a Symbol value to a string'); return String(value); };
-  const state = value => { const s = owners.get(value); if (!s) throw new TypeError('Illegal invocation'); return s; };
   const rows = s => host.queryAllWithin(s.root, '*');
   const names = id => {
     const data = host.nodeData(id), attrs = data.attributes || {}, result = [];
@@ -23,22 +22,29 @@
     if (!collection) { collection = htmlCollection(() => matches(s, name)); s.named.set(name, collection); }
     return collection;
   };
+  // Chrome tests an index using one DOMString conversion, then performs a
+  // separate named-lookup conversion of the original argument on the other
+  // branch. Keep both conversions (and their side effects) in the caller realm.
+  const itemArguments = args => {
+    if (!args.length) return [];
+    const key = string(args[0]);
+    return indexed(key) ? [key,true] : [string(args[0]),false];
+  };
   const lookup = (s, args) => {
     if (!args.length) return null;
-    const key = string(args[0]);
-    return indexed(key) ? wrap(rows(s)[Number(key)]) : named(s, key);
+    return args[1] ? wrap(rows(s)[Number(args[0])]) : named(s, args[0]);
   };
   class HTMLAllCollection { constructor() { throw new TypeError('Illegal constructor'); } }
   const prototype = HTMLAllCollection.prototype;
   // Order and descriptors are observable (including the inherited method
   // hiding an element named "item", while that name remains in ownKeys).
   delete prototype.constructor;
-  const length = Object.getOwnPropertyDescriptor({get length() { return rows(state(this)).length; }}, 'length').get;
+  const length = Object.getOwnPropertyDescriptor({get length() { const binding=requireRealmBinding(this,'HTMLAllCollection');return callRealmBinding(this,binding,'length',[]); }}, 'length').get;
   Object.defineProperty(length, 'name', {value:'get length', configurable:true});
   markNative(length, 'length', 'get ');
   Object.defineProperty(prototype, 'length', {get:length, enumerable:true, configurable:true});
-  const item = {item(...args) { return lookup(state(this), args); }}.item;
-  const namedItem = {namedItem(name) { const s = state(this); if (!arguments.length) throw new TypeError('Not enough arguments'); return named(s, string(name)); }}.namedItem;
+  const item = {item(...args) { const binding=requireRealmBinding(this,'HTMLAllCollection');return callRealmBinding(this,binding,'item',itemArguments(args)); }}.item;
+  const namedItem = {namedItem(name) { const binding=requireRealmBinding(this,'HTMLAllCollection');if (!arguments.length) throw new TypeError('Not enough arguments');name=string(name);return callRealmBinding(this,binding,'namedItem',[name]); }}.namedItem;
   for (const [key, fn] of [['item',item],['namedItem',namedItem]]) {
     markNative(fn, key);
     Object.defineProperty(prototype, key, {value:fn, writable:true, enumerable:true, configurable:true});
@@ -65,7 +71,7 @@
     collection = host.createUndetectable({
       __proto__:null,
       nonMasking:true,
-      call(args, construct) { if (construct) throw new TypeError('Illegal constructor'); return lookup(s, args); },
+      call(args, construct) { if (construct) throw new TypeError('Illegal constructor'); return lookup(s, itemArguments(args)); },
       get(key) { const d = descriptor(key); return d ? [true,d.value] : [false]; },
       getOwnPropertyDescriptor(key) { const d = descriptor(key); return d ? [true,d] : [false]; },
       set(key) { return indexed(key) || descriptor(key) ? [true,true] : [false]; },
@@ -78,7 +84,9 @@
       }
     });
     Object.setPrototypeOf(collection, prototype);
-    owners.set(collection, s);
+    registerRealmBinding(collection,'HTMLAllCollection',{
+      length:()=>rows(s).length,item:(...args)=>lookup(s,args),namedItem:name=>named(s,name)
+    });
     collections.set(this, collection);
     return collection;
   }}, 'all').get;

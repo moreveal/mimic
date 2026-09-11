@@ -45,6 +45,9 @@ func (r *Realm) installFrameDocumentBridge(host map[string]any) {
 			return nil, fmt.Errorf("frame reference bridge already installed")
 		}
 		r.frameReferenceImport, r.frameReferenceDescribe = args[0], args[1]
+		if len(args) > 4 {
+			r.frameBindingDescribe = args[4]
+		}
 		if len(args) > 3 {
 			r.frameGlobalRead = args[3]
 		}
@@ -381,7 +384,7 @@ const frameReflectionSource = `(()=>{
 // and never cache arbitrary property values, prototypes or access checks.
 // Fresh intrinsic Array iterator results are the sole data-field exception;
 // the importer invalidates those fields before mutation or reference escape.
-const frameValueEncoderSource = `((describe,node,reflect,retain,symbol,frame,realm,parent)=>{
+const frameValueEncoderSource = `((describe,node,reflect,retain,symbol,frame,realm,parent,binding)=>{
  const global=globalThis,intrinsicEval=globalThis.eval,stringify=JSON.stringify,create=Object.create,keys=Object.keys;
  const plain=data=>{const out=create(null),names=keys(data);for(let i=0;i<names.length;i++){const key=names[i];out[key]=data[key]}return out};
  const encode=value=>{
@@ -399,6 +402,7 @@ const frameValueEncoderSource = `((describe,node,reflect,retain,symbol,frame,rea
   let id=reflect('lookup',value);
   if(id===undefined)id=reflect('handle',value,retain(value));
   const out=plain({__mimicCrossRealm:type==='undefined'?'undetectable':type,frame,realm,handle:id});
+  const bound=binding(value);if(bound)out.binding=plain({kind:bound.kind,invoke:plain(encode(bound.invoke))});
   if(value===global.document)out.document=true;
   if(value===intrinsicEval)out.eval=true;
   if(type==='object'){const nodeId=node(value);if(nodeId)out.nodeId=nodeId;out.array=reflect('shape',value).array}
@@ -425,7 +429,7 @@ func (r *Realm) installFrameValueEncoder() error {
 	if frame, ok := r.agent.(*Frame); ok && frame.parent != nil {
 		parent = frame.parent.ID
 	}
-	encoder, err := r.runtime.Call(context.Background(), factory, nil, r.frameReferenceDescribe, r.frameNodeDescribe, r.frameReflection.operation, r.frameValueRetain, r.frameValueEncoder, r.val(r.agent.ContextID()), r.val(r.ID), r.val(parent))
+	encoder, err := r.runtime.Call(context.Background(), factory, nil, r.frameReferenceDescribe, r.frameNodeDescribe, r.frameReflection.operation, r.frameValueRetain, r.frameValueEncoder, r.val(r.agent.ContextID()), r.val(r.ID), r.val(parent), r.frameBindingDescribe)
 	if err == nil {
 		r.frameValueEncoder = encoder
 		r.frameValueEncoderJSON = true
