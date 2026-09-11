@@ -3,6 +3,7 @@ package browser
 import (
 	"context"
 	"fmt"
+	"net/url"
 	"sort"
 	"sync"
 
@@ -133,7 +134,15 @@ func (c *Context) store(origin string) map[string]string {
 	return c.storage[origin]
 }
 
+// Auxiliary top windows share their opener's agent/event loop, but are not
+// DOM descendants and have their own document, WindowProxy and viewport.
 type Frame struct {
+	auxiliaryOwner     *Realm
+	auxiliaryBase      *url.URL
+	auxiliaryOpener    *Frame
+	auxiliaryWidth     int
+	auxiliaryHeight    int
+	windowClosing      bool
 	windowName         string
 	ID                 string
 	page               *Page

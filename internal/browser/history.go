@@ -71,6 +71,11 @@ func (r *Realm) historyPush(raw string, replace bool, state engine.Value) (strin
 	if err != nil || !historyURLAllowed(current, target) {
 		return "A history state object cannot be created with this URL in the current document.", nil
 	}
+	if frame.auxiliaryOpener != nil {
+		r.auxiliaryState, r.auxiliaryStorage = exposed, stored
+		r.url = target
+		return "", nil
+	}
 	r.agent.Page().commitHistory(frame, target, replace, exposed)
 	p := r.agent.Page()
 	p.mu.Lock()
@@ -104,6 +109,12 @@ func (p *Page) commitHistory(frame *Frame, target *url.URL, replace bool, state 
 }
 
 func (r *Realm) historyState() engine.Value {
+	if f, ok := r.agent.(*Frame); ok && f.auxiliaryOpener != nil {
+		if r.auxiliaryState != nil {
+			return r.auxiliaryState
+		}
+		return r.val(nil)
+	}
 	p := r.agent.Page()
 	p.mu.RLock()
 	defer p.mu.RUnlock()
@@ -117,6 +128,9 @@ func (r *Realm) historyState() engine.Value {
 }
 
 func (r *Realm) historyGo(delta int) {
+	if f, ok := r.agent.(*Frame); ok && f.auxiliaryOpener != nil {
+		return
+	}
 	p := r.agent.Page()
 	r.browserEventLoop().Post(scheduler.Navigation, 0, func(ctx context.Context) error {
 		if !r.activeHistoryDocument() {
