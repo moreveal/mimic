@@ -88,7 +88,7 @@ static int speech_next_event(mimic_speech *s,mimic_speech_event *out){
  return 1;
 }
 static void speech_wake(mimic_speech *s){SetEvent(s->wake);}
-static void speech_wait(mimic_speech *s){HANDLE handles[2]={s->wake,s->events};WaitForMultipleObjects(s->events?2:1,handles,FALSE,INFINITE);}
+static DWORD speech_wait(mimic_speech *s){HANDLE handles[2]={s->wake,s->events};return WaitForMultipleObjects(s->events?2:1,handles,FALSE,INFINITE);}
 static void speech_destroy(mimic_speech *s){if(s->voice){speech_cancel(s);ISpVoice_Release(s->voice);}if(s->initialized)CoUninitialize();CloseHandle(s->wake);free(s);}
 */
 import "C"
@@ -115,11 +115,12 @@ type windowsBackend struct {
 	commands []nativeCommand
 	closed   bool
 	done     chan struct{}
+	wake     chan struct{}
 	notify   func(Event)
 }
 
 func openPlatform(notify func(Event)) Backend {
-	b := &windowsBackend{native: C.speech_create(), done: make(chan struct{}), notify: notify}
+	b := &windowsBackend{native: C.speech_create(), done: make(chan struct{}), wake: make(chan struct{}, 1), notify: notify}
 	go b.run()
 	return b
 }
@@ -130,6 +131,10 @@ func (b *windowsBackend) submit(command nativeCommand) {
 		return
 	}
 	b.commands = append(b.commands, command)
+	select {
+	case b.wake <- struct{}{}:
+	default:
+	}
 	if b.native != nil {
 		C.speech_wake(b.native)
 	}
@@ -150,6 +155,7 @@ func (b *windowsBackend) run() {
 	defer func() {
 		b.mu.Lock()
 		b.closed = true
+		b.commands = nil
 		if b.native != nil {
 			C.speech_destroy(b.native)
 			b.native = nil
@@ -265,10 +271,20 @@ func (b *windowsBackend) run() {
 				}
 			}
 		}
-		if b.native == nil {
-			return
+		if !available {
+			// Even allocation/initialization failure leaves a responsive provider:
+			// future Speak calls must receive failure and Close must always join.
+			<-b.wake
+			continue
 		}
-		C.speech_wait(b.native)
+		if C.speech_wait(b.native) == C.WAIT_FAILED {
+			C.speech_cancel(b.native)
+			available = false
+			if active.ID != 0 {
+				b.notify(Event{Kind: "error", ID: active.ID, Error: "synthesis-failed"})
+				active = Utterance{}
+			}
+		}
 	}
 }
 
