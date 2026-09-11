@@ -1051,6 +1051,31 @@
       }
     }
   };
+  const finalizeSingletonGetterBindings=()=>{
+    // These platform objects belong to a Window. Borrowed accessors must use
+    // the receiver's owner, including across realms and after prototype edits.
+    // Reuse the private owner binding used by Document, Location and Performance.
+    for(const [kind,prototype,instance] of [['Navigator',Navigator.prototype,nav],['Screen',Screen.prototype,scr],['History',History.prototype,hist]]){
+      const getters=new Map(),setters=new Map();
+      for(const name of Reflect.ownKeys(prototype)){
+        const descriptor=Object.getOwnPropertyDescriptor(prototype,name);
+        if(!descriptor.configurable||(!descriptor.get&&!descriptor.set))continue;
+        if(descriptor.get){
+          getters.set(name,descriptor.get);
+          descriptor.get=Object.getOwnPropertyDescriptor({get [name](){const binding=requireRealmBinding(this,kind);return callRealmBinding(this,binding,'get',[name])}},name).get;
+        }
+        if(descriptor.set){
+          setters.set(name,descriptor.set);
+          descriptor.set=Object.getOwnPropertyDescriptor({set [name](value){const binding=requireRealmBinding(this,kind);if(kind==='History'&&name==='scrollRestoration')value=bindingString(value);callRealmBinding(this,binding,'set',[name,value])}},name).set;
+        }
+        Object.defineProperty(prototype,name,descriptor);
+      }
+      registerRealmBinding(instance,kind,{
+        get:name=>functionSourceApply(getters.get(name),instance,[]),
+        set:(name,value)=>functionSourceApply(setters.get(name),instance,[value])
+      });
+    }
+  };
   const finalizeCallableBindings=()=>{
     const exposure=pendingCallableExposure;
     pendingCallableExposure=null;
