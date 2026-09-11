@@ -1,0 +1,94 @@
+{
+  "invalidKeys": [
+    "DataError",
+    "DataError",
+    "DataError",
+    "DataError",
+    "DataError",
+    "DataError",
+    "DataError",
+    "DataError"
+  ],
+  "cloneErrors": [
+    "DataCloneError",
+    "DataCloneError",
+    "DataCloneError",
+    0
+  ],
+  "cyclicKey": "DataError",
+  "infinity": [
+    "infinity",
+    "negative"
+  ],
+  "completed": [
+    "TransactionInactiveError",
+    "InvalidStateError",
+    "InvalidStateError"
+  ],
+  "microtasks": [
+    "listener",
+    "micro",
+    "second"
+  ],
+  "serial": "second",
+  "inline": [
+    1,
+    {
+      "a": {
+        "b": 1
+      }
+    }
+  ],
+  "blocked": [
+    [
+      "versionchange",
+      1,
+      2
+    ],
+    [
+      "blocked",
+      1,
+      2
+    ],
+    [
+      "upgradeneeded"
+    ],
+    [
+      [
+        "inline",
+        "name2",
+        "s"
+      ],
+      [
+        "y"
+      ]
+    ]
+  ],
+  "commit": "TransactionInactiveError",
+  "cursorOrder": [
+    [
+      "two",
+      "ReadOnlyError"
+    ],
+    [
+      "serial",
+      "ReadOnlyError"
+    ],
+    [
+      "one",
+      "ReadOnlyError"
+    ],
+    [
+      "commit",
+      "ReadOnlyError"
+    ],
+    [
+      "Infinity",
+      "ReadOnlyError"
+    ],
+    [
+      "-Infinity",
+      "ReadOnlyError"
+    ]
+  ]
+}

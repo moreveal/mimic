@@ -139,6 +139,8 @@ type Realm struct {
 	navigationActivationFrom *historyFrameState
 	navigationActivationType string
 	historyTraversalTarget   int
+	indexedNotifier          engine.Value
+	indexedEncoder           engine.Value
 	// Navigation timing belongs to the committed document, not the mutable
 	// same-document History URL or another frame's most recent navigation.
 	navigationURL      string
@@ -386,6 +388,7 @@ func (r *Realm) Close() error {
 	}
 	r.speech = nil
 	r.speechNotifier = nil
+	r.closeIndexedDatabases()
 	if r.cookieUnsubscribe != nil {
 		r.cookieUnsubscribe()
 		r.cookieUnsubscribe = nil
@@ -434,6 +437,9 @@ func (r *Realm) Close() error {
 }
 func (r *Realm) Evaluate(ctx context.Context, source, name string) (engine.Value, error) {
 	p := r.agent.Page()
+	if p.userScriptDepth == 0 {
+		p.databaseScriptEpoch++
+	}
 	p.userScriptDepth++
 	defer func() { p.userScriptDepth-- }()
 	v, err := r.runtime.Eval(ctx, source, name)
