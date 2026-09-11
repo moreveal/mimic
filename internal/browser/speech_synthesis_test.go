@@ -138,6 +138,11 @@ func TestSpeechPortableProviderQueueAndCancellation(t *testing.T) {
 			if v := eval(`speechSynthesis.speaking`); v != true {
 				t.Fatal("late completion canceled a new run")
 			}
+			backend.notify(speech.Event{Kind: "pause", ID: first.ID})
+			drain()
+			if v := eval(`speechSynthesis.paused`); v != false {
+				t.Fatal("late pause affected a new run")
+			}
 			backend.notify(speech.Event{Kind: "start", ID: second.ID})
 			drain()
 			eval(`speechSynthesis.pause()`)
@@ -154,6 +159,18 @@ func TestSpeechPortableProviderQueueAndCancellation(t *testing.T) {
 			drain()
 			if v := eval(`JSON.stringify(events)`); v != `["start:one","error:interrupted:one","error:canceled:two","start:one","end:one"]` {
 				t.Fatalf("event lifecycle: %v", v)
+			}
+			old := p.Top.Realm
+			old.deactivate()
+			backend.mu.Lock()
+			deactivatedClosed := backend.closed
+			backend.mu.Unlock()
+			if !deactivatedClosed || old.speech.backend != nil || old.speech.current != 0 || len(old.speech.runs) != 0 {
+				t.Fatal("provider survived document deactivation")
+			}
+			old.openSpeechProvider()
+			if old.speech.backend != nil {
+				t.Fatal("inactive document reopened provider")
 			}
 			if err := p.Close(); err != nil {
 				t.Fatal(err)

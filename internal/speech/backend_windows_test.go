@@ -55,3 +55,40 @@ func TestWindowsProviderNativeNotifications(t *testing.T) {
 		}
 	}
 }
+
+func TestWindowsProviderAllocationFailureStaysResponsive(t *testing.T) {
+	events := make(chan Event, 8)
+	// No native handle models CreateEvent/allocation failure before COM setup.
+	b := &windowsBackend{done: make(chan struct{}), wake: make(chan struct{}, 1), notify: func(e Event) { events <- e }}
+	go b.run()
+	defer b.Close()
+	next := func() Event {
+		t.Helper()
+		select {
+		case e := <-events:
+			return e
+		case <-time.After(3 * time.Second):
+			t.Fatal("failed provider stopped responding")
+			return Event{}
+		}
+	}
+	if e := next(); e.Kind != "voices" || len(e.Voices) != 0 {
+		t.Fatalf("discovery: %+v", e)
+	}
+	// Submit after the initial discovery, rather than racing the worker start.
+	for _, id := range []uint64{1, 2} {
+		b.Speak(Utterance{ID: id, Text: "unavailable", Rate: 1, Pitch: 1})
+		if e := next(); e.Kind != "error" || e.ID != id || e.Error != "synthesis-unavailable" {
+			t.Fatalf("failure delivery: %+v", e)
+		}
+		b.Cancel()
+	}
+	joined := make(chan struct{})
+	go func() { b.Close(); close(joined) }()
+	select {
+	case <-joined:
+	case <-time.After(3 * time.Second):
+		t.Fatal("failed provider close did not join")
+	}
+	b.Speak(Utterance{ID: 3})
+}
