@@ -1412,3 +1412,28 @@ Ready private memory is about77MiB. Recovery is the harness's250ms window, not
 forced GC or proof of leak absence. This batch improves cross-frame iteration;
 it does not claim a general workload speedup or lower memory usage. Receipts:
 `.build/window-reflection-fast-gate{,-baseline,-repeat}/raw.json` and build.json.
+
+## Interface-inheritance cleanup control, 2026-09-11
+
+The clean `037f8ff` baseline gate **FAILED** in its first measured 10-Page static
+wave after a valid warm-up: native `0xc0000005`, process exit 2, disconnected CDP.
+The process log is retained; its truncated stack does not identify a serializer
+or string-table cause. No retry replaced this failure. The corrected interface
+inheritance build passed all six mandatory semantic workloads, warm scenarios,
+10/25-Page waves and memory checks. This is not a complete passing A/B comparison
+or evidence of snapshot repair; P0 remains open.
+
+Final-build warm medians, execution / completion milliseconds: DOM 446.74 / 466.04,
+static 2.61 / 23.18, React 56.85 / 84.09. Measured static wave throughput ranges:
+10 Pages 49.07–73.17 sessions/s; 25 Pages 58.89–115.87 sessions/s. Active / recovered
+private memory for the 10-Page memory waves: static 428.30 / 155.77 MiB, React
+485.20 / 165.45 MiB. Recovery is the unchanged 250 ms window, not forced GC or a
+proof of leak absence. No performance improvement is claimed from this pair.
+
+The frozen runner and workloads are unchanged. A diagnostic wrapper copies each
+process log and records its exit status before the runner removes temporary files.
+Receipts: `compatibility/private-captures/cleanup-20260911/gate-{before,final}/`.
+Final tested executable SHA256:
+`2c951f5c4a8c393c4a0c26f44aa25c9599478d3f897495441cb63dc18b80b7e0`.
+See [semantic coverage](../compatibility/cleanup-2026-09-11.md) and the
+[separate native stability report](../compatibility/snapshot-cleanup-control-2026-09-11.md).
