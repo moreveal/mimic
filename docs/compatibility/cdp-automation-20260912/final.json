@@ -1,0 +1,953 @@
+{
+  "schemaVersion": 1,
+  "checkpoint": "final",
+  "localDate": "2026-09-12",
+  "timezone": "Asia/Tbilisi",
+  "scope": "Measured controlled automation workflows and protocol calls; no claim of total CDP or browser compatibility.",
+  "dependencies": {
+    "python": "3.14.2",
+    "pyppeteer": "2.0.0",
+    "puppeteer-core": "25.10.0"
+  },
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "buildEvidence": {
+    "binary": {
+      "path": ".build/mimic-cdp-final.exe",
+      "sha256": "b2f310af2a9eb30e609f08397a4080c433fa7c9ac1346d13f6bfec8268749b3f",
+      "lastWriteUTC": "2026-09-11T23:13:35.226028+00:00"
+    },
+    "recordedBySuite": {
+      "path": "E:\\GitHub\\mimic-cdp-automation\\.build\\mimic-cdp-final.exe",
+      "sha256": "b2f310af2a9eb30e609f08397a4080c433fa7c9ac1346d13f6bfec8268749b3f"
+    },
+    "embeddedBuildInfo": "final-build.txt",
+    "sourceState": "Uncommitted worktree checkpoint; executable identifies the tested build."
+  },
+  "reportEvidence": {
+    "baseline": {
+      "path": ".build/cdp-automation-baseline-expanded/report.json",
+      "sha256": "b92e16f26223f01e419b4601ec75079c9b0e94f9de8d0b6b2626b22dd73370da",
+      "lastWriteUTC": "2026-09-11T22:48:18.845386+00:00"
+    },
+    "chrome": {
+      "path": ".build/cdp-automation-oracle-34-final/report.json",
+      "sha256": "4bbbbf532a2306489498ae13c2c478fb8060789c6abdc491a1b890d414bd8814",
+      "lastWriteUTC": "2026-09-11T22:57:00.992673+00:00"
+    },
+    "final": {
+      "path": ".build/cdp-automation-final/report.json",
+      "sha256": "db4b28209877d1cad2839bbc549e7574ac353787c7317546e3303c906ee22d2d",
+      "lastWriteUTC": "2026-09-11T23:14:36.980550+00:00"
+    },
+    "interception": {
+      "path": ".build/cdp-automation-interception-final/report.json",
+      "sha256": "d752452184e2d077276af709602cb9b6239bdbed333b4e761dfd066627a2515e",
+      "lastWriteUTC": "2026-09-11T23:14:20.991686+00:00"
+    },
+    "eventsChrome": {
+      "path": ".build/cdp-automation-events-chrome/report.json",
+      "sha256": "cbb1b119d2f9a88ebb36a6e04c26f970a7f6d4e60b80fac7d174dcdb6b6c0a5e",
+      "lastWriteUTC": "2026-09-11T22:31:10.946787+00:00"
+    },
+    "eventsFinal": {
+      "path": ".build/cdp-automation-events-final/report.json",
+      "sha256": "d0530010692cf2e0341ba6fa90d1f2dcf6ff6241c8bbcbdbfb3de70257891f25",
+      "lastWriteUTC": "2026-09-11T23:14:26.034394+00:00"
+    }
+  },
+  "workflows": {
+    "baseline": {
+      "target": {
+        "endpoint": "http://127.0.0.1:19434",
+        "version": {
+          "Browser": "Mimic/152.0.7977.82",
+          "Protocol-Version": "1.3",
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+          "V8-Version": "virtual",
+          "webSocketDebuggerUrl": "ws://127.0.0.1:19434/devtools/page/80757c6c-ad78-475c-9860-3ec4c3607fe8"
+        },
+        "binary": {
+          "path": "E:\\GitHub\\mimic-cdp-automation\\.build\\mimic-baseline.exe",
+          "sha256": "4ae5a847c3d951640e8fc9167f50f553081aa3b2cc36ae4dee9ebead3e6f66bd"
+        }
+      },
+      "suiteSources": {
+        "cdp_automation.py": "d2ba0d13ced846ea10814afffc45322cf1a1c839de94a7216e1a9c5438502a67",
+        "cdp_automation.mjs": "9de9efcb58502a9929208cdd98b9323242da365872df375c01100bb381e22e15"
+      },
+      "clients": {
+        "pyppeteer": {
+          "version": "2.0.0",
+          "checks": 33,
+          "summary": {
+            "pass": 12,
+            "fail": 21
+          },
+          "distinctMethods": 37,
+          "methodCalls": 228,
+          "receivedResponses": 228,
+          "protocolErrors": 10,
+          "unansweredCalls": 0,
+          "nonPassingChecks": [
+            {
+              "name": "browser.version",
+              "status": "fail",
+              "errorFirstLine": "NetworkError: Protocol error (Browser.getVersion): method Browser.getVersion is registered for the pinned CDP schema but its semantics are not implemented"
+            },
+            {
+              "name": "runtime.handles_properties",
+              "status": "fail",
+              "errorFirstLine": "NetworkError: Protocol error (Runtime.getProperties): method Runtime.getProperties is registered for the pinned CDP schema but its semantics are not implemented"
+            },
+            {
+              "name": "runtime.handle_identity",
+              "status": "fail"
+            },
+            {
+              "name": "runtime.unserializable_arguments",
+              "status": "fail"
+            },
+            {
+              "name": "dom.selectors_element_evaluation",
+              "status": "fail",
+              "errorFirstLine": "PageError: Could not find `document`."
+            },
+            {
+              "name": "dom.form_input_select_dom_click",
+              "status": "fail",
+              "errorFirstLine": "PageError: Could not find `document`."
+            },
+            {
+              "name": "input.pointer_click",
+              "status": "fail",
+              "errorFirstLine": "PageError: Could not find `document`."
+            },
+            {
+              "name": "runtime.console_arguments",
+              "status": "fail"
+            },
+            {
+              "name": "navigation.reload",
+              "status": "fail",
+              "errorFirstLine": "NetworkError: Protocol error (Page.reload): method Page.reload is registered for the pinned CDP schema but its semantics are not implemented"
+            },
+            {
+              "name": "navigation.history",
+              "status": "fail",
+              "errorFirstLine": "NetworkError: Protocol error (Page.getNavigationHistory): method Page.getNavigationHistory is registered for the pinned CDP schema but its semantics are not implemented"
+            },
+            {
+              "name": "page.child_frame_events_evaluation",
+              "status": "fail",
+              "errorFirstLine": "AssertionError: child frame not discovered"
+            },
+            {
+              "name": "navigation.networkidle0",
+              "status": "fail",
+              "errorFirstLine": "TimeoutError: Navigation Timeout Exceeded: 6400 ms exceeded."
+            },
+            {
+              "name": "page.set_content",
+              "status": "fail",
+              "errorFirstLine": "PageError: Could not find `document`."
+            },
+            {
+              "name": "dom.wait_for_selector_mutation",
+              "status": "fail"
+            },
+            {
+              "name": "runtime.exposed_function_navigation",
+              "status": "fail",
+              "errorFirstLine": "NetworkError: Protocol error (Runtime.addBinding): method Runtime.addBinding is registered for the pinned CDP schema but its semantics are not implemented"
+            },
+            {
+              "name": "page.init_script_removal",
+              "status": "fail",
+              "errorFirstLine": "NetworkError: Protocol error (Page.removeScriptToEvaluateOnNewDocument): method Page.removeScriptToEvaluateOnNewDocument is registered for the pinned CDP schema but its semantics are not implemented"
+            },
+            {
+              "name": "emulation.viewport",
+              "status": "fail"
+            },
+            {
+              "name": "network.user_agent_override",
+              "status": "fail",
+              "errorFirstLine": "NetworkError: Protocol error (Network.setUserAgentOverride): method Network.setUserAgentOverride is registered for the pinned CDP schema but its semantics are not implemented"
+            },
+            {
+              "name": "network.interception_abort",
+              "status": "fail"
+            },
+            {
+              "name": "target.parallel_pages_isolation",
+              "status": "fail",
+              "errorFirstLine": "TimeoutError: Navigation Timeout Exceeded: 6400 ms exceeded."
+            },
+            {
+              "name": "target.browser_context_storage_isolation",
+              "status": "fail",
+              "errorFirstLine": "NetworkError: Protocol error (Target.createBrowserContext): method Target.createBrowserContext is registered for the pinned CDP schema but its semantics are not implemented"
+            }
+          ]
+        },
+        "puppeteer": {
+          "version": "25.10.0",
+          "checks": 33,
+          "summary": {
+            "pass": 1,
+            "fail": 2,
+            "blocked": 30
+          },
+          "distinctMethods": 5,
+          "methodCalls": 5,
+          "receivedResponses": 5,
+          "protocolErrors": 1,
+          "unansweredCalls": 0,
+          "nonPassingChecks": [
+            {
+              "name": "browser.version",
+              "status": "fail",
+              "errorFirstLine": "ProtocolError: Protocol error (Browser.getVersion): method Browser.getVersion is registered for the pinned CDP schema but its semantics are not implemented"
+            },
+            {
+              "name": "page.create",
+              "status": "fail",
+              "errorFirstLine": "Error: Operation timeout after 8000ms"
+            },
+            {
+              "name": "navigation.goto",
+              "status": "blocked",
+              "errorFirstLine": "page.create"
+            },
+            {
+              "name": "runtime.by_value",
+              "status": "blocked",
+              "errorFirstLine": "page.create"
+            },
+            {
+              "name": "runtime.promise",
+              "status": "blocked",
+              "errorFirstLine": "page.create"
+            },
+            {
+              "name": "runtime.handles_properties",
+              "status": "blocked",
+              "errorFirstLine": "page.create"
+            },
+            {
+              "name": "runtime.handle_identity",
+              "status": "blocked",
+              "errorFirstLine": "page.create"
+            },
+            {
+              "name": "runtime.handle_dispose",
+              "status": "blocked",
+              "errorFirstLine": "page.create"
+            },
+            {
+              "name": "runtime.exception",
+              "status": "blocked",
+              "errorFirstLine": "page.create"
+            },
+            {
+              "name": "runtime.unserializable_arguments",
+              "status": "blocked",
+              "errorFirstLine": "page.create"
+            },
+            {
+              "name": "dom.selectors_element_evaluation",
+              "status": "blocked",
+              "errorFirstLine": "page.create"
+            },
+            {
+              "name": "dom.form_input_select_dom_click",
+              "status": "blocked",
+              "errorFirstLine": "page.create"
+            },
+            {
+              "name": "input.pointer_click",
+              "status": "blocked",
+              "errorFirstLine": "page.create"
+            },
+            {
+              "name": "runtime.console_arguments",
+              "status": "blocked",
+              "errorFirstLine": "page.create"
+            },
+            {
+              "name": "page.init_script",
+              "status": "blocked",
+              "errorFirstLine": "page.create"
+            },
+            {
+              "name": "navigation.reload",
+              "status": "blocked",
+              "errorFirstLine": "page.create"
+            },
+            {
+              "name": "navigation.history",
+              "status": "blocked",
+              "errorFirstLine": "page.create"
+            },
+            {
+              "name": "page.child_frame_events_evaluation",
+              "status": "blocked",
+              "errorFirstLine": "page.create"
+            },
+            {
+              "name": "network.cookies",
+              "status": "blocked",
+              "errorFirstLine": "page.create"
+            },
+            {
+              "name": "network.response_body_extra_headers",
+              "status": "blocked",
+              "errorFirstLine": "page.create"
+            },
+            {
+              "name": "network.interception_fulfill_body",
+              "status": "blocked",
+              "errorFirstLine": "page.create"
+            },
+            {
+              "name": "navigation.networkidle0",
+              "status": "blocked",
+              "errorFirstLine": "page.create"
+            },
+            {
+              "name": "page.set_content",
+              "status": "blocked",
+              "errorFirstLine": "page.create"
+            },
+            {
+              "name": "dom.wait_for_selector_mutation",
+              "status": "blocked",
+              "errorFirstLine": "page.create"
+            },
+            {
+              "name": "runtime.exposed_function_navigation",
+              "status": "blocked",
+              "errorFirstLine": "page.create"
+            },
+            {
+              "name": "page.init_script_removal",
+              "status": "blocked",
+              "errorFirstLine": "page.create"
+            },
+            {
+              "name": "emulation.viewport",
+              "status": "blocked",
+              "errorFirstLine": "page.create"
+            },
+            {
+              "name": "network.user_agent_override",
+              "status": "blocked",
+              "errorFirstLine": "page.create"
+            },
+            {
+              "name": "network.interception_continue_post",
+              "status": "blocked",
+              "errorFirstLine": "page.create"
+            },
+            {
+              "name": "network.interception_abort",
+              "status": "blocked",
+              "errorFirstLine": "page.create"
+            },
+            {
+              "name": "target.parallel_pages_isolation",
+              "status": "blocked",
+              "errorFirstLine": "page.create"
+            },
+            {
+              "name": "target.browser_context_storage_isolation",
+              "status": "blocked",
+              "errorFirstLine": "page.create"
+            }
+          ]
+        }
+      },
+      "summary": {
+        "pass": 13,
+        "fail": 23,
+        "blocked": 30
+      },
+      "comparison": {
+        "match": 13,
+        "divergence": 53
+      }
+    },
+    "chrome": {
+      "target": {
+        "endpoint": "http://127.0.0.1:19433",
+        "version": {
+          "Browser": "Chrome/152.0.7977.82",
+          "Protocol-Version": "1.3",
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+          "V8-Version": "15.2.124.21",
+          "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+          "webSocketDebuggerUrl": "ws://127.0.0.1:19433/devtools/browser/e4b1f128-e4d7-43ef-9e50-d48c762de971"
+        }
+      },
+      "suiteSources": {
+        "cdp_automation.py": "45ee56912ded7d22b340dd368e5825da3f4a00b9497ad072c1206786a9604e02",
+        "cdp_automation.mjs": "0b39de7aa7d7e94a59eb526ac84bc0d2ec556534a6b6b1a5b8394b23c31ee6e6"
+      },
+      "clients": {
+        "pyppeteer": {
+          "version": "2.0.0",
+          "checks": 34,
+          "summary": {
+            "pass": 34
+          },
+          "distinctMethods": 43,
+          "methodCalls": 486,
+          "receivedResponses": 486,
+          "protocolErrors": 0,
+          "unansweredCalls": 0,
+          "nonPassingChecks": []
+        },
+        "puppeteer": {
+          "version": "25.10.0",
+          "checks": 34,
+          "summary": {
+            "pass": 34
+          },
+          "distinctMethods": 50,
+          "methodCalls": 396,
+          "receivedResponses": 396,
+          "protocolErrors": 0,
+          "unansweredCalls": 0,
+          "nonPassingChecks": []
+        }
+      },
+      "summary": {
+        "pass": 68
+      },
+      "comparison": null
+    },
+    "final": {
+      "target": {
+        "endpoint": "http://127.0.0.1:19440",
+        "version": {
+          "Browser": "Mimic/152.0.7977.82",
+          "Protocol-Version": "1.3",
+          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+          "V8-Version": "virtual",
+          "webSocketDebuggerUrl": "ws://127.0.0.1:19440/devtools/browser/7309d1f4-034d-4eff-803e-f313a0ded973"
+        },
+        "binary": {
+          "path": "E:\\GitHub\\mimic-cdp-automation\\.build\\mimic-cdp-final.exe",
+          "sha256": "b2f310af2a9eb30e609f08397a4080c433fa7c9ac1346d13f6bfec8268749b3f"
+        }
+      },
+      "suiteSources": {
+        "cdp_automation.py": "45ee56912ded7d22b340dd368e5825da3f4a00b9497ad072c1206786a9604e02",
+        "cdp_automation.mjs": "0b39de7aa7d7e94a59eb526ac84bc0d2ec556534a6b6b1a5b8394b23c31ee6e6"
+      },
+      "clients": {
+        "pyppeteer": {
+          "version": "2.0.0",
+          "checks": 34,
+          "summary": {
+            "pass": 34
+          },
+          "distinctMethods": 43,
+          "methodCalls": 486,
+          "receivedResponses": 486,
+          "protocolErrors": 0,
+          "unansweredCalls": 0,
+          "nonPassingChecks": []
+        },
+        "puppeteer": {
+          "version": "25.10.0",
+          "checks": 34,
+          "summary": {
+            "pass": 34
+          },
+          "distinctMethods": 49,
+          "methodCalls": 334,
+          "receivedResponses": 334,
+          "protocolErrors": 0,
+          "unansweredCalls": 0,
+          "nonPassingChecks": []
+        }
+      },
+      "summary": {
+        "pass": 68
+      },
+      "comparison": {
+        "match": 68
+      }
+    }
+  },
+  "commonBaselineWorkflows": {
+    "count": 66,
+    "baselinePass": 13,
+    "candidatePass": 66,
+    "additionalCandidateChecks": [
+      "puppeteer:runtime.pageerror",
+      "pyppeteer:runtime.pageerror"
+    ]
+  },
+  "measuredProtocolMethods": {
+    "chromeDistinct": 56,
+    "candidateDistinct": 55,
+    "chromeMethodsWithCandidateResponsesWithoutProtocolErrors": 55,
+    "fraction": "55/56",
+    "meaning": "Distinct methods actually used by these client workflows with no protocol errors or unanswered calls; excludes all unexercised protocol methods and does not imply full semantics for a method.",
+    "methods": [
+      "Audits.enable",
+      "Browser.getVersion",
+      "DOM.describeNode",
+      "DOM.getContentQuads",
+      "DOM.resolveNode",
+      "Emulation.setDeviceMetricsOverride",
+      "Emulation.setTouchEmulationEnabled",
+      "Fetch.continueRequest",
+      "Fetch.disable",
+      "Fetch.enable",
+      "Fetch.failRequest",
+      "Fetch.fulfillRequest",
+      "Input.dispatchKeyEvent",
+      "Input.dispatchMouseEvent",
+      "Log.enable",
+      "Network.continueInterceptedRequest",
+      "Network.deleteCookies",
+      "Network.enable",
+      "Network.getCookies",
+      "Network.getResponseBody",
+      "Network.setCacheDisabled",
+      "Network.setCookies",
+      "Network.setExtraHTTPHeaders",
+      "Network.setRequestInterception",
+      "Network.setUserAgentOverride",
+      "Page.addScriptToEvaluateOnNewDocument",
+      "Page.createIsolatedWorld",
+      "Page.enable",
+      "Page.getFrameTree",
+      "Page.getNavigationHistory",
+      "Page.navigate",
+      "Page.navigateToHistoryEntry",
+      "Page.reload",
+      "Page.removeScriptToEvaluateOnNewDocument",
+      "Page.setDocumentContent",
+      "Page.setLifecycleEventsEnabled",
+      "Performance.enable",
+      "Runtime.addBinding",
+      "Runtime.callFunctionOn",
+      "Runtime.enable",
+      "Runtime.evaluate",
+      "Runtime.getProperties",
+      "Runtime.releaseObject",
+      "Runtime.runIfWaitingForDebugger",
+      "Security.enable",
+      "Target.attachToTarget",
+      "Target.closeTarget",
+      "Target.createBrowserContext",
+      "Target.createTarget",
+      "Target.detachFromTarget",
+      "Target.disposeBrowserContext",
+      "Target.getBrowserContexts",
+      "Target.sendMessageToTarget",
+      "Target.setAutoAttach",
+      "Target.setDiscoverTargets",
+      "WebMCP.enable"
+    ],
+    "notInvokedByCandidateClients": [
+      "Target.detachFromTarget"
+    ],
+    "additionalIndependentBehavioralEvidence": {
+      "method": "Target.detachFromTarget",
+      "scenario": "fetch_detach_pending_request",
+      "result": "match",
+      "meaning": "The separate raw probe awaits Target.detachFromTarget successfully and verifies that paused navigation continues. Its report retains behavior and paused payloads, not a complete command transcript. A difference in client traces alone does not imply an unsupported method."
+    }
+  },
+  "interception": {
+    "summary": {
+      "match": 16
+    },
+    "scenarios": [
+      {
+        "name": "fetch_default",
+        "classification": "match",
+        "loaded": true,
+        "stages": [
+          "Request"
+        ],
+        "sameIdAcrossStages": true,
+        "responseHeaderShapes": []
+      },
+      {
+        "name": "fetch_empty_patterns",
+        "classification": "match",
+        "loaded": true,
+        "stages": [],
+        "sameIdAcrossStages": true,
+        "responseHeaderShapes": []
+      },
+      {
+        "name": "fetch_request",
+        "classification": "match",
+        "loaded": true,
+        "stages": [
+          "Request"
+        ],
+        "sameIdAcrossStages": true,
+        "responseHeaderShapes": []
+      },
+      {
+        "name": "fetch_response",
+        "classification": "match",
+        "loaded": true,
+        "stages": [
+          "Response"
+        ],
+        "sameIdAcrossStages": true,
+        "responseHeaderShapes": [
+          "entries"
+        ]
+      },
+      {
+        "name": "fetch_wrong_resource",
+        "classification": "match",
+        "loaded": true,
+        "stages": [],
+        "sameIdAcrossStages": true,
+        "responseHeaderShapes": []
+      },
+      {
+        "name": "fetch_wrong_url",
+        "classification": "match",
+        "loaded": true,
+        "stages": [],
+        "sameIdAcrossStages": true,
+        "responseHeaderShapes": []
+      },
+      {
+        "name": "fetch_url_question_wildcard",
+        "classification": "match",
+        "loaded": true,
+        "stages": [
+          "Request"
+        ],
+        "sameIdAcrossStages": true,
+        "responseHeaderShapes": []
+      },
+      {
+        "name": "fetch_url_escape_wildcard",
+        "classification": "match",
+        "loaded": true,
+        "stages": [],
+        "sameIdAcrossStages": true,
+        "responseHeaderShapes": []
+      },
+      {
+        "name": "fetch_override_response_true",
+        "classification": "match",
+        "loaded": true,
+        "stages": [
+          "Request",
+          "Response"
+        ],
+        "sameIdAcrossStages": true,
+        "responseHeaderShapes": [
+          "entries"
+        ]
+      },
+      {
+        "name": "fetch_both_stages_override_false",
+        "classification": "match",
+        "loaded": true,
+        "stages": [
+          "Request"
+        ],
+        "sameIdAcrossStages": true,
+        "responseHeaderShapes": []
+      },
+      {
+        "name": "fetch_disable_pending_request",
+        "classification": "match",
+        "loaded": true,
+        "stages": [
+          "Request"
+        ],
+        "sameIdAcrossStages": true,
+        "responseHeaderShapes": []
+      },
+      {
+        "name": "fetch_disable_pending_response",
+        "classification": "match",
+        "loaded": true,
+        "stages": [
+          "Response"
+        ],
+        "sameIdAcrossStages": true,
+        "responseHeaderShapes": [
+          "entries"
+        ]
+      },
+      {
+        "name": "legacy_request",
+        "classification": "match",
+        "loaded": true,
+        "stages": [
+          "Request"
+        ],
+        "sameIdAcrossStages": true,
+        "responseHeaderShapes": []
+      },
+      {
+        "name": "legacy_response",
+        "classification": "match",
+        "loaded": true,
+        "stages": [
+          "Response"
+        ],
+        "sameIdAcrossStages": true,
+        "responseHeaderShapes": [
+          "object"
+        ]
+      },
+      {
+        "name": "legacy_disable_pending",
+        "classification": "match",
+        "loaded": true,
+        "stages": [
+          "Request"
+        ],
+        "sameIdAcrossStages": true,
+        "responseHeaderShapes": []
+      },
+      {
+        "name": "fetch_detach_pending_request",
+        "classification": "match",
+        "loaded": true,
+        "stages": [
+          "Request"
+        ],
+        "sameIdAcrossStages": true,
+        "responseHeaderShapes": []
+      }
+    ]
+  },
+  "eventGating": {
+    "assessment": "Disabled sessions receive no disabled-domain events; Runtime.enable snapshots are session-local; networkIdle waits for the delayed active request plus a quiet period.",
+    "limitations": "Event parity is not complete: retained count tables show absent Network extra-info/dataReceived and Page frame-start/stop/paint observations; executionContextsCleared multiplicity also differs. These are not counted as matching events.",
+    "chrome": [
+      {
+        "name": "all_domains_disabled",
+        "eventsBySession": {
+          "a": {},
+          "b": {}
+        }
+      },
+      {
+        "name": "a_enabled_b_disabled",
+        "eventsBySession": {
+          "a": {
+            "Network.dataReceived": 1,
+            "Network.loadingFinished": 1,
+            "Network.policyUpdated": 1,
+            "Network.requestWillBeSent": 1,
+            "Network.requestWillBeSentExtraInfo": 1,
+            "Network.responseReceived": 1,
+            "Network.responseReceivedExtraInfo": 1,
+            "Page.domContentEventFired": 1,
+            "Page.frameNavigated": 1,
+            "Page.frameStartedLoading": 1,
+            "Page.frameStartedNavigating": 1,
+            "Page.frameStoppedLoading": 1,
+            "Page.lifecycleEvent": 9,
+            "Page.loadEventFired": 1,
+            "Runtime.executionContextCreated": 1,
+            "Runtime.executionContextsCleared": 2
+          },
+          "b": {}
+        }
+      },
+      {
+        "name": "b_runtime_enable_snapshot",
+        "eventsBySession": {
+          "a": {},
+          "b": {
+            "Runtime.executionContextCreated": 1
+          }
+        }
+      },
+      {
+        "name": "a_disabled_b_runtime_enabled",
+        "eventsBySession": {
+          "a": {},
+          "b": {
+            "Runtime.executionContextCreated": 1,
+            "Runtime.executionContextsCleared": 2
+          }
+        }
+      },
+      {
+        "name": "idle_with_request_after_navigation",
+        "eventsBySession": {
+          "a": {
+            "Network.dataReceived": 2,
+            "Network.loadingFinished": 2,
+            "Network.policyUpdated": 1,
+            "Network.requestWillBeSent": 2,
+            "Network.requestWillBeSentExtraInfo": 2,
+            "Network.responseReceived": 2,
+            "Network.responseReceivedExtraInfo": 2,
+            "Page.domContentEventFired": 1,
+            "Page.frameNavigated": 1,
+            "Page.frameStartedLoading": 1,
+            "Page.frameStartedNavigating": 1,
+            "Page.frameStoppedLoading": 1,
+            "Page.lifecycleEvent": 9,
+            "Page.loadEventFired": 1,
+            "Runtime.executionContextCreated": 1,
+            "Runtime.executionContextsCleared": 2
+          },
+          "b": {
+            "Runtime.executionContextCreated": 1,
+            "Runtime.executionContextsCleared": 2
+          }
+        },
+        "delayedRequest": {
+          "receivedDurationMs": 652.8,
+          "networkIdleReceivedAfterFinishMs": 604.47,
+          "networkIdleTimestampMinusFinishMs": 1.04
+        }
+      }
+    ],
+    "final": [
+      {
+        "name": "all_domains_disabled",
+        "eventsBySession": {
+          "a": {},
+          "b": {}
+        }
+      },
+      {
+        "name": "a_enabled_b_disabled",
+        "eventsBySession": {
+          "a": {
+            "Network.loadingFinished": 1,
+            "Network.requestWillBeSent": 1,
+            "Network.responseReceived": 1,
+            "Page.domContentEventFired": 1,
+            "Page.frameNavigated": 1,
+            "Page.lifecycleEvent": 5,
+            "Page.loadEventFired": 1,
+            "Runtime.executionContextCreated": 1,
+            "Runtime.executionContextsCleared": 1
+          },
+          "b": {}
+        }
+      },
+      {
+        "name": "b_runtime_enable_snapshot",
+        "eventsBySession": {
+          "a": {},
+          "b": {
+            "Runtime.executionContextCreated": 1
+          }
+        }
+      },
+      {
+        "name": "a_disabled_b_runtime_enabled",
+        "eventsBySession": {
+          "a": {},
+          "b": {
+            "Runtime.executionContextCreated": 1,
+            "Runtime.executionContextsCleared": 1
+          }
+        }
+      },
+      {
+        "name": "idle_with_request_after_navigation",
+        "eventsBySession": {
+          "a": {
+            "Network.loadingFinished": 2,
+            "Network.requestWillBeSent": 2,
+            "Network.responseReceived": 2,
+            "Page.domContentEventFired": 1,
+            "Page.frameNavigated": 1,
+            "Page.lifecycleEvent": 5,
+            "Page.loadEventFired": 1,
+            "Runtime.executionContextCreated": 1,
+            "Runtime.executionContextsCleared": 1
+          },
+          "b": {
+            "Runtime.executionContextCreated": 1,
+            "Runtime.executionContextsCleared": 1
+          }
+        },
+        "delayedRequest": {
+          "receivedDurationMs": 651.67,
+          "networkIdleReceivedAfterFinishMs": 508.05,
+          "networkIdleTimestampMinusFinishMs": 0.77
+        }
+      }
+    ]
+  },
+  "references": {
+    "automation": {
+      "path": "compatibility/cdp_automation_reference.json",
+      "sha256": "f3ecdb3e02ac2c7f1771072cc848ad5fa23e071443f8e0be3a38656356206b3a",
+      "lastWriteUTC": "2026-09-11T22:57:01.308683+00:00",
+      "capturedSHA256": "4f510c6e1a6b834172df3628b040d202a70e317ed89d39efbf4c957e67e0c820",
+      "retainedEncoding": "UTF-8 with LF; captured JSON payload unchanged"
+    },
+    "interception": {
+      "path": "compatibility/cdp_automation_interception_reference.json",
+      "sha256": "8b1e1d87f051ca3212b8a98a0550db5497f72651f0065f44b60a42be876c06db",
+      "lastWriteUTC": "2026-09-11T22:52:57.872274+00:00",
+      "capturedSHA256": "8976c20749254f61b532618045d58e600ae148b20b1910f8f560cc6608598d44",
+      "retainedEncoding": "UTF-8 with LF; captured JSON payload unchanged"
+    }
+  },
+  "excludedCapabilities": [
+    {
+      "methods": [
+        "Page.captureScreenshot",
+        "Page.printToPDF",
+        "Page.startScreencast"
+      ],
+      "reason": "Mimic has no image renderer; output image/media compatibility is not claimed."
+    },
+    {
+      "methods": [
+        "WebAudio.*",
+        "Media.*"
+      ],
+      "reason": "Media devices and playback are outside this automation suite."
+    }
+  ]
+}
