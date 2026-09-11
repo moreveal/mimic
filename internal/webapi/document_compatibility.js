@@ -8,7 +8,7 @@ function wrapDocumentNode(data) {
   if(data.nodeId===host.documentRootID())return document;
   let value=documentWrappers.get(data.nodeId);
   if(!value){const reference=host.documentReference(data.nodeId);if(reference){value=unwrapCrossRealm(reference.frame,reference);documentWrappers.set(data.nodeId,value)}}
-  if(!value){value=Object.create((data.contentType&&data.contentType!=='text/html'?globalThis.XMLDocument:HTMLDocument).prototype);elementData.set(value,data);documentWrappers.set(data.nodeId,value);if(registerDocumentGetterBinding)registerDocumentGetterBinding(value)}
+  if(!value){value=Object.create((data.contentType&&data.contentType!=='text/html'?globalThis.XMLDocument:HTMLDocument).prototype);elementData.set(value,data);Object.defineProperty(value,'location',documentLocationDescriptor);documentWrappers.set(data.nodeId,value);if(registerDocumentGetterBinding)registerDocumentGetterBinding(value)}
   return value;
 }
 {
@@ -67,7 +67,13 @@ function wrapDocumentNode(data) {
       return adopt(original.apply(this,args),this)});
   }
   accessor(Document.prototype,'documentElement',function(){validDocument(this);return Array.from(this.childNodes).find(node=>node.nodeType===1)||null});
-  accessor(Document.prototype,'firstChild',function(){validDocument(this);return this.childNodes.item(0)});
+  const firstChild=Object.getOwnPropertyDescriptor(Node.prototype,'firstChild').get;
+  accessor(Node.prototype,'firstChild',function(){
+    if(!isDOMNode(this))throw new TypeError('Illegal invocation');
+    if(this===document||elementSlot(this)?.type==='document')return documentFirstChild(this);
+    return functionSourceApply(firstChild,this,[]);
+  });
+  delete Document.prototype.firstChild;
   for(const name of ['head','body'])accessor(Document.prototype,name,function(){validDocument(this);const root=this.documentElement;if(root?.namespaceURI!=='http://www.w3.org/1999/xhtml'||root.localName!=='html')return null;return Array.from(root.children).find(node=>node.namespaceURI==='http://www.w3.org/1999/xhtml'&&(node.localName===name||name==='body'&&node.localName==='frameset'))||null});
   const tagName=Object.getOwnPropertyDescriptor(Element.prototype,'tagName').get;
   accessor(Element.prototype,'tagName',function(){return elementSlot(this)?.qualifiedName||tagName.call(this)});
@@ -79,9 +85,19 @@ function wrapDocumentNode(data) {
     return cachedHTMLCollection(root,'tag',name,()=>Array.from(root.querySelectorAll('*')).filter(node=>name==='*'||node.localName===(node.namespaceURI==='http://www.w3.org/1999/xhtml'?lower:name)).map(node=>elementSlot(node).nodeId));
   });
   accessor(Document.prototype,'defaultView',function(){validDocument(this);return this===document&&host.documentActive()?window:null});
-  accessor(Document.prototype,'textContent',function(){validDocument(this);return null},function(){validDocument(this)});
+  const nodeTextContent=Object.getOwnPropertyDescriptor(Node.prototype,'textContent');
+  const nullTextContent=value=>{const type=elementSlot(value)?.type;return value===document||type==='document'||type==='doctype'};
+  accessor(Node.prototype,'textContent',function(){
+    if(!isDOMNode(this))throw new TypeError('Illegal invocation');
+    return nullTextContent(this)?null:functionSourceApply(nodeTextContent.get,this,[]);
+  },function(value){
+    if(!isDOMNode(this))throw new TypeError('Illegal invocation');
+    if(nullTextContent(this)){if(value!=null)bindingString(value);return}
+    return functionSourceApply(nodeTextContent.set,this,[value]);
+  });
+  delete Document.prototype.textContent;
   for(const name of ['URL','documentURI'])accessor(Document.prototype,name,function(){validDocument(this);return this===document?location.href:elementSlot(this)?.documentURL||'about:blank'});
-  accessor(Document.prototype,'location',function(){validDocument(this);return this===document?location:null});
+  delete Document.prototype.location;
   const ready=Object.getOwnPropertyDescriptor(Document.prototype,'readyState').get;
   accessor(Document.prototype,'readyState',function(){validDocument(this);return this===document?ready.call(this):'complete'});
   accessor(Document.prototype,'compatMode',function(){validDocument(this);return contentType(this)==='text/html'&&(this===document||elementSlot(this)?.parsedDocument)&&!Array.from(this.childNodes).some(node=>node.nodeType===10)?'BackCompat':'CSS1Compat'});
@@ -163,6 +179,21 @@ function wrapDocumentNode(data) {
 
 for(const name of ['hasStorageAccess','hasUnpartitionedCookieAccess'])if(name in Document.prototype){const method=function(){if(!(this instanceof Document))throw new TypeError('Illegal invocation');if(this!==document)return Promise.reject(new DOMException('Document is not fully active','InvalidStateError'));return Promise.resolve(host.hasStorageAccess())};Object.defineProperty(method,'name',{value:name,configurable:true});if(typeof markNative==='function')markNative(method,name);Object.defineProperty(Document.prototype,name,{value:method,writable:true,enumerable:true,configurable:true})}
 
+// Document's unforgeable Location attribute is installed on each instance;
+// Node specializations remain on Node.prototype and dispatch by private brand.
+function documentLocation(value) {
+  if(value===document)return host.documentActive()?loc:null;
+  const reference=referenceGet(value);
+  if(reference?.binding?.kind==='Document')return callRealmBinding(value,reference,'location',[]);
+  if(elementSlot(value)?.type==='document')return null;
+  throw new TypeError('Illegal invocation');
+}
+function documentFirstChild(value) {
+  const reference=referenceGet(value);
+  if(reference?.binding?.kind==='Document')return callRealmBinding(value,reference,'firstChild',[]);
+  return wrap(host.firstChild(value===document?host.documentRootID():elementSlot(value).nodeId));
+}
+
 // Capture installed getters only after all semantic layers have been installed.
 // Borrowing an accessor must dispatch through the Document owner, rather than
 // mistake a foreign active document for a local inert document. Public property
@@ -189,7 +220,9 @@ function finalizeDocumentGetterBindings() {
     Object.defineProperty(Document.prototype,name,descriptor);
   }
   registerDocumentGetterBinding=value=>registerRealmBinding(value,'Document',{
-    get:name=>functionSourceApply(getters.get(name),value,[])
+    get:name=>functionSourceApply(getters.get(name),value,[]),
+    location:()=>documentLocation(value),
+    firstChild:()=>documentFirstChild(value)
   });
   registerDocumentGetterBinding(document);
   for(const value of documentWrappers.values())if(!referenceGet(value))registerDocumentGetterBinding(value);

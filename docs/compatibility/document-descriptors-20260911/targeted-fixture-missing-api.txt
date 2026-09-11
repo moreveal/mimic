@@ -1,0 +1,10 @@
+--- FAIL: TestDocumentDescriptorsMatchFrozenChrome (0.72s)
+    --- FAIL: TestDocumentDescriptorsMatchFrozenChrome/ordinary (0.33s)
+        --- FAIL: TestDocumentDescriptorsMatchFrozenChrome/ordinary/document_descriptor (0.09s)
+            document_all_oracle_test.go:73: promise rejected: TypeError: document.implementation.createDocumentType is not a function
+    --- FAIL: TestDocumentDescriptorsMatchFrozenChrome/snapshot (0.39s)
+        --- FAIL: TestDocumentDescriptorsMatchFrozenChrome/snapshot/document_descriptor (0.02s)
+            document_all_oracle_test.go:73: promise rejected: TypeError: document.implementation.createDocumentType is not a function
+FAIL
+FAIL    github.com/moreveal/mimic/internal/browser  2.290s
+FAIL
