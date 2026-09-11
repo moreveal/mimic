@@ -14,6 +14,7 @@ import (
 	"strings"
 	"sync"
 	"time"
+	"unicode/utf8"
 
 	"github.com/google/uuid"
 	"github.com/gorilla/websocket"
@@ -733,7 +734,12 @@ func (s *session) handleRouted(m message, route string) {
 		}
 	case "Network.getResponseBody":
 		if response, ok := s.page.Loader().Completed(stringValue(p["requestId"])); ok {
-			result = map[string]any{"body": string(response.Body), "base64Encoded": false}
+			body := string(response.Body)
+			encoded := !utf8.Valid(response.Body)
+			if encoded {
+				body = base64.StdEncoding.EncodeToString(response.Body)
+			}
+			result = map[string]any{"body": body, "base64Encoded": encoded}
 		} else {
 			err = fmt.Errorf("unknown request id")
 		}
