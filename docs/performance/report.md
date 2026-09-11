@@ -1569,3 +1569,15 @@ Both retained-srcdoc race/CPU-profile runs still exceed the original deadline
 Full browser passes. V8 fixed differential/control and corpora are unchanged.
 The earlier concurrency throughput concern and unreduced snapshot signatures
 remain open; diagnostic forced Go reclamation is not a production workaround.
+
+
+## Document getter ownership (2026-09-11)
+
+[Package evidence](../compatibility/document-getter-ownership-2026-09-11.md):
+full browser and targeted race pass; paired complete gates pass with no native
+dumps. DOM execution/completion 441.26/472.10 to 444.81/479.53 ms; static
+2.86/26.86 to 3.32/28.65; React 53.97/88.92 to 54.83/83.45. Throughput at
+10/25 Pages 71.12/62.36 to 74.02/72.72 sessions/s. Static/React recovered private
+memory 157.96/165.97 to 162.19/170.81 MiB. These mixed single-pair measurements
+do not establish neutrality or complete owner-reference reclamation. Focused
+semantic differences fall 9 to 0 without changing the fixed general corpus.
