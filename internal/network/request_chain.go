@@ -22,6 +22,9 @@ func (r *Request) redirectChain(target *url.URL) {
 }
 
 func (r Request) initiatingURL() *url.URL {
+	if r.SourceOrigin != nil {
+		return r.SourceOrigin
+	}
 	if r.SourceURL != nil {
 		return r.SourceURL
 	}

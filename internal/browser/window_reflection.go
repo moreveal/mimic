@@ -21,7 +21,11 @@ func (r *Realm) installWindowReflection(host map[string]any) {
 		if !r.canAccess(frame) {
 			return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
 		}
-		target, operation := frame.Realm, strarg(args, 1)
+		target, err := r.worldForFrame(frame)
+		if err != nil {
+			return nil, err
+		}
+		operation := strarg(args, 1)
 		return r.crossFrameData(target, func(ctx context.Context) (any, error) {
 			global := target.runtime.Get("globalThis")
 			if operation == "keys" {

@@ -1,0 +1,102 @@
+package cdp
+
+import (
+	"fmt"
+	"strings"
+
+	"github.com/moreveal/mimic/internal/state"
+)
+
+func (s *session) handleEmulation(method string, p map[string]any) (any, bool, error) {
+	empty := map[string]any{}
+	switch method {
+	case "Emulation.setDeviceMetricsOverride":
+		if mobile, _ := p["mobile"].(bool); mobile {
+			return nil, true, fmt.Errorf("Mobile viewport emulation is not supported")
+		}
+		for _, key := range []string{"viewport", "displayFeature", "devicePosture"} {
+			if _, set := p[key]; set {
+				return nil, true, fmt.Errorf("%s is not supported", key)
+			}
+		}
+		orientation, _ := p["screenOrientation"].(map[string]any)
+		if orientation != nil {
+			switch stringValue(orientation["type"]) {
+			case "portraitPrimary", "portraitSecondary", "landscapePrimary", "landscapeSecondary":
+			default:
+				return nil, true, fmt.Errorf("Invalid screen orientation type")
+			}
+			if angle := intValue(orientation["angle"], 0); angle < 0 || angle > 360 {
+				return nil, true, fmt.Errorf("Invalid screen orientation angle")
+			}
+		}
+		scale, _ := p["deviceScaleFactor"].(float64)
+		if err := s.page.SetDeviceMetrics(intValue(p["width"], 0), intValue(p["height"], 0), scale, intValue(p["screenWidth"], 0), intValue(p["screenHeight"], 0)); err != nil {
+			return nil, true, err
+		}
+		if orientation != nil {
+			return empty, true, s.page.SetScreenOrientation(stringValue(orientation["type"]), intValue(orientation["angle"], 0))
+		}
+		return empty, true, nil
+	case "Emulation.clearDeviceMetricsOverride":
+		s.page.ClearDeviceMetrics()
+		return empty, true, nil
+	case "Network.setUserAgentOverride", "Emulation.setUserAgentOverride":
+		o := &state.UserAgentOverride{UserAgent: stringValue(p["userAgent"]), Platform: stringValue(p["platform"])}
+		for _, lang := range strings.Split(stringValue(p["acceptLanguage"]), ",") {
+			lang, _, _ = strings.Cut(strings.TrimSpace(lang), ";")
+			if lang != "" {
+				o.Languages = append(o.Languages, lang)
+			}
+		}
+		if raw, ok := p["userAgentMetadata"].(map[string]any); ok {
+			m := &state.UserAgentMetadata{FullVersion: stringValue(raw["fullVersion"]), Platform: stringValue(raw["platform"]), PlatformVersion: stringValue(raw["platformVersion"]), Architecture: stringValue(raw["architecture"]), Model: stringValue(raw["model"]), Bitness: stringValue(raw["bitness"])}
+			m.Mobile, _ = raw["mobile"].(bool)
+			m.WoW64, _ = raw["wow64"].(bool)
+			brands := func(value any) []state.UserAgentBrand {
+				out := []state.UserAgentBrand{}
+				items, _ := value.([]any)
+				for _, item := range items {
+					b, _ := item.(map[string]any)
+					out = append(out, state.UserAgentBrand{Brand: stringValue(b["brand"]), Version: stringValue(b["version"]), FullVersion: stringValue(b["version"])})
+				}
+				return out
+			}
+			m.Brands = brands(raw["brands"])
+			m.FullVersionList = brands(raw["fullVersionList"])
+			o.Metadata = m
+		}
+		if o.UserAgent == "" && o.Platform == "" && len(o.Languages) == 0 {
+			o = nil
+		}
+		s.page.SetUserAgentOverride(o)
+		return empty, true, nil
+	case "Emulation.setEmulatedMedia":
+		if media := stringValue(p["media"]); media != "" && media != "screen" {
+			return nil, true, fmt.Errorf("Media type %s is not supported", media)
+		}
+		base := s.server.Browser.Environment().Preferences
+		scheme := base.ColorScheme
+		reduced := &base.ReducedMotion
+		if features, ok := p["features"].([]any); ok {
+			for _, item := range features {
+				f, _ := item.(map[string]any)
+				switch stringValue(f["name"]) {
+				case "prefers-color-scheme":
+					scheme = stringValue(f["value"])
+					if scheme != "dark" && scheme != "light" {
+						scheme = s.server.Browser.Environment().Preferences.ColorScheme
+					}
+				case "prefers-reduced-motion":
+					v := stringValue(f["value"]) == "reduce"
+					reduced = &v
+				default:
+					return nil, true, fmt.Errorf("Media feature %s is not supported", stringValue(f["name"]))
+				}
+			}
+		}
+		s.page.SetMediaPreferences(scheme, reduced)
+		return empty, true, nil
+	}
+	return nil, false, nil
+}

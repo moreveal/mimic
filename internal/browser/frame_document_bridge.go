@@ -139,7 +139,10 @@ func (r *Realm) installFrameDocumentBridge(host map[string]any) {
 		if !r.canAccess(frame) {
 			return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
 		}
-		target := frame.Realm
+		target, err := r.worldForFrame(frame)
+		if err != nil {
+			return nil, err
+		}
 		rawKey, rawValue := arg(args, 1), arg(args, 2)
 		return r.crossFrameResult(target, func(ctx context.Context) (engine.Value, error) {
 			key, err := target.decodeFrameKey(ctx, rawKey)
@@ -279,7 +282,7 @@ func (r *Realm) callFrameReference(args []engine.Value) (engine.Value, error) {
 			if e != nil {
 				return nil, e
 			}
-			record, err = target.runtime.Call(ctx, target.eventListenerInvoker, nil, function, receiver, event, target.val(arg(args, 7) == true), target.val(arg(args, 8) == true))
+			record, err = target.runtime.Call(ctx, target.eventListenerInvoker, nil, function, receiver, event, target.val(arg(args, 7) == true), target.val(arg(args, 8) == true), target.val(arg(args, 9) == true))
 		} else {
 			record, err = target.callFrameReflection(ctx, operation, function, receiver, arguments)
 		}
