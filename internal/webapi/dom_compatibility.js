@@ -423,7 +423,18 @@ const compatibilityElementState={};
       if(arguments.length===0)throw new TypeError('Expected class names');
       const root=this,normalize=value=>(root instanceof Document?root:root.ownerDocument)?.compatMode==='BackCompat'?value.replace(/[A-Z]/g,c=>c.toLowerCase()):value;
       names=String(names);const tokens=[...new Set(normalize(names).split(/[\t\n\f\r ]+/).filter(Boolean))];
-      return cachedHTMLCollection(root,'class',names,()=>tokens.length?Array.from(root.querySelectorAll('*')).filter(node=>{const classes=normalize(node.getAttribute('class')||'').split(/[\t\n\f\r ]+/);return tokens.every(token=>classes.includes(token))}).map(node=>host.nodeData(elementSlot(node).nodeId)):[]);
+      // The arena revision includes parser, host and cross-realm writes.
+      // Cache membership IDs only; wrappers and mutable fields stay canonical.
+      let revision,ids=[];
+      return cachedHTMLCollection(root,'class',names,()=>{
+        if(!tokens.length)return [];
+        const current=host.domRevision();
+        if(current!==revision) {
+          ids=host.classIDs(root===document?documentRootID:elementSlot(root).nodeId,tokens.join(' '),normalize('A')==='a'?1:0);
+          revision=current;
+        }
+        return ids;
+      });
     },writable:true,enumerable:true,configurable:true});
     Object.defineProperty(DocumentFragment.prototype,'textContent',{get(){return Array.from(this.childNodes).map(node=>node.textContent||'').join('')},set(value){for(const child of Array.from(this.childNodes))this.removeChild(child);if(value!=null&&String(value)!=='')this.appendChild(document.createTextNode(String(value)))},enumerable:true,configurable:true});
     if(typeof globalThis.CSS!=='undefined')Object.defineProperty(globalThis.CSS,'escape',{value:function(value){const s=String(value);let out='';for(let i=0;i<s.length;i++){const c=s.charCodeAt(i);if(c===0){out+='\ufffd';continue}if(c<32||c===127||i===0&&c>=48&&c<=57||i===1&&c>=48&&c<=57&&s[0]==='-'){out+='\\'+c.toString(16)+' ';continue}if(i===0&&s.length===1&&s[i]==='-'){out+='\\-';continue}out+=c>=128||c===45||c===95||c>=48&&c<=57||c>=65&&c<=90||c>=97&&c<=122?s[i]:'\\'+s[i]}return out},writable:true,configurable:true,enumerable:true});

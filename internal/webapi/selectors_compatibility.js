@@ -67,7 +67,7 @@ const compatibilitySelectors = (() => {
   let documentID=host.documentRootID();bootstrapRestoreHooks.push(()=>{documentID=host.documentRootID()});
   const children = node => memo(node,'children',()=>{
     const slot=elementSlot(node);
-    if(node===document||slot)return host.nodeChildren(node===document?documentID:slot.nodeId).map(wrap);
+    if(node===document||slot)return host.childIDs(node===document?documentID:slot.nodeId).map(wrap);
     return fragmentSlots.get(node)?.children.slice()||[];
   });
   const parent = node => memo(node,'parent',()=>{
@@ -148,6 +148,38 @@ const compatibilitySelectors = (() => {
     }
     return run(()=>{
       const scope=scopeFor(root), match=predicate(scope,selector);
+      // Select candidates from canonical DOM in one host call. The final
+      // compound's leaf is only a necessary condition: the upstream matcher
+      // still decides the complete selector, including scope and pseudos.
+      // This avoids materializing wrappers for every text node and unrelated
+      // element just to traverse a large tree. No DOM results survive a query.
+      if(root===document||slot) {
+        const leaves=parsed(selector).map(group=>{
+          let leaf=null;
+          for(let i=group.length-1;i>=0;i--) {
+            const token=group[i];
+            if(['descendant','child','adjacent','sibling','parent','column-combinator'].includes(token.type))break;
+            // The legacy native attribute matcher folds names. Do not narrow
+            // a case-sensitive foreign attribute such as SVG viewBox through it.
+            if(token.type==='attribute'&&token.name!==token.name.toLowerCase())continue;
+            const candidate=simpleNativeGroup([token]);
+            if(candidate&&candidate!=='*'){leaf=candidate;break;}
+          }
+          return leaf;
+        });
+        if(leaves.length&&leaves.every(Boolean)) {
+          const ids=host.queryAllWithin(root===document?documentID:slot.nodeId,leaves.join(','));
+          const result=[];
+          for(const id of ids) {
+            const node=wrap(id);
+            if(match(node)) {
+              if(first)return node;
+              result.push(records?id:node);
+            }
+          }
+          return first?null:result;
+        }
+      }
       const result=(first?library.findOne:library.findAll)(match,children(root),options(scope));
       return records?result.map(node=>elementSlot(node)):result;
     });

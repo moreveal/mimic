@@ -19,6 +19,29 @@ SPINNER = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
 ASCII_SPINNER = "|/-\\"
 
 
+async def resolve_loopback_endpoint(endpoint: str) -> str:
+    """Race localhost's address families before Pyppeteer's blocking discovery.
+
+    Windows can spend seconds rejecting IPv6 when Mimic listens on IPv4 only.
+    Keep HTTPS hostnames intact for certificate verification and remote URLs
+    untouched. Use the address that actually accepted a connection, including
+    IPv6-only local servers, rather than assuming localhost means IPv4.
+    """
+    parsed = urlsplit(endpoint)
+    if parsed.scheme != "http" or parsed.hostname != "localhost" or parsed.username is not None:
+        return endpoint
+    _, writer = await asyncio.wait_for(asyncio.open_connection(
+        parsed.hostname, parsed.port or 80, happy_eyeballs_delay=0.05, interleave=1,
+    ), timeout=10)
+    try:
+        address = writer.get_extra_info("peername")[0]
+    finally:
+        writer.close()
+        await writer.wait_closed()
+    host = f"[{address}]" if ":" in address else address
+    return parsed._replace(netloc=f"{host}:{parsed.port or 80}").geturl()
+
+
 def format_duration(seconds: float) -> str:
     if seconds < 0.001:
         return f"{seconds * 1_000_000:.0f} us"
@@ -357,7 +380,7 @@ async def save_snapshot(args: argparse.Namespace) -> None:
     page = None
     try:
         stage = time.monotonic()
-        browser = await connect(browserURL=args.endpoint, defaultViewport=None)
+        browser = await connect(browserURL=await resolve_loopback_endpoint(args.endpoint), defaultViewport=None)
         reporter.done("Connect", stage, args.endpoint)
 
         stage = time.monotonic()
