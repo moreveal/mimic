@@ -1,0 +1,456 @@
+{
+  "implementationRevision": "0462bf5ad7d40f45e7a80a26fbd64e4700475232",
+  "initialCommands": [
+    {
+      "name": "browser",
+      "command": [
+        "go",
+        "test",
+        "-json",
+        "-timeout=25m",
+        "./internal/browser"
+      ],
+      "exitCode": 1,
+      "elapsedSeconds": 260.7265124320984
+    },
+    {
+      "name": "race",
+      "command": [
+        "go",
+        "test",
+        "-race",
+        "-json",
+        "-timeout=15m",
+        "./internal/browser",
+        "-run",
+        "TestHistoryStorageBindings|TestWindowReflection|TestWindowMemberOrder|TestGlobalAccessTracing|TestMedia|TestHTML.*Reflection|TestIntersection|TestStylesheet|TestSnapshotDOM|TestNavigationStream",
+        "-count=1"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 22.92781400680542
+    },
+    {
+      "name": "core-race",
+      "command": [
+        "go",
+        "test",
+        "-race",
+        "./internal/cdp",
+        "./internal/network",
+        "./internal/scheduler",
+        "./internal/dom",
+        "./internal/imageresource",
+        "./internal/engine/v8",
+        "./internal/engine/goja",
+        "./cmd/mimic"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 12.747601985931396
+    },
+    {
+      "name": "python",
+      "command": [
+        "python",
+        "-m",
+        "unittest",
+        "discover",
+        "-s",
+        "tools",
+        "-p",
+        "test_mimic_snapshot.py"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 0.28048110008239746
+    }
+  ],
+  "finalCommands": [
+    {
+      "name": "browser",
+      "command": [
+        "go",
+        "test",
+        "-json",
+        "-timeout=25m",
+        "./internal/browser"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 241.75682520866394
+    },
+    {
+      "name": "frames-race",
+      "command": [
+        "go",
+        "test",
+        "-race",
+        "./internal/browser",
+        "-run",
+        "TestWindowFramesReflectsDirectChildBrowsingContexts|TestWindowReflection|TestWindowGlobalOrder|TestWindowMemberOrder|TestGlobalAccessTracing",
+        "-count=1"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 13.729337215423584
+    },
+    {
+      "name": "snapshot",
+      "command": [
+        "go",
+        "test",
+        "-json",
+        "./internal/browser",
+        "./internal/engine/v8",
+        "-run",
+        "TestBootstrapSnapshot|TestConcurrentNumericSnapshotsPreserveLiveGraphs|TestConcurrentBootstrapSnapshotSerialization|TestOrdinaryConcurrentPageLifecycles",
+        "-count=3",
+        "-timeout=5m"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 54.787057638168335
+    }
+  ],
+  "tlsNestedInvocation": {
+    "command": [
+      "go",
+      "test",
+      "-race",
+      "-count=1",
+      "-run",
+      "^(TestConnectionRaceSlowResponseSendsPOSTOnce|TestConnectionRaceCancelsLosingHandshake|TestConnectionRaceCallerCancellationBeforeHandshake|TestCachedRequestErrorDoesNotReplayConsumedBody|TestCachedHTTP3FailureRetriesSafeRequestOverTCP|TestConnectionRaceRealQUICSlowPOSTAndStreamingBody|TestConnectionSelectionWaitersDispatchConcurrently|TestRealQUICPreconnectRejectsCertificateWithoutRequest|TestConnectionRaceRealQUICHandshakeCancellation|TestCanceledApplicationRequestPreservesSelectedTransport|TestCloseIdleConnectionsClosesPendingHandshake)$",
+      "."
+    ],
+    "cwd": "E:\\GitHub\\mimic\\third_party\\tls-client",
+    "exitCode": 1,
+    "elapsedSeconds": 2.1154932975769043
+  },
+  "tlsRootInvocation": {
+    "command": [
+      "go",
+      "test",
+      "-race",
+      "-count=1",
+      "-run",
+      "^(TestConnectionRaceSlowResponseSendsPOSTOnce|TestConnectionRaceCancelsLosingHandshake|TestConnectionRaceCallerCancellationBeforeHandshake|TestCachedRequestErrorDoesNotReplayConsumedBody|TestCachedHTTP3FailureRetriesSafeRequestOverTCP|TestConnectionRaceRealQUICSlowPOSTAndStreamingBody|TestConnectionSelectionWaitersDispatchConcurrently|TestRealQUICPreconnectRejectsCertificateWithoutRequest|TestConnectionRaceRealQUICHandshakeCancellation|TestCanceledApplicationRequestPreservesSelectedTransport|TestCloseIdleConnectionsClosesPendingHandshake)$",
+      "github.com/bogdanfinn/tls-client"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 12.619349956512451
+  },
+  "testEvents": {
+    "main-merge-browser": {
+      "passEvents": 1177,
+      "failures": [
+        {
+          "Time": "2026-09-11T19:51:13.8643284+04:00",
+          "Action": "fail",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestWindowFramesReflectsDirectChildBrowsingContexts",
+          "Elapsed": 0.25
+        },
+        {
+          "Time": "2026-09-11T19:52:18.0082129+04:00",
+          "Action": "fail",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Elapsed": 258.518
+        }
+      ],
+      "skips": [
+        {
+          "Time": "2026-09-11T19:48:04.9813622+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestBootstrapSnapshotConcurrentPageLifecycles",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:48:04.9813622+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestBootstrapSnapshotBarrierConcurrentBuilders",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:48:04.9813622+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestBootstrapSnapshotBarrierSequentialBuilders",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:48:04.9813622+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestBootstrapSnapshotConcurrentPagesSequentialBuilders",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:48:04.9813622+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestOrdinaryConcurrentPageLifecycles",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:48:37.1720146+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestDetachedFrameMemoryProfile",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:49:31.4124163+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestFrameBridgeBreakdown",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:49:31.9249716+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestNativeFrameMicrotasksBeforeNextTask/goja",
+          "Elapsed": 0.51
+        },
+        {
+          "Time": "2026-09-11T19:49:49.2072333+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestGojaBootstrapProfile",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:49:49.2072333+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestGojaBootstrapPhases",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:49:49.2072333+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestGojaBootstrapChildProfile",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:51:24.7822358+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestPerformanceDensityProfile",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:51:25.0083007+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestPerformanceParallelPages",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:51:25.0083007+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestPerformanceProfile",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:51:33.8884027+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestSnapshotWorkloadProfile",
+          "Elapsed": 0
+        }
+      ]
+    },
+    "main-final-browser": {
+      "passEvents": 1178,
+      "failures": [],
+      "skips": [
+        {
+          "Time": "2026-09-11T19:56:11.5624844+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestBootstrapSnapshotConcurrentPageLifecycles",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:56:11.5624844+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestBootstrapSnapshotBarrierConcurrentBuilders",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:56:11.5624844+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestBootstrapSnapshotBarrierSequentialBuilders",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:56:11.5624844+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestBootstrapSnapshotConcurrentPagesSequentialBuilders",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:56:11.5624844+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestOrdinaryConcurrentPageLifecycles",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:56:45.6074892+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestDetachedFrameMemoryProfile",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:57:18.403856+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestFrameBridgeBreakdown",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:57:18.7011963+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestNativeFrameMicrotasksBeforeNextTask/goja",
+          "Elapsed": 0.3
+        },
+        {
+          "Time": "2026-09-11T19:57:35.3128856+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestGojaBootstrapProfile",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:57:35.3128856+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestGojaBootstrapPhases",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:57:35.3128856+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestGojaBootstrapChildProfile",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:59:11.6576089+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestPerformanceDensityProfile",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:59:11.925346+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestPerformanceParallelPages",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:59:11.925346+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestPerformanceProfile",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:59:20.7994848+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestSnapshotWorkloadProfile",
+          "Elapsed": 0
+        }
+      ]
+    },
+    "main-final-snapshot": {
+      "passEvents": 168,
+      "failures": [],
+      "skips": []
+    }
+  },
+  "deletedBranches": [
+    {
+      "branch": "codex/backup-main-before-conventional-reword-20260910",
+      "head": "8ad6d13071a0c75c8306b3265f83c3388f1b6293",
+      "unmatched": []
+    },
+    {
+      "branch": "codex/backup-main-before-resigning-20260910",
+      "head": "dd8420a960914d1391925399c59de2b0686b4b6b",
+      "unmatched": []
+    },
+    {
+      "branch": "codex/child-deferred-20260911",
+      "head": "990a7d8e0b94297b0c27b6d4202e25519a181879",
+      "unmatched": []
+    },
+    {
+      "branch": "codex/child-final-baseline-20260911",
+      "head": "a260c26c35ca63745e651901619be6926f622c75",
+      "unmatched": []
+    },
+    {
+      "branch": "codex/compat-cleanup-20260911",
+      "head": "b9433139b47cc02d72a9521a0b4c886d05b1fa45",
+      "unmatched": []
+    },
+    {
+      "branch": "codex/headers-semantics-20260911",
+      "head": "9e7548e3b7e974a008a6fed1bf0b3ac59ec42618",
+      "unmatched": [
+        "b2ce7c8d4d93a86c27679ff3578eea1e9f84ff4d"
+      ]
+    },
+    {
+      "branch": "codex/iteration-bytes-20260911",
+      "head": "73f08544bba5ca723289a36e5d87a3d43e6f9bed",
+      "unmatched": [
+        "b2ce7c8d4d93a86c27679ff3578eea1e9f84ff4d"
+      ]
+    },
+    {
+      "branch": "codex/node-specializations-20260911",
+      "head": "b2ce7c8d4d93a86c27679ff3578eea1e9f84ff4d",
+      "unmatched": [
+        "b2ce7c8d4d93a86c27679ff3578eea1e9f84ff4d"
+      ]
+    },
+    {
+      "branch": "codex/platform-bindings-before-20260911",
+      "head": "6bfa2456e5e181383237d4a60e19afde275bc777",
+      "unmatched": []
+    },
+    {
+      "branch": "codex/youtube-twitch-hydration",
+      "head": "38603553572c6ccf4496c30d9e97259747436c23",
+      "unmatched": []
+    }
+  ],
+  "retainedBackups": {
+    ".build/pre-main-consolidation.bundle": "28c60f5194a634292c823c13fd407ad3dea8bdcec7832cd906bf1591af5bbd09",
+    ".build/main-consolidation-dirty-worktrees.zip": "db8053f9cdd6584db7c55de79683f6726e9cb92df0de111f36c83eccee2920ff"
+  },
+  "logHashes": {
+    ".build/main-final-browser.log": "2f9169b10fb4c9f3efa727bcc9cc847b168422ae67696b85cc851401a3fb69d9",
+    ".build/main-final-frames-race.log": "1fe43f81b1fdca13a7652ff7e1be6d3ba82f5a86866dc549fe975d72b5e6a52d",
+    ".build/main-final-snapshot.log": "a2c3b9917dd2ac1ca65e5dd008aa8e79d545fcf4d2f4f8582c87ca526dae475c",
+    ".build/main-merge-browser.log": "9e001c639dc417ec531c2c2d424bdef747e588465c765eb86a0a58697fb1de99",
+    ".build/main-merge-core-race.log": "1042c4e390ede767c9a39eb71f20d61ae69ff8d5e3046697a3f7568aa2b7e1cf",
+    ".build/main-merge-core-tests.log": "7e2ee43e61523d4402f68d74ea435ae19d71ab02ccaf9cfa105c0d053a6b17ee",
+    ".build/main-merge-focused.log": "8f893c491b2b802b3b24e9d306e103431217b64672774e23fb52610143506c7e",
+    ".build/main-merge-frames-focused.log": "cbd0d171d9e962e2c3f3134729d1c7d0dac2c8dc1c6cfac95d05041d62f4b0f7",
+    ".build/main-merge-python.log": "1b6f69157102cc03f5264c937d138171570f1a3f06ab9ba2d8345507e1df7261",
+    ".build/main-merge-race.log": "bfc09b2fef6f78c1b2c60e0eb0d330ce3d9f7eb38fafad930634327a96fd8614",
+    ".build/main-merge-tls-race-root.log": "ae4205452c52a535e9b1faecdc90d338b97b514c8371c2cca435806ffb7215a5",
+    ".build/main-merge-tls-race.log": "902e30da3db5bdb2e80dc18bd7436015f6761aa0b7a9882a1d8c1cd8b89fcd6f"
+  }
+}
