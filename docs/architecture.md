@@ -63,6 +63,14 @@ composed per realm with the selected bundle's generated Blink WebIDL surface.
 Generated bindings describe known shape and route operations to semantic hosts;
 they never own independent browser state.
 
+DOMException name, message and legacy code share private state in Window and
+Worker bindings. Its current native Error backing preserves Error.isError but
+still exposes a different Object.prototype.toString tag after prototype removal.
+See the measured [exception branding boundary](compatibility/domexception-state-2026-09-11.md).
+Host-record conversion creates own data properties; inherited setters must not
+intercept fields transported into V8. This does not establish complete structured
+clone semantics or preserve ordering lost in a Go map.
+
 ### Graphics observations without rendering
 
 Mimic does not render a display and must not require a GPU or an embedded graphics

@@ -1,0 +1,447 @@
+{
+  "sha256": "a83d61593de79e9f566da7942d24da602d7aeecd13a6d2cd52eb03258335aa56",
+  "chrome": {
+    "codes": {
+      "IndexSizeError": 1,
+      "DOMStringSizeError": 0,
+      "HierarchyRequestError": 3,
+      "WrongDocumentError": 4,
+      "InvalidCharacterError": 5,
+      "NoDataAllowedError": 0,
+      "NoModificationAllowedError": 7,
+      "NotFoundError": 8,
+      "NotSupportedError": 9,
+      "InUseAttributeError": 10,
+      "InvalidStateError": 11,
+      "SyntaxError": 12,
+      "InvalidModificationError": 13,
+      "NamespaceError": 14,
+      "InvalidAccessError": 15,
+      "ValidationError": 0,
+      "TypeMismatchError": 17,
+      "SecurityError": 18,
+      "NetworkError": 19,
+      "AbortError": 20,
+      "URLMismatchError": 21,
+      "QuotaExceededError": 22,
+      "TimeoutError": 23,
+      "InvalidNodeTypeError": 24,
+      "DataCloneError": 25,
+      "Other": 0,
+      "aborterror": 0,
+      "constructor": 0,
+      "toString": 0,
+      "__proto__": 0
+    },
+    "invalid": {
+      "exception": "TypeError"
+    },
+    "shadow": 8,
+    "private": 8,
+    "conversion": [
+      "message",
+      "name"
+    ],
+    "message": "m",
+    "own": [],
+    "messageAfterDelete": "m",
+    "symbolMessage": {
+      "exception": "TypeError"
+    },
+    "symbolName": {
+      "exception": "TypeError"
+    }
+  },
+  "mimic": {
+    "codes": {
+      "AbortError": 20,
+      "DOMStringSizeError": 0,
+      "DataCloneError": 0,
+      "HierarchyRequestError": 0,
+      "InUseAttributeError": 0,
+      "IndexSizeError": 0,
+      "InvalidAccessError": 0,
+      "InvalidCharacterError": 0,
+      "InvalidModificationError": 0,
+      "InvalidNodeTypeError": 0,
+      "InvalidStateError": 0,
+      "NamespaceError": 0,
+      "NetworkError": 0,
+      "NoDataAllowedError": 0,
+      "NoModificationAllowedError": 0,
+      "NotFoundError": 0,
+      "NotSupportedError": 0,
+      "Other": 0,
+      "QuotaExceededError": 0,
+      "SecurityError": 0,
+      "SyntaxError": 0,
+      "TimeoutError": 23,
+      "TypeMismatchError": 0,
+      "URLMismatchError": 0,
+      "ValidationError": 0,
+      "WrongDocumentError": 0,
+      "aborterror": 0,
+      "constructor": 0,
+      "toString": 0
+    },
+    "conversion": [
+      "message",
+      "message",
+      "name"
+    ],
+    "invalid": 20,
+    "message": "m",
+    "messageAfterDelete": "m",
+    "own": [
+      "stack",
+      "message"
+    ],
+    "private": 20,
+    "shadow": 20,
+    "symbolMessage": "Symbol()",
+    "symbolName": "Symbol()"
+  },
+  "after": {
+    "codes": {
+      "AbortError": 20,
+      "DOMStringSizeError": 0,
+      "DataCloneError": 25,
+      "HierarchyRequestError": 3,
+      "InUseAttributeError": 10,
+      "IndexSizeError": 1,
+      "InvalidAccessError": 15,
+      "InvalidCharacterError": 5,
+      "InvalidModificationError": 13,
+      "InvalidNodeTypeError": 24,
+      "InvalidStateError": 11,
+      "NamespaceError": 14,
+      "NetworkError": 19,
+      "NoDataAllowedError": 0,
+      "NoModificationAllowedError": 7,
+      "NotFoundError": 8,
+      "NotSupportedError": 9,
+      "Other": 0,
+      "QuotaExceededError": 22,
+      "SecurityError": 18,
+      "SyntaxError": 12,
+      "TimeoutError": 23,
+      "TypeMismatchError": 17,
+      "URLMismatchError": 21,
+      "ValidationError": 0,
+      "WrongDocumentError": 4,
+      "__proto__": 0,
+      "aborterror": 0,
+      "constructor": 0,
+      "toString": 0
+    },
+    "conversion": [
+      "message",
+      "name"
+    ],
+    "invalid": {
+      "exception": "TypeError"
+    },
+    "message": "m",
+    "messageAfterDelete": "m",
+    "own": [],
+    "private": 8,
+    "shadow": 8,
+    "symbolMessage": {
+      "exception": "TypeError"
+    },
+    "symbolName": {
+      "exception": "TypeError"
+    }
+  },
+  "control": {
+    "codes": {
+      "IndexSizeError": 1,
+      "DOMStringSizeError": 0,
+      "HierarchyRequestError": 3,
+      "WrongDocumentError": 4,
+      "InvalidCharacterError": 5,
+      "NoDataAllowedError": 0,
+      "NoModificationAllowedError": 7,
+      "NotFoundError": 8,
+      "NotSupportedError": 9,
+      "InUseAttributeError": 10,
+      "InvalidStateError": 11,
+      "SyntaxError": 12,
+      "InvalidModificationError": 13,
+      "NamespaceError": 14,
+      "InvalidAccessError": 15,
+      "ValidationError": 0,
+      "TypeMismatchError": 17,
+      "SecurityError": 18,
+      "NetworkError": 19,
+      "AbortError": 20,
+      "URLMismatchError": 21,
+      "QuotaExceededError": 22,
+      "TimeoutError": 23,
+      "InvalidNodeTypeError": 24,
+      "DataCloneError": 25,
+      "Other": 0,
+      "aborterror": 0,
+      "constructor": 0,
+      "toString": 0,
+      "__proto__": 0
+    },
+    "invalid": {
+      "exception": "TypeError"
+    },
+    "shadow": 8,
+    "private": 8,
+    "conversion": [
+      "message",
+      "name"
+    ],
+    "message": "m",
+    "own": [],
+    "messageAfterDelete": "m",
+    "symbolMessage": {
+      "exception": "TypeError"
+    },
+    "symbolName": {
+      "exception": "TypeError"
+    }
+  },
+  "differences": [
+    [
+      [
+        "codes",
+        "DataCloneError"
+      ],
+      25,
+      0
+    ],
+    [
+      [
+        "codes",
+        "HierarchyRequestError"
+      ],
+      3,
+      0
+    ],
+    [
+      [
+        "codes",
+        "InUseAttributeError"
+      ],
+      10,
+      0
+    ],
+    [
+      [
+        "codes",
+        "IndexSizeError"
+      ],
+      1,
+      0
+    ],
+    [
+      [
+        "codes",
+        "InvalidAccessError"
+      ],
+      15,
+      0
+    ],
+    [
+      [
+        "codes",
+        "InvalidCharacterError"
+      ],
+      5,
+      0
+    ],
+    [
+      [
+        "codes",
+        "InvalidModificationError"
+      ],
+      13,
+      0
+    ],
+    [
+      [
+        "codes",
+        "InvalidNodeTypeError"
+      ],
+      24,
+      0
+    ],
+    [
+      [
+        "codes",
+        "InvalidStateError"
+      ],
+      11,
+      0
+    ],
+    [
+      [
+        "codes",
+        "NamespaceError"
+      ],
+      14,
+      0
+    ],
+    [
+      [
+        "codes",
+        "NetworkError"
+      ],
+      19,
+      0
+    ],
+    [
+      [
+        "codes",
+        "NoModificationAllowedError"
+      ],
+      7,
+      0
+    ],
+    [
+      [
+        "codes",
+        "NotFoundError"
+      ],
+      8,
+      0
+    ],
+    [
+      [
+        "codes",
+        "NotSupportedError"
+      ],
+      9,
+      0
+    ],
+    [
+      [
+        "codes",
+        "QuotaExceededError"
+      ],
+      22,
+      0
+    ],
+    [
+      [
+        "codes",
+        "SecurityError"
+      ],
+      18,
+      0
+    ],
+    [
+      [
+        "codes",
+        "SyntaxError"
+      ],
+      12,
+      0
+    ],
+    [
+      [
+        "codes",
+        "TypeMismatchError"
+      ],
+      17,
+      0
+    ],
+    [
+      [
+        "codes",
+        "URLMismatchError"
+      ],
+      21,
+      0
+    ],
+    [
+      [
+        "codes",
+        "WrongDocumentError"
+      ],
+      4,
+      0
+    ],
+    [
+      [
+        "codes",
+        "__proto__"
+      ],
+      0,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "conversion"
+      ],
+      [
+        "message",
+        "name"
+      ],
+      [
+        "message",
+        "message",
+        "name"
+      ]
+    ],
+    [
+      [
+        "invalid"
+      ],
+      {
+        "exception": "TypeError"
+      },
+      20
+    ],
+    [
+      [
+        "own"
+      ],
+      [],
+      [
+        "stack",
+        "message"
+      ]
+    ],
+    [
+      [
+        "private"
+      ],
+      8,
+      20
+    ],
+    [
+      [
+        "shadow"
+      ],
+      8,
+      20
+    ],
+    [
+      [
+        "symbolMessage"
+      ],
+      {
+        "exception": "TypeError"
+      },
+      "Symbol()"
+    ],
+    [
+      [
+        "symbolName"
+      ],
+      {
+        "exception": "TypeError"
+      },
+      "Symbol()"
+    ]
+  ],
+  "afterDifferences": [],
+  "controlDifferences": []
+}
