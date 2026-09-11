@@ -5,11 +5,28 @@
   const accessor=(prototype,name,get,set)=>{markNative(get,name,'get ');markNative(set,name,'set ');Object.defineProperty(prototype,name,{get,set,enumerable:true,configurable:true})};
   const stateOf=event=>{const state=eventSlots.get(event);if(!state)throw new TypeError('Illegal invocation');return state};
   const optionCapture=options=>typeof options==='boolean'?options:!!options?.capture;
+  const ContentFunction=Function;
+  let contentHandlerWorld=host.isIsolatedInputWorld();
+  bootstrapRestoreHooks.push(()=>{contentHandlerWorld=host.isIsolatedInputWorld()});
+  const ensureContentHandler=(target,type)=>{
+    if(contentHandlerWorld||!(target instanceof HTMLElement))return;
+    const source=target.getAttribute('on'+type),state=eventHandlerRecord(target,type);
+    if(state.attributeRead&&state.attributeSource===source)return;
+    state.attributeRead=true;state.attributeSource=source;
+    if(source===null){if(state.attributeOwned){state.attributeOwned=false;setEventHandlerValue(target,type,null)}return}
+    state.attributeOwned=true;let callback=null;
+    if(host.allowContentEventHandler(source)){
+      try{callback=ContentFunction('return function '+('on'+type).replace(/[^A-Za-z0-9_$]/g,'_')+'(event){with(document){with(this.form||{}){with(this){'+source+'\n}}}}')()}
+      catch(error){try{console.error(error)}catch{}}
+    }
+    setEventHandlerValue(target,type,callback);
+  };
   member(EventTarget.prototype,'addEventListener',function(type,callback,options){
     const target=this==null?window:this;type=String(type);
     if(callback==null)return;if(typeof callback!=='function'&&typeof callback!=='object')throw new TypeError('Invalid event listener');
     const capture=optionCapture(options),signal=typeof options==='object'?options?.signal:null;
     if(signal?.aborted)return;
+    ensureContentHandler(target,type);
     const listeners=listenersFor(target),list=listeners.get(type)||[];
     if(list.some(record=>record.callback===callback&&record.capture===capture&&!record.removed))return;
     const record={callback,capture,once:!!options?.once,passive:!!options?.passive,removed:false};
@@ -27,9 +44,9 @@
   }
   for(const name of Object.getOwnPropertyNames(prototype).filter(name=>/^on/.test(name))){
     const type=name.slice(2),state=target=>{if(!(target instanceof C))throw new TypeError('Illegal invocation');return eventHandlerRecord(target,type)};
-    const get=function(){if(name==='onreadystatechange'&&!(this instanceof C))return undefined;return state(this).value},set=function(value){
+    const get=function(){if(name==='onreadystatechange'&&!(this instanceof C))return undefined;ensureContentHandler(this,type);return state(this).value},set=function(value){
       if(name==='onreadystatechange'&&!(this instanceof C))return;
-      state(this);setEventHandlerValue(this,type,value);
+      const record=state(this);if(this instanceof HTMLElement){record.attributeRead=true;record.attributeSource=this.getAttribute(name);record.attributeOwned=false}setEventHandlerValue(this,type,value);
     };
     Object.defineProperty(get,'name',{value:'get '+name,configurable:true});Object.defineProperty(set,'name',{value:'set '+name,configurable:true});accessor(prototype,name,get,set);
   }
@@ -63,28 +80,29 @@
   let currentWindowEvent,eventCallbackDepth=0;
   const eventGet=function(){return currentWindowEvent},eventSet=function(value){Object.defineProperty(this,'event',{value,writable:true,enumerable:true,configurable:true})};
   accessor(window,'event',eventGet,eventSet);
-  const invokeOwnedEvent=(callback,receiver,event,inShadow,native)=>{
+  const invokeOwnedEvent=(callback,receiver,event,inShadow,native,errorHandler=false)=>{
     const previous=currentWindowEvent,checkpoint=native&&eventCallbackDepth===0;
     if(!inShadow)currentWindowEvent=event;
     eventCallbackDepth++;
-    try{if(typeof callback==='function')return callback.call(receiver,event);const handle=callback.handleEvent;if(typeof handle==='function')return handle.call(callback,event)}finally{
+    try{if(typeof callback==='function')return errorHandler?callback.call(receiver,event.message,event.filename,event.lineno,event.colno,event.error):callback.call(receiver,event);const handle=callback.handleEvent;if(typeof handle==='function')return handle.call(callback,event)}finally{
       eventCallbackDepth--;
       try{if(checkpoint)host.eventCallbackCheckpoint()}finally{currentWindowEvent=previous}
     }
   };
-  registerBootstrapCallback('installEventInvoker',(callback,receiver,event,inShadow,native)=>{
+  registerBootstrapCallback('installEventInvoker',(callback,receiver,event,inShadow,native,errorHandler)=>{
     const outcome=(threw,value)=>({threw,value,valueType:typeof value,symbol:typeof value==='symbol'?value:undefined});
-    try{return outcome(false,invokeOwnedEvent(callback,receiver,event,inShadow,native))}catch(value){return outcome(true,value)}
+    try{return outcome(false,invokeOwnedEvent(callback,receiver,event,inShadow,native,errorHandler))}catch(value){return outcome(true,value)}
   });
   const invokeEventCallback=(callback,receiver,event,inShadow,native)=>{
     const handler=eventHandlerWrappers.get(callback);
+    const errorHandler=!!handler&&receiver===window&&event.type==='error'&&errorEventSlots.has(event);
     if(handler){if(typeof handler.value!=='function')return;callback=handler.value}
     const reference=referenceGet(callback);let value;
     if(reference&&(reference.type==='function'||reference.type==='object')){
-      const outcome=host.frameCall(reference.frame,reference.handle,[encodeCrossRealmArgument(event)],encodeCrossRealmArgument(receiver),reference.realm,false,true,inShadow,native&&eventCallbackDepth===0);
+      const outcome=host.frameCall(reference.frame,reference.handle,[encodeCrossRealmArgument(event)],encodeCrossRealmArgument(receiver),reference.realm,false,true,inShadow,native&&eventCallbackDepth===0,errorHandler);
       value=unwrapCrossRealm(reference.frame,outcome.value);if(outcome.threw)throw value;
-    }else value=invokeOwnedEvent(callback,receiver,event,inShadow,native);
-    if(handler&&value===false)event.preventDefault();return value;
+    }else value=invokeOwnedEvent(callback,receiver,event,inShadow,native,errorHandler);
+    if(handler&&(errorHandler?value===true:value===false))event.preventDefault();return value;
   };
   dispatchEventCore=(target,event,trusted,native=false)=>{
     const state=stateOf(event);if(state.dispatching||!state.type)throw new DOMException('Event is already being dispatched or uninitialized','InvalidStateError');
@@ -93,9 +111,10 @@
     while(isDOMNode(current)){let parent=current.parentNode;if(!parent&&current instanceof ShadowRoot&&state.composed)parent=current.host;if(!parent&&current instanceof Document&&state.type!=='load')parent=current.defaultView;if(!parent)break;path.push(parent);current=parent}
     if(!isDOMNode(target))while(eventParents.has(current)){current=eventParents.get(current);path.push(current)}
     state.path=path;
-    const report=error=>{state.listenerException=true;try{console.error(error?.stack||String(error))}catch{}};
+    const report=error=>{state.listenerException=true;reportWindowException(error)};
     const invoke=(current,capture,phase)=>{
       state.currentTarget=current;state.target=retarget(target,current);state.phase=phase;
+      ensureContentHandler(current,state.type);
       const list=listenersFor(current).get(state.type)||[];
       for(const record of list.slice()){
         if(state.immediate)break;

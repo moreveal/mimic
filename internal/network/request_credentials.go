@@ -30,7 +30,7 @@ func requestIncludesCredentials(r Request) bool {
 	case "omit":
 		return false
 	case "same-origin":
-		return !r.OpaqueOrigin && sameRequestOrigin(r.SourceURL, r.URL) && r.chainSite() == "same-origin"
+		return !r.OpaqueOrigin && sameRequestOrigin(r.initiatingURL(), r.URL) && r.chainSite() == "same-origin"
 	default:
 		return true
 	}
@@ -72,7 +72,7 @@ func applyStorageAccessHeader(r *Request, cookiesEnabled bool) {
 	}
 	top := r.TopLevelURL
 	if top == nil {
-		top = r.SourceURL
+		top = r.initiatingURL()
 	}
 	if top == nil || !r.OpaqueOrigin && requestSameSite(top, r.URL) {
 		return

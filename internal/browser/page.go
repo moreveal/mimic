@@ -22,7 +22,7 @@ import (
 	"github.com/moreveal/mimic/internal/trace"
 )
 
-type InitScript struct{ ID, Source string }
+type InitScript struct{ ID, Source, WorldName string }
 type documentSecurity struct {
 	secureContext       bool
 	crossOriginIsolated bool
@@ -31,6 +31,10 @@ type documentSecurity struct {
 	permissionsPolicy   string
 }
 type Page struct {
+	debuggers          map[*Debugger]struct{}
+	inputIgnored       bool // Page command owned; survives document navigation.
+	debuggerWaitMu     sync.Mutex
+	debuggerProgress   chan struct{}
 	launches           []string
 	performanceClamper performanceClamper
 	commandMu          sync.Mutex
@@ -49,6 +53,7 @@ type Page struct {
 	current            *url.URL
 	history            []*sessionHistoryEntry
 	historyIndex       int
+	historySequence    int
 	initScripts        []InitScript
 	sessionStorage     map[string]map[string]string
 	policy             csp.PolicySet
@@ -117,6 +122,7 @@ func (p *Page) Loader() *network.Loader               { return p.loader }
 func (p *Page) Cookies() *network.CookieStore         { return p.ctx.cookies }
 func (p *Page) NetworkSession() *network.SessionState { return p.ctx.network }
 func (p *Page) Close() error {
+	defer p.loader.CloseOwnedTransport()
 	p.mu.Lock()
 	p.Top.Realm = nil
 	p.launches = nil
@@ -178,10 +184,14 @@ func (p *Page) Title() string {
 	return r.document.Title()
 }
 func (p *Page) AddInitScript(source string) string {
+	return p.AddInitScriptWorld(source, "")
+}
+
+func (p *Page) AddInitScriptWorld(source, worldName string) string {
 	p.mu.Lock()
 	defer p.mu.Unlock()
 	id := uuid.NewString()
-	p.initScripts = append(p.initScripts, InitScript{id, source})
+	p.initScripts = append(p.initScripts, InitScript{ID: id, Source: source, WorldName: worldName})
 	return id
 }
 
@@ -190,11 +200,20 @@ func (p *Page) runInitScripts(ctx context.Context, realm *Realm) {
 	scripts := append([]InitScript(nil), p.initScripts...)
 	p.mu.RUnlock()
 	for _, script := range scripts {
-		if _, err := realm.Evaluate(ctx, script.Source, "mimic:init-script"); err != nil {
+		target := realm
+		if script.WorldName != "" {
+			world, err := p.isolatedWorld(ctx, realm, script.WorldName)
+			if err != nil {
+				p.trace.Add(trace.Exception, "initScript", map[string]any{"scriptId": script.ID, "error": err.Error(), "realm": realm.ID})
+				continue
+			}
+			target = world
+		}
+		if _, err := target.Evaluate(ctx, script.Source, "mimic:init-script"); err != nil {
 			p.trace.Add(trace.Exception, "initScript", map[string]any{"scriptId": script.ID, "error": err.Error(), "realm": realm.ID})
 			continue
 		}
-		if err := realm.checkpoint(ctx); err != nil {
+		if err := target.checkpoint(ctx); err != nil {
 			p.trace.Add(trace.Error, "initScriptMicrotaskCheckpoint", map[string]any{"scriptId": script.ID, "error": err.Error(), "realm": realm.ID})
 		}
 	}
@@ -373,6 +392,9 @@ func (p *Page) navigateRequestWithHistory(ctx context.Context, raw, loaderID str
 	realm.initializeClientHints(res.Headers.Get("Permissions-Policy"))
 	p.mu.Lock()
 	old := p.Top.Realm
+	if p.historyIndex >= 0 && old != nil {
+		p.history[p.historyIndex].title = old.document.Title()
+	}
 	p.removeDescendantFramesLocked(p.Top)
 	p.Top.Realm = realm
 	p.current = u
@@ -390,7 +412,7 @@ func (p *Page) navigateRequestWithHistory(ctx context.Context, raw, loaderID str
 		realm.navigationActivationType = "traverse"
 	}
 	entry := &sessionHistoryEntry{URL: u, frames: map[string]*historyFrameState{p.Top.ID: {url: u, realmID: realm.ID}}}
-	if len(replace) > 1 && replace[1] && p.historyIndex >= 0 {
+	if len(replace) > 1 && replace[1] && p.historyIndex >= 0 && historyTarget == 0 {
 		previous := p.history[p.historyIndex].frames[p.Top.ID]
 		entry.frames[p.Top.ID].navigationState = previous.navigationState
 		entry.frames[p.Top.ID].storageData = previous.storageData
@@ -411,15 +433,25 @@ func (p *Page) navigateRequestWithHistory(ctx context.Context, raw, loaderID str
 	}
 	if historyTarget > 0 {
 		target := historyTarget - 1
+		entry.id = p.history[target].id
 		previous := p.history[target].frames[p.Top.ID]
 		previous.ensureNavigationIdentity()
 		entry.frames[p.Top.ID].navigationKey = previous.navigationKey
 		entry.frames[p.Top.ID].navigationID = previous.navigationID
 		entry.frames[p.Top.ID].navigationState = previous.navigationState
 		entry.frames[p.Top.ID].storageData = previous.storageData
+		oldRealmID := previous.realmID
+		for _, oldEntry := range p.history {
+			if state := oldEntry.frames[p.Top.ID]; state != nil && state.realmID == oldRealmID {
+				state.realmID = realm.ID
+				state.state = nil
+				state.storageState = nil
+			}
+		}
 		p.history[target] = entry
 		p.historyIndex = target
 	} else if len(replace) > 0 && replace[0] && p.historyIndex >= 0 {
+		entry.id = p.history[p.historyIndex].id
 		p.history[p.historyIndex] = entry
 	} else {
 		p.history = p.history[:p.historyIndex+1]
@@ -431,7 +463,7 @@ func (p *Page) navigateRequestWithHistory(ctx context.Context, raw, loaderID str
 	p.policy = csp.Parse(policies...)
 	p.mu.Unlock()
 	p.retireRealm(old)
-	p.trace.Add(trace.Lifecycle, "frameNavigated", map[string]any{"url": u.String(), "realm": realm.ID})
+	p.trace.Add(trace.Lifecycle, "frameNavigated", map[string]any{"url": u.String(), "realm": realm.ID, "frameId": p.Top.ID, "loaderId": loaderID})
 	streamState, err := realm.initializeNavigationStream(ctx)
 	if err != nil {
 		return err
@@ -664,7 +696,7 @@ func (p *Page) navigateRequestWithHistory(ctx context.Context, raw, loaderID str
 	// load-blocking resources complete. The realm owns that accounting so DOM,
 	// resource loading, readyState and NavigationTiming share one lifecycle.
 	realm.requestLoad(func(taskContext context.Context) {
-		p.trace.Add(trace.Lifecycle, "load", map[string]any{"url": u.String()})
+		p.trace.Add(trace.Lifecycle, "load", map[string]any{"url": u.String(), "frameId": p.Top.ID, "realm": realm.ID, "loaderId": loaderID})
 		p.mu.Lock()
 		p.loadEventEnded = true
 		p.mu.Unlock()
@@ -831,6 +863,10 @@ func (p *Page) evaluationRealms(evaluating *Realm) []*Realm {
 		if frame.Realm != nil {
 			realms = append(realms, frame.Realm)
 			found = found || frame.Realm == evaluating
+			for _, world := range frame.Realm.isolatedWorlds {
+				realms = append(realms, world)
+				found = found || world == evaluating
+			}
 		}
 	}
 	if !found {
@@ -894,6 +930,9 @@ func (p *Page) advanceTimeTasks(ctx context.Context, delta time.Duration, maxTas
 	for _, frame := range p.frames {
 		if frame.Realm != nil {
 			realms = append(realms, frame.Realm)
+			for _, world := range frame.Realm.isolatedWorlds {
+				realms = append(realms, world)
+			}
 		}
 	}
 	p.mu.Unlock()
@@ -911,6 +950,9 @@ func (p *Page) advanceTimeTasks(ctx context.Context, delta time.Duration, maxTas
 		for _, frame := range p.frames {
 			if frame.Realm != nil {
 				queues = append(queues, frame.Realm.scheduler)
+				for _, world := range frame.Realm.isolatedWorlds {
+					queues = append(queues, world.scheduler)
+				}
 			}
 		}
 		p.mu.RUnlock()
@@ -938,6 +980,9 @@ func (p *Page) ExecutionStatus() scheduler.ExecutionStatus {
 	for _, frame := range p.frames {
 		if frame.Realm != nil {
 			queues = append(queues, frame.Realm.scheduler)
+			for _, world := range frame.Realm.isolatedWorlds {
+				queues = append(queues, world.scheduler)
+			}
 		}
 	}
 	p.mu.RUnlock()

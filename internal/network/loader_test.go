@@ -227,7 +227,7 @@ func TestCacheDisabledIsCanonicalPolicy(t *testing.T) {
 	if transport.calls != 1 {
 		t.Fatalf("cache missed: calls=%d", transport.calls)
 	}
-	session.SetCacheDisabled(true)
+	l.Policy().SetCacheDisabled(true)
 	if _, err := l.Load(context.Background(), Request{URL: u, Method: http.MethodGet}); err != nil {
 		t.Fatal(err)
 	}

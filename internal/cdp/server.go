@@ -25,8 +25,15 @@ import (
 )
 
 type Server struct {
+	certificateMu     sync.Mutex
 	lifecycleMu       sync.Mutex
 	connections       map[*websocket.Conn]context.CancelFunc
+	clients           map[*connection]struct{}
+	browserID         string
+	targetObservers   map[*browser.Page]func()
+	targetNavigations map[*browser.Page]string
+	tabTargets        map[*browser.Page]string
+	idlePages         map[*browser.Page]*pageIdle
 	pumps             map[*browser.Page]context.CancelFunc
 	executions        map[*browser.Page]context.CancelFunc
 	pausedPumps       map[*browser.Page]int
@@ -46,7 +53,7 @@ func New(b *browser.Browser) (*Server, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Server{Browser: b, Context: c, Page: p, connections: make(map[*websocket.Conn]context.CancelFunc), pumps: make(map[*browser.Page]context.CancelFunc), executions: make(map[*browser.Page]context.CancelFunc)}, nil
+	return &Server{Browser: b, Context: c, Page: p, browserID: uuid.NewString(), clients: make(map[*connection]struct{}), connections: make(map[*websocket.Conn]context.CancelFunc), pumps: make(map[*browser.Page]context.CancelFunc), executions: make(map[*browser.Page]context.CancelFunc), targetObservers: make(map[*browser.Page]func()), targetNavigations: make(map[*browser.Page]string)}, nil
 }
 func (s *Server) SetNavigationTimeout(timeout time.Duration) {
 	if timeout >= 0 {
@@ -59,7 +66,12 @@ func (s *Server) Serve(listener net.Listener) error {
 	mux.HandleFunc("/json/version", s.version)
 	mux.HandleFunc("/json", s.list)
 	mux.HandleFunc("/json/list", s.list)
+	mux.HandleFunc("/json/protocol", s.protocol)
+	mux.HandleFunc("/json/new", s.newTarget)
+	mux.HandleFunc("/json/close/", s.closeTargetHTTP)
+	mux.HandleFunc("/json/activate/", s.activateTargetHTTP)
 	mux.HandleFunc("/devtools/page/", s.ws)
+	mux.HandleFunc("/devtools/browser/", s.ws)
 	s.lifecycleMu.Lock()
 	if s.closed {
 		s.lifecycleMu.Unlock()
@@ -89,21 +101,25 @@ func (s *Server) Close(ctx context.Context) error {
 	if server != nil {
 		err = server.Shutdown(ctx)
 	}
-	s.Context.Cancel()
+	for _, c := range s.Browser.Contexts() {
+		c.Cancel()
+	}
 	s.workers.Wait()
-	_ = s.Context.Close()
+	for _, c := range s.Browser.Contexts() {
+		_ = s.Browser.CloseContext(c.ID)
+	}
 	return err
 }
 
 func (s *Server) base(r *http.Request) string {
-	return "ws://" + r.Host + "/devtools/page/" + s.Page.ID
+	return "ws://" + r.Host + "/devtools/browser/" + s.browserID
 }
 func (s *Server) version(w http.ResponseWriter, r *http.Request) {
 	writeJSON(w, map[string]any{"Browser": s.Browser.String(), "Protocol-Version": "1.3", "User-Agent": s.Page.Environment().Navigator().UserAgent, "V8-Version": "virtual", "webSocketDebuggerUrl": s.base(r)})
 }
 func (s *Server) list(w http.ResponseWriter, r *http.Request) {
 	targets := []any{}
-	for _, page := range s.Context.Pages() {
+	for _, page := range s.pages() {
 		targets = append(targets, map[string]any{"id": page.ID, "type": "page", "title": page.Title(), "url": page.URL(), "webSocketDebuggerUrl": "ws://" + r.Host + "/devtools/page/" + page.ID})
 	}
 	writeJSON(w, targets)
@@ -116,79 +132,49 @@ func writeJSON(w http.ResponseWriter, v any) {
 var upgrader = websocket.Upgrader{CheckOrigin: func(*http.Request) bool { return true }}
 
 type message struct {
-	ID     int64           `json:"id"`
-	Method string          `json:"method"`
-	Params json.RawMessage `json:"params"`
+	ID        int64           `json:"id"`
+	Method    string          `json:"method"`
+	Params    json.RawMessage `json:"params"`
+	SessionID string          `json:"sessionId,omitempty"`
 }
 type session struct {
-	commandMu         sync.Mutex // protects binding changes against commands and asynchronous navigation
-	ctx               context.Context
-	work              sync.WaitGroup
-	server            *Server
-	conn              *websocket.Conn
-	page              *browser.Page
-	bindMu            sync.RWMutex
-	writeMu           sync.Mutex
-	routeMu           sync.RWMutex
-	activeSession     string
-	interceptor       *ControlInterceptor
-	unsub             func()
-	removeInterceptor func()
-	navigationTimeout time.Duration
-	navigationMu      sync.Mutex
-	navigationCancel  context.CancelFunc
-	navigationID      uint64
-	contextMu         sync.Mutex
-	nextContextID     int64
-	contextByFrame    map[string]int64
-	frameByContext    map[int64]string
-	realmByFrame      map[string]string
-}
-
-func (s *Server) ws(w http.ResponseWriter, r *http.Request) {
-	targetID := strings.TrimPrefix(r.URL.Path, "/devtools/page/")
-	page, ok := s.Context.Page(targetID)
-	if !ok || r.URL.Path != "/devtools/page/"+targetID {
-		http.NotFound(w, r)
-		return
-	}
-	conn, err := upgrader.Upgrade(w, r, nil)
-	if err != nil {
-		return
-	}
-	ctx, cancel := context.WithCancel(context.Background())
-	s.lifecycleMu.Lock()
-	if s.closed {
-		s.lifecycleMu.Unlock()
-		cancel()
-		_ = conn.Close()
-		return
-	}
-	s.connections[conn] = cancel
-	s.workers.Add(1)
-	s.lifecycleMu.Unlock()
-	defer s.workers.Done()
-	ss := &session{server: s, conn: conn, ctx: ctx, navigationTimeout: s.navigationTimeout}
-	page.LockCommands()
-	ss.bindPage(page)
-	page.UnlockCommands()
-	defer func() {
-		cancel()
-		_ = conn.Close()
-		ss.work.Wait()
-		ss.unbindPage()
-		s.lifecycleMu.Lock()
-		delete(s.connections, conn)
-		s.lifecycleMu.Unlock()
-	}()
-	for {
-		var m message
-		if err := conn.ReadJSON(&m); err != nil {
-			return
-		}
-		ss.work.Add(1)
-		go func() { defer ss.work.Done(); ss.handle(m) }()
-	}
+	commandMu               sync.Mutex // protects binding changes against commands and asynchronous navigation
+	ctx                     context.Context
+	server                  *Server
+	transport               *connection
+	parent                  *session
+	id                      string
+	targetID                string
+	targetType              string
+	flat                    bool
+	cancel                  context.CancelFunc
+	stateMu                 sync.RWMutex
+	attachMu                sync.Mutex
+	detached                bool
+	discover                bool
+	autoAttach              bool
+	waitForDebugger         bool
+	autoFlat                bool
+	targetFilter            []any
+	autoFilter              []any
+	domains                 map[string]bool
+	lifecycleEvents         bool
+	ignoreCertificateErrors bool
+	browserSession          bool
+	conn                    *websocket.Conn
+	page                    *browser.Page
+	debugger                *browser.Debugger
+	bindMu                  sync.RWMutex
+	interceptor             *ControlInterceptor
+	unsub                   func()
+	removeInterceptor       func()
+	navigationTimeout       time.Duration
+	contextMu               sync.Mutex
+	nextContextID           int64
+	contextByFrame          map[string]int64
+	frameByContext          map[int64]string
+	realmByFrame            map[string]string
+	worldContexts           map[int64]runtimeWorldContext
 }
 
 func (s *session) bindPage(page *browser.Page) {
@@ -218,36 +204,61 @@ func (s *session) bindPage(page *browser.Page) {
 func (s *session) unbindPage() {
 	s.bindMu.Lock()
 	defer s.bindMu.Unlock()
+	// Release paused requests before waiting for their owning Page turn.
+	if s.interceptor != nil {
+		s.interceptor.Close()
+	}
+	if s.debugger != nil {
+		s.page.LockCommands()
+		s.debugger.Close()
+		s.debugger = nil
+		s.page.UnlockCommands()
+	}
 	if s.unsub != nil {
 		s.unsub()
 	}
 	if s.removeInterceptor != nil {
 		s.removeInterceptor()
 	}
-	if s.interceptor != nil {
-		s.interceptor.Close()
-	}
 }
 
 // A Page owns one clock regardless of how many debugger connections observe it.
 // Its pump survives debugger disconnection and ends with the Page or server.
 func (s *Server) ensurePump(page *browser.Page) {
+	s.applyCertificatePolicy(page)
 	s.lifecycleMu.Lock()
 	defer s.lifecycleMu.Unlock()
 	if s.closed || s.pumps[page] != nil {
 		return
 	}
-	if live, ok := s.Context.Page(page.ID); !ok || live != page {
+	if live, ok := s.page(page.ID); !ok || live != page {
 		return
 	}
 	ctx, cancel := context.WithCancel(context.Background())
 	s.pumps[page] = cancel
+	if s.idlePages == nil {
+		s.idlePages = make(map[*browser.Page]*pageIdle)
+	}
+	state := &pageIdle{loaderID: page.LoaderID()}
+	if page.LoadEventEnded() {
+		state.loaded = time.Now()
+	}
+	s.idlePages[page] = state
+	s.targetObservers[page] = page.Trace().Subscribe(func(e trace.Event) {
+		s.observePageLifecycle(page, e)
+	})
 	s.workers.Add(1)
 	go func() { defer s.workers.Done(); s.pumpEventLoop(ctx, page) }()
 }
 func (s *Server) stopPump(page *browser.Page) {
 	s.lifecycleMu.Lock()
 	defer s.lifecycleMu.Unlock()
+	delete(s.targetNavigations, page)
+	delete(s.idlePages, page)
+	if unsub := s.targetObservers[page]; unsub != nil {
+		unsub()
+		delete(s.targetObservers, page)
+	}
 	if cancel := s.executions[page]; cancel != nil {
 		cancel()
 	}
@@ -291,6 +302,7 @@ func (s *Server) pumpEventLoop(lifetime context.Context, page *browser.Page) {
 				delete(s.executions, page)
 				s.lifecycleMu.Unlock()
 				cancelTurn()
+				s.emitIdle(page)
 				page.UnlockCommands()
 				// Exclude time spent executing or waiting for other Page turns.
 				last = time.Now()
@@ -342,50 +354,15 @@ func (s *Server) cancelExecution(page *browser.Page) bool {
 	cancel()
 	return true
 }
-func (s *session) send(v any) {
-	payload, err := json.Marshal(v)
-	if err != nil {
-		return
-	}
-	s.writeMu.Lock()
-	defer s.writeMu.Unlock()
-	_ = s.conn.WriteMessage(websocket.TextMessage, payload)
-}
-func (s *session) reply(id int64, result any, err error) {
-	s.replyRouted(id, result, err, "")
-}
-func (s *session) replyRouted(id int64, result any, err error, route string) {
-	var response map[string]any
-	if err != nil {
-		response = map[string]any{"id": id, "error": map[string]any{"code": -32000, "message": err.Error()}}
-	} else {
-		response = map[string]any{"id": id, "result": result}
-	}
-	if route == "" {
-		s.send(response)
-		return
-	}
-	raw, _ := json.Marshal(response)
-	s.rootEvent("Target.receivedMessageFromTarget", map[string]any{"sessionId": route, "message": string(raw), "targetId": s.page.ID})
-}
-func (s *session) event(method string, params any) {
-	s.routeMu.RLock()
-	route := s.activeSession
-	s.routeMu.RUnlock()
-	if route == "" {
-		s.rootEvent(method, params)
-		return
-	}
-	raw, _ := json.Marshal(map[string]any{"method": method, "params": params})
-	s.rootEvent("Target.receivedMessageFromTarget", map[string]any{"sessionId": route, "message": string(raw), "targetId": s.page.ID})
-}
-func (s *session) rootEvent(method string, params any) {
-	s.page.Trace().Add(trace.CDP, "event", map[string]any{"method": method, "params": params})
-	s.send(map[string]any{"method": method, "params": params})
-}
 func (s *session) traceEvent(e trace.Event) {
+	if s.browserSession || s.targetType == "tab" {
+		return
+	}
 	switch e.Kind {
 	case trace.Console:
+		if raw, _ := e.Data["remoteValues"].(bool); raw {
+			return
+		}
 		contextID, ok := s.contextForRealm(stringValue(e.Data["realm"]))
 		if !ok {
 			// A queued callback can outlive a navigated or detached realm. Chrome
@@ -395,7 +372,14 @@ func (s *session) traceEvent(e trace.Event) {
 		}
 		s.event("Runtime.consoleAPICalled", map[string]any{"type": e.Name, "args": remoteObjects(e.Data["args"]), "executionContextId": contextID, "timestamp": float64(e.Time.UnixMilli())})
 	case trace.Exception:
-		s.event("Runtime.exceptionThrown", map[string]any{"timestamp": float64(e.Time.UnixMilli()), "exceptionDetails": e.Data})
+		details := map[string]any{"exceptionId": e.Sequence, "text": stringValue(e.Data["error"]), "lineNumber": intValue(e.Data["lineNumber"], 0), "columnNumber": intValue(e.Data["columnNumber"], 0)}
+		if contextID, ok := s.contextForRealm(stringValue(e.Data["realm"])); ok {
+			details["executionContextId"] = contextID
+		}
+		if rawURL := stringValue(e.Data["url"]); rawURL != "" {
+			details["url"] = rawURL
+		}
+		s.event("Runtime.exceptionThrown", map[string]any{"timestamp": float64(e.Time.UnixMilli()), "exceptionDetails": details})
 	case trace.Lifecycle:
 		frameID := stringValue(e.Data["frameId"])
 		if frameID == "" {
@@ -403,6 +387,10 @@ func (s *session) traceEvent(e trace.Event) {
 		}
 		timestamp := float64(e.Time.UnixMilli()) / 1000
 		switch e.Name {
+		case "isolatedWorldCreated":
+			s.event("Runtime.executionContextCreated", map[string]any{"context": s.ensureRuntimeWorldContext(frameID, stringValue(e.Data["realm"]), stringValue(e.Data["mainRealm"]), stringValue(e.Data["worldName"]), stringValue(e.Data["url"]))})
+		case "navigatedWithinDocument":
+			s.event("Page.navigatedWithinDocument", map[string]any{"frameId": frameID, "url": e.Data["url"], "navigationType": e.Data["navigationType"]})
 		case "frameAttached":
 			parentFrameID := stringValue(e.Data["parentFrameId"])
 			s.event("Page.frameAttached", map[string]any{"frameId": frameID, "parentFrameId": parentFrameID})
@@ -425,9 +413,6 @@ func (s *session) traceEvent(e trace.Event) {
 			s.event("Page.lifecycleEvent", map[string]any{"name": "init", "timestamp": timestamp, "frameId": frameID, "loaderId": loaderID})
 			s.event("Page.frameNavigated", map[string]any{"frame": s.framePayloadByID(frameID, stringValue(e.Data["url"]), loaderID, stringValue(e.Data["parentFrameId"]))})
 			s.event("Runtime.executionContextCreated", map[string]any{"context": s.ensureContext(frameID, stringValue(e.Data["realm"]), stringValue(e.Data["url"]))})
-			if isTop {
-				s.rootEvent("Target.targetInfoChanged", map[string]any{"targetInfo": targetInfo(s.page, true)})
-			}
 		case "frameDetached":
 			s.event("Page.frameDetached", map[string]any{"frameId": frameID, "reason": "remove"})
 			s.destroyFrameContext(frameID)
@@ -441,6 +426,9 @@ func (s *session) traceEvent(e trace.Event) {
 			s.event("Page.lifecycleEvent", map[string]any{"name": e.Name, "timestamp": timestamp, "frameId": frameID, "loaderId": s.frameLoaderID(frameID)})
 		}
 	case trace.Network:
+		if strings.HasPrefix(stringValue(e.Data["url"]), "data:") {
+			return
+		}
 		frameID := stringValue(e.Data["context"])
 		if frameID == "" {
 			frameID = s.page.Top.ID
@@ -460,22 +448,34 @@ func (s *session) traceEvent(e trace.Event) {
 	}
 }
 func (s *session) handle(m message) {
-	s.handleRouted(m, "")
-}
-func (s *session) handleRouted(m message, route string) {
-	s.page.Trace().Add(trace.CDP, "method", map[string]any{"method": m.Method, "sessionId": route})
-	var p map[string]any
-	_ = json.Unmarshal(m.Params, &p)
-	if m.Method == "Target.sendMessageToTarget" {
-		s.reply(m.ID, map[string]any{}, nil)
-		var inner message
-		if json.Unmarshal([]byte(stringValue(p["message"])), &inner) != nil {
+	s.page.Trace().Add(trace.CDP, "method", map[string]any{"method": m.Method, "sessionId": s.id})
+	if !strings.HasPrefix(m.Method, "Mimic.") {
+		if err := validateCommand(m.Method, m.Params); err != nil {
+			s.reply(m.ID, nil, err)
 			return
 		}
-		s.handleRouted(inner, stringValue(p["sessionId"]))
+	}
+	var p map[string]any
+	params := bytes.TrimSpace(m.Params)
+	if len(params) > 0 && string(params) != "null" && (params[0] == '{' || strings.HasPrefix(m.Method, "Mimic.")) {
+		if err := json.Unmarshal(m.Params, &p); err != nil {
+			s.reply(m.ID, nil, fmt.Errorf("invalid command parameters: %w", err))
+			return
+		}
+	}
+	if strings.HasPrefix(m.Method, "Target.") || strings.HasPrefix(m.Method, "Browser.") {
+		if result, handled, err := s.handleTarget(m, p); handled {
+			if err != errReplySent {
+				s.reply(m.ID, result, err)
+			}
+			return
+		}
+	}
+	if value, handled, cookieErr := s.handleStorageCookies(m.Method, p); handled {
+		s.reply(m.ID, value, cookieErr)
 		return
 	}
-	control := m.Method == "Fetch.continueRequest" || m.Method == "Fetch.continueResponse" || m.Method == "Fetch.failRequest" || m.Method == "Fetch.fulfillRequest" || m.Method == "Network.continueInterceptedRequest" || m.Method == "Mimic.getTrace" || m.Method == "Mimic.getStatus" || m.Method == "Mimic.getDiagnostics" || m.Method == "Mimic.cancelExecution" || m.Method == "Page.stopLoading" || m.Method == "Target.closeTarget"
+	control := m.Method == "Fetch.disable" || m.Method == "Fetch.getResponseBody" || m.Method == "Network.setRequestInterception" || m.Method == "Fetch.continueRequest" || m.Method == "Fetch.continueResponse" || m.Method == "Fetch.failRequest" || m.Method == "Fetch.fulfillRequest" || m.Method == "Network.continueInterceptedRequest" || m.Method == "Mimic.getTrace" || m.Method == "Mimic.getStatus" || m.Method == "Mimic.getDiagnostics" || m.Method == "Mimic.cancelExecution" || m.Method == "Page.stopLoading" || m.Method == "Target.closeTarget"
 	if !control {
 		s.commandMu.Lock()
 		defer s.commandMu.Unlock()
@@ -494,10 +494,53 @@ func (s *session) handleRouted(m message, route string) {
 	}
 	var result any = map[string]any{}
 	var err error
+	if s.ctx.Err() != nil {
+		s.reply(m.ID, nil, fmt.Errorf("Session closed"))
+		return
+	}
+	if value, handled, runtimeErr := s.handleRuntime(s.ctx, m.Method, p); handled {
+		s.reply(m.ID, value, runtimeErr)
+		return
+	}
+	if value, handled, domErr := s.handleDOM(s.ctx, m.Method, p); handled {
+		s.reply(m.ID, value, domErr)
+		return
+	}
+	if value, handled, pageErr := s.handlePage(s.ctx, m.Method, p); handled {
+		s.reply(m.ID, value, pageErr)
+		return
+	}
+	if value, handled, emuErr := s.handleEmulation(m.Method, p); handled {
+		s.reply(m.ID, value, emuErr)
+		return
+	}
 	switch m.Method {
-	case "Page.enable", "Network.enable", "DOM.enable", "Log.enable", "Performance.enable", "Storage.enable", "Security.enable", "Security.setIgnoreCertificateErrors", "Target.setAutoAttach", "Emulation.setTouchEmulationEnabled":
+	case "Input.dispatchKeyEvent", "Input.insertText", "Input.dispatchMouseEvent", "Input.setIgnoreInputEvents":
+		err = s.page.DispatchProtocolInput(s.ctx, m.Method, p)
+	case "Page.enable", "Network.enable", "DOM.enable", "Log.enable", "Performance.enable", "Security.enable", "Inspector.enable":
+		s.setDomain(strings.SplitN(m.Method, ".", 2)[0], true)
+	case "Page.disable", "Network.disable", "DOM.disable", "Log.disable", "Performance.disable", "Security.disable", "Inspector.disable":
+		s.setDomain(strings.SplitN(m.Method, ".", 2)[0], false)
+	case "Runtime.disable":
+		s.setDomain("Runtime", false)
+		s.clearContexts()
+	case "Runtime.runIfWaitingForDebugger":
+		s.stateMu.Lock()
+		s.waitForDebugger = false
+		s.stateMu.Unlock()
+		s.server.resumeTarget(s.page)
+	case "Security.setIgnoreCertificateErrors":
+		ignore, _ := p["ignore"].(bool)
+		err = s.setCertificateOverride(ignore)
+	case "Emulation.setTouchEmulationEnabled":
+		if enabled, _ := p["enabled"].(bool); enabled {
+			err = fmt.Errorf("Touch emulation is not supported")
+		}
 	case "Page.setLifecycleEventsEnabled":
 		enabled, _ := p["enabled"].(bool)
+		s.stateMu.Lock()
+		s.lifecycleEvents = enabled
+		s.stateMu.Unlock()
 		if enabled {
 			timestamp := float64(time.Now().UnixMilli()) / 1000
 			frameID, loaderID := s.page.Top.ID, s.page.LoaderID()
@@ -506,155 +549,45 @@ func (s *session) handleRouted(m message, route string) {
 				s.event("Page.lifecycleEvent", map[string]any{"name": "DOMContentLoaded", "timestamp": timestamp, "frameId": frameID, "loaderId": loaderID})
 			}
 			if s.page.Top.ReadyState() == "complete" {
-				for _, name := range []string{"load", "networkAlmostIdle", "networkIdle"} {
+				for _, name := range []string{"load"} {
 					s.event("Page.lifecycleEvent", map[string]any{"name": name, "timestamp": timestamp, "frameId": frameID, "loaderId": loaderID})
 				}
+				s.replayIdle()
 			}
 		}
 	case "Runtime.enable":
-		s.event("Runtime.executionContextCreated", map[string]any{"context": s.ensureContext(s.page.Top.ID, s.page.Top.RealmID(), s.page.URL())})
-	case "Target.getBrowserContexts":
-		result = map[string]any{"browserContextIds": []string{}}
-	case "Target.setDiscoverTargets":
-		for _, page := range s.server.Context.Pages() {
-			s.rootEvent("Target.targetCreated", map[string]any{"targetInfo": targetInfo(page, page == s.page)})
-		}
-	case "Target.createTarget":
-		page, createErr := s.server.Context.NewPage()
-		if createErr != nil {
-			err = createErr
-			break
-		}
-		result = map[string]any{"targetId": page.ID}
-		s.rootEvent("Target.targetCreated", map[string]any{"targetInfo": targetInfo(page, false)})
-	case "Target.attachToTarget":
-		targetID := stringValue(p["targetId"])
-		page, ok := s.server.Context.Page(targetID)
-		if !ok {
-			err = fmt.Errorf("unknown target %s", targetID)
-			break
-		}
-		if page != s.page {
-			page.LockCommands()
-			s.bindPage(page)
-			page.UnlockCommands()
-		}
-		sid := uuid.NewString()
-		s.routeMu.Lock()
-		s.activeSession = sid
-		s.routeMu.Unlock()
-		result = map[string]any{"sessionId": sid}
-	case "Target.getTargets":
-		infos := []any{}
-		for _, page := range s.server.Context.Pages() {
-			infos = append(infos, targetInfo(page, page == s.page))
-		}
-		result = map[string]any{"targetInfos": infos}
-	case "Target.closeTarget":
-		targetID := stringValue(p["targetId"])
-		if targetID == "" {
-			targetID = s.page.ID
-		}
-		success := false
-		if page, ok := s.server.Context.Page(targetID); ok {
-			// Cancel before waiting for the command lock: a running callback
-			// can otherwise prevent its own teardown forever.
-			s.server.stopPump(page)
-			page.LockCommands()
-			success = s.server.Context.ClosePage(targetID)
-			page.UnlockCommands()
-		}
-		result = map[string]any{"success": success}
-		s.rootEvent("Target.targetDestroyed", map[string]any{"targetId": targetID})
-	case "Page.getFrameTree":
-		result = map[string]any{"frameTree": s.frameTree(s.page.Top)}
-	case "Emulation.setDeviceMetricsOverride":
-		err = s.page.SetViewport(intValue(p["width"], 800), intValue(p["height"], 600))
-	case "Runtime.evaluate":
-		var v any
-		v, err = s.evaluateInContext(s.ctx, int64(intValue(p["contextId"], 0)), stringValue(p["expression"]))
-		result = map[string]any{"result": remoteObject(v)}
-	case "Runtime.callFunctionOn":
-		declaration := strings.Split(stringValue(p["functionDeclaration"]), "//# sourceURL=")[0]
-		values := []any{}
-		if arguments, ok := p["arguments"].([]any); ok {
-			for _, item := range arguments {
-				if argument, ok := item.(map[string]any); ok {
-					values = append(values, argument["value"])
+		if !s.domainEnabled("Runtime") {
+			s.setDomain("Runtime", true)
+			s.runtimeDebugger()
+			var emitContexts func(*browser.Frame)
+			emitContexts = func(frame *browser.Frame) {
+				s.event("Runtime.executionContextCreated", map[string]any{"context": s.ensureContext(frame.ID, frame.RealmID(), frame.URL())})
+				for _, child := range frame.Children() {
+					emitContexts(child)
 				}
 			}
+			emitContexts(s.page.Top)
+			for _, world := range s.page.IsolatedWorlds() {
+				s.event("Runtime.executionContextCreated", map[string]any{"context": s.ensureRuntimeWorldContext(world.FrameID, world.RealmID, world.MainRealmID, world.Name, world.URL)})
+			}
 		}
-		encoded, _ := json.Marshal(values)
-		var v any
-		v, err = s.evaluateInContext(s.ctx, int64(intValue(p["executionContextId"], 0)), "("+declaration+")(..."+string(encoded)+")")
-		result = map[string]any{"result": remoteObject(v)}
-	case "Runtime.releaseObject", "Runtime.releaseObjectGroup":
+	case "Page.getFrameTree":
+		result = map[string]any{"frameTree": s.frameTree(s.page.Top)}
 	case "Page.navigate":
 		navigationURL := stringValue(p["url"])
 		loaderID := s.page.ReserveNavigation()
 		result = map[string]any{"frameId": s.page.Top.ID, "loaderId": loaderID}
-		page := s.page
-		navigationCtx, navigationCancel := context.WithCancel(s.ctx)
-		if s.navigationTimeout > 0 {
-			navigationCancel()
-			navigationCtx, navigationCancel = context.WithTimeout(s.ctx, s.navigationTimeout)
-		}
-		s.navigationMu.Lock()
-		if s.navigationCancel != nil {
-			s.navigationCancel()
-		}
-		s.navigationID++
-		navigationID := s.navigationID
-		s.navigationCancel = navigationCancel
-		s.navigationMu.Unlock()
-		s.work.Add(1)
-		go func() {
-			defer s.work.Done()
-			defer navigationCancel()
-			defer func() {
-				s.navigationMu.Lock()
-				if s.navigationID == navigationID {
-					s.navigationCancel = nil
-				}
-				s.navigationMu.Unlock()
-			}()
-			s.commandMu.Lock()
-			defer s.commandMu.Unlock()
-			page.LockCommands()
-			defer page.UnlockCommands()
-			if live, ok := s.server.Context.Page(page.ID); !ok || live != page {
-				return
-			}
-			s.server.lifecycleMu.Lock()
-			if s.server.pumps[page] == nil {
-				s.server.lifecycleMu.Unlock()
-				return
-			}
-			s.server.executions[page] = navigationCancel
-			s.server.lifecycleMu.Unlock()
-			defer func() {
-				s.server.lifecycleMu.Lock()
-				delete(s.server.executions, page)
-				s.server.lifecycleMu.Unlock()
-			}()
-			if navErr := page.NavigateReserved(navigationCtx, navigationURL, loaderID); navErr != nil {
-				page.Trace().Add(trace.Error, "navigation", map[string]any{"url": navigationURL, "error": navErr.Error()})
-			}
-		}()
+		err = s.server.startNavigation(s.page, navigationURL, loaderID, s.navigationTimeout)
 	case "Page.stopLoading":
-		s.navigationMu.Lock()
-		if s.navigationCancel != nil {
-			s.navigationCancel()
-		}
-		s.navigationMu.Unlock()
-	case "Browser.close":
+		s.server.cancelExecution(s.page)
 	case "Page.addScriptToEvaluateOnNewDocument":
-		id := s.page.AddInitScript(stringValue(p["source"]))
+		id := s.page.AddInitScriptWorld(stringValue(p["source"]), stringValue(p["worldName"]))
 		result = map[string]any{"identifier": id}
 	case "Page.setBypassCSP":
 		bypass, _ := p["enabled"].(bool)
 		s.page.SetBypassCSP(bypass)
 	case "DOM.getDocument":
+		s.setDomain("DOM", true)
 		var d *dom.Document
 		var ok bool
 		if d, ok = s.page.Document(); !ok {
@@ -694,8 +627,6 @@ func (s *session) handleRouted(m message, route string) {
 		}
 	case "Network.getAllCookies":
 		result = map[string]any{"cookies": s.pageCookies()}
-	case "Storage.getCookies":
-		result = map[string]any{"cookies": s.pageCookies()}
 	case "Network.setCookie":
 		err = s.setCookie(p)
 		if err == nil {
@@ -707,17 +638,17 @@ func (s *session) handleRouted(m message, route string) {
 		s.page.Cookies().Clear()
 	case "Network.setCacheDisabled":
 		disabled, _ := p["cacheDisabled"].(bool)
-		s.page.NetworkSession().SetCacheDisabled(disabled)
+		s.page.NetworkPolicy().SetCacheDisabled(disabled)
 	case "Network.clearBrowserCache":
 		s.page.NetworkSession().ClearCache()
 	case "Network.setExtraHTTPHeaders":
-		s.page.NetworkSession().SetExtraHeaders(headerObject(p["headers"]))
+		s.page.NetworkPolicy().SetExtraHeaders(headerObject(p["headers"]))
 	case "Network.emulateNetworkConditions":
 		offline, _ := p["offline"].(bool)
-		s.page.NetworkSession().SetOffline(offline)
+		s.page.SetNetworkOffline(offline)
 	case "Network.setRequestInterception":
 		patterns, _ := p["patterns"].([]any)
-		s.interceptor.EnableNetwork(len(patterns) > 0)
+		err = s.interceptor.ConfigureNetwork(patterns)
 	case "Network.continueInterceptedRequest":
 		a := interceptAnswer{action: "continue", url: stringValue(p["url"]), method: stringValue(p["method"]), headers: headerObjectOrNil(p["headers"])}
 		if post, ok := p["postData"].(string); ok {
@@ -744,7 +675,7 @@ func (s *session) handleRouted(m message, route string) {
 			err = fmt.Errorf("unknown request id")
 		}
 	case "Network.getCookies":
-		result = map[string]any{"cookies": s.pageCookies()}
+		result = map[string]any{"cookies": s.cookiesForURLs(p)}
 	case "Network.setCookies":
 		if list, ok := p["cookies"].([]any); ok {
 			for _, item := range list {
@@ -756,17 +687,31 @@ func (s *session) handleRouted(m message, route string) {
 			}
 		}
 	case "Fetch.enable":
-		s.interceptor.Enable(true)
+		patterns, _ := p["patterns"].([]any)
+		err = s.interceptor.ConfigureFetch(patterns)
 	case "Fetch.disable":
 		s.interceptor.Enable(false)
 	case "Fetch.continueRequest":
-		err = s.interceptor.Resolve(stringValue(p["requestId"]), interceptAnswer{action: "continue", url: stringValue(p["url"]), method: stringValue(p["method"]), headers: headersValue(p["headers"]), body: decodeBody(stringValue(p["postData"]))})
+		a := interceptAnswer{action: "continue", url: stringValue(p["url"]), method: stringValue(p["method"]), headers: headersValue(p["headers"]), body: bodyParameter(p, "postData")}
+		if enabled, ok := p["interceptResponse"].(bool); ok {
+			a.interceptResponse = &enabled
+		}
+		err = s.interceptor.Resolve(stringValue(p["requestId"]), a)
 	case "Fetch.continueResponse":
-		err = s.interceptor.Resolve(stringValue(p["requestId"]), interceptAnswer{action: "fulfill", status: intValue(p["responseCode"], 0), headers: headersValue(p["responseHeaders"])})
+		err = s.interceptor.Resolve(stringValue(p["requestId"]), interceptAnswer{action: "continueResponse", status: intValue(p["responseCode"], 0), headers: headersValue(p["responseHeaders"])})
 	case "Fetch.failRequest":
 		err = s.interceptor.Resolve(stringValue(p["requestId"]), interceptAnswer{action: "fail"})
 	case "Fetch.fulfillRequest":
-		err = s.interceptor.Resolve(stringValue(p["requestId"]), interceptAnswer{action: "fulfill", status: intValue(p["responseCode"], 200), headers: headersValue(p["responseHeaders"]), body: decodeBody(stringValue(p["body"]))})
+		err = s.interceptor.Resolve(stringValue(p["requestId"]), interceptAnswer{action: "fulfill", status: intValue(p["responseCode"], 200), headers: headersValue(p["responseHeaders"]), body: bodyParameter(p, "body")})
+	case "Fetch.getResponseBody":
+		var body []byte
+		body, err = s.interceptor.ResponseBody(stringValue(p["requestId"]))
+		encoded := !utf8.Valid(body)
+		text := string(body)
+		if encoded {
+			text = base64.StdEncoding.EncodeToString(body)
+		}
+		result = map[string]any{"body": text, "base64Encoded": encoded}
 	case "Performance.getMetrics":
 		result = map[string]any{"metrics": []any{map[string]any{"name": "Timestamp", "value": float64(time.Now().UnixNano()) / 1e9}}}
 	case "Mimic.captureSnapshot":
@@ -793,8 +738,7 @@ func (s *session) handleRouted(m message, route string) {
 	case "Mimic.clearTrace":
 		s.page.Trace().Clear()
 	case "Mimic.getCompatibilityMatrix":
-		schema := s.page.Compatibility().CDP()
-		result = map[string]any{"chromeVersion": s.page.Environment().Product.FullVersion, "protocol": protocolMatrix(schema.Methods, schema.Events)}
+		result = map[string]any{"chromeVersion": s.page.Environment().Product.FullVersion, "protocol": protocolMatrix(protocolCommandNames(), protocolEventNames())}
 	case "Mimic.setViewport":
 		err = s.page.SetViewport(intValue(p["width"], 0), intValue(p["height"], 0))
 	case "Mimic.pause":
@@ -802,16 +746,15 @@ func (s *session) handleRouted(m message, route string) {
 	case "Mimic.resume":
 		s.page.Resume()
 	default:
-		schema := s.page.Compatibility().CDP()
-		if _, registered := schema.Methods[m.Method]; registered {
-			s.page.Trace().Add(trace.SemanticMissing, "CDP."+m.Method, map[string]any{"sessionId": route})
+		if _, registered := protocolCommands[m.Method]; registered {
+			s.page.Trace().Add(trace.SemanticMissing, "CDP."+m.Method, map[string]any{"sessionId": s.id})
 			err = fmt.Errorf("method %s is registered for the pinned CDP schema but its semantics are not implemented", m.Method)
 		} else {
-			s.page.Trace().Add(trace.SurfaceMissing, "CDP."+m.Method, map[string]any{"sessionId": route})
+			s.page.Trace().Add(trace.SurfaceMissing, "CDP."+m.Method, map[string]any{"sessionId": s.id})
 			err = fmt.Errorf("method %s is absent from the pinned CDP schema", m.Method)
 		}
 	}
-	s.replyRouted(m.ID, result, err, route)
+	s.reply(m.ID, result, err)
 }
 func targetInfo(page *browser.Page, attached bool) map[string]any {
 	return map[string]any{"targetId": page.ID, "type": "page", "title": page.Title(), "url": page.URL(), "attached": attached}
@@ -853,6 +796,9 @@ func (s *session) framePayloadByID(frameID, rawURL, loaderID, parentID string) m
 		}
 	}
 	payload := map[string]any{"id": frameID, "loaderId": loaderID, "url": rawURL, "domainAndRegistry": "", "securityOrigin": securityOrigin, "mimeType": "text/html"}
+	if frame, ok := s.page.Frame(frameID); ok {
+		payload["name"] = frame.Name()
+	}
 	if parentID != "" {
 		payload["parentId"] = parentID
 	}
@@ -894,12 +840,20 @@ func (s *session) contextPayload(contextID int64, frameID, rawURL string) map[st
 			origin = originURL(frame.Parent().URL())
 		}
 	}
-	return map[string]any{"id": contextID, "origin": origin, "name": "", "auxData": map[string]any{"isDefault": true, "type": "default", "frameId": frameID}}
+	s.contextMu.Lock()
+	uniqueID := s.realmByFrame[frameID]
+	s.contextMu.Unlock()
+	return map[string]any{"id": contextID, "origin": origin, "name": "", "uniqueId": uniqueID, "auxData": map[string]any{"isDefault": true, "type": "default", "frameId": frameID}}
 }
 
 func (s *session) contextForRealm(realmID string) (int64, bool) {
 	s.contextMu.Lock()
 	defer s.contextMu.Unlock()
+	for id, world := range s.worldContexts {
+		if world.RealmID == realmID {
+			return id, true
+		}
+	}
 	for frameID, currentRealmID := range s.realmByFrame {
 		if currentRealmID == realmID {
 			contextID, ok := s.contextByFrame[frameID]
@@ -910,6 +864,10 @@ func (s *session) contextForRealm(realmID string) (int64, bool) {
 }
 
 func (s *session) clearContexts() {
+	if s.debugger != nil {
+		s.debugger.Prune()
+	}
+	s.clearRuntimeWorldContexts()
 	s.contextMu.Lock()
 	s.contextByFrame = map[string]int64{}
 	s.frameByContext = map[int64]string{}
@@ -918,6 +876,10 @@ func (s *session) clearContexts() {
 }
 
 func (s *session) destroyFrameContext(frameID string) {
+	if s.debugger != nil {
+		s.debugger.Prune()
+	}
+	s.destroyRuntimeWorldContexts(frameID)
 	s.contextMu.Lock()
 	contextID, ok := s.contextByFrame[frameID]
 	if ok {
@@ -931,23 +893,6 @@ func (s *session) destroyFrameContext(frameID string) {
 	}
 }
 
-func (s *session) evaluateInContext(ctx context.Context, contextID int64, source string) (any, error) {
-	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
-	defer cancel()
-	if contextID == 0 {
-		return s.page.EvaluateCommand(ctx, "", source)
-	}
-	s.contextMu.Lock()
-	frameID, ok := s.frameByContext[contextID]
-	s.contextMu.Unlock()
-	if !ok {
-		return nil, fmt.Errorf("cannot find context with specified id")
-	}
-	if frameID == s.page.Top.ID {
-		return s.page.EvaluateCommand(ctx, "", source)
-	}
-	return s.page.EvaluateCommand(ctx, frameID, source)
-}
 func originURL(raw string) string {
 	u, e := url.Parse(raw)
 	if e != nil || u.Host == "" {
@@ -1129,8 +1074,11 @@ func parseRawResponse(encoded string) (interceptAnswer, error) {
 	return interceptAnswer{action: "fulfill", status: res.StatusCode, headers: res.Header.Clone(), body: body}, nil
 }
 func (s *session) pageCookies() []any {
+	return cookieRows(s.page.Cookies().Snapshots())
+}
+func cookieRows(snapshots []network.CookieSnapshot) []any {
 	out := []any{}
-	for _, snapshot := range s.page.Cookies().Snapshots() {
+	for _, snapshot := range snapshots {
 		c := snapshot.Cookie
 		domain := c.Domain
 		if !snapshot.HostOnly && !strings.HasPrefix(domain, ".") {

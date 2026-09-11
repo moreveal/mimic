@@ -231,9 +231,9 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 		environment := p.Environment()
 		n := environment.Navigator()
 		return runtime.Value(map[string]any{
-			"userAgent": n.UserAgent, "appVersion": strings.TrimPrefix(n.UserAgent, "Mozilla/"), "platform": n.Platform,
+			"userAgent": n.UserAgent, "appVersion": environment.AppVersion(), "platform": n.Platform,
 			"languages": n.Languages, "language": n.Languages[0], "hardwareConcurrency": n.HardwareConcurrency,
-			"deviceMemory": n.DeviceMemory, "onLine": n.Online,
+			"deviceMemory": n.DeviceMemory, "onLine": n.Online && !p.NetworkPolicy().Offline(),
 		}), nil
 	})
 	if detacher, ok := runtime.(engine.ArrayBufferDetacher); ok {

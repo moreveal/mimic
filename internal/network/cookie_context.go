@@ -84,10 +84,7 @@ func (r Request) cookieContext() CookieContext {
 		// Each main-frame redirect establishes a destination partition; there
 		// are no ancestors. Its initiator still governs Fetch/SameSite semantics.
 		context := CookieContext{TopLevelSite: SchemefulSite(r.URL), MainFrameNavigation: true, Access: CookieAccessStrict}
-		source := r.SourceURL
-		if source == nil {
-			source = r.Referrer
-		}
+		source := r.initiatingURL()
 		if r.OpaqueOrigin || r.chainSite() == "cross-site" || source != nil && SchemefulSite(source) != context.TopLevelSite {
 			context.Access = CookieAccessLaxUnsafe
 			switch r.Method {
@@ -99,7 +96,7 @@ func (r Request) cookieContext() CookieContext {
 	}
 	top := r.TopLevelURL
 	if top == nil {
-		top = r.SourceURL
+		top = r.initiatingURL()
 	}
 	if top == nil {
 		top = r.URL

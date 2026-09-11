@@ -39,19 +39,25 @@ func (r *Realm) installDocumentStream(host map[string]any) {
 		if resolveErr != nil {
 			return nil, resolveErr
 		}
+		if target.mainWorld != nil {
+			target = target.mainWorld
+		}
 		caller := r
 		if r.documentEntry != nil {
 			caller = r.documentEntry
 		}
-		var err error
-		switch strarg(args, 1) {
-		case "open":
-			err = target.openDocumentStream(caller)
-		case "write":
-			err = target.writeDocumentStream(caller, strarg(args, 2))
-		case "close":
-			err = target.closeDocumentStream()
-		}
+		operation, text := strarg(args, 1), strarg(args, 2)
+		err := r.runWorld(target, func(context.Context) error {
+			switch operation {
+			case "open":
+				return target.openDocumentStream(caller)
+			case "write":
+				return target.writeDocumentStream(caller, text)
+			case "close":
+				return target.closeDocumentStream()
+			}
+			return nil
+		})
 		return r.val(nil), err
 	})
 	host["documentBaseURI"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
@@ -89,8 +95,13 @@ func (r *Realm) openDocumentStream(caller *Realm) error {
 		r.documentStream.parser.Abort()
 	}
 	// Reset before detaching: previously detached nodes keep their listeners.
-	if _, err := r.runtime.Call(r.resourceContext, r.documentStreamReset, nil); err != nil {
-		return err
+	for _, world := range r.documentWorlds() {
+		if world.documentStreamReset == nil {
+			continue
+		}
+		if err := r.callWorld(world, world.documentStreamReset); err != nil {
+			return err
+		}
 	}
 	for id := range r.childFrames {
 		r.detachChildFrame(id)

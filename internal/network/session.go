@@ -3,22 +3,20 @@ package network
 import (
 	"net/http"
 	"net/url"
+	"slices"
 	"strings"
 	"sync"
 	"time"
 )
 
-// SessionState is the browser-context scoped source of truth for network
-// policy and the HTTP cache. CDP mutates this object; every loader observes it.
+// SessionState owns network resources shared by one browser context. Request
+// overrides belong to each Page's Loader, not to this shared resource store.
 type SessionState struct {
-	mu            sync.RWMutex
-	cacheDisabled bool
-	offline       bool
-	extraHeaders  http.Header
-	cache         map[string][]cacheEntry
-	clientHints   map[string]map[string]bool
-	blobs         map[string]blobEntry
-	connections   map[string]ConnectionRecord
+	mu          sync.RWMutex
+	cache       map[string][]cacheEntry
+	clientHints map[string]map[string]bool
+	blobs       map[string]blobEntry
+	connections map[string]ConnectionRecord
 }
 type blobEntry struct {
 	body        []byte
@@ -30,12 +28,6 @@ type cacheEntry struct {
 	vary           []string
 	requestHeaders http.Header
 }
-type SessionSnapshot struct {
-	CacheDisabled bool
-	Offline       bool
-	ExtraHeaders  http.Header
-}
-
 type ConnectionStatus string
 
 const (
@@ -62,7 +54,7 @@ type ConnectionAttempt struct {
 }
 
 func NewSessionState() *SessionState {
-	return &SessionState{extraHeaders: make(http.Header), cache: map[string][]cacheEntry{}, clientHints: map[string]map[string]bool{}, blobs: map[string]blobEntry{}, connections: map[string]ConnectionRecord{}}
+	return &SessionState{cache: map[string][]cacheEntry{}, clientHints: map[string]map[string]bool{}, blobs: map[string]blobEntry{}, connections: map[string]ConnectionRecord{}}
 }
 
 func connectionKey(u *url.URL) (string, string) {
@@ -134,18 +126,6 @@ func (s *SessionState) Blob(raw string) ([]byte, string, bool) {
 	s.mu.RUnlock()
 	return append([]byte(nil), entry.body...), entry.contentType, ok
 }
-func (s *SessionState) Snapshot() SessionSnapshot {
-	s.mu.RLock()
-	defer s.mu.RUnlock()
-	return SessionSnapshot{s.cacheDisabled, s.offline, s.extraHeaders.Clone()}
-}
-func (s *SessionState) SetCacheDisabled(v bool) { s.mu.Lock(); s.cacheDisabled = v; s.mu.Unlock() }
-func (s *SessionState) SetOffline(v bool)       { s.mu.Lock(); s.offline = v; s.mu.Unlock() }
-func (s *SessionState) SetExtraHeaders(h http.Header) {
-	s.mu.Lock()
-	s.extraHeaders = h.Clone()
-	s.mu.Unlock()
-}
 func (s *SessionState) ClearCache() { s.mu.Lock(); s.cache = map[string][]cacheEntry{}; s.mu.Unlock() }
 func (s *SessionState) AcceptClientHints(u *url.URL, header string) {
 	if u == nil || header == "" {
@@ -179,9 +159,6 @@ func (s *SessionState) GetCached(req Request, now time.Time) (Response, bool) {
 	}
 	s.mu.RLock()
 	defer s.mu.RUnlock()
-	if s.cacheDisabled {
-		return Response{}, false
-	}
 	for _, e := range s.cache[req.URL.String()] {
 		if now.After(e.expires) {
 			continue
@@ -237,13 +214,33 @@ func (s *SessionState) PutCached(req Request, res Response, now time.Time) {
 			vary = append(vary, http.CanonicalHeaderKey(v))
 		}
 	}
+	slices.Sort(vary)
+	vary = slices.Compact(vary)
 	copy := res
 	copy.Body = append([]byte(nil), res.Body...)
 	copy.Headers = res.Headers.Clone()
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	if s.cacheDisabled {
-		return
+	// A fresh representation replaces the same Vary variant. Keep different
+	// variants, but never return an older matching response ahead of its update.
+	key := req.URL.String()
+	entries := s.cache[key]
+	kept := entries[:0]
+	for _, entry := range entries {
+		if now.After(entry.expires) || !slices.Equal(entry.vary, vary) {
+			continue
+		}
+		match := true
+		for _, name := range entry.vary {
+			if req.Headers.Get(name) != entry.requestHeaders.Get(name) {
+				match = false
+				break
+			}
+		}
+		if !match {
+			kept = append(kept, entry)
+		}
 	}
-	s.cache[req.URL.String()] = append(s.cache[req.URL.String()], cacheEntry{copy, now.Add(maxAge), vary, req.Headers.Clone()})
+	clear(entries[len(kept):])
+	s.cache[key] = append(kept, cacheEntry{copy, now.Add(maxAge), vary, req.Headers.Clone()})
 }

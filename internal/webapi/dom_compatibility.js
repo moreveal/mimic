@@ -89,7 +89,7 @@ const compatibilityElementState={};
     Object.defineProperty(CustomElementRegistry.prototype,Symbol.toStringTag,{value:'CustomElementRegistry',configurable:true});expose('CustomElementRegistry',CustomElementRegistry);expose('customElements',new CustomElementRegistry(hostToken));
     Object.defineProperty(Document.prototype,'createElement',{value:function(name,options){const node=rawCreate.call(this,name,options);if(definitions.size&&!customElementCloneInert)upgrade(node);return node},writable:true,configurable:true,enumerable:true});
 
-    const observers=new Set(),observerSlots=new WeakMap(),pendingObservers=new Set();let deliveryQueued=false,mutationDepth=0,observerSequence=0;
+    const observers=new Set(),observerSlots=new WeakMap(),pendingObservers=new Set();let deliveryQueued=false,mutationDepth=0,observerSequence=0,otherWorldObservers=false;
     const scheduleDelivery=()=>{if(!deliveryQueued){deliveryQueued=true;queueMicrotask(deliver)}};
     const deliver=()=>{
       deliveryQueued=false;const active=Array.from(pendingObservers).sort((a,b)=>observerSlots.get(a).sequence-observerSlots.get(b).sequence);pendingObservers.clear();
@@ -104,14 +104,20 @@ const compatibilityElementState={};
     expose('MutationRecord',MutationRecord);
     const observerState=observer=>{const state=observerSlots.get(observer);if(!state)throw new TypeError('Illegal invocation');return state};
     const observedRoots=s=>[...s.targets,...s.transients];
-    const retainRemoved=node=>{
+    const retainRemoved=(node,remote=false)=>{
+      if(otherWorldObservers&&!remote)host.worldMutation({kind:'retain',target:elementSlot(node).nodeId});
       for(const observer of observers){const s=observerSlots.get(observer),entries=[];
         for(const [root,options] of observedRoots(s))if(options.subtree&&root!==node&&root.contains(node))entries.push([node,options]);
         if(entries.length){s.transients.push(...entries);pendingObservers.add(observer);scheduleDelivery()}
       }
     };
-    const queueRecord=(type,target,details={})=>{
-      if(!observers.size||mutationDepth)return;
+    const queueRecord=(type,target,details={},remote=false)=>{
+      if(mutationDepth)return;
+      if(otherWorldObservers&&!remote){
+        const id=node=>node?elementSlot(node).nodeId:0;
+        host.worldMutation({kind:'mutation',type,target:id(target),addedNodes:(details.addedNodes||[]).map(id),removedNodes:(details.removedNodes||[]).map(id),previousSibling:id(details.previousSibling),nextSibling:id(details.nextSibling),attributeName:details.attributeName??null,attributeNamespace:details.attributeNamespace??null,oldValue:details.oldValue??null});
+      }
+      if(!observers.size)return;
       for(const observer of observers){
         const s=observerSlots.get(observer);let match=false,old=false;
         for(const [root,options] of observedRoots(s)){
@@ -127,6 +133,13 @@ const compatibilityElementState={};
         if(!old)fields.oldValue=null;recordSlots.set(record,fields);s.records.push(record);pendingObservers.add(observer);scheduleDelivery();
       }
     };
+    registerBootstrapCallback('registerWorldMutationReceiver',(kind,record)=>{
+      if(kind==='enabled'){otherWorldObservers=record;return}
+      const resolve=id=>id?wrap(host.nodeData(id)):null,target=resolve(record.target);
+      if(!target)return;
+      if(record.kind==='retain'){retainRemoved(target,true);return}
+      queueRecord(record.type,target,{addedNodes:record.addedNodes.map(resolve),removedNodes:record.removedNodes.map(resolve),previousSibling:resolve(record.previousSibling),nextSibling:resolve(record.nextSibling),attributeName:record.attributeName,attributeNamespace:record.attributeNamespace,oldValue:record.oldValue},true);
+    });
     class MutationObserver {
       constructor(callback){if(typeof callback!=='function')throw new TypeError('Callback must be callable');observerSlots.set(this,{callback,sequence:observerSequence++,records:[],targets:new Map(),transients:[]})}
       observe(target,options){
@@ -137,9 +150,9 @@ const compatibilityElementState={};
         if(!options.childList&&!options.attributes&&!options.characterData||!options.attributes&&(options.attributeOldValue||options.attributeFilter)||!options.characterData&&options.characterDataOldValue)throw new TypeError('Invalid observer options');
         if(options.attributeFilter!==undefined){if(options.attributeFilter==null||typeof options.attributeFilter[Symbol.iterator]!=='function')throw new TypeError('attributeFilter must be iterable');options.attributeFilter=Array.from(options.attributeFilter,String)}
         if(s.targets.has(target))s.transients=s.transients.filter(([,registered])=>registered!==s.targets.get(target));
-        s.targets.set(target,options);observers.add(this);
+        s.targets.set(target,options);const first=!observers.size;observers.add(this);if(first)host.worldObserverPresence(true);
       }
-      disconnect(){const s=observerState(this);s.targets.clear();s.records.length=0;s.transients=[];observers.delete(this);pendingObservers.delete(this)}
+      disconnect(){const s=observerState(this);s.targets.clear();s.records.length=0;s.transients=[];const removed=observers.delete(this);pendingObservers.delete(this);if(removed&&!observers.size)host.worldObserverPresence(false)}
       takeRecords(){return observerState(this).records.splice(0)}
     }
     Object.defineProperty(MutationObserver.prototype,Symbol.toStringTag,{value:'MutationObserver',configurable:true});
@@ -205,7 +218,7 @@ const compatibilityElementState={};
     for(const name of ['setAttribute','removeAttribute']){
       const original=Element.prototype[name];
       Object.defineProperty(Element.prototype,name,{value:function(key,value){
-        if(!observers.size&&!definitions.size&&!compatibilityElementState.hasModal?.())return original.apply(this,arguments);
+        if(!observers.size&&!otherWorldObservers&&!definitions.size&&!compatibilityElementState.hasModal?.())return original.apply(this,arguments);
         key=this.namespaceURI==='http://www.w3.org/1999/xhtml'?String(key).toLowerCase():String(key);const old=this.getAttribute(key);
         const result=original.apply(this,arguments);
         if(name==='setAttribute'||old!==null)attributeChanged(this,key,old);
@@ -222,7 +235,7 @@ const compatibilityElementState={};
     for(const method of ['appendChild','insertBefore','removeChild','replaceChild']){
       const original=mutationOriginals[method];
       member(Node.prototype,method,function(node,reference){
-        if(mutationDepth||!observers.size&&!definitions.size&&!compatibilityElementState.hasModal?.())return original.apply(this,arguments);
+        if(mutationDepth||!observers.size&&!otherWorldObservers&&!definitions.size&&!compatibilityElementState.hasModal?.())return original.apply(this,arguments);
         if(!isDOMNode(node))return original.apply(this,arguments);
         if(method==='removeChild'){if(node.parentNode!==this)throw new DOMException('Not a child','NotFoundError')}else prepareInsertion(this,node,method==='appendChild'?null:reference);
         const fragment=node instanceof DocumentFragment,children=fragment?Array.from(node.childNodes):[node],entries=children.map(nodeSnapshot);
@@ -260,7 +273,7 @@ const compatibilityElementState={};
     for(const [prototype,key] of [[Element.prototype,'innerHTML'],[Element.prototype,'textContent'],[Node.prototype,'textContent']]){
       const original=Object.getOwnPropertyDescriptor(prototype,key);if(!original?.set)continue;
       Object.defineProperty(prototype,key,{...original,set(value){
-        if(mutationDepth||!observers.size&&!definitions.size&&!compatibilityElementState.hasModal?.())return original.set.call(this,value);
+        if(mutationDepth||!observers.size&&!otherWorldObservers&&!definitions.size&&!compatibilityElementState.hasModal?.())return original.set.call(this,value);
         const character=this.nodeType===3||this.nodeType===8,old=character?this.textContent:null;
         const removed=character?[]:Array.from(this.childNodes),entries=removed.map(nodeSnapshot);
         for(const node of removed)retainRemoved(node);
@@ -278,7 +291,7 @@ const compatibilityElementState={};
     // Markup insertion shares the child-list transaction and CE reaction queue
     // with ordinary node mutations; the host parser remains the tree authority.
     const markupMutation=(parent,removed,invoke)=>{
-      if(!parent||mutationDepth||!observers.size&&!definitions.size&&!compatibilityElementState.hasModal?.())return invoke();
+      if(!parent||mutationDepth||!observers.size&&!otherWorldObservers&&!definitions.size&&!compatibilityElementState.hasModal?.())return invoke();
       const before=Array.from(parent.childNodes),prior=new Set(before),entry=removed?nodeSnapshot(removed):null;
       if(removed)retainRemoved(removed);
       mutationDepth++;reactionDepth++;
@@ -336,7 +349,7 @@ const compatibilityElementState={};
     const checkedTokens=tokens=>tokens.map(value=>{const token=String(value);if(!token)throw new DOMException('Empty token','SyntaxError');if(/[\t\n\f\r ]/.test(token))throw new DOMException('Whitespace in token','InvalidCharacterError');return token});
     member(DOMTokenList.prototype,'add',function(...values){const tokens=checkedTokens(values);writeDOMTokens(this,domTokens(this).concat(tokens))});
     member(DOMTokenList.prototype,'remove',function(...values){const tokens=new Set(checkedTokens(values));writeDOMTokens(this,domTokens(this).filter(value=>!tokens.has(value)))});
-    member(DOMTokenList.prototype,'toggle',function(value,force){const [token]=checkedTokens([value]);if(!observers.size&&!definitions.size&&!compatibilityElementState.hasModal?.()){const state=domTokenState(this);return host.toggleToken(elementSlot(state.element).nodeId,state.attribute,token,force===undefined?-1:Boolean(force)?1:0)}const tokens=domTokens(this),has=tokens.includes(token);if(has){if(force===undefined||!Boolean(force)){writeDOMTokens(this,tokens.filter(value=>value!==token));return false}return true}if(force!==undefined&&!Boolean(force))return false;writeDOMTokens(this,[...tokens,token]);return true});
+    member(DOMTokenList.prototype,'toggle',function(value,force){const [token]=checkedTokens([value]);if(!observers.size&&!otherWorldObservers&&!definitions.size&&!compatibilityElementState.hasModal?.()){const state=domTokenState(this);return host.toggleToken(elementSlot(state.element).nodeId,state.attribute,token,force===undefined?-1:Boolean(force)?1:0)}const tokens=domTokens(this),has=tokens.includes(token);if(has){if(force===undefined||!Boolean(force)){writeDOMTokens(this,tokens.filter(value=>value!==token));return false}return true}if(force!==undefined&&!Boolean(force))return false;writeDOMTokens(this,[...tokens,token]);return true});
 
     /* shared_abort_encoding */
     Object.defineProperty(Element.prototype,'matches',{value:function(selector){return host.matches(elementSlot(this).nodeId,String(selector))},writable:true,configurable:true,enumerable:true});
@@ -374,8 +387,9 @@ const compatibilityElementState={};
     document.addEventListener('keydown',event=>{if(event.isTrusted&&!event.altKey&&!event.ctrlKey&&!event.metaKey)keyboardFocus=true},true);
     for(const type of ['mousedown','pointerdown','touchstart'])document.addEventListener(type,event=>{if(event.isTrusted)keyboardFocus=false},true);
     Object.defineProperty(Document.prototype,'activeElement',{get(){return focused&&focused.isConnected?focused:this.body||this.documentElement},configurable:true,enumerable:true});
-    Object.defineProperty(HTMLElement.prototype,'focus',{value:function(){if(!this.isConnected||focused===this)return;const previous=focused;focused=this;if(previous)dispatchTrusted(previous,new Event('blur'));dispatchTrusted(this,new Event('focus'));dispatchTrusted(this,new Event('focusin',{bubbles:true}))},writable:true,configurable:true,enumerable:true});
-    Object.defineProperty(HTMLElement.prototype,'blur',{value:function(){if(focused!==this)return;focused=null;dispatchTrusted(this,new Event('blur'));dispatchTrusted(this,new Event('focusout',{bubbles:true}))},writable:true,configurable:true,enumerable:true});
+    const focusEvent=(target,type,related,bubbles=false)=>compatibilityElementState.dispatchFocus?compatibilityElementState.dispatchFocus(target,type,related,bubbles):dispatchTrusted(target,new Event(type,{bubbles,composed:true}));
+    Object.defineProperty(HTMLElement.prototype,'focus',{value:function(){if(!this.isConnected||focused===this)return;const previous=focused;focused=null;if(previous){focusEvent(previous,'blur',this);focusEvent(previous,'focusout',this,true)}focused=this;focusEvent(this,'focus',previous);focusEvent(this,'focusin',previous,true)},writable:true,configurable:true,enumerable:true});
+    Object.defineProperty(HTMLElement.prototype,'blur',{value:function(){if(focused!==this)return;focused=null;focusEvent(this,'blur',null);focusEvent(this,'focusout',null,true)},writable:true,configurable:true,enumerable:true});
     const mediaSlots=new WeakMap();
     class MediaQueryList extends EventTarget {
       constructor(query){super();mediaSlots.set(this,{query:String(query),onchange:null})}

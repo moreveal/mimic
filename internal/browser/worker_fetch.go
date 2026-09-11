@@ -3,6 +3,7 @@ package browser
 import (
 	"context"
 	"fmt"
+	"net/url"
 
 	"github.com/moreveal/mimic/internal/engine"
 	"github.com/moreveal/mimic/internal/scheduler"
@@ -25,7 +26,8 @@ func (w *DedicatedWorker) installFetch(host map[string]any, lifetime context.Con
 		request.TopLevelURL = w.topLevelURL
 		request.HasCrossSiteAncestor = w.cookieContext.HasCrossSiteAncestor
 		if w.url.Scheme == "blob" {
-			request.SourceURL = w.securityURL
+			request.SourceOrigin, _ = url.Parse(w.parent.origin)
+			request.OpaqueOrigin = w.parent.origin == "null"
 		}
 		requestID := strarg(args, 4)
 		ctx, cancel := context.WithCancel(lifetime)

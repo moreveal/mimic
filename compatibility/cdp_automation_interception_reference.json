@@ -1,0 +1,401 @@
+{
+  "schemaVersion": 1,
+  "version": {
+    "Browser": "Chrome/152.0.7977.82",
+    "Protocol-Version": "1.3",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "V8-Version": "15.2.124.21",
+    "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:19433/devtools/browser/e4b1f128-e4d7-43ef-9e50-d48c762de971"
+  },
+  "origin": "http://127.0.0.1:1997",
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "scenarios": [
+    {
+      "name": "fetch_default",
+      "loaded": true,
+      "stages": [
+        "Request"
+      ],
+      "paused": [
+        {
+          "requestId": "interception-job-43.0",
+          "networkId": "F8E65D5F3DC4D985F3A8B89D750FC37E",
+          "frameId": "D9CE52F31E22ECC67082A07D721AF1BA",
+          "resourceType": "Document",
+          "request": {
+            "url": "http://127.0.0.1:1997/page/probe",
+            "method": "GET"
+          }
+        }
+      ]
+    },
+    {
+      "name": "fetch_empty_patterns",
+      "loaded": true,
+      "stages": [],
+      "paused": []
+    },
+    {
+      "name": "fetch_request",
+      "loaded": true,
+      "stages": [
+        "Request"
+      ],
+      "paused": [
+        {
+          "requestId": "interception-job-44.0",
+          "networkId": "4A5DA2CB368CF94BD72B4E6480E46119",
+          "frameId": "D9CE52F31E22ECC67082A07D721AF1BA",
+          "resourceType": "Document",
+          "request": {
+            "url": "http://127.0.0.1:1997/page/probe",
+            "method": "GET"
+          }
+        }
+      ]
+    },
+    {
+      "name": "fetch_response",
+      "loaded": true,
+      "stages": [
+        "Response"
+      ],
+      "paused": [
+        {
+          "requestId": "interception-job-45.0",
+          "networkId": "6E3AFF17F86C7B8F3624FB5675F84A1A",
+          "frameId": "D9CE52F31E22ECC67082A07D721AF1BA",
+          "resourceType": "Document",
+          "responseStatusCode": 200,
+          "responseStatusText": "OK",
+          "responseHeaders": [
+            {
+              "name": "Server",
+              "value": "BaseHTTP/0.6 Python/3.14.2"
+            },
+            {
+              "name": "Date",
+              "value": "Fri, 11 Sep 2026 22:48:24 GMT"
+            },
+            {
+              "name": "Content-Type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "Content-Length",
+              "value": "811"
+            },
+            {
+              "name": "Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "name": "Permissions-Policy",
+              "value": "unload=(self)"
+            }
+          ],
+          "request": {
+            "url": "http://127.0.0.1:1997/page/probe",
+            "method": "GET"
+          }
+        }
+      ]
+    },
+    {
+      "name": "fetch_wrong_resource",
+      "loaded": true,
+      "stages": [],
+      "paused": []
+    },
+    {
+      "name": "fetch_wrong_url",
+      "loaded": true,
+      "stages": [],
+      "paused": []
+    },
+    {
+      "name": "fetch_url_question_wildcard",
+      "loaded": true,
+      "stages": [
+        "Request"
+      ],
+      "paused": [
+        {
+          "requestId": "interception-job-48.0",
+          "networkId": "2330037A24008DE437E98EF7B6113A14",
+          "frameId": "D9CE52F31E22ECC67082A07D721AF1BA",
+          "resourceType": "Document",
+          "request": {
+            "url": "http://127.0.0.1:1997/page/probe",
+            "method": "GET"
+          }
+        }
+      ]
+    },
+    {
+      "name": "fetch_url_escape_wildcard",
+      "loaded": true,
+      "stages": [],
+      "paused": []
+    },
+    {
+      "name": "fetch_override_response_true",
+      "loaded": true,
+      "stages": [
+        "Request",
+        "Response"
+      ],
+      "paused": [
+        {
+          "requestId": "interception-job-50.0",
+          "networkId": "BE04CB96F26B4A78AF4ADF59F0FE8054",
+          "frameId": "D9CE52F31E22ECC67082A07D721AF1BA",
+          "resourceType": "Document",
+          "request": {
+            "url": "http://127.0.0.1:1997/page/probe",
+            "method": "GET"
+          }
+        },
+        {
+          "requestId": "interception-job-50.0",
+          "networkId": "BE04CB96F26B4A78AF4ADF59F0FE8054",
+          "frameId": "D9CE52F31E22ECC67082A07D721AF1BA",
+          "resourceType": "Document",
+          "responseStatusCode": 200,
+          "responseStatusText": "OK",
+          "responseHeaders": [
+            {
+              "name": "Server",
+              "value": "BaseHTTP/0.6 Python/3.14.2"
+            },
+            {
+              "name": "Date",
+              "value": "Fri, 11 Sep 2026 22:48:25 GMT"
+            },
+            {
+              "name": "Content-Type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "Content-Length",
+              "value": "811"
+            },
+            {
+              "name": "Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "name": "Permissions-Policy",
+              "value": "unload=(self)"
+            }
+          ],
+          "request": {
+            "url": "http://127.0.0.1:1997/page/probe",
+            "method": "GET"
+          }
+        }
+      ]
+    },
+    {
+      "name": "fetch_both_stages_override_false",
+      "loaded": true,
+      "stages": [
+        "Request"
+      ],
+      "paused": [
+        {
+          "requestId": "interception-job-51.0",
+          "networkId": "2037064C916842EF21ACAC63955EE3CD",
+          "frameId": "D9CE52F31E22ECC67082A07D721AF1BA",
+          "resourceType": "Document",
+          "request": {
+            "url": "http://127.0.0.1:1997/page/probe",
+            "method": "GET"
+          }
+        }
+      ]
+    },
+    {
+      "name": "fetch_disable_pending_request",
+      "loaded": true,
+      "stages": [
+        "Request"
+      ],
+      "paused": [
+        {
+          "requestId": "interception-job-52.0",
+          "networkId": "4860F6D75D1549F74799ECF02382934B",
+          "frameId": "D9CE52F31E22ECC67082A07D721AF1BA",
+          "resourceType": "Document",
+          "request": {
+            "url": "http://127.0.0.1:1997/page/probe",
+            "method": "GET"
+          }
+        }
+      ]
+    },
+    {
+      "name": "fetch_disable_pending_response",
+      "loaded": true,
+      "stages": [
+        "Response"
+      ],
+      "paused": [
+        {
+          "requestId": "interception-job-53.0",
+          "networkId": "F985DCFF5F9E8CA0C32C0D36FFE6F609",
+          "frameId": "D9CE52F31E22ECC67082A07D721AF1BA",
+          "resourceType": "Document",
+          "responseStatusCode": 200,
+          "responseStatusText": "OK",
+          "responseHeaders": [
+            {
+              "name": "Server",
+              "value": "BaseHTTP/0.6 Python/3.14.2"
+            },
+            {
+              "name": "Date",
+              "value": "Fri, 11 Sep 2026 22:48:25 GMT"
+            },
+            {
+              "name": "Content-Type",
+              "value": "text/html; charset=utf-8"
+            },
+            {
+              "name": "Content-Length",
+              "value": "811"
+            },
+            {
+              "name": "Cache-Control",
+              "value": "no-store"
+            },
+            {
+              "name": "Permissions-Policy",
+              "value": "unload=(self)"
+            }
+          ],
+          "request": {
+            "url": "http://127.0.0.1:1997/page/probe",
+            "method": "GET"
+          }
+        }
+      ]
+    },
+    {
+      "name": "legacy_request",
+      "loaded": true,
+      "stages": [
+        "Request"
+      ],
+      "paused": [
+        {
+          "requestId": "6E79D6AAA0C130F9E59131354604D5F6",
+          "interceptionId": "interception-job-54.0",
+          "frameId": "D9CE52F31E22ECC67082A07D721AF1BA",
+          "resourceType": "Document",
+          "isNavigationRequest": true,
+          "request": {
+            "url": "http://127.0.0.1:1997/page/probe",
+            "method": "GET"
+          }
+        }
+      ]
+    },
+    {
+      "name": "legacy_response",
+      "loaded": true,
+      "stages": [
+        "Response"
+      ],
+      "paused": [
+        {
+          "requestId": "B2FB1E06F6D8A990C497E84471876FDB",
+          "interceptionId": "interception-job-55.0",
+          "frameId": "D9CE52F31E22ECC67082A07D721AF1BA",
+          "resourceType": "Document",
+          "isNavigationRequest": true,
+          "responseStatusCode": 200,
+          "responseHeaders": {
+            "Cache-Control": "no-store",
+            "Content-Length": "811",
+            "Content-Type": "text/html; charset=utf-8",
+            "Date": "Fri, 11 Sep 2026 22:48:25 GMT",
+            "Permissions-Policy": "unload=(self)",
+            "Server": "BaseHTTP/0.6 Python/3.14.2"
+          },
+          "request": {
+            "url": "http://127.0.0.1:1997/page/probe",
+            "method": "GET"
+          }
+        }
+      ]
+    },
+    {
+      "name": "legacy_disable_pending",
+      "loaded": true,
+      "stages": [
+        "Request"
+      ],
+      "paused": [
+        {
+          "requestId": "4A41DC1C0316F74183DAE97E925C202D",
+          "interceptionId": "interception-job-56.0",
+          "frameId": "D9CE52F31E22ECC67082A07D721AF1BA",
+          "resourceType": "Document",
+          "isNavigationRequest": true,
+          "request": {
+            "url": "http://127.0.0.1:1997/page/probe",
+            "method": "GET"
+          }
+        }
+      ]
+    },
+    {
+      "name": "fetch_detach_pending_request",
+      "loaded": true,
+      "stages": [
+        "Request"
+      ],
+      "paused": [
+        {
+          "requestId": "interception-job-57.0",
+          "networkId": "CCA8598B2F39B14BB4C5F90BCF8CD727",
+          "frameId": "D9CE52F31E22ECC67082A07D721AF1BA",
+          "resourceType": "Document",
+          "request": {
+            "url": "http://127.0.0.1:1997/page/detached",
+            "method": "GET"
+          }
+        }
+      ]
+    }
+  ]
+}

@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"slices"
 	"strings"
+	"sync"
 	"unicode/utf16"
 
 	fhttp "github.com/bogdanfinn/fhttp"
@@ -22,8 +23,11 @@ import (
 // net/http boundary consumed by ResourceLoader. Cookie, redirect, cache and
 // interception semantics deliberately remain above this transport.
 type TLSClientTransport struct {
-	client   tls_client.HttpClient
-	fallback http.RoundTripper
+	client         tls_client.HttpClient
+	fallback       http.RoundTripper
+	insecureMu     sync.Mutex
+	insecureClient tls_client.HttpClient
+	clientOptions  []tls_client.HttpClientOption
 }
 
 func blinkHeaderHash(name string) uint32 {
@@ -105,10 +109,13 @@ func NewTLSClientTransport(profile profiles.ClientProfile, options ...tls_client
 	if err != nil {
 		return nil, err
 	}
-	return &TLSClientTransport{client: client, fallback: http.DefaultTransport.(*http.Transport).Clone()}, nil
+	return &TLSClientTransport{client: client, fallback: http.DefaultTransport.(*http.Transport).Clone(), clientOptions: clientOptions}, nil
 }
 
 func (t *TLSClientTransport) RoundTrip(request *http.Request) (*http.Response, error) {
+	return t.roundTrip(request, t.client)
+}
+func (t *TLSClientTransport) roundTrip(request *http.Request, client tls_client.HttpClient) (*http.Response, error) {
 	// Browser TLS behavior is irrelevant for clear-text local development and
 	// retaining net/http here makes ordinary httptest servers deterministic.
 	if request.URL.Scheme != "https" {
@@ -153,7 +160,7 @@ func (t *TLSClientTransport) RoundTrip(request *http.Request) (*http.Response, e
 		nativeRequest = nativeRequest.WithContext(fhttptrace.WithClientTrace(nativeRequest.Context(), trace))
 	}
 
-	nativeResponse, err := t.client.Do(nativeRequest)
+	nativeResponse, err := client.Do(nativeRequest)
 	if err != nil {
 		return nil, err
 	}
@@ -360,6 +367,11 @@ func blinkHashTableOrder(insertion []string) []string {
 
 func (t *TLSClientTransport) CloseIdleConnections() {
 	t.client.CloseIdleConnections()
+	t.insecureMu.Lock()
+	if t.insecureClient != nil {
+		t.insecureClient.CloseIdleConnections()
+	}
+	t.insecureMu.Unlock()
 	if closer, ok := t.fallback.(interface{ CloseIdleConnections() }); ok {
 		closer.CloseIdleConnections()
 	}

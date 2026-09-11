@@ -7,7 +7,29 @@
   let nextOptionID=0;
   const optionState=e=>{let s=options.get(e);if(!s){s={dirty:false,selected:false,id:++nextOptionID};options.set(e,s)}return s};
   const selectState=e=>{let s=selects.get(e);if(!s){s={noSelection:false,signature:''};selects.set(e,s)}return s};
-  const define=(name,key,descriptor)=>{const p=globalThis[name]?.prototype;if(p)Object.defineProperty(p,key,{...descriptor,enumerable:true,configurable:true})};
+  const controlDescriptors=new Map(),parseControlJSON=JSON.parse,stringifyControlJSON=JSON.stringify;
+  let isolatedControls=host.isIsolatedInputWorld();
+  bootstrapRestoreHooks.push(()=>{isolatedControls=host.isIsolatedInputWorld()});
+  const sharedControlKeys=new Set(['type','value','checked','indeterminate','selected','selectedIndex','selectionStart','selectionEnd','selectionDirection','setSelectionRange','select','reset']);
+  const define=(name,key,descriptor)=>{
+    const p=globalThis[name]?.prototype;if(!p)return;
+    let entries=controlDescriptors.get(p);if(!entries){entries=new Map();controlDescriptors.set(p,entries)}entries.set(key,descriptor);
+    if(sharedControlKeys.has(key)){
+      const original=descriptor;
+      const invoke=(receiver,operation,args)=>isolatedControls?parseControlJSON(host.mainWorldInput(elementSlot(receiver).nodeId,'form',stringifyControlJSON({operation,key,args}))).value:Reflect.apply(operation==='get'?original.get:operation==='set'?original.set:original.value,receiver,args);
+      descriptor={...descriptor,...(descriptor.get?{get(){return invoke(this,'get',[])}}:{}),...(descriptor.set?{set(value){invoke(this,'set',[value])}}:{}),...(descriptor.value?{value:function(...args){return invoke(this,'call',args)}}:{})};
+    }
+    Object.defineProperty(p,key,{...descriptor,enumerable:true,configurable:true});
+  };
+  compatibilityElementState.formOperation=(element,operation,key,args=[])=>{
+    for(let p=Object.getPrototypeOf(element);p;p=Object.getPrototypeOf(p)){
+      const descriptor=controlDescriptors.get(p)?.get(key);if(!descriptor)continue;
+      const method=operation==='get'?descriptor.get:operation==='set'?descriptor.set:descriptor.value;
+      if(typeof method!=='function')throw new TypeError('Unsupported form control operation');
+      return Reflect.apply(method,element,args);
+    }
+    throw new TypeError('Unsupported form control property '+key);
+  };
   const string=(name,key,attribute=key.toLowerCase())=>define(name,key,{get(){return this.getAttribute(attribute)||''},set(value){this.setAttribute(attribute,String(value))}});
   const boolean=(name,key,attribute=key.toLowerCase())=>define(name,key,{get(){return this.hasAttribute(attribute)},set(value){if(value)this.setAttribute(attribute,'');else this.removeAttribute(attribute)}});
   const lf=value=>String(value).replace(/\r\n?/g,'\n');
@@ -54,6 +76,7 @@
   const selectOwner=option=>{for(let p=option.parentElement;p;p=p.parentElement){if(p.localName==='select')return p}return null};
   const optionDisabled=option=>option.disabled||(option.parentElement?.localName==='optgroup'&&option.parentElement.hasAttribute('disabled'));
   function selection(select){
+    if(isolatedControls){const list=optionList(select);return {list,selected:list.filter(option=>option.selected)}}
     const list=optionList(select),state=selectState(select),signature=list.map(option=>String(optionState(option).id)+':'+option.hasAttribute('selected')).join(',');
     if(signature!==state.signature){state.noSelection=false;state.signature=signature}
     let selected=list.filter(option=>{const s=optionState(option);return s.dirty?s.selected:option.hasAttribute('selected')});
@@ -73,7 +96,7 @@
   define('HTMLOptionElement','value',{get(){return this.getAttribute('value')??this.text},set(value){this.setAttribute('value',String(value))}});
   define('HTMLOptionElement','label',{get(){return this.getAttribute('label')??this.text},set(value){this.setAttribute('label',String(value))}});
   boolean('HTMLOptionElement','defaultSelected','selected');boolean('HTMLOptionElement','disabled');
-  define('HTMLOptionElement','selected',{get(){const owner=selectOwner(this);if(owner)return selection(owner).selected.includes(this);const s=optionState(this);return s.dirty?s.selected:this.hasAttribute('selected')},set(value){const owner=selectOwner(this),s=optionState(this);s.dirty=true;s.selected=Boolean(value);if(owner){if(s.selected&&!owner.multiple)assignSelection(owner,[this]);else selectState(owner).noSelection=false}}});
+  define('HTMLOptionElement','selected',{get(){const owner=selectOwner(this);if(owner)return selection(owner).selected.includes(this);const s=optionState(this);return s.dirty?s.selected:this.hasAttribute('selected')},set(value){const owner=selectOwner(this),s=optionState(this);s.dirty=true;s.selected=Boolean(value);if(owner&&s.selected){if(!owner.multiple)assignSelection(owner,[this]);else selectState(owner).noSelection=false}}});
   define('HTMLOptionElement','index',{get(){const owner=selectOwner(this);return owner?optionList(owner).indexOf(this):0}});
   define('HTMLSelectElement','type',{get(){return this.multiple?'select-multiple':'select-one'}});
   define('HTMLSelectElement','size',{get(){const value=Number(this.getAttribute('size'));return Number.isInteger(value)&&value>=0?value:0},set(value){this.setAttribute('size',String(Number(value)>>>0))}});
