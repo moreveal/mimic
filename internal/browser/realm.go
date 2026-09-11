@@ -49,6 +49,7 @@ type Realm struct {
 	profilePhases           map[string]float64
 	ID                      string
 	activationAt            time.Time
+	documentReferrer        string
 	referrerPolicy          string
 	inputDispatcher         engine.Value
 	permissionNotifier      engine.Value
@@ -160,13 +161,33 @@ func (r *Realm) securityState() documentSecurity {
 		if r.url.Scheme != "about" {
 			trustworthy := potentiallyTrustworthyURL(r.url)
 			security.secureContext = security.secureContext && trustworthy
-			security.crossOriginIsolated = security.crossOriginIsolated && security.secureContext && frame.parent.Realm != nil && r.origin == frame.parent.Realm.origin
 		}
+		security.crossOriginIsolated = security.crossOriginIsolated && security.secureContext && r.isolationDelegated(frame)
 	}
 	if r.documentSecurity != nil {
 		security.permissionsPolicy = r.documentSecurity.permissionsPolicy
 	}
+	if allow, declared := hintPolicy(security.permissionsPolicy, r.origin)["cross-origin-isolated"]; declared && !hintAllows(allow, r.origin) {
+		security.crossOriginIsolated = false
+	}
 	return security
+}
+
+// The default permission is same-origin. An iframe's allow declaration can
+// delegate it to another origin, bounded by its parent's response policy.
+func (r *Realm) isolationDelegated(frame *Frame) bool {
+	parent := frame.parent.Realm
+	if parent == nil {
+		return false
+	}
+	policy := parent.securityState().permissionsPolicy
+	if allow, declared := hintPolicy(policy, parent.origin)["cross-origin-isolated"]; declared && !hintAllows(allow, r.origin) {
+		return false
+	}
+	if allow, declared := parent.frameClientHintsContainer(frame, r.origin)["cross-origin-isolated"]; declared {
+		return hintAllows(allow, r.origin)
+	}
+	return r.origin == parent.origin
 }
 
 func newRealm(p *Page, agent ExecutionAgent, d *dom.Document, u *url.URL) (*Realm, error) {
@@ -1545,6 +1566,14 @@ func (r *Realm) installBindings() error {
 		viewport := p.Environment().Window
 		width, height := r.layoutBox(int64(numarg(a, 0)), float64(viewport.ViewportWidth), float64(viewport.ViewportHeight), 0)
 		return r.val(map[string]any{"x": 0, "y": 0, "top": 0, "left": 0, "right": width, "bottom": height, "width": width, "height": height}), nil
+	})
+	host["documentReferrer"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(r.documentReferrer), nil })
+	host["documentDomain"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		u, _ := url.Parse(r.origin)
+		if u == nil {
+			return r.val(""), nil
+		}
+		return r.val(u.Hostname()), nil
 	})
 	host["location"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(r.documentURL().String()), nil })
 	host["locationPart"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {

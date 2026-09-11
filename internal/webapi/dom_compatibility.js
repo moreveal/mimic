@@ -399,7 +399,7 @@ const compatibilityElementState={};
     expose('CustomEvent',CustomEvent);
     Object.defineProperty(Event.prototype,'initEvent',{value:function(type,bubbles=false,cancelable=false){const s=eventSlots.get(this);if(!s)throw new TypeError('Illegal invocation');s.type=String(type);s.bubbles=!!bubbles;s.cancelable=!!cancelable},writable:true,configurable:true,enumerable:true});
     Object.defineProperty(Document.prototype,'createEvent',{value:function(interfaceName){switch(String(interfaceName).toLowerCase()){case'event':case'events':case'htmlevents':return new Event('');case'customevent':return new CustomEvent('');default:throw new DOMException('The provided event type is invalid.','NotSupportedError')}},writable:true,configurable:true,enumerable:true});
-    Object.defineProperty(Document.prototype,'domain',{get(){return location.hostname},configurable:true,enumerable:true});
+    Object.defineProperty(Document.prototype,'domain',{get(){return host.documentDomain()},configurable:true,enumerable:true});
     Object.defineProperty(Node.prototype,'getRootNode',{value:function(options={}){let node=this;while(node.parentNode)node=node.parentNode;if(options.composed&&node instanceof ShadowRoot)return node.host.getRootNode(options);return node},writable:true,configurable:true,enumerable:true});
     Object.defineProperty(Node.prototype,'cloneNode',{value:function(deep=false){
       let copy;

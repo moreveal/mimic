@@ -91,7 +91,7 @@ func newPage(c *Context) (*Page, error) {
 }
 func (p *Page) Compatibility() compatibility.Bundle { return p.ctx.browser.Compatibility() }
 func (p *Page) initBlank() error {
-	d, err := dom.Parse("<!doctype html><html><head></head><body></body></html>")
+	d, err := dom.Parse("<html><head></head><body></body></html>")
 	if err != nil {
 		return err
 	}
@@ -332,6 +332,7 @@ func (p *Page) navigateRequest(ctx context.Context, raw, loaderID string, reques
 	if len(replace) > 1 && replace[1] {
 		realm.navigationType = "reload"
 	}
+	realm.documentReferrer = res.Referrer
 	realm.referrerPolicy = res.Headers.Get("Referrer-Policy")
 	realm.lastModified, _ = http.ParseTime(res.Headers.Get("Last-Modified"))
 	realm.initializeClientHints(res.Headers.Get("Permissions-Policy"))

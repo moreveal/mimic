@@ -77,6 +77,9 @@ func hintAllows(list []string, origin string) bool {
 func (r *Realm) initializeClientHints(header string) {
 	security := r.securityState()
 	security.permissionsPolicy = header
+	if allow, declared := hintPolicy(header, r.origin)["cross-origin-isolated"]; declared && !hintAllows(allow, r.origin) {
+		security.crossOriginIsolated = false
+	}
 	r.documentSecurity = &security
 	origin := r.origin
 	state := &clientHintsDocument{top: r.url, origin: origin, policy: hintPolicy(header, origin), enabled: map[string]bool{}}
