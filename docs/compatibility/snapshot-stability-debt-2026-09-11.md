@@ -70,3 +70,13 @@ Until such evidence recurs, no unbounded absence-of-crash experiment is required
 The independent performance/concurrency work remains an
 [optimization backlog](../performance/report.md), without claims beyond its
 preserved measurements.
+
+
+## Final source-preservation recheck
+
+After `bd0408a` restored two original Intl fallback literals, a clean build at
+`1a6652c` passed the full browser suite and another three repetitions of both
+snapshot matrices: browser 126 pass events, V8 42 pass events, zero selected
+skips and exit code zero. The [final receipt](semantic-checkpoint-20260911/post-unicode-validation.json)
+records separate binary identities and logs. The stability-debt disposition and
+immediate reopen rule remain unchanged; no broader native cause is inferred.
