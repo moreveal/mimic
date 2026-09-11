@@ -7,8 +7,55 @@ import (
 	"net/http/httptest"
 	"net/url"
 	"strings"
+	"sync/atomic"
 	"testing"
+	"time"
 )
+
+func TestSnapshotPreservesCaseInsensitiveDataURL(t *testing.T) {
+	b := &snapshotBuilder{}
+	base, _ := url.Parse("https://example.test/")
+	data := "DATA:image/png;base64,iVBORw0KGgo="
+	if got := b.asset(data, base, false); got != data {
+		t.Fatalf("data URL rewritten: %q", got)
+	}
+}
+
+func TestSnapshotPrefetchesAssetsConcurrently(t *testing.T) {
+	var active atomic.Int32
+	var peak atomic.Int32
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		current := active.Add(1)
+		defer active.Add(-1)
+		for observed := peak.Load(); current > observed && !peak.CompareAndSwap(observed, current); observed = peak.Load() {
+		}
+		time.Sleep(100 * time.Millisecond)
+		w.Header().Set("Content-Type", "image/png")
+		w.Write([]byte{0, 1, 2, 3})
+	}))
+	defer ts.Close()
+
+	p := testPage(t)
+	defer p.Close()
+	base, _ := url.Parse(ts.URL + "/")
+	b := &snapshotBuilder{
+		page:       p,
+		ctx:        context.Background(),
+		prefetched: map[string]snapshotAssetLoad{},
+	}
+	specs := make([]snapshotAssetSpec, 8)
+	for index := range specs {
+		resource, _ := url.Parse(fmt.Sprintf("%s/asset-%d.png", ts.URL, index))
+		specs[index] = snapshotAssetSpec{key: resource.String(), url: resource, base: base}
+	}
+	b.loadAssetBatch(context.Background(), specs)
+	if peak.Load() < 2 {
+		t.Fatalf("asset prefetch was serial: peak concurrency %d", peak.Load())
+	}
+	if len(b.prefetched) != len(specs) {
+		t.Fatalf("prefetched %d assets, want %d", len(b.prefetched), len(specs))
+	}
+}
 
 func TestSnapshotPreservesSelfContainedCSSURLQuoting(t *testing.T) {
 	base, _ := url.Parse("https://example.test/styles/main.css")
