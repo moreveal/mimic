@@ -202,6 +202,10 @@ function finalizeDocumentGetterBindings() {
   // Frozen Document WebIDL marks only these three attributes LegacyLenientThis.
   // Their getter returns undefined for a receiver without the Document brand.
   const lenientThis=new Set(['onreadystatechange','onmouseenter','onmouseleave']);
+  const lenientSetter=new Set(['fullscreen','fullscreenElement','fullscreenEnabled']);
+  const stringSetters=new Set(['xmlVersion','domain','cookie','title','dir','designMode','fgColor','linkColor','vlinkColor','alinkColor','bgColor']);
+  const nullToEmpty=new Set(['fgColor','linkColor','vlinkColor','alinkColor','bgColor']);
+  const documentReceiver=value=>value===document||elementSlot(value)?.type==='document'||referenceGet(value)?.binding?.kind==='Document';
   const getters=new Map();
   for(const name of Reflect.ownKeys(Document.prototype)){
     const descriptor=Object.getOwnPropertyDescriptor(Document.prototype,name);
@@ -216,6 +220,19 @@ function finalizeDocumentGetterBindings() {
         throw new TypeError('Illegal invocation');
       }
       return functionSourceApply(original,this,[]);
+    };
+    // LegacyLenientSetter is an actual no-op setter, not an absent setter.
+    // All setters check the receiver before touching or converting the value.
+    const originalSetter=descriptor.set||(lenientSetter.has(name)?function(value){}:undefined);
+    if(originalSetter)descriptor.set=function(value){
+      if(!documentReceiver(this)){
+        if(lenientThis.has(name))return;
+        throw new TypeError('Illegal invocation');
+      }
+      // Perform WebIDL string coercion in the binding realm, including Symbol
+      // rejection; preserve nullable and LegacyNullToEmptyString inputs.
+      if(stringSetters.has(name))value=name==='xmlVersion'&&value==null?null:bindingString(value===null&&nullToEmpty.has(name)?'':value);
+      return functionSourceApply(originalSetter,this,[value]);
     };
     Object.defineProperty(Document.prototype,name,descriptor);
   }

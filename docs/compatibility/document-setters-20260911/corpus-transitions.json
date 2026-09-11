@@ -1,0 +1,114 @@
+{
+  "brand": {
+    "before": 578,
+    "after": 578,
+    "removed": [],
+    "added": [],
+    "changed": [],
+    "cases": [
+      {
+        "id": "brand-matrix",
+        "valid": true,
+        "incomplete": {}
+      }
+    ]
+  },
+  "relations": {
+    "before": 2,
+    "after": 2,
+    "removed": [],
+    "added": [],
+    "changed": [],
+    "cases": [
+      {
+        "id": "state-relations",
+        "valid": true,
+        "incomplete": {}
+      }
+    ]
+  },
+  "corpus": {
+    "before": 40,
+    "after": 40,
+    "removed": [],
+    "added": [],
+    "changed": [],
+    "cases": [
+      {
+        "id": "value-normalization",
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "network",
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "temporal",
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "frame-task-interleaving",
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "frame-microtask-checkpoint",
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "resource-realm-isolation",
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "resource-json",
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "worker-microtasks",
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "surface",
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "samesite",
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "samesite-navigation",
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "partition",
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "svg-values",
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "observations",
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "webgpu-lifecycle",
+        "valid": true,
+        "incomplete": {}
+      }
+    ]
+  }
+}
