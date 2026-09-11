@@ -5,10 +5,147 @@ import asyncio
 import base64
 import contextlib
 import json
+import os
+import sys
 import time
+from collections import Counter
 from pathlib import Path, PurePosixPath
+from urllib.parse import urlsplit
 
 from pyppeteer import connect
+
+
+SPINNER = "⠋⠙⠹⠸⠼⠴⠦⠧⠇⠏"
+ASCII_SPINNER = "|/-\\"
+
+
+def format_duration(seconds: float) -> str:
+    if seconds < 0.001:
+        return f"{seconds * 1_000_000:.0f} us"
+    if seconds < 1:
+        return f"{seconds * 1000:.0f} ms"
+    if seconds < 60:
+        return f"{seconds:.1f} s"
+    minutes, remainder = divmod(seconds, 60)
+    return f"{int(minutes)}m {remainder:04.1f}s"
+
+
+def format_bytes(size: float) -> str:
+    value = float(size)
+    for unit in ("B", "KiB", "MiB", "GiB"):
+        if abs(value) < 1024 or unit == "GiB":
+            return f"{value:.0f} {unit}" if unit == "B" else f"{value:.1f} {unit}"
+        value /= 1024
+    return f"{value:.1f} GiB"
+
+
+def short_url(raw: object, limit: int = 54) -> str:
+    raw_value = str(raw or "").strip()
+    if raw_value in {",", "<nil>"}:
+        return ""
+    try:
+        parsed = urlsplit(raw_value)
+        value = parsed.netloc + parsed.path
+    except (TypeError, ValueError):
+        value = raw_value
+    if len(value) <= limit:
+        return value
+    return value[: limit - 3] + "..."
+
+
+class Reporter:
+    """TTY progress renderer with readable log output when stdout is redirected."""
+
+    def __init__(self, *, max_wait: float | None, log_interval: float, live: bool) -> None:
+        self.started = time.monotonic()
+        self.max_wait = max_wait
+        self.log_interval = max(log_interval, 0.1)
+        self.interactive = live and sys.stdout.isatty()
+        self.color = self.interactive and "NO_COLOR" not in os.environ
+        encoding = sys.stdout.encoding or "ascii"
+        try:
+            "✓⠋…█░".encode(encoding)
+            self.unicode = True
+        except UnicodeEncodeError:
+            self.unicode = False
+        self.last_log = self.started
+        self.live_visible = False
+        self.frame = 0
+        self.timings: dict[str, float] = {}
+
+    def paint(self, code: str, value: str) -> str:
+        return f"\033[{code}m{value}\033[0m" if self.color else value
+
+    def clear_live(self) -> None:
+        if self.live_visible:
+            print("\r\033[2K", end="", flush=True)
+            self.live_visible = False
+
+    def line(self, message: str) -> None:
+        self.clear_live()
+        elapsed = time.monotonic() - self.started
+        print(f"[{format_duration(elapsed):>8}] {message}", flush=True)
+
+    def blank(self) -> None:
+        self.clear_live()
+        print(flush=True)
+
+    def done(self, name: str, started: float, detail: str = "") -> None:
+        duration = time.monotonic() - started
+        self.timings[name] = duration
+        suffix = f"  {self.paint('2', detail)}" if detail else ""
+        mark = "✓" if self.unicode else "OK"
+        self.line(f"{self.paint('32', mark)} {name:<16} {format_duration(duration):>8}{suffix}")
+
+    def warning(self, message: str) -> None:
+        self.line(f"{self.paint('33', '!')} {message}")
+
+    def progress_bar(self, elapsed: float, width: int = 18) -> str:
+        if self.max_wait:
+            ratio = min(max(elapsed / self.max_wait, 0), 1)
+            filled = min(width, int(ratio * width))
+            full, empty = ("█", "░") if self.unicode else ("#", "-")
+            return "[" + full * filled + empty * (width - filled) + "]"
+        position = int(elapsed * 5) % (width * 2 - 2)
+        if position >= width:
+            position = width * 2 - 2 - position
+        full, empty = ("█", "░") if self.unicode else ("#", "-")
+        cells = [empty] * width
+        cells[position] = full
+        return "[" + "".join(cells) + "]"
+
+    def navigation(self, progress, ready_state: str, *, force: bool = False) -> None:
+        now = time.monotonic()
+        elapsed = now - progress.started
+        quiet = now - progress.last_activity
+        status = f"HTTP {progress.status}" if progress.status is not None else "HTTP ..."
+        detail = (
+            f"{status} | {ready_state:<11} | "
+            f"{progress.events['requests']} req, {len(progress.pending)} active | "
+            f"{format_bytes(progress.transferred)} | quiet {format_duration(quiet)}"
+        )
+        if progress.last_event:
+            detail += f" | {progress.last_event}"
+        if self.interactive:
+            frames = SPINNER if self.unicode else ASCII_SPINNER
+            spinner = frames[self.frame % len(frames)]
+            self.frame += 1
+            cap = f"/{format_duration(self.max_wait)}" if self.max_wait else ""
+            text = f"{spinner} Loading {self.progress_bar(elapsed)} {format_duration(elapsed)}{cap}  {detail}"
+            try:
+                width = max(40, os.get_terminal_size().columns - 1)
+            except OSError:
+                width = 120
+            print("\r\033[2K" + text[:width], end="", flush=True)
+            self.live_visible = True
+        elif now - self.last_log >= self.log_interval or (
+            force and now - self.last_log >= 0.05
+        ):
+            self.line(f"... Loading {format_duration(elapsed)}  {detail}")
+            self.last_log = now
+
+    def finish(self) -> None:
+        self.clear_live()
 
 
 class NavigationProgress:
@@ -22,6 +159,11 @@ class NavigationProgress:
         self.dom_content_loaded = False
         self.load_fired = False
         self.status = None
+        self.transferred = 0.0
+        self.last_event = ""
+        self.resource_types: Counter[str] = Counter()
+        self.responded: set[str] = set()
+        self.completed: set[str] = set()
         self.events = {"requests": 0, "responses": 0, "finished": 0, "failed": 0}
 
     def touch(self) -> None:
@@ -31,54 +173,72 @@ class NavigationProgress:
         request_id = event.get("requestId")
         if request_id:
             self.pending.add(request_id)
+        resource_type = str(event.get("type") or "Other")
+        self.resource_types[resource_type] += 1
         self.events["requests"] += 1
-        if event.get("type") == "Document":
+        if resource_type == "Document":
             self.document_seen = True
+        request = event.get("request", {})
+        method, raw_url = request.get("method", "GET"), request.get("url", "")
+        self.last_event = f"{method} {short_url(raw_url)}" if raw_url else resource_type
         self.touch()
 
     def response(self, event: dict) -> None:
+        request_id = event.get("requestId")
+        if request_id and request_id in self.responded:
+            return
+        if request_id:
+            self.responded.add(request_id)
         self.events["responses"] += 1
+        response = event.get("response", {})
+        status = response.get("status")
         if event.get("type") == "Document":
-            self.status = event.get("response", {}).get("status")
+            self.status = status
+        display_url = short_url(response.get("url"))
+        self.last_event = (
+            f"{status or '...'} {display_url}"
+            if display_url
+            else f"HTTP {status or '...'}"
+        )
         self.touch()
 
     def finished(self, event: dict, failed: bool = False) -> None:
-        self.pending.discard(event.get("requestId"))
+        request_id = event.get("requestId")
+        if request_id and request_id in self.completed:
+            return
+        if request_id:
+            self.completed.add(request_id)
+        self.pending.discard(request_id)
         self.events["failed" if failed else "finished"] += 1
+        self.transferred += max(float(event.get("encodedDataLength") or 0), 0)
+        if failed:
+            self.last_event = "request failed"
         self.touch()
 
 
-async def wait_for_stable_page(page, progress: NavigationProgress, args):
+async def wait_for_stable_page(progress: NavigationProgress, args, reporter: Reporter):
     """Wait for quiescence; return diagnostics even when progress stalls."""
     quiet_seconds = max(args.settle_ms / 1000, 0.5)
     stall_seconds = max(args.timeout / 1000, quiet_seconds)
     max_seconds = args.max_wait / 1000 if args.max_wait else None
-    sample = {"readyState": "loading", "nodes": None, "htmlBytes": None}
-    last_report = progress.started
+    ready_state = "loading"
     reason = "stable"
 
     while True:
-        await asyncio.sleep(0.5)
+        await asyncio.sleep(0.2)
         now = time.monotonic()
-        sample["readyState"] = (
+        ready_state = (
             "complete"
             if progress.load_fired
             else "interactive"
             if progress.dom_content_loaded
             else "loading"
         )
+        reporter.navigation(progress, ready_state)
 
         elapsed = now - progress.started
         quiet_for = now - progress.last_activity
-        if now - last_report >= 10:
-            print(
-                f"Waiting: state={sample['readyState']}; pending={len(progress.pending)}; "
-                f"requests={progress.events['requests']}; quiet={round(quiet_for * 1000)} ms; "
-                f"elapsed={round(elapsed * 1000)} ms",
-                flush=True,
-            )
-            last_report = now
-        navigation_observed = progress.document_seen or sample["readyState"] != "loading"
+        navigation_observed = progress.document_seen or ready_state != "loading"
         if navigation_observed and not progress.pending and quiet_for >= quiet_seconds:
             break
         if navigation_observed and quiet_for >= stall_seconds:
@@ -88,6 +248,8 @@ async def wait_for_stable_page(page, progress: NavigationProgress, args):
             reason = "max-wait"
             break
 
+    reporter.navigation(progress, ready_state, force=True)
+    reporter.finish()
     return {
         "reason": reason,
         "partial": reason != "stable" or not progress.load_fired,
@@ -96,9 +258,35 @@ async def wait_for_stable_page(page, progress: NavigationProgress, args):
         "pendingRequests": len(progress.pending),
         "domContentLoaded": progress.dom_content_loaded,
         "loadFired": progress.load_fired,
-        **sample,
+        "readyState": ready_state,
+        "nodes": None,
+        "htmlBytes": None,
+        "transferredBytes": round(progress.transferred),
+        "resourceTypes": dict(progress.resource_types.most_common()),
         **progress.events,
     }
+
+
+async def await_with_progress(awaitable, reporter: Reporter, label: str):
+    """Keep a slow CDP operation visibly alive without imposing a new timeout."""
+    task = asyncio.ensure_future(awaitable)
+    started = time.monotonic()
+    while not task.done():
+        try:
+            await asyncio.wait_for(asyncio.shield(task), timeout=0.2)
+        except asyncio.TimeoutError:
+            elapsed = time.monotonic() - started
+            if reporter.interactive:
+                frames = SPINNER if reporter.unicode else ASCII_SPINNER
+                spinner = frames[reporter.frame % len(frames)]
+                reporter.frame += 1
+                print(f"\r\033[2K{spinner} {label}... {format_duration(elapsed)}", end="", flush=True)
+                reporter.live_visible = True
+            elif time.monotonic() - reporter.last_log >= reporter.log_interval:
+                reporter.line(f"... {label} still running ({format_duration(elapsed)})")
+                reporter.last_log = time.monotonic()
+    reporter.finish()
+    return await task
 
 
 def decode_files(snapshot: dict) -> dict[PurePosixPath, bytes]:
@@ -106,49 +294,69 @@ def decode_files(snapshot: dict) -> dict[PurePosixPath, bytes]:
     files = {}
     for name, encoded in snapshot["files"].items():
         relative = PurePosixPath(name)
-        if (
-            relative.is_absolute()
-            or ".." in relative.parts
-            or "\\" in name
-            or ":" in name
-        ):
+        if relative.is_absolute() or ".." in relative.parts or "\\" in name or ":" in name:
             raise ValueError(f"Invalid snapshot path: {name!r}")
         files[relative] = base64.b64decode(encoded, validate=True)
     return files
 
 
 async def save_snapshot(args: argparse.Namespace) -> None:
-    print(f"Connecting to {args.endpoint}", flush=True)
-    browser = await connect(browserURL=args.endpoint, defaultViewport=None)
-    page = await browser.newPage()
-    print(f"Navigating to {args.url}", flush=True)
-    progress = NavigationProgress()
+    total_started = time.monotonic()
+    output = Path(args.output).resolve()
+    if output.exists():
+        raise FileExistsError(f"Output directory already exists: {output}")
 
-    page._client.on("Network.requestWillBeSent", progress.request)
-    page._client.on("Network.responseReceived", progress.response)
-    page._client.on("Network.loadingFinished", progress.finished)
-    page._client.on(
-        "Network.loadingFailed", lambda event: progress.finished(event, failed=True)
+    max_wait = args.max_wait / 1000 if args.max_wait else None
+    reporter = Reporter(
+        max_wait=max_wait,
+        log_interval=args.log_interval,
+        live=not args.no_progress,
+    )
+    reporter.line(f"Mimic snapshot  {short_url(args.url, 90)}")
+    reporter.line(
+        f"Endpoint {args.endpoint} | quiet {format_duration(max(args.settle_ms / 1000, 0.5))} "
+        f"| stall {format_duration(max(args.timeout / 1000, 0.5))}"
     )
 
-    def dom_content_loaded(_event: dict) -> None:
-        progress.dom_content_loaded = True
-        progress.touch()
-
-    def load_fired(_event: dict) -> None:
-        progress.load_fired = True
-        progress.touch()
-
-    page._client.on("Page.domContentEventFired", dom_content_loaded)
-    page._client.on("Page.loadEventFired", load_fired)
-
+    browser = None
+    page = None
     try:
-        navigation = asyncio.create_task(page.goto(
-            args.url,
-            {"waitUntil": "load", "timeout": 0},
-        ))
-        print("Navigation started; monitoring network progress", flush=True)
-        diagnostics = await wait_for_stable_page(page, progress, args)
+        stage = time.monotonic()
+        browser = await connect(browserURL=args.endpoint, defaultViewport=None)
+        reporter.done("Connect", stage, args.endpoint)
+
+        stage = time.monotonic()
+        page = await browser.newPage()
+        reporter.done("New page", stage)
+        progress = NavigationProgress()
+
+        page._client.on("Network.requestWillBeSent", progress.request)
+        page._client.on("Network.responseReceived", progress.response)
+        page._client.on("Network.loadingFinished", progress.finished)
+        page._client.on("Network.loadingFailed", lambda event: progress.finished(event, failed=True))
+
+        def dom_content_loaded(_event: dict) -> None:
+            progress.dom_content_loaded = True
+            progress.last_event = "DOMContentLoaded"
+            progress.touch()
+
+        def load_fired(_event: dict) -> None:
+            progress.load_fired = True
+            progress.last_event = "load"
+            progress.touch()
+
+        page._client.on("Page.domContentEventFired", dom_content_loaded)
+        page._client.on("Page.loadEventFired", load_fired)
+
+        navigation = asyncio.create_task(page.goto(args.url, {"waitUntil": "load", "timeout": 0}))
+        stage = time.monotonic()
+        diagnostics = await wait_for_stable_page(progress, args, reporter)
+        reporter.done(
+            "Navigation",
+            stage,
+            f"{diagnostics['reason']}, HTTP {progress.status or '...'}, {progress.events['requests']} requests",
+        )
+
         navigation_error = None
         response = None
         if navigation.done():
@@ -157,50 +365,74 @@ async def save_snapshot(args: argparse.Namespace) -> None:
             except Exception as error:
                 navigation_error = str(error)
         else:
+            stage = time.monotonic()
             await page._client.send("Page.stopLoading")
             navigation.cancel()
             with contextlib.suppress(asyncio.CancelledError):
                 await navigation
+            reporter.done("Stop loading", stage, "committed DOM preserved")
 
-        snapshot = await page._client.send("Mimic.captureSnapshot")
+        stage = time.monotonic()
+        snapshot = await await_with_progress(
+            page._client.send("Mimic.captureSnapshot"), reporter, "Capturing DOM and assets"
+        )
+        reporter.done("Capture", stage, f"{len(snapshot['files'])} files")
+
+        stage = time.monotonic()
         files = decode_files(snapshot)
         diagnostics["htmlBytes"] = len(files.get(PurePosixPath("index.html"), b""))
+        decoded_bytes = sum(map(len, files.values()))
+        reporter.done("Decode", stage, format_bytes(decoded_bytes))
 
-        output = Path(args.output).resolve()
+        stage = time.monotonic()
         output.mkdir(parents=True, exist_ok=False)
-
         for relative, data in files.items():
             destination = output.joinpath(*relative.parts)
             destination.parent.mkdir(parents=True, exist_ok=True)
             destination.write_bytes(data)
 
+        status = progress.status
+        if status is None and response:
+            status = response.status
+        reporter.done("Write", stage, str(output))
+        reporter.timings["Total"] = time.monotonic() - total_started
         metadata = {
             "url": snapshot["url"],
-            "status": response.status if response else progress.status,
+            "status": status,
             "warnings": snapshot["warnings"],
             "navigation": diagnostics,
+            "timingsMs": {name: round(duration * 1000) for name, duration in reporter.timings.items()},
         }
         if navigation_error:
             metadata["navigation"]["error"] = navigation_error
         (output / "snapshot.json").write_text(
-            json.dumps(metadata, ensure_ascii=False, indent=2),
-            encoding="utf-8",
+            json.dumps(metadata, ensure_ascii=False, indent=2), encoding="utf-8"
         )
 
-        print(output / "index.html")
-        print(
-            f"Navigation: {diagnostics['reason']}; "
-            f"readyState={diagnostics['readyState']}; "
-            f"pending={diagnostics['pendingRequests']}; "
-            f"elapsed={diagnostics['elapsedMs']} ms"
+        reporter.blank()
+        reporter.line(f"{reporter.paint('1;32', 'Snapshot saved')}  {output / 'index.html'}")
+        reporter.line(
+            f"HTTP {status or '...'} | {diagnostics['reason']} | HTML {format_bytes(diagnostics['htmlBytes'])} "
+            f"| assets {max(len(files) - 1, 0)} | total {format_bytes(decoded_bytes)}"
+        )
+        reporter.line(
+            "Timings  "
+            + " | ".join(
+                f"{name} {format_duration(duration)}" for name, duration in reporter.timings.items()
+            )
         )
         if diagnostics["partial"]:
-            print("Warning: Navigation did not fully settle; saved the current DOM")
+            reporter.warning("Navigation did not fully settle; saved the committed DOM")
         for warning in snapshot["warnings"]:
-            print(f"Warning: {warning}")
+            reporter.warning(warning)
     finally:
-        await page.close()
-        await browser.disconnect()
+        reporter.finish()
+        if page is not None:
+            with contextlib.suppress(Exception):
+                await page.close()
+        if browser is not None:
+            with contextlib.suppress(Exception):
+                await browser.disconnect()
 
 
 def parse_args() -> argparse.Namespace:
@@ -230,8 +462,31 @@ def parse_args() -> argparse.Namespace:
         default=0,
         help="Required quiet period before capture (default: %(default)s)",
     )
+    parser.add_argument(
+        "--log-interval",
+        type=float,
+        default=10,
+        help="Seconds between progress logs outside an interactive terminal (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--no-progress",
+        action="store_true",
+        help="Disable the animated progress line",
+    )
     return parser.parse_args()
 
 
+def main() -> int:
+    try:
+        asyncio.run(save_snapshot(parse_args()))
+        return 0
+    except KeyboardInterrupt:
+        print("\nCancelled by user", file=sys.stderr)
+        return 130
+    except Exception as error:
+        print(f"\nSnapshot failed: {error}", file=sys.stderr)
+        return 1
+
+
 if __name__ == "__main__":
-    asyncio.run(save_snapshot(parse_args()))
+    raise SystemExit(main())
