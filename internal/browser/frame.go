@@ -149,14 +149,14 @@ func (r *Realm) scheduleChildFrameNavigation(frame *Frame, elementID int64) {
 
 // The embedding realm owns the child navigation lifecycle, irrespective of
 // whether navigation was requested by an iframe attribute or child Location.
-func (r *Realm) scheduleChildNavigationTo(frame *Frame, target *url.URL, replace bool, initiator *Realm, navigationType string) {
-	r.scheduleChildNavigationContent(frame, target, replace, initiator, nil, navigationType)
+func (r *Realm) scheduleChildNavigationTo(frame *Frame, target *url.URL, replace bool, initiator *Realm, navigationType string, traversal ...int) {
+	r.scheduleChildNavigationContent(frame, target, replace, initiator, nil, navigationType, traversal...)
 }
 
 // Inline iframe content uses the same navigation sequence, parser and retirement
 // path as a fetched document. Capture the attribute now: later mutations must
 // cancel this navigation rather than alter the document already being committed.
-func (r *Realm) scheduleChildNavigationContent(frame *Frame, target *url.URL, replace bool, initiator *Realm, content *string, navigationType string) {
+func (r *Realm) scheduleChildNavigationContent(frame *Frame, target *url.URL, replace bool, initiator *Realm, content *string, navigationType string, traversal ...int) {
 	request := network.Request{URL: target, SourceURL: initiator.documentURL(), Referrer: initiator.documentURL(), UserActivation: initiator.navigationActivated()}
 	request.ReferrerPolicy = initiator.referrerPolicy
 	r.applyChildNavigationClientHints(&request, frame, target)
@@ -186,7 +186,11 @@ func (r *Realm) scheduleChildNavigationContent(frame *Frame, target *url.URL, re
 		frame.loadBlockers[sequence] = blockerReason
 	}
 	if blank && frame.loaderID == "" {
-		navigation := &childNavigation{embeddingRealm: r, frame: frame, target: target, sequence: sequence, loaderID: loaderID, blockerReason: blockerReason, blocksLoad: blocksLoad, realm: frame.Realm}
+		historyTarget := 0
+		if len(traversal) > 0 {
+			historyTarget = traversal[0]
+		}
+		navigation := &childNavigation{historyTarget: historyTarget, embeddingRealm: r, frame: frame, target: target, sequence: sequence, loaderID: loaderID, blockerReason: blockerReason, blocksLoad: blocksLoad, realm: frame.Realm}
 		frame.loaderID = loaderID
 		frame.navigationPending = false
 		p := r.agent.Page()
@@ -207,14 +211,18 @@ func (r *Realm) scheduleChildNavigationContent(frame *Frame, target *url.URL, re
 	}
 	r.scheduler.Post(scheduler.Navigation, 0, func(ctx context.Context) error {
 		if blank || content != nil {
-			navigation := &childNavigation{embeddingRealm: r, frame: frame, target: target, sequence: sequence, loaderID: loaderID, blockerReason: blockerReason, blocksLoad: blocksLoad, replace: replace, navigationType: navigationType}
+			historyTarget := 0
+			if len(traversal) > 0 {
+				historyTarget = traversal[0]
+			}
+			navigation := &childNavigation{historyTarget: historyTarget, embeddingRealm: r, frame: frame, target: target, sequence: sequence, loaderID: loaderID, blockerReason: blockerReason, blocksLoad: blocksLoad, replace: replace, navigationType: navigationType}
 			body := "<html><head></head><body></body></html>"
 			if content != nil {
 				body = *content
 			}
 			return r.commitChildFrameNavigation(ctx, navigation, network.Response{URL: target, Body: []byte(body), Referrer: request.ReferrerValue()}, nil)
 		}
-		r.startChildFrameNavigation(frame, target, sequence, loaderID, blockerReason, blocksLoad, replace, request, navigationType)
+		r.startChildFrameNavigation(frame, target, sequence, loaderID, blockerReason, blocksLoad, replace, request, navigationType, traversal...)
 		return nil
 	})
 }
@@ -237,6 +245,7 @@ func (r *Realm) childFrameAttributeChanged(id int64, name string) {
 }
 
 type childNavigation struct {
+	historyTarget     int
 	navigationType    string
 	performanceOrigin time.Time
 	embeddingRealm    *Realm
@@ -310,10 +319,14 @@ func (r *Realm) prepareChildFrameRemoval(elementID int64) bool {
 	return true
 }
 
-func (r *Realm) startChildFrameNavigation(frame *Frame, target *url.URL, sequence uint64, loaderID, blockerReason string, blocksLoad, replace bool, request network.Request, navigationType string) {
+func (r *Realm) startChildFrameNavigation(frame *Frame, target *url.URL, sequence uint64, loaderID, blockerReason string, blocksLoad, replace bool, request network.Request, navigationType string, traversal ...int) {
 	p := r.agent.Page()
 	performanceOrigin := p.ClockNow()
-	navigation := &childNavigation{embeddingRealm: r, frame: frame, target: target, sequence: sequence, loaderID: loaderID, blockerReason: blockerReason, blocksLoad: blocksLoad, replace: replace, navigationType: navigationType}
+	historyTarget := 0
+	if len(traversal) > 0 {
+		historyTarget = traversal[0]
+	}
+	navigation := &childNavigation{historyTarget: historyTarget, embeddingRealm: r, frame: frame, target: target, sequence: sequence, loaderID: loaderID, blockerReason: blockerReason, blocksLoad: blocksLoad, replace: replace, navigationType: navigationType}
 	navigation.performanceOrigin = performanceOrigin
 	if !r.childNavigationCurrent(navigation) {
 		r.finishChildNavigation(navigation)
@@ -386,7 +399,34 @@ func (r *Realm) commitChildFrameNavigation(ctx context.Context, navigation *chil
 	navigation.frame.Realm = realm
 	navigation.frame.loaderID = navigation.loaderID
 	p.mu.Unlock()
-	p.commitHistory(navigation.frame, documentURL, navigation.replace, nil)
+	p.mu.Lock()
+	if p.historyIndex >= 0 {
+		realm.navigationActivationFrom = p.history[p.historyIndex].frames[navigation.frame.ID]
+	}
+	p.mu.Unlock()
+	realm.navigationActivationType = "push"
+	if navigation.replace {
+		realm.navigationActivationType = "replace"
+	}
+	if navigation.navigationType == "reload" {
+		realm.navigationActivationType = "reload"
+	}
+	if navigation.historyTarget > 0 {
+		realm.navigationActivationType = "traverse"
+	}
+	p.commitHistory(navigation.frame, documentURL, navigation.replace, nil, navigation.historyTarget)
+	if navigation.navigationType == "reload" && navigation.historyTarget == 0 && realm.navigationActivationFrom != nil {
+		p.mu.Lock()
+		previous := realm.navigationActivationFrom
+		previous.ensureNavigationIdentity()
+		next := p.history[p.historyIndex].frames[navigation.frame.ID]
+		next.navigationID = previous.navigationID
+		next.navigationKey = previous.navigationKey
+		next.navigationState = previous.navigationState
+		next.storageData = previous.storageData
+		p.mu.Unlock()
+	}
+
 	p.retireRealm(old)
 	navigation.document = document
 	navigation.realm = realm

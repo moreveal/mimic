@@ -1,0 +1,99 @@
+{
+  "intercept": {
+    "path": "/intercept",
+    "state": {
+      "b": 2
+    },
+    "transition": null
+  },
+  "back": [
+    true,
+    true,
+    "#one",
+    {
+      "a": 1
+    }
+  ],
+  "forward": "/intercept",
+  "cancel": [
+    "AbortError",
+    "AbortError"
+  ],
+  "undefinedState": "TypeError",
+  "logs": [
+    [
+      "navigate",
+      "push",
+      true,
+      true
+    ],
+    [
+      "currententrychange",
+      "push"
+    ],
+    [
+      "navigatesuccess",
+      null
+    ],
+    [
+      "navigate",
+      "push",
+      false,
+      false
+    ],
+    [
+      "currententrychange",
+      "push"
+    ],
+    [
+      "handler",
+      "/intercept",
+      true
+    ],
+    [
+      "handler-end"
+    ],
+    [
+      "navigatesuccess",
+      null
+    ],
+    [
+      "navigate",
+      "traverse",
+      true,
+      false
+    ],
+    [
+      "currententrychange",
+      "traverse"
+    ],
+    [
+      "navigatesuccess",
+      null
+    ],
+    [
+      "navigate",
+      "traverse",
+      true,
+      false
+    ],
+    [
+      "currententrychange",
+      "traverse"
+    ],
+    [
+      "navigatesuccess",
+      null
+    ],
+    [
+      "navigate",
+      "push",
+      true,
+      true
+    ],
+    [
+      "navigateerror",
+      null
+    ]
+  ]
+}

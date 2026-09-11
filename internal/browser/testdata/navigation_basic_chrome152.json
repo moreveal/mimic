@@ -1,0 +1,184 @@
+{
+  "tag": "[object Navigation]",
+  "initial": {
+    "entry": true,
+    "entries": 1,
+    "back": false,
+    "forward": false,
+    "transition": null,
+    "activation": true
+  },
+  "push": {
+    "same": false,
+    "keySame": false,
+    "entry": {
+      "url": "/plain#a",
+      "index": 1,
+      "sameDocument": true,
+      "key": true,
+      "id": true
+    },
+    "old": {
+      "url": "/plain",
+      "index": 0,
+      "sameDocument": true,
+      "key": true,
+      "id": true
+    },
+    "history": {
+      "h": 1
+    }
+  },
+  "replace": {
+    "same": false,
+    "keySame": true,
+    "idSame": false,
+    "old": {
+      "url": "/plain#a",
+      "index": -1,
+      "sameDocument": true,
+      "key": true,
+      "id": true
+    },
+    "entry": {
+      "url": "/plain#b",
+      "index": 1,
+      "sameDocument": true,
+      "key": true,
+      "id": true
+    }
+  },
+  "update": {
+    "state": {
+      "n": 3
+    },
+    "history": {
+      "h": 2
+    }
+  },
+  "result": {
+    "keys": [
+      "committed",
+      "finished"
+    ],
+    "committed": true,
+    "finished": true
+  },
+  "after": {
+    "url": "/plain#c",
+    "index": 2,
+    "sameDocument": true,
+    "state": {
+      "n": 4
+    },
+    "key": true,
+    "id": true
+  },
+  "logs": [
+    {
+      "type": "navigate",
+      "navigationType": "push",
+      "canIntercept": true,
+      "cancelable": true,
+      "hashChange": false,
+      "userInitiated": false,
+      "downloadRequest": null,
+      "formData": null,
+      "index": -1,
+      "key": false,
+      "id": false,
+      "sameDocument": true
+    },
+    {
+      "type": "currententrychange",
+      "navigationType": "push",
+      "from": {
+        "url": "/plain",
+        "index": 0,
+        "sameDocument": true,
+        "key": true,
+        "id": true
+      }
+    },
+    {
+      "type": "navigateerror"
+    },
+    {
+      "type": "navigate",
+      "navigationType": "replace",
+      "canIntercept": true,
+      "cancelable": true,
+      "hashChange": false,
+      "userInitiated": false,
+      "downloadRequest": null,
+      "formData": null,
+      "index": -1,
+      "key": false,
+      "id": false,
+      "sameDocument": true
+    },
+    {
+      "type": "currententrychange",
+      "navigationType": "replace",
+      "from": {
+        "url": "/plain#a",
+        "index": -1,
+        "sameDocument": true,
+        "key": true,
+        "id": true
+      }
+    },
+    {
+      "type": "currententrychange",
+      "navigationType": null,
+      "from": {
+        "url": "/plain#b",
+        "index": 1,
+        "sameDocument": true,
+        "state": {
+          "n": 3
+        },
+        "key": true,
+        "id": true
+      }
+    },
+    {
+      "type": "navigateerror"
+    },
+    {
+      "type": "navigate",
+      "navigationType": "push",
+      "canIntercept": true,
+      "cancelable": true,
+      "hashChange": true,
+      "userInitiated": false,
+      "downloadRequest": null,
+      "formData": null,
+      "info": "test",
+      "state": {
+        "n": 4
+      },
+      "index": -1,
+      "key": false,
+      "id": false,
+      "sameDocument": true
+    },
+    {
+      "type": "currententrychange",
+      "navigationType": "push",
+      "from": {
+        "url": "/plain#b",
+        "index": 1,
+        "sameDocument": true,
+        "state": {
+          "n": 3
+        },
+        "key": true,
+        "id": true
+      }
+    },
+    {
+      "type": "navigatesuccess"
+    }
+  ]
+}
