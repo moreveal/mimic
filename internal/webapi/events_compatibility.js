@@ -34,6 +34,23 @@
     Object.defineProperty(get,'name',{value:'get '+name,configurable:true});Object.defineProperty(set,'name',{value:'set '+name,configurable:true});accessor(prototype,name,get,set);
   }
   }
+  // Window's handler attributes are own properties in the frozen exposure.
+  // Use the same listener records as Document/HTMLElement, so replacement,
+  // primitive conversion and dispatch order do not depend on publication stubs.
+  for(const name of Object.getOwnPropertyNames(window).filter(name=>/^on/.test(name))){
+    const descriptor=Object.getOwnPropertyDescriptor(window,name);
+    if(!descriptor?.get||!descriptor.set||!descriptor.configurable)continue;
+    const type=name.slice(2),target=receiver=>{
+      if(receiver==null||receiver===window)return window;
+      const reference=referenceGet(receiver);
+      if(reference?.type==='window'){bridgeAccess(reference.frame);return receiver}
+      throw new TypeError('Illegal invocation');
+    };
+    const get=function(){const owner=target(this);return owner===window?eventHandlerRecord(window,type).value:owner[name]};
+    const set=function(value){const owner=target(this);if(owner===window)setEventHandlerValue(window,type,value);else owner[name]=value};
+    Object.defineProperty(get,'name',{value:'get '+name,configurable:true});Object.defineProperty(set,'name',{value:'set '+name,configurable:true});
+    accessor(window,name,get,set);
+  }
   for(const [name,key,fallback] of [['target','target',null],['srcElement','target',null],['currentTarget','currentTarget',null],['eventPhase','phase',0],['composed','composed',false]])accessor(Event.prototype,name,function(){return stateOf(this)[key]??fallback});
   accessor(Event.prototype,'cancelBubble',function(){return !!stateOf(this).stopped},function(value){if(value)stateOf(this).stopped=true});
   accessor(Event.prototype,'returnValue',function(){return !stateOf(this).defaultPrevented},function(value){if(!value)this.preventDefault()});
