@@ -289,6 +289,9 @@ func (p *Page) navigate(ctx context.Context, raw, loaderID string, replace ...bo
 	return p.navigateRequest(ctx, raw, loaderID, network.Request{UserActivation: true}, replace...)
 }
 func (p *Page) navigateRequest(ctx context.Context, raw, loaderID string, request network.Request, replace ...bool) error {
+	return p.navigateRequestWithHistory(ctx, raw, loaderID, request, 0, replace...)
+}
+func (p *Page) navigateRequestWithHistory(ctx context.Context, raw, loaderID string, request network.Request, historyTarget int, replace ...bool) error {
 	u, err := url.Parse(raw)
 	if err != nil {
 		return err
@@ -372,8 +375,50 @@ func (p *Page) navigateRequest(ctx context.Context, raw, loaderID string, reques
 	p.removeDescendantFramesLocked(p.Top)
 	p.Top.Realm = realm
 	p.current = u
+	if p.historyIndex >= 0 {
+		realm.navigationActivationFrom = p.history[p.historyIndex].frames[p.Top.ID]
+	}
+	realm.navigationActivationType = "push"
+	if len(replace) > 0 && replace[0] {
+		realm.navigationActivationType = "replace"
+	}
+	if len(replace) > 1 && replace[1] {
+		realm.navigationActivationType = "reload"
+	}
+	if historyTarget > 0 {
+		realm.navigationActivationType = "traverse"
+	}
 	entry := &sessionHistoryEntry{URL: u, frames: map[string]*historyFrameState{p.Top.ID: {url: u, realmID: realm.ID}}}
+	if len(replace) > 1 && replace[1] && p.historyIndex >= 0 {
+		previous := p.history[p.historyIndex].frames[p.Top.ID]
+		entry.frames[p.Top.ID].navigationState = previous.navigationState
+		entry.frames[p.Top.ID].storageData = previous.storageData
+		oldRealmID := previous.realmID
+		for _, oldEntry := range p.history {
+			if oldState := oldEntry.frames[p.Top.ID]; oldState != nil && oldState.realmID == oldRealmID {
+				oldState.realmID = realm.ID
+				oldState.state = nil
+				oldState.storageState = nil
+			}
+		}
+	}
+	entry.frames[p.Top.ID].ensureNavigationIdentity()
 	if len(replace) > 0 && replace[0] && p.historyIndex >= 0 {
+		previous := p.history[p.historyIndex].frames[p.Top.ID]
+		previous.ensureNavigationIdentity()
+		entry.frames[p.Top.ID].navigationKey = previous.navigationKey
+	}
+	if historyTarget > 0 {
+		target := historyTarget - 1
+		previous := p.history[target].frames[p.Top.ID]
+		previous.ensureNavigationIdentity()
+		entry.frames[p.Top.ID].navigationKey = previous.navigationKey
+		entry.frames[p.Top.ID].navigationID = previous.navigationID
+		entry.frames[p.Top.ID].navigationState = previous.navigationState
+		entry.frames[p.Top.ID].storageData = previous.storageData
+		p.history[target] = entry
+		p.historyIndex = target
+	} else if len(replace) > 0 && replace[0] && p.historyIndex >= 0 {
 		p.history[p.historyIndex] = entry
 	} else {
 		p.history = p.history[:p.historyIndex+1]
