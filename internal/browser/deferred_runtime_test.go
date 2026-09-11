@@ -54,3 +54,38 @@ func TestInitialBlankRealmIsDeferredAndIndependent(t *testing.T) {
 		t.Fatalf("runtime count %d", factory.count)
 	}
 }
+
+func TestInitialBlankChildRealmsInitializeOnlyWhenObserved(t *testing.T) {
+	factory := &countingFactory{}
+	b, err := New(factory, chrome152.New())
+	if err != nil {
+		t.Fatal(err)
+	}
+	c := b.NewContext()
+	defer c.Close()
+	p, err := c.NewPage()
+	if err != nil {
+		t.Fatal(err)
+	}
+	value, err := p.Evaluate(context.Background(), `globalThis.loads=0;globalThis.a=document.createElement('iframe');globalThis.b=document.createElement('iframe');a.onload=b.onload=()=>loads++;document.body.append(a,b);loads===2`)
+	if err != nil || value != true {
+		t.Fatalf("synchronous initial child load: %v, %v", value, err)
+	}
+	if factory.count != 1 {
+		t.Fatalf("unobserved child documents created runtimes: %d", factory.count)
+	}
+	value, err = p.Evaluate(context.Background(), `const w=a.contentWindow,d=a.contentDocument;d.body.textContent='owned';w.eval('globalThis.childOnly=42');d===w.document&&d.readyState==='complete'&&w.childOnly===42&&typeof childOnly==='undefined'&&w.Document!==Document&&a.contentDocument===d`)
+	if err != nil || value != true {
+		t.Fatalf("observed child identity and isolation: %v, %v", value, err)
+	}
+	if factory.count != 2 {
+		t.Fatalf("only the observed child should initialize: %d", factory.count)
+	}
+	value, err = p.Evaluate(context.Background(), `a.remove();b.remove();true`)
+	if err != nil || value != true {
+		t.Fatalf("child teardown: %v, %v", value, err)
+	}
+	if factory.count != 2 {
+		t.Fatalf("teardown initialized an unobserved child: %d", factory.count)
+	}
+}

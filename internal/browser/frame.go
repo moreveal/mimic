@@ -94,7 +94,9 @@ func (r *Realm) ensureChildFrameInternal(elementID int64, shadowConnected, sched
 		return nil, err
 	}
 	blank, _ := url.Parse("about:blank")
-	realm, err := newRealm(page, frame, document, blank)
+	// As with a Page's initial empty document, preserve canonical state now
+	// and install JavaScript only if this document is actually observed.
+	realm, err := newRealmState(page, frame, document, blank, true)
 	if err != nil {
 		return nil, err
 	}
