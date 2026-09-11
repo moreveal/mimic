@@ -1629,3 +1629,22 @@ caches and DOM arena reclamation remain separate boundaries.
 ## Node names, host records and DOMException package (2026-09-11)
 
 The complete fast gate passes for 660713a against bda67db. Median 10/25 Page throughput changes from 69.42/71.48 to 71.01/69.67 Pages/s. Static/React recovery private memory changes from 159.73/170.54 to 170.93/163.82 MiB. Completion latency increases in this sequential pair; performance neutrality is not established. See [package validation](../compatibility/domexception-state-2026-09-11.md) for latency, test status and evidence. No native dump occurred in this gate; historical snapshot P0 remains open.
+
+## Platform binding bootstrap allocation (2026-09-11)
+
+[Package and complete receipts](../compatibility/platform-bindings-2026-09-11.md)
+compare fresh 6bfa245 with the integrated descriptor/native-source optimization
+and three semantic fixes. Cold five-Page Goja startup improves about 3–4% in two
+pairs; the latter warm comparison is effectively unchanged, 389.010→388.170 ms.
+Normal recovery private memory is variable across the two pairs; diagnostic
+post-GC live heap is nearly unchanged. Full browser tests and targeted browser
+race pass, including all six previously failing Goja deadline scenarios.
+
+Both full fast-gate attempts and the pair after releasing our idle servers are
+preserved as incomplete failures. The latter pair passes six mandatory workloads,
+10-Page waves and all 25 warmup operations, then hits the unchanged host RAM guard.
+Measured 25-Page and dedicated memory waves do not execute. Median 10-Page
+throughput is 74.19→73.16 Pages/s; DOM/static/React completion is
+517.87/27.74/90.03→518.84/25.97/94.67 ms. No V8 throughput improvement, full gate
+pass or overall P0 closure is claimed. No native dump or unexpected process exit
+was observed in these attempts.

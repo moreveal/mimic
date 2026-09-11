@@ -1,0 +1,985 @@
+{
+  "checks": 1,
+  "beforeMatches": 0,
+  "afterMatches": 0,
+  "beforeDiffRecords": 555,
+  "afterDiffRecords": 495,
+  "beforeExpandedPaths": 555,
+  "afterExpandedPaths": 495,
+  "changedPaths": [
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "HTMLCollection.length",
+        "exception"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": "TypeError"
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "HTMLCollection.length",
+        "result"
+      ],
+      "before": "undefined",
+      "after": {
+        "$missing": true
+      }
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "History.length",
+        "exception"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": "TypeError"
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "History.length",
+        "result"
+      ],
+      "before": "number",
+      "after": {
+        "$missing": true
+      }
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "History.state",
+        "exception"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": "TypeError"
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "History.state",
+        "result"
+      ],
+      "before": "object",
+      "after": {
+        "$missing": true
+      }
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.appName",
+        "exception"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": "TypeError"
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.appName",
+        "result"
+      ],
+      "before": "string",
+      "after": {
+        "$missing": true
+      }
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.appVersion",
+        "exception"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": "TypeError"
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.appVersion",
+        "result"
+      ],
+      "before": "string",
+      "after": {
+        "$missing": true
+      }
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.cookieEnabled",
+        "exception"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": "TypeError"
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.cookieEnabled",
+        "result"
+      ],
+      "before": "boolean",
+      "after": {
+        "$missing": true
+      }
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.cpuPerformance",
+        "exception"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": "TypeError"
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.cpuPerformance",
+        "result"
+      ],
+      "before": "undefined",
+      "after": {
+        "$missing": true
+      }
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.deviceMemory",
+        "exception"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": "TypeError"
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.deviceMemory",
+        "result"
+      ],
+      "before": "number",
+      "after": {
+        "$missing": true
+      }
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.hardwareConcurrency",
+        "exception"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": "TypeError"
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.hardwareConcurrency",
+        "result"
+      ],
+      "before": "number",
+      "after": {
+        "$missing": true
+      }
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.language",
+        "exception"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": "TypeError"
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.language",
+        "result"
+      ],
+      "before": "string",
+      "after": {
+        "$missing": true
+      }
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.languages",
+        "exception"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": "TypeError"
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.languages",
+        "result"
+      ],
+      "before": "object",
+      "after": {
+        "$missing": true
+      }
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.maxTouchPoints",
+        "exception"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": "TypeError"
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.maxTouchPoints",
+        "result"
+      ],
+      "before": "number",
+      "after": {
+        "$missing": true
+      }
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.mimeTypes",
+        "exception"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": "TypeError"
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.mimeTypes",
+        "result"
+      ],
+      "before": "object",
+      "after": {
+        "$missing": true
+      }
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.onLine",
+        "exception"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": "TypeError"
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.onLine",
+        "result"
+      ],
+      "before": "boolean",
+      "after": {
+        "$missing": true
+      }
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.pdfViewerEnabled",
+        "exception"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": "TypeError"
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.pdfViewerEnabled",
+        "result"
+      ],
+      "before": "boolean",
+      "after": {
+        "$missing": true
+      }
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.platform",
+        "exception"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": "TypeError"
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.platform",
+        "result"
+      ],
+      "before": "string",
+      "after": {
+        "$missing": true
+      }
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.plugins",
+        "exception"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": "TypeError"
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.plugins",
+        "result"
+      ],
+      "before": "object",
+      "after": {
+        "$missing": true
+      }
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.product",
+        "exception"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": "TypeError"
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.product",
+        "result"
+      ],
+      "before": "string",
+      "after": {
+        "$missing": true
+      }
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.userAgent",
+        "exception"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": "TypeError"
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.userAgent",
+        "result"
+      ],
+      "before": "string",
+      "after": {
+        "$missing": true
+      }
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.userAgentData",
+        "exception"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": "TypeError"
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.userAgentData",
+        "result"
+      ],
+      "before": "object",
+      "after": {
+        "$missing": true
+      }
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.vendor",
+        "exception"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": "TypeError"
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.vendor",
+        "result"
+      ],
+      "before": "string",
+      "after": {
+        "$missing": true
+      }
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.webdriver",
+        "exception"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": "TypeError"
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Navigator.webdriver",
+        "result"
+      ],
+      "before": "boolean",
+      "after": {
+        "$missing": true
+      }
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "NodeList.length",
+        "exception"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": "TypeError"
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "NodeList.length",
+        "result"
+      ],
+      "before": "undefined",
+      "after": {
+        "$missing": true
+      }
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Screen.availHeight",
+        "exception"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": "TypeError"
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Screen.availHeight",
+        "result"
+      ],
+      "before": "number",
+      "after": {
+        "$missing": true
+      }
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Screen.availWidth",
+        "exception"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": "TypeError"
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Screen.availWidth",
+        "result"
+      ],
+      "before": "number",
+      "after": {
+        "$missing": true
+      }
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Screen.colorDepth",
+        "exception"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": "TypeError"
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Screen.colorDepth",
+        "result"
+      ],
+      "before": "number",
+      "after": {
+        "$missing": true
+      }
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Screen.height",
+        "exception"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": "TypeError"
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Screen.height",
+        "result"
+      ],
+      "before": "number",
+      "after": {
+        "$missing": true
+      }
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Screen.pixelDepth",
+        "exception"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": "TypeError"
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Screen.pixelDepth",
+        "result"
+      ],
+      "before": "number",
+      "after": {
+        "$missing": true
+      }
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Screen.width",
+        "exception"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": "TypeError"
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "getters",
+        "Screen.width",
+        "result"
+      ],
+      "before": "number",
+      "after": {
+        "$missing": true
+      }
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "methods",
+        "HTMLCollection.Symbol(Symbol.iterator)"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": {
+        "length": 0,
+        "name": "values",
+        "newTarget": {
+          "exception": "TypeError"
+        },
+        "ownKeys": [
+          "length",
+          "name"
+        ]
+      }
+    },
+    {
+      "id": "brand-matrix",
+      "path": [
+        "observations",
+        0,
+        "value",
+        "methods",
+        "NodeList.Symbol(Symbol.iterator)"
+      ],
+      "before": {
+        "$missing": true
+      },
+      "after": {
+        "length": 0,
+        "name": "values",
+        "newTarget": {
+          "exception": "TypeError"
+        },
+        "ownKeys": [
+          "length",
+          "name"
+        ]
+      }
+    }
+  ],
+  "newDifferingPaths": [],
+  "chromeDrift": [],
+  "groups": {
+    "before": {
+      "2e1d6047a46db9c1": {
+        "category": "webidl-receivers-and-function-shape",
+        "firstDifference": [
+          [
+            "observations",
+            0,
+            "value",
+            "getters",
+            "CSSStyleDeclaration.cssFloat",
+            "exception"
+          ],
+          "TypeError",
+          {
+            "$missing": true
+          }
+        ],
+        "members": [
+          "brand-matrix"
+        ]
+      }
+    },
+    "after": {
+      "2e1d6047a46db9c1": {
+        "category": "webidl-receivers-and-function-shape",
+        "firstDifference": [
+          [
+            "observations",
+            0,
+            "value",
+            "getters",
+            "CSSStyleDeclaration.cssFloat",
+            "exception"
+          ],
+          "TypeError",
+          {
+            "$missing": true
+          }
+        ],
+        "members": [
+          "brand-matrix"
+        ]
+      }
+    }
+  },
+  "valid": {
+    "before": true,
+    "after": true
+  },
+  "incomplete": {
+    "before": [],
+    "after": []
+  }
+}

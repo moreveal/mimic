@@ -1,0 +1,3089 @@
+{
+  "chrome": {
+    "live": {
+      "stable": true,
+      "prototypeMethod": true,
+      "missing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "empty": {
+        "value": null
+      },
+      "wrapped": {
+        "value": "first"
+      },
+      "negative": {
+        "value": null
+      },
+      "bigint": {
+        "error": "TypeError",
+        "local": true
+      },
+      "symbol": {
+        "error": "TypeError",
+        "local": true
+      },
+      "length": {
+        "value": 2
+      },
+      "forged": {
+        "error": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalid": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalidConversions": 0,
+      "noPrototype": {
+        "value": "first"
+      }
+    },
+    "static": {
+      "stable": true,
+      "prototypeMethod": true,
+      "missing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "empty": {
+        "value": null
+      },
+      "wrapped": {
+        "value": "first"
+      },
+      "negative": {
+        "value": null
+      },
+      "bigint": {
+        "error": "TypeError",
+        "local": true
+      },
+      "symbol": {
+        "error": "TypeError",
+        "local": true
+      },
+      "length": {
+        "value": 2
+      },
+      "forged": {
+        "error": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalid": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalidConversions": 0,
+      "noPrototype": {
+        "value": "first"
+      }
+    },
+    "fragment": {
+      "stable": true,
+      "prototypeMethod": true,
+      "missing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "empty": {
+        "value": null
+      },
+      "wrapped": {
+        "value": "first"
+      },
+      "negative": {
+        "value": null
+      },
+      "bigint": {
+        "error": "TypeError",
+        "local": true
+      },
+      "symbol": {
+        "error": "TypeError",
+        "local": true
+      },
+      "length": {
+        "value": 2
+      },
+      "forged": {
+        "error": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalid": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalidConversions": 0,
+      "noPrototype": {
+        "value": "first"
+      }
+    },
+    "children": {
+      "stable": true,
+      "prototypeMethod": true,
+      "missing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "empty": {
+        "value": null
+      },
+      "wrapped": {
+        "value": "first"
+      },
+      "negative": {
+        "value": null
+      },
+      "bigint": {
+        "error": "TypeError",
+        "local": true
+      },
+      "symbol": {
+        "error": "TypeError",
+        "local": true
+      },
+      "length": {
+        "value": 2
+      },
+      "forged": {
+        "error": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalid": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalidConversions": 0,
+      "noPrototype": {
+        "value": "first"
+      },
+      "named": {
+        "value": "first"
+      },
+      "namedMissing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "namedSymbol": {
+        "error": "TypeError",
+        "local": true
+      }
+    },
+    "form": {
+      "stable": true,
+      "prototypeMethod": true,
+      "missing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "empty": {
+        "value": null
+      },
+      "wrapped": {
+        "value": "control"
+      },
+      "negative": {
+        "value": null
+      },
+      "bigint": {
+        "error": "TypeError",
+        "local": true
+      },
+      "symbol": {
+        "error": "TypeError",
+        "local": true
+      },
+      "length": {
+        "value": 2
+      },
+      "forged": {
+        "error": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalid": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalidConversions": 0,
+      "noPrototype": {
+        "value": "control"
+      },
+      "named": {
+        "value": "control"
+      },
+      "namedMissing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "namedSymbol": {
+        "error": "TypeError",
+        "local": true
+      }
+    },
+    "options": {
+      "stable": true,
+      "prototypeMethod": true,
+      "missing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "empty": {
+        "value": null
+      },
+      "wrapped": {
+        "value": "option"
+      },
+      "negative": {
+        "value": null
+      },
+      "bigint": {
+        "error": "TypeError",
+        "local": true
+      },
+      "symbol": {
+        "error": "TypeError",
+        "local": true
+      },
+      "length": {
+        "value": 1
+      },
+      "forged": {
+        "error": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalid": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalidConversions": 0,
+      "noPrototype": {
+        "value": "option"
+      },
+      "named": {
+        "value": "option"
+      },
+      "namedMissing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "namedSymbol": {
+        "error": "TypeError",
+        "local": true
+      }
+    },
+    "selected": {
+      "stable": true,
+      "prototypeMethod": true,
+      "missing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "empty": {
+        "value": null
+      },
+      "wrapped": {
+        "value": "option"
+      },
+      "negative": {
+        "value": null
+      },
+      "bigint": {
+        "error": "TypeError",
+        "local": true
+      },
+      "symbol": {
+        "error": "TypeError",
+        "local": true
+      },
+      "length": {
+        "value": 1
+      },
+      "forged": {
+        "error": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalid": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalidConversions": 0,
+      "noPrototype": {
+        "value": "option"
+      },
+      "named": {
+        "value": "option"
+      },
+      "namedMissing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "namedSymbol": {
+        "error": "TypeError",
+        "local": true
+      }
+    },
+    "aliases": {
+      "values": true,
+      "entries": true,
+      "keys": true,
+      "forEach": true,
+      "iterator": true,
+      "htmlIterator": true
+    },
+    "generic": {
+      "values": {
+        "value": [
+          "a",
+          "b"
+        ]
+      },
+      "item": {
+        "error": "TypeError",
+        "local": true
+      }
+    },
+    "shadow.item": "shadow",
+    "shadow.values": "shadow",
+    "shadow.forEach": "shadow",
+    "liveFirst": "first",
+    "liveRemainder": [
+      "added"
+    ],
+    "borrowed": {
+      "node": true,
+      "html": true,
+      "reverse": true
+    },
+    "iteratorShape": {
+      "name": "values",
+      "length": 0,
+      "source": "function values() { [native code] }",
+      "tag": "[object Array Iterator]"
+    }
+  },
+  "before": {
+    "aliases": {
+      "entries": false,
+      "forEach": false,
+      "htmlIterator": false,
+      "iterator": false,
+      "keys": false,
+      "values": false
+    },
+    "borrowed": {
+      "html": false,
+      "node": false,
+      "reverse": false
+    },
+    "children": {
+      "bigint": {},
+      "empty": {},
+      "forged": {},
+      "invalid": {},
+      "invalidConversions": 0,
+      "length": {},
+      "missing": {},
+      "named": {},
+      "namedMissing": {},
+      "namedSymbol": {},
+      "negative": {},
+      "noPrototype": {},
+      "prototypeMethod": false,
+      "proxy": {},
+      "stable": true,
+      "symbol": {},
+      "wrapped": {}
+    },
+    "form": {
+      "bigint": {},
+      "empty": {},
+      "forged": {},
+      "invalid": {},
+      "invalidConversions": 0,
+      "length": {},
+      "missing": {},
+      "named": {},
+      "namedMissing": {},
+      "namedSymbol": {},
+      "negative": {},
+      "noPrototype": {},
+      "prototypeMethod": false,
+      "proxy": {},
+      "stable": true,
+      "symbol": {},
+      "wrapped": {}
+    },
+    "fragment": {
+      "bigint": {},
+      "empty": {},
+      "forged": {},
+      "invalid": {},
+      "invalidConversions": 0,
+      "length": {},
+      "missing": {},
+      "negative": {},
+      "noPrototype": {},
+      "prototypeMethod": false,
+      "proxy": {},
+      "stable": true,
+      "symbol": {},
+      "wrapped": {}
+    },
+    "generic": {
+      "item": {},
+      "values": {
+        "error": "TypeError",
+        "local": true
+      }
+    },
+    "iteratorShape": {
+      "length": 0,
+      "name": "values",
+      "source": "function values() { [native code] }",
+      "tag": "[object Generator]"
+    },
+    "live": {
+      "bigint": {},
+      "empty": {},
+      "forged": {},
+      "invalid": {},
+      "invalidConversions": 0,
+      "length": {},
+      "missing": {},
+      "negative": {},
+      "noPrototype": {},
+      "prototypeMethod": false,
+      "proxy": {},
+      "stable": true,
+      "symbol": {},
+      "wrapped": {}
+    },
+    "liveFirst": "first",
+    "liveRemainder": [
+      "added"
+    ],
+    "options": {
+      "bigint": {},
+      "empty": {},
+      "forged": {},
+      "invalid": {},
+      "invalidConversions": 0,
+      "length": {},
+      "missing": {},
+      "named": {},
+      "namedMissing": {},
+      "namedSymbol": {},
+      "negative": {},
+      "noPrototype": {},
+      "prototypeMethod": false,
+      "proxy": {},
+      "stable": true,
+      "symbol": {},
+      "wrapped": {}
+    },
+    "selected": {
+      "bigint": {},
+      "empty": {},
+      "forged": {},
+      "invalid": {},
+      "invalidConversions": 0,
+      "length": {},
+      "missing": {},
+      "named": {},
+      "namedMissing": {},
+      "namedSymbol": {},
+      "negative": {},
+      "noPrototype": {},
+      "prototypeMethod": false,
+      "proxy": {},
+      "stable": true,
+      "symbol": {},
+      "wrapped": {}
+    },
+    "static": {
+      "bigint": {},
+      "empty": {},
+      "forged": {},
+      "invalid": {},
+      "invalidConversions": 0,
+      "length": {},
+      "missing": {},
+      "negative": {},
+      "noPrototype": {},
+      "prototypeMethod": false,
+      "proxy": {},
+      "stable": true,
+      "symbol": {},
+      "wrapped": {}
+    }
+  },
+  "after": {
+    "aliases": {
+      "entries": true,
+      "forEach": true,
+      "htmlIterator": true,
+      "iterator": true,
+      "keys": true,
+      "values": true
+    },
+    "borrowed": {
+      "html": true,
+      "node": true,
+      "reverse": true
+    },
+    "children": {
+      "bigint": {
+        "error": "TypeError",
+        "local": true
+      },
+      "empty": {
+        "value": null
+      },
+      "forged": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalid": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalidConversions": 0,
+      "length": {
+        "value": 2
+      },
+      "missing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "named": {
+        "value": "first"
+      },
+      "namedMissing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "namedSymbol": {
+        "error": "TypeError",
+        "local": true
+      },
+      "negative": {
+        "value": null
+      },
+      "noPrototype": {
+        "value": "first"
+      },
+      "prototypeMethod": true,
+      "proxy": {
+        "error": "TypeError",
+        "local": true
+      },
+      "stable": true,
+      "symbol": {
+        "error": "TypeError",
+        "local": true
+      },
+      "wrapped": {
+        "value": "first"
+      }
+    },
+    "form": {
+      "bigint": {
+        "error": "TypeError",
+        "local": true
+      },
+      "empty": {
+        "value": null
+      },
+      "forged": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalid": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalidConversions": 0,
+      "length": {
+        "value": 2
+      },
+      "missing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "named": {
+        "value": "control"
+      },
+      "namedMissing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "namedSymbol": {
+        "error": "TypeError",
+        "local": true
+      },
+      "negative": {
+        "value": null
+      },
+      "noPrototype": {
+        "value": "control"
+      },
+      "prototypeMethod": true,
+      "proxy": {
+        "error": "TypeError",
+        "local": true
+      },
+      "stable": true,
+      "symbol": {
+        "error": "TypeError",
+        "local": true
+      },
+      "wrapped": {
+        "value": "control"
+      }
+    },
+    "fragment": {
+      "bigint": {
+        "error": "TypeError",
+        "local": true
+      },
+      "empty": {
+        "value": null
+      },
+      "forged": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalid": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalidConversions": 0,
+      "length": {
+        "value": 2
+      },
+      "missing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "negative": {
+        "value": null
+      },
+      "noPrototype": {
+        "value": "first"
+      },
+      "prototypeMethod": true,
+      "proxy": {
+        "error": "TypeError",
+        "local": true
+      },
+      "stable": true,
+      "symbol": {
+        "error": "TypeError",
+        "local": true
+      },
+      "wrapped": {
+        "value": "first"
+      }
+    },
+    "generic": {
+      "item": {
+        "error": "TypeError",
+        "local": true
+      },
+      "values": {
+        "value": [
+          "a",
+          "b"
+        ]
+      }
+    },
+    "iteratorShape": {
+      "length": 0,
+      "name": "values",
+      "source": "function values() { [native code] }",
+      "tag": "[object Array Iterator]"
+    },
+    "live": {
+      "bigint": {
+        "error": "TypeError",
+        "local": true
+      },
+      "empty": {
+        "value": null
+      },
+      "forged": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalid": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalidConversions": 0,
+      "length": {
+        "value": 2
+      },
+      "missing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "negative": {
+        "value": null
+      },
+      "noPrototype": {
+        "value": "first"
+      },
+      "prototypeMethod": true,
+      "proxy": {
+        "error": "TypeError",
+        "local": true
+      },
+      "stable": true,
+      "symbol": {
+        "error": "TypeError",
+        "local": true
+      },
+      "wrapped": {
+        "value": "first"
+      }
+    },
+    "liveFirst": "first",
+    "liveRemainder": [
+      "added"
+    ],
+    "options": {
+      "bigint": {
+        "error": "TypeError",
+        "local": true
+      },
+      "empty": {
+        "value": null
+      },
+      "forged": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalid": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalidConversions": 0,
+      "length": {
+        "value": 1
+      },
+      "missing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "named": {
+        "value": "option"
+      },
+      "namedMissing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "namedSymbol": {
+        "error": "TypeError",
+        "local": true
+      },
+      "negative": {
+        "value": null
+      },
+      "noPrototype": {
+        "value": "option"
+      },
+      "prototypeMethod": true,
+      "proxy": {
+        "error": "TypeError",
+        "local": true
+      },
+      "stable": true,
+      "symbol": {
+        "error": "TypeError",
+        "local": true
+      },
+      "wrapped": {
+        "value": "option"
+      }
+    },
+    "selected": {
+      "bigint": {
+        "error": "TypeError",
+        "local": true
+      },
+      "empty": {
+        "value": null
+      },
+      "forged": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalid": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalidConversions": 0,
+      "length": {
+        "value": 1
+      },
+      "missing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "named": {
+        "value": "option"
+      },
+      "namedMissing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "namedSymbol": {
+        "error": "TypeError",
+        "local": true
+      },
+      "negative": {
+        "value": null
+      },
+      "noPrototype": {
+        "value": "option"
+      },
+      "prototypeMethod": true,
+      "proxy": {
+        "error": "TypeError",
+        "local": true
+      },
+      "stable": true,
+      "symbol": {
+        "error": "TypeError",
+        "local": true
+      },
+      "wrapped": {
+        "value": "option"
+      }
+    },
+    "shadow.forEach": "shadow",
+    "shadow.item": "shadow",
+    "shadow.values": "shadow",
+    "static": {
+      "bigint": {
+        "error": "TypeError",
+        "local": true
+      },
+      "empty": {
+        "value": null
+      },
+      "forged": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalid": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalidConversions": 0,
+      "length": {
+        "value": 2
+      },
+      "missing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "negative": {
+        "value": null
+      },
+      "noPrototype": {
+        "value": "first"
+      },
+      "prototypeMethod": true,
+      "proxy": {
+        "error": "TypeError",
+        "local": true
+      },
+      "stable": true,
+      "symbol": {
+        "error": "TypeError",
+        "local": true
+      },
+      "wrapped": {
+        "value": "first"
+      }
+    }
+  },
+  "control": {
+    "live": {
+      "stable": true,
+      "prototypeMethod": true,
+      "missing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "empty": {
+        "value": null
+      },
+      "wrapped": {
+        "value": "first"
+      },
+      "negative": {
+        "value": null
+      },
+      "bigint": {
+        "error": "TypeError",
+        "local": true
+      },
+      "symbol": {
+        "error": "TypeError",
+        "local": true
+      },
+      "length": {
+        "value": 2
+      },
+      "forged": {
+        "error": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalid": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalidConversions": 0,
+      "noPrototype": {
+        "value": "first"
+      }
+    },
+    "static": {
+      "stable": true,
+      "prototypeMethod": true,
+      "missing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "empty": {
+        "value": null
+      },
+      "wrapped": {
+        "value": "first"
+      },
+      "negative": {
+        "value": null
+      },
+      "bigint": {
+        "error": "TypeError",
+        "local": true
+      },
+      "symbol": {
+        "error": "TypeError",
+        "local": true
+      },
+      "length": {
+        "value": 2
+      },
+      "forged": {
+        "error": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalid": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalidConversions": 0,
+      "noPrototype": {
+        "value": "first"
+      }
+    },
+    "fragment": {
+      "stable": true,
+      "prototypeMethod": true,
+      "missing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "empty": {
+        "value": null
+      },
+      "wrapped": {
+        "value": "first"
+      },
+      "negative": {
+        "value": null
+      },
+      "bigint": {
+        "error": "TypeError",
+        "local": true
+      },
+      "symbol": {
+        "error": "TypeError",
+        "local": true
+      },
+      "length": {
+        "value": 2
+      },
+      "forged": {
+        "error": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalid": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalidConversions": 0,
+      "noPrototype": {
+        "value": "first"
+      }
+    },
+    "children": {
+      "stable": true,
+      "prototypeMethod": true,
+      "missing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "empty": {
+        "value": null
+      },
+      "wrapped": {
+        "value": "first"
+      },
+      "negative": {
+        "value": null
+      },
+      "bigint": {
+        "error": "TypeError",
+        "local": true
+      },
+      "symbol": {
+        "error": "TypeError",
+        "local": true
+      },
+      "length": {
+        "value": 2
+      },
+      "forged": {
+        "error": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalid": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalidConversions": 0,
+      "noPrototype": {
+        "value": "first"
+      },
+      "named": {
+        "value": "first"
+      },
+      "namedMissing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "namedSymbol": {
+        "error": "TypeError",
+        "local": true
+      }
+    },
+    "form": {
+      "stable": true,
+      "prototypeMethod": true,
+      "missing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "empty": {
+        "value": null
+      },
+      "wrapped": {
+        "value": "control"
+      },
+      "negative": {
+        "value": null
+      },
+      "bigint": {
+        "error": "TypeError",
+        "local": true
+      },
+      "symbol": {
+        "error": "TypeError",
+        "local": true
+      },
+      "length": {
+        "value": 2
+      },
+      "forged": {
+        "error": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalid": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalidConversions": 0,
+      "noPrototype": {
+        "value": "control"
+      },
+      "named": {
+        "value": "control"
+      },
+      "namedMissing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "namedSymbol": {
+        "error": "TypeError",
+        "local": true
+      }
+    },
+    "options": {
+      "stable": true,
+      "prototypeMethod": true,
+      "missing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "empty": {
+        "value": null
+      },
+      "wrapped": {
+        "value": "option"
+      },
+      "negative": {
+        "value": null
+      },
+      "bigint": {
+        "error": "TypeError",
+        "local": true
+      },
+      "symbol": {
+        "error": "TypeError",
+        "local": true
+      },
+      "length": {
+        "value": 1
+      },
+      "forged": {
+        "error": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalid": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalidConversions": 0,
+      "noPrototype": {
+        "value": "option"
+      },
+      "named": {
+        "value": "option"
+      },
+      "namedMissing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "namedSymbol": {
+        "error": "TypeError",
+        "local": true
+      }
+    },
+    "selected": {
+      "stable": true,
+      "prototypeMethod": true,
+      "missing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "empty": {
+        "value": null
+      },
+      "wrapped": {
+        "value": "option"
+      },
+      "negative": {
+        "value": null
+      },
+      "bigint": {
+        "error": "TypeError",
+        "local": true
+      },
+      "symbol": {
+        "error": "TypeError",
+        "local": true
+      },
+      "length": {
+        "value": 1
+      },
+      "forged": {
+        "error": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalid": {
+        "error": "TypeError",
+        "local": true
+      },
+      "invalidConversions": 0,
+      "noPrototype": {
+        "value": "option"
+      },
+      "named": {
+        "value": "option"
+      },
+      "namedMissing": {
+        "error": "TypeError",
+        "local": true
+      },
+      "namedSymbol": {
+        "error": "TypeError",
+        "local": true
+      }
+    },
+    "aliases": {
+      "values": true,
+      "entries": true,
+      "keys": true,
+      "forEach": true,
+      "iterator": true,
+      "htmlIterator": true
+    },
+    "generic": {
+      "values": {
+        "value": [
+          "a",
+          "b"
+        ]
+      },
+      "item": {
+        "error": "TypeError",
+        "local": true
+      }
+    },
+    "shadow.item": "shadow",
+    "shadow.values": "shadow",
+    "shadow.forEach": "shadow",
+    "liveFirst": "first",
+    "liveRemainder": [
+      "added"
+    ],
+    "borrowed": {
+      "node": true,
+      "html": true,
+      "reverse": true
+    },
+    "iteratorShape": {
+      "name": "values",
+      "length": 0,
+      "source": "function values() { [native code] }",
+      "tag": "[object Array Iterator]"
+    }
+  },
+  "sha256": "71f23da9a767703e211eb6e75e0f6542d0939a69e5f4cbce6b14216bf8005dcf",
+  "beforeDifferences": [
+    [
+      [
+        "aliases",
+        "entries"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "aliases",
+        "forEach"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "aliases",
+        "htmlIterator"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "aliases",
+        "iterator"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "aliases",
+        "keys"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "aliases",
+        "values"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "borrowed",
+        "html"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "borrowed",
+        "node"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "borrowed",
+        "reverse"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "children",
+        "bigint",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "children",
+        "bigint",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "children",
+        "empty",
+        "value"
+      ],
+      null,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "children",
+        "forged",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "children",
+        "forged",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "children",
+        "invalid",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "children",
+        "invalid",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "children",
+        "length",
+        "value"
+      ],
+      2,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "children",
+        "missing",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "children",
+        "missing",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "children",
+        "named",
+        "value"
+      ],
+      "first",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "children",
+        "namedMissing",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "children",
+        "namedMissing",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "children",
+        "namedSymbol",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "children",
+        "namedSymbol",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "children",
+        "negative",
+        "value"
+      ],
+      null,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "children",
+        "noPrototype",
+        "value"
+      ],
+      "first",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "children",
+        "prototypeMethod"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "children",
+        "proxy",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "children",
+        "proxy",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "children",
+        "symbol",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "children",
+        "symbol",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "children",
+        "wrapped",
+        "value"
+      ],
+      "first",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "form",
+        "bigint",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "form",
+        "bigint",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "form",
+        "empty",
+        "value"
+      ],
+      null,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "form",
+        "forged",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "form",
+        "forged",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "form",
+        "invalid",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "form",
+        "invalid",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "form",
+        "length",
+        "value"
+      ],
+      2,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "form",
+        "missing",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "form",
+        "missing",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "form",
+        "named",
+        "value"
+      ],
+      "control",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "form",
+        "namedMissing",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "form",
+        "namedMissing",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "form",
+        "namedSymbol",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "form",
+        "namedSymbol",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "form",
+        "negative",
+        "value"
+      ],
+      null,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "form",
+        "noPrototype",
+        "value"
+      ],
+      "control",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "form",
+        "prototypeMethod"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "form",
+        "proxy",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "form",
+        "proxy",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "form",
+        "symbol",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "form",
+        "symbol",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "form",
+        "wrapped",
+        "value"
+      ],
+      "control",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "fragment",
+        "bigint",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "fragment",
+        "bigint",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "fragment",
+        "empty",
+        "value"
+      ],
+      null,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "fragment",
+        "forged",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "fragment",
+        "forged",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "fragment",
+        "invalid",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "fragment",
+        "invalid",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "fragment",
+        "length",
+        "value"
+      ],
+      2,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "fragment",
+        "missing",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "fragment",
+        "missing",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "fragment",
+        "negative",
+        "value"
+      ],
+      null,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "fragment",
+        "noPrototype",
+        "value"
+      ],
+      "first",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "fragment",
+        "prototypeMethod"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "fragment",
+        "proxy",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "fragment",
+        "proxy",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "fragment",
+        "symbol",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "fragment",
+        "symbol",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "fragment",
+        "wrapped",
+        "value"
+      ],
+      "first",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "generic",
+        "item",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "generic",
+        "item",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "generic",
+        "values",
+        "error"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "generic",
+        "values",
+        "local"
+      ],
+      {
+        "$missing": true
+      },
+      true
+    ],
+    [
+      [
+        "generic",
+        "values",
+        "value"
+      ],
+      [
+        "a",
+        "b"
+      ],
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "iteratorShape",
+        "tag"
+      ],
+      "[object Array Iterator]",
+      "[object Generator]"
+    ],
+    [
+      [
+        "live",
+        "bigint",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "live",
+        "bigint",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "live",
+        "empty",
+        "value"
+      ],
+      null,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "live",
+        "forged",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "live",
+        "forged",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "live",
+        "invalid",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "live",
+        "invalid",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "live",
+        "length",
+        "value"
+      ],
+      2,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "live",
+        "missing",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "live",
+        "missing",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "live",
+        "negative",
+        "value"
+      ],
+      null,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "live",
+        "noPrototype",
+        "value"
+      ],
+      "first",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "live",
+        "prototypeMethod"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "live",
+        "proxy",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "live",
+        "proxy",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "live",
+        "symbol",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "live",
+        "symbol",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "live",
+        "wrapped",
+        "value"
+      ],
+      "first",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "options",
+        "bigint",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "options",
+        "bigint",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "options",
+        "empty",
+        "value"
+      ],
+      null,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "options",
+        "forged",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "options",
+        "forged",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "options",
+        "invalid",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "options",
+        "invalid",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "options",
+        "length",
+        "value"
+      ],
+      1,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "options",
+        "missing",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "options",
+        "missing",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "options",
+        "named",
+        "value"
+      ],
+      "option",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "options",
+        "namedMissing",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "options",
+        "namedMissing",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "options",
+        "namedSymbol",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "options",
+        "namedSymbol",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "options",
+        "negative",
+        "value"
+      ],
+      null,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "options",
+        "noPrototype",
+        "value"
+      ],
+      "option",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "options",
+        "prototypeMethod"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "options",
+        "proxy",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "options",
+        "proxy",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "options",
+        "symbol",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "options",
+        "symbol",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "options",
+        "wrapped",
+        "value"
+      ],
+      "option",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "selected",
+        "bigint",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "selected",
+        "bigint",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "selected",
+        "empty",
+        "value"
+      ],
+      null,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "selected",
+        "forged",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "selected",
+        "forged",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "selected",
+        "invalid",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "selected",
+        "invalid",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "selected",
+        "length",
+        "value"
+      ],
+      1,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "selected",
+        "missing",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "selected",
+        "missing",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "selected",
+        "named",
+        "value"
+      ],
+      "option",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "selected",
+        "namedMissing",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "selected",
+        "namedMissing",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "selected",
+        "namedSymbol",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "selected",
+        "namedSymbol",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "selected",
+        "negative",
+        "value"
+      ],
+      null,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "selected",
+        "noPrototype",
+        "value"
+      ],
+      "option",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "selected",
+        "prototypeMethod"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "selected",
+        "proxy",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "selected",
+        "proxy",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "selected",
+        "symbol",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "selected",
+        "symbol",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "selected",
+        "wrapped",
+        "value"
+      ],
+      "option",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "shadow.forEach"
+      ],
+      "shadow",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "shadow.item"
+      ],
+      "shadow",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "shadow.values"
+      ],
+      "shadow",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "static",
+        "bigint",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "static",
+        "bigint",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "static",
+        "empty",
+        "value"
+      ],
+      null,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "static",
+        "forged",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "static",
+        "forged",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "static",
+        "invalid",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "static",
+        "invalid",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "static",
+        "length",
+        "value"
+      ],
+      2,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "static",
+        "missing",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "static",
+        "missing",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "static",
+        "negative",
+        "value"
+      ],
+      null,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "static",
+        "noPrototype",
+        "value"
+      ],
+      "first",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "static",
+        "prototypeMethod"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "static",
+        "proxy",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "static",
+        "proxy",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "static",
+        "symbol",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "static",
+        "symbol",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "static",
+        "wrapped",
+        "value"
+      ],
+      "first",
+      {
+        "$missing": true
+      }
+    ]
+  ],
+  "afterDifferences": [],
+  "controlDifferences": []
+}

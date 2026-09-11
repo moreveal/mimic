@@ -1,0 +1,4383 @@
+{
+  "chrome": {
+    "Navigator.userAgent": {
+      "name": "get userAgent",
+      "length": 0,
+      "native": "function get userAgent() { [native code] }",
+      "null": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "forged": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "other": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "borrowed": {
+        "ok": true,
+        "type": "string"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "string"
+      },
+      "ignoresOwnShadow": true
+    },
+    "Navigator.language": {
+      "name": "get language",
+      "length": 0,
+      "native": "function get language() { [native code] }",
+      "null": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "forged": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "other": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "borrowed": {
+        "ok": true,
+        "type": "string"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "string"
+      },
+      "ignoresOwnShadow": true
+    },
+    "Navigator.languages": {
+      "name": "get languages",
+      "length": 0,
+      "native": "function get languages() { [native code] }",
+      "null": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "forged": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "other": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "borrowed": {
+        "ok": true,
+        "type": "object"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "object"
+      },
+      "ignoresOwnShadow": true
+    },
+    "Navigator.plugins": {
+      "name": "get plugins",
+      "length": 0,
+      "native": "function get plugins() { [native code] }",
+      "null": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "forged": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "other": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "borrowed": {
+        "ok": true,
+        "type": "object"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "object"
+      },
+      "ignoresOwnShadow": true
+    },
+    "Navigator.mimeTypes": {
+      "name": "get mimeTypes",
+      "length": 0,
+      "native": "function get mimeTypes() { [native code] }",
+      "null": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "forged": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "other": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "borrowed": {
+        "ok": true,
+        "type": "object"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "object"
+      },
+      "ignoresOwnShadow": true
+    },
+    "Navigator.hardwareConcurrency": {
+      "name": "get hardwareConcurrency",
+      "length": 0,
+      "native": "function get hardwareConcurrency() { [native code] }",
+      "null": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "forged": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "other": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "borrowed": {
+        "ok": true,
+        "type": "number"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "number"
+      },
+      "ignoresOwnShadow": true
+    },
+    "Navigator.cookieEnabled": {
+      "name": "get cookieEnabled",
+      "length": 0,
+      "native": "function get cookieEnabled() { [native code] }",
+      "null": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "forged": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "other": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "borrowed": {
+        "ok": true,
+        "type": "boolean"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "boolean"
+      },
+      "ignoresOwnShadow": true
+    },
+    "Screen.width": {
+      "name": "get width",
+      "length": 0,
+      "native": "function get width() { [native code] }",
+      "null": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "forged": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "other": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "borrowed": {
+        "ok": true,
+        "type": "number"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "number"
+      },
+      "ignoresOwnShadow": true
+    },
+    "Screen.height": {
+      "name": "get height",
+      "length": 0,
+      "native": "function get height() { [native code] }",
+      "null": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "forged": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "other": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "borrowed": {
+        "ok": true,
+        "type": "number"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "number"
+      },
+      "ignoresOwnShadow": true
+    },
+    "Screen.availLeft": {
+      "name": "get availLeft",
+      "length": 0,
+      "native": "function get availLeft() { [native code] }",
+      "null": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "forged": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "other": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "borrowed": {
+        "ok": true,
+        "type": "number"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "number"
+      },
+      "ignoresOwnShadow": true
+    },
+    "Screen.orientation": {
+      "name": "get orientation",
+      "length": 0,
+      "native": "function get orientation() { [native code] }",
+      "null": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "forged": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "other": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "borrowed": {
+        "ok": true,
+        "type": "object"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "object"
+      },
+      "ignoresOwnShadow": true
+    },
+    "Screen.onchange": {
+      "name": "get onchange",
+      "length": 0,
+      "native": "function get onchange() { [native code] }",
+      "null": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "forged": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "other": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "borrowed": {
+        "ok": true,
+        "type": "object"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "object"
+      },
+      "ignoresOwnShadow": true
+    },
+    "History.length": {
+      "name": "get length",
+      "length": 0,
+      "native": "function get length() { [native code] }",
+      "null": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "forged": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "other": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "borrowed": {
+        "ok": true,
+        "type": "number"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "number"
+      },
+      "ignoresOwnShadow": true
+    },
+    "History.state": {
+      "name": "get state",
+      "length": 0,
+      "native": "function get state() { [native code] }",
+      "null": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "forged": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "other": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "borrowed": {
+        "ok": true,
+        "type": "object"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "object"
+      },
+      "ignoresOwnShadow": true
+    },
+    "History.scrollRestoration": {
+      "name": "get scrollRestoration",
+      "length": 0,
+      "native": "function get scrollRestoration() { [native code] }",
+      "null": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "forged": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "other": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "borrowed": {
+        "ok": true,
+        "type": "string"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "string"
+      },
+      "ignoresOwnShadow": true
+    },
+    "historyOwner": {
+      "parent": "parent",
+      "child": "child",
+      "reverse": "parent"
+    },
+    "pluginsOwner": {
+      "same": true,
+      "foreign": true
+    },
+    "setterWrong": {
+      "ok": false,
+      "name": "TypeError",
+      "local": true
+    },
+    "wrongConversions": 0,
+    "setterBorrowed": {
+      "ok": true,
+      "type": "undefined"
+    },
+    "validConversions": 1,
+    "restoration": {
+      "child": {
+        "ok": true,
+        "type": "string"
+      },
+      "parent": "auto",
+      "childManual": {
+        "ok": true,
+        "type": "boolean"
+      }
+    },
+    "setterSymbol": {
+      "ok": false,
+      "name": "TypeError",
+      "local": true
+    }
+  },
+  "before": {
+    "History.length": {
+      "borrowed": {
+        "ok": true,
+        "type": "number"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "number"
+      },
+      "forged": {
+        "ok": true,
+        "type": "number"
+      },
+      "ignoresOwnShadow": true,
+      "length": 0,
+      "name": "get length",
+      "native": "function get length() { [native code] }",
+      "null": {
+        "ok": true,
+        "type": "number"
+      },
+      "other": {
+        "ok": true,
+        "type": "number"
+      },
+      "proxy": {
+        "ok": true,
+        "type": "number"
+      }
+    },
+    "History.scrollRestoration": {
+      "borrowed": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "string"
+      },
+      "forged": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "ignoresOwnShadow": true,
+      "length": 0,
+      "name": "get scrollRestoration",
+      "native": "function get scrollRestoration() { [native code] }",
+      "null": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "other": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "proxy": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      }
+    },
+    "History.state": {
+      "borrowed": {
+        "ok": true,
+        "type": "object"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "object"
+      },
+      "forged": {
+        "ok": true,
+        "type": "object"
+      },
+      "ignoresOwnShadow": true,
+      "length": 0,
+      "name": "get state",
+      "native": "function get state() { [native code] }",
+      "null": {
+        "ok": true,
+        "type": "object"
+      },
+      "other": {
+        "ok": true,
+        "type": "object"
+      },
+      "proxy": {
+        "ok": true,
+        "type": "object"
+      }
+    },
+    "Navigator.cookieEnabled": {
+      "borrowed": {
+        "ok": true,
+        "type": "boolean"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "boolean"
+      },
+      "forged": {
+        "ok": true,
+        "type": "boolean"
+      },
+      "ignoresOwnShadow": true,
+      "length": 0,
+      "name": "get cookieEnabled",
+      "native": "function get cookieEnabled() { [native code] }",
+      "null": {
+        "ok": true,
+        "type": "boolean"
+      },
+      "other": {
+        "ok": true,
+        "type": "boolean"
+      },
+      "proxy": {
+        "ok": true,
+        "type": "boolean"
+      }
+    },
+    "Navigator.hardwareConcurrency": {
+      "borrowed": {
+        "ok": true,
+        "type": "number"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "number"
+      },
+      "forged": {
+        "ok": true,
+        "type": "number"
+      },
+      "ignoresOwnShadow": true,
+      "length": 0,
+      "name": "get hardwareConcurrency",
+      "native": "function get hardwareConcurrency() { [native code] }",
+      "null": {
+        "ok": true,
+        "type": "number"
+      },
+      "other": {
+        "ok": true,
+        "type": "number"
+      },
+      "proxy": {
+        "ok": true,
+        "type": "number"
+      }
+    },
+    "Navigator.language": {
+      "borrowed": {
+        "ok": true,
+        "type": "string"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "string"
+      },
+      "forged": {
+        "ok": true,
+        "type": "string"
+      },
+      "ignoresOwnShadow": true,
+      "length": 0,
+      "name": "get language",
+      "native": "function get language() { [native code] }",
+      "null": {
+        "ok": true,
+        "type": "string"
+      },
+      "other": {
+        "ok": true,
+        "type": "string"
+      },
+      "proxy": {
+        "ok": true,
+        "type": "string"
+      }
+    },
+    "Navigator.languages": {
+      "borrowed": {
+        "ok": true,
+        "type": "object"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "object"
+      },
+      "forged": {
+        "ok": true,
+        "type": "object"
+      },
+      "ignoresOwnShadow": true,
+      "length": 0,
+      "name": "get languages",
+      "native": "function get languages() { [native code] }",
+      "null": {
+        "ok": true,
+        "type": "object"
+      },
+      "other": {
+        "ok": true,
+        "type": "object"
+      },
+      "proxy": {
+        "ok": true,
+        "type": "object"
+      }
+    },
+    "Navigator.mimeTypes": {
+      "borrowed": {
+        "ok": true,
+        "type": "object"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "object"
+      },
+      "forged": {
+        "ok": true,
+        "type": "object"
+      },
+      "ignoresOwnShadow": true,
+      "length": 0,
+      "name": "get mimeTypes",
+      "native": "function get mimeTypes() { [native code] }",
+      "null": {
+        "ok": true,
+        "type": "object"
+      },
+      "other": {
+        "ok": true,
+        "type": "object"
+      },
+      "proxy": {
+        "ok": true,
+        "type": "object"
+      }
+    },
+    "Navigator.plugins": {
+      "borrowed": {
+        "ok": true,
+        "type": "object"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "object"
+      },
+      "forged": {
+        "ok": true,
+        "type": "object"
+      },
+      "ignoresOwnShadow": true,
+      "length": 0,
+      "name": "get plugins",
+      "native": "function get plugins() { [native code] }",
+      "null": {
+        "ok": true,
+        "type": "object"
+      },
+      "other": {
+        "ok": true,
+        "type": "object"
+      },
+      "proxy": {
+        "ok": true,
+        "type": "object"
+      }
+    },
+    "Navigator.userAgent": {
+      "borrowed": {
+        "ok": true,
+        "type": "string"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "string"
+      },
+      "forged": {
+        "ok": true,
+        "type": "string"
+      },
+      "ignoresOwnShadow": true,
+      "length": 0,
+      "name": "get userAgent",
+      "native": "function get userAgent() { [native code] }",
+      "null": {
+        "ok": true,
+        "type": "string"
+      },
+      "other": {
+        "ok": true,
+        "type": "string"
+      },
+      "proxy": {
+        "ok": true,
+        "type": "string"
+      }
+    },
+    "Screen.availLeft": {
+      "borrowed": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "number"
+      },
+      "forged": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "ignoresOwnShadow": true,
+      "length": 0,
+      "name": "get availLeft",
+      "native": "function get availLeft() { [native code] }",
+      "null": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "other": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "proxy": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      }
+    },
+    "Screen.height": {
+      "borrowed": {
+        "ok": true,
+        "type": "number"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "number"
+      },
+      "forged": {
+        "ok": true,
+        "type": "number"
+      },
+      "ignoresOwnShadow": true,
+      "length": 0,
+      "name": "get height",
+      "native": "function get height() { [native code] }",
+      "null": {
+        "ok": true,
+        "type": "number"
+      },
+      "other": {
+        "ok": true,
+        "type": "number"
+      },
+      "proxy": {
+        "ok": true,
+        "type": "number"
+      }
+    },
+    "Screen.onchange": {
+      "borrowed": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "object"
+      },
+      "forged": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "ignoresOwnShadow": true,
+      "length": 0,
+      "name": "get onchange",
+      "native": "function get onchange() { [native code] }",
+      "null": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "other": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "proxy": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      }
+    },
+    "Screen.orientation": {
+      "borrowed": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "object"
+      },
+      "forged": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "ignoresOwnShadow": true,
+      "length": 0,
+      "name": "get orientation",
+      "native": "function get orientation() { [native code] }",
+      "null": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "other": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "proxy": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      }
+    },
+    "Screen.width": {
+      "borrowed": {
+        "ok": true,
+        "type": "number"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "number"
+      },
+      "forged": {
+        "ok": true,
+        "type": "number"
+      },
+      "ignoresOwnShadow": true,
+      "length": 0,
+      "name": "get width",
+      "native": "function get width() { [native code] }",
+      "null": {
+        "ok": true,
+        "type": "number"
+      },
+      "other": {
+        "ok": true,
+        "type": "number"
+      },
+      "proxy": {
+        "ok": true,
+        "type": "number"
+      }
+    },
+    "historyOwner": {
+      "child": "parent",
+      "parent": "parent",
+      "reverse": "child"
+    },
+    "pluginsOwner": {
+      "foreign": false,
+      "same": false
+    },
+    "restoration": {
+      "child": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "childManual": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "parent": "auto"
+    },
+    "setterBorrowed": {
+      "local": true,
+      "name": "TypeError",
+      "ok": false
+    },
+    "setterSymbol": {
+      "ok": true,
+      "type": "undefined"
+    },
+    "setterWrong": {
+      "local": true,
+      "name": "TypeError",
+      "ok": false
+    },
+    "validConversions": 2,
+    "wrongConversions": 1
+  },
+  "after": {
+    "History.length": {
+      "borrowed": {
+        "ok": true,
+        "type": "number"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "number"
+      },
+      "forged": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "ignoresOwnShadow": true,
+      "length": 0,
+      "name": "get length",
+      "native": "function get length() { [native code] }",
+      "null": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "other": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "proxy": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      }
+    },
+    "History.scrollRestoration": {
+      "borrowed": {
+        "ok": true,
+        "type": "string"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "string"
+      },
+      "forged": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "ignoresOwnShadow": true,
+      "length": 0,
+      "name": "get scrollRestoration",
+      "native": "function get scrollRestoration() { [native code] }",
+      "null": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "other": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "proxy": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      }
+    },
+    "History.state": {
+      "borrowed": {
+        "ok": true,
+        "type": "object"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "object"
+      },
+      "forged": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "ignoresOwnShadow": true,
+      "length": 0,
+      "name": "get state",
+      "native": "function get state() { [native code] }",
+      "null": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "other": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "proxy": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      }
+    },
+    "Navigator.cookieEnabled": {
+      "borrowed": {
+        "ok": true,
+        "type": "boolean"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "boolean"
+      },
+      "forged": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "ignoresOwnShadow": true,
+      "length": 0,
+      "name": "get cookieEnabled",
+      "native": "function get cookieEnabled() { [native code] }",
+      "null": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "other": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "proxy": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      }
+    },
+    "Navigator.hardwareConcurrency": {
+      "borrowed": {
+        "ok": true,
+        "type": "number"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "number"
+      },
+      "forged": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "ignoresOwnShadow": true,
+      "length": 0,
+      "name": "get hardwareConcurrency",
+      "native": "function get hardwareConcurrency() { [native code] }",
+      "null": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "other": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "proxy": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      }
+    },
+    "Navigator.language": {
+      "borrowed": {
+        "ok": true,
+        "type": "string"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "string"
+      },
+      "forged": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "ignoresOwnShadow": true,
+      "length": 0,
+      "name": "get language",
+      "native": "function get language() { [native code] }",
+      "null": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "other": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "proxy": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      }
+    },
+    "Navigator.languages": {
+      "borrowed": {
+        "ok": true,
+        "type": "object"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "object"
+      },
+      "forged": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "ignoresOwnShadow": true,
+      "length": 0,
+      "name": "get languages",
+      "native": "function get languages() { [native code] }",
+      "null": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "other": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "proxy": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      }
+    },
+    "Navigator.mimeTypes": {
+      "borrowed": {
+        "ok": true,
+        "type": "object"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "object"
+      },
+      "forged": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "ignoresOwnShadow": true,
+      "length": 0,
+      "name": "get mimeTypes",
+      "native": "function get mimeTypes() { [native code] }",
+      "null": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "other": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "proxy": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      }
+    },
+    "Navigator.plugins": {
+      "borrowed": {
+        "ok": true,
+        "type": "object"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "object"
+      },
+      "forged": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "ignoresOwnShadow": true,
+      "length": 0,
+      "name": "get plugins",
+      "native": "function get plugins() { [native code] }",
+      "null": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "other": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "proxy": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      }
+    },
+    "Navigator.userAgent": {
+      "borrowed": {
+        "ok": true,
+        "type": "string"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "string"
+      },
+      "forged": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "ignoresOwnShadow": true,
+      "length": 0,
+      "name": "get userAgent",
+      "native": "function get userAgent() { [native code] }",
+      "null": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "other": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "proxy": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      }
+    },
+    "Screen.availLeft": {
+      "borrowed": {
+        "ok": true,
+        "type": "number"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "number"
+      },
+      "forged": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "ignoresOwnShadow": true,
+      "length": 0,
+      "name": "get availLeft",
+      "native": "function get availLeft() { [native code] }",
+      "null": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "other": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "proxy": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      }
+    },
+    "Screen.height": {
+      "borrowed": {
+        "ok": true,
+        "type": "number"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "number"
+      },
+      "forged": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "ignoresOwnShadow": true,
+      "length": 0,
+      "name": "get height",
+      "native": "function get height() { [native code] }",
+      "null": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "other": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "proxy": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      }
+    },
+    "Screen.onchange": {
+      "borrowed": {
+        "ok": true,
+        "type": "object"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "object"
+      },
+      "forged": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "ignoresOwnShadow": true,
+      "length": 0,
+      "name": "get onchange",
+      "native": "function get onchange() { [native code] }",
+      "null": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "other": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "proxy": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      }
+    },
+    "Screen.orientation": {
+      "borrowed": {
+        "ok": true,
+        "type": "object"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "object"
+      },
+      "forged": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "ignoresOwnShadow": true,
+      "length": 0,
+      "name": "get orientation",
+      "native": "function get orientation() { [native code] }",
+      "null": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "other": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "proxy": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      }
+    },
+    "Screen.width": {
+      "borrowed": {
+        "ok": true,
+        "type": "number"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "number"
+      },
+      "forged": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "ignoresOwnShadow": true,
+      "length": 0,
+      "name": "get width",
+      "native": "function get width() { [native code] }",
+      "null": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "other": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      },
+      "proxy": {
+        "local": true,
+        "name": "TypeError",
+        "ok": false
+      }
+    },
+    "historyOwner": {
+      "child": "child",
+      "parent": "parent",
+      "reverse": "parent"
+    },
+    "pluginsOwner": {
+      "foreign": true,
+      "same": true
+    },
+    "restoration": {
+      "child": {
+        "ok": true,
+        "type": "string"
+      },
+      "childManual": {
+        "ok": true,
+        "type": "boolean"
+      },
+      "parent": "auto"
+    },
+    "setterBorrowed": {
+      "ok": true,
+      "type": "undefined"
+    },
+    "setterSymbol": {
+      "local": true,
+      "name": "TypeError",
+      "ok": false
+    },
+    "setterWrong": {
+      "local": true,
+      "name": "TypeError",
+      "ok": false
+    },
+    "validConversions": 1,
+    "wrongConversions": 0
+  },
+  "control": {
+    "Navigator.userAgent": {
+      "name": "get userAgent",
+      "length": 0,
+      "native": "function get userAgent() { [native code] }",
+      "null": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "forged": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "other": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "borrowed": {
+        "ok": true,
+        "type": "string"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "string"
+      },
+      "ignoresOwnShadow": true
+    },
+    "Navigator.language": {
+      "name": "get language",
+      "length": 0,
+      "native": "function get language() { [native code] }",
+      "null": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "forged": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "other": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "borrowed": {
+        "ok": true,
+        "type": "string"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "string"
+      },
+      "ignoresOwnShadow": true
+    },
+    "Navigator.languages": {
+      "name": "get languages",
+      "length": 0,
+      "native": "function get languages() { [native code] }",
+      "null": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "forged": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "other": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "borrowed": {
+        "ok": true,
+        "type": "object"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "object"
+      },
+      "ignoresOwnShadow": true
+    },
+    "Navigator.plugins": {
+      "name": "get plugins",
+      "length": 0,
+      "native": "function get plugins() { [native code] }",
+      "null": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "forged": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "other": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "borrowed": {
+        "ok": true,
+        "type": "object"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "object"
+      },
+      "ignoresOwnShadow": true
+    },
+    "Navigator.mimeTypes": {
+      "name": "get mimeTypes",
+      "length": 0,
+      "native": "function get mimeTypes() { [native code] }",
+      "null": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "forged": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "other": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "borrowed": {
+        "ok": true,
+        "type": "object"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "object"
+      },
+      "ignoresOwnShadow": true
+    },
+    "Navigator.hardwareConcurrency": {
+      "name": "get hardwareConcurrency",
+      "length": 0,
+      "native": "function get hardwareConcurrency() { [native code] }",
+      "null": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "forged": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "other": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "borrowed": {
+        "ok": true,
+        "type": "number"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "number"
+      },
+      "ignoresOwnShadow": true
+    },
+    "Navigator.cookieEnabled": {
+      "name": "get cookieEnabled",
+      "length": 0,
+      "native": "function get cookieEnabled() { [native code] }",
+      "null": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "forged": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "other": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "borrowed": {
+        "ok": true,
+        "type": "boolean"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "boolean"
+      },
+      "ignoresOwnShadow": true
+    },
+    "Screen.width": {
+      "name": "get width",
+      "length": 0,
+      "native": "function get width() { [native code] }",
+      "null": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "forged": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "other": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "borrowed": {
+        "ok": true,
+        "type": "number"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "number"
+      },
+      "ignoresOwnShadow": true
+    },
+    "Screen.height": {
+      "name": "get height",
+      "length": 0,
+      "native": "function get height() { [native code] }",
+      "null": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "forged": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "other": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "borrowed": {
+        "ok": true,
+        "type": "number"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "number"
+      },
+      "ignoresOwnShadow": true
+    },
+    "Screen.availLeft": {
+      "name": "get availLeft",
+      "length": 0,
+      "native": "function get availLeft() { [native code] }",
+      "null": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "forged": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "other": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "borrowed": {
+        "ok": true,
+        "type": "number"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "number"
+      },
+      "ignoresOwnShadow": true
+    },
+    "Screen.orientation": {
+      "name": "get orientation",
+      "length": 0,
+      "native": "function get orientation() { [native code] }",
+      "null": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "forged": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "other": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "borrowed": {
+        "ok": true,
+        "type": "object"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "object"
+      },
+      "ignoresOwnShadow": true
+    },
+    "Screen.onchange": {
+      "name": "get onchange",
+      "length": 0,
+      "native": "function get onchange() { [native code] }",
+      "null": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "forged": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "other": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "borrowed": {
+        "ok": true,
+        "type": "object"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "object"
+      },
+      "ignoresOwnShadow": true
+    },
+    "History.length": {
+      "name": "get length",
+      "length": 0,
+      "native": "function get length() { [native code] }",
+      "null": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "forged": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "other": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "borrowed": {
+        "ok": true,
+        "type": "number"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "number"
+      },
+      "ignoresOwnShadow": true
+    },
+    "History.state": {
+      "name": "get state",
+      "length": 0,
+      "native": "function get state() { [native code] }",
+      "null": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "forged": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "other": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "borrowed": {
+        "ok": true,
+        "type": "object"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "object"
+      },
+      "ignoresOwnShadow": true
+    },
+    "History.scrollRestoration": {
+      "name": "get scrollRestoration",
+      "length": 0,
+      "native": "function get scrollRestoration() { [native code] }",
+      "null": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "forged": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "proxy": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "other": {
+        "ok": false,
+        "name": "TypeError",
+        "local": true
+      },
+      "borrowed": {
+        "ok": true,
+        "type": "string"
+      },
+      "detachedPrototype": {
+        "ok": true,
+        "type": "string"
+      },
+      "ignoresOwnShadow": true
+    },
+    "historyOwner": {
+      "parent": "parent",
+      "child": "child",
+      "reverse": "parent"
+    },
+    "pluginsOwner": {
+      "same": true,
+      "foreign": true
+    },
+    "setterWrong": {
+      "ok": false,
+      "name": "TypeError",
+      "local": true
+    },
+    "wrongConversions": 0,
+    "setterBorrowed": {
+      "ok": true,
+      "type": "undefined"
+    },
+    "validConversions": 1,
+    "restoration": {
+      "child": {
+        "ok": true,
+        "type": "string"
+      },
+      "parent": "auto",
+      "childManual": {
+        "ok": true,
+        "type": "boolean"
+      }
+    },
+    "setterSymbol": {
+      "ok": false,
+      "name": "TypeError",
+      "local": true
+    }
+  },
+  "sha256": "83a98acd23d38fda27ee9c4c475370a54504ccc1e06af7cc93668780e2665b76",
+  "beforeDifferences": [
+    [
+      [
+        "History.length",
+        "forged",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "History.length",
+        "forged",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "History.length",
+        "forged",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "History.length",
+        "forged",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "number"
+    ],
+    [
+      [
+        "History.length",
+        "null",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "History.length",
+        "null",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "History.length",
+        "null",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "History.length",
+        "null",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "number"
+    ],
+    [
+      [
+        "History.length",
+        "other",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "History.length",
+        "other",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "History.length",
+        "other",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "History.length",
+        "other",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "number"
+    ],
+    [
+      [
+        "History.length",
+        "proxy",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "History.length",
+        "proxy",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "History.length",
+        "proxy",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "History.length",
+        "proxy",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "number"
+    ],
+    [
+      [
+        "History.scrollRestoration",
+        "borrowed",
+        "local"
+      ],
+      {
+        "$missing": true
+      },
+      true
+    ],
+    [
+      [
+        "History.scrollRestoration",
+        "borrowed",
+        "name"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "History.scrollRestoration",
+        "borrowed",
+        "ok"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "History.scrollRestoration",
+        "borrowed",
+        "type"
+      ],
+      "string",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "History.state",
+        "forged",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "History.state",
+        "forged",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "History.state",
+        "forged",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "History.state",
+        "forged",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "History.state",
+        "null",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "History.state",
+        "null",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "History.state",
+        "null",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "History.state",
+        "null",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "History.state",
+        "other",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "History.state",
+        "other",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "History.state",
+        "other",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "History.state",
+        "other",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "History.state",
+        "proxy",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "History.state",
+        "proxy",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "History.state",
+        "proxy",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "History.state",
+        "proxy",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "Navigator.cookieEnabled",
+        "forged",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.cookieEnabled",
+        "forged",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.cookieEnabled",
+        "forged",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Navigator.cookieEnabled",
+        "forged",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "boolean"
+    ],
+    [
+      [
+        "Navigator.cookieEnabled",
+        "null",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.cookieEnabled",
+        "null",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.cookieEnabled",
+        "null",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Navigator.cookieEnabled",
+        "null",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "boolean"
+    ],
+    [
+      [
+        "Navigator.cookieEnabled",
+        "other",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.cookieEnabled",
+        "other",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.cookieEnabled",
+        "other",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Navigator.cookieEnabled",
+        "other",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "boolean"
+    ],
+    [
+      [
+        "Navigator.cookieEnabled",
+        "proxy",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.cookieEnabled",
+        "proxy",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.cookieEnabled",
+        "proxy",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Navigator.cookieEnabled",
+        "proxy",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "boolean"
+    ],
+    [
+      [
+        "Navigator.hardwareConcurrency",
+        "forged",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.hardwareConcurrency",
+        "forged",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.hardwareConcurrency",
+        "forged",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Navigator.hardwareConcurrency",
+        "forged",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "number"
+    ],
+    [
+      [
+        "Navigator.hardwareConcurrency",
+        "null",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.hardwareConcurrency",
+        "null",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.hardwareConcurrency",
+        "null",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Navigator.hardwareConcurrency",
+        "null",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "number"
+    ],
+    [
+      [
+        "Navigator.hardwareConcurrency",
+        "other",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.hardwareConcurrency",
+        "other",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.hardwareConcurrency",
+        "other",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Navigator.hardwareConcurrency",
+        "other",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "number"
+    ],
+    [
+      [
+        "Navigator.hardwareConcurrency",
+        "proxy",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.hardwareConcurrency",
+        "proxy",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.hardwareConcurrency",
+        "proxy",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Navigator.hardwareConcurrency",
+        "proxy",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "number"
+    ],
+    [
+      [
+        "Navigator.language",
+        "forged",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.language",
+        "forged",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.language",
+        "forged",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Navigator.language",
+        "forged",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "Navigator.language",
+        "null",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.language",
+        "null",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.language",
+        "null",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Navigator.language",
+        "null",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "Navigator.language",
+        "other",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.language",
+        "other",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.language",
+        "other",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Navigator.language",
+        "other",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "Navigator.language",
+        "proxy",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.language",
+        "proxy",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.language",
+        "proxy",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Navigator.language",
+        "proxy",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "Navigator.languages",
+        "forged",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.languages",
+        "forged",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.languages",
+        "forged",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Navigator.languages",
+        "forged",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "Navigator.languages",
+        "null",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.languages",
+        "null",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.languages",
+        "null",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Navigator.languages",
+        "null",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "Navigator.languages",
+        "other",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.languages",
+        "other",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.languages",
+        "other",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Navigator.languages",
+        "other",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "Navigator.languages",
+        "proxy",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.languages",
+        "proxy",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.languages",
+        "proxy",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Navigator.languages",
+        "proxy",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "Navigator.mimeTypes",
+        "forged",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.mimeTypes",
+        "forged",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.mimeTypes",
+        "forged",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Navigator.mimeTypes",
+        "forged",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "Navigator.mimeTypes",
+        "null",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.mimeTypes",
+        "null",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.mimeTypes",
+        "null",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Navigator.mimeTypes",
+        "null",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "Navigator.mimeTypes",
+        "other",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.mimeTypes",
+        "other",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.mimeTypes",
+        "other",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Navigator.mimeTypes",
+        "other",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "Navigator.mimeTypes",
+        "proxy",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.mimeTypes",
+        "proxy",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.mimeTypes",
+        "proxy",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Navigator.mimeTypes",
+        "proxy",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "Navigator.plugins",
+        "forged",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.plugins",
+        "forged",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.plugins",
+        "forged",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Navigator.plugins",
+        "forged",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "Navigator.plugins",
+        "null",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.plugins",
+        "null",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.plugins",
+        "null",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Navigator.plugins",
+        "null",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "Navigator.plugins",
+        "other",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.plugins",
+        "other",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.plugins",
+        "other",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Navigator.plugins",
+        "other",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "Navigator.plugins",
+        "proxy",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.plugins",
+        "proxy",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.plugins",
+        "proxy",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Navigator.plugins",
+        "proxy",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "object"
+    ],
+    [
+      [
+        "Navigator.userAgent",
+        "forged",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.userAgent",
+        "forged",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.userAgent",
+        "forged",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Navigator.userAgent",
+        "forged",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "Navigator.userAgent",
+        "null",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.userAgent",
+        "null",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.userAgent",
+        "null",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Navigator.userAgent",
+        "null",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "Navigator.userAgent",
+        "other",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.userAgent",
+        "other",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.userAgent",
+        "other",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Navigator.userAgent",
+        "other",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "Navigator.userAgent",
+        "proxy",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.userAgent",
+        "proxy",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Navigator.userAgent",
+        "proxy",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Navigator.userAgent",
+        "proxy",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "string"
+    ],
+    [
+      [
+        "Screen.availLeft",
+        "borrowed",
+        "local"
+      ],
+      {
+        "$missing": true
+      },
+      true
+    ],
+    [
+      [
+        "Screen.availLeft",
+        "borrowed",
+        "name"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "Screen.availLeft",
+        "borrowed",
+        "ok"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "Screen.availLeft",
+        "borrowed",
+        "type"
+      ],
+      "number",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Screen.height",
+        "forged",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Screen.height",
+        "forged",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Screen.height",
+        "forged",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Screen.height",
+        "forged",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "number"
+    ],
+    [
+      [
+        "Screen.height",
+        "null",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Screen.height",
+        "null",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Screen.height",
+        "null",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Screen.height",
+        "null",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "number"
+    ],
+    [
+      [
+        "Screen.height",
+        "other",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Screen.height",
+        "other",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Screen.height",
+        "other",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Screen.height",
+        "other",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "number"
+    ],
+    [
+      [
+        "Screen.height",
+        "proxy",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Screen.height",
+        "proxy",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Screen.height",
+        "proxy",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Screen.height",
+        "proxy",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "number"
+    ],
+    [
+      [
+        "Screen.onchange",
+        "borrowed",
+        "local"
+      ],
+      {
+        "$missing": true
+      },
+      true
+    ],
+    [
+      [
+        "Screen.onchange",
+        "borrowed",
+        "name"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "Screen.onchange",
+        "borrowed",
+        "ok"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "Screen.onchange",
+        "borrowed",
+        "type"
+      ],
+      "object",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Screen.orientation",
+        "borrowed",
+        "local"
+      ],
+      {
+        "$missing": true
+      },
+      true
+    ],
+    [
+      [
+        "Screen.orientation",
+        "borrowed",
+        "name"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "Screen.orientation",
+        "borrowed",
+        "ok"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "Screen.orientation",
+        "borrowed",
+        "type"
+      ],
+      "object",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Screen.width",
+        "forged",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Screen.width",
+        "forged",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Screen.width",
+        "forged",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Screen.width",
+        "forged",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "number"
+    ],
+    [
+      [
+        "Screen.width",
+        "null",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Screen.width",
+        "null",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Screen.width",
+        "null",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Screen.width",
+        "null",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "number"
+    ],
+    [
+      [
+        "Screen.width",
+        "other",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Screen.width",
+        "other",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Screen.width",
+        "other",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Screen.width",
+        "other",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "number"
+    ],
+    [
+      [
+        "Screen.width",
+        "proxy",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Screen.width",
+        "proxy",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Screen.width",
+        "proxy",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Screen.width",
+        "proxy",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "number"
+    ],
+    [
+      [
+        "historyOwner",
+        "child"
+      ],
+      "child",
+      "parent"
+    ],
+    [
+      [
+        "historyOwner",
+        "reverse"
+      ],
+      "parent",
+      "child"
+    ],
+    [
+      [
+        "pluginsOwner",
+        "foreign"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "pluginsOwner",
+        "same"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "restoration",
+        "child",
+        "local"
+      ],
+      {
+        "$missing": true
+      },
+      true
+    ],
+    [
+      [
+        "restoration",
+        "child",
+        "name"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "restoration",
+        "child",
+        "ok"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "restoration",
+        "child",
+        "type"
+      ],
+      "string",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "restoration",
+        "childManual",
+        "local"
+      ],
+      {
+        "$missing": true
+      },
+      true
+    ],
+    [
+      [
+        "restoration",
+        "childManual",
+        "name"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "restoration",
+        "childManual",
+        "ok"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "restoration",
+        "childManual",
+        "type"
+      ],
+      "boolean",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "setterBorrowed",
+        "local"
+      ],
+      {
+        "$missing": true
+      },
+      true
+    ],
+    [
+      [
+        "setterBorrowed",
+        "name"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "setterBorrowed",
+        "ok"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "setterBorrowed",
+        "type"
+      ],
+      "undefined",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "setterSymbol",
+        "local"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "setterSymbol",
+        "name"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "setterSymbol",
+        "ok"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "setterSymbol",
+        "type"
+      ],
+      {
+        "$missing": true
+      },
+      "undefined"
+    ],
+    [
+      [
+        "validConversions"
+      ],
+      1,
+      2
+    ],
+    [
+      [
+        "wrongConversions"
+      ],
+      0,
+      1
+    ]
+  ],
+  "afterDifferences": [],
+  "controlDifferences": []
+}
