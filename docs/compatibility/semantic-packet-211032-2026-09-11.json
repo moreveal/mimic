@@ -1,0 +1,748 @@
+{
+  "schema": 1,
+  "report": "semantic-packet-211032-2026-09-11.md",
+  "scope": "Offline recorded three-cycle execution and consumed semantic packet; no live target run; no server-acceptance inference",
+  "baseline": {
+    "sourceRevision": "7542e8310d70724f0a4a59c287f072a11aa7228f",
+    "runtimeRevision": "531e1e70d4926ff30ad2cc4f1ffd033732a23d7d",
+    "startingDirtyState": "clean",
+    "binarySHA256": "771c9239897e69b328464d3369d298d23f7f63be0c306b88d8fc572436d4d21d"
+  },
+  "finalProductionSources": {
+    "runtimeAndRegressionCheckpoint": "8e62be3a1c589447e22628371d56cc4ef0ea8017",
+    "revisionAtReceipt": "a96d52e6e0ab9faef59bacf0e4ba41706ba1420c",
+    "changesSinceR4Build": [
+      "internal/browser/document_inherited_state_test.go",
+      "internal/browser/frame_owner_checkpoint_test.go",
+      "internal/browser/performance_navigation_metadata_test.go"
+    ],
+    "productionSourceUnchanged": true,
+    "replaySourcesStableAcrossBuild": true,
+    "hashedReplaySourceFiles": 745
+  },
+  "binaries": {
+    ".build/causal-211032/mimic-packet-r4.exe": "af88569f9b64fea0c1b553f0c8fdf4fd909e257d60c89fa7dd8c90142a71e29f",
+    ".build/causal-211032/mimic-clean-8e62be3.exe": "1ae87ef0b8271fa4911b38cfb8f0de0b0db0329632e0c2b5133c163e81cf2dcb"
+  },
+  "chrome": {
+    "version": "152.0.7977.82",
+    "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+    "mode": "headful",
+    "profile": "chrome-152-windows-x64-headful-controlled-v1",
+    "generalControls": {
+      "chrome-a": {
+        "arguments": [
+          "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+          "--remote-debugging-port=19624",
+          "--user-data-dir=E:\\GitHub\\mimic\\.build\\causal-211032\\compare\\general-packet-final\\chrome-a-profile",
+          "--no-first-run",
+          "--no-default-browser-check",
+          "--window-size=1280,800",
+          "about:blank"
+        ],
+        "actualObservation": {
+          "href": "http://127.0.0.1:42242/",
+          "isSecureContext": true,
+          "crossOriginIsolated": false,
+          "innerWidth": 1272,
+          "innerHeight": 653,
+          "outerWidth": 0,
+          "outerHeight": 0,
+          "devicePixelRatio": 1,
+          "visibility": "hidden",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+          "platform": "Win32",
+          "language": "ru-RU",
+          "languages": [
+            "ru-RU"
+          ]
+        }
+      },
+      "chrome-b": {
+        "arguments": [
+          "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+          "--remote-debugging-port=19626",
+          "--user-data-dir=E:\\GitHub\\mimic\\.build\\causal-211032\\compare\\general-packet-final\\chrome-b-profile",
+          "--no-first-run",
+          "--no-default-browser-check",
+          "--window-size=1280,800",
+          "about:blank"
+        ],
+        "actualObservation": {
+          "href": "http://127.0.0.1:42242/",
+          "isSecureContext": true,
+          "crossOriginIsolated": false,
+          "innerWidth": 1272,
+          "innerHeight": 653,
+          "outerWidth": 0,
+          "outerHeight": 0,
+          "devicePixelRatio": 1,
+          "visibility": "hidden",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+          "platform": "Win32",
+          "language": "ru-RU",
+          "languages": [
+            "ru-RU"
+          ]
+        }
+      }
+    },
+    "finalAfterCheckControlReused": true
+  },
+  "generalCorpus": {
+    "cases": [
+      {
+        "id": "value-normalization",
+        "coverage": {
+          "chrome-a": true,
+          "chrome-b": true,
+          "mimic-before": true,
+          "mimic-after": true
+        },
+        "beforeDifferingLeaves": 0,
+        "afterDifferingLeaves": 0,
+        "controlDifferingLeaves": 0,
+        "newlyDifferentStableLeaves": 0,
+        "beforeAfterLeaves": 0,
+        "coverageRegression": false
+      },
+      {
+        "id": "network",
+        "coverage": {
+          "chrome-a": true,
+          "chrome-b": true,
+          "mimic-before": true,
+          "mimic-after": true
+        },
+        "beforeDifferingLeaves": 12,
+        "afterDifferingLeaves": 12,
+        "controlDifferingLeaves": 10,
+        "newlyDifferentStableLeaves": 0,
+        "beforeAfterLeaves": 0,
+        "coverageRegression": false
+      },
+      {
+        "id": "temporal",
+        "coverage": {
+          "chrome-a": true,
+          "chrome-b": true,
+          "mimic-before": true,
+          "mimic-after": true
+        },
+        "beforeDifferingLeaves": 0,
+        "afterDifferingLeaves": 0,
+        "controlDifferingLeaves": 0,
+        "newlyDifferentStableLeaves": 0,
+        "beforeAfterLeaves": 0,
+        "coverageRegression": false
+      },
+      {
+        "id": "frame-task-interleaving",
+        "coverage": {
+          "chrome-a": true,
+          "chrome-b": true,
+          "mimic-before": true,
+          "mimic-after": true
+        },
+        "beforeDifferingLeaves": 0,
+        "afterDifferingLeaves": 0,
+        "controlDifferingLeaves": 0,
+        "newlyDifferentStableLeaves": 0,
+        "beforeAfterLeaves": 0,
+        "coverageRegression": false
+      },
+      {
+        "id": "frame-microtask-checkpoint",
+        "coverage": {
+          "chrome-a": true,
+          "chrome-b": true,
+          "mimic-before": true,
+          "mimic-after": true
+        },
+        "beforeDifferingLeaves": 0,
+        "afterDifferingLeaves": 0,
+        "controlDifferingLeaves": 0,
+        "newlyDifferentStableLeaves": 0,
+        "beforeAfterLeaves": 0,
+        "coverageRegression": false
+      },
+      {
+        "id": "resource-realm-isolation",
+        "coverage": {
+          "chrome-a": true,
+          "chrome-b": true,
+          "mimic-before": true,
+          "mimic-after": true
+        },
+        "beforeDifferingLeaves": 0,
+        "afterDifferingLeaves": 0,
+        "controlDifferingLeaves": 0,
+        "newlyDifferentStableLeaves": 0,
+        "beforeAfterLeaves": 0,
+        "coverageRegression": false
+      },
+      {
+        "id": "resource-json",
+        "coverage": {
+          "chrome-a": true,
+          "chrome-b": true,
+          "mimic-before": true,
+          "mimic-after": true
+        },
+        "beforeDifferingLeaves": 0,
+        "afterDifferingLeaves": 0,
+        "controlDifferingLeaves": 0,
+        "newlyDifferentStableLeaves": 0,
+        "beforeAfterLeaves": 0,
+        "coverageRegression": false
+      },
+      {
+        "id": "worker-microtasks",
+        "coverage": {
+          "chrome-a": true,
+          "chrome-b": true,
+          "mimic-before": true,
+          "mimic-after": true
+        },
+        "beforeDifferingLeaves": 0,
+        "afterDifferingLeaves": 0,
+        "controlDifferingLeaves": 0,
+        "newlyDifferentStableLeaves": 0,
+        "beforeAfterLeaves": 0,
+        "coverageRegression": false
+      },
+      {
+        "id": "surface",
+        "coverage": {
+          "chrome-a": true,
+          "chrome-b": true,
+          "mimic-before": true,
+          "mimic-after": true
+        },
+        "beforeDifferingLeaves": 27,
+        "afterDifferingLeaves": 27,
+        "controlDifferingLeaves": 0,
+        "newlyDifferentStableLeaves": 0,
+        "beforeAfterLeaves": 0,
+        "coverageRegression": false
+      },
+      {
+        "id": "samesite",
+        "coverage": {
+          "chrome-a": true,
+          "chrome-b": true,
+          "mimic-before": true,
+          "mimic-after": true
+        },
+        "beforeDifferingLeaves": 0,
+        "afterDifferingLeaves": 0,
+        "controlDifferingLeaves": 0,
+        "newlyDifferentStableLeaves": 0,
+        "beforeAfterLeaves": 0,
+        "coverageRegression": false
+      },
+      {
+        "id": "samesite-navigation",
+        "coverage": {
+          "chrome-a": true,
+          "chrome-b": true,
+          "mimic-before": true,
+          "mimic-after": true
+        },
+        "beforeDifferingLeaves": 0,
+        "afterDifferingLeaves": 0,
+        "controlDifferingLeaves": 0,
+        "newlyDifferentStableLeaves": 0,
+        "beforeAfterLeaves": 0,
+        "coverageRegression": false
+      },
+      {
+        "id": "partition",
+        "coverage": {
+          "chrome-a": true,
+          "chrome-b": true,
+          "mimic-before": true,
+          "mimic-after": true
+        },
+        "beforeDifferingLeaves": 0,
+        "afterDifferingLeaves": 0,
+        "controlDifferingLeaves": 0,
+        "newlyDifferentStableLeaves": 0,
+        "beforeAfterLeaves": 0,
+        "coverageRegression": false
+      },
+      {
+        "id": "svg-values",
+        "coverage": {
+          "chrome-a": true,
+          "chrome-b": true,
+          "mimic-before": true,
+          "mimic-after": true
+        },
+        "beforeDifferingLeaves": 0,
+        "afterDifferingLeaves": 0,
+        "controlDifferingLeaves": 0,
+        "newlyDifferentStableLeaves": 0,
+        "beforeAfterLeaves": 0,
+        "coverageRegression": false
+      },
+      {
+        "id": "observations",
+        "coverage": {
+          "chrome-a": true,
+          "chrome-b": true,
+          "mimic-before": true,
+          "mimic-after": true
+        },
+        "beforeDifferingLeaves": 23,
+        "afterDifferingLeaves": 23,
+        "controlDifferingLeaves": 0,
+        "newlyDifferentStableLeaves": 0,
+        "beforeAfterLeaves": 0,
+        "coverageRegression": false
+      },
+      {
+        "id": "webgpu-lifecycle",
+        "coverage": {
+          "chrome-a": true,
+          "chrome-b": true,
+          "mimic-before": true,
+          "mimic-after": true
+        },
+        "beforeDifferingLeaves": 0,
+        "afterDifferingLeaves": 0,
+        "controlDifferingLeaves": 0,
+        "newlyDifferentStableLeaves": 0,
+        "beforeAfterLeaves": 0,
+        "coverageRegression": false
+      }
+    ],
+    "countsDoNotIncludeFocusedOrEmittedBuckets": true
+  },
+  "focusedR2": [
+    {
+      "name": "nodefilter-oracle",
+      "differingLeaves": 4,
+      "harnessError": null,
+      "probeSHA256": "5f1844c70b482e886f81aa6256f5da509e14a85d53ec11e0ff55cd37bd8b771b",
+      "frozenReferenceSHA256": "11b10a28c9ebe7132af494d71928afb774b5bb90f6fd652163881ea287df9e01",
+      "frozenControlLeaves": 0
+    },
+    {
+      "name": "window-set-oracle",
+      "differingLeaves": 91,
+      "harnessError": null,
+      "probeSHA256": "1375cedc6e184f7a78c06bd3d6dc49564d731f34e347a7b5525fa8e679b90c4b",
+      "frozenReferenceSHA256": "cf76fcc6e5010ff7df4dee5c10101120136830f05830f964f91a21359927ad32",
+      "frozenControlLeaves": 0
+    },
+    {
+      "name": "postmessage-shape-oracle",
+      "differingLeaves": 7,
+      "harnessError": null,
+      "probeSHA256": "7d066eac5fa7af210efd6b43f8518f5f18b449e7cbc69d799eac7a9d2e09754c",
+      "frozenReferenceSHA256": "bf7818c2f331a680ed5a6297514384b282d47217caec1a70569a408552ff99c8",
+      "frozenControlLeaves": 0
+    }
+  ],
+  "emittedRepeatedBucket": {
+    "rawDifferingPathsBefore": 174,
+    "rawDifferingPathsAfter": 43,
+    "normalizedDifferingPathsBefore": 173,
+    "normalizedDifferingPathsAfter": 41,
+    "becameMatch": 132,
+    "newlyDiffering": 0,
+    "coverageBefore": 1663,
+    "coverageAfter": 1665,
+    "coverageChrome": 1666,
+    "chromeOnlyPaths": 3,
+    "mimicOnlyPaths": 2,
+    "serializerPairs": 10,
+    "serializerPairsMatchingPOST": 10,
+    "parseErrors": 0,
+    "doNotSumRepeatedBucketsOrCountPathsAsRootCauses": true
+  },
+  "finalReplay": {
+    "baseline": {
+      "binarySHA256": "f0958a96bae980a2970954874d90ee5675d2d357733b8eabfb61c28ce444dcf7",
+      "resultSHA256": "95b4d8e094c510640b15b0e097a04777fd1dca12ed8f0bf28ccee5beb69de514",
+      "traceSHA256": "924f5a3c8bafc06e618fdc03f2fcb12b9ac523fceb91890ae7898de380f0a050",
+      "lastCycle": 3,
+      "topDocumentFixtures": [
+        {
+          "fixtureIndex": 0,
+          "cycle": 1,
+          "criticalRetryCopy": true
+        },
+        {
+          "fixtureIndex": 0,
+          "cycle": 1,
+          "criticalRetryCopy": false
+        },
+        {
+          "fixtureIndex": 15,
+          "cycle": 2,
+          "criticalRetryCopy": false
+        },
+        {
+          "fixtureIndex": 30,
+          "cycle": 3,
+          "criticalRetryCopy": false
+        }
+      ],
+      "stopReason": "uncaptured-request-boundary",
+      "completedSteps": 163,
+      "errorRecords": {
+        "imageDecode": 5
+      },
+      "schedulerErrorRecords": 1,
+      "schedulerErrorsOccurAfterBoundary": true,
+      "pumpError": "dom task: context canceled\nmicrotask checkpoint: context canceled",
+      "contextError": "context canceled",
+      "bounds": {
+        "advanceMs": 50,
+        "maxRequests": 256,
+        "sleepMs": 20,
+        "steps": 1600,
+        "timeoutMs": 60000
+      },
+      "exitCode": 0,
+      "stderrBytes": 0
+    },
+    "messages-only": {
+      "binarySHA256": "8436767c84a0a19cef73924b0b7bc041bc92ee77a888e14240bf77b1847dbf4d",
+      "resultSHA256": "1c239b2f5bc0eda106967dce8066edd00b9dfefc7158e866d3fe90768a1dab57",
+      "traceSHA256": "7738c88ef234b39067c315f904b6dd58e23390aaae750ad317a07a9aea9e2572",
+      "lastCycle": 3,
+      "topDocumentFixtures": [
+        {
+          "fixtureIndex": 0,
+          "cycle": 1,
+          "criticalRetryCopy": true
+        },
+        {
+          "fixtureIndex": 0,
+          "cycle": 1,
+          "criticalRetryCopy": false
+        },
+        {
+          "fixtureIndex": 15,
+          "cycle": 2,
+          "criticalRetryCopy": false
+        },
+        {
+          "fixtureIndex": 30,
+          "cycle": 3,
+          "criticalRetryCopy": false
+        }
+      ],
+      "stopReason": "uncaptured-request-boundary",
+      "completedSteps": 165,
+      "errorRecords": {
+        "imageDecode": 5
+      },
+      "schedulerErrorRecords": 1,
+      "schedulerErrorsOccurAfterBoundary": true,
+      "pumpError": "dom task: context canceled\nmicrotask checkpoint: context canceled",
+      "contextError": "context canceled",
+      "bounds": {
+        "advanceMs": 50,
+        "maxRequests": 256,
+        "sleepMs": 20,
+        "steps": 1600,
+        "timeoutMs": 60000
+      },
+      "exitCode": 0,
+      "stderrBytes": 0
+    },
+    "payloads": {
+      "binarySHA256": "8436767c84a0a19cef73924b0b7bc041bc92ee77a888e14240bf77b1847dbf4d",
+      "resultSHA256": "ec81adc6d5d2294d7be5e89be0ef5c4d48cdc864b67bd16a81e52adb5afb2c60",
+      "traceSHA256": "15f3b53bdaf0ddc847bf9da54bc25277e44f80bc634e44159a962c7d26364e2f",
+      "lastCycle": 3,
+      "topDocumentFixtures": [
+        {
+          "fixtureIndex": 0,
+          "cycle": 1,
+          "criticalRetryCopy": true
+        },
+        {
+          "fixtureIndex": 0,
+          "cycle": 1,
+          "criticalRetryCopy": false
+        },
+        {
+          "fixtureIndex": 15,
+          "cycle": 2,
+          "criticalRetryCopy": false
+        },
+        {
+          "fixtureIndex": 30,
+          "cycle": 3,
+          "criticalRetryCopy": false
+        }
+      ],
+      "stopReason": "uncaptured-request-boundary",
+      "completedSteps": 165,
+      "errorRecords": {
+        "imageDecode": 5
+      },
+      "schedulerErrorRecords": 1,
+      "schedulerErrorsOccurAfterBoundary": true,
+      "pumpError": "dom task: context canceled\nmicrotask checkpoint: context canceled",
+      "contextError": "context canceled",
+      "bounds": {
+        "advanceMs": 50,
+        "maxRequests": 256,
+        "sleepMs": 20,
+        "steps": 1600,
+        "timeoutMs": 60000
+      },
+      "exitCode": 0,
+      "stderrBytes": 0
+    }
+  },
+  "replayLimitations": [
+    "Saved responses do not evaluate changed POST bodies",
+    "Critical-CH first response is inferred and marked",
+    "Configured dynamic-ID response substitution is recorded",
+    "Unknown request stops without live fallback",
+    "R2 incomplete first uninstrumented replay retained; exact historical cause unproved",
+    "R4 one scheduler cancellation diagnostic per run is after deliberate boundary cancellation",
+    "Unused favicon fixture4 corresponds to real runtime cache; not forced to transport"
+  ],
+  "fullSuite": {
+    "exitCode": 0,
+    "browserSeconds": 385.328,
+    "command": "go test ./internal/browser ./internal/network ./internal/scheduler ./internal/cdp ./internal/engine/... ./internal/webapi ./tools/compatibility/offline_replay -count=1 -timeout=15m",
+    "allTestedPackagesPassed": true,
+    "skipCount": "not available from nonverbose log; opt-in stress/performance not enabled",
+    "logSHA256": "ef270441c3e3cdeb03d0808b2c621f9cc16f5198b8c41fb07860228ebaf6c4a1",
+    "timing": "Before only new-test watchdog adjustments; production source unchanged"
+  },
+  "race": {
+    "initialBrowser": {
+      "testAndSubtestEvents": {
+        "pass": 65,
+        "fail": 6,
+        "skip": 0
+      },
+      "failures": [
+        {
+          "name": "TestChildDocumentInheritsDomainAndNavigationReferrer/goja",
+          "seconds": 19.79
+        },
+        {
+          "name": "TestChildDocumentInheritsDomainAndNavigationReferrer",
+          "seconds": 20.65
+        },
+        {
+          "name": "TestNestedFrameOwnerLoadDrainsMicrotasks/goja",
+          "seconds": 9.65
+        },
+        {
+          "name": "TestNestedFrameOwnerLoadDrainsMicrotasks",
+          "seconds": 10.09
+        },
+        {
+          "name": "TestPerformanceNavigationReasonAndResourceIdentity/goja",
+          "seconds": 23.4
+        },
+        {
+          "name": "TestPerformanceNavigationReasonAndResourceIdentity",
+          "seconds": 24.09
+        }
+      ],
+      "skips": [],
+      "packages": {
+        "github.com/moreveal/mimic/internal/browser": {
+          "status": "fail",
+          "seconds": 190.752
+        }
+      },
+      "dataRaceWarnings": [],
+      "logSHA256": "f9c5c3366216b6c453318707df7e3a7a6d7629305edf13ce9f866322c59aa6c0"
+    },
+    "core": {
+      "testAndSubtestEvents": {
+        "pass": 184,
+        "fail": 0,
+        "skip": 2
+      },
+      "failures": [],
+      "skips": [
+        {
+          "name": "TestOwnerModelProbe",
+          "seconds": 0
+        },
+        {
+          "name": "TestHostBoundaryProfile",
+          "seconds": 0
+        }
+      ],
+      "packages": {
+        "github.com/moreveal/mimic/internal/scheduler": {
+          "status": "pass",
+          "seconds": 1.291
+        },
+        "github.com/moreveal/mimic/internal/network": {
+          "status": "pass",
+          "seconds": 2.895
+        },
+        "github.com/moreveal/mimic/internal/engine/v8": {
+          "status": "pass",
+          "seconds": 5.497
+        },
+        "github.com/moreveal/mimic/internal/cdp": {
+          "status": "pass",
+          "seconds": 6.695
+        }
+      },
+      "dataRaceWarnings": [],
+      "logSHA256": "04b30728ee845600fa5780cf31a2a0eff6d419e7904ecc15ccf0b90eb3941201"
+    },
+    "deadlineControl": {
+      "testAndSubtestEvents": {
+        "pass": 5,
+        "fail": 4,
+        "skip": 0
+      },
+      "failures": [
+        {
+          "name": "TestChildDocumentInheritsDomainAndNavigationReferrer/goja",
+          "seconds": 21.2
+        },
+        {
+          "name": "TestChildDocumentInheritsDomainAndNavigationReferrer",
+          "seconds": 22.22
+        },
+        {
+          "name": "TestNestedFrameOwnerLoadDrainsMicrotasks/goja",
+          "seconds": 10.68
+        },
+        {
+          "name": "TestNestedFrameOwnerLoadDrainsMicrotasks",
+          "seconds": 11.12
+        }
+      ],
+      "skips": [],
+      "packages": {
+        "github.com/moreveal/mimic/internal/browser": {
+          "status": "fail",
+          "seconds": 50.393
+        }
+      },
+      "dataRaceWarnings": [],
+      "logSHA256": "5a7c32b6753f2dbc021a7d6363c4d33da4dd4330b4ab1eaead9dba39d9ed0ead"
+    },
+    "adjustedWatchdogs": {
+      "testAndSubtestEvents": {
+        "pass": 9,
+        "fail": 0,
+        "skip": 0
+      },
+      "failures": [],
+      "skips": [],
+      "packages": {
+        "github.com/moreveal/mimic/internal/browser": {
+          "status": "pass",
+          "seconds": 61.404
+        }
+      },
+      "dataRaceWarnings": [],
+      "logSHA256": "87219111833f02e93dce1401ddd746f7e26dea78fd9c3660e9f4d4e413903c09"
+    }
+  },
+  "raceCommands": {
+    "initialBrowser": "go test -race -json ./internal/browser -run 'Test(WindowHandler|WindowProxyWrites|WindowReflection|WindowGlobalPublication|WindowReference|PostMessageUses|NodeFilterIs|InitialEmptyDocument|BorrowedCalls|ChildDocumentInherits|CrossOriginIsolationHonors|NestedFrameOwner|DocumentStream|ResourceTimingUses|PerformanceNavigation|FramePostMessage|V8NavigatedFrameTransferred|CrossFrameIterator|BootstrapSnapshot(WindowHandlers|NestedWindowMessage|ConcurrentPageTeardown|ConcurrentColdAdmission|FramesHaveIndependentState))' -count=1 -timeout=10m",
+    "core": "go test -race -json ./internal/network ./internal/scheduler ./internal/cdp ./internal/engine/v8 -count=1 -timeout=10m",
+    "deadlineControlAndAfter": "go test -race -json ./internal/browser -run '^Test(ChildDocumentInheritsDomainAndNavigationReferrer|NestedFrameOwnerLoadDrainsMicrotasks|PerformanceNavigationReasonAndResourceIdentity)$' -count=1 -timeout=5m"
+  },
+  "python": {
+    "initialInvocation": "package import error from repository cwd, retained",
+    "correctedCommand": "python -m unittest test_differential",
+    "cwd": "tools/compatibility",
+    "testsPassed": 7,
+    "exitCode": 0
+  },
+  "performanceAndStability": {
+    "fastGate": "not run in this stage; optimization backlog unchanged",
+    "nativeStress": "opt-in broader matrix not rerun; full/targeted ordinary tests only",
+    "nativeCrashClaim": false,
+    "historicalDebt": "docs/compatibility/snapshot-stability-debt-2026-09-11.md",
+    "reopen": "Any new native crash; preserve build/stderr/exit/stack/topology before matched triage"
+  },
+  "probeHashes": {
+    "compatibility/corpus/brand-matrix.js": "9e6ed118d24accf857f272b7660c92749ed20f488c9304032084cbfeafcc9433",
+    "compatibility/corpus/frame-microtask-checkpoint.js": "8dc918220dd2c292e4c7369ec5a5ec0437fa5c0977a12c1abdce0d37ecc66436",
+    "compatibility/corpus/frame-task-interleaving.js": "187a69cf8fd56078dc65d62379700074d00949bea6eba81daf1aa7077e381409",
+    "compatibility/corpus/network.js": "0cd46d6dea3f38f439083cc79e28f43b4256707d04585492f566f3fa6658ea27",
+    "compatibility/corpus/normalize.js": "160591c37d3ea64e3b80f690fc64ded8f6c811cf7aaa68eaf50f0fed8d1fde20",
+    "compatibility/corpus/observations.js": "5771269022a17956af106be508280bdd0fed58a760b2ac68491fe5f38100e5d8",
+    "compatibility/corpus/partition-revisit.js": "c6a149ed1ec9940c02c3af85f0fcdf8d02e4ff1aa6fc18cb6336f0519ae66474",
+    "compatibility/corpus/partition.js": "51019a0bc140f4f991f642b2262ab443c2d9e93f2a0de50f57892465bfa13adf",
+    "compatibility/corpus/resource-json.js": "c3d2fbdc2d566dbd12255bb057c26455d9d2483b896f5d6ba48d88b134f6a154",
+    "compatibility/corpus/resource-realm-isolation.js": "06fe5bbf913e237d3a7891b20118be21b681914dae049cf2950a55f7bc46e94d",
+    "compatibility/corpus/samesite-init.js": "06e726431a42570b7f873ab1532c1dbfa67d23f9b68a6a78a286c13120767bf5",
+    "compatibility/corpus/samesite-navigation.js": "b6ebebe63d5c49993b05a78719029d929b983d24e3697dfc7ad1b3457125e359",
+    "compatibility/corpus/samesite.js": "87ca9ba49f4374401e263c4c746b448e9b434ae83fb8b1186b4d82a7c3b789c9",
+    "compatibility/corpus/state-relations-audit.js": "d59dac409ce127f675711fcb61f2708d5fe628fdd3ca846c390b4c8be18e19e1",
+    "compatibility/corpus/surface.js": "485dd5ad89a7e79488f746d192744c06d345590913e7937c0a2209ddf6fac9a3",
+    "compatibility/corpus/temporal.js": "4b66cbe9ca5a4edef041dbca867b5cb440eb9e68c8cbe21a9951f9c641d47503",
+    "compatibility/corpus/values.js": "14733ae3f7e30fd20569f43f2733829efd45f56300ec095177a9820b40f0c73a",
+    "compatibility/corpus/worker-microtasks.js": "dd14c8773d67ea01710efaac39111d2ea648c67ef1b2f0e54c5edfaf796fdbfa",
+    "internal/browser/testdata/svg_values_oracle.js": "b28c3b20e43cd6dec0a855892ca5feb12000f607e3c71ff832af3885ac0b5c9f",
+    "internal/browser/testdata/webgpu_lifecycle_oracle.js": "c0918bc66a4cf1cb5d4e0a7d22da73734499dafd81835f8ae8bcc25d39263428",
+    "compatibility/corpus/index.json": "12d4f3bd616f19f3aa6dbc4f9bf2f987f0686eb0d4044ce09b738bc2635b4928",
+    "tools/compatibility/differential.py": "31a05b0b77ccff45ce2d551c246786e976c7b4e2e8a5e190c9f7e4380b67e405",
+    "compatibility/fuzz_probes.py": "922e0cc6db7ae3669f7adc5602c649afde8c6060fee7eb8b55e19229567b0e10",
+    ".build/causal-211032/window-oracle/probe.js": "edd9eac6f07a67494a25a2c52dc4434dcd1b95d816103a3c579b7b1ea66dbffe",
+    ".build/causal-211032/window-set-oracle/probe.js": "1375cedc6e184f7a78c06bd3d6dc49564d731f34e347a7b5525fa8e679b90c4b",
+    ".build/causal-211032/nodefilter-oracle/probe.js": "5f1844c70b482e886f81aa6256f5da509e14a85d53ec11e0ff55cd37bd8b771b",
+    ".build/causal-211032/postmessage-shape-oracle/probe.js": "7d066eac5fa7af210efd6b43f8518f5f18b449e7cbc69d799eac7a9d2e09754c",
+    ".build/causal-211032/window-event-oracle/probe.js": "a7f3b8df318f741225fc16c3d5d30d78729cb9006ea0eb6ac8235a4fc0fe8c5c",
+    ".build/causal-211032/document-open-handlers-oracle/probe.js": "f037b72a1193de81316124a541404166892d51214b8f026475c4f00a7b8b52bb",
+    ".build/causal-211032/compare/clock_probe.py": "03dd804f626ffa74399b2fbf8285ef5751b8636e07bf90a8e408bbb190b7f157",
+    ".build/causal-211032/compare/srcdoc_await_probe.py": "fe294b21469ecb8794386abc02fae0635caaab7c8459f0e111a8d38eb9204f31",
+    ".build/causal-211032/compare/timing_probe.py": "fe0c47e6d3928efcdcab8b0431d0341c810015d8a2b072e4090b525125c5bdf8"
+  },
+  "privateEvidenceHashes": {
+    ".build/causal-211032/replay/r2/receipt.json": "af43c8b1145ccac8a8669cd2ea871ea15ea0d598c91d1a29ee61fd82cf8371e3",
+    ".build/causal-211032/replay/r3/receipt.json": "21f665ebb1a8bb0ab379c686db0b8137f325e40418decc92ce416b36def067b8",
+    ".build/causal-211032/replay/r4/receipt.json": "f5b78c5167dd2f7717155697f6e0e6a44847f8499dd6c501d7cf5d7af6c84019",
+    ".build/causal-211032/vm-analysis/r4/payload-provenance.json": "31302747beb425d2d9d71038ba40fb399fccfd5b13f2c9146f0e046cbb932536",
+    ".build/causal-211032/vm-analysis/r4/emitted-property-comparison.json": "35ad27a492fce2b24b4f90c006e1c87f560a4b63c94172837ade9cf25ff86bcc",
+    ".build/causal-211032/vm-analysis/r4/coverage-precision.json": "61c1f1529fd716fe5eb17e260139a506c2d94cdab533687d27195a0c8465fb6b",
+    ".build/causal-211032/compare/general-packet-final/manifest.json": "e65ed7fa30378a2d117c66c55ceaae05896f9a2e133f2941d16b51e3178ea82b",
+    ".build/causal-211032/compare/general-packet-final/all-leaves.json": "696cd105217dd2f88abbc4cdfd2b188f1919a560d3ff00e4a292446679ea50ad",
+    ".build/causal-211032/compare/general-after-r4/manifest.json": "0d206578a0afd056b1e1bad5f7b386d41d9f89a5120ae557d0b139c36b9a8351",
+    ".build/causal-211032/compare/general-after-r4/all-leaves.json": "68524c3cb1bbf30a99527238a38f2f42f6892b6b94cc82109d5f22b86b6f8087",
+    ".build/causal-211032/compare/warm-r3/manifest.json": "ca3a2cf73f5a3de268fe49747af2722f4dc2d4db3a341f30ae58a6dd5babbcf4",
+    ".build/causal-211032/compare/warm-handler-findings.md": "e12572b34b85919f15ceb64ddccec72005fddab5859cbf147e1a536c6deefc2f",
+    ".build/causal-211032/focused-r2/passport.json": "31fea6d28391445075d6ef74423d65e82fe22b25dc7570b897fb784a733c1433",
+    ".build/causal-211032/document-open-handlers-oracle/before/passport.json": "b272b2d85e03cdde9057ad5a6c037dde39fd1f23c1f9295cf8075e3329841149",
+    ".build/causal-211032/document-open-handlers-oracle/r4/passport.json": "b721078ebbd7ed5267a21ab74bb5defdc7f5516e77139afe6e844e31351eaf02",
+    ".build/causal-211032/window-oracle/checkpoint-1/comparison-summary.json": "6951544b977f020aaf12921d093fe760af0e7c0d675de9e20fa84c58e5b4fb96",
+    ".build/causal-211032/compare/checkpoint-2-after/comparison.json": "65c5d8b5919136729297f281731a7e54d2f68ad6261eca85d5f0d9ba627e3682",
+    ".build/causal-211032/validation/full-tests.log": "ada61a9271743ce25e56503417d6831bed4138b09dd2668cbf13f90fc495ee05",
+    ".build/causal-211032/validation/full-tests-r4.log": "ef270441c3e3cdeb03d0808b2c621f9cc16f5198b8c41fb07860228ebaf6c4a1",
+    ".build/causal-211032/validation/python-final.log": "75091a76327b4de64aa0947c23db2069ba43fde7f222596b5935a5f8255d5a07",
+    ".build/causal-211032/validation/python-final-package-cwd.log": "2debe722d5804e54cfb397d02ed03707f449f8c5096e021cf5a6ee1175c9df7f",
+    ".build/causal-211032/validation/snapshot-handlers-no-eager-key.log": "739c042c7e3fd5dcbf9b172c309cac6bbbff964485fad0b61c9034c127cbe713"
+  },
+  "commits": [
+    "a96d52e test(browser): budget instrumented realm bootstrap in semantic probes",
+    "8e62be3 test(webapi): align restore fixture with lazy Window topology",
+    "fc34dbc fix(webapi): reset handler attributes when document opens",
+    "282b695 fix(browser): drain microtasks after iframe owner load",
+    "fd024be fix(browser): preserve postMessage owner and incumbent realm",
+    "c322073 fix(browser): preserve WindowProxy setter receivers",
+    "4109ad1 fix(webapi): expose the native NodeFilter interface shape",
+    "5c53c8b fix(browser): preserve thrown values across realm calls",
+    "8d75d8f fix(webapi): keep Window handlers in live listener state",
+    "6a5f728 fix(browser): inherit document origin referrer and isolation policy",
+    "29c5e4e fix(browser): bind resource timing to document navigation state",
+    "827bcb0 feat(compat): replay recorded navigation cycles offline"
+  ],
+  "privateArtifactPolicy": "Only paths, digests and safe aggregates are published. Raw capture/source/payload/cookies/tokens remain ignored."
+}
