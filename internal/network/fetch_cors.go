@@ -17,16 +17,17 @@ var corsSimpleRange = regexp.MustCompile(`^bytes=[0-9]+-[0-9]*$`)
 // the aggregate 1024-byte safelist limit, and the no-cors author-header guard.
 // Element/module CORS and XHR have separate consumers and are not routed here.
 func fetchCrossOrigin(r Request) bool {
-	return r.Initiator == Fetch && r.SourceURL != nil && r.URL != nil &&
+	return r.Initiator == Fetch && r.initiatingURL() != nil && r.URL != nil &&
 		(r.URL.Scheme == "http" || r.URL.Scheme == "https") &&
 		(r.OpaqueOrigin || r.chainSite() != "same-origin")
 }
 
 func fetchOrigin(r Request) string {
-	if r.OpaqueOrigin || r.redirectTaintedOrigin() || r.SourceURL == nil || r.SourceURL.Scheme != "http" && r.SourceURL.Scheme != "https" {
+	source := r.initiatingURL()
+	if r.OpaqueOrigin || r.redirectTaintedOrigin() || source == nil || source.Scheme != "http" && source.Scheme != "https" {
 		return "null"
 	}
-	u := *r.SourceURL
+	u := *source
 	u.User, u.Path, u.RawPath, u.RawQuery, u.Fragment = nil, "", "", "", ""
 	u.ForceQuery, u.RawFragment = false, ""
 	if u.Port() == "80" && u.Scheme == "http" || u.Port() == "443" && u.Scheme == "https" {

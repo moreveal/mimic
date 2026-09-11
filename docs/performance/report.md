@@ -1712,3 +1712,21 @@ focused browser/CDP race, full DOM race and eight Python tests pass. Two final
 live attempts fail before snapshot while the external document is unavailable;
 these are not E2E passes. See the report for remaining style initialization,
 network/navigation limitations and identical baseline repository-audit failures.
+
+## CDP automation compatibility (2026-09-12)
+
+The [CDP compatibility checkpoint](../compatibility/cdp-automation-2026-09-12.md)
+includes a complete unchanged fast gate on a fresh intermediate build. All
+mandatory workloads, 10/25-Page concurrency waves and the two memory-recovery
+waves passed. Median DOM/static/React completion was 218.62/35.73/123.92 ms;
+median measured 10/25-Page throughput was 73.19/85.84 Pages/s. Static/React
+recovery private memory was 146.80/169.79 MiB.
+
+The [machine-readable receipt](../compatibility/cdp-automation-20260912/performance.json)
+retains the executed binary hash, build state, frozen harness fingerprint,
+launch checks, concurrency/memory measurements and raw-data hash. Other tests
+and owned oracle processes were active on this host. This is a single
+intermediate checkpoint, not a controlled baseline pair or a performance
+improvement claim. Later timer/blank-frame changes are covered by the final
+semantic and race checks. Prior performance measurements and stability debt
+remain historical evidence and are not reclassified by this gate.

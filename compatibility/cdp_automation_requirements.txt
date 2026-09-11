@@ -1,0 +1,2 @@
+pyppeteer==2.0.0
+websockets==10.4

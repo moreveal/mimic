@@ -220,6 +220,8 @@ func TestCDPTopLegacyLifecycleEventsPrecedeLifecycleEvents(t *testing.T) {
 	}
 	defer c.Close()
 	_ = c.SetReadDeadline(time.Now().Add(5 * time.Second))
+	_ = c.WriteJSON(map[string]any{"id": 101, "method": "Page.enable"})
+	_ = readReply(t, c, 101)
 	_ = c.WriteJSON(map[string]any{"id": 1, "method": "Page.setLifecycleEventsEnabled", "params": map[string]any{"enabled": true}})
 	_ = readReply(t, c, 1)
 	_ = c.WriteJSON(map[string]any{"id": 2, "method": "Page.navigate", "params": map[string]any{"url": pageServer.URL}})
@@ -267,6 +269,8 @@ func TestCDPProjectsChildFrameTreeLifecycleAndExecutionContext(t *testing.T) {
 	}
 	defer c.Close()
 	_ = c.SetReadDeadline(time.Now().Add(5 * time.Second))
+	_ = c.WriteJSON(map[string]any{"id": 101, "method": "Page.enable"})
+	_ = readReply(t, c, 101)
 	_ = c.WriteJSON(map[string]any{"id": 1, "method": "Runtime.enable"})
 	_ = readReply(t, c, 1)
 	_ = c.WriteJSON(map[string]any{"id": 2, "method": "Page.setLifecycleEventsEnabled", "params": map[string]any{"enabled": true}})
@@ -328,7 +332,7 @@ func TestCDPProjectsChildFrameTreeLifecycleAndExecutionContext(t *testing.T) {
 		t.Fatalf("incorrect child frame payload: %#v", childPayload)
 	}
 
-	_ = c.WriteJSON(map[string]any{"id": 5, "method": "Runtime.evaluate", "params": map[string]any{"contextId": childContextID, "expression": `({title:document.title,parent:parent!==self,marker:childMarker})`}})
+	_ = c.WriteJSON(map[string]any{"id": 5, "method": "Runtime.evaluate", "params": map[string]any{"contextId": childContextID, "expression": `({title:document.title,parent:parent!==self,marker:childMarker})`, "returnByValue": true}})
 	evaluation := readReply(t, c, 5)
 	value := evaluation["result"].(map[string]any)["result"].(map[string]any)["value"].(map[string]any)
 	if value["title"] != "child title" || value["parent"] != true || value["marker"] != float64(42) {

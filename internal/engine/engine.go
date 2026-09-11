@@ -12,6 +12,19 @@ type Value interface {
 	String() string
 }
 
+// ValueReleaser releases an embedder-owned root after its last use. It never
+// destroys the JavaScript object while that object is reachable from script.
+// Values retained by another Go owner must not be released through this API.
+type ValueReleaser interface {
+	ReleaseValue(Value)
+}
+
+// ThrownValue preserves the identity and type of a JavaScript exception.
+// The caller may release this root after handling the exception.
+type ThrownValue interface {
+	ThrownValue() Value
+}
+
 type Function func(this Value, args []Value) (Value, error)
 
 type Promise struct {

@@ -1,0 +1,51 @@
+E:\GitHub\mimic-cdp-automation\.build\mimic-cdp5.exe: go1.26.4
+	path	github.com/moreveal/mimic/cmd/mimic
+	mod	github.com/moreveal/mimic	(devel)
+	dep	github.com/andybalholm/brotli	v1.2.0	h1:ukwgCxwYrmACq68yiUqwIWnGY0cTPox/M94sVwToPjQ=
+	dep	github.com/bdandy/go-errors	v1.2.2	h1:WdFv/oukjTJCLa79UfkGmwX7ZxONAihKu4V0mLIs11Q=
+	dep	github.com/bdandy/go-socks4	v1.2.3	h1:Q6Y2heY1GRjCtHbmlKfnwrKVU/k81LS8mRGLRlmDlic=
+	dep	github.com/bogdanfinn/fhttp	v0.6.9	h1:F9MsWR1K6JMRlXN4Q/MfjYmptr29nCdycQo+OPBG5U0=
+	dep	github.com/bogdanfinn/quic-go-utls	v1.0.10-utls
+	=>	./third_party/quic-go-utls	(devel)
+
+	dep	github.com/bogdanfinn/tls-client	v1.16.0
+	=>	./third_party/tls-client	(devel)
+
+	dep	github.com/bogdanfinn/utls	v1.7.8-barnius
+	=>	./third_party/utls	(devel)
+
+	dep	github.com/bogdanfinn/websocket	v1.5.6-barnius	h1:QpdWVEZ9rKtcT7C2pU19uE2KQw2XevuKTDTzLxfDi/I=
+	dep	github.com/buke/quickjs-go	v0.7.7	h1:kuG3d0Vnn7LBvO64vgW+fwSZ5E3XK5pcYDttiIYmatw=
+	dep	github.com/cloudflare/circl	v1.6.2	h1:hL7VBpHHKzrV5WTfHCaBsgx/HGbBYlgrwvNXEVDYYsQ=
+	dep	github.com/dlclark/regexp2/v2	v2.5.2	h1:HAsucWRhsqcDzl6Ua9aR8JwYOTzrZyPrF0/FNxJVAI0=
+	dep	github.com/dop251/goja	v0.0.0-20260906210903-70ad66ec7ce4	h1:GsWm9G80nlJAmJE/r9qdyqQWieJVdJObCMxmu4cZ5dQ=
+	dep	github.com/gen2brain/gav1d	v0.2.5	h1:Zg5/DE1JBdf8kxZqIvNo2ZEizF9DVF9jdPTAKJQZbOY=
+	dep	github.com/go-sourcemap/sourcemap	v2.1.3+incompatible	h1:W1iEw64niKVGogNgBN3ePyLFfuisuzeidWPMPWmECqU=
+	dep	github.com/go-text/typesetting	v0.3.4	h1:YYurUOtEb9kGSOz4uE3k4OpBGsp1dDL8+fjCeaFamAU=
+	dep	github.com/golang/freetype	v0.0.0-20170609003504-e2365dfdc4a0	h1:DACJavvAHhabrF08vX0COfcOBJRhZ8lUbR+ZWIs0Y5g=
+	dep	github.com/google/pprof	v0.0.0-20230207041349-798e818bf904	h1:4/hN5RUoecvl+RmJRE2YxKWtnnQls6rQjjW5oV7qg2U=
+	dep	github.com/google/uuid	v1.6.0	h1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=
+	dep	github.com/gorilla/websocket	v1.5.3	h1:saDtZ6Pbx/0u+bgYQ3q96pZgCzfhKXGPqt7kZ72aNNg=
+	dep	github.com/klauspost/compress	v1.18.2	h1:iiPHWW0YrcFgpBYhsA6D1+fqHssJscY/Tm/y2Uqnapk=
+	dep	github.com/maclof/gov8	v0.1.1
+	=>	./third_party/gov8	(devel)
+
+	dep	github.com/quic-go/qpack	v0.6.0	h1:g7W+BMYynC1LbYLSqRt8PBg5Tgwxn214ZZR34VIOjz8=
+	dep	github.com/tam7t/hpkp	v0.0.0-20160821193359-2b70b4024ed5	h1:YqAladjX7xpA6BM04leXMWAEjS0mTZ5kUU9KRBriQJc=
+	dep	github.com/tdewolff/font	v0.0.0-20241125190050-d899fdc808fc	h1:8YYYxRss857qPp/DHQw5Ej5jMdWkTFYz6kHO9tnqY3M=
+	dep	github.com/tdewolff/parse/v2	v2.7.14-0.20240511005308-a1dd1e88845b	h1:oexdBDt+PcFBI5yf/+ozmKHDugKR83Hrkuvw5FfTwe8=
+	dep	golang.org/x/crypto	v0.48.0	h1:/VRzVqiRSggnhY7gNRxPauEQ5Drw9haKdM0jqfcCFts=
+	dep	golang.org/x/image	v0.23.0	h1:HseQ7c2OpPKTPVzNjG5fwJsOTCiiwS4QdsYi5XU6H68=
+	dep	golang.org/x/net	v0.51.0	h1:94R/GTO7mt3/4wIKpcR5gkGmRLOuE/2hNGeWq/GBIFo=
+	dep	golang.org/x/sys	v0.41.0	h1:Ivj+2Cp/ylzLiEU89QhWblYnOE9zerudt9Ftecq2C6k=
+	dep	golang.org/x/text	v0.34.0	h1:oL/Qq0Kdaqxa1KbNeMKwQq0reLCCaFtqu2eNuSeNHbk=
+	build	-buildmode=exe
+	build	-compiler=gc
+	build	CGO_ENABLED=1
+	build	CGO_CFLAGS=
+	build	CGO_CPPFLAGS=
+	build	CGO_CXXFLAGS=
+	build	CGO_LDFLAGS=
+	build	GOARCH=amd64
+	build	GOOS=windows
+	build	GOAMD64=v1

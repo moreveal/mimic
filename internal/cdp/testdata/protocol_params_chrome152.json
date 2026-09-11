@@ -1,0 +1,472 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "viewport": {
+      "width": 1272,
+      "height": 709,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "x": 0,
+      "y": 0,
+      "outerWidth": 1280,
+      "outerHeight": 800
+    },
+    "secureContextState": false,
+    "isolationState": false,
+    "visibilityState": "visible",
+    "hasFocus": false
+  },
+  "cases": [
+    {
+      "name": "unknown-command",
+      "method": "Runtime.noSuchCommand",
+      "params": "{}",
+      "response": {
+        "error": {
+          "code": -32601,
+          "message": "'Runtime.noSuchCommand' wasn't found"
+        }
+      }
+    },
+    {
+      "name": "missing-params",
+      "method": "Runtime.evaluate",
+      "params": null,
+      "response": {
+        "error": {
+          "code": -32602,
+          "message": "Invalid parameters",
+          "data": "Failed to deserialize params - CBOR: map start expected at position 0"
+        }
+      }
+    },
+    {
+      "name": "null-params",
+      "method": "Runtime.evaluate",
+      "params": "null",
+      "response": {
+        "error": {
+          "code": -32602,
+          "message": "Invalid parameters",
+          "data": "Failed to deserialize params - CBOR: map start expected at position 0"
+        }
+      }
+    },
+    {
+      "name": "array-params",
+      "method": "Runtime.evaluate",
+      "params": "[]",
+      "response": {
+        "error": {
+          "code": -32602,
+          "message": "Invalid parameters",
+          "data": "Failed to deserialize params - CBOR: map start expected at position 7"
+        }
+      }
+    },
+    {
+      "name": "required-missing",
+      "method": "Runtime.evaluate",
+      "params": "{}",
+      "response": {
+        "error": {
+          "code": -32602,
+          "message": "Invalid parameters",
+          "data": "Failed to deserialize params.expression - BINDINGS: mandatory field missing at position 8"
+        }
+      }
+    },
+    {
+      "name": "required-null",
+      "method": "Runtime.evaluate",
+      "params": "{\"expression\":null}",
+      "response": {
+        "error": {
+          "code": -32602,
+          "message": "Invalid parameters",
+          "data": "Failed to deserialize params.expression - BINDINGS: string value expected at position 19"
+        }
+      }
+    },
+    {
+      "name": "required-wrong-type",
+      "method": "Runtime.evaluate",
+      "params": "{\"expression\":42}",
+      "response": {
+        "error": {
+          "code": -32602,
+          "message": "Invalid parameters",
+          "data": "Failed to deserialize params.expression - BINDINGS: string value expected at position 19"
+        }
+      }
+    },
+    {
+      "name": "unknown-param",
+      "method": "Runtime.evaluate",
+      "params": "{\"expression\":\"1+1\",\"futureField\":{\"a\":1}}",
+      "response": {
+        "success": true
+      }
+    },
+    {
+      "name": "optional-null",
+      "method": "Runtime.evaluate",
+      "params": "{\"expression\":\"1+1\",\"returnByValue\":null}",
+      "response": {
+        "error": {
+          "code": -32602,
+          "message": "Invalid parameters",
+          "data": "Failed to deserialize params.returnByValue - BINDINGS: bool value expected at position 37"
+        }
+      }
+    },
+    {
+      "name": "optional-wrong-type",
+      "method": "Runtime.evaluate",
+      "params": "{\"expression\":\"1+1\",\"returnByValue\":\"true\"}",
+      "response": {
+        "error": {
+          "code": -32602,
+          "message": "Invalid parameters",
+          "data": "Failed to deserialize params.returnByValue - BINDINGS: bool value expected at position 37"
+        }
+      }
+    },
+    {
+      "name": "integer-literal",
+      "method": "DOM.getDocument",
+      "params": "{\"depth\":1}",
+      "response": {
+        "success": true
+      }
+    },
+    {
+      "name": "optional-params-missing",
+      "method": "DOM.getDocument",
+      "params": null,
+      "response": {
+        "success": true
+      }
+    },
+    {
+      "name": "optional-params-null",
+      "method": "DOM.getDocument",
+      "params": "null",
+      "response": {
+        "success": true
+      }
+    },
+    {
+      "name": "optional-params-array",
+      "method": "DOM.getDocument",
+      "params": "[]",
+      "response": {
+        "error": {
+          "code": -32602,
+          "message": "Invalid parameters",
+          "data": "Failed to deserialize params - CBOR: map start expected at position 7"
+        }
+      }
+    },
+    {
+      "name": "integer-float",
+      "method": "DOM.getDocument",
+      "params": "{\"depth\":1.0}",
+      "response": {
+        "success": true
+      }
+    },
+    {
+      "name": "integer-exponent",
+      "method": "DOM.getDocument",
+      "params": "{\"depth\":1e0}",
+      "response": {
+        "success": true
+      }
+    },
+    {
+      "name": "integer-fraction",
+      "method": "DOM.getDocument",
+      "params": "{\"depth\":1.5}",
+      "response": {
+        "error": {
+          "code": -32602,
+          "message": "Invalid parameters",
+          "data": "Failed to deserialize params.depth - BINDINGS: int32 value expected at position 14"
+        }
+      }
+    },
+    {
+      "name": "integer-overflow",
+      "method": "DOM.getDocument",
+      "params": "{\"depth\":2147483648}",
+      "response": {
+        "error": {
+          "code": -32602,
+          "message": "Invalid parameters",
+          "data": "Failed to deserialize params.depth - BINDINGS: int32 value expected at position 14"
+        }
+      }
+    },
+    {
+      "name": "enum-string",
+      "method": "Page.setLifecycleEventsEnabled",
+      "params": "{\"enabled\":true}",
+      "response": {
+        "success": true
+      }
+    },
+    {
+      "name": "enum-unknown-string",
+      "method": "Runtime.evaluate",
+      "params": "{\"expression\":\"1\",\"serializationOptions\":{\"serialization\":\"future\"}}",
+      "response": {
+        "error": {
+          "code": -32602,
+          "message": "Unknown serializationOptions.serialization value future"
+        }
+      }
+    },
+    {
+      "name": "enum-wrong-type",
+      "method": "Runtime.evaluate",
+      "params": "{\"expression\":\"1\",\"serializationOptions\":{\"serialization\":42}}",
+      "response": {
+        "error": {
+          "code": -32602,
+          "message": "Invalid parameters",
+          "data": "Failed to deserialize params.serializationOptions.serialization - BINDINGS: string value expected at position 64"
+        }
+      }
+    },
+    {
+      "name": "nested-required",
+      "method": "Runtime.evaluate",
+      "params": "{\"expression\":\"1\",\"serializationOptions\":{}}",
+      "response": {
+        "error": {
+          "code": -32602,
+          "message": "Invalid parameters",
+          "data": "Failed to deserialize params.serializationOptions.serialization - BINDINGS: mandatory field missing at position 50"
+        }
+      }
+    },
+    {
+      "name": "nested-unknown-field",
+      "method": "Runtime.evaluate",
+      "params": "{\"expression\":\"1\",\"serializationOptions\":{\"serialization\":\"json\",\"future\":42}}",
+      "response": {
+        "success": true
+      }
+    },
+    {
+      "name": "array-wrong-type",
+      "method": "Runtime.callFunctionOn",
+      "params": "{\"functionDeclaration\":\"function(){}\",\"arguments\":{}}",
+      "response": {
+        "error": {
+          "code": -32602,
+          "message": "Invalid parameters",
+          "data": "Failed to deserialize params.arguments - CBOR: array start expected at position 58"
+        }
+      }
+    },
+    {
+      "name": "array-item-wrong-type",
+      "method": "Runtime.callFunctionOn",
+      "params": "{\"functionDeclaration\":\"function(){}\",\"arguments\":[1]}",
+      "response": {
+        "error": {
+          "code": -32602,
+          "message": "Invalid parameters",
+          "data": "Failed to deserialize params.arguments - CBOR: map start expected at position 59"
+        }
+      }
+    },
+    {
+      "name": "array-item-null",
+      "method": "Runtime.callFunctionOn",
+      "params": "{\"functionDeclaration\":\"function(){}\",\"arguments\":[null]}",
+      "response": {
+        "error": {
+          "code": -32602,
+          "message": "Invalid parameters",
+          "data": "Failed to deserialize params.arguments - CBOR: map start expected at position 59"
+        }
+      }
+    },
+    {
+      "name": "any-null",
+      "method": "Runtime.callFunctionOn",
+      "params": "{\"functionDeclaration\":\"function(){}\",\"arguments\":[{\"value\":null}]}",
+      "response": {
+        "error": {
+          "code": -32602,
+          "message": "Either objectId or executionContextId or uniqueContextId must be specified"
+        }
+      }
+    },
+    {
+      "name": "any-object",
+      "method": "Runtime.callFunctionOn",
+      "params": "{\"functionDeclaration\":\"function(){}\",\"arguments\":[{\"value\":{\"a\":1}}]}",
+      "response": {
+        "error": {
+          "code": -32602,
+          "message": "Either objectId or executionContextId or uniqueContextId must be specified"
+        }
+      }
+    },
+    {
+      "name": "empty-command-null",
+      "method": "Browser.getVersion",
+      "params": "null",
+      "response": {
+        "success": true
+      }
+    },
+    {
+      "name": "empty-command-array",
+      "method": "Browser.getVersion",
+      "params": "[]",
+      "response": {
+        "success": true
+      }
+    },
+    {
+      "name": "empty-command-extra",
+      "method": "Browser.getVersion",
+      "params": "{\"future\":true}",
+      "response": {
+        "success": true
+      }
+    },
+    {
+      "name": "required-nested-array",
+      "method": "Network.setCookies",
+      "params": "{\"cookies\":[{}]}",
+      "response": {
+        "error": {
+          "code": -32602,
+          "message": "Invalid parameters",
+          "data": "Failed to deserialize params.cookies.name - BINDINGS: mandatory field missing at position 32"
+        }
+      }
+    },
+    {
+      "name": "optional-object-null",
+      "method": "Runtime.evaluate",
+      "params": "{\"expression\":\"1\",\"serializationOptions\":null}",
+      "response": {
+        "error": {
+          "code": -32602,
+          "message": "Invalid parameters",
+          "data": "Failed to deserialize params.serializationOptions - CBOR: map start expected at position 42"
+        }
+      }
+    },
+    {
+      "name": "optional-array-null",
+      "method": "Runtime.callFunctionOn",
+      "params": "{\"functionDeclaration\":\"function(){}\",\"arguments\":null}",
+      "response": {
+        "error": {
+          "code": -32602,
+          "message": "Invalid parameters",
+          "data": "Failed to deserialize params.arguments - CBOR: array start expected at position 51"
+        }
+      }
+    },
+    {
+      "name": "optional-any-null",
+      "method": "Runtime.callFunctionOn",
+      "params": "{\"functionDeclaration\":\"function(){}\",\"arguments\":[{\"value\":null}]}",
+      "response": {
+        "error": {
+          "code": -32602,
+          "message": "Either objectId or executionContextId or uniqueContextId must be specified"
+        }
+      }
+    },
+    {
+      "name": "binary-valid",
+      "method": "Fetch.fulfillRequest",
+      "params": "{\"requestId\":\"missing\",\"responseCode\":200,\"body\":\"aGk=\"}",
+      "response": {
+        "error": {
+          "code": -32000,
+          "message": "Fetch domain is not enabled"
+        }
+      }
+    },
+    {
+      "name": "binary-invalid-base64",
+      "method": "Fetch.fulfillRequest",
+      "params": "{\"requestId\":\"missing\",\"responseCode\":200,\"body\":\"!\"}",
+      "response": {
+        "error": {
+          "code": -32602,
+          "message": "Invalid parameters",
+          "data": "Failed to deserialize params.body - BINDINGS: invalid base64 string at position 46"
+        }
+      }
+    },
+    {
+      "name": "binary-wrong-type",
+      "method": "Fetch.fulfillRequest",
+      "params": "{\"requestId\":\"missing\",\"responseCode\":200,\"body\":42}",
+      "response": {
+        "error": {
+          "code": -32602,
+          "message": "Invalid parameters",
+          "data": "Failed to deserialize params.body - BINDINGS: binary value expected at position 46"
+        }
+      }
+    },
+    {
+      "name": "binary-unpadded",
+      "method": "Fetch.fulfillRequest",
+      "params": "{\"requestId\":\"missing\",\"responseCode\":200,\"body\":\"aGk\"}",
+      "response": {
+        "error": {
+          "code": -32602,
+          "message": "Invalid parameters",
+          "data": "Failed to deserialize params.body - BINDINGS: invalid base64 string at position 46"
+        }
+      }
+    },
+    {
+      "name": "binary-newline",
+      "method": "Fetch.fulfillRequest",
+      "params": "{\"requestId\":\"missing\",\"responseCode\":200,\"body\":\"aGk=\\n\"}",
+      "response": {
+        "error": {
+          "code": -32602,
+          "message": "Invalid parameters",
+          "data": "Failed to deserialize params.body - BINDINGS: invalid base64 string at position 46"
+        }
+      }
+    },
+    {
+      "name": "binary-empty",
+      "method": "Fetch.fulfillRequest",
+      "params": "{\"requestId\":\"missing\",\"responseCode\":200,\"body\":\"\"}",
+      "response": {
+        "error": {
+          "code": -32000,
+          "message": "Fetch domain is not enabled"
+        }
+      }
+    }
+  ]
+}
