@@ -469,7 +469,10 @@ func (r *Realm) completeChildFrameLoad(ctx context.Context, navigation *childNav
 		}
 	}
 	r.finishChildNavigation(navigation)
-	return nil
+	// The owner load callback ran in the embedding realm, which can differ
+	// from both the loaded document and the Page scheduler's top realm. Drain
+	// its jobs now; otherwise nested-frame promises wait for an unrelated timer.
+	return r.checkpoint(ctx)
 }
 
 func (r *Realm) canAccess(frame *Frame) bool {
