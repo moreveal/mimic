@@ -31,3 +31,13 @@ return document.compatMode==='BackCompat'&&document.doctype===null&&d.compatMode
 	})
 }
 
+func TestNodeFilterIsNonConstructibleInterface(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, p *Page) {
+		historyEval(t, p, `(()=>{if(typeof NodeFilter!=='function'||NodeFilter.length!==0||Object.hasOwn(NodeFilter,'prototype')||!Object.isExtensible(NodeFilter))return false;
+const d=Object.getOwnPropertyDescriptor(NodeFilter,'SHOW_ELEMENT');if(d.value!==1||d.writable||d.configurable||!d.enumerable)return false;
+try{NodeFilter();return false}catch(e){if(e.name!=='TypeError')return false}
+try{new NodeFilter();return false}catch(e){if(e.name!=='TypeError')return false}
+try{Reflect.construct(function(){},[],NodeFilter);return false}catch(e){return e.name==='TypeError'}
+})()`, true)
+	})
+}
