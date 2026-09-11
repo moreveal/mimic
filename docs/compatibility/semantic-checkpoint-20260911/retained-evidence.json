@@ -1,0 +1,37 @@
+[
+  {
+    "path": "compatibility/private-captures/p0-numeric-test-matrix-20260911/1-before/p0-numeric-test-before.exe_260911_172840.dmp",
+    "bytes": 161152635,
+    "sha256": "5ee51a72e0e1b33750f3407336550e749e0d1eaa58d6c8ebf7f10cff9e9ef1e3"
+  },
+  {
+    "path": "compatibility/private-captures/p0-numeric-test-matrix-20260911/2-before/p0-numeric-test-before.exe_260911_172842.dmp",
+    "bytes": 161118433,
+    "sha256": "e78852e05f5037c7f4e1436c4e04363aa01d3e1f83178c1e522c378fed1679e8"
+  },
+  {
+    "path": "compatibility/private-captures/p0-numeric-test-matrix-20260911/3-before/p0-numeric-test-before.exe_260911_172843.dmp",
+    "bytes": 161787233,
+    "sha256": "7999c9908639bb4ceaf00964c2af307d3b8cf7126956c45d155f03c97c3c1104"
+  },
+  {
+    "path": "docs/compatibility/snapshot-lifecycle-audit-2026-09-11.md",
+    "bytes": 5707,
+    "sha256": "418961790df963a9424606615cb951dae36e81a640e363f3d2b00e0e8f48fe4a"
+  },
+  {
+    "path": "docs/compatibility/snapshot-numeric-allocator-20260911/evidence.json",
+    "bytes": 13171,
+    "sha256": "87b2f912489985f52f9c3a1d0e8f99eff257c62400f9475973ffbac9967bd206"
+  },
+  {
+    "path": "docs/compatibility/platform-bindings-20260911/performance.json",
+    "bytes": 55845,
+    "sha256": "f923a36db0cef4a318ff056c0e78081836c5e62956258114d988256893c2b87e"
+  },
+  {
+    "path": ".build/semantic-plateau-p0.log",
+    "bytes": 128857,
+    "sha256": "e03e7828000cf3190f355c3b488e30a8da0ebb8544966f6ca0ee9304f7c726d3"
+  }
+]
