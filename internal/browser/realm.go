@@ -1824,7 +1824,7 @@ func (r *Realm) installBindings() error {
 		return nil, nil
 	})
 	host["historyLength"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
-		if f, ok := r.agent.(*Frame); ok && f.auxiliaryOpener != nil {
+		if f, ok := r.agent.(*Frame); ok && disabledSessionHistory(f) {
 			return r.val(0), nil
 		}
 		return r.val(p.historyLength()), nil
@@ -2168,10 +2168,6 @@ func (r *Realm) recordAPIAccess(name string, supported bool) {
 	}
 }
 func (r *Realm) postNavigate(raw string, replaceOption ...bool) error {
-	if frame, ok := r.agent.(*Frame); ok && frame.auxiliaryOpener != nil {
-		r.scheduler.Post(scheduler.Navigation, 0, func(context.Context) error { r.closePictureInPictureWindow(frame, false); return nil })
-		return nil
-	}
 	historyTarget := r.historyTraversalTarget
 	r.historyTraversalTarget = 0
 	r.recordNavigationDiagnostic(raw, replaceOption)
@@ -2186,6 +2182,10 @@ func (r *Realm) postNavigate(raw string, replaceOption ...bool) error {
 	withoutFragment.Fragment, withoutFragment.RawFragment = current.Fragment, current.RawFragment
 	if !reload && strings.Contains(raw, "#") && withoutFragment.String() == current.String() {
 		r.navigateFragment(u, replace)
+		return nil
+	}
+	if frame, ok := r.agent.(*Frame); ok && frame.auxiliaryOpener != nil {
+		r.scheduler.Post(scheduler.Navigation, 0, func(context.Context) error { r.closePictureInPictureWindow(frame, false); return nil })
 		return nil
 	}
 	reason := "crossDocument"
