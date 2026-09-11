@@ -1,4 +1,6 @@
 import unittest
+import binascii
+from pathlib import PurePosixPath
 from mimic_snapshot import NavigationProgress, decode_files
 
 
@@ -34,6 +36,18 @@ class NavigationProgressTests(unittest.TestCase):
         for path in ["../outside", "/absolute", "C:/drive", "assets\\outside"]:
             with self.subTest(path=path), self.assertRaises(ValueError):
                 decode_files({"files": {path: ""}})
+
+    def test_empty_snapshot_assets_from_current_and_older_servers(self):
+        files = decode_files({"files": {"empty": "", "legacy-empty": None,
+                                        "index.html": "b2s="}})
+        self.assertEqual(files, {PurePosixPath("empty"): b"",
+                                 PurePosixPath("legacy-empty"): b"",
+                                 PurePosixPath("index.html"): b"ok"})
+
+    def test_invalid_asset_data_is_not_treated_as_empty(self):
+        for value in [0, False, [], {}, "%%%"]:
+            with self.subTest(value=value), self.assertRaises((TypeError, ValueError, binascii.Error)):
+                decode_files({"files": {"asset": value}})
 
 
 if __name__ == "__main__":

@@ -329,7 +329,8 @@ def decode_files(snapshot: dict) -> dict[PurePosixPath, bytes]:
         relative = PurePosixPath(name)
         if relative.is_absolute() or ".." in relative.parts or "\\" in name or ":" in name:
             raise ValueError(f"Invalid snapshot path: {name!r}")
-        files[relative] = base64.b64decode(encoded, validate=True)
+        # Older servers serialize a nil Go []byte as null for empty assets.
+        files[relative] = b"" if encoded is None else base64.b64decode(encoded, validate=True)
     return files
 
 

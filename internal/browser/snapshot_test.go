@@ -2,6 +2,7 @@ package browser
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/http/httptest"
@@ -10,7 +11,36 @@ import (
 	"sync/atomic"
 	"testing"
 	"time"
+
+	"github.com/moreveal/mimic/internal/network"
 )
+
+func TestSnapshotEmptyAssetEncodesAsBase64String(t *testing.T) {
+	base, _ := url.Parse("https://example.test/")
+	for _, status := range []int{http.StatusOK, http.StatusNoContent} {
+		b := &snapshotBuilder{
+			out:  Snapshot{Files: map[string][]byte{}},
+			seen: map[string]string{},
+			prefetched: map[string]snapshotAssetLoad{
+				"https://example.test/empty.png": {response: network.Response{Status: status}},
+			},
+		}
+		name := b.asset("/empty.png", base, false)
+		encoded, err := json.Marshal(b.out)
+		if err != nil {
+			t.Fatal(err)
+		}
+		var wire struct {
+			Files map[string]any `json:"files"`
+		}
+		if err := json.Unmarshal(encoded, &wire); err != nil {
+			t.Fatal(err)
+		}
+		if value, ok := wire.Files[name]; name == "" || !ok || value != "" {
+			t.Fatalf("status %d: empty asset must be a base64 string, got %s", status, encoded)
+		}
+	}
+}
 
 func TestSnapshotPreservesCaseInsensitiveDataURL(t *testing.T) {
 	b := &snapshotBuilder{}
