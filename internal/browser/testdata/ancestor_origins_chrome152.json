@@ -1,0 +1,134 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "fixtureOrigin": "http://127.0.0.1:35471",
+  "result": {
+    "result": {
+      "type": "object",
+      "value": {
+        "windowOrigin": {
+          "type": "string",
+          "matchesURL": true,
+          "childMatches": true,
+          "get": "function",
+          "set": "function",
+          "enumerable": true,
+          "configurable": true,
+          "forged": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "borrowed": true,
+          "replaceable": true
+        },
+        "shape": {
+          "keys": [
+            "length",
+            "contains",
+            "item",
+            "constructor",
+            "Symbol(Symbol.toStringTag)",
+            "Symbol(Symbol.iterator)"
+          ],
+          "iterator": "function",
+          "constructor": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "own": [
+            "0"
+          ],
+          "indexDescriptor": {
+            "value": "origin",
+            "writable": false,
+            "enumerable": true,
+            "configurable": true
+          }
+        },
+        "values": {
+          "length": 1,
+          "first": true,
+          "missing": true,
+          "item": true,
+          "itemMissing": null,
+          "contains": true,
+          "notContained": false
+        },
+        "bindings": {
+          "forged": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "missing": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "containsMissing": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "symbol": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "borrowed": true
+        },
+        "mutations": {
+          "setIndex": true,
+          "setMissing": true,
+          "defineIndex": true,
+          "defineMissing": true,
+          "deleteIndex": false,
+          "deleteMissing": true,
+          "preventExtensions": false,
+          "unchanged": true
+        },
+        "nested": {
+          "length": 2,
+          "values": true
+        },
+        "after": {
+          "newList": true,
+          "oldLength": 1,
+          "oldFirst": true
+        },
+        "detached": {
+          "length": 1,
+          "first": true
+        }
+      }
+    }
+  }
+}

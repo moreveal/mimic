@@ -1463,3 +1463,26 @@ Final tested executable SHA256:
 `2c951f5c4a8c393c4a0c26f44aa25c9599478d3f897495441cb63dc18b80b7e0`.
 See [semantic coverage](../compatibility/cleanup-2026-09-11.md) and the
 [separate native stability report](../compatibility/snapshot-cleanup-control-2026-09-11.md).
+
+## Location ownership and reflection checkpoint — 2026-09-11
+
+The clean 8780592 baseline gate failed at the first measured 10-Page static
+wave after a valid warmup, with native access violation and exit 2. A new
+389,882,223-byte first-chance dump and full stderr were retained. The changed
+Location/reflection build completed the full gate, including every mandatory
+workload, 10/25-Page waves and teardown-memory measurements. This is not a
+passing pair and does not close native P0. No failed workload was excluded or
+retried into a passing result.
+
+Warm completion medians before/after (ms): DOM 491.32/489.90, static
+26.89/26.94, React 94.65/86.41. Changed throughput medians: 66.08 sessions/s
+at 10 Pages, 86.64 at 25. Changed post-recovery private memory: 166.94 MiB
+static, 172.37 MiB React. The baseline interruption leaves its corresponding
+concurrency and memory comparison incomplete; previous throughput/memory
+concerns are not declared resolved. Debugger overhead remains part of both
+attempted topologies.
+
+[Receipts](../compatibility/location-owner-reflection-20260911/gates.json) and
+[semantic validation](../compatibility/location-owner-reflection-2026-09-11.md).
+Tested executable SHA256:
+`cc97570c06cf010f6525cd41c946a935f603bfab1d71061105eb1403724ee88d`.
