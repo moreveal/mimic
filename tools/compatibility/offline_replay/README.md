@@ -1,0 +1,75 @@
+# Recorded multi-cycle replay
+
+This local diagnostic executable loads the manual capture format (`trace.json`
+and `root-<request-id>.json`) and runs its saved document in Mimic with a
+replacement Page transport. It never falls back to a live transport. Run it only
+against trusted captures; the scripts execute in the actual browser runtime.
+Raw input and output contain private page data and belong in ignored directories.
+
+```powershell
+go test ./tools/compatibility/offline_replay -count=1
+go build -o .build/offline-replay.exe ./tools/compatibility/offline_replay
+.build/offline-replay.exe -capture compatibility/private-captures/CAPTURE -out .build/REPLAY
+```
+
+Selection uses the recorded method, exact URL, request occurrence, resource
+initiator, mapped realm context and top navigation cycle. Later GET documents
+are consumed once. Repeated POSTs also consume their own responses. Relative
+ordering of unrelated resource requests may differ; this is not a global network
+schedule simulator.
+
+The `criticalClientHintsRestart` trace event explicitly permits one duplicate
+response per recorded restart. The initial wire response is absent from this
+capture format, so the final response body and headers are reused **as an
+inference** for that restart. This is labeled `criticalRetryCopy`. Other duplicate
+request IDs and redirect topologies without enough evidence fail capture loading.
+
+Recorded cache and blob/synthetic outputs are excluded from transport selection.
+The live runtime generates them and their observation is recorded as `local`.
+Local matching checks context, initiator, cycle, scheme/URL and status; it does
+not compare blob body bytes. A different cache decision remains visible as an
+`unmatched-local` observation plus an unused wire fixture. The replay does not
+force a network request to hide that difference.
+
+Saved transport failures, including DNS failures, are returned with their saved
+error text. A failure that was actually recorded does not end replay. An unknown
+request, exhausted response queue, missing context or configured limit cancels
+the run. The result always reports remaining fixtures, so an exhausted queue
+cannot be mistaken for the end of every captured cycle. A new local blob or cache
+observation alone does not cancel the run; it is reported separately.
+
+`replay-result.json` contains input and binary hashes, build metadata, selected
+fixture indices, cycles, request body hashes/equality, differing header names,
+explicit bounds, stopping condition and unused records. `replay-trace.json`
+retains the private full browser trace. Keep process stderr and exit code next
+to these files, especially for native failure investigations.
+
+## Optional diagnostic changes
+
+Some captured programs embed a newly generated path identifier in a subsequent
+request. Exact matching intentionally fails in that case. A private replay may
+opt in to `-dynamic-segment '<regexp with exactly one captured ID>'`. The matched
+path fragment is normalized for selection, and the saved ID is replaced with the
+new ID in that response body. This is an explicit harness transformation, not a
+browser fix or evidence that a server would accept the new identifier. The
+expression and each actual substitution appear in the receipt. Do not use this
+option for a comparison that requires byte-identical response bodies.
+
+`-body-overrides file.json` accepts a map from zero-based network response index
+to a local replacement body path. Use separate output directories for original
+and instrumented responses. Each replacement's content hash is recorded; the
+original capture stays unchanged. Native trace-only diagnostics may instead use
+Go's `-overlay` build argument. Preserve the overlay and its hash with the run.
+
+## Interpretation boundary
+
+Response bytes are already decoded in manual captures, so the replacement strips
+Content-Encoding and Content-Length and supplies the decoded length. It does not
+reproduce TLS/H2/H3, wire timing, previous cookies/storage, OS/GPU behavior, or a
+fresh server decision. Body/header differences are reported, not submitted to a
+server evaluator. Reaching a stored continuation proves execution coverage only;
+it does not prove acceptance or identify the cause of a live refusal.
+
+Defaults bound execution to 60 seconds, 1600 scheduler advances and 256 transport
+requests; all are configurable within hard limits. This is a causal debugging
+tool, not a wall-clock benchmark or a native stability stress gate.
