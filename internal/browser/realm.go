@@ -33,6 +33,8 @@ import (
 )
 
 type Realm struct {
+	indexedNotifier         engine.Value
+	indexedEncoder          engine.Value
 	cookieNotifier          engine.Value
 	launchNotifier          engine.Value
 	cookieUnsubscribe       func()
@@ -364,6 +366,7 @@ func (r *Realm) Close() error {
 		return nil
 	}
 	r.closed = true
+	r.closeIndexedDatabases()
 	if r.cookieUnsubscribe != nil {
 		r.cookieUnsubscribe()
 		r.cookieUnsubscribe = nil
@@ -412,6 +415,9 @@ func (r *Realm) Close() error {
 }
 func (r *Realm) Evaluate(ctx context.Context, source, name string) (engine.Value, error) {
 	p := r.agent.Page()
+	if p.userScriptDepth == 0 {
+		p.databaseScriptEpoch++
+	}
 	p.userScriptDepth++
 	defer func() { p.userScriptDepth-- }()
 	v, err := r.runtime.Eval(ctx, source, name)

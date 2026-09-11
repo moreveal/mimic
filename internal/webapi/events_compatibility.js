@@ -90,8 +90,9 @@
     state.trusted=!!trusted;state.dispatching=true;state.stopped=false;state.immediate=false;
     const path=[target];let current=target;
     while(isDOMNode(current)){let parent=current.parentNode;if(!parent&&current instanceof ShadowRoot&&state.composed)parent=current.host;if(!parent&&current instanceof Document&&state.type!=='load')parent=current.defaultView;if(!parent)break;path.push(parent);current=parent}
+    if(!isDOMNode(target))while(eventParents.has(current)){current=eventParents.get(current);path.push(current)}
     state.path=path;
-    const report=error=>{try{console.error(error?.stack||String(error))}catch{}};
+    const report=error=>{state.listenerException=true;try{console.error(error?.stack||String(error))}catch{}};
     const invoke=(current,capture,phase)=>{
       state.currentTarget=current;state.target=retarget(target,current);state.phase=phase;
       const list=listenersFor(current).get(state.type)||[];

@@ -65,10 +65,20 @@ func nativeValue(v any) any {
 }
 
 func (r *runtime) Set(name string, v any) error { return r.vm.Set(name, nativeValue(v)) }
-func (r *runtime) Get(name string) engine.Value { return value{r.vm.Get(name)} }
-func (r *runtime) Value(v any) engine.Value     { return value{r.vm.ToValue(nativeValue(v))} }
+func (r *runtime) Get(name string) engine.Value {
+	v := r.vm.Get(name)
+	if v == nil {
+		v = goja.Undefined()
+	}
+	return value{v}
+}
+func (r *runtime) Value(v any) engine.Value { return value{r.vm.ToValue(nativeValue(v))} }
 func (r *runtime) GetProperty(v engine.Value, name string) engine.Value {
-	return value{unwrap(v).ToObject(r.vm).Get(name)}
+	property := unwrap(v).ToObject(r.vm).Get(name)
+	if property == nil {
+		property = goja.Undefined()
+	}
+	return value{property}
 }
 func (r *runtime) SetProperty(v engine.Value, name string, x any) error {
 	return unwrap(v).ToObject(r.vm).Set(name, nativeValue(x))

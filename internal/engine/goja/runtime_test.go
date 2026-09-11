@@ -3,6 +3,7 @@ package gojaengine
 import (
 	"context"
 	"errors"
+	"github.com/moreveal/mimic/internal/engine"
 	"testing"
 	"time"
 )
@@ -73,5 +74,19 @@ func TestGlobalAccessObserverDeduplicatesSupportQueriesWithoutCachingHas(t *test
  })()`, "deduplicated-support.js")
 	if err != nil || value.Export() != true || observations != 1 {
 		t.Fatalf("support observation: value=%v err=%v observations=%d", value, err, observations)
+	}
+}
+
+func TestMissingPropertiesAreUndefined(t *testing.T) {
+	r := Factory{}.New()
+	defer r.Close()
+	object, err := r.Eval(context.Background(), `({})`, "missing.js")
+	if err != nil {
+		t.Fatal(err)
+	}
+	for _, v := range []engine.Value{r.Get("missingGlobal"), r.GetProperty(object, "missingMember")} {
+		if v.String() != "undefined" || v.Export() != nil || r.TypeOf(v) != "undefined" {
+			t.Fatalf("missing property: %v", v)
+		}
 	}
 }
