@@ -654,6 +654,21 @@ func (d *Document) ElementChildren(id int64) []Node {
 	}
 	return out
 }
+
+// ChildIDs snapshots membership without copying each child's mutable fields.
+func (d *Document) ChildIDs(id int64, elementsOnly bool) []int64 {
+	d.mu.RLock()
+	defer d.mu.RUnlock()
+	out := []int64{}
+	if n := d.nodes[id]; n != nil {
+		for _, id := range n.Children {
+			if child := d.nodes[id]; child != nil && (!elementsOnly || child.Type == "element") {
+				out = append(out, id)
+			}
+		}
+	}
+	return out
+}
 func (d *Document) RemoveNode(parent, child int64) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()

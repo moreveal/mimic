@@ -60,3 +60,37 @@ func TestClassCollectionQuirksCaseMatching(t *testing.T) {
 		})
 	}
 }
+
+func TestClassCollectionRevisionIncludesHostWrites(t *testing.T) {
+	p := testPage(t)
+	ctx := context.Background()
+	v, err := p.Evaluate(ctx, `(()=>{
+ const root=document.createElement('div');root.id='class-cache-root';
+ root.innerHTML='<i id="class-cache-child" class="left:right x\u00a0y"></i>';
+ document.body.appendChild(root);
+ globalThis.cachedClasses=root.getElementsByClassName('left:right');
+ return cachedClasses.length===1&&root.getElementsByClassName('x').length===0&&root.getElementsByClassName('x\u00a0y').length===1;
+})()`)
+	if err != nil || v != true {
+		t.Fatalf("initial: %v %v", v, err)
+	}
+	d, _ := p.Document()
+	n, ok := d.Find("#class-cache-child")
+	if !ok {
+		t.Fatal("missing child")
+	}
+	if err := d.SetAttribute(n.ID, "class", "changed"); err != nil {
+		t.Fatal(err)
+	}
+	v, err = p.Evaluate(ctx, `cachedClasses.length===0&&cachedClasses[0]===undefined`)
+	if err != nil || v != true {
+		t.Fatalf("host invalidation: %v %v", v, err)
+	}
+	if err := d.SetAttribute(n.ID, "class", "left:right"); err != nil {
+		t.Fatal(err)
+	}
+	v, err = p.Evaluate(ctx, `cachedClasses.length===1&&cachedClasses[0]===document.getElementById('class-cache-child')`)
+	if err != nil || v != true {
+		t.Fatalf("identity: %v %v", v, err)
+	}
+}

@@ -1429,6 +1429,12 @@ func (r *Realm) installBindings() error {
 		p.trace.Add(trace.API, "Element.querySelectorAll", map[string]any{"nodeId": int64(numarg(a, 0)), "selector": strarg(a, 1), "realm": r.ID, "resultNodeIds": append([]int64{}, ids...)})
 		return r.val(ids), nil
 	}, "ns")
+	host["classIDs"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return r.val(r.document.FindClassIDs(int64(numarg(a, 0)), strarg(a, 1), numarg(a, 2) != 0)), nil
+	}, "nsn")
+	host["domRevision"] = r.packedFn(func(_ engine.Value, _ []engine.Value) (engine.Value, error) {
+		return r.val(r.document.Revision()), nil
+	}, "")
 	host["matches"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(r.document.Matches(int64(numarg(a, 0)), strarg(a, 1))), nil
 	}, "ns")
@@ -1620,14 +1626,16 @@ func (r *Realm) installBindings() error {
 		if !ok {
 			return nil, nil
 		}
-		return r.val(nodeData(n)), nil
+		return r.val(n.ID), nil
 	})
 	host["parentNode"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		n, ok := r.document.Parent(int64(numarg(a, 0)))
 		if !ok {
 			return r.val(nil), nil
 		}
-		return r.val(nodeData(n)), nil
+		// Parent access needs identity, not a fresh copy of all attributes and
+		// children on every ancestor read. wrap resolves uncached IDs lazily.
+		return r.val(n.ID), nil
 	}, "n")
 	host["isConnected"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(r.document.IsConnected(int64(numarg(a, 0)))), nil
@@ -1640,7 +1648,10 @@ func (r *Realm) installBindings() error {
 		return r.val(nodeData(n)), nil
 	})
 	host["elementChildren"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		return r.val(nodesData(r.document.ElementChildren(int64(numarg(a, 0))))), nil
+		return r.val(r.document.ChildIDs(int64(numarg(a, 0)), true)), nil
+	}, "n")
+	host["childIDs"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return r.val(r.document.ChildIDs(int64(numarg(a, 0)), false)), nil
 	}, "n")
 	host["removeNode"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		childID := int64(numarg(a, 1))

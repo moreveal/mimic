@@ -26,3 +26,19 @@ python tools/performance/full_gate.py --output benchmark/runs/UNIQUE-MILESTONE -
 ```
 
 It runs the unchanged full matrix. Its Runtime subclass verifies the just-built Mimic executable before every launch and also verifies the pinned Chrome executable against its initial hash; `launches.jsonl` records each check. Both wrappers reject a harness fingerprint that differs from the original baseline. The original benchmark files remain untouched.
+
+## CDP operation latency diagnostics
+
+`python tools/performance/runtime_latency.py --binary .build/mimic.exe --output .build/runtime-new.json`
+uses a local generated DOM, validates each operation, and reports cold/warm Page,
+selector, live-collection, traversal and mutation timings with recovery RSS.
+It requires `pyppeteer` and `psutil`, records the executable hash, and does not
+replace the frozen gate. Use a fresh output path for every comparison.
+
+For an opt-in live native/Go profile, set `MIMIC_LATENCY_PROFILE_URL`,
+`MIMIC_LATENCY_PROFILE_DIR`, `MIMIC_PROFILE_HOSTS=1`, and optionally
+`MIMIC_LATENCY_PROFILE_EXPRESSION`, then run
+`go test ./internal/browser -run '^TestRuntimeLatencyProfile$' -v -count=1`.
+`MIMIC_V8_CPU_PROFILE=1` plus `MIMIC_V8_CPU_PROFILE_FILTER` selects a script-name
+substring for an additional native profile during navigation. Profiling changes
+execution cost; use unprofiled binaries for latency claims.

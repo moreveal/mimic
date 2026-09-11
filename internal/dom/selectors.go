@@ -2,6 +2,57 @@ package dom
 
 import "strings"
 
+// FindClassIDs projects membership only. Class names are ASCII-whitespace
+// tokens, not selectors, and quirks matching folds ASCII letters only.
+func (d *Document) FindClassIDs(root int64, names string, fold bool) []int64 {
+	d.mu.RLock()
+	defer d.mu.RUnlock()
+	normalize := func(s string) string {
+		if !fold {
+			return s
+		}
+		return strings.Map(func(r rune) rune {
+			if r >= 'A' && r <= 'Z' {
+				return r + ('a' - 'A')
+			}
+			return r
+		}, s)
+	}
+	tokens := strings.FieldsFunc(normalize(names), func(r rune) bool { return r == ' ' || r == '\t' || r == '\n' || r == '\r' || r == '\f' })
+	result := []int64{}
+	if len(tokens) == 0 {
+		return result
+	}
+	var visit func(int64)
+	visit = func(id int64) {
+		n := d.nodes[id]
+		if n == nil {
+			return
+		}
+		if n.Type == "element" {
+			classes, matches := normalize(n.Attributes["class"]), true
+			for _, token := range tokens {
+				if !hasClass(classes, token) {
+					matches = false
+					break
+				}
+			}
+			if matches {
+				result = append(result, id)
+			}
+		}
+		for _, child := range n.Children {
+			visit(child)
+		}
+	}
+	if n := d.nodes[root]; n != nil {
+		for _, child := range n.Children {
+			visit(child)
+		}
+	}
+	return result
+}
+
 // This restricted legacy leaf matcher is used by internal native lookups and
 // the validated simple-selector fast path. Web-platform selector parsing and
 // all structural matching live in the shared mature JavaScript domain layer.

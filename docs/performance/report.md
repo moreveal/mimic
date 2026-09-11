@@ -1694,3 +1694,21 @@ failure records from seven to zero. This is a capture correctness observation,
 not a latency, throughput, concurrency or retained-memory measurement. No gate
 was run for this package, as requested by the user. The existing optimization
 backlog and incomplete performance results remain unchanged.
+
+## Runtime/CDP latency and canonical DOM projections (2026-09-12)
+
+[Measured investigation](runtime-cdp-latency-2026-09-12.md) removes repeated
+whole-tree class-collection scans and full-node transport during identity-only
+reads, and narrows structural selector candidates before the existing matcher.
+A controlled local CDP pair improves selector 24.98 to 0.89 ms, live collection
+iteration 2217.38 to 0.48 ms, and traversal 211.37 to 14.46 ms. The localhost
+client connection fix separately improves 4056.46 to 58.46 ms.
+
+Four complete frozen fast gates pass, including 10/25-Page and recovery-memory
+waves. Final paired DOM execution improves 191.24 to 160.25 ms; React execution
+is unchanged, but completion increases 121.48 to 150.03 ms. Throughput varies
+substantially across pairs; overall neutrality is not established. Full Go tests,
+focused browser/CDP race, full DOM race and eight Python tests pass. Two final
+live attempts fail before snapshot while the external document is unavailable;
+these are not E2E passes. See the report for remaining style initialization,
+network/navigation limitations and identical baseline repository-audit failures.
