@@ -1005,13 +1005,26 @@
     const remove=p=>{bridgeAccess(id);return host.frameGlobalReflect(id,'delete',encodeCrossRealmKey(p))};
     const prototype=()=>host.frameCanAccess(id)?unwrapCrossRealm(id,host.frameGlobalReflect(id,'prototype')):null;
     const write=(p,v)=>{bridgeAccess(id);return unwrapCrossRealm(id,host.frameGlobalSet(id,encodeCrossRealmKey(p),encodeCrossRealmArgument(v)))};
+    const writeReceiver=(p,v,receiver)=>{
+      if(receiver===proxy)return write(p,v);
+      let d=describe(p),parent;
+      if(!d){parent=prototype();while(!d&&parent!==null){d=Reflect.getOwnPropertyDescriptor(parent,p);parent=Reflect.getPrototypeOf(parent)}}
+      if(d&&!('value' in d)){if(!d.set)return false;Reflect.apply(d.set,receiver,[v]);return true}
+      if(d&&!d.writable||receiver===null||(typeof receiver!=='object'&&typeof receiver!=='function'))return false;
+      const own=Reflect.getOwnPropertyDescriptor(receiver,p);
+      if(own){if(!('value' in own)||!own.writable)return false;return Reflect.defineProperty(receiver,p,{value:v})}
+      return Reflect.defineProperty(receiver,p,{value:v,writable:true,enumerable:true,configurable:true});
+    };
     if(host.createWindowObject){
       // A native exotic object can replace nonconfigurable descriptors after
       // navigation. A JS Proxy target cannot do this without invariant errors.
       const native=host.createWindowObject({__proto__:null,get:p=>[true,read(p)],set:(p,v)=>[true,write(p,v)],getOwnPropertyDescriptor:p=>{const d=describe(p);return d===undefined?[false]:[true,d]},ownKeys:keys,defineProperty:(p,d)=>[true,define(p,d)],deleteProperty:p=>[true,remove(p)]});
-      proxy=new Proxy(native,{getPrototypeOf:prototype,preventExtensions:()=>false,setPrototypeOf:(_t,next)=>next===prototype(),has:(_t,p)=>{if(!host.frameCanAccess(id)){if(crossKeys.includes(p))return true;bridgeAccess(id)}return unwrapCrossRealm(id,host.frameGlobalHas(id,encodeCrossRealmKey(p)))}});
+      // Let direct writes reach the native setter with its own receiver. The
+      // outer Proxy's default [[Set]] would instead query data attributes and
+      // reject accessor properties before invoking their setters.
+      proxy=new Proxy(native,{set:(_t,p,v,receiver)=>writeReceiver(p,v,receiver),getPrototypeOf:prototype,preventExtensions:()=>false,setPrototypeOf:(_t,next)=>next===prototype(),has:(_t,p)=>{if(!host.frameCanAccess(id)){if(crossKeys.includes(p))return true;bridgeAccess(id)}return unwrapCrossRealm(id,host.frameGlobalHas(id,encodeCrossRealmKey(p)))}});
     }else{
-      proxy=new Proxy(target,{get:(_t,p)=>read(p),set:(_t,p,v)=>write(p,v),has:(_t,p)=>{bridgeAccess(id);return unwrapCrossRealm(id,host.frameGlobalHas(id,encodeCrossRealmKey(p)))},ownKeys:keys,getPrototypeOf:prototype,preventExtensions:()=>false,setPrototypeOf:(_t,next)=>next===prototype(),getOwnPropertyDescriptor:(_t,p)=>{const d=describe(p);if(d&&!d.configurable)Object.defineProperty(target,p,d);return d},defineProperty:(_t,p,d)=>define(p,d),deleteProperty:(_t,p)=>remove(p)});
+      proxy=new Proxy(target,{get:(_t,p)=>read(p),set:(_t,p,v,receiver)=>writeReceiver(p,v,receiver),has:(_t,p)=>{bridgeAccess(id);return unwrapCrossRealm(id,host.frameGlobalHas(id,encodeCrossRealmKey(p)))},ownKeys:keys,getPrototypeOf:prototype,preventExtensions:()=>false,setPrototypeOf:(_t,next)=>next===prototype(),getOwnPropertyDescriptor:(_t,p)=>{const d=describe(p);if(d&&!d.configurable)Object.defineProperty(target,p,d);return d},defineProperty:(_t,p,d)=>define(p,d),deleteProperty:(_t,p)=>remove(p)});
     }
     referenceSet(proxy,{frame:id,type:'window'});remoteWindowCache.set(id,proxy);return proxy;
   };
