@@ -15,10 +15,12 @@ CPU/memory accounting and cold, warm and concurrent sessions. See its
 
 ## Build and run
 
-The current build is **Windows amd64**, Go **1.26**, with CGO and a compatible
+The current build is **Windows amd64**, Go **1.26.4+**, with CGO and a compatible
 C compiler (tested with `gcc`). Platform support is intentionally unchanged.
 Dependencies are pinned in `go.mod`/`go.sum`; the local `third_party/tls-client`
 replacement is required. A first build needs those module dependencies available.
+The AVIF decoder requires Go 1.26.4; standard Go toolchain auto-selection can
+download that pinned toolchain when the installed patch version is older.
 
 ```powershell
 go build -o .build/mimic.exe ./cmd/mimic
@@ -33,10 +35,16 @@ explicit fallback; goja is retained for development and regression tests.
 Neither fallback promises V8-equivalent ECMAScript behavior. gov8 extracts its
 packaged DLL into its user cache; no repository-local V8/Chrome download is needed.
 No `.env` file or secret is required. Stop the foreground server with Ctrl+C.
+The AVIF resource decoder is pinned to `gav1d v0.2.5` and needs Go 1.26.4;
+standard Go toolchain selection downloads that patch version when necessary.
+It decodes image bytes in Go without a GPU or external codec DLL.
 
 CDP listens on loopback by default. It has no authentication and is intended for
-trusted local clients. `-navigation-timeout 30s` bounds navigation, CDP evaluation
-and event-loop turns. Mimic is not a security sandbox for hostile code.
+trusted local clients. Navigation has no arbitrary deadline by default
+(`-navigation-timeout 0`); set e.g. `-navigation-timeout 30s` explicitly if needed.
+This setting does not terminate background application callbacks. Individual CDP
+evaluations and snapshot serialization retain independent 30-second bounds.
+Mimic is not a security sandbox for hostile code.
 
 ## CDP
 
@@ -60,15 +68,53 @@ capture canvas pixels, live form state or embedded frames.
 
 For navigation and capture in one command, use
 `python tools/mimic_snapshot.py URL OUTPUT --settle-ms 2500`. Its `--timeout`
-is a no-progress threshold rather than a hard navigation deadline: while network
-or lifecycle activity continues it keeps waiting. If progress stops, it stops the
-outstanding load and preserves the committed DOM with diagnostics in
-`snapshot.json`. `--max-wait` supplies a separate absolute safety cap.
+is a no-progress threshold rather than a hard navigation deadline: network,
+lifecycle and active browser-turn progress all keep the wait alive. Readiness
+uses Chrome's `networkidle2` shape by default; change the accepted number of
+active transports with `--idle-connections`. If progress stops, the tool stops
+the outstanding load and preserves the committed DOM with diagnostics in
+`snapshot.json`. `--max-wait` supplies a separate absolute safety cap; when a
+reported JavaScript/browser turn exceeds it, the tool identifies and interrupts
+that turn before taking a consistent snapshot instead of waiting forever.
 Interactive terminals get a live progress bar with HTTP status, lifecycle state,
 active/request counts, transferred bytes, quiet time and the latest resource.
 Redirected output emits the same progress every `--log-interval` seconds. The
-final summary and `snapshot.json` include per-stage timings; use `--no-progress`
-to disable animation while retaining ordinary logs.
+bar shows elapsed time against the wait budget, not a predicted completion
+percentage. The final summary and `snapshot.json` include per-stage timings.
+Portable asset capture uses a bounded concurrent fetch pool and reports its own internal
+clone/fetch/rewrite breakdown. Use `--no-progress` to disable animation while
+retaining ordinary logs.
+
+No Poetry is needed. Start the freshly built server above, then in a second
+PowerShell window, from the **same checkout**:
+
+```powershell
+python -m venv .venv
+./.venv/Scripts/python.exe -m pip install pyppeteer==2.0.0
+./.venv/Scripts/python.exe tools/mimic_snapshot.py "https://youtube.com/" snapshots/youtube --settle-ms 2500
+```
+
+The legacy `tools/mimic/_snapshot.py` entry point forwards to this tool. Pass a
+plain URL (not Markdown link syntax) and a new output directory; existing captures
+are never overwritten. Connecting to an old server binary does not enable the
+new runtime fixes, even when the Python script is current.
+
+Readiness is a heuristic based on main-document lifecycle, network quiet and
+running-task diagnostics, not proof that an application is fully hydrated.
+The default absolute budget is 120 seconds (`--max-wait 0` disables it).
+When it expires, capture reserves a task boundary and interrupts current work;
+`navigation.partial` and `interruptRequested` distinguish this from normal capture.
+Asset downloads reuse the runtime's resource loader, with up to 32 concurrent
+fetches, 512 resources and an eight-second fetch budget; missing assets are listed
+as warnings instead of silently adding serial waits. Scripts and embedded frames
+are not exported. Media decoding/playback remains unsupported, and geometry,
+including intersection observations, uses the runtime's approximate box model;
+it does not implement full layout, scrolling or paint visibility.
+Independent resource transfers run concurrently; author JavaScript callbacks
+and their microtask checkpoints remain ordered on each Page. Adding Python
+threads cannot shorten a busy browser callback. The
+[snapshot investigation](docs/performance/snapshot-hydration-20260911.md) records
+the measured runtime bottlenecks and the limits of the live-site checks.
 
 ## Architecture and target
 

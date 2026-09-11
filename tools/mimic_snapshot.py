@@ -124,6 +124,11 @@ class Reporter:
             f"{progress.events['requests']} req, {len(progress.pending)} active | "
             f"{format_bytes(progress.transferred)} | quiet {format_duration(quiet)}"
         )
+        execution = progress.execution
+        if execution.get("running"):
+            source = execution.get("source") or "task"
+            phase = execution.get("phase") or "callback"
+            detail += f" | {source}/{phase} busy {format_duration(float(execution.get('elapsedMs') or 0) / 1000)}"
         if progress.last_event:
             detail += f" | {progress.last_event}"
         if self.interactive:
@@ -151,8 +156,9 @@ class Reporter:
 class NavigationProgress:
     """Track observable navigation progress without making load a hard gate."""
 
-    def __init__(self) -> None:
+    def __init__(self, main_frame_id: str) -> None:
         self.started = time.monotonic()
+        self.main_frame_id = main_frame_id
         self.last_activity = self.started
         self.pending: set[str] = set()
         self.document_seen = False
@@ -165,6 +171,8 @@ class NavigationProgress:
         self.responded: set[str] = set()
         self.completed: set[str] = set()
         self.events = {"requests": 0, "responses": 0, "finished": 0, "failed": 0}
+        self.execution = {"running": False, "source": "", "taskId": 0, "elapsedMs": 0}
+        self.status_supported = True
 
     def touch(self) -> None:
         self.last_activity = time.monotonic()
@@ -173,11 +181,16 @@ class NavigationProgress:
         request_id = event.get("requestId")
         if request_id:
             self.pending.add(request_id)
+            self.completed.discard(request_id)
+            self.responded.discard(request_id)
         resource_type = str(event.get("type") or "Other")
         self.resource_types[resource_type] += 1
         self.events["requests"] += 1
-        if resource_type == "Document":
+        if resource_type == "Document" and event.get("frameId") == self.main_frame_id:
             self.document_seen = True
+            self.dom_content_loaded = False
+            self.load_fired = False
+            self.status = None
         request = event.get("request", {})
         method, raw_url = request.get("method", "GET"), request.get("url", "")
         self.last_event = f"{method} {short_url(raw_url)}" if raw_url else resource_type
@@ -185,15 +198,17 @@ class NavigationProgress:
 
     def response(self, event: dict) -> None:
         request_id = event.get("requestId")
+        response = event.get("response", {})
+        status = response.get("status")
+        # Redirect responses can share their request ID. Subframe failures
+        # must not replace the final main-document status.
+        if event.get("type") == "Document" and event.get("frameId") == self.main_frame_id:
+            self.status = status
         if request_id and request_id in self.responded:
             return
         if request_id:
             self.responded.add(request_id)
         self.events["responses"] += 1
-        response = event.get("response", {})
-        status = response.get("status")
-        if event.get("type") == "Document":
-            self.status = status
         display_url = short_url(response.get("url"))
         self.last_event = (
             f"{status or '...'} {display_url}"
@@ -216,7 +231,7 @@ class NavigationProgress:
         self.touch()
 
 
-async def wait_for_stable_page(progress: NavigationProgress, args, reporter: Reporter):
+async def wait_for_stable_page(progress: NavigationProgress, client, args, reporter: Reporter):
     """Wait for quiescence; return diagnostics even when progress stalls."""
     quiet_seconds = max(args.settle_ms / 1000, 0.5)
     stall_seconds = max(args.timeout / 1000, quiet_seconds)
@@ -227,6 +242,12 @@ async def wait_for_stable_page(progress: NavigationProgress, args, reporter: Rep
     while True:
         await asyncio.sleep(0.2)
         now = time.monotonic()
+        if progress.status_supported:
+            try:
+                status = await client.send("Mimic.getStatus")
+                progress.execution = status.get("execution", progress.execution)
+            except Exception:
+                progress.status_supported = False
         ready_state = (
             "complete"
             if progress.load_fired
@@ -237,11 +258,22 @@ async def wait_for_stable_page(progress: NavigationProgress, args, reporter: Rep
         reporter.navigation(progress, ready_state)
 
         elapsed = now - progress.started
+        # Periodic animation/telemetry turns are normal on live pages. Wait for
+        # a complete turn, not a second network-quiet interval after each timer.
         quiet_for = now - progress.last_activity
+        runtime_busy = bool(progress.execution.get("running"))
+        long_turn = runtime_busy and float(progress.execution.get("elapsedMs") or 0) >= quiet_seconds * 1000
         navigation_observed = progress.document_seen or ready_state != "loading"
-        if navigation_observed and not progress.pending and quiet_for >= quiet_seconds:
+        if (
+            navigation_observed
+            and ready_state != "loading"
+            and not long_turn
+            and len(progress.pending) <= args.idle_connections
+            and quiet_for >= quiet_seconds
+        ):
+            reason = "stable" if not progress.pending and not runtime_busy else "network-idle"
             break
-        if navigation_observed and quiet_for >= stall_seconds:
+        if navigation_observed and not runtime_busy and quiet_for >= stall_seconds:
             reason = "stalled"
             break
         if max_seconds is not None and elapsed >= max_seconds:
@@ -252,9 +284,10 @@ async def wait_for_stable_page(progress: NavigationProgress, args, reporter: Rep
     reporter.finish()
     return {
         "reason": reason,
-        "partial": reason != "stable" or not progress.load_fired,
+        "partial": reason in {"stalled", "max-wait"},
         "elapsedMs": round((time.monotonic() - progress.started) * 1000),
         "quietMs": round((time.monotonic() - progress.last_activity) * 1000),
+        "execution": progress.execution,
         "pendingRequests": len(progress.pending),
         "domContentLoaded": progress.dom_content_loaded,
         "loadFired": progress.load_fired,
@@ -315,7 +348,8 @@ async def save_snapshot(args: argparse.Namespace) -> None:
     reporter.line(f"Mimic snapshot  {short_url(args.url, 90)}")
     reporter.line(
         f"Endpoint {args.endpoint} | quiet {format_duration(max(args.settle_ms / 1000, 0.5))} "
-        f"| stall {format_duration(max(args.timeout / 1000, 0.5))}"
+        f"| idle <= {args.idle_connections} | "
+        f"stall {format_duration(max(args.timeout / 1000, 0.5))}"
     )
 
     browser = None
@@ -328,7 +362,7 @@ async def save_snapshot(args: argparse.Namespace) -> None:
         stage = time.monotonic()
         page = await browser.newPage()
         reporter.done("New page", stage)
-        progress = NavigationProgress()
+        progress = NavigationProgress(page.mainFrame._id)
 
         page._client.on("Network.requestWillBeSent", progress.request)
         page._client.on("Network.responseReceived", progress.response)
@@ -350,7 +384,7 @@ async def save_snapshot(args: argparse.Namespace) -> None:
 
         navigation = asyncio.create_task(page.goto(args.url, {"waitUntil": "load", "timeout": 0}))
         stage = time.monotonic()
-        diagnostics = await wait_for_stable_page(progress, args, reporter)
+        diagnostics = await wait_for_stable_page(progress, page._client, args, reporter)
         reporter.done(
             "Navigation",
             stage,
@@ -359,6 +393,10 @@ async def save_snapshot(args: argparse.Namespace) -> None:
 
         navigation_error = None
         response = None
+        interrupt = diagnostics["reason"] == "max-wait"
+        if interrupt:
+            diagnostics["execution"]["interruptRequested"] = True
+            reporter.warning("Maximum wait reached; capturing partial DOM at an interrupted task boundary")
         if navigation.done():
             try:
                 response = navigation.result()
@@ -374,9 +412,15 @@ async def save_snapshot(args: argparse.Namespace) -> None:
 
         stage = time.monotonic()
         snapshot = await await_with_progress(
-            page._client.send("Mimic.captureSnapshot"), reporter, "Capturing DOM and assets"
+            page._client.send("Mimic.captureSnapshot", {"interrupt": interrupt}), reporter, "Capturing DOM and assets"
         )
         reporter.done("Capture", stage, f"{len(snapshot['files'])} files")
+        capture_timings = snapshot.get("timingsMs", {})
+        if capture_timings:
+            reporter.line(
+                "Capture internals  "
+                + " | ".join(f"{name} {value} ms" for name, value in capture_timings.items())
+            )
 
         stage = time.monotonic()
         files = decode_files(snapshot)
@@ -395,12 +439,19 @@ async def save_snapshot(args: argparse.Namespace) -> None:
         if status is None and response:
             status = response.status
         reporter.done("Write", stage, str(output))
+        stage = time.monotonic()
+        await await_with_progress(page.close(), reporter, "Closing page")
+        page = None
+        await browser.disconnect()
+        browser = None
+        reporter.done("Close", stage)
         reporter.timings["Total"] = time.monotonic() - total_started
         metadata = {
             "url": snapshot["url"],
             "status": status,
             "warnings": snapshot["warnings"],
             "navigation": diagnostics,
+            "captureTimingsMs": capture_timings,
             "timingsMs": {name: round(duration * 1000) for name, duration in reporter.timings.items()},
         }
         if navigation_error:
@@ -461,6 +512,12 @@ def parse_args() -> argparse.Namespace:
         type=int,
         default=0,
         help="Required quiet period before capture (default: %(default)s)",
+    )
+    parser.add_argument(
+        "--idle-connections",
+        type=int,
+        default=2,
+        help="Active requests still considered network-idle (default: %(default)s)",
     )
     parser.add_argument(
         "--log-interval",

@@ -10,6 +10,8 @@ import (
 	"path"
 	"regexp"
 	"strings"
+	"sync"
+	"time"
 
 	"github.com/moreveal/mimic/internal/network"
 	"golang.org/x/net/html"
@@ -18,22 +20,48 @@ import (
 // Snapshot is a static, portable document. Files are relative to index.html;
 // byte slices are base64 encoded by the CDP JSON encoder.
 type Snapshot struct {
-	URL      string            `json:"url"`
-	Files    map[string][]byte `json:"files"`
-	Warnings []string          `json:"warnings"`
+	URL       string            `json:"url"`
+	Files     map[string][]byte `json:"files"`
+	Warnings  []string          `json:"warnings"`
+	TimingsMS map[string]int64  `json:"timingsMs"`
 }
 
 type snapshotBuilder struct {
-	page  *Page
-	ctx   context.Context
-	out   Snapshot
-	seen  map[string]string
-	count int
+	page             *Page
+	ctx              context.Context
+	out              Snapshot
+	seen             map[string]string
+	prefetched       map[string]snapshotAssetLoad
+	prefetchComplete bool
+	count            int
 }
+
+type snapshotAssetSpec struct {
+	key  string
+	url  *url.URL
+	base *url.URL
+	css  bool
+}
+
+type snapshotAssetLoad struct {
+	response network.Response
+	err      error
+}
+
+const (
+	snapshotFetchConcurrency = 32
+	snapshotFetchBudget      = 8 * time.Second
+)
 
 // CaptureSnapshot exports the current DOM, without executing the exported scripts.
 // Callers must serialize this operation with navigation/evaluation, as CDP does.
 func (p *Page) CaptureSnapshot(ctx context.Context) (*Snapshot, error) {
+	timings := map[string]int64{}
+	stage := time.Now()
+	mark := func(name string) {
+		timings[name] = time.Since(stage).Milliseconds()
+		stage = time.Now()
+	}
 	d, ok := p.Document()
 	if !ok {
 		return nil, fmt.Errorf("page has no document")
@@ -42,19 +70,28 @@ func (p *Page) CaptureSnapshot(ctx context.Context) (*Snapshot, error) {
 	if err != nil {
 		return nil, err
 	}
+	mark("shadowState")
 	forms, err := p.Top.Realm.FormSnapshots(ctx)
 	if err != nil {
 		return nil, err
 	}
+	mark("formState")
 	root, err := d.SnapshotTreeWithFormState(d.Root().ID, shadows, forms)
 	if err != nil {
 		return nil, err
 	}
+	mark("cloneDOM")
 	base, err := url.Parse(p.URL())
 	if err != nil {
 		return nil, err
 	}
-	b := &snapshotBuilder{page: p, ctx: ctx, out: Snapshot{URL: p.URL(), Files: map[string][]byte{}, Warnings: []string{}}, seen: map[string]string{}}
+	b := &snapshotBuilder{
+		page:       p,
+		ctx:        ctx,
+		out:        Snapshot{URL: p.URL(), Files: map[string][]byte{}, Warnings: []string{}, TimingsMS: timings},
+		seen:       map[string]string{},
+		prefetched: map[string]snapshotAssetLoad{},
+	}
 	var findBase func(*html.Node) bool
 	findBase = func(n *html.Node) bool {
 		if n.Type == html.ElementNode && n.Data == "base" {
@@ -75,7 +112,11 @@ func (p *Page) CaptureSnapshot(ctx context.Context) (*Snapshot, error) {
 		return false
 	}
 	findBase(root)
+	mark("findBase")
+	b.prefetchHTMLAssets(root, base)
+	mark("fetchAssets")
 	b.rewriteHTML(root, base)
+	mark("rewriteDOM")
 	var output bytes.Buffer
 	// Portable snapshots use the historical HTML5 preamble exactly once.
 	// Remove only the immutable projection's doctype, not canonical DOM state.
@@ -90,6 +131,7 @@ func (p *Page) CaptureSnapshot(ctx context.Context) (*Snapshot, error) {
 	if err := html.Render(&output, root); err != nil {
 		return nil, err
 	}
+	mark("renderHTML")
 	if err := ctx.Err(); err != nil {
 		return nil, err
 	}
@@ -97,18 +139,188 @@ func (p *Page) CaptureSnapshot(ctx context.Context) (*Snapshot, error) {
 	return &b.out, nil
 }
 
-func (b *snapshotBuilder) asset(raw string, base *url.URL, css bool) string {
+func snapshotAssetURL(raw string, base *url.URL) (string, *url.URL, bool) {
 	raw = strings.TrimSpace(raw)
-	if raw == "" || strings.HasPrefix(raw, "#") || strings.HasPrefix(raw, "data:") {
-		return raw
+	if raw == "" || strings.HasPrefix(raw, "#") || strings.HasPrefix(strings.ToLower(raw), "data:") {
+		return "", nil, false
 	}
 	u, err := base.Parse(raw)
 	if err != nil || (u.Scheme != "http" && u.Scheme != "https") {
+		return "", nil, false
+	}
+	u.Fragment = ""
+	return u.String(), u, true
+}
+
+func (b *snapshotBuilder) loadAsset(ctx context.Context, spec snapshotAssetSpec) snapshotAssetLoad {
+	if response, ok := b.page.loader.CompletedURL(spec.key); ok {
+		return snapshotAssetLoad{response: response}
+	}
+	response, err := b.page.loader.Load(ctx, network.Request{
+		URL: spec.url, Method: http.MethodGet, Initiator: network.Other,
+		Referrer: spec.base, SourceURL: spec.base,
+	})
+	return snapshotAssetLoad{response: response, err: err}
+}
+
+func (b *snapshotBuilder) loadAssetBatch(ctx context.Context, specs []snapshotAssetSpec) {
+	if len(specs) == 0 {
+		return
+	}
+	type result struct {
+		key  string
+		load snapshotAssetLoad
+	}
+	workerCount := min(snapshotFetchConcurrency, len(specs))
+	jobs := make(chan snapshotAssetSpec)
+	results := make(chan result, len(specs))
+	var workers sync.WaitGroup
+	workers.Add(workerCount)
+	defer workers.Wait()
+	for range workerCount {
+		go func() {
+			defer workers.Done()
+			for spec := range jobs {
+				results <- result{key: spec.key, load: b.loadAsset(ctx, spec)}
+			}
+		}()
+	}
+	go func() {
+		for _, spec := range specs {
+			jobs <- spec
+		}
+		close(jobs)
+		workers.Wait()
+		close(results)
+	}()
+	remaining := len(specs)
+	for remaining > 0 {
+		select {
+		case result, ok := <-results:
+			if !ok {
+				return
+			}
+			b.prefetched[result.key] = result.load
+			remaining--
+		case <-ctx.Done():
+			for _, spec := range specs {
+				if _, ok := b.prefetched[spec.key]; !ok {
+					b.prefetched[spec.key] = snapshotAssetLoad{err: ctx.Err()}
+				}
+			}
+			return
+		}
+	}
+}
+
+func collectSnapshotCSSAssets(source string, base *url.URL, add func(snapshotAssetSpec)) {
+	for _, groups := range snapshotCSSURL.FindAllStringSubmatch(source, -1) {
+		raw := ""
+		for _, value := range groups[1:] {
+			if value != "" {
+				raw = value
+				break
+			}
+		}
+		if key, resource, ok := snapshotAssetURL(raw, base); ok {
+			add(snapshotAssetSpec{key: key, url: resource, base: base, css: strings.HasPrefix(strings.ToLower(groups[0]), "@import")})
+		}
+	}
+}
+
+func collectSnapshotHTMLAssets(n *html.Node, base *url.URL, add func(snapshotAssetSpec)) {
+	if n.Type == html.ElementNode {
+		// These subtrees are omitted by rewriteHTML. Do not spend the fetch
+		// budget (or issue new requests) on content that cannot be exported.
+		switch n.Data {
+		case "script", "base", "iframe", "object", "embed":
+			return
+		}
+		rel := ""
+		for _, attribute := range n.Attr {
+			if attribute.Key == "rel" {
+				rel = strings.ToLower(attribute.Val)
+			}
+		}
+		for _, attribute := range n.Attr {
+			if attribute.Key == "style" {
+				collectSnapshotCSSAssets(attribute.Val, base, add)
+			}
+			isStylesheet := n.Data == "link" && strings.Contains(rel, "stylesheet")
+			isAsset := attribute.Key == "src" || attribute.Key == "poster" || attribute.Key == "background" ||
+				(attribute.Key == "href" && n.Data == "link" && (isStylesheet || strings.Contains(rel, "icon")))
+			if isAsset {
+				if key, resource, ok := snapshotAssetURL(attribute.Val, base); ok {
+					add(snapshotAssetSpec{key: key, url: resource, base: base, css: isStylesheet})
+				}
+			}
+		}
+		if n.Data == "style" {
+			for child := n.FirstChild; child != nil; child = child.NextSibling {
+				if child.Type == html.TextNode {
+					collectSnapshotCSSAssets(child.Data, base, add)
+				}
+			}
+		}
+	}
+	for child := n.FirstChild; child != nil; child = child.NextSibling {
+		collectSnapshotHTMLAssets(child, base, add)
+	}
+}
+
+func (b *snapshotBuilder) prefetchHTMLAssets(root *html.Node, base *url.URL) {
+	prefetchContext, cancel := context.WithTimeout(b.ctx, snapshotFetchBudget)
+	defer cancel()
+	defer func() { b.prefetchComplete = true }()
+	queued := map[string]bool{}
+	queue := make([]snapshotAssetSpec, 0)
+	add := func(spec snapshotAssetSpec) {
+		if len(queued) >= 512 || queued[spec.key] {
+			return
+		}
+		queued[spec.key] = true
+		queue = append(queue, spec)
+	}
+	collectSnapshotHTMLAssets(root, base, add)
+	for len(queue) > 0 {
+		batch := queue
+		queue = nil
+		b.loadAssetBatch(prefetchContext, batch)
+		for _, spec := range batch {
+			load := b.prefetched[spec.key]
+			response := load.response
+			if load.err != nil || response.Status < 200 || response.Status >= 300 || len(response.Body) > 32<<20 {
+				continue
+			}
+			mediaType := strings.ToLower(strings.TrimSpace(strings.Split(response.Headers.Get("Content-Type"), ";")[0]))
+			if !spec.css && mediaType != "text/css" {
+				continue
+			}
+			resourceBase := spec.url
+			if response.URL != nil {
+				resourceBase = response.URL
+			}
+			collectSnapshotCSSAssets(string(response.Body), resourceBase, add)
+		}
+		if prefetchContext.Err() != nil {
+			break
+		}
+	}
+}
+
+func (b *snapshotBuilder) asset(raw string, base *url.URL, css bool) string {
+	raw = strings.TrimSpace(raw)
+	if raw == "" || strings.HasPrefix(raw, "#") || strings.HasPrefix(strings.ToLower(raw), "data:") {
+		return raw
+	}
+	key, u, ok := snapshotAssetURL(raw, base)
+	if !ok {
 		return ""
 	}
-	fragment := u.Fragment
-	u.Fragment = ""
-	key := u.String()
+	fragment := ""
+	if parsed, err := base.Parse(raw); err == nil {
+		fragment = parsed.Fragment
+	}
 	if name, ok := b.seen[key]; ok {
 		if fragment != "" && name != "" {
 			return name + "#" + fragment
@@ -121,10 +333,15 @@ func (b *snapshotBuilder) asset(raw string, base *url.URL, css bool) string {
 	}
 	b.count++
 	b.seen[key] = ""
-	response, ok := b.page.loader.CompletedURL(key)
-	if !ok {
-		response, err = b.page.loader.Load(b.ctx, network.Request{URL: u, Method: http.MethodGet, Initiator: network.Other, Referrer: base, SourceURL: base})
+	load, prefetched := b.prefetched[key]
+	if !prefetched {
+		if b.prefetchComplete {
+			load.err = fmt.Errorf("resource was not reached within the snapshot fetch budget")
+		} else {
+			load = b.loadAsset(b.ctx, snapshotAssetSpec{key: key, url: u, base: base, css: css})
+		}
 	}
+	response, err := load.response, load.err
 	if err != nil || response.Status < 200 || response.Status >= 300 {
 		b.out.Warnings = append(b.out.Warnings, fmt.Sprintf("Resource unavailable: %s (status %d, error %v)", key, response.Status, err))
 		return ""
