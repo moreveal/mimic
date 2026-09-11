@@ -1621,3 +1621,7 @@ no native dumps; their throughput/latency results are mixed and do not close the
 broader concurrency concern. Expanded race still hits the pre-existing Goja
 retained-srcdoc setup deadline; full race success is not claimed. Strong bridge
 caches and DOM arena reclamation remain separate boundaries.
+
+## Goja bootstrap cache and exposure transport (2026-09-11)
+
+[Complete checkpoint](../compatibility/bootstrap-transport-2026-09-11.md): five-Page cold/warm Goja waves improve 527.12/443.03 to 485.05/333.42 ms; warm recovery private memory improves 551.71 to 483.23 MiB. Diagnostic post-GC live heap increases 13.72 to 21.57 MiB because compiled code is retained. Both full V8 gates pass with mixed latency/throughput results. Full browser race still fails six Goja deadlines; no data race is reported. Performance neutrality and snapshot P0 closure are not claimed.
