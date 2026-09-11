@@ -2,8 +2,12 @@ package browser
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	"net/url"
+	"sort"
+	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -13,9 +17,100 @@ import (
 
 // The bounded annotation buffer belongs to the document, not its JS wrapper.
 // Diagnostics can read it while the runtime is blocked, without entering V8.
+type crashAnnotation struct {
+	// JSON string tokens preserve JavaScript UTF-16 escaping exactly, including
+	// lone surrogates. This is binding serialization, not a second JS data store.
+	key, value string
+}
+
 type crashReportState struct {
-	mu   sync.RWMutex
-	data string
+	mu          sync.RWMutex
+	requested   bool
+	initialized bool
+	capacity    uint32
+	annotations []crashAnnotation
+}
+
+func crashReportJSON(annotations []crashAnnotation) string {
+	// JSON.stringify orders array-index property names before string names;
+	// other keys retain insertion order and updates do not change that order.
+	ordered := append([]crashAnnotation(nil), annotations...)
+	index := func(key string) (uint64, bool) {
+		var decoded string
+		if json.Unmarshal([]byte(key), &decoded) != nil {
+			return 0, false
+		}
+		n, err := strconv.ParseUint(decoded, 10, 32)
+		return n, err == nil && n < 4294967295 && strconv.FormatUint(n, 10) == decoded
+	}
+	sort.SliceStable(ordered, func(i, j int) bool {
+		a, ai := index(ordered[i].key)
+		b, bi := index(ordered[j].key)
+		if ai != bi {
+			return ai
+		}
+		return ai && a < b
+	})
+	var out strings.Builder
+	out.WriteByte('{')
+	for i, item := range ordered {
+		if i > 0 {
+			out.WriteByte(',')
+		}
+		out.WriteString(item.key)
+		out.WriteByte(':')
+		out.WriteString(item.value)
+	}
+	out.WriteByte('}')
+	return out.String()
+}
+
+func (s *crashReportState) request(size uint32) bool {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if s.requested {
+		return false
+	}
+	s.requested = true
+	s.capacity = size
+	return true
+}
+func (s *crashReportState) initialize() bool {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if !s.requested || s.capacity > 65536 {
+		return false
+	}
+	s.initialized = true
+	return true
+}
+func (s *crashReportState) mutate(method, key, value string) string {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if !s.initialized {
+		return "InvalidStateError"
+	}
+	next := append([]crashAnnotation(nil), s.annotations...)
+	found := false
+	for i, item := range next {
+		if item.key == key {
+			found = true
+			if method == "delete" {
+				next = append(next[:i], next[i+1:]...)
+			} else {
+				next[i].value = value
+			}
+			break
+		}
+	}
+	if !found && method == "set" {
+		next = append(next, crashAnnotation{key, value})
+	}
+	if len(crashReportJSON(next)) > int(s.capacity) {
+		return "NotAllowedError"
+	}
+	s.annotations = next
+	return ""
 }
 
 func (p *Page) CrashReports() map[string]string {
@@ -28,8 +123,8 @@ func (p *Page) CrashReports() map[string]string {
 		}
 		s := &frame.Realm.crashReport
 		s.mu.RLock()
-		if s.data != "" {
-			result[id] = s.data
+		if s.initialized {
+			result[id] = crashReportJSON(s.annotations)
 		}
 		s.mu.RUnlock()
 	}
@@ -67,16 +162,14 @@ func addWindowServiceHosts(r *Realm, h map[string]any) {
 	h["currentWebTask"] = r.fn(func(_ engine.Value, _ []engine.Value) (engine.Value, error) {
 		return r.val(r.scheduler.ExecutionStatus().TaskID), nil
 	})
-	h["readCrashReport"] = r.fn(func(_ engine.Value, _ []engine.Value) (engine.Value, error) {
-		r.crashReport.mu.RLock()
-		defer r.crashReport.mu.RUnlock()
-		return r.val(r.crashReport.data), nil
+	h["requestCrashReport"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return r.val(r.crashReport.request(uint32(numarg(a, 0)))), nil
 	})
-	h["writeCrashReport"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		r.crashReport.mu.Lock()
-		r.crashReport.data = strarg(a, 0)
-		r.crashReport.mu.Unlock()
-		return nil, nil
+	h["initializeCrashReport"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		return r.val(r.crashReport.initialize()), nil
+	})
+	h["mutateCrashReport"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return r.val(r.crashReport.mutate(strarg(a, 0), strarg(a, 1), strarg(a, 2))), nil
 	})
 }
 

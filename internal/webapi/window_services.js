@@ -7,28 +7,24 @@
   if(typeof CrashReportContext==='function'){
     const report=Object.create(CrashReportContext.prototype);
     replaceableWindow('crashReport',()=>report);
-    let requested=false,initialized=false,capacity=0;
+    const quote=JSON.stringify;
     const fail=(method,name,message)=>new DOMException(`Failed to execute '${method}' on 'CrashReportContext': ${message}`,name);
     const check=receiver=>{if(receiver!==report)throw new TypeError('Illegal invocation')};
     nativeMethod(CrashReportContext.prototype,'initialize',function initialize(size){
       try{
         check(this);requireArgs('initialize','CrashReportContext',1,arguments);
         size=Number(size)>>>0;
-        if(requested)throw fail('initialize','InvalidStateError','The initialize() method has already been called.');
-        requested=true;
+        if(!host.requestCrashReport(size))throw fail('initialize','InvalidStateError','The initialize() method has already been called.');
         return new Promise((resolve,reject)=>host.enqueueWebTask(()=>{
-          if(size>65536){reject(new DOMException('The requested size is too large.','NotAllowedError'));return}
-          capacity=size;initialized=true;host.writeCrashReport('{}');resolve();
+          if(!host.initializeCrashReport()){reject(new DOMException('The requested size is too large.','NotAllowedError'));return}
+          resolve();
         },1,0,false));
       }catch(e){return Promise.reject(e)}
     });
     const mutate=(method,key,value)=>{
-      if(!initialized)throw fail(method,'InvalidStateError','CrashReportContext is not initialized. Call initialize() and wait for it to resolve.');
-      const next=Object.assign(Object.create(null),JSON.parse(host.readCrashReport()));
-      if(method==='set')next[key]=value;else delete next[key];
-      const serialized=JSON.stringify(next);
-      if(new TextEncoder().encode(serialized).length>capacity)throw fail(method,'NotAllowedError','The crash report data is too large to be stored in the requested buffer.');
-      host.writeCrashReport(serialized);
+      const error=host.mutateCrashReport(method,quote(key),value===undefined?'':quote(value));
+      if(error==='InvalidStateError')throw fail(method,error,'CrashReportContext is not initialized. Call initialize() and wait for it to resolve.');
+      if(error==='NotAllowedError')throw fail(method,error,'The crash report data is too large to be stored in the requested buffer.');
     };
     nativeMethod(CrashReportContext.prototype,'set',function set(key,value){check(this);requireArgs('set','CrashReportContext',2,arguments);mutate('set',String(key),String(value))});
     nativeMethod(CrashReportContext.prototype,'delete',function delete_(key){check(this);requireArgs('delete','CrashReportContext',1,arguments);mutate('delete',String(key))});
