@@ -108,6 +108,7 @@ func (r *Realm) ensureChildFrameInternal(elementID int64, shadowConnected, sched
 	realm.documentReferrer = (network.Request{URL: r.documentURL(), Referrer: r.documentURL(), ReferrerPolicy: "unsafe-url"}).ReferrerValue()
 	realm.readyState = "complete"
 	frame.Realm = realm
+	frame.windowName = node.Attributes["name"]
 	page.mu.Lock()
 	page.frames[frame.ID] = frame
 	parent.children[frame.ID] = frame

@@ -221,10 +221,14 @@ func (t *replay) summary() map[string]any {
 	t.mu.Lock()
 	defer t.mu.Unlock()
 	unused := []map[string]any{}
+	unavailable := []int{}
 	for i, f := range t.capture.Fixtures {
+		if f.UnavailableBody {
+			unavailable = append(unavailable, f.Index)
+		}
 		if !t.used[i] {
 			unused = append(unused, map[string]any{"fixtureIndex": f.Index, "cycle": f.Cycle, "local": f.Local, "method": f.Request.Method, "urlHash": shortHash(f.Request.URL), "recordedFailure": f.Failure != "", "criticalRetryCopy": f.CriticalRetryCopy})
 		}
 	}
-	return map[string]any{"transport": "captured occurrences only; no live fallback", "requests": append([]map[string]any(nil), t.events...), "unusedFixtures": unused, "lastCycle": t.cycle, "sourceHashes": t.capture.SourceHashes, "requestBodyPolicy": "compare and report only; stored server responses do not evaluate submissions", "timingPolicy": "immediate saved responses; no wire timing or H3 replay", "dynamicSegmentPattern": fmt.Sprint(t.segment)}
+	return map[string]any{"transport": "captured occurrences only; no live fallback", "requests": append([]map[string]any(nil), t.events...), "unusedFixtures": unused, "unavailableSyntheticBodies": unavailable, "lastCycle": t.cycle, "sourceHashes": t.capture.SourceHashes, "requestBodyPolicy": "compare and report only; stored server responses do not evaluate submissions", "timingPolicy": "immediate saved responses; no wire timing or H3 replay", "dynamicSegmentPattern": fmt.Sprint(t.segment)}
 }

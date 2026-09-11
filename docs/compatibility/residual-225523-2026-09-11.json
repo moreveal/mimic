@@ -1,0 +1,451 @@
+{
+  "schema": 1,
+  "baselineRevision": "afff4ec64a33c0ccfdaef6355c64b898a6d682b7",
+  "capture": "manual-20260911-225523",
+  "captureFilesSHA256": {
+    "events.json": "7df3abf83318b1db37df931e2d607b3b98208b3927909c83c8992880c571de02",
+    "frames-25.json": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+    "root-0527d757-3167-4f18-802a-90cdce9f2b80.json": "8d75cd4a757f1cd6575120130b2530687f21445d8a175d47f1ccd85c525c55d2",
+    "root-05ffcce3-3601-474b-b197-d8d670cef67a.json": "4212cbf155c700e09d14ea38f26fb194fe2ccc94b638c2c2859e4ce781292321",
+    "root-066874e4-e87e-4b33-afd8-b608891add43.json": "90342d5f3bd8e41cabb2bcc066ff163c19b9579e540c8775016590fff47686c4",
+    "root-160c2149-922b-4049-ac98-7abf1ad3b662.json": "d0ac902082f34f6f66d6b9c8ddb491ca56e00b57009a262419e55c0e3f630a9a",
+    "root-18ee5c3e-5506-4893-bcfe-a749f38c988a.json": "9e542b52080c71ee766df7e91a06ff40062bf50f23c634b6b3a0a736a40e1b78",
+    "root-1a114c7b-9de5-4f13-9cdf-8d762ea52fe1.json": "c5e898b69faa06cef44c2e97dd7942bce02d34fa6fd1cce7545f2eb4c4233f6a",
+    "root-268826a3-64b9-416f-bedd-c0611f9eba1b.json": "fe9faf1e92de1282122893087ee252767834a444d0b1f83140fca0182362c8c4",
+    "root-279b1d60-c24d-4fb8-a8df-63d67d164637.json": "0830061f138832bda4772b7b7b069af978e5fdb28e57ebf748936577c6a4f18d",
+    "root-322534d5-423c-450e-bf27-6d6826d5afa4.json": "569ca3b34e1de6ee2a563803baeb83814184e23bc80bb458e797d7645e84c4df",
+    "root-47aeed43-26f5-42a0-8ce8-c9cb9ee84ab7.json": "4f34d71abe237702666c22320231f2a444f48fa432a17551d381841dd9832b6f",
+    "root-4deee971-b55e-46e3-8002-bb52b8cba380.json": "15d10e84fb0f309da1853dbfde888bc25ddec1c6c79ad33e74924917702203e3",
+    "root-65b16e65-e39f-4b42-8ece-8e1fe82c41a9.json": "f8affa81fb111d36d44df37b400fc87c845c4e6715a6dfea94d7d0afa924d8ff",
+    "root-6868cb3f-3b53-4942-9915-92bd82a180d9.json": "feffec70bdd56286f76074b8e19bb59bac7369fc1fe1f4ed396483b9335f6b4d",
+    "root-6973083d-a48c-4a6f-af0c-1f33b17734c0.json": "9b527c9fcec8dcaf0ead947c944afec5892d8e685fcefc3c45a17223b2a8ff2b",
+    "root-69a0a577-c225-4cec-90d5-dee0fc4d95b8.json": "fa15713990faf269caadae6c1243ff965cf48099f6cb6ebba259ee08e28f2325",
+    "root-6a37dddc-e921-4059-934c-41a39eddba21.json": "a7919da9870b0bdf8762dca438930c449a138dc01e58c7f273c90265135f7dfb",
+    "root-7a22150b-180a-4b32-9bb9-3a515f844cd1.json": "76130136cfd10017f8024e2f54597046c71ab5c924fb41cd6af98515d271ab99",
+    "root-7cb90699-d987-4b07-873c-7a7d69d81177.json": "196c117da338c472786c21a7b9b18dfabeee8db76b7b2ddab289126417c63257",
+    "root-8430f1ea-e594-4949-95e2-817f230727ca.json": "e87481c989c464b894e77cfd91fcb9055abe09494f2a2bdf970a54cbac7b4b80",
+    "root-8638347d-ee84-4a8b-bcfa-0bc72600ac9b.json": "87d9d692f5708467c0ef730b4aeccc5675470ab28995f33c8553a96f2d300f0d",
+    "root-8eafb686-9417-4113-82e7-b871255b3bdc.json": "9374f9f6b48b107afad6fe597e7bc1ad58ce8ee6748e245bdbd9cfad4574bcca",
+    "root-906ce149-e4b2-441c-86f1-d77044b2f6bc.json": "3d2ba3294d2efe33fbf5b0969e8d8b33bfd7368a7ecf4c836d93233797bf83b9",
+    "root-9ed37c1b-f10c-4b20-a2fa-b1d299e616e8.json": "6e02cfd973aaafe96c29568c981875049bbee6f39aa76bd601c27d8fd91b7288",
+    "root-a3d271b7-2495-4167-85e8-f958f901a4c3.json": "6c63d265a7f15959adc1b9c80a0d704494e942dc6c84aebf46abce47a6842a1f",
+    "root-a685f567-2e6c-492b-ad0e-31d857bafbc3.json": "e215fc287f75119ed8cbe9d829ea5621e9049843d85f9ecbf14e5703afc3cf1d",
+    "root-aaea436a-55c5-4ab9-b604-2d31c56382e5.json": "b5175193c99292a52e7a725cccf9b0840d4950f2b22ab6618ea67a1421b5576a",
+    "root-adb369d3-6621-4c6e-aa7d-0d5199cc3b95.json": "b420e1168203b807347adb7ee09ee8646979624a8f86e95362cb347a98db2e3a",
+    "root-af7cb4e7-e69f-4f91-8c42-01f04ea74fac.json": "4b47ea6060be5db0da7fb0ae2e54dbcc5d38a64fb556627b5d3917fcabc4c4a2",
+    "root-b1604061-4052-4e87-9817-b85f24b21451.json": "4746ae8c2d4616194e646a2166bd61eed3d6346dc07f2bf3481c219f93f5dc4d",
+    "root-b1a08bc6-9658-4016-bedf-00a8779fc2e5.json": "a03597e7d7e7a479d0a51e8c38f73b3fa799d70edf3381846f1d4f24e4d9e1e0",
+    "root-b250bae3-f73a-4151-b9b1-253c92a53003.json": "9e8df2e13df2ff3e7cdbabd65d5cae2a9d6a95e73b42a6dd3e55c28f3212dcb6",
+    "root-b7d836c9-51d0-4ccd-b71c-78f520026312.json": "a8f7e39d0d958cee3e81c24f7a6276bf2b4c32f3156ebaf1f45da384f6b8b94c",
+    "root-baa8175c-3fc1-484f-a868-e49e5724fc95.json": "e4224c55e62b9faa79ef1d82e436e20ff0d23c31d66e1dbee17c759df18019ff",
+    "root-c2a7b0f7-b43d-415f-ae5e-a98579fcff6d.json": "adf9ea6ec9d0abc65650ccf587053a48c6883eb7af406167f82e248d521bdff7",
+    "root-c2c7ec13-a8c2-4c00-97b6-5dc2caf753be.json": "de87679f5e6ecbc7168dc0512d9883c0771ea07f78114dff83477196b8e8218e",
+    "root-c83d346b-3e53-4fdd-b4d5-75d560d8d100.json": "38dfeda2bcefdbdf39216c1bed3e1609542894a482f44796bcde7587184b26fc",
+    "root-e3ea99c9-b46d-4283-8c1e-354a785653a4.json": "ec4f3124f885822a9ab7ac3131d64d616be8f7fa497b5285ffdf619eef56286d",
+    "root-ed470a92-65bd-4cfa-8956-d30afe36b0b5.json": "37bda39bfab0541bcc802b19c659ca0a8c96de49b423ebfe1c746913b792e351",
+    "root-ef32bec0-4f0e-4eef-ac9d-553843738ed4.json": "b76cd739dad7598f20ff7fa40518238e01a2052850864fd483b32f7fe25e3205",
+    "root-ff808de5-8565-4654-b8ec-8c680123a723.json": "eac16e5a2eb32741dc2a6d4c3fd796ba0f7acb982a8e024cc10121ce1409f8c4",
+    "trace.json": "755e289d23cb097a02b0a7e2312e917f58325df713e1a456acf420d95f5f37da"
+  },
+  "reference": "Chrome 152.0.7977.82, headful Windows x64",
+  "counts": {
+    "originalResidualBefore": 41,
+    "originalResidualAfter": 11,
+    "newCaptureReferenceABefore": 47,
+    "newCaptureReferenceAAfter": 17,
+    "fixedLeaves": 30,
+    "newDifferences": 0,
+    "unsupportedServiceLeaves": 9,
+    "originalEnvironmentLeaves": 2,
+    "additionalChromeControlVariableLeaves": 6,
+    "unclassifiedLeaves": 0
+  },
+  "observationsPerRepeatedBucket": {
+    "before": 1665,
+    "after": 1666,
+    "chrome": 1666
+  },
+  "repeatedBucketPairIndices": [
+    2,
+    6
+  ],
+  "remaining": [
+    {
+      "property": "caches",
+      "interface": "CacheStorage / Cache",
+      "classification": "unsupported-capability",
+      "mimic": "u",
+      "chromeReferenceA": "o",
+      "reason": "No origin-owned CacheStorage service. The HTTP loader cache is a different state model; Request/Response snapshots, Vary matching, atomic put/addAll and context sharing are absent.",
+      "evidence": [
+        "internal/webapi/surface.js",
+        "internal/webapi/window_observations.js"
+      ]
+    },
+    {
+      "property": "cookieStore",
+      "interface": "CookieStore",
+      "classification": "unsupported-capability",
+      "mimic": "u",
+      "chromeReferenceA": "o",
+      "reason": "The HTTP cookie jar exists, but no structured CookieStore binding or mutation-subscription path exists. Correct async filtering, URL/domain validation and cross-realm change events require integrating every jar mutation source, not an independent JS map.",
+      "evidence": [
+        "internal/webapi/surface.js",
+        "internal/webapi/window_observations.js"
+      ]
+    },
+    {
+      "property": "crashReport",
+      "interface": "CrashReportContext",
+      "classification": "unsupported-capability",
+      "mimic": "u",
+      "chromeReferenceA": "o",
+      "reason": "No crash-annotation sink or crash reporter ownership contract exists. A JS object accepting annotations would discard their only effect.",
+      "evidence": [
+        "internal/webapi/surface.js",
+        "internal/webapi/window_observations.js"
+      ]
+    },
+    {
+      "property": "d.hidden",
+      "interface": "Document",
+      "classification": "native-presentation-state",
+      "mimic": "F",
+      "chromeReferenceA": "T",
+      "reason": "Exact same unmodified saved payload fixtures differ on this leaf in Chrome A versus Chrome B. Fixed local control has visible document and 1280x800 outer size, matching Mimic. Detached-document semantics have a separate passing regression.",
+      "evidence": [
+        ".build/residual-225523/chrome-control-b/emitted-property-comparison.json",
+        ".build/residual-225523/environment-boundary/chrome-a.json"
+      ]
+    },
+    {
+      "property": "d.lastModified",
+      "interface": "Document",
+      "classification": "execution-clock",
+      "mimic": "09/11/2026 23:39:59",
+      "chromeReferenceA": "09/11/2026 23:09:31",
+      "reason": "No Last-Modified is supplied for this empty document. Fixed local Chrome/Mimic control matches the run clock; separate replays were executed at different wall times.",
+      "evidence": [
+        ".build/residual-225523/environment-boundary/chrome-a.json",
+        ".build/residual-225523/environment-boundary/mimic-before.json"
+      ]
+    },
+    {
+      "property": "d.visibilityState",
+      "interface": "Document",
+      "classification": "native-presentation-state",
+      "mimic": "visible",
+      "chromeReferenceA": "hidden",
+      "reason": "Exact same unmodified saved payload fixtures differ on this leaf in Chrome A versus Chrome B. Fixed local control has visible document and 1280x800 outer size, matching Mimic. Detached-document semantics have a separate passing regression.",
+      "evidence": [
+        ".build/residual-225523/chrome-control-b/emitted-property-comparison.json",
+        ".build/residual-225523/environment-boundary/chrome-a.json"
+      ]
+    },
+    {
+      "property": "d.webkitHidden",
+      "interface": "Document",
+      "classification": "native-presentation-state",
+      "mimic": "F",
+      "chromeReferenceA": "T",
+      "reason": "Exact same unmodified saved payload fixtures differ on this leaf in Chrome A versus Chrome B. Fixed local control has visible document and 1280x800 outer size, matching Mimic. Detached-document semantics have a separate passing regression.",
+      "evidence": [
+        ".build/residual-225523/chrome-control-b/emitted-property-comparison.json",
+        ".build/residual-225523/environment-boundary/chrome-a.json"
+      ]
+    },
+    {
+      "property": "d.webkitVisibilityState",
+      "interface": "Document",
+      "classification": "native-presentation-state",
+      "mimic": "visible",
+      "chromeReferenceA": "hidden",
+      "reason": "Exact same unmodified saved payload fixtures differ on this leaf in Chrome A versus Chrome B. Fixed local control has visible document and 1280x800 outer size, matching Mimic. Detached-document semantics have a separate passing regression.",
+      "evidence": [
+        ".build/residual-225523/chrome-control-b/emitted-property-comparison.json",
+        ".build/residual-225523/environment-boundary/chrome-a.json"
+      ]
+    },
+    {
+      "property": "documentPictureInPicture",
+      "interface": "DocumentPictureInPicture",
+      "classification": "unsupported-capability",
+      "mimic": "u",
+      "chromeReferenceA": "o",
+      "reason": "No picture-in-picture document/window service, activation-driven creation, window close/ownership lifecycle or presentation surface exists.",
+      "evidence": [
+        "internal/webapi/surface.js",
+        "internal/webapi/window_observations.js"
+      ]
+    },
+    {
+      "property": "indexedDB",
+      "interface": "IDBFactory / IDBDatabase",
+      "classification": "unsupported-capability",
+      "mimic": "u",
+      "chromeReferenceA": "o",
+      "reason": "No IndexedDB transaction/object-store engine, key ordering/ranges, structured-clone persistence or upgrade/blocked ownership exists.",
+      "evidence": [
+        "internal/webapi/surface.js",
+        "internal/webapi/window_observations.js"
+      ]
+    },
+    {
+      "property": "launchQueue",
+      "interface": "LaunchQueue",
+      "classification": "unsupported-capability",
+      "mimic": "u",
+      "chromeReferenceA": "o",
+      "reason": "No application-launch event source, file-handle delivery or launch-consumer queue exists. A no-op setConsumer would advertise an unimplemented capability.",
+      "evidence": [
+        "internal/webapi/surface.js",
+        "internal/webapi/window_observations.js"
+      ]
+    },
+    {
+      "property": "n.webdriver",
+      "interface": "Navigator",
+      "classification": "diagnostic-environment",
+      "mimic": "F",
+      "chromeReferenceA": "T",
+      "reason": "Offline native runner uses remote-debugging-port=0. Fixed-port Chrome control and Mimic both report false; offline native reports true.",
+      "evidence": [
+        ".build/residual-225523/chrome-offline-03/result.json",
+        ".build/residual-225523/environment-boundary/chrome-a.json"
+      ]
+    },
+    {
+      "property": "navigation",
+      "interface": "Navigation",
+      "classification": "unsupported-capability",
+      "mimic": "u",
+      "chromeReferenceA": "o",
+      "reason": "History is implemented, but Navigation entries/transitions, intercept/commit/abort and navigate-event ownership are not. This requires a new projection integrated into navigation commits and traversal, not a placeholder currentEntry.",
+      "evidence": [
+        "internal/webapi/surface.js",
+        "internal/webapi/window_observations.js"
+      ]
+    },
+    {
+      "property": "outerHeight",
+      "interface": "Window",
+      "classification": "native-presentation-state",
+      "mimic": "800",
+      "chromeReferenceA": "0",
+      "reason": "Exact same unmodified saved payload fixtures differ on this leaf in Chrome A versus Chrome B. Fixed local control has visible document and 1280x800 outer size, matching Mimic. Detached-document semantics have a separate passing regression.",
+      "evidence": [
+        ".build/residual-225523/chrome-control-b/emitted-property-comparison.json",
+        ".build/residual-225523/environment-boundary/chrome-a.json"
+      ]
+    },
+    {
+      "property": "outerWidth",
+      "interface": "Window",
+      "classification": "native-presentation-state",
+      "mimic": "1280",
+      "chromeReferenceA": "0",
+      "reason": "Exact same unmodified saved payload fixtures differ on this leaf in Chrome A versus Chrome B. Fixed local control has visible document and 1280x800 outer size, matching Mimic. Detached-document semantics have a separate passing regression.",
+      "evidence": [
+        ".build/residual-225523/chrome-control-b/emitted-property-comparison.json",
+        ".build/residual-225523/environment-boundary/chrome-a.json"
+      ]
+    },
+    {
+      "property": "scheduler",
+      "interface": "Scheduler",
+      "classification": "unsupported-capability",
+      "mimic": "u",
+      "chromeReferenceA": "o",
+      "reason": "The Page event loop exists, but no prioritized postTask/yield continuation service, TaskController/TaskSignal reprioritization or cancellation contract exists. setTimeout is not an equivalent implementation.",
+      "evidence": [
+        "internal/webapi/surface.js",
+        "internal/webapi/window_observations.js"
+      ]
+    },
+    {
+      "property": "speechSynthesis",
+      "interface": "SpeechSynthesis",
+      "classification": "unsupported-capability",
+      "mimic": "u",
+      "chromeReferenceA": "o",
+      "reason": "No voice registry, utterance queue, speaking/pause/cancel state or speech event source exists. An empty fake voice list would not reproduce the measured OS-backed browser service.",
+      "evidence": [
+        "internal/webapi/surface.js",
+        "internal/webapi/window_observations.js"
+      ]
+    }
+  ],
+  "validation": {
+    "finalCombinedSuite": "pass",
+    "targetedRace": "pass",
+    "fullRaceSuite": false,
+    "originalReplayExitCode": 0,
+    "payloadReplayExitCode": 0,
+    "retainedFirstSuiteFailure": "minimal custom bundle missing BarProp; fixed with exposure gates",
+    "chromeAError": "Fetch.failRequest session already gone; retained",
+    "chromeBErrors": 0
+  },
+  "limits": [
+    "Counts invert the consumed property bucket; distinct repeated cycles are not summed.",
+    "Only the already declared dynamic route segment is normalized. No observations are dropped.",
+    "Nine unimplemented capability services are explicit package boundaries, not a claim they are fundamentally impossible.",
+    "Stored replay responses do not validate newly generated submissions or prove live server acceptance.",
+    "Goja lacks a nested native-callback job checkpoint; production V8 is the full event-order oracle target."
+  ],
+  "binaries": {
+    ".build/residual-225523/replay-final.exe": "3c74360d0647c7ffcfb9c63d86a83885d05aaca1e60539133d56df89febbc4f3",
+    ".build/residual-225523/mimic-final.exe": "e67a8a79ef77aa507cd1c9cf32ebb6217b7a22127299c28f8a9412bb54f091cb"
+  },
+  "sourceSHA256": {
+    "internal/browser/bootstrap_snapshot.go": "8f2eb1906001d16b02668235ff5ea7f1bf16a0fed215685d6317b7d3646797c3",
+    "internal/browser/browser.go": "c37fac01ed20b092d69349d719a4eda2a9152d10253ca31b041effa230079980",
+    "internal/browser/capabilities.go": "da92b8e919e20fb7c1221853a0582b13d59fc4488659d22dc4cbf9703f7cd521",
+    "internal/browser/capture_trace.go": "f4685a35d8425a85a78ccb2d243e00d6cf48278fb6902213b79d7253237941c6",
+    "internal/browser/client_hints_policy.go": "982380640d7a862a2ba613fbf54f87f7c4523e33a315b44f89b7438417825c8a",
+    "internal/browser/cookie_context.go": "908525c907fa77996869b6285429bf54a53c82534454d3eb01135485ebb679ed",
+    "internal/browser/deferred_runtime.go": "0f774b7426a4a2d7bcfd1154bcaa123d234ae71fb76eb4563ed1770d5e5e8706",
+    "internal/browser/document_compatibility.go": "849dd65ad9ae88d5e30f759c8a6648073fb669f10d4ffaca473bd3561a58284a",
+    "internal/browser/document_stream.go": "86373abb557a73925d894441f6ee8a919c39ae7978af974ce517a241ac0680de",
+    "internal/browser/dom_query.go": "f431a2716156a19d961d91b2a34eaf68ca7f19ae048ee1a6c31e555780ecc180",
+    "internal/browser/eval_source.go": "68c2bcf16ca07c987ab10a575e0f7e27407e4e24ea0c5873570897f188804e05",
+    "internal/browser/exception_host.go": "83250dfeed5faae92c6a1fbc994acd9e3a3157a518f93028adadf066179b2292",
+    "internal/browser/fetch.go": "04d854ce5f880b711b35b85c1d3006dd905dc67fd21a0e3b943dd40bf8710ef9",
+    "internal/browser/font_resources.go": "15532b9731da4e1b85340315c839e0737f610c455bb8bbd79f514afca781c54c",
+    "internal/browser/form_navigation.go": "08a6ff651ddf8a827a5ece4255e10dd60281ef9d7ef07cda1a4a1b2a462f7d63",
+    "internal/browser/form_snapshot.go": "85a097fcaa1f1fa6a584424298aa5877e506f6746fd0605ec47dd48703934eca",
+    "internal/browser/frame.go": "b01c2b8c43dafb89484c03768702376bc0b53d014403bb1733859d69436e2412",
+    "internal/browser/frame_document_bridge.go": "743e0cbc9fcf7996d46f6a184cb426697fa02d6386342ba7402aa8b18f4bcd17",
+    "internal/browser/history.go": "d7d168692c8fdfba95d5d59c54d5af07c0d804a09c8ed4948ab5f7db7f1b5728",
+    "internal/browser/image_load.go": "dcf722da0ffd199a98582c2a75a203dcc2e5a5af7c9c955d346917bc7ceaf18b",
+    "internal/browser/image_resources.go": "a4a284e4f3549cfd3cc2eec8a2fc2749f9256872671b403ab6df46f5644eb67a",
+    "internal/browser/message_port.go": "4920462099b286aab835e4bc8824d4a399facbec2f3cedecdbca686a85c2e4bd",
+    "internal/browser/module_fetch.go": "74514ff16122119569239e8b2e3b43c08c61fe50ede0124b7a984ab1027f3d71",
+    "internal/browser/navigation_diagnostics.go": "45d1e26bbd6c13dd839e7c56b4baf41ce6b06e647989579634a38cc160586de9",
+    "internal/browser/navigation_stream.go": "ae86a78be9d52b69011d6671aa04e5adfdae9897fd0aa9471cf08146dd4bc85a",
+    "internal/browser/page.go": "9bab4a3c9dd85008398b4f577fbbbd97702c953ae5724597456a54582ab5e83d",
+    "internal/browser/performance_clock.go": "40a6481c2ec41e7a6b204c196a35312be0c9f97c24089e381fcb933e1399c7f0",
+    "internal/browser/realm.go": "81388433249a177cb1183d5183519ab41026b16c4b6a80715e8b56214ad76740",
+    "internal/browser/realm_ownership.go": "fe0edb117af0d4ed5733cd5b03b49b1aeef6494e1e72680e4522f93ef524b831",
+    "internal/browser/resource_preload.go": "e39c219f514d5eae820399293241c9c7685d8698cb9d526926efcde9554e3363",
+    "internal/browser/script_response.go": "ee3a829ced6854be31d0f717830a90d050ffca0538083812861c6ae94655d5fa",
+    "internal/browser/selector_state.go": "abe85384d0ccf0d2c316f2ea241f6ec7f14abf892f728b93b14c459344fb5995",
+    "internal/browser/semantic_diagnostics.go": "849e5ba54ea0ff22cecf818566df65640982e6697a72f914e1d51313631da53d",
+    "internal/browser/shadow_snapshot.go": "e645f74ea9a944b2cf7f0e9f3f4fe842489fc59addc099c7ac26fe756607c62f",
+    "internal/browser/snapshot.go": "b447ec514d7af8fbe4b235432674a9a0bb367785c89a89c3eebd6efeb8572cb2",
+    "internal/browser/stylesheet_load.go": "68b25120d5f9a970f68fd5ae229d27e22e96e7897cd0bc95820103956e68ffa6",
+    "internal/browser/text_metrics.go": "140316c57f3536fa3b939f6427e020d94f9399807f7715690a562913985e955b",
+    "internal/browser/trustworthy_origin.go": "45de7aac2acc9d7e6d5c58b96f745ee8c6c4027c5ad5032d428d6483eb251a57",
+    "internal/browser/url_host.go": "3fdf3292ba6bddc6462fb0bf47a8a097ef7576733d787afd82926197b1e765c8",
+    "internal/browser/window_reflection.go": "2a6a7bf2d7c38f03824ac98b7f4bb0a29c12f05e2a5879f151fa2b791c26693c",
+    "internal/browser/worker.go": "45f03b39faf54123e3263ef0bcb59f3fca0c8cc8d41a642b59611d98027bed7c",
+    "internal/browser/worker_fetch.go": "44f4b164893ac455aa5655373aed55ad2a1e5efafe2b114c3ebb62af90b7125b",
+    "internal/webapi/abort_encoding.js": "8ae36a94d9c3c6c00312de44f7fcdd6bafd2fe06940370e61c048d6b14d2c229",
+    "internal/webapi/attributes_compatibility.js": "aeb9a4128eaf4bf950efd8877a0aad6f1b8b6748964b3b65a2bb3ed339df980e",
+    "internal/webapi/base64.js": "54d29951507cc573fa8eabdff1d3876e46d93de173274c53622aeb8e353aad83",
+    "internal/webapi/canvas_path_observations.js": "2f12073af144828de48193c6eb70a1623b94509643f2f21ea93755a2450272ae",
+    "internal/webapi/canvas_state.js": "436a743ed95dd3c3e86f9f080d810a10883c1f94b13720219c00ca2340b9008e",
+    "internal/webapi/capabilities.js": "1a3c362e29fac408e79e38edf088890c0f0bfad454291ea961e49ecc3e196112",
+    "internal/webapi/catalog.go": "5afa250c02d1da765e75bb4712a64eb5cbe8182e4123f88341c4c01aa9b6df72",
+    "internal/webapi/cssom_compatibility.js": "6663f9d7e79a094df4d7e328b711f466e06800941dd20a9e861e07e131f17ef9",
+    "internal/webapi/css_animation_grammar.js": "c9f4fb63ac6b91c3ff0214eede9f4dee50a6d93dda1e600a748fa1fbc850163f",
+    "internal/webapi/css_colors.js": "92419ddb2948c10dd85d86c9347120026f2b66fc89fe2ff0ddde0abc518fb12f",
+    "internal/webapi/css_font_metrics.js": "f954942b0e4c63ce4385c1c96ba59b4b2daba792cf76dbd36f6dc45549368787",
+    "internal/webapi/css_shorthands.js": "a30bd1ee9f6444615a1109eb2b705b43309abfc91fc887f44c1ab2c9016aa27f",
+    "internal/webapi/css_supports.js": "119bc998f716f75d5fd9514d4157074b2bcf30fd5591588eeed86a178d33937b",
+    "internal/webapi/css_value_grammar.js": "7f145fbe79feccea9dff5203312d111114e062cd66c689be7fbfdd57adbc7e70",
+    "internal/webapi/document_all.js": "0c21cac3aa2bf2ae4a1ce8df342d1e20a87672c7c1e3975d9ddb6e5aeea2e768",
+    "internal/webapi/document_compatibility.js": "8056560920d2f28a433ff261bb21da0ecf589e8303f9c8a1ceec3774c186e877",
+    "internal/webapi/document_state.js": "4dd0633a9578ba8860d37afbc9e01d4bb24715ad581a1749650e476307e23080",
+    "internal/webapi/document_stream.js": "c6407caaf52f06ba4c6f4e2491b4201c4a72b93aa84ba8625556401e9fc318e8",
+    "internal/webapi/dom_compatibility.js": "7f5a8c757ecb4469f4b6ec4887f76c069ce2273d19f4fc1be1255336a9b1ec05",
+    "internal/webapi/dom_matrix.js": "3bdec59369d74fbc14eb1e380d00533e2beca8400f0cdfc1c058cfec5fab55d3",
+    "internal/webapi/events_compatibility.js": "94d9c76a40e0b09bc9e44e90e88e010bb0589fac1c86ac205249a91af89dc604",
+    "internal/webapi/exposure_transport.go": "d81bdbfc7e404359339f58263dd1675f2e5adc23b49c2cf8843ef5475b350495",
+    "internal/webapi/fetch_compatibility.js": "d9eef68c0766b071adca25cc05fecef6d79009ad40f1c8a1e79fca57600d4d7f",
+    "internal/webapi/fetch_primitives.js": "068f55a7bb95b418b520974eafac554f52f6ee5b57617b759f34a3080e202b64",
+    "internal/webapi/font_faces.js": "7353c15ba034dc567297cef9022602a9926f482174652f59e058a08fd72bb012",
+    "internal/webapi/form_controls.js": "d7da66e8357ba78018f61784902e5d8be95bfb67579d546773e2d8b25f3c3aef",
+    "internal/webapi/glsl_observations.js": "98ede22e7f050968b3778abd02cf44d707e68a2b0e7cad740c864fad31bee387",
+    "internal/webapi/image_resources.js": "f0e72b39a6174c71d65f071ee22e2f898b3377715a9b4cbd4afd906a225943e4",
+    "internal/webapi/intersection_observer.js": "1d33c8dff591868686079cad7b8011bfa6d6dfca5e27d0248ed9c37b9707a147",
+    "internal/webapi/native_functions.js": "034ae03d549af4058270569c565cc2f4ba9e6a7e617febcc01e85dc42ea5a041",
+    "internal/webapi/offline_audio.js": "768b4bd7b8fb3d3b2748f54f6aada5a45b53886b9757390096c7aaf4d58e9e27",
+    "internal/webapi/screen_focus.js": "e35ebe78f12a998d66f35595d5f61daa62983f36d3b2e1e9de1bf849d41f5c9a",
+    "internal/webapi/selectors_compatibility.js": "cb43a119e9f1716ed5c70f697ad85740a279e479374ce15244bef298d6884bbe",
+    "internal/webapi/selectors_vendor.js": "f4a159e3afb7231fe8c43542193c921b262799a2a219da9691bcb2f9f3695f65",
+    "internal/webapi/shadow_serialization.js": "bf96c31e3a6550224d01150aa8d3676094b807c067cdadc6361e16c8d26d066a",
+    "internal/webapi/streams_vendor.js": "30835bf3c9af5236b16126f83512d5daaf5e6b53d93ae4e61efadce775857a95",
+    "internal/webapi/surface.go": "4e7add875e6859c23adc0059afd785c8359788a1c1a9335c23fc736efc1d42be",
+    "internal/webapi/surface.js": "a0466fcc1fb2e9bef052e13973035b15e24d5eb2b1d59a7e16dab5d599b0046c",
+    "internal/webapi/svg_attribute_defaults.js": "1c377b292fc966802f51a994aa8451df45766046ad85ac9b8703728d6b296f83",
+    "internal/webapi/svg_attribute_semantics.js": "b7f4547707e603dfe992e02a7dd94386cb43cf4e099a629bdd570ed8018b0da2",
+    "internal/webapi/svg_boundaries.js": "5ca828f57460caee94809917b9ba377269d574995184261008bd8513aa5c8855",
+    "internal/webapi/svg_coordinates.js": "4f6c08b4dfd19771fb53fa30b5bfca79a97a6752c88d01d35bc7ef5a5d1f33b3",
+    "internal/webapi/svg_css_transform.js": "19d00e9ad7759b555a0e7b60ee8b810f2357f013fbe60795868f5534a787bea3",
+    "internal/webapi/svg_geometry.js": "1a94820c66b2d0f084736b89eecb3954ec4b927bd95b18ead23fed764a41ff99",
+    "internal/webapi/svg_path_metrics.js": "c362f42f56fe79b80e11a3e637c0f0ae05626c9dbf05c9a902bc123d1f0dd9b3",
+    "internal/webapi/svg_reflections.js": "51073d84fdafe9e113cd280e2d08a536a34a3e51f0293ce25df38ea4fec80afd",
+    "internal/webapi/svg_text.js": "58b823ce7e51c97dc93693971970b1068991bd2122bfc6cad68ec347d12a37dc",
+    "internal/webapi/svg_types.js": "4940d99a1353343ead0c8e00f2e40075a5526caaf5a1352f3fc963951f7813a5",
+    "internal/webapi/svg_use.js": "6e60f62631ed310072936135b740737881e5eb084f6af77c5295c216cf7a28f0",
+    "internal/webapi/templates_compatibility.js": "9a3a4c91ad06404fa0ee13fed9af26a9f30134e36147c7c5e134bde65096711a",
+    "internal/webapi/traversal_compatibility.js": "70a32d80f41f805f159fa2b77099db422ca576acb83f19e9e53333a80a2091e0",
+    "internal/webapi/webgl_framebuffer_observations.js": "c23ca3b72c8b584be5792f4e82f8f4ce526c06965c3274f6b91a895b74dbabaf",
+    "internal/webapi/webgl_program_observations.js": "050e740347f772ca59c5f246ca22fd6fe41c196a7c20fbc791957ec8afd76d47",
+    "internal/webapi/webgl_state.js": "f0a2f9aea65ee55d4950a3b1138db7c4a314d0947d920b4e587c7802e7d16664",
+    "internal/webapi/webgpu_state.js": "c6a69aa157b427eea65cc18d6fedec2cfce3b763c32ceb3a0a5ed3ea83568843",
+    "internal/webapi/webkit_css.js": "508c86381cb55fb24bb67dea988e0ecdfbc3c86c24828efe3ff216720b47cd63",
+    "internal/webapi/webkit_css_names.js": "9a82566b66c7fad361c29000cd6286a43b263f03d740251427f04fe9c9308a14",
+    "internal/webapi/window_observations.js": "7fcf96b21c02e8e68889dfb703f8815cb47c298330b110fcf036a1d0cf4641f8",
+    "internal/webapi/worker.js": "3133475ce2990f6ee906d78fd232e5da9ea516af413a967a6928629c477208a5",
+    "internal/engine/v8/bootstrap_cache.go": "eba8f8bb04797942ac03829cec994ac54353b6b3633e7e1b6738bae025e7da72",
+    "internal/engine/v8/bootstrap_snapshot.go": "9f645d91c5ac49f102b6761a68beae8b1ff9f130cfe4edec2c1cf000d4a06ab8",
+    "internal/engine/v8/diagnostics.go": "bebeb095ee2d23eedfcc66fdbe762f64cefd7732179780476767044dc7da3f42",
+    "internal/engine/v8/eval_source.go": "c2c0309d4402001bdec81185376a2a97d303c909b8b529a196cb2b3121a4421d",
+    "internal/engine/v8/native_profile.go": "0cb6fe8414c7745473f1fc918947be6c49c80a0f47ede162ae40ed207b9b8ffe",
+    "internal/engine/v8/packed.go": "5d86b4b396169d36edfb089d37b0d04c8494cf81480188be321a5575aaf4e6fe",
+    "internal/engine/v8/runtime.go": "d1c156e6c66bc06766462266b1f5e3535f0da7f585dba4fc8396a9c7a1bfef06",
+    "internal/engine/v8/spike.go": "32dff5c0a9462f58f52332a1bd9327463d9529ed38eb14d5ca8d829ee9108b21",
+    "internal/engine/v8/stack.go": "39d612e3d1b24992c731d450bccac84a6f96e70e54043555ddd65cb7723839f4",
+    "internal/engine/v8/structured_clone.go": "ae6ee48191acb5db19ce4fdefe974cb9c7daaf27286e0c7dd3733d70390c5213",
+    "internal/engine/v8/thread_policy_windows.go": "3846585f095a2f24811184313951ab922fb3bd1b1e75b8ec108de2d6473a9bea",
+    "internal/engine/v8/thread_windows.go": "c15df06c94a74ecca84e0dc9dcabf9f91731091c2e524eb764c1940b6ae4948e",
+    "internal/engine/v8/undetectable.go": "67ab1677ce51a2d91b6e1fe9a2e7caa866910eba38621b6033cc7b81514eda11",
+    "internal/state/capabilities.go": "970adbc9c476a4d0a70921167f94ed6773d294430806b5409a12b9a0b1cd818c",
+    "internal/state/environment.go": "8353d724eac6e60ffa14b2601764940dbbbea4f3c56bf6951b39ec2750dbd055",
+    "internal/state/webgl.go": "9a2aa14d3615d6ab63b80c98226bd5f77e2e8947f75056263a6aeb778436e768",
+    "chrome/152/profile.go": "508052d53c4cd15bd5a188a131ed49fbe08977e1568c40f7a00134f8a1fbde1b",
+    "tools/compatibility/offline_replay/capture.go": "e803fff62a9e0c57abf264fe5f8e0e3cbc30c1ba465970441e214a8d69ff864c",
+    "tools/compatibility/offline_replay/main.go": "262d6d05ec99e539803908e79852a0e30805c706fe2105bfacf8d3e1f7e1e58f",
+    "tools/compatibility/offline_replay/replay.go": "eaab003330f201937f314ff8c4c1c3efdfeb1c65356d8cd5148bf0dca7db517e"
+  },
+  "evidenceSHA256": {
+    ".build/residual-225523/before/payload-probes.json": "1d066bc188ab464b19ccaf22586677a75bf83b412b232764cc357c1cc7fa4523",
+    ".build/residual-225523/chrome-offline-03/payload-probes.json": "11f5614ce894eb50cf3e3a216191e9a70e3a8c44dc65d5e2ab3e98ec31a09662",
+    ".build/residual-225523/chrome-control-b/payload-probes.json": "bbd66d7b99b41914466a85b17936395940aace7016d98e78abf295c829f4dbf3",
+    ".build/residual-225523/chrome-control-b/emitted-property-comparison.json": "5b7622ccf163c74954ad829cc37b0d27d1a496eb7ac81b5d6a59f4b246d09c2a",
+    ".build/residual-225523/environment-boundary/chrome-a.json": "a1197123ac593869c298f888ef10f9294c6d97e24e4617320a3ee0f125524ee7",
+    ".build/residual-225523/environment-boundary/chrome-b.json": "35fa1e7ba47d4b53d79d0e34371de07fa549309441bca54350148a39b3cbafd8",
+    ".build/residual-225523/environment-boundary/mimic-before.json": "76403aa1232d9f91f7006711d9dbb0d2514e7974e93fd9bc040296509f6a31ef",
+    ".build/residual-225523/event-after-r2/passport.json": "f1764a91042dda0e2214f5c0034d18735d81f301ab780ab948d6db5e2c2cee0e",
+    ".build/residual-225523/capability-oracle/passport.json": "712f11f29c82306e3d27c04d2f1a1a6f20312331d516047a2458db177bf6ae22",
+    ".build/residual-225523/style-forwarding/passport.json": "4f8c8d9593c65e575ad14aaf444830d84a998c67c3209d94efb969e5cc1fe064",
+    ".build/residual-225523/detached-document/passport.json": "f045d1157d21ebca5cc61adf8c823f61e1b531dd48e968be6b1fed9c169c22d5",
+    ".build/residual-225523/viewport-details/passport.json": "71af510053d00dee086fd1d3af4af4980347cfc2ba71c935a96e9245cd6ce19e",
+    ".build/residual-225523/window-navigation-state/passport.json": "6144548911d02330d5fccad838ff1ade7da140b4b93657f3cabc0f0a4a91ae6f",
+    ".build/residual-225523/final-r8-payload/replay-result.json": "4ed7e93db42a34f93ce8a52a6da71c3007cc2b971e54ff1f122234955f027010",
+    ".build/residual-225523/final-r8-original/replay-result.json": "b95b9207afaa9b06b1bef2fd39f600b9a37a533087d48ecc647d4c8e7cadeaa4",
+    ".build/residual-225523/final-r8-payload/emitted-property-comparison.json": "ce582f892beeccc196c3cfba695ab62c5e6036884b36ba078eb9dfa51ce25d1b",
+    ".build/residual-225523/final-r8-payload/payload-provenance.json": "824e4d65828fa31eed32971e39e6f5fa4cf10a1c2c4b610684eeed40b0af4c63",
+    ".build/residual-225523/full-suite.log": "d09d2f90a9ed619f8122e95c08cea11f2c7c72c3dd7cf8985d3c5bc7d29fc9f9",
+    ".build/residual-225523/browser-suite-final.log": "4aafb68e9ffdbba078b072b8bb03812759bcdcf1c2e3e432be731796804ca117",
+    ".build/residual-225523/final-r8-suite.log": "59202c2e68269b44e94e301a1b69e4b8edb6f2544c5fe13929c9cf9510d9f158",
+    ".build/residual-225523/race-browser.log": "aeffda8b0a7a49d6edace3efb269a9d06c835db77759f1105405fe51d4c8c907",
+    ".build/residual-225523/race-packages.log": "4e125042367b126fd649043cc76add1e58237d32c5d107e6f94cd96f06213e51",
+    ".build/residual-225523/final-r8-race.log": "1c21a620494154d6c4346ab88333e0878d25f62ada92a72355708805b7985c5b",
+    ".build/residual-225523/final-additional-race.log": "4a4be7b76be4437ebefcafefa6a57c84ca72dfb55c00e57633508e8c17d5f369",
+    ".build/residual-225523/selected-bundle-tests.log": "7d4c4fa10190007f17a5cb81a8c5cb0cc5c116b6d4f1acffc87b02373a7a4fe6",
+    ".build/residual-225523/cpu-profile-tests.log": "cb78294b431e3016ff81ba54e24200e1891d51a42da3706f7964d5f9727c4ede",
+    ".build/residual-225523/final-remaining-packages.log": "b852912852ccd89d3c03aef0e72b94b0b51454d03a934f9a8621b87d1d317d3b"
+  }
+}

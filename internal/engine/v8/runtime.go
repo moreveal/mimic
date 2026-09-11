@@ -916,6 +916,16 @@ func (a *adapter) MicrotaskCheckpointContext(ctx context.Context) error {
 	return err
 }
 
+// NativeCallbackCheckpoint is requested only by browser-owned event dispatch
+// after a user listener has returned. The remaining JS stack is the private
+// dispatch implementation; ordinary nested script cleanup still defers jobs.
+func (a *adapter) NativeCallbackCheckpoint() error {
+	if a.onCallback() != nil {
+		return a.activeIsolate.PerformMicrotaskCheckpoint()
+	}
+	return a.MicrotaskCheckpoint()
+}
+
 // NativeTasksPending requests another browser task boundary while native work
 // is outstanding. No background goroutine may enter the JavaScript isolate.
 func (a *adapter) NativeTasksPending() bool {

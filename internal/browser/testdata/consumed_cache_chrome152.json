@@ -1,0 +1,1 @@
+{"identity":false,"keys":["test"],"used":true,"miss":true,"body":"hello","readonly":false,"query":"hello","urls":["/a?q=1"],"requestGuard":true,"keyGuard":true,"deleted":true,"retained":"hello","fresh":0,"frame":"same-origin"}

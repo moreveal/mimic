@@ -26,9 +26,11 @@ type storedCookie struct {
 }
 
 type CookieStore struct {
-	mu        sync.RWMutex
-	jar       map[cookieKey]storedCookie
-	nextOrder uint64
+	mu           sync.RWMutex
+	jar          map[cookieKey]storedCookie
+	nextOrder    uint64
+	observers    map[uint64]func(CookieSnapshot, bool)
+	nextObserver uint64
 }
 
 func NewCookieStore() *CookieStore { return &CookieStore{jar: make(map[cookieKey]storedCookie)} }
@@ -143,6 +145,9 @@ func (s *CookieStore) setWithPartition(u *url.URL, c *http.Cookie, script bool, 
 	}
 	if copy.MaxAge < 0 || copy.MaxAge == 0 && !copy.Expires.IsZero() && !copy.Expires.After(now) {
 		delete(s.jar, key)
+		if exists {
+			s.notifyLocked(old, true)
+		}
 		return
 	}
 	if copy.MaxAge > 0 {
@@ -157,6 +162,7 @@ func (s *CookieStore) setWithPartition(u *url.URL, c *http.Cookie, script bool, 
 		created = old.created
 	}
 	s.jar[key] = storedCookie{copy, hostOnly, order, partition, created}
+	s.notifyLocked(s.jar[key], false)
 }
 func (s *CookieStore) SetFromResponse(u *url.URL, h http.Header, context ...CookieContext) {
 	for _, c := range (&http.Response{Header: h}).Cookies() {
@@ -266,9 +272,10 @@ func (s *CookieStore) Delete(domain, name string) {
 	domain = cookieHost(strings.TrimPrefix(domain, "."))
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	for key := range s.jar {
+	for key, entry := range s.jar {
 		if key.domain == domain && key.name == name {
 			delete(s.jar, key)
+			s.notifyLocked(entry, true)
 		}
 	}
 }
@@ -283,15 +290,77 @@ func (s *CookieStore) DeleteScoped(domain, path, name string, partition *CookieP
 	}
 	s.mu.Lock()
 	defer s.mu.Unlock()
-	for key := range s.jar {
+	for key, entry := range s.jar {
 		if key.domain == domain && key.name == name && (path == "" || key.path == path) && key.partition == selected {
 			delete(s.jar, key)
+			s.notifyLocked(entry, true)
 		}
 	}
 }
 func (s *CookieStore) Clear() {
 	s.mu.Lock()
 	defer s.mu.Unlock()
+	for _, entry := range s.jar {
+		s.notifyLocked(entry, true)
+	}
 	s.jar = make(map[cookieKey]storedCookie)
 	s.nextOrder = 0
+}
+
+// Subscribe reports canonical mutations, including HTTP and CDP writes. The
+// callback runs under the jar lock and may only enqueue work, never call the jar.
+func (s *CookieStore) Subscribe(callback func(CookieSnapshot, bool)) func() {
+	s.mu.Lock()
+	s.nextObserver++
+	id := s.nextObserver
+	if s.observers == nil {
+		s.observers = map[uint64]func(CookieSnapshot, bool){}
+	}
+	s.observers[id] = callback
+	s.mu.Unlock()
+	return func() { s.mu.Lock(); delete(s.observers, id); s.mu.Unlock() }
+}
+func snapshotCookie(entry storedCookie) CookieSnapshot {
+	row := CookieSnapshot{Cookie: entry.cookie, HostOnly: entry.hostOnly}
+	if entry.cookie.Partitioned {
+		key := entry.partition
+		row.PartitionKey = &key
+	}
+	return row
+}
+func (s *CookieStore) notifyLocked(entry storedCookie, deleted bool) {
+	if entry.cookie.HttpOnly {
+		return
+	}
+	row := snapshotCookie(entry)
+	for _, callback := range s.observers {
+		callback(row, deleted)
+	}
+}
+func (s *CookieStore) DocumentSnapshots(u *url.URL, access ...CookieContext) []CookieSnapshot {
+	out := []CookieSnapshot{}
+	for _, entry := range s.matching(u, access...) {
+		if !entry.cookie.HttpOnly {
+			out = append(out, snapshotCookie(entry))
+		}
+	}
+	return out
+}
+
+// Visible uses the same cookie selection algorithm as HTTP and document.cookie.
+// Deleted records are checked without their old expiry, since the deletion is
+// itself the observation being delivered.
+func (row CookieSnapshot) Visible(u *url.URL, deleted bool, access ...CookieContext) bool {
+	entry := storedCookie{cookie: row.Cookie, hostOnly: row.HostOnly, created: time.Now()}
+	if deleted {
+		entry.cookie.Expires = time.Time{}
+	}
+	if row.PartitionKey != nil {
+		entry.partition = *row.PartitionKey
+	}
+	temporary := CookieStore{jar: map[cookieKey]storedCookie{{}: entry}}
+	return !row.Cookie.HttpOnly && len(temporary.matching(u, access...)) != 0
+}
+func (s *CookieStore) SetFromCookieStore(u *url.URL, c *http.Cookie, access ...CookieContext) {
+	s.set(u, c, true, access...)
 }

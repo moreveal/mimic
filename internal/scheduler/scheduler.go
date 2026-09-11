@@ -16,6 +16,7 @@ type Source string
 
 const (
 	DOM             Source = "dom"
+	WebTask         Source = "web-task"
 	Timer           Source = "timer"
 	Network         Source = "network"
 	Navigation      Source = "navigation"
@@ -51,6 +52,8 @@ type task struct {
 	source       Source
 	callback     Callback
 	cancelled    bool
+	webPriority  int
+	continuation bool
 }
 type queue []*task
 
@@ -465,10 +468,32 @@ func (s *Scheduler) popNextLocked(advance bool) *task {
 	return heap.Remove(&s.tasks, best).(*task)
 }
 
+// Web scheduling priorities choose among ready tasks, never change due times.
+func (s *Scheduler) SetWebTaskPriority(id uint64, priority int, continuation bool) {
+	s.mu.Lock()
+	if t := s.byID[id]; t != nil {
+		t.webPriority = priority
+		t.continuation = continuation
+	}
+	s.mu.Unlock()
+}
+
 func taskBefore(left, right *task) bool {
-	leftPriority, rightPriority := sourcePriority(left.source), sourcePriority(right.source)
+	priority := func(t *task) int {
+		if t.source == WebTask {
+			return t.webPriority - 1
+		}
+		return sourcePriority(t.source)
+	}
+	leftPriority, rightPriority := priority(left), priority(right)
 	if leftPriority != rightPriority {
 		return leftPriority < rightPriority
+	}
+	if left.source == WebTask && right.source == WebTask {
+		if left.continuation != right.continuation {
+			return left.continuation
+		}
+		return left.sequence < right.sequence
 	}
 	if !left.due.Equal(right.due) {
 		return left.due.Before(right.due)

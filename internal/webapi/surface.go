@@ -108,6 +108,15 @@ var svgReflectionsSurface string
 //go:embed svg_css_transform.js
 var svgCSSTransformSurface string
 
+//go:embed window_observations.js
+var windowObservationsSurface string
+
+//go:embed window_services.js
+var windowServicesSurface string
+
+//go:embed cache_storage.js
+var cacheStorageSurface string
+
 //go:embed events_compatibility.js
 var eventsCompatibilitySurface string
 
@@ -257,7 +266,7 @@ func composeSurface(generated, exposureSource string) string {
 	parts := []string{capabilitySurface, generated, "finalizeBindings();", exposureSource,
 		"installNavigatorCapabilities();", cssSupportsSurface, strings.Replace(domCompatibilitySurface, "/* shared_abort_encoding */", abortEncodingSurface, 1),
 		templatesCompatibilitySurface, selectorsVendorSurface, selectorsCompatibilitySurface, cssomCompatibilitySurface, strings.Replace(strings.Replace(strings.Replace(strings.Replace(svgGeometrySurface, "/* shared_svg_boundaries */", svgBoundariesSurface, 1), "/* shared_svg_text */", svgTextSurface, 1), "/* shared_svg_css_transform */", svgCSSTransformSurface, 1), "/* shared_svg_types */", svgTypesSurface+svgCoordinatesSurface+svgReflectionsSurface+svgPathMetricsSurface+svgUseSurface+svgAttributeDefaultsSurface+svgAttributeSemanticsSurface, 1), streamPrelude,
-		streamsVendorSurface, "}", fetchCompatibilitySurface, formControlsSurface, traversalCompatibilitySurface, strings.Replace(documentCompatibilitySurface, "/* shared_document_state */", documentStateSurface, 1), documentAllSurface, attributesCompatibilitySurface, imageResourcesSurface, screenFocusSurface, eventsCompatibilitySurface, documentStreamSurface, shadowSerializationSurface, strings.Replace(canvasStateSurface, "/* shared_canvas_paths */", canvasPathObservationsSurface, 1), webglObservationsSource(), webgpuStateSurface, fontFacesSurface, offlineAudioSurface, "finalizeDocumentGetterBindings();finalizeSingletonGetterBindings();finalizeCallableBindings();finalizeNativeBindings();", marker}
+		streamsVendorSurface, "}", strings.Replace(fetchCompatibilitySurface, "/* cache_storage */", cacheStorageSurface, 1), formControlsSurface, traversalCompatibilitySurface, strings.Replace(documentCompatibilitySurface, "/* shared_document_state */", documentStateSurface, 1), documentAllSurface, attributesCompatibilitySurface, imageResourcesSurface, screenFocusSurface, eventsCompatibilitySurface, windowObservationsSurface, windowServicesSurface, documentStreamSurface, shadowSerializationSurface, strings.Replace(canvasStateSurface, "/* shared_canvas_paths */", canvasPathObservationsSurface, 1), webglObservationsSource(), webgpuStateSurface, fontFacesSurface, offlineAudioSurface, "finalizeDocumentGetterBindings();finalizeSingletonGetterBindings();finalizeCallableBindings();finalizeNativeBindings();", marker}
 	base := strings.Replace(handwrittenSurface, "/* shared_fetch_primitives */", fetchPrimitivesSurface, 1)
 	base = strings.Replace(base, "/* shared_native_functions */", nativeFunctionsSurface, 1)
 	base = strings.Replace(base, "/* shared_base64 */", base64Surface, 1)

@@ -273,7 +273,16 @@ func (r *Realm) callFrameReference(args []engine.Value) (engine.Value, error) {
 				}
 			}
 		}
-		record, err := target.callFrameReflection(ctx, operation, function, receiver, arguments)
+		var record engine.Value
+		if arg(args, 6) == true {
+			event, e := target.decodeFrameArgument(raw[0])
+			if e != nil {
+				return nil, e
+			}
+			record, err = target.runtime.Call(ctx, target.eventListenerInvoker, nil, function, receiver, event, target.val(arg(args, 7) == true), target.val(arg(args, 8) == true))
+		} else {
+			record, err = target.callFrameReflection(ctx, operation, function, receiver, arguments)
+		}
 		if err != nil {
 			return nil, err
 		}

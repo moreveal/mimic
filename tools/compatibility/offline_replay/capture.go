@@ -33,6 +33,7 @@ type fixture struct {
 	// A Critical-CH retry has two request observations but only its final
 	// response body is captured. The duplicate response is an explicit replay
 	// inference, not another recorded network response.
+	UnavailableBody   bool `json:"unavailableBody,omitempty"`
 	CriticalRetryCopy bool `json:"criticalRetryCopy,omitempty"`
 }
 
@@ -100,7 +101,7 @@ func readCapture(dir string) (*capture, error) {
 						Headers map[string]string
 						URL     string
 					}
-					Result struct {
+					Result *struct {
 						Body          string
 						Base64Encoded bool
 					}
@@ -113,11 +114,19 @@ func readCapture(dir string) (*capture, error) {
 				}
 				f.Status = saved.Response.Status
 				f.Headers = saved.Response.Headers
-				f.Body = []byte(saved.Result.Body)
-				if saved.Result.Base64Encoded {
-					f.Body, err = base64.StdEncoding.DecodeString(saved.Result.Body)
-					if err != nil {
-						return nil, err
+				if saved.Result == nil {
+					if !boolField(d, "synthetic") {
+						return nil, fmt.Errorf("response %d has no saved body", f.Index)
+					}
+					f.UnavailableBody = true
+				}
+				if saved.Result != nil {
+					f.Body = []byte(saved.Result.Body)
+					if saved.Result.Base64Encoded {
+						f.Body, err = base64.StdEncoding.DecodeString(saved.Result.Body)
+						if err != nil {
+							return nil, err
+						}
 					}
 				}
 				if boolField(d, "fromCache") {

@@ -33,6 +33,12 @@ import (
 )
 
 type Realm struct {
+	cookieNotifier          engine.Value
+	launchNotifier          engine.Value
+	cookieUnsubscribe       func()
+	cacheHandles            map[uint64]*cacheBucket
+	crashReport             crashReportState
+	windowStatus            string
 	historyCloneFunction    engine.Value
 	inactive                bool
 	closed                  bool
@@ -60,6 +66,9 @@ type Realm struct {
 	documentStream          *documentStream
 	documentStreamReset     engine.Value
 	frameReflection         *frameReflection
+	viewportNotifier        engine.Value
+	eventListenerInvoker    engine.Value
+	frameViewportRead       engine.Value
 	frameReferenceImport    engine.Value
 	frameReferenceDescribe  engine.Value
 	frameGlobalRead         engine.Value
@@ -355,6 +364,10 @@ func (r *Realm) Close() error {
 		return nil
 	}
 	r.closed = true
+	if r.cookieUnsubscribe != nil {
+		r.cookieUnsubscribe()
+		r.cookieUnsubscribe = nil
+	}
 	p := r.agent.Page()
 	p.mu.Lock()
 	delete(p.realmOwners, r.ID)
@@ -392,9 +405,15 @@ func (r *Realm) Close() error {
 	r.crossValues = nil
 	r.realmReferences = nil
 	r.windowReferences = nil
+	r.cacheHandles = nil
+	r.cookieNotifier = nil
+	r.launchNotifier = nil
 	return r.runtime.Close()
 }
 func (r *Realm) Evaluate(ctx context.Context, source, name string) (engine.Value, error) {
+	p := r.agent.Page()
+	p.userScriptDepth++
+	defer func() { p.userScriptDepth-- }()
 	v, err := r.runtime.Eval(ctx, source, name)
 	if err != nil {
 		r.agent.Page().trace.Add(trace.Exception, "evaluation", map[string]any{"source": name, "error": err.Error()})
@@ -783,7 +802,11 @@ func (r *Realm) installBindings() error {
 		for _, brand := range environment.Product.UserAgentBrands {
 			brands = append(brands, map[string]any{"brand": brand.Brand, "version": brand.Version, "fullVersion": brand.FullVersion})
 		}
-		return r.val(map[string]any{"userAgent": n.UserAgent, "appVersion": strings.TrimPrefix(n.UserAgent, "Mozilla/"), "platform": n.Platform, "languages": n.Languages, "language": n.Languages[0], "hardwareConcurrency": n.HardwareConcurrency, "deviceMemory": n.DeviceMemory, "onLine": n.Online, "cookieEnabled": n.CookieEnabled, "vendor": "Google Inc.", "product": "Gecko", "appName": "Netscape", "maxTouchPoints": 0, "webdriver": false, "pdfViewerEnabled": true, "uaBrands": brands, "uaFullVersion": environment.Product.FullVersion, "architecture": "x86", "bitness": "64", "model": "", "platformVersion": environment.Platform.OSVersion}), nil
+		values := map[string]any{"userAgent": n.UserAgent, "appVersion": strings.TrimPrefix(n.UserAgent, "Mozilla/"), "platform": n.Platform, "languages": n.Languages, "language": n.Languages[0], "hardwareConcurrency": n.HardwareConcurrency, "deviceMemory": n.DeviceMemory, "onLine": n.Online, "cookieEnabled": n.CookieEnabled, "vendor": "Google Inc.", "product": "Gecko", "appName": "Netscape", "maxTouchPoints": 0, "webdriver": navigatorWebDriver, "pdfViewerEnabled": true, "uaBrands": brands, "uaFullVersion": environment.Product.FullVersion, "architecture": "x86", "bitness": "64", "model": "", "platformVersion": environment.Platform.OSVersion}
+		if environment.Hardware.CPUPerformanceKnown {
+			values["cpuPerformance"] = environment.Hardware.CPUPerformance
+		}
+		return r.val(values), nil
 	})
 	host["intlEnvironment"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		environment := p.Environment()
@@ -801,9 +824,80 @@ func (r *Realm) installBindings() error {
 		s := p.Environment().Screen()
 		return r.val(map[string]any{"width": s.Width, "height": s.Height, "availWidth": s.AvailWidth, "availHeight": s.AvailHeight, "colorDepth": s.ColorDepth, "pixelDepth": s.PixelDepth, "devicePixelRatio": s.DevicePixelRatio}), nil
 	})
+	host["windowState"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		frame, ok := r.agent.(*Frame)
+		if !ok {
+			return r.val(nil), nil
+		}
+		p.mu.Lock()
+		defer p.mu.Unlock()
+		switch strarg(a, 0) {
+		case "name":
+			if len(a) > 1 {
+				frame.windowName = strarg(a, 1)
+			}
+			return r.val(frame.windowName), nil
+		case "status":
+			if len(a) > 1 {
+				r.windowStatus = strarg(a, 1)
+			}
+			return r.val(r.windowStatus), nil
+		case "closed":
+			return r.val(p.frames[frame.ID] != frame), nil
+		}
+		return r.val(nil), nil
+	})
+	host["installViewportNotifier"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		r.viewportNotifier = a[0]
+		return nil, nil
+	})
+	host["installEventInvoker"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		r.eventListenerInvoker = a[0]
+		return nil, nil
+	})
+	host["eventCallbackCheckpoint"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		if p.userScriptDepth != 0 {
+			return nil, nil
+		}
+		if runtime, ok := r.runtime.(interface{ NativeCallbackCheckpoint() error }); ok {
+			return nil, runtime.NativeCallbackCheckpoint()
+		}
+		return nil, nil
+	})
+	host["installFrameViewport"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		r.frameViewportRead = a[0]
+		return nil, nil
+	})
 	host["viewport"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		w := p.Environment().Window
-		return r.val(map[string]any{"width": w.ViewportWidth, "height": w.ViewportHeight, "outerWidth": w.OuterWidth, "outerHeight": w.OuterHeight}), nil
+		p.mu.RLock()
+		frame, isFrame := r.agent.(*Frame)
+		detached := isFrame && frame.parent != nil && p.frames[frame.ID] != frame
+		p.mu.RUnlock()
+		if detached {
+			return r.val(map[string]any{"width": 0, "height": 0, "outerWidth": 0, "outerHeight": 0, "screenX": w.X, "screenY": w.Y}), nil
+		}
+		if frame, ok := r.agent.(*Frame); ok && frame.parent != nil && frame.parent.Realm != nil {
+			parent := frame.parent.Realm
+			if parent.frameViewportRead != nil {
+				var size []any
+				err := parent.runOnOwner(context.Background(), func(ctx context.Context) error {
+					v, e := parent.runtime.Call(ctx, parent.frameViewportRead, nil, parent.val(frame.elementID))
+					if e == nil {
+						size, _ = v.Export().([]any)
+					}
+					return e
+				})
+				if err != nil {
+					return nil, err
+				}
+				if len(size) == 2 {
+					w.ViewportWidth = int(numberValue(size[0]))
+					w.ViewportHeight = int(numberValue(size[1]))
+				}
+			}
+		}
+		return r.val(map[string]any{"width": w.ViewportWidth, "height": w.ViewportHeight, "outerWidth": w.OuterWidth, "outerHeight": w.OuterHeight, "screenX": w.X, "screenY": w.Y}), nil
 	})
 	host["observationVersion"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		w := p.Environment().Window
@@ -1759,7 +1853,7 @@ func (r *Realm) installBindings() error {
 	host["media"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		q := strings.ToLower(strarg(a, 0))
 		e := p.Environment()
-		match := false
+		match := strings.TrimSpace(q) == "screen" || strings.TrimSpace(q) == "all" || strings.TrimSpace(q) == ""
 		if strings.Contains(q, "prefers-color-scheme: light") {
 			match = e.Preferences.ColorScheme == "light"
 		}
@@ -1823,6 +1917,7 @@ func (r *Realm) installBindings() error {
 	r.installImageResources(host)
 	addStorageHosts(r, host)
 	addCapabilityHosts(r, host)
+	addWindowServiceHosts(r, host)
 	profiling := false
 	if diagnostic, ok := r.runtime.(interface{ ProfileEnabled() bool }); ok {
 		profiling = diagnostic.ProfileEnabled()
@@ -2075,6 +2170,9 @@ func (r *Realm) hostTimer(_ engine.Value, a []engine.Value) (engine.Value, error
 	var cb func(context.Context) error
 	var id uint64
 	cb = func(ctx context.Context) error {
+		p := r.agent.Page()
+		p.userScriptDepth++
+		defer func() { p.userScriptDepth-- }()
 		_, err := r.runtime.Call(ctx, fn, r.runtime.Get("window"))
 		if err == nil && repeat {
 			id = r.scheduler.Post(scheduler.Timer, delay, cb)

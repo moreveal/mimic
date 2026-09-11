@@ -60,7 +60,32 @@
   const insideRoot=(node,root)=>{for(let current=node;isDOMNode(current);current=current.parentNode||(current instanceof ShadowRoot?current.host:null))if(current===root)return true;return false};
   member(Event.prototype,'composedPath',function(){const state=stateOf(this);return (state.path||[]).filter(node=>{for(let current=node;isDOMNode(current);){const root=current.getRootNode();if(!(root instanceof ShadowRoot))break;if(root.mode==='closed'&&!insideRoot(state.currentTarget,root))return false;current=root.host}return true})});
   const retarget=(target,current)=>{let node=target;while(isDOMNode(node)){const root=node.getRootNode();if(!(root instanceof ShadowRoot)||isDOMNode(current)&&current.getRootNode()===root)return node;node=root.host}return node};
-  dispatchEventCore=(target,event,trusted)=>{
+  let currentWindowEvent,eventCallbackDepth=0;
+  const eventGet=function(){return currentWindowEvent},eventSet=function(value){Object.defineProperty(this,'event',{value,writable:true,enumerable:true,configurable:true})};
+  accessor(window,'event',eventGet,eventSet);
+  const invokeOwnedEvent=(callback,receiver,event,inShadow,native)=>{
+    const previous=currentWindowEvent,checkpoint=native&&eventCallbackDepth===0;
+    if(!inShadow)currentWindowEvent=event;
+    eventCallbackDepth++;
+    try{if(typeof callback==='function')return callback.call(receiver,event);const handle=callback.handleEvent;if(typeof handle==='function')return handle.call(callback,event)}finally{
+      eventCallbackDepth--;
+      try{if(checkpoint)host.eventCallbackCheckpoint()}finally{currentWindowEvent=previous}
+    }
+  };
+  registerBootstrapCallback('installEventInvoker',(callback,receiver,event,inShadow,native)=>{
+    try{return{threw:false,value:invokeOwnedEvent(callback,receiver,event,inShadow,native)}}catch(value){return{threw:true,value}}
+  });
+  const invokeEventCallback=(callback,receiver,event,inShadow,native)=>{
+    const handler=eventHandlerWrappers.get(callback);
+    if(handler){if(typeof handler.value!=='function')return;callback=handler.value}
+    const reference=referenceGet(callback);let value;
+    if(reference&&(reference.type==='function'||reference.type==='object')){
+      const outcome=host.frameCall(reference.frame,reference.handle,[encodeCrossRealmArgument(event)],encodeCrossRealmArgument(receiver),reference.realm,false,true,inShadow,native&&eventCallbackDepth===0);
+      value=unwrapCrossRealm(reference.frame,outcome.value);if(outcome.threw)throw value;
+    }else value=invokeOwnedEvent(callback,receiver,event,inShadow,native);
+    if(handler&&value===false)event.preventDefault();return value;
+  };
+  dispatchEventCore=(target,event,trusted,native=false)=>{
     const state=stateOf(event);if(state.dispatching||!state.type)throw new DOMException('Event is already being dispatched or uninitialized','InvalidStateError');
     state.trusted=!!trusted;state.dispatching=true;state.stopped=false;state.immediate=false;
     const path=[target];let current=target;
@@ -72,14 +97,14 @@
       const list=listenersFor(current).get(state.type)||[];
       for(const record of list.slice()){
         if(state.immediate)break;
-        if(typeof record==='function'){if(capture)continue;try{record.call(current,event)}catch(error){report(error)}continue}
+        if(typeof record==='function'){if(capture)continue;try{invokeEventCallback(record,current,event,isDOMNode(current)&&current.getRootNode() instanceof ShadowRoot,native)}catch(error){report(error)}continue}
         if(record.removed||record.capture!==capture)continue;
         if(record.once){record.removed=true;const index=list.indexOf(record);if(index>=0)list.splice(index,1)}
         state.passive=record.passive;
-        try{if(typeof record.callback==='function')record.callback.call(current,event);else if(typeof record.callback.handleEvent==='function')record.callback.handleEvent(event)}catch(error){report(error)}
+        try{if(typeof record.callback==='function')invokeEventCallback(record.callback,current,event,isDOMNode(current)&&current.getRootNode() instanceof ShadowRoot,native);else invokeEventCallback(record.callback,record.callback,event,isDOMNode(current)&&current.getRootNode() instanceof ShadowRoot,native)}catch(error){report(error)}
         state.passive=false;
       }
-      if(!capture&&!state.immediate){const handler=internalEventHandler(current,state.type);if(typeof handler==='function')try{if(handler.call(current,event)===false)event.preventDefault()}catch(error){report(error)}}
+      if(!capture&&!state.immediate){const handler=internalEventHandler(current,state.type);if(typeof handler==='function')try{if(invokeEventCallback(handler,current,event,isDOMNode(current)&&current.getRootNode() instanceof ShadowRoot,native)===false)event.preventDefault()}catch(error){report(error)}}
     };
     try{
       for(let i=path.length-1;i>0&&!state.stopped;i--)invoke(path[i],true,retarget(target,path[i])===path[i]?2:1);
