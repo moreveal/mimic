@@ -24,7 +24,9 @@ func TestNestedFrameOwnerLoadDrainsMicrotasks(t *testing.T) {
 		defer child.Close()
 		parent := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { fmt.Fprint(w, "<!doctype html><body></body>") }))
 		defer parent.Close()
-		ctx, cancel := context.WithTimeout(context.Background(), 8*time.Second)
+		// Allow instrumented Goja bootstrap for all three realms; the tested
+		// ordering still must complete without any unrelated timer in the page.
+		ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)
 		defer cancel()
 		if err := p.Navigate(ctx, parent.URL); err != nil {
 			t.Fatal(err)
