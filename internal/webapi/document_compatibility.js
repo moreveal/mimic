@@ -109,7 +109,7 @@ function wrapDocumentNode(data) {
   for(const prototype of [Document.prototype,Element.prototype])member(prototype,'getElementsByTagName',function(name){
     if(!(this instanceof Document)&&!(this instanceof Element))throw new TypeError('Illegal invocation');
     name=String(name);const lower=name.toLowerCase(),root=this;
-    return cachedHTMLCollection(root,'tag',name,()=>Array.from(root.querySelectorAll('*')).filter(node=>name==='*'||node.localName===(node.namespaceURI==='http://www.w3.org/1999/xhtml'?lower:name)).map(node=>elementSlot(node).nodeId));
+    return cachedHTMLCollection(root,'tag',name,()=>compatibilitySelectors.query(root,'*').filter(node=>name==='*'||node.localName===(node.namespaceURI==='http://www.w3.org/1999/xhtml'?lower:name)).map(node=>elementSlot(node).nodeId));
   });
   accessor(Document.prototype,'defaultView',function(){validDocument(this);return this===document&&host.documentActive()?window:null});
   const nodeTextContent=Object.getOwnPropertyDescriptor(Node.prototype,'textContent');
@@ -134,7 +134,7 @@ function wrapDocumentNode(data) {
   const current=Object.getOwnPropertyDescriptor(Document.prototype,'currentScript').get;
   accessor(Document.prototype,'currentScript',function(){validDocument(this);return this===document?current.call(this):null});
   const title=Object.getOwnPropertyDescriptor(Document.prototype,'title');
-  accessor(Document.prototype,'title',function(){validDocument(this);if(this===document)return title.get.call(this);return (this.querySelector('title')?.textContent||'').replace(/[\t\n\f\r ]+/g,' ').trim()},function(value){validDocument(this);if(this===document)return title.set.call(this,value);let node=this.querySelector('title');if(!node&&this.head){node=this.createElement('title');this.head.appendChild(node)}if(node)node.textContent=String(value)});
+  accessor(Document.prototype,'title',function(){validDocument(this);if(this===document)return title.get.call(this);return (compatibilitySelectors.query(this,'title',true)?.textContent||'').replace(/[\t\n\f\r ]+/g,' ').trim()},function(value){validDocument(this);if(this===document)return title.set.call(this,value);let node=compatibilitySelectors.query(this,'title',true);if(!node&&this.head){node=this.createElement('title');this.head.appendChild(node)}if(node)node.textContent=String(value)});
   const implSlots=new WeakSet();
   class DOMImplementation {
     constructor(token){if(token!==hostToken)throw new TypeError('Illegal constructor');implSlots.add(this)}
@@ -177,7 +177,7 @@ function wrapDocumentNode(data) {
   accessor(Document.prototype,'children',function(){return documentCollection(this,'children',()=>Array.from(this.childNodes).filter(node=>node.nodeType===1).map(node=>elementSlot(node).nodeId))});
   accessor(Document.prototype,'childElementCount',function(){validDocument(this);return this.children.length});
   for(const name of ['firstElementChild','lastElementChild'])accessor(Document.prototype,name,function(){validDocument(this);const nodes=this.children;return nodes.item(name==='firstElementChild'?0:nodes.length-1)});
-  for(const [name,selector]of Object.entries({links:'a[href],area[href]',anchors:'a[name]',forms:'form',images:'img',embeds:'embed',scripts:'script',applets:null}))accessor(Document.prototype,name,function(){return documentCollection(this,name,()=>selector?Array.from(this.querySelectorAll(selector)).filter(node=>node.namespaceURI==='http://www.w3.org/1999/xhtml').map(node=>elementSlot(node).nodeId):[])});
+  for(const [name,selector]of Object.entries({links:'a[href],area[href]',anchors:'a[name]',forms:'form',images:'img',embeds:'embed',scripts:'script',applets:null}))accessor(Document.prototype,name,function(){return documentCollection(this,name,()=>selector?compatibilitySelectors.query(this,selector).filter(node=>node.namespaceURI==='http://www.w3.org/1999/xhtml').map(node=>elementSlot(node).nodeId):[])});
   accessor(Document.prototype,'plugins',function(){validDocument(this);return this.embeds});
   const disconnectedOrder=new WeakMap();let nextDisconnectedOrder=0;
   const order=node=>{if(!disconnectedOrder.has(node))disconnectedOrder.set(node,++nextDisconnectedOrder);return disconnectedOrder.get(node)};

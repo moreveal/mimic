@@ -1,0 +1,98 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "width": 1280,
+      "height": 800
+    },
+    "isSecureContext": true,
+    "crossOriginIsolated": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "origin": "http://127.0.0.1:11835/plain",
+    "sourcePassport": ".build/cleanup-012501/svg-hidden-before/passport.json",
+    "binarySHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+    "probeSHA256": "dd1796b75e251369e77d6c6e894eccd8a58afa5922b5465737a7722b9364c10e"
+  },
+  "result": {
+    "result": {
+      "value": {
+        "rows": [
+          {
+            "mode": "visible",
+            "lengthZero": false,
+            "chars": 4,
+            "extent": false
+          },
+          {
+            "mode": "group-hidden",
+            "lengthZero": false,
+            "chars": 4,
+            "extent": false
+          },
+          {
+            "mode": "text-hidden",
+            "lengthZero": true,
+            "chars": 0,
+            "extent": "IndexSizeError"
+          },
+          {
+            "mode": "svg-hidden",
+            "lengthZero": true,
+            "chars": 0,
+            "extent": "IndexSizeError"
+          },
+          {
+            "mode": "ancestor-hidden",
+            "lengthZero": true,
+            "chars": 0,
+            "extent": "IndexSizeError"
+          },
+          {
+            "mode": "visibility-hidden",
+            "lengthZero": false,
+            "chars": 4,
+            "extent": false
+          },
+          {
+            "mode": "detached",
+            "lengthZero": true,
+            "chars": 0,
+            "extent": "IndexSizeError"
+          },
+          {
+            "mode": "frame-visible",
+            "lengthZero": false
+          },
+          {
+            "mode": "frame-hidden",
+            "lengthZero": true
+          },
+          {
+            "mode": "frame-detached",
+            "lengthZero": true
+          },
+          {
+            "mode": "shadow-frame-visible",
+            "lengthZero": false
+          },
+          {
+            "mode": "shadow-frame-hidden",
+            "lengthZero": true
+          }
+        ]
+      }
+    }
+  }
+}

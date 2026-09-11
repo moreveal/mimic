@@ -1,5 +1,6 @@
 // Component membership/order measured against Chrome 152; see webkit-css-shorthands oracle.
 const cssShorthandComponents={
+ "font": ["font-style","font-variant-caps","font-variant-ligatures","font-variant-numeric","font-variant-east-asian","font-variant-alternates","font-size-adjust","font-language-override","font-kerning","font-optical-sizing","font-feature-settings","font-variation-settings","font-variant-position","font-variant-emoji","font-weight","font-stretch","font-size","line-height","font-family"],
  "animation": [
   "animation-duration",
   "animation-timing-function",
@@ -102,6 +103,11 @@ const expandCSSDeclaration=entry=>{
  const components=cssShorthandComponents[entry.name];if(!components)return [entry];
  if(cssWideValue(entry.value))return components.map(name=>({...entry,name}));
  if(/^var\(/.test(entry.value))return components.map(name=>({name,value:'',priority:entry.priority,pending:{name:entry.name,value:entry.value}}));
+ if(entry.name==='font'){
+  const values=parseCSSFont(entry.value);
+  if(!values){host.semanticMissingAt('css_shorthands.js/font','CSS.fontShorthandResolution');return [entry]}
+  return components.map((name,i)=>({name,value:values[i],priority:entry.priority}));
+ }
  const parser=cssShorthandParsers.get(entry.name);
  if(parser){const values=parser(entry.value);return values?(cssOrdinaryShorthandOrder[entry.name]||components).map(name=>({name,value:values[components.indexOf(name)],priority:entry.priority})):[]}
  return [entry];

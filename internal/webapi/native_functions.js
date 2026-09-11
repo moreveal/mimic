@@ -8,3 +8,4 @@
   // when it is observed, without reading any public property of the function.
   Function.prototype.toString=new Proxy(engineFunctionToString,{apply(target,thisArg,args){const native=nativeFunctionNameGet(thisArg);return native===undefined?functionSourceApply(target,thisArg,args):'function '+native+'() { [native code] }'}});
   const markNative=(fn,name,prefix='')=>{if(typeof fn==='function')nativeFunctionNameSet(fn,prefix?prefix+String(name):String(name))};
+  markNative(Function.prototype.toString,'toString');

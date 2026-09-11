@@ -1,0 +1,124 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "width": 1280,
+      "height": 800
+    },
+    "isSecureContext": true,
+    "crossOriginIsolated": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "origin": "http://127.0.0.1:45750/plain",
+    "sourcePassport": ".build/cleanup-012501/operation-before/passport.json",
+    "binarySHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+    "probeSHA256": "41a9b4f314c6e1d90a434f7d054c79d852de8279fbb917908f63656063235893"
+  },
+  "result": {
+    "result": {
+      "value": {
+        "count": {
+          "name": "count",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "source": "function count() { [native code] }",
+          "constructable": false
+        },
+        "countReset": {
+          "name": "countReset",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "source": "function countReset() { [native code] }",
+          "constructable": false
+        },
+        "setTimeout": {
+          "name": "setTimeout",
+          "length": 1,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "source": "function setTimeout() { [native code] }",
+          "constructable": false
+        },
+        "setInterval": {
+          "name": "setInterval",
+          "length": 1,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "source": "function setInterval() { [native code] }",
+          "constructable": false
+        },
+        "clearTimeout": {
+          "name": "clearTimeout",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "source": "function clearTimeout() { [native code] }",
+          "constructable": false
+        },
+        "toString": {
+          "name": "toString",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "source": "function toString() { [native code] }",
+          "constructable": false
+        },
+        "getSupportedConstraints": {
+          "name": "getSupportedConstraints",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "source": "function getSupportedConstraints() { [native code] }",
+          "constructable": false
+        },
+        "createDataChannel": {
+          "name": "createDataChannel",
+          "length": 1,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "source": "function createDataChannel() { [native code] }",
+          "constructable": false
+        },
+        "createElement": {
+          "name": "createElement",
+          "length": 1,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "source": "function createElement() { [native code] }",
+          "constructable": false
+        }
+      }
+    }
+  }
+}

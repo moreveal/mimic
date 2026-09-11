@@ -1,0 +1,298 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "width": 1280,
+      "height": 800
+    },
+    "isSecureContext": true,
+    "crossOriginIsolated": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "origin": "http://127.0.0.1:40751/plain",
+    "sourcePassport": ".build/cleanup-012501/after-second/passport.json",
+    "binarySHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+    "probeSHA256": "4a41ded4121cc038cf04782c0e6e0f8342614f129ed8958ce80c079603730b1b"
+  },
+  "result": {
+    "result": {
+      "value": {
+        "selectors": {
+          "values": [
+            2,
+            2,
+            0,
+            "a",
+            3,
+            3,
+            0,
+            1,
+            false,
+            true
+          ],
+          "calls": []
+        },
+        "nonce": [
+          {
+            "label": "script detached",
+            "nonce": "abc",
+            "attr": null,
+            "has": false,
+            "html": "<script></script>"
+          },
+          {
+            "label": "script connected",
+            "nonce": "abc",
+            "attr": null,
+            "has": false,
+            "html": "<script></script>"
+          },
+          {
+            "label": "script attribute",
+            "nonce": "def",
+            "attr": "def",
+            "has": true,
+            "html": "<script nonce=\"def\"></script>"
+          },
+          {
+            "label": "script property",
+            "nonce": "ghi",
+            "attr": "def",
+            "has": true,
+            "html": "<script nonce=\"def\"></script>"
+          },
+          {
+            "label": "script clone",
+            "nonce": "ghi",
+            "attr": "def",
+            "has": true,
+            "html": "<script nonce=\"def\"></script>"
+          },
+          {
+            "label": "script removed",
+            "nonce": "ghi",
+            "attr": "def",
+            "has": true,
+            "html": "<script nonce=\"def\"></script>"
+          },
+          {
+            "label": "script cleared",
+            "nonce": "",
+            "attr": null,
+            "has": false,
+            "html": "<script></script>"
+          },
+          {
+            "label": "style detached",
+            "nonce": "abc",
+            "attr": null,
+            "has": false,
+            "html": "<style></style>"
+          },
+          {
+            "label": "style connected",
+            "nonce": "abc",
+            "attr": null,
+            "has": false,
+            "html": "<style></style>"
+          },
+          {
+            "label": "style attribute",
+            "nonce": "def",
+            "attr": "def",
+            "has": true,
+            "html": "<style nonce=\"def\"></style>"
+          },
+          {
+            "label": "style property",
+            "nonce": "ghi",
+            "attr": "def",
+            "has": true,
+            "html": "<style nonce=\"def\"></style>"
+          },
+          {
+            "label": "style clone",
+            "nonce": "ghi",
+            "attr": "def",
+            "has": true,
+            "html": "<style nonce=\"def\"></style>"
+          },
+          {
+            "label": "style removed",
+            "nonce": "ghi",
+            "attr": "def",
+            "has": true,
+            "html": "<style nonce=\"def\"></style>"
+          },
+          {
+            "label": "style cleared",
+            "nonce": "",
+            "attr": null,
+            "has": false,
+            "html": "<style></style>"
+          },
+          {
+            "label": "div detached",
+            "nonce": "abc",
+            "attr": null,
+            "has": false,
+            "html": "<div></div>"
+          },
+          {
+            "label": "div connected",
+            "nonce": "abc",
+            "attr": null,
+            "has": false,
+            "html": "<div></div>"
+          },
+          {
+            "label": "div attribute",
+            "nonce": "def",
+            "attr": "def",
+            "has": true,
+            "html": "<div nonce=\"def\"></div>"
+          },
+          {
+            "label": "div property",
+            "nonce": "ghi",
+            "attr": "def",
+            "has": true,
+            "html": "<div nonce=\"def\"></div>"
+          },
+          {
+            "label": "div clone",
+            "nonce": "ghi",
+            "attr": "def",
+            "has": true,
+            "html": "<div nonce=\"def\"></div>"
+          },
+          {
+            "label": "div removed",
+            "nonce": "ghi",
+            "attr": "def",
+            "has": true,
+            "html": "<div nonce=\"def\"></div>"
+          },
+          {
+            "label": "div cleared",
+            "nonce": "",
+            "attr": null,
+            "has": false,
+            "html": "<div></div>"
+          }
+        ],
+        "serialization": [
+          [
+            "div",
+            "\"'&amp;&lt;&gt;&nbsp;",
+            "<div data-test=\"&quot;'&amp;&lt;&gt;&nbsp;\">\"'&amp;&lt;&gt;&nbsp;</div>"
+          ],
+          [
+            "script",
+            "\"'&<>\u00a0",
+            "<script data-test=\"&quot;'&amp;&lt;&gt;&nbsp;\">\"'&<>\u00a0</script>"
+          ],
+          [
+            "style",
+            "\"'&<>\u00a0",
+            "<style data-test=\"&quot;'&amp;&lt;&gt;&nbsp;\">\"'&<>\u00a0</style>"
+          ],
+          [
+            "textarea",
+            "\"'&amp;&lt;&gt;&nbsp;",
+            "<textarea data-test=\"&quot;'&amp;&lt;&gt;&nbsp;\">\"'&amp;&lt;&gt;&nbsp;</textarea>"
+          ],
+          [
+            "pre",
+            "\"'&amp;&lt;&gt;&nbsp;",
+            "<pre data-test=\"&quot;'&amp;&lt;&gt;&nbsp;\">\"'&amp;&lt;&gt;&nbsp;</pre>"
+          ],
+          [
+            "template",
+            "<p data-a=\"&quot;\">&nbsp; &amp;</p>",
+            "<template><p data-a=\"&quot;\">&nbsp; &amp;</p></template>"
+          ]
+        ],
+        "geometry": [
+          [
+            "absolute",
+            13,
+            17,
+            80,
+            20,
+            13,
+            17,
+            80,
+            20
+          ],
+          [
+            "negative",
+            -13,
+            -17,
+            80,
+            20,
+            -13,
+            -17,
+            80,
+            20
+          ],
+          [
+            "translate",
+            20,
+            26,
+            80,
+            20,
+            13,
+            17,
+            80,
+            20
+          ],
+          [
+            "fixed",
+            13,
+            17,
+            80,
+            20,
+            13,
+            17,
+            80,
+            20
+          ],
+          [
+            "scale",
+            -27,
+            7,
+            160,
+            40,
+            13,
+            17,
+            80,
+            20
+          ],
+          [
+            "hidden",
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ]
+        ]
+      }
+    }
+  }
+}

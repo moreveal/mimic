@@ -459,7 +459,7 @@ func (p *Page) navigateRequestWithHistory(ctx context.Context, raw, loaderID str
 				p.trace.Add(trace.Error, "scriptURL", map[string]any{"src": src, "error": err.Error()})
 				return nil
 			}
-			if !p.allowsScript(su, false, false, s.Attributes["nonce"]) {
+			if !p.allowsScript(su, false, false, s.Nonce) {
 				return nil
 			}
 			request := realm.elementRequest(su, s.Attributes, network.Script)
@@ -497,7 +497,7 @@ func (p *Page) navigateRequestWithHistory(ctx context.Context, raw, loaderID str
 			}
 			code = string(rr.Body)
 			name = su.String()
-		} else if !p.allowsScript(nil, true, false, s.Attributes["nonce"]) {
+		} else if !p.allowsScript(nil, true, false, s.Nonce) {
 			return nil
 		}
 		if kind == "module" {

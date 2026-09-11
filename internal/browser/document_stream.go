@@ -181,7 +181,7 @@ func (r *Realm) executeStreamScript(s *documentStream, node dom.Node) error {
 		if err != nil {
 			return err
 		}
-		if !r.agent.Page().allowsScript(u, false, false, node.Attributes["nonce"]) {
+		if !r.agent.Page().allowsScript(u, false, false, node.Nonce) {
 			return nil
 		}
 		loaded := s.scripts[node.ID]
@@ -231,7 +231,7 @@ func (r *Realm) executeStreamScript(s *documentStream, node dom.Node) error {
 			return r.dispatchResourceEvent(ctx, node.ID, "error")
 		}
 		code, name = string(loaded.response.Body), u.String()
-	} else if !r.agent.Page().allowsScript(nil, true, false, node.Attributes["nonce"]) {
+	} else if !r.agent.Page().allowsScript(nil, true, false, node.Nonce) {
 		return nil
 	}
 	if kind != "classic" {

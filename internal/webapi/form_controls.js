@@ -38,7 +38,7 @@
   define('HTMLInputElement','type',{get(){return typeOf(this)},set(value){const oldMode=mode(this),oldValue=inputValue(this);this.setAttribute('type',String(value));const next=mode(this),s=inputState(this);if(oldMode==='value'&&next!=='value'&&oldValue!=='')this.setAttribute('value',oldValue);if(oldMode!=='value'&&next==='value'){s.dirty=false;s.value=''}if(next==='filename'){s.dirty=false;s.value=''}}});
   define('HTMLInputElement','value',{get(){return inputValue(this)},set(value){value=value===null?'':String(value);const m=mode(this),s=inputState(this);if(m==='filename'){if(value!=='')throw new DOMException('File input value can only be cleared','InvalidStateError');s.value='';return}if(m!=='value'){this.setAttribute('value',value);return}s.dirty=true;s.value=sanitize(this,value);s.start=s.end=s.value.length;s.direction='none'}});
   string('HTMLInputElement','defaultValue','value');
-  define('HTMLInputElement','checked',{get(){const s=inputState(this);return s.dirtyChecked?s.checked:this.hasAttribute('checked')},set(value){const s=inputState(this);s.dirtyChecked=true;s.checked=Boolean(value);if(s.checked&&typeOf(this)==='radio'&&this.name){const root=this.getRootNode();for(const other of root.querySelectorAll('input'))if(other!==this&&typeOf(other)==='radio'&&other.name===this.name&&formOwner(other)===formOwner(this)){const state=inputState(other);state.dirtyChecked=true;state.checked=false}}}});
+  define('HTMLInputElement','checked',{get(){const s=inputState(this);return s.dirtyChecked?s.checked:this.hasAttribute('checked')},set(value){const s=inputState(this);s.dirtyChecked=true;s.checked=Boolean(value);if(s.checked&&typeOf(this)==='radio'&&this.name){const root=this.getRootNode();for(const other of compatibilitySelectors.query(root,'input'))if(other!==this&&typeOf(other)==='radio'&&other.name===this.name&&formOwner(other)===formOwner(this)){const state=inputState(other);state.dirtyChecked=true;state.checked=false}}}});
   boolean('HTMLInputElement','defaultChecked','checked');
   define('HTMLInputElement','indeterminate',{get(){return inputState(this).indeterminate},set(value){inputState(this).indeterminate=Boolean(value)}});
   define('HTMLTextAreaElement','value',{get(){const s=textareaState(this);return s.dirty?s.value:lf(childText(this))},set(value){const s=textareaState(this);s.dirty=true;s.value=lf(value===null?'':value);s.start=s.end=s.value.length;s.direction='none'}});
@@ -50,7 +50,7 @@
     define(name,'setSelectionRange',{value:function(start,end,direction='none'){if(name==='HTMLInputElement'&&!selectionTypes.has(typeOf(this)))throw new DOMException('Input does not support selection','InvalidStateError');const s=name==='HTMLInputElement'?inputState(this):textareaState(this);s.end=Math.min(Number(end)>>>0,this.value.length);s.start=Math.min(Number(start)>>>0,s.end);s.direction=['forward','backward'].includes(String(direction))?String(direction):'none'},writable:true});
     define(name,'select',{value:function(){if(name==='HTMLInputElement'&&!selectionTypes.has(typeOf(this)))return;this.setSelectionRange(0,this.value.length);this.dispatchEvent(new Event('select',{bubbles:true}))},writable:true});
   }
-  const optionList=select=>Array.from(select.querySelectorAll('option')).filter(option=>{for(let p=option.parentElement;p;p=p.parentElement){if(p.localName==='select')return p===select}return false});
+  const optionList=select=>Array.from(compatibilitySelectors.query(select,'option')).filter(option=>{for(let p=option.parentElement;p;p=p.parentElement){if(p.localName==='select')return p===select}return false});
   const selectOwner=option=>{for(let p=option.parentElement;p;p=p.parentElement){if(p.localName==='select')return p}return null};
   const optionDisabled=option=>option.disabled||(option.parentElement?.localName==='optgroup'&&option.parentElement.hasAttribute('disabled'));
   function selection(select){
@@ -91,7 +91,7 @@
   }
   for(const name of ['HTMLInputElement','HTMLTextAreaElement']){string(name,'placeholder');boolean(name,'readOnly','readonly')}
   for(const name of ['HTMLInputElement','HTMLSelectElement'])boolean(name,'multiple');
-  const associated=form=>Array.from(document.querySelectorAll('input,textarea,select,button')).filter(e=>formOwner(e)===form);
+  const associated=form=>Array.from(compatibilitySelectors.query(form.ownerDocument,'input,textarea,select,button')).filter(e=>formOwner(e)===form);
   define('HTMLFormElement','elements',{get(){return collection(()=>associated(this),globalThis.HTMLFormControlsCollection?.prototype||globalThis.HTMLCollection.prototype)}});
   define('HTMLFormElement','length',{get(){return associated(this).length}});
   const formCheck=form=>{if(!elementSlot(form)||form.localName!=='form')throw new TypeError('Illegal invocation');return form};
