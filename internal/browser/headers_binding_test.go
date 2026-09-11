@@ -11,3 +11,7 @@ func TestHeadersBindingMatchesFrozenChrome(t *testing.T) {
 func TestHeadersBytesMatchFrozenChrome(t *testing.T) {
 	documentAllOracle(t, "headers_bytes")
 }
+
+func TestHeadersInitializerMatchesFrozenChrome(t *testing.T) {
+	documentAllOracle(t, "headers_init")
+}

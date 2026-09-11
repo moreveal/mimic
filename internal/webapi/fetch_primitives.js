@@ -44,5 +44,27 @@
   const headersState=(receiver,count=0,required=0)=>{const state=headersSlots.get(receiver);if(!state)throw new TypeError('Illegal invocation');if(count<required)throw new TypeError('Not enough arguments');return state};
   const headerByteString=value=>{if(typeof value==='symbol')throw new TypeError('Cannot convert a Symbol value to a string');const text=String(value);for(let i=0;i<text.length;i++)if(text.charCodeAt(i)>255)throw new TypeError('Value is not a ByteString');return text};
   const headerName=value=>{const name=headerByteString(value).toLowerCase();if(!name||/[^!#$%&'*+.^_`|~0-9a-z-]/.test(name))throw new TypeError('Invalid header name');return name},headerValue=value=>{const text=headerByteString(value).replace(/^[\t\r\n ]+|[\t\r\n ]+$/g,'');if(/[\0\r\n]/.test(text))throw new TypeError('Invalid header value');return text};
-  class Headers { constructor(init){const values=new Map();headersSlots.set(this,values);if(init instanceof Headers)for(const [name,value] of init)this.append(name,value);else if(init&&typeof init[Symbol.iterator]==='function')for(const pair of init)this.append(pair[0],pair[1]);else if(init)for(const name of Object.keys(init))this.append(name,init[name])} append(name,value){const values=headersState(this,arguments.length,2);name=headerByteString(name);value=headerByteString(value);const key=headerName(name),next=headerValue(value);values.set(key,values.has(key)?values.get(key)+', '+next:next)} delete(name){headersState(this,arguments.length,1).delete(headerName(name))} get(name){return headersState(this,arguments.length,1).get(headerName(name))??null} has(name){return headersState(this,arguments.length,1).has(headerName(name))} set(name,value){const state=headersState(this,arguments.length,2);name=headerByteString(name);value=headerByteString(value);state.set(headerName(name),headerValue(value))} entries(){const state=headersState(this);return(function*(){for(const entry of [...state].sort((a,b)=>a[0]<b[0]?-1:a[0]>b[0]?1:0))yield entry})()} keys(){headersState(this);return Array.from(this.entries(),entry=>entry[0])[Symbol.iterator]()} values(){headersState(this);return Array.from(this.entries(),entry=>entry[1])[Symbol.iterator]()} forEach(callback,thisArg){headersState(this,arguments.length,1);if(typeof callback!=='function')throw new TypeError('Callback must be callable');for(const [name,value] of this)callback.call(thisArg,value,name,this)} [Symbol.iterator](){return this.entries()} }
+  class Headers { constructor(init){
+    const values=new Map();headersSlots.set(this,values);
+    if(init===undefined)return;
+    if(init===null||(typeof init!=='object'&&typeof init!=='function'))throw new TypeError('Headers initializer must be an object');
+    // Complete WebIDL union/sequence conversion before mutating the header list.
+    // Filling the list must not call an override of the public append method.
+    const pairs=[],iterator=init[Symbol.iterator];
+    if(iterator!==undefined&&iterator!==null){
+      if(typeof iterator!=='function')throw new TypeError('Initializer is not iterable');
+      const iterable={[Symbol.iterator](){return iterator.call(init)}};
+      for(const pair of iterable){
+        if(pair===null||(typeof pair!=='object'&&typeof pair!=='function'))throw new TypeError('Header pair must be a sequence');
+        const converted=[];for(const item of pair)converted.push(headerByteString(item));pairs.push(converted);
+      }
+    }else{
+      for(const key of Reflect.ownKeys(init))if(Object.prototype.propertyIsEnumerable.call(init,key))pairs.push([headerByteString(key),headerByteString(init[key])]);
+    }
+    for(const pair of pairs){
+      if(pair.length!==2)throw new TypeError('Header pair must contain exactly two items');
+      const name=headerName(pair[0]),value=headerValue(pair[1]);
+      values.set(name,values.has(name)?values.get(name)+', '+value:value);
+    }
+  } append(name,value){const values=headersState(this,arguments.length,2);name=headerByteString(name);value=headerByteString(value);const key=headerName(name),next=headerValue(value);values.set(key,values.has(key)?values.get(key)+', '+next:next)} delete(name){headersState(this,arguments.length,1).delete(headerName(name))} get(name){return headersState(this,arguments.length,1).get(headerName(name))??null} has(name){return headersState(this,arguments.length,1).has(headerName(name))} set(name,value){const state=headersState(this,arguments.length,2);name=headerByteString(name);value=headerByteString(value);state.set(headerName(name),headerValue(value))} entries(){const state=headersState(this);return(function*(){for(const entry of [...state].sort((a,b)=>a[0]<b[0]?-1:a[0]>b[0]?1:0))yield entry})()} keys(){headersState(this);return Array.from(this.entries(),entry=>entry[0])[Symbol.iterator]()} values(){headersState(this);return Array.from(this.entries(),entry=>entry[1])[Symbol.iterator]()} forEach(callback,thisArg){headersState(this,arguments.length,1);if(typeof callback!=='function')throw new TypeError('Callback must be callable');for(const [name,value] of this)callback.call(thisArg,value,name,this)} [Symbol.iterator](){return this.entries()} }
   Object.defineProperty(Headers.prototype,Symbol.toStringTag,{value:'Headers',configurable:true});
