@@ -20,6 +20,7 @@ import (
 	"strconv"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/google/uuid"
@@ -106,6 +107,9 @@ type Realm struct {
 	preloadContext          context.Context
 	cancelPreloads          context.CancelFunc
 	preloadedLinks          map[int64]bool
+	stylesheetLoads         map[preloadKey]*resourcePreload
+	stylesheetFetchSlots    chan struct{}
+	resourceRevision        atomic.Uint64
 	fetchCancels            map[string]context.CancelFunc
 	nativePollQueued        bool
 	checkpointQueued        bool
@@ -409,6 +413,32 @@ func (r *Realm) RunReady(ctx context.Context) error {
 		}
 	}
 	return fmt.Errorf("page scheduler task limit exceeded")
+}
+
+// runTask queues and completes one browser-owned event-loop turn without
+// draining work scheduled by that turn. Parser scripts and lifecycle events
+// are navigation boundaries: their callbacks and microtask checkpoints must
+// finish before parsing can continue, while timers and network callbacks they
+// enqueue belong to later turns driven by the Page event-loop pump.
+func (r *Realm) runTask(ctx context.Context, source scheduler.Source, callback scheduler.Callback) error {
+	completed := false
+	r.scheduler.Post(source, 0, func(taskContext context.Context) error {
+		defer func() { completed = true }()
+		return callback(taskContext)
+	})
+	for turn := 0; turn < 10000; turn++ {
+		progress, err := scheduler.RunReadyAcross(ctx, r.readyQueues(nil))
+		if err != nil {
+			return err
+		}
+		if completed {
+			return nil
+		}
+		if !progress {
+			return fmt.Errorf("browser task did not become ready")
+		}
+	}
+	return fmt.Errorf("page scheduler task limit exceeded before browser task")
 }
 
 func (r *Realm) readyQueues(queues []*scheduler.Scheduler) []*scheduler.Scheduler {
@@ -740,6 +770,10 @@ func (r *Realm) installBindings() error {
 		w := p.Environment().Window
 		return r.val(map[string]any{"width": w.ViewportWidth, "height": w.ViewportHeight, "outerWidth": w.OuterWidth, "outerHeight": w.OuterHeight}), nil
 	})
+	host["observationVersion"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		w := p.Environment().Window
+		return r.val(fmt.Sprintf("%d:%d:%d:%d:%d", r.document.Revision(), r.resourceRevision.Load(), w.ViewportWidth, w.ViewportHeight, r.selectorTargetID)), nil
+	})
 	if detacher, ok := r.runtime.(engine.ArrayBufferDetacher); ok {
 		host["detachArrayBuffer"] = r.runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 			if len(args) != 1 {
@@ -974,6 +1008,8 @@ func (r *Realm) installBindings() error {
 		})
 		return nil, nil
 	})
+	// Both deliveries are DOM tasks, after the sampled rendering observation.
+	host["queueIntersectionObserver"] = host["queuePerformanceObserver"]
 	host["queuePostedMessage"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		if len(a) == 0 {
 			return nil, nil

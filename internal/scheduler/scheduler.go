@@ -38,6 +38,13 @@ type Transition struct {
 	Source Source
 	Due    time.Time
 }
+type ExecutionStatus struct {
+	Running bool
+	TaskID  uint64
+	Source  Source
+	Phase   string
+	Elapsed time.Duration
+}
 type task struct {
 	id, sequence uint64
 	due          time.Time
@@ -71,6 +78,9 @@ type Scheduler struct {
 	observer       func(Transition)
 	runningAt      time.Time
 	runningBase    time.Time
+	runningTaskID  uint64
+	runningSource  Source
+	runningPhase   string
 	wake           chan struct{}
 	executionScale float64
 	sequenceSource func() uint64
@@ -105,7 +115,7 @@ func (s *Scheduler) Post(source Source, delay time.Duration, callback Callback) 
 		return 0
 	}
 	s.seq++
-	t := &task{s.seq, s.seq, s.nowLocked().Add(delay), source, callback, false}
+	t := &task{id: s.seq, sequence: s.seq, due: s.nowLocked().Add(delay), source: source, callback: callback}
 	if s.sequenceSource != nil {
 		t.sequence = s.sequenceSource()
 	}
@@ -279,6 +289,9 @@ func (s *Scheduler) endExecution() {
 	s.now = s.nowLocked()
 	s.runningAt = time.Time{}
 	s.runningBase = time.Time{}
+	s.runningTaskID = 0
+	s.runningSource = ""
+	s.runningPhase = ""
 	s.mu.Unlock()
 }
 
@@ -347,6 +360,9 @@ func (s *Scheduler) run(ctx context.Context, maxTasks int, advance, limitError b
 	defer s.runMu.Unlock()
 	var taskErrors []error
 	for i := 0; i < maxTasks; i++ {
+		if err := ctx.Err(); err != nil {
+			return errors.Join(append(taskErrors, err)...)
+		}
 		s.mu.Lock()
 		if s.paused || len(s.tasks) == 0 {
 			s.mu.Unlock()
@@ -369,10 +385,7 @@ func (s *Scheduler) run(ctx context.Context, maxTasks int, advance, limitError b
 		if observer != nil {
 			observer(Transition{"start", t.id, t.source, t.due})
 		}
-		if err := ctx.Err(); err != nil {
-			return errors.Join(append(taskErrors, err)...)
-		}
-		s.beginExecution()
+		s.beginTask(t.id, t.source)
 		callbackErr := t.callback(ctx)
 		if callbackErr != nil {
 			if observer != nil {
@@ -381,6 +394,9 @@ func (s *Scheduler) run(ctx context.Context, maxTasks int, advance, limitError b
 			taskErrors = append(taskErrors, fmt.Errorf("%s task: %w", t.source, callbackErr))
 		}
 		if s.checkpoint != nil {
+			s.mu.Lock()
+			s.runningPhase = "checkpoint"
+			s.mu.Unlock()
 			if observer != nil {
 				observer(Transition{"microtaskCheckpoint", t.id, t.source, t.due})
 			}
@@ -402,6 +418,26 @@ func (s *Scheduler) run(ctx context.Context, maxTasks int, advance, limitError b
 		taskErrors = append(taskErrors, fmt.Errorf("scheduler task limit %d exceeded", maxTasks))
 	}
 	return errors.Join(taskErrors...)
+}
+
+func (s *Scheduler) beginTask(id uint64, source Source) {
+	s.mu.Lock()
+	s.runningTaskID = id
+	s.runningSource = source
+	s.runningPhase = "callback"
+	s.runningBase = s.now
+	s.runningAt = monotime.Now()
+	s.mu.Unlock()
+}
+
+func (s *Scheduler) ExecutionStatus() ExecutionStatus {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	status := ExecutionStatus{Running: !s.runningAt.IsZero(), TaskID: s.runningTaskID, Source: s.runningSource, Phase: s.runningPhase}
+	if status.Running {
+		status.Elapsed = monotime.Since(s.runningAt)
+	}
+	return status
 }
 
 func (s *Scheduler) popNextLocked(advance bool) *task {
