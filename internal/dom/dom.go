@@ -35,8 +35,23 @@ type Node struct {
 	ScriptAlreadyStarted  bool              `json:"-"`
 	OwnerDocument         int64             `json:"ownerDocumentId,omitempty"`
 }
+
+// arenaMutex conservatively invalidates derived observations on every write
+// transaction, including parser and detached-node writes. Readers never advance
+// the revision. Keeping this at the canonical write boundary avoids a second
+// mutation notification path that individual DOM operations can forget to update.
+type arenaMutex struct {
+	sync.RWMutex
+	revision uint64
+}
+
+func (m *arenaMutex) Unlock() {
+	m.revision++
+	m.RWMutex.Unlock()
+}
+
 type nodeArena struct {
-	mu               sync.RWMutex
+	mu               arenaMutex
 	next             int64
 	nodes            map[int64]*Node
 	hasFrameElements bool
@@ -46,6 +61,12 @@ type Document struct {
 	*nodeArena
 	root          int64
 	title, source string
+}
+
+func (d *Document) Revision() uint64 {
+	d.mu.RLock()
+	defer d.mu.RUnlock()
+	return d.mu.revision
 }
 
 func Parse(source string) (*Document, error) {

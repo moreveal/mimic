@@ -27,6 +27,8 @@ type Server struct {
 	lifecycleMu       sync.Mutex
 	connections       map[*websocket.Conn]context.CancelFunc
 	pumps             map[*browser.Page]context.CancelFunc
+	executions        map[*browser.Page]context.CancelFunc
+	pausedPumps       map[*browser.Page]int
 	closed            bool
 	workers           sync.WaitGroup
 	Browser           *browser.Browser
@@ -43,10 +45,10 @@ func New(b *browser.Browser) (*Server, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Server{Browser: b, Context: c, Page: p, navigationTimeout: 30 * time.Second, connections: make(map[*websocket.Conn]context.CancelFunc), pumps: make(map[*browser.Page]context.CancelFunc)}, nil
+	return &Server{Browser: b, Context: c, Page: p, connections: make(map[*websocket.Conn]context.CancelFunc), pumps: make(map[*browser.Page]context.CancelFunc), executions: make(map[*browser.Page]context.CancelFunc)}, nil
 }
 func (s *Server) SetNavigationTimeout(timeout time.Duration) {
-	if timeout > 0 {
+	if timeout >= 0 {
 		s.navigationTimeout = timeout
 	}
 }
@@ -72,6 +74,9 @@ func (s *Server) Close(ctx context.Context) error {
 	s.closed = true
 	server := s.http
 	for _, cancel := range s.pumps {
+		cancel()
+	}
+	for _, cancel := range s.executions {
 		cancel()
 	}
 	for conn, cancel := range s.connections {
@@ -242,6 +247,9 @@ func (s *Server) ensurePump(page *browser.Page) {
 func (s *Server) stopPump(page *browser.Page) {
 	s.lifecycleMu.Lock()
 	defer s.lifecycleMu.Unlock()
+	if cancel := s.executions[page]; cancel != nil {
+		cancel()
+	}
 	if cancel := s.pumps[page]; cancel != nil {
 		cancel()
 		delete(s.pumps, page)
@@ -255,26 +263,93 @@ func (s *Server) pumpEventLoop(lifetime context.Context, page *browser.Page) {
 		select {
 		case <-ticker.C:
 			delta := time.Since(last)
-			page.LockCommands()
-			if lifetime.Err() != nil {
+			for turn := 0; turn < 32; turn++ {
+				page.LockCommands()
+				if lifetime.Err() != nil {
+					page.UnlockCommands()
+					return
+				}
+				turnContext, cancelTurn := context.WithCancel(lifetime)
+				s.lifecycleMu.Lock()
+				if s.pausedPumps[page] > 0 {
+					s.lifecycleMu.Unlock()
+					cancelTurn()
+					page.UnlockCommands()
+					break
+				}
+				s.executions[page] = cancelTurn
+				s.lifecycleMu.Unlock()
+				// One debugger pump turn must not monopolize the Page when an
+				// application continuously posts ready timers/network callbacks.
+				// Background JavaScript has the Page lifetime, not the unrelated
+				// navigation timeout: terminating a valid hydration callback at 30s
+				// leaves an otherwise recoverable committed document half-built.
+				more, err := page.AdvanceTimeBudget(turnContext, delta, 1)
+				delta = 0
+				s.lifecycleMu.Lock()
+				delete(s.executions, page)
+				s.lifecycleMu.Unlock()
+				cancelTurn()
 				page.UnlockCommands()
-				return
-			}
-			ctx, cancel := context.WithTimeout(lifetime, s.navigationTimeout)
-			err := page.AdvanceTime(ctx, delta)
-			cancel()
-			page.UnlockCommands()
-			// Exclude time spent executing or waiting for other Page turns.
-			last = time.Now()
-			if err != nil && lifetime.Err() == nil {
-				page.Trace().Add(trace.Error, "scheduler", map[string]any{"error": err.Error(), "during": "CDP event-loop pump"})
+				// Exclude time spent executing or waiting for other Page turns.
+				last = time.Now()
+				if err != nil && lifetime.Err() == nil {
+					page.Trace().Add(trace.Error, "scheduler", map[string]any{"error": err.Error(), "during": "CDP event-loop pump"})
+				}
+				if !more || err != nil {
+					break
+				}
 			}
 		case <-lifetime.Done():
 			return
 		}
 	}
 }
-func (s *session) send(v any) { s.writeMu.Lock(); defer s.writeMu.Unlock(); _ = s.conn.WriteJSON(v) }
+
+// Snapshot serialization owns a consistent task boundary. Prevent the pump
+// from starting another task while capture waits for that boundary. Explicit
+// interrupted captures may cancel the current task; ordinary captures do not.
+func (s *Server) pausePump(page *browser.Page, interrupt bool) func() {
+	s.lifecycleMu.Lock()
+	if s.pausedPumps == nil {
+		s.pausedPumps = make(map[*browser.Page]int)
+	}
+	s.pausedPumps[page]++
+	if interrupt {
+		if cancel := s.executions[page]; cancel != nil {
+			cancel()
+		}
+	}
+	s.lifecycleMu.Unlock()
+	return func() {
+		s.lifecycleMu.Lock()
+		s.pausedPumps[page]--
+		if s.pausedPumps[page] == 0 {
+			delete(s.pausedPumps, page)
+		}
+		s.lifecycleMu.Unlock()
+	}
+}
+
+func (s *Server) cancelExecution(page *browser.Page) bool {
+	s.lifecycleMu.Lock()
+	cancel := s.executions[page]
+	s.lifecycleMu.Unlock()
+	if cancel == nil {
+		return false
+	}
+	cancel()
+	return true
+}
+func (s *session) send(v any) {
+	payload, err := json.Marshal(v)
+	if err != nil {
+		return
+	}
+	s.writeMu.Lock()
+	defer s.writeMu.Unlock()
+	_ = s.conn.WriteMessage(websocket.TextMessage, payload)
+}
 func (s *session) reply(id int64, result any, err error) {
 	s.replyRouted(id, result, err, "")
 }
@@ -399,7 +474,7 @@ func (s *session) handleRouted(m message, route string) {
 		s.handleRouted(inner, stringValue(p["sessionId"]))
 		return
 	}
-	control := m.Method == "Fetch.continueRequest" || m.Method == "Fetch.continueResponse" || m.Method == "Fetch.failRequest" || m.Method == "Fetch.fulfillRequest" || m.Method == "Network.continueInterceptedRequest" || m.Method == "Mimic.getTrace" || m.Method == "Page.stopLoading"
+	control := m.Method == "Fetch.continueRequest" || m.Method == "Fetch.continueResponse" || m.Method == "Fetch.failRequest" || m.Method == "Fetch.fulfillRequest" || m.Method == "Network.continueInterceptedRequest" || m.Method == "Mimic.getTrace" || m.Method == "Mimic.getStatus" || m.Method == "Mimic.getDiagnostics" || m.Method == "Mimic.cancelExecution" || m.Method == "Page.stopLoading" || m.Method == "Target.closeTarget"
 	if !control {
 		s.commandMu.Lock()
 		defer s.commandMu.Unlock()
@@ -407,6 +482,11 @@ func (s *session) handleRouted(m message, route string) {
 		// Never hold the control Page while bootstrapping an independent Page.
 		if !strings.HasPrefix(m.Method, "Target.") {
 			page := s.page
+			if m.Method == "Mimic.captureSnapshot" {
+				interrupt, _ := p["interrupt"].(bool)
+				resume := s.server.pausePump(page, interrupt)
+				defer resume()
+			}
 			page.LockCommands()
 			defer page.UnlockCommands()
 		}
@@ -476,8 +556,10 @@ func (s *session) handleRouted(m message, route string) {
 		}
 		success := false
 		if page, ok := s.server.Context.Page(targetID); ok {
-			page.LockCommands()
+			// Cancel before waiting for the command lock: a running callback
+			// can otherwise prevent its own teardown forever.
 			s.server.stopPump(page)
+			page.LockCommands()
 			success = s.server.Context.ClosePage(targetID)
 			page.UnlockCommands()
 		}
@@ -511,7 +593,11 @@ func (s *session) handleRouted(m message, route string) {
 		loaderID := s.page.ReserveNavigation()
 		result = map[string]any{"frameId": s.page.Top.ID, "loaderId": loaderID}
 		page := s.page
-		navigationCtx, navigationCancel := context.WithTimeout(s.ctx, s.navigationTimeout)
+		navigationCtx, navigationCancel := context.WithCancel(s.ctx)
+		if s.navigationTimeout > 0 {
+			navigationCancel()
+			navigationCtx, navigationCancel = context.WithTimeout(s.ctx, s.navigationTimeout)
+		}
 		s.navigationMu.Lock()
 		if s.navigationCancel != nil {
 			s.navigationCancel()
@@ -535,6 +621,21 @@ func (s *session) handleRouted(m message, route string) {
 			defer s.commandMu.Unlock()
 			page.LockCommands()
 			defer page.UnlockCommands()
+			if live, ok := s.server.Context.Page(page.ID); !ok || live != page {
+				return
+			}
+			s.server.lifecycleMu.Lock()
+			if s.server.pumps[page] == nil {
+				s.server.lifecycleMu.Unlock()
+				return
+			}
+			s.server.executions[page] = navigationCancel
+			s.server.lifecycleMu.Unlock()
+			defer func() {
+				s.server.lifecycleMu.Lock()
+				delete(s.server.executions, page)
+				s.server.lifecycleMu.Unlock()
+			}()
 			if navErr := page.NavigateReserved(navigationCtx, navigationURL, loaderID); navErr != nil {
 				page.Trace().Add(trace.Error, "navigation", map[string]any{"url": navigationURL, "error": navErr.Error()})
 			}
@@ -663,11 +764,26 @@ func (s *session) handleRouted(m message, route string) {
 	case "Performance.getMetrics":
 		result = map[string]any{"metrics": []any{map[string]any{"name": "Timestamp", "value": float64(time.Now().UnixNano()) / 1e9}}}
 	case "Mimic.captureSnapshot":
-		ctx, cancel := context.WithTimeout(s.ctx, s.navigationTimeout)
+		ctx, cancel := context.WithTimeout(s.ctx, 30*time.Second)
 		defer cancel()
 		result, err = s.page.CaptureSnapshot(ctx)
 	case "Mimic.getTrace":
 		result = map[string]any{"events": s.page.Trace().Events()}
+	case "Mimic.getStatus":
+		activity := s.page.ExecutionStatus()
+		result = map[string]any{
+			"execution": map[string]any{
+				"running":   activity.Running,
+				"taskId":    activity.TaskID,
+				"source":    activity.Source,
+				"phase":     activity.Phase,
+				"elapsedMs": activity.Elapsed.Milliseconds(),
+			},
+		}
+	case "Mimic.getDiagnostics":
+		result = s.page.LiveDiagnostics()
+	case "Mimic.cancelExecution":
+		result = map[string]any{"cancelled": s.server.cancelExecution(s.page)}
 	case "Mimic.clearTrace":
 		s.page.Trace().Clear()
 	case "Mimic.getCompatibilityMatrix":
@@ -810,10 +926,10 @@ func (s *session) destroyFrameContext(frameID string) {
 }
 
 func (s *session) evaluateInContext(ctx context.Context, contextID int64, source string) (any, error) {
-	ctx, cancel := context.WithTimeout(ctx, s.navigationTimeout)
+	ctx, cancel := context.WithTimeout(ctx, 30*time.Second)
 	defer cancel()
 	if contextID == 0 {
-		return s.page.Evaluate(ctx, source)
+		return s.page.EvaluateCommand(ctx, "", source)
 	}
 	s.contextMu.Lock()
 	frameID, ok := s.frameByContext[contextID]
@@ -822,9 +938,9 @@ func (s *session) evaluateInContext(ctx context.Context, contextID int64, source
 		return nil, fmt.Errorf("cannot find context with specified id")
 	}
 	if frameID == s.page.Top.ID {
-		return s.page.Evaluate(ctx, source)
+		return s.page.EvaluateCommand(ctx, "", source)
 	}
-	return s.page.EvaluateFrame(ctx, frameID, source)
+	return s.page.EvaluateCommand(ctx, frameID, source)
 }
 func originURL(raw string) string {
 	u, e := url.Parse(raw)

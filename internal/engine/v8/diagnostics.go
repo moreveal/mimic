@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"golang.org/x/sys/windows"
 	"os"
+	"sync"
 	"time"
 	"unsafe"
 )
@@ -20,6 +21,7 @@ type diagnosticCost struct {
 }
 
 type diagnosticState struct {
+	mu          sync.Mutex                 `json:"-"`
 	Detailed    bool                       `json:"detailed"`
 	HostOnly    bool                       `json:"host_only,omitempty"`
 	Costs       map[string]diagnosticCost  `json:"costs"`
@@ -72,10 +74,29 @@ func (a *adapter) recordCost(name string, start time.Time) {
 	if a.profile == nil {
 		return
 	}
+	a.profile.mu.Lock()
+	defer a.profile.mu.Unlock()
 	cost := a.profile.Costs[name]
 	cost.Count++
 	cost.Nanoseconds += time.Since(start).Nanoseconds()
 	a.profile.Costs[name] = cost
+}
+
+// LiveDiagnostics returns counters that are safe to inspect while JavaScript
+// owns the isolate thread. It intentionally excludes heap/isolate operations,
+// which must still be dispatched to the owner actor.
+func (a *adapter) LiveDiagnostics() any {
+	if a.profile == nil {
+		return map[string]any{"enabled": false}
+	}
+	a.profile.mu.Lock()
+	costs := make(map[string]diagnosticCost, len(a.profile.Costs))
+	for name, cost := range a.profile.Costs {
+		costs[name] = cost
+	}
+	hostOnly := a.profile.HostOnly
+	a.profile.mu.Unlock()
+	return map[string]any{"enabled": true, "hostOnly": hostOnly, "costs": costs}
 }
 
 // Diagnostics samples the isolate on its owner thread. It is deliberately not
