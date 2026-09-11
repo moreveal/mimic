@@ -3,6 +3,8 @@ package browser
 import (
 	"context"
 	"crypto"
+	"crypto/aes"
+	"crypto/cipher"
 	cryptorand "crypto/rand"
 	"crypto/rsa"
 	"crypto/sha1"
@@ -1109,6 +1111,42 @@ func (r *Realm) installBindings() error {
 		}
 		out := make([]int, len(ciphertext))
 		for i, value := range ciphertext {
+			out[i] = int(value)
+		}
+		return r.val(out), nil
+	})
+	host["subtleAESGCM"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		operation, key, iv, additionalData, input, tagBits := strarg(a, 0), byteSlice(arg(a, 1)), byteSlice(arg(a, 2)), byteSlice(arg(a, 3)), byteSlice(arg(a, 4)), int(numarg(a, 5))
+		block, err := aes.NewCipher(key)
+		if err != nil {
+			return nil, err
+		}
+		tagSize := tagBits / 8
+		var aead cipher.AEAD
+		switch {
+		case len(iv) == 12 && tagSize == 16:
+			aead, err = cipher.NewGCM(block)
+		case len(iv) == 12:
+			aead, err = cipher.NewGCMWithTagSize(block, tagSize)
+		case tagSize == 16:
+			aead, err = cipher.NewGCMWithNonceSize(block, len(iv))
+		default:
+			err = fmt.Errorf("non-standard AES-GCM nonce and tag sizes cannot be combined")
+		}
+		if err != nil {
+			return nil, err
+		}
+		var result []byte
+		if operation == "encrypt" {
+			result = aead.Seal(nil, iv, input, additionalData)
+		} else {
+			result, err = aead.Open(nil, iv, input, additionalData)
+			if err != nil {
+				return nil, err
+			}
+		}
+		out := make([]int, len(result))
+		for i, value := range result {
 			out[i] = int(value)
 		}
 		return r.val(out), nil
