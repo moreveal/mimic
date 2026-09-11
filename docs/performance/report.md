@@ -1593,3 +1593,19 @@ covers this new reproducer without serializing Pages or disabling snapshots.
 The new subprocess regression and full engine/race suites pass. This does not
 close the original SizeFromMap signature or turn finite fast gates into proof
 of global native stability. No new production performance change is introduced.
+
+
+## Attr/Node binding checkpoint (2026-09-11)
+
+[Package and full receipts](../compatibility/attr-node-2026-09-11.md): all mandatory
+paired fast-gate workloads pass without native dumps, after correcting an import
+failure by selecting the existing benchmark Python environment. Throughput at
+10/25 Pages is 74.33/83.15 to 70.98/63.14 sessions/s. DOM completion is nearly
+unchanged (482.05/484.04 ms), React completion increases 84.11 to 93.03 ms.
+This remains an open performance concern; a single mixed pair does not establish
+causality or neutrality. A separate unobserved-iframe diagnostic retained nine
+realms after eight removals with zero exported Window references; lifetime cleanup
+is the next measured ownership task. The current production change fixes Attr
+inheritance/Node borrowing; it does not yet change realm reclamation.
+
+Static/React private memory after recovery is 156.75/166.61 to 157.24/170.47 MiB.

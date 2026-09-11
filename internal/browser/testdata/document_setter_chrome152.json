@@ -23,7 +23,7 @@
     "secureContextState": true,
     "isolationState": false,
     "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
-    "profileFreshness": "fresh-controlled",
+    "profileFreshness": "unverified-reused-controlled",
     "visibilityState": "visible",
     "hasFocus": true
   },

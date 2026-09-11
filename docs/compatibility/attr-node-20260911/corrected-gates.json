@@ -1,0 +1,22 @@
+[
+  {
+    "side": "before",
+    "command": [
+      "E:\\GitHub\\mimic\\.build\\benchmark-venv\\Scripts\\python.exe",
+      ".build/p0_full_gate.py",
+      "attr-node-gate-before-20260911",
+      "E:\\GitHub\\mimic\\.build\\attr-node-baseline"
+    ],
+    "exitCode": 0
+  },
+  {
+    "side": "after",
+    "command": [
+      "E:\\GitHub\\mimic\\.build\\benchmark-venv\\Scripts\\python.exe",
+      ".build/p0_full_gate.py",
+      "attr-node-gate-after-20260911",
+      "E:\\GitHub\\mimic"
+    ],
+    "exitCode": 0
+  }
+]
