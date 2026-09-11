@@ -40,6 +40,7 @@ func addWindowServiceHosts(r *Realm, h map[string]any) {
 	addCacheHosts(r, h)
 	addCookieStoreHosts(r, h)
 	addLaunchHosts(r, h)
+	addSpeechHosts(r, h)
 	h["enqueueWebTask"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		fn := a[0]
 		id := r.scheduler.Post(scheduler.WebTask, time.Duration(numarg(a, 2)*float64(time.Millisecond)), func(ctx context.Context) error {

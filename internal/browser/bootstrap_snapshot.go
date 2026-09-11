@@ -312,6 +312,7 @@ func (r *Realm) retryBootstrap(err error) error {
 	}
 	r.cookieNotifier = nil
 	r.launchNotifier = nil
+	r.speechNotifier = nil
 	if closeErr := r.runtime.Close(); closeErr != nil {
 		return fmt.Errorf("snapshot binding: %v; close failed runtime: %w", err, closeErr)
 	}

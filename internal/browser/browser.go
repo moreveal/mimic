@@ -10,18 +10,29 @@ import (
 	"github.com/moreveal/mimic/compatibility"
 	"github.com/moreveal/mimic/internal/engine"
 	"github.com/moreveal/mimic/internal/network"
+	"github.com/moreveal/mimic/internal/speech"
 	"github.com/moreveal/mimic/internal/state"
 )
 
 type Browser struct {
-	mu       sync.RWMutex
-	factory  engine.Factory
-	env      state.Environment
-	compat   compatibility.Bundle
-	contexts map[string]*Context
+	speechProvider speech.Provider
+	mu             sync.RWMutex
+	factory        engine.Factory
+	env            state.Environment
+	compat         compatibility.Bundle
+	contexts       map[string]*Context
+}
+
+type Options struct {
+	// SpeechProvider is an optional portable synthesis driver. Nil selects the
+	// system provider. It creates document-owned resources only on first use.
+	SpeechProvider speech.Provider
 }
 
 func New(factory engine.Factory, bundle compatibility.Bundle) (*Browser, error) {
+	return NewWithOptions(factory, bundle, Options{})
+}
+func NewWithOptions(factory engine.Factory, bundle compatibility.Bundle, options Options) (*Browser, error) {
 	if bundle == nil || bundle.Environment() == nil {
 		return nil, fmt.Errorf("compatibility bundle is required")
 	}
@@ -29,7 +40,11 @@ func New(factory engine.Factory, bundle compatibility.Bundle) (*Browser, error) 
 	if err := env.Validate(); err != nil {
 		return nil, err
 	}
-	return &Browser{factory: factory, env: env, compat: bundle, contexts: map[string]*Context{}}, nil
+	provider := options.SpeechProvider
+	if provider == nil {
+		provider = speech.Open
+	}
+	return &Browser{speechProvider: provider, factory: factory, env: env, compat: bundle, contexts: map[string]*Context{}}, nil
 }
 func (b *Browser) NewContext() *Context {
 	b.mu.Lock()
