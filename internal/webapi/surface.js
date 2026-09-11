@@ -155,7 +155,7 @@
     prepend(...nodes){for(let i=nodes.length-1;i>=0;i--){const node=isDOMNode(nodes[i])?nodes[i]:document.createElement('span');fragmentState(this).children.unshift(node);syntheticParents.set(node,this)}}
     replaceChildren(...nodes){const state=fragmentState(this);for(const child of state.children)syntheticParents.delete(child);state.children=[];state.html='';this.append(...nodes)}
     querySelector(selector){return this.querySelectorAll(selector)[0]||null}
-    querySelectorAll(selector){const query=String(selector).trim(),result=[];const matches=node=>node instanceof Element&&(query.startsWith('#')?node.id===query.slice(1):query.startsWith('.')?node.classList.contains(query.slice(1)):node.localName===query.toLowerCase());const visit=node=>{if(matches(node))result.push(node);if(node instanceof Element)for(const child of Array.from(node.children))visit(child)};for(const child of fragmentState(this).children)visit(child);return new Proxy(Object.create(NodeList.prototype),{get(target,key){if(key==='length')return result.length;if(key==='item')return index=>result[Number(index)]||null;if(key===Symbol.iterator)return result[Symbol.iterator].bind(result);if(typeof key==='string'&&/^\d+$/.test(key))return result[Number(key)];return Reflect.get(target,key)}})}
+    querySelectorAll(selector){const query=String(selector).trim(),result=[];const matches=node=>node instanceof Element&&(query.startsWith('#')?node.id===query.slice(1):query.startsWith('.')?node.classList.contains(query.slice(1)):node.localName===query.toLowerCase());const visit=node=>{if(matches(node))result.push(node);if(node instanceof Element)for(const child of Array.from(node.children))visit(child)};for(const child of fragmentState(this).children)visit(child);return nodeListView(()=>result.length,index=>result[index])}
     getElementById(id){return this.querySelector('#'+String(id))}
   }
   class ShadowRoot extends DocumentFragment {
@@ -261,7 +261,7 @@
   const htmlCollection=get=>{
     const indexed=key=>typeof key==='string'&&/^(0|[1-9]\d*)$/.test(key)&&Number(key)<4294967295;
     const named=(values,name)=>{name=String(name);if(!name)return null;for(const value of values){const node=wrap(value);if(node&&(node.getAttribute('id')===name||node.namespaceURI==='http://www.w3.org/1999/xhtml'&&node.getAttribute('name')===name))return node}return null};
-    return new Proxy(Object.create(HTMLCollection.prototype),{
+    const proxy=new Proxy(Object.create(HTMLCollection.prototype),{
       ownKeys(o){
         const values=get(),keys=values.map((_,index)=>String(index));
         for(const value of values){const node=wrap(value);for(const name of [node.getAttribute('id'),node.namespaceURI==='http://www.w3.org/1999/xhtml'?node.getAttribute('name'):null])if(name&&!keys.includes(name))keys.push(name)}
@@ -276,16 +276,40 @@
         if(typeof key==='string'&&!Reflect.has(o,key)){const value=named(get(),key);if(value!==null)return {value,writable:false,enumerable:false,configurable:true}}
       },
       has(o,key){if(indexed(key))return Number(key)<get().length;return Reflect.has(o,key)||typeof key==='string'&&named(get(),key)!==null},
-      get(o,key){const values=get();if(key==='length')return values.length;if(key==='item')return index=>wrap(get()[Number(index)>>>0]);if(key==='namedItem')return name=>named(get(),name);
-        if(key===Symbol.iterator)return function*(){for(let i=0;i<get().length;i++)yield wrap(get()[i])};
-        if(indexed(key))return Number(key)<values.length?wrap(values[Number(key)]):undefined;
-        if(Reflect.has(o,key))return Reflect.get(o,key);return typeof key==='string'?named(values,key)||undefined:undefined;
+      get(o,key,receiver){
+        if(indexed(key)){const values=get();return Number(key)<values.length?wrap(values[Number(key)]):undefined}
+        if(Reflect.has(o,key))return Reflect.get(o,key,receiver);return typeof key==='string'?named(get(),key)||undefined:undefined;
       }
     });
+    registerRealmBinding(proxy,'HTMLCollection',{length:()=>get().length,item:index=>{const values=get();return index<values.length?wrap(values[index]):null},namedItem:name=>named(get(),name)});
+    return proxy;
   };
-  class HTMLCollection { constructor(){illegal('HTMLCollection')} item(){} namedItem(){} }
-  const nodeList=data=>{const read=()=>typeof data==='function'?data():data;let proxy;proxy=new Proxy(Object.create(NodeList.prototype),{get(o,p){if(p==='length')return read().length;if(p==='item')return i=>wrap(read()[Number(i)>>>0]);if(p==='forEach')return (cb,thisArg)=>{const length=read().length;for(let i=0;i<length;i++){const rows=read();if(i<rows.length)cb.call(thisArg,wrap(rows[i]),i,proxy)}};if(p===Symbol.iterator||p==='values')return function*(){for(let i=0;i<read().length;i++)yield wrap(read()[i])};if(p==='keys')return function*(){for(let i=0;i<read().length;i++)yield i};if(p==='entries')return function*(){for(let i=0;i<read().length;i++)yield [i,wrap(read()[i])]};if(typeof p==='string'&&/^\d+$/.test(p)){const row=read()[Number(p)];return row===undefined?undefined:wrap(row)}return Reflect.get(o,p)},has(o,p){return typeof p==='string'&&/^(0|[1-9][0-9]*)$/.test(p)&&Number(p)<read().length||Reflect.has(o,p)},ownKeys(o){return [...read().map((_,i)=>String(i)),...Reflect.ownKeys(o)]},getOwnPropertyDescriptor(o,p){if(typeof p==='string'&&/^(0|[1-9][0-9]*)$/.test(p)&&Number(p)<read().length)return {value:wrap(read()[Number(p)]),writable:false,enumerable:true,configurable:true};return Reflect.getOwnPropertyDescriptor(o,p)}});return proxy};
-  class NodeList { constructor(){illegal('NodeList')} item(){} forEach(){} }
+  class HTMLCollection {
+    constructor(){illegal('HTMLCollection')}
+    get length(){const binding=requireRealmBinding(this,'HTMLCollection');return callRealmBinding(this,binding,'length',[])}
+    item(index){const binding=requireRealmBinding(this,'HTMLCollection');if(!arguments.length)throw new TypeError('Not enough arguments');index=(+index)>>>0;return callRealmBinding(this,binding,'item',[index])}
+    namedItem(name){const binding=requireRealmBinding(this,'HTMLCollection');if(!arguments.length)throw new TypeError('Not enough arguments');name=bindingString(name);return callRealmBinding(this,binding,'namedItem',[name])}
+  }
+  Object.defineProperty(HTMLCollection.prototype,Symbol.iterator,{value:Array.prototype.values,writable:true,configurable:true});
+  const collectionIndex=key=>typeof key==='string'&&/^(0|[1-9]\d*)$/.test(key)&&Number(key)<4294967295;
+  const nodeListView=(length,item)=>{
+    const proxy=new Proxy(Object.create(NodeList.prototype),{
+      get(target,key,receiver){if(collectionIndex(key))return item(Number(key))??undefined;return Reflect.get(target,key,receiver)},
+      has(target,key){return collectionIndex(key)&&Number(key)<length()||Reflect.has(target,key)},
+      ownKeys(target){return [...new Set([...Array.from({length:length()},(_,i)=>String(i)),...Reflect.ownKeys(target)])]},
+      getOwnPropertyDescriptor(target,key){if(collectionIndex(key)&&Number(key)<length())return{value:item(Number(key)),writable:false,enumerable:true,configurable:true};return Reflect.getOwnPropertyDescriptor(target,key)}
+    });
+    registerRealmBinding(proxy,'NodeList',{length,item:index=>item(index)??null});
+    return proxy;
+  };
+  const nodeList=data=>{const read=()=>typeof data==='function'?data():data;return nodeListView(()=>read().length,index=>wrap(read()[index]))};
+  class NodeList {
+    constructor(){illegal('NodeList')}
+    get length(){const binding=requireRealmBinding(this,'NodeList');return callRealmBinding(this,binding,'length',[])}
+    item(index){const binding=requireRealmBinding(this,'NodeList');if(!arguments.length)throw new TypeError('Not enough arguments');index=(+index)>>>0;return callRealmBinding(this,binding,'item',[index])}
+  }
+  for(const name of ['entries','keys','values','forEach'])Object.defineProperty(NodeList.prototype,name,{value:Array.prototype[name],writable:true,enumerable:true,configurable:true});
+  Object.defineProperty(NodeList.prototype,Symbol.iterator,{value:Array.prototype.values,writable:true,configurable:true});
   // New node shape is already known here; only canonical identity crosses back.
   const freshNodeData=(nodeId,type,tagName,namespaceURI,text)=>({attributes:{},children:[],namespaceURI,nodeId,parentId:0,tagName,text,type});
   const freshCharacterData=(id,type,text)=>wrap(/[\uD800-\uDFFF]/.test(text)?id:freshNodeData(id,type,'','',text));
