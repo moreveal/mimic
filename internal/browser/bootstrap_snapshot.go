@@ -408,12 +408,15 @@ func (c *bootstrapSnapshotCache) close() error {
 // Recording wraps only the first ordinary initialization for a profile. It
 // retains JSON replies, never real host callbacks, Page state or user objects.
 // finish turns recording off even for closures which captured the proxy.
+// Recording an optional seed must not turn a successful host call into a
+// script exception. Defer serialization failures until capture finalization,
+// where the cache rejects the seed and the live realm keeps its host bindings.
 const bootstrapCaptureSource = `(function(original){
  const stringify=JSON.stringify,apply=Reflect.apply,get=Reflect.get;
- let calls=[];const engineKeys=Reflect.ownKeys(globalThis).filter(key=>typeof key==='string');
+ let calls=[],captureFailed=false;const engineKeys=Reflect.ownKeys(globalThis).filter(key=>typeof key==='string');
  const shape=Object.fromEntries(Object.getOwnPropertyNames(original).map(name=>[name,typeof original[name]]));
- globalThis.__mimic=new Proxy(original,{get(target,name,receiver){const value=get(target,name,receiver);if(calls===null||typeof value!=='function')return value;return function(...args){const result=apply(value,target,args);if(calls!==null)calls.push({name,args:stringify(args),result:stringify(result)});return result}}});
- return function(){globalThis.__mimic=original;const globalKeys=Reflect.ownKeys(globalThis).filter(key=>typeof key==='string');const result=stringify({shape,calls,engineKeys,globalKeys});calls=null;return result};
+ globalThis.__mimic=new Proxy(original,{get(target,name,receiver){const value=get(target,name,receiver);if(calls===null||typeof value!=='function')return value;return function(...args){const result=apply(value,target,args);if(calls!==null&&!captureFailed){try{calls.push({name,args:stringify(args),result:stringify(result)})}catch{captureFailed=true}}return result}}});
+ return function(){globalThis.__mimic=original;if(captureFailed){calls=null;throw new Error('bootstrap capture serialization failed')}const globalKeys=Reflect.ownKeys(globalThis).filter(key=>typeof key==='string');const result=stringify({shape,calls,engineKeys,globalKeys});calls=null;return result};
 })(__mimic)`
 
 func (r *Realm) beginBootstrapCapture() (engine.Value, error) {

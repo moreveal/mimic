@@ -233,3 +233,29 @@ func TestBootstrapSnapshotBindingFailureFallsBackBeforeScripts(t *testing.T) {
 		t.Fatal("binding failure diagnostic was lost")
 	}
 }
+
+// Capture failure must invalidate the optional seed, never the live host call.
+func TestBootstrapCaptureSerializationFailurePreservesHostResult(t *testing.T) {
+	runtime := (v8engine.Factory{}).New()
+	defer runtime.Close()
+	ctx := context.Background()
+	_, err := runtime.Eval(ctx, `globalThis.value=new Proxy({}, {get(){throw Error('serialization denied')}});globalThis.__mimic={probe(){return value}}`, "setup")
+	if err != nil {
+		t.Fatal(err)
+	}
+	finish, err := runtime.Eval(ctx, bootstrapCaptureSource, "capture")
+	if err != nil {
+		t.Fatal(err)
+	}
+	result, err := runtime.Eval(ctx, `globalThis.saved=__mimic.probe; saved()===value`, "host-call")
+	if err != nil || result.Export() != true {
+		t.Fatalf("host call changed: %v %v", result, err)
+	}
+	if _, err = runtime.Call(ctx, finish, nil); err == nil {
+		t.Fatal("invalid capture accepted")
+	}
+	result, err = runtime.Eval(ctx, `saved()===value && __mimic.probe()===value`, "after-capture")
+	if err != nil || result.Export() != true {
+		t.Fatalf("capture remained active: %v %v", result, err)
+	}
+}
