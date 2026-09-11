@@ -39,8 +39,9 @@ type SurfaceProperty struct {
 }
 
 type RealmExposure struct {
-	Properties []SurfaceProperty            `json:"properties"`
-	Prototypes map[string][]SurfaceProperty `json:"prototypes,omitempty"`
+	PropertyOrder []string                     `json:"propertyOrder,omitempty"`
+	Properties    []SurfaceProperty            `json:"properties"`
+	Prototypes    map[string][]SurfaceProperty `json:"prototypes,omitempty"`
 }
 
 type ProtocolSchema struct {

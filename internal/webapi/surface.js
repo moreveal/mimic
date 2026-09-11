@@ -520,9 +520,17 @@
   let frameElementCache;
   const frameElement=()=>{const result=host.frameElement();return result?unwrapCrossRealm(result.frame,result):null};
   const remoteWindowCache=new Map(),remoteDocumentCache=new Map(),crossRealmCache=new Map(),crossRealmReferences=new WeakMap();
+  let bridgeRealmID=host.selfRealmID();
   const bridgeApply=Reflect.apply;
+  const bridgeHasOwn=Object.prototype.hasOwnProperty;
   const bridgeWeakGet=WeakMap.prototype.get,bridgeWeakSet=WeakMap.prototype.set,bridgeWeakHas=WeakMap.prototype.has;
   const referenceGet=value=>bridgeApply(bridgeWeakGet,crossRealmReferences,[value]),referenceSet=(value,record)=>bridgeApply(bridgeWeakSet,crossRealmReferences,[value,record]),referenceHas=value=>bridgeApply(bridgeWeakHas,crossRealmReferences,[value]);
+  // Only native ArrayIterator.next creates a result with no preexisting user
+  // aliases. Its primitive own fields remain valid until mutation or escape.
+  // Keep identity/prototypes on the ordinary reference bridge; never prefetch
+  // array elements or cache user iterator results.
+  const freshIteratorFields=new WeakMap();
+  const invalidateIteratorFields=value=>{const fields=bridgeApply(bridgeWeakGet,freshIteratorFields,[value]);if(fields)fields.valid=false};
   // Some engines reject even identical nonconfigurable accessor descriptors
   // returned by a Proxy. Detect the invariant once using bootstrap intrinsics.
   const crossRealmAccessorDescriptors=(()=>{
@@ -558,7 +566,7 @@
     if(typeof value==='symbol')return{kind:'symbol',key:encodeCrossRealmKey(value)};
     if(typeof value==='bigint')return{kind:'bigint',value:String(value)};
     if((typeof value==='object'&&value!==null)||typeof value==='function'||typeof value==='undefined'){
-      const reference=referenceGet(value);if(reference)return{kind:'reference',...reference};
+      const reference=referenceGet(value);if(reference){invalidateIteratorFields(value);return{kind:'reference',...reference}}
       const local=host.frameReference(value);
       return{kind:'reference',frame:local.frame,realm:local.realm,handle:local.handle,type:local.__mimicCrossRealm,array:local.array,constructable:local.constructable};
     }
@@ -574,23 +582,25 @@
     if(kind==='undefined')return undefined;if(kind==='null')return null;if(kind==='value')return result.value;
     if(kind==='symbol')return decodeCrossRealmKey(result);
     if(kind==='bigint')return BigInt(result.value);
+    if(kind==='special-number')return result.value==='NaN'?NaN:result.value==='-0'?-0:result.value==='Infinity'?Infinity:-Infinity;
     if(kind==='window')return remoteWindow(result.frame);
     if(kind!=='object'&&kind!=='function'&&kind!=='undetectable')return result;
-    if(result.realm===host.selfRealmID())return host.frameResolve(result.handle,result.realm);
+    if(result.realm===bridgeRealmID)return host.frameResolve(result.handle,result.realm);
     const key=id+':'+String(result.realm||'')+':'+result.handle;if(crossRealmCache.has(key))return crossRealmCache.get(key);
+    const iteratorFields=result.iteratorResult?{valid:true,fields:result.iteratorResult}:null;
     // Bound callables have no nonconfigurable prototype/caller/arguments of
     // their own. Remote descriptors supply those properties when they exist.
     const target=kind==='function'?(result.constructable?(function(){}).bind(null):()=>{}):result.array?[]:Object.create(null);
     for(const name of Reflect.ownKeys(target))if(Object.getOwnPropertyDescriptor(target,name).configurable)delete target[name];
     const unsupported=operation=>{host.semanticMissingAt('surface.js:513','CrossRealm.'+operation);throw new DOMException('Cross-realm '+operation+' is not implemented','NotSupportedError')};
     const traps={
-      get(_target,property){bridgeAccess(id,result.realm);return unwrapCrossRealm(id,host.frameGet(id,result.handle,encodeCrossRealmKey(property),result.realm))},
-      set(_target,property,value){bridgeAccess(id,result.realm);return host.frameSet(id,result.handle,encodeCrossRealmKey(property),encodeCrossRealmArgument(value),result.realm)},
+      get(_target,property){bridgeAccess(id,result.realm);if(iteratorFields?.valid&&(property==='done'||property==='value')&&bridgeApply(bridgeHasOwn,iteratorFields.fields,[property]))return unwrapCrossRealm(id,iteratorFields.fields[property]);return unwrapCrossRealm(id,host.frameGet(id,result.handle,encodeCrossRealmKey(property),result.realm))},
+      set(_target,property,value){if(iteratorFields)iteratorFields.valid=false;bridgeAccess(id,result.realm);return host.frameSet(id,result.handle,encodeCrossRealmKey(property),encodeCrossRealmArgument(value),result.realm)},
       has(_target,property){bridgeAccess(id,result.realm);return host.frameHas(id,result.handle,encodeCrossRealmKey(property),result.realm)},
       apply(_target,receiver,args){
         bridgeAccess(id,result.realm);
         if(result.eval){if(!host.frameEvalAllowed(id))return undefined;const value=args[0],source=typeof value==='string'?value:evalSourceResolver(value);if(source===undefined){host.frameEval(id,undefined,result.realm);return value}return unwrapCrossRealm(id,host.frameEval(id,source,result.realm))}
-        return unwrapCrossRealm(id,host.frameCall(id,result.handle,args.map(encodeCrossRealmArgument),encodeCrossRealmArgument(receiver),result.realm));
+        return unwrapCrossRealm(id,host.frameCall(id,result.handle,args.map(encodeCrossRealmArgument),encodeCrossRealmArgument(receiver),result.realm,!!result.iteratorNext));
       },
       construct(_target,args,newTarget){
         bridgeAccess(id,result.realm);
@@ -601,10 +611,10 @@
         if(outcome.threw)throw value;
         return value;
       },
-      defineProperty(){return unsupported('defineProperty')},
-      deleteProperty(){return unsupported('deleteProperty')},
-      preventExtensions(){return unsupported('preventExtensions')},
-      setPrototypeOf(){return unsupported('setPrototypeOf')},
+      defineProperty(){if(iteratorFields)iteratorFields.valid=false;return unsupported('defineProperty')},
+      deleteProperty(){if(iteratorFields)iteratorFields.valid=false;return unsupported('deleteProperty')},
+      preventExtensions(){if(iteratorFields)iteratorFields.valid=false;return unsupported('preventExtensions')},
+      setPrototypeOf(){if(iteratorFields)iteratorFields.valid=false;return unsupported('setPrototypeOf')},
       getPrototypeOf(){bridgeAccess(id,result.realm);return unwrapCrossRealm(id,host.framePrototype(id,result.handle,result.realm))},
       ownKeys(){bridgeAccess(id,result.realm);return host.frameOwnKeys(id,result.handle,result.realm).map(decodeCrossRealmKey)},
       getOwnPropertyDescriptor(_target,property){
@@ -633,6 +643,7 @@
       getOwnPropertyDescriptor(property){const descriptor=traps.getOwnPropertyDescriptor(target,property);return descriptor===undefined?[false]:[true,descriptor]},
       ownKeys(){return traps.ownKeys()}
     }):new Proxy(target,traps);
+    if(iteratorFields)bridgeApply(bridgeWeakSet,freshIteratorFields,[proxy,iteratorFields]);
     if(result.eval)markNative(proxy,'eval');
     if(result.nodeId){const data=host.nodeData(result.nodeId);if(data){elementData.set(proxy,data);elementWrappers.set(String(result.nodeId),proxy)}}
     referenceSet(proxy,{frame:id,realm:result.realm,handle:result.handle,type:kind,array:result.array,constructable:result.constructable,nodeId:result.nodeId,document:result.document,eval:result.eval});crossRealmCache.set(key,proxy);
@@ -648,11 +659,61 @@
     encoded=>unwrapCrossRealm(encoded.frame,encoded),
     value=>{
       if(value===null||value===undefined||(typeof value!=='object'&&typeof value!=='function'&&typeof value!=='undefined'))return null;
-      const reference=referenceGet(value);if(reference)return{...reference,__mimicCrossRealm:reference.type};
+      const reference=referenceGet(value);if(reference){invalidateIteratorFields(value);return{...reference,__mimicCrossRealm:reference.type}}
       return null;
     },(value,importNode=false)=>importNode?wrap(host.nodeData(value)):value===document?host.documentRootID():bridgeApply(bridgeWeakGet,elementData,[value])?.nodeId||0,
     key=>{const value=Reflect.get(globalThis,key);return{value,intrinsic:key==='eval'&&value===bridgeOriginalEval||key==='postMessage'&&value===bridgeOriginalPostMessage}});
-  const remoteWindow=id=>{if(id===host.selfFrameID())return globalThis;if(remoteWindowCache.has(id))return remoteWindowCache.get(id);host.retainWindowReference(id);let proxy;const framePost=new Proxy(function postMessage(){},{apply(_target,_this,args){return host.framePost(id,args[0],args[1]===undefined?'/':String(args[1]),takeMessagePorts(args[2]))}});markNative(framePost,'postMessage');const target={postMessage:framePost};Object.defineProperty(target,Symbol.toStringTag,{value:'Window',configurable:true});proxy=new Proxy(target,{get(t,p,r){if(p==='window'||p==='self')return proxy;if(p==='document')return remoteDocument(id);if(p==='location')return Object.freeze({get href(){bridgeAccess(id);return host.frameLocation(id)},toString(){return this.href}});if(p==='parent'||p==='top')return remoteWindow(host.frameRelation(id,p));if(p===Symbol.toStringTag)return host.frameCanAccess(id)?'Window':undefined;if(p!=='postMessage')bridgeAccess(id);const encoded=host.frameGlobalGet(id,encodeCrossRealmKey(p));if(encoded.intrinsic&&p==='postMessage')return Reflect.get(t,p,r);const value=unwrapCrossRealm(id,encoded);if(typeof p==='string')recordAPIAccess('WindowProxy.'+p,value!==undefined);return value},has(t,p){bridgeAccess(id);return unwrapCrossRealm(id,host.frameGlobalHas(id,encodeCrossRealmKey(p)))},set(t,p,v,r){bridgeAccess(id);return unwrapCrossRealm(id,host.frameGlobalSet(id,encodeCrossRealmKey(p),encodeCrossRealmArgument(v)))}});referenceSet(proxy,{frame:id,type:'window'});remoteWindowCache.set(id,proxy);return proxy};
+  const remoteWindow=id=>{
+    if(id===host.selfFrameID())return globalThis;
+    if(remoteWindowCache.has(id))return remoteWindowCache.get(id);
+    host.retainWindowReference(id);
+    let proxy;
+    const framePost=new Proxy(function postMessage(){},{apply(_target,_this,args){return host.framePost(id,args[0],args[1]===undefined?'/':String(args[1]),takeMessagePorts(args[2]))}});markNative(framePost,'postMessage');
+    const target={postMessage:framePost};Object.defineProperty(target,Symbol.toStringTag,{value:'Window',configurable:true});
+    const crossKeys=['window','self','location','closed','frames','length','top','opener','parent','blur','close','focus','postMessage','then',Symbol.toStringTag,Symbol.hasInstance,Symbol.isConcatSpreadable];
+    const read=p=>{
+      if(p==='window'||p==='self')return proxy;
+      if(p==='document')return remoteDocument(id);
+      if(p==='parent'||p==='top')return remoteWindow(host.frameRelation(id,p));
+      const accessible=host.frameCanAccess(id);
+      if(!accessible){
+        if(p==='then'||p===Symbol.toStringTag||p===Symbol.hasInstance||p===Symbol.isConcatSpreadable)return undefined;
+        if(p==='location')return Object.freeze({get href(){bridgeAccess(id);return host.frameLocation(id)},toString(){return this.href}});
+      }
+      if(p!=='postMessage'&&!accessible)throw new DOMException('Blocked cross-origin frame access','SecurityError');
+      const encoded=host.frameGlobalGet(id,encodeCrossRealmKey(p));
+      if(encoded.intrinsic&&p==='postMessage')return framePost;
+      const value=unwrapCrossRealm(id,encoded);
+      if(typeof p==='string')recordAPIAccess('WindowProxy.'+p,value!==undefined);
+      return value;
+    };
+    const describe=p=>{
+      if(!host.frameCanAccess(id)){
+        if(p==='then'||p===Symbol.toStringTag||p===Symbol.hasInstance||p===Symbol.isConcatSpreadable)return{value:undefined,writable:false,enumerable:false,configurable:true};
+        bridgeAccess(id);
+      }
+      const raw=host.frameGlobalReflect(id,'descriptor',encodeCrossRealmKey(p));
+      if(!raw||!raw.exists)return undefined;
+      const descriptor={enumerable:!!raw.enumerable,configurable:!!raw.configurable};
+      if(raw.accessor){descriptor.get=unwrapCrossRealm(id,raw.get);descriptor.set=unwrapCrossRealm(id,raw.set)}
+      else{descriptor.value=unwrapCrossRealm(id,raw.value);descriptor.writable=!!raw.writable}
+      return descriptor;
+    };
+    const keys=()=>host.frameCanAccess(id)?host.frameGlobalReflect(id,'keys').map(decodeCrossRealmKey):crossKeys.slice();
+    const define=(p,d)=>{bridgeAccess(id);const raw={};for(const k of ['enumerable','configurable','writable'])if(k in d)raw[k]=d[k];for(const k of ['get','set','value'])if(k in d)raw[k]=encodeCrossRealmArgument(d[k]);return host.frameGlobalReflect(id,'define',encodeCrossRealmKey(p),raw)};
+    const remove=p=>{bridgeAccess(id);return host.frameGlobalReflect(id,'delete',encodeCrossRealmKey(p))};
+    const prototype=()=>host.frameCanAccess(id)?unwrapCrossRealm(id,host.frameGlobalReflect(id,'prototype')):null;
+    const write=(p,v)=>{bridgeAccess(id);return unwrapCrossRealm(id,host.frameGlobalSet(id,encodeCrossRealmKey(p),encodeCrossRealmArgument(v)))};
+    if(host.createWindowObject){
+      // A native exotic object can replace nonconfigurable descriptors after
+      // navigation. A JS Proxy target cannot do this without invariant errors.
+      const native=host.createWindowObject({__proto__:null,get:p=>[true,read(p)],set:(p,v)=>[true,write(p,v)],getOwnPropertyDescriptor:p=>{const d=describe(p);return d===undefined?[false]:[true,d]},ownKeys:keys,defineProperty:(p,d)=>[true,define(p,d)],deleteProperty:p=>[true,remove(p)]});
+      proxy=new Proxy(native,{getPrototypeOf:prototype,preventExtensions:()=>false,setPrototypeOf:(_t,next)=>next===prototype(),has:(_t,p)=>{if(!host.frameCanAccess(id)){if(crossKeys.includes(p))return true;bridgeAccess(id)}return unwrapCrossRealm(id,host.frameGlobalHas(id,encodeCrossRealmKey(p)))}});
+    }else{
+      proxy=new Proxy(target,{get:(_t,p)=>read(p),set:(_t,p,v)=>write(p,v),has:(_t,p)=>{bridgeAccess(id);return unwrapCrossRealm(id,host.frameGlobalHas(id,encodeCrossRealmKey(p)))},ownKeys:keys,getPrototypeOf:prototype,preventExtensions:()=>false,setPrototypeOf:(_t,next)=>next===prototype(),getOwnPropertyDescriptor:(_t,p)=>{const d=describe(p);if(d&&!d.configurable)Object.defineProperty(target,p,d);return d},defineProperty:(_t,p,d)=>define(p,d),deleteProperty:(_t,p)=>remove(p)});
+    }
+    referenceSet(proxy,{frame:id,type:'window'});remoteWindowCache.set(id,proxy);return proxy;
+  };
   const xhrSlots=new WeakMap(),xhrState=xhr=>xhrSlots.get(xhr);
   const fireXHREvent=(xhr,type)=>dispatchTrusted(xhr,new Event(type)),setXHRState=(xhr,value)=>{xhrState(xhr).readyState=value;fireXHREvent(xhr,'readystatechange')};
   class XMLHttpRequest extends EventTarget { constructor(){super();xhrSlots.set(this,{readyState:0,status:0,statusText:'',responseText:'',responseURL:'',responseType:'',timeout:0,withCredentials:false,onreadystatechange:null,onload:null,onerror:null,ontimeout:null,onloadend:null,requestHeaders:{},requestHeaderOrder:[],responseHeaders:{},sent:false,method:'GET',url:'',async:true})} open(method,url,async=true,user,password){method=String(method).toUpperCase();if(!method||/[^A-Z-]/.test(method))throw new DOMException('Invalid HTTP method','SyntaxError');const state=xhrState(this);state.method=method;state.url=String(url);state.async=Boolean(async);state.sent=false;state.requestHeaders={};state.requestHeaderOrder=[];state.status=0;state.responseText='';state.responseURL='';setXHRState(this,1)} setRequestHeader(name,value){const state=xhrState(this);if(state.readyState!==1||state.sent)throw new DOMException("The object's state must be OPENED.",'InvalidStateError');name=String(name).trim().toLowerCase();value=String(value).trim();if(!name||/[^!#$%&'*+.^_`|~0-9a-z-]/i.test(name)||/[\0\r\n]/.test(value))throw new DOMException('Invalid HTTP header','SyntaxError');if(state.requestHeaders[name]===undefined)state.requestHeaderOrder.push(name);state.requestHeaders[name]=state.requestHeaders[name]?state.requestHeaders[name]+', '+value:value} getResponseHeader(name){const state=xhrState(this);if(state.readyState<2)return null;const value=state.responseHeaders[String(name).toLowerCase()];return value===undefined?null:value} getAllResponseHeaders(){const state=xhrState(this);if(state.readyState<2)return'';return Object.keys(state.responseHeaders).sort().map(k=>k+': '+state.responseHeaders[k]+'\r\n').join('')} send(body=null){const state=xhrState(this);if(state.readyState!==1||state.sent)throw new DOMException("The object's state must be OPENED.",'InvalidStateError');state.sent=true;host.xhr(result=>{if(result.error){state.status=0;setXHRState(this,4);fireXHREvent(this,result.error);fireXHREvent(this,'loadend');return}state.status=result.status;state.statusText=result.statusText;state.responseURL=result.responseURL;state.responseHeaders=result.responseHeaders||{};setXHRState(this,2);setXHRState(this,3);state.responseText=result.responseText||'';setXHRState(this,4);fireXHREvent(this,'load');fireXHREvent(this,'loadend')},state.method,state.url,state.requestHeaders,body==null?'':String(body),Number(state.timeout)||0,state.requestHeaderOrder,Boolean(state.withCredentials))} abort(){const state=xhrState(this);state.sent=false;state.status=0;state.responseText='';setXHRState(this,0)} }
@@ -701,6 +762,26 @@
   let known;
   const applyTargetExposure=exposure=>{
     const properties=exposure.properties||[];
+    const publicationMissing=new Set();
+    // Publish the frozen profile's static globals in their observed order once,
+    // before unforgeable descriptors are installed. Later user additions and
+    // delete/reinsert operations retain the engine's ordinary key ordering.
+    if(exposure.propertyOrder&&exposure.propertyOrder.length){
+      const descriptors=new Map(),define=Object.defineProperty;
+      let republish=false;
+      for(const name of exposure.propertyOrder){
+        if(!engineGlobals.has(name))republish=true;
+        if(!republish)continue;
+        const descriptor=Object.getOwnPropertyDescriptor(globalThis,name)||(name in globalThis?{value:globalThis[name],writable:true,configurable:true}:undefined);
+        if(descriptor&&!descriptor.configurable)throw new Error('non-configurable global publication: '+name);
+        descriptors.set(name,descriptor);delete globalThis[name];
+      }
+      for(const [name,descriptor]of descriptors){
+        if(snapshotPublication&&snapshotPublication.lateEngineKeys.has(name))continue;
+        if(!descriptor)publicationMissing.add(name);
+        define(globalThis,name,descriptor||{value:undefined,writable:true,configurable:true});
+      }
+    }
     const expected=new Map(properties.map(property=>[property.name,property]));
     for(const name of Object.getOwnPropertyNames(globalThis)){
       if(name.startsWith('__mimic')||name==='__receiveFrameMessage'||name==='__receiveMessagePort')continue;
@@ -710,7 +791,7 @@
       if(snapshotPublication&&snapshotPublication.lateEngineKeys.has(property.name))continue;
       const propertyName=property.name;
       const descriptor={enumerable:property.enumerable,configurable:property.configurable};
-      const current=Object.getOwnPropertyDescriptor(globalThis,property.name);
+      const current=publicationMissing.has(property.name)?undefined:Object.getOwnPropertyDescriptor(globalThis,property.name);
       if(property.valueType==='accessor'){
         let stored=current&&'value' in current?current.value:undefined;
         descriptor.get=current&&current.get?current.get:function(){return stored};
@@ -718,7 +799,7 @@
       }else{
         let value;
         if(current&&'value' in current)value=current.value;
-        else if(property.name in globalThis)value=globalThis[property.name];
+        else if(!publicationMissing.has(property.name)&&property.name in globalThis)value=globalThis[property.name];
         else if(property.valueType==='function'){
           const functionName=property.functionName||property.name;
           value={[functionName]:function(){return host.semanticMissingAt('surface.js:615','Window.'+propertyName)}}[functionName];
@@ -908,7 +989,7 @@
   // Called only on a fresh deserialized, pre-script realm. Seed DOM must be
   // empty: preserving user-created wrappers across a host change is invalid.
   globalThis.__mimicRestoreBootstrap=freshHost=>{
-    host=freshHost;hostToken=host.token();intlEnvironment=host.intlEnvironment();
+    host=freshHost;hostToken=host.token();bridgeRealmID=host.selfRealmID();intlEnvironment=host.intlEnvironment();
     security=host.documentSecurity();
     const policy=permissionsPolicySlots.get(new PermissionsPolicy(hostToken,host.permissionsPolicy()));
     Object.assign(permissionsPolicySlots.get(documentPolicy),policy);

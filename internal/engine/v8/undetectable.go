@@ -13,6 +13,16 @@ import (
 // NewUndetectableObject creates a callable HTMLDDA exotic object. The native
 // handlers keep JS state in callback Data, rooted by the isolate's registry.
 func (a *adapter) NewUndetectableObject(handler engine.Value) (engine.Value, error) {
+	return a.newInterceptedObject(handler, true)
+}
+
+// NewInterceptedObject forwards property operations without Proxy target
+// invariants: WindowProxy descriptors belong to the current navigable realm.
+func (a *adapter) NewInterceptedObject(handler engine.Value) (engine.Value, error) {
+	return a.newInterceptedObject(handler, false)
+}
+
+func (a *adapter) newInterceptedObject(handler engine.Value, undetectable bool) (engine.Value, error) {
 	makeObject := func(iso *gov8.Isolate, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
 		data, err := a.local(scope, handler)
 		if err != nil {
@@ -22,8 +32,10 @@ func (a *adapter) NewUndetectableObject(handler engine.Value) (engine.Value, err
 		if err != nil {
 			return nil, err
 		}
-		if err = ot.MarkAsUndetectable(); err != nil {
-			return nil, err
+		if undetectable {
+			if err = ot.MarkAsUndetectable(); err != nil {
+				return nil, err
+			}
 		}
 		named := gov8.NamedPropertyHandlerConfig{Data: data}
 		// Real own properties override named collection entries, but cross-realm
@@ -99,41 +111,43 @@ func (a *adapter) NewUndetectableObject(handler engine.Value) (engine.Value, err
 		if err = ot.SetIndexedPropertyHandler(indexed); err != nil {
 			return nil, err
 		}
-		err = ot.SetCallAsFunctionHandler(func(cs *gov8.CallbackScope, args gov8.FunctionCallbackArguments, rv gov8.ReturnValue) {
-			d, e := args.Data()
-			if e != nil {
-				ddaThrow(cs, e)
-				return
-			}
-			values := make([]gov8.Value, args.Length())
-			for i := range values {
-				values[i], e = args.Get(i)
+		if undetectable {
+			err = ot.SetCallAsFunctionHandler(func(cs *gov8.CallbackScope, args gov8.FunctionCallbackArguments, rv gov8.ReturnValue) {
+				d, e := args.Data()
 				if e != nil {
 					ddaThrow(cs, e)
 					return
 				}
+				values := make([]gov8.Value, args.Length())
+				for i := range values {
+					values[i], e = args.Get(i)
+					if e != nil {
+						ddaThrow(cs, e)
+						return
+					}
+				}
+				list, e := cs.NewArrayWithElements(values)
+				if e != nil {
+					ddaThrow(cs, e)
+					return
+				}
+				construct, e := cs.Scope().Boolean(args.IsConstructCall())
+				if e != nil {
+					ddaThrow(cs, e)
+					return
+				}
+				result, ok, e := ddaInvoke(cs, d, "call", list, construct)
+				if e != nil {
+					ddaThrow(cs, e)
+					return
+				}
+				if ok {
+					_ = rv.Set(result)
+				}
+			}, data)
+			if err != nil {
+				return nil, err
 			}
-			list, e := cs.NewArrayWithElements(values)
-			if e != nil {
-				ddaThrow(cs, e)
-				return
-			}
-			construct, e := cs.Scope().Boolean(args.IsConstructCall())
-			if e != nil {
-				ddaThrow(cs, e)
-				return
-			}
-			result, ok, e := ddaInvoke(cs, d, "call", list, construct)
-			if e != nil {
-				ddaThrow(cs, e)
-				return
-			}
-			if ok {
-				_ = rv.Set(result)
-			}
-		}, data)
-		if err != nil {
-			return nil, err
 		}
 		object, ok, err := ot.NewInstance(scope, realm)
 		if err != nil {

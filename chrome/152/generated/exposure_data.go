@@ -15,6 +15,18 @@ import (
 //go:embed window-secure.json
 var windowSecureJSON []byte
 
+// Frozen headful Chrome 152 secure Window own-key order. The descriptor
+// capture is alphabetized and cannot encode installation order.
+//
+//go:embed window-secure-order.json
+var windowSecureOrderJSON []byte
+
+//go:embed window-insecure-order.json
+var windowInsecureOrderJSON []byte
+
+//go:embed window-secure-isolated-order.json
+var windowSecureIsolatedOrderJSON []byte
+
 //go:embed window-secure-isolated.json
 var windowSecureIsolatedJSON []byte
 
@@ -25,7 +37,7 @@ var workerSecureJSON []byte
 var windowInsecureJSON []byte
 
 var windowInsecureOnce = sync.OnceValue(func() compatibility.RealmExposure {
-	return parseWindowExposure(windowInsecureJSON)
+	return parseOrderedWindowExposure(windowInsecureJSON, windowInsecureOrderJSON)
 })
 
 func InsecureWindowExposure() compatibility.RealmExposure { return windowInsecureOnce() }
@@ -42,13 +54,21 @@ func parseWindowExposure(raw []byte) compatibility.RealmExposure {
 }
 
 var windowSecureOnce = sync.OnceValue(func() compatibility.RealmExposure {
-	return parseWindowExposure(windowSecureJSON)
+	return parseOrderedWindowExposure(windowSecureJSON, windowSecureOrderJSON)
 })
+
+func parseOrderedWindowExposure(raw, order []byte) compatibility.RealmExposure {
+	exposure := parseWindowExposure(raw)
+	if err := json.Unmarshal(order, &exposure.PropertyOrder); err != nil {
+		panic(err)
+	}
+	return exposure
+}
 
 func SecureWindowExposure() compatibility.RealmExposure { return windowSecureOnce() }
 
 var windowSecureIsolatedOnce = sync.OnceValue(func() compatibility.RealmExposure {
-	return parseWindowExposure(windowSecureIsolatedJSON)
+	return parseOrderedWindowExposure(windowSecureIsolatedJSON, windowSecureIsolatedOrderJSON)
 })
 
 func SecureIsolatedWindowExposure() compatibility.RealmExposure { return windowSecureIsolatedOnce() }

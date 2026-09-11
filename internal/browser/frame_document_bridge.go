@@ -84,7 +84,7 @@ func (r *Realm) installFrameDocumentBridge(host map[string]any) {
 		if rawNewTarget["kind"] != "reference" || rawNewTarget["type"] != "function" {
 			return nil, fmt.Errorf("NotSupportedError: cross-realm construction requires a remote newTarget")
 		}
-		return r.crossFrameData(func(ctx context.Context) (any, error) {
+		return r.crossFrameData(target, func(ctx context.Context) (any, error) {
 			newTarget, err := target.decodeFrameArgument(rawNewTarget)
 			if err != nil {
 				return nil, err
@@ -160,7 +160,7 @@ func (r *Realm) installFrameDocumentBridge(host map[string]any) {
 			return nil, fmt.Errorf("cross-realm object is no longer available")
 		}
 		rawKey, rawValue := arg(args, 2), arg(args, 3)
-		return r.crossFrameData(func(ctx context.Context) (any, error) {
+		return r.crossFrameData(target, func(ctx context.Context) (any, error) {
 			key, err := target.decodeFrameKey(ctx, rawKey)
 			if err != nil {
 				return nil, err
@@ -248,6 +248,12 @@ func (r *Realm) callFrameReference(args []engine.Value) (engine.Value, error) {
 		receiver, err := target.decodeFrameArgument(rawReceiver)
 		if err != nil {
 			return nil, err
+		}
+		// The captured native Array iterator next ignores arguments and creates
+		// a fresh result object. Encode its two own data fields with the result
+		// reference, avoiding later owner trips while it remains unexposed.
+		if arg(args, 5) == true {
+			return target.callFrameReflection(ctx, "arrayIteratorStep", function, receiver, nil)
 		}
 		arguments := make([]engine.Value, len(raw))
 		for index := range raw {
@@ -341,10 +347,14 @@ type frameReflection struct {
 // Capture intrinsics before document scripts can replace Reflect or Symbol.
 // Reflection uses the remote canonical object, never exported object copies.
 const frameReflectionSource = `(()=>{
- const ids=new WeakMap(),weakGet=WeakMap.prototype.get,weakSet=WeakMap.prototype.set,P=Proxy,isArray=Array.isArray,integer=BigInt,keys=Reflect.ownKeys,descriptor=Reflect.getOwnPropertyDescriptor,get=Reflect.get,set=Reflect.set,contains=Reflect.has,prototype=Reflect.getPrototypeOf,construct=Reflect.construct,apply=Reflect.apply,has=Object.prototype.hasOwnProperty,S=Symbol,forKey=Symbol.for,keyFor=Symbol.keyFor,description=descriptor(Symbol.prototype,'description').get;
+ const arrayIteratorNext=Object.getPrototypeOf([][Symbol.iterator]()).next,freshIteratorResults=new WeakSet(),freshAdd=WeakSet.prototype.add,freshDelete=WeakSet.prototype.delete;
+ const ids=new WeakMap(),weakGet=WeakMap.prototype.get,weakSet=WeakMap.prototype.set,P=Proxy,isArray=Array.isArray,integer=BigInt,keys=Reflect.ownKeys,descriptor=Reflect.getOwnPropertyDescriptor,get=Reflect.get,set=Reflect.set,define=Reflect.defineProperty,remove=Reflect.deleteProperty,contains=Reflect.has,prototype=Reflect.getPrototypeOf,construct=Reflect.construct,apply=Reflect.apply,has=Object.prototype.hasOwnProperty,S=Symbol,forKey=Symbol.for,keyFor=Symbol.keyFor,description=descriptor(Symbol.prototype,'description').get;
  const wellKnown=[],names=keys(Symbol);for(let i=0;i<names.length;i++){const name=names[i];if(typeof Symbol[name]==='symbol')wellKnown[wellKnown.length]=[name,Symbol[name]]}
  const info=key=>{if(typeof key==='string')return{kind:'string',value:key};const result={kind:'symbol',key,description:apply(description,key,[])};for(let i=0;i<wellKnown.length;i++)if(wellKnown[i][1]===key){result.wellKnown=wellKnown[i][0];return result}const global=keyFor(key);if(global!==undefined)result.global=global;return result};
  return(op,object,key,value)=>{
+  if(op==='iteratorNext')return object===arrayIteratorNext;
+  if(op==='arrayIteratorStep'){const result=apply(object,key,[]);if(object===arrayIteratorNext)apply(freshAdd,freshIteratorResults,[result]);return result}
+  if(op==='takeIteratorResult')return apply(freshDelete,freshIteratorResults,[object]);
   if(op==='lookup')return apply(weakGet,ids,[object]);
   if(op==='handle'){let id=apply(weakGet,ids,[object]);if(id===undefined){id=key;apply(weakSet,ids,[object,id])}return id}
   if(op==='array')return [];
@@ -358,6 +368,8 @@ const frameReflectionSource = `(()=>{
   if(op==='keys'){const source=keys(object),out=[];for(let i=0;i<source.length;i++)out[i]=info(source[i]);return out}
   if(op==='get'){const value=get(object,key);return{value,valueType:typeof value,symbol:typeof value==='symbol'?info(value):null}}
   if(op==='set')return set(object,key,value);
+  if(op==='define')return define(object,key,value);
+  if(op==='delete')return remove(object,key);
   if(op==='has')return contains(object,key);
   const d=descriptor(object,key);if(d===undefined)return{exists:false};const accessor=!apply(has,d,['value']);return accessor?{exists:true,accessor:true,enumerable:d.enumerable,configurable:d.configurable,get:d.get,set:d.set}:{exists:true,accessor:false,enumerable:d.enumerable,configurable:d.configurable,writable:d.writable,value:d.value,valueType:typeof d.value,symbol:typeof d.value==='symbol'?info(d.value):null}
  }
@@ -366,9 +378,12 @@ const frameReflectionSource = `(()=>{
 // Classify references in JavaScript, where the canonical WeakMap, intrinsics
 // and wrappers live. Only the first export of an object needs a host retention
 // callback. Repeated reads still inspect live shape (including revoked proxies)
-// and never cache property values, prototypes or access checks.
+// and never cache arbitrary property values, prototypes or access checks.
+// Fresh intrinsic Array iterator results are the sole data-field exception;
+// the importer invalidates those fields before mutation or reference escape.
 const frameValueEncoderSource = `((describe,node,reflect,retain,symbol,frame,realm,parent)=>{
  const global=globalThis,intrinsicEval=globalThis.eval,stringify=JSON.stringify,create=Object.create,keys=Object.keys;
+ const plain=data=>{const out=create(null),names=keys(data);for(let i=0;i<names.length;i++){const key=names[i];out[key]=data[key]}return out};
  const encode=value=>{
   const type=typeof value;
   if(value===undefined)return {__mimicCrossRealm:'undefined'};
@@ -383,11 +398,18 @@ const frameValueEncoderSource = `((describe,node,reflect,retain,symbol,frame,rea
   if(parent&&value===global.parent)return {__mimicCrossRealm:'window',frame:parent};
   let id=reflect('lookup',value);
   if(id===undefined)id=reflect('handle',value,retain(value));
-  const out={__mimicCrossRealm:type==='undefined'?'undetectable':type,frame,realm,handle:id};
+  const out=plain({__mimicCrossRealm:type==='undefined'?'undetectable':type,frame,realm,handle:id});
   if(value===global.document)out.document=true;
   if(value===intrinsicEval)out.eval=true;
   if(type==='object'){const nodeId=node(value);if(nodeId)out.nodeId=nodeId;out.array=reflect('shape',value).array}
-  else if(type==='function')out.constructable=reflect('shape',value).constructable;
+  else if(type==='function'){out.constructable=reflect('shape',value).constructable;if(reflect('iteratorNext',value))out.iteratorNext=true}
+  if(type==='object'&&reflect('takeIteratorResult',value)){
+   out.iteratorResult=create(null);out.iteratorResult.done=plain(encode(value.done));
+   // Do not inspect object-valued results early: e.g. a revoked Proxy must
+   // not throw during next() merely because its later import would throw.
+   const item=value.value,t=typeof item;
+   if(item===undefined||item===null||t==='string'||t==='number'||t==='boolean'||t==='bigint')out.iteratorResult.value=plain(encode(item));
+  }
   return out;
  };
  return value=>{const data=encode(value),out=create(null);const names=keys(data);for(let i=0;i<names.length;i++){const key=names[i];out[key]=data[key]}return stringify(out)};
@@ -433,7 +455,7 @@ func (r *Realm) installFrameReflection(host map[string]any) {
 			if name != "frameOwnKeys" {
 				rawKey = arg(args, 2)
 			}
-			return r.crossFrameData(func(ctx context.Context) (any, error) {
+			return r.crossFrameData(target, func(ctx context.Context) (any, error) {
 				if name == "frameOwnKeys" {
 					keys, err := target.callFrameReflection(ctx, "keys", object, nil, nil)
 					if err != nil {
@@ -616,29 +638,35 @@ func (r *Realm) encodeReflectedValue(record engine.Value) (map[string]any, error
 }
 
 func (r *Realm) reflectFrameGet(target *Realm, object engine.Value, rawKey any) (engine.Value, error) {
-	return r.crossFrameData(func(ctx context.Context) (any, error) {
-		var encoded map[string]any
-		err := target.runOnOwner(ctx, func(ctx context.Context) error {
-			key, err := target.decodeFrameKey(ctx, rawKey)
-			if err != nil {
-				return err
-			}
-			record, err := target.callFrameReflection(ctx, "get", object, key, nil)
-			if err != nil {
-				return err
-			}
-			encoded, err = target.encodeReflectedValue(record)
-			return err
-		})
-		return encoded, err
+	return r.crossFrameData(target, func(ctx context.Context) (any, error) {
+		key, err := target.decodeFrameKey(ctx, rawKey)
+		if err != nil {
+			return nil, err
+		}
+		record, err := target.callFrameReflection(ctx, "get", object, key, nil)
+		if err != nil {
+			return nil, err
+		}
+		return target.encodeReflectedValue(record)
 	})
 }
 
-func (r *Realm) crossFrameData(operation func(context.Context) (any, error)) (engine.Value, error) {
+func (r *Realm) crossFrameData(target *Realm, operation func(context.Context) (any, error)) (engine.Value, error) {
 	var data any
-	run := func(ctx context.Context) error { var err error; data, err = operation(ctx); return err }
+	// Keep reflection and descriptor/key encoding on the same owner turn.
+	// Returning between individual field reads otherwise adds an actor trip
+	// per field (and thousands of trips for Window ownKeys).
+	run := func(ctx context.Context) error {
+		return target.runOnOwner(ctx, func(ctx context.Context) error {
+			var err error
+			data, err = operation(ctx)
+			return err
+		})
+	}
 	var err error
-	if nested, ok := r.runtime.(engine.ReentrantRuntime); ok {
+	if target == r {
+		err = run(context.Background())
+	} else if nested, ok := r.runtime.(engine.ReentrantRuntime); ok {
 		err = nested.RunNested(context.Background(), run)
 	} else {
 		err = run(context.Background())

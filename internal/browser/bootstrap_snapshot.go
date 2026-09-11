@@ -497,15 +497,17 @@ func bootstrapSeedSources(source, capture string) []string {
   const restore=globalThis.__mimicRestoreBootstrap;
   if(typeof restore!=='function')throw new Error('bootstrap snapshot restore hook is missing');
   const define=Object.defineProperty,ownDescriptor=Object.getOwnPropertyDescriptor;
+  const retainedEngineKeys=new Set();
+  for(const key of globalKeys){if(!engineKeys.includes(key))break;retainedEngineKeys.add(key)}
   const published=[];
   for(const key of globalKeys){
-   if(seedEngineKeys.has(key)&&!lateEngineKeys.has(key))continue;
-   if(lateEngineKeys.has(key))continue;
+   if(retainedEngineKeys.has(key))continue;
+   if(lateEngineKeys.has(key)){published.push([key,null]);continue}
    const descriptor=publication.descriptors.get(key)||ownDescriptor(globalThis,key);
    if(descriptor)published.push([key,descriptor]);
   }
   for(const key of Reflect.ownKeys(globalThis)){
-   if(typeof key!=='string'||seedEngineKeys.has(key)&&!lateEngineKeys.has(key))continue;
+   if(typeof key!=='string'||retainedEngineKeys.has(key))continue;
    const descriptor=ownDescriptor(globalThis,key);
    if(descriptor&&!descriptor.configurable)throw new Error('non-configurable snapshot publication: '+key);
    delete globalThis[key];
@@ -515,7 +517,9 @@ func bootstrapSeedSources(source, capture string) []string {
    // V8 installs conditional intrinsics only when deserializing a context.
    // Apply the profile's native-global exposure before publishing Web APIs.
    for(const key of lateEngineKeys)if(!globalKeys.includes(key))delete globalThis[key];
-   for(const [key,descriptor]of published)define(globalThis,key,descriptor);
+   const descriptors=published.map(([key,descriptor])=>[key,descriptor||ownDescriptor(globalThis,key)]);
+   for(const [key]of descriptors)delete globalThis[key];
+   for(const [key,descriptor]of descriptors)if(descriptor)define(globalThis,key,descriptor);
    return restore(host);
   };
   delete globalThis.__mimic;delete globalThis.__mimicSnapshotFinish;
