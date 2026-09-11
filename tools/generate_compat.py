@@ -573,6 +573,10 @@ def check_generated(target: dict) -> None:
             raise RuntimeError(f'Artifact hash mismatch: {name}')
     print('PASS: pinned metadata, artifact hashes, deterministic WebIDL/CDP projections (offline)')
     print('Raw upstream IDL/CDP download and Chrome exposure recapture are separate checks; not performed.')
+    # The legacy stable-1.3 input above stays frozen. The runtime wire schema
+    # comes from the complete exact-Chrome protocol retained independently.
+    from generate_cdp import generate as generate_cdp
+    generate(ROOT, check=True)
 
 
 def main() -> None:
