@@ -478,6 +478,9 @@ def generate_surface_js(catalog: dict) -> str:
     if(!exposed(spec)||!spec.parent)continue;
     const ctor=globals[spec.name],parent=globals[spec.parent];
     if(ctor&&ctor.prototype&&parent&&parent.prototype&&Object.getPrototypeOf(ctor.prototype)!==parent.prototype)Object.setPrototypeOf(ctor.prototype,parent.prototype);
+    // Interface objects inherit too: static members and reflection must use
+    // the same realm's parent, including parents declared later in the catalog.
+    if(typeof ctor==='function'&&typeof parent==='function'&&Object.getPrototypeOf(ctor)!==parent)Object.setPrototypeOf(ctor,parent);
   }}
 }})(__mimic);
 """
