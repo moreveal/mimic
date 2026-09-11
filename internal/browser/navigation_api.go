@@ -19,6 +19,9 @@ func (s *historyFrameState) ensureNavigationIdentity() {
 // Navigation is a projection of the frame's entries in joint session history.
 // Keys survive replacement; IDs identify a particular version of an entry.
 func (r *Realm) navigationEntries() map[string]any {
+	if frame, ok := r.agent.(*Frame); ok && disabledSessionHistory(frame) {
+		return map[string]any{"entries": []any{}, "current": ""}
+	}
 	if !r.activeHistoryDocument() {
 		return map[string]any{"entries": []any{}, "current": ""}
 	}

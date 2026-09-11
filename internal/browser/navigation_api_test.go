@@ -78,3 +78,17 @@ func TestNavigationHashChange(t *testing.T) {
 		historyEval(t, p, `new Promise(resolve=>{addEventListener('hashchange',e=>resolve(e.oldURL.endsWith('/plain')&&e.newURL.endsWith('/plain#target')&&document.querySelector(':target').id==='target'),{once:true});navigation.navigate('#target')})`, true)
 	})
 }
+func TestPictureInPictureFragmentAndDescendantHistoryIsolation(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { w.Write([]byte("<!doctype html><body>fixture")) }))
+	defer server.Close()
+	historyTestPages(t, func(t *testing.T, p *Page) {
+		if err := p.Navigate(context.Background(), server.URL+"/plain"); err != nil {
+			t.Fatal(err)
+		}
+		owner := p.Top.Realm
+		owner.activationAt = owner.scheduler.Now()
+		historyEval(t, p, `(async()=>{const w=await documentPictureInPicture.requestWindow({width:400,height:300});globalThis.aux=w;globalThis.beforeAuxHistory=history.length;w.history.pushState({a:1},'');return new Promise(resolve=>{w.onhashchange=e=>resolve(w.location.href==='about:blank#x'&&w.history.state===null&&history.length===beforeAuxHistory&&!w.closed&&e.oldURL==='about:blank'&&e.newURL==='about:blank#x');w.location.hash='x'})})()`, true)
+		historyEval(t, p, `new Promise(resolve=>{aux.onhashchange=()=>resolve(aux.location.href==='about:blank#y'&&!aux.closed&&history.length===beforeAuxHistory);aux.location.href='about:blank#y'})`, true)
+		historyEval(t, p, `(()=>{const f=aux.document.createElement('iframe');aux.document.body.append(f);f.contentWindow.history.pushState({a:2},'','about:blank#child');return f.contentWindow.history.length===0&&aux.history.length===0&&history.length===beforeAuxHistory&&f.contentWindow.history.state.a===2&&f.contentWindow.navigation.currentEntry===null})()`, true)
+	})
+}

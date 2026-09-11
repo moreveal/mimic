@@ -31,6 +31,19 @@ type historyFrameState struct {
 	storageState    engine.Value // private clone, never exposed to application code
 }
 
+// Chrome disables session history for the complete auxiliary PiP tree.
+// Its documents still own History state and fragment URLs, but never append
+// entries to the opener Page's joint history.
+func disabledSessionHistory(frame *Frame) bool {
+	for frame != nil {
+		if frame.auxiliaryOpener != nil {
+			return true
+		}
+		frame = frame.parent
+	}
+	return false
+}
+
 func historyOrigin(u *url.URL) string {
 	port := u.Port()
 	if (u.Scheme == "http" && port == "80") || (u.Scheme == "https" && port == "443") {
@@ -75,7 +88,7 @@ func (r *Realm) historyPush(raw string, replace bool, state engine.Value) (strin
 	if err != nil || !historyURLAllowed(current, target) {
 		return "A history state object cannot be created with this URL in the current document.", nil
 	}
-	if frame.auxiliaryOpener != nil {
+	if disabledSessionHistory(frame) {
 		r.auxiliaryState, r.auxiliaryStorage = exposed, stored
 		r.url = target
 		return "", nil
@@ -106,6 +119,12 @@ func (r *Realm) historyPush(raw string, replace bool, state engine.Value) (strin
 }
 
 func (p *Page) commitHistory(frame *Frame, target *url.URL, replace bool, state engine.Value, traversal ...int) {
+	if disabledSessionHistory(frame) {
+		frame.Realm.url = target
+		frame.Realm.auxiliaryState = state
+		frame.Realm.auxiliaryStorage = nil
+		return
+	}
 	p.mu.Lock()
 	defer p.mu.Unlock()
 	entry := &sessionHistoryEntry{URL: p.current, frames: make(map[string]*historyFrameState)}
@@ -155,7 +174,7 @@ func (p *Page) commitHistory(frame *Frame, target *url.URL, replace bool, state 
 }
 
 func (r *Realm) historyState() engine.Value {
-	if f, ok := r.agent.(*Frame); ok && f.auxiliaryOpener != nil {
+	if f, ok := r.agent.(*Frame); ok && disabledSessionHistory(f) {
 		if r.auxiliaryState != nil {
 			return r.auxiliaryState
 		}
@@ -186,7 +205,7 @@ func (r *Realm) historyState() engine.Value {
 }
 
 func (r *Realm) historyGo(delta int) {
-	if f, ok := r.agent.(*Frame); ok && f.auxiliaryOpener != nil {
+	if f, ok := r.agent.(*Frame); ok && disabledSessionHistory(f) {
 		return
 	}
 	p := r.agent.Page()
