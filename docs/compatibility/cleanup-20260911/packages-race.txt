@@ -1,0 +1,5 @@
+ok  	github.com/moreveal/mimic/internal/webapi	2.530s
+ok  	github.com/moreveal/mimic/internal/scheduler	1.245s
+ok  	github.com/moreveal/mimic/internal/network	2.623s
+ok  	github.com/moreveal/mimic/internal/cdp	5.580s
+ok  	github.com/moreveal/mimic/internal/engine/v8	1.634s
