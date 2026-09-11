@@ -1,0 +1,58 @@
+{
+  "revision": "cee1376920a445781ac384d31110ddfb597af5c3",
+  "dirty": [
+    " M internal/engine/v8/runtime.go",
+    " M internal/webapi/document_compatibility.js",
+    " M internal/webapi/dom_compatibility.js",
+    " M internal/webapi/fetch_primitives.js",
+    " M internal/webapi/surface.go",
+    " M internal/webapi/surface.js",
+    "?? docs/compatibility/node-exception-20260911/",
+    "?? docs/compatibility/node-name-2026-09-11.md",
+    "?? docs/compatibility/node-name-20260911/",
+    "?? internal/browser/domexception_state_test.go",
+    "?? internal/browser/node_name_test.go",
+    "?? internal/browser/testdata/domexception_state_chrome152.json",
+    "?? internal/browser/testdata/domexception_state_oracle.js",
+    "?? internal/browser/testdata/domexception_worker_chrome152.json",
+    "?? internal/browser/testdata/domexception_worker_oracle.js",
+    "?? internal/browser/testdata/node_name_chrome152.json",
+    "?? internal/browser/testdata/node_name_oracle.js",
+    "?? internal/engine/v8/host_record_test.go"
+  ],
+  "afterBinarySHA256": "8b8bfbddf42a905f9154838346b72c27bec8bc1a62cdbcff7061cf25b0cff9d3",
+  "beforeBinarySHA256": "7d7cea8db9d465ab89fc8bddfc8533f565ce70dc8ff951f58fdc1d67e7ac27f9",
+  "probes": {
+    "node_name": "be9b63c1c43efa067e0c3bb3146e675af32fd9c6aece7097bb2b6e72414bbac8",
+    "domexception_state": "6b614d7904870429b32d5abe5149368349f93172c4a65f20b9bcf4cad9713171",
+    "domexception_worker": "bb6823a2aa9db7db383799380f7d4cd63cc97b6a10e9d8eb7497575613493e3e"
+  },
+  "chromeMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "unverified-reused-controlled",
+    "visibilityState": "visible",
+    "hasFocus": true
+  }
+}

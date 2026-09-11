@@ -1625,3 +1625,7 @@ caches and DOM arena reclamation remain separate boundaries.
 ## Goja bootstrap cache and exposure transport (2026-09-11)
 
 [Complete checkpoint](../compatibility/bootstrap-transport-2026-09-11.md): five-Page cold/warm Goja waves improve 527.12/443.03 to 485.05/333.42 ms; warm recovery private memory improves 551.71 to 483.23 MiB. Diagnostic post-GC live heap increases 13.72 to 21.57 MiB because compiled code is retained. Both full V8 gates pass with mixed latency/throughput results. Full browser race still fails six Goja deadlines; no data race is reported. Performance neutrality and snapshot P0 closure are not claimed.
+
+## Node names, host records and DOMException package (2026-09-11)
+
+The complete fast gate passes for 660713a against bda67db. Median 10/25 Page throughput changes from 69.42/71.48 to 71.01/69.67 Pages/s. Static/React recovery private memory changes from 159.73/170.54 to 170.93/163.82 MiB. Completion latency increases in this sequential pair; performance neutrality is not established. See [package validation](../compatibility/domexception-state-2026-09-11.md) for latency, test status and evidence. No native dump occurred in this gate; historical snapshot P0 remains open.
