@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/google/uuid"
 	"github.com/moreveal/mimic/internal/engine"
+	"github.com/moreveal/mimic/internal/scheduler"
 	"github.com/moreveal/mimic/internal/trace"
 	"net/url"
 )
@@ -156,12 +157,21 @@ func addNavigationHosts(r *Realm, h map[string]any) {
 			return nil, nil
 		}
 		replace, _ := arg(a, 1).(bool)
+		previousURL := r.documentURL()
 		r.agent.Page().commitHistory(frame, target, replace, nil)
 		p := r.agent.Page()
 		p.mu.Lock()
 		p.history[p.historyIndex].frames[frame.ID].navigationState = strarg(a, 2)
 		p.mu.Unlock()
 		r.updateSelectorTarget(target.Fragment)
+		if previousURL.Scheme == target.Scheme && previousURL.Host == target.Host && previousURL.Path == target.Path && previousURL.RawQuery == target.RawQuery && previousURL.Fragment != target.Fragment {
+			r.browserEventLoop().Post(scheduler.Navigation, 0, func(ctx context.Context) error {
+				if !r.activeHistoryDocument() {
+					return nil
+				}
+				return r.dispatchHashChange(ctx, previousURL, target)
+			})
+		}
 		return nil, nil
 	})
 	h["navigationTraverse"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
