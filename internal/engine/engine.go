@@ -90,6 +90,12 @@ type UndetectableRuntime interface {
 	NewUndetectableObject(handlers Value) (Value, error)
 }
 
+// InterceptedObjectRuntime supplies detectable, noncallable exotic objects.
+// Unlike JS Proxy targets, their descriptors can change when a Window navigates.
+type InterceptedObjectRuntime interface {
+	NewInterceptedObject(handlers Value) (Value, error)
+}
+
 // ArrayBufferDetacher supplies real backing-store detachment where the engine
 // does not expose ArrayBuffer.prototype.transfer. Call only on the realm actor.
 type ArrayBufferDetacher interface {

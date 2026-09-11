@@ -1367,3 +1367,48 @@ Validation: internal/monotime and the full scheduler suite passed, including
 and capture regressions passed with -race (27.5s). A broader -race selection
 also included performance profiles and was stopped before completion; no full
 performance-matrix or full browser race-suite result is claimed.
+
+
+## Window reflection and iterator-result bridge, 2026-09-11
+
+The WindowProxy reflection fix preserves the complete Chrome key surface; the
+pre-fix parent enumeration's tiny wrapper result is not a valid fast baseline.
+Publication order now matches frozen secure/insecure/isolated Window captures.
+See [compatibility scope and correctness](../compatibility/window-reflection-2026-09-11.md).
+
+A bounded A/B/B/A experiment compares identical corrected builds with the fresh
+native iterator-result specialization enabled/disabled (10 observations each).
+The same 1234 keys, property types, identity, descriptors and getter counts agree
+in every observation. Complete local operation median: **520.35 → 288.65 ms**
+(44.5% reduction); remote-array materialization median: **340.20 → 140.75 ms**.
+No iterator lookahead or array snapshot is used. The result's primitive fields
+are invalidated before mutation or any direct/transitive reference escape.
+Ordinary remote reflection metadata is encoded on one owner turn. Raw controls:
+`compatibility/private-captures/window-sweep-controls-20260911/`.
+These numbers exclude iframe creation and are not a protected-site timing claim.
+
+The unchanged fast gate was run on fresh b94c63c and corrected builds. The first
+corrected run lost its process in the 25-Page static wave; exact failure cause
+is unavailable because the frozen runner removed its process log. Baseline and
+corrected repeat completed all mandatory workloads and concurrency/memory gates.
+The repeat captures process logs through a wrapper around Runtime.close, without
+changing the frozen workloads or assertions. The intermittent failure remains
+open, not reclassified as a confirmed preexisting defect.
+
+| Warm median, ms | b94c63c baseline | Corrected repeat |
+|---|---:|---:|
+| DOM execution / completion | 449.70 / 472.95 | 461.19 / 497.38 |
+| Static execution / completion | 2.99 / 22.84 | 2.95 / 24.04 |
+| React execution / completion | 56.32 / 83.75 | 56.10 / 84.07 |
+
+Single-wave process-tree private memory (MiB), 10 simultaneous Pages:
+
+| Workload | Baseline active / after recovery | Corrected active / after recovery |
+|---|---:|---:|
+| Static | 431.48 / 165.07 | 444.89 / 171.89 |
+| React | 484.71 / 173.96 | 492.73 / 173.52 |
+
+Ready private memory is about77MiB. Recovery is the harness's250ms window, not
+forced GC or proof of leak absence. This batch improves cross-frame iteration;
+it does not claim a general workload speedup or lower memory usage. Receipts:
+`.build/window-reflection-fast-gate{,-baseline,-repeat}/raw.json` and build.json.

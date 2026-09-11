@@ -607,6 +607,7 @@ func (r *Realm) installBindings() error {
 		return r.callFrameReference(a)
 	})
 	r.installFrameDocumentBridge(host)
+	r.installWindowReflection(host)
 	host["frameGet"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		target, err := r.referenceRealm(strarg(a, 0), strarg(a, 3))
 		if err != nil {

@@ -1,0 +1,112 @@
+{
+  "browser": "Chrome 152.0.7977.82 headful",
+  "result": {
+    "result": {
+      "type": "object",
+      "value": {
+        "namesEqual": true,
+        "requiredKeys": true,
+        "descriptors": {
+          "Object": {
+            "enumerable": false,
+            "configurable": true,
+            "type": "function",
+            "writable": true
+          },
+          "document": {
+            "enumerable": true,
+            "configurable": false,
+            "get": "function",
+            "set": "undefined"
+          },
+          "window": {
+            "enumerable": true,
+            "configurable": false,
+            "get": "function",
+            "set": "undefined"
+          },
+          "location": {
+            "enumerable": true,
+            "configurable": false,
+            "get": "function",
+            "set": "function"
+          },
+          "undefined": {
+            "enumerable": false,
+            "configurable": false,
+            "type": "undefined",
+            "writable": false
+          },
+          "NaN": {
+            "enumerable": false,
+            "configurable": false,
+            "type": "number",
+            "writable": false
+          },
+          "missing": null
+        },
+        "documentIdentity": true,
+        "objectIdentity": true,
+        "prototypeIdentity": true,
+        "preventExtensions": false,
+        "extensible": true,
+        "samePrototype": true,
+        "otherPrototype": false,
+        "accessor": {
+          "enumerable": true,
+          "configurable": true,
+          "get": "function",
+          "set": "undefined"
+        },
+        "readsBefore": 0,
+        "readValue": 17,
+        "readsAfter": 1,
+        "fixed": {
+          "enumerable": false,
+          "configurable": false,
+          "type": "number",
+          "writable": false
+        },
+        "fixedValue": 23,
+        "symbol": true,
+        "symbolValue": 31,
+        "define": true,
+        "definedValue": 41,
+        "delete": true,
+        "deleted": true,
+        "windowIdentity": true,
+        "newDocument": true,
+        "newDescriptor": true,
+        "fixedGone": true,
+        "keysAfterNav": true,
+        "crossKeys": [
+          "window",
+          "self",
+          "location",
+          "closed",
+          "frames",
+          "length",
+          "top",
+          "opener",
+          "parent",
+          "blur",
+          "close",
+          "focus",
+          "postMessage",
+          "then",
+          "Symbol(Symbol.toStringTag)",
+          "Symbol(Symbol.hasInstance)",
+          "Symbol(Symbol.isConcatSpreadable)"
+        ],
+        "crossDocument": "SecurityError",
+        "crossThen": {
+          "enumerable": false,
+          "configurable": true,
+          "type": "undefined",
+          "writable": false
+        },
+        "crossPrototype": true
+      }
+    }
+  }
+}

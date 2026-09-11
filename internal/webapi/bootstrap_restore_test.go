@@ -23,7 +23,7 @@ func TestBootstrapRestoreRebindsState(t *testing.T) {
  const window=globalThis,document={},documentPolicy={},permissionsPolicySlots=new WeakMap();
  const originalPolicy={clauses:new Map([['old','()']]),origin:'old'};
  permissionsPolicySlots.set(documentPolicy,originalPolicy);
- let host,hostToken=1,intlEnvironment={},security={},windowTop,windowParent,frameElementCache={},uaData={};
+ let host,hostToken=1,bridgeRealmID="old-realm",intlEnvironment={},security={},windowTop,windowParent,frameElementCache={},uaData={};
  const remoteWindowCache=new Map(),remoteDocumentCache=new Map(),crossRealmCache=new Map(),crossRealmSymbols=new Map(),crossRealmSymbolReferences=new Map(),localCrossRealmSymbols=new Map(),elementWrappers=new Map(),documentWrappers=new Map(),tracedAccesses=new Map();
  const caches=[remoteWindowCache,remoteDocumentCache,crossRealmCache,crossRealmSymbols,crossRealmSymbolReferences,localCrossRealmSymbols,elementWrappers,documentWrappers,tracedAccesses];
  for(const cache of caches)cache.set('stale',{});
@@ -34,11 +34,11 @@ func TestBootstrapRestoreRebindsState(t *testing.T) {
  const calls=[];
  class PermissionsPolicy {constructor(token,data){if(token!==2)throw Error('token');permissionsPolicySlots.set(this,{clauses:new Map([['fresh','*']]),origin:data.origin})}}
  const remoteWindow=id=>({id});
- const freshHost={token:()=>2,intlEnvironment:()=>({locale:'en',timeZone:'UTC'}),documentSecurity:()=>({secureContext:true}),permissionsPolicy:()=>({origin:'https://new.test'}),windowRelations:()=>({self:9,top:10,parent:9}),documentRootID:()=>99,ready:()=>calls.push('ready')};
+ const freshHost={token:()=>2,selfRealmID:()=>"new-realm",intlEnvironment:()=>({locale:'en',timeZone:'UTC'}),documentSecurity:()=>({secureContext:true}),permissionsPolicy:()=>({origin:'https://new.test'}),windowRelations:()=>({self:9,top:10,parent:9}),documentRootID:()=>99,ready:()=>calls.push('ready')};
  for(const [name,args] of bootstrapCallbacks)freshHost[name]=(...actual)=>{if(actual.length!==args.length||actual.some((v,i)=>v!==args[i]))throw Error('callback identity');calls.push(name)};
  ` + handwrittenSurface[start:start+end] + `
  __mimicRestoreBootstrap(freshHost);
- if(host!==freshHost||hostToken!==2||intlEnvironment.locale!=='en'||!security.secureContext)throw Error('host state');
+ if(host!==freshHost||hostToken!==2||bridgeRealmID!=="new-realm"||intlEnvironment.locale!=='en'||!security.secureContext)throw Error('host state');
  if(permissionsPolicySlots.get(documentPolicy)!==originalPolicy||originalPolicy.origin!=='https://new.test'||originalPolicy.clauses.has('old'))throw Error('canonical policy');
  if(windowTop.id!==10||windowParent!==window||root!==99)throw Error('topology/root');
  if(caches.some(cache=>cache.size)||nextCrossRealmSymbolID!==0||frameElementCache!==undefined||uaData!==undefined)throw Error('stale cache');
