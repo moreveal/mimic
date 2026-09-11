@@ -112,6 +112,7 @@ func (r *Realm) deactivate() {
 	r.checkpointClosed = true
 	r.scheduler.Close()
 	r.cancelResources()
+	r.closeSpeechProvider()
 	if r.documentStream != nil {
 		r.documentStream.cancel()
 		r.documentStream.parser.Abort()

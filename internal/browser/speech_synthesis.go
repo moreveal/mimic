@@ -51,6 +51,9 @@ func (r *Realm) speechState() *speechSynthesisState {
 }
 
 func (r *Realm) openSpeechProvider() {
+	if r.inactive || r.closed {
+		return
+	}
 	s := r.speechState()
 	if s.backend != nil {
 		return
@@ -59,8 +62,27 @@ func (r *Realm) openSpeechProvider() {
 		if r.resourceContext.Err() != nil {
 			return
 		}
+		event.Voices = append([]speech.Voice(nil), event.Voices...)
 		r.scheduler.Post(scheduler.DOM, 0, func(ctx context.Context) error { return r.receiveSpeechEvent(ctx, event) })
 	})
+}
+
+// Navigation deactivates runnable work before retained JS wrappers are
+// collected. Stop synthesis there, while preserving immutable voice and
+// utterance records for references to the old document.
+func (r *Realm) closeSpeechProvider() {
+	if s := r.speech; s != nil {
+		if s.backend != nil {
+			s.backend.Close()
+			s.backend = nil
+		}
+		s.queue = nil
+		s.runs = map[uint64]*speechRun{}
+		s.current = 0
+		s.started = false
+		s.paused = false
+		s.startedAt = time.Time{}
+	}
 }
 
 func (r *Realm) emitSpeech(ctx context.Context, kind string, id uint64, details map[string]any) error {
@@ -105,6 +127,9 @@ func (r *Realm) speechElapsed() float64 {
 }
 
 func (r *Realm) startSpeech() {
+	if r.inactive || r.closed {
+		return
+	}
 	s := r.speechState()
 	if s.current != 0 || s.paused || len(s.queue) == 0 {
 		return
@@ -133,6 +158,9 @@ func (r *Realm) receiveSpeechEvent(ctx context.Context, event speech.Event) erro
 		return r.emitSpeech(ctx, "voiceschanged", 0, nil)
 	}
 	if event.Kind == "pause" || event.Kind == "resume" {
+		if event.ID != 0 && event.ID != s.current {
+			return nil
+		}
 		s.paused = event.Kind == "pause"
 		if event.ID != 0 && event.ID == s.current {
 			return r.emitSpeechRun(ctx, event.Kind, s.runs[event.ID], map[string]any{"elapsedTime": r.speechElapsed()})
@@ -228,6 +256,9 @@ func addSpeechHosts(r *Realm, h map[string]any) {
 			}
 			return nil, nil
 		case "speak":
+			if r.inactive || r.closed {
+				return nil, nil
+			}
 			id := uint64(numarg(a, 1))
 			owner := r
 			if ownerID := strarg(a, 2); ownerID != "" && ownerID != r.ID {
