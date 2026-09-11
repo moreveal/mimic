@@ -33,6 +33,11 @@ import (
 )
 
 type Realm struct {
+	auxiliaryState          engine.Value
+	auxiliaryStorage        engine.Value
+	pictureInPicture        *Frame
+	pipLifecycle            engine.Value
+	activationConsumed      bool
 	cookieNotifier          engine.Value
 	launchNotifier          engine.Value
 	cookieUnsubscribe       func()
@@ -494,6 +499,9 @@ func (r *Realm) runTask(ctx context.Context, source scheduler.Source, callback s
 
 func (r *Realm) readyQueues(queues []*scheduler.Scheduler) []*scheduler.Scheduler {
 	queues = append(queues, r.scheduler)
+	if f := r.pictureInPicture; f != nil && f.Realm != nil && !f.Realm.inactive {
+		queues = f.Realm.readyQueues(queues)
+	}
 	for _, frame := range r.childFrames {
 		if frame.Realm != nil {
 			queues = frame.Realm.readyQueues(queues)
@@ -843,6 +851,8 @@ func (r *Realm) installBindings() error {
 			}
 			return r.val(r.windowStatus), nil
 		case "closed":
+			return r.val(frame.windowClosing || p.frames[frame.ID] != frame), nil
+		case "documentHidden":
 			return r.val(p.frames[frame.ID] != frame), nil
 		}
 		return r.val(nil), nil
@@ -872,10 +882,14 @@ func (r *Realm) installBindings() error {
 		w := p.Environment().Window
 		p.mu.RLock()
 		frame, isFrame := r.agent.(*Frame)
-		detached := isFrame && frame.parent != nil && p.frames[frame.ID] != frame
+		detached := isFrame && frame != p.Top && p.frames[frame.ID] != frame
 		p.mu.RUnlock()
 		if detached {
 			return r.val(map[string]any{"width": 0, "height": 0, "outerWidth": 0, "outerHeight": 0, "screenX": w.X, "screenY": w.Y}), nil
+		}
+		if isFrame && frame.auxiliaryOpener != nil {
+			w.ViewportWidth, w.ViewportHeight = frame.auxiliaryWidth, frame.auxiliaryHeight
+			w.OuterWidth, w.OuterHeight = frame.auxiliaryWidth, frame.auxiliaryHeight
 		}
 		if frame, ok := r.agent.(*Frame); ok && frame.parent != nil && frame.parent.Realm != nil {
 			parent := frame.parent.Realm
@@ -1786,7 +1800,12 @@ func (r *Realm) installBindings() error {
 		r.historyGo(int(numarg(a, 0)))
 		return nil, nil
 	})
-	host["historyLength"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(p.historyLength()), nil })
+	host["historyLength"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		if f, ok := r.agent.(*Frame); ok && f.auxiliaryOpener != nil {
+			return r.val(0), nil
+		}
+		return r.val(p.historyLength()), nil
+	})
 	host["setTimer"] = r.fn(r.hostTimer)
 	host["clearTimer"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		r.scheduler.Cancel(uint64(numarg(a, 0)))
@@ -2126,6 +2145,10 @@ func (r *Realm) recordAPIAccess(name string, supported bool) {
 	}
 }
 func (r *Realm) postNavigate(raw string, replaceOption ...bool) error {
+	if frame, ok := r.agent.(*Frame); ok && frame.auxiliaryOpener != nil {
+		r.scheduler.Post(scheduler.Navigation, 0, func(context.Context) error { r.closePictureInPictureWindow(frame, false); return nil })
+		return nil
+	}
 	r.recordNavigationDiagnostic(raw, replaceOption)
 	u, err := r.resolveDocument(raw)
 	if err != nil {
@@ -2158,7 +2181,7 @@ func (r *Realm) postNavigate(raw string, replaceOption ...bool) error {
 	return nil
 }
 func (r *Realm) navigationActivated() bool {
-	return !r.activationAt.IsZero() && r.scheduler.Now().Sub(r.activationAt) < 5*time.Second
+	return !r.activationConsumed && !r.activationAt.IsZero() && r.scheduler.Now().Sub(r.activationAt) < 5*time.Second
 }
 func (r *Realm) hostTimer(_ engine.Value, a []engine.Value) (engine.Value, error) {
 	if len(a) == 0 {

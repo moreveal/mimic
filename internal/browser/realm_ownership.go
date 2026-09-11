@@ -105,6 +105,9 @@ func (r *Realm) deactivate() {
 	if r.inactive {
 		return
 	}
+	if r.pictureInPicture != nil {
+		r.closePictureInPictureWindow(r.pictureInPicture, false)
+	}
 	r.inactive = true
 	r.checkpointClosed = true
 	r.scheduler.Close()

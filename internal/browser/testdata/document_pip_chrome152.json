@@ -1,0 +1,87 @@
+{
+  "initial": [
+    "[object DocumentPictureInPicture]",
+    true,
+    null,
+    null
+  ],
+  "invalid": [
+    [
+      "RangeError",
+      "Failed to execute 'requestWindow' on 'DocumentPictureInPicture': Height must be specified if width is specified"
+    ],
+    [
+      "RangeError",
+      "Failed to execute 'requestWindow' on 'DocumentPictureInPicture': Width must be specified if height is specified"
+    ],
+    [
+      "TypeError",
+      "Failed to execute 'requestWindow' on 'DocumentPictureInPicture': Failed to read the 'width' property from 'DocumentPictureInPictureOptions': Value is outside the 'unsigned long long' value range."
+    ]
+  ],
+  "open": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    null,
+    "about:blank",
+    "about:blank",
+    true,
+    "complete",
+    true,
+    "visible",
+    "",
+    "",
+    false
+  ],
+  "dom": [
+    "hello",
+    true,
+    true,
+    true
+  ],
+  "nested": [
+    "NotAllowedError",
+    "Failed to execute 'requestWindow' on 'DocumentPictureInPicture': Opening a PiP window from a PiP window is not allowed"
+  ],
+  "second": [
+    "NotAllowedError",
+    "Failed to execute 'requestWindow' on 'DocumentPictureInPicture': Document PiP requires user activation"
+  ],
+  "close": [
+    true,
+    true,
+    "visible"
+  ],
+  "later": [
+    true,
+    true,
+    "hidden",
+    null,
+    null,
+    0,
+    0
+  ],
+  "events": [
+    [
+      "enter",
+      true,
+      true,
+      true
+    ],
+    [
+      "pagehide",
+      false,
+      true,
+      true,
+      "hidden"
+    ],
+    [
+      "unload",
+      true,
+      true
+    ]
+  ]
+}
