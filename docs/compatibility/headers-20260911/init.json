@@ -1,0 +1,219 @@
+{
+  "chrome": {
+    "init.short": {
+      "error": "TypeError"
+    },
+    "init.long": {
+      "error": "TypeError"
+    },
+    "init.primitive": {
+      "error": "TypeError"
+    },
+    "init.null": {
+      "error": "TypeError"
+    },
+    "init.override": {
+      "value": [
+        [
+          "x",
+          "a"
+        ]
+      ]
+    }
+  },
+  "before": {
+    "init.long": {
+      "value": [
+        [
+          "x",
+          "a"
+        ]
+      ]
+    },
+    "init.null": {
+      "value": []
+    },
+    "init.override": {
+      "error": "Error"
+    },
+    "init.primitive": {
+      "value": []
+    },
+    "init.short": {
+      "value": [
+        [
+          "x",
+          "undefined"
+        ]
+      ]
+    }
+  },
+  "control": {
+    "init.short": {
+      "error": "TypeError"
+    },
+    "init.long": {
+      "error": "TypeError"
+    },
+    "init.primitive": {
+      "error": "TypeError"
+    },
+    "init.null": {
+      "error": "TypeError"
+    },
+    "init.override": {
+      "value": [
+        [
+          "x",
+          "a"
+        ]
+      ]
+    }
+  },
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "unverified-reused-controlled",
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "sha256": "f7be3c7da01df1fc24d7fbb4dfd00c2d0ad082cbb03fa3489b5bc40b9adf318a",
+  "differences": [
+    [
+      [
+        "init.long",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "init.long",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      [
+        [
+          "x",
+          "a"
+        ]
+      ]
+    ],
+    [
+      [
+        "init.null",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "init.null",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      []
+    ],
+    [
+      [
+        "init.override",
+        "error"
+      ],
+      {
+        "$missing": true
+      },
+      "Error"
+    ],
+    [
+      [
+        "init.override",
+        "value"
+      ],
+      [
+        [
+          "x",
+          "a"
+        ]
+      ],
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "init.primitive",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "init.primitive",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      []
+    ],
+    [
+      [
+        "init.short",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "init.short",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      [
+        [
+          "x",
+          "undefined"
+        ]
+      ]
+    ]
+  ]
+}

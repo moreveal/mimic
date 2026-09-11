@@ -1,0 +1,260 @@
+{
+  "chrome": {
+    "spaced-name": {
+      "error": "TypeError"
+    },
+    "symbol-name": {
+      "error": "TypeError"
+    },
+    "unicode-name": {
+      "error": "TypeError"
+    },
+    "symbol-value": {
+      "error": "TypeError"
+    },
+    "unicode-value": {
+      "error": "TypeError"
+    },
+    "latin-value": {
+      "value": "\u00a0x\u00a0"
+    },
+    "vertical-value": {
+      "value": "\u000bx\u000b"
+    },
+    "conversion.append": {
+      "error": "TypeError"
+    },
+    "conversionLog.append": [
+      "name",
+      "value"
+    ],
+    "immutable.append": {
+      "error": "TypeError"
+    },
+    "conversion.set": {
+      "error": "TypeError"
+    },
+    "conversionLog.set": [
+      "name",
+      "value"
+    ],
+    "immutable.set": {
+      "error": "TypeError"
+    }
+  },
+  "before": {
+    "conversion.append": {
+      "error": "TypeError"
+    },
+    "conversion.set": {
+      "error": "TypeError"
+    },
+    "conversionLog.append": [
+      "name"
+    ],
+    "conversionLog.set": [
+      "name"
+    ],
+    "immutable.append": {
+      "error": "TypeError"
+    },
+    "immutable.set": {
+      "error": "TypeError"
+    },
+    "latin-value": {
+      "value": "x"
+    },
+    "spaced-name": {
+      "value": "ok"
+    },
+    "symbol-name": {
+      "error": "TypeError"
+    },
+    "symbol-value": {
+      "value": "Symbol(x)"
+    },
+    "unicode-name": {
+      "error": "TypeError"
+    },
+    "unicode-value": {
+      "value": "\u0100"
+    },
+    "vertical-value": {
+      "value": "x"
+    }
+  },
+  "control": {
+    "spaced-name": {
+      "error": "TypeError"
+    },
+    "symbol-name": {
+      "error": "TypeError"
+    },
+    "unicode-name": {
+      "error": "TypeError"
+    },
+    "symbol-value": {
+      "error": "TypeError"
+    },
+    "unicode-value": {
+      "error": "TypeError"
+    },
+    "latin-value": {
+      "value": "\u00a0x\u00a0"
+    },
+    "vertical-value": {
+      "value": "\u000bx\u000b"
+    },
+    "conversion.append": {
+      "error": "TypeError"
+    },
+    "conversionLog.append": [
+      "name",
+      "value"
+    ],
+    "immutable.append": {
+      "error": "TypeError"
+    },
+    "conversion.set": {
+      "error": "TypeError"
+    },
+    "conversionLog.set": [
+      "name",
+      "value"
+    ],
+    "immutable.set": {
+      "error": "TypeError"
+    }
+  },
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "unverified-reused-controlled",
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "sha256": "e84896567b5bff505b7d5b7e463e67354840ad1eccc09116259d0c00831e2cca",
+  "differences": [
+    [
+      [
+        "conversionLog.append"
+      ],
+      [
+        "name",
+        "value"
+      ],
+      [
+        "name"
+      ]
+    ],
+    [
+      [
+        "conversionLog.set"
+      ],
+      [
+        "name",
+        "value"
+      ],
+      [
+        "name"
+      ]
+    ],
+    [
+      [
+        "latin-value",
+        "value"
+      ],
+      "\u00a0x\u00a0",
+      "x"
+    ],
+    [
+      [
+        "spaced-name",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "spaced-name",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      "ok"
+    ],
+    [
+      [
+        "symbol-value",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "symbol-value",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      "Symbol(x)"
+    ],
+    [
+      [
+        "unicode-value",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "unicode-value",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      "\u0100"
+    ],
+    [
+      [
+        "vertical-value",
+        "value"
+      ],
+      "\u000bx\u000b",
+      "x"
+    ]
+  ]
+}

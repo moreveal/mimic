@@ -1,0 +1,35 @@
+[
+  {
+    "name": "suite",
+    "args": [
+      "go",
+      "test",
+      "-json",
+      "-timeout=30m",
+      "./internal/browser",
+      "./internal/webapi",
+      "./internal/engine/v8",
+      "./internal/cdp",
+      "./internal/network",
+      "./internal/scheduler"
+    ],
+    "cwd": "E:\\GitHub\\mimic\\.build\\headers-semantics",
+    "exitCode": 0
+  },
+  {
+    "name": "race",
+    "args": [
+      "go",
+      "test",
+      "-race",
+      "-json",
+      "-timeout=15m",
+      "./internal/browser",
+      "-run",
+      "TestHeaders|TestFetch|TestRequest|TestResponse|TestWorker",
+      "-count=1"
+    ],
+    "cwd": "E:\\GitHub\\mimic\\.build\\headers-semantics",
+    "exitCode": 0
+  }
+]
