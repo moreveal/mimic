@@ -33,7 +33,8 @@ async def save(args):
             relative = PurePosixPath(name)
             if relative.is_absolute() or ".." in relative.parts or "\\" in name or ":" in name:
                 raise ValueError(f"Invalid snapshot path: {name!r}")
-            files[relative] = base64.b64decode(encoded, validate=True)
+            # Older servers serialize a nil Go []byte as null for empty assets.
+            files[relative] = b"" if encoded is None else base64.b64decode(encoded, validate=True)
         output = Path(args.output).resolve()
         output.mkdir(parents=True, exist_ok=False)
         for relative, data in files.items():

@@ -374,6 +374,11 @@ func (b *snapshotBuilder) asset(raw string, base *url.URL, css bool) string {
 		}
 		body = []byte(b.rewriteCSS(string(body), resourceBase, true))
 	}
+	// A successful empty response is a zero-byte file. A nil Go slice would
+	// encode as JSON null instead of the base64 string promised by Snapshot.
+	if body == nil {
+		body = []byte{}
+	}
 	b.out.Files[name] = body
 	if fragment != "" {
 		return name + "#" + fragment
