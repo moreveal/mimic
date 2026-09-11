@@ -1,0 +1,7 @@
+--- FAIL: TestFrameDocumentEntryFollowsSynchronousCalls (23.33s)
+    --- FAIL: TestFrameDocumentEntryFollowsSynchronousCalls/goja (22.52s)
+        frame_document_bridge_test.go:135: context deadline exceeded
+FAIL
+FAIL	github.com/moreveal/mimic/internal/browser	123.279s
+ok  	github.com/moreveal/mimic/internal/scheduler	1.252s
+FAIL

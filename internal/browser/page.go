@@ -56,11 +56,13 @@ type Page struct {
 	// initiated a navigation has unwound. Closing the old JS runtime while one
 	// of its callbacks is still on the stack is observably different from
 	// Chrome and also makes the scheduler's microtask checkpoint fail.
-	retiredRealms    []*Realm
-	documentSecurity documentSecurity
-	loadEventEnded   bool
-	messagePorts     map[string]*messagePortState
-	textMetrics      *textmetrics.Engine // Page event-loop owned; lazy local font resources.
+	retiredRealms        []*Realm
+	realmOwners          map[string]*Realm
+	realmEvaluationDepth int
+	documentSecurity     documentSecurity
+	loadEventEnded       bool
+	messagePorts         map[string]*messagePortState
+	textMetrics          *textmetrics.Engine // Page event-loop owned; lazy local font resources.
 	// Cross-realm calls can enqueue jobs in an isolate other than the caller's.
 	// These fields are owned by the Page event loop, never by network goroutines.
 	pendingCheckpoints []*Realm
@@ -112,18 +114,19 @@ func (p *Page) Cookies() *network.CookieStore         { return p.ctx.cookies }
 func (p *Page) NetworkSession() *network.SessionState { return p.ctx.network }
 func (p *Page) Close() error {
 	p.mu.Lock()
-	realm := p.Top.Realm
 	p.Top.Realm = nil
-	retired := p.retiredRealms
+	realms := make([]*Realm, 0, len(p.realmOwners))
+	for _, r := range p.realmOwners {
+		realms = append(realms, r)
+	}
+	p.realmOwners = nil
 	p.retiredRealms = nil
+	p.frames = make(map[string]*Frame)
 	p.history = nil
 	p.historyIndex = -1
 	p.mu.Unlock()
-	if realm != nil {
-		_ = realm.Close()
-	}
-	for _, old := range retired {
-		_ = old.Close()
+	for _, r := range realms {
+		_ = r.Close()
 	}
 	p.textMetrics = nil
 	p.pendingCheckpoints = nil
@@ -218,6 +221,7 @@ func (p *Page) SetViewport(width, height int) error {
 	return nil
 }
 func (p *Page) Navigate(ctx context.Context, raw string) error {
+	defer p.collectRealmOwners()
 	if err := p.navigate(ctx, raw, uuid.NewString()); err != nil {
 		return err
 	}
@@ -342,11 +346,7 @@ func (p *Page) navigateRequest(ctx context.Context, raw, loaderID string, reques
 	policies = append(policies, navigationMetaPolicies...)
 	p.policy = csp.Parse(policies...)
 	p.mu.Unlock()
-	if old != nil {
-		p.mu.Lock()
-		p.retiredRealms = append(p.retiredRealms, old)
-		p.mu.Unlock()
-	}
+	p.retireRealm(old)
 	p.trace.Add(trace.Lifecycle, "frameNavigated", map[string]any{"url": u.String(), "realm": realm.ID})
 	streamState, err := realm.initializeNavigationStream()
 	if err != nil {
@@ -681,6 +681,8 @@ func (p *Page) EvaluateFrame(ctx context.Context, frameID, source string) (any, 
 }
 
 func (p *Page) evaluateRealm(ctx context.Context, r *Realm, source string) (any, error) {
+	p.realmEvaluationDepth++
+	defer func() { p.realmEvaluationDepth--; p.collectRealmOwners() }()
 	if r == nil {
 		return nil, fmt.Errorf("page has no realm; navigate first")
 	}
@@ -824,15 +826,8 @@ func (p *Page) AdvanceTime(ctx context.Context, delta time.Duration) error {
 	return fmt.Errorf("page scheduler task limit exceeded")
 }
 
-func (p *Page) closeRetiredRealms() {
-	p.mu.Lock()
-	retired := p.retiredRealms
-	p.retiredRealms = nil
-	p.mu.Unlock()
-	for _, realm := range retired {
-		_ = realm.Close()
-	}
-}
+func (p *Page) closeRetiredRealms() { p.collectRealmOwners() }
+
 func (p *Page) Resume() {
 	p.mu.RLock()
 	defer p.mu.RUnlock()

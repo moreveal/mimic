@@ -9,6 +9,20 @@ import (
 )
 
 func (r *Realm) installFrameDocumentBridge(host map[string]any) {
+	host["retainWindowReference"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		r.retainWindowReference(strarg(args, 0))
+		return nil, nil
+	})
+	host["selfRealmID"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(r.ID), nil })
+	host["frameEvalAllowed"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		// Frozen Chrome gates a retained eval function against the current
+		// Window's origin before argument handling, unlike ordinary functions.
+		return r.val(r.canAccess(r.agent.Page().frame(strarg(args, 0)))), nil
+	})
+	host["frameCanAccess"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		target, err := r.referenceRealm(strarg(args, 0), strarg(args, 1))
+		return r.val(err == nil && target != nil), nil
+	})
 	r.installFrameReflection(host)
 	// Describe references in one invocation on their owner. Otherwise every
 	// type/identity/shape query makes a separate round trip to the V8 actor.
@@ -18,6 +32,7 @@ func (r *Realm) installFrameDocumentBridge(host map[string]any) {
 		if err != nil {
 			return nil, err
 		}
+		r.retainEncoded(encoded)
 		return r.val(encoded), nil
 	}))
 	r.frameValueRetain = r.val(r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
@@ -41,13 +56,6 @@ func (r *Realm) installFrameDocumentBridge(host map[string]any) {
 		}
 		return nil, nil
 	})
-	host["frameDocumentRoot"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
-		frame := r.agent.Page().frame(strarg(args, 0))
-		if !r.canAccess(frame) {
-			return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
-		}
-		return r.val(frame.Realm.document.Root().ID), nil
-	})
 	host["frameReference"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		value := args[0]
 		return r.crossFrameResult(r, func(context.Context) (engine.Value, error) { return value, nil })
@@ -63,13 +71,12 @@ func (r *Realm) installFrameDocumentBridge(host map[string]any) {
 		return value, nil
 	})
 	host["frameConstruct"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
-		frame := r.agent.Page().frame(strarg(args, 0))
-		if !r.canAccess(frame) {
-			return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
+		target, err := r.referenceRealm(strarg(args, 0), strarg(args, 4))
+		if err != nil {
+			return nil, err
 		}
-		target := frame.Realm
 		function := target.crossValues[int64(numarg(args, 1))]
-		if function == nil || strarg(args, 4) != target.ID {
+		if function == nil {
 			return nil, fmt.Errorf("cross-realm constructor is no longer available")
 		}
 		raw, _ := arg(args, 2).([]any)
@@ -110,28 +117,19 @@ func (r *Realm) installFrameDocumentBridge(host map[string]any) {
 			return map[string]any{"threw": target.runtime.GetProperty(record, "threw").Export(), "value": encoded}, nil
 		})
 	})
-	host["frameDocumentGet"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
-		frame := r.agent.Page().frame(strarg(args, 0))
-		if !r.canAccess(frame) {
-			return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
-		}
-		target := frame.Realm
-		property := strarg(args, 1)
-		return r.crossFrameResult(target, func(context.Context) (engine.Value, error) {
-			return target.runtime.GetProperty(target.runtime.Get("document"), property), nil
-		})
-	})
-	host["frameDocumentSet"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
-		frame := r.agent.Page().frame(strarg(args, 0))
-		if !r.canAccess(frame) {
-			return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
-		}
-		target := frame.Realm
-		value, err := target.decodeFrameArgument(arg(args, 2))
+	host["frameGlobalHas"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		target, err := r.referenceRealm(strarg(args, 0), "")
 		if err != nil {
 			return nil, err
 		}
-		return nil, target.runtime.SetProperty(target.runtime.Get("document"), strarg(args, 1), value)
+		rawKey := arg(args, 1)
+		return r.crossFrameResult(target, func(ctx context.Context) (engine.Value, error) {
+			key, err := target.decodeFrameKey(ctx, rawKey)
+			if err != nil {
+				return nil, err
+			}
+			return target.callFrameReflection(ctx, "has", target.runtime.Get("globalThis"), key, nil)
+		})
 	})
 	host["frameGlobalSet"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		frame := r.agent.Page().frame(strarg(args, 0))
@@ -153,13 +151,9 @@ func (r *Realm) installFrameDocumentBridge(host map[string]any) {
 		})
 	})
 	host["frameSet"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
-		frame := r.agent.Page().frame(strarg(args, 0))
-		if !r.canAccess(frame) {
-			return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
-		}
-		target := frame.Realm
-		if strarg(args, 4) != target.ID {
-			return nil, fmt.Errorf("cross-realm object is no longer available")
+		target, err := r.referenceRealm(strarg(args, 0), strarg(args, 4))
+		if err != nil {
+			return nil, err
 		}
 		object := target.crossValues[int64(numarg(args, 1))]
 		if object == nil {
@@ -201,61 +195,51 @@ func (r *Realm) decodeFrameArgument(raw any) (engine.Value, error) {
 	case "value":
 		return r.runtime.Value(argument["value"]), nil
 	case "reference":
-		if argument["frame"] != r.agent.ContextID() {
-			frameID, _ := argument["frame"].(string)
-			source := r.agent.Page().frame(frameID)
-			if !r.canAccess(source) {
-				return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
+		frameID, _ := argument["frame"].(string)
+		realmID, _ := argument["realm"].(string)
+		if argument["type"] == "window" {
+			// Window references denote a browsing context and follow navigation.
+			if frameID == r.agent.ContextID() {
+				return r.runtime.Get("globalThis"), nil
 			}
-			if argument["type"] == "document" || argument["type"] == "window" {
-				if r.frameReferenceImport == nil {
-					return nil, fmt.Errorf("frame reference bridge is not initialized")
-				}
-				return r.runtime.Call(context.Background(), r.frameReferenceImport, nil, r.val(map[string]any{"__mimicCrossRealm": argument["type"], "frame": frameID}))
-			}
-			if source.Realm.ID != argument["realm"] {
-				return nil, fmt.Errorf("cross-realm object is no longer available")
-			}
-			value := source.Realm.crossValues[int64(numberValue(argument["handle"]))]
-			if value == nil {
-				return nil, fmt.Errorf("cross-realm object is no longer available")
-			}
-			if r.frameReferenceImport == nil {
-				return nil, fmt.Errorf("frame reference bridge is not initialized")
-			}
-			encoded, err := source.Realm.crossRealmValue(value)
-			if err != nil {
-				return nil, err
-			}
-			return r.runtime.Call(context.Background(), r.frameReferenceImport, nil, r.val(encoded))
+			return r.importFrameReference(map[string]any{"__mimicCrossRealm": "window", "frame": frameID})
 		}
-		switch argument["type"] {
-		case "document":
-			return r.runtime.Get("document"), nil
-		case "window":
-			return r.runtime.Get("globalThis"), nil
+		source, err := r.referenceRealm(frameID, realmID)
+		if err != nil {
+			return nil, err
 		}
-		if argument["realm"] != r.ID {
-			return nil, fmt.Errorf("cross-realm reference is no longer available")
-		}
-		value := r.crossValues[int64(numberValue(argument["handle"]))]
+		value := source.crossValues[int64(numberValue(argument["handle"]))]
 		if value == nil {
 			return nil, fmt.Errorf("cross-realm reference is no longer available")
 		}
-		return value, nil
+		if source == r {
+			return value, nil
+		}
+		r.retainRealm(source)
+		encoded, err := source.crossRealmValue(value)
+		if err != nil {
+			return nil, err
+		}
+		return r.importFrameReference(encoded)
 	default:
 		return nil, fmt.Errorf("invalid cross-realm argument kind")
 	}
 }
 
-func (r *Realm) callFrameReference(args []engine.Value) (engine.Value, error) {
-	frame := r.agent.Page().frame(strarg(args, 0))
-	if !r.canAccess(frame) {
-		return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
+func (r *Realm) importFrameReference(encoded map[string]any) (engine.Value, error) {
+	if r.frameReferenceImport == nil {
+		return nil, fmt.Errorf("frame reference bridge is not initialized")
 	}
-	target := frame.Realm
+	return r.runtime.Call(context.Background(), r.frameReferenceImport, nil, r.val(encoded))
+}
+
+func (r *Realm) callFrameReference(args []engine.Value) (engine.Value, error) {
+	target, err := r.referenceRealm(strarg(args, 0), strarg(args, 4))
+	if err != nil {
+		return nil, err
+	}
 	function := target.crossValues[int64(numarg(args, 1))]
-	if function == nil || strarg(args, 4) != target.ID {
+	if function == nil {
 		return nil, fmt.Errorf("cross-realm function is no longer available")
 	}
 	raw, _ := arg(args, 2).([]any)
@@ -317,6 +301,7 @@ func (r *Realm) crossFrameResult(target *Realm, operation func(context.Context) 
 	if err != nil {
 		return nil, err
 	}
+	r.retainEncoded(encoded)
 	return r.val(encoded), nil
 }
 
@@ -383,7 +368,7 @@ const frameReflectionSource = `(()=>{
 // callback. Repeated reads still inspect live shape (including revoked proxies)
 // and never cache property values, prototypes or access checks.
 const frameValueEncoderSource = `((describe,node,reflect,retain,symbol,frame,realm,parent)=>{
- const global=globalThis,stringify=JSON.stringify,create=Object.create,keys=Object.keys;
+ const global=globalThis,intrinsicEval=globalThis.eval,stringify=JSON.stringify,create=Object.create,keys=Object.keys;
  const encode=value=>{
   const type=typeof value;
   if(value===undefined)return {__mimicCrossRealm:'undefined'};
@@ -395,11 +380,12 @@ const frameValueEncoderSource = `((describe,node,reflect,retain,symbol,frame,rea
   const reference=describe(value);
   if(reference!==null&&typeof reference==='object')return reference;
   if(value===global)return {__mimicCrossRealm:'window',frame};
-  if(value===global.document)return {__mimicCrossRealm:'document',frame};
   if(parent&&value===global.parent)return {__mimicCrossRealm:'window',frame:parent};
   let id=reflect('lookup',value);
   if(id===undefined)id=reflect('handle',value,retain(value));
   const out={__mimicCrossRealm:type==='undefined'?'undetectable':type,frame,realm,handle:id};
+  if(value===global.document)out.document=true;
+  if(value===intrinsicEval)out.eval=true;
   if(type==='object'){const nodeId=node(value);if(nodeId)out.nodeId=nodeId;out.array=reflect('shape',value).array}
   else if(type==='function')out.constructable=reflect('shape',value).constructable;
   return out;
@@ -431,17 +417,13 @@ func (r *Realm) installFrameReflection(host map[string]any) {
 	for _, name := range []string{"frameOwnKeys", "frameDescriptor", "frameHas"} {
 		name := name
 		host[name] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
-			frame := r.agent.Page().frame(strarg(args, 0))
-			if !r.canAccess(frame) {
-				return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
-			}
-			target := frame.Realm
 			realmIndex := 2
 			if name != "frameOwnKeys" {
 				realmIndex = 3
 			}
-			if strarg(args, realmIndex) != target.ID {
-				return nil, fmt.Errorf("cross-realm object is no longer available")
+			target, err := r.referenceRealm(strarg(args, 0), strarg(args, realmIndex))
+			if err != nil {
+				return nil, err
 			}
 			object := target.crossValues[int64(numarg(args, 1))]
 			if object == nil {
@@ -572,13 +554,38 @@ func (r *Realm) decodeFrameKey(ctx context.Context, raw any) (engine.Value, erro
 		return nil, fmt.Errorf("invalid cross-realm property key kind")
 	}
 	if realm, ok := key["realm"].(string); ok && realm != "" {
-		if realm != r.ID {
-			return nil, fmt.Errorf("cross-realm symbol belongs to another realm")
+		if realm == r.ID {
+			value := r.crossValues[int64(numberValue(key["handle"]))]
+			if value == nil {
+				return nil, fmt.Errorf("cross-realm symbol is no longer available")
+			}
+			return value, nil
 		}
-		value := r.crossValues[int64(numberValue(key["handle"]))]
-		if value == nil {
-			return nil, fmt.Errorf("cross-realm symbol is no longer available")
+		source, err := r.referenceRealm("", realm)
+		if err != nil {
+			return nil, err
 		}
+		r.retainRealm(source)
+		sourceKey := realm + ":handle:" + strconv.FormatInt(int64(numberValue(key["handle"])), 10)
+		if id := r.frameReflection.symbolSources[sourceKey]; id != 0 {
+			return r.crossValues[id], nil
+		}
+		encoded := make(map[string]any, len(key)+1)
+		for name, value := range key {
+			encoded[name] = value
+		}
+		encoded["__mimicCrossRealm"] = "symbol"
+		// The JS importer owns the symbol cache used by ownKeys and property
+		// access. Import arguments through that same cache, not a fresh Symbol.
+		value, err := r.importFrameReference(encoded)
+		if err != nil {
+			return nil, err
+		}
+		r.crossValueSeq++
+		id := r.crossValueSeq
+		r.crossValues[id] = value
+		r.frameReflection.symbolSources[sourceKey] = id
+		r.frameReflection.symbolOrigins[id] = map[string]any{"realm": realm, "handle": key["handle"]}
 		return value, nil
 	}
 	var sourceKey string
@@ -639,5 +646,6 @@ func (r *Realm) crossFrameData(operation func(context.Context) (any, error)) (en
 	if err != nil {
 		return nil, err
 	}
+	r.retainEncoded(data)
 	return r.val(data), nil
 }

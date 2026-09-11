@@ -1,0 +1,213 @@
+==================
+WARNING: DATA RACE
+Read at 0x00c000935858 by goroutine 13919:
+  github.com/moreveal/mimic/internal/browser.newPage.func1()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/page.go:80 +0xd0
+  github.com/moreveal/mimic/internal/network.(*Loader).Load()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/network/loader.go:347 +0x5d2b
+  github.com/moreveal/mimic/internal/browser.(*Page).navigateRequest.func4.1()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/page.go:577 +0x1ee
+
+Previous write at 0x00c000935859 by goroutine 1698:
+  github.com/moreveal/mimic/internal/browser.TestNavigatorPermissionAndNetworkState()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/capabilities_test.go:220 +0x178
+  github.com/moreveal/mimic/internal/engine/goja.(*runtime).Eval()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/engine/goja/runtime.go:46 +0x22e
+  github.com/moreveal/mimic/internal/browser.(*Realm).installBindings()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/realm.go:1670 +0xb45a
+  github.com/moreveal/mimic/internal/browser.(*Realm).install()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/realm.go:501 +0x2e
+  github.com/moreveal/mimic/internal/browser.newRealmStateWithNavigation()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/realm.go:217 +0x16b4
+  github.com/moreveal/mimic/internal/browser.newRealmState()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/realm.go:170 +0x2ef
+  github.com/moreveal/mimic/internal/browser.newRealm()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/realm.go:159 +0xe58
+  github.com/moreveal/mimic/internal/browser.(*Page).navigateRequest()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/page.go:321 +0xe1e
+  github.com/moreveal/mimic/internal/browser.(*Page).navigate()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/page.go:253 +0x126
+  github.com/moreveal/mimic/internal/browser.(*Page).Navigate()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/page.go:221 +0x1d
+  github.com/moreveal/mimic/internal/browser.navigateCapabilityFixtureMode()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/capabilities_test.go:32 +0x131
+  github.com/moreveal/mimic/internal/browser.navigateCapabilityFixture()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/capabilities_test.go:19 +0x53
+  github.com/moreveal/mimic/internal/browser.TestNavigatorPermissionAndNetworkState()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/capabilities_test.go:214 +0x41
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2036 +0x1ca
+  testing.(*T).Run.gowrap1()
+      C:/Program Files/Go/src/testing/testing.go:2101 +0x38
+
+Goroutine 13919 (running) created at:
+  github.com/moreveal/mimic/internal/browser.(*Page).navigateRequest.func4()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/page.go:575 +0x331
+  github.com/moreveal/mimic/internal/scheduler.(*Scheduler).run()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/scheduler/scheduler.go:322 +0x6f6
+  github.com/moreveal/mimic/internal/scheduler.(*Scheduler).RunReadyStep()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/scheduler/scheduler.go:239 +0x17b
+  github.com/moreveal/mimic/internal/scheduler.RunReadyAcross()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/scheduler/scheduler.go:281 +0x4b3
+  github.com/moreveal/mimic/internal/browser.(*Realm).RunReady()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/realm.go:386 +0x6c
+  github.com/moreveal/mimic/internal/browser.(*Page).navigateRequest()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/page.go:594 +0x3b4b
+  github.com/dop251/goja.(*vm).runTry()
+      C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/vm.go:873 +0x38d
+  github.com/dop251/goja.(*Runtime).RunProgram()
+      C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/runtime.go:1475 +0x7a4
+  github.com/dop251/goja.(*Runtime).RunScript()
+      C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/runtime.go:1411 +0xb4
+  github.com/moreveal/mimic/internal/engine/goja.(*runtime).Eval()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/engine/goja/runtime.go:46 +0x22e
+  github.com/moreveal/mimic/internal/browser.(*Realm).installBindings()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/realm.go:1670 +0xb45a
+  github.com/moreveal/mimic/internal/browser.(*Realm).install()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/realm.go:501 +0x2e
+  github.com/moreveal/mimic/internal/browser.newRealmStateWithNavigation()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/realm.go:217 +0x16b4
+  github.com/moreveal/mimic/internal/browser.newRealmState()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/realm.go:170 +0x2ef
+  github.com/moreveal/mimic/internal/browser.newRealm()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/realm.go:159 +0xe58
+  github.com/moreveal/mimic/internal/browser.(*Page).navigateRequest()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/page.go:321 +0xe1e
+  github.com/moreveal/mimic/internal/browser.(*Page).navigate()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/page.go:253 +0x126
+  github.com/moreveal/mimic/internal/browser.(*Page).Navigate()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/page.go:221 +0x1d
+  github.com/moreveal/mimic/internal/browser.navigateCapabilityFixtureMode()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/capabilities_test.go:32 +0x131
+  github.com/moreveal/mimic/internal/browser.navigateCapabilityFixture()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/capabilities_test.go:19 +0x53
+  github.com/moreveal/mimic/internal/browser.TestNavigatorPermissionAndNetworkState()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/capabilities_test.go:214 +0x41
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2036 +0x1ca
+  testing.(*T).Run.gowrap1()
+      C:/Program Files/Go/src/testing/testing.go:2101 +0x38
+
+Goroutine 1698 (running) created at:
+  testing.(*T).Run()
+      C:/Program Files/Go/src/testing/testing.go:2101 +0xb2a
+  testing.runTests.func1()
+      C:/Program Files/Go/src/testing/testing.go:2585 +0x85
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2036 +0x1ca
+  testing.runTests()
+      C:/Program Files/Go/src/testing/testing.go:2583 +0x9f7
+  testing.(*M).Run()
+      C:/Program Files/Go/src/testing/testing.go:2443 +0xf4b
+  main.main()
+      _testmain.go:666 +0x164
+==================
+==================
+WARNING: DATA RACE
+Read at 0x00c0009358b0 by goroutine 13919:
+  github.com/moreveal/mimic/internal/browser.newPage.func1()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/page.go:80 +0xd0
+  github.com/moreveal/mimic/internal/network.(*Loader).Load()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/network/loader.go:350 +0x5fc2
+  github.com/moreveal/mimic/internal/browser.(*Page).navigateRequest.func4.1()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/page.go:577 +0x1ee
+
+Previous write at 0x00c0009358b0 by goroutine 1698:
+  github.com/moreveal/mimic/internal/browser.TestNavigatorPermissionAndNetworkState()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/capabilities_test.go:218 +0x136
+  github.com/moreveal/mimic/internal/engine/goja.(*runtime).Eval()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/engine/goja/runtime.go:46 +0x22e
+  github.com/moreveal/mimic/internal/browser.(*Realm).installBindings()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/realm.go:1670 +0xb45a
+  github.com/moreveal/mimic/internal/browser.(*Realm).install()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/realm.go:501 +0x2e
+  github.com/moreveal/mimic/internal/browser.newRealmStateWithNavigation()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/realm.go:217 +0x16b4
+  github.com/moreveal/mimic/internal/browser.newRealmState()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/realm.go:170 +0x2ef
+  github.com/moreveal/mimic/internal/browser.newRealm()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/realm.go:159 +0xe58
+  github.com/moreveal/mimic/internal/browser.(*Page).navigateRequest()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/page.go:321 +0xe1e
+  github.com/moreveal/mimic/internal/browser.(*Page).navigate()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/page.go:253 +0x126
+  github.com/moreveal/mimic/internal/browser.(*Page).Navigate()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/page.go:221 +0x1d
+  github.com/moreveal/mimic/internal/browser.navigateCapabilityFixtureMode()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/capabilities_test.go:32 +0x131
+  github.com/moreveal/mimic/internal/browser.navigateCapabilityFixture()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/capabilities_test.go:19 +0x53
+  github.com/moreveal/mimic/internal/browser.TestNavigatorPermissionAndNetworkState()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/capabilities_test.go:214 +0x41
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2036 +0x1ca
+  testing.(*T).Run.gowrap1()
+      C:/Program Files/Go/src/testing/testing.go:2101 +0x38
+
+Goroutine 13919 (running) created at:
+  github.com/moreveal/mimic/internal/browser.(*Page).navigateRequest.func4()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/page.go:575 +0x331
+  github.com/moreveal/mimic/internal/scheduler.(*Scheduler).run()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/scheduler/scheduler.go:322 +0x6f6
+  github.com/moreveal/mimic/internal/scheduler.(*Scheduler).RunReadyStep()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/scheduler/scheduler.go:239 +0x17b
+  github.com/moreveal/mimic/internal/scheduler.RunReadyAcross()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/scheduler/scheduler.go:281 +0x4b3
+  github.com/moreveal/mimic/internal/browser.(*Realm).RunReady()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/realm.go:386 +0x6c
+  github.com/moreveal/mimic/internal/browser.(*Page).navigateRequest()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/page.go:594 +0x3b4b
+  github.com/dop251/goja.(*vm).runTry()
+      C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/vm.go:873 +0x38d
+  github.com/dop251/goja.(*Runtime).RunProgram()
+      C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/runtime.go:1475 +0x7a4
+  github.com/dop251/goja.(*Runtime).RunScript()
+      C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/runtime.go:1411 +0xb4
+  github.com/moreveal/mimic/internal/engine/goja.(*runtime).Eval()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/engine/goja/runtime.go:46 +0x22e
+  github.com/moreveal/mimic/internal/browser.(*Realm).installBindings()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/realm.go:1670 +0xb45a
+  github.com/moreveal/mimic/internal/browser.(*Realm).install()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/realm.go:501 +0x2e
+  github.com/moreveal/mimic/internal/browser.newRealmStateWithNavigation()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/realm.go:217 +0x16b4
+  github.com/moreveal/mimic/internal/browser.newRealmState()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/realm.go:170 +0x2ef
+  github.com/moreveal/mimic/internal/browser.newRealm()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/realm.go:159 +0xe58
+  github.com/moreveal/mimic/internal/browser.(*Page).navigateRequest()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/page.go:321 +0xe1e
+  github.com/moreveal/mimic/internal/browser.(*Page).navigate()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/page.go:253 +0x126
+  github.com/moreveal/mimic/internal/browser.(*Page).Navigate()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/page.go:221 +0x1d
+  github.com/moreveal/mimic/internal/browser.navigateCapabilityFixtureMode()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/capabilities_test.go:32 +0x131
+  github.com/moreveal/mimic/internal/browser.navigateCapabilityFixture()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/capabilities_test.go:19 +0x53
+  github.com/moreveal/mimic/internal/browser.TestNavigatorPermissionAndNetworkState()
+      E:/GitHub/mimic-compat-fuzz/.build/compat-baseline/internal/browser/capabilities_test.go:214 +0x41
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2036 +0x1ca
+  testing.(*T).Run.gowrap1()
+      C:/Program Files/Go/src/testing/testing.go:2101 +0x38
+
+Goroutine 1698 (running) created at:
+  testing.(*T).Run()
+      C:/Program Files/Go/src/testing/testing.go:2101 +0xb2a
+  testing.runTests.func1()
+      C:/Program Files/Go/src/testing/testing.go:2585 +0x85
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2036 +0x1ca
+  testing.runTests()
+      C:/Program Files/Go/src/testing/testing.go:2583 +0x9f7
+  testing.(*M).Run()
+      C:/Program Files/Go/src/testing/testing.go:2443 +0xf4b
+  main.main()
+      _testmain.go:666 +0x164
+==================
+--- FAIL: TestNavigatorPermissionAndNetworkState (2.07s)
+    testing.go:1712: race detected during execution of test
+FAIL
+FAIL	github.com/moreveal/mimic/internal/browser	11.621s
+FAIL

@@ -1,5 +1,8 @@
 # Compat-fuzz root-cause fixes, block 1
 
+Subsequent authorized work: [navigation and realm ownership block](navigation-ownership.md).
+The stopping point and 22-group count below describe block 1, not the latest state.
+
 Worktree: `E:/GitHub/mimic-compat-fuzz`, branch `codex/compat-fuzz`.
 Starting runtime: `3faacc6`; starting harness: `a98b2d2`.
 Frozen oracle: Chrome 152.0.7977.82, headful, separate fresh session/profile.
