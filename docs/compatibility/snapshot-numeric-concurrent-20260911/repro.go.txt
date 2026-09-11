@@ -1,0 +1,42 @@
+package main
+
+import (
+ "bufio"
+ "context"
+ "fmt"
+ "os"
+ "strings"
+ "sync"
+ "time"
+ gov8 "github.com/maclof/gov8"
+ "github.com/moreveal/mimic/internal/engine"
+ v8 "github.com/moreveal/mimic/internal/engine/v8"
+)
+func check(err error){if err!=nil{panic(err)}}
+func main(){
+ mode:=os.Args[1];fmt.Println("READY",mode);_,err:=bufio.NewReader(os.Stdin).ReadString('\n');check(err)
+ if strings.HasSuffix(mode,"-sealed"){check(gov8.SetFlagsFromString("--no-extensible-ro-snapshot"));mode=strings.TrimSuffix(mode,"-sealed")}
+ ctx,cancel:=context.WithTimeout(context.Background(),90*time.Second);defer cancel()
+ const builders=4
+ var ready,finished sync.WaitGroup;ready.Add(builders);finished.Add(builders)
+ start:=make(chan struct{});release:=make(chan struct{})
+ for worker:=0;worker<builders;worker++{go func(worker int){
+  var snapshots []engine.BootstrapSnapshot;var runtimes []engine.Runtime
+  ready.Done();<-start
+  for round:=1;round<=8;round++{
+   n:=round*1000+worker*17;var source string
+   switch mode{
+   case "arrays":source=fmt.Sprintf(`globalThis.graph=Array.from({length:%d},(_,i)=>[i,i+.5,{value:i}]);globalThis.check=()=>graph.length===%d&&graph[%d][2].value===%d`,n,n,n-1,n-1)
+   case "classes":source=fmt.Sprintf(`class C{constructor(i){this.value=i}read(){return this.value}}globalThis.graph=Array.from({length:%d},(_,i)=>new C(i));globalThis.check=()=>graph.length===%d&&graph[%d].read()===%d`,n,n,n-1,n-1)
+   case "tables":source=fmt.Sprintf(`globalThis.graph=new Map(Array.from({length:%d},(_,i)=>[i,new Set([i,i+1])]));globalThis.check=()=>graph.size===%d&&graph.get(%d).has(%d)`,n,n,n-1,n)
+   default:panic("unknown topology")
+   }
+   fmt.Println("BUILD",worker,round);blob,e:=(v8.Factory{}).BuildBootstrapSnapshot(ctx,source);check(e);snapshots=append(snapshots,blob)
+   fmt.Println("RESTORE",worker,round);r,e:=blob.NewRuntime();check(e);runtimes=append(runtimes,r)
+   for i,r:=range runtimes{v,e:=r.Eval(ctx,"check()","numeric-concurrent-check");check(e);if v.Export()!=true{panic(fmt.Sprintf("graph corruption worker=%d round=%d",worker,i))}}
+  }
+  finished.Done();<-release
+  for _,r:=range runtimes{check(r.Close())};for _,b:=range snapshots{check(b.Close())};ready.Done()
+ }(worker)}
+ ready.Wait();ready.Add(builders);close(start);finished.Wait();close(release);ready.Wait();fmt.Println("PASS")
+}

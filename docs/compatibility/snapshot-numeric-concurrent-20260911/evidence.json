@@ -1,0 +1,309 @@
+{
+  "build": {
+    "revision": "71d54f043fe55ab4ee3cee188862d4e178bd143f",
+    "dirty": "?? internal/engine/v8/bootstrap_snapshot_serialization_test.go\n",
+    "binarySHA256": "cc98e0a415e4f5cb8a23b139abd4197bb0e1eac97662b72824fd6bd823991617",
+    "sourceSHA256": "2ce743f5020cac1d9633e9c23a8fe1a72ed25b519dec8b6e50977116c78c09fb"
+  },
+  "runs": [
+    {
+      "attempt": 1,
+      "mode": "arrays",
+      "pid": 71316,
+      "exitCode": 2,
+      "timeout": false,
+      "monitorCommand": [
+        "E:\\GitHub\\mimic\\.build\\debug-tools\\procdump\\procdump64.exe",
+        "-accepteula",
+        "-ma",
+        "-b",
+        "-e",
+        "1",
+        "-f",
+        "C0000005,80000003",
+        "-n",
+        "1",
+        "71316",
+        "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-numeric-concurrent-20260911\\1-arrays\\native.dmp"
+      ],
+      "dumps": [
+        "native.dmp"
+      ]
+    },
+    {
+      "attempt": 1,
+      "mode": "arrays-sealed",
+      "pid": 71672,
+      "exitCode": 0,
+      "timeout": false,
+      "monitorCommand": [
+        "E:\\GitHub\\mimic\\.build\\debug-tools\\procdump\\procdump64.exe",
+        "-accepteula",
+        "-ma",
+        "-b",
+        "-e",
+        "1",
+        "-f",
+        "C0000005,80000003",
+        "-n",
+        "1",
+        "71672",
+        "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-numeric-concurrent-20260911\\1-arrays-sealed\\native.dmp"
+      ],
+      "dumps": []
+    },
+    {
+      "attempt": 1,
+      "mode": "classes",
+      "pid": 104588,
+      "exitCode": 2,
+      "timeout": false,
+      "monitorCommand": [
+        "E:\\GitHub\\mimic\\.build\\debug-tools\\procdump\\procdump64.exe",
+        "-accepteula",
+        "-ma",
+        "-b",
+        "-e",
+        "1",
+        "-f",
+        "C0000005,80000003",
+        "-n",
+        "1",
+        "104588",
+        "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-numeric-concurrent-20260911\\1-classes\\native.dmp"
+      ],
+      "dumps": [
+        "native.dmp"
+      ]
+    },
+    {
+      "attempt": 1,
+      "mode": "classes-sealed",
+      "pid": 103044,
+      "exitCode": 0,
+      "timeout": false,
+      "monitorCommand": [
+        "E:\\GitHub\\mimic\\.build\\debug-tools\\procdump\\procdump64.exe",
+        "-accepteula",
+        "-ma",
+        "-b",
+        "-e",
+        "1",
+        "-f",
+        "C0000005,80000003",
+        "-n",
+        "1",
+        "103044",
+        "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-numeric-concurrent-20260911\\1-classes-sealed\\native.dmp"
+      ],
+      "dumps": []
+    },
+    {
+      "attempt": 1,
+      "mode": "tables",
+      "pid": 100832,
+      "exitCode": 2,
+      "timeout": false,
+      "monitorCommand": [
+        "E:\\GitHub\\mimic\\.build\\debug-tools\\procdump\\procdump64.exe",
+        "-accepteula",
+        "-ma",
+        "-b",
+        "-e",
+        "1",
+        "-f",
+        "C0000005,80000003",
+        "-n",
+        "1",
+        "100832",
+        "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-numeric-concurrent-20260911\\1-tables\\native.dmp"
+      ],
+      "dumps": [
+        "native.dmp"
+      ]
+    },
+    {
+      "attempt": 1,
+      "mode": "tables-sealed",
+      "pid": 69308,
+      "exitCode": 0,
+      "timeout": false,
+      "monitorCommand": [
+        "E:\\GitHub\\mimic\\.build\\debug-tools\\procdump\\procdump64.exe",
+        "-accepteula",
+        "-ma",
+        "-b",
+        "-e",
+        "1",
+        "-f",
+        "C0000005,80000003",
+        "-n",
+        "1",
+        "69308",
+        "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-numeric-concurrent-20260911\\1-tables-sealed\\native.dmp"
+      ],
+      "dumps": []
+    }
+  ],
+  "native": [
+    {
+      "shape": "arrays",
+      "exceptionCode": "0xc0000005",
+      "rva": "0x5e4be",
+      "symbol": [
+        386064,
+        "?CreateFillerObjectAt@Heap@internal@v8@@QEAAX_KHV?$StrongAlias@UClearFreedMemoryModeTag@internal@v8@@_N@base@3@V?$optional@W4AllocationType@internal@v8@@@__Cr@std@@@Z"
+      ],
+      "offset": 174,
+      "registers": {
+        "rax": "0x19b5ed80999",
+        "rcx": "0x259b83a9b70",
+        "rdx": "0x16b141d4828",
+        "rbx": "0x0",
+        "rsp": "0xcfdbbff490",
+        "rbp": "0x38",
+        "rsi": "0x16b141d4828",
+        "rdi": "0x259b83a9b70",
+        "r8": "0x7d8",
+        "r9": "0x0",
+        "r10": "0x1",
+        "r11": "0xfffffffff8ca5793",
+        "r12": "0x1",
+        "r13": "0x6db6db6db6db6db7",
+        "r14": "0x7d8",
+        "r15": "0x259fddceb70",
+        "rip": "0x7ffc86afe4be"
+      },
+      "instruction": {
+        "bytes": "488906",
+        "mnemonic": "mov",
+        "operands": "qword ptr [rsi], rax"
+      },
+      "destination": "0x16b141d4828",
+      "region": {
+        "base": "0x16b141c0000",
+        "allocationBase": "0x16b141c0000",
+        "size": 86016,
+        "state": "0x1000",
+        "protection": "0x2",
+        "type": "0x20000"
+      },
+      "pageHeader": "0004000000000000708b3db859020000e907d85e9b0100000c0c0c335a08000d",
+      "frames": [
+        "FRAME 0 0x7ffc86afe4be 0xcfdbbff490 ?CreateFillerObjectAt@Heap@internal@v8@@QEAAX_KHV?$StrongAlias@UClearFreedMemoryModeTag@internal@v8@@_N@base@3@V?$optional@W4AllocationType@internal@v8@@@__Cr@std@@@Z 0xae",
+        "FRAME 1 0x7ffc87019f09 0xcfdbbff530 ?RepairFreeSpacesBeforeSerialization@ReadOnlySpace@internal@v8@@QEAAXXZ 0xa9",
+        "FRAME 2 0x7ffc86d22a4d 0xcfdbbff580 ?OnCreateHeapObjectsComplete@ReadOnlyHeap@internal@v8@@QEAAXPEAVIsolate@23@@Z 0x2d",
+        "FRAME 3 0x7ffc86b270c9 0xcfdbbff5c0 ?CreateBlob@SnapshotCreatorImpl@internal@v8@@QEAA?AVStartupData@3@W4FunctionCodeHandling@SnapshotCreator@3@V?$Flags@W4SerializerFlag@Snapshot@internal@v8@@HH@base@3@@Z 0x449",
+        "FRAME 4 0x7ffc88775251 0xcfdbbff740 gov8_snapshot_create_blob 0xe1"
+      ],
+      "dumpSHA256": "49a00b51a7efae81f183072f91508596005d96cbb6ce139b8766a6c98985493a",
+      "textSHA256": "a36943141cfa80d45bda17dc9ce6c3b72a793ef05f7cc5ff664c650990206114"
+    },
+    {
+      "shape": "classes",
+      "exceptionCode": "0xc0000005",
+      "rva": "0x5d53d1",
+      "symbol": [
+        6115984,
+        "?ProcessSlot@UpdatePointersVisitor@ReadOnlyPromotionImpl@?A0x80B0100C@internal@v8@@AEAAXV?$Tagged@VHeapObject@internal@v8@@@45@VFullMaybeObjectSlot@45@@Z"
+      ],
+      "offset": 321,
+      "registers": {
+        "rax": "0x317b5932f39",
+        "rcx": "0x3",
+        "rdx": "0x3",
+        "rbx": "0xe41b880239",
+        "rsp": "0xc3e6fff738",
+        "rbp": "0x58",
+        "rsi": "0x24ffdd48870",
+        "rdi": "0x4",
+        "r8": "0xe41b880280",
+        "r9": "0xe41b880201",
+        "r10": "0xe41b880239",
+        "r11": "0x317b5932f39",
+        "r12": "0xc3e6fff880",
+        "r13": "0x2505dfa9ef8",
+        "r14": "0xc3e6fff8d0",
+        "r15": "0xc3e6fff918",
+        "rip": "0x7ffc870753d1"
+      },
+      "instruction": {
+        "bytes": "4d8908",
+        "mnemonic": "mov",
+        "operands": "qword ptr [r8], r9"
+      },
+      "destination": "0xe41b880280",
+      "region": {
+        "base": "0xe41b880000",
+        "allocationBase": "0xe41b880000",
+        "size": 4096,
+        "state": "0x1000",
+        "protection": "0x2",
+        "type": "0x20000"
+      },
+      "pageHeader": "00040000000000001012b5ed4f020000490268a41502000026ea4d4305000000",
+      "frames": [
+        "FRAME 0 0x7ffc870753d1 0xc3e6fff738 ?ProcessSlot@UpdatePointersVisitor@ReadOnlyPromotionImpl@?A0x80B0100C@internal@v8@@AEAAXV?$Tagged@VHeapObject@internal@v8@@@45@VFullMaybeObjectSlot@45@@Z 0x141",
+        "FRAME 1 0x7ffc87074f1e 0xc3e6fff750 ?VisitPointers@UpdatePointersVisitor@ReadOnlyPromotionImpl@?A0x80B0100C@internal@v8@@UEAAXV?$Tagged@VHeapObject@internal@v8@@@45@VFullObjectSlot@45@1@Z 0x2e",
+        "FRAME 2 0x7ffc870737df 0xc3e6fff7a0 ?Promote@ReadOnlyPromotion@internal@v8@@SAXPEAVIsolate@23@AEBVSafepointScope@23@AEBV?$PerThreadAssertScopeEmpty@$0A@$00$01@23@@Z 0xa4f",
+        "FRAME 3 0x7ffc86b270b9 0xc3e6fff9d0 ?CreateBlob@SnapshotCreatorImpl@internal@v8@@QEAA?AVStartupData@3@W4FunctionCodeHandling@SnapshotCreator@3@V?$Flags@W4SerializerFlag@Snapshot@internal@v8@@HH@base@3@@Z 0x439",
+        "FRAME 4 0x7ffc88775251 0xc3e6fffb50 gov8_snapshot_create_blob 0xe1"
+      ],
+      "dumpSHA256": "e108d657eed6ac993cfbd19663474d482e66e2c931c1fef377ade2667c31f093",
+      "textSHA256": "a36943141cfa80d45bda17dc9ce6c3b72a793ef05f7cc5ff664c650990206114"
+    },
+    {
+      "shape": "tables",
+      "exceptionCode": "0xc0000005",
+      "rva": "0x5e4be",
+      "symbol": [
+        386064,
+        "?CreateFillerObjectAt@Heap@internal@v8@@QEAAX_KHV?$StrongAlias@UClearFreedMemoryModeTag@internal@v8@@_N@base@3@V?$optional@W4AllocationType@internal@v8@@@__Cr@std@@@Z"
+      ],
+      "offset": 174,
+      "registers": {
+        "rax": "0x3da38ec0999",
+        "rcx": "0x2435617cb70",
+        "rdx": "0x3e269e54828",
+        "rbx": "0x0",
+        "rsp": "0xdb243ff4c0",
+        "rbp": "0x38",
+        "rsi": "0x3e269e54828",
+        "rdi": "0x2435617cb70",
+        "r8": "0x7d8",
+        "r9": "0x0",
+        "r10": "0x1",
+        "r11": "0xfffffffff8ca5793",
+        "r12": "0x1",
+        "r13": "0x6db6db6db6db6db7",
+        "r14": "0x7d8",
+        "r15": "0x2437b9feb70",
+        "rip": "0x7ffc86afe4be"
+      },
+      "instruction": {
+        "bytes": "488906",
+        "mnemonic": "mov",
+        "operands": "qword ptr [rsi], rax"
+      },
+      "destination": "0x3e269e54828",
+      "region": {
+        "base": "0x3e269e40000",
+        "allocationBase": "0x3e269e40000",
+        "size": 86016,
+        "state": "0x1000",
+        "protection": "0x2",
+        "type": "0x20000"
+      },
+      "pageHeader": "000400000000000030d71c5643020000e907ec38da0300000c0c0c335a08000d",
+      "frames": [
+        "FRAME 0 0x7ffc86afe4be 0xdb243ff4c0 ?CreateFillerObjectAt@Heap@internal@v8@@QEAAX_KHV?$StrongAlias@UClearFreedMemoryModeTag@internal@v8@@_N@base@3@V?$optional@W4AllocationType@internal@v8@@@__Cr@std@@@Z 0xae",
+        "FRAME 1 0x7ffc87019f09 0xdb243ff560 ?RepairFreeSpacesBeforeSerialization@ReadOnlySpace@internal@v8@@QEAAXXZ 0xa9",
+        "FRAME 2 0x7ffc86d22a4d 0xdb243ff5b0 ?OnCreateHeapObjectsComplete@ReadOnlyHeap@internal@v8@@QEAAXPEAVIsolate@23@@Z 0x2d",
+        "FRAME 3 0x7ffc86b270c9 0xdb243ff5f0 ?CreateBlob@SnapshotCreatorImpl@internal@v8@@QEAA?AVStartupData@3@W4FunctionCodeHandling@SnapshotCreator@3@V?$Flags@W4SerializerFlag@Snapshot@internal@v8@@HH@base@3@@Z 0x449",
+        "FRAME 4 0x7ffc88775251 0xdb243ff770 gov8_snapshot_create_blob 0xe1"
+      ],
+      "dumpSHA256": "de2ab14b88504e337a2cf596ac01a70d607e251093eb5160e7ec756602487e87",
+      "textSHA256": "a36943141cfa80d45bda17dc9ce6c3b72a793ef05f7cc5ff664c650990206114"
+    }
+  ]
+}
