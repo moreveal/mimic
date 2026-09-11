@@ -6,7 +6,11 @@
   for(const name of ['encode','encodeInto'])markNative(TextEncoder.prototype[name],name);
   markNative(Object.getOwnPropertyDescriptor(TextEncoder.prototype,'encoding').get,'encoding','get ');
   const domExceptionSlots=new WeakMap();
-  class DOMException extends Error { constructor(message='',name='Error'){super(String(message));domExceptionSlots.set(this,{message:String(message),name:String(name)})} get name(){return domExceptionSlots.get(this).name} get message(){return domExceptionSlots.get(this).message} get code(){return this.name==='AbortError'?20:this.name==='TimeoutError'?23:0} }
+  // DOMException instances inherit Error.prototype, but the interface object
+  // inherits Function.prototype. Avoid class extends Error, whose super lookup
+  // would also require the incorrect constructor-object inheritance.
+  class DOMException { constructor(message='',name='Error'){const error=Reflect.construct(Error,[String(message)],new.target);domExceptionSlots.set(error,{message:String(message),name:String(name)});return error} get name(){return domExceptionSlots.get(this).name} get message(){return domExceptionSlots.get(this).message} get code(){return this.name==='AbortError'?20:this.name==='TimeoutError'?23:0} }
+  Object.setPrototypeOf(DOMException.prototype,Error.prototype);
   const decodeForm=s=>decodeURIComponent(String(s).replace(/\+/g,' '));
   const encodeForm=s=>encodeURIComponent(String(s)).replace(/%20/g,'+').replace(/[!'()~]/g,c=>'%'+c.charCodeAt(0).toString(16).toUpperCase());
   const urlSearchParamsSlots=new WeakMap(),urlSearchParamsState=value=>urlSearchParamsSlots.get(value),readSearchParams=value=>{const state=urlSearchParamsState(value);if(!state.url)return state.pairs;return parseSearchParams(state.url.search)},writeSearchParams=(value,pairs)=>{const state=urlSearchParamsState(value);if(state.url)state.url.search=pairs.length?'?'+pairs.map(x=>encodeForm(x[0])+'='+encodeForm(x[1])).join('&'):'';else state.pairs=pairs},parseSearchParams=input=>{const pairs=[],text=String(input||'').replace(/^\?/,'');if(text)for(const part of text.split('&')){const i=part.indexOf('=');pairs.push([decodeForm(i<0?part:part.slice(0,i)),decodeForm(i<0?'':part.slice(i+1))])}return pairs};
