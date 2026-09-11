@@ -102,8 +102,12 @@
   class BroadcastChannel extends EventTarget { constructor(name){super();name=String(name);broadcastChannelSlots.set(this,{name,closed:false,onmessage:null,onmessageerror:null});const channels=broadcastChannels.get(name)||new Set();channels.add(this);broadcastChannels.set(name,channels)} get name(){return broadcastChannelSlots.get(this).name} get onmessage(){return broadcastChannelSlots.get(this).onmessage} set onmessage(value){broadcastChannelSlots.get(this).onmessage=typeof value==='function'?value:null} get onmessageerror(){return broadcastChannelSlots.get(this).onmessageerror} set onmessageerror(value){broadcastChannelSlots.get(this).onmessageerror=typeof value==='function'?value:null} postMessage(message){const state=broadcastChannelSlots.get(this);if(state.closed)throw new DOMException('BroadcastChannel is closed.','InvalidStateError');for(const channel of broadcastChannels.get(state.name)||[]){if(channel===this||broadcastChannelSlots.get(channel).closed)continue;host.queuePostedMessage(()=>dispatchTrusted(channel,new MessageEvent('message',{data:message,origin:host.locationPart('origin')})))}} close(){const state=broadcastChannelSlots.get(this);if(state.closed)return;state.closed=true;broadcastChannels.get(state.name)?.delete(this)} }
   const browserMessagePortSlots=new WeakMap(),browserMessagePortWrappers=new Map();
   const wrapBrowserMessagePort=id=>{id=String(id);const existing=browserMessagePortWrappers.get(id);if(existing)return existing;const port=new BrowserMessagePort(hostToken,id);browserMessagePortWrappers.set(id,port);return port};
-  const takeMessagePorts=transfer=>Array.from(transfer||[]).filter(value=>browserMessagePortSlots.has(value)).map(port=>{const state=browserMessagePortSlots.get(port);if(state.closed||state.transferred)throw new DOMException('MessagePort at index 0 is already neutered.','DataCloneError');state.transferred=true;browserMessagePortWrappers.delete(state.id);return state.id});
-  class BrowserMessagePort extends MessagePort { constructor(token,id){super(hostToken);if(token!==hostToken)illegal('MessagePort');browserMessagePortSlots.set(this,{id:String(id),closed:false,transferred:false,started:false,onmessage:null,onmessageerror:null,pending:[]})} postMessage(message,transfer=[]){const state=browserMessagePortSlots.get(this);if(state.closed||state.transferred)return;host.messagePortPost(state.id,message,takeMessagePorts(transfer))} start(){const state=browserMessagePortSlots.get(this);state.started=true;while(state.pending.length){const event=state.pending.shift();host.queuePostedMessage(()=>dispatchTrusted(this,event))}} close(){const state=browserMessagePortSlots.get(this);if(state.closed)return;state.closed=true;host.messagePortClose(state.id)} get onmessage(){return browserMessagePortSlots.get(this).onmessage} set onmessage(value){const state=browserMessagePortSlots.get(this);state.onmessage=typeof value==='function'?value:null;if(state.onmessage)this.start()} get onmessageerror(){return browserMessagePortSlots.get(this).onmessageerror} set onmessageerror(value){const state=browserMessagePortSlots.get(this);state.onmessageerror=typeof value==='function'?value:null} }
+  const takeMessagePorts=transfer=>Array.from(transfer||[]).flatMap(port=>{
+    const binding=bindingGet(port)||referenceGet(port);
+    if(binding?.kind!=='MessagePort'&&binding?.binding?.kind!=='MessagePort')return [];
+    return [callRealmBinding(port,binding,'transfer',[])];
+  });
+  class BrowserMessagePort extends MessagePort { constructor(token,id){super(hostToken);if(token!==hostToken)illegal('MessagePort');browserMessagePortSlots.set(this,{id:String(id),closed:false,transferred:false,started:false,onmessage:null,onmessageerror:null,pending:[]});registerRealmBinding(this,'MessagePort',{transfer:()=>{const state=browserMessagePortSlots.get(this);if(state.closed||state.transferred)throw new DOMException('MessagePort at index 0 is already neutered.','DataCloneError');state.transferred=true;browserMessagePortWrappers.delete(state.id);return state.id}})} postMessage(message,transfer=[]){const state=browserMessagePortSlots.get(this);if(state.closed||state.transferred)return;host.messagePortPost(state.id,message,takeMessagePorts(transfer))} start(){const state=browserMessagePortSlots.get(this);state.started=true;while(state.pending.length){const event=state.pending.shift();host.queuePostedMessage(()=>dispatchTrusted(this,event))}} close(){const state=browserMessagePortSlots.get(this);if(state.closed)return;state.closed=true;host.messagePortClose(state.id)} get onmessage(){return browserMessagePortSlots.get(this).onmessage} set onmessage(value){const state=browserMessagePortSlots.get(this);state.onmessage=typeof value==='function'?value:null;if(state.onmessage)this.start()} get onmessageerror(){return browserMessagePortSlots.get(this).onmessageerror} set onmessageerror(value){const state=browserMessagePortSlots.get(this);state.onmessageerror=typeof value==='function'?value:null} }
   class BrowserMessageChannel { constructor(){const ids=host.newMessageChannel(),port1=wrapBrowserMessagePort(ids[0]),port2=wrapBrowserMessagePort(ids[1]);Object.defineProperties(this,{port1:{value:port1,enumerable:true},port2:{value:port2,enumerable:true}})} }
   globalThis.__receiveMessagePort=(id,data,portIds=[])=>{const port=browserMessagePortWrappers.get(String(id));if(!port)return;const state=browserMessagePortSlots.get(port),event=new MessageEvent('message',{data,ports:Array.from(portIds,wrapBrowserMessagePort)});if(state.started)dispatchTrusted(port,event);else state.pending.push(event)};
   class Node extends EventTarget { constructor(token){super();if(token!==hostToken)illegal('Node')} get nodeType(){const slot=elementSlot(this);if(slot)return slot.type==='element'?1:slot.type==='text'?3:slot.type==='comment'?8:slot.type==='fragment'?11:0;if(this instanceof Document)return 9;if(fragmentSlots.has(this))return 11;return 0} get nodeName(){const slot=elementSlot(this);if(slot)return slot.type==='element'?slot.tagName:slot.type==='text'?'#text':slot.type==='comment'?'#comment':'';if(this instanceof Document)return'#document';if(fragmentSlots.has(this))return'#document-fragment';return''} get textContent(){const slot=elementSlot(this);return slot?host.textContent(slot.nodeId):null} set textContent(value){const slot=elementSlot(this);if(slot)host.setTextContent(slot.nodeId,value==null?'':String(value))} get parentNode(){const slot=elementSlot(this);return slot?wrap(host.parentNode(slot.nodeId)):null} get firstChild(){const slot=elementSlot(this);if(slot)return wrap(host.firstChild(slot.nodeId));const state=fragmentSlots.get(this);return state&&state.children[0]||null} get childNodes(){const slot=elementSlot(this);if(slot)return nodeList(host.nodeChildren(slot.nodeId));const state=fragmentSlots.get(this);return state?nodeList(state.children.map(child=>elementSlot(child))):nodeList([])} hasChildNodes(){return this.childNodes.length!==0} get isConnected(){if(syntheticParents.has(this))return syntheticParents.get(this).isConnected;if(typeof ShadowRoot==='function'&&this instanceof ShadowRoot)return this.host.isConnected;const slot=elementSlot(this);return slot?host.isConnected(slot.nodeId):this instanceof Document} contains(other){if(other==null)return false;if(other===this)return true;const own=elementSlot(this),child=elementSlot(other);if(own&&(own.type==='text'||own.type==='comment'))return false;if(own&&child&&!syntheticParents.has(other))return host.contains(own.nodeId,child.nodeId);for(let node=other;node;node=node.parentNode)if(node===this)return true;return false} }
@@ -886,6 +890,14 @@
       has(_target,property){bridgeAccess(id,result.realm);return host.frameHas(id,result.handle,encodeCrossRealmKey(property),result.realm)},
       apply(_target,receiver,args){
         bridgeAccess(id,result.realm);
+        // A native Window operation keeps the callable's owner identity but
+        // takes its incumbent document and transferable arguments from the
+        // invoking realm. Do not first turn message data into remote wrappers.
+        if(result.binding?.kind==='WindowPostMessage'){
+          const target=receiver==null?id:receiver===window?host.selfFrameID():referenceGet(receiver)?.type==='window'?referenceGet(receiver).frame:null;
+          if(target===null)throw new TypeError('Illegal invocation');
+          return postToFrame(target,args);
+        }
         if(result.eval){if(!host.frameEvalAllowed(id))return undefined;const value=args[0],source=typeof value==='string'?value:evalSourceResolver(value);if(source===undefined){host.frameEval(id,undefined,result.realm);return value}return unwrapCrossRealm(id,host.frameEval(id,source,result.realm))}
         const outcome=host.frameCall(id,result.handle,args.map(encodeCrossRealmArgument),encodeCrossRealmArgument(receiver),result.realm,!!result.iteratorNext),value=unwrapCrossRealm(id,outcome.value);if(outcome.threw)throw value;return value;
       },
@@ -963,13 +975,19 @@
     },(value,importNode=false)=>importNode?wrap(host.nodeData(value)):value===document?host.documentRootID():bridgeApply(bridgeWeakGet,elementData,[value])?.nodeId||0,
     key=>{const value=Reflect.get(globalThis,key);return{value,intrinsic:key==='eval'&&value===bridgeOriginalEval||key==='postMessage'&&value===bridgeOriginalPostMessage}},
     value=>{const binding=bindingGet(value);return binding?{kind:binding.kind,invoke:binding.invoke,unpreventable:binding.unpreventable}:null});
+  const postToFrame=(id,args)=>{
+    if(args.length===0)throw new TypeError("Failed to execute 'postMessage' on 'Window': 1 argument required, but only 0 present.");
+    const message=args[0];let targetOrigin=args[1]===undefined?'/':args[1],transfer=args[2]===undefined?[]:args[2];
+    if(targetOrigin&&typeof targetOrigin==='object'){transfer=targetOrigin.transfer||[];targetOrigin=targetOrigin.targetOrigin===undefined?'/':targetOrigin.targetOrigin}
+    return host.framePost(id,message,bindingString(targetOrigin),takeMessagePorts(transfer));
+  };
   const remoteWindow=id=>{
     if(id==null)return null;
     if(id===host.selfFrameID())return globalThis;
     if(remoteWindowCache.has(id))return remoteWindowCache.get(id);
     host.retainWindowReference(id);
     let proxy;
-    const framePost=new Proxy(function postMessage(){},{apply(_target,_this,args){return host.framePost(id,args[0],args[1]===undefined?'/':String(args[1]),takeMessagePorts(args[2]))}});markNative(framePost,'postMessage');
+    const framePost=new Proxy({postMessage(message){}}.postMessage,{apply(_target,_this,args){return postToFrame(id,args)}});markNative(framePost,'postMessage');
     const target={postMessage:framePost};Object.defineProperty(target,Symbol.toStringTag,{value:'Window',configurable:true});
     const crossKeys=['window','self','location','closed','frames','length','top','opener','parent','blur','close','focus','postMessage','then',Symbol.toStringTag,Symbol.hasInstance,Symbol.isConcatSpreadable];
     const read=p=>{
@@ -983,7 +1001,7 @@
       }
       if(p!=='postMessage'&&!accessible)throw new DOMException('Blocked cross-origin frame access','SecurityError');
       const encoded=host.frameGlobalGet(id,encodeCrossRealmKey(p));
-      if(encoded.intrinsic&&p==='postMessage')return framePost;
+      if(encoded.intrinsic&&p==='postMessage'&&!accessible)return framePost;
       const value=unwrapCrossRealm(id,encoded);
       if(typeof p==='string')recordAPIAccess('WindowProxy.'+p,value!==undefined);
       return value;
@@ -1099,7 +1117,12 @@
   window.chrome={loadTimes:chromeLoadTimes,csi:chromeCSI,app:chromeApp};
   def(window,'innerWidth',{get:()=>host.viewport().width});def(window,'innerHeight',{get:()=>host.viewport().height});def(window,'outerWidth',{get:()=>host.viewport().outerWidth});def(window,'outerHeight',{get:()=>host.viewport().outerHeight});def(window,'devicePixelRatio',{get:()=>host.screen().devicePixelRatio});
   const timerHandler=(handler,args)=>typeof handler==='function'?()=>handler(...args):(()=>{const source=String(handler);return()=>eval(source)})();window.setTimeout=function setTimeout(handler,timeout=0,...args){return host.setTimer(timerHandler(handler,args),Number(timeout),false)};window.setInterval=function setInterval(handler,timeout=0,...args){return host.setTimer(timerHandler(handler,args),Number(timeout),true)};window.clearTimeout=function clearTimeout(id){return host.clearTimer(Number(id))};window.clearInterval=function clearInterval(id){return host.clearTimer(Number(id))};window.requestAnimationFrame=function requestAnimationFrame(callback){return requestRenderingFrame(callback)};window.cancelAnimationFrame=function cancelAnimationFrame(id){cancelRenderingFrame(id)};
-  window.postMessage=bridgeOriginalPostMessage=function postMessage(message,targetOrigin='/',transfer=[]){if(targetOrigin&&typeof targetOrigin==='object'){transfer=targetOrigin.transfer||[];targetOrigin=targetOrigin.targetOrigin===undefined?'/':targetOrigin.targetOrigin}return host.framePost(host.selfFrameID(),message,String(targetOrigin),takeMessagePorts(transfer))};
+  window.postMessage=bridgeOriginalPostMessage={postMessage(message){
+    const receiver=this==null?window:this,reference=receiver===window?null:referenceGet(receiver);
+    if(receiver!==window&&reference?.type!=='window')throw new TypeError('Illegal invocation');
+    return postToFrame(receiver===window?host.selfFrameID():reference.frame,arguments);
+  }}.postMessage;
+  registerRealmBinding(bridgeOriginalPostMessage,'WindowPostMessage',{});
   window.queueMicrotask=function queueMicrotask(callback){if(typeof callback!=='function')throw new TypeError('callback is not a function');Promise.resolve().then(callback)};
   window.fetch=function fetch(input,init={}){const request=input instanceof Request?new Request(input,init):new Request(input,init);return host.fetch(request.url,request.method,Object.fromEntries(request.headers),request.body==null?'':String(request.body)).then(r=>{const response=new Response(r.body,{status:r.status,headers:r.headers});const state=responseSlots.get(response);state.url=r.url;return response})};
   const performanceEntries=()=>host.performanceEntries([],true).map(makePerformanceEntry).concat(performanceMarks);
