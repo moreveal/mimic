@@ -24,16 +24,7 @@
       decode(input,options={}){
         const s=decoderSlots.get(this),stream=!!options.stream,bytes=s.bytes.concat(input==null?[]:Array.from(ArrayBuffer.isView(input)?new Uint8Array(input.buffer,input.byteOffset,input.byteLength):new Uint8Array(input)));s.bytes=[];let output='';
         if(s.encoding==='windows-1252'){for(const byte of bytes)output+=String.fromCodePoint(byte>=0x80&&byte<=0x9f?windows1252C1[byte-0x80]:byte);return output}
-        const emit=point=>{if(!s.bom){s.bom=true;if(point===0xfeff&&!s.ignoreBOM)return}output+=String.fromCodePoint(point)};
-        const error=()=>{if(s.fatal)throw new TypeError('Invalid encoded data');emit(0xfffd)};
-        for(let i=0;i<bytes.length;){const start=i,b=bytes[i++];if(b<128){emit(b);continue}const count=b>=0xc2&&b<=0xdf?1:b>=0xe0&&b<=0xef?2:b>=0xf0&&b<=0xf4?3:0;if(!count){error();continue}
-          let point=b&((1<<(6-count))-1),valid=true;
-          for(let j=0;j<count;j++){
-            if(i===bytes.length){if(stream){s.bytes=bytes.slice(start);valid=false;i=bytes.length}else{error();valid=false}break}
-            const c=bytes[i],min=j===0&&b===0xe0?0xa0:j===0&&b===0xf0?0x90:0x80,max=j===0&&b===0xed?0x9f:j===0&&b===0xf4?0x8f:0xbf;
-            if(c<min||c>max){error();valid=false;break}i++;point=(point<<6)|(c&63);
-          }if(valid)emit(point);
-        }if(!stream)s.bom=false;return output;
+        return decodeUTF8(s,bytes,stream);
       }
     }
     expose('TextDecoder',TextDecoder);
