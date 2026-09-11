@@ -73,7 +73,7 @@ root.innerHTML='<tr><td>x</td></tr>';return root.innerHTML==='x'&&constructions=
 	}
 }
 
-func TestSnapshotRecognizesPolyfilledShadowRoot(t *testing.T) {
+func TestSnapshotDoesNotPromotePolyfilledShadowRoot(t *testing.T) {
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -94,9 +94,14 @@ func TestSnapshotRecognizesPolyfilledShadowRoot(t *testing.T) {
 		t.Fatal(err)
 	}
 	output := string(snapshot.Files["index.html"])
-	for _, want := range []string{`id="polyfill-host"`, `shadowrootmode="open"`, `polyfilled content`} {
-		if !strings.Contains(output, want) {
-			t.Fatalf("missing %q in %s", want, output)
-		}
+	if !strings.Contains(output, `id="polyfill-host"`) {
+		t.Fatal("snapshot lost canonical host")
+	}
+	if strings.Contains(output, "shadowrootmode") || strings.Contains(output, "polyfilled content") {
+		t.Fatal("snapshot invented a native shadow attachment from an author wrapper")
+	}
+	got, err = p.Evaluate(ctx, `document.querySelector('#polyfill-host').shadowRoot === null`)
+	if err != nil || got != true {
+		t.Fatalf("snapshot mutated attachment state: %v %v", got, err)
 	}
 }

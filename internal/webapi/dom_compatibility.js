@@ -3,7 +3,7 @@ const compatibilityElementState={};
   {
     const expose=(name,value)=>Object.defineProperty(globalThis,name,{value,writable:true,configurable:true});
     const definitions=new Map(),constructors=new Map(),upgraded=new WeakMap(),construction=[];
-    const waiting=new Map();let defining=false;
+    const waiting=new Map();let defining=false,upgradeRevision=0;
     const report=error=>console.error(error&&error.stack||String(error));
     let reactionDepth=0;const reactions=[],elementReactions=new WeakMap();
     // An invocation owns its element queue. A nested CEReactions operation
@@ -21,7 +21,7 @@ const compatibilityElementState={};
         frame.used=true;return frame.node;
       }
       const node=rawCreate.call(document,definition.name);
-      Object.setPrototypeOf(node,ctor.prototype);upgraded.set(node,definition);
+      Object.setPrototypeOf(node,ctor.prototype);upgraded.set(node,definition);upgradeRevision++;
       return node;
     };
     const upgrade=node=>{
@@ -31,7 +31,7 @@ const compatibilityElementState={};
       const frame={node,definition,used:false},attributes=node.getAttributeNames().filter(name=>definition.attributes.includes(name)).map(name=>[name,null,node.getAttribute(name),null]),connected=node.isConnected;construction.push(frame);reactionDepth++;
       try{
         if(Reflect.construct(definition.ctor,[])!==node)throw new TypeError('Custom element returned a different object');
-        upgraded.set(node,definition);
+        upgraded.set(node,definition);upgradeRevision++;
         for(const args of attributes)reaction(node,'attributeChangedCallback',args);
         if(connected)reaction(node,'connectedCallback');
       }catch(error){report(error)}finally{construction.pop();reactionDepth--;flushReactions()}
@@ -40,6 +40,17 @@ const compatibilityElementState={};
       callback(node);
       const shadow=elementShadows.get(node);if(shadow)walk(shadow,callback);
       for(const child of Array.from(node.childNodes||[]))walk(child,callback);
+    };
+    const definitionCandidates=(root,name)=>{
+      if(!shadowHosts.size)return compatibilitySelectors.query(root,name);
+      const candidates=[];
+      const collect=tree=>{
+        for(const node of compatibilitySelectors.query(tree,'*')){
+          if(node.localName===name)candidates.push(node);
+          const shadow=elementShadows.get(node);if(shadow)collect(shadow);
+        }
+      };
+      collect(root);return candidates;
     };
     class CustomElementRegistry {
       constructor(){if(arguments[0]!==hostToken)throw new TypeError('Illegal constructor')}
@@ -64,7 +75,10 @@ const compatibilityElementState={};
           definition={name,ctor,prototype,callbacks,attributes,disabledFeatures,formAssociated};
         }finally{defining=false}
         definitions.set(name,definition);constructors.set(ctor,definition);
-        walk(document,node=>{if(node instanceof Element&&node.localName===name)upgrade(node)});
+        // Collect the shadow-including upgrade candidates before constructors
+        // run. Native queries avoid one FFI call for every child of every
+        // existing node each time another custom element is defined.
+        for(const node of definitionCandidates(document,name))upgrade(node);
         if(waiting.has(name)){waiting.get(name).resolve(ctor);waiting.delete(name)}
       }
       get(name){return definitions.get(String(name))?.ctor}
@@ -337,6 +351,8 @@ const compatibilityElementState={};
     };
     compatibilityElementState.focused=()=>focused&&focused.isConnected?focused:null;
     const modalDialogs=new Set(),dialogReturnValues=new WeakMap();
+    // Non-attribute selector state also participates in observation invalidation.
+    compatibilityElementState.observationVersion=()=>[elementSlot(focused)?.nodeId||0,keyboardFocus,upgradeRevision,modalDialogs.size].join(':');
     compatibilityElementState.hasModal=()=>modalDialogs.size!==0;
     compatibilityElementState.modal=node=>modalDialogs.has(node)&&node.isConnected;
     compatibilityElementState.detached=node=>modalDialogs.delete(node);

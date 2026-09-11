@@ -12,7 +12,15 @@ func (d *Document) Matches(id int64, selector string) bool {
 }
 
 func (d *Document) matchesSelector(n *Node, selector string) bool {
-	selector = strings.TrimSpace(strings.Split(selector, ",")[0])
+	for _, leaf := range strings.Split(selector, ",") {
+		if d.matchesLeafSelector(n, strings.TrimSpace(leaf)) {
+			return true
+		}
+	}
+	return false
+}
+
+func (d *Document) matchesLeafSelector(n *Node, selector string) bool {
 	if n == nil || n.Type != "element" || selector == "" {
 		return false
 	}

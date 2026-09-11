@@ -60,6 +60,9 @@ var shadowSerializationSurface string
 //go:embed cssom_compatibility.js
 var cssomCompatibilitySurface string
 
+//go:embed intersection_observer.js
+var intersectionObserverSurface string
+
 //go:embed traversal_compatibility.js
 var traversalCompatibilitySurface string
 
@@ -261,6 +264,7 @@ func composeSurface(generated, exposureSource string) string {
 	base = strings.Replace(base, "/* shared_base64 */", base64Surface, 1)
 	base = strings.Replace(base, "/* shared_webkit_css */", webkitCSSNamesSurface+webkitCSSSurface+cssShorthandsSurface+cssValueGrammarSurface+cssAnimationGrammarSurface+cssFontMetricsSurface, 1)
 	base = strings.Replace(base, "/* shared_dom_matrix */", cssColorsSurface+domMatrixSurface, 1)
+	base = strings.Replace(base, "/* shared_intersection_observer */", intersectionObserverSurface, 1)
 	return strings.Replace(base, marker, strings.Join(parts, "\n"), 1)
 }
 
