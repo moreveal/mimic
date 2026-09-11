@@ -1,0 +1,24 @@
+{
+  "revision": "78eb990ce0c2eb9b82de660d9f94bfecf558597b",
+  "dirty": [
+    " M internal/engine/goja/runtime.go",
+    " M internal/engine/goja/runtime_test.go"
+  ],
+  "binarySHA256": "0d69670ceabf7390057a96aa22765aaa8e683cf100e95ba3d60fb7ce1eb47f22",
+  "chrome": "152.0.7977.82",
+  "mode": "headful",
+  "profile": "compatibility/private-captures/cleanup-bindings-20260911/chrome-profile",
+  "artifacts": {
+    "compatibility\\private-captures\\goja-observer-20260911\\before-corrected.txt": "d97f438bcf2e8539fef574708ce1a471c7dfd0cd281d2eb87a4c6c9cff571bfb",
+    "compatibility\\private-captures\\goja-observer-20260911\\engine-race-corrected.txt": "0ec00cc70a48338cec1cad67efc1c8368547892955b24d7e83f2e6f34eb0a1b7",
+    "compatibility\\private-captures\\goja-observer-profile-20260911\\attempts.json": "7bff5cf6b98274849c4a40290fb139e9a1b158ffff368b8a5cb443faa5da7dcb",
+    "compatibility\\private-captures\\goja-observer-profile-20260911\\before.log": "c762b9dcb8369aad67ef6c78340ffbc5acb33d239ff5dbed8ca5f45f7c37f784",
+    "compatibility\\private-captures\\goja-observer-profile-20260911\\after.log": "4086079f0c2069a7084b57c35f0cb23ab7a871362d383c0bdcaa480ac3e87b5f",
+    "compatibility\\private-captures\\goja-observer-profile-20260911\\after-observer.txt": "3fdc3f71ae7f2bc9b932682d4f28b8275befc8ad8bfe82d98a0ae28d89dde96f",
+    "compatibility\\private-captures\\callable-goja-profile-20260911\\attempts.json": "716aff81cdfd20415a2e4007aa9710fa0e03d1b176a2c84d0b661653aa27c26c",
+    "compatibility\\private-captures\\callable-goja-profile-20260911\\before.log": "d5002b6c1b5c9484ac88aa20013604e2412e75db635a3d5a096fbc376425e69e",
+    "compatibility\\private-captures\\callable-goja-profile-20260911\\after.log": "533ba2832bd9b2fe89002c2dad62ca160f07880a78ecd2dfafc4b4795266ad0c",
+    "compatibility\\private-captures\\callable-goja-profile-20260911\\after-global-observer.txt": "998f2f2211b1470cdc09eb34c70ce5e2bae547802c2dd4656c83410b681163b7",
+    "compatibility\\private-captures\\native-shape-profile-20260911\\attempts.json": "a7e53d02c32bd3daa71319b291c07ac4f158c75c1767791b4bfbfe6d5c089273"
+  }
+}

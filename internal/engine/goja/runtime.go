@@ -214,8 +214,12 @@ func (r *runtime) SetGlobalAccessObserver(observer func(name string, supported b
 			return supported
 		},
 		Get: func(_ *goja.Object, property string, receiver goja.Value) goja.Value {
-			supported := has(property)
-			report(property, supported)
+			// Support is observed once per property. Do not reenter Reflect.has
+			// for a trace event that report would discard. The Has trap above
+			// still queries live state for JavaScript membership operations.
+			if _, recorded := seen[property]; !recorded {
+				report(property, has(property))
+			}
 			// Observation must preserve accessor receivers, including inherited
 			// access through an object whose prototype is the global proxy.
 			v, err := getFn(goja.Undefined(), target, r.vm.ToValue(property), receiver)

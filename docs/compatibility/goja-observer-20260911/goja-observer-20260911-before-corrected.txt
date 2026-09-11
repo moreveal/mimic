@@ -1,0 +1,5 @@
+--- FAIL: TestGlobalAccessObserverDeduplicatesSupportQueriesWithoutCachingHas (0.00s)
+    runtime_test.go:75: support observation: value=false err=<nil> observations=1
+FAIL
+FAIL    github.com/moreveal/mimic/internal/engine/goja  0.098s
+FAIL
