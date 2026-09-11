@@ -173,22 +173,36 @@ const compatibilitySelectors = (() => {
   }
   return {query,matches,closest,getElementById};
 })();
-for (const prototype of [Document.prototype,Element.prototype,DocumentFragment.prototype]) {
-  Object.defineProperties(prototype,{
-    querySelector:{value:function(selector){return compatibilitySelectors.query(this,selector,true);},writable:true,configurable:true},
-    querySelectorAll:{value:function(selector){return nodeList(compatibilitySelectors.query(this,selector,false,true));},writable:true,configurable:true}
-  });
+// These late semantic replacements are WebIDL operations too. Validate the
+// private brand before arity and conversion, outside selector-parser error
+// handling, so conversion exceptions keep their identity and caller realm.
+const installSelectorOperation = (prototype,name,operation) => {
+  const fn = {[name](selector){
+    const slot=elementSlot(this);
+    const valid=prototype===Document.prototype ? this===document||slot?.type==='document' : slot?.type==='element';
+    if(!valid)throw new TypeError('Illegal invocation');
+    if(arguments.length===0)throw new TypeError('Not enough arguments');
+    if(typeof selector==='symbol')throw new TypeError('Cannot convert a Symbol value to a string');
+    return operation(this,String(selector));
+  }}[name];
+  markNative(fn,name);
+  Object.defineProperty(prototype,name,{value:fn,writable:true,enumerable:true,configurable:true});
+};
+for (const prototype of [Document.prototype,Element.prototype]) {
+  installSelectorOperation(prototype,'querySelector',(receiver,selector)=>compatibilitySelectors.query(receiver,selector,true));
+  installSelectorOperation(prototype,'querySelectorAll',(receiver,selector)=>nodeList(compatibilitySelectors.query(receiver,selector,false,true)));
 }
-Object.defineProperties(Element.prototype,{
-  matches:{value:function(selector){return compatibilitySelectors.matches(this,selector);},writable:true,configurable:true},
-  webkitMatchesSelector:{value:function(selector){return compatibilitySelectors.matches(this,selector);},writable:true,configurable:true},
-  closest:{value:function(selector){return compatibilitySelectors.closest(this,selector);},writable:true,configurable:true}
+for(const name of ['matches','webkitMatchesSelector','closest'])
+  installSelectorOperation(Element.prototype,name,(receiver,selector)=>compatibilitySelectors[name==='webkitMatchesSelector'?'matches':name](receiver,selector));
+installSelectorOperation(Document.prototype,'getElementById',(receiver,id)=>compatibilitySelectors.getElementById(receiver,id));
+// Synthetic DocumentFragments still lack a cross-realm private-brand bridge.
+// Keep their existing bindings until borrowed calls can be validated without
+// rejecting genuine foreign fragments or accepting prototype forgeries.
+Object.defineProperties(DocumentFragment.prototype,{
+  querySelector:{value:function(selector){return compatibilitySelectors.query(this,selector,true);},writable:true,configurable:true},
+  querySelectorAll:{value:function(selector){return nodeList(compatibilitySelectors.query(this,selector,false,true));},writable:true,configurable:true},
+  getElementById:{value:function(id){return compatibilitySelectors.getElementById(this,id);},writable:true,configurable:true}
 });
-
-
-for (const prototype of [Document.prototype,DocumentFragment.prototype]) {
-  Object.defineProperty(prototype,'getElementById',{value:function(id){return compatibilitySelectors.getElementById(this,id);},writable:true,configurable:true});
-}
 
 // CDP calls the same closed-over engine instead of evaluating page-controlled
 // querySelector properties or maintaining an independent native CSS grammar.

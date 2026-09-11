@@ -1,0 +1,340 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "fixtureOrigin": "http://127.0.0.1:46553",
+  "result": {
+    "result": {
+      "type": "object",
+      "value": {
+        "Document.querySelector": {
+          "invalid": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "invalidConversions": 0,
+          "nullReceiver": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "nullConversions": 0,
+          "missing": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "symbol": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "converted": {
+            "ok": true,
+            "value": "object"
+          },
+          "totalConversions": 1,
+          "borrowed": {
+            "ok": true,
+            "value": "object"
+          },
+          "forged": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "constructible": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          }
+        },
+        "Document.querySelectorAll": {
+          "invalid": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "invalidConversions": 0,
+          "nullReceiver": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "nullConversions": 0,
+          "missing": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "symbol": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "converted": {
+            "ok": true,
+            "value": "object"
+          },
+          "totalConversions": 1,
+          "borrowed": {
+            "ok": true,
+            "value": "object"
+          },
+          "forged": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "constructible": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          }
+        },
+        "Document.getElementById": {
+          "invalid": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "invalidConversions": 0,
+          "nullReceiver": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "nullConversions": 0,
+          "missing": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "symbol": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "converted": {
+            "ok": true,
+            "value": "null"
+          },
+          "totalConversions": 1,
+          "borrowed": {
+            "ok": true,
+            "value": "null"
+          },
+          "forged": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "constructible": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          }
+        },
+        "Element.querySelector": {
+          "invalid": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "invalidConversions": 0,
+          "nullReceiver": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "nullConversions": 0,
+          "missing": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "symbol": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "converted": {
+            "ok": true,
+            "value": "null"
+          },
+          "totalConversions": 1,
+          "borrowed": {
+            "ok": true,
+            "value": "null"
+          },
+          "forged": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "constructible": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          }
+        },
+        "Element.querySelectorAll": {
+          "invalid": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "invalidConversions": 0,
+          "nullReceiver": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "nullConversions": 0,
+          "missing": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "symbol": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "converted": {
+            "ok": true,
+            "value": "object"
+          },
+          "totalConversions": 1,
+          "borrowed": {
+            "ok": true,
+            "value": "object"
+          },
+          "forged": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "constructible": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          }
+        },
+        "Element.matches": {
+          "invalid": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "invalidConversions": 0,
+          "nullReceiver": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "nullConversions": 0,
+          "missing": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "symbol": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "converted": {
+            "ok": true,
+            "value": "boolean"
+          },
+          "totalConversions": 1,
+          "borrowed": {
+            "ok": true,
+            "value": "boolean"
+          },
+          "forged": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "constructible": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          }
+        },
+        "Element.closest": {
+          "invalid": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "invalidConversions": 0,
+          "nullReceiver": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "nullConversions": 0,
+          "missing": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "symbol": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "converted": {
+            "ok": true,
+            "value": "object"
+          },
+          "totalConversions": 1,
+          "borrowed": {
+            "ok": true,
+            "value": "object"
+          },
+          "forged": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          },
+          "constructible": {
+            "ok": false,
+            "name": "TypeError",
+            "local": true
+          }
+        },
+        "originalException": true
+      }
+    }
+  }
+}
