@@ -851,7 +851,9 @@
   const attributeUnsafeInterfaces=globalThis.__mimicAttributeUnsafeInterfaces;
   delete globalThis.__mimicAttributeUnsafeInterfaces;
   let known;
+  let pendingCallableExposure;
   const applyTargetExposure=exposure=>{
+    pendingCallableExposure=exposure;
     const properties=exposure.properties||[];
     const publicationMissing=new Set();
     // Publish the frozen profile's static globals in their observed order once,
@@ -1000,6 +1002,52 @@
         }else if(!name.startsWith('__')){
           delete prototype[name];
         }
+      }
+    }
+  };
+  const finalizeCallableBindings=()=>{
+    const exposure=pendingCallableExposure;
+    pendingCallableExposure=null;
+    if(!exposure)return;
+    // Late semantic installers replace generated functions. Reapply only the
+    // captured callable metadata to existing bindings, without creating missing
+    // members, changing prototype ownership or replaying global publication.
+    const wrappers=new WeakMap();
+    const normalize=(fn,name,length,operation)=>{
+      if(typeof fn!=='function')return fn;
+      if(operation&&Object.prototype.hasOwnProperty.call(fn,'prototype')){
+        let wrapper=wrappers.get(fn);
+        if(!wrapper){
+          const original=fn;
+          // Concise methods are callable without [[Construct]]. One wrapper per
+          // original preserves aliases; captured apply preserves the receiver,
+          // arguments and exception identity even after user mutation.
+          wrapper=({[name](...args){return functionSourceApply(original,this,args)}})[name];
+          wrappers.set(fn,wrapper);
+        }
+        fn=wrapper;
+      }
+      if(name&&fn.name!==name)Object.defineProperty(fn,'name',{value:name,configurable:true});
+      if(length!==null&&length!==undefined&&fn.length!==length)Object.defineProperty(fn,'length',{value:length,configurable:true});
+      return fn;
+    };
+    for(const property of exposure.properties||[]){
+      if(engineGlobals.has(property.name))continue;
+      const descriptor=Object.getOwnPropertyDescriptor(globalThis,property.name);
+      if(descriptor&&typeof descriptor.value==='function')normalize(descriptor.value,property.functionName,property.functionLength,false);
+    }
+    for(const [name,members] of Object.entries(exposure.prototypes||{})){
+      if(engineGlobals.has(name))continue;
+      const ctor=Object.getOwnPropertyDescriptor(globalThis,name)?.value,prototype=ctor&&ctor.prototype;
+      if(!prototype)continue;
+      for(const member of members){
+        if(member.name==='constructor')continue;
+        const descriptor=Object.getOwnPropertyDescriptor(prototype,member.name);
+        if(!descriptor||!descriptor.configurable)continue;
+        if(typeof descriptor.value==='function')descriptor.value=normalize(descriptor.value,member.functionName||member.name,member.functionLength,true);
+        if(descriptor.get)descriptor.get=normalize(descriptor.get,'get '+member.name,0,true);
+        if(descriptor.set)descriptor.set=normalize(descriptor.set,'set '+member.name,1,true);
+        Object.defineProperty(prototype,member.name,descriptor);
       }
     }
   };
