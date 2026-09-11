@@ -74,6 +74,57 @@ func TestCrashReportDiagnosticsOwnBuffer(t *testing.T) {
 	})
 }
 
+// Runtime snapshots must restore wrappers only. The host's requested bit,
+// capacity, initialization and annotations belong to each document Realm.
+func TestCrashReportHostStateAndSnapshotIsolation(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, p *Page) {
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer cancel()
+		_, err := p.Evaluate(ctx, `(async()=>{
+   await crashReport.initialize(64);crashReport.set('z','é');crashReport.set('10','ten');crashReport.set('2','two');crashReport.set('z','<');
+   const f=document.createElement('iframe');document.body.append(f);await f.contentWindow.crashReport.initialize(2);
+   try{f.contentWindow.crashReport.set('a','b');throw new Error('capacity ignored')}catch(e){if(e.name!=='NotAllowedError')throw e}
+  })()`)
+		if err != nil {
+			t.Fatal(err)
+		}
+		owner := &p.Top.Realm.crashReport
+		owner.mu.RLock()
+		requested, initialized, capacity := owner.requested, owner.initialized, owner.capacity
+		owner.mu.RUnlock()
+		if !requested || !initialized || capacity != 64 {
+			t.Fatal("host does not own initialization")
+		}
+		want := `{"2":"two","10":"ten","z":"<"}`
+		if p.CrashReports()[p.Top.ID] != want {
+			t.Fatalf("annotation encoding/order: %v", p.CrashReports())
+		}
+		for _, f := range p.Top.children {
+			if p.CrashReports()[f.ID] != `{}` {
+				t.Fatalf("child buffer: %v", p.CrashReports())
+			}
+		}
+	})
+}
+
+func TestTaskSignalHostPriorityAndReentrancy(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, p *Page) {
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer cancel()
+		value, err := p.Evaluate(ctx, `(async()=>{
+   const c=new TaskController({priority:'background'}),observed=[];
+   c.signal.onprioritychange=e=>{observed.push(e.previousPriority+':'+c.signal.priority);try{c.setPriority('user-visible')}catch(e){observed.push(e.name)}};
+   const jobs=[scheduler.postTask(()=>observed.push('dynamic'),{signal:c.signal}),scheduler.postTask(()=>observed.push('fixed'),{priority:'user-visible',signal:c.signal})];
+   c.setPriority('user-blocking');await Promise.all(jobs);
+   return JSON.stringify(observed);
+  })()`)
+		want := `["background:user-blocking","NotAllowedError","dynamic","fixed"]`
+		if err != nil || value != want {
+			t.Fatalf("task signal: %v %v", value, err)
+		}
+	})
+}
+
 func TestLaunchQueueRetainsAndDeliversURLLaunches(t *testing.T) {
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)

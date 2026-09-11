@@ -282,6 +282,7 @@ func (p *Page) DispatchInput(ctx context.Context, nodeID int64, eventType string
 	}
 	r.scheduler.Post(scheduler.UserInteraction, 0, func(ctx context.Context) error {
 		r.activationAt = r.scheduler.Now()
+		r.activationConsumed = false
 		_, err := r.runtime.Call(ctx, r.inputDispatcher, nil, r.val(nodeID), r.val(eventType))
 		return err
 	})

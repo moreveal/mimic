@@ -73,7 +73,8 @@
     }
   };
   registerBootstrapCallback('installEventInvoker',(callback,receiver,event,inShadow,native)=>{
-    try{return{threw:false,value:invokeOwnedEvent(callback,receiver,event,inShadow,native)}}catch(value){return{threw:true,value}}
+    const outcome=(threw,value)=>({threw,value,valueType:typeof value,symbol:typeof value==='symbol'?value:undefined});
+    try{return outcome(false,invokeOwnedEvent(callback,receiver,event,inShadow,native))}catch(value){return outcome(true,value)}
   });
   const invokeEventCallback=(callback,receiver,event,inShadow,native)=>{
     const handler=eventHandlerWrappers.get(callback);
