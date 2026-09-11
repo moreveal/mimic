@@ -1,0 +1,136 @@
+[
+  {
+    "name": "fixed",
+    "command": [
+      "E:\\GitHub\\mimic-compat-fuzz\\.build\\fuzz-venv\\Scripts\\python.exe",
+      ".build/platform_fixed.py"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 0,
+    "elapsedSeconds": 47.575162172317505
+  },
+  {
+    "name": "brand-before",
+    "command": [
+      "E:\\GitHub\\mimic-compat-fuzz\\.build\\fuzz-venv\\Scripts\\python.exe",
+      "tools/compatibility/differential.py",
+      "--chrome",
+      "http://127.0.0.1:19533",
+      "--mimic",
+      "http://127.0.0.1:19556",
+      "--corpus",
+      "compatibility/private-captures/audit-20260911-3faacc6/brand-index.json",
+      "--output",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-final-20260911\\brand-before"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 1,
+    "elapsedSeconds": 0.942173957824707
+  },
+  {
+    "name": "brand-after",
+    "command": [
+      "E:\\GitHub\\mimic-compat-fuzz\\.build\\fuzz-venv\\Scripts\\python.exe",
+      "tools/compatibility/differential.py",
+      "--chrome",
+      "http://127.0.0.1:19533",
+      "--mimic",
+      "http://127.0.0.1:19555",
+      "--corpus",
+      "compatibility/private-captures/audit-20260911-3faacc6/brand-index.json",
+      "--output",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-final-20260911\\brand-after"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 1,
+    "elapsedSeconds": 1.0274808406829834
+  },
+  {
+    "name": "relations-before",
+    "command": [
+      "E:\\GitHub\\mimic-compat-fuzz\\.build\\fuzz-venv\\Scripts\\python.exe",
+      "tools/compatibility/differential.py",
+      "--chrome",
+      "http://127.0.0.1:19533",
+      "--mimic",
+      "http://127.0.0.1:19556",
+      "--corpus",
+      "compatibility/private-captures/audit-20260911-3faacc6/relations-index.json",
+      "--output",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-final-20260911\\relations-before"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 1,
+    "elapsedSeconds": 1.1190659999847412
+  },
+  {
+    "name": "relations-after",
+    "command": [
+      "E:\\GitHub\\mimic-compat-fuzz\\.build\\fuzz-venv\\Scripts\\python.exe",
+      "tools/compatibility/differential.py",
+      "--chrome",
+      "http://127.0.0.1:19533",
+      "--mimic",
+      "http://127.0.0.1:19555",
+      "--corpus",
+      "compatibility/private-captures/audit-20260911-3faacc6/relations-index.json",
+      "--output",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-final-20260911\\relations-after"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 1,
+    "elapsedSeconds": 1.0399725437164307
+  },
+  {
+    "name": "corpus-before",
+    "command": [
+      "E:\\GitHub\\mimic-compat-fuzz\\.build\\fuzz-venv\\Scripts\\python.exe",
+      "tools/compatibility/differential.py",
+      "--chrome",
+      "http://127.0.0.1:19533",
+      "--mimic",
+      "http://127.0.0.1:19556",
+      "--corpus",
+      "compatibility/corpus/index.json",
+      "--output",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-final-20260911\\corpus-before"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 1,
+    "elapsedSeconds": 8.534838199615479
+  },
+  {
+    "name": "corpus-after",
+    "command": [
+      "E:\\GitHub\\mimic-compat-fuzz\\.build\\fuzz-venv\\Scripts\\python.exe",
+      "tools/compatibility/differential.py",
+      "--chrome",
+      "http://127.0.0.1:19533",
+      "--mimic",
+      "http://127.0.0.1:19555",
+      "--corpus",
+      "compatibility/corpus/index.json",
+      "--output",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-final-20260911\\corpus-after"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 1,
+    "elapsedSeconds": 8.71489143371582
+  },
+  {
+    "name": "corpus-control",
+    "command": [
+      "E:\\GitHub\\mimic-compat-fuzz\\.build\\fuzz-venv\\Scripts\\python.exe",
+      "tools/compatibility/differential.py",
+      "--chrome",
+      "http://127.0.0.1:19533",
+      "--mimic",
+      "http://127.0.0.1:19533",
+      "--output",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-final-20260911\\corpus-control"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 0,
+    "elapsedSeconds": 11.343584537506104
+  }
+]

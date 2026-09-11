@@ -1,0 +1,1674 @@
+{
+  "initial": {
+    "before": {
+      "build": {
+        "command": [
+          "go",
+          "build",
+          "-o",
+          "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-gate-before-20260911\\mimic.exe",
+          "./cmd/mimic"
+        ],
+        "source": "E:\\GitHub\\mimic\\.build\\platform-bindings-before",
+        "revision": "6bfa2456e5e181383237d4a60e19afde275bc777",
+        "status": "?? internal/browser/goja_child_profile_test.go\n",
+        "executable": "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-gate-before-20260911\\mimic.exe",
+        "sha256": "ef86f669f2cd97773fa213872dd986b228daced11e280ad5ebdc80367a4ebd71",
+        "harness_sha256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7",
+        "harness_files": {
+          "compare.py": "274b156ee88e67085f5e556ef79629146f5e7287ee54af844476a0c005e65a5b",
+          "report.py": "f12e393341c00e9e03748a06913fa639c1069f66dc7acb71959cffd51647f214",
+          "requirements.txt": "06e6d87d17f39a59fe7b2576545231fe65d5a1940d22e63fc2b32b6cfa12123b",
+          "run.ps1": "6c50b0a55886278de7c1e4d92b77b42bf2cfad59fa451dbaa766b0e0eae84fa6",
+          "run.py": "67718e844bce74b7757f2238716233b9d8683a17294f2b02017667b9c1e44cd3",
+          "test_harness.py": "ddb8dcf74a192d3403971833cf5e011dd8578a9acd9a060b3b265cc6d79aef2a",
+          "v8_version.go": "669a669b0545ba599edb2f7923617f154b976e7377de89d8b2e1f477bdb12f09",
+          "windows_metrics.py": "57ba1e10dfb1f1cb439a52ad5f7f5795c3ba4eef25ae22c9514ecfe115434cd5",
+          "fixtures/workload.js": "484019063e33e131756f67ab6f3076ad2c18e3959072fbae42f540455448c214",
+          "fixtures/vendor/react-dom.production.min.js": "35f4f974f4b2bcd44da73963347f8952e341f83909e4498227d4e26b98f66f0d",
+          "fixtures/vendor/REACT-LICENSE.txt": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85",
+          "fixtures/vendor/react.production.min.js": "d949f1c3687aedadcedac85261865f29b17cd273997e7f6b2bfc53b2f9d4c4dd"
+        },
+        "built_at": "2026-09-11T18:30:20.684739+04:00"
+      },
+      "failure": "RuntimeError('Mandatory workload correctness gate failed; see raw.json')",
+      "complete": false,
+      "correctness": [
+        {
+          "workload": "static",
+          "status": "VALID"
+        },
+        {
+          "workload": "cpu",
+          "status": "VALID"
+        },
+        {
+          "workload": "dom",
+          "status": "VALID"
+        },
+        {
+          "workload": "async",
+          "status": "VALID"
+        },
+        {
+          "workload": "react",
+          "status": "VALID"
+        },
+        {
+          "workload": "wasm",
+          "status": "VALID"
+        }
+      ],
+      "latency": {
+        "dom": {
+          "session_create_ms": 2.0844000100623816,
+          "execution_ms": 458.1585000123596,
+          "completion_ms": 481.95050000504125
+        },
+        "static": {
+          "session_create_ms": 2.0031999883940443,
+          "execution_ms": 3.132400001049973,
+          "completion_ms": 27.356199992937036
+        },
+        "react": {
+          "session_create_ms": 2.1551999961957335,
+          "execution_ms": 59.443499994813465,
+          "completion_ms": 89.42659999593161
+        }
+      },
+      "concurrency": [
+        {
+          "workload": "static",
+          "n": 10,
+          "wave": -1,
+          "excluded": true,
+          "throughput": 0.0,
+          "stop_reason": "memory pressure",
+          "active_memory": {
+            "t": 107922.4502069,
+            "rss": 27308032,
+            "private": 81371136,
+            "user_s": 0.015625,
+            "kernel_s": 0.015625,
+            "cpu_s": 0.03125,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5091803136,
+            "system_memory_percent": 85.1,
+            "page_faults": 6916,
+            "system_pages_input_s": 10.97972880238777,
+            "paging_counter_error": null
+          },
+          "after_teardown": {
+            "t": 107922.4638433,
+            "rss": 28381184,
+            "private": 82624512,
+            "user_s": 0.015625,
+            "kernel_s": 0.015625,
+            "cpu_s": 0.03125,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5088002048,
+            "system_memory_percent": 85.1,
+            "page_faults": 7186,
+            "system_pages_input_s": 10.97972880238777,
+            "paging_counter_error": null
+          },
+          "after_recovery": {
+            "t": 107922.715443,
+            "rss": 28921856,
+            "private": 82866176,
+            "user_s": 0.015625,
+            "kernel_s": 0.015625,
+            "cpu_s": 0.03125,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5087825920,
+            "system_memory_percent": 85.1,
+            "page_faults": 7335,
+            "system_pages_input_s": 10.97972880238777,
+            "paging_counter_error": null
+          },
+          "validRows": 0,
+          "totalRows": 10
+        }
+      ],
+      "memoryWavesCompleted": 0,
+      "nativeDumps": [],
+      "processStatus": {
+        "18939.json": {
+          "exitBeforeClose": null,
+          "command": [
+            "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-gate-before-20260911\\mimic.exe",
+            "-listen",
+            "127.0.0.1:18939",
+            "-engine",
+            "v8",
+            "-chrome",
+            "152",
+            "-browser-mode",
+            "headless"
+          ]
+        },
+        "18973.json": {
+          "exitBeforeClose": null,
+          "command": [
+            "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-gate-before-20260911\\mimic.exe",
+            "-listen",
+            "127.0.0.1:18973",
+            "-engine",
+            "v8",
+            "-chrome",
+            "152",
+            "-browser-mode",
+            "headless"
+          ]
+        },
+        "19004.json": {
+          "exitBeforeClose": null,
+          "command": [
+            "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-gate-before-20260911\\mimic.exe",
+            "-listen",
+            "127.0.0.1:19004",
+            "-engine",
+            "v8",
+            "-chrome",
+            "152",
+            "-browser-mode",
+            "headless"
+          ]
+        },
+        "19033.json": {
+          "exitBeforeClose": null,
+          "command": [
+            "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-gate-before-20260911\\mimic.exe",
+            "-listen",
+            "127.0.0.1:19033",
+            "-engine",
+            "v8",
+            "-chrome",
+            "152",
+            "-browser-mode",
+            "headless"
+          ]
+        },
+        "51709.json": {
+          "exitBeforeClose": null,
+          "command": [
+            "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-gate-before-20260911\\mimic.exe",
+            "-listen",
+            "127.0.0.1:51709",
+            "-engine",
+            "v8",
+            "-chrome",
+            "152",
+            "-browser-mode",
+            "headless"
+          ]
+        }
+      },
+      "rawSHA256": "0536736bc805ab26d94fb67ba6b304fe5511034e5249b523487dac8b7caaad90",
+      "gojaMemory": [
+        {
+          "elapsed_ms": 0,
+          "go_heap": 1446168,
+          "go_released": 1900544,
+          "go_sys": 8538360,
+          "goroutines": 2,
+          "phase": "initial",
+          "private": 79495168,
+          "rss": 14864384
+        },
+        {
+          "elapsed_ms": 499.5315,
+          "go_heap": 258376272,
+          "go_released": 6086656,
+          "go_sys": 428695800,
+          "goroutines": 2,
+          "phase": "cold_live5",
+          "private": 498110464,
+          "rss": 446550016
+        },
+        {
+          "elapsed_ms": 0,
+          "go_heap": 258379064,
+          "go_released": 6086656,
+          "go_sys": 428695800,
+          "goroutines": 2,
+          "phase": "cold_closed",
+          "private": 498110464,
+          "rss": 446603264
+        },
+        {
+          "elapsed_ms": 0,
+          "go_heap": 258379928,
+          "go_released": 15720448,
+          "go_sys": 428695800,
+          "goroutines": 2,
+          "phase": "cold_closed250ms",
+          "private": 488476672,
+          "rss": 437096448
+        },
+        {
+          "elapsed_ms": 361.833,
+          "go_heap": 251817280,
+          "go_released": 22183936,
+          "go_sys": 442065144,
+          "goroutines": 2,
+          "phase": "warm_live5",
+          "private": 495480832,
+          "rss": 444248064
+        },
+        {
+          "elapsed_ms": 0,
+          "go_heap": 251820120,
+          "go_released": 22183936,
+          "go_sys": 442065144,
+          "goroutines": 2,
+          "phase": "warm_closed",
+          "private": 495480832,
+          "rss": 444248064
+        },
+        {
+          "elapsed_ms": 0,
+          "go_heap": 251820888,
+          "go_released": 52461568,
+          "go_sys": 442065144,
+          "goroutines": 2,
+          "phase": "warm_closed250ms",
+          "private": 465203200,
+          "rss": 413986816
+        },
+        {
+          "elapsed_ms": 0,
+          "go_heap": 22855344,
+          "go_released": 57049088,
+          "go_sys": 442065144,
+          "goroutines": 2,
+          "phase": "diagnostic_go_gc",
+          "private": 460914688,
+          "rss": 409579520
+        }
+      ]
+    },
+    "after": {
+      "build": {
+        "command": [
+          "go",
+          "build",
+          "-o",
+          "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-gate-after-20260911\\mimic.exe",
+          "./cmd/mimic"
+        ],
+        "source": "E:\\GitHub\\mimic",
+        "revision": "6bfa2456e5e181383237d4a60e19afde275bc777",
+        "status": " M chrome/152/generated/artifact-hashes.json\n M chrome/152/generated/exposure_data.go\n M compatibility/bundle.go\n M internal/browser/bootstrap_snapshot_test.go\n M internal/webapi/dom_compatibility.js\n M internal/webapi/exposure_transport.go\n M internal/webapi/exposure_transport_test.go\n M internal/webapi/form_controls.js\n M internal/webapi/native_functions.js\n M internal/webapi/surface.go\n M internal/webapi/surface.js\n?? chrome/152/generated/window-secure-member-order.json\n?? chrome/152/generated/window-secure-member-order.md\n?? docs/compatibility/snapshot-numeric-allocator-20260911/\n?? internal/browser/goja_child_profile_test.go\n?? internal/browser/platform_collection_binding_test.go\n?? internal/browser/singleton_accessor_test.go\n?? internal/browser/testdata/collection_binding_chrome152.json\n?? internal/browser/testdata/collection_binding_oracle.js\n?? internal/browser/testdata/singleton_accessor_chrome152.json\n?? internal/browser/testdata/singleton_accessor_oracle.js\n?? internal/browser/testdata/window_member_order_chrome152.json\n?? internal/browser/testdata/window_member_order_oracle.js\n?? internal/browser/window_member_order_test.go\n",
+        "executable": "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-gate-after-20260911\\mimic.exe",
+        "sha256": "9959abe0c784a96ef4af4ffe61e66ac7810413e9c68e3f16cd0f04d2c6c7979a",
+        "harness_sha256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7",
+        "harness_files": {
+          "compare.py": "274b156ee88e67085f5e556ef79629146f5e7287ee54af844476a0c005e65a5b",
+          "report.py": "f12e393341c00e9e03748a06913fa639c1069f66dc7acb71959cffd51647f214",
+          "requirements.txt": "06e6d87d17f39a59fe7b2576545231fe65d5a1940d22e63fc2b32b6cfa12123b",
+          "run.ps1": "6c50b0a55886278de7c1e4d92b77b42bf2cfad59fa451dbaa766b0e0eae84fa6",
+          "run.py": "67718e844bce74b7757f2238716233b9d8683a17294f2b02017667b9c1e44cd3",
+          "test_harness.py": "ddb8dcf74a192d3403971833cf5e011dd8578a9acd9a060b3b265cc6d79aef2a",
+          "v8_version.go": "669a669b0545ba599edb2f7923617f154b976e7377de89d8b2e1f477bdb12f09",
+          "windows_metrics.py": "57ba1e10dfb1f1cb439a52ad5f7f5795c3ba4eef25ae22c9514ecfe115434cd5",
+          "fixtures/workload.js": "484019063e33e131756f67ab6f3076ad2c18e3959072fbae42f540455448c214",
+          "fixtures/vendor/react-dom.production.min.js": "35f4f974f4b2bcd44da73963347f8952e341f83909e4498227d4e26b98f66f0d",
+          "fixtures/vendor/REACT-LICENSE.txt": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85",
+          "fixtures/vendor/react.production.min.js": "d949f1c3687aedadcedac85261865f29b17cd273997e7f6b2bfc53b2f9d4c4dd"
+        },
+        "built_at": "2026-09-11T18:30:38.944083+04:00"
+      },
+      "failure": "RuntimeError('Mandatory workload correctness gate failed; see raw.json')",
+      "complete": false,
+      "correctness": [
+        {
+          "workload": "static",
+          "status": "VALID"
+        },
+        {
+          "workload": "cpu",
+          "status": "VALID"
+        },
+        {
+          "workload": "dom",
+          "status": "VALID"
+        },
+        {
+          "workload": "async",
+          "status": "VALID"
+        },
+        {
+          "workload": "react",
+          "status": "VALID"
+        },
+        {
+          "workload": "wasm",
+          "status": "VALID"
+        }
+      ],
+      "latency": {
+        "dom": {
+          "session_create_ms": 2.164800011087209,
+          "execution_ms": 487.0158999983687,
+          "completion_ms": 509.06229999964125
+        },
+        "static": {
+          "session_create_ms": 2.2363000025507063,
+          "execution_ms": 3.3103000023402274,
+          "completion_ms": 27.31709998624865
+        },
+        "react": {
+          "session_create_ms": 2.794900006847456,
+          "execution_ms": 69.07630000205245,
+          "completion_ms": 103.41550000885036
+        }
+      },
+      "concurrency": [
+        {
+          "workload": "static",
+          "n": 10,
+          "wave": -1,
+          "excluded": true,
+          "throughput": 0.0,
+          "stop_reason": "memory pressure",
+          "active_memory": {
+            "t": 107941.1113508,
+            "rss": 27508736,
+            "private": 82059264,
+            "user_s": 0.015625,
+            "kernel_s": 0.015625,
+            "cpu_s": 0.03125,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 4981874688,
+            "system_memory_percent": 85.4,
+            "page_faults": 6971,
+            "system_pages_input_s": 36.83169495292376,
+            "paging_counter_error": null
+          },
+          "after_teardown": {
+            "t": 107941.1332557,
+            "rss": 28549120,
+            "private": 83501056,
+            "user_s": 0.015625,
+            "kernel_s": 0.03125,
+            "cpu_s": 0.046875,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 4982452224,
+            "system_memory_percent": 85.4,
+            "page_faults": 7233,
+            "system_pages_input_s": 36.83169495292376,
+            "paging_counter_error": null
+          },
+          "after_recovery": {
+            "t": 107941.3849774,
+            "rss": 28557312,
+            "private": 83509248,
+            "user_s": 0.015625,
+            "kernel_s": 0.046875,
+            "cpu_s": 0.0625,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5067522048,
+            "system_memory_percent": 85.2,
+            "page_faults": 7235,
+            "system_pages_input_s": 826.4008836537809,
+            "paging_counter_error": null
+          },
+          "validRows": 0,
+          "totalRows": 10
+        }
+      ],
+      "memoryWavesCompleted": 0,
+      "nativeDumps": [],
+      "processStatus": {
+        "10626.json": {
+          "exitBeforeClose": null,
+          "command": [
+            "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-gate-after-20260911\\mimic.exe",
+            "-listen",
+            "127.0.0.1:10626",
+            "-engine",
+            "v8",
+            "-chrome",
+            "152",
+            "-browser-mode",
+            "headless"
+          ]
+        },
+        "10683.json": {
+          "exitBeforeClose": null,
+          "command": [
+            "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-gate-after-20260911\\mimic.exe",
+            "-listen",
+            "127.0.0.1:10683",
+            "-engine",
+            "v8",
+            "-chrome",
+            "152",
+            "-browser-mode",
+            "headless"
+          ]
+        },
+        "12771.json": {
+          "exitBeforeClose": null,
+          "command": [
+            "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-gate-after-20260911\\mimic.exe",
+            "-listen",
+            "127.0.0.1:12771",
+            "-engine",
+            "v8",
+            "-chrome",
+            "152",
+            "-browser-mode",
+            "headless"
+          ]
+        },
+        "44947.json": {
+          "exitBeforeClose": null,
+          "command": [
+            "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-gate-after-20260911\\mimic.exe",
+            "-listen",
+            "127.0.0.1:44947",
+            "-engine",
+            "v8",
+            "-chrome",
+            "152",
+            "-browser-mode",
+            "headless"
+          ]
+        },
+        "44989.json": {
+          "exitBeforeClose": null,
+          "command": [
+            "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-gate-after-20260911\\mimic.exe",
+            "-listen",
+            "127.0.0.1:44989",
+            "-engine",
+            "v8",
+            "-chrome",
+            "152",
+            "-browser-mode",
+            "headless"
+          ]
+        }
+      },
+      "rawSHA256": "f3afa887b23beeab0460a89e85039a41c9e04717f4f5ceea54bf0dc2e26d7640",
+      "gojaMemory": [
+        {
+          "elapsed_ms": 0,
+          "go_heap": 1445400,
+          "go_released": 5816320,
+          "go_sys": 12470520,
+          "goroutines": 2,
+          "phase": "initial",
+          "private": 80166912,
+          "rss": 15048704
+        },
+        {
+          "elapsed_ms": 482.7148,
+          "go_heap": 253612008,
+          "go_released": 10977280,
+          "go_sys": 432824568,
+          "goroutines": 2,
+          "phase": "cold_live5",
+          "private": 497709056,
+          "rss": 445460480
+        },
+        {
+          "elapsed_ms": 0,
+          "go_heap": 253614800,
+          "go_released": 10977280,
+          "go_sys": 432824568,
+          "goroutines": 2,
+          "phase": "cold_closed",
+          "private": 497709056,
+          "rss": 445521920
+        },
+        {
+          "elapsed_ms": 0,
+          "go_heap": 253615696,
+          "go_released": 21069824,
+          "go_sys": 432824568,
+          "goroutines": 2,
+          "phase": "cold_closed250ms",
+          "private": 487616512,
+          "rss": 435548160
+        },
+        {
+          "elapsed_ms": 347.9128,
+          "go_heap": 337364400,
+          "go_released": 29196288,
+          "go_sys": 439116024,
+          "goroutines": 2,
+          "phase": "warm_live5",
+          "private": 485818368,
+          "rss": 434192384
+        },
+        {
+          "elapsed_ms": 0,
+          "go_heap": 337367240,
+          "go_released": 29196288,
+          "go_sys": 439116024,
+          "goroutines": 2,
+          "phase": "warm_closed",
+          "private": 485818368,
+          "rss": 434192384
+        },
+        {
+          "elapsed_ms": 0,
+          "go_heap": 337367960,
+          "go_released": 29196288,
+          "go_sys": 439116024,
+          "goroutines": 2,
+          "phase": "warm_closed250ms",
+          "private": 485818368,
+          "rss": 434192384
+        },
+        {
+          "elapsed_ms": 0,
+          "go_heap": 22878152,
+          "go_released": 29196288,
+          "go_sys": 439116024,
+          "goroutines": 2,
+          "phase": "diagnostic_go_gc",
+          "private": 486129664,
+          "rss": 434360320
+        }
+      ]
+    }
+  },
+  "recovered-": {
+    "before": {
+      "build": {
+        "command": [
+          "go",
+          "build",
+          "-o",
+          "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-recovered-gate-before-20260911\\mimic.exe",
+          "./cmd/mimic"
+        ],
+        "source": "E:\\GitHub\\mimic\\.build\\platform-bindings-before",
+        "revision": "6bfa2456e5e181383237d4a60e19afde275bc777",
+        "status": "?? internal/browser/goja_child_profile_test.go\n",
+        "executable": "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-recovered-gate-before-20260911\\mimic.exe",
+        "sha256": "3da35c4367ec6579a4c5320de4d198adc634962412d474c5e44bfa80ebafb232",
+        "harness_sha256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7",
+        "harness_files": {
+          "compare.py": "274b156ee88e67085f5e556ef79629146f5e7287ee54af844476a0c005e65a5b",
+          "report.py": "f12e393341c00e9e03748a06913fa639c1069f66dc7acb71959cffd51647f214",
+          "requirements.txt": "06e6d87d17f39a59fe7b2576545231fe65d5a1940d22e63fc2b32b6cfa12123b",
+          "run.ps1": "6c50b0a55886278de7c1e4d92b77b42bf2cfad59fa451dbaa766b0e0eae84fa6",
+          "run.py": "67718e844bce74b7757f2238716233b9d8683a17294f2b02017667b9c1e44cd3",
+          "test_harness.py": "ddb8dcf74a192d3403971833cf5e011dd8578a9acd9a060b3b265cc6d79aef2a",
+          "v8_version.go": "669a669b0545ba599edb2f7923617f154b976e7377de89d8b2e1f477bdb12f09",
+          "windows_metrics.py": "57ba1e10dfb1f1cb439a52ad5f7f5795c3ba4eef25ae22c9514ecfe115434cd5",
+          "fixtures/workload.js": "484019063e33e131756f67ab6f3076ad2c18e3959072fbae42f540455448c214",
+          "fixtures/vendor/react-dom.production.min.js": "35f4f974f4b2bcd44da73963347f8952e341f83909e4498227d4e26b98f66f0d",
+          "fixtures/vendor/REACT-LICENSE.txt": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85",
+          "fixtures/vendor/react.production.min.js": "d949f1c3687aedadcedac85261865f29b17cd273997e7f6b2bfc53b2f9d4c4dd"
+        },
+        "built_at": "2026-09-11T18:34:51.952376+04:00"
+      },
+      "failure": "RuntimeError('memory pressure')",
+      "complete": false,
+      "correctness": [
+        {
+          "workload": "static",
+          "status": "VALID"
+        },
+        {
+          "workload": "cpu",
+          "status": "VALID"
+        },
+        {
+          "workload": "dom",
+          "status": "VALID"
+        },
+        {
+          "workload": "async",
+          "status": "VALID"
+        },
+        {
+          "workload": "react",
+          "status": "VALID"
+        },
+        {
+          "workload": "wasm",
+          "status": "VALID"
+        }
+      ],
+      "latency": {
+        "dom": {
+          "session_create_ms": 2.451599997584708,
+          "execution_ms": 494.1646000079345,
+          "completion_ms": 517.870399999083
+        },
+        "static": {
+          "session_create_ms": 2.041500003542751,
+          "execution_ms": 2.78019999677781,
+          "completion_ms": 27.742999998736195
+        },
+        "react": {
+          "session_create_ms": 2.017500009969808,
+          "execution_ms": 59.53710000903811,
+          "completion_ms": 90.02780000446364
+        }
+      },
+      "concurrency": [
+        {
+          "workload": "static",
+          "n": 10,
+          "wave": -1,
+          "excluded": true,
+          "throughput": 21.851437321757007,
+          "stop_reason": null,
+          "active_memory": {
+            "t": 108194.4181122,
+            "rss": 446443520,
+            "private": 496963584,
+            "user_s": 2.109375,
+            "kernel_s": 0.96875,
+            "cpu_s": 3.078125,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5523816448,
+            "system_memory_percent": 83.8,
+            "page_faults": 184083,
+            "system_pages_input_s": 333.7377848343166,
+            "paging_counter_error": null
+          },
+          "after_teardown": {
+            "t": 108194.4441641,
+            "rss": 123961344,
+            "private": 155394048,
+            "user_s": 2.28125,
+            "kernel_s": 1.15625,
+            "cpu_s": 3.4375,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5858095104,
+            "system_memory_percent": 82.9,
+            "page_faults": 184532,
+            "system_pages_input_s": 333.7377848343166,
+            "paging_counter_error": null
+          },
+          "after_recovery": {
+            "t": 108194.6957586,
+            "rss": 123961344,
+            "private": 155394048,
+            "user_s": 2.296875,
+            "kernel_s": 1.171875,
+            "cpu_s": 3.46875,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5854957568,
+            "system_memory_percent": 82.9,
+            "page_faults": 184532,
+            "system_pages_input_s": 333.7377848343166,
+            "paging_counter_error": null
+          },
+          "validRows": 10,
+          "totalRows": 10
+        },
+        {
+          "workload": "static",
+          "n": 10,
+          "wave": 0,
+          "excluded": false,
+          "throughput": 37.30567937953,
+          "stop_reason": null,
+          "active_memory": {
+            "t": 108195.0348242,
+            "rss": 489328640,
+            "private": 540499968,
+            "user_s": 4.375,
+            "kernel_s": 1.90625,
+            "cpu_s": 6.28125,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5426757632,
+            "system_memory_percent": 84.1,
+            "page_faults": 312474,
+            "system_pages_input_s": 333.7377848343166,
+            "paging_counter_error": null
+          },
+          "after_teardown": {
+            "t": 108195.0749281,
+            "rss": 139792384,
+            "private": 173092864,
+            "user_s": 4.484375,
+            "kernel_s": 1.9375,
+            "cpu_s": 6.421875,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5786931200,
+            "system_memory_percent": 83.1,
+            "page_faults": 313658,
+            "system_pages_input_s": 333.7377848343166,
+            "paging_counter_error": null
+          },
+          "after_recovery": {
+            "t": 108195.3270067,
+            "rss": 134438912,
+            "private": 166563840,
+            "user_s": 4.578125,
+            "kernel_s": 1.953125,
+            "cpu_s": 6.53125,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5850247168,
+            "system_memory_percent": 82.9,
+            "page_faults": 324774,
+            "system_pages_input_s": 95.05530238279879,
+            "paging_counter_error": null
+          },
+          "validRows": 10,
+          "totalRows": 10
+        },
+        {
+          "workload": "static",
+          "n": 10,
+          "wave": 1,
+          "excluded": false,
+          "throughput": 74.79543448382742,
+          "stop_reason": null,
+          "active_memory": {
+            "t": 108195.5617515,
+            "rss": 419528704,
+            "private": 468533248,
+            "user_s": 4.828125,
+            "kernel_s": 2.03125,
+            "cpu_s": 6.859375,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5567008768,
+            "system_memory_percent": 83.7,
+            "page_faults": 396939,
+            "system_pages_input_s": 95.05530238279879,
+            "paging_counter_error": null
+          },
+          "after_teardown": {
+            "t": 108195.5840705,
+            "rss": 216535040,
+            "private": 248393728,
+            "user_s": 4.921875,
+            "kernel_s": 2.09375,
+            "cpu_s": 7.015625,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5772562432,
+            "system_memory_percent": 83.1,
+            "page_faults": 399189,
+            "system_pages_input_s": 95.05530238279879,
+            "paging_counter_error": null
+          },
+          "after_recovery": {
+            "t": 108195.8378931,
+            "rss": 216535040,
+            "private": 248393728,
+            "user_s": 4.9375,
+            "kernel_s": 2.09375,
+            "cpu_s": 7.03125,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5769908224,
+            "system_memory_percent": 83.1,
+            "page_faults": 399189,
+            "system_pages_input_s": 95.05530238279879,
+            "paging_counter_error": null
+          },
+          "validRows": 10,
+          "totalRows": 10
+        },
+        {
+          "workload": "static",
+          "n": 10,
+          "wave": 2,
+          "excluded": false,
+          "throughput": 74.1865628803834,
+          "stop_reason": null,
+          "active_memory": {
+            "t": 108196.0594119,
+            "rss": 478257152,
+            "private": 526217216,
+            "user_s": 5.15625,
+            "kernel_s": 2.21875,
+            "cpu_s": 7.375,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5475450880,
+            "system_memory_percent": 84.0,
+            "page_faults": 465747,
+            "system_pages_input_s": 95.05530238279879,
+            "paging_counter_error": null
+          },
+          "after_teardown": {
+            "t": 108196.0829106,
+            "rss": 276516864,
+            "private": 308559872,
+            "user_s": 5.296875,
+            "kernel_s": 2.328125,
+            "cpu_s": 7.625,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5636857856,
+            "system_memory_percent": 83.5,
+            "page_faults": 467869,
+            "system_pages_input_s": 95.05530238279879,
+            "paging_counter_error": null
+          },
+          "after_recovery": {
+            "t": 108196.3349251,
+            "rss": 276516864,
+            "private": 308559872,
+            "user_s": 5.296875,
+            "kernel_s": 2.328125,
+            "cpu_s": 7.625,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5729943552,
+            "system_memory_percent": 83.2,
+            "page_faults": 467869,
+            "system_pages_input_s": 345.68617450353963,
+            "paging_counter_error": null
+          },
+          "validRows": 10,
+          "totalRows": 10
+        },
+        {
+          "workload": "static",
+          "n": 25,
+          "wave": -1,
+          "excluded": true,
+          "throughput": 31.661107609573172,
+          "stop_reason": "memory pressure",
+          "active_memory": {
+            "t": 108197.739598,
+            "rss": 914771968,
+            "private": 996421632,
+            "user_s": 5.6875,
+            "kernel_s": 2.15625,
+            "cpu_s": 7.84375,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5079781376,
+            "system_memory_percent": 85.2,
+            "page_faults": 291057,
+            "system_pages_input_s": 215.20504463995317,
+            "paging_counter_error": null
+          },
+          "after_teardown": {
+            "t": 108197.9420323,
+            "rss": 172474368,
+            "private": 209379328,
+            "user_s": 7.890625,
+            "kernel_s": 2.609375,
+            "cpu_s": 10.5,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5802647552,
+            "system_memory_percent": 83.0,
+            "page_faults": 355597,
+            "system_pages_input_s": 215.20504463995317,
+            "paging_counter_error": null
+          },
+          "after_recovery": {
+            "t": 108198.1936952,
+            "rss": 152547328,
+            "private": 189366272,
+            "user_s": 7.890625,
+            "kernel_s": 2.609375,
+            "cpu_s": 10.5,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5841469440,
+            "system_memory_percent": 82.9,
+            "page_faults": 355597,
+            "system_pages_input_s": 215.20504463995317,
+            "paging_counter_error": null
+          },
+          "validRows": 25,
+          "totalRows": 25
+        }
+      ],
+      "memoryWavesCompleted": 0,
+      "nativeDumps": [],
+      "processStatus": {
+        "52268.json": {
+          "exitBeforeClose": null,
+          "command": [
+            "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-recovered-gate-before-20260911\\mimic.exe",
+            "-listen",
+            "127.0.0.1:52268",
+            "-engine",
+            "v8",
+            "-chrome",
+            "152",
+            "-browser-mode",
+            "headless"
+          ]
+        },
+        "52316.json": {
+          "exitBeforeClose": null,
+          "command": [
+            "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-recovered-gate-before-20260911\\mimic.exe",
+            "-listen",
+            "127.0.0.1:52316",
+            "-engine",
+            "v8",
+            "-chrome",
+            "152",
+            "-browser-mode",
+            "headless"
+          ]
+        },
+        "52353.json": {
+          "exitBeforeClose": null,
+          "command": [
+            "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-recovered-gate-before-20260911\\mimic.exe",
+            "-listen",
+            "127.0.0.1:52353",
+            "-engine",
+            "v8",
+            "-chrome",
+            "152",
+            "-browser-mode",
+            "headless"
+          ]
+        },
+        "52399.json": {
+          "exitBeforeClose": null,
+          "command": [
+            "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-recovered-gate-before-20260911\\mimic.exe",
+            "-listen",
+            "127.0.0.1:52399",
+            "-engine",
+            "v8",
+            "-chrome",
+            "152",
+            "-browser-mode",
+            "headless"
+          ]
+        },
+        "52567.json": {
+          "exitBeforeClose": null,
+          "command": [
+            "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-recovered-gate-before-20260911\\mimic.exe",
+            "-listen",
+            "127.0.0.1:52567",
+            "-engine",
+            "v8",
+            "-chrome",
+            "152",
+            "-browser-mode",
+            "headless"
+          ]
+        },
+        "59277.json": {
+          "exitBeforeClose": null,
+          "command": [
+            "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-recovered-gate-before-20260911\\mimic.exe",
+            "-listen",
+            "127.0.0.1:59277",
+            "-engine",
+            "v8",
+            "-chrome",
+            "152",
+            "-browser-mode",
+            "headless"
+          ]
+        }
+      },
+      "rawSHA256": "a7f9adae02fcc1375f6fcd0c075d841ccb3b075cbbfa2d6cc5c0da92b35bd892",
+      "gojaMemory": [
+        {
+          "elapsed_ms": 0,
+          "go_heap": 1447208,
+          "go_released": 1892352,
+          "go_sys": 8538360,
+          "goroutines": 2,
+          "phase": "initial",
+          "private": 79495168,
+          "rss": 14901248
+        },
+        {
+          "elapsed_ms": 540.0946,
+          "go_heap": 256606824,
+          "go_released": 7340032,
+          "go_sys": 416375032,
+          "goroutines": 2,
+          "phase": "cold_live5",
+          "private": 484478976,
+          "rss": 432369664
+        },
+        {
+          "elapsed_ms": 0,
+          "go_heap": 256609616,
+          "go_released": 7340032,
+          "go_sys": 416375032,
+          "goroutines": 2,
+          "phase": "cold_closed",
+          "private": 484478976,
+          "rss": 432422912
+        },
+        {
+          "elapsed_ms": 0,
+          "go_heap": 256610496,
+          "go_released": 17891328,
+          "go_sys": 416375032,
+          "goroutines": 2,
+          "phase": "cold_closed250ms",
+          "private": 473927680,
+          "rss": 421957632
+        },
+        {
+          "elapsed_ms": 389.0102,
+          "go_heap": 304622912,
+          "go_released": 11501568,
+          "go_sys": 434200824,
+          "goroutines": 2,
+          "phase": "warm_live5",
+          "private": 498208768,
+          "rss": 446296064
+        },
+        {
+          "elapsed_ms": 0,
+          "go_heap": 304625752,
+          "go_released": 11501568,
+          "go_sys": 434200824,
+          "goroutines": 2,
+          "phase": "warm_closed",
+          "private": 498208768,
+          "rss": 446296064
+        },
+        {
+          "elapsed_ms": 0,
+          "go_heap": 304626488,
+          "go_released": 11501568,
+          "go_sys": 434200824,
+          "goroutines": 2,
+          "phase": "warm_closed250ms",
+          "private": 498208768,
+          "rss": 446296064
+        },
+        {
+          "elapsed_ms": 0,
+          "go_heap": 22834864,
+          "go_released": 11436032,
+          "go_sys": 434200824,
+          "goroutines": 2,
+          "phase": "diagnostic_go_gc",
+          "private": 498470912,
+          "rss": 446459904
+        }
+      ]
+    },
+    "after": {
+      "build": {
+        "command": [
+          "go",
+          "build",
+          "-o",
+          "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-recovered-gate-after-20260911\\mimic.exe",
+          "./cmd/mimic"
+        ],
+        "source": "E:\\GitHub\\mimic",
+        "revision": "19767ed6606b29c602c957cba66f37e2fbcbb0d4",
+        "status": "",
+        "executable": "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-recovered-gate-after-20260911\\mimic.exe",
+        "sha256": "851b81f53df62b0d3861bd348aa2640b696db1e0501fe8aee5630e932dbfc4d1",
+        "harness_sha256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7",
+        "harness_files": {
+          "compare.py": "274b156ee88e67085f5e556ef79629146f5e7287ee54af844476a0c005e65a5b",
+          "report.py": "f12e393341c00e9e03748a06913fa639c1069f66dc7acb71959cffd51647f214",
+          "requirements.txt": "06e6d87d17f39a59fe7b2576545231fe65d5a1940d22e63fc2b32b6cfa12123b",
+          "run.ps1": "6c50b0a55886278de7c1e4d92b77b42bf2cfad59fa451dbaa766b0e0eae84fa6",
+          "run.py": "67718e844bce74b7757f2238716233b9d8683a17294f2b02017667b9c1e44cd3",
+          "test_harness.py": "ddb8dcf74a192d3403971833cf5e011dd8578a9acd9a060b3b265cc6d79aef2a",
+          "v8_version.go": "669a669b0545ba599edb2f7923617f154b976e7377de89d8b2e1f477bdb12f09",
+          "windows_metrics.py": "57ba1e10dfb1f1cb439a52ad5f7f5795c3ba4eef25ae22c9514ecfe115434cd5",
+          "fixtures/workload.js": "484019063e33e131756f67ab6f3076ad2c18e3959072fbae42f540455448c214",
+          "fixtures/vendor/react-dom.production.min.js": "35f4f974f4b2bcd44da73963347f8952e341f83909e4498227d4e26b98f66f0d",
+          "fixtures/vendor/REACT-LICENSE.txt": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85",
+          "fixtures/vendor/react.production.min.js": "d949f1c3687aedadcedac85261865f29b17cd273997e7f6b2bfc53b2f9d4c4dd"
+        },
+        "built_at": "2026-09-11T18:35:14.796565+04:00"
+      },
+      "failure": "RuntimeError('memory pressure')",
+      "complete": false,
+      "correctness": [
+        {
+          "workload": "static",
+          "status": "VALID"
+        },
+        {
+          "workload": "cpu",
+          "status": "VALID"
+        },
+        {
+          "workload": "dom",
+          "status": "VALID"
+        },
+        {
+          "workload": "async",
+          "status": "VALID"
+        },
+        {
+          "workload": "react",
+          "status": "VALID"
+        },
+        {
+          "workload": "wasm",
+          "status": "VALID"
+        }
+      ],
+      "latency": {
+        "dom": {
+          "session_create_ms": 2.134700000169687,
+          "execution_ms": 498.0234999966342,
+          "completion_ms": 518.835000009858
+        },
+        "static": {
+          "session_create_ms": 2.1794999920530245,
+          "execution_ms": 2.8101000061724335,
+          "completion_ms": 25.97260000766255
+        },
+        "react": {
+          "session_create_ms": 2.7329000004101545,
+          "execution_ms": 62.11690000782255,
+          "completion_ms": 94.6721000073012
+        }
+      },
+      "concurrency": [
+        {
+          "workload": "static",
+          "n": 10,
+          "wave": -1,
+          "excluded": true,
+          "throughput": 21.410864643636867,
+          "stop_reason": null,
+          "active_memory": {
+            "t": 108217.4373886,
+            "rss": 433590272,
+            "private": 487067648,
+            "user_s": 2.4375,
+            "kernel_s": 1.234375,
+            "cpu_s": 3.671875,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5291368448,
+            "system_memory_percent": 84.5,
+            "page_faults": 191807,
+            "system_pages_input_s": 30.951440285336332,
+            "paging_counter_error": null
+          },
+          "after_teardown": {
+            "t": 108217.4666634,
+            "rss": 119664640,
+            "private": 152821760,
+            "user_s": 2.453125,
+            "kernel_s": 1.234375,
+            "cpu_s": 3.6875,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5614370816,
+            "system_memory_percent": 83.6,
+            "page_faults": 192356,
+            "system_pages_input_s": 30.951440285336332,
+            "paging_counter_error": null
+          },
+          "after_recovery": {
+            "t": 108217.718307,
+            "rss": 119664640,
+            "private": 152821760,
+            "user_s": 2.453125,
+            "kernel_s": 1.234375,
+            "cpu_s": 3.6875,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5622980608,
+            "system_memory_percent": 83.5,
+            "page_faults": 192356,
+            "system_pages_input_s": 30.951440285336332,
+            "paging_counter_error": null
+          },
+          "validRows": 10,
+          "totalRows": 10
+        },
+        {
+          "workload": "static",
+          "n": 10,
+          "wave": 0,
+          "excluded": false,
+          "throughput": 34.40743007845925,
+          "stop_reason": null,
+          "active_memory": {
+            "t": 108218.072049,
+            "rss": 518160384,
+            "private": 573194240,
+            "user_s": 4.75,
+            "kernel_s": 1.96875,
+            "cpu_s": 6.71875,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5179969536,
+            "system_memory_percent": 84.8,
+            "page_faults": 321748,
+            "system_pages_input_s": 689.8396113020633,
+            "paging_counter_error": null
+          },
+          "after_teardown": {
+            "t": 108218.1294279,
+            "rss": 185331712,
+            "private": 220557312,
+            "user_s": 5.28125,
+            "kernel_s": 2.109375,
+            "cpu_s": 7.390625,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5486845952,
+            "system_memory_percent": 83.9,
+            "page_faults": 325323,
+            "system_pages_input_s": 689.8396113020633,
+            "paging_counter_error": null
+          },
+          "after_recovery": {
+            "t": 108218.3814946,
+            "rss": 164601856,
+            "private": 199258112,
+            "user_s": 5.359375,
+            "kernel_s": 2.125,
+            "cpu_s": 7.484375,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5544001536,
+            "system_memory_percent": 83.8,
+            "page_faults": 333796,
+            "system_pages_input_s": 689.8396113020633,
+            "paging_counter_error": null
+          },
+          "validRows": 10,
+          "totalRows": 10
+        },
+        {
+          "workload": "static",
+          "n": 10,
+          "wave": 1,
+          "excluded": false,
+          "throughput": 73.28503849137037,
+          "stop_reason": null,
+          "active_memory": {
+            "t": 108218.6092459,
+            "rss": 408895488,
+            "private": 462708736,
+            "user_s": 5.546875,
+            "kernel_s": 2.171875,
+            "cpu_s": 7.71875,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5300559872,
+            "system_memory_percent": 84.5,
+            "page_faults": 395661,
+            "system_pages_input_s": 689.8396113020633,
+            "paging_counter_error": null
+          },
+          "after_teardown": {
+            "t": 108218.633692,
+            "rss": 210411520,
+            "private": 241238016,
+            "user_s": 5.578125,
+            "kernel_s": 2.171875,
+            "cpu_s": 7.75,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5499232256,
+            "system_memory_percent": 83.9,
+            "page_faults": 397412,
+            "system_pages_input_s": 689.8396113020633,
+            "paging_counter_error": null
+          },
+          "after_recovery": {
+            "t": 108218.8853595,
+            "rss": 210411520,
+            "private": 241238016,
+            "user_s": 5.578125,
+            "kernel_s": 2.171875,
+            "cpu_s": 7.75,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5483528192,
+            "system_memory_percent": 84.0,
+            "page_faults": 397412,
+            "system_pages_input_s": 689.8396113020633,
+            "paging_counter_error": null
+          },
+          "validRows": 10,
+          "totalRows": 10
+        },
+        {
+          "workload": "static",
+          "n": 10,
+          "wave": 2,
+          "excluded": false,
+          "throughput": 73.15866945224879,
+          "stop_reason": null,
+          "active_memory": {
+            "t": 108219.1134972,
+            "rss": 476250112,
+            "private": 531537920,
+            "user_s": 5.71875,
+            "kernel_s": 2.296875,
+            "cpu_s": 8.015625,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5242630144,
+            "system_memory_percent": 84.7,
+            "page_faults": 464718,
+            "system_pages_input_s": 1670.1212329073533,
+            "paging_counter_error": null
+          },
+          "after_teardown": {
+            "t": 108219.1345499,
+            "rss": 280018944,
+            "private": 312143872,
+            "user_s": 5.90625,
+            "kernel_s": 2.359375,
+            "cpu_s": 8.265625,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5434179584,
+            "system_memory_percent": 84.1,
+            "page_faults": 466290,
+            "system_pages_input_s": 1670.1212329073533,
+            "paging_counter_error": null
+          },
+          "after_recovery": {
+            "t": 108219.3865047,
+            "rss": 280018944,
+            "private": 312143872,
+            "user_s": 5.90625,
+            "kernel_s": 2.375,
+            "cpu_s": 8.28125,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5420032000,
+            "system_memory_percent": 84.1,
+            "page_faults": 466290,
+            "system_pages_input_s": 1670.1212329073533,
+            "paging_counter_error": null
+          },
+          "validRows": 10,
+          "totalRows": 10
+        },
+        {
+          "workload": "static",
+          "n": 25,
+          "wave": -1,
+          "excluded": true,
+          "throughput": 30.78899256562484,
+          "stop_reason": "memory pressure",
+          "active_memory": {
+            "t": 108220.559533,
+            "rss": 527753216,
+            "private": 605077504,
+            "user_s": 1.53125,
+            "kernel_s": 1.203125,
+            "cpu_s": 2.734375,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5105696768,
+            "system_memory_percent": 85.1,
+            "page_faults": 171921,
+            "system_pages_input_s": 8.72547305879311,
+            "paging_counter_error": null
+          },
+          "after_teardown": {
+            "t": 108221.010356,
+            "rss": 210214912,
+            "private": 250585088,
+            "user_s": 7.515625,
+            "kernel_s": 2.421875,
+            "cpu_s": 9.9375,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5335060480,
+            "system_memory_percent": 84.4,
+            "page_faults": 352013,
+            "system_pages_input_s": 8.72547305879311,
+            "paging_counter_error": null
+          },
+          "after_recovery": {
+            "t": 108221.2629975,
+            "rss": 189964288,
+            "private": 230318080,
+            "user_s": 7.53125,
+            "kernel_s": 2.421875,
+            "cpu_s": 9.953125,
+            "active_processes": 2,
+            "total_processes": 2,
+            "memory_access_denied": 0,
+            "system_available": 5369810944,
+            "system_memory_percent": 84.3,
+            "page_faults": 352013,
+            "system_pages_input_s": 565.3363896228936,
+            "paging_counter_error": null
+          },
+          "validRows": 25,
+          "totalRows": 25
+        }
+      ],
+      "memoryWavesCompleted": 0,
+      "nativeDumps": [],
+      "processStatus": {
+        "16122.json": {
+          "exitBeforeClose": null,
+          "command": [
+            "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-recovered-gate-after-20260911\\mimic.exe",
+            "-listen",
+            "127.0.0.1:16122",
+            "-engine",
+            "v8",
+            "-chrome",
+            "152",
+            "-browser-mode",
+            "headless"
+          ]
+        },
+        "2066.json": {
+          "exitBeforeClose": null,
+          "command": [
+            "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-recovered-gate-after-20260911\\mimic.exe",
+            "-listen",
+            "127.0.0.1:2066",
+            "-engine",
+            "v8",
+            "-chrome",
+            "152",
+            "-browser-mode",
+            "headless"
+          ]
+        },
+        "2118.json": {
+          "exitBeforeClose": null,
+          "command": [
+            "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-recovered-gate-after-20260911\\mimic.exe",
+            "-listen",
+            "127.0.0.1:2118",
+            "-engine",
+            "v8",
+            "-chrome",
+            "152",
+            "-browser-mode",
+            "headless"
+          ]
+        },
+        "2175.json": {
+          "exitBeforeClose": null,
+          "command": [
+            "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-recovered-gate-after-20260911\\mimic.exe",
+            "-listen",
+            "127.0.0.1:2175",
+            "-engine",
+            "v8",
+            "-chrome",
+            "152",
+            "-browser-mode",
+            "headless"
+          ]
+        },
+        "54968.json": {
+          "exitBeforeClose": null,
+          "command": [
+            "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-recovered-gate-after-20260911\\mimic.exe",
+            "-listen",
+            "127.0.0.1:54968",
+            "-engine",
+            "v8",
+            "-chrome",
+            "152",
+            "-browser-mode",
+            "headless"
+          ]
+        },
+        "55015.json": {
+          "exitBeforeClose": null,
+          "command": [
+            "E:\\GitHub\\mimic\\compatibility\\private-captures\\platform-bindings-recovered-gate-after-20260911\\mimic.exe",
+            "-listen",
+            "127.0.0.1:55015",
+            "-engine",
+            "v8",
+            "-chrome",
+            "152",
+            "-browser-mode",
+            "headless"
+          ]
+        }
+      },
+      "rawSHA256": "acde0017306c8a9dafbab8029d33b21b8309893d6f567da5c6dcbe8cc0119cb7",
+      "gojaMemory": [
+        {
+          "elapsed_ms": 0,
+          "go_heap": 1446760,
+          "go_released": 6086656,
+          "go_sys": 12732664,
+          "goroutines": 2,
+          "phase": "initial",
+          "private": 79884288,
+          "rss": 14901248
+        },
+        {
+          "elapsed_ms": 520.743,
+          "go_heap": 211383016,
+          "go_released": 10723328,
+          "go_sys": 410943736,
+          "goroutines": 2,
+          "phase": "cold_live5",
+          "private": 476024832,
+          "rss": 423968768
+        },
+        {
+          "elapsed_ms": 0,
+          "go_heap": 211385808,
+          "go_released": 10723328,
+          "go_sys": 410943736,
+          "goroutines": 2,
+          "phase": "cold_closed",
+          "private": 476024832,
+          "rss": 424030208
+        },
+        {
+          "elapsed_ms": 0,
+          "go_heap": 211386688,
+          "go_released": 10723328,
+          "go_sys": 410943736,
+          "goroutines": 2,
+          "phase": "cold_closed250ms",
+          "private": 476024832,
+          "rss": 424030208
+        },
+        {
+          "elapsed_ms": 388.1695,
+          "go_heap": 235573568,
+          "go_released": 30023680,
+          "go_sys": 426410232,
+          "goroutines": 2,
+          "phase": "warm_live5",
+          "private": 472231936,
+          "rss": 420069376
+        },
+        {
+          "elapsed_ms": 0,
+          "go_heap": 235576408,
+          "go_released": 30023680,
+          "go_sys": 426410232,
+          "goroutines": 2,
+          "phase": "warm_closed",
+          "private": 472231936,
+          "rss": 420069376
+        },
+        {
+          "elapsed_ms": 0,
+          "go_heap": 235577128,
+          "go_released": 54427648,
+          "go_sys": 426410232,
+          "goroutines": 2,
+          "phase": "warm_closed250ms",
+          "private": 447827968,
+          "rss": 395718656
+        },
+        {
+          "elapsed_ms": 0,
+          "go_heap": 22895360,
+          "go_released": 54427648,
+          "go_sys": 426410232,
+          "goroutines": 2,
+          "phase": "diagnostic_go_gc",
+          "private": 448286720,
+          "rss": 395988992
+        }
+      ]
+    }
+  }
+}

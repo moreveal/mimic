@@ -1,0 +1,53 @@
+{
+  "fixed": {
+    "checks": 236,
+    "beforeMatches": 205,
+    "afterMatches": 210,
+    "beforeDiffRecords": 209,
+    "afterDiffRecords": 88,
+    "beforeExpandedPaths": 209,
+    "afterExpandedPaths": 88,
+    "chromeDrift": [],
+    "beforeGroups": 9,
+    "afterGroups": 4,
+    "newDifferingPaths": 0
+  },
+  "representative": {
+    "checks": 28,
+    "beforeMatches": 19,
+    "afterMatches": 24,
+    "beforeDiffRecords": 131,
+    "afterDiffRecords": 10,
+    "beforeExpandedPaths": 131,
+    "afterExpandedPaths": 10,
+    "chromeDrift": [],
+    "beforeGroups": 9,
+    "afterGroups": 4,
+    "newDifferingPaths": 0
+  },
+  "focused": {
+    "singleton_accessor": {
+      "before": 214,
+      "after": 0,
+      "chromeControl": 0,
+      "probeSHA256": "83a98acd23d38fda27ee9c4c475370a54504ccc1e06af7cc93668780e2665b76"
+    },
+    "collection_binding": {
+      "before": 164,
+      "after": 0,
+      "chromeControl": 0,
+      "probeSHA256": "71f23da9a767703e211eb6e75e0f6542d0939a69e5f4cbce6b14216bf8005dcf"
+    },
+    "window_member_order": {
+      "before": 121,
+      "after": 0,
+      "chromeControl": 0,
+      "probeSHA256": "6799f88e2b56f5dc2be145f6e8c0237adf8f7c185f1ed1f16840bb203d92c7be"
+    }
+  },
+  "control": {
+    "cases": 15,
+    "differences": 0,
+    "invalid": false
+  }
+}
