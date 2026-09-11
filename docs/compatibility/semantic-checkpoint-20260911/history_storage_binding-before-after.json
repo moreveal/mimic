@@ -1,0 +1,1297 @@
+{
+  "chrome": {
+    "History.pushState": {
+      "invalid": {
+        "error": "TypeError"
+      },
+      "trace": [],
+      "missing": {
+        "error": "TypeError"
+      }
+    },
+    "History.replaceState": {
+      "invalid": {
+        "error": "TypeError"
+      },
+      "trace": [],
+      "missing": {
+        "error": "TypeError"
+      }
+    },
+    "History.back": {
+      "invalid": {
+        "error": "TypeError"
+      },
+      "trace": [],
+      "missing": null
+    },
+    "History.forward": {
+      "invalid": {
+        "error": "TypeError"
+      },
+      "trace": [],
+      "missing": null
+    },
+    "History.go": {
+      "invalid": {
+        "error": "TypeError"
+      },
+      "trace": [],
+      "missing": null
+    },
+    "Storage.getItem": {
+      "invalid": {
+        "error": "TypeError"
+      },
+      "trace": [],
+      "missing": {
+        "error": "TypeError"
+      }
+    },
+    "Storage.setItem": {
+      "invalid": {
+        "error": "TypeError"
+      },
+      "trace": [],
+      "missing": {
+        "error": "TypeError"
+      }
+    },
+    "Storage.removeItem": {
+      "invalid": {
+        "error": "TypeError"
+      },
+      "trace": [],
+      "missing": {
+        "error": "TypeError"
+      }
+    },
+    "Storage.key": {
+      "invalid": {
+        "error": "TypeError"
+      },
+      "trace": [],
+      "missing": {
+        "error": "TypeError"
+      }
+    },
+    "Storage.clear": {
+      "invalid": {
+        "error": "TypeError"
+      },
+      "trace": [],
+      "missing": null
+    },
+    "pushState.order": {
+      "result": {
+        "value": "undefined"
+      },
+      "trace": [
+        "title",
+        "url",
+        "state"
+      ]
+    },
+    "pushState.titleSymbol": {
+      "error": "TypeError"
+    },
+    "pushState.urlSymbol": {
+      "error": "TypeError"
+    },
+    "replaceState.order": {
+      "result": {
+        "value": "undefined"
+      },
+      "trace": [
+        "title",
+        "url",
+        "state"
+      ]
+    },
+    "replaceState.titleSymbol": {
+      "error": "TypeError"
+    },
+    "replaceState.urlSymbol": {
+      "error": "TypeError"
+    },
+    "goBigInt": {
+      "error": "TypeError"
+    },
+    "keyBigInt": {
+      "error": "TypeError"
+    },
+    "getItem.symbol": {
+      "error": "TypeError"
+    },
+    "removeItem.symbol": {
+      "error": "TypeError"
+    },
+    "setItem.symbol": {
+      "error": "TypeError"
+    },
+    "setOrder": {
+      "result": {
+        "value": "undefined"
+      },
+      "trace": [
+        "key",
+        "value"
+      ]
+    },
+    "stored": "value",
+    "wrappedKey": "key",
+    "owner": {
+      "session": "child",
+      "local": null,
+      "borrowed": "child",
+      "length": 1
+    },
+    "childHistory": {
+      "value": "undefined"
+    },
+    "childState": 7,
+    "parentState": {
+      "x": 1
+    },
+    "detachedPrototype": {
+      "value": "value"
+    }
+  },
+  "before": {
+    "History.back": {
+      "invalid": {
+        "value": "undefined"
+      },
+      "missing": null,
+      "trace": []
+    },
+    "History.forward": {
+      "invalid": {
+        "value": "undefined"
+      },
+      "missing": null,
+      "trace": []
+    },
+    "History.go": {
+      "invalid": {
+        "value": "undefined"
+      },
+      "missing": null,
+      "trace": [
+        "number"
+      ]
+    },
+    "History.pushState": {
+      "invalid": {
+        "error": "DataCloneError"
+      },
+      "missing": {
+        "value": "undefined"
+      },
+      "trace": [
+        "string"
+      ]
+    },
+    "History.replaceState": {
+      "invalid": {
+        "error": "DataCloneError"
+      },
+      "missing": {
+        "value": "undefined"
+      },
+      "trace": [
+        "string"
+      ]
+    },
+    "Storage.clear": {
+      "invalid": {
+        "value": "undefined"
+      },
+      "missing": null,
+      "trace": []
+    },
+    "Storage.getItem": {
+      "invalid": {
+        "value": null
+      },
+      "missing": {
+        "value": null
+      },
+      "trace": [
+        "string"
+      ]
+    },
+    "Storage.key": {
+      "invalid": {
+        "value": null
+      },
+      "missing": {
+        "value": null
+      },
+      "trace": [
+        "number"
+      ]
+    },
+    "Storage.removeItem": {
+      "invalid": {
+        "value": "undefined"
+      },
+      "missing": {
+        "value": "undefined"
+      },
+      "trace": [
+        "string"
+      ]
+    },
+    "Storage.setItem": {
+      "invalid": {
+        "value": "undefined"
+      },
+      "missing": {
+        "value": "undefined"
+      },
+      "trace": [
+        "string",
+        "string"
+      ]
+    },
+    "childHistory": {
+      "value": "undefined"
+    },
+    "childState": null,
+    "detachedPrototype": {
+      "value": "value"
+    },
+    "getItem.symbol": {
+      "value": null
+    },
+    "goBigInt": {
+      "value": "undefined"
+    },
+    "keyBigInt": {
+      "value": null
+    },
+    "owner": {
+      "borrowed": "child",
+      "length": 2,
+      "local": "child",
+      "session": null
+    },
+    "parentState": 7,
+    "pushState.order": {
+      "result": {
+        "value": "undefined"
+      },
+      "trace": [
+        "url",
+        "state"
+      ]
+    },
+    "pushState.titleSymbol": {
+      "value": "undefined"
+    },
+    "pushState.urlSymbol": {
+      "value": "undefined"
+    },
+    "removeItem.symbol": {
+      "value": "undefined"
+    },
+    "replaceState.order": {
+      "result": {
+        "value": "undefined"
+      },
+      "trace": [
+        "url",
+        "state"
+      ]
+    },
+    "replaceState.titleSymbol": {
+      "value": "undefined"
+    },
+    "replaceState.urlSymbol": {
+      "value": "undefined"
+    },
+    "setItem.symbol": {
+      "value": "undefined"
+    },
+    "setOrder": {
+      "result": {
+        "value": "undefined"
+      },
+      "trace": [
+        "key",
+        "value"
+      ]
+    },
+    "stored": "value",
+    "wrappedKey": "key"
+  },
+  "after": {
+    "History.back": {
+      "invalid": {
+        "error": "TypeError"
+      },
+      "missing": null,
+      "trace": []
+    },
+    "History.forward": {
+      "invalid": {
+        "error": "TypeError"
+      },
+      "missing": null,
+      "trace": []
+    },
+    "History.go": {
+      "invalid": {
+        "error": "TypeError"
+      },
+      "missing": null,
+      "trace": []
+    },
+    "History.pushState": {
+      "invalid": {
+        "error": "TypeError"
+      },
+      "missing": {
+        "error": "TypeError"
+      },
+      "trace": []
+    },
+    "History.replaceState": {
+      "invalid": {
+        "error": "TypeError"
+      },
+      "missing": {
+        "error": "TypeError"
+      },
+      "trace": []
+    },
+    "Storage.clear": {
+      "invalid": {
+        "error": "TypeError"
+      },
+      "missing": null,
+      "trace": []
+    },
+    "Storage.getItem": {
+      "invalid": {
+        "error": "TypeError"
+      },
+      "missing": {
+        "error": "TypeError"
+      },
+      "trace": []
+    },
+    "Storage.key": {
+      "invalid": {
+        "error": "TypeError"
+      },
+      "missing": {
+        "error": "TypeError"
+      },
+      "trace": []
+    },
+    "Storage.removeItem": {
+      "invalid": {
+        "error": "TypeError"
+      },
+      "missing": {
+        "error": "TypeError"
+      },
+      "trace": []
+    },
+    "Storage.setItem": {
+      "invalid": {
+        "error": "TypeError"
+      },
+      "missing": {
+        "error": "TypeError"
+      },
+      "trace": []
+    },
+    "childHistory": {
+      "value": "undefined"
+    },
+    "childState": 7,
+    "detachedPrototype": {
+      "value": "value"
+    },
+    "getItem.symbol": {
+      "error": "TypeError"
+    },
+    "goBigInt": {
+      "error": "TypeError"
+    },
+    "keyBigInt": {
+      "error": "TypeError"
+    },
+    "owner": {
+      "borrowed": "child",
+      "length": 1,
+      "local": null,
+      "session": "child"
+    },
+    "parentState": {
+      "x": 1
+    },
+    "pushState.order": {
+      "result": {
+        "value": "undefined"
+      },
+      "trace": [
+        "title",
+        "url",
+        "state"
+      ]
+    },
+    "pushState.titleSymbol": {
+      "error": "TypeError"
+    },
+    "pushState.urlSymbol": {
+      "error": "TypeError"
+    },
+    "removeItem.symbol": {
+      "error": "TypeError"
+    },
+    "replaceState.order": {
+      "result": {
+        "value": "undefined"
+      },
+      "trace": [
+        "title",
+        "url",
+        "state"
+      ]
+    },
+    "replaceState.titleSymbol": {
+      "error": "TypeError"
+    },
+    "replaceState.urlSymbol": {
+      "error": "TypeError"
+    },
+    "setItem.symbol": {
+      "error": "TypeError"
+    },
+    "setOrder": {
+      "result": {
+        "value": "undefined"
+      },
+      "trace": [
+        "key",
+        "value"
+      ]
+    },
+    "stored": "value",
+    "wrappedKey": "key"
+  },
+  "control": {
+    "History.pushState": {
+      "invalid": {
+        "error": "TypeError"
+      },
+      "trace": [],
+      "missing": {
+        "error": "TypeError"
+      }
+    },
+    "History.replaceState": {
+      "invalid": {
+        "error": "TypeError"
+      },
+      "trace": [],
+      "missing": {
+        "error": "TypeError"
+      }
+    },
+    "History.back": {
+      "invalid": {
+        "error": "TypeError"
+      },
+      "trace": [],
+      "missing": null
+    },
+    "History.forward": {
+      "invalid": {
+        "error": "TypeError"
+      },
+      "trace": [],
+      "missing": null
+    },
+    "History.go": {
+      "invalid": {
+        "error": "TypeError"
+      },
+      "trace": [],
+      "missing": null
+    },
+    "Storage.getItem": {
+      "invalid": {
+        "error": "TypeError"
+      },
+      "trace": [],
+      "missing": {
+        "error": "TypeError"
+      }
+    },
+    "Storage.setItem": {
+      "invalid": {
+        "error": "TypeError"
+      },
+      "trace": [],
+      "missing": {
+        "error": "TypeError"
+      }
+    },
+    "Storage.removeItem": {
+      "invalid": {
+        "error": "TypeError"
+      },
+      "trace": [],
+      "missing": {
+        "error": "TypeError"
+      }
+    },
+    "Storage.key": {
+      "invalid": {
+        "error": "TypeError"
+      },
+      "trace": [],
+      "missing": {
+        "error": "TypeError"
+      }
+    },
+    "Storage.clear": {
+      "invalid": {
+        "error": "TypeError"
+      },
+      "trace": [],
+      "missing": null
+    },
+    "pushState.order": {
+      "result": {
+        "value": "undefined"
+      },
+      "trace": [
+        "title",
+        "url",
+        "state"
+      ]
+    },
+    "pushState.titleSymbol": {
+      "error": "TypeError"
+    },
+    "pushState.urlSymbol": {
+      "error": "TypeError"
+    },
+    "replaceState.order": {
+      "result": {
+        "value": "undefined"
+      },
+      "trace": [
+        "title",
+        "url",
+        "state"
+      ]
+    },
+    "replaceState.titleSymbol": {
+      "error": "TypeError"
+    },
+    "replaceState.urlSymbol": {
+      "error": "TypeError"
+    },
+    "goBigInt": {
+      "error": "TypeError"
+    },
+    "keyBigInt": {
+      "error": "TypeError"
+    },
+    "getItem.symbol": {
+      "error": "TypeError"
+    },
+    "removeItem.symbol": {
+      "error": "TypeError"
+    },
+    "setItem.symbol": {
+      "error": "TypeError"
+    },
+    "setOrder": {
+      "result": {
+        "value": "undefined"
+      },
+      "trace": [
+        "key",
+        "value"
+      ]
+    },
+    "stored": "value",
+    "wrappedKey": "key",
+    "owner": {
+      "session": "child",
+      "local": null,
+      "borrowed": "child",
+      "length": 1
+    },
+    "childHistory": {
+      "value": "undefined"
+    },
+    "childState": 7,
+    "parentState": {
+      "x": 1
+    },
+    "detachedPrototype": {
+      "value": "value"
+    }
+  },
+  "sha256": "55c38c1209c2e6b4ce918033c7fe76b8bf44465c4ce9d92c192327bac5314a26",
+  "beforeDifferences": [
+    [
+      [
+        "History.back",
+        "invalid",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "History.back",
+        "invalid",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      "undefined"
+    ],
+    [
+      [
+        "History.forward",
+        "invalid",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "History.forward",
+        "invalid",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      "undefined"
+    ],
+    [
+      [
+        "History.go",
+        "invalid",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "History.go",
+        "invalid",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      "undefined"
+    ],
+    [
+      [
+        "History.go",
+        "trace"
+      ],
+      [],
+      [
+        "number"
+      ]
+    ],
+    [
+      [
+        "History.pushState",
+        "invalid",
+        "error"
+      ],
+      "TypeError",
+      "DataCloneError"
+    ],
+    [
+      [
+        "History.pushState",
+        "missing",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "History.pushState",
+        "missing",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      "undefined"
+    ],
+    [
+      [
+        "History.pushState",
+        "trace"
+      ],
+      [],
+      [
+        "string"
+      ]
+    ],
+    [
+      [
+        "History.replaceState",
+        "invalid",
+        "error"
+      ],
+      "TypeError",
+      "DataCloneError"
+    ],
+    [
+      [
+        "History.replaceState",
+        "missing",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "History.replaceState",
+        "missing",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      "undefined"
+    ],
+    [
+      [
+        "History.replaceState",
+        "trace"
+      ],
+      [],
+      [
+        "string"
+      ]
+    ],
+    [
+      [
+        "Storage.clear",
+        "invalid",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Storage.clear",
+        "invalid",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      "undefined"
+    ],
+    [
+      [
+        "Storage.getItem",
+        "invalid",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Storage.getItem",
+        "invalid",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      null
+    ],
+    [
+      [
+        "Storage.getItem",
+        "missing",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Storage.getItem",
+        "missing",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      null
+    ],
+    [
+      [
+        "Storage.getItem",
+        "trace"
+      ],
+      [],
+      [
+        "string"
+      ]
+    ],
+    [
+      [
+        "Storage.key",
+        "invalid",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Storage.key",
+        "invalid",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      null
+    ],
+    [
+      [
+        "Storage.key",
+        "missing",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Storage.key",
+        "missing",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      null
+    ],
+    [
+      [
+        "Storage.key",
+        "trace"
+      ],
+      [],
+      [
+        "number"
+      ]
+    ],
+    [
+      [
+        "Storage.removeItem",
+        "invalid",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Storage.removeItem",
+        "invalid",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      "undefined"
+    ],
+    [
+      [
+        "Storage.removeItem",
+        "missing",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Storage.removeItem",
+        "missing",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      "undefined"
+    ],
+    [
+      [
+        "Storage.removeItem",
+        "trace"
+      ],
+      [],
+      [
+        "string"
+      ]
+    ],
+    [
+      [
+        "Storage.setItem",
+        "invalid",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Storage.setItem",
+        "invalid",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      "undefined"
+    ],
+    [
+      [
+        "Storage.setItem",
+        "missing",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Storage.setItem",
+        "missing",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      "undefined"
+    ],
+    [
+      [
+        "Storage.setItem",
+        "trace"
+      ],
+      [],
+      [
+        "string",
+        "string"
+      ]
+    ],
+    [
+      [
+        "childState"
+      ],
+      7,
+      null
+    ],
+    [
+      [
+        "getItem.symbol",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "getItem.symbol",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      null
+    ],
+    [
+      [
+        "goBigInt",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "goBigInt",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      "undefined"
+    ],
+    [
+      [
+        "keyBigInt",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "keyBigInt",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      null
+    ],
+    [
+      [
+        "owner",
+        "length"
+      ],
+      1,
+      2
+    ],
+    [
+      [
+        "owner",
+        "local"
+      ],
+      null,
+      "child"
+    ],
+    [
+      [
+        "owner",
+        "session"
+      ],
+      "child",
+      null
+    ],
+    [
+      [
+        "parentState"
+      ],
+      {
+        "x": 1
+      },
+      7
+    ],
+    [
+      [
+        "pushState.order",
+        "trace"
+      ],
+      [
+        "title",
+        "url",
+        "state"
+      ],
+      [
+        "url",
+        "state"
+      ]
+    ],
+    [
+      [
+        "pushState.titleSymbol",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "pushState.titleSymbol",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      "undefined"
+    ],
+    [
+      [
+        "pushState.urlSymbol",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "pushState.urlSymbol",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      "undefined"
+    ],
+    [
+      [
+        "removeItem.symbol",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "removeItem.symbol",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      "undefined"
+    ],
+    [
+      [
+        "replaceState.order",
+        "trace"
+      ],
+      [
+        "title",
+        "url",
+        "state"
+      ],
+      [
+        "url",
+        "state"
+      ]
+    ],
+    [
+      [
+        "replaceState.titleSymbol",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "replaceState.titleSymbol",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      "undefined"
+    ],
+    [
+      [
+        "replaceState.urlSymbol",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "replaceState.urlSymbol",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      "undefined"
+    ],
+    [
+      [
+        "setItem.symbol",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "setItem.symbol",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      "undefined"
+    ]
+  ],
+  "afterDifferences": [],
+  "controlDifferences": []
+}

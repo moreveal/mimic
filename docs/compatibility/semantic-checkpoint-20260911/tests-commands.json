@@ -1,0 +1,75 @@
+[
+  {
+    "name": "suite",
+    "command": [
+      "go",
+      "test",
+      "-json",
+      "-timeout=25m",
+      "./internal/browser",
+      "./internal/webapi",
+      "./internal/engine/v8",
+      "./internal/engine/goja",
+      "./internal/cdp",
+      "./internal/network",
+      "./internal/scheduler",
+      "./chrome/152/...",
+      "./compatibility"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 0,
+    "elapsedSeconds": 402.3100700378418
+  },
+  {
+    "name": "browser-race",
+    "command": [
+      "go",
+      "test",
+      "-race",
+      "-json",
+      "-timeout=15m",
+      "./internal/browser",
+      "-run",
+      "TestHistoryStorageBindings|TestFormNameReflection|TestSingletonAccessorOwnership|TestCollectionPrototypeBindings|TestWindowMemberOrder|TestHTMLCollectionReflection|TestLivePairIterators|TestFormUTF8|TestTextEncoder|TestIterationAndEncoding|TestHeaders|TestNativeFunctionFinalization|TestCrossFrameIteratorResultCache|TestInitialBlankRealmIsDeferredAndIndependent|TestInitialBlankChildRealmsInitializeOnlyWhenObserved|TestPartitionCookiesFrameAndWorkerTransport|TestFrameDocumentEntryFollowsSynchronousCalls|TestFrameNavigationTimingIsDocumentScoped|TestChildNavigationObserverWaitsForChildLoad|TestFrameInsertionAfterInnerHTMLAndFragmentMove|TestResourceTimingDoesNotLeakParentInflightFetch",
+      "-count=1"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 0,
+    "elapsedSeconds": 56.45945191383362
+  },
+  {
+    "name": "core-race",
+    "command": [
+      "go",
+      "test",
+      "-race",
+      "-json",
+      "-timeout=15m",
+      "./internal/webapi",
+      "./internal/engine/v8",
+      "./internal/engine/goja",
+      "./internal/cdp",
+      "./internal/network",
+      "./internal/scheduler"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 0,
+    "elapsedSeconds": 10.375779628753662
+  },
+  {
+    "name": "python",
+    "command": [
+      "E:\\GitHub\\mimic-compat-fuzz\\.build\\fuzz-venv\\Scripts\\python.exe",
+      "-m",
+      "unittest",
+      "discover",
+      "-s",
+      "compatibility",
+      "-p",
+      "test_*.py"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 0,
+    "elapsedSeconds": 0.3058016300201416
+  }
+]

@@ -82,7 +82,7 @@ const attributeCompatibility=(()=>{
   accessor(globalThis.Attr.prototype,'ownerElement',function(){const value=state(this);if(value.owner&&!value.owner.hasAttribute(value.name)){cache(value.owner).delete(value.name);detach(this)}return value.owner});
   accessor(globalThis.Attr.prototype,'ownerDocument',function(){const value=state(this);return value.owner?value.owner.ownerDocument:value.document});
   const read=function(){const value=state(this);return value.owner?value.owner.getAttribute(value.name)??value.value:value.value};
-  const write=function(input){const value=state(this),text=String(input);if(value.owner)value.owner.setAttribute(value.name,text);else value.value=text};
+  const write=function(input){const value=state(this),text=bindingString(input);if(value.owner)value.owner.setAttribute(value.name,text);else value.value=text};
   accessor(globalThis.Attr.prototype,'value',read,write);
   for(const name of ['nodeValue','textContent'])accessor(globalThis.Attr.prototype,name,read,function(value){write.call(this,value==null?'':value)});
   member(globalThis.Attr.prototype,'cloneNode',function(){const value=state(this);return create(value.name,this.value,this.ownerDocument,null,value.namespace)});
@@ -104,5 +104,27 @@ const attributeCompatibility=(()=>{
     if(previous)detach(previous);
     value.document=this.ownerDocument;value.owner=this;cache(this).set(value.name,attr);if(value.namespace)this.setAttributeNS(value.namespace,value.name,value.value);else this.setAttribute(value.name,value.value);return previous;
   });
+  // Attr inherits these bindings from Node. Select its private state here so
+  // borrowing Node accessors and changing public prototypes preserve semantics.
+  for(const name of ['nodeName','nodeType','nodeValue','ownerDocument','parentNode','parentElement','textContent']){
+    const attr=Object.getOwnPropertyDescriptor(globalThis.Attr.prototype,name);
+    const node=Object.getOwnPropertyDescriptor(Node.prototype,name);
+    accessor(Node.prototype,name,function(){
+      if(!isDOMNode(this))throw new TypeError('Illegal invocation');
+      return functionSourceApply(slots.has(this)?attr.get:node.get,this,[]);
+    },node.set?function(value){
+      if(!isDOMNode(this))throw new TypeError('Illegal invocation');
+      return functionSourceApply(slots.has(this)?attr.set:node.set,this,[value]);
+    }:undefined);
+    delete globalThis.Attr.prototype[name];
+  }
+  const clone=Node.prototype.cloneNode;
+  member(Node.prototype,'cloneNode',function(deep=false){
+    if(!isDOMNode(this))throw new TypeError('Illegal invocation');
+    if(!slots.has(this))return functionSourceApply(clone,this,[deep]);
+    const value=state(this);
+    return create(value.name,functionSourceApply(read,this,[]),value.owner?value.owner.ownerDocument:value.document,null,value.namespace);
+  });
+  delete globalThis.Attr.prototype.cloneNode;
   return {namedMap};
 })();

@@ -1,0 +1,160 @@
+{
+  "checks": 15,
+  "beforeMatches": 12,
+  "afterMatches": 12,
+  "beforeDiffRecords": 40,
+  "afterDiffRecords": 40,
+  "beforeExpandedPaths": 40,
+  "afterExpandedPaths": 40,
+  "changedPaths": [],
+  "newDifferingPaths": [],
+  "chromeDrift": [],
+  "groups": {
+    "before": {
+      "6ae848b54560c36a": {
+        "category": "network",
+        "firstDifference": [
+          [
+            "observations",
+            0,
+            "value",
+            0,
+            "received",
+            "headers",
+            "connection"
+          ],
+          "keep-alive",
+          {
+            "$missing": true
+          }
+        ],
+        "members": [
+          "network"
+        ]
+      },
+      "98b00c8c2a3516ae": {
+        "category": "interface-surface",
+        "firstDifference": [
+          [
+            "observations",
+            0,
+            "value",
+            "CanvasRenderingContext2D",
+            "props",
+            "createConicGradient"
+          ],
+          {
+            "enumerable": true,
+            "configurable": true,
+            "writable": true,
+            "type": "function",
+            "name": "createConicGradient",
+            "length": 3
+          },
+          {
+            "$missing": true
+          }
+        ],
+        "members": [
+          "surface"
+        ]
+      },
+      "35cc05e39363ce7a": {
+        "category": "fonts-canvas-media-rtc",
+        "firstDifference": [
+          [
+            "observations",
+            0,
+            "value",
+            "canvas",
+            "invalid",
+            "exception",
+            "message"
+          ],
+          "Failed to execute 'getImageData' on 'CanvasRenderingContext2D': The source width is 0.",
+          "ImageData dimensions must be nonzero"
+        ],
+        "members": [
+          "observations"
+        ]
+      }
+    },
+    "after": {
+      "6ae848b54560c36a": {
+        "category": "network",
+        "firstDifference": [
+          [
+            "observations",
+            0,
+            "value",
+            0,
+            "received",
+            "headers",
+            "connection"
+          ],
+          "keep-alive",
+          {
+            "$missing": true
+          }
+        ],
+        "members": [
+          "network"
+        ]
+      },
+      "98b00c8c2a3516ae": {
+        "category": "interface-surface",
+        "firstDifference": [
+          [
+            "observations",
+            0,
+            "value",
+            "CanvasRenderingContext2D",
+            "props",
+            "createConicGradient"
+          ],
+          {
+            "enumerable": true,
+            "configurable": true,
+            "writable": true,
+            "type": "function",
+            "name": "createConicGradient",
+            "length": 3
+          },
+          {
+            "$missing": true
+          }
+        ],
+        "members": [
+          "surface"
+        ]
+      },
+      "35cc05e39363ce7a": {
+        "category": "fonts-canvas-media-rtc",
+        "firstDifference": [
+          [
+            "observations",
+            0,
+            "value",
+            "canvas",
+            "invalid",
+            "exception",
+            "message"
+          ],
+          "Failed to execute 'getImageData' on 'CanvasRenderingContext2D': The source width is 0.",
+          "ImageData dimensions must be nonzero"
+        ],
+        "members": [
+          "observations"
+        ]
+      }
+    }
+  },
+  "valid": {
+    "before": true,
+    "after": true
+  },
+  "incomplete": {
+    "before": [],
+    "after": []
+  }
+}

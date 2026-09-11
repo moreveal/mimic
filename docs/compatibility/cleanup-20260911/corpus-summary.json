@@ -1,0 +1,446 @@
+[
+  {
+    "name": "corpus-before",
+    "cases": [
+      {
+        "id": "value-normalization",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "network",
+        "differences": 12,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "temporal",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "frame-task-interleaving",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "frame-microtask-checkpoint",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "resource-realm-isolation",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "resource-json",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "worker-microtasks",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "surface",
+        "differences": 7,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "samesite",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "samesite-navigation",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "partition",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "svg-values",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "observations",
+        "differences": 22,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "webgpu-lifecycle",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      }
+    ],
+    "corpusSHA256": "12d4f3bd616f19f3aa6dbc4f9bf2f987f0686eb0d4044ce09b738bc2635b4928",
+    "fixtures": {
+      "compatibility/corpus/frame-microtask-checkpoint.js": "8dc918220dd2c292e4c7369ec5a5ec0437fa5c0977a12c1abdce0d37ecc66436",
+      "compatibility/corpus/frame-task-interleaving.js": "187a69cf8fd56078dc65d62379700074d00949bea6eba81daf1aa7077e381409",
+      "compatibility/corpus/network.js": "0cd46d6dea3f38f439083cc79e28f43b4256707d04585492f566f3fa6658ea27",
+      "compatibility/corpus/normalize.js": "160591c37d3ea64e3b80f690fc64ded8f6c811cf7aaa68eaf50f0fed8d1fde20",
+      "compatibility/corpus/observations.js": "5771269022a17956af106be508280bdd0fed58a760b2ac68491fe5f38100e5d8",
+      "compatibility/corpus/partition-revisit.js": "c6a149ed1ec9940c02c3af85f0fcdf8d02e4ff1aa6fc18cb6336f0519ae66474",
+      "compatibility/corpus/partition.js": "51019a0bc140f4f991f642b2262ab443c2d9e93f2a0de50f57892465bfa13adf",
+      "compatibility/corpus/resource-json.js": "c3d2fbdc2d566dbd12255bb057c26455d9d2483b896f5d6ba48d88b134f6a154",
+      "compatibility/corpus/resource-realm-isolation.js": "06fe5bbf913e237d3a7891b20118be21b681914dae049cf2950a55f7bc46e94d",
+      "compatibility/corpus/samesite-init.js": "06e726431a42570b7f873ab1532c1dbfa67d23f9b68a6a78a286c13120767bf5",
+      "compatibility/corpus/samesite-navigation.js": "b6ebebe63d5c49993b05a78719029d929b983d24e3697dfc7ad1b3457125e359",
+      "compatibility/corpus/samesite.js": "87ca9ba49f4374401e263c4c746b448e9b434ae83fb8b1186b4d82a7c3b789c9",
+      "compatibility/corpus/surface.js": "485dd5ad89a7e79488f746d192744c06d345590913e7937c0a2209ddf6fac9a3",
+      "compatibility/corpus/temporal.js": "4b66cbe9ca5a4edef041dbca867b5cb440eb9e68c8cbe21a9951f9c641d47503",
+      "compatibility/corpus/values.js": "14733ae3f7e30fd20569f43f2733829efd45f56300ec095177a9820b40f0c73a",
+      "compatibility/corpus/worker-microtasks.js": "dd14c8773d67ea01710efaac39111d2ea648c67ef1b2f0e54c5edfaf796fdbfa",
+      "internal/browser/testdata/svg_values_oracle.js": "b28c3b20e43cd6dec0a855892ca5feb12000f607e3c71ff832af3885ac0b5c9f",
+      "internal/browser/testdata/webgpu_lifecycle_oracle.js": "c0918bc66a4cf1cb5d4e0a7d22da73734499dafd81835f8ae8bcc25d39263428"
+    }
+  },
+  {
+    "name": "corpus-final",
+    "cases": [
+      {
+        "id": "value-normalization",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "network",
+        "differences": 12,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "temporal",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "frame-task-interleaving",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "frame-microtask-checkpoint",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "resource-realm-isolation",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "resource-json",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "worker-microtasks",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "surface",
+        "differences": 7,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "samesite",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "samesite-navigation",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "partition",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "svg-values",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "observations",
+        "differences": 22,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "webgpu-lifecycle",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      }
+    ],
+    "corpusSHA256": "12d4f3bd616f19f3aa6dbc4f9bf2f987f0686eb0d4044ce09b738bc2635b4928",
+    "fixtures": {
+      "compatibility/corpus/frame-microtask-checkpoint.js": "8dc918220dd2c292e4c7369ec5a5ec0437fa5c0977a12c1abdce0d37ecc66436",
+      "compatibility/corpus/frame-task-interleaving.js": "187a69cf8fd56078dc65d62379700074d00949bea6eba81daf1aa7077e381409",
+      "compatibility/corpus/network.js": "0cd46d6dea3f38f439083cc79e28f43b4256707d04585492f566f3fa6658ea27",
+      "compatibility/corpus/normalize.js": "160591c37d3ea64e3b80f690fc64ded8f6c811cf7aaa68eaf50f0fed8d1fde20",
+      "compatibility/corpus/observations.js": "5771269022a17956af106be508280bdd0fed58a760b2ac68491fe5f38100e5d8",
+      "compatibility/corpus/partition-revisit.js": "c6a149ed1ec9940c02c3af85f0fcdf8d02e4ff1aa6fc18cb6336f0519ae66474",
+      "compatibility/corpus/partition.js": "51019a0bc140f4f991f642b2262ab443c2d9e93f2a0de50f57892465bfa13adf",
+      "compatibility/corpus/resource-json.js": "c3d2fbdc2d566dbd12255bb057c26455d9d2483b896f5d6ba48d88b134f6a154",
+      "compatibility/corpus/resource-realm-isolation.js": "06fe5bbf913e237d3a7891b20118be21b681914dae049cf2950a55f7bc46e94d",
+      "compatibility/corpus/samesite-init.js": "06e726431a42570b7f873ab1532c1dbfa67d23f9b68a6a78a286c13120767bf5",
+      "compatibility/corpus/samesite-navigation.js": "b6ebebe63d5c49993b05a78719029d929b983d24e3697dfc7ad1b3457125e359",
+      "compatibility/corpus/samesite.js": "87ca9ba49f4374401e263c4c746b448e9b434ae83fb8b1186b4d82a7c3b789c9",
+      "compatibility/corpus/surface.js": "485dd5ad89a7e79488f746d192744c06d345590913e7937c0a2209ddf6fac9a3",
+      "compatibility/corpus/temporal.js": "4b66cbe9ca5a4edef041dbca867b5cb440eb9e68c8cbe21a9951f9c641d47503",
+      "compatibility/corpus/values.js": "14733ae3f7e30fd20569f43f2733829efd45f56300ec095177a9820b40f0c73a",
+      "compatibility/corpus/worker-microtasks.js": "dd14c8773d67ea01710efaac39111d2ea648c67ef1b2f0e54c5edfaf796fdbfa",
+      "internal/browser/testdata/svg_values_oracle.js": "b28c3b20e43cd6dec0a855892ca5feb12000f607e3c71ff832af3885ac0b5c9f",
+      "internal/browser/testdata/webgpu_lifecycle_oracle.js": "c0918bc66a4cf1cb5d4e0a7d22da73734499dafd81835f8ae8bcc25d39263428"
+    }
+  },
+  {
+    "name": "corpus-final-control",
+    "cases": [
+      {
+        "id": "value-normalization",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "network",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "temporal",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "frame-task-interleaving",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "frame-microtask-checkpoint",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "resource-realm-isolation",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "resource-json",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "worker-microtasks",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "surface",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "samesite",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "samesite-navigation",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "partition",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "svg-values",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "observations",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      },
+      {
+        "id": "webgpu-lifecycle",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      }
+    ],
+    "corpusSHA256": "12d4f3bd616f19f3aa6dbc4f9bf2f987f0686eb0d4044ce09b738bc2635b4928",
+    "fixtures": {
+      "compatibility/corpus/frame-microtask-checkpoint.js": "8dc918220dd2c292e4c7369ec5a5ec0437fa5c0977a12c1abdce0d37ecc66436",
+      "compatibility/corpus/frame-task-interleaving.js": "187a69cf8fd56078dc65d62379700074d00949bea6eba81daf1aa7077e381409",
+      "compatibility/corpus/network.js": "0cd46d6dea3f38f439083cc79e28f43b4256707d04585492f566f3fa6658ea27",
+      "compatibility/corpus/normalize.js": "160591c37d3ea64e3b80f690fc64ded8f6c811cf7aaa68eaf50f0fed8d1fde20",
+      "compatibility/corpus/observations.js": "5771269022a17956af106be508280bdd0fed58a760b2ac68491fe5f38100e5d8",
+      "compatibility/corpus/partition-revisit.js": "c6a149ed1ec9940c02c3af85f0fcdf8d02e4ff1aa6fc18cb6336f0519ae66474",
+      "compatibility/corpus/partition.js": "51019a0bc140f4f991f642b2262ab443c2d9e93f2a0de50f57892465bfa13adf",
+      "compatibility/corpus/resource-json.js": "c3d2fbdc2d566dbd12255bb057c26455d9d2483b896f5d6ba48d88b134f6a154",
+      "compatibility/corpus/resource-realm-isolation.js": "06fe5bbf913e237d3a7891b20118be21b681914dae049cf2950a55f7bc46e94d",
+      "compatibility/corpus/samesite-init.js": "06e726431a42570b7f873ab1532c1dbfa67d23f9b68a6a78a286c13120767bf5",
+      "compatibility/corpus/samesite-navigation.js": "b6ebebe63d5c49993b05a78719029d929b983d24e3697dfc7ad1b3457125e359",
+      "compatibility/corpus/samesite.js": "87ca9ba49f4374401e263c4c746b448e9b434ae83fb8b1186b4d82a7c3b789c9",
+      "compatibility/corpus/surface.js": "485dd5ad89a7e79488f746d192744c06d345590913e7937c0a2209ddf6fac9a3",
+      "compatibility/corpus/temporal.js": "4b66cbe9ca5a4edef041dbca867b5cb440eb9e68c8cbe21a9951f9c641d47503",
+      "compatibility/corpus/values.js": "14733ae3f7e30fd20569f43f2733829efd45f56300ec095177a9820b40f0c73a",
+      "compatibility/corpus/worker-microtasks.js": "dd14c8773d67ea01710efaac39111d2ea648c67ef1b2f0e54c5edfaf796fdbfa",
+      "internal/browser/testdata/svg_values_oracle.js": "b28c3b20e43cd6dec0a855892ca5feb12000f607e3c71ff832af3885ac0b5c9f",
+      "internal/browser/testdata/webgpu_lifecycle_oracle.js": "c0918bc66a4cf1cb5d4e0a7d22da73734499dafd81835f8ae8bcc25d39263428"
+    }
+  },
+  {
+    "name": "brand-before",
+    "cases": [
+      {
+        "id": "brand-matrix",
+        "differences": 1351,
+        "valid": true,
+        "incomplete": {}
+      }
+    ],
+    "corpusSHA256": "836c268e2f702ac315f59502df89819d2d7e971199dfed08c86bc664b457825a",
+    "fixtures": {
+      "compatibility/corpus/brand-matrix.js": "9e6ed118d24accf857f272b7660c92749ed20f488c9304032084cbfeafcc9433",
+      "compatibility/corpus/normalize.js": "160591c37d3ea64e3b80f690fc64ded8f6c811cf7aaa68eaf50f0fed8d1fde20"
+    }
+  },
+  {
+    "name": "brand-final",
+    "cases": [
+      {
+        "id": "brand-matrix",
+        "differences": 1351,
+        "valid": true,
+        "incomplete": {}
+      }
+    ],
+    "corpusSHA256": "836c268e2f702ac315f59502df89819d2d7e971199dfed08c86bc664b457825a",
+    "fixtures": {
+      "compatibility/corpus/brand-matrix.js": "9e6ed118d24accf857f272b7660c92749ed20f488c9304032084cbfeafcc9433",
+      "compatibility/corpus/normalize.js": "160591c37d3ea64e3b80f690fc64ded8f6c811cf7aaa68eaf50f0fed8d1fde20"
+    }
+  },
+  {
+    "name": "brand-final-control",
+    "cases": [
+      {
+        "id": "brand-matrix",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      }
+    ],
+    "corpusSHA256": "836c268e2f702ac315f59502df89819d2d7e971199dfed08c86bc664b457825a",
+    "fixtures": {
+      "compatibility/corpus/brand-matrix.js": "9e6ed118d24accf857f272b7660c92749ed20f488c9304032084cbfeafcc9433",
+      "compatibility/corpus/normalize.js": "160591c37d3ea64e3b80f690fc64ded8f6c811cf7aaa68eaf50f0fed8d1fde20"
+    }
+  },
+  {
+    "name": "relations-before",
+    "cases": [
+      {
+        "id": "state-relations",
+        "differences": 4,
+        "valid": true,
+        "incomplete": {}
+      }
+    ],
+    "corpusSHA256": "14322bffa0d6e65b5905847d7463e5e0523cb932fd95b53c691f8955ad5b2b39",
+    "fixtures": {
+      "compatibility/corpus/normalize.js": "160591c37d3ea64e3b80f690fc64ded8f6c811cf7aaa68eaf50f0fed8d1fde20",
+      "compatibility/corpus/state-relations-audit.js": "d59dac409ce127f675711fcb61f2708d5fe628fdd3ca846c390b4c8be18e19e1"
+    }
+  },
+  {
+    "name": "relations-final",
+    "cases": [
+      {
+        "id": "state-relations",
+        "differences": 4,
+        "valid": true,
+        "incomplete": {}
+      }
+    ],
+    "corpusSHA256": "14322bffa0d6e65b5905847d7463e5e0523cb932fd95b53c691f8955ad5b2b39",
+    "fixtures": {
+      "compatibility/corpus/normalize.js": "160591c37d3ea64e3b80f690fc64ded8f6c811cf7aaa68eaf50f0fed8d1fde20",
+      "compatibility/corpus/state-relations-audit.js": "d59dac409ce127f675711fcb61f2708d5fe628fdd3ca846c390b4c8be18e19e1"
+    }
+  },
+  {
+    "name": "relations-final-control",
+    "cases": [
+      {
+        "id": "state-relations",
+        "differences": 0,
+        "valid": true,
+        "incomplete": {}
+      }
+    ],
+    "corpusSHA256": "14322bffa0d6e65b5905847d7463e5e0523cb932fd95b53c691f8955ad5b2b39",
+    "fixtures": {
+      "compatibility/corpus/normalize.js": "160591c37d3ea64e3b80f690fc64ded8f6c811cf7aaa68eaf50f0fed8d1fde20",
+      "compatibility/corpus/state-relations-audit.js": "d59dac409ce127f675711fcb61f2708d5fe628fdd3ca846c390b4c8be18e19e1"
+    }
+  }
+]

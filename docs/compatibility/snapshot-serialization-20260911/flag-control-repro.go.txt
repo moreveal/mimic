@@ -1,0 +1,35 @@
+package main
+
+import (
+ "bufio"
+ "context"
+ "fmt"
+ "os"
+ "strings"
+ "sync"
+ "time"
+ v8 "github.com/moreveal/mimic/internal/engine/v8"
+ gov8 "github.com/maclof/gov8"
+)
+
+func main() {
+ mode:="concurrent";if len(os.Args)>1 {mode=os.Args[1]}
+ fmt.Println("READY",mode);if _,err:=bufio.NewReader(os.Stdin).ReadString('\n');err!=nil {panic(err)}
+ if strings.HasSuffix(mode,"-sealed") {if err:=gov8.SetFlagsFromString("--no-extensible-ro-snapshot");err!=nil {panic(err)};mode=strings.TrimSuffix(mode,"-sealed")}
+ ctx,cancel:=context.WithTimeout(context.Background(),90*time.Second);defer cancel()
+ for round:=0;round<8;round++ {
+  fmt.Println("ROUND",round)
+  start:=make(chan struct{});var workers sync.WaitGroup;errors:=make(chan error,4)
+  build:=func(worker int){
+   defer workers.Done();<-start
+   var source strings.Builder;source.WriteString("globalThis.graph={")
+   for i:=0;i<2500;i++ {fmt.Fprintf(&source,"builder%dRound%dKey%04d:{index:%d,text:'distinct%d_%d_%d'},",worker,round,i,i,worker,round,i)}
+   source.WriteString("};")
+   blob,err:=(v8.Factory{}).BuildBootstrapSnapshot(ctx,source.String());if err!=nil {errors<-err;return}
+   if err=blob.Close();err!=nil {errors<-err}
+  }
+  if mode=="serial" {close(start);for worker:=0;worker<4;worker++ {workers.Add(1);build(worker)}} else {for worker:=0;worker<4;worker++ {workers.Add(1);go build(worker)};close(start)}
+  workers.Wait();close(errors);for err:=range errors {panic(err)}
+ }
+ fmt.Println("PASS")
+}

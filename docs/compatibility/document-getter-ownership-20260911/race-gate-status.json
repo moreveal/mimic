@@ -1,0 +1,39 @@
+[
+  {
+    "name": "targeted-race",
+    "command": [
+      "go",
+      "test",
+      "-race",
+      "./internal/browser",
+      "./internal/webapi",
+      "-run",
+      "TestDocumentGetterOwnership|TestDocumentAll|TestNativeFunctionFinalization|TestRealmPropertyMutation|TestNavigationRealm",
+      "-count=1"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 0
+  },
+  {
+    "name": "document-getter-gate-before-20260911",
+    "command": [
+      "C:\\Users\\moreveal\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      ".build/p0_full_gate.py",
+      "document-getter-gate-before-20260911",
+      "E:\\GitHub\\mimic\\.build\\document-getter-baseline"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 0
+  },
+  {
+    "name": "document-getter-gate-after-20260911",
+    "command": [
+      "C:\\Users\\moreveal\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      ".build/p0_full_gate.py",
+      "document-getter-gate-after-20260911",
+      "E:\\GitHub\\mimic"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 0
+  }
+]

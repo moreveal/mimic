@@ -1,0 +1,10 @@
+{
+  "checks": 236,
+  "matches": 205,
+  "fixedProbes": [],
+  "regressions": [],
+  "newDifferences": [],
+  "oracleDrift": [],
+  "representatives": 28,
+  "fullyMatchedRepresentatives": 19
+}

@@ -1,0 +1,13 @@
+{
+  "revision": "f6135d71b20af1c50e02c3771add5f50ce4c0890",
+  "dirty": [
+    " M internal/webapi/document_compatibility.js",
+    " M internal/webapi/surface.js",
+    "?? docs/compatibility/document-descriptors-20260911/",
+    "?? internal/browser/document_descriptor_test.go",
+    "?? internal/browser/testdata/document_descriptor_chrome152.json",
+    "?? internal/browser/testdata/document_descriptor_oracle.js"
+  ],
+  "binarySHA256": "a0290a4fd64ae393f13c2570532f4804eb033b5341fa4b7394ae17a0f8382432",
+  "probeSHA256": "a78def7399ad05e8ec5e735762789ed23e393d6df151905936caa86ffe1976aa"
+}

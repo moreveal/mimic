@@ -1,0 +1,110 @@
+[
+  {
+    "name": "recovered-memory-before",
+    "command": [
+      "go",
+      "test",
+      "./internal/browser",
+      "-run",
+      "^TestGojaBootstrapChildProfile$",
+      "-count=1"
+    ],
+    "cwd": "E:\\GitHub\\mimic\\.build\\platform-bindings-before",
+    "exitCode": 0,
+    "elapsedSeconds": 4.286990404129028,
+    "systemBefore": {
+      "total": 34177138688,
+      "available": 5528334336,
+      "percent": 83.8,
+      "used": 28648804352,
+      "free": 5528334336
+    },
+    "systemAfter": {
+      "total": 34177138688,
+      "available": 5576253440,
+      "percent": 83.7,
+      "used": 28600885248,
+      "free": 5576253440
+    }
+  },
+  {
+    "name": "recovered-memory-after",
+    "command": [
+      "go",
+      "test",
+      "./internal/browser",
+      "-run",
+      "^TestGojaBootstrapChildProfile$",
+      "-count=1"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 0,
+    "elapsedSeconds": 4.8689024448394775,
+    "systemBefore": {
+      "total": 34177138688,
+      "available": 5576187904,
+      "percent": 83.7,
+      "used": 28600950784,
+      "free": 5576187904
+    },
+    "systemAfter": {
+      "total": 34177138688,
+      "available": 5774266368,
+      "percent": 83.1,
+      "used": 28402872320,
+      "free": 5774266368
+    }
+  },
+  {
+    "name": "recovered-gate-before",
+    "command": [
+      "E:\\GitHub\\mimic\\.build\\benchmark-venv\\Scripts\\python.exe",
+      ".build/p0_full_gate.py",
+      "platform-bindings-recovered-gate-before-20260911",
+      "E:\\GitHub\\mimic\\.build\\platform-bindings-before"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 1,
+    "elapsedSeconds": 23.53949213027954,
+    "systemBefore": {
+      "total": 34177138688,
+      "available": 5771337728,
+      "percent": 83.1,
+      "used": 28405800960,
+      "free": 5771337728
+    },
+    "systemAfter": {
+      "total": 34177138688,
+      "available": 6049591296,
+      "percent": 82.3,
+      "used": 28127547392,
+      "free": 6049591296
+    }
+  },
+  {
+    "name": "recovered-gate-after",
+    "command": [
+      "E:\\GitHub\\mimic\\.build\\benchmark-venv\\Scripts\\python.exe",
+      ".build/p0_full_gate.py",
+      "platform-bindings-recovered-gate-after-20260911",
+      "E:\\GitHub\\mimic"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 1,
+    "elapsedSeconds": 23.076852321624756,
+    "systemBefore": {
+      "total": 34177138688,
+      "available": 6046736384,
+      "percent": 82.3,
+      "used": 28130402304,
+      "free": 6046736384
+    },
+    "systemAfter": {
+      "total": 34177138688,
+      "available": 5570502656,
+      "percent": 83.7,
+      "used": 28606636032,
+      "free": 5570502656
+    }
+  }
+]

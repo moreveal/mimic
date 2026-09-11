@@ -1,0 +1,418 @@
+{
+  "sha256": "7b9a29fab1c07ed14f74a81ebc1d8a03296b65d0408af26f366098df95bd9289",
+  "chrome": {
+    "text": {
+      "direct": "#text",
+      "borrowed": "#text",
+      "shadowed": "#text",
+      "privateName": "#text"
+    },
+    "comment": {
+      "direct": "#comment",
+      "borrowed": "#comment",
+      "shadowed": "#comment",
+      "privateName": "#comment"
+    },
+    "fragment": {
+      "direct": "#document-fragment",
+      "borrowed": "#document-fragment",
+      "shadowed": "#document-fragment",
+      "privateName": "#document-fragment"
+    },
+    "element": {
+      "direct": "DIV",
+      "borrowed": "DIV",
+      "shadowed": "DIV",
+      "privateName": "DIV"
+    },
+    "doctype": {
+      "direct": "html",
+      "borrowed": "html",
+      "shadowed": "html",
+      "privateName": "html"
+    },
+    "document": {
+      "direct": "#document",
+      "borrowed": "#document",
+      "shadowed": "#document",
+      "privateName": "#document"
+    },
+    "shadow": {
+      "direct": "#document-fragment",
+      "borrowed": "#document-fragment",
+      "shadowed": "#document-fragment",
+      "privateName": "#document-fragment"
+    },
+    "svg": {
+      "direct": "linearGradient",
+      "borrowed": "linearGradient",
+      "shadowed": "linearGradient",
+      "privateName": "linearGradient"
+    },
+    "placement": {
+      "Element": false,
+      "CharacterData": false,
+      "DocumentFragment": false,
+      "DocumentType": false,
+      "Document": false,
+      "Attr": false
+    },
+    "invalid": {
+      "exception": "TypeError"
+    },
+    "attr": "data-test"
+  },
+  "mimic": {
+    "attr": "data-test",
+    "comment": {
+      "direct": "#comment",
+      "shadowed": "shadowed"
+    },
+    "doctype": {
+      "borrowed": "html",
+      "direct": "html",
+      "privateName": "html",
+      "shadowed": "html"
+    },
+    "document": {
+      "borrowed": "#document",
+      "direct": "#document",
+      "shadowed": "#document"
+    },
+    "element": {
+      "borrowed": "DIV",
+      "direct": "DIV",
+      "shadowed": "shadowed"
+    },
+    "fragment": {
+      "direct": "#document-fragment",
+      "shadowed": "shadowed"
+    },
+    "invalid": {
+      "exception": "TypeError"
+    },
+    "placement": {
+      "Attr": false,
+      "CharacterData": true,
+      "Document": false,
+      "DocumentFragment": true,
+      "DocumentType": false,
+      "Element": false
+    },
+    "shadow": {
+      "direct": "#document-fragment",
+      "shadowed": "shadowed"
+    },
+    "svg": {
+      "borrowed": "linearGradient",
+      "direct": "linearGradient",
+      "shadowed": "shadowed"
+    },
+    "text": {
+      "direct": "#text",
+      "shadowed": "shadowed"
+    }
+  },
+  "after": {
+    "attr": "data-test",
+    "comment": {
+      "borrowed": "#comment",
+      "direct": "#comment",
+      "privateName": "#comment",
+      "shadowed": "#comment"
+    },
+    "doctype": {
+      "borrowed": "html",
+      "direct": "html",
+      "privateName": "html",
+      "shadowed": "html"
+    },
+    "document": {
+      "borrowed": "#document",
+      "direct": "#document",
+      "privateName": "#document",
+      "shadowed": "#document"
+    },
+    "element": {
+      "borrowed": "DIV",
+      "direct": "DIV",
+      "privateName": "DIV",
+      "shadowed": "DIV"
+    },
+    "fragment": {
+      "borrowed": "#document-fragment",
+      "direct": "#document-fragment",
+      "privateName": "#document-fragment",
+      "shadowed": "#document-fragment"
+    },
+    "invalid": {
+      "exception": "TypeError"
+    },
+    "placement": {
+      "Attr": false,
+      "CharacterData": false,
+      "Document": false,
+      "DocumentFragment": false,
+      "DocumentType": false,
+      "Element": false
+    },
+    "shadow": {
+      "borrowed": "#document-fragment",
+      "direct": "#document-fragment",
+      "privateName": "#document-fragment",
+      "shadowed": "#document-fragment"
+    },
+    "svg": {
+      "borrowed": "linearGradient",
+      "direct": "linearGradient",
+      "privateName": "linearGradient",
+      "shadowed": "linearGradient"
+    },
+    "text": {
+      "borrowed": "#text",
+      "direct": "#text",
+      "privateName": "#text",
+      "shadowed": "#text"
+    }
+  },
+  "control": {
+    "text": {
+      "direct": "#text",
+      "borrowed": "#text",
+      "shadowed": "#text",
+      "privateName": "#text"
+    },
+    "comment": {
+      "direct": "#comment",
+      "borrowed": "#comment",
+      "shadowed": "#comment",
+      "privateName": "#comment"
+    },
+    "fragment": {
+      "direct": "#document-fragment",
+      "borrowed": "#document-fragment",
+      "shadowed": "#document-fragment",
+      "privateName": "#document-fragment"
+    },
+    "element": {
+      "direct": "DIV",
+      "borrowed": "DIV",
+      "shadowed": "DIV",
+      "privateName": "DIV"
+    },
+    "doctype": {
+      "direct": "html",
+      "borrowed": "html",
+      "shadowed": "html",
+      "privateName": "html"
+    },
+    "document": {
+      "direct": "#document",
+      "borrowed": "#document",
+      "shadowed": "#document",
+      "privateName": "#document"
+    },
+    "shadow": {
+      "direct": "#document-fragment",
+      "borrowed": "#document-fragment",
+      "shadowed": "#document-fragment",
+      "privateName": "#document-fragment"
+    },
+    "svg": {
+      "direct": "linearGradient",
+      "borrowed": "linearGradient",
+      "shadowed": "linearGradient",
+      "privateName": "linearGradient"
+    },
+    "placement": {
+      "Element": false,
+      "CharacterData": false,
+      "DocumentFragment": false,
+      "DocumentType": false,
+      "Document": false,
+      "Attr": false
+    },
+    "invalid": {
+      "exception": "TypeError"
+    },
+    "attr": "data-test"
+  },
+  "differences": [
+    [
+      [
+        "comment",
+        "borrowed"
+      ],
+      "#comment",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "comment",
+        "privateName"
+      ],
+      "#comment",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "comment",
+        "shadowed"
+      ],
+      "#comment",
+      "shadowed"
+    ],
+    [
+      [
+        "document",
+        "privateName"
+      ],
+      "#document",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "element",
+        "privateName"
+      ],
+      "DIV",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "element",
+        "shadowed"
+      ],
+      "DIV",
+      "shadowed"
+    ],
+    [
+      [
+        "fragment",
+        "borrowed"
+      ],
+      "#document-fragment",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "fragment",
+        "privateName"
+      ],
+      "#document-fragment",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "fragment",
+        "shadowed"
+      ],
+      "#document-fragment",
+      "shadowed"
+    ],
+    [
+      [
+        "placement",
+        "CharacterData"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "placement",
+        "DocumentFragment"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "shadow",
+        "borrowed"
+      ],
+      "#document-fragment",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "shadow",
+        "privateName"
+      ],
+      "#document-fragment",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "shadow",
+        "shadowed"
+      ],
+      "#document-fragment",
+      "shadowed"
+    ],
+    [
+      [
+        "svg",
+        "privateName"
+      ],
+      "linearGradient",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "svg",
+        "shadowed"
+      ],
+      "linearGradient",
+      "shadowed"
+    ],
+    [
+      [
+        "text",
+        "borrowed"
+      ],
+      "#text",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "text",
+        "privateName"
+      ],
+      "#text",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "text",
+        "shadowed"
+      ],
+      "#text",
+      "shadowed"
+    ]
+  ],
+  "afterDifferences": [],
+  "controlDifferences": []
+}

@@ -1,0 +1,77 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "unverified-reused-controlled",
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "result": {
+    "result": {
+      "value": {
+        "spaced-name": {
+          "error": "TypeError"
+        },
+        "symbol-name": {
+          "error": "TypeError"
+        },
+        "unicode-name": {
+          "error": "TypeError"
+        },
+        "symbol-value": {
+          "error": "TypeError"
+        },
+        "unicode-value": {
+          "error": "TypeError"
+        },
+        "latin-value": {
+          "value": "\u00a0x\u00a0"
+        },
+        "vertical-value": {
+          "value": "\u000bx\u000b"
+        },
+        "conversion.append": {
+          "error": "TypeError"
+        },
+        "conversionLog.append": [
+          "name",
+          "value"
+        ],
+        "immutable.append": {
+          "error": "TypeError"
+        },
+        "conversion.set": {
+          "error": "TypeError"
+        },
+        "conversionLog.set": [
+          "name",
+          "value"
+        ],
+        "immutable.set": {
+          "error": "TypeError"
+        }
+      }
+    }
+  }
+}

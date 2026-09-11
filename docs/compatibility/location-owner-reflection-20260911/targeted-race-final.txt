@@ -1,0 +1,2 @@
+ok  	github.com/moreveal/mimic/internal/browser	61.094s
+ok  	github.com/moreveal/mimic/internal/engine/goja	1.572s

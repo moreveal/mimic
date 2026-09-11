@@ -1,0 +1,396 @@
+{
+  "chrome": {
+    "brand.append": {
+      "error": "TypeError"
+    },
+    "brandLog.append": [],
+    "brand.set": {
+      "error": "TypeError"
+    },
+    "brandLog.set": [],
+    "brand.get": {
+      "error": "TypeError"
+    },
+    "brandLog.get": [],
+    "brand.has": {
+      "error": "TypeError"
+    },
+    "brandLog.has": [],
+    "brand.delete": {
+      "error": "TypeError"
+    },
+    "brandLog.delete": [],
+    "brand.entries": {
+      "error": "TypeError"
+    },
+    "brandLog.entries": [],
+    "brand.keys": {
+      "error": "TypeError"
+    },
+    "brandLog.keys": [],
+    "brand.values": {
+      "error": "TypeError"
+    },
+    "brandLog.values": [],
+    "brand.forEach": {
+      "error": "TypeError"
+    },
+    "brandLog.forEach": [],
+    "arity.append": {
+      "error": "TypeError"
+    },
+    "arity.set": {
+      "error": "TypeError"
+    },
+    "arity.get": {
+      "error": "TypeError"
+    },
+    "arity.has": {
+      "error": "TypeError"
+    },
+    "arity.delete": {
+      "error": "TypeError"
+    },
+    "forEach.callback": {
+      "error": "TypeError"
+    }
+  },
+  "before": {
+    "arity.append": {
+      "value": [
+        [
+          "undefined",
+          "undefined"
+        ]
+      ]
+    },
+    "arity.delete": {
+      "value": []
+    },
+    "arity.get": {
+      "value": []
+    },
+    "arity.has": {
+      "value": []
+    },
+    "arity.set": {
+      "value": [
+        [
+          "undefined",
+          "undefined"
+        ]
+      ]
+    },
+    "brand.append": {
+      "error": "TypeError"
+    },
+    "brand.delete": {
+      "error": "TypeError"
+    },
+    "brand.entries": {
+      "value": "returned"
+    },
+    "brand.forEach": {
+      "error": "TypeError"
+    },
+    "brand.get": {
+      "error": "TypeError"
+    },
+    "brand.has": {
+      "error": "TypeError"
+    },
+    "brand.keys": {
+      "error": "TypeError"
+    },
+    "brand.set": {
+      "error": "TypeError"
+    },
+    "brand.values": {
+      "error": "TypeError"
+    },
+    "brandLog.append": [
+      "convert",
+      "convert"
+    ],
+    "brandLog.delete": [
+      "convert"
+    ],
+    "brandLog.entries": [],
+    "brandLog.forEach": [],
+    "brandLog.get": [],
+    "brandLog.has": [],
+    "brandLog.keys": [],
+    "brandLog.set": [
+      "convert"
+    ],
+    "brandLog.values": [],
+    "forEach.callback": {
+      "value": "returned"
+    }
+  },
+  "control": {
+    "brand.append": {
+      "error": "TypeError"
+    },
+    "brandLog.append": [],
+    "brand.set": {
+      "error": "TypeError"
+    },
+    "brandLog.set": [],
+    "brand.get": {
+      "error": "TypeError"
+    },
+    "brandLog.get": [],
+    "brand.has": {
+      "error": "TypeError"
+    },
+    "brandLog.has": [],
+    "brand.delete": {
+      "error": "TypeError"
+    },
+    "brandLog.delete": [],
+    "brand.entries": {
+      "error": "TypeError"
+    },
+    "brandLog.entries": [],
+    "brand.keys": {
+      "error": "TypeError"
+    },
+    "brandLog.keys": [],
+    "brand.values": {
+      "error": "TypeError"
+    },
+    "brandLog.values": [],
+    "brand.forEach": {
+      "error": "TypeError"
+    },
+    "brandLog.forEach": [],
+    "arity.append": {
+      "error": "TypeError"
+    },
+    "arity.set": {
+      "error": "TypeError"
+    },
+    "arity.get": {
+      "error": "TypeError"
+    },
+    "arity.has": {
+      "error": "TypeError"
+    },
+    "arity.delete": {
+      "error": "TypeError"
+    },
+    "forEach.callback": {
+      "error": "TypeError"
+    }
+  },
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "unverified-reused-controlled",
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "sha256": "49774f05a991c77d4035ec301ac45ec4afee34364d7b357d957097a3633e611d",
+  "differences": [
+    [
+      [
+        "arity.append",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "arity.append",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      [
+        [
+          "undefined",
+          "undefined"
+        ]
+      ]
+    ],
+    [
+      [
+        "arity.delete",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "arity.delete",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      []
+    ],
+    [
+      [
+        "arity.get",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "arity.get",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      []
+    ],
+    [
+      [
+        "arity.has",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "arity.has",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      []
+    ],
+    [
+      [
+        "arity.set",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "arity.set",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      [
+        [
+          "undefined",
+          "undefined"
+        ]
+      ]
+    ],
+    [
+      [
+        "brand.entries",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "brand.entries",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      "returned"
+    ],
+    [
+      [
+        "brandLog.append"
+      ],
+      [],
+      [
+        "convert",
+        "convert"
+      ]
+    ],
+    [
+      [
+        "brandLog.delete"
+      ],
+      [],
+      [
+        "convert"
+      ]
+    ],
+    [
+      [
+        "brandLog.set"
+      ],
+      [],
+      [
+        "convert"
+      ]
+    ],
+    [
+      [
+        "forEach.callback",
+        "error"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "forEach.callback",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      "returned"
+    ]
+  ]
+}

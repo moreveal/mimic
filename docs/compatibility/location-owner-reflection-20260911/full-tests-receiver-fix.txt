@@ -1,0 +1,20 @@
+--- FAIL: TestFrameReflectionPreservesDescriptorsAndKeys (1.19s)
+    --- FAIL: TestFrameReflectionPreservesDescriptorsAndKeys/v8 (0.19s)
+        frame_reflection_test.go:49: remote reflection: unsupported mutation accepted, <nil>
+    --- FAIL: TestFrameReflectionPreservesDescriptorsAndKeys/goja (1.00s)
+        frame_reflection_test.go:49: remote reflection: unsupported mutation accepted, <nil>
+FAIL
+<unknown>:13: Uncaught TypeError: Converting circular structure to JSON
+    --> starting at object with constructor 'Object'
+    --- property 'window' closes the circle
+FAIL	github.com/moreveal/mimic/internal/browser	422.893s
+ok  	github.com/moreveal/mimic/internal/webapi	(cached)
+ok  	github.com/moreveal/mimic/internal/cdp	(cached)
+ok  	github.com/moreveal/mimic/internal/dom	(cached)
+ok  	github.com/moreveal/mimic/internal/network	(cached)
+ok  	github.com/moreveal/mimic/internal/scheduler	(cached)
+?   	github.com/moreveal/mimic/internal/engine	[no test files]
+ok  	github.com/moreveal/mimic/internal/engine/goja	0.117s
+ok  	github.com/moreveal/mimic/internal/engine/quickjs	(cached)
+ok  	github.com/moreveal/mimic/internal/engine/v8	(cached)
+FAIL

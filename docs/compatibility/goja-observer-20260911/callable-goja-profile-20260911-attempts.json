@@ -1,0 +1,52 @@
+[
+  {
+    "side": "before",
+    "command": [
+      "go",
+      "test",
+      "-race",
+      "./internal/browser",
+      "-run",
+      "^TestIframeSrcdocRetainsExportedDescendant$/goja$",
+      "-count=1",
+      "-cpuprofile",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\callable-goja-profile-20260911\\before.cpu.pprof",
+      "-o",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\callable-goja-profile-20260911\\before.browser.test.exe"
+    ],
+    "cwd": "E:\\GitHub\\mimic\\.build\\callable-metadata-baseline",
+    "revision": "706fc1508ce51205d4f7a8ce80dc2350922f5689",
+    "dirty": [],
+    "exitCode": 1,
+    "binarySHA256": "8d534e887d44cc46ab8fae5b9d01fd6dccdbf2dc12318bfd0d4ed06921df76c2"
+  },
+  {
+    "side": "after",
+    "command": [
+      "go",
+      "test",
+      "-race",
+      "./internal/browser",
+      "-run",
+      "^TestIframeSrcdocRetainsExportedDescendant$/goja$",
+      "-count=1",
+      "-cpuprofile",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\callable-goja-profile-20260911\\after.cpu.pprof",
+      "-o",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\callable-goja-profile-20260911\\after.browser.test.exe"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "revision": "706fc1508ce51205d4f7a8ce80dc2350922f5689",
+    "dirty": [
+      " M internal/webapi/surface.go",
+      " M internal/webapi/surface.js",
+      "?? docs/compatibility/callable-metadata-2026-09-11.md",
+      "?? docs/compatibility/callable-metadata-20260911/",
+      "?? internal/browser/callable_metadata_test.go",
+      "?? internal/browser/testdata/callable_metadata_chrome152.json",
+      "?? internal/browser/testdata/callable_metadata_oracle.js"
+    ],
+    "exitCode": 1,
+    "binarySHA256": "a3c584b2393174a153aab85087ab9b0d4b5769460e7350a96243a4561adab577"
+  }
+]

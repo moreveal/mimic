@@ -25,6 +25,10 @@ func (v value) String() string { return v.v.String() }
 type runtime struct{ vm *goja.Runtime }
 
 func (r *runtime) Eval(ctx context.Context, source, name string) (engine.Value, error) {
+	return r.run(ctx, func() (goja.Value, error) { return r.vm.RunScript(name, source) })
+}
+
+func (r *runtime) run(ctx context.Context, execute func() (goja.Value, error)) (engine.Value, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, err
 	}
@@ -43,7 +47,7 @@ func (r *runtime) Eval(ctx context.Context, source, name string) (engine.Value, 
 		case <-finished:
 		}
 	}()
-	v, err := r.vm.RunScript(name, source)
+	v, err := execute()
 	close(finished)
 	<-watcherDone
 	r.vm.ClearInterrupt()
@@ -202,6 +206,7 @@ func (r *runtime) SetGlobalAccessObserver(observer func(name string, supported b
 	}
 	reflect := r.vm.Get("Reflect").ToObject(r.vm)
 	hasFn, _ := goja.AssertFunction(reflect.Get("has"))
+	getFn, _ := goja.AssertFunction(reflect.Get("get"))
 	has := func(property string) bool {
 		v, err := hasFn(goja.Undefined(), target, r.vm.ToValue(property))
 		return err == nil && v.ToBoolean()
@@ -212,10 +217,20 @@ func (r *runtime) SetGlobalAccessObserver(observer func(name string, supported b
 			report(property, supported)
 			return supported
 		},
-		Get: func(_ *goja.Object, property string, _ goja.Value) goja.Value {
-			supported := has(property)
-			report(property, supported)
-			return target.Get(property)
+		Get: func(_ *goja.Object, property string, receiver goja.Value) goja.Value {
+			// Support is observed once per property. Do not reenter Reflect.has
+			// for a trace event that report would discard. The Has trap above
+			// still queries live state for JavaScript membership operations.
+			if _, recorded := seen[property]; !recorded {
+				report(property, has(property))
+			}
+			// Observation must preserve accessor receivers, including inherited
+			// access through an object whose prototype is the global proxy.
+			v, err := getFn(goja.Undefined(), target, r.vm.ToValue(property), receiver)
+			if err != nil {
+				panic(err)
+			}
+			return v
 		},
 	})
 	r.vm.SetGlobalObject(r.vm.ToValue(proxy).(*goja.Object))

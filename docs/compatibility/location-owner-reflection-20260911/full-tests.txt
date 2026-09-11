@@ -1,0 +1,25 @@
+?   	github.com/moreveal/mimic/internal/engine	[no test files]
+PASS
+ok  	github.com/moreveal/mimic/internal/engine/goja	0.207s
+PASS
+ok  	github.com/moreveal/mimic/internal/engine/quickjs	0.255s
+PASS
+ok  	github.com/moreveal/mimic/internal/webapi	0.310s
+PASS
+ok  	github.com/moreveal/mimic/internal/network	0.338s
+PASS
+ok  	github.com/moreveal/mimic/internal/dom	0.412s
+PASS
+ok  	github.com/moreveal/mimic/internal/scheduler	0.441s
+PASS
+ok  	github.com/moreveal/mimic/internal/engine/v8	0.745s
+PASS
+ok  	github.com/moreveal/mimic/internal/cdp	2.266s
+PASS
+<unknown>:13: Uncaught TypeError: Converting circular structure to JSON
+
+    --> starting at object with constructor 'Object'
+
+    --- property 'window' closes the circle
+
+ok  	github.com/moreveal/mimic/internal/browser	415.113s

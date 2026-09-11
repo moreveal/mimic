@@ -1,0 +1,120 @@
+{
+  "terminal": {
+    "Time": "2026-09-11T16:41:42.2345133+04:00",
+    "Action": "fail",
+    "Package": "github.com/moreveal/mimic/internal/browser",
+    "Elapsed": 2004.465
+  },
+  "failedTests": [
+    {
+      "test": "TestPartitionCookiesFrameAndWorkerTransport/goja",
+      "elapsed": 16.41
+    },
+    {
+      "test": "TestPartitionCookiesFrameAndWorkerTransport",
+      "elapsed": 17.16
+    },
+    {
+      "test": "TestFrameDocumentEntryFollowsSynchronousCalls/goja",
+      "elapsed": 22.03
+    },
+    {
+      "test": "TestFrameDocumentEntryFollowsSynchronousCalls",
+      "elapsed": 22.88
+    },
+    {
+      "test": "TestFrameNavigationTimingIsDocumentScoped/goja",
+      "elapsed": 11.65
+    },
+    {
+      "test": "TestFrameNavigationTimingIsDocumentScoped",
+      "elapsed": 12.1
+    },
+    {
+      "test": "TestChildNavigationObserverWaitsForChildLoad/goja",
+      "elapsed": 12.2
+    },
+    {
+      "test": "TestChildNavigationObserverWaitsForChildLoad",
+      "elapsed": 12.81
+    },
+    {
+      "test": "TestFrameInsertionAfterInnerHTMLAndFragmentMove/goja",
+      "elapsed": 5.98
+    },
+    {
+      "test": "TestFrameInsertionAfterInnerHTMLAndFragmentMove",
+      "elapsed": 6.4
+    },
+    {
+      "test": "TestResourceTimingDoesNotLeakParentInflightFetch/goja",
+      "elapsed": 11
+    },
+    {
+      "test": "TestResourceTimingDoesNotLeakParentInflightFetch",
+      "elapsed": 12.01
+    }
+  ],
+  "dataRaceReported": false,
+  "skips": [
+    "TestOwnerModelProbe",
+    "TestHostBoundaryProfile",
+    "TestBootstrapSnapshotConcurrentPageLifecycles",
+    "TestBootstrapSnapshotBarrierConcurrentBuilders",
+    "TestBootstrapSnapshotBarrierSequentialBuilders",
+    "TestBootstrapSnapshotConcurrentPagesSequentialBuilders",
+    "TestOrdinaryConcurrentPageLifecycles",
+    "TestDetachedFrameMemoryProfile",
+    "TestFrameBridgeBreakdown",
+    "TestNativeFrameMicrotasksBeforeNextTask/goja",
+    "TestGojaBootstrapProfile",
+    "TestGojaBootstrapPhases",
+    "TestPerformanceDensityProfile",
+    "TestPerformanceParallelPages",
+    "TestPerformanceProfile"
+  ],
+  "packages": [
+    {
+      "Time": "2026-09-11T16:08:19.0243706+04:00",
+      "Action": "pass",
+      "Package": "github.com/moreveal/mimic/internal/scheduler",
+      "Elapsed": 1.254
+    },
+    {
+      "Time": "2026-09-11T16:08:19.3708679+04:00",
+      "Action": "pass",
+      "Package": "github.com/moreveal/mimic/internal/engine/goja",
+      "Elapsed": 1.601
+    },
+    {
+      "Time": "2026-09-11T16:08:19.7680287+04:00",
+      "Action": "pass",
+      "Package": "github.com/moreveal/mimic/internal/network",
+      "Elapsed": 1.998
+    },
+    {
+      "Time": "2026-09-11T16:08:19.8074328+04:00",
+      "Action": "pass",
+      "Package": "github.com/moreveal/mimic/internal/webapi",
+      "Elapsed": 2.037
+    },
+    {
+      "Time": "2026-09-11T16:08:22.2482759+04:00",
+      "Action": "pass",
+      "Package": "github.com/moreveal/mimic/internal/engine/v8",
+      "Elapsed": 4.479
+    },
+    {
+      "Time": "2026-09-11T16:08:23.4881186+04:00",
+      "Action": "pass",
+      "Package": "github.com/moreveal/mimic/internal/cdp",
+      "Elapsed": 5.718
+    },
+    {
+      "Time": "2026-09-11T16:41:42.2345133+04:00",
+      "Action": "fail",
+      "Package": "github.com/moreveal/mimic/internal/browser",
+      "Elapsed": 2004.465
+    }
+  ]
+}

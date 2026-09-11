@@ -1,0 +1,248 @@
+{
+  "brand-final": {
+    "corpusSHA256": "836c268e2f702ac315f59502df89819d2d7e971199dfed08c86bc664b457825a",
+    "frozenReference": true,
+    "cases": [
+      {
+        "id": "brand-matrix",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 609
+      }
+    ],
+    "rawSHA256": "f11ea14b63475c85f4a590324535bd70a6318dd3bd311c6422cc87489307f0d0"
+  },
+  "brand-final-control": {
+    "corpusSHA256": "836c268e2f702ac315f59502df89819d2d7e971199dfed08c86bc664b457825a",
+    "frozenReference": true,
+    "cases": [
+      {
+        "id": "brand-matrix",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 0
+      }
+    ],
+    "rawSHA256": "70272e5e9c1a98a10d066ce4528deca09b31d9a5832f3fa446257b5095f7dc07"
+  },
+  "corpus-final": {
+    "corpusSHA256": "12d4f3bd616f19f3aa6dbc4f9bf2f987f0686eb0d4044ce09b738bc2635b4928",
+    "frozenReference": true,
+    "cases": [
+      {
+        "id": "value-normalization",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 0
+      },
+      {
+        "id": "network",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 12
+      },
+      {
+        "id": "temporal",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 0
+      },
+      {
+        "id": "frame-task-interleaving",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 0
+      },
+      {
+        "id": "frame-microtask-checkpoint",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 0
+      },
+      {
+        "id": "resource-realm-isolation",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 0
+      },
+      {
+        "id": "resource-json",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 0
+      },
+      {
+        "id": "worker-microtasks",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 0
+      },
+      {
+        "id": "surface",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 6
+      },
+      {
+        "id": "samesite",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 0
+      },
+      {
+        "id": "samesite-navigation",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 0
+      },
+      {
+        "id": "partition",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 0
+      },
+      {
+        "id": "svg-values",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 0
+      },
+      {
+        "id": "observations",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 22
+      },
+      {
+        "id": "webgpu-lifecycle",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 0
+      }
+    ],
+    "rawSHA256": "6f01199cdf6877514b5e65fec39638fc8edcf488695f2349a021f134f9e3b59c"
+  },
+  "corpus-final-control": {
+    "corpusSHA256": "12d4f3bd616f19f3aa6dbc4f9bf2f987f0686eb0d4044ce09b738bc2635b4928",
+    "frozenReference": true,
+    "cases": [
+      {
+        "id": "value-normalization",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 0
+      },
+      {
+        "id": "network",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 0
+      },
+      {
+        "id": "temporal",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 0
+      },
+      {
+        "id": "frame-task-interleaving",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 0
+      },
+      {
+        "id": "frame-microtask-checkpoint",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 0
+      },
+      {
+        "id": "resource-realm-isolation",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 0
+      },
+      {
+        "id": "resource-json",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 0
+      },
+      {
+        "id": "worker-microtasks",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 0
+      },
+      {
+        "id": "surface",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 0
+      },
+      {
+        "id": "samesite",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 0
+      },
+      {
+        "id": "samesite-navigation",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 0
+      },
+      {
+        "id": "partition",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 0
+      },
+      {
+        "id": "svg-values",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 0
+      },
+      {
+        "id": "observations",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 0
+      },
+      {
+        "id": "webgpu-lifecycle",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 0
+      }
+    ],
+    "rawSHA256": "c06f660f0251afe0af78b2c400f0bf7ff7d6c2bf2b4a1eb0066aa71c925ca9a2"
+  },
+  "relations-final": {
+    "corpusSHA256": "14322bffa0d6e65b5905847d7463e5e0523cb932fd95b53c691f8955ad5b2b39",
+    "frozenReference": true,
+    "cases": [
+      {
+        "id": "state-relations",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 2
+      }
+    ],
+    "rawSHA256": "11bd480e7db54e381828835f14756da73a79e80abd0ec11efa5c7a29f64bdaa9"
+  },
+  "relations-final-control": {
+    "corpusSHA256": "14322bffa0d6e65b5905847d7463e5e0523cb932fd95b53c691f8955ad5b2b39",
+    "frozenReference": true,
+    "cases": [
+      {
+        "id": "state-relations",
+        "valid": true,
+        "incomplete": {},
+        "differenceCount": 0
+      }
+    ],
+    "rawSHA256": "9ff1f9969c91eb3452a2540f2e3ab297245e0f20f09344ca8aa7e0088a047ba6"
+  }
+}

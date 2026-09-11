@@ -1,0 +1,60 @@
+{
+  "checks": 1,
+  "beforeMatches": 0,
+  "afterMatches": 0,
+  "beforeDiffRecords": 2,
+  "afterDiffRecords": 2,
+  "beforeExpandedPaths": 2,
+  "afterExpandedPaths": 2,
+  "changedPaths": [],
+  "newDifferingPaths": [],
+  "chromeDrift": [],
+  "groups": {
+    "before": {
+      "d4f96bec1801c8e3": {
+        "category": "state-and-origin",
+        "firstDifference": [
+          [
+            "observations",
+            0,
+            "value",
+            "remotePrototypeMutation",
+            "changed"
+          ],
+          true,
+          false
+        ],
+        "members": [
+          "state-relations"
+        ]
+      }
+    },
+    "after": {
+      "d4f96bec1801c8e3": {
+        "category": "state-and-origin",
+        "firstDifference": [
+          [
+            "observations",
+            0,
+            "value",
+            "remotePrototypeMutation",
+            "changed"
+          ],
+          true,
+          false
+        ],
+        "members": [
+          "state-relations"
+        ]
+      }
+    }
+  },
+  "valid": {
+    "before": true,
+    "after": true
+  },
+  "incomplete": {
+    "before": [],
+    "after": []
+  }
+}

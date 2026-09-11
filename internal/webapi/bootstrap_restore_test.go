@@ -67,7 +67,7 @@ func TestBootstrapWindowTopologyDescriptors(t *testing.T) {
 		t.Fatal("topology end missing")
 	}
 	runtime := goja.New()
-	_, err := runtime.RunString(`const window=globalThis;let windowTop=window,windowParent=window;` + nativeFunctionsSurface + handwrittenSurface[start:start+end] + `
+	_, err := runtime.RunString(`const window=globalThis;let active=true;const host={documentActive:()=>active};let windowTop=window,windowParent=window;` + nativeFunctionsSurface + handwrittenSurface[start:start+end] + `
  Object.defineProperty(window,'top',{configurable:false});
  const parentDescriptor=Object.getOwnPropertyDescriptor(window,'parent'),topDescriptor=Object.getOwnPropertyDescriptor(window,'top');
  if(parentDescriptor.get.name!=='get parent'||parentDescriptor.get.length!==0||parentDescriptor.set.name!=='set parent'||parentDescriptor.set.length!==1||!parentDescriptor.enumerable||!parentDescriptor.configurable)throw Error('parent descriptor');
@@ -75,6 +75,7 @@ func TestBootstrapWindowTopologyDescriptors(t *testing.T) {
  if(String(parentDescriptor.get)!=='function get parent() { [native code] }'||String(parentDescriptor.set)!=='function set parent() { [native code] }')throw Error('native accessors');
  const nextParent={};windowParent=nextParent;windowTop=nextParent;
  if(parent!==nextParent||top!==nextParent)throw Error('restored cells');
+ active=false;if(parent!==null||top!==null)throw Error('inactive relations');active=true;
  if(!Reflect.set(window,'parent',17))throw Error('parent write');
  const replaced=Object.getOwnPropertyDescriptor(window,'parent');
  if(replaced.value!==17||!replaced.writable||!replaced.enumerable||!replaced.configurable||replaced.get!==undefined)throw Error('replaceable parent');

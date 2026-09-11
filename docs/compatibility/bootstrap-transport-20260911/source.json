@@ -1,0 +1,14 @@
+{
+  "revision": "cee1376920a445781ac384d31110ddfb597af5c3",
+  "files": {
+    "internal/engine/goja/runtime.go": "a081936e812dcc6f4b9b20d49044db8c138123f4ff3c849eeda56ff34200da25",
+    "internal/webapi/surface.go": "4ce30c2bfd788296af91957f1616c38058ae95352b3b1efeac6fdda52a129a48",
+    "internal/webapi/surface.js": "89fc74f5f1bb0173c0dae96163bfbadfce068f6ab44624badac3d9ec1927dff7",
+    "internal/browser/goja_bootstrap_profile_test.go": "76fc849097e97e6031ea8dd4e165d1801aafd01cfc1ef5a46419982f28eee8b9",
+    "internal/engine/goja/bootstrap.go": "64f9767d64f72a7326be9a37f9e5c3978f6085c11a8b32af0bf9817737d176d7",
+    "internal/engine/goja/bootstrap_test.go": "4bc0d5675f7d94704a0a69d5b30a9054eebb4d04000a932aef0c461ab4f13803",
+    "internal/webapi/exposure_transport.go": "fa07652879b00004503ebc5c3f4823eb64eb56a19bb747f4a266153365cf28c9",
+    "internal/webapi/exposure_transport_test.go": "0471e8783ea59d18e7b956fb8e715897285e94478295998060f8247374056ae1"
+  },
+  "dirty": " M internal/engine/goja/runtime.go\n M internal/webapi/surface.go\n M internal/webapi/surface.js\n?? internal/browser/goja_bootstrap_profile_test.go\n?? internal/engine/goja/bootstrap.go\n?? internal/engine/goja/bootstrap_test.go\n?? internal/webapi/exposure_transport.go\n?? internal/webapi/exposure_transport_test.go\n"
+}

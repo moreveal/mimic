@@ -17,9 +17,9 @@
   const slot = (map,value) => {const result=map.get(value);if(!result)throw new TypeError('Illegal invocation');return result};
   const forbidden = name => /^(accept-charset|accept-encoding|access-control-request-headers|access-control-request-method|connection|content-length|cookie|cookie2|date|dnt|expect|host|keep-alive|origin|referer|te|trailer|transfer-encoding|upgrade|via)$/.test(name)||name.startsWith('proxy-')||name.startsWith('sec-');
   class FetchHeaders extends BaseHeaders {
-    append(name,value){name=String(name).toLowerCase();const guard=guards.get(this);if(guard==='immutable')throw new TypeError('Headers are immutable');if(guard==='request'&&forbidden(name)||guard==='response'&&['set-cookie','set-cookie2'].includes(name))return;super.append(name,value)}
-    set(name,value){name=String(name).toLowerCase();const guard=guards.get(this);if(guard==='immutable')throw new TypeError('Headers are immutable');if(guard==='request'&&forbidden(name)||guard==='response'&&['set-cookie','set-cookie2'].includes(name))return;super.set(name,value)}
-    delete(name){name=String(name).toLowerCase();const guard=guards.get(this);if(guard==='immutable')throw new TypeError('Headers are immutable');if(guard==='request'&&forbidden(name)||guard==='response'&&['set-cookie','set-cookie2'].includes(name))return;super.delete(name)}
+    append(name,value){headersState(this,arguments.length,2);name=headerByteString(name);value=headerByteString(value);name=headerName(name);value=headerValue(value);const guard=guards.get(this);if(guard==='immutable')throw new TypeError('Headers are immutable');if(guard==='request'&&forbidden(name)||guard==='response'&&['set-cookie','set-cookie2'].includes(name))return;super.append(name,value)}
+    set(name,value){headersState(this,arguments.length,2);name=headerByteString(name);value=headerByteString(value);name=headerName(name);value=headerValue(value);const guard=guards.get(this);if(guard==='immutable')throw new TypeError('Headers are immutable');if(guard==='request'&&forbidden(name)||guard==='response'&&['set-cookie','set-cookie2'].includes(name))return;super.set(name,value)}
+    delete(name){headersState(this,arguments.length,1);name=headerName(name);const guard=guards.get(this);if(guard==='immutable')throw new TypeError('Headers are immutable');if(guard==='request'&&forbidden(name)||guard==='response'&&['set-cookie','set-cookie2'].includes(name))return;super.delete(name)}
   }
   Object.defineProperty(FetchHeaders,'name',{value:'Headers'});
   function headers(init,guard){const result=new FetchHeaders();guards.set(result,guard);if(init!=null){const source=new BaseHeaders(init);for(const [name,value] of source)result.append(name,value)}return result}
@@ -55,11 +55,11 @@
     Object.defineProperties(prototype,{
       body:{get(){return slot(bodies,this).stream},configurable:true,enumerable:true},
       bodyUsed:{get(){return disturbed(slot(bodies,this).stream)},configurable:true,enumerable:true},
-      bytes:{value:function(){return consume(this)},writable:true,configurable:true,enumerable:true},
-      arrayBuffer:{value:function(){return consume(this).then(value=>value.buffer)},writable:true,configurable:true,enumerable:true},
-      text:{value:function(){return consume(this).then(value=>new Decoder().decode(value))},writable:true,configurable:true,enumerable:true},
-      json:{value:function(){return this.text().then(JSON.parse)},writable:true,configurable:true,enumerable:true},
-      blob:{value:function(){return consume(this).then(value=>new NativeBlob([value],{type:this.headers.get('content-type')||''}))},writable:true,configurable:true,enumerable:true}
+      bytes:{value:function bytes(){return consume(this)},writable:true,configurable:true,enumerable:true},
+      arrayBuffer:{value:function arrayBuffer(){return consume(this).then(value=>value.buffer)},writable:true,configurable:true,enumerable:true},
+      text:{value:function text(){return consume(this).then(value=>new Decoder().decode(value))},writable:true,configurable:true,enumerable:true},
+      json:{value:function json(){return this.text().then(JSON.parse)},writable:true,configurable:true,enumerable:true},
+      blob:{value:function blob(){return consume(this).then(value=>new NativeBlob([value],{type:this.headers.get('content-type')||''}))},writable:true,configurable:true,enumerable:true}
     });
   }
   const nullBodyStatus = status => [101,103,204,205,304].includes(status);

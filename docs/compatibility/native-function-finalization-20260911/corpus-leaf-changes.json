@@ -1,0 +1,195 @@
+{
+  "brand-final": [
+    {
+      "id": "brand-matrix",
+      "beforeCount": 1319,
+      "afterCount": 1309,
+      "added": [],
+      "removed": [
+        {
+          "path": "/observations/0/value/methods/Request.arrayBuffer/name",
+          "chrome": "arrayBuffer",
+          "mimic": "value"
+        },
+        {
+          "path": "/observations/0/value/methods/Response.arrayBuffer/name",
+          "chrome": "arrayBuffer",
+          "mimic": "value"
+        },
+        {
+          "path": "/observations/0/value/methods/Response.blob/name",
+          "chrome": "blob",
+          "mimic": "value"
+        },
+        {
+          "path": "/observations/0/value/methods/Request.text/name",
+          "chrome": "text",
+          "mimic": "value"
+        },
+        {
+          "path": "/observations/0/value/methods/Request.blob/name",
+          "chrome": "blob",
+          "mimic": "value"
+        },
+        {
+          "path": "/observations/0/value/methods/Response.bytes/name",
+          "chrome": "bytes",
+          "mimic": "value"
+        },
+        {
+          "path": "/observations/0/value/methods/Request.bytes/name",
+          "chrome": "bytes",
+          "mimic": "value"
+        },
+        {
+          "path": "/observations/0/value/methods/Response.text/name",
+          "chrome": "text",
+          "mimic": "value"
+        },
+        {
+          "path": "/observations/0/value/methods/Request.json/name",
+          "chrome": "json",
+          "mimic": "value"
+        },
+        {
+          "path": "/observations/0/value/methods/Response.json/name",
+          "chrome": "json",
+          "mimic": "value"
+        }
+      ],
+      "changed": []
+    }
+  ],
+  "relations-final": [
+    {
+      "id": "state-relations",
+      "beforeCount": 2,
+      "afterCount": 2,
+      "added": [],
+      "removed": [],
+      "changed": []
+    }
+  ],
+  "corpus-final": [
+    {
+      "id": "value-normalization",
+      "beforeCount": 0,
+      "afterCount": 0,
+      "added": [],
+      "removed": [],
+      "changed": []
+    },
+    {
+      "id": "network",
+      "beforeCount": 12,
+      "afterCount": 12,
+      "added": [],
+      "removed": [],
+      "changed": []
+    },
+    {
+      "id": "temporal",
+      "beforeCount": 0,
+      "afterCount": 0,
+      "added": [],
+      "removed": [],
+      "changed": []
+    },
+    {
+      "id": "frame-task-interleaving",
+      "beforeCount": 0,
+      "afterCount": 0,
+      "added": [],
+      "removed": [],
+      "changed": []
+    },
+    {
+      "id": "frame-microtask-checkpoint",
+      "beforeCount": 0,
+      "afterCount": 0,
+      "added": [],
+      "removed": [],
+      "changed": []
+    },
+    {
+      "id": "resource-realm-isolation",
+      "beforeCount": 0,
+      "afterCount": 0,
+      "added": [],
+      "removed": [],
+      "changed": []
+    },
+    {
+      "id": "resource-json",
+      "beforeCount": 0,
+      "afterCount": 0,
+      "added": [],
+      "removed": [],
+      "changed": []
+    },
+    {
+      "id": "worker-microtasks",
+      "beforeCount": 0,
+      "afterCount": 0,
+      "added": [],
+      "removed": [],
+      "changed": []
+    },
+    {
+      "id": "surface",
+      "beforeCount": 7,
+      "afterCount": 7,
+      "added": [],
+      "removed": [],
+      "changed": []
+    },
+    {
+      "id": "samesite",
+      "beforeCount": 0,
+      "afterCount": 0,
+      "added": [],
+      "removed": [],
+      "changed": []
+    },
+    {
+      "id": "samesite-navigation",
+      "beforeCount": 0,
+      "afterCount": 0,
+      "added": [],
+      "removed": [],
+      "changed": []
+    },
+    {
+      "id": "partition",
+      "beforeCount": 0,
+      "afterCount": 0,
+      "added": [],
+      "removed": [],
+      "changed": []
+    },
+    {
+      "id": "svg-values",
+      "beforeCount": 0,
+      "afterCount": 0,
+      "added": [],
+      "removed": [],
+      "changed": []
+    },
+    {
+      "id": "observations",
+      "beforeCount": 22,
+      "afterCount": 22,
+      "added": [],
+      "removed": [],
+      "changed": []
+    },
+    {
+      "id": "webgpu-lifecycle",
+      "beforeCount": 0,
+      "afterCount": 0,
+      "added": [],
+      "removed": [],
+      "changed": []
+    }
+  ]
+}

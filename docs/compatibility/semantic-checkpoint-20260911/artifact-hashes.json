@@ -1,0 +1,15 @@
+{
+  "compatibility\\private-captures\\semantic-checkpoint-20260911\\differential-status.json": "fa676e5e7e6c47201e3058a58a5ba37700944bc01494703448945c6d460c1eb5",
+  "compatibility\\private-captures\\semantic-checkpoint-20260911\\final-build.json": "da05afe96227bf6169c95240106809ecd60a7646f013c0756af4eac2c5c57700",
+  "compatibility\\private-captures\\semantic-checkpoint-20260911\\final-tests-status.json": "4140f24cfcab0706d9e4aef639795474b8cbd38fd825a1e54a116757dca8d3f3",
+  "compatibility\\private-captures\\semantic-checkpoint-20260911\\fixed-observations.json": "fad9c11de8451db4d1e49c21caace0bae421d76c015d3c7542656ba29a5bef46",
+  "compatibility\\private-captures\\semantic-checkpoint-20260911\\fixed-summary.json": "e486322833a441f0645a0e8b4cef161122a0720ee9bb1ea5e335401b442c6a6c",
+  "compatibility\\private-captures\\semantic-checkpoint-20260911\\form_name.json": "931905d67c05bb2a8be3dd4f4f1bbf6500c455de865808deb8abb565d3b2c887",
+  "compatibility\\private-captures\\semantic-checkpoint-20260911\\history_storage_binding.json": "e96162cc0896d75e7b572f2e84f12fbef43427c7adbbadbd9fea8df59cda356b",
+  "compatibility\\private-captures\\semantic-checkpoint-20260911\\identity.json": "665db94cafca17bd5f377d56cebc558db106af949e3ab9259d059c41dc68983a",
+  "compatibility\\private-captures\\semantic-checkpoint-20260911\\representative-observations.json": "53c274aae9bbec648953da73d6c32c6e99cc12f95802a0b1f61f048ea274229e",
+  "compatibility\\private-captures\\semantic-checkpoint-20260911\\retained-evidence.json": "1363ed615fb7a96c1d8547933d04cfc499ab386957f6d90d06593f0faa10b5f1",
+  "compatibility\\private-captures\\semantic-checkpoint-20260911\\test-binaries.json": "9a5e997e2637144e3ff73faf10ab25f41fda1c08ce439cd98894b0a333a81145",
+  "compatibility\\private-captures\\semantic-checkpoint-20260911\\tests-status.json": "328a883807a53d137490368cdb595eec11010faf54d7bbe25f65ba0934fab63c",
+  "compatibility\\private-captures\\semantic-checkpoint-20260911\\withdrawn-window-candidate.json": "dbf5eca3f7cbeb14da83560dfdb3f35250899d82167cd4fab1057f26f882a8ac"
+}

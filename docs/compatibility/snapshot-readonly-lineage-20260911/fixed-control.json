@@ -1,0 +1,241 @@
+{
+  "checks": 236,
+  "matches": 236,
+  "fixedProbes": [
+    "legacy.window-named",
+    "call.document.hasFocus.correct.missing",
+    "call.document.hasFocus.correct.undefined",
+    "call.document.hasFocus.correct.null",
+    "call.document.hasFocus.correct.primitive",
+    "call.document.hasFocus.correct.object",
+    "call.document.hasFocus.correct.symbol",
+    "call.document.hasFocus.object.missing",
+    "call.document.hasFocus.object.undefined",
+    "call.document.hasFocus.object.null",
+    "call.document.hasFocus.object.primitive",
+    "call.document.hasFocus.object.object",
+    "call.document.hasFocus.object.symbol",
+    "call.document.hasFocus.null.missing",
+    "call.document.hasFocus.null.undefined",
+    "call.document.hasFocus.null.null",
+    "call.document.hasFocus.null.primitive",
+    "call.document.hasFocus.null.object",
+    "call.document.hasFocus.null.symbol",
+    "call.document.hasFocus.foreign.missing",
+    "call.document.hasFocus.foreign.undefined",
+    "call.document.hasFocus.foreign.null",
+    "call.document.hasFocus.foreign.primitive",
+    "call.document.hasFocus.foreign.object",
+    "call.document.hasFocus.foreign.symbol",
+    "surface.window",
+    "property.window.AbortController",
+    "property.window.AbortSignal",
+    "property.navigator.__proto__",
+    "property.performance.__proto__",
+    "property.screen.__proto__",
+    "property.history.__proto__",
+    "property.performance.addEventListener",
+    "property.screen.addEventListener"
+  ],
+  "regressions": [],
+  "newDifferences": [],
+  "oracleDrift": [],
+  "groups": [
+    {
+      "id": "040b06ea0edd0d8b",
+      "category": "descriptor",
+      "fixed": true,
+      "signatureFixed": true,
+      "remaining": []
+    },
+    {
+      "id": "16623006f5e14633",
+      "category": "surface",
+      "fixed": true,
+      "signatureFixed": true,
+      "remaining": []
+    },
+    {
+      "id": "21a81b154f26e799",
+      "category": "surface",
+      "fixed": true,
+      "signatureFixed": true,
+      "remaining": []
+    },
+    {
+      "id": "261de7a21e7145d7",
+      "category": "legacy",
+      "fixed": true,
+      "signatureFixed": true,
+      "remaining": []
+    },
+    {
+      "id": "2e3fa5c55a4a766c",
+      "category": "surface",
+      "fixed": true,
+      "signatureFixed": true,
+      "remaining": []
+    },
+    {
+      "id": "2f13fa24fe6af546",
+      "category": "surface",
+      "fixed": true,
+      "signatureFixed": true,
+      "remaining": []
+    },
+    {
+      "id": "4055936baf635d06",
+      "category": "legacy",
+      "fixed": true,
+      "signatureFixed": true,
+      "remaining": []
+    },
+    {
+      "id": "4c01ec91c8369240",
+      "category": "brand-check",
+      "fixed": true,
+      "signatureFixed": true,
+      "remaining": []
+    },
+    {
+      "id": "4d8f2d7aa415e51f",
+      "category": "brand-check",
+      "fixed": true,
+      "signatureFixed": true,
+      "remaining": []
+    },
+    {
+      "id": "56e9263979f49328",
+      "category": "descriptor",
+      "fixed": true,
+      "signatureFixed": true,
+      "remaining": []
+    },
+    {
+      "id": "6dad37e5c7073bd2",
+      "category": "realm",
+      "fixed": true,
+      "signatureFixed": true,
+      "remaining": []
+    },
+    {
+      "id": "76be3fd8e5525b76",
+      "category": "brand-check",
+      "fixed": true,
+      "signatureFixed": true,
+      "remaining": []
+    },
+    {
+      "id": "7ce0490158dc72b8",
+      "category": "surface",
+      "fixed": true,
+      "signatureFixed": true,
+      "remaining": []
+    },
+    {
+      "id": "8279f9ac1a699ee3",
+      "category": "realm",
+      "fixed": true,
+      "signatureFixed": true,
+      "remaining": []
+    },
+    {
+      "id": "90dd2730882e2b50",
+      "category": "brand-check",
+      "fixed": true,
+      "signatureFixed": true,
+      "remaining": []
+    },
+    {
+      "id": "91b505855c3b52b5",
+      "category": "surface",
+      "fixed": true,
+      "signatureFixed": true,
+      "remaining": []
+    },
+    {
+      "id": "931e39fff24f9387",
+      "category": "legacy",
+      "fixed": true,
+      "signatureFixed": true,
+      "remaining": []
+    },
+    {
+      "id": "98f341941429c165",
+      "category": "descriptor",
+      "fixed": true,
+      "signatureFixed": true,
+      "remaining": []
+    },
+    {
+      "id": "a6c93c3a079303c5",
+      "category": "surface",
+      "fixed": true,
+      "signatureFixed": true,
+      "remaining": []
+    },
+    {
+      "id": "a99b7b19d5053e5d",
+      "category": "surface",
+      "fixed": true,
+      "signatureFixed": true,
+      "remaining": []
+    },
+    {
+      "id": "a9a67828d18d5d5b",
+      "category": "surface",
+      "fixed": true,
+      "signatureFixed": true,
+      "remaining": []
+    },
+    {
+      "id": "babc848f0fbe86db",
+      "category": "brand-check",
+      "fixed": true,
+      "signatureFixed": true,
+      "remaining": []
+    },
+    {
+      "id": "c035c36945679951",
+      "category": "realm",
+      "fixed": true,
+      "signatureFixed": true,
+      "remaining": []
+    },
+    {
+      "id": "c5a808c0f491bb2b",
+      "category": "surface",
+      "fixed": true,
+      "signatureFixed": true,
+      "remaining": []
+    },
+    {
+      "id": "d4c44ff9b4314406",
+      "category": "descriptor",
+      "fixed": true,
+      "signatureFixed": true,
+      "remaining": []
+    },
+    {
+      "id": "d7352700b9d1b6e4",
+      "category": "surface",
+      "fixed": true,
+      "signatureFixed": true,
+      "remaining": []
+    },
+    {
+      "id": "f5bf6be29751c1f4",
+      "category": "surface",
+      "fixed": true,
+      "signatureFixed": true,
+      "remaining": []
+    },
+    {
+      "id": "fb77ad41b9b7b4e0",
+      "category": "realm",
+      "fixed": true,
+      "signatureFixed": true,
+      "remaining": []
+    }
+  ]
+}

@@ -1,0 +1,82 @@
+[
+  {
+    "elapsed_ms": 0,
+    "go_heap": 1445296,
+    "go_released": 1900544,
+    "go_sys": 8538360,
+    "goroutines": 2,
+    "phase": "initial",
+    "private": 79499264,
+    "rss": 14901248
+  },
+  {
+    "elapsed_ms": 527.1201,
+    "go_heap": 223534736,
+    "go_released": 11747328,
+    "go_sys": 493904120,
+    "goroutines": 2,
+    "phase": "cold_live5",
+    "private": 557789184,
+    "rss": 504233984
+  },
+  {
+    "elapsed_ms": 0,
+    "go_heap": 223537048,
+    "go_released": 11747328,
+    "go_sys": 493904120,
+    "goroutines": 2,
+    "phase": "cold_closed",
+    "private": 557789184,
+    "rss": 504291328
+  },
+  {
+    "elapsed_ms": 0,
+    "go_heap": 223537912,
+    "go_released": 11747328,
+    "go_sys": 493904120,
+    "goroutines": 2,
+    "phase": "cold_closed250ms",
+    "private": 557789184,
+    "rss": 504295424
+  },
+  {
+    "elapsed_ms": 443.0332,
+    "go_heap": 301270872,
+    "go_released": 14385152,
+    "go_sys": 517234936,
+    "goroutines": 2,
+    "phase": "warm_live5",
+    "private": 578514944,
+    "rss": 526680064
+  },
+  {
+    "elapsed_ms": 0,
+    "go_heap": 300952976,
+    "go_released": 14385152,
+    "go_sys": 517234936,
+    "goroutines": 2,
+    "phase": "warm_closed",
+    "private": 578514944,
+    "rss": 526680064
+  },
+  {
+    "elapsed_ms": 0,
+    "go_heap": 211418464,
+    "go_released": 14450688,
+    "go_sys": 517234936,
+    "goroutines": 2,
+    "phase": "warm_closed250ms",
+    "private": 578514944,
+    "rss": 526680064
+  },
+  {
+    "elapsed_ms": 0,
+    "go_heap": 14388976,
+    "go_released": 17072128,
+    "go_sys": 517234936,
+    "goroutines": 2,
+    "phase": "diagnostic_go_gc",
+    "private": 576282624,
+    "rss": 524255232
+  }
+]

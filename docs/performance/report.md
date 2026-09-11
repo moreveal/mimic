@@ -1412,3 +1412,259 @@ Ready private memory is about77MiB. Recovery is the harness's250ms window, not
 forced GC or proof of leak absence. This batch improves cross-frame iteration;
 it does not claim a general workload speedup or lower memory usage. Receipts:
 `.build/window-reflection-fast-gate{,-baseline,-repeat}/raw.json` and build.json.
+
+## Interface-inheritance cleanup control, 2026-09-11
+
+The clean `037f8ff` baseline gate **FAILED** in its first measured 10-Page static
+wave after a valid warm-up: native `0xc0000005`, process exit 2, disconnected CDP.
+The process log is retained; its truncated stack does not identify a serializer
+or string-table cause. No retry replaced this failure. The corrected interface
+inheritance build passed all six mandatory semantic workloads, warm scenarios,
+10/25-Page waves and memory checks. This is not a complete passing A/B comparison
+or evidence of snapshot repair; P0 remains open.
+
+Final-build warm medians, execution / completion milliseconds: DOM 446.74 / 466.04,
+static 2.61 / 23.18, React 56.85 / 84.09. Measured static wave throughput ranges:
+10 Pages 49.07–73.17 sessions/s; 25 Pages 58.89–115.87 sessions/s. Active / recovered
+private memory for the 10-Page memory waves: static 428.30 / 155.77 MiB, React
+485.20 / 165.45 MiB. Recovery is the unchanged 250 ms window, not forced GC or a
+proof of leak absence. No performance improvement is claimed from this pair.
+
+The frozen runner and workloads are unchanged. A diagnostic wrapper copies each
+process log and records its exit status before the runner removes temporary files.
+Receipts: `compatibility/private-captures/cleanup-20260911/gate-{before,final}/`.
+
+### Srcdoc navigation validation, 2026-09-11
+
+The unchanged complete fast gate passed for the srcdoc navigation package,
+including 10/25 concurrent Pages and static/React retained-memory waves after
+teardown. A first-chance ProcDump collector monitored each owned process and
+produced no exception dump. Debugger timing precludes a performance improvement
+claim. This finite pass does not close P0: clean 037f8ff separately reproduced
+a native StringTable failure with a full dump. See the
+[srcdoc validation receipt](../compatibility/iframe-srcdoc-20260911/gate.json)
+and [native investigation](../compatibility/snapshot-firstchance-2026-09-11.md).
+
+### Captured owner bindings, 2026-09-11
+
+Two complete monitored baseline/changed gate pairs passed all mandatory
+workloads, 10/25-Page concurrency and retained-memory waves. The latest pair
+has warm completion medians DOM 497.91→534.20 ms, static 26.65→26.86 ms,
+React 89.35→84.39 ms. DOM execution itself is 468.17→463.99 ms.
+Throughput medians are 73.71→66.41 sessions/s (10 Pages) and 71.98→71.14
+(25 Pages); the initial 25-Page baseline was 89.15, demonstrating substantial
+run variation. Post-recovery private memory is static 158.29→162.10 MiB and
+React 169.94→170.50 MiB. The 10-Page decrease/static memory increment are
+not dismissed or claimed neutral; their cause needs profiling. First-chance
+debugger overhead and two pairs do not support an improvement claim.
+No native exception was captured; P0 remains open.
+[All receipts](../compatibility/owner-bindings-20260911/gates.json).
+Final tested executable SHA256:
+`2c951f5c4a8c393c4a0c26f44aa25c9599478d3f897495441cb63dc18b80b7e0`.
+See [semantic coverage](../compatibility/cleanup-2026-09-11.md) and the
+[separate native stability report](../compatibility/snapshot-cleanup-control-2026-09-11.md).
+
+## Location ownership and reflection checkpoint — 2026-09-11
+
+The clean 8780592 baseline gate failed at the first measured 10-Page static
+wave after a valid warmup, with native access violation and exit 2. A new
+389,882,223-byte first-chance dump and full stderr were retained. The changed
+Location/reflection build completed the full gate, including every mandatory
+workload, 10/25-Page waves and teardown-memory measurements. This is not a
+passing pair and does not close native P0. No failed workload was excluded or
+retried into a passing result.
+
+Warm completion medians before/after (ms): DOM 491.32/489.90, static
+26.89/26.94, React 94.65/86.41. Changed throughput medians: 66.08 sessions/s
+at 10 Pages, 86.64 at 25. Changed post-recovery private memory: 166.94 MiB
+static, 172.37 MiB React. The baseline interruption leaves its corresponding
+concurrency and memory comparison incomplete; previous throughput/memory
+concerns are not declared resolved. Debugger overhead remains part of both
+attempted topologies.
+
+[Receipts](../compatibility/location-owner-reflection-20260911/gates.json) and
+[semantic validation](../compatibility/location-owner-reflection-2026-09-11.md).
+Tested executable SHA256:
+`cc97570c06cf010f6525cd41c946a935f603bfab1d71061105eb1403724ee88d`.
+
+
+## Distinct snapshot read-only layouts - 2026-09-11
+
+The P0 ownership correction retains snapshots and concurrent Pages while
+preventing custom objects from extending the isolate group's shared read-only
+layout. A clean 71d54f0 complete gate failed natively in the first measured
+10-Page static wave. Three predeclared changed gates completed every mandatory
+workload, 10/25-Page concurrency and teardown-memory wave, with no native dump.
+Both sides used the same first-chance debugger collector and frozen harness.
+
+| Metric | Baseline (incomplete gate) | After 1 | After 2 | After 3 |
+|---|---:|---:|---:|---:|
+| DOM warm execution / completion ms | 447.20 / 476.13 | 450.92 / 487.70 | 444.13 / 475.45 | 440.52 / 465.51 |
+| Static warm execution / completion ms | 2.89 / 26.17 | 2.94 / 31.01 | 2.80 / 27.83 | 2.78 / 24.74 |
+| React warm execution / completion ms | 53.83 / 81.73 | 53.58 / 84.96 | 54.18 / 83.86 | 47.96 / 79.02 |
+| Throughput, 10 Pages, sessions/s | incomplete | 66.46 | 76.41 | 73.20 |
+| Throughput, 25 Pages, sessions/s | not reached | 72.75 | 87.58 | 86.32 |
+| Static private memory after recovery, MiB | not reached | 159.97 | 159.31 | 156.77 |
+| React private memory after recovery, MiB | not reached | 172.91 | 166.72 | 164.44 |
+
+A failed wave's zero throughput is not a performance measurement. This is not
+three successful pairs and does not establish performance neutrality or close
+all historical native signatures. The Goja-only retained-srcdoc race test also
+timed out on the changed tree; the V8 flag is not executed in that subtest.
+The independent timing concern remains open without deadline changes.
+[Native scope and validation](../compatibility/snapshot-readonly-lineage-2026-09-11.md);
+[full gate receipts](../compatibility/snapshot-readonly-lineage-20260911/gates.json).
+
+
+## Native function finalization - 2026-09-11
+
+Both complete monitored gates passed: clean ed4261b and the source-finalization
+package. All mandatory workloads, 10/25-Page waves and teardown-memory workloads
+ran; neither attempt produced a native dump. This adds bounded P0 evidence and
+does not causally close the separately retained historical signatures.
+
+Warm execution/completion medians before / after (ms): DOM 438.72/469.39 /
+439.59/484.31, static 2.98/25.61 / 2.73/24.32, React 55.05/83.80 / 54.58/86.16.
+Throughput is 74.48 / 69.42 sessions/s at 10 Pages and 84.48 / 69.22 at 25.
+Post-recovery private memory is static 159.92 / 164.92 MiB and React 168.36 /
+175.36 MiB. These decreases/increases remain a performance concern, not a
+neutrality claim. One monitored pair does not identify the cause or separate
+implementation overhead from the earlier measured run variation. Profiling is
+required before undertaking an optimization or attributing the complete delta.
+No workload was excluded or retried into a pass.
+
+[Complete receipts](../compatibility/native-function-finalization-20260911/gates.json)
+and [semantic scope and validation](../compatibility/native-function-finalization-2026-09-11.md).
+
+
+## Callable metadata - 2026-09-11
+
+Clean 706fc15 and the metadata-normalization build both completed the full
+monitored fast gate, including mandatory correctness, 10/25-Page concurrency
+and teardown memory. No native dump or workload exclusion occurred.
+
+Warm execution/completion before / after (ms): DOM 443.43/476.26 /
+450.52/506.93, static 2.96/31.10 / 2.74/33.02, React 48.95/83.16 / 50.90/81.79.
+Throughput is 73.01 / 64.62 sessions/s at 10 Pages and 69.98 / 62.49 at 25.
+Static private memory after recovery is 150.80 / 159.03 MiB; React 170.87 /
+169.02 MiB. Throughput/latency remain a performance concern, with profiling
+pending; no neutrality or whole-delta attribution is claimed. The full browser
+suite passed in 515.399 s versus 435.027 s in the preceding package, which is
+retained as an uncontrolled suite-timing observation. Targeted browser race
+passed; the separate prior Goja deadline issue is not closed by that filter.
+
+[Complete receipts](../compatibility/callable-metadata-20260911/gates.json) and
+[semantic coverage and limits](../compatibility/callable-metadata-2026-09-11.md).
+
+
+## Goja observer profiling checkpoint (2026-09-11)
+
+[Detailed results and limitations](../compatibility/goja-observer-2026-09-11.md)
+record the completed native/density profile pair and a measured redundant
+Reflect.has path in Goja global observation. Deduplicate support queries before
+calling Reflect.has; preserve live membership, accessor receiver and exception
+identity. Corrected baseline regression fails and changed engine race passes.
+Both retained-srcdoc race/CPU-profile runs still exceed the original deadline
+(25.59/23.53 s); no timeout resolution or complete workload speedup is claimed.
+Full browser passes. V8 fixed differential/control and corpora are unchanged.
+The earlier concurrency throughput concern and unreduced snapshot signatures
+remain open; diagnostic forced Go reclamation is not a production workaround.
+
+
+## Document getter ownership (2026-09-11)
+
+[Package evidence](../compatibility/document-getter-ownership-2026-09-11.md):
+full browser and targeted race pass; paired complete gates pass with no native
+dumps. DOM execution/completion 441.26/472.10 to 444.81/479.53 ms; static
+2.86/26.86 to 3.32/28.65; React 53.97/88.92 to 54.83/83.45. Throughput at
+10/25 Pages 71.12/62.36 to 74.02/72.72 sessions/s. Static/React recovered private
+memory 157.96/165.97 to 162.19/170.81 MiB. These mixed single-pair measurements
+do not establish neutrality or complete owner-reference reclamation. Focused
+semantic differences fall 9 to 0 without changing the fixed general corpus.
+
+
+## Concurrent snapshot serialization boundary (2026-09-11)
+
+[Separate P0 investigation](../compatibility/snapshot-serialization-2026-09-11.md)
+reproduces CreateBlob writes into an OS-protected read-only page using only four
+snapshot builders. Three same-binary default/stock-RO-heap pairs yield three
+native failures and three complete passes. The existing ed4261b configuration
+covers this new reproducer without serializing Pages or disabling snapshots.
+The new subprocess regression and full engine/race suites pass. This does not
+close the original SizeFromMap signature or turn finite fast gates into proof
+of global native stability. No new production performance change is introduced.
+
+
+## Attr/Node binding checkpoint (2026-09-11)
+
+[Package and full receipts](../compatibility/attr-node-2026-09-11.md): all mandatory
+paired fast-gate workloads pass without native dumps, after correcting an import
+failure by selecting the existing benchmark Python environment. Throughput at
+10/25 Pages is 74.33/83.15 to 70.98/63.14 sessions/s. DOM completion is nearly
+unchanged (482.05/484.04 ms), React completion increases 84.11 to 93.03 ms.
+This remains an open performance concern; a single mixed pair does not establish
+causality or neutrality. A separate unobserved-iframe diagnostic retained nine
+realms after eight removals with zero exported Window references; lifetime cleanup
+is the next measured ownership task. The current production change fixes Attr
+inheritance/Node borrowing; it does not yet change realm reclamation.
+
+Static/React private memory after recovery is 156.75/166.61 to 157.24/170.47 MiB.
+
+
+## Unobserved detached-frame reclamation (2026-09-11)
+
+[Full evidence](../compatibility/detached-frame-lifetime-2026-09-11.md): after 32
+unobserved iframe removals, live realms improve 33 to one and private memory
+1051.06 to 287.50 MiB. Page-close plus 250 ms private memory improves 533.83 to
+250.56 MiB without forced collection. Both complete paired fast gates pass with
+no native dumps; their throughput/latency results are mixed and do not close the
+broader concurrency concern. Expanded race still hits the pre-existing Goja
+retained-srcdoc setup deadline; full race success is not claimed. Strong bridge
+caches and DOM arena reclamation remain separate boundaries.
+
+## Goja bootstrap cache and exposure transport (2026-09-11)
+
+[Complete checkpoint](../compatibility/bootstrap-transport-2026-09-11.md): five-Page cold/warm Goja waves improve 527.12/443.03 to 485.05/333.42 ms; warm recovery private memory improves 551.71 to 483.23 MiB. Diagnostic post-GC live heap increases 13.72 to 21.57 MiB because compiled code is retained. Both full V8 gates pass with mixed latency/throughput results. Full browser race still fails six Goja deadlines; no data race is reported. Performance neutrality and snapshot P0 closure are not claimed.
+
+## Node names, host records and DOMException package (2026-09-11)
+
+The complete fast gate passes for 660713a against bda67db. Median 10/25 Page throughput changes from 69.42/71.48 to 71.01/69.67 Pages/s. Static/React recovery private memory changes from 159.73/170.54 to 170.93/163.82 MiB. Completion latency increases in this sequential pair; performance neutrality is not established. See [package validation](../compatibility/domexception-state-2026-09-11.md) for latency, test status and evidence. No native dump occurred in this gate; historical snapshot P0 remains open.
+
+## Platform binding bootstrap allocation (2026-09-11)
+
+[Package and complete receipts](../compatibility/platform-bindings-2026-09-11.md)
+compare fresh 6bfa245 with the integrated descriptor/native-source optimization
+and three semantic fixes. Cold five-Page Goja startup improves about 3–4% in two
+pairs; the latter warm comparison is effectively unchanged, 389.010→388.170 ms.
+Normal recovery private memory is variable across the two pairs; diagnostic
+post-GC live heap is nearly unchanged. Full browser tests and targeted browser
+race pass, including all six previously failing Goja deadline scenarios.
+
+Both full fast-gate attempts and the pair after releasing our idle servers are
+preserved as incomplete failures. The latter pair passes six mandatory workloads,
+10-Page waves and all 25 warmup operations, then hits the unchanged host RAM guard.
+Measured 25-Page and dedicated memory waves do not execute. Median 10-Page
+throughput is 74.19→73.16 Pages/s; DOM/static/React completion is
+517.87/27.74/90.03→518.84/25.97/94.67 ms. No V8 throughput improvement, full gate
+pass or overall P0 closure is claimed. No native dump or unexpected process exit
+was observed in these attempts.
+
+## Optimization backlog after semantic checkpoint (2026-09-11)
+
+Per the current scope decision, performance/concurrency investigation is separate
+from semantic cleanup. The preceding measurements and
+[platform-binding performance receipt](../compatibility/platform-bindings-20260911/performance.json)
+remain unchanged. Both recovered gates reached the 25-Page warmup but stopped at
+the host-memory guard; measured 25-Page and dedicated teardown-memory waves did
+not execute. They remain failed/incomplete gates, not passes.
+
+Next work requires sufficient RAM to complete the unchanged gate, then matched
+latency, throughput, concurrency and retained-memory measurements after teardown.
+Profile Goja bootstrap allocation and retained bridge/DOM arena state before a
+substantial optimization. Do not extrapolate the small measured Goja cold-start
+change to V8 throughput or overall memory recovery. The semantic checkpoint adds
+no new performance claim and does not rerun gates merely to chase a green result.
+
+The unexplained broader native snapshot signatures now have a separate
+[stability-debt disposition](../compatibility/snapshot-stability-debt-2026-09-11.md)
+with immediate P0 reopen on any new native reproduction.

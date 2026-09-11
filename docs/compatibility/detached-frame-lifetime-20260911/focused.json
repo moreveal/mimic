@@ -1,0 +1,97 @@
+{
+  "sha256": "14b3fe943d584e8f81cdce018717321a710c5ae30e45ee83b28103387a4c7d63",
+  "chrome": {
+    "ownRelations": true,
+    "parentNull": true,
+    "topNull": true,
+    "selfParent": false,
+    "selfTop": false,
+    "parentIsTop": false,
+    "parentBody": false,
+    "frameElement": true,
+    "childContent": true,
+    "outerContent": true
+  },
+  "mimic": {
+    "childContent": false,
+    "frameElement": false,
+    "outerContent": true,
+    "ownRelations": false,
+    "parentBody": true,
+    "parentIsTop": false,
+    "parentNull": false,
+    "selfParent": false,
+    "selfTop": false,
+    "topNull": false
+  },
+  "after": {
+    "childContent": true,
+    "frameElement": true,
+    "outerContent": true,
+    "ownRelations": true,
+    "parentBody": false,
+    "parentIsTop": false,
+    "parentNull": true,
+    "selfParent": false,
+    "selfTop": false,
+    "topNull": true
+  },
+  "control": {
+    "ownRelations": true,
+    "parentNull": true,
+    "topNull": true,
+    "selfParent": false,
+    "selfTop": false,
+    "parentIsTop": false,
+    "parentBody": false,
+    "frameElement": true,
+    "childContent": true,
+    "outerContent": true
+  },
+  "differences": [
+    [
+      [
+        "childContent"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "frameElement"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "ownRelations"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "parentBody"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "parentNull"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "topNull"
+      ],
+      true,
+      false
+    ]
+  ],
+  "afterDifferences": [],
+  "controlDifferences": []
+}

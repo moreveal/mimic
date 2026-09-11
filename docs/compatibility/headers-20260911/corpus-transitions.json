@@ -1,0 +1,29 @@
+{
+  "brand": {
+    "before": 556,
+    "after": 556,
+    "removed": [],
+    "added": [],
+    "changed": [],
+    "valid": true,
+    "incomplete": []
+  },
+  "relations": {
+    "before": 2,
+    "after": 2,
+    "removed": [],
+    "added": [],
+    "changed": [],
+    "valid": true,
+    "incomplete": []
+  },
+  "corpus": {
+    "before": 40,
+    "after": 40,
+    "removed": [],
+    "added": [],
+    "changed": [],
+    "valid": true,
+    "incomplete": []
+  }
+}

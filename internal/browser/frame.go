@@ -70,7 +70,7 @@ func (r *Realm) ensureChildFrame(elementID int64, connectedThroughShadow ...bool
 }
 
 func (r *Realm) ensureChildFrameInternal(elementID int64, shadowConnected, scheduleNavigation bool) (*Frame, error) {
-	if !r.document.IsConnected(elementID) && !shadowConnected {
+	if r.inactive || !r.document.IsConnected(elementID) && !shadowConnected {
 		return nil, nil
 	}
 	if frame := r.childFrames[elementID]; frame != nil {
@@ -94,7 +94,9 @@ func (r *Realm) ensureChildFrameInternal(elementID int64, shadowConnected, sched
 		return nil, err
 	}
 	blank, _ := url.Parse("about:blank")
-	realm, err := newRealm(page, frame, document, blank)
+	// As with a Page's initial empty document, preserve canonical state now
+	// and install JavaScript only if this document is actually observed.
+	realm, err := newRealmState(page, frame, document, blank, true)
 	if err != nil {
 		return nil, err
 	}
@@ -126,6 +128,11 @@ func (r *Realm) scheduleChildFrameNavigation(frame *Frame, elementID int64) {
 	if !ok {
 		return
 	}
+	if content, present := node.Attributes["srcdoc"]; present {
+		target := &url.URL{Scheme: "about", Opaque: "srcdoc"}
+		r.scheduleChildNavigationContent(frame, target, frame.loaderID == "", r, &content)
+		return
+	}
 	src := node.Attributes["src"]
 	if src == "" {
 		src = "about:blank"
@@ -145,6 +152,13 @@ func (r *Realm) scheduleChildNavigationTo(frame *Frame, target *url.URL, replace
 	if len(initiatingRealm) > 0 && initiatingRealm[0] != nil {
 		initiator = initiatingRealm[0]
 	}
+	r.scheduleChildNavigationContent(frame, target, replace, initiator, nil)
+}
+
+// Inline iframe content uses the same navigation sequence, parser and retirement
+// path as a fetched document. Capture the attribute now: later mutations must
+// cancel this navigation rather than alter the document already being committed.
+func (r *Realm) scheduleChildNavigationContent(frame *Frame, target *url.URL, replace bool, initiator *Realm, content *string) {
 	request := network.Request{SourceURL: initiator.documentURL(), Referrer: initiator.documentURL(), UserActivation: initiator.navigationActivated()}
 	request.ReferrerPolicy = initiator.referrerPolicy
 	r.applyChildNavigationClientHints(&request, frame, target)
@@ -157,7 +171,7 @@ func (r *Realm) scheduleChildNavigationTo(frame *Frame, target *url.URL, replace
 		}
 	}
 	blank := target.Scheme == "about" && target.Opaque == "blank"
-	if !blank && target.Scheme != "http" && target.Scheme != "https" {
+	if !blank && content == nil && target.Scheme != "http" && target.Scheme != "https" {
 		return
 	}
 	if frame.navigationCancel != nil {
@@ -194,13 +208,34 @@ func (r *Realm) scheduleChildNavigationTo(frame *Frame, target *url.URL, replace
 		return
 	}
 	r.scheduler.Post(scheduler.Navigation, 0, func(ctx context.Context) error {
-		if blank {
+		if blank || content != nil {
 			navigation := &childNavigation{embeddingRealm: r, frame: frame, target: target, sequence: sequence, loaderID: loaderID, blockerReason: blockerReason, blocksLoad: blocksLoad, replace: replace}
-			return r.commitChildFrameNavigation(ctx, navigation, network.Response{URL: target, Body: []byte("<!doctype html><html><head></head><body></body></html>")}, nil)
+			body := "<!doctype html><html><head></head><body></body></html>"
+			if content != nil {
+				body = *content
+			}
+			return r.commitChildFrameNavigation(ctx, navigation, network.Response{URL: target, Body: []byte(body)}, nil)
 		}
 		r.startChildFrameNavigation(frame, target, sequence, loaderID, blockerReason, blocksLoad, replace, request)
 		return nil
 	})
+}
+
+func (r *Realm) childFrameAttributeChanged(id int64, name string) {
+	if !strings.EqualFold(name, "src") && !strings.EqualFold(name, "srcdoc") {
+		return
+	}
+	if strings.EqualFold(name, "src") {
+		if node, ok := r.document.Get(id); ok {
+			if _, present := node.Attributes["srcdoc"]; present {
+				return
+			}
+		}
+	}
+	if frame := r.childFrames[id]; frame != nil {
+		frame.navigationStarted = false
+		r.scheduleChildFrameNavigation(frame, id)
+	}
 }
 
 type childNavigation struct {
@@ -450,6 +485,7 @@ func (r *Realm) detachChildFrame(elementID int64) {
 	delete(r.childFrames, elementID)
 	page := r.agent.Page()
 	page.mu.Lock()
+	page.removeDescendantFramesLocked(frame)
 	delete(page.frames, frame.ID)
 	if frame.parent != nil {
 		delete(frame.parent.children, frame.ID)
@@ -457,7 +493,7 @@ func (r *Realm) detachChildFrame(elementID int64) {
 	page.mu.Unlock()
 	// Removing an iframe detaches its browsing context from the active frame
 	// tree, but references to its WindowProxy/functions keep the Window/Realm
-	// alive. Retain it until the owning Realm is closed.
+	// alive. Index it for lookup; owner collection traces only exported references.
 	r.retainedFrames[frame.ID] = frame
 	page.trace.Add(trace.Lifecycle, "frameDetached", map[string]any{"frameId": frame.ID, "elementNodeId": elementID})
 }

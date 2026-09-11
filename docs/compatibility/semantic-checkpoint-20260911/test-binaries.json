@@ -1,0 +1,8 @@
+{
+  "revision": "b5b62e63f1fbb278d8931e7bbc797303e42be32c",
+  "dirty": "",
+  "binaries": {
+    ".build\\plateau-browser-test.exe": "e962d3fbe9fe3253c40d9532a2f9f75e635e9cd0c884b2bd99c42a2f6e6f59b1",
+    ".build\\plateau-v8-test.exe": "801a05e948706c8fd5a796abc0c3cc9433fd0f7f5534b2a30ec236cd41cbed2a"
+  }
+}

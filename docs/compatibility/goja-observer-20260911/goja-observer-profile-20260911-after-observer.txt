@@ -1,0 +1,28 @@
+Total: 25.81s
+ROUTINE ======================== github.com/moreveal/mimic/internal/engine/goja.(*runtime).SetGlobalAccessObserver.func2 in E:\GitHub\mimic\internal\engine\goja\runtime.go
+      10ms       20ms (flat, cum) 0.077% of Total
+         .          .    206:   has := func(property string) bool {
+         .       10ms    207:       v, err := hasFn(goja.Undefined(), target, r.vm.ToValue(property))
+      10ms       10ms    208:       return err == nil && v.ToBoolean()
+         .          .    209:   }
+         .          .    210:   proxy := r.vm.NewProxy(target, &goja.ProxyTrapConfig{
+         .          .    211:       Has: func(_ *goja.Object, property string) bool {
+         .          .    212:           supported := has(property)
+         .          .    213:           report(property, supported)
+ROUTINE ======================== github.com/moreveal/mimic/internal/engine/goja.(*runtime).SetGlobalAccessObserver.func4 in E:\GitHub\mimic\internal\engine\goja\runtime.go
+      20ms      990ms (flat, cum)  3.84% of Total
+      10ms       10ms    216:       Get: func(_ *goja.Object, property string, receiver goja.Value) goja.Value {
+         .          .    217:           // Support is observed once per property. Do not reenter Reflect.has
+         .          .    218:           // for a trace event that report would discard. The Has trap above
+         .          .    219:           // still queries live state for JavaScript membership operations.
+         .       80ms    220:           if _, recorded := seen[property]; !recorded {
+         .       20ms    221:               report(property, has(property))
+         .          .    222:           }
+         .          .    223:           // Observation must preserve accessor receivers, including inherited
+         .          .    224:           // access through an object whose prototype is the global proxy.
+      10ms      880ms    225:           v, err := getFn(goja.Undefined(), target, r.vm.ToValue(property), receiver)
+         .          .    226:           if err != nil {
+         .          .    227:               panic(err)
+         .          .    228:           }
+         .          .    229:           return v
+         .          .    230:       },

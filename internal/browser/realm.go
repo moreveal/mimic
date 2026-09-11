@@ -63,6 +63,7 @@ type Realm struct {
 	frameValueRetain        engine.Value
 	frameValueEncoderJSON   bool
 	frameNodeDescribe       engine.Value
+	frameBindingDescribe    engine.Value
 	documentStreamEvent     engine.Value
 	url                     *url.URL
 	token                   string
@@ -115,6 +116,7 @@ type Realm struct {
 	performanceOrigin  time.Time
 	navigationLoadEnd  time.Time
 	documentEntry      *Realm
+	ancestorOrigins    []string
 }
 
 // documentURL is the URL observed by this realm. For the top-level realm it
@@ -181,6 +183,13 @@ func newRealmStateWithNavigation(p *Page, agent ExecutionAgent, d *dom.Document,
 	resourceContext, cancelResources := context.WithCancel(p.ctx.lifetime)
 	r := &Realm{ID: uuid.NewString(), agent: agent, document: d, url: u, origin: originOf(u.String()), token: uuid.NewString(), detached: map[int64]dom.Node{}, apiSeen: map[string]bool{}, readyState: "loading", workers: map[int64]*DedicatedWorker{}, childFrames: map[int64]*Frame{}, retainedFrames: map[string]*Frame{}, crossValues: map[int64]engine.Value{}, resourceContext: resourceContext, cancelResources: cancelResources}
 	r.navigationURL, r.navigationLoaderID, r.performanceOrigin = u.String(), loaderID, performanceOrigin
+	if frame, ok := agent.(*Frame); ok {
+		for ancestor := frame.parent; ancestor != nil; ancestor = ancestor.parent {
+			if ancestor.Realm != nil {
+				r.ancestorOrigins = append(r.ancestorOrigins, ancestor.Realm.origin)
+			}
+		}
+	}
 	policyHeader := ""
 	if frame, ok := agent.(*Frame); ok && frame.parent == nil {
 		policyHeader = r.securityState().permissionsPolicy
@@ -551,7 +560,7 @@ func (r *Realm) installBindings() error {
 	host["documentActive"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(!r.inactive), nil })
 	host["frameElement"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		frame, ok := r.agent.(*Frame)
-		if !ok || frame.parent == nil || !r.canAccess(frame.parent) {
+		if !ok || r.inactive || frame.parent == nil || !r.canAccess(frame.parent) {
 			return r.val(nil), nil
 		}
 		target := frame.parent.Realm
@@ -573,6 +582,9 @@ func (r *Realm) installBindings() error {
 	host["frameRelation"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		frame := p.frame(strarg(a, 0))
 		if frame == nil {
+			return r.val(nil), nil
+		}
+		if frame.Realm != nil && frame.Realm.inactive {
 			return r.val(nil), nil
 		}
 		switch strarg(a, 1) {
@@ -1246,20 +1258,22 @@ func (r *Realm) installBindings() error {
 			if node, ok := r.document.Get(id); ok && node.TagName == "IMG" {
 				r.updateImage(id, true)
 			}
-			if frame := r.childFrames[id]; frame != nil {
-				frame.navigationStarted = false
-				r.scheduleChildFrameNavigation(frame, id)
-			}
 		}
+		r.childFrameAttributeChanged(id, name)
 		return nil, nil
 	}, "nss")
 	host["removeAttribute"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		id, name := int64(numarg(a, 0)), strarg(a, 1)
+		node, _ := r.document.Get(id)
+		_, existed := node.Attributes[strings.ToLower(name)]
 		err := r.document.RemoveAttribute(id, name)
 		if err == nil && strings.EqualFold(name, "src") {
 			if node, ok := r.document.Get(id); ok && node.TagName == "IMG" {
 				r.updateImage(id, true)
 			}
+		}
+		if err == nil && existed {
+			r.childFrameAttributeChanged(id, name)
 		}
 		return nil, err
 	})
@@ -1446,6 +1460,20 @@ func (r *Realm) installBindings() error {
 			}
 		}
 		return r.val(""), nil
+	})
+	host["locationAncestorOrigins"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		origins := append([]string{}, r.ancestorOrigins...)
+		return r.val(origins), nil
+	})
+	host["windowOrigin"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		if id := strarg(args, 0); id != "" {
+			frame := p.frame(id)
+			if !r.canAccess(frame) {
+				return nil, fmt.Errorf("blocked cross-origin Window access")
+			}
+			return r.val(frame.Realm.origin), nil
+		}
+		return r.val(r.origin), nil
 	})
 	installURLHost(host, r.runtime, r.documentURL)
 	host["setLocationPart"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {

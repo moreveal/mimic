@@ -1,0 +1,39 @@
+[
+  {
+    "name": "targeted-race",
+    "command": [
+      "go",
+      "test",
+      "-race",
+      "./internal/browser",
+      "./internal/webapi",
+      "-run",
+      "TestUnobservedDetached|TestDetachedFrameRelations|TestNavigationRealmRetention|TestWindowReferenceRetains|TestIframeSrcdocRetains|TestDocumentDescriptors",
+      "-count=1"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 1
+  },
+  {
+    "name": "detached-lifetime-gate-before-20260911",
+    "command": [
+      "E:\\GitHub\\mimic\\.build\\benchmark-venv\\Scripts\\python.exe",
+      ".build/p0_full_gate.py",
+      "detached-lifetime-gate-before-20260911",
+      "E:\\GitHub\\mimic\\.build\\detached-lifetime-baseline"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 0
+  },
+  {
+    "name": "detached-lifetime-gate-after-20260911",
+    "command": [
+      "E:\\GitHub\\mimic\\.build\\benchmark-venv\\Scripts\\python.exe",
+      ".build/p0_full_gate.py",
+      "detached-lifetime-gate-after-20260911",
+      "E:\\GitHub\\mimic"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 0
+  }
+]

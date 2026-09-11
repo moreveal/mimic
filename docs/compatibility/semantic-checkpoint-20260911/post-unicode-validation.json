@@ -1,0 +1,351 @@
+{
+  "identity": {
+    "revision": "1a6652cad748311f9262e358d1ccb6c37bc0b17b",
+    "dirty": "",
+    "binary": ".build/mimic-semantic-checkpoint-final.exe",
+    "binarySHA256": "2c20efeeb6822669df65580b1a7a1a9cfdee04aa45364242f489d02c5d018767",
+    "buildInfo": ".build\\mimic-semantic-checkpoint-final.exe: go1.26.1\n\tpath\tgithub.com/moreveal/mimic/cmd/mimic\n\tmod\tgithub.com/moreveal/mimic\tv0.0.0-20260911153546-1a6652cad748\t\n\tdep\tgithub.com/andybalholm/brotli\tv1.2.0\th1:ukwgCxwYrmACq68yiUqwIWnGY0cTPox/M94sVwToPjQ=\n\tdep\tgithub.com/bdandy/go-errors\tv1.2.2\th1:WdFv/oukjTJCLa79UfkGmwX7ZxONAihKu4V0mLIs11Q=\n\tdep\tgithub.com/bdandy/go-socks4\tv1.2.3\th1:Q6Y2heY1GRjCtHbmlKfnwrKVU/k81LS8mRGLRlmDlic=\n\tdep\tgithub.com/bogdanfinn/fhttp\tv0.6.9\th1:F9MsWR1K6JMRlXN4Q/MfjYmptr29nCdycQo+OPBG5U0=\n\tdep\tgithub.com/bogdanfinn/quic-go-utls\tv1.0.10-utls\n\t=>\t./third_party/quic-go-utls\t(devel)\t\n\t\n\tdep\tgithub.com/bogdanfinn/tls-client\tv1.16.0\n\t=>\t./third_party/tls-client\t(devel)\t\n\t\n\tdep\tgithub.com/bogdanfinn/utls\tv1.7.8-barnius\n\t=>\t./third_party/utls\t(devel)\t\n\t\n\tdep\tgithub.com/bogdanfinn/websocket\tv1.5.6-barnius\th1:QpdWVEZ9rKtcT7C2pU19uE2KQw2XevuKTDTzLxfDi/I=\n\tdep\tgithub.com/buke/quickjs-go\tv0.7.7\th1:kuG3d0Vnn7LBvO64vgW+fwSZ5E3XK5pcYDttiIYmatw=\n\tdep\tgithub.com/cloudflare/circl\tv1.6.2\th1:hL7VBpHHKzrV5WTfHCaBsgx/HGbBYlgrwvNXEVDYYsQ=\n\tdep\tgithub.com/dlclark/regexp2/v2\tv2.5.2\th1:HAsucWRhsqcDzl6Ua9aR8JwYOTzrZyPrF0/FNxJVAI0=\n\tdep\tgithub.com/dop251/goja\tv0.0.0-20260906210903-70ad66ec7ce4\th1:GsWm9G80nlJAmJE/r9qdyqQWieJVdJObCMxmu4cZ5dQ=\n\tdep\tgithub.com/go-sourcemap/sourcemap\tv2.1.3+incompatible\th1:W1iEw64niKVGogNgBN3ePyLFfuisuzeidWPMPWmECqU=\n\tdep\tgithub.com/go-text/typesetting\tv0.3.4\th1:YYurUOtEb9kGSOz4uE3k4OpBGsp1dDL8+fjCeaFamAU=\n\tdep\tgithub.com/golang/freetype\tv0.0.0-20170609003504-e2365dfdc4a0\th1:DACJavvAHhabrF08vX0COfcOBJRhZ8lUbR+ZWIs0Y5g=\n\tdep\tgithub.com/google/pprof\tv0.0.0-20230207041349-798e818bf904\th1:4/hN5RUoecvl+RmJRE2YxKWtnnQls6rQjjW5oV7qg2U=\n\tdep\tgithub.com/google/uuid\tv1.6.0\th1:NIvaJDMOsjHA8n1jAhLSgzrAzy1Hgr+hNrb57e+94F0=\n\tdep\tgithub.com/gorilla/websocket\tv1.5.3\th1:saDtZ6Pbx/0u+bgYQ3q96pZgCzfhKXGPqt7kZ72aNNg=\n\tdep\tgithub.com/klauspost/compress\tv1.18.2\th1:iiPHWW0YrcFgpBYhsA6D1+fqHssJscY/Tm/y2Uqnapk=\n\tdep\tgithub.com/maclof/gov8\tv0.1.1\n\t=>\t./third_party/gov8\t(devel)\t\n\t\n\tdep\tgithub.com/quic-go/qpack\tv0.6.0\th1:g7W+BMYynC1LbYLSqRt8PBg5Tgwxn214ZZR34VIOjz8=\n\tdep\tgithub.com/tam7t/hpkp\tv0.0.0-20160821193359-2b70b4024ed5\th1:YqAladjX7xpA6BM04leXMWAEjS0mTZ5kUU9KRBriQJc=\n\tdep\tgithub.com/tdewolff/font\tv0.0.0-20241125190050-d899fdc808fc\th1:8YYYxRss857qPp/DHQw5Ej5jMdWkTFYz6kHO9tnqY3M=\n\tdep\tgithub.com/tdewolff/parse/v2\tv2.7.14-0.20240511005308-a1dd1e88845b\th1:oexdBDt+PcFBI5yf/+ozmKHDugKR83Hrkuvw5FfTwe8=\n\tdep\tgolang.org/x/crypto\tv0.48.0\th1:/VRzVqiRSggnhY7gNRxPauEQ5Drw9haKdM0jqfcCFts=\n\tdep\tgolang.org/x/image\tv0.23.0\th1:HseQ7c2OpPKTPVzNjG5fwJsOTCiiwS4QdsYi5XU6H68=\n\tdep\tgolang.org/x/net\tv0.51.0\th1:94R/GTO7mt3/4wIKpcR5gkGmRLOuE/2hNGeWq/GBIFo=\n\tdep\tgolang.org/x/sys\tv0.41.0\th1:Ivj+2Cp/ylzLiEU89QhWblYnOE9zerudt9Ftecq2C6k=\n\tdep\tgolang.org/x/text\tv0.34.0\th1:oL/Qq0Kdaqxa1KbNeMKwQq0reLCCaFtqu2eNuSeNHbk=\n\tbuild\t-buildmode=exe\n\tbuild\t-compiler=gc\n\tbuild\tCGO_ENABLED=1\n\tbuild\tCGO_CFLAGS=\n\tbuild\tCGO_CPPFLAGS=\n\tbuild\tCGO_CXXFLAGS=\n\tbuild\tCGO_LDFLAGS=\n\tbuild\tGOARCH=amd64\n\tbuild\tGOOS=windows\n\tbuild\tGOAMD64=v1\n\tbuild\tvcs=git\n\tbuild\tvcs.revision=1a6652cad748311f9262e358d1ccb6c37bc0b17b\n\tbuild\tvcs.time=2026-09-11T15:35:46Z\n\tbuild\tvcs.modified=false\n",
+    "change": "bd0408a restores exactly two original Unicode fallback formatter lines from d889379; other production changes are unchanged.",
+    "beforeObservations": "Retained d889379 before values from semantic-checkpoint-20260911; final Chrome and after values freshly captured."
+  },
+  "testBinaries": {
+    "revision": "1a6652cad748311f9262e358d1ccb6c37bc0b17b",
+    "dirty": "",
+    "binaries": {
+      ".build\\plateau-browser-test.exe": "06ed4b61297953d2272ae5db301ac2717ff05dd87ef6ca1f890c95ea7b7eceb0",
+      ".build\\plateau-v8-test.exe": "801a05e948706c8fd5a796abc0c3cc9433fd0f7f5534b2a30ec236cd41cbed2a"
+    }
+  },
+  "commands": [
+    {
+      "name": "browser-final",
+      "command": [
+        "go",
+        "test",
+        "-json",
+        "-timeout=25m",
+        "./internal/browser",
+        "./internal/webapi"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 290.3321912288666,
+      "logSHA256": "a39d2675ae53cb2f0ec93f0d81ad45ccfe2e830b2c12260e6e1f195e263955b1"
+    },
+    {
+      "name": "p0-browser",
+      "command": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "github.com/moreveal/mimic/internal/browser",
+        "E:\\GitHub\\mimic\\.build\\plateau-browser-test.exe",
+        "-test.v",
+        "-test.timeout=5m",
+        "-test.run=TestBootstrapSnapshot|TestOrdinaryConcurrentPageLifecycles",
+        "-test.count=3"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 52.14978861808777,
+      "logSHA256": "45407a5f9694fb09305781b58c7db6a43ce4153ea1038f71d7cdd2006e771b2a"
+    },
+    {
+      "name": "p0-v8",
+      "command": [
+        "go",
+        "tool",
+        "test2json",
+        "-t",
+        "-p",
+        "github.com/moreveal/mimic/internal/engine/v8",
+        "E:\\GitHub\\mimic\\.build\\plateau-v8-test.exe",
+        "-test.v",
+        "-test.timeout=5m",
+        "-test.run=TestBootstrapSnapshot|TestConcurrentNumericSnapshotsPreserveLiveGraphs|TestConcurrentBootstrapSnapshotSerialization",
+        "-test.count=3"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 1.9662647247314453,
+      "logSHA256": "2a4a997ffcea618fd91c8514d873b18b7e18e3ed91445103b1ac576f0e30e481"
+    }
+  ],
+  "differentialCommands": [
+    {
+      "name": "brand",
+      "command": [
+        "E:/GitHub/mimic-compat-fuzz/.build/fuzz-venv/Scripts/python.exe",
+        "tools/compatibility/differential.py",
+        "--chrome",
+        "http://127.0.0.1:19533",
+        "--mimic",
+        "http://127.0.0.1:19555",
+        "--corpus",
+        "compatibility/private-captures/audit-20260911-3faacc6/brand-index.json",
+        "--output",
+        "E:\\GitHub\\mimic\\compatibility\\private-captures\\semantic-checkpoint-unicode-final-20260911\\brand"
+      ],
+      "exitCode": 1,
+      "elapsedSeconds": 0.8957200050354004
+    },
+    {
+      "name": "relations",
+      "command": [
+        "E:/GitHub/mimic-compat-fuzz/.build/fuzz-venv/Scripts/python.exe",
+        "tools/compatibility/differential.py",
+        "--chrome",
+        "http://127.0.0.1:19533",
+        "--mimic",
+        "http://127.0.0.1:19555",
+        "--corpus",
+        "compatibility/private-captures/audit-20260911-3faacc6/relations-index.json",
+        "--output",
+        "E:\\GitHub\\mimic\\compatibility\\private-captures\\semantic-checkpoint-unicode-final-20260911\\relations"
+      ],
+      "exitCode": 1,
+      "elapsedSeconds": 1.0790510177612305
+    },
+    {
+      "name": "corpus",
+      "command": [
+        "E:/GitHub/mimic-compat-fuzz/.build/fuzz-venv/Scripts/python.exe",
+        "tools/compatibility/differential.py",
+        "--chrome",
+        "http://127.0.0.1:19533",
+        "--mimic",
+        "http://127.0.0.1:19555",
+        "--corpus",
+        "compatibility/corpus/index.json",
+        "--output",
+        "E:\\GitHub\\mimic\\compatibility\\private-captures\\semantic-checkpoint-unicode-final-20260911\\corpus"
+      ],
+      "exitCode": 1,
+      "elapsedSeconds": 8.973957061767578
+    },
+    {
+      "name": "control",
+      "command": [
+        "E:/GitHub/mimic-compat-fuzz/.build/fuzz-venv/Scripts/python.exe",
+        "tools/compatibility/differential.py",
+        "--chrome",
+        "http://127.0.0.1:19533",
+        "--mimic",
+        "http://127.0.0.1:19533",
+        "--corpus",
+        "compatibility/corpus/index.json",
+        "--output",
+        "E:\\GitHub\\mimic\\compatibility\\private-captures\\semantic-checkpoint-unicode-final-20260911\\control"
+      ],
+      "exitCode": 0,
+      "elapsedSeconds": 17.069319248199463
+    }
+  ],
+  "tests": {
+    "browser-final": {
+      "packages": [
+        {
+          "Time": "2026-09-11T19:36:24.3957146+04:00",
+          "Action": "pass",
+          "Package": "github.com/moreveal/mimic/internal/webapi",
+          "Elapsed": 0.215
+        },
+        {
+          "Time": "2026-09-11T19:41:12.2825604+04:00",
+          "Action": "pass",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Elapsed": 288.102
+        }
+      ],
+      "passEvents": 1169,
+      "failures": [],
+      "skips": [
+        {
+          "Time": "2026-09-11T19:36:30.9221946+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestBootstrapSnapshotConcurrentPageLifecycles",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:36:30.9221946+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestBootstrapSnapshotBarrierConcurrentBuilders",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:36:30.9221946+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestBootstrapSnapshotBarrierSequentialBuilders",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:36:30.9221946+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestBootstrapSnapshotConcurrentPagesSequentialBuilders",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:36:30.9221946+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestOrdinaryConcurrentPageLifecycles",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:37:15.5917151+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestDetachedFrameMemoryProfile",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:38:01.8922516+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestFrameBridgeBreakdown",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:38:02.3942338+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestNativeFrameMicrotasksBeforeNextTask/goja",
+          "Elapsed": 0.28
+        },
+        {
+          "Time": "2026-09-11T19:38:18.3265271+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestGojaBootstrapProfile",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:38:18.3265271+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestGojaBootstrapPhases",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:38:18.3265271+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestGojaBootstrapChildProfile",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:40:19.0574477+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestPerformanceDensityProfile",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:40:19.2854171+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestPerformanceParallelPages",
+          "Elapsed": 0
+        },
+        {
+          "Time": "2026-09-11T19:40:19.2854171+04:00",
+          "Action": "skip",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Test": "TestPerformanceProfile",
+          "Elapsed": 0
+        }
+      ]
+    },
+    "p0-browser": {
+      "packages": [
+        {
+          "Time": "2026-09-11T19:42:04.4841609+04:00",
+          "Action": "pass",
+          "Package": "github.com/moreveal/mimic/internal/browser",
+          "Elapsed": 51.913
+        }
+      ],
+      "passEvents": 126,
+      "failures": [],
+      "skips": []
+    },
+    "p0-v8": {
+      "packages": [
+        {
+          "Time": "2026-09-11T19:42:06.4622748+04:00",
+          "Action": "pass",
+          "Package": "github.com/moreveal/mimic/internal/engine/v8",
+          "Elapsed": 1.755
+        }
+      ],
+      "passEvents": 42,
+      "failures": [],
+      "skips": []
+    }
+  },
+  "replay": {
+    "fixed": {
+      "checks": 236,
+      "matches": 210,
+      "diffRecords": 88,
+      "observationalGroups": 4,
+      "changedAfterOrChromeObservations": []
+    },
+    "representative": {
+      "checks": 28,
+      "matches": 24,
+      "diffRecords": 10,
+      "observationalGroups": 4,
+      "changedAfterOrChromeObservations": []
+    }
+  },
+  "corpora": {
+    "brand": {
+      "checks": 1,
+      "matches": 0,
+      "diffRecords": 493,
+      "invalidOrIncomplete": [],
+      "changedObservations": []
+    },
+    "relations": {
+      "checks": 1,
+      "matches": 0,
+      "diffRecords": 2,
+      "invalidOrIncomplete": [],
+      "changedObservations": []
+    },
+    "corpus": {
+      "checks": 15,
+      "matches": 12,
+      "diffRecords": 40,
+      "invalidOrIncomplete": [],
+      "changedObservations": []
+    },
+    "control": {
+      "checks": 15,
+      "matches": 15,
+      "diffRecords": 0,
+      "invalidOrIncomplete": []
+    }
+  },
+  "hashes": {
+    "compatibility/private-captures/semantic-checkpoint-unicode-final-20260911/brand.log": "0d83f4ce3ca8559575e8be718428fb06ae16a49ebb28f3f19fb0b092ec66ec55",
+    "compatibility/private-captures/semantic-checkpoint-unicode-final-20260911/browser-final.log": "a39d2675ae53cb2f0ec93f0d81ad45ccfe2e830b2c12260e6e1f195e263955b1",
+    "compatibility/private-captures/semantic-checkpoint-unicode-final-20260911/build.json": "45d4882b80a76e4a19edf5843e657c8c4f47db4648e7c13aa4a5cde3ca19f720",
+    "compatibility/private-captures/semantic-checkpoint-unicode-final-20260911/control.log": "0ebb110e0d7162e8699f4946180f0353ad9b0097db6e474aa84301608ae652e3",
+    "compatibility/private-captures/semantic-checkpoint-unicode-final-20260911/corpus.log": "da530bedc24d23729a87b353c83f31b7523a1617e990a29276ff43b8ce9ad777",
+    "compatibility/private-captures/semantic-checkpoint-unicode-final-20260911/differential-status.json": "9b0f02196133ed05a916f7eef57bf2f337600ad6cdf31dc27604c2ed4ac46156",
+    "compatibility/private-captures/semantic-checkpoint-unicode-final-20260911/final-tests-status.json": "e81eef1c17fcd7d120d103299f994c30fb7f08329e5c798db9d39e9b75c67a3c",
+    "compatibility/private-captures/semantic-checkpoint-unicode-final-20260911/fixed-observations.json": "fad9c11de8451db4d1e49c21caace0bae421d76c015d3c7542656ba29a5bef46",
+    "compatibility/private-captures/semantic-checkpoint-unicode-final-20260911/fixed-summary.json": "e486322833a441f0645a0e8b4cef161122a0720ee9bb1ea5e335401b442c6a6c",
+    "compatibility/private-captures/semantic-checkpoint-unicode-final-20260911/fixed.log": "f06e78f3e555497e4f66cb3f7d281cc772f77a6111bb582fba6eff7ddc15927d",
+    "compatibility/private-captures/semantic-checkpoint-unicode-final-20260911/p0-browser.log": "45407a5f9694fb09305781b58c7db6a43ce4153ea1038f71d7cdd2006e771b2a",
+    "compatibility/private-captures/semantic-checkpoint-unicode-final-20260911/p0-v8.log": "2a4a997ffcea618fd91c8514d873b18b7e18e3ed91445103b1ac576f0e30e481",
+    "compatibility/private-captures/semantic-checkpoint-unicode-final-20260911/relations.log": "fe8ff216833ee5c91694e92bc39e92aaa22570fb71c829fbc49efe7594ef43cd",
+    "compatibility/private-captures/semantic-checkpoint-unicode-final-20260911/representative-observations.json": "53c274aae9bbec648953da73d6c32c6e99cc12f95802a0b1f61f048ea274229e",
+    "compatibility/private-captures/semantic-checkpoint-unicode-final-20260911/test-binaries.json": "a48021e49ac9576b26c4207aff30df150529f4f063647d8bfbdc99e156a8b134"
+  }
+}
