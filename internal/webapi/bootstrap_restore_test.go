@@ -23,7 +23,7 @@ func TestBootstrapRestoreRebindsState(t *testing.T) {
  const window=globalThis,document={},documentPolicy={},permissionsPolicySlots=new WeakMap();
  const originalPolicy={clauses:new Map([['old','()']]),origin:'old'};
  permissionsPolicySlots.set(documentPolicy,originalPolicy);
- let host,hostToken=1,bridgeRealmID="old-realm",intlEnvironment={},security={},windowTop,windowParent,frameElementCache={},uaData={};
+ let host,hostToken=1,bridgeRealmID="old-realm",intlEnvironment={},security={},windowRelations,windowTop,windowParent,frameElementCache={},uaData={};
  const remoteWindowCache=new Map(),remoteDocumentCache=new Map(),crossRealmCache=new Map(),crossRealmSymbols=new Map(),crossRealmSymbolReferences=new Map(),localCrossRealmSymbols=new Map(),elementWrappers=new Map(),documentWrappers=new Map(),tracedAccesses=new Map();
  const caches=[remoteWindowCache,remoteDocumentCache,crossRealmCache,crossRealmSymbols,crossRealmSymbolReferences,localCrossRealmSymbols,elementWrappers,documentWrappers,tracedAccesses];
  for(const cache of caches)cache.set('stale',{});
@@ -40,7 +40,9 @@ func TestBootstrapRestoreRebindsState(t *testing.T) {
  __mimicRestoreBootstrap(freshHost);
  if(host!==freshHost||hostToken!==2||bridgeRealmID!=="new-realm"||intlEnvironment.locale!=='en'||!security.secureContext)throw Error('host state');
  if(permissionsPolicySlots.get(documentPolicy)!==originalPolicy||originalPolicy.origin!=='https://new.test'||originalPolicy.clauses.has('old'))throw Error('canonical policy');
- if(windowTop.id!==10||windowParent!==window||root!==99)throw Error('topology/root');
+ // Restoring a bootstrap must not create native WindowProxy references before
+ // its profile/host has been rebound. Topology IDs are eager; objects are lazy.
+ if(windowRelations.self!==9||windowRelations.top!==10||windowRelations.parent!==9||windowTop!==undefined||windowParent!==undefined||root!==99)throw Error('topology/root');
  if(caches.some(cache=>cache.size)||nextCrossRealmSymbolID!==0||frameElementCache!==undefined||uaData!==undefined)throw Error('stale cache');
  if(calls.join(',')!=='installFrameReferenceBridge,setDOMQueryCallback,registerFormSnapshot,registerShadowSnapshot,ready')throw Error('registration order');
  `)
