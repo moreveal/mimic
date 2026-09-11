@@ -95,6 +95,8 @@ type Request struct {
 	chain               requestChain
 }
 type Response struct {
+	// Referrer is the committed navigation referrer after request policy/redirects.
+	Referrer        string
 	Redirected      bool
 	Type            string
 	Status          int
@@ -227,29 +229,9 @@ func (l *Loader) Load(ctx context.Context, r Request) (Response, error) {
 			r.Headers.Set("Accept-Encoding", "gzip, deflate, br, zstd")
 		}
 	}
-	if r.Referrer != nil && r.Headers.Get("Referer") == "" {
-		referrer := *r.Referrer
-		referrer.User = nil
-		referrer.Fragment = ""
-		referrer.RawFragment = ""
-		policy := "strict-origin-when-cross-origin"
-		for _, token := range strings.Split(r.ReferrerPolicy, ",") {
-			switch strings.TrimSpace(strings.ToLower(token)) {
-			case "no-referrer", "no-referrer-when-downgrade", "same-origin", "origin", "strict-origin", "origin-when-cross-origin", "strict-origin-when-cross-origin", "unsafe-url":
-				policy = strings.TrimSpace(strings.ToLower(token))
-			}
-		}
-		sameOrigin := referrer.Scheme == r.URL.Scheme && referrer.Host == r.URL.Host
-		downgrade := referrer.Scheme == "https" && r.URL.Scheme != "https"
-		suppress := policy == "no-referrer" || policy == "same-origin" && !sameOrigin || downgrade && (policy == "no-referrer-when-downgrade" || policy == "strict-origin" || policy == "strict-origin-when-cross-origin")
-		if (referrer.Scheme == "http" || referrer.Scheme == "https") && !suppress {
-			if policy == "origin" || policy == "strict-origin" || !sameOrigin && (policy == "origin-when-cross-origin" || policy == "strict-origin-when-cross-origin") {
-				referrer.Path = "/"
-				referrer.RawPath = ""
-				referrer.RawQuery = ""
-				referrer.ForceQuery = false
-			}
-			r.Headers.Set("Referer", referrer.String())
+	if r.Headers.Get("Referer") == "" {
+		if referrer := r.ReferrerValue(); referrer != "" {
+			r.Headers.Set("Referer", referrer)
 		}
 	}
 	for k, values := range snapshot.ExtraHeaders {
@@ -533,6 +515,7 @@ func applyBrowserRequestHeaders(r *Request) {
 	}
 }
 func (l *Loader) after(ctx context.Context, r Request, res Response) (Response, error) {
+	res.Referrer = r.Headers.Get("Referer")
 	interceptors := l.interceptorSnapshot()
 	for n := len(interceptors) - 1; n >= 0; n-- {
 		var err error
@@ -686,4 +669,35 @@ func (l *Loader) CompletedURL(rawURL string) (Response, bool) {
 		}
 	}
 	return Response{}, false
+}
+
+// ReferrerValue is shared by the wire request and inline document navigation.
+func (r Request) ReferrerValue() string {
+	if r.Referrer == nil || r.URL == nil {
+		return ""
+	}
+	referrer := *r.Referrer
+	referrer.User = nil
+	referrer.Fragment = ""
+	referrer.RawFragment = ""
+	policy := "strict-origin-when-cross-origin"
+	for _, token := range strings.Split(r.ReferrerPolicy, ",") {
+		switch strings.TrimSpace(strings.ToLower(token)) {
+		case "no-referrer", "no-referrer-when-downgrade", "same-origin", "origin", "strict-origin", "origin-when-cross-origin", "strict-origin-when-cross-origin", "unsafe-url":
+			policy = strings.TrimSpace(strings.ToLower(token))
+		}
+	}
+	sameOrigin := referrer.Scheme == r.URL.Scheme && referrer.Host == r.URL.Host
+	downgrade := referrer.Scheme == "https" && r.URL.Scheme != "https" && r.URL.Scheme != "about"
+	suppress := policy == "no-referrer" || policy == "same-origin" && !sameOrigin || downgrade && (policy == "no-referrer-when-downgrade" || policy == "strict-origin" || policy == "strict-origin-when-cross-origin")
+	if (referrer.Scheme == "http" || referrer.Scheme == "https") && !suppress {
+		if policy == "origin" || policy == "strict-origin" || !sameOrigin && (policy == "origin-when-cross-origin" || policy == "strict-origin-when-cross-origin") {
+			referrer.Path = "/"
+			referrer.RawPath = ""
+			referrer.RawQuery = ""
+			referrer.ForceQuery = false
+		}
+		return referrer.String()
+	}
+	return ""
 }

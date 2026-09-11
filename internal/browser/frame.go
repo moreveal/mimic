@@ -89,7 +89,7 @@ func (r *Realm) ensureChildFrameInternal(elementID int64, shadowConnected, sched
 	}
 	page := r.agent.Page()
 	frame := &Frame{ID: uuid.NewString(), page: page, parent: parent, elementID: elementID, children: map[string]*Frame{}, loadBlockers: map[uint64]string{}}
-	document, err := dom.Parse("<!doctype html><html><head></head><body></body></html>")
+	document, err := dom.Parse("<html><head></head><body></body></html>")
 	if err != nil {
 		return nil, err
 	}
@@ -105,6 +105,7 @@ func (r *Realm) ensureChildFrameInternal(elementID int64, shadowConnected, sched
 	realm.referrerPolicy = r.referrerPolicy
 	page.ctx.mu.Unlock()
 	realm.initializeClientHints("")
+	realm.documentReferrer = (network.Request{URL: r.documentURL(), Referrer: r.documentURL(), ReferrerPolicy: "unsafe-url"}).ReferrerValue()
 	realm.readyState = "complete"
 	frame.Realm = realm
 	page.mu.Lock()
@@ -155,7 +156,7 @@ func (r *Realm) scheduleChildNavigationTo(frame *Frame, target *url.URL, replace
 // path as a fetched document. Capture the attribute now: later mutations must
 // cancel this navigation rather than alter the document already being committed.
 func (r *Realm) scheduleChildNavigationContent(frame *Frame, target *url.URL, replace bool, initiator *Realm, content *string, navigationType string) {
-	request := network.Request{SourceURL: initiator.documentURL(), Referrer: initiator.documentURL(), UserActivation: initiator.navigationActivated()}
+	request := network.Request{URL: target, SourceURL: initiator.documentURL(), Referrer: initiator.documentURL(), UserActivation: initiator.navigationActivated()}
 	request.ReferrerPolicy = initiator.referrerPolicy
 	r.applyChildNavigationClientHints(&request, frame, target)
 	if initiator == r {
@@ -206,11 +207,11 @@ func (r *Realm) scheduleChildNavigationContent(frame *Frame, target *url.URL, re
 	r.scheduler.Post(scheduler.Navigation, 0, func(ctx context.Context) error {
 		if blank || content != nil {
 			navigation := &childNavigation{embeddingRealm: r, frame: frame, target: target, sequence: sequence, loaderID: loaderID, blockerReason: blockerReason, blocksLoad: blocksLoad, replace: replace, navigationType: navigationType}
-			body := "<!doctype html><html><head></head><body></body></html>"
+			body := "<html><head></head><body></body></html>"
 			if content != nil {
 				body = *content
 			}
-			return r.commitChildFrameNavigation(ctx, navigation, network.Response{URL: target, Body: []byte(body)}, nil)
+			return r.commitChildFrameNavigation(ctx, navigation, network.Response{URL: target, Body: []byte(body), Referrer: request.ReferrerValue()}, nil)
 		}
 		r.startChildFrameNavigation(frame, target, sequence, loaderID, blockerReason, blocksLoad, replace, request, navigationType)
 		return nil
@@ -371,6 +372,7 @@ func (r *Realm) commitChildFrameNavigation(ctx context.Context, navigation *chil
 		realm.origin = r.origin
 		p.ctx.mu.Unlock()
 	}
+	realm.documentReferrer = res.Referrer
 	realm.referrerPolicy = res.Headers.Get("Referrer-Policy")
 	realm.lastModified, _ = http.ParseTime(res.Headers.Get("Last-Modified"))
 	realm.initializeClientHints(res.Headers.Get("Permissions-Policy"))
