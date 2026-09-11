@@ -1,0 +1,12 @@
+{
+  "revision": "7c1bbfe10615c776cad5282c39c8b20715397cfd",
+  "dirty": [
+    " M internal/webapi/document_compatibility.js",
+    "?? docs/compatibility/document-getter-brands-20260911/",
+    "?? internal/browser/document_getter_brand_test.go",
+    "?? internal/browser/testdata/document_getter_brand_chrome152.json",
+    "?? internal/browser/testdata/document_getter_brand_oracle.js"
+  ],
+  "binarySHA256": "158a589a4abbc8403ac785a38abf3cc8a6cac61bd49a473862878ef046cc1bda",
+  "probeSHA256": "1ca461f1f92c5d104adc92edd32775cf38a9136e7505ef2babbc9bd544c2a73b"
+}
