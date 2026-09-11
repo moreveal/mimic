@@ -85,6 +85,23 @@ function wrapDocumentNode(data) {
   });
   delete Document.prototype.firstChild;
   for(const name of ['head','body'])accessor(Document.prototype,name,function(){validDocument(this);const root=this.documentElement;if(root?.namespaceURI!=='http://www.w3.org/1999/xhtml'||root.localName!=='html')return null;return Array.from(root.children).find(node=>node.namespaceURI==='http://www.w3.org/1999/xhtml'&&(node.localName===name||name==='body'&&node.localName==='frameset'))||null});
+  const bodyGetter=Object.getOwnPropertyDescriptor(Document.prototype,'body').get;
+  accessor(Document.prototype,'body',bodyGetter,function(value){
+    validDocument(this);
+    const slot=value==null?null:elementSlot(value);
+    if(value!=null&&(!slot||slot.type!=='element'||slot.namespaceURI!=='http://www.w3.org/1999/xhtml'))throw new TypeError('The provided value is not of type HTMLElement');
+    if(!slot||!['body','frameset'].includes((slot.qualifiedName||slot.tagName.toLowerCase())))throw new DOMException('The new body element must be a body or frameset element','HierarchyRequestError');
+    const old=bodyGetter.call(this);
+    if(value===old)return;
+    // Use canonical mutation paths so replacement also adopts the subtree and
+    // delivers the same mutation/lifecycle notifications as ordinary insertion.
+    if(old)old.parentNode.replaceChild(value,old);
+    else {
+      const root=this.documentElement;
+      if(!root)throw new DOMException('The document has no document element','HierarchyRequestError');
+      root.appendChild(value);
+    }
+  });
   const tagName=Object.getOwnPropertyDescriptor(Element.prototype,'tagName').get;
   accessor(Element.prototype,'tagName',function(){return elementSlot(this)?.qualifiedName||tagName.call(this)});
   accessor(Element.prototype,'localName',function(){const name=elementSlot(this)?.qualifiedName;return name?name.split(':').at(-1):tagName.call(this).toLowerCase()});
