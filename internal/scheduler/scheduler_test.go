@@ -340,3 +340,45 @@ func TestConcurrentDriversNeverOverlapBrowserCallbacks(t *testing.T) {
 		t.Fatal("serialized second callback did not run")
 	}
 }
+
+func TestWebTaskSignalOwnsPriorityAndReadySelection(t *testing.T) {
+	s := New(time.Unix(0, 0), nil)
+	signal := s.NewWebTaskSignal(2)
+	var order []string
+	dynamic := s.Post(WebTask, 0, func(context.Context) error {
+		id, priority, group := s.CurrentWebTask()
+		if id == 0 || priority != 0 || group != signal {
+			t.Errorf("task context: %d %d %d", id, priority, group)
+		}
+		order = append(order, "dynamic")
+		return nil
+	})
+	s.SetWebTaskPriority(dynamic, 2, false)
+	s.SetWebTaskSignal(dynamic, signal)
+	fixed := s.Post(WebTask, 0, func(context.Context) error { order = append(order, "fixed"); return nil })
+	s.SetWebTaskPriority(fixed, 1, false)
+	previous, status := s.BeginWebTaskPriorityChange(signal, 0)
+	if previous != 2 || status != 1 || s.WebTaskSignalPriority(signal) != 0 {
+		t.Fatal("priority transition")
+	}
+	if _, status := s.BeginWebTaskPriorityChange(signal, 1); status != -1 {
+		t.Fatal("reentrant update accepted")
+	}
+	s.EndWebTaskPriorityChange(signal)
+	if _, status := s.BeginWebTaskPriorityChange(signal, 0); status != 0 {
+		t.Fatal("unchanged priority dispatched")
+	}
+	if err := s.RunReady(context.Background(), 10); err != nil {
+		t.Fatal(err)
+	}
+	if !reflect.DeepEqual(order, []string{"dynamic", "fixed"}) {
+		t.Fatal(order)
+	}
+	if id, _, _ := s.CurrentWebTask(); id != 0 {
+		t.Fatal("finished task context retained")
+	}
+	s.Close()
+	if s.WebTaskSignalPriority(signal) != 0 {
+		t.Fatal("retained signal changed on queue close")
+	}
+}

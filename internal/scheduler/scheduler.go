@@ -54,6 +54,7 @@ type task struct {
 	cancelled    bool
 	webPriority  int
 	continuation bool
+	webSignal    uint64
 }
 type queue []*task
 
@@ -68,25 +69,34 @@ func (q queue) Swap(i, j int) { q[i], q[j] = q[j], q[i] }
 func (q *queue) Push(x any)   { *q = append(*q, x.(*task)) }
 func (q *queue) Pop() any     { old := *q; n := len(old); x := old[n-1]; *q = old[:n-1]; return x }
 
+type webTaskSignal struct {
+	priority int
+	changing bool
+}
+
 type Scheduler struct {
-	mu             sync.Mutex
-	runMu          sync.Mutex
-	now            time.Time
-	seq            uint64
-	tasks          queue
-	byID           map[uint64]*task
-	checkpoint     func(context.Context) error
-	paused         bool
-	closed         bool
-	observer       func(Transition)
-	runningAt      time.Time
-	runningBase    time.Time
-	runningTaskID  uint64
-	runningSource  Source
-	runningPhase   string
-	wake           chan struct{}
-	executionScale float64
-	sequenceSource func() uint64
+	webSignals         map[uint64]*webTaskSignal
+	webSignalSequence  uint64
+	runningWebPriority int
+	runningWebSignal   uint64
+	mu                 sync.Mutex
+	runMu              sync.Mutex
+	now                time.Time
+	seq                uint64
+	tasks              queue
+	byID               map[uint64]*task
+	checkpoint         func(context.Context) error
+	paused             bool
+	closed             bool
+	observer           func(Transition)
+	runningAt          time.Time
+	runningBase        time.Time
+	runningTaskID      uint64
+	runningSource      Source
+	runningPhase       string
+	wake               chan struct{}
+	executionScale     float64
+	sequenceSource     func() uint64
 }
 
 func New(start time.Time, checkpoint func(context.Context) error) *Scheduler {
@@ -295,6 +305,7 @@ func (s *Scheduler) endExecution() {
 	s.runningTaskID = 0
 	s.runningSource = ""
 	s.runningPhase = ""
+	s.runningWebPriority, s.runningWebSignal = 1, 0
 	s.mu.Unlock()
 }
 
@@ -341,8 +352,9 @@ func RunReadyAcross(ctx context.Context, queues []*Scheduler) (bool, error) {
 				if candidate.due.After(queue.now) {
 					continue
 				}
-				if selected == nil || taskBefore(candidate, &best) {
-					selected, best = queue, *candidate
+				snapshot := queue.webTaskSnapshotLocked(candidate)
+				if selected == nil || taskBefore(&snapshot, &best) {
+					selected, best = queue, snapshot
 				}
 			}
 		}
@@ -388,7 +400,7 @@ func (s *Scheduler) run(ctx context.Context, maxTasks int, advance, limitError b
 		if observer != nil {
 			observer(Transition{"start", t.id, t.source, t.due})
 		}
-		s.beginTask(t.id, t.source)
+		s.beginTask(t)
 		callbackErr := t.callback(ctx)
 		if callbackErr != nil {
 			if observer != nil {
@@ -423,10 +435,11 @@ func (s *Scheduler) run(ctx context.Context, maxTasks int, advance, limitError b
 	return errors.Join(taskErrors...)
 }
 
-func (s *Scheduler) beginTask(id uint64, source Source) {
+func (s *Scheduler) beginTask(t *task) {
 	s.mu.Lock()
-	s.runningTaskID = id
-	s.runningSource = source
+	s.runningTaskID = t.id
+	s.runningSource = t.source
+	s.runningWebPriority, s.runningWebSignal = t.webPriority, t.webSignal
 	s.runningPhase = "callback"
 	s.runningBase = s.now
 	s.runningAt = monotime.Now()
@@ -458,7 +471,12 @@ func (s *Scheduler) popNextLocked(advance bool) *task {
 		if candidate.due.After(s.now) {
 			continue
 		}
-		if best < 0 || taskBefore(candidate, s.tasks[best]) {
+		snapshot := s.webTaskSnapshotLocked(candidate)
+		var previous task
+		if best >= 0 {
+			previous = s.webTaskSnapshotLocked(s.tasks[best])
+		}
+		if best < 0 || taskBefore(&snapshot, &previous) {
 			best = index
 		}
 	}
@@ -466,6 +484,81 @@ func (s *Scheduler) popNextLocked(advance bool) *task {
 		return nil
 	}
 	return heap.Remove(&s.tasks, best).(*task)
+}
+
+// A TaskSignal's priority has one owner. Queue entries retain only its ID;
+// each ready selection resolves the current value under the scheduler lock.
+func (s *Scheduler) webTaskSnapshotLocked(t *task) task {
+	snapshot := *t
+	if signal := s.webSignals[t.webSignal]; signal != nil {
+		snapshot.webPriority = signal.priority
+	}
+	return snapshot
+}
+func (s *Scheduler) NewWebTaskSignal(priority int) uint64 {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if s.webSignals == nil {
+		s.webSignals = make(map[uint64]*webTaskSignal)
+	}
+	s.webSignalSequence++
+	s.webSignals[s.webSignalSequence] = &webTaskSignal{priority: priority}
+	return s.webSignalSequence
+}
+func (s *Scheduler) WebTaskSignalPriority(id uint64) int {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if signal := s.webSignals[id]; signal != nil {
+		return signal.priority
+	}
+	return 1
+}
+
+// Begin returns -1 for a reentrant update, 0 for no change, and 1 when the
+// binding should dispatch prioritychange. End must run even if a listener throws.
+func (s *Scheduler) BeginWebTaskPriorityChange(id uint64, priority int) (int, int) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	signal := s.webSignals[id]
+	if signal == nil {
+		return 1, 0
+	}
+	previous := signal.priority
+	if signal.changing {
+		return previous, -1
+	}
+	if previous == priority {
+		return previous, 0
+	}
+	signal.priority = priority
+	signal.changing = true
+	return previous, 1
+}
+func (s *Scheduler) EndWebTaskPriorityChange(id uint64) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if signal := s.webSignals[id]; signal != nil {
+		signal.changing = false
+	}
+}
+func (s *Scheduler) SetWebTaskSignal(taskID, signalID uint64) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if task := s.byID[taskID]; task != nil && s.webSignals[signalID] != nil {
+		task.webSignal = signalID
+	}
+}
+func (s *Scheduler) CurrentWebTask() (uint64, int, uint64) {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if s.runningSource != WebTask {
+		return 0, 1, 0
+	}
+	priority := s.runningWebPriority
+	if signal := s.webSignals[s.runningWebSignal]; signal != nil {
+		priority = signal.priority
+	}
+	return s.runningTaskID, priority, s.runningWebSignal
 }
 
 // Web scheduling priorities choose among ready tasks, never change due times.

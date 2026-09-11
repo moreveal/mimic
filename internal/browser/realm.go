@@ -33,6 +33,7 @@ import (
 )
 
 type Realm struct {
+	webTaskAbort            engine.Value
 	auxiliaryState          engine.Value
 	auxiliaryStorage        engine.Value
 	pictureInPicture        *Frame
@@ -262,6 +263,9 @@ func newRealmStateWithNavigation(p *Page, agent ExecutionAgent, d *dom.Document,
 	r.scheduler.SetExecutionScale(p.Environment().Time.ExecutionScale)
 	r.scheduler.SetSequenceSource(func() uint64 { return p.taskSequence.Add(1) })
 	r.scheduler.SetObserver(func(t scheduler.Transition) {
+		if t.Name == "end" {
+			r.webTaskAbort = nil
+		}
 		p.trace.Add(trace.Scheduler, t.Name, map[string]any{"taskId": t.TaskID, "source": t.Source, "due": t.Due, "realm": r.ID})
 	})
 	r.runtime.SetTimeSource(r.scheduler.Now)

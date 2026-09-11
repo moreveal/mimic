@@ -107,6 +107,24 @@ func TestCrashReportHostStateAndSnapshotIsolation(t *testing.T) {
 	})
 }
 
+func TestTaskSignalHostPriorityAndReentrancy(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, p *Page) {
+		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
+		defer cancel()
+		value, err := p.Evaluate(ctx, `(async()=>{
+   const c=new TaskController({priority:'background'}),observed=[];
+   c.signal.onprioritychange=e=>{observed.push(e.previousPriority+':'+c.signal.priority);try{c.setPriority('user-visible')}catch(e){observed.push(e.name)}};
+   const jobs=[scheduler.postTask(()=>observed.push('dynamic'),{signal:c.signal}),scheduler.postTask(()=>observed.push('fixed'),{priority:'user-visible',signal:c.signal})];
+   c.setPriority('user-blocking');await Promise.all(jobs);
+   return JSON.stringify(observed);
+  })()`)
+		want := `["background:user-blocking","NotAllowedError","dynamic","fixed"]`
+		if err != nil || value != want {
+			t.Fatalf("task signal: %v %v", value, err)
+		}
+	})
+}
+
 func TestLaunchQueueRetainsAndDeliversURLLaunches(t *testing.T) {
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
