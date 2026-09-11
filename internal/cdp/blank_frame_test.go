@@ -22,6 +22,8 @@ func TestCDPInitialBlankFramesCompleteLifecycle(t *testing.T) {
 	}
 	defer c.Close()
 	_ = c.SetReadDeadline(time.Now().Add(5 * time.Second))
+	_ = c.WriteJSON(map[string]any{"id": 101, "method": "Page.enable"})
+	_ = readReply(t, c, 101)
 	_ = c.WriteJSON(map[string]any{"id": 1, "method": "Page.setLifecycleEventsEnabled", "params": map[string]any{"enabled": true}})
 	_ = readReply(t, c, 1)
 	_ = c.WriteJSON(map[string]any{"id": 2, "method": "Page.navigate", "params": map[string]any{"url": pageServer.URL}})

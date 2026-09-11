@@ -101,7 +101,7 @@ type adapter struct {
 	packedFrames      []*packedFrame
 	callbackSeq       uint64
 	promiseFactory    engine.Value
-	globals           []*gov8.Global // retained engine.Values; released on the isolate thread
+	globals           map[*gov8.Global]struct{} // retained engine.Values; released on the isolate thread
 	modules           []*gov8.Module
 	moduleCache       map[string]*gov8.Module
 	moduleNames       map[*gov8.Module]string
@@ -341,11 +341,9 @@ func (a *adapter) evalScopedCode(isolate *gov8.Isolate, realm *gov8.Context, sco
 
 func (a *adapter) evalError(catcher *gov8.TryCatch, scope *gov8.Scope, realm *gov8.Context, name string, cause error) error {
 	err := exceptionError(catcher, scope, realm, name, cause)
-	if a.onCallback() != nil {
-		if exception, ok, readErr := catcher.Exception(scope); readErr == nil && ok {
-			if value, persistErr := a.persist(scope, exception); persistErr == nil {
-				return &callException{error: err, value: value}
-			}
+	if exception, ok, readErr := catcher.Exception(scope); readErr == nil && ok {
+		if value, persistErr := a.persist(scope, exception); persistErr == nil {
+			return &callException{error: err, value: value}
 		}
 	}
 	return err
@@ -699,6 +697,9 @@ type callException struct {
 	value engine.Value
 }
 
+func (e *callException) ThrownValue() engine.Value { return e.value }
+func (e *callException) Unwrap() error             { return e.error }
+
 func (a *adapter) callError(catcher *gov8.TryCatch, scope *gov8.Scope, realm *gov8.Context) error {
 	err := exceptionError(catcher, scope, realm, "JavaScript callback", errors.New("call threw"))
 	if exception, ok, readErr := catcher.Exception(scope); readErr == nil && ok {
@@ -855,7 +856,11 @@ func (a *adapter) Await(value engine.Value) (engine.Value, bool, error) {
 			return nil, err
 		}
 		if state == gov8.PromiseRejected {
-			return nil, fmt.Errorf("promise rejected: %s", localResultString(localResult, realm))
+			thrown, persistErr := a.persist(scope, localResult)
+			if persistErr != nil {
+				return nil, persistErr
+			}
+			return nil, &callException{error: fmt.Errorf("promise rejected: %s", localResultString(localResult, realm)), value: thrown}
 		}
 		result, err = a.persist(scope, localResult)
 		return nil, err
@@ -961,7 +966,7 @@ func (a *adapter) Close() error {
 		for i := len(a.modules) - 1; i >= 0; i-- {
 			_ = a.modules[i].Close()
 		}
-		for _, global := range a.globals {
+		for global := range a.globals {
 			_ = global.Close()
 		}
 		a.globals = nil
@@ -1063,9 +1068,29 @@ func (a *adapter) runContext(ctx context.Context, operation realmOperation) (eng
 func (a *adapter) newGlobal(scope *gov8.Scope, local gov8.Value) (*gov8.Global, error) {
 	global, err := gov8.NewGlobal(scope, local)
 	if err == nil {
-		a.globals = append(a.globals, global)
+		if a.globals == nil {
+			a.globals = make(map[*gov8.Global]struct{})
+		}
+		a.globals[global] = struct{}{}
 	}
 	return global, err
+}
+
+// ReleaseValue removes only this persistent root. Other handles and ordinary
+// JavaScript references to the same object remain valid.
+func (a *adapter) ReleaseValue(value engine.Value) {
+	v, ok := value.(*runtimeValue)
+	if !ok || v == nil || v.runtime != a || v.global == nil {
+		return
+	}
+	_, _ = a.run(func(_ *state, _ *gov8.Context, _ *gov8.Scope) (engine.Value, error) {
+		if v.global != nil {
+			delete(a.globals, v.global)
+			_ = v.global.Close()
+			v.global = nil
+		}
+		return nil, nil
+	})
 }
 
 func (a *adapter) persist(scope *gov8.Scope, local gov8.Value) (engine.Value, error) {

@@ -33,6 +33,13 @@ import (
 )
 
 type Realm struct {
+	debuggerFactory          engine.Value
+	debuggerBindings         map[string]bool
+	mainWorld                *Realm
+	isolatedWorlds           map[string]*Realm
+	worldName                string
+	worldMutationReceiver    engine.Value
+	worldHasObservers        bool
 	speech                   *speechSynthesisState
 	speechNotifier           engine.Value
 	webTaskAbort             engine.Value
@@ -67,9 +74,11 @@ type Realm struct {
 	referrerPolicy           string
 	inputDispatcher          engine.Value
 	permissionNotifier       engine.Value
+	networkStateEvent        engine.Value
 	agent                    ExecutionAgent
 	runtime                  engine.Runtime
 	scheduler                *scheduler.Scheduler
+	timers                   map[uint64]*windowTimer
 	document                 *dom.Document
 	documentStream           *documentStream
 	documentStreamReset      engine.Value
@@ -347,6 +356,7 @@ func (p *Page) requireCheckpoint(r *Realm) {
 }
 
 func (r *Realm) checkpointRuntime(ctx context.Context) error {
+	defer r.agent.Page().notifyDebuggerProgress()
 	if r.checkpointClosed {
 		return ctx.Err()
 	}
@@ -399,6 +409,7 @@ func (r *Realm) Close() error {
 	p.mu.Unlock()
 	r.checkpointClosed = true
 	r.scheduler.Close()
+	clear(r.timers)
 	c := r.agent.Page().ctx
 	c.mu.Lock()
 	delete(c.permissionRealms, r)
@@ -522,6 +533,9 @@ func (r *Realm) runTask(ctx context.Context, source scheduler.Source, callback s
 
 func (r *Realm) readyQueues(queues []*scheduler.Scheduler) []*scheduler.Scheduler {
 	queues = append(queues, r.scheduler)
+	for _, world := range r.isolatedWorlds {
+		queues = append(queues, world.scheduler)
+	}
 	if f := r.pictureInPicture; f != nil && f.Realm != nil && !f.Realm.inactive {
 		queues = f.Realm.readyQueues(queues)
 	}
@@ -717,7 +731,10 @@ func (r *Realm) installBindings() error {
 		if !ok || r.inactive || frame.parent == nil || !r.canAccess(frame.parent) {
 			return r.val(nil), nil
 		}
-		target := frame.parent.Realm
+		target, err := r.worldForFrame(frame.parent)
+		if err != nil {
+			return nil, err
+		}
 		if _, ok := target.document.Get(frame.elementID); !ok {
 			return r.val(nil), nil
 		}
@@ -773,6 +790,7 @@ func (r *Realm) installBindings() error {
 		return r.callFrameReference(a)
 	})
 	r.installFrameDocumentBridge(host)
+	r.installWorldObservationBridge(host)
 	r.installWindowReflection(host)
 	host["frameGet"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		target, err := r.referenceRealm(strarg(a, 0), strarg(a, 3))
@@ -796,7 +814,10 @@ func (r *Realm) installBindings() error {
 			}
 			return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
 		}
-		target := frame.Realm
+		target, err := r.worldForFrame(frame)
+		if err != nil {
+			return nil, err
+		}
 		rawKey := arg(a, 1)
 		var intrinsic bool
 		result, err := r.crossFrameResult(target, func(ctx context.Context) (engine.Value, error) {
@@ -863,11 +884,30 @@ func (r *Realm) installBindings() error {
 		p.trace.Add(trace.API, "Navigator", map[string]any{"realm": r.ID})
 		environment := p.Environment()
 		n := environment.Navigator()
+		metadata := environment.UserAgentData()
 		brands := make([]map[string]any, 0, len(environment.Product.UserAgentBrands))
-		for _, brand := range environment.Product.UserAgentBrands {
+		for _, brand := range metadata.Brands {
 			brands = append(brands, map[string]any{"brand": brand.Brand, "version": brand.Version, "fullVersion": brand.FullVersion})
 		}
-		values := map[string]any{"userAgent": n.UserAgent, "appVersion": strings.TrimPrefix(n.UserAgent, "Mozilla/"), "platform": n.Platform, "languages": n.Languages, "language": n.Languages[0], "hardwareConcurrency": n.HardwareConcurrency, "deviceMemory": n.DeviceMemory, "onLine": n.Online, "cookieEnabled": n.CookieEnabled, "vendor": "Google Inc.", "product": "Gecko", "appName": "Netscape", "maxTouchPoints": 0, "webdriver": navigatorWebDriver, "pdfViewerEnabled": true, "uaBrands": brands, "uaFullVersion": environment.Product.FullVersion, "architecture": "x86", "bitness": "64", "model": "", "platformVersion": environment.Platform.OSVersion}
+		values := map[string]any{"userAgent": n.UserAgent, "appVersion": strings.TrimPrefix(n.UserAgent, "Mozilla/"), "platform": n.Platform, "languages": n.Languages, "language": n.Languages[0], "hardwareConcurrency": n.HardwareConcurrency, "deviceMemory": n.DeviceMemory, "onLine": n.Online && !p.NetworkPolicy().Offline(), "cookieEnabled": n.CookieEnabled, "vendor": "Google Inc.", "product": "Gecko", "appName": "Netscape", "maxTouchPoints": 0, "webdriver": navigatorWebDriver, "pdfViewerEnabled": true, "uaBrands": brands, "uaFullVersion": environment.Product.FullVersion, "architecture": "x86", "bitness": "64", "model": "", "platformVersion": environment.Platform.OSVersion}
+		values["appVersion"] = environment.AppVersion()
+		values["uaPlatform"] = metadata.Platform
+		values["uaMobile"] = metadata.Mobile
+		values["uaFullVersion"] = metadata.FullVersion
+		values["platformVersion"] = metadata.PlatformVersion
+		values["architecture"] = metadata.Architecture
+		values["model"] = metadata.Model
+		values["bitness"] = metadata.Bitness
+		values["wow64"] = metadata.WoW64
+		fullBrands := []map[string]any{}
+		for _, b := range metadata.FullVersionList {
+			v := b.FullVersion
+			if v == "" {
+				v = b.Version
+			}
+			fullBrands = append(fullBrands, map[string]any{"brand": b.Brand, "version": v})
+		}
+		values["uaFullVersionList"] = fullBrands
 		if environment.Hardware.CPUPerformanceKnown {
 			values["cpuPerformance"] = environment.Hardware.CPUPerformance
 		}
@@ -886,8 +926,14 @@ func (r *Realm) installBindings() error {
 	})
 	host["screen"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		p.trace.Add(trace.API, "Screen", map[string]any{"realm": r.ID})
-		s := p.Environment().Screen()
-		return r.val(map[string]any{"width": s.Width, "height": s.Height, "availWidth": s.AvailWidth, "availHeight": s.AvailHeight, "colorDepth": s.ColorDepth, "pixelDepth": s.PixelDepth, "devicePixelRatio": s.DevicePixelRatio}), nil
+		environment := p.Environment()
+		s := environment.Screen()
+		orientation := environment.ScreenOrientation
+		orientationType, orientationAngle := "landscape-primary", 0
+		if orientation != nil {
+			orientationType, orientationAngle = orientation.Type, orientation.Angle
+		}
+		return r.val(map[string]any{"width": s.Width, "height": s.Height, "availWidth": s.AvailWidth, "availHeight": s.AvailHeight, "colorDepth": s.ColorDepth, "pixelDepth": s.PixelDepth, "devicePixelRatio": s.DevicePixelRatio, "orientationType": orientationType, "orientationAngle": orientationAngle}), nil
 	})
 	host["windowState"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		frame, ok := r.agent.(*Frame)
@@ -1416,8 +1462,12 @@ func (r *Realm) installBindings() error {
 	})
 	host["title"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(r.document.Title()), nil })
 	host["readyState"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
-		p.trace.Add(trace.API, "Document.readyStateValue", map[string]any{"value": r.readyState, "realm": r.ID})
-		return r.val(r.readyState), nil
+		state := r.readyState
+		if r.mainWorld != nil {
+			state = r.mainWorld.readyState
+		}
+		p.trace.Add(trace.API, "Document.readyStateValue", map[string]any{"value": state, "realm": r.ID})
+		return r.val(state), nil
 	})
 	if native, ok := r.runtime.(engine.UndetectableRuntime); ok {
 		host["createUndetectable"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
@@ -1889,10 +1939,8 @@ func (r *Realm) installBindings() error {
 		return r.val(p.historyLength()), nil
 	})
 	host["setTimer"] = r.fn(r.hostTimer)
-	host["clearTimer"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		r.scheduler.Cancel(uint64(numarg(a, 0)))
-		return nil, nil
-	})
+	host["clearTimer"] = r.fn(r.hostClearTimer)
+	r.installWindowExceptionReporting(host)
 	host["createWorker"] = r.fn(r.hostCreateWorker)
 	host["createObjectURL"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		raw := "blob:" + r.origin + "/" + uuid.NewString()
@@ -1929,8 +1977,11 @@ func (r *Realm) installBindings() error {
 		return nil, nil
 	})
 	host["xhr"] = r.fn(r.hostXHR)
-	host["console"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		p.trace.Add(trace.Console, strarg(a, 0), map[string]any{"args": arg(a, 1), "realm": r.ID})
+	host["console"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		if len(a) > 2 {
+			r.debuggerConsole(strarg(a, 0), a[2])
+		}
+		p.trace.Add(trace.Console, strarg(a, 0), map[string]any{"args": arg(a, 1), "realm": r.ID, "remoteValues": len(a) > 2})
 		return nil, nil
 	})
 	host["unsupported"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
@@ -2016,6 +2067,7 @@ func (r *Realm) installBindings() error {
 	r.installDocumentCompatibility(host)
 	r.installTextMetrics(host)
 	r.installImageResources(host)
+	r.installProtocolInput(host)
 	addStorageHosts(r, host)
 	addCapabilityHosts(r, host)
 	addWindowServiceHosts(r, host)
@@ -2103,7 +2155,8 @@ func (r *Realm) installBindings() error {
 	r.documentStreamEvent = r.runtime.Get("__mimicDocumentStreamEvent")
 	r.inputDispatcher = r.runtime.Get("__mimicDispatchInput")
 	r.permissionNotifier = r.runtime.Get("__mimicPermissionChanged")
-	if _, err = r.runtime.Eval(context.Background(), `delete globalThis.__mimicDispatchInput;delete globalThis.__mimicPermissionChanged;delete globalThis.__mimicEvalSourceResolver;delete globalThis.__mimicResetDocumentStream;delete globalThis.__mimicDocumentStreamEvent`, "mimic:hide-input"); err != nil {
+	r.networkStateEvent = r.runtime.Get("__mimicNetworkStateEvent")
+	if _, err = r.runtime.Eval(context.Background(), `delete globalThis.__mimicDispatchInput;delete globalThis.__mimicPermissionChanged;delete globalThis.__mimicNetworkStateEvent;delete globalThis.__mimicEvalSourceResolver;delete globalThis.__mimicResetDocumentStream;delete globalThis.__mimicDocumentStreamEvent`, "mimic:hide-input"); err != nil {
 		return err
 	}
 	r.messagePortReceiver = r.runtime.Get("__receiveMessagePort")
@@ -2111,6 +2164,12 @@ func (r *Realm) installBindings() error {
 	r.resourceEventDispatcher = r.runtime.Get("__mimicDispatchResourceEvent")
 	r.performanceNotifier = r.runtime.Get("__mimicNotifyPerformanceObservers")
 	_, err = r.runtime.Eval(context.Background(), `delete globalThis.__mimic;delete globalThis.__mimicRestoreBootstrap;delete globalThis.__mimicUnsupportedProbe;delete globalThis.__receiveFrameMessage;delete globalThis.__receiveMessagePort;delete globalThis.__mimicDispatchFrameLoad;delete globalThis.__mimicDispatchResourceEvent;delete globalThis.__mimicNotifyPerformanceObservers`, "mimic:hide-internals")
+	if err == nil {
+		r.debuggerFactory, err = r.runtime.Eval(context.Background(), debuggerFactorySource, "mimic:debugger-intrinsics")
+	}
+	if err == nil {
+		err = r.installDebuggerBindings()
+	}
 	return err
 }
 
@@ -2276,28 +2335,6 @@ func (r *Realm) postNavigate(raw string, replaceOption ...bool) error {
 }
 func (r *Realm) navigationActivated() bool {
 	return !r.activationConsumed && !r.activationAt.IsZero() && r.scheduler.Now().Sub(r.activationAt) < 5*time.Second
-}
-func (r *Realm) hostTimer(_ engine.Value, a []engine.Value) (engine.Value, error) {
-	if len(a) == 0 {
-		return nil, fmt.Errorf("timer callback required")
-	}
-	fn := a[0]
-	delay := time.Duration(numarg(a, 1)) * time.Millisecond
-	repeat, _ := arg(a, 2).(bool)
-	var cb func(context.Context) error
-	var id uint64
-	cb = func(ctx context.Context) error {
-		p := r.agent.Page()
-		p.userScriptDepth++
-		defer func() { p.userScriptDepth-- }()
-		_, err := r.runtime.Call(ctx, fn, r.runtime.Get("window"))
-		if err == nil && repeat {
-			id = r.scheduler.Post(scheduler.Timer, delay, cb)
-		}
-		return err
-	}
-	id = r.scheduler.Post(scheduler.Timer, delay, cb)
-	return r.val(id), nil
 }
 func (r *Realm) hostFetch(_ engine.Value, a []engine.Value) (engine.Value, error) {
 	promise := r.runtime.NewPromise()
@@ -2549,8 +2586,12 @@ func (r *Realm) hostInsertArgs(a []engine.Value, hasBefore bool) (engine.Value, 
 			return nil
 		}
 		if tag == "SCRIPT" && code != "" {
-			r.agent.Page().trace.Add(trace.JS, "scriptStart", map[string]any{"url": name, "realm": r.ID, "dynamic": true})
-			err := r.evaluateClassicScript(ctx, code, name, childID)
+			owner := r
+			if r.mainWorld != nil {
+				owner = r.mainWorld
+			}
+			r.agent.Page().trace.Add(trace.JS, "scriptStart", map[string]any{"url": name, "realm": owner.ID, "dynamic": true})
+			err := r.runWorld(owner, func(ctx context.Context) error { return owner.evaluateClassicScript(ctx, code, name, childID) })
 			if err != nil {
 				r.agent.Page().trace.Add(trace.Error, "dynamicScriptExecution", map[string]any{"url": name, "error": err.Error()})
 				r.agent.Page().trace.Add(trace.JS, "scriptEnd", map[string]any{"url": name, "realm": r.ID, "dynamic": true, "error": err.Error()})

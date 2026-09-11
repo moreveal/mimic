@@ -14,6 +14,7 @@ import (
 	"slices"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 
 	"github.com/andybalholm/brotli"
@@ -55,6 +56,10 @@ type Request struct {
 	// for Fetch Metadata and origin decisions when Referrer-Policy suppresses
 	// the wire Referer header.
 	SourceURL *url.URL
+	// SourceOrigin is the client's security origin when it differs from its
+	// document URL, as for inherited about:blank/srcdoc and blob contexts. It
+	// governs CORS, credentials and Fetch Metadata without inventing a Referer.
+	SourceOrigin *url.URL
 	// UserActivation is captured from the navigation initiator, not inferred from
 	// its destination. Script and iframe requests need not be user activated.
 	UserActivation bool
@@ -92,6 +97,7 @@ type Request struct {
 	corsPrepared        bool
 	corsPreflight       bool
 	corsUnsafeHeaders   []string
+	reportingFailure    bool
 	chain               requestChain
 }
 type Response struct {
@@ -132,16 +138,22 @@ type HTTPTransport struct{ Client *http.Client }
 func (t HTTPTransport) RoundTrip(r *http.Request) (*http.Response, error) { return t.Client.Do(r) }
 
 type Loader struct {
-	transport      Transport
-	env            func() state.Environment
-	cookies        *CookieStore
-	session        *SessionState
-	interceptors   []Interceptor
-	interceptorsMu sync.RWMutex
-	trace          *trace.Recorder
-	completedMu    sync.RWMutex
-	completed      map[string]Response
-	completedOrder []string
+	ignoreCertificateErrors atomic.Bool
+	ownsTransport           bool
+	activityMu              sync.Mutex
+	activeLoads             int
+	idleSince               [2]time.Time
+	transport               Transport
+	env                     func() state.Environment
+	cookies                 *CookieStore
+	session                 *SessionState
+	policy                  RequestPolicy
+	interceptors            []Interceptor
+	interceptorsMu          sync.RWMutex
+	trace                   *trace.Recorder
+	completedMu             sync.RWMutex
+	completed               map[string]Response
+	completedOrder          []string
 }
 
 func NewLoader(env func() state.Environment, cookies *CookieStore, tr *trace.Recorder) *Loader {
@@ -150,9 +162,16 @@ func NewLoader(env func() state.Environment, cookies *CookieStore, tr *trace.Rec
 func NewLoaderWithSession(env func() state.Environment, cookies *CookieStore, session *SessionState, tr *trace.Recorder) *Loader {
 	transport := http.DefaultTransport.(*http.Transport).Clone()
 	client := &http.Client{Transport: transport, Timeout: 30 * time.Second, CheckRedirect: func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }}
-	return &Loader{transport: HTTPTransport{client}, env: env, cookies: cookies, session: session, trace: tr, completed: map[string]Response{}}
+	return &Loader{transport: &httpCertificateTransport{HTTPTransport: HTTPTransport{client}}, ownsTransport: true, env: env, cookies: cookies, session: session, trace: tr, completed: map[string]Response{}}
 }
-func (l *Loader) SetTransport(t Transport) { l.transport = t }
+func (l *Loader) SetTransport(t Transport) {
+	l.CloseOwnedTransport()
+	l.transport = t
+	l.ownsTransport = false
+	l.ignoreCertificateErrors.Store(false)
+}
+
+func (l *Loader) Policy() *RequestPolicy { return &l.policy }
 func (l *Loader) Use(i Interceptor) func() {
 	l.interceptorsMu.Lock()
 	l.interceptors = append(l.interceptors, i)
@@ -168,7 +187,9 @@ func (l *Loader) Use(i Interceptor) func() {
 		}
 	}
 }
-func (l *Loader) Load(ctx context.Context, r Request) (Response, error) {
+func (l *Loader) Load(ctx context.Context, r Request) (response Response, loadErr error) {
+	l.beginActivity()
+	defer l.endActivity()
 	if err := ctx.Err(); err != nil {
 		return Response{}, err
 	}
@@ -177,6 +198,15 @@ func (l *Loader) Load(ctx context.Context, r Request) (Response, error) {
 	}
 	if r.ID == "" {
 		r.ID = uuid.NewString()
+	}
+	if !r.reportingFailure {
+		r.reportingFailure = true
+		defer func() {
+			if loadErr != nil {
+				l.trace.Add(trace.Network, "failed", map[string]any{"id": r.ID, "url": r.URL.String(), "error": loadErr.Error(), "initiator": r.Initiator, "context": r.ContextID})
+				l.trace.Add(trace.Resource, "loadEnd", map[string]any{"id": r.ID, "url": r.URL.String(), "error": loadErr.Error()})
+			}
+		}()
 	}
 	if r.Method == "" {
 		r.Method = http.MethodGet
@@ -188,10 +218,7 @@ func (l *Loader) Load(ctx context.Context, r Request) (Response, error) {
 	if err := l.prepareFetchCORS(ctx, &r); err != nil {
 		return Response{}, err
 	}
-	snapshot := l.session.Snapshot()
-	if snapshot.Offline {
-		return Response{}, fmt.Errorf("network is offline")
-	}
+	snapshot := l.policy.Snapshot()
 	if r.URL.Scheme == "data" {
 		body, contentType, err := decodeDataURL(r.URL)
 		if err != nil {
@@ -256,6 +283,9 @@ func (l *Loader) Load(ctx context.Context, r Request) (Response, error) {
 	requestStarted := time.Now()
 	l.trace.Add(trace.Network, "request", map[string]any{"id": r.ID, "url": r.URL.String(), "method": r.Method, "headers": visibleHeaders, "postData": string(r.Body), "initiator": r.Initiator, "context": r.ContextID, "performanceOwner": r.PerformanceOwner, "performanceStart": r.PerformanceStart})
 	l.trace.Add(trace.Resource, "loadStart", map[string]any{"id": r.ID, "url": r.URL.String(), "type": r.Initiator, "context": r.ContextID})
+	if snapshot.Offline && r.URL.Scheme != "blob" {
+		return Response{}, fmt.Errorf("net::ERR_INTERNET_DISCONNECTED")
+	}
 	interceptors := l.interceptorSnapshot()
 	for _, i := range interceptors {
 		d, err := i.Before(ctx, r)
@@ -288,7 +318,7 @@ func (l *Loader) Load(ctx context.Context, r Request) (Response, error) {
 		}
 		return l.after(ctx, r, Response{Status: http.StatusOK, Headers: headers, Body: body, URL: r.URL, Synthetic: true})
 	}
-	if cached, ok := l.session.GetCached(r, time.Now()); ok {
+	if cached, ok := l.cachedResponse(r, snapshot); ok {
 		l.trace.Add(trace.Network, "cacheHit", map[string]any{"id": r.ID, "url": r.URL.String()})
 		cached.FromCache = true
 		// The bytes/headers describe the stored representation; elapsed time and
@@ -311,14 +341,12 @@ func (l *Loader) Load(ctx context.Context, r Request) (Response, error) {
 	req.Header = r.Headers.Clone()
 	req = req.WithContext(withBrowserHeaderLayout(req.Context(), r.Initiator, r.AuthorHeaderOrder))
 	req = req.WithContext(withTransportTiming(httptrace.WithClientTrace(req.Context(), timing.standardTrace()), timing))
-	raw, err := l.transport.RoundTrip(req)
+	raw, err := l.roundTrip(req)
 	if err != nil {
 		timing.mark("responseComplete")
 		timingSnapshot := timing.snapshot()
 		record := l.session.CompleteConnection(attempt, timingSnapshot, "", true)
 		l.trace.Add(trace.Network, "transport", map[string]any{"id": r.ID, "url": r.URL.String(), "timing": timingSnapshot, "sessionCold": attempt.Cold, "connectionState": record.Status, "error": err.Error()})
-		l.trace.Add(trace.Network, "failed", map[string]any{"id": r.ID, "error": err.Error(), "initiator": r.Initiator, "context": r.ContextID})
-		l.trace.Add(trace.Resource, "loadEnd", map[string]any{"id": r.ID, "url": r.URL.String(), "error": err.Error()})
 		return Response{}, err
 	}
 	stopBodyCancellation := context.AfterFunc(ctx, func() { _ = raw.Body.Close() })
@@ -364,6 +392,15 @@ func (l *Loader) Load(ctx context.Context, r Request) (Response, error) {
 	}
 	l.session.PutCached(r, res, time.Now())
 	return l.after(ctx, r, res)
+}
+
+func (l *Loader) cachedResponse(request Request, policy PolicySnapshot) (Response, bool) {
+	// Chrome's cacheDisabled bypasses reads, while the successful network
+	// response still refreshes the shared HTTP cache for other Pages.
+	if policy.CacheDisabled {
+		return Response{}, false
+	}
+	return l.session.GetCached(request, time.Now())
 }
 
 func criticalClientHintsForRestart(environment state.Environment, request Request, response Response, acceptedBefore map[string]bool) []string {
@@ -440,10 +477,7 @@ func applyBrowserRequestHeaders(r *Request) {
 		}
 	}
 	site := r.chainSite()
-	source := r.SourceURL
-	if source == nil {
-		source = r.Referrer
-	}
+	source := r.initiatingURL()
 	mode, destination := "no-cors", "empty"
 	switch r.Initiator {
 	case Navigation, Iframe:

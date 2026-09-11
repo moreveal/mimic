@@ -1,0 +1,52 @@
+{
+  "checks": [
+    {
+      "command": "go test ./... -count=1 -timeout=12m",
+      "result": "PASS",
+      "output": "cdp-final-tests.txt",
+      "sha256": "12b0a587b001d5824278190646c7dc8b6601c3b31d71d7bd6c2f3e0277d05b4b",
+      "capturedSHA256": "f5cf7e934272480166ba5a05226809b69b44d55ddffe760b21c99737cd96cd7a"
+    },
+    {
+      "command": "go test -race ./internal/cdp ./internal/network -count=1 -timeout=3m",
+      "result": "PASS",
+      "output": "cdp-final-race.txt",
+      "sha256": "d1f97947bf1ef9eb32af6decdede38327379d3bb67a077e863186a57f95c8d04",
+      "capturedSHA256": "fcbab9d2a2050ace753bd988209f9143d9c38fccbc8d62574788d73719260249"
+    },
+    {
+      "command": "go test -race ./internal/browser -run '^Test(Debugger|PageNetworkPolicy|BlankFrameFetch)' -count=1 -timeout=120s",
+      "result": "PASS",
+      "packageSeconds": 52.311,
+      "source": "runtime_handles agent execution"
+    },
+    {
+      "command": "go test -race ./internal/cdp -run TestCertificateOverrideUsesBrowserAndPageSessionScope|TestProtocolCoverage|TestProtocolSupport -count=1 -timeout=60s",
+      "result": "PASS",
+      "packageSeconds": 21.601,
+      "scope": "Additional test-only TLS scope regression after complete suite; no production change"
+    },
+    {
+      "command": "python tools/generate_cdp.py --check",
+      "result": "PASS"
+    },
+    {
+      "command": "python -m unittest discover -s tools -p test_generate_cdp.py",
+      "result": "PASS",
+      "tests": 5
+    },
+    {
+      "command": "python -m unittest discover -s compatibility -p cdp_automation_test.py",
+      "result": "PASS",
+      "tests": 4
+    },
+    {
+      "command": "python tools/generate_compat.py --check",
+      "result": "PREEXISTING_FAILURE",
+      "diagnostic": "Artifact manifest does not cover exactly the retained files",
+      "unlistedArtifact": "chrome/152/generated/window-secure-member-order.md",
+      "reproducedIn": "original E:/GitHub/mimic checkout; frozen source inputs not changed"
+    }
+  ],
+  "frozenDataChanged": false
+}

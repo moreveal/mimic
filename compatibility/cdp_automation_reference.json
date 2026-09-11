@@ -1,0 +1,1303 @@
+{
+  "schemaVersion": 1,
+  "suiteVersion": 1,
+  "suiteSources": {
+    "cdp_automation.py": "45ee56912ded7d22b340dd368e5825da3f4a00b9497ad072c1206786a9604e02",
+    "cdp_automation.mjs": "0b39de7aa7d7e94a59eb526ac84bc0d2ec556534a6b6b1a5b8394b23c31ee6e6"
+  },
+  "target": {
+    "endpoint": "http://127.0.0.1:19433",
+    "version": {
+      "Browser": "Chrome/152.0.7977.82",
+      "Protocol-Version": "1.3",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "V8-Version": "15.2.124.21",
+      "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+      "webSocketDebuggerUrl": "ws://127.0.0.1:19433/devtools/browser/e4b1f128-e4d7-43ef-9e50-d48c762de971"
+    }
+  },
+  "fixture": {
+    "origin": "http://127.0.0.1:25133",
+    "controlledLoopback": true
+  },
+  "dependencies": {
+    "python": "3.14.2",
+    "pyppeteer": "2.0.0",
+    "puppeteer-core": "25.10.0"
+  },
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "excludedCapabilities": [
+    {
+      "methods": [
+        "Page.captureScreenshot",
+        "Page.printToPDF",
+        "Page.startScreencast"
+      ],
+      "reason": "Mimic has no image renderer; output image/media compatibility is not claimed."
+    },
+    {
+      "methods": [
+        "WebAudio.*",
+        "Media.*"
+      ],
+      "reason": "Media devices and playback are outside this automation suite."
+    }
+  ],
+  "clients": {
+    "pyppeteer": {
+      "client": "pyppeteer",
+      "version": "2.0.0",
+      "summary": {
+        "pass": 34
+      },
+      "checks": [
+        {
+          "status": "pass",
+          "observed": true,
+          "name": "browser.connect"
+        },
+        {
+          "status": "pass",
+          "observed": true,
+          "name": "browser.version"
+        },
+        {
+          "status": "pass",
+          "observed": "about:blank",
+          "name": "page.create"
+        },
+        {
+          "status": "pass",
+          "observed": {
+            "status": 200,
+            "title": "Automation a"
+          },
+          "name": "navigation.goto"
+        },
+        {
+          "status": "pass",
+          "observed": {
+            "number": 42,
+            "nested": [
+              true,
+              null,
+              {
+                "text": "value"
+              }
+            ]
+          },
+          "name": "runtime.by_value"
+        },
+        {
+          "status": "pass",
+          "observed": 42,
+          "name": "runtime.promise"
+        },
+        {
+          "status": "pass",
+          "observed": {
+            "keys": [
+              "a",
+              "nested"
+            ],
+            "a": 7,
+            "nested": {
+              "label": "nested"
+            }
+          },
+          "name": "runtime.handles_properties"
+        },
+        {
+          "status": "pass",
+          "observed": true,
+          "name": "runtime.handle_identity"
+        },
+        {
+          "status": "pass",
+          "observed": true,
+          "name": "runtime.handle_dispose"
+        },
+        {
+          "status": "pass",
+          "observed": true,
+          "name": "runtime.exception"
+        },
+        {
+          "status": "pass",
+          "observed": [
+            true,
+            true,
+            true
+          ],
+          "name": "runtime.unserializable_arguments"
+        },
+        {
+          "status": "pass",
+          "observed": {
+            "heading": "Fixture a",
+            "items": [
+              "first",
+              "second"
+            ]
+          },
+          "name": "dom.selectors_element_evaluation"
+        },
+        {
+          "status": "pass",
+          "observed": {
+            "value": "Alpha 42",
+            "selected": [
+              "b"
+            ],
+            "clicked": 1
+          },
+          "name": "dom.form_input_select_dom_click"
+        },
+        {
+          "status": "pass",
+          "observed": 2,
+          "name": "input.pointer_click"
+        },
+        {
+          "status": "pass",
+          "observed": {
+            "type": "log",
+            "arguments": [
+              "automation-console",
+              {
+                "answer": 42
+              }
+            ]
+          },
+          "name": "runtime.console_arguments"
+        },
+        {
+          "status": "pass",
+          "observed": "Uncaught TypeError: automation-pageerror",
+          "name": "runtime.pageerror"
+        },
+        {
+          "status": "pass",
+          "observed": "installed",
+          "name": "page.init_script"
+        },
+        {
+          "status": "pass",
+          "observed": {
+            "status": 200,
+            "value": [
+              "undefined",
+              "installed"
+            ]
+          },
+          "name": "navigation.reload"
+        },
+        {
+          "status": "pass",
+          "observed": [
+            "Automation a",
+            "Automation b"
+          ],
+          "name": "navigation.history"
+        },
+        {
+          "status": "pass",
+          "observed": {
+            "title": "Automation child",
+            "parent": true,
+            "attached": true,
+            "navigated": true
+          },
+          "name": "page.child_frame_events_evaluation"
+        },
+        {
+          "status": "pass",
+          "observed": {
+            "cookie": "cookie",
+            "visible": true,
+            "removed": true
+          },
+          "name": "network.cookies"
+        },
+        {
+          "status": "pass",
+          "observed": {
+            "status": 200,
+            "header": "header",
+            "path": "/api/body"
+          },
+          "name": "network.response_body_extra_headers"
+        },
+        {
+          "status": "pass",
+          "observed": {
+            "status": 201,
+            "body": {
+              "intercepted": true
+            }
+          },
+          "name": "network.interception_fulfill_body"
+        },
+        {
+          "status": "pass",
+          "observed": {
+            "status": 200,
+            "title": "Automation a"
+          },
+          "name": "navigation.networkidle0"
+        },
+        {
+          "status": "pass",
+          "observed": {
+            "title": "Automation content",
+            "text": "inserted"
+          },
+          "name": "page.set_content"
+        },
+        {
+          "status": "pass",
+          "observed": "arrived",
+          "name": "dom.wait_for_selector_mutation"
+        },
+        {
+          "status": "pass",
+          "observed": [
+            21,
+            9
+          ],
+          "name": "runtime.exposed_function_navigation"
+        },
+        {
+          "status": "pass",
+          "observed": [
+            true,
+            "undefined"
+          ],
+          "name": "page.init_script_removal"
+        },
+        {
+          "status": "pass",
+          "observed": [
+            900,
+            620,
+            1.5
+          ],
+          "name": "emulation.viewport"
+        },
+        {
+          "status": "pass",
+          "observed": [
+            "AutomationClient/1.0",
+            "AutomationClient/1.0"
+          ],
+          "name": "network.user_agent_override"
+        },
+        {
+          "status": "pass",
+          "observed": {
+            "method": "POST",
+            "body": "posted=42"
+          },
+          "name": "network.interception_continue_post"
+        },
+        {
+          "status": "pass",
+          "observed": {
+            "rejected": true,
+            "requestFailed": true
+          },
+          "name": "network.interception_abort"
+        },
+        {
+          "status": "pass",
+          "observed": [
+            [
+              "Automation first",
+              "first"
+            ],
+            [
+              "Automation second",
+              "second"
+            ]
+          ],
+          "name": "target.parallel_pages_isolation"
+        },
+        {
+          "status": "pass",
+          "observed": [
+            [
+              "private=first",
+              "first"
+            ],
+            [
+              "",
+              null
+            ]
+          ],
+          "name": "target.browser_context_storage_isolation"
+        }
+      ],
+      "protocol": {
+        "methods": {
+          "Browser.getVersion": {
+            "calls": 1,
+            "responses": 1,
+            "errors": [],
+            "unanswered": 0
+          },
+          "DOM.getContentQuads": {
+            "calls": 1,
+            "responses": 1,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Emulation.setDeviceMetricsOverride": {
+            "calls": 1,
+            "responses": 1,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Emulation.setTouchEmulationEnabled": {
+            "calls": 1,
+            "responses": 1,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Input.dispatchKeyEvent": {
+            "calls": 16,
+            "responses": 16,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Input.dispatchMouseEvent": {
+            "calls": 3,
+            "responses": 3,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Log.enable": {
+            "calls": 5,
+            "responses": 5,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Network.continueInterceptedRequest": {
+            "calls": 3,
+            "responses": 3,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Network.deleteCookies": {
+            "calls": 2,
+            "responses": 2,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Network.enable": {
+            "calls": 5,
+            "responses": 5,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Network.getCookies": {
+            "calls": 1,
+            "responses": 1,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Network.getResponseBody": {
+            "calls": 4,
+            "responses": 4,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Network.setCacheDisabled": {
+            "calls": 6,
+            "responses": 6,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Network.setCookies": {
+            "calls": 1,
+            "responses": 1,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Network.setExtraHTTPHeaders": {
+            "calls": 1,
+            "responses": 1,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Network.setRequestInterception": {
+            "calls": 6,
+            "responses": 6,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Network.setUserAgentOverride": {
+            "calls": 1,
+            "responses": 1,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Page.addScriptToEvaluateOnNewDocument": {
+            "calls": 3,
+            "responses": 3,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Page.enable": {
+            "calls": 5,
+            "responses": 5,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Page.getFrameTree": {
+            "calls": 5,
+            "responses": 5,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Page.getNavigationHistory": {
+            "calls": 2,
+            "responses": 2,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Page.navigate": {
+            "calls": 17,
+            "responses": 17,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Page.navigateToHistoryEntry": {
+            "calls": 2,
+            "responses": 2,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Page.reload": {
+            "calls": 1,
+            "responses": 1,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Page.removeScriptToEvaluateOnNewDocument": {
+            "calls": 1,
+            "responses": 1,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Page.setLifecycleEventsEnabled": {
+            "calls": 5,
+            "responses": 5,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Performance.enable": {
+            "calls": 5,
+            "responses": 5,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Runtime.addBinding": {
+            "calls": 1,
+            "responses": 1,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Runtime.callFunctionOn": {
+            "calls": 66,
+            "responses": 66,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Runtime.enable": {
+            "calls": 5,
+            "responses": 5,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Runtime.evaluate": {
+            "calls": 20,
+            "responses": 20,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Runtime.getProperties": {
+            "calls": 2,
+            "responses": 2,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Runtime.releaseObject": {
+            "calls": 26,
+            "responses": 26,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Security.enable": {
+            "calls": 5,
+            "responses": 5,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Target.attachToTarget": {
+            "calls": 5,
+            "responses": 5,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Target.closeTarget": {
+            "calls": 3,
+            "responses": 3,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Target.createBrowserContext": {
+            "calls": 2,
+            "responses": 2,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Target.createTarget": {
+            "calls": 5,
+            "responses": 5,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Target.disposeBrowserContext": {
+            "calls": 2,
+            "responses": 2,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Target.getBrowserContexts": {
+            "calls": 1,
+            "responses": 1,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Target.sendMessageToTarget": {
+            "calls": 233,
+            "responses": 233,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Target.setAutoAttach": {
+            "calls": 5,
+            "responses": 5,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Target.setDiscoverTargets": {
+            "calls": 1,
+            "responses": 1,
+            "errors": [],
+            "unanswered": 0
+          }
+        },
+        "events": {
+          "Log.entryAdded": 1,
+          "Network.dataReceived": 32,
+          "Network.loadingFailed": 1,
+          "Network.loadingFinished": 28,
+          "Network.policyUpdated": 22,
+          "Network.requestIntercepted": 5,
+          "Network.requestServedFromCache": 3,
+          "Network.requestWillBeSent": 28,
+          "Network.requestWillBeSentExtraInfo": 23,
+          "Network.responseReceived": 27,
+          "Network.responseReceivedExtraInfo": 23,
+          "Page.backForwardCacheNotUsed": 2,
+          "Page.documentOpened": 1,
+          "Page.domContentEventFired": 21,
+          "Page.frameAttached": 1,
+          "Page.frameNavigated": 21,
+          "Page.frameRequestedNavigation": 1,
+          "Page.frameResized": 1,
+          "Page.frameStartedLoading": 21,
+          "Page.frameStartedNavigating": 21,
+          "Page.frameStoppedLoading": 21,
+          "Page.lifecycleEvent": 132,
+          "Page.loadEventFired": 21,
+          "Runtime.bindingCalled": 2,
+          "Runtime.consoleAPICalled": 1,
+          "Runtime.exceptionThrown": 1,
+          "Runtime.executionContextCreated": 26,
+          "Runtime.executionContextsCleared": 40,
+          "Security.visibleSecurityStateChanged": 25,
+          "Target.attachedToTarget": 5,
+          "Target.detachedFromTarget": 5,
+          "Target.receivedMessageFromTarget": 785,
+          "Target.targetCreated": 21,
+          "Target.targetDestroyed": 13,
+          "Target.targetInfoChanged": 41
+        }
+      }
+    },
+    "puppeteer": {
+      "client": "puppeteer",
+      "version": "25.10.0",
+      "summary": {
+        "pass": 34
+      },
+      "checks": [
+        {
+          "name": "browser.connect",
+          "status": "pass",
+          "observed": true
+        },
+        {
+          "name": "browser.version",
+          "status": "pass",
+          "observed": true
+        },
+        {
+          "name": "page.create",
+          "status": "pass",
+          "observed": "about:blank"
+        },
+        {
+          "name": "navigation.goto",
+          "status": "pass",
+          "observed": {
+            "status": 200,
+            "title": "Automation a"
+          }
+        },
+        {
+          "name": "runtime.by_value",
+          "status": "pass",
+          "observed": {
+            "number": 42,
+            "nested": [
+              true,
+              null,
+              {
+                "text": "value"
+              }
+            ]
+          }
+        },
+        {
+          "name": "runtime.promise",
+          "status": "pass",
+          "observed": 42
+        },
+        {
+          "name": "runtime.handles_properties",
+          "status": "pass",
+          "observed": {
+            "keys": [
+              "a",
+              "nested"
+            ],
+            "a": 7,
+            "nested": {
+              "label": "nested"
+            }
+          }
+        },
+        {
+          "name": "runtime.handle_identity",
+          "status": "pass",
+          "observed": true
+        },
+        {
+          "name": "runtime.handle_dispose",
+          "status": "pass",
+          "observed": true
+        },
+        {
+          "name": "runtime.exception",
+          "status": "pass",
+          "observed": true
+        },
+        {
+          "name": "runtime.unserializable_arguments",
+          "status": "pass",
+          "observed": [
+            true,
+            true,
+            true
+          ]
+        },
+        {
+          "name": "dom.selectors_element_evaluation",
+          "status": "pass",
+          "observed": {
+            "heading": "Fixture a",
+            "items": [
+              "first",
+              "second"
+            ]
+          }
+        },
+        {
+          "name": "dom.form_input_select_dom_click",
+          "status": "pass",
+          "observed": {
+            "value": "Alpha 42",
+            "selected": [
+              "b"
+            ],
+            "clicked": 1
+          }
+        },
+        {
+          "name": "input.pointer_click",
+          "status": "pass",
+          "observed": 2
+        },
+        {
+          "name": "runtime.console_arguments",
+          "status": "pass",
+          "observed": {
+            "type": "log",
+            "arguments": [
+              "automation-console",
+              {
+                "answer": 42
+              }
+            ]
+          }
+        },
+        {
+          "name": "runtime.pageerror",
+          "status": "pass",
+          "observed": "Error: Uncaught TypeError: automation-pageerror"
+        },
+        {
+          "name": "page.init_script",
+          "status": "pass",
+          "observed": "installed"
+        },
+        {
+          "name": "navigation.reload",
+          "status": "pass",
+          "observed": {
+            "status": 200,
+            "value": [
+              "undefined",
+              "installed"
+            ]
+          }
+        },
+        {
+          "name": "navigation.history",
+          "status": "pass",
+          "observed": [
+            "Automation a",
+            "Automation b"
+          ]
+        },
+        {
+          "name": "page.child_frame_events_evaluation",
+          "status": "pass",
+          "observed": {
+            "title": "Automation child",
+            "parent": true,
+            "attached": true,
+            "navigated": true
+          }
+        },
+        {
+          "name": "network.cookies",
+          "status": "pass",
+          "observed": {
+            "cookie": "cookie",
+            "visible": true,
+            "removed": true
+          }
+        },
+        {
+          "name": "network.response_body_extra_headers",
+          "status": "pass",
+          "observed": {
+            "status": 200,
+            "header": "header",
+            "path": "/api/body"
+          }
+        },
+        {
+          "name": "network.interception_fulfill_body",
+          "status": "pass",
+          "observed": {
+            "status": 201,
+            "body": {
+              "intercepted": true
+            }
+          }
+        },
+        {
+          "name": "navigation.networkidle0",
+          "status": "pass",
+          "observed": {
+            "status": 200,
+            "title": "Automation a"
+          }
+        },
+        {
+          "name": "page.set_content",
+          "status": "pass",
+          "observed": {
+            "title": "Automation content",
+            "text": "inserted"
+          }
+        },
+        {
+          "name": "dom.wait_for_selector_mutation",
+          "status": "pass",
+          "observed": "arrived"
+        },
+        {
+          "name": "runtime.exposed_function_navigation",
+          "status": "pass",
+          "observed": [
+            21,
+            9
+          ]
+        },
+        {
+          "name": "page.init_script_removal",
+          "status": "pass",
+          "observed": [
+            true,
+            "undefined"
+          ]
+        },
+        {
+          "name": "emulation.viewport",
+          "status": "pass",
+          "observed": [
+            900,
+            620,
+            1.5
+          ]
+        },
+        {
+          "name": "network.user_agent_override",
+          "status": "pass",
+          "observed": [
+            "AutomationClient/1.0",
+            "AutomationClient/1.0"
+          ]
+        },
+        {
+          "name": "network.interception_continue_post",
+          "status": "pass",
+          "observed": {
+            "method": "POST",
+            "body": "posted=42"
+          }
+        },
+        {
+          "name": "network.interception_abort",
+          "status": "pass",
+          "observed": {
+            "rejected": true,
+            "requestFailed": true
+          }
+        },
+        {
+          "name": "target.parallel_pages_isolation",
+          "status": "pass",
+          "observed": [
+            [
+              "Automation first",
+              "first"
+            ],
+            [
+              "Automation second",
+              "second"
+            ]
+          ]
+        },
+        {
+          "name": "target.browser_context_storage_isolation",
+          "status": "pass",
+          "observed": [
+            [
+              "private=first",
+              "first"
+            ],
+            [
+              "",
+              null
+            ]
+          ]
+        }
+      ],
+      "protocol": {
+        "methods": {
+          "Audits.enable": {
+            "calls": 5,
+            "responses": 5,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Browser.getVersion": {
+            "calls": 1,
+            "responses": 1,
+            "errors": [],
+            "unanswered": 0
+          },
+          "DOM.describeNode": {
+            "calls": 15,
+            "responses": 15,
+            "errors": [],
+            "unanswered": 0
+          },
+          "DOM.resolveNode": {
+            "calls": 15,
+            "responses": 15,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Emulation.setDeviceMetricsOverride": {
+            "calls": 1,
+            "responses": 1,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Emulation.setTouchEmulationEnabled": {
+            "calls": 1,
+            "responses": 1,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Fetch.continueRequest": {
+            "calls": 1,
+            "responses": 1,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Fetch.disable": {
+            "calls": 3,
+            "responses": 3,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Fetch.enable": {
+            "calls": 3,
+            "responses": 3,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Fetch.failRequest": {
+            "calls": 1,
+            "responses": 1,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Fetch.fulfillRequest": {
+            "calls": 1,
+            "responses": 1,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Input.dispatchKeyEvent": {
+            "calls": 16,
+            "responses": 16,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Input.dispatchMouseEvent": {
+            "calls": 3,
+            "responses": 3,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Log.enable": {
+            "calls": 5,
+            "responses": 5,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Network.deleteCookies": {
+            "calls": 4,
+            "responses": 4,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Network.enable": {
+            "calls": 5,
+            "responses": 5,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Network.getCookies": {
+            "calls": 1,
+            "responses": 1,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Network.getResponseBody": {
+            "calls": 4,
+            "responses": 4,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Network.setCacheDisabled": {
+            "calls": 6,
+            "responses": 6,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Network.setCookies": {
+            "calls": 1,
+            "responses": 1,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Network.setExtraHTTPHeaders": {
+            "calls": 1,
+            "responses": 1,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Network.setUserAgentOverride": {
+            "calls": 1,
+            "responses": 1,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Page.addScriptToEvaluateOnNewDocument": {
+            "calls": 8,
+            "responses": 8,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Page.createIsolatedWorld": {
+            "calls": 5,
+            "responses": 5,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Page.enable": {
+            "calls": 5,
+            "responses": 5,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Page.getFrameTree": {
+            "calls": 5,
+            "responses": 5,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Page.getNavigationHistory": {
+            "calls": 2,
+            "responses": 2,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Page.navigate": {
+            "calls": 17,
+            "responses": 17,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Page.navigateToHistoryEntry": {
+            "calls": 2,
+            "responses": 2,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Page.reload": {
+            "calls": 1,
+            "responses": 1,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Page.removeScriptToEvaluateOnNewDocument": {
+            "calls": 1,
+            "responses": 1,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Page.setDocumentContent": {
+            "calls": 1,
+            "responses": 1,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Page.setLifecycleEventsEnabled": {
+            "calls": 5,
+            "responses": 5,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Performance.enable": {
+            "calls": 5,
+            "responses": 5,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Runtime.addBinding": {
+            "calls": 5,
+            "responses": 5,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Runtime.callFunctionOn": {
+            "calls": 85,
+            "responses": 85,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Runtime.enable": {
+            "calls": 5,
+            "responses": 5,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Runtime.evaluate": {
+            "calls": 6,
+            "responses": 6,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Runtime.getProperties": {
+            "calls": 3,
+            "responses": 3,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Runtime.releaseObject": {
+            "calls": 35,
+            "responses": 35,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Runtime.runIfWaitingForDebugger": {
+            "calls": 43,
+            "responses": 43,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Target.closeTarget": {
+            "calls": 3,
+            "responses": 3,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Target.createBrowserContext": {
+            "calls": 2,
+            "responses": 2,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Target.createTarget": {
+            "calls": 5,
+            "responses": 5,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Target.detachFromTarget": {
+            "calls": 2,
+            "responses": 2,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Target.disposeBrowserContext": {
+            "calls": 2,
+            "responses": 2,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Target.getBrowserContexts": {
+            "calls": 1,
+            "responses": 1,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Target.setAutoAttach": {
+            "calls": 42,
+            "responses": 42,
+            "errors": [],
+            "unanswered": 0
+          },
+          "Target.setDiscoverTargets": {
+            "calls": 1,
+            "responses": 1,
+            "errors": [],
+            "unanswered": 0
+          },
+          "WebMCP.enable": {
+            "calls": 5,
+            "responses": 5,
+            "errors": [],
+            "unanswered": 0
+          }
+        },
+        "events": {
+          "Audits.issueAdded": 51,
+          "Fetch.requestPaused": 5,
+          "Inspector.workerScriptLoaded": 2,
+          "Log.entryAdded": 1,
+          "Network.dataReceived": 30,
+          "Network.loadingFailed": 1,
+          "Network.loadingFinished": 27,
+          "Network.policyUpdated": 23,
+          "Network.requestServedFromCache": 3,
+          "Network.requestWillBeSent": 28,
+          "Network.requestWillBeSentExtraInfo": 23,
+          "Network.responseReceived": 26,
+          "Network.responseReceivedExtraInfo": 23,
+          "Page.backForwardCacheNotUsed": 2,
+          "Page.documentOpened": 1,
+          "Page.domContentEventFired": 21,
+          "Page.frameAttached": 1,
+          "Page.frameNavigated": 21,
+          "Page.frameRequestedNavigation": 1,
+          "Page.frameResized": 2,
+          "Page.frameStartedLoading": 21,
+          "Page.frameStartedNavigating": 21,
+          "Page.frameStoppedLoading": 22,
+          "Page.lifecycleEvent": 137,
+          "Page.loadEventFired": 21,
+          "Runtime.bindingCalled": 2,
+          "Runtime.consoleAPICalled": 1,
+          "Runtime.exceptionThrown": 1,
+          "Runtime.executionContextCreated": 52,
+          "Runtime.executionContextsCleared": 40,
+          "Target.attachedToTarget": 43,
+          "Target.detachedFromTarget": 30,
+          "Target.targetCreated": 38,
+          "Target.targetDestroyed": 24,
+          "Target.targetInfoChanged": 92
+        }
+      }
+    }
+  }
+}

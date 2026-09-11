@@ -1,0 +1,28 @@
+?   	github.com/moreveal/mimic/benchmark	[no test files]
+ok  	github.com/moreveal/mimic/chrome	0.158s
+ok  	github.com/moreveal/mimic/chrome/152	0.143s
+?   	github.com/moreveal/mimic/chrome/152/generated	[no test files]
+?   	github.com/moreveal/mimic/cmd/engine-spike	[no test files]
+ok  	github.com/moreveal/mimic/cmd/mimic	0.277s
+?   	github.com/moreveal/mimic/cmd/mimic-diff	[no test files]
+?   	github.com/moreveal/mimic/compatibility	[no test files]
+ok  	github.com/moreveal/mimic/internal/browser	280.727s
+ok  	github.com/moreveal/mimic/internal/cdp	3.869s
+ok  	github.com/moreveal/mimic/internal/csp	0.389s
+ok  	github.com/moreveal/mimic/internal/dom	0.424s
+?   	github.com/moreveal/mimic/internal/engine	[no test files]
+ok  	github.com/moreveal/mimic/internal/engine/goja	0.168s
+ok  	github.com/moreveal/mimic/internal/engine/quickjs	0.326s
+ok  	github.com/moreveal/mimic/internal/engine/v8	1.317s
+?   	github.com/moreveal/mimic/internal/htmlstream	[no test files]
+ok  	github.com/moreveal/mimic/internal/imageresource	0.489s
+ok  	github.com/moreveal/mimic/internal/monotime	0.399s
+ok  	github.com/moreveal/mimic/internal/network	0.349s
+ok  	github.com/moreveal/mimic/internal/scheduler	0.455s
+ok  	github.com/moreveal/mimic/internal/speech	0.214s
+ok  	github.com/moreveal/mimic/internal/state	0.381s
+ok  	github.com/moreveal/mimic/internal/textmetrics	0.918s
+?   	github.com/moreveal/mimic/internal/trace	[no test files]
+ok  	github.com/moreveal/mimic/internal/webapi	0.272s
+ok  	github.com/moreveal/mimic/tools/compatibility/offline_replay	0.196s
+?   	github.com/moreveal/mimic/tools/networkprobe	[no test files]

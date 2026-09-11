@@ -10,6 +10,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/moreveal/mimic/internal/engine"
 	"github.com/moreveal/mimic/internal/scheduler"
+	"github.com/moreveal/mimic/internal/trace"
 )
 
 // Session history is joint across the frame tree. Each entry records the URL
@@ -17,6 +18,8 @@ import (
 // the Page's top-level URL. The embedded URL is the top-level entry URL.
 type sessionHistoryEntry struct {
 	*url.URL
+	id     int
+	title  string
 	frames map[string]*historyFrameState
 }
 
@@ -115,6 +118,7 @@ func (r *Realm) historyPush(raw string, replace bool, state engine.Value) (strin
 		}
 	}
 	r.navigationCommitted(map[bool]string{true: "replace", false: "push"}[replace])
+	p.trace.Add(trace.Lifecycle, "navigatedWithinDocument", map[string]any{"frameId": frame.ID, "url": target.String(), "navigationType": "historyApi"})
 	return "", nil
 }
 
@@ -148,6 +152,7 @@ func (p *Page) commitHistory(frame *Frame, target *url.URL, replace bool, state 
 	frame.Realm.url = target
 	if len(traversal) > 0 && traversal[0] > 0 {
 		target := traversal[0] - 1
+		entry.id = p.history[target].id
 		previous := p.history[target].frames[frame.ID]
 		previous.ensureNavigationIdentity()
 		entry.frames[frame.ID].navigationKey = previous.navigationKey
@@ -165,6 +170,7 @@ func (p *Page) commitHistory(frame *Frame, target *url.URL, replace bool, state 
 		p.history[target] = entry
 		p.historyIndex = target
 	} else if replace && p.historyIndex >= 0 {
+		entry.id = p.history[p.historyIndex].id
 		p.history[p.historyIndex] = entry
 	} else {
 		p.history = p.history[:p.historyIndex+1]
@@ -279,6 +285,7 @@ func (r *Realm) historyGo(delta int) {
 				p.mu.Unlock()
 			}
 			realm.navigationCommitted("traverse")
+			p.trace.Add(trace.Lifecycle, "navigatedWithinDocument", map[string]any{"frameId": realm.agent.ContextID(), "url": change.newURL.String(), "navigationType": "historyApi"})
 			// Dispatch in the document whose active history entry changed, even
 			// when traversal was requested by its parent or a sibling.
 			if _, err := realm.Evaluate(ctx, `(()=>{const event=new Event('popstate');Object.defineProperty(event,'state',{value:history.state});dispatchEvent(event)})()`, "mimic:history"); err != nil {
@@ -318,6 +325,7 @@ func (r *Realm) navigateFragment(target *url.URL, replace bool) {
 	r.updateSelectorTarget(target.Fragment)
 	r.agent.Page().commitHistory(frame, target, replace, nil)
 	r.navigationCommitted(map[bool]string{true: "replace", false: "push"}[replace])
+	r.agent.Page().trace.Add(trace.Lifecycle, "navigatedWithinDocument", map[string]any{"frameId": frame.ID, "url": target.String(), "navigationType": "fragment"})
 	r.browserEventLoop().Post(scheduler.Navigation, 0, func(ctx context.Context) error {
 		if !r.activeHistoryDocument() {
 			return nil

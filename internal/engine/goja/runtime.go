@@ -186,6 +186,9 @@ type callException struct {
 	value goja.Value
 }
 
+func (e *callException) ThrownValue() engine.Value { return value{e.value} }
+func (e *callException) Unwrap() error             { return e.error }
+
 func (r *runtime) Function(fn engine.Function) any {
 	return func(call goja.FunctionCall) goja.Value {
 		args := make([]engine.Value, len(call.Arguments))
@@ -262,15 +265,16 @@ func (r *runtime) Await(v engine.Value) (engine.Value, bool, error) {
 	if raw == nil {
 		return value{goja.Undefined()}, true, nil
 	}
-	p, ok := raw.Export().(*goja.Promise)
-	if !ok {
+	object, isObject := raw.(*goja.Object)
+	if !isObject || object.ExportType() != reflect.TypeOf((*goja.Promise)(nil)) {
 		return v, true, nil
 	}
+	p := object.Export().(*goja.Promise)
 	switch p.State() {
 	case goja.PromiseStateFulfilled:
 		return value{p.Result()}, true, nil
 	case goja.PromiseStateRejected:
-		return nil, true, fmt.Errorf("promise rejected: %s", p.Result().String())
+		return nil, true, &callException{error: fmt.Errorf("promise rejected: %s", p.Result().String()), value: p.Result()}
 	default:
 		return v, false, nil
 	}

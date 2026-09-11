@@ -6,6 +6,20 @@
   const getter=(prototype,name,get)=>{markNative(get,name,'get ');Object.defineProperty(prototype,name,{get,enumerable:true,configurable:true})};
   const method=(prototype,name,fn)=>{markNative(fn,name);Object.defineProperty(prototype,name,{value:fn,writable:true,enumerable:true,configurable:true})};
   const singleton=(name,prototype,brand)=>{const object=Object.create(prototype);brand.add(object);replaceableWindow(name,()=>object);return object};
+  const viewportNotifiers=[];
+  if(typeof ScreenOrientation==='function'){
+  const orientation=new EventTarget();Object.setPrototypeOf(orientation,ScreenOrientation.prototype);
+  getter(Screen.prototype,'orientation',function(){if(this!==scr)throw new TypeError('Illegal invocation');return orientation});
+  getter(ScreenOrientation.prototype,'type',function(){if(this!==orientation)throw new TypeError('Illegal invocation');return host.screen().orientationType});
+  getter(ScreenOrientation.prototype,'angle',function(){if(this!==orientation)throw new TypeError('Illegal invocation');return host.screen().orientationAngle});
+  Object.defineProperty(ScreenOrientation.prototype,'onchange',{get(){if(this!==orientation)throw new TypeError('Illegal invocation');return eventHandlerRecord(orientation,'change').value},set(value){if(this!==orientation)throw new TypeError('Illegal invocation');setEventHandlerValue(orientation,'change',value)},enumerable:true,configurable:true});
+  let previousOrientation=null;
+  viewportNotifiers.push(before=>{
+    if(!(listenersFor(orientation).get('change')||[]).length)return;
+    const current=host.screen(),previous=previousOrientation;previousOrientation=current;
+    if(!before&&previous&&(current.orientationType!==previous.orientationType||current.orientationAngle!==previous.orientationAngle))dispatchNative(orientation,new Event('change'));
+  });
+  }
   // Runtime-enabled after the static exposure snapshot in Chrome 152.
   // Unknown machine profiles leave this measurement unsupported.
   if(host.navigator().cpuPerformance!==undefined)getter(Navigator.prototype,'cpuPerformance',function(){if(this!==navigator)throw new TypeError('Illegal invocation');return host.navigator().cpuPerformance});
@@ -34,7 +48,7 @@
   for(const name of ['offsetLeft','offsetTop','pageLeft','pageTop','width','height','scale'])getter(VisualViewport.prototype,name,function(){if(this!==visual)throw new TypeError('Illegal invocation');return visualMetrics()[name]});
   for(const name of ['onresize','onscroll','onscrollend'])Object.defineProperty(VisualViewport.prototype,name,{get(){if(this!==visual)throw new TypeError('Illegal invocation');return eventHandlerRecord(visual,name.slice(2)).value},set(value){if(this!==visual)throw new TypeError('Illegal invocation');setEventHandlerValue(visual,name.slice(2),value)},enumerable:true,configurable:true});
   let previousVisual=null;
-  registerBootstrapCallback('installViewportNotifier',before=>{
+  viewportNotifiers.push(before=>{
     const observed=(listenersFor(visual).get('resize')||[]).length||(listenersFor(window).get('resize')||[]).length;
     if(!observed)return;
     const current=visualMetrics(),previous=previousVisual;previousVisual=current;
@@ -45,4 +59,5 @@
   const viewport=Object.create(Viewport.prototype);replaceableWindow('viewport',()=>viewport);
   getter(Viewport.prototype,'segments',function(){if(this!==viewport)throw new TypeError('Illegal invocation');const relations=host.windowRelations();if(relations.parent!==relations.self)return null;const v=host.viewport();return Object.freeze([new DOMRect(0,0,v.width,v.height)])});
   }
+  registerBootstrapCallback('installViewportNotifier',before=>{for(const notify of viewportNotifiers)notify(before)});
 }

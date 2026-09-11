@@ -1,0 +1,1018 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "x": 0,
+      "y": 0,
+      "outerWidth": 1280,
+      "outerHeight": 800
+    },
+    "secureContextState": false,
+    "isolationState": false,
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "setup": "document.body.innerHTML='<input id=\"entry\" value=\"ab\"><input id=\"other\"><textarea id=\"area\"></textarea><input id=\"check\" type=\"checkbox\">';\nglobalThis.entry=document.querySelector('#entry');globalThis.other=document.querySelector('#other');\nglobalThis.inputEvents=[];\nglobalThis.inputEventTypes=['keydown','keypress','keyup','beforeinput','input','change','blur','focus','focusin','focusout','pointerdown','mousedown','pointerup','mouseup','click'];\nif(globalThis.inputRecorder)for(const type of inputEventTypes)document.removeEventListener(type,inputRecorder,true);\nglobalThis.inputRecorder=e=>inputEvents.push({type:e.type,class:e.constructor.name,target:e.target.id,trusted:e.isTrusted,bubbles:e.bubbles,cancelable:e.cancelable,composed:e.composed,key:e.key??null,code:e.code??null,keyCode:e.keyCode??null,charCode:e.charCode??null,which:e.which??null,data:e.data??null,inputType:e.inputType??null,value:e.target.value??null,checked:e.target.type==='checkbox'?e.target.checked:null});\nfor(const type of inputEventTypes)document.addEventListener(type,inputRecorder,true);\nentry.focus();inputEvents=[];",
+  "scenarios": [
+    {
+      "name": "insert-text-selection",
+      "setup": "entry.setSelectionRange(1,2)",
+      "commands": [
+        {
+          "method": "Input.insertText",
+          "params": {
+            "text": "XY"
+          }
+        }
+      ],
+      "result": {
+        "events": [
+          {
+            "type": "beforeinput",
+            "class": "InputEvent",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true,
+            "key": null,
+            "code": null,
+            "keyCode": null,
+            "charCode": null,
+            "which": 0,
+            "data": "XY",
+            "inputType": "insertText",
+            "value": "ab",
+            "checked": null
+          },
+          {
+            "type": "input",
+            "class": "InputEvent",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": false,
+            "composed": true,
+            "key": null,
+            "code": null,
+            "keyCode": null,
+            "charCode": null,
+            "which": 0,
+            "data": "XY",
+            "inputType": "insertText",
+            "value": "aXY",
+            "checked": null
+          }
+        ],
+        "value": "aXY",
+        "start": 3,
+        "end": 3,
+        "active": "entry"
+      }
+    },
+    {
+      "name": "key-down-up",
+      "setup": "",
+      "commands": [
+        {
+          "method": "Input.dispatchKeyEvent",
+          "params": {
+            "type": "keyDown",
+            "key": "c",
+            "code": "KeyC",
+            "text": "c",
+            "unmodifiedText": "c",
+            "windowsVirtualKeyCode": 67
+          }
+        },
+        {
+          "method": "Input.dispatchKeyEvent",
+          "params": {
+            "type": "keyUp",
+            "key": "c",
+            "code": "KeyC",
+            "windowsVirtualKeyCode": 67
+          }
+        }
+      ],
+      "result": {
+        "events": [
+          {
+            "type": "keydown",
+            "class": "KeyboardEvent",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true,
+            "key": "c",
+            "code": "KeyC",
+            "keyCode": 67,
+            "charCode": 0,
+            "which": 67,
+            "data": null,
+            "inputType": null,
+            "value": "ab",
+            "checked": null
+          },
+          {
+            "type": "keypress",
+            "class": "KeyboardEvent",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true,
+            "key": "c",
+            "code": "KeyC",
+            "keyCode": 99,
+            "charCode": 99,
+            "which": 99,
+            "data": null,
+            "inputType": null,
+            "value": "ab",
+            "checked": null
+          },
+          {
+            "type": "beforeinput",
+            "class": "InputEvent",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true,
+            "key": null,
+            "code": null,
+            "keyCode": null,
+            "charCode": null,
+            "which": 0,
+            "data": "c",
+            "inputType": "insertText",
+            "value": "ab",
+            "checked": null
+          },
+          {
+            "type": "input",
+            "class": "InputEvent",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": false,
+            "composed": true,
+            "key": null,
+            "code": null,
+            "keyCode": null,
+            "charCode": null,
+            "which": 0,
+            "data": "c",
+            "inputType": "insertText",
+            "value": "cab",
+            "checked": null
+          },
+          {
+            "type": "keyup",
+            "class": "KeyboardEvent",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true,
+            "key": "c",
+            "code": "KeyC",
+            "keyCode": 67,
+            "charCode": 0,
+            "which": 67,
+            "data": null,
+            "inputType": null,
+            "value": "cab",
+            "checked": null
+          }
+        ],
+        "value": "cab",
+        "start": 1,
+        "end": 1,
+        "active": "entry"
+      }
+    },
+    {
+      "name": "raw-down-char",
+      "setup": "",
+      "commands": [
+        {
+          "method": "Input.dispatchKeyEvent",
+          "params": {
+            "type": "rawKeyDown",
+            "key": "z",
+            "code": "KeyZ",
+            "windowsVirtualKeyCode": 90
+          }
+        },
+        {
+          "method": "Input.dispatchKeyEvent",
+          "params": {
+            "type": "char",
+            "text": "z",
+            "key": "z",
+            "code": "KeyZ",
+            "windowsVirtualKeyCode": 90
+          }
+        }
+      ],
+      "result": {
+        "events": [
+          {
+            "type": "keydown",
+            "class": "KeyboardEvent",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true,
+            "key": "z",
+            "code": "KeyZ",
+            "keyCode": 90,
+            "charCode": 0,
+            "which": 90,
+            "data": null,
+            "inputType": null,
+            "value": "ab",
+            "checked": null
+          },
+          {
+            "type": "keypress",
+            "class": "KeyboardEvent",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true,
+            "key": "z",
+            "code": "KeyZ",
+            "keyCode": 122,
+            "charCode": 122,
+            "which": 122,
+            "data": null,
+            "inputType": null,
+            "value": "ab",
+            "checked": null
+          },
+          {
+            "type": "beforeinput",
+            "class": "InputEvent",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true,
+            "key": null,
+            "code": null,
+            "keyCode": null,
+            "charCode": null,
+            "which": 0,
+            "data": "z",
+            "inputType": "insertText",
+            "value": "ab",
+            "checked": null
+          },
+          {
+            "type": "input",
+            "class": "InputEvent",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": false,
+            "composed": true,
+            "key": null,
+            "code": null,
+            "keyCode": null,
+            "charCode": null,
+            "which": 0,
+            "data": "z",
+            "inputType": "insertText",
+            "value": "zab",
+            "checked": null
+          }
+        ],
+        "value": "zab",
+        "start": 1,
+        "end": 1,
+        "active": "entry"
+      }
+    },
+    {
+      "name": "backspace",
+      "setup": "entry.setSelectionRange(2,2)",
+      "commands": [
+        {
+          "method": "Input.dispatchKeyEvent",
+          "params": {
+            "type": "rawKeyDown",
+            "key": "Backspace",
+            "code": "Backspace",
+            "windowsVirtualKeyCode": 8
+          }
+        }
+      ],
+      "result": {
+        "events": [
+          {
+            "type": "keydown",
+            "class": "KeyboardEvent",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true,
+            "key": "Backspace",
+            "code": "Backspace",
+            "keyCode": 8,
+            "charCode": 0,
+            "which": 8,
+            "data": null,
+            "inputType": null,
+            "value": "ab",
+            "checked": null
+          },
+          {
+            "type": "beforeinput",
+            "class": "InputEvent",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true,
+            "key": null,
+            "code": null,
+            "keyCode": null,
+            "charCode": null,
+            "which": 0,
+            "data": null,
+            "inputType": "deleteContentBackward",
+            "value": "ab",
+            "checked": null
+          },
+          {
+            "type": "input",
+            "class": "InputEvent",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": false,
+            "composed": true,
+            "key": null,
+            "code": null,
+            "keyCode": null,
+            "charCode": null,
+            "which": 0,
+            "data": null,
+            "inputType": "deleteContentBackward",
+            "value": "a",
+            "checked": null
+          }
+        ],
+        "value": "a",
+        "start": 1,
+        "end": 1,
+        "active": "entry"
+      }
+    },
+    {
+      "name": "prevent-keydown",
+      "setup": "entry.addEventListener('keydown',e=>e.preventDefault())",
+      "commands": [
+        {
+          "method": "Input.dispatchKeyEvent",
+          "params": {
+            "type": "keyDown",
+            "key": "c",
+            "code": "KeyC",
+            "text": "c",
+            "windowsVirtualKeyCode": 67
+          }
+        }
+      ],
+      "result": {
+        "events": [
+          {
+            "type": "keydown",
+            "class": "KeyboardEvent",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true,
+            "key": "c",
+            "code": "KeyC",
+            "keyCode": 67,
+            "charCode": 0,
+            "which": 67,
+            "data": null,
+            "inputType": null,
+            "value": "ab",
+            "checked": null
+          }
+        ],
+        "value": "ab",
+        "start": 0,
+        "end": 0,
+        "active": "entry"
+      }
+    },
+    {
+      "name": "prevent-beforeinput",
+      "setup": "entry.addEventListener('beforeinput',e=>e.preventDefault())",
+      "commands": [
+        {
+          "method": "Input.insertText",
+          "params": {
+            "text": "c"
+          }
+        }
+      ],
+      "result": {
+        "events": [
+          {
+            "type": "beforeinput",
+            "class": "InputEvent",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true,
+            "key": null,
+            "code": null,
+            "keyCode": null,
+            "charCode": null,
+            "which": 0,
+            "data": "c",
+            "inputType": "insertText",
+            "value": "ab",
+            "checked": null
+          }
+        ],
+        "value": "ab",
+        "start": 0,
+        "end": 0,
+        "active": "entry"
+      }
+    },
+    {
+      "name": "edit-then-blur",
+      "setup": "",
+      "commands": [
+        {
+          "method": "Input.insertText",
+          "params": {
+            "text": "c"
+          }
+        },
+        {
+          "method": "Runtime.evaluate",
+          "params": {
+            "expression": "other.focus()"
+          }
+        }
+      ],
+      "result": {
+        "events": [
+          {
+            "type": "beforeinput",
+            "class": "InputEvent",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true,
+            "key": null,
+            "code": null,
+            "keyCode": null,
+            "charCode": null,
+            "which": 0,
+            "data": "c",
+            "inputType": "insertText",
+            "value": "ab",
+            "checked": null
+          },
+          {
+            "type": "input",
+            "class": "InputEvent",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": false,
+            "composed": true,
+            "key": null,
+            "code": null,
+            "keyCode": null,
+            "charCode": null,
+            "which": 0,
+            "data": "c",
+            "inputType": "insertText",
+            "value": "cab",
+            "checked": null
+          },
+          {
+            "type": "change",
+            "class": "Event",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": false,
+            "composed": false,
+            "key": null,
+            "code": null,
+            "keyCode": null,
+            "charCode": null,
+            "which": null,
+            "data": null,
+            "inputType": null,
+            "value": "cab",
+            "checked": null
+          },
+          {
+            "type": "blur",
+            "class": "FocusEvent",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": false,
+            "cancelable": false,
+            "composed": true,
+            "key": null,
+            "code": null,
+            "keyCode": null,
+            "charCode": null,
+            "which": 0,
+            "data": null,
+            "inputType": null,
+            "value": "cab",
+            "checked": null
+          },
+          {
+            "type": "focusout",
+            "class": "FocusEvent",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": false,
+            "composed": true,
+            "key": null,
+            "code": null,
+            "keyCode": null,
+            "charCode": null,
+            "which": 0,
+            "data": null,
+            "inputType": null,
+            "value": "cab",
+            "checked": null
+          },
+          {
+            "type": "focus",
+            "class": "FocusEvent",
+            "target": "other",
+            "trusted": true,
+            "bubbles": false,
+            "cancelable": false,
+            "composed": true,
+            "key": null,
+            "code": null,
+            "keyCode": null,
+            "charCode": null,
+            "which": 0,
+            "data": null,
+            "inputType": null,
+            "value": "",
+            "checked": null
+          },
+          {
+            "type": "focusin",
+            "class": "FocusEvent",
+            "target": "other",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": false,
+            "composed": true,
+            "key": null,
+            "code": null,
+            "keyCode": null,
+            "charCode": null,
+            "which": 0,
+            "data": null,
+            "inputType": null,
+            "value": "",
+            "checked": null
+          }
+        ],
+        "value": "cab",
+        "start": 1,
+        "end": 1,
+        "active": "other"
+      }
+    },
+    {
+      "name": "select-all-replace",
+      "setup": "",
+      "commands": [
+        {
+          "method": "Input.dispatchKeyEvent",
+          "params": {
+            "type": "rawKeyDown",
+            "key": "a",
+            "code": "KeyA",
+            "modifiers": 2,
+            "windowsVirtualKeyCode": 65
+          }
+        },
+        {
+          "method": "Input.insertText",
+          "params": {
+            "text": "XY"
+          }
+        }
+      ],
+      "result": {
+        "events": [
+          {
+            "type": "keydown",
+            "class": "KeyboardEvent",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true,
+            "key": "a",
+            "code": "KeyA",
+            "keyCode": 65,
+            "charCode": 0,
+            "which": 65,
+            "data": null,
+            "inputType": null,
+            "value": "ab",
+            "checked": null
+          },
+          {
+            "type": "beforeinput",
+            "class": "InputEvent",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true,
+            "key": null,
+            "code": null,
+            "keyCode": null,
+            "charCode": null,
+            "which": 0,
+            "data": "XY",
+            "inputType": "insertText",
+            "value": "ab",
+            "checked": null
+          },
+          {
+            "type": "input",
+            "class": "InputEvent",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": false,
+            "composed": true,
+            "key": null,
+            "code": null,
+            "keyCode": null,
+            "charCode": null,
+            "which": 0,
+            "data": "XY",
+            "inputType": "insertText",
+            "value": "XY",
+            "checked": null
+          }
+        ],
+        "value": "XY",
+        "start": 2,
+        "end": 2,
+        "active": "entry"
+      }
+    },
+    {
+      "name": "beforeinput-changes-selection",
+      "setup": "entry.addEventListener('beforeinput',()=>entry.setSelectionRange(2,2))",
+      "commands": [
+        {
+          "method": "Input.insertText",
+          "params": {
+            "text": "X"
+          }
+        }
+      ],
+      "result": {
+        "events": [
+          {
+            "type": "beforeinput",
+            "class": "InputEvent",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true,
+            "key": null,
+            "code": null,
+            "keyCode": null,
+            "charCode": null,
+            "which": 0,
+            "data": "X",
+            "inputType": "insertText",
+            "value": "ab",
+            "checked": null
+          },
+          {
+            "type": "input",
+            "class": "InputEvent",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": false,
+            "composed": true,
+            "key": null,
+            "code": null,
+            "keyCode": null,
+            "charCode": null,
+            "which": 0,
+            "data": "X",
+            "inputType": "insertText",
+            "value": "abX",
+            "checked": null
+          }
+        ],
+        "value": "abX",
+        "start": 1,
+        "end": 1,
+        "active": "entry"
+      }
+    },
+    {
+      "name": "beforeinput-changes-value",
+      "setup": "entry.addEventListener('beforeinput',()=>{entry.value='ZZ'})",
+      "commands": [
+        {
+          "method": "Input.insertText",
+          "params": {
+            "text": "X"
+          }
+        }
+      ],
+      "result": {
+        "events": [
+          {
+            "type": "beforeinput",
+            "class": "InputEvent",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true,
+            "key": null,
+            "code": null,
+            "keyCode": null,
+            "charCode": null,
+            "which": 0,
+            "data": "X",
+            "inputType": "insertText",
+            "value": "ab",
+            "checked": null
+          },
+          {
+            "type": "input",
+            "class": "InputEvent",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": false,
+            "composed": true,
+            "key": null,
+            "code": null,
+            "keyCode": null,
+            "charCode": null,
+            "which": 0,
+            "data": "X",
+            "inputType": "insertText",
+            "value": "ZZX",
+            "checked": null
+          }
+        ],
+        "value": "ZZX",
+        "start": 1,
+        "end": 1,
+        "active": "entry"
+      }
+    },
+    {
+      "name": "empty-insertion-removes-selection",
+      "setup": "entry.setSelectionRange(1,2)",
+      "commands": [
+        {
+          "method": "Input.insertText",
+          "params": {
+            "text": ""
+          }
+        }
+      ],
+      "result": {
+        "events": [
+          {
+            "type": "beforeinput",
+            "class": "InputEvent",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true,
+            "key": null,
+            "code": null,
+            "keyCode": null,
+            "charCode": null,
+            "which": 0,
+            "data": "",
+            "inputType": "insertText",
+            "value": "ab",
+            "checked": null
+          },
+          {
+            "type": "input",
+            "class": "InputEvent",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": false,
+            "composed": true,
+            "key": null,
+            "code": null,
+            "keyCode": null,
+            "charCode": null,
+            "which": 0,
+            "data": "",
+            "inputType": "insertText",
+            "value": "a",
+            "checked": null
+          }
+        ],
+        "value": "a",
+        "start": 1,
+        "end": 1,
+        "active": "entry"
+      }
+    },
+    {
+      "name": "maxlength-surrogate",
+      "setup": "entry.value='';entry.setAttribute('maxlength','1')",
+      "commands": [
+        {
+          "method": "Input.insertText",
+          "params": {
+            "text": "😀"
+          }
+        }
+      ],
+      "result": {
+        "events": [
+          {
+            "type": "beforeinput",
+            "class": "InputEvent",
+            "target": "entry",
+            "trusted": true,
+            "bubbles": true,
+            "cancelable": true,
+            "composed": true,
+            "key": null,
+            "code": null,
+            "keyCode": null,
+            "charCode": null,
+            "which": 0,
+            "data": "😀",
+            "inputType": "insertText",
+            "value": "",
+            "checked": null
+          }
+        ],
+        "value": "",
+        "start": 0,
+        "end": 0,
+        "active": "entry"
+      }
+    }
+  ],
+  "geometrySetup": "document.body.innerHTML='<input id=\"text\"><input id=\"small\" size=\"10\"><input id=\"checkbox\" type=\"checkbox\"><input id=\"radio\" type=\"radio\"><button id=\"go\">Go</button><button id=\"long\">Long label</button><input id=\"inputbutton\" type=\"button\" value=\"Go\"><textarea id=\"textarea\"></textarea><select id=\"select\"><option>A</option><option>Longest</option></select>';JSON.stringify(Array.from(document.body.children,e=>{const s=getComputedStyle(e),r=e.getBoundingClientRect();return{id:e.id,width:r.width,height:r.height,fontSize:s.fontSize,fontFamily:s.fontFamily,lineHeight:s.lineHeight,padding:s.padding,border:s.borderWidth,boxSizing:s.boxSizing}}))",
+  "geometry": [
+    {
+      "id": "text",
+      "width": 177,
+      "height": 21,
+      "fontSize": "13.3333px",
+      "fontFamily": "Arial",
+      "lineHeight": "normal",
+      "padding": "1px 2px",
+      "border": "2px",
+      "boxSizing": "border-box"
+    },
+    {
+      "id": "small",
+      "width": 107,
+      "height": 21,
+      "fontSize": "13.3333px",
+      "fontFamily": "Arial",
+      "lineHeight": "normal",
+      "padding": "1px 2px",
+      "border": "2px",
+      "boxSizing": "border-box"
+    },
+    {
+      "id": "checkbox",
+      "width": 13,
+      "height": 13,
+      "fontSize": "13.3333px",
+      "fontFamily": "Arial",
+      "lineHeight": "normal",
+      "padding": "0px",
+      "border": "0px",
+      "boxSizing": "border-box"
+    },
+    {
+      "id": "radio",
+      "width": 13,
+      "height": 13,
+      "fontSize": "13.3333px",
+      "fontFamily": "Arial",
+      "lineHeight": "normal",
+      "padding": "0px",
+      "border": "0px",
+      "boxSizing": "border-box"
+    },
+    {
+      "id": "go",
+      "width": 33.796875,
+      "height": 21,
+      "fontSize": "13.3333px",
+      "fontFamily": "Arial",
+      "lineHeight": "normal",
+      "padding": "1px 6px",
+      "border": "2px",
+      "boxSizing": "border-box"
+    },
+    {
+      "id": "long",
+      "width": 77.53125,
+      "height": 21,
+      "fontSize": "13.3333px",
+      "fontFamily": "Arial",
+      "lineHeight": "normal",
+      "padding": "1px 6px",
+      "border": "2px",
+      "boxSizing": "border-box"
+    },
+    {
+      "id": "inputbutton",
+      "width": 33.796875,
+      "height": 21,
+      "fontSize": "13.3333px",
+      "fontFamily": "Arial",
+      "lineHeight": "normal",
+      "padding": "1px 6px",
+      "border": "2px",
+      "boxSizing": "border-box"
+    },
+    {
+      "id": "textarea",
+      "width": 168,
+      "height": 36,
+      "fontSize": "13.3333px",
+      "fontFamily": "monospace",
+      "lineHeight": "normal",
+      "padding": "2px",
+      "border": "1px",
+      "boxSizing": "border-box"
+    },
+    {
+      "id": "select",
+      "width": 70,
+      "height": 19,
+      "fontSize": "13.3333px",
+      "fontFamily": "Arial",
+      "lineHeight": "normal",
+      "padding": "0px",
+      "border": "1px",
+      "boxSizing": "border-box"
+    }
+  ]
+}

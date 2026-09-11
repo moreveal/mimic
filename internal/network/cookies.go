@@ -268,6 +268,31 @@ func (s *CookieStore) Snapshots() []CookieSnapshot {
 	}
 	return out
 }
+
+// SnapshotsForURLs is the debugger's URL filter. Unlike a Fetch access check it
+// includes HttpOnly and every partition; matching still uses the canonical
+// cookie host/path/secure rules and excludes expired entries.
+func (s *CookieStore) SnapshotsForURLs(urls []*url.URL) []CookieSnapshot {
+	out := []CookieSnapshot{}
+	for _, snapshot := range s.Snapshots() {
+		c := snapshot.Cookie
+		for _, u := range urls {
+			if u == nil || (u.Scheme != "http" && u.Scheme != "https") {
+				continue
+			}
+			host, path := cookieHost(u.Hostname()), u.EscapedPath()
+			if path == "" {
+				path = "/"
+			}
+			if snapshot.HostOnly && host != c.Domain || !cookieDomainMatches(host, c.Domain) || !cookiePathMatches(path, c.Path) || c.Secure && !secureCookieURL(u) {
+				continue
+			}
+			out = append(out, snapshot)
+			break
+		}
+	}
+	return out
+}
 func (s *CookieStore) Delete(domain, name string) {
 	domain = cookieHost(strings.TrimPrefix(domain, "."))
 	s.mu.Lock()

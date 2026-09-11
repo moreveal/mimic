@@ -118,20 +118,22 @@ type Presentation struct {
 }
 
 type Environment struct {
-	ProfileID    string
-	Presentation Presentation
-	Product      Product
-	Platform     Platform
-	Hardware     Hardware
-	Display      Display
-	Window       Window
-	Graphics     Graphics
-	Locale       Locale
-	Preferences  Preferences
-	Time         Time
-	Network      Network
-	Permissions  Permissions
-	Capabilities Capabilities
+	UserAgentOverride *UserAgentOverride
+	ScreenOrientation *ScreenOrientation
+	ProfileID         string
+	Presentation      Presentation
+	Product           Product
+	Platform          Platform
+	Hardware          Hardware
+	Display           Display
+	Window            Window
+	Graphics          Graphics
+	Locale            Locale
+	Preferences       Preferences
+	Time              Time
+	Network           Network
+	Permissions       Permissions
+	Capabilities      Capabilities
 	// Explicit feature overrides restrict the bundle's captured exposure.
 	Features map[string]bool
 }
@@ -234,10 +236,22 @@ func (e Environment) Navigator() NavigatorView {
 		languages = languages[:1]
 	}
 	os := "Windows NT 10.0; Win64; x64"
-	return NavigatorView{
+	n := NavigatorView{
 		UserAgent: fmt.Sprintf("Mozilla/5.0 (%s) AppleWebKit/537.36 (KHTML, like Gecko) %s/%s Safari/537.36", os, e.Product.UserAgentProduct, e.Product.Version),
 		Platform:  "Win32", Languages: append([]string(nil), languages...), HardwareConcurrency: e.Hardware.LogicalProcessors, DeviceMemory: e.Hardware.DeviceMemoryGB, Online: e.Network.Online, CookieEnabled: e.Network.CookiesEnabled,
 	}
+	if o := e.UserAgentOverride; o != nil {
+		if o.UserAgent != "" {
+			n.UserAgent = o.UserAgent
+		}
+		if o.Platform != "" {
+			n.Platform = o.Platform
+		}
+		if len(o.Languages) > 0 {
+			n.Languages = append([]string(nil), o.Languages...)
+		}
+	}
+	return n
 }
 
 type ScreenView struct {
@@ -270,6 +284,9 @@ func (e Environment) requestHeaders(reduce bool) map[string]string {
 		selectedLanguages = selectedLanguages[:1]
 	}
 	n := e.Navigator()
+	if e.UserAgentOverride != nil && len(e.UserAgentOverride.Languages) > 0 {
+		selectedLanguages = e.UserAgentOverride.Languages
+	}
 	languages := ""
 	for index, language := range selectedLanguages {
 		if index == 0 {
@@ -287,12 +304,33 @@ func (e Environment) requestHeaders(reduce bool) map[string]string {
 	for _, brand := range e.Product.UserAgentBrands {
 		brands = append(brands, fmt.Sprintf(`%q;v=%q`, brand.Brand, brand.Version))
 	}
-	return map[string]string{"User-Agent": n.UserAgent, "Accept-Language": languages, "Sec-CH-UA": strings.Join(brands, ", "), "Sec-CH-UA-Mobile": "?0", "Sec-CH-UA-Platform": `"Windows"`}
+	headers := map[string]string{"User-Agent": n.UserAgent, "Accept-Language": languages, "Sec-CH-UA": strings.Join(brands, ", "), "Sec-CH-UA-Mobile": "?0", "Sec-CH-UA-Platform": `"Windows"`}
+	if o := e.UserAgentOverride; o != nil && o.UserAgent != "" {
+		delete(headers, "Sec-CH-UA")
+		delete(headers, "Sec-CH-UA-Mobile")
+		delete(headers, "Sec-CH-UA-Platform")
+		if m := o.Metadata; m != nil {
+			brands = nil
+			for _, b := range m.Brands {
+				brands = append(brands, fmt.Sprintf(`%q;v=%q`, b.Brand, b.Version))
+			}
+			headers["Sec-CH-UA"] = strings.Join(brands, ", ")
+			headers["Sec-CH-UA-Platform"] = fmt.Sprintf("%q", m.Platform)
+			headers["Sec-CH-UA-Mobile"] = "?0"
+			if m.Mobile {
+				headers["Sec-CH-UA-Mobile"] = "?1"
+			}
+		}
+	}
+	return headers
 }
 
 // ClientHintHeaders projects only hints accepted by the origin. This keeps
 // network-visible identity tied to the same Product and Platform as Navigator.
 func (e Environment) ClientHintHeaders(accepted map[string]bool) map[string]string {
+	if o := e.UserAgentOverride; o != nil && o.UserAgent != "" {
+		return overrideHintHeaders(o.Metadata, accepted)
+	}
 	full := e.Product.FullVersion
 	arch, bitness := "x86", "64"
 	if strings.Contains(e.Platform.Architecture, "arm") {

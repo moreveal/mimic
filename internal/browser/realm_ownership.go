@@ -89,7 +89,11 @@ func (r *Realm) referenceRealm(frameID, realmID string) (*Realm, error) {
 	} else {
 		frame := p.frame(frameID)
 		if frame != nil {
-			target = frame.Realm
+			var err error
+			target, err = r.worldForFrame(frame)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 	if target == nil || target.origin != r.origin {
@@ -102,6 +106,7 @@ func (r *Realm) referenceRealm(frameID, realmID string) (*Realm, error) {
 // Promise checkpoints are disabled too, matching retained-function calls in
 // frozen Chrome. Resource cancellation and runtime disposal are separate.
 func (r *Realm) deactivate() {
+	defer r.agent.Page().notifyDebuggerProgress()
 	if r.inactive {
 		return
 	}
@@ -109,6 +114,9 @@ func (r *Realm) deactivate() {
 		r.closePictureInPictureWindow(r.pictureInPicture, false)
 	}
 	r.inactive = true
+	for _, world := range r.isolatedWorlds {
+		world.deactivate()
+	}
 	r.checkpointClosed = true
 	r.scheduler.Close()
 	r.cancelResources()
@@ -157,6 +165,9 @@ func (p *Page) collectRealmOwners() {
 			return
 		}
 		seen[r.ID] = true
+		for _, world := range r.isolatedWorlds {
+			visit(world)
+		}
 		for id := range r.realmReferences {
 			visit(p.realmOwners[id])
 		}

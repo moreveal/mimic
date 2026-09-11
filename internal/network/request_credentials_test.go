@@ -45,3 +45,19 @@ func TestRequestCredentialsAndStorageAccessContext(t *testing.T) {
 		})
 	}
 }
+
+func TestInheritedClientOriginKeepsDocumentReferrerSeparate(t *testing.T) {
+	blank, _ := url.Parse("about:blank")
+	origin, _ := url.Parse("https://example.test")
+	target, _ := url.Parse("https://example.test/echo")
+	request := Request{SourceURL: blank, SourceOrigin: origin, Referrer: blank, URL: target, Initiator: Fetch, Method: http.MethodPost, Credentials: "same-origin", Headers: make(http.Header)}
+	request.beginChain()
+	applyBrowserRequestHeaders(&request)
+	if fetchCrossOrigin(request) || !requestIncludesCredentials(request) || request.Headers.Get("Sec-Fetch-Site") != "same-origin" || request.Headers.Get("Origin") != origin.String() || request.ReferrerValue() != "" {
+		t.Fatalf("inherited client origin projection: headers=%v origin=%s referrer=%s", request.Headers, fetchOrigin(request), request.ReferrerValue())
+	}
+	request.OpaqueOrigin = true
+	if !fetchCrossOrigin(request) || requestIncludesCredentials(request) || fetchOrigin(request) != "null" {
+		t.Fatal("opaque origin acquired inherited credentials or CORS access")
+	}
+}
