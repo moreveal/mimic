@@ -33,106 +33,112 @@ import (
 )
 
 type Realm struct {
-	speech                  *speechSynthesisState
-	speechNotifier          engine.Value
-	webTaskAbort            engine.Value
-	auxiliaryState          engine.Value
-	auxiliaryStorage        engine.Value
-	pictureInPicture        *Frame
-	pipLifecycle            engine.Value
-	activationConsumed      bool
-	cookieNotifier          engine.Value
-	launchNotifier          engine.Value
-	cookieUnsubscribe       func()
-	cacheHandles            map[uint64]*cacheBucket
-	crashReport             crashReportState
-	windowStatus            string
-	historyCloneFunction    engine.Value
-	inactive                bool
-	closed                  bool
-	realmReferences         map[string]struct{}
-	windowReferences        map[string]*Frame
-	bootstrapPlan           *bootstrapSource
-	bootstrapCapture        *bootstrapSnapshotEntry
-	bootstrapRestored       bool
-	fontChoices             []textmetrics.FontReference
-	lastModified            time.Time
-	clientHints             *clientHintsDocument
-	documentSecurity        *documentSecurity
-	profileWrappers         uint64
-	profilePhases           map[string]float64
-	ID                      string
-	activationAt            time.Time
-	documentReferrer        string
-	referrerPolicy          string
-	inputDispatcher         engine.Value
-	permissionNotifier      engine.Value
-	agent                   ExecutionAgent
-	runtime                 engine.Runtime
-	scheduler               *scheduler.Scheduler
-	document                *dom.Document
-	documentStream          *documentStream
-	documentStreamReset     engine.Value
-	frameReflection         *frameReflection
-	viewportNotifier        engine.Value
-	eventListenerInvoker    engine.Value
-	frameViewportRead       engine.Value
-	frameReferenceImport    engine.Value
-	frameReferenceDescribe  engine.Value
-	frameGlobalRead         engine.Value
-	frameValueEncoder       engine.Value
-	frameValueRetain        engine.Value
-	frameValueEncoderJSON   bool
-	frameNodeDescribe       engine.Value
-	frameBindingDescribe    engine.Value
-	documentStreamEvent     engine.Value
-	url                     *url.URL
-	token                   string
-	detached                map[int64]dom.Node
-	apiSeen                 map[string]bool
-	readyState              string
-	apiTracking             bool
-	workers                 map[int64]*DedicatedWorker
-	workerSeq               int64
-	childFrames             map[int64]*Frame
-	retainedFrames          map[string]*Frame
-	crossValues             map[int64]engine.Value
-	crossValueSeq           int64
-	origin                  string
-	currentScript           int64
-	messageReceiver         engine.Value
-	messagePortReceiver     engine.Value
-	frameLoadDispatcher     engine.Value
-	resourceEventDispatcher engine.Value
-	performanceNotifier     engine.Value
-	domQueryCallback        engine.Value
-	shadowSnapshotCallback  engine.Value
-	formSnapshotCallback    engine.Value
-	selectorTargetID        int64
-	loadBlockers            int
-	loadRequested           bool
-	loadScheduled           bool
-	loadCompleted           bool
-	loadEpoch               uint64
-	loadCallback            func(context.Context)
-	resourceContext         context.Context
-	cancelResources         context.CancelFunc
-	resourceWG              sync.WaitGroup
-	moduleFetches           map[string]*moduleFetch
-	preloadedModuleLinks    map[int64]bool
-	imageLoads              map[int64]*imageLoad
-	preloads                map[preloadKey]*resourcePreload
-	preloadsMu              sync.Mutex
-	preloadContext          context.Context
-	cancelPreloads          context.CancelFunc
-	preloadedLinks          map[int64]bool
-	stylesheetLoads         map[preloadKey]*resourcePreload
-	stylesheetFetchSlots    chan struct{}
-	resourceRevision        atomic.Uint64
-	fetchCancels            map[string]context.CancelFunc
-	nativePollQueued        bool
-	checkpointQueued        bool
-	checkpointClosed        bool
+	speech                   *speechSynthesisState
+	speechNotifier           engine.Value
+	webTaskAbort             engine.Value
+	auxiliaryState           engine.Value
+	auxiliaryStorage         engine.Value
+	pictureInPicture         *Frame
+	pipLifecycle             engine.Value
+	activationConsumed       bool
+	cookieNotifier           engine.Value
+	launchNotifier           engine.Value
+	cookieUnsubscribe        func()
+	cacheHandles             map[uint64]*cacheBucket
+	crashReport              crashReportState
+	windowStatus             string
+	historyCloneFunction     engine.Value
+	inactive                 bool
+	closed                   bool
+	realmReferences          map[string]struct{}
+	windowReferences         map[string]*Frame
+	bootstrapPlan            *bootstrapSource
+	bootstrapCapture         *bootstrapSnapshotEntry
+	bootstrapRestored        bool
+	fontChoices              []textmetrics.FontReference
+	lastModified             time.Time
+	clientHints              *clientHintsDocument
+	documentSecurity         *documentSecurity
+	profileWrappers          uint64
+	profilePhases            map[string]float64
+	ID                       string
+	activationAt             time.Time
+	documentReferrer         string
+	referrerPolicy           string
+	inputDispatcher          engine.Value
+	permissionNotifier       engine.Value
+	agent                    ExecutionAgent
+	runtime                  engine.Runtime
+	scheduler                *scheduler.Scheduler
+	document                 *dom.Document
+	documentStream           *documentStream
+	documentStreamReset      engine.Value
+	frameReflection          *frameReflection
+	viewportNotifier         engine.Value
+	eventListenerInvoker     engine.Value
+	frameViewportRead        engine.Value
+	frameReferenceImport     engine.Value
+	frameReferenceDescribe   engine.Value
+	frameGlobalRead          engine.Value
+	frameValueEncoder        engine.Value
+	frameValueRetain         engine.Value
+	frameValueEncoderJSON    bool
+	frameNodeDescribe        engine.Value
+	frameBindingDescribe     engine.Value
+	documentStreamEvent      engine.Value
+	url                      *url.URL
+	token                    string
+	detached                 map[int64]dom.Node
+	apiSeen                  map[string]bool
+	readyState               string
+	apiTracking              bool
+	workers                  map[int64]*DedicatedWorker
+	workerSeq                int64
+	childFrames              map[int64]*Frame
+	retainedFrames           map[string]*Frame
+	crossValues              map[int64]engine.Value
+	crossValueSeq            int64
+	origin                   string
+	currentScript            int64
+	messageReceiver          engine.Value
+	messagePortReceiver      engine.Value
+	frameLoadDispatcher      engine.Value
+	resourceEventDispatcher  engine.Value
+	performanceNotifier      engine.Value
+	domQueryCallback         engine.Value
+	shadowSnapshotCallback   engine.Value
+	formSnapshotCallback     engine.Value
+	selectorTargetID         int64
+	loadBlockers             int
+	loadRequested            bool
+	loadScheduled            bool
+	loadCompleted            bool
+	loadEpoch                uint64
+	loadCallback             func(context.Context)
+	resourceContext          context.Context
+	cancelResources          context.CancelFunc
+	resourceWG               sync.WaitGroup
+	moduleFetches            map[string]*moduleFetch
+	preloadedModuleLinks     map[int64]bool
+	imageLoads               map[int64]*imageLoad
+	preloads                 map[preloadKey]*resourcePreload
+	preloadsMu               sync.Mutex
+	preloadContext           context.Context
+	cancelPreloads           context.CancelFunc
+	preloadedLinks           map[int64]bool
+	stylesheetLoads          map[preloadKey]*resourcePreload
+	stylesheetFetchSlots     chan struct{}
+	resourceRevision         atomic.Uint64
+	fetchCancels             map[string]context.CancelFunc
+	nativePollQueued         bool
+	checkpointQueued         bool
+	checkpointClosed         bool
+	navigationCallback       engine.Value
+	navigationEncoder        engine.Value
+	navigationDecoder        engine.Value
+	navigationActivationFrom *historyFrameState
+	navigationActivationType string
+	historyTraversalTarget   int
 	// Navigation timing belongs to the committed document, not the mutable
 	// same-document History URL or another frame's most recent navigation.
 	navigationURL      string
@@ -2160,6 +2166,8 @@ func (r *Realm) postNavigate(raw string, replaceOption ...bool) error {
 		r.scheduler.Post(scheduler.Navigation, 0, func(context.Context) error { r.closePictureInPictureWindow(frame, false); return nil })
 		return nil
 	}
+	historyTarget := r.historyTraversalTarget
+	r.historyTraversalTarget = 0
 	r.recordNavigationDiagnostic(raw, replaceOption)
 	u, err := r.resolveDocument(raw)
 	if err != nil {
@@ -2174,20 +2182,30 @@ func (r *Realm) postNavigate(raw string, replaceOption ...bool) error {
 		r.navigateFragment(u, replace)
 		return nil
 	}
+	reason := "crossDocument"
+	if reload {
+		reason = "reload"
+	}
+	if historyTarget > 0 {
+		reason = "traverse"
+	}
+	if !r.navigationStart(u, replace, reason) {
+		return nil
+	}
 	if frame, ok := r.agent.(*Frame); ok && frame.parent != nil {
 		if frame.Realm == r && frame.parent.Realm != nil {
 			kind := "navigate"
 			if reload {
 				kind = "reload"
 			}
-			frame.parent.Realm.scheduleChildNavigationTo(frame, u, replace, r, kind)
+			frame.parent.Realm.scheduleChildNavigationTo(frame, u, replace, r, kind, historyTarget)
 		}
 		return nil
 	}
 	request := network.Request{SourceURL: current, Referrer: current, UserActivation: r.navigationActivated()}
 	request.ReferrerPolicy = r.referrerPolicy
 	r.scheduler.Post(scheduler.Navigation, 0, func(ctx context.Context) error {
-		return r.agent.Page().navigateRequest(ctx, u.String(), uuid.NewString(), request, replace, reload)
+		return r.agent.Page().navigateRequestWithHistory(ctx, u.String(), uuid.NewString(), request, historyTarget, replace, reload)
 	})
 	return nil
 }

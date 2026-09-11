@@ -538,7 +538,9 @@
     if(blobSlots.has(value)||fileSlots.has(value))throw new DOMException('History storage of Blob and File requires platform serialization support.','NotSupportedError');
     return value===globalThis||value===document||elementData.has(value)||documentWrappers.has(value)||eventSlots.has(value);
   };
+  let cloneCrossRealmHistoryState=null;
   const cloneHistoryState=value=>{
+    if(cloneCrossRealmHistoryState&&referenceGet(value))return cloneCrossRealmHistoryState(value);
     const fail=()=>{throw new DOMException('The value could not be cloned.','DataCloneError')};
     if(historyUncloneableHost(value))fail();
     if(typeof host.cloneHistoryValue==='function'){
