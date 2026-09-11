@@ -65,3 +65,16 @@ func TestNavigationGraphStateAndRealm(t *testing.T) {
 		historyEval(t, p, `childFrame.contentWindow.history.state.v===7`, true)
 	})
 }
+
+func TestNavigationHashChange(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Write([]byte("<!doctype html><body><div id='target'>target</div>"))
+	}))
+	defer server.Close()
+	historyTestPages(t, func(t *testing.T, p *Page) {
+		if err := p.Navigate(context.Background(), server.URL+"/plain"); err != nil {
+			t.Fatal(err)
+		}
+		historyEval(t, p, `new Promise(resolve=>{addEventListener('hashchange',e=>resolve(e.oldURL.endsWith('/plain')&&e.newURL.endsWith('/plain#target')&&document.querySelector(':target').id==='target'),{once:true});navigation.navigate('#target')})`, true)
+	})
+}
