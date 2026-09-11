@@ -1246,20 +1246,22 @@ func (r *Realm) installBindings() error {
 			if node, ok := r.document.Get(id); ok && node.TagName == "IMG" {
 				r.updateImage(id, true)
 			}
-			if frame := r.childFrames[id]; frame != nil {
-				frame.navigationStarted = false
-				r.scheduleChildFrameNavigation(frame, id)
-			}
 		}
+		r.childFrameAttributeChanged(id, name)
 		return nil, nil
 	}, "nss")
 	host["removeAttribute"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		id, name := int64(numarg(a, 0)), strarg(a, 1)
+		node, _ := r.document.Get(id)
+		_, existed := node.Attributes[strings.ToLower(name)]
 		err := r.document.RemoveAttribute(id, name)
 		if err == nil && strings.EqualFold(name, "src") {
 			if node, ok := r.document.Get(id); ok && node.TagName == "IMG" {
 				r.updateImage(id, true)
 			}
+		}
+		if err == nil && existed {
+			r.childFrameAttributeChanged(id, name)
 		}
 		return nil, err
 	})
