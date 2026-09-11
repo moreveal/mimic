@@ -25,6 +25,10 @@ func (v value) String() string { return v.v.String() }
 type runtime struct{ vm *goja.Runtime }
 
 func (r *runtime) Eval(ctx context.Context, source, name string) (engine.Value, error) {
+	return r.run(ctx, func() (goja.Value, error) { return r.vm.RunScript(name, source) })
+}
+
+func (r *runtime) run(ctx context.Context, execute func() (goja.Value, error)) (engine.Value, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, err
 	}
@@ -43,7 +47,7 @@ func (r *runtime) Eval(ctx context.Context, source, name string) (engine.Value, 
 		case <-finished:
 		}
 	}()
-	v, err := r.vm.RunScript(name, source)
+	v, err := execute()
 	close(finished)
 	<-watcherDone
 	r.vm.ClearInterrupt()
