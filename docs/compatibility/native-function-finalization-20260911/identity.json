@@ -1,0 +1,22 @@
+{
+  "revision": "ed4261b231fd5f69d2e2dc7634fe01e07235a0e3",
+  "dirty": [
+    " M internal/webapi/fetch_compatibility.js",
+    " M internal/webapi/surface.go",
+    " M internal/webapi/surface.js",
+    "?? internal/browser/native_function_finalization_test.go",
+    "?? internal/browser/testdata/native_function_finalization_chrome152.json",
+    "?? internal/browser/testdata/native_function_finalization_oracle.js"
+  ],
+  "binary": ".build/mimic-native-shape-final.exe",
+  "binarySHA256": "1aafade462b4e03d56fa9b271c03fd22f9c81283942e9860eb42a3e78a6f91b4",
+  "sourceHashes": {
+    "internal/webapi/surface.js": "65f3a3cd1f4c27a928373118d1ca72428f776ed2ffee677e11b0097e7085fa18",
+    "internal/webapi/surface.go": "44025258b69f17a5668c74d1a8848aaf2d92d5dc277718acb65a7e6df7c33106",
+    "internal/webapi/fetch_compatibility.js": "0cb37a857dc9b59584810b92549e3959fd4eb2d17b3326ac3c0c81ff42da3d9c",
+    "internal/browser/testdata/native_function_finalization_oracle.js": "c09d03084e72c80612ef49c1c4bb8b2060ba899a92bf05534b47f785c08f7f10",
+    "docs/compatibility/cleanup-20260911/fixed-probes.json": "0a342f61b8447ce408d1a6686de295d41e317117dcc41828a9b10be342b37209"
+  },
+  "baselineServerBinarySHA256": "a01e6602eb732cc1b7c8a8e53f69dbbac34975ca937dff6b4065236e7b53d867",
+  "baselineNote": "server has precommit P0 build from 71d54f0 plus P0 flag; runtime source equals clean ed4261b. Gate baseline is freshly built from ed4261b."
+}

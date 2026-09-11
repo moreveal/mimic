@@ -1,0 +1,3580 @@
+{
+  "sha256": "4690ad174071bc49f92c9cd9c004e3a0eba952a568e4f662d55a12dc497e1954",
+  "chrome": {
+    "EventTarget": {
+      "constructor": {
+        "name": "EventTarget",
+        "length": 0,
+        "keys": [
+          "length",
+          "name",
+          "prototype"
+        ],
+        "constructible": true
+      },
+      "members": {
+        "addEventListener": {
+          "name": "addEventListener",
+          "length": 2,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "dispatchEvent": {
+          "name": "dispatchEvent",
+          "length": 1,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "removeEventListener": {
+          "name": "removeEventListener",
+          "length": 2,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "when": {
+          "name": "when",
+          "length": 1,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        }
+      }
+    },
+    "AbortController": {
+      "constructor": {
+        "name": "AbortController",
+        "length": 0,
+        "keys": [
+          "length",
+          "name",
+          "prototype"
+        ],
+        "constructible": true
+      },
+      "members": {
+        "get signal": {
+          "name": "get signal",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "abort": {
+          "name": "abort",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        }
+      }
+    },
+    "AbortSignal": {
+      "constructor": {
+        "name": "AbortSignal",
+        "length": 0,
+        "keys": [
+          "length",
+          "name",
+          "prototype",
+          "abort",
+          "any",
+          "timeout"
+        ],
+        "constructible": true
+      },
+      "members": {
+        "get aborted": {
+          "name": "get aborted",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get reason": {
+          "name": "get reason",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get onabort": {
+          "name": "get onabort",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "set onabort": {
+          "name": "set onabort",
+          "length": 1,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "throwIfAborted": {
+          "name": "throwIfAborted",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        }
+      }
+    },
+    "TextDecoder": {
+      "constructor": {
+        "name": "TextDecoder",
+        "length": 0,
+        "keys": [
+          "length",
+          "name",
+          "prototype"
+        ],
+        "constructible": true
+      },
+      "members": {
+        "get encoding": {
+          "name": "get encoding",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get fatal": {
+          "name": "get fatal",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get ignoreBOM": {
+          "name": "get ignoreBOM",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "decode": {
+          "name": "decode",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        }
+      }
+    },
+    "Headers": {
+      "constructor": {
+        "name": "Headers",
+        "length": 0,
+        "keys": [
+          "length",
+          "name",
+          "prototype"
+        ],
+        "constructible": true
+      },
+      "members": {
+        "append": {
+          "name": "append",
+          "length": 2,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "delete": {
+          "name": "delete",
+          "length": 1,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get": {
+          "name": "get",
+          "length": 1,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "getSetCookie": {
+          "name": "getSetCookie",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "has": {
+          "name": "has",
+          "length": 1,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "set": {
+          "name": "set",
+          "length": 2,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "entries": {
+          "name": "entries",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "forEach": {
+          "name": "forEach",
+          "length": 1,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "keys": {
+          "name": "keys",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "values": {
+          "name": "values",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "Symbol(Symbol.iterator)": {
+          "name": "entries",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        }
+      }
+    },
+    "Request": {
+      "constructor": {
+        "name": "Request",
+        "length": 1,
+        "keys": [
+          "length",
+          "name",
+          "prototype"
+        ],
+        "constructible": true
+      },
+      "members": {
+        "get method": {
+          "name": "get method",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get url": {
+          "name": "get url",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get headers": {
+          "name": "get headers",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get destination": {
+          "name": "get destination",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get referrer": {
+          "name": "get referrer",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get referrerPolicy": {
+          "name": "get referrerPolicy",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get mode": {
+          "name": "get mode",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get credentials": {
+          "name": "get credentials",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get cache": {
+          "name": "get cache",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get redirect": {
+          "name": "get redirect",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get integrity": {
+          "name": "get integrity",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get keepalive": {
+          "name": "get keepalive",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get signal": {
+          "name": "get signal",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get duplex": {
+          "name": "get duplex",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get isHistoryNavigation": {
+          "name": "get isHistoryNavigation",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get bodyUsed": {
+          "name": "get bodyUsed",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "arrayBuffer": {
+          "name": "arrayBuffer",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "blob": {
+          "name": "blob",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "clone": {
+          "name": "clone",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "formData": {
+          "name": "formData",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "json": {
+          "name": "json",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "text": {
+          "name": "text",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get targetAddressSpace": {
+          "name": "get targetAddressSpace",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get isReloadNavigation": {
+          "name": "get isReloadNavigation",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get body": {
+          "name": "get body",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "bytes": {
+          "name": "bytes",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "textStream": {
+          "name": "textStream",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        }
+      }
+    },
+    "Response": {
+      "constructor": {
+        "name": "Response",
+        "length": 0,
+        "keys": [
+          "length",
+          "name",
+          "prototype",
+          "error",
+          "json",
+          "redirect"
+        ],
+        "constructible": true
+      },
+      "members": {
+        "get type": {
+          "name": "get type",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get url": {
+          "name": "get url",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get redirected": {
+          "name": "get redirected",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get status": {
+          "name": "get status",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get ok": {
+          "name": "get ok",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get statusText": {
+          "name": "get statusText",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get headers": {
+          "name": "get headers",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get body": {
+          "name": "get body",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get bodyUsed": {
+          "name": "get bodyUsed",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "arrayBuffer": {
+          "name": "arrayBuffer",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "blob": {
+          "name": "blob",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "clone": {
+          "name": "clone",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "formData": {
+          "name": "formData",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "json": {
+          "name": "json",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "text": {
+          "name": "text",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "bytes": {
+          "name": "bytes",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "textStream": {
+          "name": "textStream",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        }
+      }
+    },
+    "ReadableStream": {
+      "constructor": {
+        "name": "ReadableStream",
+        "length": 0,
+        "keys": [
+          "length",
+          "name",
+          "prototype"
+        ],
+        "constructible": true
+      },
+      "members": {
+        "get locked": {
+          "name": "get locked",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "cancel": {
+          "name": "cancel",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "getReader": {
+          "name": "getReader",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "pipeThrough": {
+          "name": "pipeThrough",
+          "length": 1,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "pipeTo": {
+          "name": "pipeTo",
+          "length": 1,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "tee": {
+          "name": "tee",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "values": {
+          "name": "values",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "Symbol(Symbol.asyncIterator)": {
+          "name": "values",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        }
+      }
+    },
+    "WritableStream": {
+      "constructor": {
+        "name": "WritableStream",
+        "length": 0,
+        "keys": [
+          "length",
+          "name",
+          "prototype"
+        ],
+        "constructible": true
+      },
+      "members": {
+        "get locked": {
+          "name": "get locked",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "abort": {
+          "name": "abort",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "close": {
+          "name": "close",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "getWriter": {
+          "name": "getWriter",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        }
+      }
+    },
+    "TransformStream": {
+      "constructor": {
+        "name": "TransformStream",
+        "length": 0,
+        "keys": [
+          "length",
+          "name",
+          "prototype"
+        ],
+        "constructible": true
+      },
+      "members": {
+        "get readable": {
+          "name": "get readable",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get writable": {
+          "name": "get writable",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        }
+      }
+    }
+  },
+  "mimic": {
+    "AbortController": {
+      "constructor": {
+        "constructible": true,
+        "keys": [
+          "length",
+          "name",
+          "prototype"
+        ],
+        "length": 0,
+        "name": "AbortController"
+      },
+      "members": {
+        "abort": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 1,
+          "name": "abort"
+        },
+        "get signal": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get signal"
+        }
+      }
+    },
+    "AbortSignal": {
+      "constructor": {
+        "constructible": true,
+        "keys": [
+          "length",
+          "name",
+          "prototype",
+          "abort",
+          "timeout",
+          "any"
+        ],
+        "length": 1,
+        "name": "AbortSignal"
+      },
+      "members": {
+        "get aborted": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get aborted"
+        },
+        "get onabort": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get onabort"
+        },
+        "get reason": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get reason"
+        },
+        "set onabort": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 1,
+          "name": "set onabort"
+        },
+        "throwIfAborted": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "throwIfAborted"
+        }
+      }
+    },
+    "EventTarget": {
+      "constructor": {
+        "constructible": true,
+        "keys": [
+          "length",
+          "name",
+          "prototype"
+        ],
+        "length": 0,
+        "name": "EventTarget"
+      },
+      "members": {
+        "addEventListener": {
+          "constructible": true,
+          "keys": [
+            "length",
+            "name",
+            "prototype"
+          ],
+          "length": 3,
+          "name": "addEventListener"
+        },
+        "dispatchEvent": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 1,
+          "name": "dispatchEvent"
+        },
+        "removeEventListener": {
+          "constructible": true,
+          "keys": [
+            "length",
+            "name",
+            "prototype"
+          ],
+          "length": 3,
+          "name": "removeEventListener"
+        },
+        "when": {
+          "constructible": true,
+          "keys": [
+            "length",
+            "name",
+            "prototype"
+          ],
+          "length": 1,
+          "name": "when"
+        }
+      }
+    },
+    "Headers": {
+      "constructor": {
+        "constructible": true,
+        "keys": [
+          "length",
+          "name",
+          "prototype"
+        ],
+        "length": 0,
+        "name": "Headers"
+      },
+      "members": {
+        "append": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 2,
+          "name": "append"
+        },
+        "delete": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 1,
+          "name": "delete"
+        },
+        "set": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 2,
+          "name": "set"
+        }
+      }
+    },
+    "ReadableStream": {
+      "constructor": {
+        "constructible": true,
+        "keys": [
+          "length",
+          "name",
+          "prototype",
+          "from"
+        ],
+        "length": 0,
+        "name": "ReadableStream"
+      },
+      "members": {
+        "Symbol(Symbol.asyncIterator)": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "values"
+        },
+        "cancel": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "cancel"
+        },
+        "get locked": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get locked"
+        },
+        "getReader": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "getReader"
+        },
+        "pipeThrough": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 1,
+          "name": "pipeThrough"
+        },
+        "pipeTo": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 1,
+          "name": "pipeTo"
+        },
+        "tee": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "tee"
+        },
+        "values": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "values"
+        }
+      }
+    },
+    "Request": {
+      "constructor": {
+        "constructible": true,
+        "keys": [
+          "length",
+          "name",
+          "prototype"
+        ],
+        "length": 1,
+        "name": "Request"
+      },
+      "members": {
+        "arrayBuffer": {
+          "constructible": true,
+          "keys": [
+            "length",
+            "name",
+            "prototype"
+          ],
+          "length": 0,
+          "name": "arrayBuffer"
+        },
+        "blob": {
+          "constructible": true,
+          "keys": [
+            "length",
+            "name",
+            "prototype"
+          ],
+          "length": 0,
+          "name": "blob"
+        },
+        "bytes": {
+          "constructible": true,
+          "keys": [
+            "length",
+            "name",
+            "prototype"
+          ],
+          "length": 0,
+          "name": "bytes"
+        },
+        "clone": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "clone"
+        },
+        "get body": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get"
+        },
+        "get bodyUsed": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get"
+        },
+        "get cache": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get"
+        },
+        "get credentials": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get"
+        },
+        "get destination": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get"
+        },
+        "get duplex": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get"
+        },
+        "get headers": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get"
+        },
+        "get integrity": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get"
+        },
+        "get keepalive": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get"
+        },
+        "get method": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get"
+        },
+        "get mode": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get"
+        },
+        "get redirect": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get"
+        },
+        "get referrer": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get"
+        },
+        "get referrerPolicy": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get"
+        },
+        "get signal": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get"
+        },
+        "get url": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get"
+        },
+        "json": {
+          "constructible": true,
+          "keys": [
+            "length",
+            "name",
+            "prototype"
+          ],
+          "length": 0,
+          "name": "json"
+        },
+        "text": {
+          "constructible": true,
+          "keys": [
+            "length",
+            "name",
+            "prototype"
+          ],
+          "length": 0,
+          "name": "text"
+        }
+      }
+    },
+    "Response": {
+      "constructor": {
+        "constructible": true,
+        "keys": [
+          "length",
+          "name",
+          "prototype",
+          "error",
+          "redirect",
+          "json"
+        ],
+        "length": 0,
+        "name": "Response"
+      },
+      "members": {
+        "arrayBuffer": {
+          "constructible": true,
+          "keys": [
+            "length",
+            "name",
+            "prototype"
+          ],
+          "length": 0,
+          "name": "arrayBuffer"
+        },
+        "blob": {
+          "constructible": true,
+          "keys": [
+            "length",
+            "name",
+            "prototype"
+          ],
+          "length": 0,
+          "name": "blob"
+        },
+        "bytes": {
+          "constructible": true,
+          "keys": [
+            "length",
+            "name",
+            "prototype"
+          ],
+          "length": 0,
+          "name": "bytes"
+        },
+        "clone": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "clone"
+        },
+        "get body": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get"
+        },
+        "get bodyUsed": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get"
+        },
+        "get headers": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get"
+        },
+        "get ok": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get ok"
+        },
+        "get redirected": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get"
+        },
+        "get status": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get"
+        },
+        "get statusText": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get"
+        },
+        "get type": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get"
+        },
+        "get url": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get"
+        },
+        "json": {
+          "constructible": true,
+          "keys": [
+            "length",
+            "name",
+            "prototype"
+          ],
+          "length": 0,
+          "name": "json"
+        },
+        "text": {
+          "constructible": true,
+          "keys": [
+            "length",
+            "name",
+            "prototype"
+          ],
+          "length": 0,
+          "name": "text"
+        }
+      }
+    },
+    "TextDecoder": {
+      "constructor": {
+        "constructible": true,
+        "keys": [
+          "length",
+          "name",
+          "prototype"
+        ],
+        "length": 0,
+        "name": "TextDecoder"
+      },
+      "members": {
+        "decode": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 1,
+          "name": "decode"
+        },
+        "get encoding": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get encoding"
+        },
+        "get fatal": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get fatal"
+        },
+        "get ignoreBOM": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get ignoreBOM"
+        }
+      }
+    },
+    "TransformStream": {
+      "constructor": {
+        "constructible": true,
+        "keys": [
+          "length",
+          "name",
+          "prototype"
+        ],
+        "length": 0,
+        "name": "TransformStream"
+      },
+      "members": {
+        "get readable": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get readable"
+        },
+        "get writable": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get writable"
+        }
+      }
+    },
+    "WritableStream": {
+      "constructor": {
+        "constructible": true,
+        "keys": [
+          "length",
+          "name",
+          "prototype"
+        ],
+        "length": 0,
+        "name": "WritableStream"
+      },
+      "members": {
+        "abort": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "abort"
+        },
+        "close": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "close"
+        },
+        "get locked": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "get locked"
+        },
+        "getWriter": {
+          "constructible": false,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "length": 0,
+          "name": "getWriter"
+        }
+      }
+    }
+  },
+  "control": {
+    "EventTarget": {
+      "constructor": {
+        "name": "EventTarget",
+        "length": 0,
+        "keys": [
+          "length",
+          "name",
+          "prototype"
+        ],
+        "constructible": true
+      },
+      "members": {
+        "addEventListener": {
+          "name": "addEventListener",
+          "length": 2,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "dispatchEvent": {
+          "name": "dispatchEvent",
+          "length": 1,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "removeEventListener": {
+          "name": "removeEventListener",
+          "length": 2,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "when": {
+          "name": "when",
+          "length": 1,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        }
+      }
+    },
+    "AbortController": {
+      "constructor": {
+        "name": "AbortController",
+        "length": 0,
+        "keys": [
+          "length",
+          "name",
+          "prototype"
+        ],
+        "constructible": true
+      },
+      "members": {
+        "get signal": {
+          "name": "get signal",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "abort": {
+          "name": "abort",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        }
+      }
+    },
+    "AbortSignal": {
+      "constructor": {
+        "name": "AbortSignal",
+        "length": 0,
+        "keys": [
+          "length",
+          "name",
+          "prototype",
+          "abort",
+          "any",
+          "timeout"
+        ],
+        "constructible": true
+      },
+      "members": {
+        "get aborted": {
+          "name": "get aborted",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get reason": {
+          "name": "get reason",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get onabort": {
+          "name": "get onabort",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "set onabort": {
+          "name": "set onabort",
+          "length": 1,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "throwIfAborted": {
+          "name": "throwIfAborted",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        }
+      }
+    },
+    "TextDecoder": {
+      "constructor": {
+        "name": "TextDecoder",
+        "length": 0,
+        "keys": [
+          "length",
+          "name",
+          "prototype"
+        ],
+        "constructible": true
+      },
+      "members": {
+        "get encoding": {
+          "name": "get encoding",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get fatal": {
+          "name": "get fatal",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get ignoreBOM": {
+          "name": "get ignoreBOM",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "decode": {
+          "name": "decode",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        }
+      }
+    },
+    "Headers": {
+      "constructor": {
+        "name": "Headers",
+        "length": 0,
+        "keys": [
+          "length",
+          "name",
+          "prototype"
+        ],
+        "constructible": true
+      },
+      "members": {
+        "append": {
+          "name": "append",
+          "length": 2,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "delete": {
+          "name": "delete",
+          "length": 1,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get": {
+          "name": "get",
+          "length": 1,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "getSetCookie": {
+          "name": "getSetCookie",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "has": {
+          "name": "has",
+          "length": 1,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "set": {
+          "name": "set",
+          "length": 2,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "entries": {
+          "name": "entries",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "forEach": {
+          "name": "forEach",
+          "length": 1,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "keys": {
+          "name": "keys",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "values": {
+          "name": "values",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "Symbol(Symbol.iterator)": {
+          "name": "entries",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        }
+      }
+    },
+    "Request": {
+      "constructor": {
+        "name": "Request",
+        "length": 1,
+        "keys": [
+          "length",
+          "name",
+          "prototype"
+        ],
+        "constructible": true
+      },
+      "members": {
+        "get method": {
+          "name": "get method",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get url": {
+          "name": "get url",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get headers": {
+          "name": "get headers",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get destination": {
+          "name": "get destination",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get referrer": {
+          "name": "get referrer",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get referrerPolicy": {
+          "name": "get referrerPolicy",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get mode": {
+          "name": "get mode",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get credentials": {
+          "name": "get credentials",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get cache": {
+          "name": "get cache",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get redirect": {
+          "name": "get redirect",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get integrity": {
+          "name": "get integrity",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get keepalive": {
+          "name": "get keepalive",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get signal": {
+          "name": "get signal",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get duplex": {
+          "name": "get duplex",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get isHistoryNavigation": {
+          "name": "get isHistoryNavigation",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get bodyUsed": {
+          "name": "get bodyUsed",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "arrayBuffer": {
+          "name": "arrayBuffer",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "blob": {
+          "name": "blob",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "clone": {
+          "name": "clone",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "formData": {
+          "name": "formData",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "json": {
+          "name": "json",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "text": {
+          "name": "text",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get targetAddressSpace": {
+          "name": "get targetAddressSpace",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get isReloadNavigation": {
+          "name": "get isReloadNavigation",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get body": {
+          "name": "get body",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "bytes": {
+          "name": "bytes",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "textStream": {
+          "name": "textStream",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        }
+      }
+    },
+    "Response": {
+      "constructor": {
+        "name": "Response",
+        "length": 0,
+        "keys": [
+          "length",
+          "name",
+          "prototype",
+          "error",
+          "json",
+          "redirect"
+        ],
+        "constructible": true
+      },
+      "members": {
+        "get type": {
+          "name": "get type",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get url": {
+          "name": "get url",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get redirected": {
+          "name": "get redirected",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get status": {
+          "name": "get status",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get ok": {
+          "name": "get ok",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get statusText": {
+          "name": "get statusText",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get headers": {
+          "name": "get headers",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get body": {
+          "name": "get body",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get bodyUsed": {
+          "name": "get bodyUsed",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "arrayBuffer": {
+          "name": "arrayBuffer",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "blob": {
+          "name": "blob",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "clone": {
+          "name": "clone",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "formData": {
+          "name": "formData",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "json": {
+          "name": "json",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "text": {
+          "name": "text",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "bytes": {
+          "name": "bytes",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "textStream": {
+          "name": "textStream",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        }
+      }
+    },
+    "ReadableStream": {
+      "constructor": {
+        "name": "ReadableStream",
+        "length": 0,
+        "keys": [
+          "length",
+          "name",
+          "prototype"
+        ],
+        "constructible": true
+      },
+      "members": {
+        "get locked": {
+          "name": "get locked",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "cancel": {
+          "name": "cancel",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "getReader": {
+          "name": "getReader",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "pipeThrough": {
+          "name": "pipeThrough",
+          "length": 1,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "pipeTo": {
+          "name": "pipeTo",
+          "length": 1,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "tee": {
+          "name": "tee",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "values": {
+          "name": "values",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "Symbol(Symbol.asyncIterator)": {
+          "name": "values",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        }
+      }
+    },
+    "WritableStream": {
+      "constructor": {
+        "name": "WritableStream",
+        "length": 0,
+        "keys": [
+          "length",
+          "name",
+          "prototype"
+        ],
+        "constructible": true
+      },
+      "members": {
+        "get locked": {
+          "name": "get locked",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "abort": {
+          "name": "abort",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "close": {
+          "name": "close",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "getWriter": {
+          "name": "getWriter",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        }
+      }
+    },
+    "TransformStream": {
+      "constructor": {
+        "name": "TransformStream",
+        "length": 0,
+        "keys": [
+          "length",
+          "name",
+          "prototype"
+        ],
+        "constructible": true
+      },
+      "members": {
+        "get readable": {
+          "name": "get readable",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        },
+        "get writable": {
+          "name": "get writable",
+          "length": 0,
+          "keys": [
+            "length",
+            "name"
+          ],
+          "constructible": false
+        }
+      }
+    }
+  },
+  "differences": [
+    [
+      [
+        "AbortController",
+        "members",
+        "abort",
+        "length"
+      ],
+      0,
+      1
+    ],
+    [
+      [
+        "AbortSignal",
+        "constructor",
+        "keys",
+        4
+      ],
+      "any",
+      "timeout"
+    ],
+    [
+      [
+        "AbortSignal",
+        "constructor",
+        "keys",
+        5
+      ],
+      "timeout",
+      "any"
+    ],
+    [
+      [
+        "AbortSignal",
+        "constructor",
+        "length"
+      ],
+      0,
+      1
+    ],
+    [
+      [
+        "EventTarget",
+        "members",
+        "addEventListener",
+        "constructible"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "EventTarget",
+        "members",
+        "addEventListener",
+        "keys"
+      ],
+      [
+        "length",
+        "name"
+      ],
+      [
+        "length",
+        "name",
+        "prototype"
+      ]
+    ],
+    [
+      [
+        "EventTarget",
+        "members",
+        "addEventListener",
+        "length"
+      ],
+      2,
+      3
+    ],
+    [
+      [
+        "EventTarget",
+        "members",
+        "removeEventListener",
+        "constructible"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "EventTarget",
+        "members",
+        "removeEventListener",
+        "keys"
+      ],
+      [
+        "length",
+        "name"
+      ],
+      [
+        "length",
+        "name",
+        "prototype"
+      ]
+    ],
+    [
+      [
+        "EventTarget",
+        "members",
+        "removeEventListener",
+        "length"
+      ],
+      2,
+      3
+    ],
+    [
+      [
+        "EventTarget",
+        "members",
+        "when",
+        "constructible"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "EventTarget",
+        "members",
+        "when",
+        "keys"
+      ],
+      [
+        "length",
+        "name"
+      ],
+      [
+        "length",
+        "name",
+        "prototype"
+      ]
+    ],
+    [
+      [
+        "Headers",
+        "members",
+        "Symbol(Symbol.iterator)"
+      ],
+      {
+        "name": "entries",
+        "length": 0,
+        "keys": [
+          "length",
+          "name"
+        ],
+        "constructible": false
+      },
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Headers",
+        "members",
+        "entries"
+      ],
+      {
+        "name": "entries",
+        "length": 0,
+        "keys": [
+          "length",
+          "name"
+        ],
+        "constructible": false
+      },
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Headers",
+        "members",
+        "forEach"
+      ],
+      {
+        "name": "forEach",
+        "length": 1,
+        "keys": [
+          "length",
+          "name"
+        ],
+        "constructible": false
+      },
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Headers",
+        "members",
+        "get"
+      ],
+      {
+        "name": "get",
+        "length": 1,
+        "keys": [
+          "length",
+          "name"
+        ],
+        "constructible": false
+      },
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Headers",
+        "members",
+        "getSetCookie"
+      ],
+      {
+        "name": "getSetCookie",
+        "length": 0,
+        "keys": [
+          "length",
+          "name"
+        ],
+        "constructible": false
+      },
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Headers",
+        "members",
+        "has"
+      ],
+      {
+        "name": "has",
+        "length": 1,
+        "keys": [
+          "length",
+          "name"
+        ],
+        "constructible": false
+      },
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Headers",
+        "members",
+        "keys"
+      ],
+      {
+        "name": "keys",
+        "length": 0,
+        "keys": [
+          "length",
+          "name"
+        ],
+        "constructible": false
+      },
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Headers",
+        "members",
+        "values"
+      ],
+      {
+        "name": "values",
+        "length": 0,
+        "keys": [
+          "length",
+          "name"
+        ],
+        "constructible": false
+      },
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "ReadableStream",
+        "constructor",
+        "keys"
+      ],
+      [
+        "length",
+        "name",
+        "prototype"
+      ],
+      [
+        "length",
+        "name",
+        "prototype",
+        "from"
+      ]
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "arrayBuffer",
+        "constructible"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "arrayBuffer",
+        "keys"
+      ],
+      [
+        "length",
+        "name"
+      ],
+      [
+        "length",
+        "name",
+        "prototype"
+      ]
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "blob",
+        "constructible"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "blob",
+        "keys"
+      ],
+      [
+        "length",
+        "name"
+      ],
+      [
+        "length",
+        "name",
+        "prototype"
+      ]
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "bytes",
+        "constructible"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "bytes",
+        "keys"
+      ],
+      [
+        "length",
+        "name"
+      ],
+      [
+        "length",
+        "name",
+        "prototype"
+      ]
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "formData"
+      ],
+      {
+        "name": "formData",
+        "length": 0,
+        "keys": [
+          "length",
+          "name"
+        ],
+        "constructible": false
+      },
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "get body",
+        "name"
+      ],
+      "get body",
+      "get"
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "get bodyUsed",
+        "name"
+      ],
+      "get bodyUsed",
+      "get"
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "get cache",
+        "name"
+      ],
+      "get cache",
+      "get"
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "get credentials",
+        "name"
+      ],
+      "get credentials",
+      "get"
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "get destination",
+        "name"
+      ],
+      "get destination",
+      "get"
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "get duplex",
+        "name"
+      ],
+      "get duplex",
+      "get"
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "get headers",
+        "name"
+      ],
+      "get headers",
+      "get"
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "get integrity",
+        "name"
+      ],
+      "get integrity",
+      "get"
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "get isHistoryNavigation"
+      ],
+      {
+        "name": "get isHistoryNavigation",
+        "length": 0,
+        "keys": [
+          "length",
+          "name"
+        ],
+        "constructible": false
+      },
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "get isReloadNavigation"
+      ],
+      {
+        "name": "get isReloadNavigation",
+        "length": 0,
+        "keys": [
+          "length",
+          "name"
+        ],
+        "constructible": false
+      },
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "get keepalive",
+        "name"
+      ],
+      "get keepalive",
+      "get"
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "get method",
+        "name"
+      ],
+      "get method",
+      "get"
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "get mode",
+        "name"
+      ],
+      "get mode",
+      "get"
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "get redirect",
+        "name"
+      ],
+      "get redirect",
+      "get"
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "get referrer",
+        "name"
+      ],
+      "get referrer",
+      "get"
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "get referrerPolicy",
+        "name"
+      ],
+      "get referrerPolicy",
+      "get"
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "get signal",
+        "name"
+      ],
+      "get signal",
+      "get"
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "get targetAddressSpace"
+      ],
+      {
+        "name": "get targetAddressSpace",
+        "length": 0,
+        "keys": [
+          "length",
+          "name"
+        ],
+        "constructible": false
+      },
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "get url",
+        "name"
+      ],
+      "get url",
+      "get"
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "json",
+        "constructible"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "json",
+        "keys"
+      ],
+      [
+        "length",
+        "name"
+      ],
+      [
+        "length",
+        "name",
+        "prototype"
+      ]
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "text",
+        "constructible"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "text",
+        "keys"
+      ],
+      [
+        "length",
+        "name"
+      ],
+      [
+        "length",
+        "name",
+        "prototype"
+      ]
+    ],
+    [
+      [
+        "Request",
+        "members",
+        "textStream"
+      ],
+      {
+        "name": "textStream",
+        "length": 0,
+        "keys": [
+          "length",
+          "name"
+        ],
+        "constructible": false
+      },
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Response",
+        "constructor",
+        "keys",
+        4
+      ],
+      "json",
+      "redirect"
+    ],
+    [
+      [
+        "Response",
+        "constructor",
+        "keys",
+        5
+      ],
+      "redirect",
+      "json"
+    ],
+    [
+      [
+        "Response",
+        "members",
+        "arrayBuffer",
+        "constructible"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Response",
+        "members",
+        "arrayBuffer",
+        "keys"
+      ],
+      [
+        "length",
+        "name"
+      ],
+      [
+        "length",
+        "name",
+        "prototype"
+      ]
+    ],
+    [
+      [
+        "Response",
+        "members",
+        "blob",
+        "constructible"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Response",
+        "members",
+        "blob",
+        "keys"
+      ],
+      [
+        "length",
+        "name"
+      ],
+      [
+        "length",
+        "name",
+        "prototype"
+      ]
+    ],
+    [
+      [
+        "Response",
+        "members",
+        "bytes",
+        "constructible"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Response",
+        "members",
+        "bytes",
+        "keys"
+      ],
+      [
+        "length",
+        "name"
+      ],
+      [
+        "length",
+        "name",
+        "prototype"
+      ]
+    ],
+    [
+      [
+        "Response",
+        "members",
+        "formData"
+      ],
+      {
+        "name": "formData",
+        "length": 0,
+        "keys": [
+          "length",
+          "name"
+        ],
+        "constructible": false
+      },
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Response",
+        "members",
+        "get body",
+        "name"
+      ],
+      "get body",
+      "get"
+    ],
+    [
+      [
+        "Response",
+        "members",
+        "get bodyUsed",
+        "name"
+      ],
+      "get bodyUsed",
+      "get"
+    ],
+    [
+      [
+        "Response",
+        "members",
+        "get headers",
+        "name"
+      ],
+      "get headers",
+      "get"
+    ],
+    [
+      [
+        "Response",
+        "members",
+        "get redirected",
+        "name"
+      ],
+      "get redirected",
+      "get"
+    ],
+    [
+      [
+        "Response",
+        "members",
+        "get status",
+        "name"
+      ],
+      "get status",
+      "get"
+    ],
+    [
+      [
+        "Response",
+        "members",
+        "get statusText",
+        "name"
+      ],
+      "get statusText",
+      "get"
+    ],
+    [
+      [
+        "Response",
+        "members",
+        "get type",
+        "name"
+      ],
+      "get type",
+      "get"
+    ],
+    [
+      [
+        "Response",
+        "members",
+        "get url",
+        "name"
+      ],
+      "get url",
+      "get"
+    ],
+    [
+      [
+        "Response",
+        "members",
+        "json",
+        "constructible"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Response",
+        "members",
+        "json",
+        "keys"
+      ],
+      [
+        "length",
+        "name"
+      ],
+      [
+        "length",
+        "name",
+        "prototype"
+      ]
+    ],
+    [
+      [
+        "Response",
+        "members",
+        "text",
+        "constructible"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "Response",
+        "members",
+        "text",
+        "keys"
+      ],
+      [
+        "length",
+        "name"
+      ],
+      [
+        "length",
+        "name",
+        "prototype"
+      ]
+    ],
+    [
+      [
+        "Response",
+        "members",
+        "textStream"
+      ],
+      {
+        "name": "textStream",
+        "length": 0,
+        "keys": [
+          "length",
+          "name"
+        ],
+        "constructible": false
+      },
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "TextDecoder",
+        "members",
+        "decode",
+        "length"
+      ],
+      0,
+      1
+    ]
+  ],
+  "controlDifferences": []
+}

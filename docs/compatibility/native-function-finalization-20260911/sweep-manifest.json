@@ -1,0 +1,1206 @@
+{
+  "executed": [
+    {
+      "name": "TextEncoder semantics",
+      "expression": "(()=>{const result={type:typeof TextEncoder,tag:Object.prototype.toString.call(TextEncoder),length:TextEncoder.length,name:TextEncoder.name};try{const value=new TextEncoder(),destination=new Uint8Array(4),progress=value.encodeInto('\u00e9',destination);Object.assign(result,{instanceTag:Object.prototype.toString.call(value),encoding:value.encoding,bytes:Array.from(value.encode('A\u00e9')),encodeInto:{read:progress.read,written:progress.written,bytes:Array.from(destination)}})}catch(error){result.error=error.name+': '+error.message}return result})()",
+      "source": "probes-browserscan-path.json",
+      "id": "probes-browserscan-path:0",
+      "sha256": "0848c74772fa456a2d78fab691fa908460819e59e82969eb802c966cebae9451"
+    },
+    {
+      "name": "Fetch value constructors",
+      "expression": "(()=>{const headers=new Headers({X_Test:'one'});headers.append('x-test','two');const request=new Request('http://www.example.com/path',{headers,method:'POST'}),response=new Response();return{headers:{tag:Object.prototype.toString.call(headers),value:headers.get('x-test'),entries:Array.from(headers)},request:{tag:Object.prototype.toString.call(request),url:request.url,method:request.method,mode:request.mode,credentials:request.credentials,cache:request.cache,redirect:request.redirect,referrer:request.referrer},response:{tag:Object.prototype.toString.call(response),status:response.status,statusText:response.statusText,ok:response.ok,type:response.type,url:response.url,redirected:response.redirected}}})()",
+      "source": "probes-browserscan-path.json",
+      "id": "probes-browserscan-path:1",
+      "sha256": "a93d5043aafdb5e926ad60f507daf74ff33b670791ff3bc2886b7ce48513164e"
+    },
+    {
+      "name": "DOMMatrix identity",
+      "expression": "(()=>{const value=new DOMMatrix();return{tag:Object.prototype.toString.call(value),is2D:value.is2D,a:value.a,b:value.b,c:value.c,d:value.d,e:value.e,f:value.f,m11:value.m11,m12:value.m12,m21:value.m21,m22:value.m22,m41:value.m41,m42:value.m42,text:value.toString(),array:Array.from(value.toFloat64Array())}})()",
+      "source": "probes-browserscan-path.json",
+      "id": "probes-browserscan-path:2",
+      "sha256": "1df9e2ada228b3315ac493f649262029b09a2f0dd234d7013a2de55f9534ef43"
+    },
+    {
+      "name": "SVG createSVGRect",
+      "expression": "(()=>{const svg=document.createElementNS('http://www.w3.org/2000/svg','svg'),rect=svg.createSVGRect();return{method:typeof svg.createSVGRect,tag:Object.prototype.toString.call(rect),x:rect.x,y:rect.y,width:rect.width,height:rect.height}})()",
+      "source": "probes-browserscan-path.json",
+      "id": "probes-browserscan-path:3",
+      "sha256": "b8590bf91f960bcd54edf04b51bfa076bdf75d84ad8d6ea90f80638a15268e7f"
+    },
+    {
+      "name": "Intentional namespaces absence",
+      "expression": "(()=>({present:'namespaces' in document,type:typeof document.namespaces,value:document.namespaces===undefined}))()",
+      "source": "probes-browserscan-path.json",
+      "id": "probes-browserscan-path:4",
+      "sha256": "98061d1996eabf79534938306e4febb9ea9f23ddb628e233e45a621fc18657e7"
+    },
+    {
+      "name": "Node child primitives",
+      "expression": "(()=>{const div=document.createElement('div');div.innerHTML='<span>child</span>tail';return{has:div.hasChildNodes(),firstType:div.firstChild.nodeType,firstName:div.firstChild.nodeName,firstElement:div.firstElementChild.tagName,childCount:div.childNodes.length}})()",
+      "source": "probes-browserscan-path.json",
+      "id": "probes-browserscan-path:5",
+      "sha256": "8a2584bce939e0fcaf22f63a3dd60b3e479bbbdb7b4d974a3dca9b7b636450b0"
+    },
+    {
+      "name": "Script textContent",
+      "expression": "(()=>{const script=document.createElement('script');script.textContent='const answer=42';return{value:script.textContent,text:script.text,own:Object.prototype.hasOwnProperty.call(HTMLScriptElement.prototype,'textContent')}})()",
+      "source": "probes-browserscan-path.json",
+      "id": "probes-browserscan-path:6",
+      "sha256": "70e8da4070b45e1c969ce521f530c30b6d797f0fc0b6a7957505714555691f19"
+    },
+    {
+      "name": "Comment construction",
+      "expression": "(()=>{const value=document.createComment('hello');return{tag:Object.prototype.toString.call(value),nodeType:value.nodeType,nodeName:value.nodeName,data:value.data,textContent:value.textContent,has:value.hasChildNodes()}})()",
+      "source": "probes-browserscan-path.json",
+      "id": "probes-browserscan-path:7",
+      "sha256": "04da5f9aa7c7a4f9bebe7522360becb9f70334a01dc199e5e1f79441201c1c1e"
+    },
+    {
+      "name": "Text node construction",
+      "expression": "(()=>{const value=document.createTextNode('hello');return{tag:Object.prototype.toString.call(value),nodeType:value.nodeType,nodeName:value.nodeName,data:value.data,textContent:value.textContent,length:value.length,has:value.hasChildNodes(),parent:value.parentNode}})()",
+      "source": "probes-browserscan-path.json",
+      "id": "probes-browserscan-path:8",
+      "sha256": "a37611416d2c70f9adba043d25753dbc476c24b59463b2aa13e1d2586e572d55"
+    },
+    {
+      "name": "CharacterData sibling traversal",
+      "expression": "(()=>{const host=document.createElement('div');host.innerHTML='lead<!--a--><span></span><!--b-->tail';const nodes=host.childNodes,a=nodes[1],span=nodes[2],b=nodes[3];return{count:nodes.length,aNextType:a.nextSibling&&a.nextSibling.nodeType,aNextName:a.nextSibling&&a.nextSibling.nodeName,spanPreviousType:span.previousSibling&&span.previousSibling.nodeType,spanNextType:span.nextSibling&&span.nextSibling.nodeType,bPreviousName:b.previousSibling&&b.previousSibling.nodeName,bNextType:b.nextSibling&&b.nextSibling.nodeType,firstPrevious:a.previousSibling&&a.previousSibling.nodeType,lastNext:nodes[nodes.length-1].nextSibling}})()",
+      "source": "probes-browserscan-path.json",
+      "id": "probes-browserscan-path:9",
+      "sha256": "73b31565734782db3d6c92f3743d8dc00ae8a2b76aeb5db6d513b203b55a2394"
+    },
+    {
+      "name": "IntersectionObserver defaults",
+      "expression": "(()=>{const value=new IntersectionObserver(()=>{});const result={tag:Object.prototype.toString.call(value),root:value.root,rootMargin:value.rootMargin,scrollMargin:value.scrollMargin,thresholds:value.thresholds,records:value.takeRecords()};value.disconnect();return result})()",
+      "source": "probes-browserscan-path.json",
+      "id": "probes-browserscan-path:10",
+      "sha256": "516276b83dc3e56bb508076bf27985f807463ae18c91d29a9a47f7a373343390"
+    },
+    {
+      "name": "History state and scroll restoration",
+      "expression": "(()=>{history.scrollRestoration='auto';const initialScrollRestoration=history.scrollRestoration;history.replaceState({answer:42},'');const answer=history.state.answer;history.scrollRestoration='manual';const manual=history.scrollRestoration;history.scrollRestoration='invalid';return{tag:Object.prototype.toString.call(history),initialScrollRestoration,answer,manual,invalid:history.scrollRestoration}})()",
+      "source": "probes-browserscan-path.json",
+      "id": "probes-browserscan-path:11",
+      "sha256": "1c52b5f0026b2a4232a56c2d24d8faa8b08757a3dbb2987eeae721938cdeffda"
+    },
+    {
+      "name": "HTMLLinkElement URL and attributes",
+      "expression": "(()=>{const link=document.createElement('link');const initial={tag:Object.prototype.toString.call(link),href:link.href,rel:link.rel,as:link.as,crossOrigin:link.crossOrigin};link.href='https://example.test/asset.js';link.rel='modulepreload';link.as='script';link.crossOrigin='anonymous';return{initial,values:{href:link.href,rel:link.rel,as:link.as,crossOrigin:link.crossOrigin},attributes:{href:link.getAttribute('href'),rel:link.getAttribute('rel'),as:link.getAttribute('as'),crossorigin:link.getAttribute('crossorigin')}}})()",
+      "source": "probes-browserscan-path.json",
+      "id": "probes-browserscan-path:12",
+      "sha256": "85fce6d26f85147965260a96e90bea00087a3fbe00d9aeb690ff0e4fbe1b5677"
+    },
+    {
+      "name": "Application private property absence",
+      "expression": "(()=>{const div=document.createElement('div');return{vnode:'_vnode' in div,vnodeValue:div._vnode===undefined,vue:'_isVueCE' in div,vueValue:div._isVueCE===undefined}})()",
+      "source": "probes-browserscan-path.json",
+      "id": "probes-browserscan-path:14",
+      "sha256": "e7e235b696de60411e411ea21a3387a7525621fe5778d533c9b7764e0c2798c6"
+    },
+    {
+      "name": "DocumentFragment construction",
+      "expression": "(()=>{const fragment=document.createDocumentFragment(),child=document.createElement('span');fragment.appendChild(child);return{tag:Object.prototype.toString.call(fragment),nodeType:fragment.nodeType,nodeName:fragment.nodeName,has:fragment.hasChildNodes(),first:fragment.firstChild===child,childCount:fragment.childNodes.length,firstElement:fragment.firstElementChild===child,parent:child.parentNode===fragment}})()",
+      "source": "probes-browserscan-path.json",
+      "id": "probes-browserscan-path:15",
+      "sha256": "9110a0d9d17853a8f6879de3e37074eb0aecfd0da2df9c00f0bd3784e115cc75"
+    },
+    {
+      "name": "Performance timing and mark",
+      "expression": "(()=>{const timing=performance.timing,mark=performance.mark('compat-mark',{detail:{answer:42}});return{timingTag:Object.prototype.toString.call(timing),navigationStartType:typeof timing.navigationStart,loadEventEndType:typeof timing.loadEventEnd,markTag:Object.prototype.toString.call(mark),name:mark.name,entryType:mark.entryType,duration:mark.duration,detail:mark.detail}})()",
+      "source": "probes-browserscan-path.json",
+      "id": "probes-browserscan-path:16",
+      "sha256": "7e6d66fe2feb0529496c4ed58ccbe85820410923c089c6205061704861909295"
+    },
+    {
+      "name": "BroadcastChannel basics",
+      "expression": "(()=>{const channel=new BroadcastChannel('compat');const result={tag:Object.prototype.toString.call(channel),name:channel.name,onmessage:channel.onmessage,onmessageerror:channel.onmessageerror,post:typeof channel.postMessage,close:typeof channel.close};channel.close();return result})()",
+      "source": "probes-browserscan-path.json",
+      "id": "probes-browserscan-path:17",
+      "sha256": "74da29c5f082ff8f4363d027694a420eecdbbf3aa88e52d53576d876af62fe0a"
+    },
+    {
+      "name": "SubtleCrypto surface",
+      "expression": "(async()=>{const hash=await crypto.subtle.digest('SHA-256',new Uint8Array([97,98,99]));return{cryptoTag:Object.prototype.toString.call(crypto),subtleTag:Object.prototype.toString.call(crypto.subtle),digest:typeof crypto.subtle.digest,encrypt:typeof crypto.subtle.encrypt,importKey:typeof crypto.subtle.importKey,hash:Array.from(new Uint8Array(hash))}})()",
+      "source": "probes-browserscan-path.json",
+      "id": "probes-browserscan-path:18",
+      "sha256": "423fbde7a65a6c6e248ec63f5d160539ad61e04096f57ca0f4f2f8c0f4f66c30"
+    },
+    {
+      "name": "WebCrypto RSA-OAEP SPKI import and encrypt",
+      "expression": "(async()=>{const der=Uint8Array.from(atob('MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDfK5CElVUHUMX0sCpkNSBa5EQ6QSmK0ZKt1tweJ7Q8LeuwFyXv9HeJq6Cp+naXAoewBUdP7ImRmtrADIwAqLlnbBUcTMBLlC/Mmx0lSFPZg2QLOaIhNt5ES3vwteKUplY2OHPv2NP7Ww/EvKNu8768FWLho+Dw3XI8xPUF5HwbQwIDAQAB'),c=>c.charCodeAt(0));const key=await crypto.subtle.importKey('spki',der,{name:'RSA-OAEP',hash:'SHA-1'},true,['encrypt']);const encrypted=await crypto.subtle.encrypt({name:'RSA-OAEP'},key,new TextEncoder().encode('independent differential probe'));return{tag:Object.prototype.toString.call(key),type:key.type,extractable:key.extractable,algorithm:{name:key.algorithm.name,modulusLength:key.algorithm.modulusLength,publicExponent:Array.from(key.algorithm.publicExponent),hash:key.algorithm.hash.name},usages:Array.from(key.usages),resultTag:Object.prototype.toString.call(encrypted),byteLength:encrypted.byteLength}})()",
+      "source": "probes-browserscan-path.json",
+      "id": "probes-browserscan-path:19",
+      "sha256": "6584f4438aaa2fd10a639a9c069e0cebe860515ca430e304a4e01d50f5ac5245"
+    },
+    {
+      "name": "Script lowercase crossorigin absence",
+      "expression": "(()=>{const script=document.createElement('script');return{present:'crossorigin' in script,type:typeof script.crossorigin,value:script.crossorigin===undefined}})()",
+      "source": "probes-browserscan-path.json",
+      "id": "probes-browserscan-path:20",
+      "sha256": "60b970f5b57d807a5a4af134843bc1936a1df1f642f9d85894bb0a23fc78aabc"
+    },
+    {
+      "name": "HTMLMetaElement reflection",
+      "expression": "(()=>{const meta=document.createElement('meta'),initial={tag:Object.prototype.toString.call(meta),httpEquiv:meta.httpEquiv,content:meta.content};meta.httpEquiv='refresh';meta.content='5';return{initial,values:{httpEquiv:meta.httpEquiv,content:meta.content},attributes:{httpEquiv:meta.getAttribute('http-equiv'),content:meta.getAttribute('content')}}})()",
+      "source": "probes-browserscan-path.json",
+      "id": "probes-browserscan-path:21",
+      "sha256": "fae7388e0a8bce5c77b62d6e1d96603608e6e4c750a66e4adb478e6273b79ff5"
+    },
+    {
+      "name": "webgpu adapter availability",
+      "expression": "(async()=>{if(!navigator.gpu)return{gpu:false};const adapter=await navigator.gpu.requestAdapter();return{gpu:true,adapter:adapter===null?null:{tag:Object.prototype.toString.call(adapter),features:Array.from(adapter.features||[]).sort(),limitsType:typeof adapter.limits,infoType:typeof adapter.info}}})()",
+      "source": "probes-capabilities.json",
+      "id": "probes-capabilities:0",
+      "sha256": "3b3245a3e1f9a08eb67f8601f3aeae035db2a572ed60dcf11401f44a5b43454b"
+    },
+    {
+      "name": "blob worker capability path",
+      "expression": "new Promise((resolve,reject)=>{const source='postMessage({tag:Object.prototype.toString.call(self),window:typeof window,document:typeof document,crypto:typeof crypto,streams:typeof ReadableStream})';const url=URL.createObjectURL(new Blob([source],{type:'text/javascript'}));const worker=new Worker(url);const timer=setTimeout(()=>reject(new Error('timeout')),3000);worker.onmessage=e=>{clearTimeout(timer);worker.terminate();URL.revokeObjectURL(url);resolve(e.data)};worker.onerror=e=>reject(new Error(e.message))})",
+      "source": "probes-capabilities.json",
+      "id": "probes-capabilities:1",
+      "sha256": "af11a5c0878da8276f211991273e14e688003cdc72cd40402895fe4d8c94f7c5"
+    },
+    {
+      "name": "intl environment projection",
+      "expression": "(()=>({intl:typeof Intl,locale:new Intl.DateTimeFormat().resolvedOptions(),number:new Intl.NumberFormat().resolvedOptions(),collator:new Intl.Collator().resolvedOptions(),supported:Intl.DateTimeFormat.supportedLocalesOf(['ru-RU','en-US','zz-ZZ'])}))()",
+      "source": "probes-ecmascript.json",
+      "id": "probes-ecmascript:0",
+      "sha256": "686bca911f4186939534275aba0d7016ffe0734c69bd9a692d2ad43cf12da398"
+    },
+    {
+      "name": "dynamic code constructors",
+      "expression": "(()=>{const AsyncFunction=Object.getPrototypeOf(async function(){}).constructor,GeneratorFunction=Object.getPrototypeOf(function*(){}).constructor;return{eval:(0,eval)('1+2'),fn:Function('return this===globalThis')(),asyncName:AsyncFunction.name,generatorName:GeneratorFunction.name,fnText:Function.prototype.toString.call(function sample(a){return a+1})}})()",
+      "source": "probes-ecmascript.json",
+      "id": "probes-ecmascript:1",
+      "sha256": "b255f20ee142c223d7755dd6499a95e617b12e02346937fb0eb44125d15d927a"
+    },
+    {
+      "name": "error and conversion shape",
+      "expression": "(()=>{let stack='';try{null.x}catch(error){stack=String(error.stack).split('\\n').slice(0,2)};const values=[];for(const value of [undefined,null,NaN,Infinity,-0,1n])values.push({type:typeof value,string:String(value),tag:Object.prototype.toString.call(value)});return{stack,values,jsonNegZero:JSON.stringify(-0),url:String(new URL('/x?y=1','https://example.com/a'))}})()",
+      "source": "probes-ecmascript.json",
+      "id": "probes-ecmascript:2",
+      "sha256": "d7b9dea9d4d5a2c4abeed3d1a468bbaa1f1d002eee9ec77501e435beb4242f78"
+    },
+    {
+      "name": "globalThis",
+      "expression": "(()=>({exists:typeof globalThis==='object',self:globalThis.globalThis===globalThis,functionThis:Function('return this')()===globalThis}))()",
+      "source": "probes-engine.json",
+      "id": "probes-engine:0",
+      "sha256": "162f7ad1e535b98ca6598d7a486753f9cb67a6ba2761e964efe8a977848f25ca"
+    },
+    {
+      "name": "Function",
+      "expression": "(()=>{const AsyncFunction=Object.getPrototypeOf(async function(){}).constructor,GeneratorFunction=Object.getPrototypeOf(function*(){}).constructor;return{eval:(0,eval)('20+22'),function:Function('a','return a+1')(41),asyncName:AsyncFunction.name,generatorName:GeneratorFunction.name,toString:Function.prototype.toString.call(function sample(a){return a+1})}})()",
+      "source": "probes-engine.json",
+      "id": "probes-engine:1",
+      "sha256": "cd0ce116f885b6746dd2f0b864380704c6057583417e12911ffa5cc0bb72a473"
+    },
+    {
+      "name": "Intl",
+      "expression": "(()=>({exists:typeof Intl==='object',date:new Intl.DateTimeFormat('en-US',{timeZone:'UTC',year:'numeric',month:'2-digit',day:'2-digit'}).format(new Date('2020-01-02T00:00:00Z')),number:new Intl.NumberFormat('de-DE',{minimumFractionDigits:2}).format(1234.5),plural:new Intl.PluralRules('en').select(2),canonical:Intl.getCanonicalLocales(['EN-us','ru-ru'])}))()",
+      "source": "probes-engine.json",
+      "id": "probes-engine:2",
+      "sha256": "49c8f7cbb75b939e25e101d686cee764601489cc3f290d2489f0c904ff571025"
+    },
+    {
+      "name": "Error.stack",
+      "expression": "(()=>{function namedFrame(){throw new TypeError('boom')}let error;try{namedFrame()}catch(e){error=e}const lines=String(error.stack).split('\\n');return{name:error.name,message:error.message,header:lines[0],hasNamedFrame:lines.some(line=>line.includes('namedFrame')),multiLine:lines.length>1}})()",
+      "source": "probes-engine.json",
+      "id": "probes-engine:3",
+      "sha256": "11e61566492c6b514b2cf09767372fd60189851b95a81dc0a41f8d96d4cd2608"
+    },
+    {
+      "name": "TypedArrays",
+      "expression": "(()=>{const buffer=new ArrayBuffer(8),view=new DataView(buffer),bytes=new Uint8Array(buffer);view.setUint32(0,0x12345678);bytes.set([9,8,7,6],4);return{arrayBuffer:Object.prototype.toString.call(buffer),byteLength:buffer.byteLength,hex:Array.from(bytes).map(x=>x.toString(16).padStart(2,'0')).join(''),slice:Array.from(bytes.slice(2,6)),bigint:typeof BigInt64Array==='function'}})()",
+      "source": "probes-engine.json",
+      "id": "probes-engine:4",
+      "sha256": "830bbbd3e3ec2ff49bf26cf945b285dd671890efada508510135c238134ea7e5"
+    },
+    {
+      "name": "Promise",
+      "expression": "(()=>({exists:typeof Promise==='function',tag:Object.prototype.toString.call(Promise.resolve()),then:typeof Promise.prototype.then,finally:typeof Promise.prototype.finally,allSettled:typeof Promise.allSettled,withResolvers:typeof Promise.withResolvers}))()",
+      "source": "probes-engine.json",
+      "id": "probes-engine:5",
+      "sha256": "90bd3050ed13ad728ae92598dbf9fcc317d45f58ff2c24213e2b1c6408a9efd5"
+    },
+    {
+      "name": "WebAssembly",
+      "expression": "(()=>{const bytes=new Uint8Array([0,97,115,109,1,0,0,0,1,5,1,96,0,1,127,3,2,1,0,7,7,1,3,114,117,110,0,0,10,6,1,4,0,65,42,11]),module=new WebAssembly.Module(bytes),instance=new WebAssembly.Instance(module);return{exists:typeof WebAssembly==='object',module:Object.prototype.toString.call(module),instance:Object.prototype.toString.call(instance),result:instance.exports.run(),validate:WebAssembly.validate(bytes)}})()",
+      "source": "probes-engine.json",
+      "id": "probes-engine:6",
+      "sha256": "066db6c298525b2abdaca91bd28301eb8704993d9978a6c41c7f38bc8e9fd69f"
+    },
+    {
+      "name": "synchronous execution clock",
+      "expression": "(()=>{const wall=Date.now(),start=performance.now();let value=0;for(let i=0;i<20000000;i++)value=(value+i)|0;return{performance:performance.now()-start,wall:Date.now()-wall,value}})()",
+      "source": "probes-engine.json",
+      "id": "probes-engine:7",
+      "sha256": "589aabdc9ed96e87bc04414b64ca7427472cf9179431eb7f697b93fcdfa3c98e"
+    },
+    {
+      "name": "out-of-flow child layout",
+      "expression": "(()=>{const measure=position=>{const container=document.createElement('div'),child=document.createElement('iframe');container.style.width='100px';child.style.cssText='border:none;width:1px;height:1px;position:'+position+';left:0;top:0';container.appendChild(child);document.body.appendChild(container);const rect=container.getBoundingClientRect(),style=getComputedStyle(child),result={width:rect.width,height:rect.height,offsetHeight:container.offsetHeight,childHeight:child.getBoundingClientRect().height,childDisplay:style.display,childPosition:style.position};container.remove();return result};return{fixed:measure('fixed'),absolute:measure('absolute'),static:measure('static')}})()",
+      "source": "probes-layout-path.json",
+      "id": "probes-layout-path:0",
+      "sha256": "087548806d78b1049510188ad270349314d761a2bb6298eb364c9119ba6b0b4a"
+    },
+    {
+      "name": "move-records",
+      "expression": "(()=>{const p=document.createElement('div'),a=document.createElement('a'),b=document.createElement('b');p.appendChild(a);p.appendChild(b);const o=new MutationObserver(()=>{});o.observe(p,{childList:true});p.appendChild(a);const rs=o.takeRecords();o.disconnect();return rs.map(r=>[r.addedNodes.length,r.removedNodes.length,r.previousSibling?.localName,r.nextSibling?.localName])})()",
+      "source": "probes-mutations-reactions.json",
+      "id": "probes-mutations-reactions:0",
+      "sha256": "1c4bd9bff17c2ddfa2dcd867b7aadf83b1b8edaa9d5bb2482f0022c521bc1b51"
+    },
+    {
+      "name": "fragment-records",
+      "expression": "(()=>{const p=document.createElement('div'),f=document.createDocumentFragment();f.appendChild(document.createElement('a'));f.appendChild(document.createElement('b'));const o=new MutationObserver(()=>{});o.observe(p,{childList:true});o.observe(f,{childList:true});p.appendChild(f);const rs=o.takeRecords();o.disconnect();return rs.map(r=>[r.target===f,r.addedNodes.length,r.removedNodes.length])})()",
+      "source": "probes-mutations-reactions.json",
+      "id": "probes-mutations-reactions:1",
+      "sha256": "021775948ded5f951e279c00c3d40cc21787300ac321f9516dec5ac4b803dc9a"
+    },
+    {
+      "name": "record-interface",
+      "expression": "(()=>{const p=document.createElement('div');const o=new MutationObserver(()=>{});o.observe(p,{childList:true});p.appendChild(document.createTextNode('x'));const r=o.takeRecords()[0];o.disconnect();return [r instanceof MutationRecord,r.addedNodes instanceof NodeList,0 in r.addedNodes,r.addedNodes.item(0)===p.firstChild,Object.hasOwn(r,'type'),Object.getOwnPropertyDescriptor(MutationRecord.prototype,'type').get!==undefined]})()",
+      "source": "probes-mutations-reactions.json",
+      "id": "probes-mutations-reactions:2",
+      "sha256": "0b73262a4ea970b40c63c7b06d83c0f10950808f3f9803fe3f1bb5783f1b09ee"
+    },
+    {
+      "name": "removed-subtree",
+      "expression": "(async()=>{const p=document.createElement('div'),c=document.createElement('span');p.appendChild(c);const log=[];const o=new MutationObserver(rs=>log.push(...rs.map(r=>r.type+':'+(r.attributeName||''))));o.observe(p,{childList:true,subtree:true,attributes:true});p.removeChild(c);c.setAttribute('a','1');await Promise.resolve();c.setAttribute('b','2');await Promise.resolve();o.disconnect();return log})()",
+      "source": "probes-mutations-reactions.json",
+      "id": "probes-mutations-reactions:3",
+      "sha256": "aadbf5ad387a537fe0660f7c9733b80e78a0960a60a426711955d4b7786715d6"
+    },
+    {
+      "name": "notify-order",
+      "expression": "(async()=>{const p=document.createElement('div'),log=[];const a=new MutationObserver(()=>log.push('a')),b=new MutationObserver(()=>log.push('b'));b.observe(p,{attributes:true});a.observe(p,{attributes:true});p.setAttribute('a','1');queueMicrotask(()=>log.push('microtask'));await Promise.resolve();a.disconnect();b.disconnect();return log})()",
+      "source": "probes-mutations-reactions.json",
+      "id": "probes-mutations-reactions:4",
+      "sha256": "003bf2c6c997137a8f31055f64bacdf8cada4ccbbaf895ccd7c5df4fcdee92f4"
+    },
+    {
+      "name": "callback-snapshot",
+      "expression": "(()=>{const log=[];class X extends HTMLElement{static observedAttributes=['a'];attributeChangedCallback(n,o,v){log.push('old:'+v)}}customElements.define('x-snapshot-probe',X);X.prototype.attributeChangedCallback=()=>log.push('new');const x=new X();x.setAttribute('a','1');return log})()",
+      "source": "probes-mutations-reactions.json",
+      "id": "probes-mutations-reactions:5",
+      "sha256": "b27deb3cc0f3e1b1aacaf62a22d4dceb240af30623bf86f6929e788f955abd53"
+    },
+    {
+      "name": "upgrade-order",
+      "expression": "(()=>{const p=document.createElement('div');p.innerHTML='<x-upgrade-probe id=\"a\"></x-upgrade-probe><x-upgrade-probe id=\"b\"></x-upgrade-probe>';document.body.appendChild(p);const log=[];class X extends HTMLElement{static observedAttributes=['id'];constructor(){super();log.push('ctor:'+this.id)}attributeChangedCallback(n,o,v){log.push('attr:'+v)}connectedCallback(){log.push('connect:'+this.id)}}customElements.define('x-upgrade-probe',X);p.remove();return log})()",
+      "source": "probes-mutations-reactions.json",
+      "id": "probes-mutations-reactions:6",
+      "sha256": "75eb0363b1ce3c676473caf4eea0e1084bba100974c4e6b46f109ffeb012ddc1"
+    },
+    {
+      "name": "upgrade-removal",
+      "expression": "(()=>{const p=document.createElement('x-remove-probe');document.body.appendChild(p);const log=[];class X extends HTMLElement{constructor(){super();this.remove();log.push('ctor')}connectedCallback(){log.push('connected')}disconnectedCallback(){log.push('disconnected')}}customElements.define('x-remove-probe',X);return log})()",
+      "source": "probes-mutations-reactions.json",
+      "id": "probes-mutations-reactions:7",
+      "sha256": "3ae205152037840116faa65b89f75322ea8a1b71474fe9560a4a65df00236152"
+    },
+    {
+      "name": "upgrade-insertion",
+      "expression": "(()=>{const p=document.createElement('x-insert-probe');const log=[];class X extends HTMLElement{constructor(){super();document.body.appendChild(this);log.push('ctor')}connectedCallback(){log.push('connected')}}customElements.define('x-insert-probe',X);customElements.upgrade(p);p.remove();return log})()",
+      "source": "probes-mutations-reactions.json",
+      "id": "probes-mutations-reactions:8",
+      "sha256": "f6bd02cf2f4891efb323f6ac354e8a3c951d43a15f8752cb04d97aa7d628aef8"
+    },
+    {
+      "name": "shadow-lifecycle",
+      "expression": "(()=>{const log=[];class X extends HTMLElement{connectedCallback(){log.push('connected')}disconnectedCallback(){log.push('disconnected')}}customElements.define('x-shadow-probe',X);const host=document.createElement('div');host.attachShadow({mode:'closed'}).appendChild(new X());document.body.appendChild(host);host.remove();return log})()",
+      "source": "probes-mutations-reactions.json",
+      "id": "probes-mutations-reactions:9",
+      "sha256": "5fd77c2859b927ffc1a00ea14b6d36dca715b3d9a07bed26836f26b42d9eafdd"
+    },
+    {
+      "name": "parentnode-batch",
+      "expression": "(()=>{const p=document.createElement('div');const o=new MutationObserver(()=>{});o.observe(p,{childList:true});p.append('a','b');let first=o.takeRecords().map(r=>[r.addedNodes.length,r.removedNodes.length]);p.replaceChildren(p.firstChild);const second=o.takeRecords().map(r=>[r.addedNodes.length,r.removedNodes.length]);o.disconnect();return [first,second,p.textContent]})()",
+      "source": "probes-mutations-reactions.json",
+      "id": "probes-mutations-reactions:10",
+      "sha256": "a7562dab32b1577f829c462231a9f1f487d8968429c1534f180fec16adc65b11"
+    },
+    {
+      "name": "tokens-fast-and-observed",
+      "expression": "(()=>{return [false,true].map(observed=>{const e=document.createElement('div'),o=new MutationObserver(()=>{});if(observed)o.observe(e,{attributes:true});const result=[];for(const force of [undefined,false,true,0,1,'',{},null]){e.className='';result.push(e.classList.toggle('a',force),e.className)}for(const token of ['', 'a b'])try{e.classList.toggle(token)}catch(error){result.push(error.name,error.code)}o.disconnect();return result})})()",
+      "source": "probes-mutations-reactions.json",
+      "id": "probes-mutations-reactions:11",
+      "sha256": "ec6bb767082209a7f4cfc15530bf5ecf6e020e31f75461212f292d5dc2f468a2"
+    },
+    {
+      "name": "permissions.initial",
+      "expression": "Promise.all([\"geolocation\", \"notifications\", \"push\", \"midi\", \"camera\", \"microphone\", \"background-fetch\", \"background-sync\", \"persistent-storage\", \"ambient-light-sensor\", \"accelerometer\", \"gyroscope\", \"magnetometer\", \"screen-wake-lock\", \"nfc\", \"display-capture\", \"clipboard-read\", \"clipboard-write\", \"payment-handler\", \"idle-detection\", \"periodic-background-sync\", \"system-wake-lock\", \"storage-access\", \"window-management\", \"local-fonts\", \"top-level-storage-access\", \"captured-surface-control\", \"speaker-selection\", \"keyboard-lock\", \"pointer-lock\", \"fullscreen\", \"web-app-installation\", \"local-network-access\", \"local-network\", \"loopback-network\", \"geolocation-approximate\"].map(async name=>{try{return [name,(await navigator.permissions.query({name})).state]}catch(e){return [name,{name:e.name,message:e.message}]}})).then(Object.fromEntries)",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:0",
+      "sha256": "6f5401f1446df73ce850e5a559e18263512ba19efb09002d21a8758aef9c081e"
+    },
+    {
+      "name": "activation",
+      "expression": "({active:navigator.userActivation.isActive,sticky:navigator.userActivation.hasBeenActive,pending:navigator.scheduling.isInputPending()})",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:1",
+      "sha256": "27c220c5b3d8ca5198f5c6ccb10d648d158dd53f325595714a346e56786f6b8f"
+    },
+    {
+      "name": "connection",
+      "expression": "({effectiveType:navigator.connection.effectiveType,downlink:navigator.connection.downlink,rtt:navigator.connection.rtt,saveData:navigator.connection.saveData})",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:3",
+      "sha256": "76b25b057b461fd24a2e37dd79703ff452eaac6a6fb61f5abedcb48707e3f5ba"
+    },
+    {
+      "name": "bluetooth.available",
+      "expression": "navigator.bluetooth.getAvailability()",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:4",
+      "sha256": "d4d72e82ecb958c884f8b15c015baf1f5dd036cbd96b4b9265c353fb93f009ca"
+    },
+    {
+      "name": "posture",
+      "expression": "navigator.devicePosture.type",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:9",
+      "sha256": "4c7c924c35408b5ae1ba7082d0529febcd807d514625a592fa7a3667565004f9"
+    },
+    {
+      "name": "permissions.geo",
+      "expression": "navigator.permissions.query({name:'geolocation'}).then(p=>({state:p.state,name:p.name,tag:Object.prototype.toString.call(p)}))",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:13",
+      "sha256": "01a52fb8442c428f8085dcbe4742cd20700e2507cc1a24026ed504935d645389"
+    },
+    {
+      "name": "permissions.unknown",
+      "expression": "navigator.permissions.query({name:'not-a-permission'})",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:14",
+      "sha256": "57332b43b22da44a009e68c8470d791f64c221f8c45a4d74e43953766247c3cd"
+    },
+    {
+      "name": "media.constraints",
+      "expression": "navigator.mediaDevices.getSupportedConstraints()",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:17",
+      "sha256": "2d9145b3660b93ae19cbda8699f792b1dc76c88c0563063ba75c0e64274c61eb"
+    },
+    {
+      "name": "media.decoding",
+      "expression": "navigator.mediaCapabilities.decodingInfo({type:'file',video:{contentType:'video/unknown',width:640,height:480,bitrate:1000,framerate:30}})",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:20",
+      "sha256": "5f81696246a840f4604cc2bc332955e759fdefb300fe77d5c2d19d6e50db93a7"
+    },
+    {
+      "name": "media.mp4",
+      "expression": "navigator.mediaCapabilities.decodingInfo({type:'file',video:{contentType:'video/mp4; codecs=\"avc1.42E01E\"',width:640,height:480,bitrate:1000,framerate:30}})",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:21",
+      "sha256": "7dc7495b9c0f051851448daad15413aabf6735b0a9b259fe37f1dcb5b7acc2b4"
+    },
+    {
+      "name": "media.session",
+      "expression": "({metadata:navigator.mediaSession.metadata,playbackState:navigator.mediaSession.playbackState})",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:22",
+      "sha256": "d3293fe9fd51820a5f8f644c18a961f18446034442f12119a6605da8d9b66094"
+    },
+    {
+      "name": "presentation",
+      "expression": "({defaultRequest:navigator.presentation.defaultRequest,receiver:navigator.presentation.receiver})",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:23",
+      "sha256": "6d715de545a0cc558859bddab41f0a7cce516427239a49d3dcc3ad1dab015db1"
+    },
+    {
+      "name": "storage.estimate",
+      "expression": "navigator.storage.estimate()",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:24",
+      "sha256": "90a348b3e9cb0e936a8796e6729dbd8c6a5d8ee95a6e7986af08827109371de1"
+    },
+    {
+      "name": "storage.persisted",
+      "expression": "navigator.storage.persisted()",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:25",
+      "sha256": "c1efa1237477880994c24a652b21cf0681e5970821ddf17696e6f69f0608dbbb"
+    },
+    {
+      "name": "buckets.keys",
+      "expression": "navigator.storageBuckets.keys()",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:26",
+      "sha256": "03a25032c40b597beed895483310727c938682fe62de14d2ba952b1fd11dcb0a"
+    },
+    {
+      "name": "locks.query",
+      "expression": "navigator.locks.query()",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:27",
+      "sha256": "b2b25deb8b47c873508286737b285c9ca5c09c29469cd95ad330cb8125b479e6"
+    },
+    {
+      "name": "quota.temporary",
+      "expression": "new Promise((resolve,reject)=>navigator.webkitTemporaryStorage.queryUsageAndQuota((usage,quota)=>resolve({usage,quota}),reject))",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:28",
+      "sha256": "4176c4b8bb9efc403f609eaef2b2d2423988fedea38e51d35ad98add197092a6"
+    },
+    {
+      "name": "quota.persistent",
+      "expression": "new Promise((resolve,reject)=>navigator.webkitPersistentStorage.queryUsageAndQuota((usage,quota)=>resolve({usage,quota}),reject))",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:29",
+      "sha256": "ae999f4e2ea752ab07bc0209e3a3cf7b3355358e431c14cf61d5f0615602e876"
+    },
+    {
+      "name": "quota.identity",
+      "expression": "navigator.webkitTemporaryStorage===navigator.webkitPersistentStorage",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:30",
+      "sha256": "d316cca82670e496680509a469b2dfef3d4f77760d6b3f09c5aad6d6f4c49da9"
+    },
+    {
+      "name": "serviceWorker.controller",
+      "expression": "navigator.serviceWorker.controller",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:31",
+      "sha256": "fbe0082efc05407d0407a36a14f4f26dec8094566fc476b9b623b9f908f6f739"
+    },
+    {
+      "name": "serviceWorker.registrations",
+      "expression": "navigator.serviceWorker.getRegistrations()",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:32",
+      "sha256": "8a39a395d7efc11bae1c6285ffeb5f7867502a45eb0729f1e01703cf5084efea"
+    },
+    {
+      "name": "serviceWorker.registration",
+      "expression": "navigator.serviceWorker.getRegistration()",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:33",
+      "sha256": "4bc66292126f03d6b671b240b67fcdfc900c20f4700b912e5646e1219b6445d2"
+    },
+    {
+      "name": "xr.vr",
+      "expression": "navigator.xr.isSessionSupported('immersive-vr')",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:34",
+      "sha256": "4e32c82d498a53cc5417230d73fd629a07a6a5b1569b3e3d3487d663d9d06c54"
+    },
+    {
+      "name": "xr.ar",
+      "expression": "navigator.xr.isSessionSupported('immersive-ar')",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:35",
+      "sha256": "a00dabffc4e0afe87711c055c66472b9e1e9e08cf988fbeec27124b4bdb7dda7"
+    },
+    {
+      "name": "overlay",
+      "expression": "({visible:navigator.windowControlsOverlay.visible,rect:navigator.windowControlsOverlay.getTitlebarAreaRect().toJSON()})",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:37",
+      "sha256": "65a31ca04156c924eef5af0be8535a0761c1d76d4ce6e09f5407c97427fb8c16"
+    },
+    {
+      "name": "buckets.lifecycle",
+      "expression": "(async()=>{const b=await navigator.storageBuckets.open('capability-test');const r={name:b.name,persisted:await b.persisted(),expires:await b.expires(),tag:Object.prototype.toString.call(b)};await navigator.storageBuckets.delete('capability-test');return r})()",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:45",
+      "sha256": "1852b0c470de6768484b9721ca2a5c0cc73b81ca1cdaaad5eec4a23298e53d5c"
+    },
+    {
+      "name": "locks.lifecycle",
+      "expression": "navigator.locks.request('capability-test',async lock=>({name:lock.name,mode:lock.mode,tag:Object.prototype.toString.call(lock)}))",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:46",
+      "sha256": "c15fcbe8d29c19de7a99ec47a61b19070e127cb45e2d88810730c4ac5c44dd6f"
+    },
+    {
+      "name": "ink",
+      "expression": "navigator.ink.requestPresenter({presentationArea:document.body}).then(p=>({expectedImprovement:p.expectedImprovement,tag:Object.prototype.toString.call(p)}))",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:49",
+      "sha256": "ff1a71445d1920c326481d5a0fd00cfdf3e34e5f69405863b0c4540182e7cbcf"
+    },
+    {
+      "name": "managed",
+      "expression": "navigator.managed.getManagedConfiguration([])",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:50",
+      "sha256": "18464a8f94a02e67bcd0543d2fff82366f32fc240d0c7a84bdf4bb3abee469b4"
+    },
+    {
+      "name": "virtualKeyboard",
+      "expression": "({overlaysContent:navigator.virtualKeyboard.overlaysContent,rect:navigator.virtualKeyboard.boundingRect.toJSON()})",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:51",
+      "sha256": "763eba31d6b4f68ba8b7848021e9a53b36fe3011991625020263992aa45a1cf1"
+    },
+    {
+      "name": "protectedAudience",
+      "expression": "navigator.protectedAudience.queryFeatureSupport('unknown')",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:52",
+      "sha256": "c75f43638993ee89f911da7585742d0d07056c6ef88a62d321cf28765ffae96b"
+    },
+    {
+      "name": "permissions.all",
+      "expression": "Promise.all([\"geolocation\", \"notifications\", \"push\", \"midi\", \"camera\", \"microphone\", \"background-fetch\", \"background-sync\", \"persistent-storage\", \"ambient-light-sensor\", \"accelerometer\", \"gyroscope\", \"magnetometer\", \"screen-wake-lock\", \"nfc\", \"display-capture\", \"clipboard-read\", \"clipboard-write\", \"payment-handler\", \"idle-detection\", \"periodic-background-sync\", \"system-wake-lock\", \"storage-access\", \"window-management\", \"local-fonts\", \"top-level-storage-access\", \"captured-surface-control\", \"speaker-selection\", \"keyboard-lock\", \"pointer-lock\", \"fullscreen\", \"web-app-installation\", \"local-network-access\", \"local-network\", \"loopback-network\", \"geolocation-approximate\"].map(async name=>{try{return [name,(await navigator.permissions.query({name})).state]}catch(e){return [name,{name:e.name,message:e.message}]}})).then(Object.fromEntries)",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:53",
+      "sha256": "6f5401f1446df73ce850e5a559e18263512ba19efb09002d21a8758aef9c081e"
+    },
+    {
+      "name": "constructed pre-fo own properties",
+      "expression": "(()=>{const blob=new Blob(['x']),url=new URL('https://example.com/a?b=c'),params=new URLSearchParams('a=b'),stream=new ReadableStream(),observer=new PerformanceObserver(()=>{}),xhr=new XMLHttpRequest(),event=new Event('x'),message=new MessageEvent('message',{data:1}),candidate=new RTCIceCandidate({candidate:'candidate:x',sdpMid:'0'}),iframe=document.createElement('iframe');document.body.appendChild(iframe);const worker=new Worker(URL.createObjectURL(new Blob(['']))),result={blob:Object.getOwnPropertyNames(blob).sort(),url:Object.getOwnPropertyNames(url).sort(),params:Object.getOwnPropertyNames(params).sort(),stream:Object.getOwnPropertyNames(stream).sort(),observer:Object.getOwnPropertyNames(observer).sort(),xhr:Object.getOwnPropertyNames(xhr).sort(),event:Object.getOwnPropertyNames(event).sort(),message:Object.getOwnPropertyNames(message).sort(),candidate:Object.getOwnPropertyNames(candidate).sort(),iframe:Object.getOwnPropertyNames(iframe).sort(),worker:Object.getOwnPropertyNames(worker).sort()};worker.terminate();iframe.remove();return result})()",
+      "source": "probes-prefo.json",
+      "id": "probes-prefo:0",
+      "sha256": "68496ba13a35fbdb9d8b01b9076e2fc3481a26a4a34843ffabd21643dcbc5cd8"
+    },
+    {
+      "name": "pre-fo prototype ownership",
+      "expression": "Object.fromEntries(['EventTarget','Node','Element','HTMLElement','HTMLScriptElement','HTMLImageElement','HTMLIFrameElement','DOMTokenList','Document','URL','URLSearchParams','Blob','Worker','PerformanceEntry','PerformanceResourceTiming','PerformanceObserver','PerformanceObserverEntryList','XMLHttpRequest'].map(name=>[name,Object.getOwnPropertyNames(globalThis[name].prototype).sort()]))",
+      "source": "probes-prefo.json",
+      "id": "probes-prefo:1",
+      "sha256": "a056ef5727f09541bde30db24b1d0f439c4de15eb6695096d5d1e2dcf89b1621"
+    },
+    {
+      "name": "pre-fo function shapes",
+      "expression": "(()=>{const shape=f=>({name:f.name,length:f.length,text:Function.prototype.toString.call(f)});return{atob:shape(atob),decodeURIComponent:shape(decodeURIComponent),isFinite:shape(isFinite),isNaN:shape(isNaN),parseInt:shape(parseInt),xhrOpen:shape(XMLHttpRequest.prototype.open),xhrSend:shape(XMLHttpRequest.prototype.send),url:shape(URL),worker:shape(Worker)}})()",
+      "source": "probes-prefo.json",
+      "id": "probes-prefo:2",
+      "sha256": "cb6eec0829f3f71e48451771ec4a8289efc7063117166ba0fd6a7f9b4d4de7aa"
+    },
+    {
+      "name": "dynamic global execution descriptors",
+      "expression": "(()=>{const descriptor=name=>{const d=Object.getOwnPropertyDescriptor(globalThis,name);return d&&{writable:d.writable,enumerable:d.enumerable,configurable:d.configurable,name:globalThis[name].name,length:globalThis[name].length,native:/\\[native code\\]/.test(Function.prototype.toString.call(globalThis[name]))}};return{eval:descriptor('eval'),Function:descriptor('Function'),unescape:descriptor('unescape'),directEval:eval('this')===globalThis,indirectEval:(0,eval)('this')===globalThis,dynamicFunction:Function('return this')()===globalThis}})()",
+      "source": "probes-prefo.json",
+      "id": "probes-prefo:3",
+      "sha256": "061234596a14736ab9c085aecb3d6795a75aba71d995940da227a5b94286c65c"
+    },
+    {
+      "name": "resource timing initiator snapshot",
+      "expression": "performance.getEntriesByType('resource').map(entry=>({name:new URL(entry.name).pathname,initiatorType:entry.initiatorType,responseStatus:entry.responseStatus,transferSize:entry.transferSize,encodedBodySize:entry.encodedBodySize}))",
+      "source": "probes-prefo.json",
+      "id": "probes-prefo:4",
+      "sha256": "b7ce0df4eb9be4b601f79edc037353fe150bff1d5a0b5599366b148821a6ed83"
+    },
+    {
+      "name": "webgpu adapter settlement",
+      "expression": "new Promise(resolve=>{let done=false;const finish=value=>{if(!done){done=true;resolve(value)}};navigator.gpu.requestAdapter().then(value=>finish({winner:'adapter',tag:Object.prototype.toString.call(value)}),()=>finish({winner:'rejection',tag:''}));setTimeout(()=>finish({winner:'timeout',tag:''}),100)})",
+      "source": "probes-prefo.json",
+      "id": "probes-prefo:5",
+      "sha256": "0433731ca31148a11f477f4d2d8f9c92bc51a9d400ba2f1c836e7e955226cde1"
+    },
+    {
+      "name": "dynamic script force async",
+      "expression": "(()=>{const s=document.createElement('script');const initial=s.async;s.async=false;return{initial,after:s.async,attribute:s.getAttribute('async')!==null}})()",
+      "source": "probes-realm.json",
+      "id": "probes-realm:0",
+      "sha256": "e47055dc4c5458765b1ae546fccbac86c87fe4e73cc27ac919f86b5ff5d72732"
+    },
+    {
+      "name": "detached iframe eval",
+      "expression": "(()=>{const f=document.createElement('iframe');document.body.appendChild(f);const e=f.contentWindow.eval,shape={name:e.name,length:e.length,text:Function.prototype.toString.call(e)};f.remove();return{...shape,result:e('6*7')}})()",
+      "source": "probes-realm.json",
+      "id": "probes-realm:1",
+      "sha256": "26ad9766f37214f857e51da0242b96fca70285bec7dc337e89a314b7dca8b16e"
+    },
+    {
+      "name": "webgpu basic shape",
+      "expression": "new Promise(resolve=>navigator.gpu.requestAdapter().then(a=>resolve({gpu:Object.prototype.toString.call(navigator.gpu),adapter:Object.prototype.toString.call(a),fallback:a&&a.isFallbackAdapter,format:navigator.gpu.getPreferredCanvasFormat(),hasInfo:!!(a&&a.info)})))",
+      "source": "probes-realm.json",
+      "id": "probes-realm:2",
+      "sha256": "da3d4a75fd4f81c1ccd0f072ce4a0fe0b46c69d5232bb9c393e87d396aca5a4e"
+    },
+    {
+      "name": "same-origin iframe global identity",
+      "expression": "(()=>{const iframe=document.createElement('iframe');document.body.appendChild(iframe);const child=iframe.contentWindow;const result={stable:child===iframe.contentWindow,self:child.self===child,global:child.eval('globalThis')===child,parent:child.eval('parent')===window,distinctArray:child.eval('Array')!==Array,evalType:typeof child.eval,windowTag:Object.prototype.toString.call(child)};iframe.remove();return result})()",
+      "source": "probes-realms.json",
+      "id": "probes-realms:0",
+      "sha256": "c9ef0ab9470050b1694e5f1303f72f2b3743ef7f9220ed039368fe47e349dae8"
+    },
+    {
+      "name": "same-origin iframe eval value transfer",
+      "expression": "(()=>{const iframe=document.createElement('iframe');document.body.appendChild(iframe);const child=iframe.contentWindow;const fn=child.eval('(function add(a,b){return a+b})');const object=child.eval('({x:1})');const result={functionType:typeof fn,functionCall:typeof fn==='function'?fn(2,3):null,functionRealm:typeof fn==='function'?Object.getPrototypeOf(fn)===child.eval('Function.prototype'):false,objectValue:object.x,objectRealm:Object.getPrototypeOf(object)===child.eval('Object.prototype')};iframe.remove();return result})()",
+      "source": "probes-realms.json",
+      "id": "probes-realms:1",
+      "sha256": "e78eca2dc84e98b254bda4ba7cc602ebbba9f4150ed1d8ca82a74abffc82a056"
+    },
+    {
+      "name": "window realm brand",
+      "expression": "({tag:Object.prototype.toString.call(window),instance:window instanceof Window,prototype:Object.getPrototypeOf(window)===Window.prototype,constructor:window.constructor===Window,self:window===globalThis})",
+      "source": "probes-runtime-gaps.json",
+      "id": "probes-runtime-gaps:1",
+      "sha256": "d30cfa6d5c6a406e7e19246ba6546f39744dc5bdb6d2d20bdb911cc172bdb77f"
+    },
+    {
+      "name": "created-innerhtml",
+      "expression": "(()=>{const t=document.createElement('template');t.innerHTML='<span>A&amp;B</span><!--c-->';return [t.childNodes.length,t.content.childNodes.length,t.content.textContent,t.innerHTML,t.textContent,t.content.firstChild.parentNode===t.content]})()",
+      "source": "probes-templates.json",
+      "id": "probes-templates:2",
+      "sha256": "6ff0c9626a3675c53201a3a5b5c255b350a184649a9689abbe59f9a2a2f2fd3a"
+    },
+    {
+      "name": "nested-content",
+      "expression": "(()=>{const t=document.createElement('template');t.innerHTML='<div>A<template><b>B</b></template>C</div>';const n=t.content.querySelector('template');return [t.childNodes.length,t.content.textContent,n.childNodes.length,n.content.textContent,t.innerHTML,n.innerHTML]})()",
+      "source": "probes-templates.json",
+      "id": "probes-templates:3",
+      "sha256": "0e7d0261b8c6ecceebd815b4833d19c9a0712e97d32ca284df4d8c050de80faf"
+    },
+    {
+      "name": "content-mutations",
+      "expression": "(()=>{const t=document.createElement('template');t.innerHTML='<i>x</i>';const node=t.content.firstChild,identity=t.content;t.innerHTML='<b>y</b>';return [identity===t.content,node.parentNode===null,t.content.firstChild.localName,t.innerHTML,t.childNodes.length]})()",
+      "source": "probes-templates.json",
+      "id": "probes-templates:5",
+      "sha256": "0f4abb84662b889220ede38741cfba2bbff85eb97449ca9715d9b71b963b9fc1"
+    },
+    {
+      "name": "content-observer",
+      "expression": "(()=>{const t=document.createElement('template');t.innerHTML='<i>x</i>';const records=[],o=new MutationObserver(()=>{});o.observe(t,{childList:true,subtree:true});o.observe(t.content,{childList:true});t.innerHTML='<b>y</b>';records.push(...o.takeRecords().map(r=>[r.target===t.content,r.addedNodes.length,r.removedNodes.length]));o.disconnect();return records})()",
+      "source": "probes-templates.json",
+      "id": "probes-templates:6",
+      "sha256": "91fdf7b710187caecef496f74eff08e3c6eed4b5b8ddab0adf90bf29dba9d28c"
+    },
+    {
+      "name": "host-inclusive-cycles",
+      "expression": "(()=>{const t=document.createElement('template');t.innerHTML='<div></div>';const result=[];for(const parent of [t.content,t.content.firstChild])try{parent.appendChild(t);result.push('accepted')}catch(e){result.push(e.name)}return result})()",
+      "source": "probes-templates.json",
+      "id": "probes-templates:7",
+      "sha256": "f5f1b77135fd55e9ca527fe6a47c1be1d385c3e205797809b8be994d53614c41"
+    },
+    {
+      "name": "ordinary-template-children",
+      "expression": "(()=>{const t=document.createElement('template');t.innerHTML='<i>content</i>';t.appendChild(document.createTextNode('ordinary'));return [t.childNodes.length,t.textContent,t.content.textContent,t.innerHTML,t.cloneNode(true).textContent,t.cloneNode(true).content.textContent]})()",
+      "source": "probes-templates.json",
+      "id": "probes-templates:8",
+      "sha256": "baef78b5f6864856fa0fd663b1184347da5792c0babbd05298b59d2fb8cf7770"
+    },
+    {
+      "name": "activate-innerhtml-content",
+      "expression": "(async()=>{globalThis.__templateDynamicRan=0;const t=document.createElement('template');t.innerHTML='<script>globalThis.__templateDynamicRan++<\\/script>';document.body.appendChild(t.content.cloneNode(true));await new Promise(r=>setTimeout(r,20));return globalThis.__templateDynamicRan})()",
+      "source": "probes-templates.json",
+      "id": "probes-templates:10",
+      "sha256": "c9c70f89b4e28441b99b1258cbdc6f068c58b57db81437b52108886374f53c6a"
+    },
+    {
+      "name": "inert-custom-elements",
+      "expression": "(()=>{const log=[];class X extends HTMLElement{constructor(){super();log.push('ctor')}connectedCallback(){log.push('connected')}}customElements.define('x-template-inert',X);const t=document.createElement('template');t.innerHTML='<x-template-inert></x-template-inert>';const first=t.content.firstChild,copy=t.cloneNode(true),fragmentCopy=t.content.cloneNode(true);const before=[first instanceof X,copy.content.firstChild instanceof X,fragmentCopy.firstChild instanceof X,log.slice()];document.body.appendChild(first);return [before,first instanceof X,log]})()",
+      "source": "probes-templates.json",
+      "id": "probes-templates:11",
+      "sha256": "f1dc518b73048787aa4bcf22c478568da4ac72220ee3e9e4247401ca245b2e25"
+    },
+    {
+      "name": "dedicated worker realm surface",
+      "expression": "new Promise((resolve,reject)=>{const source=`onmessage=()=>{try{const chain=[];for(let value=self;value&&chain.length<8;value=Object.getPrototypeOf(value))chain.push({tag:Object.prototype.toString.call(value),ctor:value.constructor&&value.constructor.name,names:Object.getOwnPropertyNames(value).sort()});const slash=location.href.lastIndexOf('/');postMessage({same:self===globalThis,chain,types:{window:typeof window,document:typeof document,WorkerGlobalScope:typeof WorkerGlobalScope,DedicatedWorkerGlobalScope:typeof DedicatedWorkerGlobalScope,Blob:typeof Blob,URL:typeof URL,crypto:typeof crypto,performance:typeof performance,ReadableStream:typeof ReadableStream,fetch:typeof fetch,location:typeof location,navigator:typeof navigator},navigator:typeof navigator==='object'?{userAgent:navigator.userAgent,platform:navigator.platform,language:navigator.language,languages:Array.from(navigator.languages||[]),hardwareConcurrency:navigator.hardwareConcurrency,deviceMemory:navigator.deviceMemory}:null,location:typeof location==='object'?{hrefPrefix:location.href.slice(0,slash+1),origin:location.origin,protocol:location.protocol,host:location.host,pathnamePrefix:location.pathname.slice(0,location.pathname.lastIndexOf('/')+1)}:null,crypto:typeof crypto==='object'?{tag:Object.prototype.toString.call(crypto),subtle:typeof crypto.subtle,getRandomValues:typeof crypto.getRandomValues,randomUUID:typeof crypto.randomUUID}:null,performance:typeof performance==='object'?{tag:Object.prototype.toString.call(performance),now:typeof performance.now,timeOriginType:typeof performance.timeOrigin}:null})}catch(error){postMessage({error:String(error),stack:error&&error.stack})}}`;const url=URL.createObjectURL(new Blob([source],{type:'text/javascript'}));const worker=new Worker(url);const timer=setTimeout(()=>{worker.terminate();URL.revokeObjectURL(url);reject(new Error('worker probe timeout'))},5000);worker.onmessage=event=>{clearTimeout(timer);worker.terminate();URL.revokeObjectURL(url);resolve(event.data)};worker.onerror=event=>{clearTimeout(timer);worker.terminate();URL.revokeObjectURL(url);reject(new Error(event.message||'worker error'))};worker.postMessage(null)})",
+      "source": "probes-worker.json",
+      "id": "probes-worker:0",
+      "sha256": "e049fd9d8c4ef2349e7f59bcd0e9dfa8342fce1e7f7a811025987d43db2f9e63"
+    },
+    {
+      "name": "dedicated worker scheduling",
+      "expression": "new Promise((resolve,reject)=>{const source=`onmessage=()=>{const order=[];Promise.resolve().then(()=>order.push('microtask'));setTimeout(()=>{order.push('timer');postMessage(order)},0);order.push('task-end')}`;const url=URL.createObjectURL(new Blob([source],{type:'text/javascript'}));const worker=new Worker(url);const timer=setTimeout(()=>{worker.terminate();URL.revokeObjectURL(url);reject(new Error('worker scheduling timeout'))},5000);worker.onmessage=event=>{clearTimeout(timer);worker.terminate();URL.revokeObjectURL(url);resolve(event.data)};worker.onerror=event=>{clearTimeout(timer);worker.terminate();URL.revokeObjectURL(url);reject(new Error(event.message||'worker error'))};worker.postMessage(null)})",
+      "source": "probes-worker.json",
+      "id": "probes-worker:1",
+      "sha256": "2f430d299c38ab0bef19c39b492e7ad445b3fb9cc30c9bd8c01ef435938b228d"
+    },
+    {
+      "name": "navigator identity",
+      "expression": "({ua:navigator.userAgent,platform:navigator.platform,languages:navigator.languages})",
+      "source": "probes.json",
+      "id": "probes:0",
+      "sha256": "7282983defb2a8b86ca30fd7b700aa7e69f29a5eeaa8a013e9b0ce7f00dfd096"
+    },
+    {
+      "name": "display coherence",
+      "expression": "({screen:[screen.width,screen.height],viewport:[innerWidth,innerHeight],dpr:devicePixelRatio})",
+      "source": "probes.json",
+      "id": "probes:1",
+      "sha256": "b6a5b16b3fdd95a6219c48d8dde08246e4a8195adf2cf30056aa6dd7c3bc719b"
+    },
+    {
+      "name": "surface descriptors",
+      "expression": "({navigator:!!Object.getOwnPropertyDescriptor(globalThis,'navigator'),title:!!Object.getOwnPropertyDescriptor(Document.prototype,'title')})",
+      "source": "probes.json",
+      "id": "probes:2",
+      "sha256": "ffe5b7015eb08c3abdf8f698ef7dfbc6fa6ba2219e091a87cafc7b33fac39c4d"
+    },
+    {
+      "name": "event ordering",
+      "expression": "new Promise(resolve=>{const x=[];setTimeout(()=>{x.push('timer');resolve(x)},0);Promise.resolve().then(()=>x.push('microtask'))})",
+      "source": "probes.json",
+      "id": "probes:3",
+      "sha256": "8bd8e3080459e4311723272d7c8a41727a29e8f60ef8658f8f16a7724a439659"
+    },
+    {
+      "name": "dynamic script force async",
+      "expression": "(()=>{const s=document.createElement('script');const initial=s.async;s.async=false;return{initial,after:s.async,attribute:s.hasAttribute?s.hasAttribute('async'):s.getAttribute('async')!==null}})()",
+      "source": "probes.json",
+      "id": "probes:4",
+      "sha256": "09a3f6b9051b751b028ba31882684ff1a2c9b23d4587ebdc82d184d7b363996e"
+    },
+    {
+      "name": "detached iframe eval",
+      "expression": "(()=>{const f=document.createElement('iframe');document.body.appendChild(f);const e=f.contentWindow.eval,shape={name:e.name,length:e.length,text:Function.prototype.toString.call(e)};f.remove();return{...shape,result:e('6*7')}})()",
+      "source": "probes.json",
+      "id": "probes:5",
+      "sha256": "26ad9766f37214f857e51da0242b96fca70285bec7dc337e89a314b7dca8b16e"
+    },
+    {
+      "name": "webgpu basic shape",
+      "expression": "new Promise(resolve=>navigator.gpu.requestAdapter().then(a=>resolve({gpu:Object.prototype.toString.call(navigator.gpu),adapter:Object.prototype.toString.call(a),fallback:a&&a.isFallbackAdapter,format:navigator.gpu.getPreferredCanvasFormat(),hasInfo:!!(a&&a.info)})))",
+      "source": "probes.json",
+      "id": "probes:6",
+      "sha256": "da3d4a75fd4f81c1ccd0f072ce4a0fe0b46c69d5232bb9c393e87d396aca5a4e"
+    },
+    {
+      "name": "webgpu adapter profile",
+      "expression": "navigator.gpu.requestAdapter().then(a=>({info:{vendor:a.info.vendor,architecture:a.info.architecture,device:a.info.device,description:a.info.description},features:[...a.features].sort(),limits:Object.fromEntries(Object.entries(a.limits).sort())}))",
+      "source": "probes.json",
+      "id": "probes:7",
+      "sha256": "8e12652cd59e7089376ed363ebb2e840850edc5f4673f64d8ea9b9b0008f5ccb"
+    },
+    {
+      "name": "webgpu adapter existence",
+      "expression": "navigator.gpu.requestAdapter().then(a=>({type:typeof a,tag:Object.prototype.toString.call(a)}))",
+      "source": "probes.json",
+      "id": "probes:8",
+      "sha256": "ab9440613a4b214e3e9968ef3a7970f34b9847b22860bbcf59e3b6ec81f956cf"
+    },
+    {
+      "name": "timer string handler",
+      "expression": "new Promise(resolve=>{globalThis.__timerProbe=0;setTimeout('__timerProbe=42',0);setTimeout(()=>resolve(__timerProbe),1)})",
+      "source": "probes.json",
+      "id": "probes:10",
+      "sha256": "d1cf0dcb2435c918b649e677cb2d82458b8d510b42a6e1b6558519db2924e7b9"
+    },
+    {
+      "name": "binding native representation",
+      "expression": "(()=>{const title=Object.getOwnPropertyDescriptor(Document.prototype,'title');return{constructor:Function.prototype.toString.call(Element),method:Function.prototype.toString.call(Element.prototype.getAttribute),getter:Function.prototype.toString.call(title.get),setter:Function.prototype.toString.call(title.set)}})()",
+      "source": "probes.json",
+      "id": "probes:11",
+      "sha256": "8923ffdd8ec835575dfa4dcc688490d2b7fdc9b9164825d2696c7358dd320e08"
+    },
+    {
+      "name": "date constructor shape",
+      "expression": "({name:Date.name,length:Date.length,text:Function.prototype.toString.call(Date),prototype:Date.prototype.constructor===Date,invalid:String(new Date(NaN)),callType:typeof Date()})",
+      "source": "probes.json",
+      "id": "probes:12",
+      "sha256": "6cd71d1619c39f2fec77d3387edc1d18db7a045fbc98729d1a12ef0d6697a476"
+    },
+    {
+      "name": "intrinsic function shape",
+      "expression": "(()=>{const shape=f=>({name:f.name,length:f.length,text:Function.prototype.toString.call(f)});return{eval:shape(eval),object:shape(Object),promise:shape(Promise),timeout:shape(setTimeout),fetch:shape(fetch)}})()",
+      "source": "probes.json",
+      "id": "probes:13",
+      "sha256": "3fedf2d989a7746bcee67d60ed471478b084adbaba11a5e13c0c3926511cd368"
+    },
+    {
+      "name": "error stack shape",
+      "expression": "(()=>{function stackProbe(){return new Error('probe').stack}const stack=stackProbe();return{type:typeof stack,lines:String(stack).split('\\n').slice(0,3).map(line=>line.replace(/:[0-9]+:[0-9]+/g,':<line>:<col>').replace(/__pyppeteer_evaluation_script__/g,'<eval>'))}})()",
+      "source": "probes.json",
+      "id": "probes:14",
+      "sha256": "46dd20cdae5a45b5addac6a59019c6624b7a1be04cde96a11cc45fafefadea6a"
+    },
+    {
+      "name": "intl environment",
+      "expression": "(()=>{const x=Intl.DateTimeFormat().resolvedOptions();return{locale:x.locale,calendar:x.calendar,numberingSystem:x.numberingSystem,timeZone:x.timeZone,hourCycle:x.hourCycle,segmenter:typeof Intl.Segmenter}})()",
+      "source": "probes.json",
+      "id": "probes:15",
+      "sha256": "b90b0fee0bfdf6c27c22eef1fa3b29ebdbb085fdf202e9aaceb79e840cca9cf7"
+    },
+    {
+      "name": "navigator profile",
+      "expression": "({userAgent:navigator.userAgent,appVersion:navigator.appVersion,platform:navigator.platform,languages:navigator.languages,language:navigator.language,hardwareConcurrency:navigator.hardwareConcurrency,deviceMemory:navigator.deviceMemory,onLine:navigator.onLine,cookieEnabled:navigator.cookieEnabled,vendor:navigator.vendor,product:navigator.product,appName:navigator.appName,maxTouchPoints:navigator.maxTouchPoints,webdriver:navigator.webdriver,pdfViewerEnabled:navigator.pdfViewerEnabled})",
+      "source": "probes.json",
+      "id": "probes:16",
+      "sha256": "a6c65127e9935145374691f6488c6b6471b445a9907dae9ac7926505cfe49590"
+    },
+    {
+      "name": "platform object own keys",
+      "expression": "({navigator:Object.getOwnPropertyNames(navigator).sort(),screen:Object.getOwnPropertyNames(screen).sort(),uaData:Object.getOwnPropertyNames(navigator.userAgentData).sort(),gpu:Object.getOwnPropertyNames(navigator.gpu).sort()})",
+      "source": "probes.json",
+      "id": "probes:17",
+      "sha256": "c2c37f574708c4691322d622f9efe72779bf9db6e343c143b2139f4de809befd"
+    },
+    {
+      "name": "screen profile",
+      "expression": "({width:screen.width,height:screen.height,availWidth:screen.availWidth,availHeight:screen.availHeight,colorDepth:screen.colorDepth,pixelDepth:screen.pixelDepth,innerWidth,innerHeight,outerWidth,outerHeight,devicePixelRatio})",
+      "source": "probes.json",
+      "id": "probes:18",
+      "sha256": "0624b7988e5bbc5a1cd26e6572890cca38cf4552839fee32926b9c14f02e0a8a"
+    },
+    {
+      "name": "chrome global profile",
+      "expression": "({type:typeof chrome,tag:typeof chrome==='object'?Object.prototype.toString.call(chrome):'',keys:typeof chrome==='object'?Object.keys(chrome):[],app:typeof chrome==='object'&&chrome.app?Object.keys(chrome.app):[],runtime:typeof chrome==='object'&&chrome.runtime?Object.keys(chrome.runtime):[]})",
+      "source": "probes.json",
+      "id": "probes:19",
+      "sha256": "0d8521e21b79bd48e433596fa0914f7793fe3b56655728661cf570b7e413c22a"
+    },
+    {
+      "name": "navigator legacy collections",
+      "expression": "({pluginsType:Object.prototype.toString.call(navigator.plugins),pluginsLength:navigator.plugins&&navigator.plugins.length,mimeTypesType:Object.prototype.toString.call(navigator.mimeTypes),mimeTypesLength:navigator.mimeTypes&&navigator.mimeTypes.length,pdfViewerEnabled:navigator.pdfViewerEnabled})",
+      "source": "probes.json",
+      "id": "probes:20",
+      "sha256": "90cb80b4798c3c6b0a33b6e97fe0eac1b91692e4000b5f5781677a1f0286bb20"
+    },
+    {
+      "name": "window surface census",
+      "expression": "(()=>{const names=Object.getOwnPropertyNames(window).sort();return{count:names.length,names}})()",
+      "source": "probes.json",
+      "id": "probes:21",
+      "sha256": "71cf603d32d71e800bd053cabaa36c96d95b517fe48b1616ee8cb2eac6ca8ddf"
+    },
+    {
+      "name": "context isolation",
+      "expression": "({secure:isSecureContext,isolated:crossOriginIsolated,sharedArrayBuffer:typeof SharedArrayBuffer,atomics:typeof Atomics,credentialless:window.credentialless})",
+      "source": "probes.json",
+      "id": "probes:22",
+      "sha256": "11a2b5415e19f4bb7193cb18a9cfaf96825e8b7ca30c7c8725bfbe17b7b97033"
+    },
+    {
+      "name": "binding descriptors",
+      "expression": "(()=>{const pick=d=>d&&({enumerable:d.enumerable,configurable:d.configurable,writable:d.writable,hasGet:typeof d.get==='function',hasSet:typeof d.set==='function'});return{element:pick(Object.getOwnPropertyDescriptor(window,'Element')),navigatorOwn:pick(Object.getOwnPropertyDescriptor(window,'navigator')),navigatorProto:pick(Object.getOwnPropertyDescriptor(Window.prototype,'navigator')),method:pick(Object.getOwnPropertyDescriptor(Element.prototype,'getAttribute')),title:pick(Object.getOwnPropertyDescriptor(Document.prototype,'title'))}})()",
+      "source": "probes.json",
+      "id": "probes:23",
+      "sha256": "f823cba04d681d302b03c0fdaa4d0f9c3c80557a3c395d7f797d053eee216607"
+    },
+    {
+      "name": "window realm shape",
+      "expression": "({tag:Object.prototype.toString.call(window),instance:window instanceof Window,prototype:Object.getPrototypeOf(window)===Window.prototype,constructor:window.constructor===Window,self:window===self&&self===globalThis})",
+      "source": "probes.json",
+      "id": "probes:24",
+      "sha256": "58879b50520b9161a4006fef555eebb36ec727c85e6414c07bac9f5489a78a12"
+    },
+    {
+      "name": "webassembly surface",
+      "expression": "(()=>({type:typeof WebAssembly,tag:Object.prototype.toString.call(WebAssembly),keys:typeof WebAssembly==='object'?Object.getOwnPropertyNames(WebAssembly).sort():[],module:typeof WebAssembly?.Module,instantiate:typeof WebAssembly?.instantiate,validate:typeof WebAssembly?.validate}))()",
+      "source": "probes.json",
+      "id": "probes:28",
+      "sha256": "9aeb8a239243bd5c2ee253dbca8d466e87ad62c91056e236298b3cf234ed6d1d"
+    },
+    {
+      "name": "html element interface mapping",
+      "expression": "Object.fromEntries(['html','head','body','div','h1','p','span','style','ol','li','noscript','script','img','iframe','a'].map(tag=>{const e=document.createElement(tag);return[tag,{constructor:e.constructor.name,tag:Object.prototype.toString.call(e),own:Object.getOwnPropertyNames(e).sort()}]}))",
+      "source": "probes.json",
+      "id": "probes:29",
+      "sha256": "ccbdb1d4ba5c4cb0bedb91bb29e6c17849f2917243bd9b23338eb5478f0d42f8"
+    },
+    {
+      "name": "performance resource timing shape",
+      "expression": "new Promise(resolve=>{const img=document.createElement('img');const done=()=>setTimeout(()=>resolve(performance.getEntriesByType('resource').map(e=>({constructor:e.constructor.name,tag:Object.prototype.toString.call(e),own:Object.getOwnPropertyNames(e).sort(),name:e.name,entryType:e.entryType,initiatorType:e.initiatorType,startTime:e.startTime,duration:e.duration,fetchStart:e.fetchStart,requestStart:e.requestStart,responseStart:e.responseStart,responseEnd:e.responseEnd,transferSize:e.transferSize,encodedBodySize:e.encodedBodySize,decodedBodySize:e.decodedBodySize,nextHopProtocol:e.nextHopProtocol,toJSON:typeof e.toJSON}))),20);img.onload=done;img.onerror=done;img.src='/favicon.ico?mimic-timing-probe=1';document.body.appendChild(img)})",
+      "source": "probes.json",
+      "id": "probes:31",
+      "sha256": "4f9fc477c219082bacd8b9bbf84d8666494232d886393b9fbd3a22ae327ff6cc"
+    },
+    {
+      "name": "ua client hints exact",
+      "expression": "navigator.userAgentData.getHighEntropyValues(['architecture','bitness','model','platformVersion','uaFullVersion','fullVersionList']).then(x=>({low:navigator.userAgentData.toJSON(),high:x}))",
+      "source": "probes.json",
+      "id": "probes:32",
+      "sha256": "36029aa81a3f69d86c126d25460128abb38f20f5c998defa523e5ddbe62c55a4"
+    },
+    {
+      "name": "observable internal slot census",
+      "expression": "(()=>{const observer=new PerformanceObserver(()=>{}),xhr=new XMLHttpRequest(),event=new Event('x'),message=new MessageEvent('message',{data:1}),candidate=new RTCIceCandidate({candidate:'candidate:x',sdpMid:'0'}),worker=new Worker(URL.createObjectURL(new Blob(['']))),entries=performance.getEntries(),result={observer:Object.getOwnPropertyNames(observer).sort(),xhr:Object.getOwnPropertyNames(xhr).sort(),event:Object.getOwnPropertyNames(event).sort(),message:Object.getOwnPropertyNames(message).sort(),candidate:Object.getOwnPropertyNames(candidate).sort(),worker:Object.getOwnPropertyNames(worker).sort(),entry:entries.length?Object.getOwnPropertyNames(entries[0]).sort():[]};worker.terminate();return result})()",
+      "source": "probes.json",
+      "id": "probes:33",
+      "sha256": "afeaa54122df6fe52b5a4ce764a09592a8e5bdd41611cf816c2e7d54c7959008"
+    }
+  ],
+  "skipped": [
+    {
+      "name": "Dynamic link load events",
+      "expression": "(async()=>{const link=document.createElement('link');link.rel='modulepreload';link.href='https://www.browserscan.net/dist/jZn_p2Gi.js';return await new Promise(resolve=>{link.onload=()=>resolve('load');link.onerror=()=>resolve('error');document.head.appendChild(link);setTimeout(()=>resolve('timeout'),3000)})})()",
+      "source": "probes-browserscan-path.json",
+      "id": "probes-browserscan-path:13",
+      "sha256": "9e616e149184299b3532f7b4325d6eb4d1a648fe6b6f8f9fbe488d1191c50b81",
+      "reason": "external network or ICE"
+    },
+    {
+      "name": "geolocation.current",
+      "expression": "new Promise(resolve=>navigator.geolocation.getCurrentPosition(p=>resolve({unexpectedPosition:true}),e=>resolve({code:e.code,message:e.message})))",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:2",
+      "sha256": "0db3381a0ce2182f2a528d7b915ff62890d160e9f635dec632725060e247afca",
+      "reason": "device, permission prompt, or user state"
+    },
+    {
+      "name": "bluetooth.devices",
+      "expression": "navigator.bluetooth.getDevices()",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:5",
+      "sha256": "9638ee438fb3d0422d0436851a5ee8dab2c517334c8e9323c8ee08dc832170ea",
+      "reason": "device, permission prompt, or user state"
+    },
+    {
+      "name": "hid.devices",
+      "expression": "navigator.hid.getDevices()",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:6",
+      "sha256": "8e5a65f341eaa2eb56ec8e56a9481a5d5f7a4afeb0108e7c0447ad81558e65c1",
+      "reason": "device, permission prompt, or user state"
+    },
+    {
+      "name": "usb.devices",
+      "expression": "navigator.usb.getDevices()",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:7",
+      "sha256": "a12c5318ab56cd3d97f246325565db47799d6c9e859e1fe998f198d65d1ca046",
+      "reason": "device, permission prompt, or user state"
+    },
+    {
+      "name": "serial.ports",
+      "expression": "navigator.serial.getPorts()",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:8",
+      "sha256": "bedb1e46f98e2d706e180db9bcf24f461e095328845f1e3c45062ad27b5d2e18",
+      "reason": "device, permission prompt, or user state"
+    },
+    {
+      "name": "credentials.get",
+      "expression": "navigator.credentials.get({})",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:10",
+      "sha256": "81c0a5609b5a21f43a26893a4c49bd86d4bac17e1378264f441f9d559a6320b8",
+      "reason": "device, permission prompt, or user state"
+    },
+    {
+      "name": "credentials.create",
+      "expression": "navigator.credentials.create({})",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:11",
+      "sha256": "0e60ebb2da8b08891804c8481fc83a2d4819ac8f76ecf36f1a449ab99429a44d",
+      "reason": "device, permission prompt, or user state"
+    },
+    {
+      "name": "credentials.prevent",
+      "expression": "navigator.credentials.preventSilentAccess()",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:12",
+      "sha256": "85092970d93a946e438ad00c08b11d0cee3fc5c6bc8ee98a9fa366e19df1e9cb",
+      "reason": "device, permission prompt, or user state"
+    },
+    {
+      "name": "clipboard.read",
+      "expression": "navigator.clipboard.readText().then(()=>({resolved:true}))",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:15",
+      "sha256": "54641070c436b07f6fca84c0a11db046216610885dfd725caa8de9e1000df45f",
+      "reason": "device, permission prompt, or user state"
+    },
+    {
+      "name": "media.enumerate",
+      "expression": "navigator.mediaDevices.enumerateDevices().then(ds=>ds.map(d=>d.toJSON()))",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:16",
+      "sha256": "7b83540fb7f9f18b686e63df40c65b68377d6a87bfd9a555c7716fec472604b2",
+      "reason": "device, permission prompt, or user state"
+    },
+    {
+      "name": "media.getUserMedia",
+      "expression": "navigator.mediaDevices.getUserMedia({video:true})",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:18",
+      "sha256": "620d9d60c9d1c882f340288ca67e6e2d4f882eac21002c8a735eeb25b060b398",
+      "reason": "device, permission prompt, or user state"
+    },
+    {
+      "name": "media.invalid",
+      "expression": "navigator.mediaDevices.getUserMedia({})",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:19",
+      "sha256": "9bcf4a46cc748c8983dfbbd4ebe64871a6605a32108d64f13f2dd764741f7c54",
+      "reason": "device, permission prompt, or user state"
+    },
+    {
+      "name": "xr.request",
+      "expression": "navigator.xr.requestSession('immersive-vr')",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:36",
+      "sha256": "77a95accbaa7964eeb5f7a0a6c0ea0654cb4c75967d85d69ab655c85ed9003de",
+      "reason": "device, permission prompt, or user state"
+    },
+    {
+      "name": "keyboard.unlock",
+      "expression": "navigator.keyboard.unlock()",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:38",
+      "sha256": "9afb57bf5f1197de6415e33b84f53885515714cfa09205c41c70421bf637a139",
+      "reason": "device, permission prompt, or user state"
+    },
+    {
+      "name": "keyboard.lock",
+      "expression": "navigator.keyboard.lock()",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:39",
+      "sha256": "814dfca402f11826aa40eadd9ab3407e77c1753e097f1cbab9310a345351b986",
+      "reason": "device, permission prompt, or user state"
+    },
+    {
+      "name": "keyboard.layout",
+      "expression": "navigator.keyboard.getLayoutMap().then(m=>Object.fromEntries(m))",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:40",
+      "sha256": "12fc18831df37aa16152b65d904ccd4a3e83c5374d1c705c6c710e64177cd4d5",
+      "reason": "device, permission prompt, or user state"
+    },
+    {
+      "name": "bluetooth.request",
+      "expression": "navigator.bluetooth.requestDevice({acceptAllDevices:true})",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:41",
+      "sha256": "d0a7d3e8266d5dae08dde27ec7dad2c9a309782346fe03cf58001b130fb9d25d",
+      "reason": "device, permission prompt, or user state"
+    },
+    {
+      "name": "hid.request",
+      "expression": "navigator.hid.requestDevice({filters:[]})",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:42",
+      "sha256": "91f75b7d72d664fe7f1df59792cb872f56e0f697c375f967f52302fe35750c0c",
+      "reason": "device, permission prompt, or user state"
+    },
+    {
+      "name": "usb.request",
+      "expression": "navigator.usb.requestDevice({filters:[]})",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:43",
+      "sha256": "92a91b9cdbefee037a6ad0e469bbbdcf511675111b10f4096eb19488db180b91",
+      "reason": "device, permission prompt, or user state"
+    },
+    {
+      "name": "serial.request",
+      "expression": "navigator.serial.requestPort()",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:44",
+      "sha256": "ed8c5b9b5577cb300bd9238485f840f692327f894e8c9381aa8fc412f9bdcb2a",
+      "reason": "device, permission prompt, or user state"
+    },
+    {
+      "name": "login.status",
+      "expression": "navigator.login.setStatus('logged-out')",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:47",
+      "sha256": "8d4af6fe1e8a52c7ad5faf7a4dfc0a5b7571cd4184acdfd02a8a123aeaae0a71",
+      "reason": "device, permission prompt, or user state"
+    },
+    {
+      "name": "wakeLock.request",
+      "expression": "navigator.wakeLock.request().then(async s=>{const r={type:s.type,released:s.released,tag:Object.prototype.toString.call(s)};await s.release();return r})",
+      "source": "probes-navigator-capabilities.json",
+      "id": "probes-navigator-capabilities:48",
+      "sha256": "d3ec0f953c8e2a6b142f818d397852d105e2619c376def0d34c4fe32ea104043",
+      "reason": "device, permission prompt, or user state"
+    },
+    {
+      "name": "webrtc initial state",
+      "expression": "(()=>{const p=new RTCPeerConnection();const result={signaling:p.signalingState,gathering:p.iceGatheringState,ice:p.iceConnectionState,connection:p.connectionState,local:p.localDescription};p.close();return result})()",
+      "source": "probes-realm.json",
+      "id": "probes-realm:3",
+      "sha256": "ff20c7a52ba3537a47fd6d49ec7e2d2428cd8d3ea476ae540896716bb1c1c9bc",
+      "reason": "external network or ICE"
+    },
+    {
+      "name": "platform object own properties",
+      "expression": "new Promise(async resolve=>{const stages=[];try{const element=document.createElement('iframe');stages.push(['element',Object.getOwnPropertyNames(element).sort()]);const pc=new RTCPeerConnection();stages.push(['pc',Object.getOwnPropertyNames(pc).sort()]);const dc=pc.createDataChannel('x');stages.push(['dc',Object.getOwnPropertyNames(dc).sort()]);const offer=await pc.createOffer();stages.push(['offer',Object.getOwnPropertyNames(offer).sort()]);stages.push(['storage',Object.getOwnPropertyNames(localStorage).sort()]);pc.close();resolve({stages})}catch(error){resolve({stages,error:{name:error.name,message:error.message,stack:String(error.stack)}})}})",
+      "source": "probes-runtime-gaps.json",
+      "id": "probes-runtime-gaps:0",
+      "sha256": "0f2a1e873e97fd036dc3f6b5c766f53e028fcb2af9a18df3222d6ad99dcbaf50",
+      "reason": "external network or ICE"
+    },
+    {
+      "name": "parsed-topology",
+      "expression": "(()=>{const t=document.querySelector('#parsed-template');return [document.querySelector('#hidden-child')===null,t.childNodes.length,t.textContent,t.content instanceof DocumentFragment,t.content.nodeType,t.content===t.content,t.content.firstChild.parentNode===t.content,t.content.parentNode===null,t.content.isConnected,t.contains(t.content.firstChild),t.content.querySelector('#hidden-child')!==null]})()",
+      "source": "probes-templates.json",
+      "id": "probes-templates:0",
+      "sha256": "999f653e3aae6fde81c735afb6f9f04c80ead845f956b1bb0b3ab3e7675db219",
+      "reason": "requires parsed-template fixture, unavailable in standalone empty document"
+    },
+    {
+      "name": "parser-script-inert",
+      "expression": "(()=>[globalThis.__templateParserRan||0,document.querySelector('#parsed-template').content.querySelector('script')!==null])()",
+      "source": "probes-templates.json",
+      "id": "probes-templates:1",
+      "sha256": "5a52e200f06aa02f503a14abe436bcb40ceca0aed3a7d69883371a2a359a79ff",
+      "reason": "requires parsed-template fixture, unavailable in standalone empty document"
+    },
+    {
+      "name": "clone-and-import",
+      "expression": "(()=>{const t=document.querySelector('#parsed-template'),clone=t.cloneNode(true),shallow=t.cloneNode(false),imported=document.importNode(t,true);return [clone!==t,clone.content!==t.content,clone.childNodes.length,clone.content.childNodes.length,shallow.content.childNodes.length,clone.innerHTML===t.innerHTML,imported.innerHTML===t.innerHTML,clone.content.firstChild!==t.content.firstChild]})()",
+      "source": "probes-templates.json",
+      "id": "probes-templates:4",
+      "sha256": "1ca6e73de1a74c170ca2602cae105d801e0bdb7bf6bcc560834a35b6950863de",
+      "reason": "requires parsed-template fixture, unavailable in standalone empty document"
+    },
+    {
+      "name": "activate-parsed-content",
+      "expression": "(async()=>{const t=document.querySelector('#parsed-template');document.body.appendChild(t.content.cloneNode(true));await new Promise(r=>setTimeout(r,20));return globalThis.__templateParserRan||0})()",
+      "source": "probes-templates.json",
+      "id": "probes-templates:9",
+      "sha256": "3e4a017edc8886ef9f14050c7ff6fcaf9da086b3888bb33c5b93ebffa7e7568a",
+      "reason": "requires parsed-template fixture, unavailable in standalone empty document"
+    },
+    {
+      "name": "webrtc offer and gathering",
+      "expression": "new Promise(async resolve=>{const p=new RTCPeerConnection({iceCandidatePoolSize:1,iceServers:[{urls:'stun:stun.cloudflare.com:3478'},{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]}),events=[];p.createDataChannel('');p.addEventListener('icecandidate',e=>{events.push(e.candidate?e.candidate.candidate:null);if(!e.candidate)resolve({offer:offer.sdp,local:p.localDescription.sdp,events,configuration:p.getConfiguration(),signaling:p.signalingState,gathering:p.iceGatheringState})});const offer=await p.createOffer();await p.setLocalDescription(offer)})",
+      "source": "probes-webrtc.json",
+      "id": "probes-webrtc:0",
+      "sha256": "267436b6e095f7d130fd7c6068b6a319599635bfb64ed2a0d2c2f21f96e00ef7",
+      "reason": "external network or ICE"
+    },
+    {
+      "name": "webrtc candidate timing profile",
+      "expression": "new Promise(async resolve=>{const start=performance.now(),p=new RTCPeerConnection({iceCandidatePoolSize:1,iceServers:[{urls:'stun:stun.cloudflare.com:3478'},{urls:'stun:stun.l.google.com:19302'},{urls:'stun:stun1.l.google.com:19302'}]}),events=[];p.createDataChannel('');p.addEventListener('icecandidate',e=>{events.push({kind:e.candidate?(e.candidate.candidate.includes(' typ srflx ')?'srflx':'host'):'end',at:performance.now()-start});if(!e.candidate)resolve(events)});const offer=await p.createOffer();await p.setLocalDescription(offer)})",
+      "source": "probes-webrtc.json",
+      "id": "probes-webrtc:1",
+      "sha256": "aa17fe0a6640a5e80b028a18d3db6579c75baf889eb9d511653d13e394e5617f",
+      "reason": "external network or ICE"
+    },
+    {
+      "name": "webrtc initial state",
+      "expression": "(()=>{const p=new RTCPeerConnection();const result={signaling:p.signalingState,gathering:p.iceGatheringState,ice:p.iceConnectionState,connection:p.connectionState,local:p.localDescription};p.close();return result})()",
+      "source": "probes.json",
+      "id": "probes:9",
+      "sha256": "ff20c7a52ba3537a47fd6d49ec7e2d2428cd8d3ea476ae540896716bb1c1c9bc",
+      "reason": "external network or ICE"
+    },
+    {
+      "name": "webrtc offer lifecycle",
+      "expression": "new Promise(async resolve=>{const p=new RTCPeerConnection();p.createDataChannel('probe');const events=[];p.addEventListener('signalingstatechange',()=>events.push('signaling:'+p.signalingState));p.addEventListener('icegatheringstatechange',()=>events.push('gathering:'+p.iceGatheringState));p.addEventListener('icecandidate',e=>events.push(e.candidate?'candidate':'candidate:null'));const offer=await p.createOffer();const before={type:offer.type,hasData:/m=application/.test(offer.sdp),signaling:p.signalingState,gathering:p.iceGatheringState};await p.setLocalDescription(offer);setTimeout(()=>{const local=p.localDescription;resolve({before,after:{type:local&&local.type,hasData:!!local&&/m=application/.test(local.sdp),hasICE:!!local&&/a=ice-ufrag:/.test(local.sdp),signaling:p.signalingState,gathering:p.iceGatheringState},events});p.close()},500)})",
+      "source": "probes.json",
+      "id": "probes:25",
+      "sha256": "97aa330e46eecbfb7dc8c8a2b08fd4040fa36bc4ec737b4a9c1590350ba2094c",
+      "reason": "external network or ICE"
+    },
+    {
+      "name": "webrtc sdp shape",
+      "expression": "new Promise(async resolve=>{const p=new RTCPeerConnection();p.createDataChannel('probe');const offer=await p.createOffer();await p.setLocalDescription(offer);setTimeout(()=>{const lines=p.localDescription.sdp.trim().split(/\\r?\\n/),shape=lines.map(line=>{if(line.startsWith('a=ice-ufrag:'))return'a=ice-ufrag:<'+line.slice(12).length+'>';if(line.startsWith('a=ice-pwd:'))return'a=ice-pwd:<'+line.slice(10).length+'>';if(line.startsWith('a=fingerprint:'))return'a=fingerprint:'+line.split(' ')[0].slice(14)+' <'+line.split(':').length+' bytes>';if(line.startsWith('a=candidate:')){const x=line.split(/\\s+/);return'a=candidate:<foundation> '+x[2]+' '+x[3]+' <priority> '+(/\\.local$/.test(x[4])?'mdns':x[4].includes(':')?'ipv6':'ipv4')+' '+x[5]+' typ '+x[7]}return line});resolve(shape);p.close()},500)})",
+      "source": "probes.json",
+      "id": "probes:26",
+      "sha256": "47106843af8bba5d08bacad48cf5071e760274290feca81c9c017d846a873e69",
+      "reason": "external network or ICE"
+    },
+    {
+      "name": "observed platform own properties",
+      "expression": "new Promise(async resolve=>{const element=document.createElement('iframe'),pc=new RTCPeerConnection(),dc=pc.createDataChannel('x'),offer=await pc.createOffer();resolve({element:Object.getOwnPropertyNames(element).sort(),pc:Object.getOwnPropertyNames(pc).sort(),dc:Object.getOwnPropertyNames(dc).sort(),offer:Object.getOwnPropertyNames(offer).sort(),storage:Object.getOwnPropertyNames(localStorage).sort()});pc.close()})",
+      "source": "probes.json",
+      "id": "probes:27",
+      "sha256": "6bd7bf00c21aaa76e3a83342fbb3372a9c26d0f184538b4c3f32aed79efc99cb",
+      "reason": "external network or ICE"
+    },
+    {
+      "name": "observed prototype member census",
+      "expression": "Object.fromEntries(['Element','HTMLElement','HTMLScriptElement','HTMLImageElement','HTMLIFrameElement','HTMLAnchorElement','Document','Navigator','NavigatorUAData','Screen','Location','History','Storage','GPU','GPUAdapter','RTCPeerConnection','RTCDataChannel'].map(name=>[name,Object.getOwnPropertyNames(globalThis[name].prototype).sort()]))",
+      "source": "probes.json",
+      "id": "probes:30",
+      "sha256": "ed47789ff33f94cc5f641b8220c40ec2049873674af6c03ecfb35010907d6701",
+      "reason": "external network or ICE"
+    }
+  ],
+  "timeoutSeconds": 8,
+  "fixture": "empty HTML document on same loopback origin; fresh target for every probe"
+}
