@@ -1,0 +1,6 @@
+--- FAIL: TestFrameInsertionAfterInnerHTMLAndFragmentMove (7.38s)
+    --- FAIL: TestFrameInsertionAfterInnerHTMLAndFragmentMove/goja (6.88s)
+        insertion_steps_test.go:45: frame insertion: <nil> context deadline exceeded
+FAIL
+FAIL	github.com/moreveal/mimic/internal/browser	40.949s
+FAIL

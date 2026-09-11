@@ -2,13 +2,14 @@
 // the calling realm for document.open's URL/origin checks.
 {
   const frameOf=value=>{
-    if(value===document)return host.selfFrameID();
-    for(const [id,remote] of remoteDocumentCache)if(remote===value)return id;
+    if(value===document)return {frame:host.selfFrameID(),realm:host.selfRealmID()};
+    const reference=referenceGet(value);if(reference?.document)return reference;
     if(value instanceof Document)throw new DOMException('Document streaming requires an active HTML document.','InvalidStateError');
     throw new TypeError('Illegal invocation');
   };
   const invoke=(receiver,operation,source='')=>{
-    const result=host.documentStream(frameOf(receiver),operation,source);
+    const owner=frameOf(receiver);
+    const result=host.documentStream(owner.frame,operation,source,owner.realm);
     if(result?.error)throw new DOMException(result.error,result.name||'InvalidStateError');
   };
   const methods={

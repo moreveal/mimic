@@ -1,0 +1,26 @@
+{
+  "id": "21a81b154f26e799",
+  "category": "surface",
+  "members": [
+    "property.window.AbortController"
+  ],
+  "path": [
+    "value",
+    "functionShape",
+    "source",
+    "ok",
+    "value"
+  ],
+  "chrome": "function AbortController() { [native code] }",
+  "mimic": "class AbortController {constructor(){controllerSlots.set(this,new AbortSignal(hostToken))}get signal(){return controllerSlots.get(this)}abort(reason){abort(this.signal,reason)}}",
+  "probe": {
+    "id": "property.window.AbortController",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(window[\"AbortController\"])"
+  },
+  "originalSetupStatements": 0,
+  "minimality": "1-minimal setup deletion for fixed observation and exact result pair; not global JS minimum",
+  "fixtureOrigin": "http://127.0.0.1:54524",
+  "crossOrigin": "http://localhost:54524"
+}

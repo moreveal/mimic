@@ -1,0 +1,2 @@
+ok  	github.com/moreveal/mimic/internal/browser	41.286s
+ok  	github.com/moreveal/mimic/internal/scheduler	1.185s

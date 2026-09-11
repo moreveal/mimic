@@ -215,9 +215,12 @@ func TestNavigatorPermissionAndNetworkState(t *testing.T) {
 	if err := p.ctx.SetPermission(originOf(p.URL()), "geolocation", "granted"); err != nil {
 		t.Fatal(err)
 	}
+	// The loader can still read the Page environment from a resource goroutine.
+	p.mu.Lock()
 	p.env.Network.DownlinkMbps = 3.25
 	p.env.Network.RTTMillis = 125
 	p.env.Preferences.DoNotTrack = true
+	p.mu.Unlock()
 	value, err := p.Evaluate(context.Background(), `navigator.permissions.query({name:'geolocation'}).then(p=>p.state==='granted'&&navigator.connection.downlink===3.25&&navigator.connection.rtt===125&&navigator.doNotTrack==='1')`)
 	if err != nil || value != true {
 		t.Fatalf("canonical state: %v %v", value, err)

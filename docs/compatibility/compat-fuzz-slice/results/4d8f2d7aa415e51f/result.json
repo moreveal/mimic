@@ -1,0 +1,38 @@
+{
+  "id": "4d8f2d7aa415e51f",
+  "category": "brand-check",
+  "members": [
+    "call.document.getElementById.null.missing",
+    "call.document.getElementById.null.undefined",
+    "call.document.getElementById.null.null",
+    "call.document.getElementById.null.primitive",
+    "call.document.getElementById.null.object",
+    "call.document.getElementById.null.symbol",
+    "call.document.querySelector.null.missing",
+    "call.document.querySelector.null.undefined",
+    "call.document.querySelector.null.null",
+    "call.document.querySelector.null.primitive",
+    "call.performance.getEntriesByName.null.missing",
+    "call.performance.getEntriesByName.null.undefined",
+    "call.performance.getEntriesByName.null.null",
+    "call.performance.getEntriesByName.null.primitive",
+    "call.performance.getEntriesByName.null.object",
+    "call.performance.getEntriesByName.null.symbol"
+  ],
+  "path": [
+    "value",
+    "messageCategory"
+  ],
+  "chrome": "illegal-receiver",
+  "mimic": "other",
+  "probe": {
+    "id": "call.document.getElementById.null.missing",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.getElementById,null,[]))"
+  },
+  "originalSetupStatements": 0,
+  "minimality": "1-minimal setup deletion for fixed observation and exact result pair; not global JS minimum",
+  "fixtureOrigin": "http://127.0.0.1:54524",
+  "crossOrigin": "http://localhost:54524"
+}

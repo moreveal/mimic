@@ -1,0 +1,35 @@
+{
+  "id": "931e39fff24f9387",
+  "category": "legacy",
+  "members": [
+    "legacy.window-named"
+  ],
+  "path": [
+    "value",
+    "descriptor"
+  ],
+  "chrome": {
+    "depth": 2,
+    "configurable": true,
+    "enumerable": false,
+    "kind": "data",
+    "writable": true,
+    "value": {
+      "type": "object",
+      "tag": "[object HTMLFormElement]"
+    }
+  },
+  "mimic": null,
+  "probe": {
+    "id": "legacy.window-named",
+    "category": "legacy",
+    "setup": [
+      "const item=document.createElement('form');item.name='compat_named';document.body.appendChild(item);"
+    ],
+    "expression": "({windowNamed:window.compat_named===item,documentNamed:document.compat_named===item,descriptor:descriptor(window,'compat_named')})"
+  },
+  "originalSetupStatements": 1,
+  "minimality": "1-minimal setup deletion for fixed observation and exact result pair; not global JS minimum",
+  "fixtureOrigin": "http://127.0.0.1:54524",
+  "crossOrigin": "http://localhost:54524"
+}

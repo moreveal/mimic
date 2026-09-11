@@ -67,6 +67,7 @@ type Scheduler struct {
 	byID           map[uint64]*task
 	checkpoint     func(context.Context) error
 	paused         bool
+	closed         bool
 	observer       func(Transition)
 	runningAt      time.Time
 	runningBase    time.Time
@@ -99,6 +100,10 @@ func (s *Scheduler) SetExecutionScale(scale float64) {
 }
 func (s *Scheduler) Post(source Source, delay time.Duration, callback Callback) uint64 {
 	s.mu.Lock()
+	if s.closed {
+		s.mu.Unlock()
+		return 0
+	}
 	s.seq++
 	t := &task{s.seq, s.seq, s.nowLocked().Add(delay), source, callback, false}
 	if s.sequenceSource != nil {
@@ -216,8 +221,23 @@ func (s *Scheduler) Cancel(id uint64) {
 		delete(s.byID, id)
 	}
 }
+
+// Close discards pending callbacks and rejects future work for a destroyed or
+// inactive document. Unlike Pause it cannot be reversed by Resume.
+func (s *Scheduler) Close() {
+	s.mu.Lock()
+	s.closed = true
+	s.paused = true
+	s.tasks = nil
+	s.byID = make(map[uint64]*task)
+	s.mu.Unlock()
+	select {
+	case s.wake <- struct{}{}:
+	default:
+	}
+}
 func (s *Scheduler) Pause()  { s.mu.Lock(); s.paused = true; s.mu.Unlock() }
-func (s *Scheduler) Resume() { s.mu.Lock(); s.paused = false; s.mu.Unlock() }
+func (s *Scheduler) Resume() { s.mu.Lock(); s.paused = s.closed; s.mu.Unlock() }
 func (s *Scheduler) RunUntilIdle(ctx context.Context, maxTasks int) error {
 	return s.run(ctx, maxTasks, true, true)
 }

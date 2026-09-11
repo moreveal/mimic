@@ -1,0 +1,26 @@
+{
+  "id": "c5a808c0f491bb2b",
+  "category": "surface",
+  "members": [
+    "property.window.AbortSignal"
+  ],
+  "path": [
+    "value",
+    "functionShape",
+    "length",
+    "ok",
+    "value"
+  ],
+  "chrome": 0,
+  "mimic": 1,
+  "probe": {
+    "id": "property.window.AbortSignal",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(window[\"AbortSignal\"])"
+  },
+  "originalSetupStatements": 0,
+  "minimality": "1-minimal setup deletion for fixed observation and exact result pair; not global JS minimum",
+  "fixtureOrigin": "http://127.0.0.1:54524",
+  "crossOrigin": "http://localhost:54524"
+}

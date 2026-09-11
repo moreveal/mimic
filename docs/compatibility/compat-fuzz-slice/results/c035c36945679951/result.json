@@ -1,0 +1,27 @@
+{
+  "id": "c035c36945679951",
+  "category": "realm",
+  "members": [
+    "realm.same-origin"
+  ],
+  "path": [
+    "value",
+    "frameElement"
+  ],
+  "chrome": true,
+  "mimic": false,
+  "probe": {
+    "id": "realm.same-origin",
+    "category": "realm",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "({differentObject:other.Object!==Object,sameProxy:other===frame.contentWindow,frameElement:other.frameElement===frame,parent:other.parent===window,document:other.document===frame.contentDocument,instance:other.document instanceof other.Document,notMainInstance:other.document instanceof Document})"
+  },
+  "originalSetupStatements": 3,
+  "minimality": "1-minimal setup deletion for fixed observation and exact result pair; not global JS minimum",
+  "fixtureOrigin": "http://127.0.0.1:54524",
+  "crossOrigin": "http://localhost:54524"
+}
