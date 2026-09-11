@@ -5,6 +5,12 @@ Baseline is `37ba978`, on main. The earlier fix preserved live calls when seed
 recording failed; it did not make that seed reusable. This package addresses the
 creation of native WindowProxy objects inside the captured bootstrap itself.
 
+Follow-up: [manual capture 211032 and the replay scope correction](manual-replay-scope-2026-09-11.md)
+confirm zero snapshot-unavailable diagnostics in the new manual capture, but
+supersede this report's claim of reaching the end of the saved exchange. The
+offline driver reused the first document on reload and stopped before later
+recorded cycles.
+
 ## Cause and implementation
 
 The first realm for a profile can be a child. Bootstrap eagerly created native
