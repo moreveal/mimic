@@ -1224,9 +1224,6 @@ func (r *Realm) installBindings() error {
 		r.document.CopyNodeState(int64(numarg(a, 0)), int64(numarg(a, 1)))
 		return nil, nil
 	}, "nn")
-	host["windowNamedElements"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		return r.val(r.document.WindowNamedElements(strarg(a, 0))), nil
-	}, "s")
 	host["documentRootID"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(r.document.Root().ID), nil
 	})

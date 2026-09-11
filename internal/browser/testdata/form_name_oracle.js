@@ -1,0 +1,1 @@
+(()=>{const form=document.createElement('form');const out={initial:form.name};form.name='first';out.attribute=form.getAttribute('name');form.setAttribute('name','second');out.property=form.name;form.removeAttribute('name');out.removed=form.name;return out})()
