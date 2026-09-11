@@ -6,6 +6,7 @@ import (
 	"bytes"
 	"encoding/xml"
 	"fmt"
+	"github.com/gen2brain/gav1d/avif"
 	_ "golang.org/x/image/webp"
 	"image"
 	"image/draw"
@@ -96,20 +97,32 @@ func Decode(data []byte, contentType string) (*Image, error) {
 			return &Image{Width: w, Height: h, Vector: true}, nil
 		}
 	}
-	config, _, err := image.DecodeConfig(bytes.NewReader(data))
+	config, format, err := image.DecodeConfig(bytes.NewReader(data))
 	if err != nil {
 		return nil, err
 	}
 	if config.Width <= 0 || config.Height <= 0 || int64(config.Width)*int64(config.Height) > 16777216 {
 		return nil, fmt.Errorf("image dimension limit")
 	}
-	decoded, _, err := image.Decode(bytes.NewReader(data))
+	var decoded image.Image
+	if format == "avif" {
+		// Decode into the same intrinsic pixel state used by images and Canvas.
+		// No renderer, GPU or native graphics library is involved. Bound codec
+		// allocations as well as the final image, including internal AV1 frames.
+		decoded, err = avif.Decode(bytes.NewReader(data), avif.Options{AutoRotate: true, FrameSizeLimit: 16777216})
+	} else {
+		decoded, _, err = image.Decode(bytes.NewReader(data))
+	}
 	if err != nil {
 		return nil, err
 	}
-	pixels := image.NewRGBA(image.Rect(0, 0, config.Width, config.Height))
+	width, height := decoded.Bounds().Dx(), decoded.Bounds().Dy()
+	if width <= 0 || height <= 0 || int64(width)*int64(height) > 16777216 {
+		return nil, fmt.Errorf("image dimension limit")
+	}
+	pixels := image.NewRGBA(image.Rect(0, 0, width, height))
 	draw.Draw(pixels, pixels.Bounds(), decoded, decoded.Bounds().Min, draw.Src)
-	return &Image{Width: config.Width, Height: config.Height, Pixels: pixels.Pix}, nil
+	return &Image{Width: width, Height: height, Pixels: pixels.Pix}, nil
 }
 
 var intrinsicNumber = regexp.MustCompile(`^([+-]?(?:[0-9]*\.[0-9]+|[0-9]+)(?:[eE][+-]?[0-9]+)?)(px|in|cm|mm|q|pt|pc)?$`)
