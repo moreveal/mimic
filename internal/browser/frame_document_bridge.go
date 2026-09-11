@@ -247,39 +247,41 @@ func (r *Realm) callFrameReference(args []engine.Value) (engine.Value, error) {
 	}
 	raw, _ := arg(args, 2).([]any)
 	rawReceiver := arg(args, 3)
-	return r.crossFrameResult(target, func(ctx context.Context) (engine.Value, error) {
+	return r.crossFrameData(target, func(ctx context.Context) (any, error) {
 		receiver, err := target.decodeFrameArgument(rawReceiver)
 		if err != nil {
 			return nil, err
 		}
-		// The captured native Array iterator next ignores arguments and creates
-		// a fresh result object. Encode its two own data fields with the result
-		// reference, avoiding later owner trips while it remains unexposed.
-		if arg(args, 5) == true {
-			return target.callFrameReflection(ctx, "arrayIteratorStep", function, receiver, nil)
-		}
-		arguments := make([]engine.Value, len(raw))
-		for index := range raw {
-			arguments[index], err = target.decodeFrameArgument(raw[index])
-			if err != nil {
-				return nil, err
-			}
-		}
 		restore := r.enterFrameDocumentEntry(target)
 		defer restore()
-		if target.runtime.TypeOf(function) == "undefined" {
-			array, err := target.callFrameReflection(ctx, "array", nil, nil, nil)
+		operation := "applyOutcome"
+		var arguments engine.Value
+		if arg(args, 5) == true {
+			operation = "arrayIteratorOutcome"
+		} else {
+			arguments, err = target.callFrameReflection(ctx, "array", nil, nil, nil)
 			if err != nil {
 				return nil, err
 			}
-			for index, argument := range arguments {
-				if err := target.runtime.SetProperty(array, strconv.Itoa(index), argument); err != nil {
+			for index, encoded := range raw {
+				value, err := target.decodeFrameArgument(encoded)
+				if err != nil {
+					return nil, err
+				}
+				if err := target.runtime.SetProperty(arguments, strconv.Itoa(index), value); err != nil {
 					return nil, err
 				}
 			}
-			return target.callFrameReflection(ctx, "apply", function, receiver, array)
 		}
-		return target.runtime.Call(ctx, function, receiver, arguments...)
+		record, err := target.callFrameReflection(ctx, operation, function, receiver, arguments)
+		if err != nil {
+			return nil, err
+		}
+		encoded, err := target.encodeReflectedValue(record)
+		if err != nil {
+			return nil, err
+		}
+		return map[string]any{"threw": target.runtime.GetProperty(record, "threw").Export(), "value": encoded}, nil
 	})
 }
 
@@ -362,10 +364,16 @@ const frameReflectionSource = `(()=>{
   if(op==='lookup')return apply(weakGet,ids,[object]);
   if(op==='handle'){let id=apply(weakGet,ids,[object]);if(id===undefined){id=key;apply(weakSet,ids,[object,id])}return id}
   if(op==='array')return [];
+  if(op==='object')return create(null);
   if(op==='shape'){if(typeof object!=='function')return{array:isArray(object)};let constructable=true;try{construct(new P(object,{construct(){return {}}}),[])}catch(error){constructable=false}return{constructable}}
   if(op==='bigint')return integer(key);
   if(op==='prototype')return prototype(object);
   if(op==='apply')return apply(object,key,value);
+  if(op==='applyOutcome'||op==='arrayIteratorOutcome'){
+   let result,threw=false;
+   try{result=apply(object,key,op==='arrayIteratorOutcome'?[]:value);if(op==='arrayIteratorOutcome'&&object===arrayIteratorNext)apply(freshAdd,freshIteratorResults,[result])}catch(error){result=error;threw=true}
+   return{threw,value:result,valueType:typeof result,symbol:typeof result==='symbol'?info(result):null};
+  }
   if(op==='construct'){let result,threw=false;try{result=construct(object,key,value)}catch(error){result=error;threw=true}return{threw,value:result,valueType:typeof result,symbol:typeof result==='symbol'?info(result):null}}
   if(op==='key'){if(key.wellKnown!==undefined){for(let i=0;i<wellKnown.length;i++)if(wellKnown[i][0]===key.wellKnown)return wellKnown[i][1]}if(key.global!==undefined)return forKey(key.global);return S(key.description)}
   if(op==='symbol')return info(object);

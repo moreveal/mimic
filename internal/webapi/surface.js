@@ -887,7 +887,7 @@
       apply(_target,receiver,args){
         bridgeAccess(id,result.realm);
         if(result.eval){if(!host.frameEvalAllowed(id))return undefined;const value=args[0],source=typeof value==='string'?value:evalSourceResolver(value);if(source===undefined){host.frameEval(id,undefined,result.realm);return value}return unwrapCrossRealm(id,host.frameEval(id,source,result.realm))}
-        return unwrapCrossRealm(id,host.frameCall(id,result.handle,args.map(encodeCrossRealmArgument),encodeCrossRealmArgument(receiver),result.realm,!!result.iteratorNext));
+        const outcome=host.frameCall(id,result.handle,args.map(encodeCrossRealmArgument),encodeCrossRealmArgument(receiver),result.realm,!!result.iteratorNext),value=unwrapCrossRealm(id,outcome.value);if(outcome.threw)throw value;return value;
       },
       construct(_target,args,newTarget){
         bridgeAccess(id,result.realm);
