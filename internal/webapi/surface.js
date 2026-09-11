@@ -1104,8 +1104,6 @@
   };
   const finalizeBindings=()=>{
   const reflectString=(interfaceName,property,attribute=property,defaultValue='')=>{const ctor=globalThis[interfaceName];if(!ctor||!ctor.prototype)return;Object.defineProperty(ctor.prototype,property,{get(){const value=this.getAttribute(attribute);return value===null?defaultValue:value},set(value){this.setAttribute(attribute,String(value))},enumerable:true,configurable:true})};
-  Object.defineProperty(CharacterData.prototype,'nodeName',{get(){const slot=elementSlot(this);return slot&&slot.type==='comment'?'#comment':'#text'},enumerable:true,configurable:true});
-  Object.defineProperty(DocumentFragment.prototype,'nodeName',{get(){return'#document-fragment'},enumerable:true,configurable:true});
   reflectString('HTMLScriptElement','type');
   reflectString('HTMLInputElement','name');
   if(globalThis.HTMLInputElement&&globalThis.HTMLInputElement.prototype)Object.defineProperty(globalThis.HTMLInputElement.prototype,'type',{get(){const value=(this.getAttribute('type')||'text').toLowerCase();return new Set(['hidden','text','search','tel','url','email','password','date','month','week','time','datetime-local','number','range','color','checkbox','radio','file','submit','image','reset','button']).has(value)?value:'text'},set(value){this.setAttribute('type',String(value))},enumerable:true,configurable:true});
