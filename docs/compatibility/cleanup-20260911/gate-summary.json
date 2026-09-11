@@ -1,0 +1,88 @@
+{
+  "before": {
+    "build": {
+      "command": [
+        "go",
+        "build",
+        "-o",
+        "E:\\GitHub\\mimic\\compatibility\\private-captures\\cleanup-20260911\\gate-before\\mimic.exe",
+        "./cmd/mimic"
+      ],
+      "source": "E:\\GitHub\\mimic\\.build\\cleanup-baseline",
+      "revision": "037f8ff0e1146bab8f531a758cc59d6291c9b82b",
+      "status": "",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\private-captures\\cleanup-20260911\\gate-before\\mimic.exe",
+      "sha256": "5b514c9a367f6925d9176c77a91cb6b24ad87d194f562c03725df0791a173396",
+      "harness_sha256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7",
+      "harness_files": {
+        "compare.py": "274b156ee88e67085f5e556ef79629146f5e7287ee54af844476a0c005e65a5b",
+        "report.py": "f12e393341c00e9e03748a06913fa639c1069f66dc7acb71959cffd51647f214",
+        "requirements.txt": "06e6d87d17f39a59fe7b2576545231fe65d5a1940d22e63fc2b32b6cfa12123b",
+        "run.ps1": "6c50b0a55886278de7c1e4d92b77b42bf2cfad59fa451dbaa766b0e0eae84fa6",
+        "run.py": "67718e844bce74b7757f2238716233b9d8683a17294f2b02017667b9c1e44cd3",
+        "test_harness.py": "ddb8dcf74a192d3403971833cf5e011dd8578a9acd9a060b3b265cc6d79aef2a",
+        "v8_version.go": "669a669b0545ba599edb2f7923617f154b976e7377de89d8b2e1f477bdb12f09",
+        "windows_metrics.py": "57ba1e10dfb1f1cb439a52ad5f7f5795c3ba4eef25ae22c9514ecfe115434cd5",
+        "fixtures/workload.js": "484019063e33e131756f67ab6f3076ad2c18e3959072fbae42f540455448c214",
+        "fixtures/vendor/react-dom.production.min.js": "35f4f974f4b2bcd44da73963347f8952e341f83909e4498227d4e26b98f66f0d",
+        "fixtures/vendor/REACT-LICENSE.txt": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85",
+        "fixtures/vendor/react.production.min.js": "d949f1c3687aedadcedac85261865f29b17cd273997e7f6b2bfc53b2f9d4c4dd"
+      },
+      "built_at": "2026-09-11T05:34:44.008603+04:00"
+    },
+    "failure": "RuntimeError('Mandatory workload correctness gate failed; see raw.json')",
+    "summary": null,
+    "finished": null
+  },
+  "final": {
+    "build": {
+      "command": [
+        "go",
+        "build",
+        "-o",
+        "E:\\GitHub\\mimic\\compatibility\\private-captures\\cleanup-20260911\\gate-final\\mimic.exe",
+        "./cmd/mimic"
+      ],
+      "source": "E:\\GitHub\\mimic",
+      "revision": "037f8ff0e1146bab8f531a758cc59d6291c9b82b",
+      "status": " M chrome/152/generated/artifact-hashes.json\n M chrome/152/generated/surface.js\n M internal/webapi/fetch_primitives.js\n M internal/webapi/surface.js\n M tools/generate_compat.py\n?? docs/compatibility/cleanup-2026-09-11.md\n?? docs/compatibility/cleanup-20260911/\n?? docs/compatibility/snapshot-cleanup-control-2026-09-11.md\n?? internal/browser/interface_inheritance_test.go\n?? internal/browser/testdata/interface_inheritance_chrome152.json\n?? internal/browser/testdata/interface_inheritance_oracle.js\n",
+      "executable": "E:\\GitHub\\mimic\\compatibility\\private-captures\\cleanup-20260911\\gate-final\\mimic.exe",
+      "sha256": "2c951f5c4a8c393c4a0c26f44aa25c9599478d3f897495441cb63dc18b80b7e0",
+      "harness_sha256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7",
+      "harness_files": {
+        "compare.py": "274b156ee88e67085f5e556ef79629146f5e7287ee54af844476a0c005e65a5b",
+        "report.py": "f12e393341c00e9e03748a06913fa639c1069f66dc7acb71959cffd51647f214",
+        "requirements.txt": "06e6d87d17f39a59fe7b2576545231fe65d5a1940d22e63fc2b32b6cfa12123b",
+        "run.ps1": "6c50b0a55886278de7c1e4d92b77b42bf2cfad59fa451dbaa766b0e0eae84fa6",
+        "run.py": "67718e844bce74b7757f2238716233b9d8683a17294f2b02017667b9c1e44cd3",
+        "test_harness.py": "ddb8dcf74a192d3403971833cf5e011dd8578a9acd9a060b3b265cc6d79aef2a",
+        "v8_version.go": "669a669b0545ba599edb2f7923617f154b976e7377de89d8b2e1f477bdb12f09",
+        "windows_metrics.py": "57ba1e10dfb1f1cb439a52ad5f7f5795c3ba4eef25ae22c9514ecfe115434cd5",
+        "fixtures/workload.js": "484019063e33e131756f67ab6f3076ad2c18e3959072fbae42f540455448c214",
+        "fixtures/vendor/react-dom.production.min.js": "35f4f974f4b2bcd44da73963347f8952e341f83909e4498227d4e26b98f66f0d",
+        "fixtures/vendor/REACT-LICENSE.txt": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85",
+        "fixtures/vendor/react.production.min.js": "d949f1c3687aedadcedac85261865f29b17cd273997e7f6b2bfc53b2f9d4c4dd"
+      },
+      "built_at": "2026-09-11T05:35:55.074212+04:00"
+    },
+    "failure": null,
+    "summary": {
+      "dom": {
+        "session_create_ms": 2.024199995503295,
+        "execution_ms": 446.7383000010159,
+        "completion_ms": 466.0431000011158
+      },
+      "static": {
+        "session_create_ms": 2.8139999994891696,
+        "execution_ms": 2.609299997857306,
+        "completion_ms": 23.184800003946293
+      },
+      "react": {
+        "session_create_ms": 2.1780000024591573,
+        "execution_ms": 56.85060000541853,
+        "completion_ms": 84.09499999834225
+      }
+    },
+    "finished": "2026-09-11T05:36:16.542812+04:00"
+  }
+}

@@ -1,0 +1,8 @@
+Mimic listening on http://127.0.0.1:37918
+Exception 0xc0000005 0x0 0x7d 0x7ffc7feaeed8
+PC=0x7ffc7feaeed8
+signal arrived during external code execution
+
+runtime.cgocall(0x7ff790426040, 0x190220a2f358)
+	C:/Program Files/Go/src/runtime/cgocall.go:167 +0x3e fp=0x190221c3f7d8 sp=0x190221c3f770 pc=0x7ff790491e1e
+syscall.syscalln(0x190220a2f008?, 0x190220d98040?
