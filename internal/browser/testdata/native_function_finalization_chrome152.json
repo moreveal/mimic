@@ -1,0 +1,164 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "fixtureOrigin": "http://127.0.0.1:25190",
+  "result": {
+    "result": {
+      "type": "object",
+      "value": {
+        "AbortController": {
+          "source": "function AbortController() { [native code] }",
+          "methods": {
+            "abort": "function abort() { [native code] }",
+            "get signal": "function get signal() { [native code] }"
+          }
+        },
+        "AbortSignal": {
+          "source": "function AbortSignal() { [native code] }",
+          "methods": {
+            "get aborted": "function get aborted() { [native code] }",
+            "get reason": "function get reason() { [native code] }",
+            "get onabort": "function get onabort() { [native code] }",
+            "set onabort": "function set onabort() { [native code] }",
+            "throwIfAborted": "function throwIfAborted() { [native code] }"
+          }
+        },
+        "TextDecoder": {
+          "source": "function TextDecoder() { [native code] }",
+          "methods": {
+            "decode": "function decode() { [native code] }",
+            "get encoding": "function get encoding() { [native code] }",
+            "get fatal": "function get fatal() { [native code] }",
+            "get ignoreBOM": "function get ignoreBOM() { [native code] }"
+          }
+        },
+        "TextEncoder": {
+          "source": "function TextEncoder() { [native code] }",
+          "methods": {
+            "encode": "function encode() { [native code] }",
+            "encodeInto": "function encodeInto() { [native code] }",
+            "get encoding": "function get encoding() { [native code] }"
+          }
+        },
+        "Headers": {
+          "source": "function Headers() { [native code] }",
+          "methods": {
+            "append": "function append() { [native code] }",
+            "delete": "function delete() { [native code] }",
+            "set": "function set() { [native code] }"
+          }
+        },
+        "Request": {
+          "source": "function Request() { [native code] }",
+          "methods": {
+            "bytes": "function bytes() { [native code] }",
+            "arrayBuffer": "function arrayBuffer() { [native code] }",
+            "text": "function text() { [native code] }",
+            "json": "function json() { [native code] }",
+            "blob": "function blob() { [native code] }"
+          }
+        },
+        "Response": {
+          "source": "function Response() { [native code] }",
+          "methods": {
+            "bytes": "function bytes() { [native code] }",
+            "arrayBuffer": "function arrayBuffer() { [native code] }",
+            "text": "function text() { [native code] }",
+            "json": "function json() { [native code] }",
+            "blob": "function blob() { [native code] }"
+          }
+        },
+        "ReadableStream": {
+          "source": "function ReadableStream() { [native code] }",
+          "methods": {
+            "get locked": "function get locked() { [native code] }",
+            "cancel": "function cancel() { [native code] }",
+            "getReader": "function getReader() { [native code] }",
+            "pipeThrough": "function pipeThrough() { [native code] }",
+            "pipeTo": "function pipeTo() { [native code] }",
+            "tee": "function tee() { [native code] }",
+            "values": "function values() { [native code] }",
+            "Symbol(Symbol.asyncIterator)": "function values() { [native code] }"
+          }
+        },
+        "WritableStream": {
+          "source": "function WritableStream() { [native code] }",
+          "methods": {
+            "get locked": "function get locked() { [native code] }",
+            "abort": "function abort() { [native code] }",
+            "close": "function close() { [native code] }",
+            "getWriter": "function getWriter() { [native code] }"
+          }
+        },
+        "TransformStream": {
+          "source": "function TransformStream() { [native code] }",
+          "methods": {
+            "get readable": "function get readable() { [native code] }",
+            "get writable": "function get writable() { [native code] }"
+          }
+        },
+        "DOMStringList": {
+          "source": "function DOMStringList() { [native code] }",
+          "methods": {
+            "item": "function item() { [native code] }",
+            "contains": "function contains() { [native code] }",
+            "Symbol(Symbol.iterator)": "function values() { [native code] }"
+          }
+        },
+        "statics": {
+          "AbortSignal.abort": "function abort() { [native code] }",
+          "AbortSignal.any": "function any() { [native code] }",
+          "AbortSignal.timeout": "function timeout() { [native code] }",
+          "Response.error": "function error() { [native code] }",
+          "Response.json": "function json() { [native code] }",
+          "Response.redirect": "function redirect() { [native code] }"
+        },
+        "bodyNames": {
+          "Request.bytes": "bytes",
+          "Request.arrayBuffer": "arrayBuffer",
+          "Request.text": "text",
+          "Request.json": "json",
+          "Request.blob": "blob",
+          "Response.bytes": "bytes",
+          "Response.arrayBuffer": "arrayBuffer",
+          "Response.text": "text",
+          "Response.json": "json",
+          "Response.blob": "blob"
+        },
+        "intrinsics": {
+          "arrayValues": "function values() { [native code] }",
+          "arrayIterator": "function values() { [native code] }",
+          "mapEntries": "function entries() { [native code] }"
+        },
+        "aliasIdentity": true,
+        "userSource": "function visibleUserFunction(){return 42}"
+      }
+    }
+  }
+}

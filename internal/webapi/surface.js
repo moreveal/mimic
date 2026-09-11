@@ -1003,6 +1003,41 @@
       }
     }
   };
+  const finalizeNativeBindings=()=>{
+  // WebIDL bindings are native functions from JavaScript's point of view even
+  // when their semantics are implemented in JavaScript underneath. Derive this
+  // representation from the installed surface so generated and handwritten
+  // interfaces cannot drift apart.
+  const markedPrototypes=new Set([Object.prototype,Function.prototype]);
+  const markMembers=owner=>{
+    for(const member of Reflect.ownKeys(owner)){
+      if(member==='constructor'||member==='prototype')continue;
+      const descriptor=Object.getOwnPropertyDescriptor(owner,member);
+      const method=descriptor&&descriptor.value;
+      // Iteration aliases can reuse intrinsic functions such as Array#values.
+      // Their identity and original function name survive the alias.
+      markNative(method,typeof method==='function'&&method.name||String(member));
+      markNative(descriptor&&descriptor.get,String(member),'get ');
+      markNative(descriptor&&descriptor.set,String(member),'set ');
+    }
+  };
+  for(const key of Reflect.ownKeys(globalThis)){
+    if(engineGlobals.has(key))continue;
+    const globalDescriptor=Object.getOwnPropertyDescriptor(globalThis,key);
+    const value=globalDescriptor&&globalDescriptor.value;
+    if(typeof value!=='function')continue;
+    // A LegacyWindowAlias is another property pointing at the same interface
+    // object; it must not rename that function in Function#toString.
+    markNative(value,value.name||String(key));
+    markMembers(value);
+    let prototype=value.prototype;
+    while(prototype&&prototype!==Object.prototype&&!markedPrototypes.has(prototype)){
+      markedPrototypes.add(prototype);
+      markMembers(prototype);
+      prototype=Object.getPrototypeOf(prototype);
+    }
+  }
+  };
   const finalizeBindings=()=>{
   const reflectString=(interfaceName,property,attribute=property,defaultValue='')=>{const ctor=globalThis[interfaceName];if(!ctor||!ctor.prototype)return;Object.defineProperty(ctor.prototype,property,{get(){const value=this.getAttribute(attribute);return value===null?defaultValue:value},set(value){this.setAttribute(attribute,String(value))},enumerable:true,configurable:true})};
   Object.defineProperty(CharacterData.prototype,'nodeName',{get(){const slot=elementSlot(this);return slot&&slot.type==='comment'?'#comment':'#text'},enumerable:true,configurable:true});
@@ -1040,32 +1075,6 @@
   }
   markNative(frameElement,'frameElement','get ');Object.defineProperty(globalThis,'frameElement',{get:frameElement,enumerable:true,configurable:true});
   if(globalThis.Window&&globalThis.Window.prototype)delete globalThis.Window.prototype.frameElement;
-  // WebIDL bindings are native functions from JavaScript's point of view even
-  // when their semantics are implemented in JavaScript underneath. Derive this
-  // representation from the installed surface so generated and handwritten
-  // interfaces cannot drift apart.
-  const markedPrototypes=new Set();
-  for(const key of Reflect.ownKeys(globalThis)){
-    if(engineGlobals.has(key))continue;
-    const globalDescriptor=Object.getOwnPropertyDescriptor(globalThis,key);
-    const value=globalDescriptor&&globalDescriptor.value;
-    if(typeof value!=='function')continue;
-    // A LegacyWindowAlias is another property pointing at the same interface
-    // object; it must not rename that function in Function#toString.
-    markNative(value,value.name||String(key));
-    let prototype=value.prototype;
-    while(prototype&&prototype!==Object.prototype&&!markedPrototypes.has(prototype)){
-      markedPrototypes.add(prototype);
-      for(const member of Reflect.ownKeys(prototype)){
-        if(member==='constructor')continue;
-        const descriptor=Object.getOwnPropertyDescriptor(prototype,member);
-        markNative(descriptor&&descriptor.value,String(member));
-        markNative(descriptor&&descriptor.get,String(member),'get ');
-        markNative(descriptor&&descriptor.set,String(member),'set ');
-      }
-      prototype=Object.getPrototypeOf(prototype);
-    }
-  }
   if(globalThis.Window&&globalThis.Window.prototype){
     const target=window;
     // The realm global is the local WindowProxy identity.  Wrapping it in a

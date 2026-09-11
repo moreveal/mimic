@@ -1488,7 +1488,7 @@ Tested executable SHA256:
 `cc97570c06cf010f6525cd41c946a935f603bfab1d71061105eb1403724ee88d`.
 
 
-## Distinct snapshot read-only layouts — 2026-09-11
+## Distinct snapshot read-only layouts - 2026-09-11
 
 The P0 ownership correction retains snapshots and concurrent Pages while
 preventing custom objects from extending the isolate group's shared read-only
@@ -1514,3 +1514,24 @@ timed out on the changed tree; the V8 flag is not executed in that subtest.
 The independent timing concern remains open without deadline changes.
 [Native scope and validation](../compatibility/snapshot-readonly-lineage-2026-09-11.md);
 [full gate receipts](../compatibility/snapshot-readonly-lineage-20260911/gates.json).
+
+
+## Native function finalization - 2026-09-11
+
+Both complete monitored gates passed: clean ed4261b and the source-finalization
+package. All mandatory workloads, 10/25-Page waves and teardown-memory workloads
+ran; neither attempt produced a native dump. This adds bounded P0 evidence and
+does not causally close the separately retained historical signatures.
+
+Warm execution/completion medians before / after (ms): DOM 438.72/469.39 /
+439.59/484.31, static 2.98/25.61 / 2.73/24.32, React 55.05/83.80 / 54.58/86.16.
+Throughput is 74.48 / 69.42 sessions/s at 10 Pages and 84.48 / 69.22 at 25.
+Post-recovery private memory is static 159.92 / 164.92 MiB and React 168.36 /
+175.36 MiB. These decreases/increases remain a performance concern, not a
+neutrality claim. One monitored pair does not identify the cause or separate
+implementation overhead from the earlier measured run variation. Profiling is
+required before undertaking an optimization or attributing the complete delta.
+No workload was excluded or retried into a pass.
+
+[Complete receipts](../compatibility/native-function-finalization-20260911/gates.json)
+and [semantic scope and validation](../compatibility/native-function-finalization-2026-09-11.md).

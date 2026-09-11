@@ -1,0 +1,152 @@
+{
+  "packages": [
+    {
+      "Time": "2026-09-11T08:08:31.6492361+04:00",
+      "Action": "skip",
+      "Package": "github.com/moreveal/mimic/internal/engine",
+      "Elapsed": 0
+    },
+    {
+      "Time": "2026-09-11T08:08:31.6502426+04:00",
+      "Action": "pass",
+      "Package": "github.com/moreveal/mimic/internal/engine/quickjs",
+      "Elapsed": 0.001
+    },
+    {
+      "Time": "2026-09-11T08:08:31.6507572+04:00",
+      "Action": "pass",
+      "Package": "github.com/moreveal/mimic/internal/engine/goja",
+      "Elapsed": 0.002
+    },
+    {
+      "Time": "2026-09-11T08:08:31.6507572+04:00",
+      "Action": "pass",
+      "Package": "github.com/moreveal/mimic/internal/scheduler",
+      "Elapsed": 0.002
+    },
+    {
+      "Time": "2026-09-11T08:08:31.6507572+04:00",
+      "Action": "pass",
+      "Package": "github.com/moreveal/mimic/internal/dom",
+      "Elapsed": 0.002
+    },
+    {
+      "Time": "2026-09-11T08:08:31.6522654+04:00",
+      "Action": "pass",
+      "Package": "github.com/moreveal/mimic/internal/engine/v8",
+      "Elapsed": 0.003
+    },
+    {
+      "Time": "2026-09-11T08:08:31.6522654+04:00",
+      "Action": "pass",
+      "Package": "github.com/moreveal/mimic/internal/network",
+      "Elapsed": 0.003
+    },
+    {
+      "Time": "2026-09-11T08:08:31.8715256+04:00",
+      "Action": "pass",
+      "Package": "github.com/moreveal/mimic/internal/webapi",
+      "Elapsed": 0.222
+    },
+    {
+      "Time": "2026-09-11T08:08:33.5700672+04:00",
+      "Action": "pass",
+      "Package": "github.com/moreveal/mimic/internal/cdp",
+      "Elapsed": 1.921
+    },
+    {
+      "Time": "2026-09-11T08:15:53.7952639+04:00",
+      "Action": "pass",
+      "Package": "github.com/moreveal/mimic/internal/browser",
+      "Elapsed": 442.146
+    }
+  ],
+  "skips": [
+    {
+      "Time": "2026-09-11T08:08:31.6507572+04:00",
+      "Action": "skip",
+      "Package": "github.com/moreveal/mimic/internal/engine/v8",
+      "Test": "TestOwnerModelProbe",
+      "Elapsed": 0
+    },
+    {
+      "Time": "2026-09-11T08:08:31.6507572+04:00",
+      "Action": "skip",
+      "Package": "github.com/moreveal/mimic/internal/engine/v8",
+      "Test": "TestHostBoundaryProfile",
+      "Elapsed": 0
+    },
+    {
+      "Time": "2026-09-11T08:08:37.1283831+04:00",
+      "Action": "skip",
+      "Package": "github.com/moreveal/mimic/internal/browser",
+      "Test": "TestBootstrapSnapshotConcurrentPageLifecycles",
+      "Elapsed": 0
+    },
+    {
+      "Time": "2026-09-11T08:08:37.1283831+04:00",
+      "Action": "skip",
+      "Package": "github.com/moreveal/mimic/internal/browser",
+      "Test": "TestBootstrapSnapshotBarrierConcurrentBuilders",
+      "Elapsed": 0
+    },
+    {
+      "Time": "2026-09-11T08:08:37.1283831+04:00",
+      "Action": "skip",
+      "Package": "github.com/moreveal/mimic/internal/browser",
+      "Test": "TestBootstrapSnapshotBarrierSequentialBuilders",
+      "Elapsed": 0
+    },
+    {
+      "Time": "2026-09-11T08:08:37.1283831+04:00",
+      "Action": "skip",
+      "Package": "github.com/moreveal/mimic/internal/browser",
+      "Test": "TestBootstrapSnapshotConcurrentPagesSequentialBuilders",
+      "Elapsed": 0
+    },
+    {
+      "Time": "2026-09-11T08:08:37.1283831+04:00",
+      "Action": "skip",
+      "Package": "github.com/moreveal/mimic/internal/browser",
+      "Test": "TestOrdinaryConcurrentPageLifecycles",
+      "Elapsed": 0
+    },
+    {
+      "Time": "2026-09-11T08:10:25.6454291+04:00",
+      "Action": "skip",
+      "Package": "github.com/moreveal/mimic/internal/browser",
+      "Test": "TestFrameBridgeBreakdown",
+      "Elapsed": 0
+    },
+    {
+      "Time": "2026-09-11T08:10:26.2631899+04:00",
+      "Action": "skip",
+      "Package": "github.com/moreveal/mimic/internal/browser",
+      "Test": "TestNativeFrameMicrotasksBeforeNextTask/goja",
+      "Elapsed": 0.62
+    },
+    {
+      "Time": "2026-09-11T08:14:20.601629+04:00",
+      "Action": "skip",
+      "Package": "github.com/moreveal/mimic/internal/browser",
+      "Test": "TestPerformanceDensityProfile",
+      "Elapsed": 0
+    },
+    {
+      "Time": "2026-09-11T08:14:21.0757289+04:00",
+      "Action": "skip",
+      "Package": "github.com/moreveal/mimic/internal/browser",
+      "Test": "TestPerformanceParallelPages",
+      "Elapsed": 0
+    },
+    {
+      "Time": "2026-09-11T08:14:21.0757289+04:00",
+      "Action": "skip",
+      "Package": "github.com/moreveal/mimic/internal/browser",
+      "Test": "TestPerformanceProfile",
+      "Elapsed": 0
+    }
+  ],
+  "failures": [],
+  "rawSHA256": "f9b8c5cc6a183c3852fc9e3972c5ea407b7bc6912be4d93e1dc49b557f86e8da"
+}

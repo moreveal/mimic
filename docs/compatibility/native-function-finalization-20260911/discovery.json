@@ -1,0 +1,1412 @@
+{
+  "sha256": "8024774b575a79945448b13224f3ecef3b2c52822ff68aa5f443dbdee3088d6e",
+  "chrome": {
+    "AbortController": {
+      "source": "function AbortController() { [native code] }",
+      "methods": {
+        "get signal": "function get signal() { [native code] }",
+        "abort": "function abort() { [native code] }"
+      },
+      "statics": {}
+    },
+    "AbortSignal": {
+      "source": "function AbortSignal() { [native code] }",
+      "methods": {
+        "get aborted": "function get aborted() { [native code] }",
+        "get reason": "function get reason() { [native code] }",
+        "get onabort": "function get onabort() { [native code] }",
+        "set onabort": "function set onabort() { [native code] }",
+        "throwIfAborted": "function throwIfAborted() { [native code] }"
+      },
+      "statics": {
+        "abort": "function abort() { [native code] }",
+        "any": "function any() { [native code] }",
+        "timeout": "function timeout() { [native code] }"
+      }
+    },
+    "TextDecoder": {
+      "source": "function TextDecoder() { [native code] }",
+      "methods": {
+        "get encoding": "function get encoding() { [native code] }",
+        "get fatal": "function get fatal() { [native code] }",
+        "get ignoreBOM": "function get ignoreBOM() { [native code] }",
+        "decode": "function decode() { [native code] }"
+      },
+      "statics": {}
+    },
+    "TextEncoder": {
+      "source": "function TextEncoder() { [native code] }",
+      "methods": {
+        "get encoding": "function get encoding() { [native code] }",
+        "encode": "function encode() { [native code] }",
+        "encodeInto": "function encodeInto() { [native code] }"
+      },
+      "statics": {}
+    },
+    "Headers": {
+      "source": "function Headers() { [native code] }",
+      "methods": {
+        "append": "function append() { [native code] }",
+        "delete": "function delete() { [native code] }",
+        "get": "function get() { [native code] }",
+        "getSetCookie": "function getSetCookie() { [native code] }",
+        "has": "function has() { [native code] }",
+        "set": "function set() { [native code] }",
+        "entries": "function entries() { [native code] }",
+        "forEach": "function forEach() { [native code] }",
+        "keys": "function keys() { [native code] }",
+        "values": "function values() { [native code] }",
+        "Symbol(Symbol.iterator)": "function entries() { [native code] }"
+      },
+      "statics": {}
+    },
+    "Request": {
+      "source": "function Request() { [native code] }",
+      "methods": {
+        "get method": "function get method() { [native code] }",
+        "get url": "function get url() { [native code] }",
+        "get headers": "function get headers() { [native code] }",
+        "get destination": "function get destination() { [native code] }",
+        "get referrer": "function get referrer() { [native code] }",
+        "get referrerPolicy": "function get referrerPolicy() { [native code] }",
+        "get mode": "function get mode() { [native code] }",
+        "get credentials": "function get credentials() { [native code] }",
+        "get cache": "function get cache() { [native code] }",
+        "get redirect": "function get redirect() { [native code] }",
+        "get integrity": "function get integrity() { [native code] }",
+        "get keepalive": "function get keepalive() { [native code] }",
+        "get signal": "function get signal() { [native code] }",
+        "get duplex": "function get duplex() { [native code] }",
+        "get isHistoryNavigation": "function get isHistoryNavigation() { [native code] }",
+        "get bodyUsed": "function get bodyUsed() { [native code] }",
+        "arrayBuffer": "function arrayBuffer() { [native code] }",
+        "blob": "function blob() { [native code] }",
+        "clone": "function clone() { [native code] }",
+        "formData": "function formData() { [native code] }",
+        "json": "function json() { [native code] }",
+        "text": "function text() { [native code] }",
+        "get targetAddressSpace": "function get targetAddressSpace() { [native code] }",
+        "get isReloadNavigation": "function get isReloadNavigation() { [native code] }",
+        "get body": "function get body() { [native code] }",
+        "bytes": "function bytes() { [native code] }",
+        "textStream": "function textStream() { [native code] }"
+      },
+      "statics": {}
+    },
+    "Response": {
+      "source": "function Response() { [native code] }",
+      "methods": {
+        "get type": "function get type() { [native code] }",
+        "get url": "function get url() { [native code] }",
+        "get redirected": "function get redirected() { [native code] }",
+        "get status": "function get status() { [native code] }",
+        "get ok": "function get ok() { [native code] }",
+        "get statusText": "function get statusText() { [native code] }",
+        "get headers": "function get headers() { [native code] }",
+        "get body": "function get body() { [native code] }",
+        "get bodyUsed": "function get bodyUsed() { [native code] }",
+        "arrayBuffer": "function arrayBuffer() { [native code] }",
+        "blob": "function blob() { [native code] }",
+        "clone": "function clone() { [native code] }",
+        "formData": "function formData() { [native code] }",
+        "json": "function json() { [native code] }",
+        "text": "function text() { [native code] }",
+        "bytes": "function bytes() { [native code] }",
+        "textStream": "function textStream() { [native code] }"
+      },
+      "statics": {
+        "error": "function error() { [native code] }",
+        "json": "function json() { [native code] }",
+        "redirect": "function redirect() { [native code] }"
+      }
+    },
+    "ReadableStream": {
+      "source": "function ReadableStream() { [native code] }",
+      "methods": {
+        "get locked": "function get locked() { [native code] }",
+        "cancel": "function cancel() { [native code] }",
+        "getReader": "function getReader() { [native code] }",
+        "pipeThrough": "function pipeThrough() { [native code] }",
+        "pipeTo": "function pipeTo() { [native code] }",
+        "tee": "function tee() { [native code] }",
+        "values": "function values() { [native code] }",
+        "Symbol(Symbol.asyncIterator)": "function values() { [native code] }"
+      },
+      "statics": {}
+    },
+    "WritableStream": {
+      "source": "function WritableStream() { [native code] }",
+      "methods": {
+        "get locked": "function get locked() { [native code] }",
+        "abort": "function abort() { [native code] }",
+        "close": "function close() { [native code] }",
+        "getWriter": "function getWriter() { [native code] }"
+      },
+      "statics": {}
+    },
+    "TransformStream": {
+      "source": "function TransformStream() { [native code] }",
+      "methods": {
+        "get readable": "function get readable() { [native code] }",
+        "get writable": "function get writable() { [native code] }"
+      },
+      "statics": {}
+    },
+    "DOMStringList": {
+      "source": "function DOMStringList() { [native code] }",
+      "methods": {
+        "get length": "function get length() { [native code] }",
+        "contains": "function contains() { [native code] }",
+        "item": "function item() { [native code] }",
+        "Symbol(Symbol.iterator)": "function values() { [native code] }"
+      },
+      "statics": {}
+    },
+    "intrinsics": {
+      "arrayValues": "function values() { [native code] }",
+      "arrayIterator": "function values() { [native code] }",
+      "mapEntries": "function entries() { [native code] }"
+    },
+    "userSource": "function visibleUserFunction(){return 42}"
+  },
+  "mimic": {
+    "AbortController": {
+      "methods": {
+        "abort": "abort(reason){abort(this.signal,reason)}",
+        "get signal": "get signal(){return controllerSlots.get(this)}"
+      },
+      "source": "class AbortController {constructor(){controllerSlots.set(this,new AbortSignal(hostToken))}get signal(){return controllerSlots.get(this)}abort(reason){abort(this.signal,reason)}}",
+      "statics": {}
+    },
+    "AbortSignal": {
+      "methods": {
+        "get aborted": "get aborted(){return abortSlots.get(this).aborted}",
+        "get onabort": "get onabort(){return abortSlots.get(this).onabort}",
+        "get reason": "get reason(){return abortSlots.get(this).reason}",
+        "set onabort": "set onabort(value){abortSlots.get(this).onabort=value}",
+        "throwIfAborted": "throwIfAborted(){if(this.aborted)throw this.reason}"
+      },
+      "source": "class AbortSignal extends EventTarget {\r\n      constructor(token){super();if(token!==hostToken)throw new TypeError('Illegal constructor');abortSlots.set(this,{aborted:false,reason:undefined,onabort:null})}\r\n      get aborted(){return abortSlots.get(this).aborted} get reason(){return abortSlots.get(this).reason}\r\n      get onabort(){return abortSlots.get(this).onabort} set onabort(value){abortSlots.get(this).onabort=value}\r\n      throwIfAborted(){if(this.aborted)throw this.reason}\r\n      static abort(reason){const signal=new AbortSignal(hostToken);abort(signal,reason);return signal}\r\n      static timeout(ms){ms=Number(ms);if(ms<0||!Number.isFinite(ms))throw new RangeError('Invalid timeout');const signal=new AbortSignal(hostToken);setTimeout(()=>abort(signal,new DOMException('signal timed out','TimeoutError')),ms);return signal}\r\n      static any(signals){const result=new AbortSignal(hostToken);for(const signal of signals){if(!(signal instanceof AbortSignal))throw new TypeError('Expected AbortSignal');if(signal.aborted){abort(result,signal.reason);break}signal.addEventListener('abort',()=>abort(result,signal.reason))}return result}\r\n    }",
+      "statics": {
+        "abort": "abort(reason){const signal=new AbortSignal(hostToken);abort(signal,reason);return signal}",
+        "any": "any(signals){const result=new AbortSignal(hostToken);for(const signal of signals){if(!(signal instanceof AbortSignal))throw new TypeError('Expected AbortSignal');if(signal.aborted){abort(result,signal.reason);break}signal.addEventListener('abort',()=>abort(result,signal.reason))}return result}",
+        "timeout": "timeout(ms){ms=Number(ms);if(ms<0||!Number.isFinite(ms))throw new RangeError('Invalid timeout');const signal=new AbortSignal(hostToken);setTimeout(()=>abort(signal,new DOMException('signal timed out','TimeoutError')),ms);return signal}"
+      }
+    },
+    "DOMStringList": {
+      "methods": {
+        "Symbol(Symbol.iterator)": "function Symbol(Symbol.iterator)() { [native code] }",
+        "contains": "function contains() { [native code] }",
+        "get length": "function get length() { [native code] }",
+        "item": "function item() { [native code] }"
+      },
+      "source": "function DOMStringList() { [native code] }",
+      "statics": {}
+    },
+    "Headers": {
+      "methods": {
+        "append": "append(name,value){name=String(name).toLowerCase();const guard=guards.get(this);if(guard==='immutable')throw new TypeError('Headers are immutable');if(guard==='request'&&forbidden(name)||guard==='response'&&['set-cookie','set-cookie2'].includes(name))return;super.append(name,value)}",
+        "delete": "delete(name){name=String(name).toLowerCase();const guard=guards.get(this);if(guard==='immutable')throw new TypeError('Headers are immutable');if(guard==='request'&&forbidden(name)||guard==='response'&&['set-cookie','set-cookie2'].includes(name))return;super.delete(name)}",
+        "set": "set(name,value){name=String(name).toLowerCase();const guard=guards.get(this);if(guard==='immutable')throw new TypeError('Headers are immutable');if(guard==='request'&&forbidden(name)||guard==='response'&&['set-cookie','set-cookie2'].includes(name))return;super.set(name,value)}"
+      },
+      "source": "class FetchHeaders extends BaseHeaders {\r\n    append(name,value){name=String(name).toLowerCase();const guard=guards.get(this);if(guard==='immutable')throw new TypeError('Headers are immutable');if(guard==='request'&&forbidden(name)||guard==='response'&&['set-cookie','set-cookie2'].includes(name))return;super.append(name,value)}\r\n    set(name,value){name=String(name).toLowerCase();const guard=guards.get(this);if(guard==='immutable')throw new TypeError('Headers are immutable');if(guard==='request'&&forbidden(name)||guard==='response'&&['set-cookie','set-cookie2'].includes(name))return;super.set(name,value)}\r\n    delete(name){name=String(name).toLowerCase();const guard=guards.get(this);if(guard==='immutable')throw new TypeError('Headers are immutable');if(guard==='request'&&forbidden(name)||guard==='response'&&['set-cookie','set-cookie2'].includes(name))return;super.delete(name)}\r\n  }",
+      "statics": {}
+    },
+    "ReadableStream": {
+      "methods": {
+        "Symbol(Symbol.asyncIterator)": "values(e=void 0){if(!Ir(this))throw xr(\"values\");return function(e,t){const r=V(e),o=new ye(r,t),n=Object.create(ge);return n._asyncIteratorImpl=o,n}(this,function(e,t){L(e,t);const r=null==e?void 0:e.preventCancel;return{preventCancel:Boolean(r)}}(e,\"First parameter\").preventCancel)}",
+        "cancel": "cancel(e=void 0){return Ir(this)?$r(this)?d(new TypeError(\"Cannot cancel a stream that already has a reader\")):Mr(this,e):d(xr(\"cancel\"))}",
+        "get locked": "get locked(){if(!Ir(this))throw xr(\"locked\");return $r(this)}",
+        "getReader": "getReader(e=void 0){if(!Ir(this))throw xr(\"getReader\");return void 0===function(e,t){L(e,t);const r=null==e?void 0:e.mode;return{mode:void 0===r?void 0:at(r,`${t} has member 'mode' that`)}}(e,\"First parameter\").mode?V(this):it(this)}",
+        "pipeThrough": "pipeThrough(e,t={}){if(!Ir(this))throw xr(\"pipeThrough\");M(e,1,\"pipeThrough\");const r=function(e,t){L(e,t);const r=null==e?void 0:e.readable;Y(r,\"readable\",\"ReadableWritablePair\"),H(r,`${t} has member 'readable' that`);const o=null==e?void 0:e.writable;return Y(o,\"writable\",\"ReadableWritablePair\"),Tt(o,`${t} has member 'writable' that`),{readable:r,writable:o}}(e,\"First parameter\"),o=zr(t,\"Second parameter\");if($r(this))throw new TypeError(\"ReadableStream.prototype.pipeThrough cannot be used on a locked ReadableStream\");if(Et(r.writable))throw new TypeError(\"ReadableStream.prototype.pipeThrough cannot be used on a locked WritableStream\");return p(br(this,r.writable,o.preventClose,o.preventAbort,o.preventCancel,o.signal)),r.readable}",
+        "pipeTo": "pipeTo(e,t={}){if(!Ir(this))return d(xr(\"pipeTo\"));if(void 0===e)return d(\"Parameter 1 is required in 'pipeTo'.\");if(!qt(e))return d(new TypeError(\"ReadableStream.prototype.pipeTo's first argument must be a WritableStream\"));let r;try{r=zr(t,\"Second parameter\")}catch(e){return d(e)}return $r(this)?d(new TypeError(\"ReadableStream.prototype.pipeTo cannot be used on a locked ReadableStream\")):Et(e)?d(new TypeError(\"ReadableStream.prototype.pipeTo cannot be used on a locked WritableStream\")):br(this,e,r.preventClose,r.preventAbort,r.preventCancel,r.signal)}",
+        "tee": "tee(){if(!Ir(this))throw xr(\"tee\");return le(Wr(this))}",
+        "values": "values(e=void 0){if(!Ir(this))throw xr(\"values\");return function(e,t){const r=V(e),o=new ye(r,t),n=Object.create(ge);return n._asyncIteratorImpl=o,n}(this,function(e,t){L(e,t);const r=null==e?void 0:e.preventCancel;return{preventCancel:Boolean(r)}}(e,\"First parameter\").preventCancel)}"
+      },
+      "source": "class ReadableStream{constructor(e={},t={}){void 0===e?e=null:$(e,\"First parameter\");const r=yt(t,\"Second parameter\"),o=function(e,t){L(e,t);const r=e,o=null==r?void 0:r.autoAllocateChunkSize,n=null==r?void 0:r.cancel,a=null==r?void 0:r.pull,i=null==r?void 0:r.start,s=null==r?void 0:r.type;return{autoAllocateChunkSize:void 0===o?void 0:N(o,`${t} has member 'autoAllocateChunkSize' that`),cancel:void 0===n?void 0:Or(n,r,`${t} has member 'cancel' that`),pull:void 0===a?void 0:jr(a,r,`${t} has member 'pull' that`),start:void 0===i?void 0:kr(i,r,`${t} has member 'start' that`),type:void 0===s?void 0:Ar(s,`${t} has member 'type' that`)}}(e,\"First parameter\");if(Lr(this),\"bytes\"===o.type){if(void 0!==r.size)throw new RangeError(\"The strategy for a byte stream cannot have a size function\");!function(e,t,r){const o=Object.create(ReadableByteStreamController.prototype);let n,a,i;n=void 0!==t.start?()=>t.start(o):()=>{},a=void 0!==t.pull?()=>t.pull(o):()=>c(void 0),i=void 0!==t.cancel?e=>t.cancel(e):()=>c(void 0);const s=t.autoAllocateChunkSize;if(0===s)throw new TypeError(\"autoAllocateChunkSize must be greater than 0\");rt(e,o,n,a,i,r,s)}(this,o,mt(r,0))}else{const e=pt(r);!function(e,t,r,o){const n=Object.create(ReadableStreamDefaultController.prototype);let a,i,s;a=void 0!==t.start?()=>t.start(n):()=>{},i=void 0!==t.pull?()=>t.pull(n):()=>c(void 0),s=void 0!==t.cancel?e=>t.cancel(e):()=>c(void 0),qr(e,n,a,i,s,r,o)}(this,o,mt(r,1),e)}}get locked(){if(!Ir(this))throw xr(\"locked\");return $r(this)}cancel(e=void 0){return Ir(this)?$r(this)?d(new TypeError(\"Cannot cancel a stream that already has a reader\")):Mr(this,e):d(xr(\"cancel\"))}getReader(e=void 0){if(!Ir(this))throw xr(\"getReader\");return void 0===function(e,t){L(e,t);const r=null==e?void 0:e.mode;return{mode:void 0===r?void 0:at(r,`${t} has member 'mode' that`)}}(e,\"First parameter\").mode?V(this):it(this)}pipeThrough(e,t={}){if(!Ir(this))throw xr(\"pipeThrough\");M(e,1,\"pipeThrough\");const r=function(e,t){L(e,t);const r=null==e?void 0:e.readable;Y(r,\"readable\",\"ReadableWritablePair\"),H(r,`${t} has member 'readable' that`);const o=null==e?void 0:e.writable;return Y(o,\"writable\",\"ReadableWritablePair\"),Tt(o,`${t} has member 'writable' that`),{readable:r,writable:o}}(e,\"First parameter\"),o=zr(t,\"Second parameter\");if($r(this))throw new TypeError(\"ReadableStream.prototype.pipeThrough cannot be used on a locked ReadableStream\");if(Et(r.writable))throw new TypeError(\"ReadableStream.prototype.pipeThrough cannot be used on a locked WritableStream\");return p(br(this,r.writable,o.preventClose,o.preventAbort,o.preventCancel,o.signal)),r.readable}pipeTo(e,t={}){if(!Ir(this))return d(xr(\"pipeTo\"));if(void 0===e)return d(\"Parameter 1 is required in 'pipeTo'.\");if(!qt(e))return d(new TypeError(\"ReadableStream.prototype.pipeTo's first argument must be a WritableStream\"));let r;try{r=zr(t,\"Second parameter\")}catch(e){return d(e)}return $r(this)?d(new TypeError(\"ReadableStream.prototype.pipeTo cannot be used on a locked ReadableStream\")):Et(e)?d(new TypeError(\"ReadableStream.prototype.pipeTo cannot be used on a locked WritableStream\")):br(this,e,r.preventClose,r.preventAbort,r.preventCancel,r.signal)}tee(){if(!Ir(this))throw xr(\"tee\");return le(Wr(this))}values(e=void 0){if(!Ir(this))throw xr(\"values\");return function(e,t){const r=V(e),o=new ye(r,t),n=Object.create(ge);return n._asyncIteratorImpl=o,n}(this,function(e,t){L(e,t);const r=null==e?void 0:e.preventCancel;return{preventCancel:Boolean(r)}}(e,\"First parameter\").preventCancel)}[_e](e){return this.values(e)}static from(e){return Br(e)}}",
+      "statics": {
+        "from": "from(e){return Br(e)}"
+      }
+    },
+    "Request": {
+      "methods": {
+        "arrayBuffer": "function(){return consume(this).then(value=>value.buffer)}",
+        "blob": "function(){return consume(this).then(value=>new NativeBlob([value],{type:this.headers.get('content-type')||''}))}",
+        "bytes": "function(){return consume(this)}",
+        "clone": "clone(){const record=slot(requests,this),body=cloneBody(this),copy=Object.create(FetchRequest.prototype);requests.set(copy,{...record,headers:headers(record.headers,'request'),signal:dependentSignal(record.signal)});bodies.set(copy,body);return copy}",
+        "get body": "get(){return slot(bodies,this).stream}",
+        "get bodyUsed": "get(){return disturbed(slot(bodies,this).stream)}",
+        "get cache": "get(){return slot(requests,this)[name]}",
+        "get credentials": "get(){return slot(requests,this)[name]}",
+        "get destination": "get(){return slot(requests,this)[name]}",
+        "get duplex": "get(){return slot(requests,this)[name]}",
+        "get headers": "get(){return slot(requests,this)[name]}",
+        "get integrity": "get(){return slot(requests,this)[name]}",
+        "get keepalive": "get(){return slot(requests,this)[name]}",
+        "get method": "get(){return slot(requests,this)[name]}",
+        "get mode": "get(){return slot(requests,this)[name]}",
+        "get redirect": "get(){return slot(requests,this)[name]}",
+        "get referrer": "get(){return slot(requests,this)[name]}",
+        "get referrerPolicy": "get(){return slot(requests,this)[name]}",
+        "get signal": "get(){return slot(requests,this)[name]}",
+        "get url": "get(){return slot(requests,this)[name]}",
+        "json": "function(){return this.text().then(JSON.parse)}",
+        "text": "function(){return consume(this).then(value=>new Decoder().decode(value))}"
+      },
+      "source": "class FetchRequest {\r\n    constructor(input,init={}){\r\n      if(arguments.length===0)throw new TypeError('Request requires input');\r\n      const previous=requests.get(input),url=new globalThis.URL(previous?previous.url:String(input),fetchBaseURL());if(url.username||url.password)throw new TypeError('Request URL contains credentials');\r\n      let method=String(init.method===undefined?(previous?.method||'GET'):init.method);if(!/^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/.test(method)||['CONNECT','TRACE','TRACK'].includes(method.toUpperCase()))throw new TypeError('Invalid HTTP method');if(normalizedMethods.has(method.toUpperCase()))method=method.toUpperCase();\r\n      const mode=String(init.mode??previous?.mode??'cors'),credentials=String(init.credentials??previous?.credentials??'same-origin'),cache=String(init.cache??previous?.cache??'default'),redirect=String(init.redirect??previous?.redirect??'follow');\r\n      if(!['cors','same-origin','no-cors','navigate'].includes(mode)||mode==='navigate'&&init.mode!==undefined)throw new TypeError('Invalid request mode');\r\n      if(!['omit','same-origin','include'].includes(credentials)||!['default','no-store','reload','no-cache','force-cache','only-if-cached'].includes(cache)||!['follow','error','manual'].includes(redirect))throw new TypeError('Invalid request option');\r\n      if(cache==='only-if-cached'&&mode!=='same-origin')throw new TypeError('only-if-cached requires same-origin');if(mode==='no-cors'&&!['GET','HEAD','POST'].includes(method))throw new TypeError('Invalid no-cors method');\r\n      const supplied=init.body!=null;let body;\r\n      if(supplied)body=extract(init.body);else if(previous){const old=slot(bodies,input);if(unusable(old))throw new TypeError('Request body already used');body={...old}}else body=extract(null);\r\n      if(['GET','HEAD'].includes(method)&&body.stream!==null)throw new TypeError('GET/HEAD request cannot have body');\r\n      if(supplied&&init.body instanceof Streams&&init.duplex!=='half')throw new TypeError('Streaming body requires duplex half');\r\n      if(init.duplex!==undefined&&init.duplex!=='half')throw new TypeError('Invalid duplex');\r\n      const list=headers(init.headers===undefined?previous?.headers:init.headers,'request');if(body.type&&!list.has('content-type'))list.set('content-type',body.type);\r\n      const signal=dependentSignal(init.signal===undefined?previous?.signal:init.signal),referrer=String(init.referrer??previous?.referrer??'about:client');\r\n      if(previous&&!supplied&&body.stream!==null)body.stream=body.stream.pipeThrough(new globalThis.TransformStream());\r\n      requests.set(this,{url:url.href,method,headers:list,mode,credentials,cache,redirect,referrer,referrerPolicy:String(init.referrerPolicy??previous?.referrerPolicy??''),integrity:String(init.integrity??previous?.integrity??''),keepalive:Boolean(init.keepalive??previous?.keepalive??false),signal,destination:'',duplex:'half'});bodies.set(this,body);\r\n    }\r\n    clone(){const record=slot(requests,this),body=cloneBody(this),copy=Object.create(FetchRequest.prototype);requests.set(copy,{...record,headers:headers(record.headers,'request'),signal:dependentSignal(record.signal)});bodies.set(copy,body);return copy}\r\n  }",
+      "statics": {}
+    },
+    "Response": {
+      "methods": {
+        "arrayBuffer": "function(){return consume(this).then(value=>value.buffer)}",
+        "blob": "function(){return consume(this).then(value=>new NativeBlob([value],{type:this.headers.get('content-type')||''}))}",
+        "bytes": "function(){return consume(this)}",
+        "clone": "clone(){const record=slot(responses,this),body=cloneBody(this),list=headers(record.headers,'response');guards.set(list,guards.get(record.headers));return createResponse({...record,headers:list},body)}",
+        "get body": "get(){return slot(bodies,this).stream}",
+        "get bodyUsed": "get(){return disturbed(slot(bodies,this).stream)}",
+        "get headers": "get(){return slot(responses,this)[name]}",
+        "get ok": "get ok(){const status=slot(responses,this).status;return status>=200&&status<=299}",
+        "get redirected": "get(){return slot(responses,this)[name]}",
+        "get status": "get(){return slot(responses,this)[name]}",
+        "get statusText": "get(){return slot(responses,this)[name]}",
+        "get type": "get(){return slot(responses,this)[name]}",
+        "get url": "get(){return slot(responses,this)[name]}",
+        "json": "function(){return this.text().then(JSON.parse)}",
+        "text": "function(){return consume(this).then(value=>new Decoder().decode(value))}"
+      },
+      "source": "class FetchResponse {\r\n    constructor(body=null,init={}){\r\n      const status=init.status===undefined?200:(Number(init.status)>>>0)&65535;if(status<200||status>599)throw new RangeError('Invalid response status');\r\n      const statusText=String(init.statusText||'');if(/[^\\x09\\x20-\\x7e\\x80-\\xff]/.test(statusText))throw new TypeError('Invalid status text');\r\n      if(body!=null&&nullBodyStatus(status))throw new TypeError('Response status cannot have a body');\r\n      const extracted=extract(body),list=headers(init.headers,'response');if(extracted.type&&!list.has('content-type'))list.set('content-type',extracted.type);\r\n      responses.set(this,{status,statusText,headers:list,url:'',type:'default',redirected:false});bodies.set(this,extracted);\r\n    }\r\n    get ok(){const status=slot(responses,this).status;return status>=200&&status<=299}\r\n    clone(){const record=slot(responses,this),body=cloneBody(this),list=headers(record.headers,'response');guards.set(list,guards.get(record.headers));return createResponse({...record,headers:list},body)}\r\n    static error(){const list=headers();guards.set(list,'immutable');return createResponse({status:0,statusText:'',headers:list,url:'',type:'error',redirected:false},{stream:null,type:null})}\r\n    static redirect(url,status=302){status=(Number(status)>>>0)&65535;if(![301,302,303,307,308].includes(status))throw new RangeError('Invalid redirect status');const result=new FetchResponse(null,{status,headers:{location:new globalThis.URL(String(url),fetchBaseURL()).href}});guards.set(result.headers,'immutable');return result}\r\n    static json(data,init={}){const value=JSON.stringify(data);if(value===undefined)throw new TypeError('Value is not JSON serializable');const list=new FetchHeaders(init.headers);if(!list.has('content-type'))list.set('content-type','application/json');return new FetchResponse(value,{...init,headers:list})}\r\n  }",
+      "statics": {
+        "error": "error(){const list=headers();guards.set(list,'immutable');return createResponse({status:0,statusText:'',headers:list,url:'',type:'error',redirected:false},{stream:null,type:null})}",
+        "json": "json(data,init={}){const value=JSON.stringify(data);if(value===undefined)throw new TypeError('Value is not JSON serializable');const list=new FetchHeaders(init.headers);if(!list.has('content-type'))list.set('content-type','application/json');return new FetchResponse(value,{...init,headers:list})}",
+        "redirect": "redirect(url,status=302){status=(Number(status)>>>0)&65535;if(![301,302,303,307,308].includes(status))throw new RangeError('Invalid redirect status');const result=new FetchResponse(null,{status,headers:{location:new globalThis.URL(String(url),fetchBaseURL()).href}});guards.set(result.headers,'immutable');return result}"
+      }
+    },
+    "TextDecoder": {
+      "methods": {
+        "decode": "decode(input,options={}){\n        const s=decoderSlots.get(this),stream=!!options.stream,bytes=s.bytes.concat(input==null?[]:Array.from(ArrayBuffer.isView(input)?new Uint8Array(input.buffer,input.byteOffset,input.byteLength):new Uint8Array(input)));s.bytes=[];let output='';\n        if(s.encoding==='windows-1252'){for(const byte of bytes)output+=String.fromCodePoint(byte>=0x80&&byte<=0x9f?windows1252C1[byte-0x80]:byte);return output}\n        const emit=point=>{if(!s.bom){s.bom=true;if(point===0xfeff&&!s.ignoreBOM)return}output+=String.fromCodePoint(point)};\r\n        const error=()=>{if(s.fatal)throw new TypeError('Invalid encoded data');emit(0xfffd)};\r\n        for(let i=0;i<bytes.length;){const start=i,b=bytes[i++];if(b<128){emit(b);continue}const count=b>=0xc2&&b<=0xdf?1:b>=0xe0&&b<=0xef?2:b>=0xf0&&b<=0xf4?3:0;if(!count){error();continue}\r\n          let point=b&((1<<(6-count))-1),valid=true;\r\n          for(let j=0;j<count;j++){\r\n            if(i===bytes.length){if(stream){s.bytes=bytes.slice(start);valid=false;i=bytes.length}else{error();valid=false}break}\n            const c=bytes[i],min=j===0&&b===0xe0?0xa0:j===0&&b===0xf0?0x90:0x80,max=j===0&&b===0xed?0x9f:j===0&&b===0xf4?0x8f:0xbf;\r\n            if(c<min||c>max){error();valid=false;break}i++;point=(point<<6)|(c&63);\r\n          }if(valid)emit(point);\r\n        }if(!stream)s.bom=false;return output;\n      }",
+        "get encoding": "get encoding(){return decoderSlots.get(this).encoding}",
+        "get fatal": "get fatal(){return decoderSlots.get(this).fatal}",
+        "get ignoreBOM": "get ignoreBOM(){return decoderSlots.get(this).ignoreBOM}"
+      },
+      "source": "class TextDecoder {\n      constructor(label='utf-8',options={}){label=String(label).replace(/^[\\t\\n\\f\\r ]+|[\\t\\n\\f\\r ]+$/g,'').toLowerCase();const encoding=decoderLabels.get(label);if(!encoding)throw new RangeError('Unsupported encoding: '+label);decoderSlots.set(this,{encoding,fatal:!!options.fatal,ignoreBOM:!!options.ignoreBOM,bytes:[],bom:false})}\n      get encoding(){return decoderSlots.get(this).encoding}get fatal(){return decoderSlots.get(this).fatal}get ignoreBOM(){return decoderSlots.get(this).ignoreBOM}\n      decode(input,options={}){\n        const s=decoderSlots.get(this),stream=!!options.stream,bytes=s.bytes.concat(input==null?[]:Array.from(ArrayBuffer.isView(input)?new Uint8Array(input.buffer,input.byteOffset,input.byteLength):new Uint8Array(input)));s.bytes=[];let output='';\n        if(s.encoding==='windows-1252'){for(const byte of bytes)output+=String.fromCodePoint(byte>=0x80&&byte<=0x9f?windows1252C1[byte-0x80]:byte);return output}\n        const emit=point=>{if(!s.bom){s.bom=true;if(point===0xfeff&&!s.ignoreBOM)return}output+=String.fromCodePoint(point)};\r\n        const error=()=>{if(s.fatal)throw new TypeError('Invalid encoded data');emit(0xfffd)};\r\n        for(let i=0;i<bytes.length;){const start=i,b=bytes[i++];if(b<128){emit(b);continue}const count=b>=0xc2&&b<=0xdf?1:b>=0xe0&&b<=0xef?2:b>=0xf0&&b<=0xf4?3:0;if(!count){error();continue}\r\n          let point=b&((1<<(6-count))-1),valid=true;\r\n          for(let j=0;j<count;j++){\r\n            if(i===bytes.length){if(stream){s.bytes=bytes.slice(start);valid=false;i=bytes.length}else{error();valid=false}break}\n            const c=bytes[i],min=j===0&&b===0xe0?0xa0:j===0&&b===0xf0?0x90:0x80,max=j===0&&b===0xed?0x9f:j===0&&b===0xf4?0x8f:0xbf;\r\n            if(c<min||c>max){error();valid=false;break}i++;point=(point<<6)|(c&63);\r\n          }if(valid)emit(point);\r\n        }if(!stream)s.bom=false;return output;\n      }\r\n    }",
+      "statics": {}
+    },
+    "TextEncoder": {
+      "methods": {
+        "encode": "function encode() { [native code] }",
+        "encodeInto": "function encodeInto() { [native code] }",
+        "get encoding": "function get encoding() { [native code] }"
+      },
+      "source": "function TextEncoder() { [native code] }",
+      "statics": {}
+    },
+    "TransformStream": {
+      "methods": {
+        "get readable": "get readable(){if(!ro(this))throw _o(\"readable\");return this._readable}",
+        "get writable": "get writable(){if(!ro(this))throw _o(\"writable\");return this._writable}"
+      },
+      "source": "class TransformStream{constructor(e={},t={},r={}){void 0===e&&(e=null);const o=yt(t,\"Second parameter\"),n=yt(r,\"Third parameter\"),a=function(e,t){L(e,t);const r=null==e?void 0:e.cancel,o=null==e?void 0:e.flush,n=null==e?void 0:e.readableType,a=null==e?void 0:e.start,i=null==e?void 0:e.transform,s=null==e?void 0:e.writableType;return{cancel:void 0===r?void 0:to(r,e,`${t} has member 'cancel' that`),flush:void 0===o?void 0:Kr(o,e,`${t} has member 'flush' that`),readableType:n,start:void 0===a?void 0:Zr(a,e,`${t} has member 'start' that`),transform:void 0===i?void 0:eo(i,e,`${t} has member 'transform' that`),writableType:s}}(e,\"First parameter\");if(void 0!==a.readableType)throw new RangeError(\"Invalid readableType specified\");if(void 0!==a.writableType)throw new RangeError(\"Invalid writableType specified\");const i=mt(n,0),s=pt(n),l=mt(o,1),f=pt(o);let h;!function(e,t,r,o,n,a){function i(){return t}function s(t){return function(e,t){const r=e._transformStreamController;if(e._backpressure){return m(e._backpressureChangePromise,()=>{const o=e._writable;if(\"erroring\"===o._state)throw o._storedError;return co(r,t)})}return co(r,t)}(e,t)}function l(t){return function(e,t){const r=e._transformStreamController;if(void 0!==r._finishPromise)return r._finishPromise;const o=e._readable;r._finishPromise=u((e,t)=>{r._finishPromise_resolve=e,r._finishPromise_reject=t});const n=r._cancelAlgorithm(t);return lo(r),b(n,()=>(\"errored\"===o._state?ho(r,o._storedError):(Tr(o._readableStreamController,t),bo(r)),null),e=>(Tr(o._readableStreamController,e),ho(r,e),null)),r._finishPromise}(e,t)}function c(){return function(e){const t=e._transformStreamController;if(void 0!==t._finishPromise)return t._finishPromise;const r=e._readable;t._finishPromise=u((e,r)=>{t._finishPromise_resolve=e,t._finishPromise_reject=r});const o=t._flushAlgorithm();return lo(t),b(o,()=>(\"errored\"===r._state?ho(t,r._storedError):(wr(r._readableStreamController),bo(t)),null),e=>(Tr(r._readableStreamController,e),ho(t,e),null)),t._finishPromise}(e)}function d(){return function(e){return io(e,!1),e._backpressureChangePromise}(e)}function f(t){return function(e,t){const r=e._transformStreamController;if(void 0!==r._finishPromise)return r._finishPromise;const o=e._writable;r._finishPromise=u((e,t)=>{r._finishPromise_resolve=e,r._finishPromise_reject=t});const n=r._cancelAlgorithm(t);return lo(r),b(n,()=>(\"errored\"===o._state?ho(r,o._storedError):(Gt(o._writableStreamController,t),ao(e),bo(r)),null),t=>(Gt(o._writableStreamController,t),ao(e),ho(r,t),null)),r._finishPromise}(e,t)}e._writable=function(e,t,r,o,n=1,a=()=>1){const i=Object.create(WritableStream.prototype);return Ct(i),Nt(i,Object.create(WritableStreamDefaultController.prototype),e,t,r,o,n,a),i}(i,s,c,l,r,o),e._readable=Dr(i,d,f,n,a),e._backpressure=void 0,e._backpressureChangePromise=void 0,e._backpressureChangePromise_resolve=void 0,io(e,!0),e._transformStreamController=void 0}(this,u(e=>{h=e}),l,f,i,s),function(e,t){const r=Object.create(TransformStreamDefaultController.prototype);let o,n,a;o=void 0!==t.transform?e=>t.transform(e,r):e=>{try{return uo(r,e),c(void 0)}catch(e){return d(e)}};n=void 0!==t.flush?()=>t.flush(r):()=>c(void 0);a=void 0!==t.cancel?e=>t.cancel(e):()=>c(void 0);!function(e,t,r,o,n){t._controlledTransformStream=e,e._transformStreamController=t,t._transformAlgorithm=r,t._flushAlgorithm=o,t._cancelAlgorithm=n,t._finishPromise=void 0,t._finishPromise_resolve=void 0,t._finishPromise_reject=void 0}(e,r,o,n,a)}(this,a),void 0!==a.start?h(a.start(this._transformStreamController)):h(void 0)}get readable(){if(!ro(this))throw _o(\"readable\");return this._readable}get writable(){if(!ro(this))throw _o(\"writable\");return this._writable}}",
+      "statics": {}
+    },
+    "WritableStream": {
+      "methods": {
+        "abort": "abort(e=void 0){return qt(this)?Et(this)?d(new TypeError(\"Cannot abort a stream that already has a writer\")):Wt(this,e):d(Kt(\"abort\"))}",
+        "close": "close(){return qt(this)?Et(this)?d(new TypeError(\"Cannot close a stream that already has a writer\")):At(this)?d(new TypeError(\"Cannot close an already-closing stream\")):Bt(this):d(Kt(\"close\"))}",
+        "get locked": "get locked(){if(!qt(this))throw Kt(\"locked\");return Et(this)}",
+        "getWriter": "getWriter(){if(!qt(this))throw Kt(\"getWriter\");return Pt(this)}"
+      },
+      "source": "class WritableStream{constructor(e={},t={}){void 0===e?e=null:$(e,\"First parameter\");const r=yt(t,\"Second parameter\"),o=function(e,t){L(e,t);const r=null==e?void 0:e.abort,o=null==e?void 0:e.close,n=null==e?void 0:e.start,a=null==e?void 0:e.type,i=null==e?void 0:e.write;return{abort:void 0===r?void 0:gt(r,e,`${t} has member 'abort' that`),close:void 0===o?void 0:vt(o,e,`${t} has member 'close' that`),start:void 0===n?void 0:wt(n,e,`${t} has member 'start' that`),write:void 0===i?void 0:Rt(i,e,`${t} has member 'write' that`),type:a}}(e,\"First parameter\");Ct(this);if(void 0!==o.type)throw new RangeError(\"Invalid type is specified\");const n=pt(r);!function(e,t,r,o){const n=Object.create(WritableStreamDefaultController.prototype);let a,i,s,l;a=void 0!==t.start?()=>t.start(n):()=>{};i=void 0!==t.write?e=>t.write(e,n):()=>c(void 0);s=void 0!==t.close?()=>t.close():()=>c(void 0);l=void 0!==t.abort?e=>t.abort(e):()=>c(void 0);Nt(e,n,a,i,s,l,r,o)}(this,o,mt(r,1),n)}get locked(){if(!qt(this))throw Kt(\"locked\");return Et(this)}abort(e=void 0){return qt(this)?Et(this)?d(new TypeError(\"Cannot abort a stream that already has a writer\")):Wt(this,e):d(Kt(\"abort\"))}close(){return qt(this)?Et(this)?d(new TypeError(\"Cannot close a stream that already has a writer\")):At(this)?d(new TypeError(\"Cannot close an already-closing stream\")):Bt(this):d(Kt(\"close\"))}getWriter(){if(!qt(this))throw Kt(\"getWriter\");return Pt(this)}}",
+      "statics": {}
+    },
+    "intrinsics": {
+      "arrayIterator": "function Symbol(Symbol.iterator)() { [native code] }",
+      "arrayValues": "function Symbol(Symbol.iterator)() { [native code] }",
+      "mapEntries": "function entries() { [native code] }"
+    },
+    "userSource": "function visibleUserFunction(){return 42}"
+  },
+  "control": {
+    "AbortController": {
+      "source": "function AbortController() { [native code] }",
+      "methods": {
+        "get signal": "function get signal() { [native code] }",
+        "abort": "function abort() { [native code] }"
+      },
+      "statics": {}
+    },
+    "AbortSignal": {
+      "source": "function AbortSignal() { [native code] }",
+      "methods": {
+        "get aborted": "function get aborted() { [native code] }",
+        "get reason": "function get reason() { [native code] }",
+        "get onabort": "function get onabort() { [native code] }",
+        "set onabort": "function set onabort() { [native code] }",
+        "throwIfAborted": "function throwIfAborted() { [native code] }"
+      },
+      "statics": {
+        "abort": "function abort() { [native code] }",
+        "any": "function any() { [native code] }",
+        "timeout": "function timeout() { [native code] }"
+      }
+    },
+    "TextDecoder": {
+      "source": "function TextDecoder() { [native code] }",
+      "methods": {
+        "get encoding": "function get encoding() { [native code] }",
+        "get fatal": "function get fatal() { [native code] }",
+        "get ignoreBOM": "function get ignoreBOM() { [native code] }",
+        "decode": "function decode() { [native code] }"
+      },
+      "statics": {}
+    },
+    "TextEncoder": {
+      "source": "function TextEncoder() { [native code] }",
+      "methods": {
+        "get encoding": "function get encoding() { [native code] }",
+        "encode": "function encode() { [native code] }",
+        "encodeInto": "function encodeInto() { [native code] }"
+      },
+      "statics": {}
+    },
+    "Headers": {
+      "source": "function Headers() { [native code] }",
+      "methods": {
+        "append": "function append() { [native code] }",
+        "delete": "function delete() { [native code] }",
+        "get": "function get() { [native code] }",
+        "getSetCookie": "function getSetCookie() { [native code] }",
+        "has": "function has() { [native code] }",
+        "set": "function set() { [native code] }",
+        "entries": "function entries() { [native code] }",
+        "forEach": "function forEach() { [native code] }",
+        "keys": "function keys() { [native code] }",
+        "values": "function values() { [native code] }",
+        "Symbol(Symbol.iterator)": "function entries() { [native code] }"
+      },
+      "statics": {}
+    },
+    "Request": {
+      "source": "function Request() { [native code] }",
+      "methods": {
+        "get method": "function get method() { [native code] }",
+        "get url": "function get url() { [native code] }",
+        "get headers": "function get headers() { [native code] }",
+        "get destination": "function get destination() { [native code] }",
+        "get referrer": "function get referrer() { [native code] }",
+        "get referrerPolicy": "function get referrerPolicy() { [native code] }",
+        "get mode": "function get mode() { [native code] }",
+        "get credentials": "function get credentials() { [native code] }",
+        "get cache": "function get cache() { [native code] }",
+        "get redirect": "function get redirect() { [native code] }",
+        "get integrity": "function get integrity() { [native code] }",
+        "get keepalive": "function get keepalive() { [native code] }",
+        "get signal": "function get signal() { [native code] }",
+        "get duplex": "function get duplex() { [native code] }",
+        "get isHistoryNavigation": "function get isHistoryNavigation() { [native code] }",
+        "get bodyUsed": "function get bodyUsed() { [native code] }",
+        "arrayBuffer": "function arrayBuffer() { [native code] }",
+        "blob": "function blob() { [native code] }",
+        "clone": "function clone() { [native code] }",
+        "formData": "function formData() { [native code] }",
+        "json": "function json() { [native code] }",
+        "text": "function text() { [native code] }",
+        "get targetAddressSpace": "function get targetAddressSpace() { [native code] }",
+        "get isReloadNavigation": "function get isReloadNavigation() { [native code] }",
+        "get body": "function get body() { [native code] }",
+        "bytes": "function bytes() { [native code] }",
+        "textStream": "function textStream() { [native code] }"
+      },
+      "statics": {}
+    },
+    "Response": {
+      "source": "function Response() { [native code] }",
+      "methods": {
+        "get type": "function get type() { [native code] }",
+        "get url": "function get url() { [native code] }",
+        "get redirected": "function get redirected() { [native code] }",
+        "get status": "function get status() { [native code] }",
+        "get ok": "function get ok() { [native code] }",
+        "get statusText": "function get statusText() { [native code] }",
+        "get headers": "function get headers() { [native code] }",
+        "get body": "function get body() { [native code] }",
+        "get bodyUsed": "function get bodyUsed() { [native code] }",
+        "arrayBuffer": "function arrayBuffer() { [native code] }",
+        "blob": "function blob() { [native code] }",
+        "clone": "function clone() { [native code] }",
+        "formData": "function formData() { [native code] }",
+        "json": "function json() { [native code] }",
+        "text": "function text() { [native code] }",
+        "bytes": "function bytes() { [native code] }",
+        "textStream": "function textStream() { [native code] }"
+      },
+      "statics": {
+        "error": "function error() { [native code] }",
+        "json": "function json() { [native code] }",
+        "redirect": "function redirect() { [native code] }"
+      }
+    },
+    "ReadableStream": {
+      "source": "function ReadableStream() { [native code] }",
+      "methods": {
+        "get locked": "function get locked() { [native code] }",
+        "cancel": "function cancel() { [native code] }",
+        "getReader": "function getReader() { [native code] }",
+        "pipeThrough": "function pipeThrough() { [native code] }",
+        "pipeTo": "function pipeTo() { [native code] }",
+        "tee": "function tee() { [native code] }",
+        "values": "function values() { [native code] }",
+        "Symbol(Symbol.asyncIterator)": "function values() { [native code] }"
+      },
+      "statics": {}
+    },
+    "WritableStream": {
+      "source": "function WritableStream() { [native code] }",
+      "methods": {
+        "get locked": "function get locked() { [native code] }",
+        "abort": "function abort() { [native code] }",
+        "close": "function close() { [native code] }",
+        "getWriter": "function getWriter() { [native code] }"
+      },
+      "statics": {}
+    },
+    "TransformStream": {
+      "source": "function TransformStream() { [native code] }",
+      "methods": {
+        "get readable": "function get readable() { [native code] }",
+        "get writable": "function get writable() { [native code] }"
+      },
+      "statics": {}
+    },
+    "DOMStringList": {
+      "source": "function DOMStringList() { [native code] }",
+      "methods": {
+        "get length": "function get length() { [native code] }",
+        "contains": "function contains() { [native code] }",
+        "item": "function item() { [native code] }",
+        "Symbol(Symbol.iterator)": "function values() { [native code] }"
+      },
+      "statics": {}
+    },
+    "intrinsics": {
+      "arrayValues": "function values() { [native code] }",
+      "arrayIterator": "function values() { [native code] }",
+      "mapEntries": "function entries() { [native code] }"
+    },
+    "userSource": "function visibleUserFunction(){return 42}"
+  },
+  "differences": [
+    [
+      [
+        "AbortController",
+        "methods",
+        "abort"
+      ],
+      "function abort() { [native code] }",
+      "abort(reason){abort(this.signal,reason)}"
+    ],
+    [
+      [
+        "AbortController",
+        "methods",
+        "get signal"
+      ],
+      "function get signal() { [native code] }",
+      "get signal(){return controllerSlots.get(this)}"
+    ],
+    [
+      [
+        "AbortController",
+        "source"
+      ],
+      "function AbortController() { [native code] }",
+      "class AbortController {constructor(){controllerSlots.set(this,new AbortSignal(hostToken))}get signal(){return controllerSlots.get(this)}abort(reason){abort(this.signal,reason)}}"
+    ],
+    [
+      [
+        "AbortSignal",
+        "methods",
+        "get aborted"
+      ],
+      "function get aborted() { [native code] }",
+      "get aborted(){return abortSlots.get(this).aborted}"
+    ],
+    [
+      [
+        "AbortSignal",
+        "methods",
+        "get onabort"
+      ],
+      "function get onabort() { [native code] }",
+      "get onabort(){return abortSlots.get(this).onabort}"
+    ],
+    [
+      [
+        "AbortSignal",
+        "methods",
+        "get reason"
+      ],
+      "function get reason() { [native code] }",
+      "get reason(){return abortSlots.get(this).reason}"
+    ],
+    [
+      [
+        "AbortSignal",
+        "methods",
+        "set onabort"
+      ],
+      "function set onabort() { [native code] }",
+      "set onabort(value){abortSlots.get(this).onabort=value}"
+    ],
+    [
+      [
+        "AbortSignal",
+        "methods",
+        "throwIfAborted"
+      ],
+      "function throwIfAborted() { [native code] }",
+      "throwIfAborted(){if(this.aborted)throw this.reason}"
+    ],
+    [
+      [
+        "AbortSignal",
+        "source"
+      ],
+      "function AbortSignal() { [native code] }",
+      "class AbortSignal extends EventTarget {\r\n      constructor(token){super();if(token!==hostToken)throw new TypeError('Illegal constructor');abortSlots.set(this,{aborted:false,reason:undefined,onabort:null})}\r\n      get aborted(){return abortSlots.get(this).aborted} get reason(){return abortSlots.get(this).reason}\r\n      get onabort(){return abortSlots.get(this).onabort} set onabort(value){abortSlots.get(this).onabort=value}\r\n      throwIfAborted(){if(this.aborted)throw this.reason}\r\n      static abort(reason){const signal=new AbortSignal(hostToken);abort(signal,reason);return signal}\r\n      static timeout(ms){ms=Number(ms);if(ms<0||!Number.isFinite(ms))throw new RangeError('Invalid timeout');const signal=new AbortSignal(hostToken);setTimeout(()=>abort(signal,new DOMException('signal timed out','TimeoutError')),ms);return signal}\r\n      static any(signals){const result=new AbortSignal(hostToken);for(const signal of signals){if(!(signal instanceof AbortSignal))throw new TypeError('Expected AbortSignal');if(signal.aborted){abort(result,signal.reason);break}signal.addEventListener('abort',()=>abort(result,signal.reason))}return result}\r\n    }"
+    ],
+    [
+      [
+        "AbortSignal",
+        "statics",
+        "abort"
+      ],
+      "function abort() { [native code] }",
+      "abort(reason){const signal=new AbortSignal(hostToken);abort(signal,reason);return signal}"
+    ],
+    [
+      [
+        "AbortSignal",
+        "statics",
+        "any"
+      ],
+      "function any() { [native code] }",
+      "any(signals){const result=new AbortSignal(hostToken);for(const signal of signals){if(!(signal instanceof AbortSignal))throw new TypeError('Expected AbortSignal');if(signal.aborted){abort(result,signal.reason);break}signal.addEventListener('abort',()=>abort(result,signal.reason))}return result}"
+    ],
+    [
+      [
+        "AbortSignal",
+        "statics",
+        "timeout"
+      ],
+      "function timeout() { [native code] }",
+      "timeout(ms){ms=Number(ms);if(ms<0||!Number.isFinite(ms))throw new RangeError('Invalid timeout');const signal=new AbortSignal(hostToken);setTimeout(()=>abort(signal,new DOMException('signal timed out','TimeoutError')),ms);return signal}"
+    ],
+    [
+      [
+        "DOMStringList",
+        "methods",
+        "Symbol(Symbol.iterator)"
+      ],
+      "function values() { [native code] }",
+      "function Symbol(Symbol.iterator)() { [native code] }"
+    ],
+    [
+      [
+        "Headers",
+        "methods",
+        "Symbol(Symbol.iterator)"
+      ],
+      "function entries() { [native code] }",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Headers",
+        "methods",
+        "append"
+      ],
+      "function append() { [native code] }",
+      "append(name,value){name=String(name).toLowerCase();const guard=guards.get(this);if(guard==='immutable')throw new TypeError('Headers are immutable');if(guard==='request'&&forbidden(name)||guard==='response'&&['set-cookie','set-cookie2'].includes(name))return;super.append(name,value)}"
+    ],
+    [
+      [
+        "Headers",
+        "methods",
+        "delete"
+      ],
+      "function delete() { [native code] }",
+      "delete(name){name=String(name).toLowerCase();const guard=guards.get(this);if(guard==='immutable')throw new TypeError('Headers are immutable');if(guard==='request'&&forbidden(name)||guard==='response'&&['set-cookie','set-cookie2'].includes(name))return;super.delete(name)}"
+    ],
+    [
+      [
+        "Headers",
+        "methods",
+        "entries"
+      ],
+      "function entries() { [native code] }",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Headers",
+        "methods",
+        "forEach"
+      ],
+      "function forEach() { [native code] }",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Headers",
+        "methods",
+        "get"
+      ],
+      "function get() { [native code] }",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Headers",
+        "methods",
+        "getSetCookie"
+      ],
+      "function getSetCookie() { [native code] }",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Headers",
+        "methods",
+        "has"
+      ],
+      "function has() { [native code] }",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Headers",
+        "methods",
+        "keys"
+      ],
+      "function keys() { [native code] }",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Headers",
+        "methods",
+        "set"
+      ],
+      "function set() { [native code] }",
+      "set(name,value){name=String(name).toLowerCase();const guard=guards.get(this);if(guard==='immutable')throw new TypeError('Headers are immutable');if(guard==='request'&&forbidden(name)||guard==='response'&&['set-cookie','set-cookie2'].includes(name))return;super.set(name,value)}"
+    ],
+    [
+      [
+        "Headers",
+        "methods",
+        "values"
+      ],
+      "function values() { [native code] }",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Headers",
+        "source"
+      ],
+      "function Headers() { [native code] }",
+      "class FetchHeaders extends BaseHeaders {\r\n    append(name,value){name=String(name).toLowerCase();const guard=guards.get(this);if(guard==='immutable')throw new TypeError('Headers are immutable');if(guard==='request'&&forbidden(name)||guard==='response'&&['set-cookie','set-cookie2'].includes(name))return;super.append(name,value)}\r\n    set(name,value){name=String(name).toLowerCase();const guard=guards.get(this);if(guard==='immutable')throw new TypeError('Headers are immutable');if(guard==='request'&&forbidden(name)||guard==='response'&&['set-cookie','set-cookie2'].includes(name))return;super.set(name,value)}\r\n    delete(name){name=String(name).toLowerCase();const guard=guards.get(this);if(guard==='immutable')throw new TypeError('Headers are immutable');if(guard==='request'&&forbidden(name)||guard==='response'&&['set-cookie','set-cookie2'].includes(name))return;super.delete(name)}\r\n  }"
+    ],
+    [
+      [
+        "ReadableStream",
+        "methods",
+        "Symbol(Symbol.asyncIterator)"
+      ],
+      "function values() { [native code] }",
+      "values(e=void 0){if(!Ir(this))throw xr(\"values\");return function(e,t){const r=V(e),o=new ye(r,t),n=Object.create(ge);return n._asyncIteratorImpl=o,n}(this,function(e,t){L(e,t);const r=null==e?void 0:e.preventCancel;return{preventCancel:Boolean(r)}}(e,\"First parameter\").preventCancel)}"
+    ],
+    [
+      [
+        "ReadableStream",
+        "methods",
+        "cancel"
+      ],
+      "function cancel() { [native code] }",
+      "cancel(e=void 0){return Ir(this)?$r(this)?d(new TypeError(\"Cannot cancel a stream that already has a reader\")):Mr(this,e):d(xr(\"cancel\"))}"
+    ],
+    [
+      [
+        "ReadableStream",
+        "methods",
+        "get locked"
+      ],
+      "function get locked() { [native code] }",
+      "get locked(){if(!Ir(this))throw xr(\"locked\");return $r(this)}"
+    ],
+    [
+      [
+        "ReadableStream",
+        "methods",
+        "getReader"
+      ],
+      "function getReader() { [native code] }",
+      "getReader(e=void 0){if(!Ir(this))throw xr(\"getReader\");return void 0===function(e,t){L(e,t);const r=null==e?void 0:e.mode;return{mode:void 0===r?void 0:at(r,`${t} has member 'mode' that`)}}(e,\"First parameter\").mode?V(this):it(this)}"
+    ],
+    [
+      [
+        "ReadableStream",
+        "methods",
+        "pipeThrough"
+      ],
+      "function pipeThrough() { [native code] }",
+      "pipeThrough(e,t={}){if(!Ir(this))throw xr(\"pipeThrough\");M(e,1,\"pipeThrough\");const r=function(e,t){L(e,t);const r=null==e?void 0:e.readable;Y(r,\"readable\",\"ReadableWritablePair\"),H(r,`${t} has member 'readable' that`);const o=null==e?void 0:e.writable;return Y(o,\"writable\",\"ReadableWritablePair\"),Tt(o,`${t} has member 'writable' that`),{readable:r,writable:o}}(e,\"First parameter\"),o=zr(t,\"Second parameter\");if($r(this))throw new TypeError(\"ReadableStream.prototype.pipeThrough cannot be used on a locked ReadableStream\");if(Et(r.writable))throw new TypeError(\"ReadableStream.prototype.pipeThrough cannot be used on a locked WritableStream\");return p(br(this,r.writable,o.preventClose,o.preventAbort,o.preventCancel,o.signal)),r.readable}"
+    ],
+    [
+      [
+        "ReadableStream",
+        "methods",
+        "pipeTo"
+      ],
+      "function pipeTo() { [native code] }",
+      "pipeTo(e,t={}){if(!Ir(this))return d(xr(\"pipeTo\"));if(void 0===e)return d(\"Parameter 1 is required in 'pipeTo'.\");if(!qt(e))return d(new TypeError(\"ReadableStream.prototype.pipeTo's first argument must be a WritableStream\"));let r;try{r=zr(t,\"Second parameter\")}catch(e){return d(e)}return $r(this)?d(new TypeError(\"ReadableStream.prototype.pipeTo cannot be used on a locked ReadableStream\")):Et(e)?d(new TypeError(\"ReadableStream.prototype.pipeTo cannot be used on a locked WritableStream\")):br(this,e,r.preventClose,r.preventAbort,r.preventCancel,r.signal)}"
+    ],
+    [
+      [
+        "ReadableStream",
+        "methods",
+        "tee"
+      ],
+      "function tee() { [native code] }",
+      "tee(){if(!Ir(this))throw xr(\"tee\");return le(Wr(this))}"
+    ],
+    [
+      [
+        "ReadableStream",
+        "methods",
+        "values"
+      ],
+      "function values() { [native code] }",
+      "values(e=void 0){if(!Ir(this))throw xr(\"values\");return function(e,t){const r=V(e),o=new ye(r,t),n=Object.create(ge);return n._asyncIteratorImpl=o,n}(this,function(e,t){L(e,t);const r=null==e?void 0:e.preventCancel;return{preventCancel:Boolean(r)}}(e,\"First parameter\").preventCancel)}"
+    ],
+    [
+      [
+        "ReadableStream",
+        "source"
+      ],
+      "function ReadableStream() { [native code] }",
+      "class ReadableStream{constructor(e={},t={}){void 0===e?e=null:$(e,\"First parameter\");const r=yt(t,\"Second parameter\"),o=function(e,t){L(e,t);const r=e,o=null==r?void 0:r.autoAllocateChunkSize,n=null==r?void 0:r.cancel,a=null==r?void 0:r.pull,i=null==r?void 0:r.start,s=null==r?void 0:r.type;return{autoAllocateChunkSize:void 0===o?void 0:N(o,`${t} has member 'autoAllocateChunkSize' that`),cancel:void 0===n?void 0:Or(n,r,`${t} has member 'cancel' that`),pull:void 0===a?void 0:jr(a,r,`${t} has member 'pull' that`),start:void 0===i?void 0:kr(i,r,`${t} has member 'start' that`),type:void 0===s?void 0:Ar(s,`${t} has member 'type' that`)}}(e,\"First parameter\");if(Lr(this),\"bytes\"===o.type){if(void 0!==r.size)throw new RangeError(\"The strategy for a byte stream cannot have a size function\");!function(e,t,r){const o=Object.create(ReadableByteStreamController.prototype);let n,a,i;n=void 0!==t.start?()=>t.start(o):()=>{},a=void 0!==t.pull?()=>t.pull(o):()=>c(void 0),i=void 0!==t.cancel?e=>t.cancel(e):()=>c(void 0);const s=t.autoAllocateChunkSize;if(0===s)throw new TypeError(\"autoAllocateChunkSize must be greater than 0\");rt(e,o,n,a,i,r,s)}(this,o,mt(r,0))}else{const e=pt(r);!function(e,t,r,o){const n=Object.create(ReadableStreamDefaultController.prototype);let a,i,s;a=void 0!==t.start?()=>t.start(n):()=>{},i=void 0!==t.pull?()=>t.pull(n):()=>c(void 0),s=void 0!==t.cancel?e=>t.cancel(e):()=>c(void 0),qr(e,n,a,i,s,r,o)}(this,o,mt(r,1),e)}}get locked(){if(!Ir(this))throw xr(\"locked\");return $r(this)}cancel(e=void 0){return Ir(this)?$r(this)?d(new TypeError(\"Cannot cancel a stream that already has a reader\")):Mr(this,e):d(xr(\"cancel\"))}getReader(e=void 0){if(!Ir(this))throw xr(\"getReader\");return void 0===function(e,t){L(e,t);const r=null==e?void 0:e.mode;return{mode:void 0===r?void 0:at(r,`${t} has member 'mode' that`)}}(e,\"First parameter\").mode?V(this):it(this)}pipeThrough(e,t={}){if(!Ir(this))throw xr(\"pipeThrough\");M(e,1,\"pipeThrough\");const r=function(e,t){L(e,t);const r=null==e?void 0:e.readable;Y(r,\"readable\",\"ReadableWritablePair\"),H(r,`${t} has member 'readable' that`);const o=null==e?void 0:e.writable;return Y(o,\"writable\",\"ReadableWritablePair\"),Tt(o,`${t} has member 'writable' that`),{readable:r,writable:o}}(e,\"First parameter\"),o=zr(t,\"Second parameter\");if($r(this))throw new TypeError(\"ReadableStream.prototype.pipeThrough cannot be used on a locked ReadableStream\");if(Et(r.writable))throw new TypeError(\"ReadableStream.prototype.pipeThrough cannot be used on a locked WritableStream\");return p(br(this,r.writable,o.preventClose,o.preventAbort,o.preventCancel,o.signal)),r.readable}pipeTo(e,t={}){if(!Ir(this))return d(xr(\"pipeTo\"));if(void 0===e)return d(\"Parameter 1 is required in 'pipeTo'.\");if(!qt(e))return d(new TypeError(\"ReadableStream.prototype.pipeTo's first argument must be a WritableStream\"));let r;try{r=zr(t,\"Second parameter\")}catch(e){return d(e)}return $r(this)?d(new TypeError(\"ReadableStream.prototype.pipeTo cannot be used on a locked ReadableStream\")):Et(e)?d(new TypeError(\"ReadableStream.prototype.pipeTo cannot be used on a locked WritableStream\")):br(this,e,r.preventClose,r.preventAbort,r.preventCancel,r.signal)}tee(){if(!Ir(this))throw xr(\"tee\");return le(Wr(this))}values(e=void 0){if(!Ir(this))throw xr(\"values\");return function(e,t){const r=V(e),o=new ye(r,t),n=Object.create(ge);return n._asyncIteratorImpl=o,n}(this,function(e,t){L(e,t);const r=null==e?void 0:e.preventCancel;return{preventCancel:Boolean(r)}}(e,\"First parameter\").preventCancel)}[_e](e){return this.values(e)}static from(e){return Br(e)}}"
+    ],
+    [
+      [
+        "ReadableStream",
+        "statics",
+        "from"
+      ],
+      {
+        "$missing": true
+      },
+      "from(e){return Br(e)}"
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "arrayBuffer"
+      ],
+      "function arrayBuffer() { [native code] }",
+      "function(){return consume(this).then(value=>value.buffer)}"
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "blob"
+      ],
+      "function blob() { [native code] }",
+      "function(){return consume(this).then(value=>new NativeBlob([value],{type:this.headers.get('content-type')||''}))}"
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "bytes"
+      ],
+      "function bytes() { [native code] }",
+      "function(){return consume(this)}"
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "clone"
+      ],
+      "function clone() { [native code] }",
+      "clone(){const record=slot(requests,this),body=cloneBody(this),copy=Object.create(FetchRequest.prototype);requests.set(copy,{...record,headers:headers(record.headers,'request'),signal:dependentSignal(record.signal)});bodies.set(copy,body);return copy}"
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "formData"
+      ],
+      "function formData() { [native code] }",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "get body"
+      ],
+      "function get body() { [native code] }",
+      "get(){return slot(bodies,this).stream}"
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "get bodyUsed"
+      ],
+      "function get bodyUsed() { [native code] }",
+      "get(){return disturbed(slot(bodies,this).stream)}"
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "get cache"
+      ],
+      "function get cache() { [native code] }",
+      "get(){return slot(requests,this)[name]}"
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "get credentials"
+      ],
+      "function get credentials() { [native code] }",
+      "get(){return slot(requests,this)[name]}"
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "get destination"
+      ],
+      "function get destination() { [native code] }",
+      "get(){return slot(requests,this)[name]}"
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "get duplex"
+      ],
+      "function get duplex() { [native code] }",
+      "get(){return slot(requests,this)[name]}"
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "get headers"
+      ],
+      "function get headers() { [native code] }",
+      "get(){return slot(requests,this)[name]}"
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "get integrity"
+      ],
+      "function get integrity() { [native code] }",
+      "get(){return slot(requests,this)[name]}"
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "get isHistoryNavigation"
+      ],
+      "function get isHistoryNavigation() { [native code] }",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "get isReloadNavigation"
+      ],
+      "function get isReloadNavigation() { [native code] }",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "get keepalive"
+      ],
+      "function get keepalive() { [native code] }",
+      "get(){return slot(requests,this)[name]}"
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "get method"
+      ],
+      "function get method() { [native code] }",
+      "get(){return slot(requests,this)[name]}"
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "get mode"
+      ],
+      "function get mode() { [native code] }",
+      "get(){return slot(requests,this)[name]}"
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "get redirect"
+      ],
+      "function get redirect() { [native code] }",
+      "get(){return slot(requests,this)[name]}"
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "get referrer"
+      ],
+      "function get referrer() { [native code] }",
+      "get(){return slot(requests,this)[name]}"
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "get referrerPolicy"
+      ],
+      "function get referrerPolicy() { [native code] }",
+      "get(){return slot(requests,this)[name]}"
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "get signal"
+      ],
+      "function get signal() { [native code] }",
+      "get(){return slot(requests,this)[name]}"
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "get targetAddressSpace"
+      ],
+      "function get targetAddressSpace() { [native code] }",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "get url"
+      ],
+      "function get url() { [native code] }",
+      "get(){return slot(requests,this)[name]}"
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "json"
+      ],
+      "function json() { [native code] }",
+      "function(){return this.text().then(JSON.parse)}"
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "text"
+      ],
+      "function text() { [native code] }",
+      "function(){return consume(this).then(value=>new Decoder().decode(value))}"
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "textStream"
+      ],
+      "function textStream() { [native code] }",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Request",
+        "source"
+      ],
+      "function Request() { [native code] }",
+      "class FetchRequest {\r\n    constructor(input,init={}){\r\n      if(arguments.length===0)throw new TypeError('Request requires input');\r\n      const previous=requests.get(input),url=new globalThis.URL(previous?previous.url:String(input),fetchBaseURL());if(url.username||url.password)throw new TypeError('Request URL contains credentials');\r\n      let method=String(init.method===undefined?(previous?.method||'GET'):init.method);if(!/^[!#$%&'*+.^_`|~0-9A-Za-z-]+$/.test(method)||['CONNECT','TRACE','TRACK'].includes(method.toUpperCase()))throw new TypeError('Invalid HTTP method');if(normalizedMethods.has(method.toUpperCase()))method=method.toUpperCase();\r\n      const mode=String(init.mode??previous?.mode??'cors'),credentials=String(init.credentials??previous?.credentials??'same-origin'),cache=String(init.cache??previous?.cache??'default'),redirect=String(init.redirect??previous?.redirect??'follow');\r\n      if(!['cors','same-origin','no-cors','navigate'].includes(mode)||mode==='navigate'&&init.mode!==undefined)throw new TypeError('Invalid request mode');\r\n      if(!['omit','same-origin','include'].includes(credentials)||!['default','no-store','reload','no-cache','force-cache','only-if-cached'].includes(cache)||!['follow','error','manual'].includes(redirect))throw new TypeError('Invalid request option');\r\n      if(cache==='only-if-cached'&&mode!=='same-origin')throw new TypeError('only-if-cached requires same-origin');if(mode==='no-cors'&&!['GET','HEAD','POST'].includes(method))throw new TypeError('Invalid no-cors method');\r\n      const supplied=init.body!=null;let body;\r\n      if(supplied)body=extract(init.body);else if(previous){const old=slot(bodies,input);if(unusable(old))throw new TypeError('Request body already used');body={...old}}else body=extract(null);\r\n      if(['GET','HEAD'].includes(method)&&body.stream!==null)throw new TypeError('GET/HEAD request cannot have body');\r\n      if(supplied&&init.body instanceof Streams&&init.duplex!=='half')throw new TypeError('Streaming body requires duplex half');\r\n      if(init.duplex!==undefined&&init.duplex!=='half')throw new TypeError('Invalid duplex');\r\n      const list=headers(init.headers===undefined?previous?.headers:init.headers,'request');if(body.type&&!list.has('content-type'))list.set('content-type',body.type);\r\n      const signal=dependentSignal(init.signal===undefined?previous?.signal:init.signal),referrer=String(init.referrer??previous?.referrer??'about:client');\r\n      if(previous&&!supplied&&body.stream!==null)body.stream=body.stream.pipeThrough(new globalThis.TransformStream());\r\n      requests.set(this,{url:url.href,method,headers:list,mode,credentials,cache,redirect,referrer,referrerPolicy:String(init.referrerPolicy??previous?.referrerPolicy??''),integrity:String(init.integrity??previous?.integrity??''),keepalive:Boolean(init.keepalive??previous?.keepalive??false),signal,destination:'',duplex:'half'});bodies.set(this,body);\r\n    }\r\n    clone(){const record=slot(requests,this),body=cloneBody(this),copy=Object.create(FetchRequest.prototype);requests.set(copy,{...record,headers:headers(record.headers,'request'),signal:dependentSignal(record.signal)});bodies.set(copy,body);return copy}\r\n  }"
+    ],
+    [
+      [
+        "Response",
+        "methods",
+        "arrayBuffer"
+      ],
+      "function arrayBuffer() { [native code] }",
+      "function(){return consume(this).then(value=>value.buffer)}"
+    ],
+    [
+      [
+        "Response",
+        "methods",
+        "blob"
+      ],
+      "function blob() { [native code] }",
+      "function(){return consume(this).then(value=>new NativeBlob([value],{type:this.headers.get('content-type')||''}))}"
+    ],
+    [
+      [
+        "Response",
+        "methods",
+        "bytes"
+      ],
+      "function bytes() { [native code] }",
+      "function(){return consume(this)}"
+    ],
+    [
+      [
+        "Response",
+        "methods",
+        "clone"
+      ],
+      "function clone() { [native code] }",
+      "clone(){const record=slot(responses,this),body=cloneBody(this),list=headers(record.headers,'response');guards.set(list,guards.get(record.headers));return createResponse({...record,headers:list},body)}"
+    ],
+    [
+      [
+        "Response",
+        "methods",
+        "formData"
+      ],
+      "function formData() { [native code] }",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Response",
+        "methods",
+        "get body"
+      ],
+      "function get body() { [native code] }",
+      "get(){return slot(bodies,this).stream}"
+    ],
+    [
+      [
+        "Response",
+        "methods",
+        "get bodyUsed"
+      ],
+      "function get bodyUsed() { [native code] }",
+      "get(){return disturbed(slot(bodies,this).stream)}"
+    ],
+    [
+      [
+        "Response",
+        "methods",
+        "get headers"
+      ],
+      "function get headers() { [native code] }",
+      "get(){return slot(responses,this)[name]}"
+    ],
+    [
+      [
+        "Response",
+        "methods",
+        "get ok"
+      ],
+      "function get ok() { [native code] }",
+      "get ok(){const status=slot(responses,this).status;return status>=200&&status<=299}"
+    ],
+    [
+      [
+        "Response",
+        "methods",
+        "get redirected"
+      ],
+      "function get redirected() { [native code] }",
+      "get(){return slot(responses,this)[name]}"
+    ],
+    [
+      [
+        "Response",
+        "methods",
+        "get status"
+      ],
+      "function get status() { [native code] }",
+      "get(){return slot(responses,this)[name]}"
+    ],
+    [
+      [
+        "Response",
+        "methods",
+        "get statusText"
+      ],
+      "function get statusText() { [native code] }",
+      "get(){return slot(responses,this)[name]}"
+    ],
+    [
+      [
+        "Response",
+        "methods",
+        "get type"
+      ],
+      "function get type() { [native code] }",
+      "get(){return slot(responses,this)[name]}"
+    ],
+    [
+      [
+        "Response",
+        "methods",
+        "get url"
+      ],
+      "function get url() { [native code] }",
+      "get(){return slot(responses,this)[name]}"
+    ],
+    [
+      [
+        "Response",
+        "methods",
+        "json"
+      ],
+      "function json() { [native code] }",
+      "function(){return this.text().then(JSON.parse)}"
+    ],
+    [
+      [
+        "Response",
+        "methods",
+        "text"
+      ],
+      "function text() { [native code] }",
+      "function(){return consume(this).then(value=>new Decoder().decode(value))}"
+    ],
+    [
+      [
+        "Response",
+        "methods",
+        "textStream"
+      ],
+      "function textStream() { [native code] }",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Response",
+        "source"
+      ],
+      "function Response() { [native code] }",
+      "class FetchResponse {\r\n    constructor(body=null,init={}){\r\n      const status=init.status===undefined?200:(Number(init.status)>>>0)&65535;if(status<200||status>599)throw new RangeError('Invalid response status');\r\n      const statusText=String(init.statusText||'');if(/[^\\x09\\x20-\\x7e\\x80-\\xff]/.test(statusText))throw new TypeError('Invalid status text');\r\n      if(body!=null&&nullBodyStatus(status))throw new TypeError('Response status cannot have a body');\r\n      const extracted=extract(body),list=headers(init.headers,'response');if(extracted.type&&!list.has('content-type'))list.set('content-type',extracted.type);\r\n      responses.set(this,{status,statusText,headers:list,url:'',type:'default',redirected:false});bodies.set(this,extracted);\r\n    }\r\n    get ok(){const status=slot(responses,this).status;return status>=200&&status<=299}\r\n    clone(){const record=slot(responses,this),body=cloneBody(this),list=headers(record.headers,'response');guards.set(list,guards.get(record.headers));return createResponse({...record,headers:list},body)}\r\n    static error(){const list=headers();guards.set(list,'immutable');return createResponse({status:0,statusText:'',headers:list,url:'',type:'error',redirected:false},{stream:null,type:null})}\r\n    static redirect(url,status=302){status=(Number(status)>>>0)&65535;if(![301,302,303,307,308].includes(status))throw new RangeError('Invalid redirect status');const result=new FetchResponse(null,{status,headers:{location:new globalThis.URL(String(url),fetchBaseURL()).href}});guards.set(result.headers,'immutable');return result}\r\n    static json(data,init={}){const value=JSON.stringify(data);if(value===undefined)throw new TypeError('Value is not JSON serializable');const list=new FetchHeaders(init.headers);if(!list.has('content-type'))list.set('content-type','application/json');return new FetchResponse(value,{...init,headers:list})}\r\n  }"
+    ],
+    [
+      [
+        "Response",
+        "statics",
+        "error"
+      ],
+      "function error() { [native code] }",
+      "error(){const list=headers();guards.set(list,'immutable');return createResponse({status:0,statusText:'',headers:list,url:'',type:'error',redirected:false},{stream:null,type:null})}"
+    ],
+    [
+      [
+        "Response",
+        "statics",
+        "json"
+      ],
+      "function json() { [native code] }",
+      "json(data,init={}){const value=JSON.stringify(data);if(value===undefined)throw new TypeError('Value is not JSON serializable');const list=new FetchHeaders(init.headers);if(!list.has('content-type'))list.set('content-type','application/json');return new FetchResponse(value,{...init,headers:list})}"
+    ],
+    [
+      [
+        "Response",
+        "statics",
+        "redirect"
+      ],
+      "function redirect() { [native code] }",
+      "redirect(url,status=302){status=(Number(status)>>>0)&65535;if(![301,302,303,307,308].includes(status))throw new RangeError('Invalid redirect status');const result=new FetchResponse(null,{status,headers:{location:new globalThis.URL(String(url),fetchBaseURL()).href}});guards.set(result.headers,'immutable');return result}"
+    ],
+    [
+      [
+        "TextDecoder",
+        "methods",
+        "decode"
+      ],
+      "function decode() { [native code] }",
+      "decode(input,options={}){\n        const s=decoderSlots.get(this),stream=!!options.stream,bytes=s.bytes.concat(input==null?[]:Array.from(ArrayBuffer.isView(input)?new Uint8Array(input.buffer,input.byteOffset,input.byteLength):new Uint8Array(input)));s.bytes=[];let output='';\n        if(s.encoding==='windows-1252'){for(const byte of bytes)output+=String.fromCodePoint(byte>=0x80&&byte<=0x9f?windows1252C1[byte-0x80]:byte);return output}\n        const emit=point=>{if(!s.bom){s.bom=true;if(point===0xfeff&&!s.ignoreBOM)return}output+=String.fromCodePoint(point)};\r\n        const error=()=>{if(s.fatal)throw new TypeError('Invalid encoded data');emit(0xfffd)};\r\n        for(let i=0;i<bytes.length;){const start=i,b=bytes[i++];if(b<128){emit(b);continue}const count=b>=0xc2&&b<=0xdf?1:b>=0xe0&&b<=0xef?2:b>=0xf0&&b<=0xf4?3:0;if(!count){error();continue}\r\n          let point=b&((1<<(6-count))-1),valid=true;\r\n          for(let j=0;j<count;j++){\r\n            if(i===bytes.length){if(stream){s.bytes=bytes.slice(start);valid=false;i=bytes.length}else{error();valid=false}break}\n            const c=bytes[i],min=j===0&&b===0xe0?0xa0:j===0&&b===0xf0?0x90:0x80,max=j===0&&b===0xed?0x9f:j===0&&b===0xf4?0x8f:0xbf;\r\n            if(c<min||c>max){error();valid=false;break}i++;point=(point<<6)|(c&63);\r\n          }if(valid)emit(point);\r\n        }if(!stream)s.bom=false;return output;\n      }"
+    ],
+    [
+      [
+        "TextDecoder",
+        "methods",
+        "get encoding"
+      ],
+      "function get encoding() { [native code] }",
+      "get encoding(){return decoderSlots.get(this).encoding}"
+    ],
+    [
+      [
+        "TextDecoder",
+        "methods",
+        "get fatal"
+      ],
+      "function get fatal() { [native code] }",
+      "get fatal(){return decoderSlots.get(this).fatal}"
+    ],
+    [
+      [
+        "TextDecoder",
+        "methods",
+        "get ignoreBOM"
+      ],
+      "function get ignoreBOM() { [native code] }",
+      "get ignoreBOM(){return decoderSlots.get(this).ignoreBOM}"
+    ],
+    [
+      [
+        "TextDecoder",
+        "source"
+      ],
+      "function TextDecoder() { [native code] }",
+      "class TextDecoder {\n      constructor(label='utf-8',options={}){label=String(label).replace(/^[\\t\\n\\f\\r ]+|[\\t\\n\\f\\r ]+$/g,'').toLowerCase();const encoding=decoderLabels.get(label);if(!encoding)throw new RangeError('Unsupported encoding: '+label);decoderSlots.set(this,{encoding,fatal:!!options.fatal,ignoreBOM:!!options.ignoreBOM,bytes:[],bom:false})}\n      get encoding(){return decoderSlots.get(this).encoding}get fatal(){return decoderSlots.get(this).fatal}get ignoreBOM(){return decoderSlots.get(this).ignoreBOM}\n      decode(input,options={}){\n        const s=decoderSlots.get(this),stream=!!options.stream,bytes=s.bytes.concat(input==null?[]:Array.from(ArrayBuffer.isView(input)?new Uint8Array(input.buffer,input.byteOffset,input.byteLength):new Uint8Array(input)));s.bytes=[];let output='';\n        if(s.encoding==='windows-1252'){for(const byte of bytes)output+=String.fromCodePoint(byte>=0x80&&byte<=0x9f?windows1252C1[byte-0x80]:byte);return output}\n        const emit=point=>{if(!s.bom){s.bom=true;if(point===0xfeff&&!s.ignoreBOM)return}output+=String.fromCodePoint(point)};\r\n        const error=()=>{if(s.fatal)throw new TypeError('Invalid encoded data');emit(0xfffd)};\r\n        for(let i=0;i<bytes.length;){const start=i,b=bytes[i++];if(b<128){emit(b);continue}const count=b>=0xc2&&b<=0xdf?1:b>=0xe0&&b<=0xef?2:b>=0xf0&&b<=0xf4?3:0;if(!count){error();continue}\r\n          let point=b&((1<<(6-count))-1),valid=true;\r\n          for(let j=0;j<count;j++){\r\n            if(i===bytes.length){if(stream){s.bytes=bytes.slice(start);valid=false;i=bytes.length}else{error();valid=false}break}\n            const c=bytes[i],min=j===0&&b===0xe0?0xa0:j===0&&b===0xf0?0x90:0x80,max=j===0&&b===0xed?0x9f:j===0&&b===0xf4?0x8f:0xbf;\r\n            if(c<min||c>max){error();valid=false;break}i++;point=(point<<6)|(c&63);\r\n          }if(valid)emit(point);\r\n        }if(!stream)s.bom=false;return output;\n      }\r\n    }"
+    ],
+    [
+      [
+        "TransformStream",
+        "methods",
+        "get readable"
+      ],
+      "function get readable() { [native code] }",
+      "get readable(){if(!ro(this))throw _o(\"readable\");return this._readable}"
+    ],
+    [
+      [
+        "TransformStream",
+        "methods",
+        "get writable"
+      ],
+      "function get writable() { [native code] }",
+      "get writable(){if(!ro(this))throw _o(\"writable\");return this._writable}"
+    ],
+    [
+      [
+        "TransformStream",
+        "source"
+      ],
+      "function TransformStream() { [native code] }",
+      "class TransformStream{constructor(e={},t={},r={}){void 0===e&&(e=null);const o=yt(t,\"Second parameter\"),n=yt(r,\"Third parameter\"),a=function(e,t){L(e,t);const r=null==e?void 0:e.cancel,o=null==e?void 0:e.flush,n=null==e?void 0:e.readableType,a=null==e?void 0:e.start,i=null==e?void 0:e.transform,s=null==e?void 0:e.writableType;return{cancel:void 0===r?void 0:to(r,e,`${t} has member 'cancel' that`),flush:void 0===o?void 0:Kr(o,e,`${t} has member 'flush' that`),readableType:n,start:void 0===a?void 0:Zr(a,e,`${t} has member 'start' that`),transform:void 0===i?void 0:eo(i,e,`${t} has member 'transform' that`),writableType:s}}(e,\"First parameter\");if(void 0!==a.readableType)throw new RangeError(\"Invalid readableType specified\");if(void 0!==a.writableType)throw new RangeError(\"Invalid writableType specified\");const i=mt(n,0),s=pt(n),l=mt(o,1),f=pt(o);let h;!function(e,t,r,o,n,a){function i(){return t}function s(t){return function(e,t){const r=e._transformStreamController;if(e._backpressure){return m(e._backpressureChangePromise,()=>{const o=e._writable;if(\"erroring\"===o._state)throw o._storedError;return co(r,t)})}return co(r,t)}(e,t)}function l(t){return function(e,t){const r=e._transformStreamController;if(void 0!==r._finishPromise)return r._finishPromise;const o=e._readable;r._finishPromise=u((e,t)=>{r._finishPromise_resolve=e,r._finishPromise_reject=t});const n=r._cancelAlgorithm(t);return lo(r),b(n,()=>(\"errored\"===o._state?ho(r,o._storedError):(Tr(o._readableStreamController,t),bo(r)),null),e=>(Tr(o._readableStreamController,e),ho(r,e),null)),r._finishPromise}(e,t)}function c(){return function(e){const t=e._transformStreamController;if(void 0!==t._finishPromise)return t._finishPromise;const r=e._readable;t._finishPromise=u((e,r)=>{t._finishPromise_resolve=e,t._finishPromise_reject=r});const o=t._flushAlgorithm();return lo(t),b(o,()=>(\"errored\"===r._state?ho(t,r._storedError):(wr(r._readableStreamController),bo(t)),null),e=>(Tr(r._readableStreamController,e),ho(t,e),null)),t._finishPromise}(e)}function d(){return function(e){return io(e,!1),e._backpressureChangePromise}(e)}function f(t){return function(e,t){const r=e._transformStreamController;if(void 0!==r._finishPromise)return r._finishPromise;const o=e._writable;r._finishPromise=u((e,t)=>{r._finishPromise_resolve=e,r._finishPromise_reject=t});const n=r._cancelAlgorithm(t);return lo(r),b(n,()=>(\"errored\"===o._state?ho(r,o._storedError):(Gt(o._writableStreamController,t),ao(e),bo(r)),null),t=>(Gt(o._writableStreamController,t),ao(e),ho(r,t),null)),r._finishPromise}(e,t)}e._writable=function(e,t,r,o,n=1,a=()=>1){const i=Object.create(WritableStream.prototype);return Ct(i),Nt(i,Object.create(WritableStreamDefaultController.prototype),e,t,r,o,n,a),i}(i,s,c,l,r,o),e._readable=Dr(i,d,f,n,a),e._backpressure=void 0,e._backpressureChangePromise=void 0,e._backpressureChangePromise_resolve=void 0,io(e,!0),e._transformStreamController=void 0}(this,u(e=>{h=e}),l,f,i,s),function(e,t){const r=Object.create(TransformStreamDefaultController.prototype);let o,n,a;o=void 0!==t.transform?e=>t.transform(e,r):e=>{try{return uo(r,e),c(void 0)}catch(e){return d(e)}};n=void 0!==t.flush?()=>t.flush(r):()=>c(void 0);a=void 0!==t.cancel?e=>t.cancel(e):()=>c(void 0);!function(e,t,r,o,n){t._controlledTransformStream=e,e._transformStreamController=t,t._transformAlgorithm=r,t._flushAlgorithm=o,t._cancelAlgorithm=n,t._finishPromise=void 0,t._finishPromise_resolve=void 0,t._finishPromise_reject=void 0}(e,r,o,n,a)}(this,a),void 0!==a.start?h(a.start(this._transformStreamController)):h(void 0)}get readable(){if(!ro(this))throw _o(\"readable\");return this._readable}get writable(){if(!ro(this))throw _o(\"writable\");return this._writable}}"
+    ],
+    [
+      [
+        "WritableStream",
+        "methods",
+        "abort"
+      ],
+      "function abort() { [native code] }",
+      "abort(e=void 0){return qt(this)?Et(this)?d(new TypeError(\"Cannot abort a stream that already has a writer\")):Wt(this,e):d(Kt(\"abort\"))}"
+    ],
+    [
+      [
+        "WritableStream",
+        "methods",
+        "close"
+      ],
+      "function close() { [native code] }",
+      "close(){return qt(this)?Et(this)?d(new TypeError(\"Cannot close a stream that already has a writer\")):At(this)?d(new TypeError(\"Cannot close an already-closing stream\")):Bt(this):d(Kt(\"close\"))}"
+    ],
+    [
+      [
+        "WritableStream",
+        "methods",
+        "get locked"
+      ],
+      "function get locked() { [native code] }",
+      "get locked(){if(!qt(this))throw Kt(\"locked\");return Et(this)}"
+    ],
+    [
+      [
+        "WritableStream",
+        "methods",
+        "getWriter"
+      ],
+      "function getWriter() { [native code] }",
+      "getWriter(){if(!qt(this))throw Kt(\"getWriter\");return Pt(this)}"
+    ],
+    [
+      [
+        "WritableStream",
+        "source"
+      ],
+      "function WritableStream() { [native code] }",
+      "class WritableStream{constructor(e={},t={}){void 0===e?e=null:$(e,\"First parameter\");const r=yt(t,\"Second parameter\"),o=function(e,t){L(e,t);const r=null==e?void 0:e.abort,o=null==e?void 0:e.close,n=null==e?void 0:e.start,a=null==e?void 0:e.type,i=null==e?void 0:e.write;return{abort:void 0===r?void 0:gt(r,e,`${t} has member 'abort' that`),close:void 0===o?void 0:vt(o,e,`${t} has member 'close' that`),start:void 0===n?void 0:wt(n,e,`${t} has member 'start' that`),write:void 0===i?void 0:Rt(i,e,`${t} has member 'write' that`),type:a}}(e,\"First parameter\");Ct(this);if(void 0!==o.type)throw new RangeError(\"Invalid type is specified\");const n=pt(r);!function(e,t,r,o){const n=Object.create(WritableStreamDefaultController.prototype);let a,i,s,l;a=void 0!==t.start?()=>t.start(n):()=>{};i=void 0!==t.write?e=>t.write(e,n):()=>c(void 0);s=void 0!==t.close?()=>t.close():()=>c(void 0);l=void 0!==t.abort?e=>t.abort(e):()=>c(void 0);Nt(e,n,a,i,s,l,r,o)}(this,o,mt(r,1),n)}get locked(){if(!qt(this))throw Kt(\"locked\");return Et(this)}abort(e=void 0){return qt(this)?Et(this)?d(new TypeError(\"Cannot abort a stream that already has a writer\")):Wt(this,e):d(Kt(\"abort\"))}close(){return qt(this)?Et(this)?d(new TypeError(\"Cannot close a stream that already has a writer\")):At(this)?d(new TypeError(\"Cannot close an already-closing stream\")):Bt(this):d(Kt(\"close\"))}getWriter(){if(!qt(this))throw Kt(\"getWriter\");return Pt(this)}}"
+    ],
+    [
+      [
+        "intrinsics",
+        "arrayIterator"
+      ],
+      "function values() { [native code] }",
+      "function Symbol(Symbol.iterator)() { [native code] }"
+    ],
+    [
+      [
+        "intrinsics",
+        "arrayValues"
+      ],
+      "function values() { [native code] }",
+      "function Symbol(Symbol.iterator)() { [native code] }"
+    ]
+  ],
+  "controlDifferences": []
+}

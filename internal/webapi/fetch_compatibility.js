@@ -55,11 +55,11 @@
     Object.defineProperties(prototype,{
       body:{get(){return slot(bodies,this).stream},configurable:true,enumerable:true},
       bodyUsed:{get(){return disturbed(slot(bodies,this).stream)},configurable:true,enumerable:true},
-      bytes:{value:function(){return consume(this)},writable:true,configurable:true,enumerable:true},
-      arrayBuffer:{value:function(){return consume(this).then(value=>value.buffer)},writable:true,configurable:true,enumerable:true},
-      text:{value:function(){return consume(this).then(value=>new Decoder().decode(value))},writable:true,configurable:true,enumerable:true},
-      json:{value:function(){return this.text().then(JSON.parse)},writable:true,configurable:true,enumerable:true},
-      blob:{value:function(){return consume(this).then(value=>new NativeBlob([value],{type:this.headers.get('content-type')||''}))},writable:true,configurable:true,enumerable:true}
+      bytes:{value:function bytes(){return consume(this)},writable:true,configurable:true,enumerable:true},
+      arrayBuffer:{value:function arrayBuffer(){return consume(this).then(value=>value.buffer)},writable:true,configurable:true,enumerable:true},
+      text:{value:function text(){return consume(this).then(value=>new Decoder().decode(value))},writable:true,configurable:true,enumerable:true},
+      json:{value:function json(){return this.text().then(JSON.parse)},writable:true,configurable:true,enumerable:true},
+      blob:{value:function blob(){return consume(this).then(value=>new NativeBlob([value],{type:this.headers.get('content-type')||''}))},writable:true,configurable:true,enumerable:true}
     });
   }
   const nullBodyStatus = status => [101,103,204,205,304].includes(status);
