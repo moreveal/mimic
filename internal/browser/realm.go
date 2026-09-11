@@ -548,6 +548,21 @@ func (r *Realm) installBindings() error {
 		}
 		return r.val(map[string]any{"self": frame.ID, "parent": parent.ID, "top": frame.Top().ID}), nil
 	})
+	host["windowFrames"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		frameIDs := make([]string, 0, len(r.childFrames))
+		var visit func(int64)
+		visit = func(parentID int64) {
+			for _, child := range r.document.Children(parentID) {
+				if frame := r.childFrames[child.ID]; frame != nil {
+					frameIDs = append(frameIDs, frame.ID)
+					continue
+				}
+				visit(child.ID)
+			}
+		}
+		visit(r.document.Root().ID)
+		return r.val(frameIDs), nil
+	})
 	host["documentActive"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(!r.inactive), nil })
 	host["frameElement"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		frame, ok := r.agent.(*Frame)

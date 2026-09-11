@@ -29,11 +29,27 @@
     const visit = node => {
       if (seen.has(node)) return;
       seen.add(node);
-      const root = elementShadows.get(node);
+      let root = elementShadows.get(node);
+      // ShadyDOM keeps its logical shadow tree in a DocumentFragment and
+      // exposes it through the public wrapper even when native shadowRoot is
+      // intentionally hidden. Adopt that root into the authoritative snapshot
+      // registry without changing the polyfill's observable DOM projection.
+      if (!root && node instanceof Element && globalThis.ShadyDOM?.inUse && typeof globalThis.ShadyDOM.wrap === 'function') {
+        try {
+          const candidate = globalThis.ShadyDOM.wrap(node)?.shadowRoot;
+          if (candidate && (candidate instanceof ShadowRoot || globalThis.ShadyDOM.isShadyRoot?.(candidate))) {
+            const option = (name, fallback) => { try { const value = candidate[name]; return value === undefined ? fallback : value; } catch { return fallback; } };
+            if (!shadowSlots.has(candidate)) shadowSlots.set(candidate, {host:node, mode:String(option('mode', 'open')), delegatesFocus:!!option('delegatesFocus', false),
+              slotAssignment:String(option('slotAssignment', 'named')), serializable:!!option('serializable', false), clonable:!!option('clonable', false), onslotchange:null});
+            elementShadows.set(node, candidate);
+            root = candidate;
+          }
+        } catch {}
+      }
       if (root) {
         const state = shadowSlots.get(root), children = Array.from(root.childNodes);
         result.push({hostID:elementSlot(node).nodeId, mode:state.mode, delegatesFocus:state.delegatesFocus,
-          children:children.map(n => elementSlot(n).nodeId), html:children.length ? '' : fragmentState(root).html || '',
+          children:children.map(n => elementSlot(n).nodeId), html:children.length ? '' : fragmentState(root)?.html || '',
           styles:constructedStyleSheets.snapshot(root)});
         for (const child of children) visit(child);
       }

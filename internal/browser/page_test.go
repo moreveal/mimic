@@ -1640,6 +1640,55 @@ func TestFrameElementDerivesFromBrowsingContext(t *testing.T) {
 	}
 }
 
+func TestWindowFramesReflectsDirectChildBrowsingContexts(t *testing.T) {
+	p := testPage(t)
+	v, err := p.Evaluate(context.Background(), `(()=>{
+		const first=document.createElement('iframe'),second=document.createElement('iframe');
+		document.body.append(first,second);
+		const before={identity:frames===window,length:window.length,first:frames[0]===first.contentWindow,second:window[1]===second.contentWindow};
+		document.body.insertBefore(second,first);
+		const reordered={first:frames[0]===second.contentWindow,second:frames[1]===first.contentWindow};
+		second.remove();
+		return{before,reordered,after:{length:frames.length,first:frames[0]===first.contentWindow,stale:window[1]}};
+	})()`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	got := v.(map[string]any)
+	before := got["before"].(map[string]any)
+	reordered := got["reordered"].(map[string]any)
+	after := got["after"].(map[string]any)
+	if before["identity"] != true || before["length"] != int64(2) || before["first"] != true || before["second"] != true {
+		t.Fatalf("initial Window frames projection = %#v", before)
+	}
+	if reordered["first"] != true || reordered["second"] != true {
+		t.Fatalf("reordered Window frames projection = %#v", reordered)
+	}
+	if after["length"] != int64(1) || after["first"] != true || after["stale"] != nil {
+		t.Fatalf("updated Window frames projection = %#v", after)
+	}
+}
+
+func TestDocumentCreateEventInitializesLegacyCustomEvent(t *testing.T) {
+	p := testPage(t)
+	v, err := p.Evaluate(context.Background(), `(()=>{const event=document.createEvent('CustomEvent');event.initCustomEvent('ready',true,true,{value:7});return{ctor:event.constructor===CustomEvent,type:event.type,bubbles:event.bubbles,cancelable:event.cancelable,detail:event.detail.value}})()`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	got := v.(map[string]any)
+	if got["ctor"] != true || got["type"] != "ready" || got["bubbles"] != true || got["cancelable"] != true || got["detail"] != int64(7) {
+		t.Fatalf("legacy CustomEvent = %#v", got)
+	}
+}
+
+func TestFragmentInsertionDoesNotInvokeOverriddenRemoveChild(t *testing.T) {
+	p := testPage(t)
+	got, err := p.Evaluate(context.Background(), `(()=>{const target=document.createElement('div'),fragment=document.createDocumentFragment(),child=document.createElement('span');fragment.appendChild(child);fragment.removeChild=()=>{throw new Error('observable override')};target.appendChild(fragment);return target.firstChild===child&&fragment.childNodes.length===0})()`)
+	if err != nil || got != true {
+		t.Fatalf("fragment insertion invoked author removeChild: %v %v", got, err)
+	}
+}
+
 func TestIFrameSandboxAssignmentForwardsToDOMTokenListValue(t *testing.T) {
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{const iframe=document.createElement('iframe');iframe.sandbox='allow-scripts allow-same-origin';return{attribute:iframe.getAttribute('sandbox'),value:iframe.sandbox.value,contains:iframe.sandbox.contains('allow-scripts')}})()`)
