@@ -1,0 +1,427 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": -65,
+      "top": 222,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "unverified-reused-controlled",
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "probeSHA256": "71f23da9a767703e211eb6e75e0f6542d0939a69e5f4cbce6b14216bf8005dcf",
+  "result": {
+    "result": {
+      "value": {
+        "live": {
+          "stable": true,
+          "prototypeMethod": true,
+          "missing": {
+            "error": "TypeError",
+            "local": true
+          },
+          "empty": {
+            "value": null
+          },
+          "wrapped": {
+            "value": "first"
+          },
+          "negative": {
+            "value": null
+          },
+          "bigint": {
+            "error": "TypeError",
+            "local": true
+          },
+          "symbol": {
+            "error": "TypeError",
+            "local": true
+          },
+          "length": {
+            "value": 2
+          },
+          "forged": {
+            "error": "TypeError",
+            "local": true
+          },
+          "proxy": {
+            "error": "TypeError",
+            "local": true
+          },
+          "invalid": {
+            "error": "TypeError",
+            "local": true
+          },
+          "invalidConversions": 0,
+          "noPrototype": {
+            "value": "first"
+          }
+        },
+        "static": {
+          "stable": true,
+          "prototypeMethod": true,
+          "missing": {
+            "error": "TypeError",
+            "local": true
+          },
+          "empty": {
+            "value": null
+          },
+          "wrapped": {
+            "value": "first"
+          },
+          "negative": {
+            "value": null
+          },
+          "bigint": {
+            "error": "TypeError",
+            "local": true
+          },
+          "symbol": {
+            "error": "TypeError",
+            "local": true
+          },
+          "length": {
+            "value": 2
+          },
+          "forged": {
+            "error": "TypeError",
+            "local": true
+          },
+          "proxy": {
+            "error": "TypeError",
+            "local": true
+          },
+          "invalid": {
+            "error": "TypeError",
+            "local": true
+          },
+          "invalidConversions": 0,
+          "noPrototype": {
+            "value": "first"
+          }
+        },
+        "fragment": {
+          "stable": true,
+          "prototypeMethod": true,
+          "missing": {
+            "error": "TypeError",
+            "local": true
+          },
+          "empty": {
+            "value": null
+          },
+          "wrapped": {
+            "value": "first"
+          },
+          "negative": {
+            "value": null
+          },
+          "bigint": {
+            "error": "TypeError",
+            "local": true
+          },
+          "symbol": {
+            "error": "TypeError",
+            "local": true
+          },
+          "length": {
+            "value": 2
+          },
+          "forged": {
+            "error": "TypeError",
+            "local": true
+          },
+          "proxy": {
+            "error": "TypeError",
+            "local": true
+          },
+          "invalid": {
+            "error": "TypeError",
+            "local": true
+          },
+          "invalidConversions": 0,
+          "noPrototype": {
+            "value": "first"
+          }
+        },
+        "children": {
+          "stable": true,
+          "prototypeMethod": true,
+          "missing": {
+            "error": "TypeError",
+            "local": true
+          },
+          "empty": {
+            "value": null
+          },
+          "wrapped": {
+            "value": "first"
+          },
+          "negative": {
+            "value": null
+          },
+          "bigint": {
+            "error": "TypeError",
+            "local": true
+          },
+          "symbol": {
+            "error": "TypeError",
+            "local": true
+          },
+          "length": {
+            "value": 2
+          },
+          "forged": {
+            "error": "TypeError",
+            "local": true
+          },
+          "proxy": {
+            "error": "TypeError",
+            "local": true
+          },
+          "invalid": {
+            "error": "TypeError",
+            "local": true
+          },
+          "invalidConversions": 0,
+          "noPrototype": {
+            "value": "first"
+          },
+          "named": {
+            "value": "first"
+          },
+          "namedMissing": {
+            "error": "TypeError",
+            "local": true
+          },
+          "namedSymbol": {
+            "error": "TypeError",
+            "local": true
+          }
+        },
+        "form": {
+          "stable": true,
+          "prototypeMethod": true,
+          "missing": {
+            "error": "TypeError",
+            "local": true
+          },
+          "empty": {
+            "value": null
+          },
+          "wrapped": {
+            "value": "control"
+          },
+          "negative": {
+            "value": null
+          },
+          "bigint": {
+            "error": "TypeError",
+            "local": true
+          },
+          "symbol": {
+            "error": "TypeError",
+            "local": true
+          },
+          "length": {
+            "value": 2
+          },
+          "forged": {
+            "error": "TypeError",
+            "local": true
+          },
+          "proxy": {
+            "error": "TypeError",
+            "local": true
+          },
+          "invalid": {
+            "error": "TypeError",
+            "local": true
+          },
+          "invalidConversions": 0,
+          "noPrototype": {
+            "value": "control"
+          },
+          "named": {
+            "value": "control"
+          },
+          "namedMissing": {
+            "error": "TypeError",
+            "local": true
+          },
+          "namedSymbol": {
+            "error": "TypeError",
+            "local": true
+          }
+        },
+        "options": {
+          "stable": true,
+          "prototypeMethod": true,
+          "missing": {
+            "error": "TypeError",
+            "local": true
+          },
+          "empty": {
+            "value": null
+          },
+          "wrapped": {
+            "value": "option"
+          },
+          "negative": {
+            "value": null
+          },
+          "bigint": {
+            "error": "TypeError",
+            "local": true
+          },
+          "symbol": {
+            "error": "TypeError",
+            "local": true
+          },
+          "length": {
+            "value": 1
+          },
+          "forged": {
+            "error": "TypeError",
+            "local": true
+          },
+          "proxy": {
+            "error": "TypeError",
+            "local": true
+          },
+          "invalid": {
+            "error": "TypeError",
+            "local": true
+          },
+          "invalidConversions": 0,
+          "noPrototype": {
+            "value": "option"
+          },
+          "named": {
+            "value": "option"
+          },
+          "namedMissing": {
+            "error": "TypeError",
+            "local": true
+          },
+          "namedSymbol": {
+            "error": "TypeError",
+            "local": true
+          }
+        },
+        "selected": {
+          "stable": true,
+          "prototypeMethod": true,
+          "missing": {
+            "error": "TypeError",
+            "local": true
+          },
+          "empty": {
+            "value": null
+          },
+          "wrapped": {
+            "value": "option"
+          },
+          "negative": {
+            "value": null
+          },
+          "bigint": {
+            "error": "TypeError",
+            "local": true
+          },
+          "symbol": {
+            "error": "TypeError",
+            "local": true
+          },
+          "length": {
+            "value": 1
+          },
+          "forged": {
+            "error": "TypeError",
+            "local": true
+          },
+          "proxy": {
+            "error": "TypeError",
+            "local": true
+          },
+          "invalid": {
+            "error": "TypeError",
+            "local": true
+          },
+          "invalidConversions": 0,
+          "noPrototype": {
+            "value": "option"
+          },
+          "named": {
+            "value": "option"
+          },
+          "namedMissing": {
+            "error": "TypeError",
+            "local": true
+          },
+          "namedSymbol": {
+            "error": "TypeError",
+            "local": true
+          }
+        },
+        "aliases": {
+          "values": true,
+          "entries": true,
+          "keys": true,
+          "forEach": true,
+          "iterator": true,
+          "htmlIterator": true
+        },
+        "generic": {
+          "values": {
+            "value": [
+              "a",
+              "b"
+            ]
+          },
+          "item": {
+            "error": "TypeError",
+            "local": true
+          }
+        },
+        "shadow.item": "shadow",
+        "shadow.values": "shadow",
+        "shadow.forEach": "shadow",
+        "liveFirst": "first",
+        "liveRemainder": [
+          "added"
+        ],
+        "borrowed": {
+          "node": true,
+          "html": true,
+          "reverse": true
+        },
+        "iteratorShape": {
+          "name": "values",
+          "length": 0,
+          "source": "function values() { [native code] }",
+          "tag": "[object Array Iterator]"
+        }
+      }
+    }
+  }
+}
