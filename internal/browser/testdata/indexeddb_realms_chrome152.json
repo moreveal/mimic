@@ -1,0 +1,76 @@
+{
+  "uniqueUpgrade": [
+    "AbortError",
+    "ConstraintError"
+  ],
+  "uniqueRollback": [
+    1,
+    [
+      "s"
+    ]
+  ],
+  "openOrder": [
+    "upgrade",
+    "complete",
+    "openFirst",
+    "openSecond"
+  ],
+  "rangeIdentity": [
+    false,
+    false,
+    false
+  ],
+  "rangeCopy": [
+    [
+      1,
+      2
+    ],
+    true
+  ],
+  "realm": [
+    true,
+    -1,
+    "TypeError"
+  ],
+  "keyPathIdentity": [
+    true,
+    false
+  ],
+  "keyPathCopy": [
+    "x",
+    "y",
+    "z"
+  ],
+  "listSnapshots": [
+    [],
+    false,
+    [],
+    false,
+    false
+  ],
+  "keyPathStored": [
+    1,
+    2
+  ],
+  "borrowed": [
+    "realms",
+    [
+      "compound",
+      "s"
+    ],
+    [
+      "0",
+      "1"
+    ],
+    "compound",
+    true
+  ],
+  "shared": 3,
+  "abortQueued": "new",
+  "list": [
+    false,
+    2,
+    "compound",
+    2
+  ]
+}

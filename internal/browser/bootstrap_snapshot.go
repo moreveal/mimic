@@ -310,6 +310,8 @@ func (r *Realm) retryBootstrap(err error) error {
 		r.cookieUnsubscribe()
 		r.cookieUnsubscribe = nil
 	}
+	r.indexedNotifier = nil
+	r.indexedEncoder = nil
 	r.cookieNotifier = nil
 	r.launchNotifier = nil
 	if closeErr := r.runtime.Close(); closeErr != nil {

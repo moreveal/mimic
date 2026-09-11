@@ -43,6 +43,8 @@ func (b *Browser) Environment() state.Environment      { b.mu.RLock(); defer b.m
 func (b *Browser) Compatibility() compatibility.Bundle { return b.compat }
 
 type Context struct {
+	indexedDatabases   map[string]map[string]*indexedDatabase
+	indexedSequence    uint64
 	cacheNames         map[string]map[string]*cacheBucket
 	cacheSequence      uint64
 	bootstrapSnapshots bootstrapSnapshotCache

@@ -67,10 +67,11 @@ type Page struct {
 	textMetrics          *textmetrics.Engine // Page event-loop owned; lazy local font resources.
 	// Cross-realm calls can enqueue jobs in an isolate other than the caller's.
 	// These fields are owned by the Page event loop, never by network goroutines.
-	pendingCheckpoints []*Realm
-	checkpointDraining bool
-	userScriptDepth    int
-	crossRealmDepth    int
+	pendingCheckpoints  []*Realm
+	checkpointDraining  bool
+	userScriptDepth     int
+	databaseScriptEpoch uint64
+	crossRealmDepth     int
 }
 
 // LockCommands serializes an external command and its complete event-loop turn.
