@@ -18,14 +18,23 @@ func TestPerformanceNavigationReasonAndResourceIdentity(t *testing.T) {
 			fmt.Fprint(w, "<!doctype html><body>local timing fixture</body>")
 		}))
 		defer server.Close()
-		ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+		// Multiple full realm bootstraps under -race exceed a short generic
+		// evaluation watchdog. Assertions concern navigation state, not latency.
+		ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)
 		defer cancel()
+		check := func(script string, expected any) {
+			t.Helper()
+			value, err := p.Evaluate(ctx, script)
+			if err != nil || value != expected {
+				t.Fatalf("navigation metadata: value=%v expected=%v error=%v", value, expected, err)
+			}
+		}
 		if err := p.Navigate(ctx, server.URL); err != nil {
 			t.Fatal(err)
 		}
-		historyEval(t, p, `performance.getEntriesByType('navigation')[0].type`, "navigate")
+		check(`performance.getEntriesByType('navigation')[0].type`, "navigate")
 		checkResources := `(async()=>{await(await fetch('/resource')).text();const nav=performance.getEntriesByType('navigation')[0];const resource=performance.getEntriesByType('resource').find(e=>e.name.endsWith('/resource'));const id=nav.navigationId;history.replaceState(null,'','#state');return id>0&&resource.navigationId===id&&resource.toJSON().navigationId===id&&performance.getEntriesByType('navigation')[0].navigationId===id})()`
-		historyEval(t, p, checkResources, true)
+		check(checkResources, true)
 		for _, step := range []struct{ script, kind string }{
 			{`location.reload()`, "reload"},
 			{`history.go(0)`, "reload"},
@@ -44,10 +53,10 @@ func TestPerformanceNavigationReasonAndResourceIdentity(t *testing.T) {
 				}
 				time.Sleep(time.Millisecond)
 			}
-			historyEval(t, p, `performance.getEntriesByType('navigation')[0].type`, step.kind)
-			historyEval(t, p, checkResources, true)
+			check(`performance.getEntriesByType('navigation')[0].type`, step.kind)
+			check(checkResources, true)
 		}
-		historyEval(t, p, `(async()=>{
+		check(`(async()=>{
 const f=document.createElement('iframe');f.src='/child';await new Promise(resolve=>{f.onload=resolve;document.body.append(f)});
 const w=f.contentWindow,entry=w.performance.getEntriesByType('navigation')[0];
 await new Promise(resolve=>{f.onload=resolve;w.location.reload()});

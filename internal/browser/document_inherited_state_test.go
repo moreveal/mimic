@@ -6,16 +6,21 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+	"time"
 )
 
 func TestChildDocumentInheritsDomainAndNavigationReferrer(t *testing.T) {
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { fmt.Fprint(w, "<!doctype html><body></body>") }))
 		defer server.Close()
-		if err := p.Navigate(context.Background(), server.URL+"/parent?q=1"); err != nil {
+		// This semantic probe boots several Goja realms under -race. The
+		// watchdog bounds hangs; elapsed bootstrap time is not its assertion.
+		ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)
+		defer cancel()
+		if err := p.Navigate(ctx, server.URL+"/parent?q=1"); err != nil {
 			t.Fatal(err)
 		}
-		historyEval(t, p, `(async()=>{
+		value, err := p.Evaluate(ctx, `(async()=>{
 for(const policy of ['', 'no-referrer']){
  const f=document.createElement('iframe');f.referrerPolicy=policy;document.body.append(f);
  if(f.contentDocument.domain!==location.hostname||f.contentDocument.referrer!==location.href)throw new Error('initial inheritance');
@@ -29,7 +34,10 @@ for(const policy of ['', 'no-referrer']){
  f.remove();
 }
 return document.referrer==='';
-})()`, true)
+})()`)
+		if err != nil || value != true {
+			t.Fatalf("document inheritance: %v %v", value, err)
+		}
 	})
 }
 
