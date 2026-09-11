@@ -9,6 +9,9 @@ func (d *Document) CreateDocumentFragment() Node {
 	return *node
 }
 
+// SharesNodeArena reports whether node IDs belong to the same ownership domain.
+func (d *Document) SharesNodeArena(other *Document) bool { return d.nodeArena == other.nodeArena }
+
 // ShareNodeArena joins a newly parsed, unpublished document to a Page's node
 // arena. IDs are remapped before any JS wrapper or parser can retain them.
 // Documents keep independent roots and queries; moved nodes retain one identity.

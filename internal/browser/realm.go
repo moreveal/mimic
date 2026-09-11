@@ -30,6 +30,10 @@ import (
 )
 
 type Realm struct {
+	inactive                bool
+	closed                  bool
+	realmReferences         map[string]struct{}
+	windowReferences        map[string]*Frame
 	bootstrapPlan           *bootstrapSource
 	bootstrapCapture        *bootstrapSnapshotEntry
 	bootstrapRestored       bool
@@ -160,9 +164,6 @@ func newRealm(p *Page, agent ExecutionAgent, d *dom.Document, u *url.URL) (*Real
 }
 
 func newRealmState(p *Page, agent ExecutionAgent, d *dom.Document, u *url.URL, deferred bool) (*Realm, error) {
-	if frame, ok := agent.(*Frame); ok && frame.parent != nil && frame.parent.Realm != nil {
-		d.ShareNodeArena(frame.parent.Realm.document)
-	}
 	origin, loaderID := p.PerformanceOrigin(), p.LoaderID()
 	if frame, ok := agent.(*Frame); ok && frame.parent != nil {
 		origin, loaderID = p.ClockNow(), frame.loaderID
@@ -171,6 +172,11 @@ func newRealmState(p *Page, agent ExecutionAgent, d *dom.Document, u *url.URL, d
 }
 
 func newRealmStateWithNavigation(p *Page, agent ExecutionAgent, d *dom.Document, u *url.URL, deferred bool, performanceOrigin time.Time, loaderID string, permissionsPolicy ...string) (*Realm, error) {
+	// Every child document, including a navigation replacement, participates
+	// in its tree's authoritative node arena before any IDs are published.
+	if frame, ok := agent.(*Frame); ok && frame.parent != nil && frame.parent.Realm != nil {
+		d.ShareNodeArena(frame.parent.Realm.document)
+	}
 	resourceContext, cancelResources := context.WithCancel(p.ctx.lifetime)
 	r := &Realm{ID: uuid.NewString(), agent: agent, document: d, url: u, origin: originOf(u.String()), token: uuid.NewString(), detached: map[int64]dom.Node{}, apiSeen: map[string]bool{}, readyState: "loading", workers: map[int64]*DedicatedWorker{}, childFrames: map[int64]*Frame{}, retainedFrames: map[string]*Frame{}, crossValues: map[int64]engine.Value{}, resourceContext: resourceContext, cancelResources: cancelResources}
 	r.navigationURL, r.navigationLoaderID, r.performanceOrigin = u.String(), loaderID, performanceOrigin
@@ -211,11 +217,12 @@ func newRealmStateWithNavigation(p *Page, agent ExecutionAgent, d *dom.Document,
 			r.recordAPIAccess("Window."+name, supported)
 		}
 	})
+	p.registerRealm(r)
 	if deferred {
 		return r, nil
 	}
 	if err := r.install(); err != nil {
-		r.runtime.Close()
+		r.Close()
 		return nil, err
 	}
 	r.registerPermissions()
@@ -232,6 +239,9 @@ func (r *Realm) registerPermissions() {
 	c.mu.Unlock()
 }
 func (r *Realm) checkpoint(ctx context.Context) error {
+	if r.checkpointClosed {
+		return ctx.Err()
+	}
 	p := r.agent.Page()
 	if p.crossRealmDepth > 0 || p.checkpointDraining {
 		p.requireCheckpoint(r)
@@ -268,6 +278,9 @@ func (p *Page) requireCheckpoint(r *Realm) {
 }
 
 func (r *Realm) checkpointRuntime(ctx context.Context) error {
+	if r.checkpointClosed {
+		return ctx.Err()
+	}
 	var err error
 	if checkpoint, ok := r.runtime.(interface{ MicrotaskCheckpointContext(context.Context) error }); ok {
 		err = checkpoint.MicrotaskCheckpointContext(ctx)
@@ -299,7 +312,16 @@ func (r *Realm) evaluateClassicScript(ctx context.Context, source, name string, 
 }
 
 func (r *Realm) Close() error {
+	if r.closed {
+		return nil
+	}
+	r.closed = true
+	p := r.agent.Page()
+	p.mu.Lock()
+	delete(p.realmOwners, r.ID)
+	p.mu.Unlock()
 	r.checkpointClosed = true
+	r.scheduler.Close()
 	c := r.agent.Page().ctx
 	c.mu.Lock()
 	delete(c.permissionRealms, r)
@@ -326,16 +348,11 @@ func (r *Realm) Close() error {
 	for _, worker := range r.workers {
 		_ = worker.Close()
 	}
-	for _, frame := range r.childFrames {
-		if frame.Realm != nil {
-			_ = frame.Realm.Close()
-		}
-	}
-	for _, frame := range r.retainedFrames {
-		if frame.Realm != nil {
-			_ = frame.Realm.Close()
-		}
-	}
+	r.childFrames = nil
+	r.retainedFrames = nil
+	r.crossValues = nil
+	r.realmReferences = nil
+	r.windowReferences = nil
 	return r.runtime.Close()
 }
 func (r *Realm) Evaluate(ctx context.Context, source, name string) (engine.Value, error) {
@@ -530,16 +547,19 @@ func (r *Realm) installBindings() error {
 		}
 		return r.val(map[string]any{"self": frame.ID, "parent": parent.ID, "top": frame.Top().ID}), nil
 	})
+	host["documentActive"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(!r.inactive), nil })
 	host["frameElement"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		frame, ok := r.agent.(*Frame)
-		if !ok || frame.parent == nil || frame.parent.Realm == nil {
+		if !ok || frame.parent == nil || !r.canAccess(frame.parent) {
 			return r.val(nil), nil
 		}
-		node, ok := frame.parent.Realm.document.Get(frame.elementID)
-		if !ok {
+		target := frame.parent.Realm
+		if _, ok := target.document.Get(frame.elementID); !ok {
 			return r.val(nil), nil
 		}
-		return r.val(nodeData(node)), nil
+		return r.crossFrameResult(target, func(ctx context.Context) (engine.Value, error) {
+			return target.runtime.Call(ctx, target.frameNodeDescribe, nil, target.val(frame.elementID), target.val(true))
+		})
 	})
 	host["iframeWindow"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		connectedThroughShadow, _ := arg(a, 1).(bool)
@@ -565,36 +585,37 @@ func (r *Realm) installBindings() error {
 		return r.val(frame.ID), nil
 	})
 	host["frameEval"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		id := strarg(a, 0)
-		frame := p.frame(id)
-		if !r.canAccess(frame) {
-			return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
+		target, err := r.referenceRealm(strarg(a, 0), strarg(a, 2))
+		if err != nil {
+			return nil, err
 		}
-		// Non-string eval arguments return unchanged in the calling realm. The
-		// bridge still validates access, without evaluating or coercing them.
-		if len(a) < 2 {
+		if !r.canAccess(p.frame(strarg(a, 0))) {
+			return nil, nil
+		}
+		// Native eval leaves non-string inputs unchanged. The caller resolves
+		// TrustedScript source using its private slots, then validates access.
+		if len(a) < 2 || r.runtime.TypeOf(a[1]) == "undefined" {
 			return nil, nil
 		}
 		source := strarg(a, 1)
-		return r.crossFrameResult(frame.Realm, func(ctx context.Context) (engine.Value, error) { return r.evalInFrame(ctx, id, source) })
+		return r.crossFrameResult(target, func(ctx context.Context) (engine.Value, error) {
+			return target.Evaluate(ctx, source, "frame-eval")
+		})
 	})
 	host["frameCall"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.callFrameReference(a)
 	})
 	r.installFrameDocumentBridge(host)
 	host["frameGet"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		frame := p.frame(strarg(a, 0))
-		if !r.canAccess(frame) {
-			return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
+		target, err := r.referenceRealm(strarg(a, 0), strarg(a, 3))
+		if err != nil {
+			return nil, err
 		}
-		if strarg(a, 3) != frame.Realm.ID {
-			return nil, fmt.Errorf("cross-realm object is no longer available")
-		}
-		value := frame.Realm.crossValues[int64(numarg(a, 1))]
+		value := target.crossValues[int64(numarg(a, 1))]
 		if value == nil {
 			return r.val(map[string]any{"__mimicCrossRealm": "undefined"}), nil
 		}
-		return r.reflectFrameGet(frame.Realm, value, arg(a, 2))
+		return r.reflectFrameGet(target, value, arg(a, 2))
 	})
 	host["frameGlobalGet"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		frame := p.frame(strarg(a, 0))
@@ -648,19 +669,16 @@ func (r *Realm) installBindings() error {
 		return result, nil
 	})
 	host["framePrototype"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		frame := p.frame(strarg(a, 0))
-		if !r.canAccess(frame) {
-			return nil, fmt.Errorf("SecurityError: Blocked cross-origin frame access")
+		target, err := r.referenceRealm(strarg(a, 0), strarg(a, 2))
+		if err != nil {
+			return nil, err
 		}
-		if strarg(a, 2) != frame.Realm.ID {
-			return nil, fmt.Errorf("cross-realm object is no longer available")
-		}
-		value := frame.Realm.crossValues[int64(numarg(a, 1))]
+		value := target.crossValues[int64(numarg(a, 1))]
 		if value == nil {
 			return r.val(map[string]any{"__mimicCrossRealm": "null"}), nil
 		}
-		return r.crossFrameResult(frame.Realm, func(ctx context.Context) (engine.Value, error) {
-			return frame.Realm.callFrameReflection(ctx, "prototype", value, nil, nil)
+		return r.crossFrameResult(target, func(ctx context.Context) (engine.Value, error) {
+			return target.callFrameReflection(ctx, "prototype", value, nil, nil)
 		})
 	})
 	host["frameLocation"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {

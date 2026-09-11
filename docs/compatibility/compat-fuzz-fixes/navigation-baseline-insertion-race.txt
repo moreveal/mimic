@@ -1,0 +1,23 @@
+--- FAIL: TestFrameInsertionAfterInnerHTMLAndFragmentMove (5.70s)
+    --- FAIL: TestFrameInsertionAfterInnerHTMLAndFragmentMove/goja (5.07s)
+        insertion_steps_test.go:45: frame insertion: <nil> context deadline exceeded: context deadline exceeded
+                at runSyntheticInsertionSteps (mimic:webapi-surface:842:115(17))
+                at runSyntheticInsertionSteps (mimic:webapi-surface:842:255(39))
+                at runSyntheticInsertionSteps (mimic:webapi-surface:842:255(39))
+                at value (mimic:webapi-surface:843:812(118))
+                at call (native)
+                at value (mimic:webapi-surface:877:57(45))
+                at apply (native)
+                at mimic:webapi-surface:2276:124(23)
+                at call (native)
+                at mimic:webapi-surface:3848:48(138)
+                at value (mimic:webapi-surface:876:91(26))
+                at apply (native)
+                at mimic:webapi-surface:2276:124(23)
+                at call (native)
+                at mimic:webapi-surface:3848:48(138)
+                at __pyppeteer_evaluation_script__:7:27(40)
+                at __pyppeteer_evaluation_script__:1:1(2)
+FAIL
+FAIL	github.com/moreveal/mimic/internal/browser	5.949s
+FAIL
