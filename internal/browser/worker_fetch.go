@@ -2,6 +2,7 @@ package browser
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/moreveal/mimic/internal/engine"
 	"github.com/moreveal/mimic/internal/scheduler"
@@ -19,6 +20,8 @@ func (w *DedicatedWorker) installFetch(host map[string]any, lifetime context.Con
 		request := fetchRequest(w.parent.agent.ContextID(), target, w.url, args)
 		request.OmitClientHints = true
 		request.ClientIsWorker = true
+		request.PerformanceOwner = fmt.Sprintf("%s/worker/%d", w.parent.ID, w.id)
+		request.PerformanceStart = w.scheduler.Now()
 		request.TopLevelURL = w.topLevelURL
 		request.HasCrossSiteAncestor = w.cookieContext.HasCrossSiteAncestor
 		if w.url.Scheme == "blob" {

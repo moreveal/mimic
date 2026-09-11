@@ -119,6 +119,7 @@ type Realm struct {
 	// same-document History URL or another frame's most recent navigation.
 	navigationURL      string
 	navigationLoaderID string
+	navigationType     string
 	performanceOrigin  time.Time
 	navigationLoadEnd  time.Time
 	documentEntry      *Realm
@@ -189,6 +190,7 @@ func newRealmStateWithNavigation(p *Page, agent ExecutionAgent, d *dom.Document,
 	resourceContext, cancelResources := context.WithCancel(p.ctx.lifetime)
 	r := &Realm{ID: uuid.NewString(), agent: agent, document: d, url: u, origin: originOf(u.String()), token: uuid.NewString(), detached: map[int64]dom.Node{}, apiSeen: map[string]bool{}, readyState: "loading", workers: map[int64]*DedicatedWorker{}, childFrames: map[int64]*Frame{}, retainedFrames: map[string]*Frame{}, crossValues: map[int64]engine.Value{}, resourceContext: resourceContext, cancelResources: cancelResources}
 	r.navigationURL, r.navigationLoaderID, r.performanceOrigin = u.String(), loaderID, performanceOrigin
+	r.navigationType = "navigate"
 	if frame, ok := agent.(*Frame); ok {
 		for ancestor := frame.parent; ancestor != nil; ancestor = ancestor.parent {
 			if ancestor.Realm != nil {
@@ -853,14 +855,11 @@ func (r *Realm) installBindings() error {
 		entries := []map[string]any{}
 		origin := r.performanceOrigin
 		clockProfile := p.Environment().Time
+		navigationID := r.performanceNavigationID()
 		var navigationResponseTime time.Time
 		var navigationEnd float64
 		if len(requested) == 0 || requested["navigation"] {
-			navigationID := uint32(2166136261)
-			for _, octet := range []byte(r.navigationLoaderID) {
-				navigationID = (navigationID ^ uint32(octet)) * 16777619
-			}
-			navigation := map[string]any{"name": r.navigationURL, "entryType": "navigation", "initiatorType": "navigation", "startTime": 0, "duration": 0, "fetchStart": 0, "requestStart": 0, "responseStart": 0, "responseEnd": 0, "transferSize": 0, "encodedBodySize": 0, "decodedBodySize": 0, "nextHopProtocol": "", "serverTiming": []map[string]any{}, "contentType": "", "type": "navigate", "redirectCount": 0, "activationStart": 0, "navigationId": int(navigationID%9000) + 1000}
+			navigation := map[string]any{"name": r.navigationURL, "entryType": "navigation", "initiatorType": "navigation", "startTime": 0, "duration": 0, "fetchStart": 0, "requestStart": 0, "responseStart": 0, "responseEnd": 0, "transferSize": 0, "encodedBodySize": 0, "decodedBodySize": 0, "nextHopProtocol": "", "serverTiming": []map[string]any{}, "contentType": "", "type": r.navigationType, "redirectCount": 0, "activationStart": 0, "navigationId": navigationID}
 			for _, event := range p.Trace().Events() {
 				if event.Kind != trace.Network || event.Name != "response" || event.Data["id"] != r.navigationLoaderID || event.Data["context"] != r.agent.ContextID() {
 					continue
@@ -933,7 +932,17 @@ func (r *Realm) installBindings() error {
 			resourceEntries := make([]map[string]any, 0)
 			for _, event := range events {
 				resourceURL := fmt.Sprint(event.Data["url"])
-				if event.Time.Before(origin) || event.Kind != trace.Network || event.Name != "response" || event.Data["initiator"] == network.Navigation || strings.HasPrefix(resourceURL, "blob:") {
+				if event.Kind != trace.Network || event.Name != "response" || event.Data["initiator"] == network.Navigation || strings.HasPrefix(resourceURL, "blob:") {
+					continue
+				}
+				performanceOwner, stamped := event.Data["performanceOwner"]
+				if stamped {
+					// An empty owner is an external load (for example snapshot
+					// export), not a resource observed by every document.
+					if performanceOwner != r.ID {
+						continue
+					}
+				} else if event.Time.Before(origin) {
 					continue
 				}
 				// A parent request may begin before this realm's time origin and
@@ -951,14 +960,19 @@ func (r *Realm) installBindings() error {
 						owner = frame.parent.ID
 					}
 				}
-				if owner != "" && owner != r.agent.ContextID() {
+				if !stamped && owner != "" && owner != r.agent.ContextID() {
 					continue
 				}
 				rawDuration := numberValue(event.Data["durationMs"])
-				phases := transportPhases(event.Data["transportTiming"])
+				phases := transportPhases(event.Data["browserVisibleTiming"])
+				if phases == nil {
+					phases = transportPhases(event.Data["transportTiming"])
+				}
 				duration := transportPhase(phases, "responseComplete", rawDuration) * clockProfile.NetworkScale
 				startTime := max(0, navigationEnd)
-				if started, ok := requestStarts[fmt.Sprint(event.Data["id"])]; ok {
+				if started, ok := event.Data["performanceStart"].(time.Time); stamped && ok {
+					startTime = max(0, float64(started.Sub(origin))/float64(time.Millisecond))
+				} else if started, ok := requestStarts[fmt.Sprint(event.Data["id"])]; ok {
 					startTime = max(0, float64(started.Sub(origin))/float64(time.Millisecond))
 				} else {
 					// Backward-compatible fallback for synthetic traces which predate
@@ -976,9 +990,21 @@ func (r *Realm) installBindings() error {
 				dnsEnd := startTime + transportPhase(phases, "dnsEnd", 0)*clockProfile.NetworkScale
 				connectStart := startTime + transportPhase(phases, "tcpConnectStart", 0)*clockProfile.NetworkScale
 				connectEnd := startTime + transportPhase(phases, "tcpConnectEnd", transportPhase(phases, "requestHeadersSent", 0))*clockProfile.NetworkScale
-				secureStart := startTime + transportPhase(phases, "tlsHandshakeStart", 0)*clockProfile.NetworkScale
+				secureStart := 0.0
+				if strings.HasPrefix(resourceURL, "https:") {
+					secureStart = startTime + transportPhase(phases, "tlsHandshakeStart", 0)*clockProfile.NetworkScale
+				}
 				initiatorType := fmt.Sprint(event.Data["performanceInitiatorType"])
 				entry := map[string]any{"name": resourceURL, "entryType": "resource", "startTime": startTime, "duration": duration, "fetchStart": startTime, "domainLookupStart": dnsStart, "domainLookupEnd": dnsEnd, "connectStart": connectStart, "secureConnectionStart": secureStart, "connectEnd": connectEnd, "requestStart": requestStart, "responseStart": responseStart, "responseEnd": responseEnd, "initiatorType": initiatorType, "transferSize": event.Data["transferSize"], "encodedBodySize": event.Data["encodedBodySize"], "decodedBodySize": event.Data["decodedBodySize"], "nextHopProtocol": performanceProtocol(event.Data["protocol"]), "responseStatus": event.Data["status"], "serverTiming": performanceServerTiming(event.Data["headers"]), "contentType": fmt.Sprint(event.Data["mimeType"])}
+				entry["navigationId"] = navigationID
+				if cached, _ := event.Data["fromCache"].(bool); cached {
+					entry["deliveryType"] = "cache"
+					entry["nextHopProtocol"] = ""
+					entry["secureConnectionStart"] = 0
+					for _, field := range []string{"domainLookupStart", "domainLookupEnd", "connectStart", "connectEnd", "requestStart"} {
+						entry[field] = startTime
+					}
+				}
 				if !resourceTimingAllowed(r.origin, resourceURL, event.Data["headers"]) {
 					for _, field := range []string{"domainLookupStart", "domainLookupEnd", "connectStart", "secureConnectionStart", "connectEnd", "requestStart", "responseStart", "transferSize", "encodedBodySize", "decodedBodySize", "responseStatus"} {
 						entry[field] = 0
@@ -1992,14 +2018,18 @@ func (r *Realm) postNavigate(raw string, replaceOption ...bool) error {
 	}
 	if frame, ok := r.agent.(*Frame); ok && frame.parent != nil {
 		if frame.Realm == r && frame.parent.Realm != nil {
-			frame.parent.Realm.scheduleChildNavigationTo(frame, u, replace, r)
+			kind := "navigate"
+			if reload {
+				kind = "reload"
+			}
+			frame.parent.Realm.scheduleChildNavigationTo(frame, u, replace, r, kind)
 		}
 		return nil
 	}
 	request := network.Request{SourceURL: current, Referrer: current, UserActivation: r.navigationActivated()}
 	request.ReferrerPolicy = r.referrerPolicy
 	r.scheduler.Post(scheduler.Navigation, 0, func(ctx context.Context) error {
-		return r.agent.Page().navigateRequest(ctx, u.String(), uuid.NewString(), request, replace)
+		return r.agent.Page().navigateRequest(ctx, u.String(), uuid.NewString(), request, replace, reload)
 	})
 	return nil
 }

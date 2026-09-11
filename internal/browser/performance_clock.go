@@ -4,7 +4,29 @@ import (
 	"crypto/rand"
 	"encoding/binary"
 	"time"
+
+	"github.com/moreveal/mimic/internal/network"
 )
+
+// Bind once to the initiating realm, not whichever document occupies its
+// frame when the response arrives. No runtime handle escapes to the loader.
+func (r *Realm) withResourceTiming(request network.Request) network.Request {
+	if request.PerformanceOwner == "" {
+		request.PerformanceOwner = r.ID
+		request.PerformanceStart = r.scheduler.Now()
+	}
+	return request
+}
+
+// Every entry produced by a document refers to the same committed navigation.
+// Same-document history mutations leave its loader identity unchanged.
+func (r *Realm) performanceNavigationID() int {
+	id := uint32(2166136261)
+	for _, octet := range []byte(r.navigationLoaderID) {
+		id = (id ^ uint32(octet)) * 16777619
+	}
+	return int(id%9000) + 1000
+}
 
 // Chrome 152 coarsens absolute timestamps before subtracting the origin.
 // Each bucket has a stable randomized transition, not fresh jitter per read.

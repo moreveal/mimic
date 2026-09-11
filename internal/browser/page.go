@@ -327,6 +327,11 @@ func (p *Page) navigateRequest(ctx context.Context, raw, loaderID string, reques
 	if err != nil {
 		return err
 	}
+	// Reload is an explicit navigation reason. Neither equal URLs nor replacing
+	// a history entry imply a reload (Location.replace can do both).
+	if len(replace) > 1 && replace[1] {
+		realm.navigationType = "reload"
+	}
 	realm.referrerPolicy = res.Headers.Get("Referrer-Policy")
 	realm.lastModified, _ = http.ParseTime(res.Headers.Get("Last-Modified"))
 	realm.initializeClientHints(res.Headers.Get("Permissions-Policy"))
@@ -560,7 +565,7 @@ func (p *Page) navigateRequest(ctx context.Context, raw, loaderID string, reques
 			realm.resourceWG.Add(1)
 			go func() {
 				defer realm.resourceWG.Done()
-				_, loadErr := p.loader.Load(realm.resourceContext, request)
+				_, loadErr := p.loader.Load(realm.resourceContext, realm.withResourceTiming(request))
 				if realm.resourceContext.Err() != nil {
 					return
 				}

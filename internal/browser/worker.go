@@ -391,7 +391,7 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 		// structured JS trace so protocol subscribers do not misroute it.
 		p.trace.Add(trace.JS, "workerStart", map[string]any{"url": w.url.String(), "worker": w.id})
 		if source == "" {
-			res, loadErr := p.loader.Load(taskContext, network.Request{ContextID: w.parent.agent.ContextID(), URL: w.url, Referrer: w.securityURL, SourceURL: w.securityURL, TopLevelURL: w.topLevelURL, HasCrossSiteAncestor: w.cookieContext.HasCrossSiteAncestor, Initiator: network.Worker, OmitClientHints: true})
+			res, loadErr := p.loader.Load(taskContext, w.parent.withResourceTiming(network.Request{ContextID: w.parent.agent.ContextID(), URL: w.url, Referrer: w.securityURL, SourceURL: w.securityURL, TopLevelURL: w.topLevelURL, HasCrossSiteAncestor: w.cookieContext.HasCrossSiteAncestor, Initiator: network.Worker, OmitClientHints: true}))
 			if loadErr != nil {
 				return loadErr
 			}
