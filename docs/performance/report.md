@@ -1581,3 +1581,15 @@ dumps. DOM execution/completion 441.26/472.10 to 444.81/479.53 ms; static
 memory 157.96/165.97 to 162.19/170.81 MiB. These mixed single-pair measurements
 do not establish neutrality or complete owner-reference reclamation. Focused
 semantic differences fall 9 to 0 without changing the fixed general corpus.
+
+
+## Concurrent snapshot serialization boundary (2026-09-11)
+
+[Separate P0 investigation](../compatibility/snapshot-serialization-2026-09-11.md)
+reproduces CreateBlob writes into an OS-protected read-only page using only four
+snapshot builders. Three same-binary default/stock-RO-heap pairs yield three
+native failures and three complete passes. The existing ed4261b configuration
+covers this new reproducer without serializing Pages or disabling snapshots.
+The new subprocess regression and full engine/race suites pass. This does not
+close the original SizeFromMap signature or turn finite fast gates into proof
+of global native stability. No new production performance change is introduced.
