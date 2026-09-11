@@ -1,13 +1,14 @@
 // Every Document has its own canonical host root. The wrapper map preserves
 // identity when traversal reaches an inert document through one of its nodes.
 const documentWrappers = new Map();
+let registerDocumentGetterBinding;
 const documentImplementations = new WeakMap();
 const fragmentOwnerDocuments = new WeakMap();
 function wrapDocumentNode(data) {
   if(data.nodeId===host.documentRootID())return document;
   let value=documentWrappers.get(data.nodeId);
   if(!value){const reference=host.documentReference(data.nodeId);if(reference){value=unwrapCrossRealm(reference.frame,reference);documentWrappers.set(data.nodeId,value)}}
-  if(!value){value=Object.create((data.contentType&&data.contentType!=='text/html'?globalThis.XMLDocument:HTMLDocument).prototype);elementData.set(value,data);documentWrappers.set(data.nodeId,value)}
+  if(!value){value=Object.create((data.contentType&&data.contentType!=='text/html'?globalThis.XMLDocument:HTMLDocument).prototype);elementData.set(value,data);documentWrappers.set(data.nodeId,value);if(registerDocumentGetterBinding)registerDocumentGetterBinding(value)}
   return value;
 }
 {
@@ -161,3 +162,30 @@ function wrapDocumentNode(data) {
 }
 
 for(const name of ['hasStorageAccess','hasUnpartitionedCookieAccess'])if(name in Document.prototype){const method=function(){if(!(this instanceof Document))throw new TypeError('Illegal invocation');if(this!==document)return Promise.reject(new DOMException('Document is not fully active','InvalidStateError'));return Promise.resolve(host.hasStorageAccess())};Object.defineProperty(method,'name',{value:name,configurable:true});if(typeof markNative==='function')markNative(method,name);Object.defineProperty(Document.prototype,name,{value:method,writable:true,enumerable:true,configurable:true})}
+
+// Capture installed getters only after all semantic layers have been installed.
+// Borrowing an accessor must dispatch through the Document owner, rather than
+// mistake a foreign active document for a local inert document. Public property
+// and prototype replacements must not change a previously borrowed accessor.
+function finalizeDocumentGetterBindings() {
+  const getters=new Map();
+  for(const name of Reflect.ownKeys(Document.prototype)){
+    const descriptor=Object.getOwnPropertyDescriptor(Document.prototype,name);
+    if(!descriptor.get||!descriptor.configurable)continue;
+    const original=descriptor.get;
+    getters.set(name,original);
+    descriptor.get=function(){
+      const reference=referenceGet(this);
+      if(reference?.binding?.kind==='Document')return callRealmBinding(this,reference,'get',[name]);
+      // Preserve each local accessor's existing receiver policy, including
+      // LegacyLenientThis. Strict receiver cleanup is a separate concern.
+      return functionSourceApply(original,this,[]);
+    };
+    Object.defineProperty(Document.prototype,name,descriptor);
+  }
+  registerDocumentGetterBinding=value=>registerRealmBinding(value,'Document',{
+    get:name=>functionSourceApply(getters.get(name),value,[])
+  });
+  registerDocumentGetterBinding(document);
+  for(const value of documentWrappers.values())if(!referenceGet(value))registerDocumentGetterBinding(value);
+}

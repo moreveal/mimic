@@ -1,0 +1,266 @@
+{
+  "sha256": "c7e377cf55208265b8c913cf2f852245d6c694eca8505d81bac932aaa86ec02d",
+  "chrome": {
+    "active": {
+      "title": true,
+      "URL": true,
+      "documentURI": true,
+      "cookie": true,
+      "activeElement": true,
+      "defaultView": true,
+      "body": true,
+      "head": true,
+      "documentElement": true,
+      "readyState": true,
+      "visibilityState": true,
+      "hidden": true,
+      "contentType": true,
+      "compatMode": true,
+      "domain": true,
+      "referrer": true,
+      "currentScript": true
+    },
+    "inert": {
+      "title": true,
+      "URL": true,
+      "documentURI": true,
+      "cookie": true,
+      "activeElement": true,
+      "defaultView": true,
+      "body": true,
+      "head": true,
+      "documentElement": true,
+      "readyState": true,
+      "visibilityState": true,
+      "hidden": true,
+      "contentType": true,
+      "compatMode": true,
+      "domain": true,
+      "referrer": true,
+      "currentScript": true
+    },
+    "capturedGetter": true,
+    "localDetached": true,
+    "retained": {
+      "title": true,
+      "body": true,
+      "defaultView": true
+    }
+  },
+  "mimic": {
+    "active": {
+      "URL": false,
+      "activeElement": true,
+      "body": true,
+      "compatMode": false,
+      "contentType": true,
+      "cookie": true,
+      "currentScript": true,
+      "defaultView": false,
+      "documentElement": true,
+      "documentURI": false,
+      "domain": false,
+      "head": true,
+      "hidden": false,
+      "readyState": true,
+      "referrer": true,
+      "title": true,
+      "visibilityState": false
+    },
+    "capturedGetter": false,
+    "inert": {
+      "URL": true,
+      "activeElement": true,
+      "body": true,
+      "compatMode": true,
+      "contentType": true,
+      "cookie": true,
+      "currentScript": true,
+      "defaultView": true,
+      "documentElement": true,
+      "documentURI": true,
+      "domain": false,
+      "head": true,
+      "hidden": true,
+      "readyState": true,
+      "referrer": true,
+      "title": true,
+      "visibilityState": true
+    },
+    "localDetached": true,
+    "retained": {
+      "body": true,
+      "defaultView": true,
+      "title": true
+    }
+  },
+  "after": {
+    "active": {
+      "URL": true,
+      "activeElement": true,
+      "body": true,
+      "compatMode": true,
+      "contentType": true,
+      "cookie": true,
+      "currentScript": true,
+      "defaultView": true,
+      "documentElement": true,
+      "documentURI": true,
+      "domain": true,
+      "head": true,
+      "hidden": true,
+      "readyState": true,
+      "referrer": true,
+      "title": true,
+      "visibilityState": true
+    },
+    "capturedGetter": true,
+    "inert": {
+      "URL": true,
+      "activeElement": true,
+      "body": true,
+      "compatMode": true,
+      "contentType": true,
+      "cookie": true,
+      "currentScript": true,
+      "defaultView": true,
+      "documentElement": true,
+      "documentURI": true,
+      "domain": true,
+      "head": true,
+      "hidden": true,
+      "readyState": true,
+      "referrer": true,
+      "title": true,
+      "visibilityState": true
+    },
+    "localDetached": true,
+    "retained": {
+      "body": true,
+      "defaultView": true,
+      "title": true
+    }
+  },
+  "control": {
+    "active": {
+      "title": true,
+      "URL": true,
+      "documentURI": true,
+      "cookie": true,
+      "activeElement": true,
+      "defaultView": true,
+      "body": true,
+      "head": true,
+      "documentElement": true,
+      "readyState": true,
+      "visibilityState": true,
+      "hidden": true,
+      "contentType": true,
+      "compatMode": true,
+      "domain": true,
+      "referrer": true,
+      "currentScript": true
+    },
+    "inert": {
+      "title": true,
+      "URL": true,
+      "documentURI": true,
+      "cookie": true,
+      "activeElement": true,
+      "defaultView": true,
+      "body": true,
+      "head": true,
+      "documentElement": true,
+      "readyState": true,
+      "visibilityState": true,
+      "hidden": true,
+      "contentType": true,
+      "compatMode": true,
+      "domain": true,
+      "referrer": true,
+      "currentScript": true
+    },
+    "capturedGetter": true,
+    "localDetached": true,
+    "retained": {
+      "title": true,
+      "body": true,
+      "defaultView": true
+    }
+  },
+  "differences": [
+    [
+      [
+        "active",
+        "URL"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "active",
+        "compatMode"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "active",
+        "defaultView"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "active",
+        "documentURI"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "active",
+        "domain"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "active",
+        "hidden"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "active",
+        "visibilityState"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "capturedGetter"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "inert",
+        "domain"
+      ],
+      true,
+      false
+    ]
+  ],
+  "afterDifferences": [],
+  "controlDifferences": []
+}
