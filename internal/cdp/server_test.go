@@ -127,6 +127,48 @@ func TestNavigateOverCDP(t *testing.T) {
 	}
 }
 
+func TestStopLoadingCancelsNavigationAndKeepsCommittedDOM(t *testing.T) {
+	slowStarted := make(chan struct{})
+	pageServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/slow.js" {
+			close(slowStarted)
+			<-r.Context().Done()
+			return
+		}
+		fmt.Fprint(w, `<div id="committed">ready</div><script src="/slow.js"></script>`)
+	}))
+	defer pageServer.Close()
+	s, addr := runningServer(t)
+	c, _, err := websocket.DefaultDialer.Dial("ws://"+addr+"/devtools/page/"+s.Page.ID, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer c.Close()
+	_ = c.SetReadDeadline(time.Now().Add(5 * time.Second))
+	_ = c.WriteJSON(map[string]any{"id": 1, "method": "Page.navigate", "params": map[string]any{"url": pageServer.URL}})
+	if reply := readReply(t, c, 1); reply["error"] != nil {
+		t.Fatal(reply)
+	}
+	select {
+	case <-slowStarted:
+	case <-time.After(2 * time.Second):
+		t.Fatal("navigation did not reach blocking resource")
+	}
+	_ = c.WriteJSON(map[string]any{"id": 2, "method": "Page.stopLoading"})
+	if reply := readReply(t, c, 2); reply["error"] != nil {
+		t.Fatal(reply)
+	}
+	_ = c.WriteJSON(map[string]any{"id": 3, "method": "Runtime.evaluate", "params": map[string]any{"expression": "document.getElementById('committed').textContent"}})
+	reply := readReply(t, c, 3)
+	if reply["error"] != nil {
+		t.Fatal(reply)
+	}
+	value := reply["result"].(map[string]any)["result"].(map[string]any)["value"]
+	if value != "ready" {
+		t.Fatalf("committed DOM was lost after stopLoading: %#v", value)
+	}
+}
+
 func TestCDPConsoleEventUsesCurrentExecutionContext(t *testing.T) {
 	pageServer := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		fmt.Fprint(w, `<script>console.log("current realm")</script>`)

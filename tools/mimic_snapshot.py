@@ -53,28 +53,31 @@ async def wait_for_stable_page(page, progress: NavigationProgress, args):
     quiet_seconds = max(args.settle_ms / 1000, 0.5)
     stall_seconds = max(args.timeout / 1000, quiet_seconds)
     max_seconds = args.max_wait / 1000 if args.max_wait else None
-    last_dom = None
-    sample = {"readyState": "loading", "nodes": 0, "htmlBytes": 0}
+    sample = {"readyState": "loading", "nodes": None, "htmlBytes": None}
+    last_report = progress.started
     reason = "stable"
 
     while True:
         await asyncio.sleep(0.5)
         now = time.monotonic()
-        try:
-            sample = await page.evaluate(
-                """()=>({readyState:document.readyState,
-                nodes:document.getElementsByTagName('*').length,
-                htmlBytes:new TextEncoder().encode(document.documentElement?.outerHTML||'').length})"""
-            )
-            signature = (sample["readyState"], sample["nodes"], sample["htmlBytes"])
-            if signature != last_dom:
-                last_dom = signature
-                progress.touch()
-        except Exception as error:
-            sample = {**sample, "sampleError": str(error)}
+        sample["readyState"] = (
+            "complete"
+            if progress.load_fired
+            else "interactive"
+            if progress.dom_content_loaded
+            else "loading"
+        )
 
         elapsed = now - progress.started
         quiet_for = now - progress.last_activity
+        if now - last_report >= 10:
+            print(
+                f"Waiting: state={sample['readyState']}; pending={len(progress.pending)}; "
+                f"requests={progress.events['requests']}; quiet={round(quiet_for * 1000)} ms; "
+                f"elapsed={round(elapsed * 1000)} ms",
+                flush=True,
+            )
+            last_report = now
         navigation_observed = progress.document_seen or sample["readyState"] != "loading"
         if navigation_observed and not progress.pending and quiet_for >= quiet_seconds:
             break
@@ -115,8 +118,10 @@ def decode_files(snapshot: dict) -> dict[PurePosixPath, bytes]:
 
 
 async def save_snapshot(args: argparse.Namespace) -> None:
+    print(f"Connecting to {args.endpoint}", flush=True)
     browser = await connect(browserURL=args.endpoint, defaultViewport=None)
     page = await browser.newPage()
+    print(f"Navigating to {args.url}", flush=True)
     progress = NavigationProgress()
 
     page._client.on("Network.requestWillBeSent", progress.request)
@@ -142,6 +147,7 @@ async def save_snapshot(args: argparse.Namespace) -> None:
             args.url,
             {"waitUntil": "load", "timeout": 0},
         ))
+        print("Navigation started; monitoring network progress", flush=True)
         diagnostics = await wait_for_stable_page(page, progress, args)
         navigation_error = None
         response = None
@@ -151,12 +157,14 @@ async def save_snapshot(args: argparse.Namespace) -> None:
             except Exception as error:
                 navigation_error = str(error)
         else:
+            await page._client.send("Page.stopLoading")
             navigation.cancel()
             with contextlib.suppress(asyncio.CancelledError):
                 await navigation
 
         snapshot = await page._client.send("Mimic.captureSnapshot")
         files = decode_files(snapshot)
+        diagnostics["htmlBytes"] = len(files.get(PurePosixPath("index.html"), b""))
 
         output = Path(args.output).resolve()
         output.mkdir(parents=True, exist_ok=False)
