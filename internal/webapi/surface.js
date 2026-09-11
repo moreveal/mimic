@@ -860,7 +860,15 @@
   delete globalThis.__mimicAttributeUnsafeInterfaces;
   let known;
   let pendingCallableExposure;
-  const applyTargetExposure=exposure=>{
+  // Decode immutable transport into realm-local descriptor data. Legacy object
+  // inputs from Surface keep their existing schema.
+  const decodeExposure=exposure=>{
+    if(!Array.isArray(exposure))return exposure;
+    const row=p=>({name:p[0],enumerable:!!(p[1]&1),configurable:!!(p[1]&2),writable:(p[1]>>4)===0?null:(p[1]>>4)===2,getter:!!(p[1]&4),setter:!!(p[1]&8),valueType:p[2],functionName:p[3],functionLength:p[4]});
+    return {propertyOrder:exposure[0],properties:exposure[1]===null?null:exposure[1].map(row),prototypes:exposure[2]===null?null:Object.fromEntries(Object.entries(exposure[2]).map(([name,rows])=>[name,rows===null?null:rows.map(row)]))};
+  };
+  const applyTargetExposure=input=>{
+    const exposure=decodeExposure(input);
     pendingCallableExposure=exposure;
     const properties=exposure.properties||[];
     const publicationMissing=new Set();

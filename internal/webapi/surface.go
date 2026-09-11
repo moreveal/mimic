@@ -213,7 +213,7 @@ func bootstrapFor(surface *compatibility.WebAPISurface, name string) surfaceOutp
 			if !ok {
 				return surfaceOutput{Source: Surface(surface.GeneratedJavaScript, nil), CatalogJSON: surface.GeneratedCatalogJSON}
 			}
-			encoded, err := json.Marshal(exposure)
+			encoded, err := marshalExposure(exposure)
 			if err != nil {
 				panic(err)
 			}
