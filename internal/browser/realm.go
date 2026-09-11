@@ -381,9 +381,7 @@ func (r *Realm) Close() error {
 		return nil
 	}
 	r.closed = true
-	if r.speech != nil && r.speech.backend != nil {
-		r.speech.backend.Close()
-	}
+	r.closeSpeechProvider()
 	r.speech = nil
 	r.speechNotifier = nil
 	if r.cookieUnsubscribe != nil {
