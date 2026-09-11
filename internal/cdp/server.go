@@ -129,6 +129,9 @@ type session struct {
 	unsub             func()
 	removeInterceptor func()
 	navigationTimeout time.Duration
+	navigationMu      sync.Mutex
+	navigationCancel  context.CancelFunc
+	navigationID      uint64
 	contextMu         sync.Mutex
 	nextContextID     int64
 	contextByFrame    map[string]int64
@@ -396,7 +399,7 @@ func (s *session) handleRouted(m message, route string) {
 		s.handleRouted(inner, stringValue(p["sessionId"]))
 		return
 	}
-	control := m.Method == "Fetch.continueRequest" || m.Method == "Fetch.continueResponse" || m.Method == "Fetch.failRequest" || m.Method == "Fetch.fulfillRequest" || m.Method == "Network.continueInterceptedRequest" || m.Method == "Mimic.getTrace"
+	control := m.Method == "Fetch.continueRequest" || m.Method == "Fetch.continueResponse" || m.Method == "Fetch.failRequest" || m.Method == "Fetch.fulfillRequest" || m.Method == "Network.continueInterceptedRequest" || m.Method == "Mimic.getTrace" || m.Method == "Page.stopLoading"
 	if !control {
 		s.commandMu.Lock()
 		defer s.commandMu.Unlock()
@@ -508,19 +511,40 @@ func (s *session) handleRouted(m message, route string) {
 		loaderID := s.page.ReserveNavigation()
 		result = map[string]any{"frameId": s.page.Top.ID, "loaderId": loaderID}
 		page := s.page
+		navigationCtx, navigationCancel := context.WithTimeout(s.ctx, s.navigationTimeout)
+		s.navigationMu.Lock()
+		if s.navigationCancel != nil {
+			s.navigationCancel()
+		}
+		s.navigationID++
+		navigationID := s.navigationID
+		s.navigationCancel = navigationCancel
+		s.navigationMu.Unlock()
 		s.work.Add(1)
 		go func() {
 			defer s.work.Done()
+			defer navigationCancel()
+			defer func() {
+				s.navigationMu.Lock()
+				if s.navigationID == navigationID {
+					s.navigationCancel = nil
+				}
+				s.navigationMu.Unlock()
+			}()
 			s.commandMu.Lock()
 			defer s.commandMu.Unlock()
 			page.LockCommands()
 			defer page.UnlockCommands()
-			ctx, cancel := context.WithTimeout(s.ctx, s.navigationTimeout)
-			defer cancel()
-			if navErr := page.NavigateReserved(ctx, navigationURL, loaderID); navErr != nil {
+			if navErr := page.NavigateReserved(navigationCtx, navigationURL, loaderID); navErr != nil {
 				page.Trace().Add(trace.Error, "navigation", map[string]any{"url": navigationURL, "error": navErr.Error()})
 			}
 		}()
+	case "Page.stopLoading":
+		s.navigationMu.Lock()
+		if s.navigationCancel != nil {
+			s.navigationCancel()
+		}
+		s.navigationMu.Unlock()
 	case "Browser.close":
 	case "Page.addScriptToEvaluateOnNewDocument":
 		id := s.page.AddInitScript(stringValue(p["source"]))
