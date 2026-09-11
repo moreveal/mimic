@@ -39,9 +39,19 @@ function wrapDocumentNode(data) {
   };
   accessor(Node.prototype,'ownerDocument',function(){return ownerOf(this)});
   const originalType=Object.getOwnPropertyDescriptor(Node.prototype,'nodeType').get;
-  const originalName=Object.getOwnPropertyDescriptor(Node.prototype,'nodeName').get;
   accessor(Node.prototype,'nodeType',function(){const type=elementSlot(this)?.type;return this instanceof Document?9:type==='doctype'?10:originalType.call(this)});
-  accessor(Node.prototype,'nodeName',function(){return this instanceof Document?'#document':elementSlot(this)?.type==='doctype'?elementSlot(this).tagName:originalName.call(this)});
+  // Node's inherited binding must select private state, not an Element getter
+  // moved here during exposure publication or a shadowable public tagName.
+  accessor(Node.prototype,'nodeName',function(){
+    const slot=elementSlot(this);
+    if(this===document||slot?.type==='document')return '#document';
+    if(slot?.type==='element')return slot.qualifiedName||slot.tagName;
+    if(slot?.type==='doctype')return slot.tagName;
+    if(slot?.type==='text')return '#text';
+    if(slot?.type==='comment')return '#comment';
+    if(isDOMFragment(this))return '#document-fragment';
+    throw new TypeError('Illegal invocation');
+  });
   if(globalThis.DocumentType){
     accessor(globalThis.DocumentType.prototype,'name',function(){return elementSlot(this)?.tagName||''});
     for(const name of ['publicId','systemId'])accessor(globalThis.DocumentType.prototype,name,function(){return host.nodeData(elementSlot(this).nodeId).attributes?.[name==='publicId'?'public':'system']||''});
