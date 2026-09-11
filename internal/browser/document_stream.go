@@ -64,6 +64,8 @@ func (r *Realm) documentBaseURL() *url.URL {
 	if base.Scheme == "about" {
 		if frame, ok := r.agent.(*Frame); ok && frame.parent != nil && frame.parent.Realm != nil {
 			base = frame.parent.Realm.documentBaseURL()
+		} else if ok && frame.auxiliaryBase != nil {
+			base = frame.auxiliaryBase
 		}
 	}
 	for _, node := range r.document.FindAllByTagName("base") {
