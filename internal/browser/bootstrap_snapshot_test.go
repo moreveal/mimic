@@ -48,8 +48,10 @@ func bootstrapSnapshotWarm(t *testing.T, p *Page) {
 	if os.Getenv("MIMIC_DISABLE_BOOTSTRAP_SNAPSHOT") == "1" {
 		return
 	}
-	// A second request starts the asynchronous build; wait outside a JS turn.
-	bootstrapSnapshotEvaluate(t, p, `(()=>{const f=document.createElement('iframe');document.body.appendChild(f);f.remove();return true})()`)
+	// A second observed realm starts the asynchronous build. Initial iframe
+	// documents may defer their runtime, so exercise JavaScript before removing
+	// the frame and waiting outside the JS turn.
+	bootstrapSnapshotEvaluate(t, p, `(()=>{const f=document.createElement('iframe');document.body.appendChild(f);f.contentWindow.eval('true');f.remove();return true})()`)
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
 	if err := p.ctx.bootstrapSnapshots.wait(ctx); err != nil {
