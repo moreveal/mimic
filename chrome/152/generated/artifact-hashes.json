@@ -1,7 +1,7 @@
 {
   "bundle_data.go": "d59fac3b0653ee25258ba4a7af51f5e4a7b304f019264de5f6b664a29eabd351",
   "cdp.json": "177e48ebb4b30f93dd3e19c8cf79c73c907f0259c5f32a1814eedabfba4cca11",
-  "exposure_data.go": "502543110a12c22ed81554badb09a7e83f556c522956d3b3ded925a6d985c1f4",
+  "exposure_data.go": "aef0e592d36b30220eea9e7844f88f2b4e53fd35b46ba38a767ebce1379ef107",
   "lock.json": "dae13a75c9ac52484b8905d706450dc618e0eb887f422243826486b0c2f27602",
   "navigator-idl-sources.json": "8f2afe4478ce43e57c6e5d567e04b59bf2a058bbb343e398ff4ae872f082a2b3",
   "surface.js": "261c6c2a051aa4c798ca3a5ce27c53e80109d9927cf8ff28695fdc87c81aaf1d",
@@ -14,5 +14,6 @@
   "window-insecure-order.json": "595221d5b681de74068cde88cb27385fffba4517445bd4cfa1065a486d048ce9",
   "window-secure-isolated-order.json": "b81505c34ff192d65d11d6ca14dc7e561fb0545302a375b3f30736f89df5a823",
   "window-secure-order.json": "89b431849b911e5eaeb8e1bf4c7d253388b4e6029beefc2fe86940357dd217d1",
-  "window-secure-order.md": "dcd989ff3aa09cacae2688c24c3dc9d4ac2ef01f1d230ef0eeed8f0a7241cc6f"
+  "window-secure-order.md": "dcd989ff3aa09cacae2688c24c3dc9d4ac2ef01f1d230ef0eeed8f0a7241cc6f",
+  "window-secure-member-order.json": "e9f3663f05b3a412b7ceb1971e7a6f39e4ae62f24178d9dc1f367c35c5642922"
 }

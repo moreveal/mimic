@@ -46,5 +46,5 @@ func marshalExposure(exposure compatibility.RealmExposure) ([]byte, error) {
 	for name, properties := range exposure.Prototypes {
 		prototypes[name] = rows(properties)
 	}
-	return json.Marshal([]any{exposure.PropertyOrder, rows(exposure.Properties), prototypes})
+	return json.Marshal([]any{exposure.PropertyOrder, rows(exposure.Properties), prototypes, exposure.PrototypeOrder, exposure.InterfaceOrder})
 }

@@ -889,7 +889,7 @@
   const decodeExposure=exposure=>{
     if(!Array.isArray(exposure))return exposure;
     const row=p=>({name:p[0],enumerable:!!(p[1]&1),configurable:!!(p[1]&2),writable:(p[1]>>4)===0?null:(p[1]>>4)===2,getter:!!(p[1]&4),setter:!!(p[1]&8),valueType:p[2],functionName:p[3],functionLength:p[4]});
-    return {propertyOrder:exposure[0],properties:exposure[1]===null?null:exposure[1].map(row),prototypes:exposure[2]===null?null:Object.fromEntries(Object.entries(exposure[2]).map(([name,rows])=>[name,rows===null?null:rows.map(row)]))};
+    return {propertyOrder:exposure[0],prototypeOrder:exposure[3],interfaceOrder:exposure[4],properties:exposure[1]===null?null:exposure[1].map(row),prototypes:exposure[2]===null?null:Object.fromEntries(Object.entries(exposure[2]).map(([name,rows])=>[name,rows===null?null:rows.map(row)]))};
   };
   const applyTargetExposure=input=>{
     const exposure=decodeExposure(input);
@@ -1080,6 +1080,17 @@
     const exposure=pendingCallableExposure;
     pendingCallableExposure=null;
     if(!exposure)return;
+    const publishMemberOrder=(target,order)=>{
+      const current=Object.getOwnPropertyNames(target),descriptors=new Map(current.map(name=>[name,Object.getOwnPropertyDescriptor(target,name)]));
+      const desired=[...order.filter(name=>descriptors.has(name)),...current.filter(name=>!order.includes(name))];
+      if(current.length===desired.length&&current.every((name,i)=>name===desired[i]))return;
+      // Nonconfigurable properties cannot be moved. Preserve their entire
+      // prefix and reorder only a compatible configurable suffix.
+      let anchor=-1;for(let i=0;i<current.length;i++)if(!descriptors.get(current[i]).configurable)anchor=i;
+      for(let i=0;i<=anchor;i++)if(current[i]!==desired[i])return;
+      for(let i=anchor+1;i<current.length;i++)delete target[current[i]];
+      for(let i=anchor+1;i<desired.length;i++)Object.defineProperty(target,desired[i],descriptors.get(desired[i]));
+    };
     // Late semantic installers replace generated functions. Reapply only the
     // captured callable metadata to existing bindings, without creating missing
     // members, changing prototype ownership or replaying global publication.
@@ -1121,6 +1132,16 @@
         if(descriptor.set)descriptor.set=normalize(descriptor.set,'set '+member.name,1,true);
         if(descriptor.value!==previousValue||descriptor.get!==previousGet||descriptor.set!==previousSet)Object.defineProperty(prototype,member.name,descriptor);
       }
+    }
+    for(const [name,order] of Object.entries(exposure.prototypeOrder||{})){
+      if(engineGlobals.has(name))continue;
+      const prototype=Object.getOwnPropertyDescriptor(globalThis,name)?.value?.prototype;
+      if(prototype)publishMemberOrder(prototype,order);
+    }
+    for(const [name,order] of Object.entries(exposure.interfaceOrder||{})){
+      if(engineGlobals.has(name))continue;
+      const target=Object.getOwnPropertyDescriptor(globalThis,name)?.value;
+      if(target)publishMemberOrder(target,order);
     }
   };
   const finalizeNativeBindings=()=>{
