@@ -1,8 +1,34 @@
 package browser
 
-import "github.com/moreveal/mimic/internal/engine"
+import (
+	"context"
+
+	"github.com/moreveal/mimic/internal/engine"
+)
 
 func (r *Realm) installDocumentCompatibility(host map[string]any) {
+	// DOM adoption changes a node's owner document, not the realm of its JS
+	// wrapper. Resolve browsing documents through their canonical realm before
+	// constructing a local inert-document wrapper from shared DOM node data.
+	host["documentReference"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		id := int64(numarg(args, 0))
+		p := r.agent.Page()
+		p.mu.RLock()
+		var owner *Realm
+		for _, candidate := range p.realmOwners {
+			if candidate.document.SharesNodeArena(r.document) && candidate.document.Root().ID == id {
+				owner = candidate
+				break
+			}
+		}
+		p.mu.RUnlock()
+		if owner == nil {
+			return nil, nil
+		}
+		return r.crossFrameResult(owner, func(context.Context) (engine.Value, error) {
+			return owner.runtime.Get("document"), nil
+		})
+	})
 	host["stylesheetResource"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		u, err := r.resolveDocument(strarg(args, 0))
 		if err != nil {

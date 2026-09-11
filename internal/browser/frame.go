@@ -45,6 +45,11 @@ func (p *Page) frame(id string) *Frame {
 			return found
 		}
 	}
+	for _, realm := range p.realmOwners {
+		if frame, ok := realm.agent.(*Frame); ok && frame.ID == id {
+			return frame
+		}
+	}
 	return nil
 }
 
@@ -344,9 +349,7 @@ func (r *Realm) commitChildFrameNavigation(ctx context.Context, navigation *chil
 	navigation.frame.loaderID = navigation.loaderID
 	p.mu.Unlock()
 	p.commitHistory(navigation.frame, documentURL, navigation.replace, nil)
-	if old != nil {
-		_ = old.Close()
-	}
+	p.retireRealm(old)
 	navigation.document = document
 	navigation.realm = realm
 	streamState, err := realm.initializeNavigationStream()
@@ -442,7 +445,7 @@ func (r *Realm) detachChildFrame(elementID int64) {
 		frame.navigationCancel()
 	}
 	if frame.Realm != nil {
-		frame.Realm.cancelResources()
+		frame.Realm.deactivate()
 	}
 	delete(r.childFrames, elementID)
 	page := r.agent.Page()
@@ -560,9 +563,6 @@ func (r *Realm) describeCrossRealmValue(value engine.Value) (map[string]any, err
 	if r.runtime.StrictEqual(value, r.runtime.Get("globalThis")) {
 		return map[string]any{"__mimicCrossRealm": "window", "frame": r.agent.ContextID()}, nil
 	}
-	if r.runtime.StrictEqual(value, r.runtime.Get("document")) {
-		return map[string]any{"__mimicCrossRealm": "document", "frame": r.agent.ContextID()}, nil
-	}
 	if r.runtime.StrictEqual(value, r.runtime.Get("parent")) {
 		frame, _ := r.agent.(*Frame)
 		if frame != nil && frame.parent != nil {
@@ -574,6 +574,9 @@ func (r *Realm) describeCrossRealmValue(value engine.Value) (map[string]any, err
 	}
 	shape := func(id int64) (map[string]any, error) {
 		out := map[string]any{"__mimicCrossRealm": typeName, "frame": r.agent.ContextID(), "realm": r.ID, "handle": id}
+		if r.runtime.StrictEqual(value, r.runtime.Get("document")) {
+			out["document"] = true
+		}
 		if r.frameNodeDescribe != nil && typeName == "object" {
 			value, err := r.runtime.Call(context.Background(), r.frameNodeDescribe, nil, value)
 			if err != nil {

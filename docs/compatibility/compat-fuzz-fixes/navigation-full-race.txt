@@ -1,0 +1,516 @@
+==================
+WARNING: DATA RACE
+Read at 0x00c0004033d8 by goroutine 133505:
+  github.com/moreveal/mimic/internal/browser.newPage.func1()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/page.go:82 +0xd0
+  github.com/moreveal/mimic/internal/network.(*Loader).Load()
+      E:/GitHub/mimic-compat-fuzz/internal/network/loader.go:347 +0x5d2b
+  github.com/moreveal/mimic/internal/browser.(*Page).navigateRequest.func4.1()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/page.go:577 +0x1ee
+
+Previous write at 0x00c0004033d9 by goroutine 120960:
+  github.com/moreveal/mimic/internal/browser.TestNavigatorPermissionAndNetworkState()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/capabilities_test.go:220 +0x178
+  github.com/moreveal/mimic/internal/engine/goja.(*runtime).Eval()
+      E:/GitHub/mimic-compat-fuzz/internal/engine/goja/runtime.go:46 +0x22e
+  github.com/moreveal/mimic/internal/browser.(*Realm).installBindings()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:1688 +0xb4fa
+  github.com/moreveal/mimic/internal/browser.(*Realm).install()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:518 +0x2e
+  github.com/moreveal/mimic/internal/browser.newRealmStateWithNavigation()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:224 +0x17e4
+  github.com/moreveal/mimic/internal/browser.newRealmState()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:171 +0x1e6
+  github.com/moreveal/mimic/internal/browser.newRealm()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:163 +0xe58
+  github.com/moreveal/mimic/internal/browser.(*Page).navigateRequest()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/page.go:325 +0xe1e
+  github.com/moreveal/mimic/internal/browser.(*Page).navigate()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/page.go:257 +0x18e
+  github.com/moreveal/mimic/internal/browser.(*Page).Navigate()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/page.go:225 +0xba
+  github.com/moreveal/mimic/internal/browser.navigateCapabilityFixtureMode()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/capabilities_test.go:32 +0x131
+  github.com/moreveal/mimic/internal/browser.navigateCapabilityFixture()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/capabilities_test.go:19 +0x53
+  github.com/moreveal/mimic/internal/browser.TestNavigatorPermissionAndNetworkState()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/capabilities_test.go:214 +0x41
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2036 +0x1ca
+  testing.(*T).Run.gowrap1()
+      C:/Program Files/Go/src/testing/testing.go:2101 +0x38
+
+Goroutine 133505 (running) created at:
+  github.com/moreveal/mimic/internal/browser.(*Page).navigateRequest.func4()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/page.go:575 +0x331
+  github.com/moreveal/mimic/internal/scheduler.(*Scheduler).run()
+      E:/GitHub/mimic-compat-fuzz/internal/scheduler/scheduler.go:342 +0x6f6
+  github.com/moreveal/mimic/internal/scheduler.(*Scheduler).RunReadyStep()
+      E:/GitHub/mimic-compat-fuzz/internal/scheduler/scheduler.go:259 +0x17b
+  github.com/moreveal/mimic/internal/scheduler.RunReadyAcross()
+      E:/GitHub/mimic-compat-fuzz/internal/scheduler/scheduler.go:301 +0x4b3
+  github.com/moreveal/mimic/internal/browser.(*Realm).RunReady()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:403 +0x6c
+  github.com/moreveal/mimic/internal/browser.(*Page).navigateRequest()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/page.go:594 +0x39eb
+  github.com/dop251/goja.(*vm).runTry()
+      C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/vm.go:873 +0x38d
+  github.com/dop251/goja.(*Runtime).RunProgram()
+      C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/runtime.go:1475 +0x7a4
+  github.com/dop251/goja.(*Runtime).RunScript()
+      C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/runtime.go:1411 +0xb4
+  github.com/moreveal/mimic/internal/engine/goja.(*runtime).Eval()
+      E:/GitHub/mimic-compat-fuzz/internal/engine/goja/runtime.go:46 +0x22e
+  github.com/moreveal/mimic/internal/browser.(*Realm).installBindings()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:1688 +0xb4fa
+  github.com/moreveal/mimic/internal/browser.(*Realm).install()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:518 +0x2e
+  github.com/moreveal/mimic/internal/browser.newRealmStateWithNavigation()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:224 +0x17e4
+  github.com/moreveal/mimic/internal/browser.newRealmState()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:171 +0x1e6
+  github.com/moreveal/mimic/internal/browser.newRealm()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:163 +0xe58
+  github.com/moreveal/mimic/internal/browser.(*Page).navigateRequest()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/page.go:325 +0xe1e
+  github.com/moreveal/mimic/internal/browser.(*Page).navigate()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/page.go:257 +0x18e
+  github.com/moreveal/mimic/internal/browser.(*Page).Navigate()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/page.go:225 +0xba
+  github.com/moreveal/mimic/internal/browser.navigateCapabilityFixtureMode()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/capabilities_test.go:32 +0x131
+  github.com/moreveal/mimic/internal/browser.navigateCapabilityFixture()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/capabilities_test.go:19 +0x53
+  github.com/moreveal/mimic/internal/browser.TestNavigatorPermissionAndNetworkState()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/capabilities_test.go:214 +0x41
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2036 +0x1ca
+  testing.(*T).Run.gowrap1()
+      C:/Program Files/Go/src/testing/testing.go:2101 +0x38
+
+Goroutine 120960 (running) created at:
+  testing.(*T).Run()
+      C:/Program Files/Go/src/testing/testing.go:2101 +0xb2a
+  testing.runTests.func1()
+      C:/Program Files/Go/src/testing/testing.go:2585 +0x85
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2036 +0x1ca
+  testing.runTests()
+      C:/Program Files/Go/src/testing/testing.go:2583 +0x9f7
+  testing.(*M).Run()
+      C:/Program Files/Go/src/testing/testing.go:2443 +0xf4b
+  main.main()
+      _testmain.go:682 +0x164
+==================
+==================
+WARNING: DATA RACE
+Read at 0x00c000403430 by goroutine 133505:
+  github.com/moreveal/mimic/internal/browser.newPage.func1()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/page.go:82 +0xd0
+  github.com/moreveal/mimic/internal/network.(*Loader).Load()
+      E:/GitHub/mimic-compat-fuzz/internal/network/loader.go:350 +0x5fc2
+  github.com/moreveal/mimic/internal/browser.(*Page).navigateRequest.func4.1()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/page.go:577 +0x1ee
+
+Previous write at 0x00c000403430 by goroutine 120960:
+  github.com/moreveal/mimic/internal/browser.TestNavigatorPermissionAndNetworkState()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/capabilities_test.go:218 +0x136
+  github.com/moreveal/mimic/internal/engine/goja.(*runtime).Eval()
+      E:/GitHub/mimic-compat-fuzz/internal/engine/goja/runtime.go:46 +0x22e
+  github.com/moreveal/mimic/internal/browser.(*Realm).installBindings()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:1688 +0xb4fa
+  github.com/moreveal/mimic/internal/browser.(*Realm).install()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:518 +0x2e
+  github.com/moreveal/mimic/internal/browser.newRealmStateWithNavigation()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:224 +0x17e4
+  github.com/moreveal/mimic/internal/browser.newRealmState()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:171 +0x1e6
+  github.com/moreveal/mimic/internal/browser.newRealm()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:163 +0xe58
+  github.com/moreveal/mimic/internal/browser.(*Page).navigateRequest()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/page.go:325 +0xe1e
+  github.com/moreveal/mimic/internal/browser.(*Page).navigate()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/page.go:257 +0x18e
+  github.com/moreveal/mimic/internal/browser.(*Page).Navigate()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/page.go:225 +0xba
+  github.com/moreveal/mimic/internal/browser.navigateCapabilityFixtureMode()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/capabilities_test.go:32 +0x131
+  github.com/moreveal/mimic/internal/browser.navigateCapabilityFixture()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/capabilities_test.go:19 +0x53
+  github.com/moreveal/mimic/internal/browser.TestNavigatorPermissionAndNetworkState()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/capabilities_test.go:214 +0x41
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2036 +0x1ca
+  testing.(*T).Run.gowrap1()
+      C:/Program Files/Go/src/testing/testing.go:2101 +0x38
+
+Goroutine 133505 (running) created at:
+  github.com/moreveal/mimic/internal/browser.(*Page).navigateRequest.func4()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/page.go:575 +0x331
+  github.com/moreveal/mimic/internal/scheduler.(*Scheduler).run()
+      E:/GitHub/mimic-compat-fuzz/internal/scheduler/scheduler.go:342 +0x6f6
+  github.com/moreveal/mimic/internal/scheduler.(*Scheduler).RunReadyStep()
+      E:/GitHub/mimic-compat-fuzz/internal/scheduler/scheduler.go:259 +0x17b
+  github.com/moreveal/mimic/internal/scheduler.RunReadyAcross()
+      E:/GitHub/mimic-compat-fuzz/internal/scheduler/scheduler.go:301 +0x4b3
+  github.com/moreveal/mimic/internal/browser.(*Realm).RunReady()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:403 +0x6c
+  github.com/moreveal/mimic/internal/browser.(*Page).navigateRequest()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/page.go:594 +0x39eb
+  github.com/dop251/goja.(*vm).runTry()
+      C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/vm.go:873 +0x38d
+  github.com/dop251/goja.(*Runtime).RunProgram()
+      C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/runtime.go:1475 +0x7a4
+  github.com/dop251/goja.(*Runtime).RunScript()
+      C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/runtime.go:1411 +0xb4
+  github.com/moreveal/mimic/internal/engine/goja.(*runtime).Eval()
+      E:/GitHub/mimic-compat-fuzz/internal/engine/goja/runtime.go:46 +0x22e
+  github.com/moreveal/mimic/internal/browser.(*Realm).installBindings()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:1688 +0xb4fa
+  github.com/moreveal/mimic/internal/browser.(*Realm).install()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:518 +0x2e
+  github.com/moreveal/mimic/internal/browser.newRealmStateWithNavigation()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:224 +0x17e4
+  github.com/moreveal/mimic/internal/browser.newRealmState()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:171 +0x1e6
+  github.com/moreveal/mimic/internal/browser.newRealm()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:163 +0xe58
+  github.com/moreveal/mimic/internal/browser.(*Page).navigateRequest()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/page.go:325 +0xe1e
+  github.com/moreveal/mimic/internal/browser.(*Page).navigate()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/page.go:257 +0x18e
+  github.com/moreveal/mimic/internal/browser.(*Page).Navigate()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/page.go:225 +0xba
+  github.com/moreveal/mimic/internal/browser.navigateCapabilityFixtureMode()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/capabilities_test.go:32 +0x131
+  github.com/moreveal/mimic/internal/browser.navigateCapabilityFixture()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/capabilities_test.go:19 +0x53
+  github.com/moreveal/mimic/internal/browser.TestNavigatorPermissionAndNetworkState()
+      E:/GitHub/mimic-compat-fuzz/internal/browser/capabilities_test.go:214 +0x41
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2036 +0x1ca
+  testing.(*T).Run.gowrap1()
+      C:/Program Files/Go/src/testing/testing.go:2101 +0x38
+
+Goroutine 120960 (running) created at:
+  testing.(*T).Run()
+      C:/Program Files/Go/src/testing/testing.go:2101 +0xb2a
+  testing.runTests.func1()
+      C:/Program Files/Go/src/testing/testing.go:2585 +0x85
+  testing.tRunner()
+      C:/Program Files/Go/src/testing/testing.go:2036 +0x1ca
+  testing.runTests()
+      C:/Program Files/Go/src/testing/testing.go:2583 +0x9f7
+  testing.(*M).Run()
+      C:/Program Files/Go/src/testing/testing.go:2443 +0xf4b
+  main.main()
+      _testmain.go:682 +0x164
+==================
+--- FAIL: TestNavigatorPermissionAndNetworkState (3.06s)
+    testing.go:1712: race detected during execution of test
+--- FAIL: TestPartitionCookiesFrameAndWorkerTransport (11.74s)
+    --- FAIL: TestPartitionCookiesFrameAndWorkerTransport/goja (11.01s)
+        cookie_context_test.go:49: debug: {"top":"http://127.0.0.1:10687","child":null,"length":2,"childLength":null}
+        cookie_context_test.go:49: history evaluation: value=<nil> expected=true err=context deadline exceeded
+            new Promise(resolve=>{const f=document.createElement('iframe');const listener=e=>{if(e.source!==f.contentWindow)return;removeEventListener('message',listener);const v=e.data;f.remove();resolve(v.before==='shared=1'&&v.documentValue==='shared=1; id=nested'&&v.wire==='shared=1; id=nested'&&v.workerValue.script===v.wire&&v.workerValue.fetch===v.wire&&document.cookie==='id=top; shared=1')};addEventListener('message',listener);f.src="http://localhost:10687/middle";document.body.append(f)})
+--- FAIL: TestFrameDocumentEntryFollowsSynchronousCalls (22.06s)
+    --- FAIL: TestFrameDocumentEntryFollowsSynchronousCalls/goja (21.32s)
+        frame_document_bridge_test.go:135: context deadline exceeded
+--- FAIL: TestChildNavigationObserverWaitsForChildLoad (11.30s)
+    --- FAIL: TestChildNavigationObserverWaitsForChildLoad/goja (10.68s)
+        frame_performance_test.go:138: context deadline exceeded
+--- FAIL: TestChildLocationNavigatesOnlyChildAndResolvesFromHistoryURL (12.67s)
+    --- FAIL: TestChildLocationNavigatesOnlyChildAndResolvesFromHistoryURL/goja (11.79s)
+        history_test.go:96: debug: {"top":"http://127.0.0.1:64294/top","child":"http://127.0.0.1:64294/child/original","length":2,"childLength":2}
+        history_test.go:96: history evaluation: value=<nil> expected=true err=context deadline exceeded
+            new Promise(resolve=>{const f=document.createElement('iframe');globalThis.childFrame=f;f.src='/child/original';f.onload=()=>resolve(true);document.body.appendChild(f)})
+--- FAIL: TestFrameInsertionAfterInnerHTMLAndFragmentMove (8.50s)
+    --- FAIL: TestFrameInsertionAfterInnerHTMLAndFragmentMove/goja (8.02s)
+        insertion_steps_test.go:45: frame insertion: <nil> context deadline exceeded: context deadline exceeded
+                at runSyntheticInsertionSteps (mimic:webapi-surface:842:115(17))
+                at runSyntheticInsertionSteps (mimic:webapi-surface:842:255(39))
+                at runSyntheticInsertionSteps (mimic:webapi-surface:842:255(39))
+                at value (mimic:webapi-surface:843:812(118))
+                at call (native)
+                at value (mimic:webapi-surface:877:57(45))
+                at apply (native)
+                at mimic:webapi-surface:2296:124(23)
+                at call (native)
+                at mimic:webapi-surface:3869:48(138)
+                at value (mimic:webapi-surface:876:91(26))
+                at apply (native)
+                at mimic:webapi-surface:2296:124(23)
+                at call (native)
+                at mimic:webapi-surface:3869:48(138)
+                at __pyppeteer_evaluation_script__:7:27(40)
+                at __pyppeteer_evaluation_script__:1:1(2)
+--- FAIL: TestNavigationRemovesRetiredDescendantTasks (10.96s)
+    --- FAIL: TestNavigationRemovesRetiredDescendantTasks/goja (10.43s)
+        navigation_teardown_test.go:28: context deadline exceeded
+--- FAIL: TestChildNavigationRemovesRetiredGrandchildTasks (12.38s)
+    --- FAIL: TestChildNavigationRemovesRetiredGrandchildTasks/goja (11.86s)
+        navigation_teardown_test.go:56: context deadline exceeded
+panic: test timed out after 20m0s
+	running tests:
+		TestConnectedShadowTreeIframeLoadsItsDocument (5s)
+
+goroutine 20065 [running]:
+testing.(*M).startAlarm.func1()
+	C:/Program Files/Go/src/testing/testing.go:2802 +0x605
+created by time.goFunc
+	C:/Program Files/Go/src/time/sleep.go:215 +0x45
+
+goroutine 1 [chan receive]:
+testing.(*T).Run(0xc000002400, {0x143870476, 0x2d}, 0x143ac6670)
+	C:/Program Files/Go/src/testing/testing.go:2109 +0xb56
+testing.runTests.func1(0xc000002400)
+	C:/Program Files/Go/src/testing/testing.go:2585 +0x86
+testing.tRunner(0xc000002400, 0xc00026bad0)
+	C:/Program Files/Go/src/testing/testing.go:2036 +0x1cb
+testing.runTests({0x1438465a2, 0x19}, {0x14386b0c5, 0x2a}, 0xc00000a618, {0x1435353c0, 0x13d, 0x13d}, {0xc2a0efe00b646d14, 0x1176608a27d, ...})
+	C:/Program Files/Go/src/testing/testing.go:2583 +0x9f8
+testing.(*M).Run(0xc00023fc20)
+	C:/Program Files/Go/src/testing/testing.go:2443 +0xf4c
+main.main()
+	_testmain.go:682 +0x165
+
+goroutine 20158 [runnable]:
+github.com/dop251/goja.(*vm).run(0xc0062fb680)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/vm.go:635 +0xbf
+github.com/dop251/goja.(*vm).runTryInner(0xc0062fb680)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/vm.go:887 +0x99
+github.com/dop251/goja.(*vm).runTry(0xc0062fb680)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/vm.go:873 +0x38e
+github.com/dop251/goja.(*Runtime).RunProgram(0xc00888f408, 0xc007491cc0)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/runtime.go:1475 +0x7a5
+github.com/dop251/goja.(*Runtime).RunScript(0xc00888f408, {0x14383b97b, 0x14}, {0xc000f84000, 0xff6a4})
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/runtime.go:1411 +0xb5
+github.com/moreveal/mimic/internal/engine/goja.(*runtime).Eval(0xc00ba69300, {0x143ae7718, 0x1447d5140}, {0xc000f84000, 0xff6a4}, {0x14383b97b, 0x14})
+	E:/GitHub/mimic-compat-fuzz/internal/engine/goja/runtime.go:46 +0x22f
+github.com/moreveal/mimic/internal/browser.(*Realm).installBindings(0xc00888e808)
+	E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:1688 +0xb4fb
+github.com/moreveal/mimic/internal/browser.(*Realm).install(0xc00888e808)
+	E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:518 +0x2f
+github.com/moreveal/mimic/internal/browser.newRealmStateWithNavigation(0xc0066af088, {0x143ae4000, 0xc0043eba00}, 0xc0062f9020, 0xc00318c7e0, 0x0, {0x14382b9ef?, 0xb?, 0x0?}, {0x0, ...}, ...)
+	E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:224 +0x17e5
+github.com/moreveal/mimic/internal/browser.newRealmState(0xc0066af088, {0x143ae4000, 0xc0043eba00}, 0xc0062f9020, 0xc00318c7e0, 0x0)
+	E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:171 +0x1e7
+github.com/moreveal/mimic/internal/browser.newRealm(...)
+	E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:163
+github.com/moreveal/mimic/internal/browser.(*Realm).ensureChildFrameInternal(0xc008920008, 0xa, 0x1, 0x1)
+	E:/GitHub/mimic-compat-fuzz/internal/browser/frame.go:97 +0x5b8
+github.com/moreveal/mimic/internal/browser.(*Realm).ensureChildFrame(0xc008920008, 0xa, {0xc00676d427, 0x1, 0x0?})
+	E:/GitHub/mimic-compat-fuzz/internal/browser/frame.go:69 +0x65
+github.com/moreveal/mimic/internal/browser.(*Realm).installBindings.func8({0x143705200?, 0xc00676d560?}, {0xc006db8580, 0x2, 0x2})
+	E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:566 +0x145
+github.com/moreveal/mimic/internal/engine/goja.(*runtime).Function.func1({{0x143af7890, 0xc0026af0f8}, {0xc00ac54f88, 0x2, 0x90}})
+	E:/GitHub/mimic-compat-fuzz/internal/engine/goja/runtime.go:176 +0x215
+github.com/dop251/goja.(*nativeFuncObject).vmCall(0xc000460280, 0xc008918ea0, 0x2)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/func.go:571 +0x32b
+github.com/dop251/goja.call.exec(0x2, 0xc008918ea0)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/vm.go:3642 +0xe8
+github.com/dop251/goja.(*vm).run(0xc008918ea0)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/vm.go:635 +0xbf
+github.com/dop251/goja.(*vm).runTryInner(0xc008918ea0)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/vm.go:887 +0x99
+github.com/dop251/goja.(*baseJsFuncObject).__call(0xc00d00ab40, {0xc002b6e218, 0x1, 0x10?}, {0x0, 0x0}, {0x143af7890, 0xc0012d37b8})
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/func.go:434 +0xe31
+github.com/dop251/goja.(*baseJsFuncObject)._call(...)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/func.go:450
+github.com/dop251/goja.(*baseJsFuncObject).call(0xc00d00ab40, {{0x143af7890, 0xc0012d37b8}, {0xc002b6e218, 0x1, 0x3f}}, {0x0, 0x0})
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/func.go:458 +0xb4
+github.com/dop251/goja.(*baseJsFuncObject).Call(...)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/func.go:390
+github.com/dop251/goja.(*Runtime).functionproto_call(0xc008920408, {{0x143af7890, 0xc00879a7b0}, {0xc002b6e208, 0x2, 0x40}})
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/builtin_function.go:113 +0x1c3
+github.com/dop251/goja.(*nativeFuncObject).vmCall(0xc00d02a820, 0xc008918ea0, 0x2)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/func.go:571 +0x32b
+github.com/dop251/goja.call.exec(0x2, 0xc008918ea0)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/vm.go:3642 +0xe8
+github.com/dop251/goja.(*vm).run(0xc008918ea0)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/vm.go:635 +0xbf
+github.com/dop251/goja.(*vm).runTryInner(0xc008918ea0)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/vm.go:887 +0x99
+github.com/dop251/goja.(*baseJsFuncObject).__call(0xc00d00afc0, {0xc004ea5610, 0x1, 0x10?}, {0x0, 0x0}, {0x143af7890, 0xc0012d37b8})
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/func.go:434 +0xe31
+github.com/dop251/goja.(*baseJsFuncObject)._call(...)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/func.go:450
+github.com/dop251/goja.(*baseJsFuncObject).call(0xc00d00afc0, {{0x143af7890, 0xc0012d37b8}, {0xc004ea5610, 0x1, 0x1}}, {0x0, 0x0})
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/func.go:458 +0xb4
+github.com/dop251/goja.(*baseJsFuncObject).Call(...)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/func.go:390
+github.com/dop251/goja.(*Runtime).functionproto_apply(0xc008920408, {{0x143af7890, 0xc00879a9d8}, {0xc002b6e198, 0x2, 0x47}})
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/builtin_function.go:100 +0x2c9
+github.com/dop251/goja.(*nativeFuncObject).vmCall(0xc00023ebe0, 0xc008918ea0, 0x2)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/func.go:571 +0x32b
+github.com/dop251/goja.call.exec(0x2, 0xc008918ea0)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/vm.go:3642 +0xe8
+github.com/dop251/goja.(*vm).run(0xc008918ea0)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/vm.go:635 +0xbf
+github.com/dop251/goja.(*vm).runTryInner(0xc008918ea0)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/vm.go:887 +0x99
+github.com/dop251/goja.(*baseJsFuncObject).__call(0xc00125c540, {0xc002b6e0d8, 0x1, 0x10?}, {0x0, 0x0}, {0x143af7890, 0xc0012d37b8})
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/func.go:434 +0xe31
+github.com/dop251/goja.(*baseJsFuncObject)._call(...)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/func.go:450
+github.com/dop251/goja.(*baseJsFuncObject).call(0xc00125c540, {{0x143af7890, 0xc0012d37b8}, {0xc002b6e0d8, 0x1, 0x53}}, {0x0, 0x0})
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/func.go:458 +0xb4
+github.com/dop251/goja.(*baseJsFuncObject).Call(...)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/func.go:390
+github.com/dop251/goja.(*Runtime).functionproto_call(0xc008920408, {{0x143af7890, 0xc006fb8000}, {0xc002b6e0c8, 0x2, 0x54}})
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/builtin_function.go:113 +0x1c3
+github.com/dop251/goja.(*nativeFuncObject).vmCall(0xc00d02a820, 0xc008918ea0, 0x2)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/func.go:571 +0x32b
+github.com/dop251/goja.call.exec(0x2, 0xc008918ea0)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/vm.go:3642 +0xe8
+github.com/dop251/goja.(*vm).run(0xc008918ea0)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/vm.go:635 +0xbf
+github.com/dop251/goja.(*vm).runTryInner(0xc008918ea0)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/vm.go:887 +0x99
+github.com/dop251/goja.(*baseJsFuncObject).__call(0xc0062e00e0, {0xc006907cc0, 0x2, 0x1400254f4?}, {0x0, 0x0}, {0x0, 0x0})
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/func.go:434 +0xe31
+github.com/dop251/goja.(*baseJsFuncObject)._call(...)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/func.go:450
+github.com/dop251/goja.(*arrowFuncObject).Call(0xc0062e00e0, {{0x0, 0x0}, {0xc006907cc0, 0x2, 0x2}})
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/func.go:394 +0xb2
+github.com/dop251/goja.(*Runtime).builtin_newPromise.func1()
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/builtin_promise.go:262 +0x153
+github.com/dop251/goja.(*vm).try(0xc008918ea0, 0xc0036094b0)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/vm.go:864 +0x3e8
+github.com/dop251/goja.(*Runtime).builtin_newPromise(0xc008920408, {0xc00b546bd0, 0x1, 0x14009da29?}, 0xc0088bd4a0)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/builtin_promise.go:261 +0x445
+github.com/dop251/goja.(*Runtime).newNativeConstructOnly.func2({0xc00b546bd0, 0x1, 0x3}, 0x0)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/runtime.go:711 +0x6b
+github.com/dop251/goja._new.exec(0x1, 0xc008918ea0)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/vm.go:4860 +0x17c
+github.com/dop251/goja.(*vm).run(0xc008918ea0)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/vm.go:635 +0xbf
+github.com/dop251/goja.(*vm).runTryInner(0xc008918ea0)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/vm.go:887 +0x99
+github.com/dop251/goja.(*vm).runTry(0xc008918ea0)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/vm.go:873 +0x38e
+github.com/dop251/goja.(*Runtime).RunProgram(0xc008920408, 0xc0062da7d0)
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/runtime.go:1475 +0x7a5
+github.com/dop251/goja.(*Runtime).RunScript(0xc008920408, {0x143853d96, 0x1f}, {0x1438a1296, 0x122})
+	C:/Users/moreveal/go/pkg/mod/github.com/dop251/goja@v0.0.0-20260906210903-70ad66ec7ce4/runtime.go:1411 +0xb5
+github.com/moreveal/mimic/internal/engine/goja.(*runtime).Eval(0xc005ee0048, {0x143ae7718, 0x1447d5140}, {0x1438a1296, 0x122}, {0x143853d96, 0x1f})
+	E:/GitHub/mimic-compat-fuzz/internal/engine/goja/runtime.go:46 +0x22f
+github.com/moreveal/mimic/internal/browser.(*Realm).Evaluate(0xc008920008, {0x143ae7718, 0x1447d5140}, {0x1438a1296, 0x122}, {0x143853d96, 0x1f})
+	E:/GitHub/mimic-compat-fuzz/internal/browser/realm.go:359 +0xc3
+github.com/moreveal/mimic/internal/browser.(*Page).evaluateRealm(0xc0066af088, {0x143ae7718, 0x1447d5140}, 0xc008920008, {0x1438a1296, 0x122})
+	E:/GitHub/mimic-compat-fuzz/internal/browser/page.go:689 +0x169
+github.com/moreveal/mimic/internal/browser.(*Page).Evaluate(0xc0066af088, {0x143ae7718, 0x1447d5140}, {0x1438a1296, 0x122})
+	E:/GitHub/mimic-compat-fuzz/internal/browser/page.go:665 +0xdc
+github.com/moreveal/mimic/internal/browser.TestConnectedShadowTreeIframeLoadsItsDocument(0xc0026bf800)
+	E:/GitHub/mimic-compat-fuzz/internal/browser/page_test.go:1095 +0x1ae
+testing.tRunner(0xc0026bf800, 0x143ac6670)
+	C:/Program Files/Go/src/testing/testing.go:2036 +0x1cb
+created by testing.(*T).Run in goroutine 1
+	C:/Program Files/Go/src/testing/testing.go:2101 +0xb2b
+
+goroutine 18441 [chan receive, locked to thread]:
+github.com/moreveal/mimic/internal/engine/v8.(*Runtime).loop(0xc005b06460, 0xc005b04770)
+	E:/GitHub/mimic-compat-fuzz/internal/engine/v8/spike.go:120 +0x81d
+created by github.com/moreveal/mimic/internal/engine/v8.newRuntime in goroutine 18440
+	E:/GitHub/mimic-compat-fuzz/internal/engine/v8/spike.go:68 +0x23d
+
+goroutine 20159 [IO wait]:
+internal/poll.runtime_pollWait(0x5702a800, 0x72)
+	C:/Program Files/Go/src/runtime/netpoll.go:351 +0x85
+internal/poll.(*pollDesc).wait(0xc008792ef8, 0x72, 0x0)
+	C:/Program Files/Go/src/internal/poll/fd_poll_runtime.go:84 +0xb1
+internal/poll.(*FD).waitIO(0xc008792ee0, 0xc001b3c000)
+	C:/Program Files/Go/src/internal/poll/fd_windows.go:214 +0x107
+internal/poll.(*FD).execIO(0xc008792ee0, 0x72, 0xc001ac5998)
+	C:/Program Files/Go/src/internal/poll/fd_windows.go:297 +0x565
+internal/poll.(*FD).acceptOne(0xc008792ee0, 0xefc, {0xc0088a2000, 0x2, 0x2})
+	C:/Program Files/Go/src/internal/poll/fd_windows.go:1118 +0xf5
+internal/poll.(*FD).Accept(0xc008792ee0, 0xc001ac5c18)
+	C:/Program Files/Go/src/internal/poll/fd_windows.go:1153 +0x3a5
+net.(*netFD).accept(0xc008792ee0)
+	C:/Program Files/Go/src/net/fd_windows.go:202 +0x85
+net.(*TCPListener).accept(0xc0033da080)
+	C:/Program Files/Go/src/net/tcpsock_posix.go:159 +0x4e
+net.(*TCPListener).Accept(0xc0033da080)
+	C:/Program Files/Go/src/net/tcpsock.go:387 +0x65
+net/http.(*Server).Serve(0xc00871ee00, {0x143ae45c0, 0xc0033da080})
+	C:/Program Files/Go/src/net/http/server.go:3434 +0x610
+net/http/httptest.(*Server).goServe.func1()
+	C:/Program Files/Go/src/net/http/httptest/server.go:341 +0xb3
+created by net/http/httptest.(*Server).goServe in goroutine 20158
+	C:/Program Files/Go/src/net/http/httptest/server.go:339 +0xa5
+
+goroutine 19791 [IO wait]:
+internal/poll.runtime_pollWait(0x57029a00, 0x72)
+	C:/Program Files/Go/src/runtime/netpoll.go:351 +0x85
+internal/poll.(*pollDesc).wait(0xc0087930b8, 0x72, 0x0)
+	C:/Program Files/Go/src/internal/poll/fd_poll_runtime.go:84 +0xb1
+internal/poll.(*FD).waitIO(0xc0087930a0, 0xc000db7c80)
+	C:/Program Files/Go/src/internal/poll/fd_windows.go:214 +0x107
+internal/poll.(*FD).execIO(0xc0087930a0, 0x72, 0xc0012a9968)
+	C:/Program Files/Go/src/internal/poll/fd_windows.go:297 +0x565
+internal/poll.(*FD).Read(0xc0087930a0, {0xc003dc2000, 0x1000, 0x1000})
+	C:/Program Files/Go/src/internal/poll/fd_windows.go:586 +0x354
+net.(*netFD).Read(0xc0087930a0, {0xc003dc2000, 0x1000, 0x1000})
+	C:/Program Files/Go/src/net/fd_posix.go:68 +0x4b
+net.(*conn).Read(0xc000102d40, {0xc003dc2000, 0x1000, 0x1000})
+	C:/Program Files/Go/src/net/net.go:196 +0xad
+net/http.(*persistConn).Read(0xc0009337c0, {0xc003dc2000, 0x1000, 0x1000})
+	C:/Program Files/Go/src/net/http/transport.go:2174 +0x233
+bufio.(*Reader).fill(0xc005dfcd80)
+	C:/Program Files/Go/src/bufio/bufio.go:113 +0x2a4
+bufio.(*Reader).Peek(0xc005dfcd80, 0x1)
+	C:/Program Files/Go/src/bufio/bufio.go:152 +0xb0
+net/http.(*persistConn).readLoop(0xc0009337c0)
+	C:/Program Files/Go/src/net/http/transport.go:2330 +0x31b
+created by net/http.(*Transport).dialConn in goroutine 20160
+	C:/Program Files/Go/src/net/http/transport.go:1994 +0x2fb1
+
+goroutine 19792 [select]:
+net/http.(*persistConn).writeLoop(0xc0009337c0)
+	C:/Program Files/Go/src/net/http/transport.go:2652 +0x1b5
+created by net/http.(*Transport).dialConn in goroutine 20160
+	C:/Program Files/Go/src/net/http/transport.go:1995 +0x303d
+
+goroutine 20143 [select]:
+github.com/moreveal/mimic/internal/engine/goja.(*runtime).Eval.func1()
+	E:/GitHub/mimic-compat-fuzz/internal/engine/goja/runtime.go:35 +0x135
+created by github.com/moreveal/mimic/internal/engine/goja.(*runtime).Eval in goroutine 20158
+	E:/GitHub/mimic-compat-fuzz/internal/engine/goja/runtime.go:33 +0x1f0
+
+goroutine 20161 [IO wait]:
+internal/poll.runtime_pollWait(0x57067200, 0x72)
+	C:/Program Files/Go/src/runtime/netpoll.go:351 +0x85
+internal/poll.(*pollDesc).wait(0xc008793198, 0x72, 0x0)
+	C:/Program Files/Go/src/internal/poll/fd_poll_runtime.go:84 +0xb1
+internal/poll.(*FD).waitIO(0xc008793180, 0xc000db7c50)
+	C:/Program Files/Go/src/internal/poll/fd_windows.go:214 +0x107
+internal/poll.(*FD).execIO(0xc008793180, 0x72, 0xc0019cf7d8)
+	C:/Program Files/Go/src/internal/poll/fd_windows.go:297 +0x565
+internal/poll.(*FD).Read(0xc008793180, {0xc003d90000, 0x1000, 0x1000})
+	C:/Program Files/Go/src/internal/poll/fd_windows.go:586 +0x354
+net.(*netFD).Read(0xc008793180, {0xc003d90000, 0x1000, 0x1000})
+	C:/Program Files/Go/src/net/fd_posix.go:68 +0x4b
+net.(*conn).Read(0xc005762410, {0xc003d90000, 0x1000, 0x1000})
+	C:/Program Files/Go/src/net/net.go:196 +0xad
+net/http.(*connReader).Read(0xc0033da240, {0xc003d90000, 0x1000, 0x1000})
+	C:/Program Files/Go/src/net/http/server.go:812 +0x288
+bufio.(*Reader).fill(0xc000f55740)
+	C:/Program Files/Go/src/bufio/bufio.go:113 +0x2a4
+bufio.(*Reader).Peek(0xc000f55740, 0x4)
+	C:/Program Files/Go/src/bufio/bufio.go:152 +0xb0
+net/http.(*conn).serve(0xc001e1fb90, {0x143ae7808, 0xc0058561e0})
+	C:/Program Files/Go/src/net/http/server.go:2109 +0xffb
+created by net/http.(*Server).Serve in goroutine 20159
+	C:/Program Files/Go/src/net/http/server.go:3464 +0x88a
+
+goroutine 20141 [select]:
+github.com/moreveal/mimic/internal/engine/goja.(*runtime).Eval.func1()
+	E:/GitHub/mimic-compat-fuzz/internal/engine/goja/runtime.go:35 +0x135
+created by github.com/moreveal/mimic/internal/engine/goja.(*runtime).Eval in goroutine 20158
+	E:/GitHub/mimic-compat-fuzz/internal/engine/goja/runtime.go:33 +0x1f0
+FAIL	github.com/moreveal/mimic/internal/browser	1201.470s
+ok  	github.com/moreveal/mimic/internal/webapi	2.754s
+ok  	github.com/moreveal/mimic/internal/scheduler	1.235s
+ok  	github.com/moreveal/mimic/internal/dom	2.049s
+FAIL

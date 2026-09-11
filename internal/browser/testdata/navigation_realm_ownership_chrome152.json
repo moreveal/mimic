@@ -1,0 +1,118 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "fixtureOrigin": "http://127.0.0.1:57930",
+  "result": {
+    "result": {
+      "type": "object",
+      "value": {
+        "sameOrigin": {
+          "windowStable": true,
+          "currentDocument": false,
+          "contentDocumentNull": false,
+          "oldDocumentValue": 23,
+          "oldDocumentBody": true,
+          "oldDocumentConstructor": true,
+          "oldDefaultViewNull": true,
+          "oldObjectValue": 17,
+          "oldObjectPrototype": true,
+          "constructOldObject": true,
+          "oldSymbolIdentity": true,
+          "oldFunctionDocument": true,
+          "oldFunctionWindow": true,
+          "oldEvalDocument": true,
+          "oldEvalWindow": true,
+          "oldEvalResultType": "object",
+          "oldEvalPrimitive": 17,
+          "oldEvalObjectArgument": true,
+          "oldEvalThrow": {
+            "error": "Error"
+          },
+          "oldWindowRoundtrip": true,
+          "parentWindowRoundtrip": true,
+          "oldSymbolRoundtrip": true,
+          "oldSymbolKey": true,
+          "newWindowRoundtrip": true,
+          "newSymbolKey": true,
+          "oldFunctionGlobal": true,
+          "oldDocumentMutation": true,
+          "currentHasOldMutation": false,
+          "currentHasOldGlobal": false,
+          "currentConstructorReplaced": true
+        },
+        "crossOrigin": {
+          "windowStable": true,
+          "currentDocument": {
+            "error": "SecurityError"
+          },
+          "contentDocumentNull": true,
+          "oldDocumentValue": 23,
+          "oldDocumentBody": true,
+          "oldDocumentConstructor": true,
+          "oldDefaultViewNull": true,
+          "oldObjectValue": 17,
+          "oldObjectPrototype": true,
+          "constructOldObject": true,
+          "oldSymbolIdentity": true,
+          "oldFunctionDocument": true,
+          "oldFunctionWindow": true,
+          "oldEvalDocument": false,
+          "oldEvalWindow": false,
+          "oldEvalResultType": "undefined",
+          "oldEvalPrimitive": "undefined",
+          "oldEvalObjectArgument": "undefined",
+          "oldEvalThrow": "undefined",
+          "oldWindowRoundtrip": true,
+          "parentWindowRoundtrip": true,
+          "oldSymbolRoundtrip": true,
+          "oldSymbolKey": true,
+          "newWindowRoundtrip": {
+            "error": "SecurityError"
+          },
+          "newSymbolKey": {
+            "error": "SecurityError"
+          },
+          "oldFunctionGlobal": {
+            "error": "SecurityError"
+          },
+          "oldDocumentMutation": true,
+          "currentHasOldMutation": {
+            "error": "SecurityError"
+          },
+          "currentHasOldGlobal": {
+            "error": "SecurityError"
+          },
+          "currentConstructorReplaced": {
+            "error": "SecurityError"
+          }
+        }
+      }
+    }
+  }
+}

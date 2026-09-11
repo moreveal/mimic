@@ -1,0 +1,30 @@
+{
+  "id": "261de7a21e7145d7",
+  "category": "legacy",
+  "members": [
+    "legacy.collection-indexed-named"
+  ],
+  "path": [
+    "value",
+    "collection",
+    "ownKeys"
+  ],
+  "chrome": [
+    "0",
+    "compat_named"
+  ],
+  "mimic": [],
+  "probe": {
+    "id": "legacy.collection-indexed-named",
+    "category": "legacy",
+    "setup": [
+      "const item=document.createElement('form');item.id='compat_named';document.body.appendChild(item);",
+      "const nodes=document.forms;"
+    ],
+    "expression": "({collection:inspect(nodes),index:nodes[0]===item,named:nodes.compat_named===item,namedItem:nodes.namedItem('compat_named')===item,missing:attempt(()=>nodes.item(9)),listIndex:document.querySelectorAll('form')[0]===item,listMissing:attempt(()=>document.querySelectorAll('form').item(9))})"
+  },
+  "originalSetupStatements": 2,
+  "minimality": "1-minimal setup deletion for fixed observation and exact result pair; not global JS minimum",
+  "fixtureOrigin": "http://127.0.0.1:54524",
+  "crossOrigin": "http://localhost:54524"
+}

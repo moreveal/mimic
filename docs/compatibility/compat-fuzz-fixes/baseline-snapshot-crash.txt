@@ -1,0 +1,25 @@
+Exception 0xc0000005 0x0 0xffffffffffffffff 0x7ffc60c1cb34
+PC=0x7ffc60c1cb34
+signal arrived during external code execution
+
+runtime.cgocall(0x7ff753416040, 0x7ff756daec70)
+	C:/Program Files/Go/src/runtime/cgocall.go:167 +0x3e fp=0x288d11657d10 sp=0x288d11657ca8 pc=0x7ff753481e1e
+syscall.syscalln(0x7ff756dae920?, 0x288d0fb8ccc0?, {0x288d0fb8ccc0?, 0x7ff753482aec?, 0x288d10f24328?})
+	C:/Program Files/Go/src/runtime/syscall_windows.go:431 +0x4e fp=0x288d11657d30 sp=0x288d11657d10 pc=0x7ff7534890ce
+syscall.SyscallN(0x7ff753f3ad05?, {0x288d0fb8ccc0?, 0x7ff753423905?, 0x28?})
+	C:/Program Files/Go/src/syscall/dll_windows.go:99 +0x1e fp=0x288d11657d68 sp=0x288d11657d30 pc=0x7ff7534a473e
+syscall.(*Proc).Call(0x7ff756098187?, {0x288d0fb8ccc0?, 0x7ff753f3ac01?, 0x288d10f23b00?})
+	C:/Program Files/Go/src/syscall/dll_windows.go:256 +0x1c fp=0x288d11657da8 sp=0x288d11657d68 pc=0x7ff7534a4c5c
+github.com/maclof/gov8.(*SnapshotCreator).CreateBlob(0x288d0fcce528, 0x1)
+	E:/GitHub/mimic-compat-fuzz/third_party/gov8/snapshot.go:395 +0x1e5 fp=0x288d11657e50 sp=0x288d11657da8 pc=0x7ff753f77485
+github.com/moreveal/mimic/internal/engine/v8.buildBootstrapSnapshot({0x7ff7562ffa60, 0x288d0fc751d0}, {0x288d10364440, 0x4, 0x80?})
+	E:/GitHub/mimic-compat-fuzz/internal/engine/v8/bootstrap_snapshot.go:92 +0x43d fp=0x288d11657f88 sp=0x288d11657e50 pc=0x7ff753fe8d5d
+github.com/moreveal/mimic/internal/engine/v8.Factory.BuildBootstrapSnapshot.func1()
+	E:/GitHub/mimic-compat-fuzz/internal/engine/v8/bootstrap_snapshot.go:42 +0x30 fp=0x288d11657fe0 sp=0x288d11657f88 pc=0x7ff753fe88f0
+runtime.goexit({})
+	C:/Program Files/Go/src/runtime/asm_amd64.s:1771 +0x1 fp=0x288d11657fe8 sp=0x288d11657fe0 pc=0x7ff75348cb61
+created by github.com/moreveal/mimic/internal/engine/v8.Factory.BuildBootstrapSnapshot in goroutine 150
+	E:/GitHub/mimic-compat-fuzz/internal/engine/v8/bootstrap_snapshot.go:42 +0xe5
+
+goroutine 1 gp=0x288d0fc24000 m=nil [IO wait]:
+runtime.gopark(0x74?, 0x74?, 0x30?, 0xae?, 0x288d1079e540?)

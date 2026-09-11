@@ -1,0 +1,56 @@
+{
+  "id": "d7352700b9d1b6e4",
+  "category": "surface",
+  "members": [
+    "surface.location"
+  ],
+  "path": [
+    "value",
+    "ownKeys"
+  ],
+  "chrome": [
+    "valueOf",
+    "ancestorOrigins",
+    "href",
+    "origin",
+    "protocol",
+    "host",
+    "hostname",
+    "port",
+    "pathname",
+    "search",
+    "hash",
+    "assign",
+    "reload",
+    "replace",
+    "toString",
+    {
+      "symbol": "Symbol(Symbol.toPrimitive)"
+    }
+  ],
+  "mimic": [
+    "href",
+    "origin",
+    "protocol",
+    "host",
+    "hostname",
+    "port",
+    "pathname",
+    "search",
+    "hash",
+    "assign",
+    "replace",
+    "reload",
+    "toString"
+  ],
+  "probe": {
+    "id": "surface.location",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(location)"
+  },
+  "originalSetupStatements": 0,
+  "minimality": "1-minimal setup deletion for fixed observation and exact result pair; not global JS minimum",
+  "fixtureOrigin": "http://127.0.0.1:54524",
+  "crossOrigin": "http://localhost:54524"
+}

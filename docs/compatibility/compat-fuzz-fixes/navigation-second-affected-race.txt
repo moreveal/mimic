@@ -1,0 +1,7 @@
+--- FAIL: TestChildNavigationRemovesRetiredGrandchildTasks (10.88s)
+    --- FAIL: TestChildNavigationRemovesRetiredGrandchildTasks/goja (10.40s)
+        navigation_teardown_test.go:56: context deadline exceeded
+FAIL
+FAIL	github.com/moreveal/mimic/internal/browser	119.572s
+ok  	github.com/moreveal/mimic/internal/scheduler	1.203s
+FAIL

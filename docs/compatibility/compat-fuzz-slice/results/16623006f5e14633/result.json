@@ -1,0 +1,25 @@
+{
+  "id": "16623006f5e14633",
+  "category": "surface",
+  "members": [
+    "surface.document"
+  ],
+  "path": [
+    "value",
+    "constructorName",
+    "ok",
+    "value"
+  ],
+  "chrome": "HTMLDocument",
+  "mimic": "Document",
+  "probe": {
+    "id": "surface.document",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(document)"
+  },
+  "originalSetupStatements": 0,
+  "minimality": "1-minimal setup deletion for fixed observation and exact result pair; not global JS minimum",
+  "fixtureOrigin": "http://127.0.0.1:54524",
+  "crossOrigin": "http://localhost:54524"
+}

@@ -1,0 +1,29 @@
+{
+  "id": "babc848f0fbe86db",
+  "category": "brand-check",
+  "members": [
+    "call.document.hasFocus.correct.missing",
+    "call.document.hasFocus.correct.undefined",
+    "call.document.hasFocus.correct.null",
+    "call.document.hasFocus.correct.primitive",
+    "call.document.hasFocus.correct.object",
+    "call.document.hasFocus.correct.symbol"
+  ],
+  "path": [
+    "value",
+    "ok",
+    "type"
+  ],
+  "chrome": "boolean",
+  "mimic": "undefined",
+  "probe": {
+    "id": "call.document.hasFocus.correct.missing",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.hasFocus,document,[]))"
+  },
+  "originalSetupStatements": 0,
+  "minimality": "1-minimal setup deletion for fixed observation and exact result pair; not global JS minimum",
+  "fixtureOrigin": "http://127.0.0.1:54524",
+  "crossOrigin": "http://localhost:54524"
+}

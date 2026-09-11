@@ -35,11 +35,10 @@ type streamScriptResponse struct {
 
 func (r *Realm) installDocumentStream(host map[string]any) {
 	host["documentStream"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
-		frame := r.agent.Page().frame(strarg(args, 0))
-		if !r.canAccess(frame) {
-			return r.val(map[string]any{"name": "SecurityError", "error": "Blocked cross-origin document access"}), nil
+		target, resolveErr := r.referenceRealm(strarg(args, 0), strarg(args, 3))
+		if resolveErr != nil {
+			return nil, resolveErr
 		}
-		target := frame.Realm
 		caller := r
 		if r.documentEntry != nil {
 			caller = r.documentEntry

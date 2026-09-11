@@ -1,0 +1,24 @@
+{
+  "id": "d4c44ff9b4314406",
+  "category": "descriptor",
+  "members": [
+    "legacy.document-all-descriptor"
+  ],
+  "path": [
+    "value",
+    "all",
+    "depth"
+  ],
+  "chrome": 2,
+  "mimic": 1,
+  "probe": {
+    "id": "legacy.document-all-descriptor",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "({all:descriptor(document,'all'),name:descriptor(document.all,'name'),length:descriptor(document.all,'length'),prototype:attempt(()=>Object.getPrototypeOf(document.all)===HTMLAllCollection.prototype),constructor:attempt(()=>document.all.constructor===HTMLAllCollection),source:attempt(()=>Function.prototype.toString.call(document.all))})"
+  },
+  "originalSetupStatements": 0,
+  "minimality": "1-minimal setup deletion for fixed observation and exact result pair; not global JS minimum",
+  "fixtureOrigin": "http://127.0.0.1:54524",
+  "crossOrigin": "http://localhost:54524"
+}
