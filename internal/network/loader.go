@@ -78,6 +78,12 @@ type Request struct {
 	// separate from Initiator because CDP may classify a browser-owned favicon
 	// lookup as Other while PerformanceResourceTiming exposes "img".
 	PerformanceInitiatorType string
+	// Resource Timing belongs to the initiating document/worker, including
+	// across redirects and navigation of its browsing context. Capture these
+	// values on the agent's clock; transport diagnostics keep their wall clock.
+	// They deliberately live on Request, never on cached Response objects.
+	PerformanceOwner string
+	PerformanceStart time.Time
 	// criticalCHRestarted is loader-owned navigation state. It prevents a
 	// malformed or changing response from causing an unbounded internal retry.
 	criticalCHRestarted bool
@@ -265,7 +271,8 @@ func (l *Loader) Load(ctx context.Context, r Request) (Response, error) {
 		r.Headers.Set("Cookie", strings.Join(cookiePairs, "; "))
 	}
 	visibleHeaders := headerStrings(r.Headers)
-	l.trace.Add(trace.Network, "request", map[string]any{"id": r.ID, "url": r.URL.String(), "method": r.Method, "headers": visibleHeaders, "postData": string(r.Body), "initiator": r.Initiator, "context": r.ContextID})
+	requestStarted := time.Now()
+	l.trace.Add(trace.Network, "request", map[string]any{"id": r.ID, "url": r.URL.String(), "method": r.Method, "headers": visibleHeaders, "postData": string(r.Body), "initiator": r.Initiator, "context": r.ContextID, "performanceOwner": r.PerformanceOwner, "performanceStart": r.PerformanceStart})
 	l.trace.Add(trace.Resource, "loadStart", map[string]any{"id": r.ID, "url": r.URL.String(), "type": r.Initiator, "context": r.ContextID})
 	interceptors := l.interceptorSnapshot()
 	for _, i := range interceptors {
@@ -302,6 +309,14 @@ func (l *Loader) Load(ctx context.Context, r Request) (Response, error) {
 	if cached, ok := l.session.GetCached(r, time.Now()); ok {
 		l.trace.Add(trace.Network, "cacheHit", map[string]any{"id": r.ID, "url": r.URL.String()})
 		cached.FromCache = true
+		// The bytes/headers describe the stored representation; elapsed time and
+		// transport phases belong to this retrieval, not its original download.
+		cached.Duration = time.Since(requestStarted)
+		cached.TransportTiming.Phases = nil
+		cached.BrowserVisibleTiming = TransportTimingSnapshot{Phases: map[string]float64{
+			"firstResponseByte": float64(cached.Duration) / float64(time.Millisecond),
+			"responseComplete":  float64(cached.Duration) / float64(time.Millisecond),
+		}}
 		return l.after(ctx, r, cached)
 	}
 	attempt := l.session.BeginConnection(r.URL)
@@ -546,7 +561,7 @@ func (l *Loader) after(ctx context.Context, r Request, res Response) (Response, 
 			performanceInitiatorType = "link"
 		}
 	}
-	l.trace.Add(trace.Network, "response", map[string]any{"id": r.ID, "url": r.URL.String(), "status": res.Status, "headers": headerStrings(res.Headers), "mimeType": strings.Split(res.Headers.Get("Content-Type"), ";")[0], "encodedDataLength": len(res.Body), "encodedBodySize": encodedBodySize, "decodedBodySize": len(res.Body), "transferSize": transferSize, "durationMs": float64(res.Duration) / float64(time.Millisecond), "protocol": res.Protocol, "transportTiming": res.TransportTiming, "browserVisibleTiming": res.BrowserVisibleTiming, "connectionReused": res.TransportTiming.Reused, "connectionId": res.TransportTiming.ConnectionID, "fromCache": res.FromCache, "initiator": r.Initiator, "performanceInitiatorType": performanceInitiatorType, "synthetic": res.Synthetic, "context": r.ContextID})
+	l.trace.Add(trace.Network, "response", map[string]any{"id": r.ID, "url": r.URL.String(), "status": res.Status, "headers": headerStrings(res.Headers), "mimeType": strings.Split(res.Headers.Get("Content-Type"), ";")[0], "encodedDataLength": len(res.Body), "encodedBodySize": encodedBodySize, "decodedBodySize": len(res.Body), "transferSize": transferSize, "durationMs": float64(res.Duration) / float64(time.Millisecond), "protocol": res.Protocol, "transportTiming": res.TransportTiming, "browserVisibleTiming": res.BrowserVisibleTiming, "connectionReused": res.TransportTiming.Reused, "connectionId": res.TransportTiming.ConnectionID, "fromCache": res.FromCache, "initiator": r.Initiator, "performanceInitiatorType": performanceInitiatorType, "synthetic": res.Synthetic, "context": r.ContextID, "performanceOwner": r.PerformanceOwner, "performanceStart": r.PerformanceStart})
 	l.remember(r.ID, res)
 	l.trace.Add(trace.Resource, "loadEnd", map[string]any{"id": r.ID, "url": r.URL.String(), "status": res.Status, "type": r.Initiator})
 	if fetchCrossOrigin(r) && !r.corsPreflight && r.Mode != "no-cors" && !corsResponseAllowed(r, res.Headers) {

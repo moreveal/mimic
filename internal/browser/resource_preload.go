@@ -119,7 +119,7 @@ func (r *Realm) preloadResource(id int64, attributes map[string]string) {
 		go func() {
 			defer r.resourceWG.Done()
 			defer close(pending.done)
-			pending.response, pending.err = r.agent.Page().loader.Load(preloadContext, request)
+			pending.response, pending.err = r.agent.Page().loader.Load(preloadContext, r.withResourceTiming(request))
 		}()
 	}
 	r.preloadsMu.Unlock()
@@ -187,7 +187,7 @@ func (r *Realm) loadResource(ctx context.Context, request network.Request) (netw
 	if pending := r.consumePreload(request); pending != nil {
 		return pending.wait(ctx)
 	}
-	return r.agent.Page().loader.Load(ctx, request)
+	return r.agent.Page().loader.Load(ctx, r.withResourceTiming(request))
 }
 
 func (r *Realm) preloadResources() {
