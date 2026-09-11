@@ -77,6 +77,7 @@ type Realm struct {
 	viewportNotifier         engine.Value
 	eventListenerInvoker     engine.Value
 	frameViewportRead        engine.Value
+	frameLayoutRead          engine.Value
 	frameReferenceImport     engine.Value
 	frameReferenceDescribe   engine.Value
 	frameGlobalRead          engine.Value
@@ -85,6 +86,7 @@ type Realm struct {
 	frameValueEncoderJSON    bool
 	frameNodeDescribe        engine.Value
 	frameBindingDescribe     engine.Value
+	frameNativeNameDescribe  engine.Value
 	documentStreamEvent      engine.Value
 	url                      *url.URL
 	token                    string
@@ -676,6 +678,40 @@ func (r *Realm) installBindings() error {
 		return r.val(frameIDs), nil
 	})
 	host["documentActive"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(!r.inactive), nil })
+	host["documentHasLayout"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		if r.inactive {
+			return r.val(false), nil
+		}
+		frame, ok := r.agent.(*Frame)
+		if !ok {
+			return r.val(false), nil
+		}
+		for frame != nil && frame.parent != nil {
+			p.mu.RLock()
+			attached := p.frames[frame.ID] == frame
+			p.mu.RUnlock()
+			parent := frame.parent.Realm
+			if !attached || parent == nil || parent.inactive || parent.frameLayoutRead == nil {
+				return r.val(false), nil
+			}
+			visible := false
+			err := parent.runOnOwner(context.Background(), func(ctx context.Context) error {
+				value, err := parent.runtime.Call(ctx, parent.frameLayoutRead, nil, parent.val(frame.elementID))
+				if err == nil {
+					visible, _ = value.Export().(bool)
+				}
+				return err
+			})
+			if err != nil {
+				return nil, err
+			}
+			if !visible {
+				return r.val(false), nil
+			}
+			frame = frame.parent
+		}
+		return r.val(true), nil
+	})
 	host["frameElement"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		frame, ok := r.agent.(*Frame)
 		if !ok || r.inactive || frame.parent == nil || !r.canAccess(frame.parent) {
@@ -897,6 +933,9 @@ func (r *Realm) installBindings() error {
 	})
 	host["installFrameViewport"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		r.frameViewportRead = a[0]
+		if len(a) > 1 {
+			r.frameLayoutRead = a[1]
+		}
 		return nil, nil
 	})
 	host["viewport"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
@@ -1691,6 +1730,17 @@ func (r *Realm) installBindings() error {
 	host["setInnerHTML"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return nil, r.document.SetInnerHTML(int64(numarg(a, 0)), strarg(a, 1))
 	})
+	host["elementNonce"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		id := int64(numarg(a, 0))
+		if len(a) > 1 {
+			return nil, r.document.SetNonce(id, strarg(a, 1))
+		}
+		node, ok := r.document.Get(id)
+		if !ok {
+			return r.val(""), nil
+		}
+		return r.val(node.Nonce), nil
+	})
 	host["rect"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		viewport := p.Environment().Window
 		width, height := r.layoutBox(int64(numarg(a, 0)), float64(viewport.ViewportWidth), float64(viewport.ViewportHeight), 0)
@@ -2395,7 +2445,7 @@ func (r *Realm) hostInsertArgs(a []engine.Value, hasBefore bool) (engine.Value, 
 		}
 		r.document.MarkScriptStarted(childID)
 	}
-	nonce, _ := attrs["nonce"].(string)
+	nonce := node.Nonce
 	loadCallback, errorCallback := engine.Value(nil), engine.Value(nil)
 	if len(a) > callbackOffset {
 		loadCallback = a[callbackOffset]

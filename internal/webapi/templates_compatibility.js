@@ -63,7 +63,7 @@
       try{copy=originalClone.call(this,deep)}finally{if(inert)customElementCloneInert--}
     }
     const sourceSlot=elementSlot(this),copySlot=elementSlot(copy);
-    if(sourceSlot?.tagName==='SCRIPT'&&copySlot)host.copyNodeState(sourceSlot.nodeId,copySlot.nodeId);
+    if(sourceSlot&&copySlot)host.copyNodeState(sourceSlot.nodeId,copySlot.nodeId);
     return copy;
   },writable:true});
   define(Document.prototype,'importNode',{value:function(node,deep=false){

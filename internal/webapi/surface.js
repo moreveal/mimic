@@ -301,7 +301,7 @@
     if(value==='0'||/^(?:\d+(?:\.\d+)?|\.\d+)px$/.test(value||''))return true;
     return value?.endsWith('%')?element===document.documentElement||definiteGeometryHeight(geometryParent(element),seen):false;
   };
-  const geometryPixels=text=>text&&/^(?:\d+(?:\.\d+)?|\.\d+)px$/.test(text)?Number.parseFloat(text):text==='0'?0:null;
+  const geometryPixels=text=>text&&/^[+-]?(?:\d+(?:\.\d+)?|\.\d+)px$/.test(text)?Number.parseFloat(text):text==='0'?0:null;
   const replacedGeometryTags=new Set(['IMG','INPUT','TEXTAREA','SELECT','BUTTON','VIDEO','AUDIO','CANVAS','IFRAME','OBJECT','EMBED']);
   const layoutWidthFor=element=>{
     const cache=styleReadCache.widths;if(cache.has(element))return cache.get(element);
@@ -376,10 +376,54 @@
     value.height=clamp(value.height,'height');
     if(property('box-sizing')!=='border-box')value.height+=padding;
     if(property('position')==='absolute'&&height===null&&property('top')==='0px'&&property('bottom')==='0px')value.height=parentBox().height;
+    // Position offsets belong to the untransformed layout box. Transforms are
+    // applied only when projecting a client rectangle, never to offset metrics.
+    const position=property('position')||'static';
+    if(['absolute','fixed','relative'].includes(position)){
+      let containingElement=null;
+      if(position!=='fixed')for(let p=parent;p;p=geometryParent(p)){
+        const style=computedCSSDeclarations(p),get=k=>style.find(e=>e.name===k)?.value;
+        if((get('position')||'static')!=='static'){containingElement=p;break}
+      }
+      const box=containingElement?layoutRectFor(containingElement):{x:0,y:0,...host.viewport()};
+      const offset=(name,size)=>{const text=property(name);return text?.endsWith('%')?Number.parseFloat(text)*size/100:pixels(text)};
+      let left=offset('left',box.width),top=offset('top',box.height);
+      if(left===null){const right=offset('right',box.width);left=right===null?0:position==='relative'?-right:box.width-right-value.width}
+      if(top===null){const bottom=offset('bottom',box.height);top=bottom===null?0:position==='relative'?-bottom:box.height-bottom-value.height}
+      value.x=value.left=(box.x||0)+left;value.y=value.top=(box.y||0)+top;
+      value.offsetLeft=left;value.offsetTop=top;
+    }
     value.right=value.left+value.width;value.bottom=value.top+value.height;
     return value;
     }finally{resolving.delete(element);if(provisional.has(element)){provisional.delete(element);cache.delete(element)}}
-  }),makeDOMRect=(value,element)=>{const resolved=element?layoutRectFor(element):value;return new DOMRect(resolved.x,resolved.y,resolved.width,resolved.height)};
+  }),makeDOMRect=(value,element)=>{const resolved=element?clientRectFor(element):value;return new DOMRect(resolved.x,resolved.y,resolved.width,resolved.height)};
+  const clientRectFor=element=>withStyleReadCache(()=>{
+    const box=layoutRectFor(element),entries=computedCSSDeclarations(element),get=k=>entries.find(e=>e.name===k)?.value;
+    const raw=get('transform');if(!raw||raw==='none'||get('display')==='none')return box;
+    let matrix=[1,0,0,1,0,0],rest=raw;
+    const multiply=(a,b)=>[a[0]*b[0]+a[2]*b[1],a[1]*b[0]+a[3]*b[1],a[0]*b[2]+a[2]*b[3],a[1]*b[2]+a[3]*b[3],a[0]*b[4]+a[2]*b[5]+a[4],a[1]*b[4]+a[3]*b[5]+a[5]];
+    const len=(v,size)=>v?.endsWith('%')?parseFloat(v)*size/100:geometryPixels(v);
+    while(rest){
+      const match=/^\s*([a-zA-Z]+)\(\s*([^()]*)\)\s*/.exec(rest);let m;
+      if(!match)break;
+      const args=match[2].split(/\s*,\s*|\s+/),name=match[1].toLowerCase(),n=args.map(Number);
+      if(name==='matrix'&&n.length===6)m=n;
+      else if(name==='translate')m=[1,0,0,1,len(args[0],box.width),args[1]?len(args[1],box.height):0];
+      else if(name==='translatex'||name==='translatey')m=[1,0,0,1,name==='translatex'?len(args[0],box.width):0,name==='translatey'?len(args[0],box.height):0];
+      else if(name==='scale')m=[n[0],0,0,n[1]??n[0],0,0];
+      else if(name==='scalex'||name==='scaley')m=[name==='scalex'?n[0]:1,0,0,name==='scaley'?n[0]:1,0,0];
+      else if(name==='rotate'){const angle=/^([+-]?[\d.]+)(deg|rad|grad|turn)$/.exec(args[0]);if(angle){const a=Number(angle[1])*({deg:Math.PI/180,rad:1,grad:Math.PI/200,turn:2*Math.PI}[angle[2]]);m=[Math.cos(a),Math.sin(a),-Math.sin(a),Math.cos(a),0,0]}}
+      if(!m||m.some(v=>v===null||!Number.isFinite(v)))break;
+      matrix=multiply(matrix,m);rest=rest.slice(match[0].length);
+    }
+    if(rest){host.semanticMissingAt('surface.js/clientRectFor','CSS.clientRectTransform',raw);return box}
+    const origin=String(get('transform-origin')||'50% 50%').split(/\s+/),keywords={left:'0%',top:'0%',center:'50%',right:'100%',bottom:'100%'};
+    const ox=len(keywords[origin[0]]||origin[0],box.width),oy=len(keywords[origin[1]]||origin[1]||'50%',box.height);
+    if(ox===null||oy===null){host.semanticMissingAt('surface.js/clientRectFor','CSS.clientRectTransformOrigin');return box}
+    const points=[[0,0],[box.width,0],[0,box.height],[box.width,box.height]].map(([x,y])=>[matrix[0]*(x-ox)+matrix[2]*(y-oy)+matrix[4]+ox+box.x,matrix[1]*(x-ox)+matrix[3]*(y-oy)+matrix[5]+oy+box.y]);
+    const xs=points.map(p=>p[0]),ys=points.map(p=>p[1]),x=Math.min(...xs),y=Math.min(...ys);
+    return {x,y,width:Math.max(...xs)-x,height:Math.max(...ys)-y};
+  });
   const frameViewportSizes=new WeakMap();
   const readFrameViewport=nodeID=>withStyleReadCache(()=>{
     const element=wrap(nodeID);
@@ -398,11 +442,20 @@
     };
     const size=[dimension('width',300),dimension('height',150)];frameViewportSizes.set(element,size);return size;
   });
-  registerBootstrapCallback('installFrameViewport',readFrameViewport);
+  const frameHasLayout=nodeID=>withStyleReadCache(()=>{
+    let connected=false;
+    for(let n=wrap(nodeID);elementSlot(n)?.type==='element';n=geometryParent(n)){
+      if(host.isConnected(elementSlot(n).nodeId))connected=true;
+      const entries=computedCSSDeclarations(n),display=entries.find(e=>e.name==='display')?.value;
+      if(display==='none'||display===undefined&&host.getAttribute(elementSlot(n).nodeId,'hidden')!==null)return false;
+    }
+    return connected;
+  });
+  registerBootstrapCallback('installFrameViewport',readFrameViewport,frameHasLayout);
   let constructCustomElement=null,customElementCloneInert=0;
   let templateTreeIsInert=()=>false;
   const viewportClientElement=element=>element===document.documentElement&&document.compatMode!=='BackCompat'||element===document.body&&document.compatMode==='BackCompat';
-  class HTMLElement extends Element { constructor(token,data){if(token===hostToken){super(token,data);return}if(!constructCustomElement)illegal('HTMLElement');return constructCustomElement(new.target)} get nonce(){return this.getAttribute('nonce')||''} set nonce(v){this.setAttribute('nonce',String(v))} get title(){return this.getAttribute('title')||''} set title(v){this.setAttribute('title',String(v))} get hidden(){const value=this.getAttribute('hidden');return value?.toLowerCase()==='until-found'?'until-found':value!==null} set hidden(v){if(typeof v==='string'&&v.toLowerCase()==='until-found')this.setAttribute('hidden','until-found');else this.toggleAttribute('hidden',!!v)} get innerText(){return this.textContent} set innerText(v){this.textContent=v==null?'':String(v)} get ariaLive(){return this.getAttribute('aria-live')} set ariaLive(v){if(v==null)this.removeAttribute('aria-live');else this.setAttribute('aria-live',String(v))} get ariaAtomic(){return this.getAttribute('aria-atomic')} set ariaAtomic(v){if(v==null)this.removeAttribute('aria-atomic');else this.setAttribute('aria-atomic',String(v))} get style(){let style=styleCache.get(this);if(!style){style=cssDeclaration(this);styleCache.set(this,style)}return style} set style(value){this.style.cssText=value} get offsetWidth(){return layoutRectFor(this).width} get offsetHeight(){return layoutRectFor(this).height} get clientWidth(){return viewportClientElement(this)?host.viewport().width:Math.round(layoutRectFor(this).width)} get clientHeight(){return viewportClientElement(this)?host.viewport().height:Math.round(layoutRectFor(this).height)} get offsetTop(){return Math.round(layoutRectFor(this).top)} get offsetLeft(){return Math.round(layoutRectFor(this).left)} get scrollHeight(){return Math.max(this.clientHeight,Math.round(layoutRectFor(this).height))} get scrollWidth(){return Math.max(this.clientWidth,Math.round(layoutRectFor(this).width))} getBoundingClientRect(){return makeDOMRect(null,this)} }
+  class HTMLElement extends Element { constructor(token,data){if(token===hostToken){super(token,data);return}if(!constructCustomElement)illegal('HTMLElement');return constructCustomElement(new.target)} get nonce(){return host.elementNonce(elementSlot(this).nodeId)} set nonce(v){host.elementNonce(elementSlot(this).nodeId,bindingString(v))} get title(){return this.getAttribute('title')||''} set title(v){this.setAttribute('title',String(v))} get hidden(){const value=this.getAttribute('hidden');return value?.toLowerCase()==='until-found'?'until-found':value!==null} set hidden(v){if(typeof v==='string'&&v.toLowerCase()==='until-found')this.setAttribute('hidden','until-found');else this.toggleAttribute('hidden',!!v)} get innerText(){return this.textContent} set innerText(v){this.textContent=v==null?'':String(v)} get ariaLive(){return this.getAttribute('aria-live')} set ariaLive(v){if(v==null)this.removeAttribute('aria-live');else this.setAttribute('aria-live',String(v))} get ariaAtomic(){return this.getAttribute('aria-atomic')} set ariaAtomic(v){if(v==null)this.removeAttribute('aria-atomic');else this.setAttribute('aria-atomic',String(v))} get style(){let style=styleCache.get(this);if(!style){style=cssDeclaration(this);styleCache.set(this,style)}return style} set style(value){this.style.cssText=value} get offsetWidth(){return layoutRectFor(this).width} get offsetHeight(){return layoutRectFor(this).height} get clientWidth(){return viewportClientElement(this)?host.viewport().width:Math.round(layoutRectFor(this).width)} get clientHeight(){return viewportClientElement(this)?host.viewport().height:Math.round(layoutRectFor(this).height)} get offsetTop(){return Math.round(layoutRectFor(this).offsetTop??layoutRectFor(this).top)} get offsetLeft(){return Math.round(layoutRectFor(this).offsetLeft??layoutRectFor(this).left)} get scrollHeight(){return Math.max(this.clientHeight,Math.round(layoutRectFor(this).height))} get scrollWidth(){return Math.max(this.clientWidth,Math.round(layoutRectFor(this).width))} getBoundingClientRect(){return makeDOMRect(null,this)} }
   const datasetCache=new WeakMap(),datasetName=name=>String(name).replace(/[A-Z]/g,c=>'-'+c.toLowerCase()),datasetKey=name=>String(name).slice(5).replace(/-([a-z])/g,(_m,c)=>c.toUpperCase());Object.defineProperty(HTMLElement.prototype,'dataset',{get:function(){let value=datasetCache.get(this);if(!value){value=new Proxy({}, {get:(_target,key)=>typeof key==='string'?this.getAttribute('data-'+datasetName(key))??undefined:undefined,set:(_target,key,next)=>{this.setAttribute('data-'+datasetName(key),String(next));return true},deleteProperty:(_target,key)=>{this.removeAttribute('data-'+datasetName(key));return true},ownKeys:()=>this.getAttributeNames().filter(name=>name.startsWith('data-')).map(datasetKey),getOwnPropertyDescriptor:(_target,key)=>this.hasAttribute('data-'+datasetName(key))?{value:this.getAttribute('data-'+datasetName(key)),writable:true,enumerable:true,configurable:true}:undefined});datasetCache.set(this,value)}return value},enumerable:true,configurable:true});
   class SVGElement extends Element { get style(){let style=styleCache.get(this);if(!style){style=cssDeclaration(this);styleCache.set(this,style)}return style} }
   const svgRectSlots=new WeakMap();
@@ -979,8 +1032,11 @@
     }):new Proxy(target,traps);
     if(iteratorFields)bridgeApply(bridgeWeakSet,freshIteratorFields,[proxy,iteratorFields]);
     if(result.eval)markNative(proxy,'eval');
+    // Platform source identity belongs to the owning realm. Transport only
+    // explicit private binding metadata; never inspect author callable fields.
+    if(result.nativeName!==undefined)markNative(proxy,result.nativeName);
     if(result.nodeId){const data=host.nodeData(result.nodeId);if(data){elementData.set(proxy,data);elementWrappers.set(String(result.nodeId),proxy)}}
-    referenceSet(proxy,{frame:id,realm:result.realm,handle:result.handle,type:kind,array:result.array,constructable:result.constructable,nodeId:result.nodeId,document:result.document,eval:result.eval,binding:result.binding});crossRealmCache.set(key,proxy);
+    referenceSet(proxy,{frame:id,realm:result.realm,handle:result.handle,type:kind,array:result.array,constructable:result.constructable,nodeId:result.nodeId,document:result.document,eval:result.eval,binding:result.binding,nativeName:result.nativeName});crossRealmCache.set(key,proxy);
     if(result.document){remoteDocumentCache.set(result.realm,proxy);if(result.nodeId)documentWrappers.set(result.nodeId,proxy)}
     // Native undetectable objects cannot intercept [[GetPrototypeOf]]. This
     // preserves the initial remote prototype identity, but later replacement
@@ -997,7 +1053,7 @@
       return null;
     },(value,importNode=false)=>importNode?wrap(host.nodeData(value)):value===document?host.documentRootID():bridgeApply(bridgeWeakGet,elementData,[value])?.nodeId||0,
     key=>{const value=Reflect.get(globalThis,key);return{value,intrinsic:key==='eval'&&value===bridgeOriginalEval||key==='postMessage'&&value===bridgeOriginalPostMessage}},
-    value=>{const binding=bindingGet(value);return binding?{kind:binding.kind,invoke:binding.invoke,unpreventable:binding.unpreventable}:null});
+    value=>{const binding=bindingGet(value);return binding?{kind:binding.kind,invoke:binding.invoke,unpreventable:binding.unpreventable}:null},nativeFunctionNameGet);
   const postToFrame=(id,args)=>{
     if(args.length===0)throw new TypeError("Failed to execute 'postMessage' on 'Window': 1 argument required, but only 0 present.");
     const message=args[0];let targetOrigin=args[1]===undefined?'/':args[1],transfer=args[2]===undefined?[]:args[2];
@@ -1459,11 +1515,23 @@
   // representation from the installed surface so generated and handwritten
   // interfaces cannot drift apart.
   const markedPrototypes=new Set([Object.prototype,Function.prototype]);
+  const operationWrappers=new Map();
+  const operation=(method,name)=>{
+    if(typeof method!=='function')return method;
+    let result=method;
+    if(Object.getOwnPropertyDescriptor(method,'prototype')){
+      result=operationWrappers.get(method);
+      if(!result){result={ [name](...args){return functionSourceApply(method,this,args)} }[name];Object.defineProperty(result,'length',{value:method.length,configurable:true});operationWrappers.set(method,result)}
+    }
+    if(!result.name||result.name==='value')Object.defineProperty(result,'name',{value:name,configurable:true});
+    return result;
+  };
   const markMembers=owner=>{
     for(const member of Reflect.ownKeys(owner)){
       if(member==='constructor'||member==='prototype')continue;
       const descriptor=Object.getOwnPropertyDescriptor(owner,member);
-      const method=descriptor&&descriptor.value;
+      const method=operation(descriptor&&descriptor.value,String(member));
+      if(method!==descriptor?.value)Object.defineProperty(owner,member,{...descriptor,value:method});
       // Iteration aliases can reuse intrinsic functions such as Array#values.
       // Their identity and original function name survive the alias.
       markNative(method,typeof method==='function'&&method.name||String(member));
@@ -1471,6 +1539,13 @@
       markNative(descriptor&&descriptor.set,String(member),'set ');
     }
   };
+  markMembers(Console.prototype);
+  // Window operations have no interface prototype; unlike constructors they
+  // must reject [[Construct]] and expose no own prototype property.
+  for(const name of ['setTimeout','setInterval','clearTimeout','clearInterval','fetch','atob','btoa','getComputedStyle','matchMedia']){
+    const descriptor=Object.getOwnPropertyDescriptor(globalThis,name);if(!descriptor||typeof descriptor.value!=='function')continue;
+    const value=operation(descriptor.value,name);markNative(value,name);Object.defineProperty(globalThis,name,{...descriptor,value});
+  }
   for(const key of Reflect.ownKeys(globalThis)){
     if(engineGlobals.has(key))continue;
     const globalDescriptor=Object.getOwnPropertyDescriptor(globalThis,key);

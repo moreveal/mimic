@@ -72,6 +72,7 @@ func (d *Document) CopyNodeState(source, target int64) {
 	from, to := d.nodes[source], d.nodes[target]
 	if from != nil && to != nil {
 		to.ScriptAlreadyStarted = from.ScriptAlreadyStarted
+		to.Nonce = from.Nonce
 	}
 }
 

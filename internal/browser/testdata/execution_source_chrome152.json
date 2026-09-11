@@ -1,0 +1,84 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "width": 1280,
+      "height": 800
+    },
+    "isSecureContext": true,
+    "crossOriginIsolated": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "origin": "http://127.0.0.1:31299/plain",
+    "sourcePassport": ".build/cleanup-012501/source-before/passport.json",
+    "binarySHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+    "probeSHA256": "e34d8c7025c4b504d1f1de363da1f25222baca59e78b71c9114e3f160faa366f"
+  },
+  "result": {
+    "result": {
+      "value": {
+        "log": {
+          "local": "function log() { [native code] }",
+          "foreign": "function log() { [native code] }",
+          "keys": [
+            "length",
+            "name"
+          ],
+          "name": "log",
+          "length": 0
+        },
+        "debug": {
+          "local": "function debug() { [native code] }",
+          "foreign": "function debug() { [native code] }",
+          "keys": [
+            "length",
+            "name"
+          ],
+          "name": "debug",
+          "length": 0
+        },
+        "digest": {
+          "local": "function digest() { [native code] }",
+          "foreign": "function digest() { [native code] }",
+          "keys": [
+            "length",
+            "name"
+          ],
+          "name": "digest",
+          "length": 2
+        },
+        "foreignLog": {
+          "local": "function log() { [native code] }",
+          "foreign": "function log() { [native code] }",
+          "keys": [
+            "length",
+            "name"
+          ],
+          "name": "log",
+          "length": 0
+        },
+        "foreignDigest": {
+          "local": "function digest() { [native code] }",
+          "foreign": "function digest() { [native code] }",
+          "keys": [
+            "length",
+            "name"
+          ],
+          "name": "digest",
+          "length": 2
+        }
+      }
+    }
+  }
+}

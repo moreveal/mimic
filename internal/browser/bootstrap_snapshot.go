@@ -326,6 +326,8 @@ func (r *Realm) retryBootstrap(err error) error {
 	r.navigationDecoder = nil
 	r.viewportNotifier = nil
 	r.frameViewportRead = nil
+	r.frameLayoutRead = nil
+	r.frameNativeNameDescribe = nil
 	r.eventListenerInvoker = nil
 	r.frameReferenceImport = nil
 	r.frameReferenceDescribe = nil

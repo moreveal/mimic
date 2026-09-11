@@ -32,6 +32,7 @@ type Node struct {
 	Children              []int64           `json:"children,omitempty"`
 	TemplateContent       int64             `json:"templateContent,omitempty"`
 	TemplateHost          int64             `json:"templateHost,omitempty"`
+	Nonce                 string            `json:"-"`
 	ScriptAlreadyStarted  bool              `json:"-"`
 	OwnerDocument         int64             `json:"ownerDocumentId,omitempty"`
 }
@@ -281,6 +282,11 @@ func (d *Document) RemoveAttribute(id int64, name string) error {
 	if name == "style" {
 		n.StyleDeclarationsJSON = ""
 	}
+	if name == "nonce" && n.AttributeNamespaces[name] == "" {
+		if _, exists := n.Attributes[name]; exists {
+			n.Nonce = ""
+		}
+	}
 	delete(n.AttributeNamespaces, name)
 	delete(n.Attributes, name)
 	for i, item := range n.AttributeNames {
@@ -455,6 +461,9 @@ func cloneAttributes(in map[string]string) map[string]string {
 // Attribute values are indexed for lookup, while the ordered names preserve
 // parser/insertion order for DOM enumeration and HTML serialization.
 func (n *Node) setAttribute(name, value string) {
+	if name == "nonce" && n.AttributeNamespaces[name] == "" {
+		n.Nonce = value
+	}
 	if name == "style" && n.Attributes[name] != value {
 		n.StyleDeclarationsJSON = ""
 	}
@@ -474,6 +483,7 @@ func (d *Document) AppendElement(parent int64, tag string, attrs map[string]stri
 	}
 	d.next++
 	n := &Node{ID: d.next, Type: "element", TagName: strings.ToUpper(tag), Attributes: attrs, Parent: parent, OwnerDocument: d.ownerDocumentLocked(parent)}
+	n.Nonce = attrs["nonce"]
 	for name := range attrs {
 		n.AttributeNames = append(n.AttributeNames, name)
 	}
@@ -729,9 +739,7 @@ func (d *Document) InnerHTML(id int64) (string, error) {
 		children = d.nodes[n.TemplateContent].Children
 	}
 	for _, child := range children {
-		if err := html.Render(&b, d.htmlNode(child)); err != nil {
-			return "", err
-		}
+		renderFragmentNode(&b, d.htmlNode(child), rawHTMLText(n.TagName, n.Namespace))
 	}
 	return b.String(), nil
 }
@@ -789,9 +797,7 @@ func (d *Document) OuterHTML(id int64) (string, error) {
 		return "", fmt.Errorf("node %d does not exist", id)
 	}
 	var out bytes.Buffer
-	if err := html.Render(&out, d.htmlNode(id)); err != nil {
-		return "", err
-	}
+	renderFragmentNode(&out, d.htmlNode(id), false)
 	return out.String(), nil
 }
 func (d *Document) SetInnerHTML(id int64, source string) error {

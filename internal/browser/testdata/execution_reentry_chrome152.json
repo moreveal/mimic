@@ -1,0 +1,48 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "width": 1280,
+      "height": 800
+    },
+    "isSecureContext": true,
+    "crossOriginIsolated": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "origin": "http://127.0.0.1:62437/plain",
+    "sourcePassport": ".build/cleanup-012501/reentry-before/passport.json",
+    "binarySHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+    "probeSHA256": "d46ad98839f542ddc3de59fd93ca7a151219e950818e9e7c173659d6f5d6cb08"
+  },
+  "result": {
+    "result": {
+      "value": {
+        "calls": [],
+        "values": [
+          1,
+          1,
+          1,
+          true,
+          0,
+          "hello"
+        ],
+        "foreignNonce": [
+          "slot",
+          "foreign",
+          "slot"
+        ]
+      }
+    }
+  }
+}

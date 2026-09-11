@@ -77,7 +77,7 @@
    if(['textPath','switch','symbol'].includes(kind))return unsupported(kind);
    let b=null;for(const child of childElements(n)){const kind=tag(child);if(!graphicsTags.has(kind)||['defs','symbol'].includes(kind)||displayNone(child))continue;const childBox=bounds(child,depth+1);if(childBox&&['rect','circle','ellipse','image','foreignObject'].includes(kind)&&(childBox[2]===childBox[0]||childBox[3]===childBox[1]))continue;const m=kind==='svg'?multiply(transform(child,childBox),viewportTransform(child)):transform(child,childBox);b=union(b,transformBox(childBox,m))}return b;
   };
-  const measurable=n=>{let connected=false;for(let p=n;isDOMNode(p);p=parent(p)){const d=elementSlot(p);if(p===document||d?.type==='document')connected=true;if(d?.type==='element'&&(d.namespaceURI!==ns||tag(p)==='svg')&&displayNone(p))return false}return connected&&(!displayNone(n)||['g','a','defs','symbol','switch'].includes(tag(n)))};
+  const measurable=n=>{if(!host.documentHasLayout())return false;let connected=false;for(let p=n;isDOMNode(p);p=parent(p)){const d=elementSlot(p);if(p===document||d?.type==='document')connected=true;if(d?.type==='element'&&(d.namespaceURI!==ns||tag(p)==='svg')&&displayNone(p))return false}return connected&&(!displayNone(n)||['g','a','defs','symbol','switch'].includes(tag(n)))};
   const getBBox={getBBox(){const n=check(this),result=new SVGRect(hostToken);const b=measurable(n)?bounds(n):null;if(b){result.x=Math.fround(b[0]);result.y=Math.fround(b[1]);result.width=Math.fround(b[2]-b[0]);result.height=Math.fround(b[3]-b[1])}return result}}.getBBox;
   markNative(getBBox,'getBBox');Object.defineProperty(graphics.prototype,'getBBox',{value:getBBox,writable:true,enumerable:true,configurable:true});
   /* shared_svg_boundaries */

@@ -137,6 +137,29 @@ const cssAliasInputValue=(name,value,inputName)=>{
  return value;
 };
 const cssShorthandParsers=new Map([['flex',parseCSSFlex],['flex-flow',parseCSSFlexFlow]]);
+// Expand font before cascade/shaping. Retaining only the shorthand caused SVG
+// and other consumers of canonical longhands to shape 150px text at 16px.
+const cssFontDefaults=['normal','normal','normal','normal','normal','normal','none','normal','auto','auto','normal','normal','normal','normal','normal','normal','medium','normal','serif'];
+const parseCSSFont=value=>{
+ const tokens=cssValueTokens(value.replace(/\s*\/\s*/g,' / '));if(!tokens)return null;
+ const out=cssFontDefaults.slice(),seen=new Set();let i=0;
+ for(;i<tokens.length;i++){
+  const t=tokens[i].toLowerCase();let index;
+  if(t==='normal')continue;
+  if(t==='italic'||t==='oblique')index=0;
+  else if(t==='small-caps')index=1;
+  else if(['bold','bolder','lighter'].includes(t)||cssNumberRegex.test(t)&&Number(t)>=1&&Number(t)<=1000)index=14;
+  else if(['ultra-condensed','extra-condensed','condensed','semi-condensed','semi-expanded','expanded','extra-expanded','ultra-expanded'].includes(t))index=15;
+  else break;
+  if(seen.has(index))return null;seen.add(index);out[index]=t;
+ }
+ if(i>=tokens.length)return null;
+ const size=tokens[i++].toLowerCase();out[16]=cssLengthValue(size)||(['xx-small','x-small','small','medium','large','x-large','xx-large','xxx-large','smaller','larger'].includes(size)?size:null);if(out[16]===null)return null;
+ if(tokens[i]==='/'){i++;const line=tokens[i++];if(!line)return null;out[17]=line==='normal'?line:cssNonnegativeNumber(line)??cssLengthValue(line);if(out[17]===null)return null}
+ if(i>=tokens.length)return null;
+ const family=tokens.slice(i).join(' ').replace(/\s*,\s*/g,', ');if(!family||family.includes('/')||/[;{}]/.test(family))return null;out[18]=family;
+ return out;
+};
 const cssLonghandParsers=new Map([
  ['flex-grow',value=>cssNonnegativeNumber(value)],['flex-shrink',value=>cssNonnegativeNumber(value)],
  ['flex-basis',value=>{value=value.toLowerCase();return ['auto','content','min-content','max-content','fit-content','stretch'].includes(value)?value:cssLengthValue(value)}],
@@ -163,6 +186,11 @@ for(const name of cssShorthandComponents['border-radius'])cssLonghandParsers.set
 });
 cssLonghandParsers.set('text-emphasis-color',cssColorValue);
 const serializeOrdinaryCSSShorthand=(name,values)=>{
+ if(name==='font'){
+  if(values.slice(2,14).some((v,i)=>v!==cssFontDefaults[i+2]))return '';
+  const prefix=[0,1,14,15].map(i=>values[i]).filter(v=>v!=='normal');
+  return [...prefix,values[16]+(values[17]==='normal'?'':' / '+values[17]),values[18]].join(' ');
+ }
  if(/^border-(block|inline)-(start|end)$/.test(name)||name==='-webkit-text-stroke'||name==='text-emphasis')return values.some(v=>!v||cssWideValue(v)&&v!=='initial')?'':values.filter(v=>v!=='initial').join(' ');
  if(values.some(v=>v===''||cssWideValue(v)))return '';
  if(name==='animation'||name==='transition')return serializeCSSTimelineShorthand(values,name==='animation');

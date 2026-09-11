@@ -80,18 +80,21 @@ func (d *Document) SetAttributeNS(id int64, namespace, name, value string) error
 				n.StyleDeclarationsJSON = ""
 			}
 			n.Attributes[old] = value
+			if namespace == "" && old == "nonce" {
+				n.Nonce = value
+			}
 			return nil
 		}
 	}
 	if _, exists := n.Attributes[name]; exists && n.AttributeNamespaces[name] != namespace {
 		return fmt.Errorf("attributes with the same qualified name in different namespaces are unsupported")
 	}
-	n.setAttribute(name, value)
 	if namespace != "" {
 		if n.AttributeNamespaces == nil {
 			n.AttributeNamespaces = map[string]string{}
 		}
 		n.AttributeNamespaces[name] = namespace
 	}
+	n.setAttribute(name, value)
 	return nil
 }
