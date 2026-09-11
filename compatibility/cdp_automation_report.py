@@ -45,5 +45,5 @@ if __name__ == "__main__":
     args = parser.parse_args()
     output = compact_report(json.loads(args.source.read_text(encoding="utf-8")))
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(output, indent=2, ensure_ascii=False) + "\n", encoding="utf-8")
+    args.output.write_bytes((json.dumps(output, indent=2, ensure_ascii=False) + "\n").encode("utf-8"))
     print(str(args.output))

@@ -1,0 +1,2 @@
+ok  	github.com/moreveal/mimic/internal/cdp	7.514s
+ok  	github.com/moreveal/mimic/internal/network	1.385s
