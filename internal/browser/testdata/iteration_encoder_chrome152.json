@@ -1,0 +1,90 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "unverified-reused-controlled",
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "result": {
+    "result": {
+      "value": {
+        "encoder.symbol.encode": {
+          "error": "TypeError"
+        },
+        "encoder.order.encode": {
+          "error": "TypeError"
+        },
+        "encoder.log.encode": [],
+        "encoder.symbol.encodeInto": {
+          "error": "TypeError"
+        },
+        "encoder.order.encodeInto": {
+          "error": "TypeError"
+        },
+        "encoder.log.encodeInto": [
+          "source"
+        ],
+        "encoder.arity": {
+          "error": "TypeError"
+        },
+        "encoder.destinationShadow": {
+          "value": [
+            {
+              "read": 3,
+              "written": 3
+            },
+            [
+              97,
+              98,
+              99
+            ]
+          ]
+        },
+        "encoder.destinationForged": {
+          "error": "TypeError"
+        },
+        "encoder.destinationClamped": {
+          "error": "TypeError"
+        },
+        "encoder.destinationOffset": {
+          "value": [
+            {
+              "read": 3,
+              "written": 3
+            },
+            [
+              0,
+              0,
+              97,
+              98,
+              99,
+              0
+            ]
+          ]
+        }
+      }
+    }
+  }
+}

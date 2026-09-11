@@ -13,8 +13,20 @@
         }if(!stream)s.bom=false;return output;
   };
   const textEncoderSlots=new WeakSet();
+  const encoderArrayPrototype=Object.getPrototypeOf(Uint8Array.prototype),encoderArrayTag=Object.getOwnPropertyDescriptor(encoderArrayPrototype,Symbol.toStringTag).get,encoderArrayLength=Object.getOwnPropertyDescriptor(encoderArrayPrototype,'length').get,encoderArraySet=Uint8Array.prototype.set;
   const utf8Bytes=input=>{const out=[];for(let i=0;i<input.length;i++){let point=input.charCodeAt(i);if(point>=0xd800&&point<=0xdbff){const next=input.charCodeAt(i+1);if(next>=0xdc00&&next<=0xdfff){point=0x10000+((point-0xd800)<<10)+(next-0xdc00);i++}else point=0xfffd}else if(point>=0xdc00&&point<=0xdfff)point=0xfffd;if(point<=0x7f)out.push(point);else if(point<=0x7ff)out.push(0xc0|(point>>6),0x80|(point&63));else if(point<=0xffff)out.push(0xe0|(point>>12),0x80|((point>>6)&63),0x80|(point&63));else out.push(0xf0|(point>>18),0x80|((point>>12)&63),0x80|((point>>6)&63),0x80|(point&63))}return out};
-  class TextEncoder { constructor(){textEncoderSlots.add(this)} get encoding(){if(!textEncoderSlots.has(this))throw new TypeError('Illegal invocation');return'utf-8'} encode(input=''){if(!textEncoderSlots.has(this))throw new TypeError('Illegal invocation');return new Uint8Array(utf8Bytes(String(input)))} encodeInto(source,destination){if(!textEncoderSlots.has(this))throw new TypeError('Illegal invocation');if(!(destination instanceof Uint8Array))throw new TypeError("Failed to execute 'encodeInto' on 'TextEncoder': parameter 2 is not of type 'Uint8Array'.");source=String(source);let read=0,written=0;for(const scalar of source){const bytes=utf8Bytes(scalar);if(written+bytes.length>destination.length)break;destination.set(bytes,written);written+=bytes.length;read+=scalar.length}return{read,written}} }
+  class TextEncoder { constructor(){textEncoderSlots.add(this)} get encoding(){if(!textEncoderSlots.has(this))throw new TypeError('Illegal invocation');return'utf-8'} encode(input=''){if(!textEncoderSlots.has(this))throw new TypeError('Illegal invocation');return new Uint8Array(utf8Bytes(usvString(input)))} encodeInto(source,destination){
+    if(!textEncoderSlots.has(this))throw new TypeError('Illegal invocation');
+    if(arguments.length<2)throw new TypeError('Not enough arguments');
+    source=usvString(source);
+    if(encoderArrayTag.call(destination)!=='Uint8Array')throw new TypeError("Failed to execute 'encodeInto' on 'TextEncoder': parameter 2 is not of type 'Uint8Array'.");
+    // Validate the native view (including detachment), then use its internal
+    // length and captured write operation rather than public shadowable fields.
+    encoderArraySet.call(destination,[]);
+    const capacity=encoderArrayLength.call(destination);let read=0,written=0;
+    for(const scalar of source){const bytes=utf8Bytes(scalar);if(written+bytes.length>capacity)break;encoderArraySet.call(destination,bytes,written);written+=bytes.length;read+=scalar.length}
+    return{read,written};
+  } }
   Object.defineProperty(TextEncoder.prototype,Symbol.toStringTag,{value:'TextEncoder',configurable:true});
   for(const name of ['encode','encodeInto'])markNative(TextEncoder.prototype[name],name);
   markNative(Object.getOwnPropertyDescriptor(TextEncoder.prototype,'encoding').get,'encoding','get ');
