@@ -6,10 +6,25 @@
   for(const name of ['encode','encodeInto'])markNative(TextEncoder.prototype[name],name);
   markNative(Object.getOwnPropertyDescriptor(TextEncoder.prototype,'encoding').get,'encoding','get ');
   const domExceptionSlots=new WeakMap();
+  const domExceptionString=value=>{if(typeof value==='symbol')throw new TypeError('Cannot convert a Symbol value to a string');return String(value)};
+  const domExceptionCodes={IndexSizeError:1,HierarchyRequestError:3,WrongDocumentError:4,InvalidCharacterError:5,NoModificationAllowedError:7,NotFoundError:8,NotSupportedError:9,InUseAttributeError:10,InvalidStateError:11,SyntaxError:12,InvalidModificationError:13,NamespaceError:14,InvalidAccessError:15,TypeMismatchError:17,SecurityError:18,NetworkError:19,AbortError:20,URLMismatchError:21,QuotaExceededError:22,TimeoutError:23,InvalidNodeTypeError:24,DataCloneError:25};
   // DOMException instances inherit Error.prototype, but the interface object
   // inherits Function.prototype. Avoid class extends Error, whose super lookup
   // would also require the incorrect constructor-object inheritance.
-  class DOMException { constructor(message='',name='Error'){const error=Reflect.construct(Error,[String(message)],new.target);domExceptionSlots.set(error,{message:String(message),name:String(name)});return error} get name(){return domExceptionSlots.get(this).name} get message(){return domExceptionSlots.get(this).message} get code(){return this.name==='AbortError'?20:this.name==='TimeoutError'?23:0} }
+  class DOMException {
+    constructor(message='',name='Error'){
+      message=domExceptionString(message);name=domExceptionString(name);
+      const error=Reflect.construct(Error,[],new.target);
+      domExceptionSlots.set(error,{message,name});
+      // Preserve the engine's Error.isError classification without publishing
+      // Error's own stack/message properties on the DOMException instance.
+      delete error.stack;
+      return error;
+    }
+    get name(){return domExceptionSlots.get(this).name}
+    get message(){return domExceptionSlots.get(this).message}
+    get code(){const name=domExceptionSlots.get(this).name;return Object.prototype.hasOwnProperty.call(domExceptionCodes,name)?domExceptionCodes[name]:0}
+  }
   Object.setPrototypeOf(DOMException.prototype,Error.prototype);
   const decodeForm=s=>decodeURIComponent(String(s).replace(/\+/g,' '));
   const encodeForm=s=>encodeURIComponent(String(s)).replace(/%20/g,'+').replace(/[!'()~]/g,c=>'%'+c.charCodeAt(0).toString(16).toUpperCase());
