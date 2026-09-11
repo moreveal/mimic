@@ -64,6 +64,11 @@ is a no-progress threshold rather than a hard navigation deadline: while network
 or lifecycle activity continues it keeps waiting. If progress stops, it stops the
 outstanding load and preserves the committed DOM with diagnostics in
 `snapshot.json`. `--max-wait` supplies a separate absolute safety cap.
+Interactive terminals get a live progress bar with HTTP status, lifecycle state,
+active/request counts, transferred bytes, quiet time and the latest resource.
+Redirected output emits the same progress every `--log-interval` seconds. The
+final summary and `snapshot.json` include per-stage timings; use `--no-progress`
+to disable animation while retaining ordinary logs.
 
 ## Architecture and target
 
