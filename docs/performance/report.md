@@ -1648,3 +1648,23 @@ throughput is 74.19→73.16 Pages/s; DOM/static/React completion is
 517.87/27.74/90.03→518.84/25.97/94.67 ms. No V8 throughput improvement, full gate
 pass or overall P0 closure is claimed. No native dump or unexpected process exit
 was observed in these attempts.
+
+## Optimization backlog after semantic checkpoint (2026-09-11)
+
+Per the current scope decision, performance/concurrency investigation is separate
+from semantic cleanup. The preceding measurements and
+[platform-binding performance receipt](../compatibility/platform-bindings-20260911/performance.json)
+remain unchanged. Both recovered gates reached the 25-Page warmup but stopped at
+the host-memory guard; measured 25-Page and dedicated teardown-memory waves did
+not execute. They remain failed/incomplete gates, not passes.
+
+Next work requires sufficient RAM to complete the unchanged gate, then matched
+latency, throughput, concurrency and retained-memory measurements after teardown.
+Profile Goja bootstrap allocation and retained bridge/DOM arena state before a
+substantial optimization. Do not extrapolate the small measured Goja cold-start
+change to V8 throughput or overall memory recovery. The semantic checkpoint adds
+no new performance claim and does not rerun gates merely to chase a green result.
+
+The unexplained broader native snapshot signatures now have a separate
+[stability-debt disposition](../compatibility/snapshot-stability-debt-2026-09-11.md)
+with immediate P0 reopen on any new native reproduction.
