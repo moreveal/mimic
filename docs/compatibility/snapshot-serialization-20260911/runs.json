@@ -1,0 +1,288 @@
+[
+  {
+    "mode": "concurrent",
+    "side": "after",
+    "rounds": 8,
+    "builders": 4,
+    "restores": 0,
+    "exitCode": 0,
+    "timeout": false,
+    "collector": [
+      "E:\\GitHub\\mimic\\.build\\debug-tools\\procdump\\procdump64.exe",
+      "-accepteula",
+      "-ma",
+      "-b",
+      "-e",
+      "1",
+      "-f",
+      "C0000005,80000003",
+      "-n",
+      "1",
+      "69068",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-build-only-20260911\\after-concurrent\\native.dmp"
+    ],
+    "dumps": [],
+    "logSHA256": "29cf8b5188e396f9fdc926befe620b06421412942cdfef0094635016f215fe68",
+    "root": "compatibility\\private-captures\\p0-build-only-20260911",
+    "case": "after-concurrent",
+    "rawResultSHA256": "b6bacae17e2421161d45a9fbcffebde1e2e0201831cf6933ec7d4fddaa3dc254"
+  },
+  {
+    "mode": "serial",
+    "side": "after",
+    "rounds": 8,
+    "builders": 4,
+    "restores": 0,
+    "exitCode": 0,
+    "timeout": false,
+    "collector": [
+      "E:\\GitHub\\mimic\\.build\\debug-tools\\procdump\\procdump64.exe",
+      "-accepteula",
+      "-ma",
+      "-b",
+      "-e",
+      "1",
+      "-f",
+      "C0000005,80000003",
+      "-n",
+      "1",
+      "111684",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-build-only-20260911\\after-serial\\native.dmp"
+    ],
+    "dumps": [],
+    "logSHA256": "ffbfcefbb90b35c663030acc763a7273e6eab4ba729e171d03f678f5fa3116e5",
+    "root": "compatibility\\private-captures\\p0-build-only-20260911",
+    "case": "after-serial",
+    "rawResultSHA256": "8d293029d49701edc8ecf7cd22e97df824462e9ee7b1aab738e86458833f4c6c"
+  },
+  {
+    "mode": "concurrent",
+    "side": "before",
+    "rounds": 8,
+    "builders": 4,
+    "restores": 0,
+    "exitCode": 2,
+    "timeout": false,
+    "collector": [
+      "E:\\GitHub\\mimic\\.build\\debug-tools\\procdump\\procdump64.exe",
+      "-accepteula",
+      "-ma",
+      "-b",
+      "-e",
+      "1",
+      "-f",
+      "C0000005,80000003",
+      "-n",
+      "1",
+      "94784",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-build-only-20260911\\before-concurrent\\native.dmp"
+    ],
+    "dumps": [
+      {
+        "name": "native.dmp",
+        "size": 161402843,
+        "sha256": "94642170bb2263a77aab7e8ece28680b29966bec9d052fe83cc923451597d33f"
+      }
+    ],
+    "logSHA256": "a074d2fabc2c53f2a5aaacca1d0792031859a18a02f60bcf58de592112a74482",
+    "root": "compatibility\\private-captures\\p0-build-only-20260911",
+    "case": "before-concurrent",
+    "rawResultSHA256": "414cc31a768406d9275290b5190811171e3372bacd30cb136efcb38f6366f06d"
+  },
+  {
+    "mode": "serial",
+    "side": "before",
+    "rounds": 8,
+    "builders": 4,
+    "restores": 0,
+    "exitCode": 0,
+    "timeout": false,
+    "collector": [
+      "E:\\GitHub\\mimic\\.build\\debug-tools\\procdump\\procdump64.exe",
+      "-accepteula",
+      "-ma",
+      "-b",
+      "-e",
+      "1",
+      "-f",
+      "C0000005,80000003",
+      "-n",
+      "1",
+      "113160",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-build-only-20260911\\before-serial\\native.dmp"
+    ],
+    "dumps": [],
+    "logSHA256": "ffbfcefbb90b35c663030acc763a7273e6eab4ba729e171d03f678f5fa3116e5",
+    "root": "compatibility\\private-captures\\p0-build-only-20260911",
+    "case": "before-serial",
+    "rawResultSHA256": "d5832bb15a83aa3513ad9992f4f92fdc4a2a83259934a829f4341df29f4afb3d"
+  },
+  {
+    "attempt": 1,
+    "mode": "concurrent",
+    "pid": 46920,
+    "exitCode": 2,
+    "timeout": false,
+    "monitorCommand": [
+      "E:\\GitHub\\mimic\\.build\\debug-tools\\procdump\\procdump64.exe",
+      "-accepteula",
+      "-ma",
+      "-b",
+      "-e",
+      "1",
+      "-f",
+      "C0000005,80000003",
+      "-n",
+      "1",
+      "46920",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-build-only-flags-20260911\\1-concurrent\\native.dmp"
+    ],
+    "dumps": [
+      {
+        "name": "native.dmp",
+        "size": 162179273,
+        "sha256": "663392dae650e03098b4baa468b15b1023f088ef3985d4f9805932616ef3c235"
+      }
+    ],
+    "root": "compatibility\\private-captures\\p0-build-only-flags-20260911",
+    "case": "1-concurrent",
+    "rawResultSHA256": "9803a05b00240dfff45cde426fb76c1bf3f2f9f6fc8d9171c6d28aee0434d944"
+  },
+  {
+    "attempt": 1,
+    "mode": "concurrent-sealed",
+    "pid": 96364,
+    "exitCode": 0,
+    "timeout": false,
+    "monitorCommand": [
+      "E:\\GitHub\\mimic\\.build\\debug-tools\\procdump\\procdump64.exe",
+      "-accepteula",
+      "-ma",
+      "-b",
+      "-e",
+      "1",
+      "-f",
+      "C0000005,80000003",
+      "-n",
+      "1",
+      "96364",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-build-only-flags-20260911\\1-concurrent-sealed\\native.dmp"
+    ],
+    "dumps": [],
+    "root": "compatibility\\private-captures\\p0-build-only-flags-20260911",
+    "case": "1-concurrent-sealed",
+    "rawResultSHA256": "c6b236a542a7718c502eca9d0093df8fef83bdbd1629d95b50d8e273729cd7d3"
+  },
+  {
+    "attempt": 2,
+    "mode": "concurrent",
+    "pid": 105476,
+    "exitCode": 2,
+    "timeout": false,
+    "monitorCommand": [
+      "E:\\GitHub\\mimic\\.build\\debug-tools\\procdump\\procdump64.exe",
+      "-accepteula",
+      "-ma",
+      "-b",
+      "-e",
+      "1",
+      "-f",
+      "C0000005,80000003",
+      "-n",
+      "1",
+      "105476",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-build-only-flags-20260911\\2-concurrent\\native.dmp"
+    ],
+    "dumps": [
+      {
+        "name": "native.dmp",
+        "size": 159473669,
+        "sha256": "fafc2e1a9089f6cda129c783bee122ae819a807832fda7ce6303bba194068238"
+      }
+    ],
+    "root": "compatibility\\private-captures\\p0-build-only-flags-20260911",
+    "case": "2-concurrent",
+    "rawResultSHA256": "f99da17bae143f0f38877e31d6c0523d67734c4b721dedbc70df86020ff5636d"
+  },
+  {
+    "attempt": 2,
+    "mode": "concurrent-sealed",
+    "pid": 83064,
+    "exitCode": 0,
+    "timeout": false,
+    "monitorCommand": [
+      "E:\\GitHub\\mimic\\.build\\debug-tools\\procdump\\procdump64.exe",
+      "-accepteula",
+      "-ma",
+      "-b",
+      "-e",
+      "1",
+      "-f",
+      "C0000005,80000003",
+      "-n",
+      "1",
+      "83064",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-build-only-flags-20260911\\2-concurrent-sealed\\native.dmp"
+    ],
+    "dumps": [],
+    "root": "compatibility\\private-captures\\p0-build-only-flags-20260911",
+    "case": "2-concurrent-sealed",
+    "rawResultSHA256": "be373ef8639a2c23cc7359050561b85568ed813f59e1d9657d3c71ca43efdce5"
+  },
+  {
+    "attempt": 3,
+    "mode": "concurrent",
+    "pid": 80856,
+    "exitCode": 2,
+    "timeout": false,
+    "monitorCommand": [
+      "E:\\GitHub\\mimic\\.build\\debug-tools\\procdump\\procdump64.exe",
+      "-accepteula",
+      "-ma",
+      "-b",
+      "-e",
+      "1",
+      "-f",
+      "C0000005,80000003",
+      "-n",
+      "1",
+      "80856",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-build-only-flags-20260911\\3-concurrent\\native.dmp"
+    ],
+    "dumps": [
+      {
+        "name": "native.dmp",
+        "size": 159447801,
+        "sha256": "c9faa5c5fce83fa1d0b696f4223c55c33484c8dff78d04d50df78c180e71ec58"
+      }
+    ],
+    "root": "compatibility\\private-captures\\p0-build-only-flags-20260911",
+    "case": "3-concurrent",
+    "rawResultSHA256": "21c4a931ff11682e7fb1cc3fbcc0d5e5c0e8f49d6a7a90cf267d84b5b447473c"
+  },
+  {
+    "attempt": 3,
+    "mode": "concurrent-sealed",
+    "pid": 77620,
+    "exitCode": 0,
+    "timeout": false,
+    "monitorCommand": [
+      "E:\\GitHub\\mimic\\.build\\debug-tools\\procdump\\procdump64.exe",
+      "-accepteula",
+      "-ma",
+      "-b",
+      "-e",
+      "1",
+      "-f",
+      "C0000005,80000003",
+      "-n",
+      "1",
+      "77620",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-build-only-flags-20260911\\3-concurrent-sealed\\native.dmp"
+    ],
+    "dumps": [],
+    "root": "compatibility\\private-captures\\p0-build-only-flags-20260911",
+    "case": "3-concurrent-sealed",
+    "rawResultSHA256": "e0174f2dfe6771ced0e2382059919f47c286cfdea0ceeddf93f4a7ccb4185f64"
+  }
+]

@@ -1,0 +1,610 @@
+[
+  {
+    "probe": "internal\\browser\\testdata\\navigation_cross_window_reflection_oracle.js",
+    "sha256": "95a72922c1b2b0d3198d0d666227dc4416dc0d547b20acb85e6c39fa27e8d70a",
+    "chrome": {
+      "value": {
+        "tag": "[object Object]",
+        "toStringTag": "undefined",
+        "tagDescriptor": {
+          "configurable": true,
+          "enumerable": false,
+          "writable": false,
+          "value": "undefined"
+        },
+        "ownKeys": [
+          "window",
+          "self",
+          "location",
+          "closed",
+          "frames",
+          "length",
+          "top",
+          "opener",
+          "parent",
+          "blur",
+          "close",
+          "focus",
+          "postMessage",
+          "then",
+          "Symbol(Symbol.toStringTag)",
+          "Symbol(Symbol.hasInstance)",
+          "Symbol(Symbol.isConcatSpreadable)"
+        ],
+        "iterator": {
+          "error": "SecurityError"
+        },
+        "hasInstance": "undefined",
+        "isConcatSpreadable": "undefined",
+        "then": "undefined",
+        "uniqueSymbol": {
+          "error": "SecurityError"
+        },
+        "toPrimitive": {
+          "error": "SecurityError"
+        }
+      }
+    },
+    "mimic": {
+      "value": {
+        "hasInstance": "undefined",
+        "isConcatSpreadable": "undefined",
+        "iterator": {
+          "error": "SecurityError"
+        },
+        "ownKeys": [
+          "window",
+          "self",
+          "location",
+          "closed",
+          "frames",
+          "length",
+          "top",
+          "opener",
+          "parent",
+          "blur",
+          "close",
+          "focus",
+          "postMessage",
+          "then",
+          "Symbol(Symbol.toStringTag)",
+          "Symbol(Symbol.hasInstance)",
+          "Symbol(Symbol.isConcatSpreadable)"
+        ],
+        "tag": "[object Object]",
+        "tagDescriptor": {
+          "configurable": true,
+          "enumerable": false,
+          "value": "undefined",
+          "writable": false
+        },
+        "then": "undefined",
+        "toPrimitive": {
+          "error": "SecurityError"
+        },
+        "toStringTag": "undefined",
+        "uniqueSymbol": {
+          "error": "SecurityError"
+        }
+      }
+    },
+    "control": {
+      "value": {
+        "tag": "[object Object]",
+        "toStringTag": "undefined",
+        "tagDescriptor": {
+          "configurable": true,
+          "enumerable": false,
+          "writable": false,
+          "value": "undefined"
+        },
+        "ownKeys": [
+          "window",
+          "self",
+          "location",
+          "closed",
+          "frames",
+          "length",
+          "top",
+          "opener",
+          "parent",
+          "blur",
+          "close",
+          "focus",
+          "postMessage",
+          "then",
+          "Symbol(Symbol.toStringTag)",
+          "Symbol(Symbol.hasInstance)",
+          "Symbol(Symbol.isConcatSpreadable)"
+        ],
+        "iterator": {
+          "error": "SecurityError"
+        },
+        "hasInstance": "undefined",
+        "isConcatSpreadable": "undefined",
+        "then": "undefined",
+        "uniqueSymbol": {
+          "error": "SecurityError"
+        },
+        "toPrimitive": {
+          "error": "SecurityError"
+        }
+      }
+    },
+    "differences": [],
+    "controlDifferences": []
+  },
+  {
+    "probe": "internal\\browser\\testdata\\navigation_nested_window_oracle.js",
+    "sha256": "4b0d2dd989877d89b7c770c3c98ddc3869212119c9637637029bf67519862e44",
+    "chrome": {
+      "value": {
+        "title": "retained nested",
+        "self": true,
+        "defaultViewNull": true,
+        "eval": 17,
+        "bodyReadable": true
+      }
+    },
+    "mimic": {
+      "value": {
+        "bodyReadable": true,
+        "defaultViewNull": true,
+        "eval": 17,
+        "self": true,
+        "title": "retained nested"
+      }
+    },
+    "control": {
+      "value": {
+        "title": "retained nested",
+        "self": true,
+        "defaultViewNull": true,
+        "eval": 17,
+        "bodyReadable": true
+      }
+    },
+    "differences": [],
+    "controlDifferences": []
+  },
+  {
+    "probe": "internal\\browser\\testdata\\navigation_realm_lifecycle_oracle.js",
+    "sha256": "746dbc08a8417847725baeae9b841cf239cf02668d72da92e129f8b3a45cbb57",
+    "chrome": {
+      "value": {
+        "activeEvents": [
+          "microtask",
+          "promise",
+          "timer"
+        ],
+        "afterNavigation": {
+          "sameDocument": true,
+          "events": []
+        },
+        "detached": {
+          "contentWindowNull": true,
+          "oldDocumentReadable": true,
+          "currentDocumentReadable": true,
+          "currentFunctionDocument": true,
+          "savedEvalPrimitive": 17,
+          "savedEvalDocument": true,
+          "oldDefaultViewNull": true,
+          "detachedDefaultViewNull": true
+        }
+      }
+    },
+    "mimic": {
+      "value": {
+        "activeEvents": [
+          "microtask",
+          "promise",
+          "timer"
+        ],
+        "afterNavigation": {
+          "events": [],
+          "sameDocument": true
+        },
+        "detached": {
+          "contentWindowNull": true,
+          "currentDocumentReadable": true,
+          "currentFunctionDocument": true,
+          "detachedDefaultViewNull": true,
+          "oldDefaultViewNull": true,
+          "oldDocumentReadable": true,
+          "savedEvalDocument": true,
+          "savedEvalPrimitive": 17
+        }
+      }
+    },
+    "control": {
+      "value": {
+        "activeEvents": [
+          "microtask",
+          "promise",
+          "timer"
+        ],
+        "afterNavigation": {
+          "sameDocument": true,
+          "events": []
+        },
+        "detached": {
+          "contentWindowNull": true,
+          "oldDocumentReadable": true,
+          "currentDocumentReadable": true,
+          "currentFunctionDocument": true,
+          "savedEvalPrimitive": 17,
+          "savedEvalDocument": true,
+          "oldDefaultViewNull": true,
+          "detachedDefaultViewNull": true
+        }
+      }
+    },
+    "differences": [],
+    "controlDifferences": []
+  },
+  {
+    "probe": "internal\\browser\\testdata\\navigation_realm_ownership_oracle.js",
+    "sha256": "f408ce661cdf9645d0b45f9f4f16d48aab4564a99c791e8bf77241ebc825f865",
+    "chrome": {
+      "value": {
+        "sameOrigin": {
+          "windowStable": true,
+          "currentDocument": false,
+          "contentDocumentNull": false,
+          "oldDocumentValue": 23,
+          "oldDocumentBody": true,
+          "oldDocumentConstructor": true,
+          "oldDefaultViewNull": true,
+          "oldObjectValue": 17,
+          "oldObjectPrototype": true,
+          "constructOldObject": true,
+          "oldSymbolIdentity": true,
+          "oldFunctionDocument": true,
+          "oldFunctionWindow": true,
+          "oldEvalDocument": true,
+          "oldEvalWindow": true,
+          "oldEvalResultType": "object",
+          "oldEvalPrimitive": 17,
+          "oldEvalObjectArgument": true,
+          "oldEvalThrow": {
+            "error": "Error"
+          },
+          "oldWindowRoundtrip": true,
+          "parentWindowRoundtrip": true,
+          "oldSymbolRoundtrip": true,
+          "oldSymbolKey": true,
+          "newWindowRoundtrip": true,
+          "newSymbolKey": true,
+          "oldFunctionGlobal": true,
+          "oldDocumentMutation": true,
+          "currentHasOldMutation": false,
+          "currentHasOldGlobal": false,
+          "currentConstructorReplaced": true
+        },
+        "crossOrigin": {
+          "windowStable": true,
+          "currentDocument": {
+            "error": "SecurityError"
+          },
+          "contentDocumentNull": true,
+          "oldDocumentValue": 23,
+          "oldDocumentBody": true,
+          "oldDocumentConstructor": true,
+          "oldDefaultViewNull": true,
+          "oldObjectValue": 17,
+          "oldObjectPrototype": true,
+          "constructOldObject": true,
+          "oldSymbolIdentity": true,
+          "oldFunctionDocument": true,
+          "oldFunctionWindow": true,
+          "oldEvalDocument": false,
+          "oldEvalWindow": false,
+          "oldEvalResultType": "undefined",
+          "oldEvalPrimitive": "undefined",
+          "oldEvalObjectArgument": "undefined",
+          "oldEvalThrow": "undefined",
+          "oldWindowRoundtrip": true,
+          "parentWindowRoundtrip": true,
+          "oldSymbolRoundtrip": true,
+          "oldSymbolKey": true,
+          "newWindowRoundtrip": {
+            "error": "SecurityError"
+          },
+          "newSymbolKey": {
+            "error": "SecurityError"
+          },
+          "oldFunctionGlobal": {
+            "error": "SecurityError"
+          },
+          "oldDocumentMutation": true,
+          "currentHasOldMutation": {
+            "error": "SecurityError"
+          },
+          "currentHasOldGlobal": {
+            "error": "SecurityError"
+          },
+          "currentConstructorReplaced": {
+            "error": "SecurityError"
+          }
+        }
+      }
+    },
+    "mimic": {
+      "value": {
+        "crossOrigin": {
+          "constructOldObject": true,
+          "contentDocumentNull": true,
+          "currentConstructorReplaced": {
+            "error": "SecurityError"
+          },
+          "currentDocument": {
+            "error": "SecurityError"
+          },
+          "currentHasOldGlobal": {
+            "error": "SecurityError"
+          },
+          "currentHasOldMutation": {
+            "error": "SecurityError"
+          },
+          "newSymbolKey": {
+            "error": "SecurityError"
+          },
+          "newWindowRoundtrip": {
+            "error": "SecurityError"
+          },
+          "oldDefaultViewNull": true,
+          "oldDocumentBody": true,
+          "oldDocumentConstructor": true,
+          "oldDocumentMutation": true,
+          "oldDocumentValue": 23,
+          "oldEvalDocument": false,
+          "oldEvalObjectArgument": "undefined",
+          "oldEvalPrimitive": "undefined",
+          "oldEvalResultType": "undefined",
+          "oldEvalThrow": "undefined",
+          "oldEvalWindow": false,
+          "oldFunctionDocument": true,
+          "oldFunctionGlobal": false,
+          "oldFunctionWindow": true,
+          "oldObjectPrototype": true,
+          "oldObjectValue": 17,
+          "oldSymbolIdentity": true,
+          "oldSymbolKey": true,
+          "oldSymbolRoundtrip": true,
+          "oldWindowRoundtrip": true,
+          "parentWindowRoundtrip": true,
+          "windowStable": true
+        },
+        "sameOrigin": {
+          "constructOldObject": true,
+          "contentDocumentNull": false,
+          "currentConstructorReplaced": true,
+          "currentDocument": false,
+          "currentHasOldGlobal": false,
+          "currentHasOldMutation": false,
+          "newSymbolKey": true,
+          "newWindowRoundtrip": true,
+          "oldDefaultViewNull": true,
+          "oldDocumentBody": true,
+          "oldDocumentConstructor": true,
+          "oldDocumentMutation": true,
+          "oldDocumentValue": 23,
+          "oldEvalDocument": true,
+          "oldEvalObjectArgument": true,
+          "oldEvalPrimitive": 17,
+          "oldEvalResultType": "object",
+          "oldEvalThrow": {
+            "error": "Error"
+          },
+          "oldEvalWindow": true,
+          "oldFunctionDocument": true,
+          "oldFunctionGlobal": false,
+          "oldFunctionWindow": true,
+          "oldObjectPrototype": true,
+          "oldObjectValue": 17,
+          "oldSymbolIdentity": true,
+          "oldSymbolKey": true,
+          "oldSymbolRoundtrip": true,
+          "oldWindowRoundtrip": true,
+          "parentWindowRoundtrip": true,
+          "windowStable": true
+        }
+      }
+    },
+    "control": {
+      "value": {
+        "sameOrigin": {
+          "windowStable": true,
+          "currentDocument": false,
+          "contentDocumentNull": false,
+          "oldDocumentValue": 23,
+          "oldDocumentBody": true,
+          "oldDocumentConstructor": true,
+          "oldDefaultViewNull": true,
+          "oldObjectValue": 17,
+          "oldObjectPrototype": true,
+          "constructOldObject": true,
+          "oldSymbolIdentity": true,
+          "oldFunctionDocument": true,
+          "oldFunctionWindow": true,
+          "oldEvalDocument": true,
+          "oldEvalWindow": true,
+          "oldEvalResultType": "object",
+          "oldEvalPrimitive": 17,
+          "oldEvalObjectArgument": true,
+          "oldEvalThrow": {
+            "error": "Error"
+          },
+          "oldWindowRoundtrip": true,
+          "parentWindowRoundtrip": true,
+          "oldSymbolRoundtrip": true,
+          "oldSymbolKey": true,
+          "newWindowRoundtrip": true,
+          "newSymbolKey": true,
+          "oldFunctionGlobal": true,
+          "oldDocumentMutation": true,
+          "currentHasOldMutation": false,
+          "currentHasOldGlobal": false,
+          "currentConstructorReplaced": true
+        },
+        "crossOrigin": {
+          "windowStable": true,
+          "currentDocument": {
+            "error": "SecurityError"
+          },
+          "contentDocumentNull": true,
+          "oldDocumentValue": 23,
+          "oldDocumentBody": true,
+          "oldDocumentConstructor": true,
+          "oldDefaultViewNull": true,
+          "oldObjectValue": 17,
+          "oldObjectPrototype": true,
+          "constructOldObject": true,
+          "oldSymbolIdentity": true,
+          "oldFunctionDocument": true,
+          "oldFunctionWindow": true,
+          "oldEvalDocument": false,
+          "oldEvalWindow": false,
+          "oldEvalResultType": "undefined",
+          "oldEvalPrimitive": "undefined",
+          "oldEvalObjectArgument": "undefined",
+          "oldEvalThrow": "undefined",
+          "oldWindowRoundtrip": true,
+          "parentWindowRoundtrip": true,
+          "oldSymbolRoundtrip": true,
+          "oldSymbolKey": true,
+          "newWindowRoundtrip": {
+            "error": "SecurityError"
+          },
+          "newSymbolKey": {
+            "error": "SecurityError"
+          },
+          "oldFunctionGlobal": {
+            "error": "SecurityError"
+          },
+          "oldDocumentMutation": true,
+          "currentHasOldMutation": {
+            "error": "SecurityError"
+          },
+          "currentHasOldGlobal": {
+            "error": "SecurityError"
+          },
+          "currentConstructorReplaced": {
+            "error": "SecurityError"
+          }
+        }
+      }
+    },
+    "differences": [
+      [
+        [
+          "value",
+          "crossOrigin",
+          "oldFunctionGlobal"
+        ],
+        {
+          "error": "SecurityError"
+        },
+        false
+      ],
+      [
+        [
+          "value",
+          "sameOrigin",
+          "oldFunctionGlobal"
+        ],
+        true,
+        false
+      ]
+    ],
+    "controlDifferences": []
+  },
+  {
+    "probe": "internal\\browser\\testdata\\navigation_window_edges_oracle.js",
+    "sha256": "5fef19b92d54db1fd8fa88eb0d4fa55f9b582cfda7bdc8732ea6d644f5125150",
+    "chrome": {
+      "value": {
+        "nested": {
+          "title": "retained nested",
+          "self": true,
+          "defaultViewNull": true,
+          "eval": 17,
+          "bodyReadable": true
+        },
+        "eval": {
+          "direct": "undefined",
+          "call": "undefined",
+          "apply": "undefined",
+          "bound": "undefined",
+          "reflectApply": "undefined"
+        }
+      }
+    },
+    "mimic": {
+      "value": {
+        "eval": {
+          "apply": 17,
+          "bound": 17,
+          "call": 17,
+          "direct": "undefined",
+          "reflectApply": "undefined"
+        },
+        "nested": {
+          "bodyReadable": true,
+          "defaultViewNull": true,
+          "eval": 17,
+          "self": true,
+          "title": "retained nested"
+        }
+      }
+    },
+    "control": {
+      "value": {
+        "nested": {
+          "title": "retained nested",
+          "self": true,
+          "defaultViewNull": true,
+          "eval": 17,
+          "bodyReadable": true
+        },
+        "eval": {
+          "direct": "undefined",
+          "call": "undefined",
+          "apply": "undefined",
+          "bound": "undefined",
+          "reflectApply": "undefined"
+        }
+      }
+    },
+    "differences": [
+      [
+        [
+          "value",
+          "eval",
+          "apply"
+        ],
+        "undefined",
+        17
+      ],
+      [
+        [
+          "value",
+          "eval",
+          "bound"
+        ],
+        "undefined",
+        17
+      ],
+      [
+        [
+          "value",
+          "eval",
+          "call"
+        ],
+        "undefined",
+        17
+      ]
+    ],
+    "controlDifferences": []
+  }
+]

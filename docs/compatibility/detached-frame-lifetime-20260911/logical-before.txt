@@ -1,0 +1,7 @@
+=== RUN   TestCleanupUnobservedDetach
+    cleanup_detach_diagnostic_test.go:7: owners=9 retained=8 windowReferences=0
+    cleanup_detach_diagnostic_test.go:8: unobserved detached contexts retained: 9
+--- FAIL: TestCleanupUnobservedDetach (0.64s)
+FAIL
+FAIL	github.com/moreveal/mimic/internal/browser	0.819s
+FAIL

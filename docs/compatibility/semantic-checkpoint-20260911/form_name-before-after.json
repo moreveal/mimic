@@ -1,0 +1,62 @@
+{
+  "chrome": {
+    "initial": "",
+    "attribute": "first",
+    "property": "second",
+    "removed": ""
+  },
+  "before": {
+    "attribute": null
+  },
+  "after": {
+    "attribute": "first",
+    "initial": "",
+    "property": "second",
+    "removed": ""
+  },
+  "control": {
+    "initial": "",
+    "attribute": "first",
+    "property": "second",
+    "removed": ""
+  },
+  "sha256": "903e54c20e4dfff8d148ae227dad202d98d0463b518a42c33b9b7d482b1f1a66",
+  "beforeDifferences": [
+    [
+      [
+        "attribute"
+      ],
+      "first",
+      null
+    ],
+    [
+      [
+        "initial"
+      ],
+      "",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "property"
+      ],
+      "second",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "removed"
+      ],
+      "",
+      {
+        "$missing": true
+      }
+    ]
+  ],
+  "afterDifferences": [],
+  "controlDifferences": []
+}

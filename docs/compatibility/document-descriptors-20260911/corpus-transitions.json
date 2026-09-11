@@ -1,0 +1,44 @@
+{
+  "brand": {
+    "before": 583,
+    "after": 578,
+    "removed": [
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Document.location"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Node.firstChild/result"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Document.textContent"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Document.firstChild"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Node.firstChild/exception"
+      ]
+    ],
+    "added": [],
+    "changed": []
+  },
+  "relations": {
+    "before": 2,
+    "after": 2,
+    "removed": [],
+    "added": [],
+    "changed": []
+  },
+  "corpus": {
+    "before": 40,
+    "after": 40,
+    "removed": [],
+    "added": [],
+    "changed": []
+  }
+}

@@ -1,0 +1,358 @@
+{
+  "identity": {
+    "before": {
+      "revision": "71d54f043fe55ab4ee3cee188862d4e178bd143f",
+      "dirty": [
+        "?? internal/engine/v8/bootstrap_snapshot_numeric_test.go",
+        "?? internal/engine/v8/bootstrap_snapshot_serialization_test.go"
+      ],
+      "binarySHA256": "2e4bc6a826b1e12143f9df9f007ce3f1b1582327c6b037eab79e074469ad83c1",
+      "testSHA256": "9f5e351e504d2570f0367d4a8dd7678e1dcd6dd4a77f1bcfe0b5b41af5404426"
+    },
+    "after": {
+      "revision": "886ab78427091996dbda188728948e59e08c9b2f",
+      "dirty": [],
+      "binarySHA256": "801a05e948706c8fd5a796abc0c3cc9433fd0f7f5534b2a30ec236cd41cbed2a",
+      "testSHA256": "9f5e351e504d2570f0367d4a8dd7678e1dcd6dd4a77f1bcfe0b5b41af5404426"
+    }
+  },
+  "collectorRuns": [
+    {
+      "side": "before",
+      "attempt": 1,
+      "collectorExitCode": 1,
+      "timeout": false,
+      "command": [
+        "E:\\GitHub\\mimic\\.build\\debug-tools\\procdump\\procdump64.exe",
+        "-accepteula",
+        "-ma",
+        "-b",
+        "-e",
+        "1",
+        "-f",
+        "C0000005,80000003",
+        "-n",
+        "1",
+        "-x",
+        "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-numeric-test-matrix-20260911\\1-before",
+        "E:\\GitHub\\mimic\\.build\\p0-numeric-test-before.exe",
+        "-test.run=^TestConcurrentNumericSnapshotsPreserveLiveGraphs$",
+        "-test.v",
+        "-test.timeout=120s"
+      ],
+      "dumps": [
+        "p0-numeric-test-before.exe_260911_172840.dmp"
+      ]
+    },
+    {
+      "side": "after",
+      "attempt": 1,
+      "collectorExitCode": 0,
+      "timeout": false,
+      "command": [
+        "E:\\GitHub\\mimic\\.build\\debug-tools\\procdump\\procdump64.exe",
+        "-accepteula",
+        "-ma",
+        "-b",
+        "-e",
+        "1",
+        "-f",
+        "C0000005,80000003",
+        "-n",
+        "1",
+        "-x",
+        "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-numeric-test-matrix-20260911\\1-after",
+        "E:\\GitHub\\mimic\\.build\\p0-numeric-test-after.exe",
+        "-test.run=^TestConcurrentNumericSnapshotsPreserveLiveGraphs$",
+        "-test.v",
+        "-test.timeout=120s"
+      ],
+      "dumps": []
+    },
+    {
+      "side": "before",
+      "attempt": 2,
+      "collectorExitCode": 1,
+      "timeout": false,
+      "command": [
+        "E:\\GitHub\\mimic\\.build\\debug-tools\\procdump\\procdump64.exe",
+        "-accepteula",
+        "-ma",
+        "-b",
+        "-e",
+        "1",
+        "-f",
+        "C0000005,80000003",
+        "-n",
+        "1",
+        "-x",
+        "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-numeric-test-matrix-20260911\\2-before",
+        "E:\\GitHub\\mimic\\.build\\p0-numeric-test-before.exe",
+        "-test.run=^TestConcurrentNumericSnapshotsPreserveLiveGraphs$",
+        "-test.v",
+        "-test.timeout=120s"
+      ],
+      "dumps": [
+        "p0-numeric-test-before.exe_260911_172842.dmp"
+      ]
+    },
+    {
+      "side": "after",
+      "attempt": 2,
+      "collectorExitCode": 0,
+      "timeout": false,
+      "command": [
+        "E:\\GitHub\\mimic\\.build\\debug-tools\\procdump\\procdump64.exe",
+        "-accepteula",
+        "-ma",
+        "-b",
+        "-e",
+        "1",
+        "-f",
+        "C0000005,80000003",
+        "-n",
+        "1",
+        "-x",
+        "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-numeric-test-matrix-20260911\\2-after",
+        "E:\\GitHub\\mimic\\.build\\p0-numeric-test-after.exe",
+        "-test.run=^TestConcurrentNumericSnapshotsPreserveLiveGraphs$",
+        "-test.v",
+        "-test.timeout=120s"
+      ],
+      "dumps": []
+    },
+    {
+      "side": "before",
+      "attempt": 3,
+      "collectorExitCode": 1,
+      "timeout": false,
+      "command": [
+        "E:\\GitHub\\mimic\\.build\\debug-tools\\procdump\\procdump64.exe",
+        "-accepteula",
+        "-ma",
+        "-b",
+        "-e",
+        "1",
+        "-f",
+        "C0000005,80000003",
+        "-n",
+        "1",
+        "-x",
+        "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-numeric-test-matrix-20260911\\3-before",
+        "E:\\GitHub\\mimic\\.build\\p0-numeric-test-before.exe",
+        "-test.run=^TestConcurrentNumericSnapshotsPreserveLiveGraphs$",
+        "-test.v",
+        "-test.timeout=120s"
+      ],
+      "dumps": [
+        "p0-numeric-test-before.exe_260911_172843.dmp"
+      ]
+    },
+    {
+      "side": "after",
+      "attempt": 3,
+      "collectorExitCode": 0,
+      "timeout": false,
+      "command": [
+        "E:\\GitHub\\mimic\\.build\\debug-tools\\procdump\\procdump64.exe",
+        "-accepteula",
+        "-ma",
+        "-b",
+        "-e",
+        "1",
+        "-f",
+        "C0000005,80000003",
+        "-n",
+        "1",
+        "-x",
+        "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-numeric-test-matrix-20260911\\3-after",
+        "E:\\GitHub\\mimic\\.build\\p0-numeric-test-after.exe",
+        "-test.run=^TestConcurrentNumericSnapshotsPreserveLiveGraphs$",
+        "-test.v",
+        "-test.timeout=120s"
+      ],
+      "dumps": []
+    }
+  ],
+  "runs": [
+    {
+      "run": "1-after",
+      "logSHA256": "eafce04fdc40b0b09b281c76b90a3a02a95cf96ae80f27f9d5c042460f5e6a4e",
+      "exitCodes": [
+        "0x00000000"
+      ],
+      "passed": true,
+      "round8Builders": 4
+    },
+    {
+      "run": "1-before",
+      "logSHA256": "5c3cc702e87219a6e387c5c2437cc978054be8ece39fedc24542c2ccc2ade8ed",
+      "exitCodes": [],
+      "passed": false,
+      "round8Builders": 0,
+      "dumpSHA256": "5ee51a72e0e1b33750f3407336550e749e0d1eaa58d6c8ebf7f10cff9e9ef1e3",
+      "native": {
+        "exceptionCode": "0xc0000005",
+        "exceptionAddress": "0x7ffc8701a0a2",
+        "rva": "0x57a0a2",
+        "nearestMapSymbol": [
+          5742656,
+          "?EnsureSpaceForAllocation@ReadOnlySpace@internal@v8@@AEAAXH@Z"
+        ],
+        "offset": 98,
+        "registers": {
+          "rax": "0xfeeefeeefeec0000",
+          "rcx": "0xfeeefeeefeeefeee",
+          "rdx": "0xfeeefeeefeeefeee",
+          "rbx": "0x50",
+          "rsp": "0x74ac9ff6a0",
+          "rbp": "0x50",
+          "rsi": "0x1fc7d3b2c50",
+          "rdi": "0x1fc7d3b2ca8",
+          "r8": "0x0",
+          "r9": "0x0",
+          "r10": "0x0",
+          "r11": "0x10",
+          "r12": "0x74ac9ff830",
+          "r13": "0x1fd1d6cde50",
+          "r14": "0x1fd1d6cde68",
+          "r15": "0x74ac9ff880",
+          "rip": "0x7ffc8701a0a2"
+        },
+        "frames": [
+          "FRAME 0 0x7ffc8701a0a2 0x74ac9ff6a0 ?EnsureSpaceForAllocation@ReadOnlySpace@internal@v8@@AEAAXH@Z 0x62",
+          "FRAME 1 0x7ffc8701a3ff 0x74ac9ff710 ?AllocateRaw@ReadOnlySpace@internal@v8@@QEAA?AVAllocationResult@23@HW4AllocationAlignment@23@@Z 0x2f",
+          "FRAME 2 0x7ffc870735fb 0x74ac9ff750 ?Promote@ReadOnlyPromotion@internal@v8@@SAXPEAVIsolate@23@AEBVSafepointScope@23@AEBV?$PerThreadAssertScopeEmpty@$0A@$00$01@23@@Z 0x86b",
+          "FRAME 3 0x7ffc86b270b9 0x74ac9ff980 ?CreateBlob@SnapshotCreatorImpl@internal@v8@@QEAA?AVStartupData@3@W4FunctionCodeHandling@SnapshotCreator@3@V?$Flags@W4SerializerFlag@Snapshot@internal@v8@@HH@base@3@@Z 0x439",
+          "FRAME 4 0x7ffc88775251 0x74ac9ffb00 gov8_snapshot_create_blob 0xe1"
+        ],
+        "exceptionParameters": [
+          "0x0",
+          "0xffffffffffffffff"
+        ],
+        "faultInstructionBytes": "488b500848c7c000",
+        "allocatorRegister": "rsi",
+        "allocatorBytes": "d00963adfc010000503c881dfd010000eefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefe"
+      }
+    },
+    {
+      "run": "2-after",
+      "logSHA256": "18faa219a5d73af0d0925cfff35bc45ca3fb63de9fc6eb17ca0bdb5fab7b0b04",
+      "exitCodes": [
+        "0x00000000"
+      ],
+      "passed": true,
+      "round8Builders": 4
+    },
+    {
+      "run": "2-before",
+      "logSHA256": "b42cd18405904fbb6b3b3729e7b281a31404b5a4f1499f5139e998fb05921a6f",
+      "exitCodes": [],
+      "passed": false,
+      "round8Builders": 0,
+      "dumpSHA256": "e78852e05f5037c7f4e1436c4e04363aa01d3e1f83178c1e522c378fed1679e8",
+      "native": {
+        "exceptionCode": "0xc0000005",
+        "exceptionAddress": "0x7ffc8701a0a2",
+        "rva": "0x57a0a2",
+        "nearestMapSymbol": [
+          5742656,
+          "?EnsureSpaceForAllocation@ReadOnlySpace@internal@v8@@AEAAXH@Z"
+        ],
+        "offset": 98,
+        "registers": {
+          "rax": "0xfeeefeeefeec0000",
+          "rcx": "0xfeeefeeefeeefeee",
+          "rdx": "0xfeeefeeefeeefeee",
+          "rbx": "0x50",
+          "rsp": "0x682d9ff600",
+          "rbp": "0x50",
+          "rsi": "0x2240837ebe0",
+          "rdi": "0x2240837ec38",
+          "r8": "0x0",
+          "r9": "0x0",
+          "r10": "0x0",
+          "r11": "0x10",
+          "r12": "0x682d9ff790",
+          "r13": "0x224b5f5a1b0",
+          "r14": "0x224b5f5a1c8",
+          "r15": "0x682d9ff7e0",
+          "rip": "0x7ffc8701a0a2"
+        },
+        "frames": [
+          "FRAME 0 0x7ffc8701a0a2 0x682d9ff600 ?EnsureSpaceForAllocation@ReadOnlySpace@internal@v8@@AEAAXH@Z 0x62",
+          "FRAME 1 0x7ffc8701a3ff 0x682d9ff670 ?AllocateRaw@ReadOnlySpace@internal@v8@@QEAA?AVAllocationResult@23@HW4AllocationAlignment@23@@Z 0x2f",
+          "FRAME 2 0x7ffc870735fb 0x682d9ff6b0 ?Promote@ReadOnlyPromotion@internal@v8@@SAXPEAVIsolate@23@AEBVSafepointScope@23@AEBV?$PerThreadAssertScopeEmpty@$0A@$00$01@23@@Z 0x86b",
+          "FRAME 3 0x7ffc86b270b9 0x682d9ff8e0 ?CreateBlob@SnapshotCreatorImpl@internal@v8@@QEAA?AVStartupData@3@W4FunctionCodeHandling@SnapshotCreator@3@V?$Flags@W4SerializerFlag@Snapshot@internal@v8@@HH@base@3@@Z 0x439",
+          "FRAME 4 0x7ffc88775251 0x682d9ffa60 gov8_snapshot_create_blob 0xe1"
+        ],
+        "exceptionParameters": [
+          "0x0",
+          "0xffffffffffffffff"
+        ],
+        "faultInstructionBytes": "488b500848c7c000",
+        "allocatorRegister": "rsi",
+        "allocatorBytes": "100608162502000070b1251625020000eefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefeeefe"
+      }
+    },
+    {
+      "run": "3-after",
+      "logSHA256": "5d289f3b28bef1f8a50cda63c5df8376c629023d0d57e4d6560777cafffd5121",
+      "exitCodes": [
+        "0x00000000"
+      ],
+      "passed": true,
+      "round8Builders": 4
+    },
+    {
+      "run": "3-before",
+      "logSHA256": "c8687f7d36715317d9c3ac9c902b4414a3f72199c4db740e84aea8a016a72a4c",
+      "exitCodes": [],
+      "passed": false,
+      "round8Builders": 0,
+      "dumpSHA256": "7999c9908639bb4ceaf00964c2af307d3b8cf7126956c45d155f03c97c3c1104",
+      "native": {
+        "exceptionCode": "0xc0000005",
+        "exceptionAddress": "0x7ffc8701a418",
+        "rva": "0x57a418",
+        "nearestMapSymbol": [
+          5743568,
+          "?AllocateRaw@ReadOnlySpace@internal@v8@@QEAA?AVAllocationResult@23@HW4AllocationAlignment@23@@Z"
+        ],
+        "offset": 72,
+        "registers": {
+          "rax": "0x2",
+          "rcx": "0x50",
+          "rdx": "0xbaadf00dbaadf00d",
+          "rbx": "0x50",
+          "rsp": "0x54d81ff5a0",
+          "rbp": "0x50",
+          "rsi": "0x54d81ff628",
+          "rdi": "0x1bed9c0eb90",
+          "r8": "0x1bf8f81cdc0",
+          "r9": "0x0",
+          "r10": "0x0",
+          "r11": "0x10",
+          "r12": "0x54d81ff6c0",
+          "r13": "0x1bf8f8d2640",
+          "r14": "0x1bf8f8d2658",
+          "r15": "0x54d81ff710",
+          "rip": "0x7ffc8701a418"
+        },
+        "frames": [
+          "FRAME 0 0x7ffc8701a418 0x54d81ff5a0 ?AllocateRaw@ReadOnlySpace@internal@v8@@QEAA?AVAllocationResult@23@HW4AllocationAlignment@23@@Z 0x48",
+          "FRAME 1 0x7ffc870735fb 0x54d81ff5e0 ?Promote@ReadOnlyPromotion@internal@v8@@SAXPEAVIsolate@23@AEBVSafepointScope@23@AEBV?$PerThreadAssertScopeEmpty@$0A@$00$01@23@@Z 0x86b",
+          "FRAME 2 0x7ffc86b270b9 0x54d81ff810 ?CreateBlob@SnapshotCreatorImpl@internal@v8@@QEAA?AVStartupData@3@W4FunctionCodeHandling@SnapshotCreator@3@V?$Flags@W4SerializerFlag@Snapshot@internal@v8@@HH@base@3@@Z 0x439",
+          "FRAME 3 0x7ffc88775251 0x54d81ff990 gov8_snapshot_create_blob 0xe1"
+        ],
+        "exceptionParameters": [
+          "0x0",
+          "0xffffffffffffffff"
+        ],
+        "faultInstructionBytes": "488b52f8f048014f",
+        "allocatorRegister": "rdi",
+        "allocatorBytes": "0000000000000000b0c1b9d9be010000b0c1b9d9be01000000000000000000000000000000000000000000000000000080ce41ffbe01000080ce41ffbe01000001000000000000000df0adba0df0adbac021692fbf0100005200000000000000c0cd818fbf01000001000000000000000df0adba0000803f0df0adba0df0adba"
+      }
+    }
+  ]
+}

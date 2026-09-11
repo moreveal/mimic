@@ -1,0 +1,46 @@
+{
+  "historicalRevision": "3faacc6",
+  "historicalBinarySHA256": "a80e2f47120b3b82c79c363f904707d5fe3df1146e4304cbee598eb63c86eedc",
+  "stderrSHA256": "cc3afb32a714033f8226a1e2a2a9f6099af2cab0af9a4f98995a4bb312bb7100",
+  "relinkedTextSHA256": "a36943141cfa80d45bda17dc9ce6c3b72a793ef05f7cc5ff664c650990206114",
+  "exceptionAddress": "0xf6fff0fd5",
+  "mapArgumentRdx": "0xf6fff0fce",
+  "effectiveAddress": "0xf6fff0fd5",
+  "instructionRVA": "0x11cb34",
+  "instructions": [
+    {
+      "rva": "0x11cb30",
+      "instruction": "sub rsp, 0x28"
+    },
+    {
+      "rva": "0x11cb34",
+      "instruction": "movzx eax, byte ptr [rdx + 7]"
+    },
+    {
+      "rva": "0x11cb38",
+      "instruction": "test al, al"
+    },
+    {
+      "rva": "0x11cb3a",
+      "instruction": "je 0x11cb47"
+    },
+    {
+      "rva": "0x11cb3c",
+      "instruction": "movzx eax, al"
+    },
+    {
+      "rva": "0x11cb3f",
+      "instruction": "shl eax, 3"
+    },
+    {
+      "rva": "0x11cb42",
+      "instruction": "add rsp, 0x28"
+    },
+    {
+      "rva": "0x11cb46",
+      "instruction": "ret "
+    }
+  ],
+  "newReproduction": false,
+  "rootCauseEstablished": false
+}

@@ -1,0 +1,88 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "unverified-reused-controlled",
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "fixtureOrigin": "http://127.0.0.1:21603",
+  "result": {
+    "result": {
+      "type": "object",
+      "value": {
+        "codes": {
+          "IndexSizeError": 1,
+          "DOMStringSizeError": 0,
+          "HierarchyRequestError": 3,
+          "WrongDocumentError": 4,
+          "InvalidCharacterError": 5,
+          "NoDataAllowedError": 0,
+          "NoModificationAllowedError": 7,
+          "NotFoundError": 8,
+          "NotSupportedError": 9,
+          "InUseAttributeError": 10,
+          "InvalidStateError": 11,
+          "SyntaxError": 12,
+          "InvalidModificationError": 13,
+          "NamespaceError": 14,
+          "InvalidAccessError": 15,
+          "ValidationError": 0,
+          "TypeMismatchError": 17,
+          "SecurityError": 18,
+          "NetworkError": 19,
+          "AbortError": 20,
+          "URLMismatchError": 21,
+          "QuotaExceededError": 22,
+          "TimeoutError": 23,
+          "InvalidNodeTypeError": 24,
+          "DataCloneError": 25,
+          "Other": 0,
+          "aborterror": 0,
+          "constructor": 0,
+          "toString": 0,
+          "__proto__": 0
+        },
+        "invalid": {
+          "exception": "TypeError"
+        },
+        "shadow": 8,
+        "private": 8,
+        "conversion": [
+          "message",
+          "name"
+        ],
+        "message": "m",
+        "own": [],
+        "messageAfterDelete": "m",
+        "symbolMessage": {
+          "exception": "TypeError"
+        },
+        "symbolName": {
+          "exception": "TypeError"
+        }
+      }
+    }
+  }
+}

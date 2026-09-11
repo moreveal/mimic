@@ -1,0 +1,676 @@
+{
+  "sha256": "8024774b575a79945448b13224f3ecef3b2c52822ff68aa5f443dbdee3088d6e",
+  "chrome": {
+    "AbortController": {
+      "source": "function AbortController() { [native code] }",
+      "methods": {
+        "get signal": "function get signal() { [native code] }",
+        "abort": "function abort() { [native code] }"
+      },
+      "statics": {}
+    },
+    "AbortSignal": {
+      "source": "function AbortSignal() { [native code] }",
+      "methods": {
+        "get aborted": "function get aborted() { [native code] }",
+        "get reason": "function get reason() { [native code] }",
+        "get onabort": "function get onabort() { [native code] }",
+        "set onabort": "function set onabort() { [native code] }",
+        "throwIfAborted": "function throwIfAborted() { [native code] }"
+      },
+      "statics": {
+        "abort": "function abort() { [native code] }",
+        "any": "function any() { [native code] }",
+        "timeout": "function timeout() { [native code] }"
+      }
+    },
+    "TextDecoder": {
+      "source": "function TextDecoder() { [native code] }",
+      "methods": {
+        "get encoding": "function get encoding() { [native code] }",
+        "get fatal": "function get fatal() { [native code] }",
+        "get ignoreBOM": "function get ignoreBOM() { [native code] }",
+        "decode": "function decode() { [native code] }"
+      },
+      "statics": {}
+    },
+    "TextEncoder": {
+      "source": "function TextEncoder() { [native code] }",
+      "methods": {
+        "get encoding": "function get encoding() { [native code] }",
+        "encode": "function encode() { [native code] }",
+        "encodeInto": "function encodeInto() { [native code] }"
+      },
+      "statics": {}
+    },
+    "Headers": {
+      "source": "function Headers() { [native code] }",
+      "methods": {
+        "append": "function append() { [native code] }",
+        "delete": "function delete() { [native code] }",
+        "get": "function get() { [native code] }",
+        "getSetCookie": "function getSetCookie() { [native code] }",
+        "has": "function has() { [native code] }",
+        "set": "function set() { [native code] }",
+        "entries": "function entries() { [native code] }",
+        "forEach": "function forEach() { [native code] }",
+        "keys": "function keys() { [native code] }",
+        "values": "function values() { [native code] }",
+        "Symbol(Symbol.iterator)": "function entries() { [native code] }"
+      },
+      "statics": {}
+    },
+    "Request": {
+      "source": "function Request() { [native code] }",
+      "methods": {
+        "get method": "function get method() { [native code] }",
+        "get url": "function get url() { [native code] }",
+        "get headers": "function get headers() { [native code] }",
+        "get destination": "function get destination() { [native code] }",
+        "get referrer": "function get referrer() { [native code] }",
+        "get referrerPolicy": "function get referrerPolicy() { [native code] }",
+        "get mode": "function get mode() { [native code] }",
+        "get credentials": "function get credentials() { [native code] }",
+        "get cache": "function get cache() { [native code] }",
+        "get redirect": "function get redirect() { [native code] }",
+        "get integrity": "function get integrity() { [native code] }",
+        "get keepalive": "function get keepalive() { [native code] }",
+        "get signal": "function get signal() { [native code] }",
+        "get duplex": "function get duplex() { [native code] }",
+        "get isHistoryNavigation": "function get isHistoryNavigation() { [native code] }",
+        "get bodyUsed": "function get bodyUsed() { [native code] }",
+        "arrayBuffer": "function arrayBuffer() { [native code] }",
+        "blob": "function blob() { [native code] }",
+        "clone": "function clone() { [native code] }",
+        "formData": "function formData() { [native code] }",
+        "json": "function json() { [native code] }",
+        "text": "function text() { [native code] }",
+        "get targetAddressSpace": "function get targetAddressSpace() { [native code] }",
+        "get isReloadNavigation": "function get isReloadNavigation() { [native code] }",
+        "get body": "function get body() { [native code] }",
+        "bytes": "function bytes() { [native code] }",
+        "textStream": "function textStream() { [native code] }"
+      },
+      "statics": {}
+    },
+    "Response": {
+      "source": "function Response() { [native code] }",
+      "methods": {
+        "get type": "function get type() { [native code] }",
+        "get url": "function get url() { [native code] }",
+        "get redirected": "function get redirected() { [native code] }",
+        "get status": "function get status() { [native code] }",
+        "get ok": "function get ok() { [native code] }",
+        "get statusText": "function get statusText() { [native code] }",
+        "get headers": "function get headers() { [native code] }",
+        "get body": "function get body() { [native code] }",
+        "get bodyUsed": "function get bodyUsed() { [native code] }",
+        "arrayBuffer": "function arrayBuffer() { [native code] }",
+        "blob": "function blob() { [native code] }",
+        "clone": "function clone() { [native code] }",
+        "formData": "function formData() { [native code] }",
+        "json": "function json() { [native code] }",
+        "text": "function text() { [native code] }",
+        "bytes": "function bytes() { [native code] }",
+        "textStream": "function textStream() { [native code] }"
+      },
+      "statics": {
+        "error": "function error() { [native code] }",
+        "json": "function json() { [native code] }",
+        "redirect": "function redirect() { [native code] }"
+      }
+    },
+    "ReadableStream": {
+      "source": "function ReadableStream() { [native code] }",
+      "methods": {
+        "get locked": "function get locked() { [native code] }",
+        "cancel": "function cancel() { [native code] }",
+        "getReader": "function getReader() { [native code] }",
+        "pipeThrough": "function pipeThrough() { [native code] }",
+        "pipeTo": "function pipeTo() { [native code] }",
+        "tee": "function tee() { [native code] }",
+        "values": "function values() { [native code] }",
+        "Symbol(Symbol.asyncIterator)": "function values() { [native code] }"
+      },
+      "statics": {}
+    },
+    "WritableStream": {
+      "source": "function WritableStream() { [native code] }",
+      "methods": {
+        "get locked": "function get locked() { [native code] }",
+        "abort": "function abort() { [native code] }",
+        "close": "function close() { [native code] }",
+        "getWriter": "function getWriter() { [native code] }"
+      },
+      "statics": {}
+    },
+    "TransformStream": {
+      "source": "function TransformStream() { [native code] }",
+      "methods": {
+        "get readable": "function get readable() { [native code] }",
+        "get writable": "function get writable() { [native code] }"
+      },
+      "statics": {}
+    },
+    "DOMStringList": {
+      "source": "function DOMStringList() { [native code] }",
+      "methods": {
+        "get length": "function get length() { [native code] }",
+        "contains": "function contains() { [native code] }",
+        "item": "function item() { [native code] }",
+        "Symbol(Symbol.iterator)": "function values() { [native code] }"
+      },
+      "statics": {}
+    },
+    "intrinsics": {
+      "arrayValues": "function values() { [native code] }",
+      "arrayIterator": "function values() { [native code] }",
+      "mapEntries": "function entries() { [native code] }"
+    },
+    "userSource": "function visibleUserFunction(){return 42}"
+  },
+  "mimic": {
+    "AbortController": {
+      "methods": {
+        "abort": "function abort() { [native code] }",
+        "get signal": "function get signal() { [native code] }"
+      },
+      "source": "function AbortController() { [native code] }",
+      "statics": {}
+    },
+    "AbortSignal": {
+      "methods": {
+        "get aborted": "function get aborted() { [native code] }",
+        "get onabort": "function get onabort() { [native code] }",
+        "get reason": "function get reason() { [native code] }",
+        "set onabort": "function set onabort() { [native code] }",
+        "throwIfAborted": "function throwIfAborted() { [native code] }"
+      },
+      "source": "function AbortSignal() { [native code] }",
+      "statics": {
+        "abort": "function abort() { [native code] }",
+        "any": "function any() { [native code] }",
+        "timeout": "function timeout() { [native code] }"
+      }
+    },
+    "DOMStringList": {
+      "methods": {
+        "Symbol(Symbol.iterator)": "function values() { [native code] }",
+        "contains": "function contains() { [native code] }",
+        "get length": "function get length() { [native code] }",
+        "item": "function item() { [native code] }"
+      },
+      "source": "function DOMStringList() { [native code] }",
+      "statics": {}
+    },
+    "Headers": {
+      "methods": {
+        "append": "function append() { [native code] }",
+        "delete": "function delete() { [native code] }",
+        "set": "function set() { [native code] }"
+      },
+      "source": "function Headers() { [native code] }",
+      "statics": {}
+    },
+    "ReadableStream": {
+      "methods": {
+        "Symbol(Symbol.asyncIterator)": "function values() { [native code] }",
+        "cancel": "function cancel() { [native code] }",
+        "get locked": "function get locked() { [native code] }",
+        "getReader": "function getReader() { [native code] }",
+        "pipeThrough": "function pipeThrough() { [native code] }",
+        "pipeTo": "function pipeTo() { [native code] }",
+        "tee": "function tee() { [native code] }",
+        "values": "function values() { [native code] }"
+      },
+      "source": "function ReadableStream() { [native code] }",
+      "statics": {
+        "from": "function from() { [native code] }"
+      }
+    },
+    "Request": {
+      "methods": {
+        "arrayBuffer": "function arrayBuffer() { [native code] }",
+        "blob": "function blob() { [native code] }",
+        "bytes": "function bytes() { [native code] }",
+        "clone": "function clone() { [native code] }",
+        "get body": "function get body() { [native code] }",
+        "get bodyUsed": "function get bodyUsed() { [native code] }",
+        "get cache": "function get cache() { [native code] }",
+        "get credentials": "function get credentials() { [native code] }",
+        "get destination": "function get destination() { [native code] }",
+        "get duplex": "function get duplex() { [native code] }",
+        "get headers": "function get headers() { [native code] }",
+        "get integrity": "function get integrity() { [native code] }",
+        "get keepalive": "function get keepalive() { [native code] }",
+        "get method": "function get method() { [native code] }",
+        "get mode": "function get mode() { [native code] }",
+        "get redirect": "function get redirect() { [native code] }",
+        "get referrer": "function get referrer() { [native code] }",
+        "get referrerPolicy": "function get referrerPolicy() { [native code] }",
+        "get signal": "function get signal() { [native code] }",
+        "get url": "function get url() { [native code] }",
+        "json": "function json() { [native code] }",
+        "text": "function text() { [native code] }"
+      },
+      "source": "function Request() { [native code] }",
+      "statics": {}
+    },
+    "Response": {
+      "methods": {
+        "arrayBuffer": "function arrayBuffer() { [native code] }",
+        "blob": "function blob() { [native code] }",
+        "bytes": "function bytes() { [native code] }",
+        "clone": "function clone() { [native code] }",
+        "get body": "function get body() { [native code] }",
+        "get bodyUsed": "function get bodyUsed() { [native code] }",
+        "get headers": "function get headers() { [native code] }",
+        "get ok": "function get ok() { [native code] }",
+        "get redirected": "function get redirected() { [native code] }",
+        "get status": "function get status() { [native code] }",
+        "get statusText": "function get statusText() { [native code] }",
+        "get type": "function get type() { [native code] }",
+        "get url": "function get url() { [native code] }",
+        "json": "function json() { [native code] }",
+        "text": "function text() { [native code] }"
+      },
+      "source": "function Response() { [native code] }",
+      "statics": {
+        "error": "function error() { [native code] }",
+        "json": "function json() { [native code] }",
+        "redirect": "function redirect() { [native code] }"
+      }
+    },
+    "TextDecoder": {
+      "methods": {
+        "decode": "function decode() { [native code] }",
+        "get encoding": "function get encoding() { [native code] }",
+        "get fatal": "function get fatal() { [native code] }",
+        "get ignoreBOM": "function get ignoreBOM() { [native code] }"
+      },
+      "source": "function TextDecoder() { [native code] }",
+      "statics": {}
+    },
+    "TextEncoder": {
+      "methods": {
+        "encode": "function encode() { [native code] }",
+        "encodeInto": "function encodeInto() { [native code] }",
+        "get encoding": "function get encoding() { [native code] }"
+      },
+      "source": "function TextEncoder() { [native code] }",
+      "statics": {}
+    },
+    "TransformStream": {
+      "methods": {
+        "get readable": "function get readable() { [native code] }",
+        "get writable": "function get writable() { [native code] }"
+      },
+      "source": "function TransformStream() { [native code] }",
+      "statics": {}
+    },
+    "WritableStream": {
+      "methods": {
+        "abort": "function abort() { [native code] }",
+        "close": "function close() { [native code] }",
+        "get locked": "function get locked() { [native code] }",
+        "getWriter": "function getWriter() { [native code] }"
+      },
+      "source": "function WritableStream() { [native code] }",
+      "statics": {}
+    },
+    "intrinsics": {
+      "arrayIterator": "function values() { [native code] }",
+      "arrayValues": "function values() { [native code] }",
+      "mapEntries": "function entries() { [native code] }"
+    },
+    "userSource": "function visibleUserFunction(){return 42}"
+  },
+  "control": {
+    "AbortController": {
+      "source": "function AbortController() { [native code] }",
+      "methods": {
+        "get signal": "function get signal() { [native code] }",
+        "abort": "function abort() { [native code] }"
+      },
+      "statics": {}
+    },
+    "AbortSignal": {
+      "source": "function AbortSignal() { [native code] }",
+      "methods": {
+        "get aborted": "function get aborted() { [native code] }",
+        "get reason": "function get reason() { [native code] }",
+        "get onabort": "function get onabort() { [native code] }",
+        "set onabort": "function set onabort() { [native code] }",
+        "throwIfAborted": "function throwIfAborted() { [native code] }"
+      },
+      "statics": {
+        "abort": "function abort() { [native code] }",
+        "any": "function any() { [native code] }",
+        "timeout": "function timeout() { [native code] }"
+      }
+    },
+    "TextDecoder": {
+      "source": "function TextDecoder() { [native code] }",
+      "methods": {
+        "get encoding": "function get encoding() { [native code] }",
+        "get fatal": "function get fatal() { [native code] }",
+        "get ignoreBOM": "function get ignoreBOM() { [native code] }",
+        "decode": "function decode() { [native code] }"
+      },
+      "statics": {}
+    },
+    "TextEncoder": {
+      "source": "function TextEncoder() { [native code] }",
+      "methods": {
+        "get encoding": "function get encoding() { [native code] }",
+        "encode": "function encode() { [native code] }",
+        "encodeInto": "function encodeInto() { [native code] }"
+      },
+      "statics": {}
+    },
+    "Headers": {
+      "source": "function Headers() { [native code] }",
+      "methods": {
+        "append": "function append() { [native code] }",
+        "delete": "function delete() { [native code] }",
+        "get": "function get() { [native code] }",
+        "getSetCookie": "function getSetCookie() { [native code] }",
+        "has": "function has() { [native code] }",
+        "set": "function set() { [native code] }",
+        "entries": "function entries() { [native code] }",
+        "forEach": "function forEach() { [native code] }",
+        "keys": "function keys() { [native code] }",
+        "values": "function values() { [native code] }",
+        "Symbol(Symbol.iterator)": "function entries() { [native code] }"
+      },
+      "statics": {}
+    },
+    "Request": {
+      "source": "function Request() { [native code] }",
+      "methods": {
+        "get method": "function get method() { [native code] }",
+        "get url": "function get url() { [native code] }",
+        "get headers": "function get headers() { [native code] }",
+        "get destination": "function get destination() { [native code] }",
+        "get referrer": "function get referrer() { [native code] }",
+        "get referrerPolicy": "function get referrerPolicy() { [native code] }",
+        "get mode": "function get mode() { [native code] }",
+        "get credentials": "function get credentials() { [native code] }",
+        "get cache": "function get cache() { [native code] }",
+        "get redirect": "function get redirect() { [native code] }",
+        "get integrity": "function get integrity() { [native code] }",
+        "get keepalive": "function get keepalive() { [native code] }",
+        "get signal": "function get signal() { [native code] }",
+        "get duplex": "function get duplex() { [native code] }",
+        "get isHistoryNavigation": "function get isHistoryNavigation() { [native code] }",
+        "get bodyUsed": "function get bodyUsed() { [native code] }",
+        "arrayBuffer": "function arrayBuffer() { [native code] }",
+        "blob": "function blob() { [native code] }",
+        "clone": "function clone() { [native code] }",
+        "formData": "function formData() { [native code] }",
+        "json": "function json() { [native code] }",
+        "text": "function text() { [native code] }",
+        "get targetAddressSpace": "function get targetAddressSpace() { [native code] }",
+        "get isReloadNavigation": "function get isReloadNavigation() { [native code] }",
+        "get body": "function get body() { [native code] }",
+        "bytes": "function bytes() { [native code] }",
+        "textStream": "function textStream() { [native code] }"
+      },
+      "statics": {}
+    },
+    "Response": {
+      "source": "function Response() { [native code] }",
+      "methods": {
+        "get type": "function get type() { [native code] }",
+        "get url": "function get url() { [native code] }",
+        "get redirected": "function get redirected() { [native code] }",
+        "get status": "function get status() { [native code] }",
+        "get ok": "function get ok() { [native code] }",
+        "get statusText": "function get statusText() { [native code] }",
+        "get headers": "function get headers() { [native code] }",
+        "get body": "function get body() { [native code] }",
+        "get bodyUsed": "function get bodyUsed() { [native code] }",
+        "arrayBuffer": "function arrayBuffer() { [native code] }",
+        "blob": "function blob() { [native code] }",
+        "clone": "function clone() { [native code] }",
+        "formData": "function formData() { [native code] }",
+        "json": "function json() { [native code] }",
+        "text": "function text() { [native code] }",
+        "bytes": "function bytes() { [native code] }",
+        "textStream": "function textStream() { [native code] }"
+      },
+      "statics": {
+        "error": "function error() { [native code] }",
+        "json": "function json() { [native code] }",
+        "redirect": "function redirect() { [native code] }"
+      }
+    },
+    "ReadableStream": {
+      "source": "function ReadableStream() { [native code] }",
+      "methods": {
+        "get locked": "function get locked() { [native code] }",
+        "cancel": "function cancel() { [native code] }",
+        "getReader": "function getReader() { [native code] }",
+        "pipeThrough": "function pipeThrough() { [native code] }",
+        "pipeTo": "function pipeTo() { [native code] }",
+        "tee": "function tee() { [native code] }",
+        "values": "function values() { [native code] }",
+        "Symbol(Symbol.asyncIterator)": "function values() { [native code] }"
+      },
+      "statics": {}
+    },
+    "WritableStream": {
+      "source": "function WritableStream() { [native code] }",
+      "methods": {
+        "get locked": "function get locked() { [native code] }",
+        "abort": "function abort() { [native code] }",
+        "close": "function close() { [native code] }",
+        "getWriter": "function getWriter() { [native code] }"
+      },
+      "statics": {}
+    },
+    "TransformStream": {
+      "source": "function TransformStream() { [native code] }",
+      "methods": {
+        "get readable": "function get readable() { [native code] }",
+        "get writable": "function get writable() { [native code] }"
+      },
+      "statics": {}
+    },
+    "DOMStringList": {
+      "source": "function DOMStringList() { [native code] }",
+      "methods": {
+        "get length": "function get length() { [native code] }",
+        "contains": "function contains() { [native code] }",
+        "item": "function item() { [native code] }",
+        "Symbol(Symbol.iterator)": "function values() { [native code] }"
+      },
+      "statics": {}
+    },
+    "intrinsics": {
+      "arrayValues": "function values() { [native code] }",
+      "arrayIterator": "function values() { [native code] }",
+      "mapEntries": "function entries() { [native code] }"
+    },
+    "userSource": "function visibleUserFunction(){return 42}"
+  },
+  "differences": [
+    [
+      [
+        "Headers",
+        "methods",
+        "Symbol(Symbol.iterator)"
+      ],
+      "function entries() { [native code] }",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Headers",
+        "methods",
+        "entries"
+      ],
+      "function entries() { [native code] }",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Headers",
+        "methods",
+        "forEach"
+      ],
+      "function forEach() { [native code] }",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Headers",
+        "methods",
+        "get"
+      ],
+      "function get() { [native code] }",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Headers",
+        "methods",
+        "getSetCookie"
+      ],
+      "function getSetCookie() { [native code] }",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Headers",
+        "methods",
+        "has"
+      ],
+      "function has() { [native code] }",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Headers",
+        "methods",
+        "keys"
+      ],
+      "function keys() { [native code] }",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Headers",
+        "methods",
+        "values"
+      ],
+      "function values() { [native code] }",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "ReadableStream",
+        "statics",
+        "from"
+      ],
+      {
+        "$missing": true
+      },
+      "function from() { [native code] }"
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "formData"
+      ],
+      "function formData() { [native code] }",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "get isHistoryNavigation"
+      ],
+      "function get isHistoryNavigation() { [native code] }",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "get isReloadNavigation"
+      ],
+      "function get isReloadNavigation() { [native code] }",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "get targetAddressSpace"
+      ],
+      "function get targetAddressSpace() { [native code] }",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Request",
+        "methods",
+        "textStream"
+      ],
+      "function textStream() { [native code] }",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Response",
+        "methods",
+        "formData"
+      ],
+      "function formData() { [native code] }",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "Response",
+        "methods",
+        "textStream"
+      ],
+      "function textStream() { [native code] }",
+      {
+        "$missing": true
+      }
+    ]
+  ],
+  "controlDifferences": []
+}

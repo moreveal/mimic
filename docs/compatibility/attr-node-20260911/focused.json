@@ -1,0 +1,443 @@
+{
+  "sha256": "fbb73e341c97c2491f827a62d2e94f536345355ba087c686d029479dc4b52ade",
+  "chrome": {
+    "placement": {
+      "nodeName": false,
+      "nodeType": false,
+      "nodeValue": false,
+      "ownerDocument": false,
+      "parentNode": false,
+      "parentElement": false,
+      "textContent": false
+    },
+    "borrowed": {
+      "nodeName": "data-test",
+      "nodeType": 2,
+      "nodeValue": "initial",
+      "ownerDocument": "document",
+      "parentNode": null,
+      "parentElement": null,
+      "textContent": "initial"
+    },
+    "invalid": {
+      "nodeName": {
+        "exception": "TypeError"
+      },
+      "nodeType": {
+        "exception": "TypeError"
+      },
+      "nodeValue": {
+        "exception": "TypeError"
+      },
+      "ownerDocument": {
+        "exception": "TypeError"
+      },
+      "parentNode": {
+        "exception": "TypeError"
+      },
+      "parentElement": {
+        "exception": "TypeError"
+      },
+      "textContent": {
+        "exception": "TypeError"
+      }
+    },
+    "clonePlacement": false,
+    "clone": "data-test:initial:true",
+    "writes": {
+      "nodeValue": "changed",
+      "nodeValueSymbol": {
+        "exception": "TypeError"
+      },
+      "textContent": "changed",
+      "textContentSymbol": {
+        "exception": "TypeError"
+      }
+    },
+    "attached": "initial",
+    "privateBrand": "data-test"
+  },
+  "mimic": {
+    "attached": {
+      "exception": "TypeError"
+    },
+    "borrowed": {
+      "nodeType": 0,
+      "nodeValue": null,
+      "ownerDocument": "document",
+      "parentElement": null,
+      "parentNode": null,
+      "textContent": {
+        "exception": "TypeError"
+      }
+    },
+    "clone": {
+      "exception": "NotSupportedError"
+    },
+    "clonePlacement": true,
+    "invalid": {
+      "nodeType": 0,
+      "nodeValue": null,
+      "ownerDocument": "document",
+      "parentElement": null,
+      "parentNode": null,
+      "textContent": {
+        "exception": "TypeError"
+      }
+    },
+    "placement": {
+      "nodeName": true,
+      "nodeType": true,
+      "nodeValue": true,
+      "ownerDocument": true,
+      "parentElement": true,
+      "parentNode": true,
+      "textContent": true
+    },
+    "writes": {
+      "nodeValue": "",
+      "textContent": {
+        "exception": "TypeError"
+      },
+      "textContentSymbol": {
+        "exception": "TypeError"
+      }
+    }
+  },
+  "after": {
+    "attached": "initial",
+    "borrowed": {
+      "nodeName": "data-test",
+      "nodeType": 2,
+      "nodeValue": "initial",
+      "ownerDocument": "document",
+      "parentElement": null,
+      "parentNode": null,
+      "textContent": "initial"
+    },
+    "clone": "data-test:initial:true",
+    "clonePlacement": false,
+    "invalid": {
+      "nodeName": {
+        "exception": "TypeError"
+      },
+      "nodeType": {
+        "exception": "TypeError"
+      },
+      "nodeValue": {
+        "exception": "TypeError"
+      },
+      "ownerDocument": {
+        "exception": "TypeError"
+      },
+      "parentElement": {
+        "exception": "TypeError"
+      },
+      "parentNode": {
+        "exception": "TypeError"
+      },
+      "textContent": {
+        "exception": "TypeError"
+      }
+    },
+    "placement": {
+      "nodeName": false,
+      "nodeType": false,
+      "nodeValue": false,
+      "ownerDocument": false,
+      "parentElement": false,
+      "parentNode": false,
+      "textContent": false
+    },
+    "privateBrand": "data-test",
+    "writes": {
+      "nodeValue": "changed",
+      "nodeValueSymbol": {
+        "exception": "TypeError"
+      },
+      "textContent": "changed",
+      "textContentSymbol": {
+        "exception": "TypeError"
+      }
+    }
+  },
+  "control": {
+    "placement": {
+      "nodeName": false,
+      "nodeType": false,
+      "nodeValue": false,
+      "ownerDocument": false,
+      "parentNode": false,
+      "parentElement": false,
+      "textContent": false
+    },
+    "borrowed": {
+      "nodeName": "data-test",
+      "nodeType": 2,
+      "nodeValue": "initial",
+      "ownerDocument": "document",
+      "parentNode": null,
+      "parentElement": null,
+      "textContent": "initial"
+    },
+    "invalid": {
+      "nodeName": {
+        "exception": "TypeError"
+      },
+      "nodeType": {
+        "exception": "TypeError"
+      },
+      "nodeValue": {
+        "exception": "TypeError"
+      },
+      "ownerDocument": {
+        "exception": "TypeError"
+      },
+      "parentNode": {
+        "exception": "TypeError"
+      },
+      "parentElement": {
+        "exception": "TypeError"
+      },
+      "textContent": {
+        "exception": "TypeError"
+      }
+    },
+    "clonePlacement": false,
+    "clone": "data-test:initial:true",
+    "writes": {
+      "nodeValue": "changed",
+      "nodeValueSymbol": {
+        "exception": "TypeError"
+      },
+      "textContent": "changed",
+      "textContentSymbol": {
+        "exception": "TypeError"
+      }
+    },
+    "attached": "initial",
+    "privateBrand": "data-test"
+  },
+  "differences": [
+    [
+      [
+        "attached"
+      ],
+      "initial",
+      {
+        "exception": "TypeError"
+      }
+    ],
+    [
+      [
+        "borrowed",
+        "nodeName"
+      ],
+      "data-test",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "borrowed",
+        "nodeType"
+      ],
+      2,
+      0
+    ],
+    [
+      [
+        "borrowed",
+        "nodeValue"
+      ],
+      "initial",
+      null
+    ],
+    [
+      [
+        "borrowed",
+        "textContent"
+      ],
+      "initial",
+      {
+        "exception": "TypeError"
+      }
+    ],
+    [
+      [
+        "clone"
+      ],
+      "data-test:initial:true",
+      {
+        "exception": "NotSupportedError"
+      }
+    ],
+    [
+      [
+        "clonePlacement"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "invalid",
+        "nodeName"
+      ],
+      {
+        "exception": "TypeError"
+      },
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "invalid",
+        "nodeType"
+      ],
+      {
+        "exception": "TypeError"
+      },
+      0
+    ],
+    [
+      [
+        "invalid",
+        "nodeValue"
+      ],
+      {
+        "exception": "TypeError"
+      },
+      null
+    ],
+    [
+      [
+        "invalid",
+        "ownerDocument"
+      ],
+      {
+        "exception": "TypeError"
+      },
+      "document"
+    ],
+    [
+      [
+        "invalid",
+        "parentElement"
+      ],
+      {
+        "exception": "TypeError"
+      },
+      null
+    ],
+    [
+      [
+        "invalid",
+        "parentNode"
+      ],
+      {
+        "exception": "TypeError"
+      },
+      null
+    ],
+    [
+      [
+        "placement",
+        "nodeName"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "placement",
+        "nodeType"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "placement",
+        "nodeValue"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "placement",
+        "ownerDocument"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "placement",
+        "parentElement"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "placement",
+        "parentNode"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "placement",
+        "textContent"
+      ],
+      false,
+      true
+    ],
+    [
+      [
+        "privateBrand"
+      ],
+      "data-test",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "writes",
+        "nodeValue"
+      ],
+      "changed",
+      ""
+    ],
+    [
+      [
+        "writes",
+        "nodeValueSymbol"
+      ],
+      {
+        "exception": "TypeError"
+      },
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "writes",
+        "textContent"
+      ],
+      "changed",
+      {
+        "exception": "TypeError"
+      }
+    ]
+  ],
+  "afterDifferences": [],
+  "controlDifferences": []
+}

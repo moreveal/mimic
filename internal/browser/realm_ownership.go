@@ -162,13 +162,18 @@ func (p *Page) collectRealmOwners() {
 		for _, f := range r.childFrames {
 			visit(f.Realm)
 		}
-		// Detached browsing contexts are reachable through their owner's DOM/cache.
-		for _, f := range r.retainedFrames {
-			visit(f.Realm)
-		}
 	}
 	for _, f := range p.frames {
 		visit(f.Realm)
+	}
+	// The detached-frame lookup is an index, not a reference from JavaScript.
+	// Actual exported Window/object references above determine reachability.
+	for _, r := range p.realmOwners {
+		for id, frame := range r.retainedFrames {
+			if frame.Realm == nil || !seen[frame.Realm.ID] {
+				delete(r.retainedFrames, id)
+			}
+		}
 	}
 	var dispose []*Realm
 	for id, r := range p.realmOwners {

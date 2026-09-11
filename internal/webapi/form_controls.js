@@ -61,7 +61,14 @@
     return {list,selected};
   }
   function assignSelection(select,chosen){const {list}=selection(select);for(const option of list){const s=optionState(option);s.dirty=true;s.selected=chosen.includes(option)}selectState(select).noSelection=chosen.length===0}
-  const collection=(get,prototype)=>new Proxy(Object.create(prototype),{get(target,key,receiver){const values=get();if(key==='length')return values.length;if(key==='item')return index=>values[Number(index)]??null;if(key==='namedItem')return name=>values.find(e=>e.id===String(name)||e.getAttribute('name')===String(name))??null;if(key===Symbol.iterator)return values[Symbol.iterator].bind(values);if(typeof key==='string'&&/^\d+$/.test(key))return values[Number(key)];return Reflect.get(target,key,receiver)}});
+  const collection=(get,prototype)=>{
+    const namedItem=name=>get().find(e=>name!==''&&(e.id===name||e.getAttribute('name')===name))??null;
+    const proxy=new Proxy(Object.create(prototype),{get(target,key,receiver){if(key==='length')return get().length;if(key==='item')return HTMLCollection.prototype.item;if(key==='namedItem')return name=>namedItem(bindingString(name));if(collectionIndex(key))return get()[Number(key)];return Reflect.get(target,key,receiver)}});
+    // Derived form collections also implement the HTMLCollection interface.
+    // Register their private live source for borrowed base-interface methods.
+    registerRealmBinding(proxy,'HTMLCollection',{length:()=>get().length,item:index=>get()[index]??null,namedItem});
+    return proxy;
+  };
   define('HTMLOptionElement','text',{get(){return this.textContent.replace(/[\t\n\f\r ]+/g,' ').trim()},set(value){this.textContent=String(value)}});
   define('HTMLOptionElement','value',{get(){return this.getAttribute('value')??this.text},set(value){this.setAttribute('value',String(value))}});
   define('HTMLOptionElement','label',{get(){return this.getAttribute('label')??this.text},set(value){this.setAttribute('label',String(value))}});
@@ -70,7 +77,7 @@
   define('HTMLOptionElement','index',{get(){const owner=selectOwner(this);return owner?optionList(owner).indexOf(this):0}});
   define('HTMLSelectElement','type',{get(){return this.multiple?'select-multiple':'select-one'}});
   define('HTMLSelectElement','size',{get(){const value=Number(this.getAttribute('size'));return Number.isInteger(value)&&value>=0?value:0},set(value){this.setAttribute('size',String(Number(value)>>>0))}});
-  define('HTMLSelectElement','options',{get(){const owner=this,base=collection(()=>optionList(owner),globalThis.HTMLOptionsCollection?.prototype||globalThis.HTMLCollection.prototype);return new Proxy(base,{get(target,key,receiver){if(key==='selectedIndex')return owner.selectedIndex;if(key==='add')return (...args)=>owner.add(...args);if(key==='remove')return index=>owner.remove(index);return Reflect.get(target,key,receiver)},set(target,key,value){if(key==='selectedIndex'){owner.selectedIndex=value;return true}if(key==='length'){owner.length=value;return true}return Reflect.set(target,key,value)}})}});
+  define('HTMLSelectElement','options',{get(){const owner=this,base=collection(()=>optionList(owner),globalThis.HTMLOptionsCollection?.prototype||globalThis.HTMLCollection.prototype),proxy=new Proxy(base,{get(target,key,receiver){if(key==='selectedIndex')return owner.selectedIndex;if(key==='add')return (...args)=>owner.add(...args);if(key==='remove')return index=>owner.remove(index);return Reflect.get(target,key,receiver)},set(target,key,value){if(key==='selectedIndex'){owner.selectedIndex=value;return true}if(key==='length'){owner.length=value;return true}return Reflect.set(target,key,value)}});bindingSet(proxy,bindingGet(base));return proxy}});
   define('HTMLSelectElement','selectedOptions',{get(){return collection(()=>selection(this).selected,globalThis.HTMLCollection.prototype)}});
   define('HTMLSelectElement','length',{get(){return optionList(this).length},set(value){value=Number(value)>>>0;if(value>100000)throw new DOMException('Too many options','IndexSizeError');const list=optionList(this);while(list.length>value)list.pop().remove();while(list.length<value){const option=document.createElement('option');this.appendChild(option);list.push(option)}}});
   define('HTMLSelectElement','selectedIndex',{get(){const s=selection(this);return s.selected.length?s.list.indexOf(s.selected[0]):-1},set(value){const list=optionList(this),index=Number(value)|0;assignSelection(this,index>=0&&index<list.length?[list[index]]:[])}});
@@ -93,7 +100,7 @@
   formEnum('enctype',['application/x-www-form-urlencoded','multipart/form-data','text/plain'],'application/x-www-form-urlencoded');
   define('HTMLFormElement','encoding',{get(){return this.enctype},set(value){this.enctype=value}});
   define('HTMLFormElement','action',{get(){formCheck(this);const raw=this.getAttribute('action');if(!raw)return document.URL;try{return new URL(raw,document.baseURI).href}catch{return raw}},set(value){formCheck(this);this.setAttribute('action',String(value))}});
-  string('HTMLFormElement','target');string('HTMLFormElement','acceptCharset','accept-charset');
+  string('HTMLFormElement','name');string('HTMLFormElement','target');string('HTMLFormElement','acceptCharset','accept-charset');
   define('HTMLFormElement','submit',{value:function submit(){
     formCheck(this);if(!this.isConnected)return;
     const missing=reason=>{host.semanticMissingAt('form_controls.js:submit','HTMLFormElement.submit',reason);throw new DOMException(reason,'NotSupportedError')};

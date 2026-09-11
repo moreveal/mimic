@@ -5,6 +5,30 @@
   const bootstrapRestoreHooks=[];
   const bootstrapCallbacks=[];
   const registerBootstrapCallback=(name,...callbacks)=>{bootstrapCallbacks.push([name,callbacks]);host[name](...callbacks)};
+  // Private brands and captured operations travel with owner references. Public
+  // methods/prototypes are mutable and cannot validate or dispatch a borrowed
+  // WebIDL operation. Conversion still runs in the calling method's realm.
+  const realmBindings=new WeakMap();
+  const bindingGet=Function.prototype.call.bind(WeakMap.prototype.get,realmBindings);
+  const bindingSet=Function.prototype.call.bind(WeakMap.prototype.set,realmBindings);
+  const registerRealmBinding=(value,kind,operations,unpreventable=false)=>{
+    const invoke=(receiver,operation,args)=>{
+      const binding=bindingGet(receiver);
+      if(!binding||binding.kind!==kind)throw new TypeError('Illegal invocation');
+      return binding.operations[operation](...args);
+    };
+    bindingSet(value,{kind,operations,invoke,unpreventable});
+  };
+  const requireRealmBinding=(value,kind)=>{
+    const local=bindingGet(value);
+    if(local?.kind===kind)return local;
+    const reference=referenceGet(value);
+    if(reference?.binding?.kind===kind)return reference;
+    throw new TypeError('Illegal invocation');
+  };
+  const callRealmBinding=(receiver,binding,operation,args)=>bindingGet(receiver)===binding?
+    binding.operations[operation](...args):unwrapCrossRealm(binding.frame,binding.binding.invoke)(receiver,operation,args);
+  const bindingString=value=>{if(typeof value==='symbol')throw new TypeError('Cannot convert a Symbol value to a string');return String(value)};
   // Match the realm trace's once-per-(name,supported) contract before FFI.
   const tracedAccesses=new Map();
   const recordAPIAccess=(name,supported)=>{const bit=supported?1:2,seen=tracedAccesses.get(name)||0;if(seen&bit)return;tracedAccesses.set(name,seen|bit);host.apiAccess(name,supported)};
@@ -27,8 +51,8 @@
     const intlLanguageBases=new Set('af am ar as az be bg bn bo br bs ca cs cy da de dsb el en es et eu fa fi fil fo fr ga gd gl gu ha haw he hi hr hsb hu hy id ig is it ja ka kk km kn ko ky lb lo lt lv mk ml mn mr ms mt my nb ne nl nn no or pa pl ps pt ro ru si sk sl sq sr sv sw ta te th tk tr uk ur uz vi wo xh yo zh zu'.split(' '));
     const supportedLocales=locales=>Intl.getCanonicalLocales(locales).filter(locale=>intlLanguageBases.has(locale.split('-')[0].toLowerCase()));
     class Collator { constructor(locales,options={}){this.__locale=canonicalLocale(Array.isArray(locales)?locales[0]:locales);this.__options=options} compare(a,b){return String(a).localeCompare(String(b))} resolvedOptions(){return{locale:this.__locale,usage:'sort',sensitivity:this.__options.sensitivity||'variant',ignorePunctuation:false,collation:'default',numeric:!!this.__options.numeric,caseFirst:'false'}} static supportedLocalesOf(locales){return supportedLocales(locales)} }
-    class NumberFormat { constructor(locales,options={}){this.__locale=canonicalLocale(Array.isArray(locales)?locales[0]:locales);this.__options=options} format(value){const n=Number(value);return Number.isFinite(n)?String(n):String(n)} formatToParts(value){return[{type:'integer',value:this.format(value)}]} formatRange(a,b){return this.format(a)+'–'+this.format(b)} formatRangeToParts(a,b){return[{type:'shared',source:'startRange',value:this.format(a)},{type:'literal',source:'shared',value:'–'},{type:'shared',source:'endRange',value:this.format(b)}]} resolvedOptions(){return{locale:this.__locale,numberingSystem:'latn',style:this.__options.style||'decimal',minimumIntegerDigits:1,minimumFractionDigits:0,maximumFractionDigits:3,useGrouping:'auto',notation:'standard',signDisplay:'auto',roundingIncrement:1,roundingMode:'halfExpand',roundingPriority:'auto',trailingZeroDisplay:'auto'}} static supportedLocalesOf(locales){return supportedLocales(locales)} }
-    class DateTimeFormat { constructor(locales,options={}){this.__locale=canonicalLocale(Array.isArray(locales)?locales[0]:locales);this.__options=options} format(value=Date.now()){const d=new Date(value);return d.toLocaleString?d.toLocaleString():d.toString()} formatToParts(value=Date.now()){return[{type:'literal',value:this.format(value)}]} formatRange(a,b){return this.format(a)+' – '+this.format(b)} formatRangeToParts(a,b){return[{type:'shared',source:'startRange',value:this.format(a)},{type:'literal',source:'shared',value:' – '},{type:'shared',source:'endRange',value:this.format(b)}]} resolvedOptions(){const dateFields=this.__options.dateStyle||this.__options.timeStyle||['weekday','era','year','month','day','dayPeriod','hour','minute','second','fractionalSecondDigits','timeZoneName'].some(key=>this.__options[key]!==undefined)?{}:{year:'numeric',month:'2-digit',day:'2-digit'};return{locale:this.__locale,calendar:'gregory',numberingSystem:'latn',timeZone:this.__options.timeZone||intlEnvironment.timeZone,...dateFields,...(this.__options.hour12===undefined?{}:{hourCycle:this.__options.hour12?'h12':'h23',hour12:!!this.__options.hour12})}} static supportedLocalesOf(locales){return supportedLocales(locales)} }
+    class NumberFormat { constructor(locales,options={}){this.__locale=canonicalLocale(Array.isArray(locales)?locales[0]:locales);this.__options=options} format(value){const n=Number(value);return Number.isFinite(n)?String(n):String(n)} formatToParts(value){return[{type:'integer',value:this.format(value)}]} formatRange(a,b){return this.format(a)+'вЂ“'+this.format(b)} formatRangeToParts(a,b){return[{type:'shared',source:'startRange',value:this.format(a)},{type:'literal',source:'shared',value:'вЂ“'},{type:'shared',source:'endRange',value:this.format(b)}]} resolvedOptions(){return{locale:this.__locale,numberingSystem:'latn',style:this.__options.style||'decimal',minimumIntegerDigits:1,minimumFractionDigits:0,maximumFractionDigits:3,useGrouping:'auto',notation:'standard',signDisplay:'auto',roundingIncrement:1,roundingMode:'halfExpand',roundingPriority:'auto',trailingZeroDisplay:'auto'}} static supportedLocalesOf(locales){return supportedLocales(locales)} }
+    class DateTimeFormat { constructor(locales,options={}){this.__locale=canonicalLocale(Array.isArray(locales)?locales[0]:locales);this.__options=options} format(value=Date.now()){const d=new Date(value);return d.toLocaleString?d.toLocaleString():d.toString()} formatToParts(value=Date.now()){return[{type:'literal',value:this.format(value)}]} formatRange(a,b){return this.format(a)+' вЂ“ '+this.format(b)} formatRangeToParts(a,b){return[{type:'shared',source:'startRange',value:this.format(a)},{type:'literal',source:'shared',value:' вЂ“ '},{type:'shared',source:'endRange',value:this.format(b)}]} resolvedOptions(){const dateFields=this.__options.dateStyle||this.__options.timeStyle||['weekday','era','year','month','day','dayPeriod','hour','minute','second','fractionalSecondDigits','timeZoneName'].some(key=>this.__options[key]!==undefined)?{}:{year:'numeric',month:'2-digit',day:'2-digit'};return{locale:this.__locale,calendar:'gregory',numberingSystem:'latn',timeZone:this.__options.timeZone||intlEnvironment.timeZone,...dateFields,...(this.__options.hour12===undefined?{}:{hourCycle:this.__options.hour12?'h12':'h23',hour12:!!this.__options.hour12})}} static supportedLocalesOf(locales){return supportedLocales(locales)} }
     class PluralRules { constructor(locales,options={}){this.__locale=canonicalLocale(Array.isArray(locales)?locales[0]:locales);this.__options=options} select(value){return Number(value)===1?'one':'other'} selectRange(){return'other'} resolvedOptions(){return{locale:this.__locale,type:this.__options.type||'cardinal',minimumIntegerDigits:1,minimumFractionDigits:0,maximumFractionDigits:3,pluralCategories:['one','other']}} static supportedLocalesOf(locales){return Intl.getCanonicalLocales(locales)} }
     class RelativeTimeFormat { constructor(locales,options={}){this.__locale=canonicalLocale(Array.isArray(locales)?locales[0]:locales);this.__options=options} format(value,unit){return String(value)+' '+String(unit)} formatToParts(value,unit){return[{type:'integer',value:String(value),unit:String(unit)}]} resolvedOptions(){return{locale:this.__locale,style:this.__options.style||'long',numeric:this.__options.numeric||'always',numberingSystem:'latn'}} static supportedLocalesOf(locales){return Intl.getCanonicalLocales(locales)} }
     class ListFormat { constructor(locales,options={}){this.__locale=canonicalLocale(Array.isArray(locales)?locales[0]:locales);this.__options=options} format(values){return Array.from(values,String).join(', ')} formatToParts(values){return Array.from(values,String).map((value,index)=>({type:index?'literal':'element',value}))} resolvedOptions(){return{locale:this.__locale,type:this.__options.type||'conjunction',style:this.__options.style||'long'}} static supportedLocalesOf(locales){return Intl.getCanonicalLocales(locales)} }
@@ -131,7 +155,7 @@
     prepend(...nodes){for(let i=nodes.length-1;i>=0;i--){const node=isDOMNode(nodes[i])?nodes[i]:document.createElement('span');fragmentState(this).children.unshift(node);syntheticParents.set(node,this)}}
     replaceChildren(...nodes){const state=fragmentState(this);for(const child of state.children)syntheticParents.delete(child);state.children=[];state.html='';this.append(...nodes)}
     querySelector(selector){return this.querySelectorAll(selector)[0]||null}
-    querySelectorAll(selector){const query=String(selector).trim(),result=[];const matches=node=>node instanceof Element&&(query.startsWith('#')?node.id===query.slice(1):query.startsWith('.')?node.classList.contains(query.slice(1)):node.localName===query.toLowerCase());const visit=node=>{if(matches(node))result.push(node);if(node instanceof Element)for(const child of Array.from(node.children))visit(child)};for(const child of fragmentState(this).children)visit(child);return new Proxy(Object.create(NodeList.prototype),{get(target,key){if(key==='length')return result.length;if(key==='item')return index=>result[Number(index)]||null;if(key===Symbol.iterator)return result[Symbol.iterator].bind(result);if(typeof key==='string'&&/^\d+$/.test(key))return result[Number(key)];return Reflect.get(target,key)}})}
+    querySelectorAll(selector){const query=String(selector).trim(),result=[];const matches=node=>node instanceof Element&&(query.startsWith('#')?node.id===query.slice(1):query.startsWith('.')?node.classList.contains(query.slice(1)):node.localName===query.toLowerCase());const visit=node=>{if(matches(node))result.push(node);if(node instanceof Element)for(const child of Array.from(node.children))visit(child)};for(const child of fragmentState(this).children)visit(child);return nodeListView(()=>result.length,index=>result[index])}
     getElementById(id){return this.querySelector('#'+String(id))}
   }
   class ShadowRoot extends DocumentFragment {
@@ -237,7 +261,7 @@
   const htmlCollection=get=>{
     const indexed=key=>typeof key==='string'&&/^(0|[1-9]\d*)$/.test(key)&&Number(key)<4294967295;
     const named=(values,name)=>{name=String(name);if(!name)return null;for(const value of values){const node=wrap(value);if(node&&(node.getAttribute('id')===name||node.namespaceURI==='http://www.w3.org/1999/xhtml'&&node.getAttribute('name')===name))return node}return null};
-    return new Proxy(Object.create(HTMLCollection.prototype),{
+    const proxy=new Proxy(Object.create(HTMLCollection.prototype),{
       ownKeys(o){
         const values=get(),keys=values.map((_,index)=>String(index));
         for(const value of values){const node=wrap(value);for(const name of [node.getAttribute('id'),node.namespaceURI==='http://www.w3.org/1999/xhtml'?node.getAttribute('name'):null])if(name&&!keys.includes(name))keys.push(name)}
@@ -252,16 +276,40 @@
         if(typeof key==='string'&&!Reflect.has(o,key)){const value=named(get(),key);if(value!==null)return {value,writable:false,enumerable:false,configurable:true}}
       },
       has(o,key){if(indexed(key))return Number(key)<get().length;return Reflect.has(o,key)||typeof key==='string'&&named(get(),key)!==null},
-      get(o,key){const values=get();if(key==='length')return values.length;if(key==='item')return index=>wrap(get()[Number(index)>>>0]);if(key==='namedItem')return name=>named(get(),name);
-        if(key===Symbol.iterator)return function*(){for(let i=0;i<get().length;i++)yield wrap(get()[i])};
-        if(indexed(key))return Number(key)<values.length?wrap(values[Number(key)]):undefined;
-        if(Reflect.has(o,key))return Reflect.get(o,key);return typeof key==='string'?named(values,key)||undefined:undefined;
+      get(o,key,receiver){
+        if(indexed(key)){const values=get();return Number(key)<values.length?wrap(values[Number(key)]):undefined}
+        if(Reflect.has(o,key))return Reflect.get(o,key,receiver);return typeof key==='string'?named(get(),key)||undefined:undefined;
       }
     });
+    registerRealmBinding(proxy,'HTMLCollection',{length:()=>get().length,item:index=>{const values=get();return index<values.length?wrap(values[index]):null},namedItem:name=>named(get(),name)});
+    return proxy;
   };
-  class HTMLCollection { constructor(){illegal('HTMLCollection')} item(){} namedItem(){} }
-  const nodeList=data=>{const read=()=>typeof data==='function'?data():data;let proxy;proxy=new Proxy(Object.create(NodeList.prototype),{get(o,p){if(p==='length')return read().length;if(p==='item')return i=>wrap(read()[Number(i)>>>0]);if(p==='forEach')return (cb,thisArg)=>{const length=read().length;for(let i=0;i<length;i++){const rows=read();if(i<rows.length)cb.call(thisArg,wrap(rows[i]),i,proxy)}};if(p===Symbol.iterator||p==='values')return function*(){for(let i=0;i<read().length;i++)yield wrap(read()[i])};if(p==='keys')return function*(){for(let i=0;i<read().length;i++)yield i};if(p==='entries')return function*(){for(let i=0;i<read().length;i++)yield [i,wrap(read()[i])]};if(typeof p==='string'&&/^\d+$/.test(p)){const row=read()[Number(p)];return row===undefined?undefined:wrap(row)}return Reflect.get(o,p)},has(o,p){return typeof p==='string'&&/^(0|[1-9][0-9]*)$/.test(p)&&Number(p)<read().length||Reflect.has(o,p)},ownKeys(o){return [...read().map((_,i)=>String(i)),...Reflect.ownKeys(o)]},getOwnPropertyDescriptor(o,p){if(typeof p==='string'&&/^(0|[1-9][0-9]*)$/.test(p)&&Number(p)<read().length)return {value:wrap(read()[Number(p)]),writable:false,enumerable:true,configurable:true};return Reflect.getOwnPropertyDescriptor(o,p)}});return proxy};
-  class NodeList { constructor(){illegal('NodeList')} item(){} forEach(){} }
+  class HTMLCollection {
+    constructor(){illegal('HTMLCollection')}
+    get length(){const binding=requireRealmBinding(this,'HTMLCollection');return callRealmBinding(this,binding,'length',[])}
+    item(index){const binding=requireRealmBinding(this,'HTMLCollection');if(!arguments.length)throw new TypeError('Not enough arguments');index=(+index)>>>0;return callRealmBinding(this,binding,'item',[index])}
+    namedItem(name){const binding=requireRealmBinding(this,'HTMLCollection');if(!arguments.length)throw new TypeError('Not enough arguments');name=bindingString(name);return callRealmBinding(this,binding,'namedItem',[name])}
+  }
+  Object.defineProperty(HTMLCollection.prototype,Symbol.iterator,{value:Array.prototype.values,writable:true,configurable:true});
+  const collectionIndex=key=>typeof key==='string'&&/^(0|[1-9]\d*)$/.test(key)&&Number(key)<4294967295;
+  const nodeListView=(length,item)=>{
+    const proxy=new Proxy(Object.create(NodeList.prototype),{
+      get(target,key,receiver){if(collectionIndex(key))return item(Number(key))??undefined;return Reflect.get(target,key,receiver)},
+      has(target,key){return collectionIndex(key)&&Number(key)<length()||Reflect.has(target,key)},
+      ownKeys(target){return [...new Set([...Array.from({length:length()},(_,i)=>String(i)),...Reflect.ownKeys(target)])]},
+      getOwnPropertyDescriptor(target,key){if(collectionIndex(key)&&Number(key)<length())return{value:item(Number(key)),writable:false,enumerable:true,configurable:true};return Reflect.getOwnPropertyDescriptor(target,key)}
+    });
+    registerRealmBinding(proxy,'NodeList',{length,item:index=>item(index)??null});
+    return proxy;
+  };
+  const nodeList=data=>{const read=()=>typeof data==='function'?data():data;return nodeListView(()=>read().length,index=>wrap(read()[index]))};
+  class NodeList {
+    constructor(){illegal('NodeList')}
+    get length(){const binding=requireRealmBinding(this,'NodeList');return callRealmBinding(this,binding,'length',[])}
+    item(index){const binding=requireRealmBinding(this,'NodeList');if(!arguments.length)throw new TypeError('Not enough arguments');index=(+index)>>>0;return callRealmBinding(this,binding,'item',[index])}
+  }
+  for(const name of ['entries','keys','values','forEach'])Object.defineProperty(NodeList.prototype,name,{value:Array.prototype[name],writable:true,enumerable:true,configurable:true});
+  Object.defineProperty(NodeList.prototype,Symbol.iterator,{value:Array.prototype.values,writable:true,configurable:true});
   // New node shape is already known here; only canonical identity crosses back.
   const freshNodeData=(nodeId,type,tagName,namespaceURI,text)=>({attributes:{},children:[],namespaceURI,nodeId,parentId:0,tagName,text,type});
   const freshCharacterData=(id,type,text)=>wrap(/[\uD800-\uDFFF]/.test(text)?id:freshNodeData(id,type,'','',text));
@@ -283,7 +331,25 @@
   const uaDataSlots=new WeakMap();
   class NavigatorUAData { constructor(token,data){if(token!==hostToken)illegal('NavigatorUAData');uaDataSlots.set(this,data)} get brands(){return uaDataSlots.get(this).uaBrands.map(x=>({brand:x.brand,version:x.version}))} get mobile(){return false} get platform(){return'Windows'} getHighEntropyValues(hints=[]){const data=uaDataSlots.get(this),out={brands:this.brands,mobile:this.mobile,platform:this.platform};for(const hint of hints.map(String)){if(hint==='architecture')out.architecture=data.architecture;if(hint==='bitness')out.bitness=data.bitness;if(hint==='model')out.model=data.model;if(hint==='platformVersion')out.platformVersion=data.platformVersion;if(hint==='uaFullVersion')out.uaFullVersion=data.uaFullVersion;if(hint==='fullVersionList')out.fullVersionList=data.uaBrands.map(x=>({brand:x.brand,version:x.fullVersion}))}return Promise.resolve(out)} toJSON(){return{brands:this.brands,mobile:this.mobile,platform:this.platform}} }
   class Screen { constructor(){illegal('Screen')} }
-  class Location { constructor(){illegal('Location')} assign(v){host.navigate(String(v))} replace(v){host.navigate(String(v),true)} reload(){host.navigate(host.location(),true,true)} toString(){return this.href} }
+  class Location { constructor(){illegal('Location')} assign(value){const binding=requireRealmBinding(this,'Location');if(!arguments.length)throw new TypeError('Not enough arguments');value=bindingString(value);callRealmBinding(this,binding,'assign',[value])} replace(value){const binding=requireRealmBinding(this,'Location');if(!arguments.length)throw new TypeError('Not enough arguments');value=bindingString(value);callRealmBinding(this,binding,'replace',[value])} reload(){const binding=requireRealmBinding(this,'Location');callRealmBinding(this,binding,'reload',[])} toString(){const binding=requireRealmBinding(this,'Location');return callRealmBinding(this,binding,'get',['href'])} }
+  class DOMStringList { constructor(){illegal('DOMStringList')} }
+  delete DOMStringList.prototype.constructor;
+  Object.defineProperties(DOMStringList.prototype,{
+    length:{get(){const binding=requireRealmBinding(this,'DOMStringList');return callRealmBinding(this,binding,'length',[])},enumerable:true,configurable:true},
+    contains:{value:{contains(value){const binding=requireRealmBinding(this,'DOMStringList');if(!arguments.length)throw new TypeError('Not enough arguments');value=bindingString(value);return callRealmBinding(this,binding,'contains',[value])}}.contains,writable:true,enumerable:true,configurable:true},
+    item:{value:{item(index){const binding=requireRealmBinding(this,'DOMStringList');if(!arguments.length)throw new TypeError('Not enough arguments');index=(+index)>>>0;return callRealmBinding(this,binding,'item',[index])}}.item,writable:true,enumerable:true,configurable:true},
+    constructor:{value:DOMStringList,writable:true,configurable:true},
+    [Symbol.toStringTag]:{value:'DOMStringList',configurable:true},
+    [Symbol.iterator]:{value:Array.prototype.values,writable:true,configurable:true}
+  });
+  const createDOMStringList=values=>{
+    const target=Object.create(DOMStringList.prototype),index=key=>typeof key==='string'&&/^(0|[1-9]\d*)$/.test(key)&&Number(key)<4294967295;
+    for(let i=0;i<values.length;i++)Object.defineProperty(target,String(i),{value:values[i],enumerable:true,configurable:true});
+    const list=new Proxy(target,{set:(target,key,value,receiver)=>index(key)||Reflect.set(target,key,value,receiver),defineProperty:(target,key,descriptor)=>index(key)||Reflect.defineProperty(target,key,descriptor),deleteProperty:(target,key)=>index(key)?Number(key)>=values.length:Reflect.deleteProperty(target,key),preventExtensions:()=>false});
+    registerRealmBinding(list,'DOMStringList',{length:()=>values.length,item:index=>values[index]??null,contains:value=>values.includes(value)},true);
+    return list;
+  };
+
   const historySlots=new WeakMap();
   // History keeps a private storage copy and a separate cached state object.
   // Native V8 cloning handles ECMAScript exotic objects without invoking proxy traps.
@@ -325,9 +391,29 @@
     return copy(value);
   };
   registerBootstrapCallback('installHistoryClone',cloneHistoryState);
-  class History { constructor(){illegal('History')} pushState(s,t,u){const error=host.historyPush(u==null?'':String(u),s);if(error)throw new DOMException(error,'SecurityError')} replaceState(s,t,u){const error=host.historyReplace(u==null?'':String(u),s);if(error)throw new DOMException(error,'SecurityError')} back(){host.historyGo(-1)} forward(){host.historyGo(1)} go(n=0){host.historyGo(Number(n)|0)} get length(){return host.historyLength()} get state(){return host.historyState()} get scrollRestoration(){return historySlots.get(this).scrollRestoration} set scrollRestoration(value){value=String(value);if(value==='auto'||value==='manual')historySlots.get(this).scrollRestoration=value} }
+  const requireActiveHistory=()=>{if(!host.historyIsActive())throw new DOMException('The document is not fully active.','SecurityError')};
+  class History {
+    constructor(){illegal('History')}
+    pushState(s,t,u){const binding=requireRealmBinding(this,'History');if(arguments.length<2)throw new TypeError('2 arguments required');bindingString(t);u=u==null?'':bindingString(u);return callRealmBinding(this,binding,'update',[s,u,false])}
+    replaceState(s,t,u){const binding=requireRealmBinding(this,'History');if(arguments.length<2)throw new TypeError('2 arguments required');bindingString(t);u=u==null?'':bindingString(u);return callRealmBinding(this,binding,'update',[s,u,true])}
+    back(){const binding=requireRealmBinding(this,'History');return callRealmBinding(this,binding,'go',[-1])}
+    forward(){const binding=requireRealmBinding(this,'History');return callRealmBinding(this,binding,'go',[1])}
+    go(n=0){const binding=requireRealmBinding(this,'History');n=(+n)|0;return callRealmBinding(this,binding,'go',[n])}
+    get length(){requireActiveHistory();return host.historyLength()}
+    get state(){requireActiveHistory();return host.historyState()}
+    get scrollRestoration(){requireActiveHistory();return historySlots.get(this).scrollRestoration}
+    set scrollRestoration(value){value=String(value);if(value==='auto'||value==='manual'){requireActiveHistory();historySlots.get(this).scrollRestoration=value}}
+  }
   const storageAreas=new WeakMap();
-  class Storage { constructor(){illegal('Storage')} get length(){return host.storageLength(storageAreas.get(this))} key(i){return host.storageKey(storageAreas.get(this),Number(i)|0)} getItem(k){return host.storageGet(storageAreas.get(this),String(k))} setItem(k,v){host.storageSet(storageAreas.get(this),String(k),String(v))} removeItem(k){host.storageRemove(storageAreas.get(this),String(k))} clear(){host.storageClear(storageAreas.get(this))} }
+  class Storage {
+    constructor(){illegal('Storage')}
+    get length(){return host.storageLength(storageAreas.get(this))}
+    key(i){const binding=requireRealmBinding(this,'Storage');if(!arguments.length)throw new TypeError('1 argument required');i=(+i)>>>0;return callRealmBinding(this,binding,'key',[i])}
+    getItem(k){const binding=requireRealmBinding(this,'Storage');if(!arguments.length)throw new TypeError('1 argument required');k=bindingString(k);return callRealmBinding(this,binding,'getItem',[k])}
+    setItem(k,v){const binding=requireRealmBinding(this,'Storage');if(arguments.length<2)throw new TypeError('2 arguments required');k=bindingString(k);v=bindingString(v);return callRealmBinding(this,binding,'setItem',[k,v])}
+    removeItem(k){const binding=requireRealmBinding(this,'Storage');if(!arguments.length)throw new TypeError('1 argument required');k=bindingString(k);return callRealmBinding(this,binding,'removeItem',[k])}
+    clear(){const binding=requireRealmBinding(this,'Storage');return callRealmBinding(this,binding,'clear',[])}
+  }
   const trustedValueSlots=new WeakMap(),trustedPolicySlots=new WeakMap(),trustedFactorySlots=new WeakMap();
   const trustedValue=(Ctor,value)=>{const result=Object.create(Ctor.prototype);trustedValueSlots.set(result,{type:Ctor,value:String(value)});return result};
   class TrustedHTML { constructor(){illegal('TrustedHTML')} toString(){return trustedValueSlots.get(this)?.value} toJSON(){return this.toString()} }
@@ -394,7 +480,7 @@
   class IntersectionObserver { constructor(callback,options={}){if(typeof callback!=='function')throw new TypeError("Failed to construct 'IntersectionObserver': parameter 1 is not of type 'IntersectionObserverCallback'.");const thresholds=(options.threshold===undefined?[0]:(Array.isArray(options.threshold)?options.threshold:[options.threshold])).map(Number).sort((a,b)=>a-b);if(thresholds.some(value=>!Number.isFinite(value)||value<0||value>1))throw new RangeError('Threshold values must be numbers between 0 and 1');intersectionObserverSlots.set(this,{callback,root:options.root||null,rootMargin:String(options.rootMargin||'0px 0px 0px 0px'),scrollMargin:String(options.scrollMargin||'0px 0px 0px 0px'),thresholds:[...new Set(thresholds)],records:[],targets:new Set()})} get root(){return intersectionObserverSlots.get(this).root} get rootMargin(){return intersectionObserverSlots.get(this).rootMargin} get scrollMargin(){return intersectionObserverSlots.get(this).scrollMargin} get thresholds(){return intersectionObserverSlots.get(this).thresholds.slice()} observe(target){if(!(target instanceof Element))throw new TypeError("Failed to execute 'observe' on 'IntersectionObserver': parameter 1 is not of type 'Element'.");intersectionObserverSlots.get(this).targets.add(target)} unobserve(target){intersectionObserverSlots.get(this).targets.delete(target)} disconnect(){const state=intersectionObserverSlots.get(this);state.targets.clear();state.records.length=0} takeRecords(){return intersectionObserverSlots.get(this).records.splice(0)} }
   Object.defineProperty(globalThis,'__mimicNotifyPerformanceObservers',{value:finalized=>{navigationFinalized=!!finalized;for(const observer of performanceObservers){const state=performanceObserverSlots.get(observer);if(!state||!state.active)continue;for(const entry of host.performanceEntries(state.types,false)){const id=performanceEntryKey(entry);if(!state.seen.has(id)){state.seen.add(id);state.records.push(entry)}}queuePerformanceDelivery(observer)}},configurable:true});
   const performanceMarks=[];
-  class Performance { constructor(){illegal('Performance')} get timeOrigin(){return host.performanceTimeOrigin()} get timing(){const value=Object.create(PerformanceTiming.prototype),origin=Math.trunc(this.timeOrigin);for(const name of ['navigationStart','unloadEventStart','unloadEventEnd','redirectStart','redirectEnd','fetchStart','domainLookupStart','domainLookupEnd','connectStart','connectEnd','secureConnectionStart','requestStart','responseStart','responseEnd','domLoading','domInteractive','domContentLoadedEventStart','domContentLoadedEventEnd','domComplete','loadEventStart','loadEventEnd'])Object.defineProperty(value,name,{value:name==='navigationStart'||name==='fetchStart'?origin:0,enumerable:true});return value} now(){return host.performanceNow()} mark(name,options={}){const mark=new PerformanceMark(hostToken,{name:String(name),entryType:'mark',startTime:options.startTime===undefined?this.now():Number(options.startTime),duration:0,detail:options.detail??null});performanceMarks.push(mark);return mark} getEntries(){return host.performanceEntries([],true).map(makePerformanceEntry).concat(performanceMarks)} getEntriesByType(type){type=String(type);return host.performanceEntries([type],true).map(makePerformanceEntry).concat(type==='mark'?performanceMarks:[])} getEntriesByName(name,type){name=String(name);return this.getEntries().filter(entry=>entry.name===name&&(type===undefined||entry.entryType===String(type)))} }
+  class Performance { constructor(){illegal('Performance')} get timeOrigin(){const binding=requireRealmBinding(this,'Performance');return callRealmBinding(this,binding,'timeOrigin',[])} get timing(){const value=Object.create(PerformanceTiming.prototype),origin=Math.trunc(this.timeOrigin);for(const name of ['navigationStart','unloadEventStart','unloadEventEnd','redirectStart','redirectEnd','fetchStart','domainLookupStart','domainLookupEnd','connectStart','connectEnd','secureConnectionStart','requestStart','responseStart','responseEnd','domLoading','domInteractive','domContentLoadedEventStart','domContentLoadedEventEnd','domComplete','loadEventStart','loadEventEnd'])Object.defineProperty(value,name,{value:name==='navigationStart'||name==='fetchStart'?origin:0,enumerable:true});return value} now(){const binding=requireRealmBinding(this,'Performance');return callRealmBinding(this,binding,'now',[])} mark(name,options={}){const mark=new PerformanceMark(hostToken,{name:String(name),entryType:'mark',startTime:options.startTime===undefined?this.now():Number(options.startTime),duration:0,detail:options.detail??null});performanceMarks.push(mark);return mark} getEntries(){const binding=requireRealmBinding(this,'Performance');return callRealmBinding(this,binding,'entries',[])} getEntriesByType(type){const binding=requireRealmBinding(this,'Performance');if(!arguments.length)throw new TypeError('Not enough arguments');type=bindingString(type);return callRealmBinding(this,binding,'entriesByType',[type])} getEntriesByName(name,type=undefined){const binding=requireRealmBinding(this,'Performance');if(!arguments.length)throw new TypeError('Not enough arguments');name=bindingString(name);if(type!==undefined)type=bindingString(type);return callRealmBinding(this,binding,'entriesByName',[name,type])} }
   class GPUAdapterInfo { constructor(){illegal("GPUAdapterInfo")}}
   class GPUSupportedFeatures { constructor(){illegal("GPUSupportedFeatures")}}
   class GPUSupportedLimits { constructor(){illegal("GPUSupportedLimits")}}
@@ -478,8 +564,23 @@
   def(Navigator.prototype,'plugins',{get:()=>pluginArray});def(Navigator.prototype,'mimeTypes',{get:()=>mimeTypeArray});
   def(Navigator.prototype,'gpu',{get:()=>gpu});
   for(const k of ['width','height','availWidth','availHeight','colorDepth','pixelDepth'])def(Screen.prototype,k,{get:()=>host.screen()[k]});
-  for(const k of ['href','origin','protocol','host','hostname','port','pathname','search','hash'])def(loc,k,{get:()=>host.locationPart(k),set:v=>host.setLocationPart(k,String(v))});
-  for(const k of ['assign','replace','reload','toString'])Object.defineProperty(loc,k,Object.assign({},Object.getOwnPropertyDescriptor(Location.prototype,k),{enumerable:true,configurable:false}));
+  let locationAncestors;
+  bootstrapRestoreHooks.push(()=>{locationAncestors=undefined});
+  registerRealmBinding(loc,'Location',{
+    get:key=>key==='ancestorOrigins'?(locationAncestors??=createDOMStringList(host.locationAncestorOrigins())):host.locationPart(key),
+    set:(key,value)=>host.setLocationPart(key,value),assign:value=>host.navigate(value),replace:value=>host.navigate(value,true),reload:()=>host.navigate(host.location(),true,true)
+  });
+  Object.defineProperty(loc,'valueOf',{value:Object.prototype.valueOf});
+  for(const key of ['ancestorOrigins','href','origin','protocol','host','hostname','port','pathname','search','hash']){
+    const get=Object.getOwnPropertyDescriptor({get [key](){const binding=requireRealmBinding(this,'Location');return callRealmBinding(this,binding,'get',[key])}},key).get;
+    const set=['origin','ancestorOrigins'].includes(key)?undefined:Object.getOwnPropertyDescriptor({set [key](value){const binding=requireRealmBinding(this,'Location');value=bindingString(value);callRealmBinding(this,binding,'set',[key,value])}},key).set;
+    markNative(get,key,'get ');markNative(set,key,'set ');Object.defineProperty(loc,key,{get,set,enumerable:true});
+  }
+  for(const key of ['assign','reload','replace','toString']){
+    const value=Location.prototype[key];markNative(value,key);Object.defineProperty(loc,key,{value,enumerable:true});delete Location.prototype[key];
+  }
+  Object.defineProperty(loc,Symbol.toPrimitive,{value:undefined});
+
   const consoleString=String,consoleParseInt=parseInt,consoleParseFloat=parseFloat;
   const consoleArguments=args=>{
     if(args.length>1&&typeof args[0]==='string'){
@@ -516,7 +617,14 @@
     countReset:{value:function countReset(label=undefined){consoleCount(label,true)},writable:true,configurable:true}
   });
   const document=observe('Document',new HTMLDocument(hostToken));
-  Object.defineProperty(document,'location',{get:()=>loc,enumerable:true,configurable:false});
+  const documentLocationDescriptor=Object.getOwnPropertyDescriptor({
+    get location(){return documentLocation(this)},
+    set location(value){const target=documentLocation(this);if(target===null)throw new TypeError('Document has no browsing context');target.href=value}
+  },'location');
+  documentLocationDescriptor.configurable=false;
+  markNative(documentLocationDescriptor.get,'location','get ');
+  markNative(documentLocationDescriptor.set,'location','set ');
+  Object.defineProperty(document,'location',documentLocationDescriptor);
   let frameElementCache;
   const frameElement=()=>{const result=host.frameElement();return result?unwrapCrossRealm(result.frame,result):null};
   const remoteWindowCache=new Map(),remoteDocumentCache=new Map(),crossRealmCache=new Map(),crossRealmReferences=new WeakMap();
@@ -611,9 +719,21 @@
         if(outcome.threw)throw value;
         return value;
       },
-      defineProperty(){if(iteratorFields)iteratorFields.valid=false;return unsupported('defineProperty')},
-      deleteProperty(){if(iteratorFields)iteratorFields.valid=false;return unsupported('deleteProperty')},
-      preventExtensions(){if(iteratorFields)iteratorFields.valid=false;return unsupported('preventExtensions')},
+      defineProperty(_target,property,descriptor){
+        if(iteratorFields)iteratorFields.valid=false;bridgeAccess(id,result.realm);
+        const outcome=host.frameMutateProperty(id,result.handle,'mutateDefine',encodeCrossRealmKey(property),encodeCrossRealmArgument(descriptor),result.realm),value=unwrapCrossRealm(id,outcome.value);
+        if(outcome.threw)throw value;
+        // Materialize only the descriptor required by the local Proxy invariant.
+        // The owner remains authoritative for configurable properties.
+        if(value&&(descriptor.configurable===false||descriptor.writable===false))traps.getOwnPropertyDescriptor(target,property);
+        return value;
+      },
+      deleteProperty(_target,property){
+        if(iteratorFields)iteratorFields.valid=false;bridgeAccess(id,result.realm);
+        const outcome=host.frameMutateProperty(id,result.handle,'mutateDelete',encodeCrossRealmKey(property),encodeCrossRealmArgument(undefined),result.realm),value=unwrapCrossRealm(id,outcome.value);
+        if(outcome.threw)throw value;return value;
+      },
+      preventExtensions(){if(iteratorFields)iteratorFields.valid=false;if(result.binding?.unpreventable){bridgeAccess(id,result.realm);return false}return unsupported('preventExtensions')},
       setPrototypeOf(){if(iteratorFields)iteratorFields.valid=false;return unsupported('setPrototypeOf')},
       getPrototypeOf(){bridgeAccess(id,result.realm);return unwrapCrossRealm(id,host.framePrototype(id,result.handle,result.realm))},
       ownKeys(){bridgeAccess(id,result.realm);return host.frameOwnKeys(id,result.handle,result.realm).map(decodeCrossRealmKey)},
@@ -646,7 +766,7 @@
     if(iteratorFields)bridgeApply(bridgeWeakSet,freshIteratorFields,[proxy,iteratorFields]);
     if(result.eval)markNative(proxy,'eval');
     if(result.nodeId){const data=host.nodeData(result.nodeId);if(data){elementData.set(proxy,data);elementWrappers.set(String(result.nodeId),proxy)}}
-    referenceSet(proxy,{frame:id,realm:result.realm,handle:result.handle,type:kind,array:result.array,constructable:result.constructable,nodeId:result.nodeId,document:result.document,eval:result.eval});crossRealmCache.set(key,proxy);
+    referenceSet(proxy,{frame:id,realm:result.realm,handle:result.handle,type:kind,array:result.array,constructable:result.constructable,nodeId:result.nodeId,document:result.document,eval:result.eval,binding:result.binding});crossRealmCache.set(key,proxy);
     if(result.document){remoteDocumentCache.set(result.realm,proxy);if(result.nodeId)documentWrappers.set(result.nodeId,proxy)}
     // Native undetectable objects cannot intercept [[GetPrototypeOf]]. This
     // preserves the initial remote prototype identity, but later replacement
@@ -662,8 +782,10 @@
       const reference=referenceGet(value);if(reference){invalidateIteratorFields(value);return{...reference,__mimicCrossRealm:reference.type}}
       return null;
     },(value,importNode=false)=>importNode?wrap(host.nodeData(value)):value===document?host.documentRootID():bridgeApply(bridgeWeakGet,elementData,[value])?.nodeId||0,
-    key=>{const value=Reflect.get(globalThis,key);return{value,intrinsic:key==='eval'&&value===bridgeOriginalEval||key==='postMessage'&&value===bridgeOriginalPostMessage}});
+    key=>{const value=Reflect.get(globalThis,key);return{value,intrinsic:key==='eval'&&value===bridgeOriginalEval||key==='postMessage'&&value===bridgeOriginalPostMessage}},
+    value=>{const binding=bindingGet(value);return binding?{kind:binding.kind,invoke:binding.invoke,unpreventable:binding.unpreventable}:null});
   const remoteWindow=id=>{
+    if(id==null)return null;
     if(id===host.selfFrameID())return globalThis;
     if(remoteWindowCache.has(id))return remoteWindowCache.get(id);
     host.retainWindowReference(id);
@@ -716,7 +838,11 @@
   };
   const xhrSlots=new WeakMap(),xhrState=xhr=>xhrSlots.get(xhr);
   const fireXHREvent=(xhr,type)=>dispatchTrusted(xhr,new Event(type)),setXHRState=(xhr,value)=>{xhrState(xhr).readyState=value;fireXHREvent(xhr,'readystatechange')};
-  class XMLHttpRequest extends EventTarget { constructor(){super();xhrSlots.set(this,{readyState:0,status:0,statusText:'',responseText:'',responseURL:'',responseType:'',timeout:0,withCredentials:false,onreadystatechange:null,onload:null,onerror:null,ontimeout:null,onloadend:null,requestHeaders:{},requestHeaderOrder:[],responseHeaders:{},sent:false,method:'GET',url:'',async:true})} open(method,url,async=true,user,password){method=String(method).toUpperCase();if(!method||/[^A-Z-]/.test(method))throw new DOMException('Invalid HTTP method','SyntaxError');const state=xhrState(this);state.method=method;state.url=String(url);state.async=Boolean(async);state.sent=false;state.requestHeaders={};state.requestHeaderOrder=[];state.status=0;state.responseText='';state.responseURL='';setXHRState(this,1)} setRequestHeader(name,value){const state=xhrState(this);if(state.readyState!==1||state.sent)throw new DOMException("The object's state must be OPENED.",'InvalidStateError');name=String(name).trim().toLowerCase();value=String(value).trim();if(!name||/[^!#$%&'*+.^_`|~0-9a-z-]/i.test(name)||/[\0\r\n]/.test(value))throw new DOMException('Invalid HTTP header','SyntaxError');if(state.requestHeaders[name]===undefined)state.requestHeaderOrder.push(name);state.requestHeaders[name]=state.requestHeaders[name]?state.requestHeaders[name]+', '+value:value} getResponseHeader(name){const state=xhrState(this);if(state.readyState<2)return null;const value=state.responseHeaders[String(name).toLowerCase()];return value===undefined?null:value} getAllResponseHeaders(){const state=xhrState(this);if(state.readyState<2)return'';return Object.keys(state.responseHeaders).sort().map(k=>k+': '+state.responseHeaders[k]+'\r\n').join('')} send(body=null){const state=xhrState(this);if(state.readyState!==1||state.sent)throw new DOMException("The object's state must be OPENED.",'InvalidStateError');state.sent=true;host.xhr(result=>{if(result.error){state.status=0;setXHRState(this,4);fireXHREvent(this,result.error);fireXHREvent(this,'loadend');return}state.status=result.status;state.statusText=result.statusText;state.responseURL=result.responseURL;state.responseHeaders=result.responseHeaders||{};setXHRState(this,2);setXHRState(this,3);state.responseText=result.responseText||'';setXHRState(this,4);fireXHREvent(this,'load');fireXHREvent(this,'loadend')},state.method,state.url,state.requestHeaders,body==null?'':String(body),Number(state.timeout)||0,state.requestHeaderOrder,Boolean(state.withCredentials))} abort(){const state=xhrState(this);state.sent=false;state.status=0;state.responseText='';setXHRState(this,0)} }
+  // Keep the WebIDL intermediate interface in the implementation's constructor
+  // chain too. Its public constructor stays illegal; only XHR initializes it.
+  const xhrConstructionToken = {};
+  class XMLHttpRequestEventTarget extends EventTarget { constructor(token){if(token!==xhrConstructionToken)throw new TypeError('Illegal constructor');super()} }
+  class XMLHttpRequest extends XMLHttpRequestEventTarget { constructor(){super(xhrConstructionToken);xhrSlots.set(this,{readyState:0,status:0,statusText:'',responseText:'',responseURL:'',responseType:'',timeout:0,withCredentials:false,onreadystatechange:null,onload:null,onerror:null,ontimeout:null,onloadend:null,requestHeaders:{},requestHeaderOrder:[],responseHeaders:{},sent:false,method:'GET',url:'',async:true})} open(method,url,async=true,user,password){method=String(method).toUpperCase();if(!method||/[^A-Z-]/.test(method))throw new DOMException('Invalid HTTP method','SyntaxError');const state=xhrState(this);state.method=method;state.url=String(url);state.async=Boolean(async);state.sent=false;state.requestHeaders={};state.requestHeaderOrder=[];state.status=0;state.responseText='';state.responseURL='';setXHRState(this,1)} setRequestHeader(name,value){const state=xhrState(this);if(state.readyState!==1||state.sent)throw new DOMException("The object's state must be OPENED.",'InvalidStateError');name=String(name).trim().toLowerCase();value=String(value).trim();if(!name||/[^!#$%&'*+.^_`|~0-9a-z-]/i.test(name)||/[\0\r\n]/.test(value))throw new DOMException('Invalid HTTP header','SyntaxError');if(state.requestHeaders[name]===undefined)state.requestHeaderOrder.push(name);state.requestHeaders[name]=state.requestHeaders[name]?state.requestHeaders[name]+', '+value:value} getResponseHeader(name){const state=xhrState(this);if(state.readyState<2)return null;const value=state.responseHeaders[String(name).toLowerCase()];return value===undefined?null:value} getAllResponseHeaders(){const state=xhrState(this);if(state.readyState<2)return'';return Object.keys(state.responseHeaders).sort().map(k=>k+': '+state.responseHeaders[k]+'\r\n').join('')} send(body=null){const state=xhrState(this);if(state.readyState!==1||state.sent)throw new DOMException("The object's state must be OPENED.",'InvalidStateError');state.sent=true;host.xhr(result=>{if(result.error){state.status=0;setXHRState(this,4);fireXHREvent(this,result.error);fireXHREvent(this,'loadend');return}state.status=result.status;state.statusText=result.statusText;state.responseURL=result.responseURL;state.responseHeaders=result.responseHeaders||{};setXHRState(this,2);setXHRState(this,3);state.responseText=result.responseText||'';setXHRState(this,4);fireXHREvent(this,'load');fireXHREvent(this,'loadend')},state.method,state.url,state.requestHeaders,body==null?'':String(body),Number(state.timeout)||0,state.requestHeaderOrder,Boolean(state.withCredentials))} abort(){const state=xhrState(this);state.sent=false;state.status=0;state.responseText='';setXHRState(this,0)} }
   for(const key of ['readyState','status','statusText','responseText','responseURL','responseType','timeout','withCredentials','onreadystatechange','onload','onerror','ontimeout','onloadend'])def(XMLHttpRequest.prototype,key,{get(){return xhrState(this)[key]},set(value){xhrState(this)[key]=value}});
   const requestSlots=new WeakMap(),responseSlots=new WeakMap();
   class Request { constructor(input,init={}){const previous=input instanceof Request?requestSlots.get(input):null,method=String(init.method||previous?.method||'GET').toUpperCase(),raw=input instanceof Request?previous.url:String(input),url=host.urlParts(raw).href;requestSlots.set(this,{url,method,headers:new Headers(init.headers||previous?.headers),mode:String(init.mode||previous?.mode||'cors'),credentials:String(init.credentials||previous?.credentials||'same-origin'),cache:String(init.cache||previous?.cache||'default'),redirect:String(init.redirect||previous?.redirect||'follow'),referrer:init.referrer===undefined?(previous?.referrer||'about:client'):String(init.referrer),body:init.body??null,bodyUsed:false})} }
@@ -731,15 +857,26 @@
   globalThis.Image=function Image(width,height){const element=document.createElement('img');if(width!==undefined)element.width=Number(width);if(height!==undefined)element.height=Number(height);return element};
   globalThis.Audio=function Audio(src){const element=document.createElement('audio');if(src!==undefined)element.src=String(src);return element};
   globalThis.Option=function Option(text='',value,defaultSelected=false,selected=false){const element=document.createElement('option');element.text=String(text);if(value!==undefined)element.value=String(value);element.defaultSelected=Boolean(defaultSelected);element.selected=Boolean(selected);return element};
-  const window=globalThis;listenersFor(window);window.addEventListener=(...a)=>EventTarget.prototype.addEventListener.apply(window,a);window.removeEventListener=(...a)=>EventTarget.prototype.removeEventListener.apply(window,a);window.dispatchEvent=(...a)=>EventTarget.prototype.dispatchEvent.apply(window,a);window.onmessage=null;window.onerror=null;const NodeFilter=Object.freeze({FILTER_ACCEPT:1,FILTER_REJECT:2,FILTER_SKIP:3,SHOW_ALL:0xffffffff,SHOW_ELEMENT:1,SHOW_ATTRIBUTE:2,SHOW_TEXT:4,SHOW_CDATA_SECTION:8,SHOW_ENTITY_REFERENCE:16,SHOW_ENTITY:32,SHOW_PROCESSING_INSTRUCTION:64,SHOW_COMMENT:128,SHOW_DOCUMENT:256,SHOW_DOCUMENT_TYPE:512,SHOW_DOCUMENT_FRAGMENT:1024,SHOW_NOTATION:2048});Object.assign(window,{window:null,self:null,top:null,parent:null,document,navigator:nav,screen:scr,location:loc,history:hist,localStorage:storage,sessionStorage,crypto,trustedTypes,console:new Console(),atob,btoa,TextEncoder,Headers,Request,Response,Event,MessageEvent,ErrorEvent,EventTarget,Node,DocumentFragment,ShadowRoot,Element,HTMLElement,SVGElement,HTMLScriptElement,HTMLImageElement,HTMLIFrameElement,HTMLAnchorElement,HTMLCollection,NodeList,DOMTokenList,CSSStyleDeclaration,Crypto,DOMException,PermissionsPolicy,FeaturePolicy,TrustedHTML,TrustedScript,TrustedScriptURL,TrustedTypePolicy,TrustedTypePolicyFactory,URL,URLSearchParams,ReadableStream,ReadableStreamDefaultReader,ReadableStreamDefaultController,WritableStream,WritableStreamDefaultWriter,TransformStream,TransformStreamDefaultController,Blob,File,Worker,Document,HTMLDocument,Navigator,NavigatorUAData,Screen,Location,History,Storage,XMLHttpRequest,GPU,GPUAdapter,GPUAdapterInfo,GPUSupportedFeatures,GPUSupportedLimits,GPUDevice,RTCPeerConnection,RTCSessionDescription,RTCIceCandidate,PerformanceEntry,PerformanceServerTiming,PerformanceResourceTiming,PerformanceNavigationTiming,NodeFilter});let security=host.documentSecurity();for(const [name,key] of Object.entries({isSecureContext:'secureContext',crossOriginIsolated:'crossOriginIsolated',credentialless:'credentialless',originAgentCluster:'originAgentCluster'}))Object.defineProperty(window,name,{get:()=>security[key],enumerable:true,configurable:true});const relations=host.windowRelations();window.window=window;window.self=window;let windowTop=relations.top===relations.self?window:remoteWindow(relations.top),windowParent=relations.parent===relations.self?window:remoteWindow(relations.parent);
+  const window=globalThis;listenersFor(window);window.addEventListener=(...a)=>EventTarget.prototype.addEventListener.apply(window,a);window.removeEventListener=(...a)=>EventTarget.prototype.removeEventListener.apply(window,a);window.dispatchEvent=(...a)=>EventTarget.prototype.dispatchEvent.apply(window,a);window.onmessage=null;window.onerror=null;const NodeFilter=Object.freeze({FILTER_ACCEPT:1,FILTER_REJECT:2,FILTER_SKIP:3,SHOW_ALL:0xffffffff,SHOW_ELEMENT:1,SHOW_ATTRIBUTE:2,SHOW_TEXT:4,SHOW_CDATA_SECTION:8,SHOW_ENTITY_REFERENCE:16,SHOW_ENTITY:32,SHOW_PROCESSING_INSTRUCTION:64,SHOW_COMMENT:128,SHOW_DOCUMENT:256,SHOW_DOCUMENT_TYPE:512,SHOW_DOCUMENT_FRAGMENT:1024,SHOW_NOTATION:2048});Object.assign(window,{window:null,self:null,top:null,parent:null,document,navigator:nav,screen:scr,location:loc,history:hist,localStorage:storage,sessionStorage,crypto,trustedTypes,console:new Console(),atob,btoa,TextEncoder,Headers,Request,Response,Event,MessageEvent,ErrorEvent,EventTarget,Node,DocumentFragment,ShadowRoot,Element,HTMLElement,SVGElement,HTMLScriptElement,HTMLImageElement,HTMLIFrameElement,HTMLAnchorElement,HTMLCollection,NodeList,DOMTokenList,CSSStyleDeclaration,Crypto,DOMException,PermissionsPolicy,FeaturePolicy,TrustedHTML,TrustedScript,TrustedScriptURL,TrustedTypePolicy,TrustedTypePolicyFactory,URL,URLSearchParams,ReadableStream,ReadableStreamDefaultReader,ReadableStreamDefaultController,WritableStream,WritableStreamDefaultWriter,TransformStream,TransformStreamDefaultController,Blob,File,Worker,Document,HTMLDocument,Navigator,NavigatorUAData,Screen,Location,History,Storage,XMLHttpRequestEventTarget,XMLHttpRequest,GPU,GPUAdapter,GPUAdapterInfo,GPUSupportedFeatures,GPUSupportedLimits,GPUDevice,RTCPeerConnection,RTCSessionDescription,RTCIceCandidate,PerformanceEntry,PerformanceServerTiming,PerformanceResourceTiming,PerformanceNavigationTiming,NodeFilter});let security=host.documentSecurity();for(const [name,key] of Object.entries({isSecureContext:'secureContext',crossOriginIsolated:'crossOriginIsolated',credentialless:'credentialless',originAgentCluster:'originAgentCluster'}))Object.defineProperty(window,name,{get:()=>security[key],enumerable:true,configurable:true});const relations=host.windowRelations();window.window=window;window.self=window;let windowTop=relations.top===relations.self?window:remoteWindow(relations.top),windowParent=relations.parent===relations.self?window:remoteWindow(relations.parent);
   // Top stays an unforgeable accessor after exposure normalization. Parent is
   // replaceable: assignment creates an own data property, as in Chrome.
-  const getWindowTop=()=>windowTop,getWindowParent=()=>windowParent;
+  const getWindowTop=()=>host.documentActive()?windowTop:null,getWindowParent=()=>host.documentActive()?windowParent:null;
   const setWindowParent=({set(value){Object.defineProperty(this,'parent',{value,writable:true,enumerable:true,configurable:true})}}).set;
   for(const [fn,name,prefix] of [[getWindowTop,'top','get '],[getWindowParent,'parent','get '],[setWindowParent,'parent','set ']]){
     Object.defineProperty(fn,'name',{value:prefix+name,configurable:true});markNative(fn,name,prefix);
   }
   Object.defineProperties(window,{top:{get:getWindowTop,enumerable:true,configurable:true},parent:{get:getWindowParent,set:setWindowParent,enumerable:true,configurable:true}});
+  const originWindowID=value=>{
+    if(value===window)return '';
+    for(const [id,proxy] of remoteWindowCache)if(value===proxy){bridgeAccess(id);return id}
+    throw new TypeError('Illegal invocation');
+  };
+  const originDescriptor=Object.getOwnPropertyDescriptor({
+    get origin(){return host.windowOrigin(originWindowID(this))},
+    set origin(value){originWindowID(this);Object.defineProperty(this,'origin',{value,writable:true,enumerable:true,configurable:true})}
+  },'origin');
+  markNative(originDescriptor.get,'origin','get ');markNative(originDescriptor.set,'origin','set ');
+  Object.defineProperty(window,'origin',{...originDescriptor,enumerable:true,configurable:true});
   window.__receiveFrameMessage=(data,origin,sourceId)=>dispatchTrusted(window,new MessageEvent('message',{data,origin,source:remoteWindow(sourceId)}));globalThis.__receiveFrameMessage=window.__receiveFrameMessage;
   Object.assign(window,{CharacterData,Text,Comment,SVGSVGElement,SVGRect,HTMLLinkElement,HTMLMetaElement,IntersectionObserver,BroadcastChannel,CryptoKey,SubtleCrypto,PerformanceMark,PerformanceTiming});
   window.__receiveFrameMessage=(data,origin,sourceId,portIds=[])=>dispatchTrusted(window,new MessageEvent('message',{data,origin,source:remoteWindow(sourceId),ports:Array.from(portIds,wrapBrowserMessagePort)}));globalThis.__receiveFrameMessage=window.__receiveFrameMessage;
@@ -754,13 +891,29 @@
   window.postMessage=bridgeOriginalPostMessage=function postMessage(message,targetOrigin='/',transfer=[]){if(targetOrigin&&typeof targetOrigin==='object'){transfer=targetOrigin.transfer||[];targetOrigin=targetOrigin.targetOrigin===undefined?'/':targetOrigin.targetOrigin}return host.framePost(host.selfFrameID(),message,String(targetOrigin),takeMessagePorts(transfer))};
   window.queueMicrotask=function queueMicrotask(callback){if(typeof callback!=='function')throw new TypeError('callback is not a function');Promise.resolve().then(callback)};
   window.fetch=function fetch(input,init={}){const request=input instanceof Request?new Request(input,init):new Request(input,init);return host.fetch(request.url,request.method,Object.fromEntries(request.headers),request.body==null?'':String(request.body)).then(r=>{const response=new Response(r.body,{status:r.status,headers:r.headers});const state=responseSlots.get(response);state.url=r.url;return response})};
-  window.performance=Object.create(Performance.prototype);window.Performance=Performance;window.PerformanceEntry=PerformanceEntry;window.PerformanceServerTiming=PerformanceServerTiming;window.PerformanceResourceTiming=PerformanceResourceTiming;window.PerformanceNavigationTiming=PerformanceNavigationTiming;window.PerformanceObserverEntryList=PerformanceObserverEntryList;window.PerformanceObserver=PerformanceObserver;
+  const performanceEntries=()=>host.performanceEntries([],true).map(makePerformanceEntry).concat(performanceMarks);
+  const performanceOperations={
+    timeOrigin:()=>host.performanceTimeOrigin(),now:()=>host.performanceNow(),entries:performanceEntries,
+    entriesByType:type=>host.performanceEntries([type],true).map(makePerformanceEntry).concat(type==='mark'?performanceMarks:[]),
+    entriesByName:(name,type)=>performanceEntries().filter(entry=>entry.name===name&&(type===undefined||entry.entryType===type))
+  };
+  window.performance=Object.create(Performance.prototype);registerRealmBinding(window.performance,'Performance',performanceOperations);window.DOMStringList=DOMStringList;window.Performance=Performance;window.PerformanceEntry=PerformanceEntry;window.PerformanceServerTiming=PerformanceServerTiming;window.PerformanceResourceTiming=PerformanceResourceTiming;window.PerformanceNavigationTiming=PerformanceNavigationTiming;window.PerformanceObserverEntryList=PerformanceObserverEntryList;window.PerformanceObserver=PerformanceObserver;
   window.getComputedStyle=e=>cssDeclaration(e,true);window.matchMedia=q=>({matches:host.media(String(q)),media:String(q),onchange:null,addEventListener(){},removeEventListener(){}});
   const handwrittenInterfaceConstructors=new Set(Object.getOwnPropertyNames(globalThis).map(name=>globalThis[name]).filter(value=>typeof value==='function'));
   const attributeUnsafeInterfaces=globalThis.__mimicAttributeUnsafeInterfaces;
   delete globalThis.__mimicAttributeUnsafeInterfaces;
   let known;
-  const applyTargetExposure=exposure=>{
+  let pendingCallableExposure;
+  // Decode immutable transport into realm-local descriptor data. Legacy object
+  // inputs from Surface keep their existing schema.
+  const decodeExposure=exposure=>{
+    if(!Array.isArray(exposure))return exposure;
+    const row=p=>({name:p[0],enumerable:!!(p[1]&1),configurable:!!(p[1]&2),writable:(p[1]>>4)===0?null:(p[1]>>4)===2,getter:!!(p[1]&4),setter:!!(p[1]&8),valueType:p[2],functionName:p[3],functionLength:p[4]});
+    return {propertyOrder:exposure[0],prototypeOrder:exposure[3],interfaceOrder:exposure[4],properties:exposure[1]===null?null:exposure[1].map(row),prototypes:exposure[2]===null?null:Object.fromEntries(Object.entries(exposure[2]).map(([name,rows])=>[name,rows===null?null:rows.map(row)]))};
+  };
+  const applyTargetExposure=input=>{
+    const exposure=decodeExposure(input);
+    pendingCallableExposure=exposure;
     const properties=exposure.properties||[];
     const publicationMissing=new Set();
     // Publish the frozen profile's static globals in their observed order once,
@@ -832,15 +985,21 @@
         const current=Object.getOwnPropertyDescriptor(prototype,property.name);
         if(current){
           if(current.configurable){
-            const normalized=Object.assign({},current,{enumerable:property.enumerable,configurable:property.configurable});
-            if('value' in normalized){
-              normalized.writable=property.writable!==false;
-              if(typeof normalized.value==='function'){
-                if(property.functionName&&normalized.value.name!==property.functionName)Object.defineProperty(normalized.value,'name',{value:property.functionName,configurable:true});
-                if(property.functionLength!==null&&property.functionLength!==undefined&&normalized.value.length!==property.functionLength)Object.defineProperty(normalized.value,'length',{value:property.functionLength,configurable:true});
+            const data='value' in current,writable=property.writable!==false;
+            if(data){
+              if(typeof current.value==='function'){
+                if(property.functionName&&current.value.name!==property.functionName)Object.defineProperty(current.value,'name',{value:property.functionName,configurable:true});
+                if(property.functionLength!==null&&property.functionLength!==undefined&&current.value.length!==property.functionLength)Object.defineProperty(current.value,'length',{value:property.functionLength,configurable:true});
               }
             }
-            Object.defineProperty(prototype,property.name,normalized);
+            // Updating a function's own metadata does not require reinstalling
+            // its containing property. Avoid rewriting thousands of already
+            // normalized descriptors on every realm bootstrap.
+            if(current.enumerable!==property.enumerable||current.configurable!==property.configurable||(data&&current.writable!==writable)){
+              const normalized=Object.assign({},current,{enumerable:property.enumerable,configurable:property.configurable});
+              if(data)normalized.writable=writable;
+              Object.defineProperty(prototype,property.name,normalized);
+            }
           }
           continue;
         }
@@ -912,10 +1071,151 @@
       }
     }
   };
+  const finalizeSingletonGetterBindings=()=>{
+    // These platform objects belong to a Window. Borrowed accessors must use
+    // the receiver's owner, including across realms and after prototype edits.
+    // Reuse the private owner binding used by Document, Location and Performance.
+    for(const [kind,prototype,instance] of [['Navigator',Navigator.prototype,nav],['Screen',Screen.prototype,scr],['History',History.prototype,hist],['Storage',Storage.prototype,storage]]){
+      const getters=new Map(),setters=new Map();
+      for(const name of Reflect.ownKeys(prototype)){
+        const descriptor=Object.getOwnPropertyDescriptor(prototype,name);
+        if(!descriptor.configurable||(!descriptor.get&&!descriptor.set))continue;
+        if(descriptor.get){
+          getters.set(name,descriptor.get);
+          descriptor.get=Object.getOwnPropertyDescriptor({get [name](){const binding=requireRealmBinding(this,kind);return callRealmBinding(this,binding,'get',[name])}},name).get;
+        }
+        if(descriptor.set){
+          setters.set(name,descriptor.set);
+          descriptor.set=Object.getOwnPropertyDescriptor({set [name](value){const binding=requireRealmBinding(this,kind);if(kind==='History'&&name==='scrollRestoration')value=bindingString(value);callRealmBinding(this,binding,'set',[name,value])}},name).set;
+        }
+        Object.defineProperty(prototype,name,descriptor);
+      }
+      for(const owner of kind==='Storage'?[storage,sessionStorage]:[instance]){
+        const operations={
+          get:name=>functionSourceApply(getters.get(name),owner,[]),
+          set:(name,value)=>functionSourceApply(setters.get(name),owner,[value])
+        };
+        if(kind==='History'){
+          operations.go=n=>{requireActiveHistory();host.historyGo(n)};
+          operations.update=(state,url,replace)=>{const error=replace?host.historyReplace(url,state):host.historyPush(url,state);if(error)throw new DOMException(error,'SecurityError')};
+        }
+        if(kind==='Storage'){
+          const area=storageAreas.get(owner);
+          operations.key=i=>host.storageKey(area,i);
+          operations.getItem=k=>host.storageGet(area,k);
+          operations.setItem=(k,v)=>host.storageSet(area,k,v);
+          operations.removeItem=k=>host.storageRemove(area,k);
+          operations.clear=()=>host.storageClear(area);
+        }
+        registerRealmBinding(owner,kind,operations);
+      }
+    }
+  };
+  const finalizeCallableBindings=()=>{
+    const exposure=pendingCallableExposure;
+    pendingCallableExposure=null;
+    if(!exposure)return;
+    const publishMemberOrder=(target,order)=>{
+      const current=Object.getOwnPropertyNames(target),descriptors=new Map(current.map(name=>[name,Object.getOwnPropertyDescriptor(target,name)]));
+      const desired=[...order.filter(name=>descriptors.has(name)),...current.filter(name=>!order.includes(name))];
+      if(current.length===desired.length&&current.every((name,i)=>name===desired[i]))return;
+      // Nonconfigurable properties cannot be moved. Preserve their entire
+      // prefix and reorder only a compatible configurable suffix.
+      let anchor=-1;for(let i=0;i<current.length;i++)if(!descriptors.get(current[i]).configurable)anchor=i;
+      for(let i=0;i<=anchor;i++)if(current[i]!==desired[i])return;
+      for(let i=anchor+1;i<current.length;i++)delete target[current[i]];
+      for(let i=anchor+1;i<desired.length;i++)Object.defineProperty(target,desired[i],descriptors.get(desired[i]));
+    };
+    // Late semantic installers replace generated functions. Reapply only the
+    // captured callable metadata to existing bindings, without creating missing
+    // members, changing prototype ownership or replaying global publication.
+    const wrappers=new WeakMap();
+    const normalize=(fn,name,length,operation)=>{
+      if(typeof fn!=='function')return fn;
+      if(operation&&Object.prototype.hasOwnProperty.call(fn,'prototype')){
+        let wrapper=wrappers.get(fn);
+        if(!wrapper){
+          const original=fn;
+          // Concise methods are callable without [[Construct]]. One wrapper per
+          // original preserves aliases; captured apply preserves the receiver,
+          // arguments and exception identity even after user mutation.
+          wrapper=({[name](...args){return functionSourceApply(original,this,args)}})[name];
+          wrappers.set(fn,wrapper);
+        }
+        fn=wrapper;
+      }
+      if(name&&fn.name!==name)Object.defineProperty(fn,'name',{value:name,configurable:true});
+      if(length!==null&&length!==undefined&&fn.length!==length)Object.defineProperty(fn,'length',{value:length,configurable:true});
+      return fn;
+    };
+    for(const property of exposure.properties||[]){
+      if(engineGlobals.has(property.name))continue;
+      const descriptor=Object.getOwnPropertyDescriptor(globalThis,property.name);
+      if(descriptor&&typeof descriptor.value==='function')normalize(descriptor.value,property.functionName,property.functionLength,false);
+    }
+    for(const [name,members] of Object.entries(exposure.prototypes||{})){
+      if(engineGlobals.has(name))continue;
+      const ctor=Object.getOwnPropertyDescriptor(globalThis,name)?.value,prototype=ctor&&ctor.prototype;
+      if(!prototype)continue;
+      for(const member of members){
+        if(member.name==='constructor')continue;
+        const descriptor=Object.getOwnPropertyDescriptor(prototype,member.name);
+        if(!descriptor||!descriptor.configurable)continue;
+        const previousValue=descriptor.value,previousGet=descriptor.get,previousSet=descriptor.set;
+        if(typeof descriptor.value==='function')descriptor.value=normalize(descriptor.value,member.functionName||member.name,member.functionLength,true);
+        if(descriptor.get)descriptor.get=normalize(descriptor.get,'get '+member.name,0,true);
+        if(descriptor.set)descriptor.set=normalize(descriptor.set,'set '+member.name,1,true);
+        if(descriptor.value!==previousValue||descriptor.get!==previousGet||descriptor.set!==previousSet)Object.defineProperty(prototype,member.name,descriptor);
+      }
+    }
+    for(const [name,order] of Object.entries(exposure.prototypeOrder||{})){
+      if(engineGlobals.has(name))continue;
+      const prototype=Object.getOwnPropertyDescriptor(globalThis,name)?.value?.prototype;
+      if(prototype)publishMemberOrder(prototype,order);
+    }
+    for(const [name,order] of Object.entries(exposure.interfaceOrder||{})){
+      if(engineGlobals.has(name))continue;
+      const target=Object.getOwnPropertyDescriptor(globalThis,name)?.value;
+      if(target)publishMemberOrder(target,order);
+    }
+  };
+  const finalizeNativeBindings=()=>{
+  // WebIDL bindings are native functions from JavaScript's point of view even
+  // when their semantics are implemented in JavaScript underneath. Derive this
+  // representation from the installed surface so generated and handwritten
+  // interfaces cannot drift apart.
+  const markedPrototypes=new Set([Object.prototype,Function.prototype]);
+  const markMembers=owner=>{
+    for(const member of Reflect.ownKeys(owner)){
+      if(member==='constructor'||member==='prototype')continue;
+      const descriptor=Object.getOwnPropertyDescriptor(owner,member);
+      const method=descriptor&&descriptor.value;
+      // Iteration aliases can reuse intrinsic functions such as Array#values.
+      // Their identity and original function name survive the alias.
+      markNative(method,typeof method==='function'&&method.name||String(member));
+      markNative(descriptor&&descriptor.get,String(member),'get ');
+      markNative(descriptor&&descriptor.set,String(member),'set ');
+    }
+  };
+  for(const key of Reflect.ownKeys(globalThis)){
+    if(engineGlobals.has(key))continue;
+    const globalDescriptor=Object.getOwnPropertyDescriptor(globalThis,key);
+    const value=globalDescriptor&&globalDescriptor.value;
+    if(typeof value!=='function')continue;
+    // A LegacyWindowAlias is another property pointing at the same interface
+    // object; it must not rename that function in Function#toString.
+    markNative(value,value.name||String(key));
+    markMembers(value);
+    let prototype=value.prototype;
+    while(prototype&&prototype!==Object.prototype&&!markedPrototypes.has(prototype)){
+      markedPrototypes.add(prototype);
+      markMembers(prototype);
+      prototype=Object.getPrototypeOf(prototype);
+    }
+  }
+  };
   const finalizeBindings=()=>{
   const reflectString=(interfaceName,property,attribute=property,defaultValue='')=>{const ctor=globalThis[interfaceName];if(!ctor||!ctor.prototype)return;Object.defineProperty(ctor.prototype,property,{get(){const value=this.getAttribute(attribute);return value===null?defaultValue:value},set(value){this.setAttribute(attribute,String(value))},enumerable:true,configurable:true})};
-  Object.defineProperty(CharacterData.prototype,'nodeName',{get(){const slot=elementSlot(this);return slot&&slot.type==='comment'?'#comment':'#text'},enumerable:true,configurable:true});
-  Object.defineProperty(DocumentFragment.prototype,'nodeName',{get(){return'#document-fragment'},enumerable:true,configurable:true});
   reflectString('HTMLScriptElement','type');
   reflectString('HTMLInputElement','name');
   if(globalThis.HTMLInputElement&&globalThis.HTMLInputElement.prototype)Object.defineProperty(globalThis.HTMLInputElement.prototype,'type',{get(){const value=(this.getAttribute('type')||'text').toLowerCase();return new Set(['hidden','text','search','tel','url','email','password','date','month','week','time','datetime-local','number','range','color','checkbox','radio','file','submit','image','reset','button']).has(value)?value:'text'},set(value){this.setAttribute('type',String(value))},enumerable:true,configurable:true});
@@ -929,7 +1229,7 @@
   // singleton browser objects are enumerable readonly accessors. Object.assign
   // above is only a convenient installation mechanism, not their final binding
   // descriptor.
-  for(const ctor of [Event,MessageEvent,ErrorEvent,EventTarget,Node,DocumentFragment,ShadowRoot,Element,HTMLElement,SVGElement,HTMLScriptElement,HTMLImageElement,HTMLIFrameElement,HTMLAnchorElement,HTMLCollection,NodeList,DOMTokenList,CSSStyleDeclaration,Crypto,DOMException,PermissionsPolicy,TrustedHTML,TrustedScript,TrustedScriptURL,TrustedTypePolicy,TrustedTypePolicyFactory,URL,URLSearchParams,ReadableStream,ReadableStreamDefaultReader,ReadableStreamDefaultController,WritableStream,WritableStreamDefaultWriter,TransformStream,TransformStreamDefaultController,Blob,File,Worker,Document,HTMLDocument,Navigator,NavigatorUAData,Plugin,PluginArray,MimeType,MimeTypeArray,Screen,Location,History,Storage,XMLHttpRequest,GPU,GPUAdapter,GPUAdapterInfo,GPUSupportedFeatures,GPUSupportedLimits,GPUDevice,RTCPeerConnection,RTCSessionDescription,RTCIceCandidate,RTCPeerConnectionIceEvent,RTCDataChannel,Performance,PerformanceEntry,PerformanceServerTiming,PerformanceResourceTiming,PerformanceNavigationTiming,PerformanceObserverEntryList,PerformanceObserver])Object.defineProperty(globalThis,ctor.name,{value:ctor,writable:true,enumerable:false,configurable:true});
+  for(const ctor of [Event,MessageEvent,ErrorEvent,EventTarget,Node,DocumentFragment,ShadowRoot,Element,HTMLElement,SVGElement,HTMLScriptElement,HTMLImageElement,HTMLIFrameElement,HTMLAnchorElement,HTMLCollection,NodeList,DOMTokenList,CSSStyleDeclaration,Crypto,DOMException,PermissionsPolicy,TrustedHTML,TrustedScript,TrustedScriptURL,TrustedTypePolicy,TrustedTypePolicyFactory,URL,URLSearchParams,ReadableStream,ReadableStreamDefaultReader,ReadableStreamDefaultController,WritableStream,WritableStreamDefaultWriter,TransformStream,TransformStreamDefaultController,Blob,File,Worker,Document,HTMLDocument,Navigator,NavigatorUAData,Plugin,PluginArray,MimeType,MimeTypeArray,Screen,Location,History,Storage,XMLHttpRequestEventTarget,XMLHttpRequest,GPU,GPUAdapter,GPUAdapterInfo,GPUSupportedFeatures,GPUSupportedLimits,GPUDevice,RTCPeerConnection,RTCSessionDescription,RTCIceCandidate,RTCPeerConnectionIceEvent,RTCDataChannel,Performance,PerformanceEntry,PerformanceServerTiming,PerformanceResourceTiming,PerformanceNavigationTiming,PerformanceObserverEntryList,PerformanceObserver])Object.defineProperty(globalThis,ctor.name,{value:ctor,writable:true,enumerable:false,configurable:true});
   for(const ctor of [CharacterData,Text,Comment,SVGSVGElement,SVGRect,HTMLLinkElement,HTMLMetaElement,IntersectionObserver,BroadcastChannel,CryptoKey,SubtleCrypto,PerformanceMark,PerformanceTiming])Object.defineProperty(globalThis,ctor.name,{value:ctor,writable:true,enumerable:false,configurable:true});
   for(const [name,getter] of [['document',()=>document],['navigator',()=>nav],['screen',()=>scr],['location',()=>loc],['history',()=>hist],['localStorage',()=>storage],['sessionStorage',()=>sessionStorage],['crypto',()=>crypto],['trustedTypes',()=>trustedTypes],['performance',()=>window.performance]]){
     const value=getter();
@@ -949,32 +1249,6 @@
   }
   markNative(frameElement,'frameElement','get ');Object.defineProperty(globalThis,'frameElement',{get:frameElement,enumerable:true,configurable:true});
   if(globalThis.Window&&globalThis.Window.prototype)delete globalThis.Window.prototype.frameElement;
-  // WebIDL bindings are native functions from JavaScript's point of view even
-  // when their semantics are implemented in JavaScript underneath. Derive this
-  // representation from the installed surface so generated and handwritten
-  // interfaces cannot drift apart.
-  const markedPrototypes=new Set();
-  for(const key of Reflect.ownKeys(globalThis)){
-    if(engineGlobals.has(key))continue;
-    const globalDescriptor=Object.getOwnPropertyDescriptor(globalThis,key);
-    const value=globalDescriptor&&globalDescriptor.value;
-    if(typeof value!=='function')continue;
-    // A LegacyWindowAlias is another property pointing at the same interface
-    // object; it must not rename that function in Function#toString.
-    markNative(value,value.name||String(key));
-    let prototype=value.prototype;
-    while(prototype&&prototype!==Object.prototype&&!markedPrototypes.has(prototype)){
-      markedPrototypes.add(prototype);
-      for(const member of Reflect.ownKeys(prototype)){
-        if(member==='constructor')continue;
-        const descriptor=Object.getOwnPropertyDescriptor(prototype,member);
-        markNative(descriptor&&descriptor.value,String(member));
-        markNative(descriptor&&descriptor.get,String(member),'get ');
-        markNative(descriptor&&descriptor.set,String(member),'set ');
-      }
-      prototype=Object.getPrototypeOf(prototype);
-    }
-  }
   if(globalThis.Window&&globalThis.Window.prototype){
     const target=window;
     // The realm global is the local WindowProxy identity.  Wrapping it in a

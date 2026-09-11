@@ -1,0 +1,9 @@
+0x7ffc86afe4be mov qword ptr [rsi], rax
+0x7ffc86afe4c1 lea eax, [r14 + 7]
+0x7ffc86afe4c5 test r14d, r14d
+0x7ffc86afe4c8 cmovns eax, r14d
+0x7ffc86afe4cc sar eax, 3
+0x7ffc86afe4cf mov rcx, rax
+0x7ffc86afe4d2 shl rcx, 0x20
+0x7ffc86afe4d6 mov qword ptr [rsi + 8], rcx
+0x7ffc86afe4da cmp bl, 1

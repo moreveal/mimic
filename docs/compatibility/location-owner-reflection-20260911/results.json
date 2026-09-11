@@ -1,0 +1,6282 @@
+{
+  "identity": {
+    "dirty": [
+      " M internal/browser/frame_document_bridge.go",
+      " M internal/browser/frame_reflection_test.go",
+      " M internal/browser/realm.go",
+      " M internal/engine/goja/runtime.go",
+      " M internal/engine/goja/runtime_test.go",
+      " M internal/webapi/surface.js",
+      "?? docs/compatibility/location-owner-reflection-2026-09-11.md",
+      "?? internal/browser/location_reflection_test.go",
+      "?? internal/browser/testdata/ancestor_origins_chrome152.json",
+      "?? internal/browser/testdata/ancestor_origins_oracle.js",
+      "?? internal/browser/testdata/location_reflection_chrome152.json",
+      "?? internal/browser/testdata/location_reflection_oracle.js",
+      "?? internal/browser/testdata/realm_property_mutation_chrome152.json",
+      "?? internal/browser/testdata/realm_property_mutation_oracle.js"
+    ],
+    "sha256": "CC97570C06CF010F6525CD41C946A935F603BFAB1D71061105EB1403724EE88D",
+    "revision": "87805927ebc578be7518c28ef07d81cb24c95382",
+    "chrome": {
+      "Browser": "Chrome/152.0.7977.82",
+      "Protocol-Version": "1.3",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "V8-Version": "15.2.124.21",
+      "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+      "webSocketDebuggerUrl": "ws://127.0.0.1:19533/devtools/browser/c97058d6-c7fe-4505-ab69-996d011b5f7a"
+    }
+  },
+  "fixed": {
+    "checks": 236,
+    "matches": 202,
+    "fixedProbes": [
+      "surface.location",
+      "descriptor.location.ancestorOrigins",
+      "property.location.ancestorOrigins",
+      "descriptor.location.assign"
+    ],
+    "regressions": [],
+    "newDifferences": [],
+    "oracleDrift": [],
+    "groups": [
+      {
+        "id": "040b06ea0edd0d8b",
+        "category": "descriptor",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "16623006f5e14633",
+        "category": "surface",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "21a81b154f26e799",
+        "category": "surface",
+        "fixed": false,
+        "signatureFixed": false,
+        "remaining": [
+          [
+            [
+              "value",
+              "functionShape",
+              "source",
+              "ok",
+              "value"
+            ],
+            "function AbortController() { [native code] }",
+            "class AbortController {constructor(){controllerSlots.set(this,new AbortSignal(hostToken))}get signal(){return controllerSlots.get(this)}abort(reason){abort(this.signal,reason)}}"
+          ]
+        ]
+      },
+      {
+        "id": "261de7a21e7145d7",
+        "category": "legacy",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "2e3fa5c55a4a766c",
+        "category": "surface",
+        "fixed": false,
+        "signatureFixed": false,
+        "remaining": [
+          [
+            [
+              "value",
+              "ownKeys",
+              0
+            ],
+            "length",
+            "constructor"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              1
+            ],
+            "scrollRestoration",
+            "pushState"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              2
+            ],
+            "state",
+            "replaceState"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              6
+            ],
+            "pushState",
+            "length"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              7
+            ],
+            "replaceState",
+            "state"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              8
+            ],
+            "constructor",
+            "scrollRestoration"
+          ]
+        ]
+      },
+      {
+        "id": "2f13fa24fe6af546",
+        "category": "surface",
+        "fixed": false,
+        "signatureFixed": false,
+        "remaining": [
+          [
+            [
+              "value",
+              "ownKeys"
+            ],
+            [
+              "Object",
+              "Function",
+              "Array",
+              "Number",
+              "parseFloat",
+              "parseInt",
+              "Infinity",
+              "NaN",
+              "undefined",
+              "Boolean",
+              "String",
+              "Symbol",
+              "Date",
+              "Promise",
+              "RegExp",
+              "Error",
+              "AggregateError",
+              "EvalError",
+              "RangeError",
+              "ReferenceError",
+              "SyntaxError",
+              "TypeError",
+              "URIError",
+              "globalThis",
+              "JSON",
+              "Math",
+              "Intl",
+              "ArrayBuffer",
+              "Atomics",
+              "Uint8Array",
+              "Int8Array",
+              "Uint16Array",
+              "Int16Array",
+              "Uint32Array",
+              "Int32Array",
+              "BigUint64Array",
+              "BigInt64Array",
+              "Uint8ClampedArray",
+              "Float32Array",
+              "Float64Array",
+              "DataView",
+              "Map",
+              "BigInt",
+              "Set",
+              "Iterator",
+              "WeakMap",
+              "WeakSet",
+              "Proxy",
+              "Reflect",
+              "FinalizationRegistry",
+              "WeakRef",
+              "decodeURI",
+              "decodeURIComponent",
+              "encodeURI",
+              "encodeURIComponent",
+              "escape",
+              "unescape",
+              "eval",
+              "isFinite",
+              "isNaN",
+              "console",
+              "Option",
+              "Image",
+              "Audio",
+              "webkitURL",
+              "webkitRTCPeerConnection",
+              "webkitMediaStream",
+              "WebKitMutationObserver",
+              "WebKitCSSMatrix",
+              "FeaturePolicy",
+              "XPathResult",
+              "XPathExpression",
+              "XPathEvaluator",
+              "XMLSerializer",
+              "XMLHttpRequestUpload",
+              "XMLHttpRequestEventTarget",
+              "XMLHttpRequest",
+              "XMLDocument",
+              "WritableStreamDefaultWriter",
+              "WritableStreamDefaultController",
+              "WritableStream",
+              "Worker",
+              "WindowControlsOverlayGeometryChangeEvent",
+              "WindowControlsOverlay",
+              "Window",
+              "WheelEvent",
+              "WebSocket",
+              "WebGLVertexArrayObject",
+              "WebGLUniformLocation",
+              "WebGLTransformFeedback",
+              "WebGLTexture",
+              "WebGLSync",
+              "WebGLShaderPrecisionFormat",
+              "WebGLShader",
+              "WebGLSampler",
+              "WebGLRenderingContext",
+              "WebGLRenderbuffer",
+              "WebGLQuery",
+              "WebGLProgram",
+              "WebGLObject",
+              "WebGLFramebuffer",
+              "WebGLContextEvent",
+              "WebGLBuffer",
+              "WebGLActiveInfo",
+              "WebGL2RenderingContext",
+              "WaveShaperNode",
+              "VisualViewport",
+              "VisibilityStateEntry",
+              "VirtualKeyboardGeometryChangeEvent",
+              "ViewTransitionTypeSet",
+              "ViewTransition",
+              "ViewTimeline",
+              "VideoPlaybackQuality",
+              "VideoFrame",
+              "VideoColorSpace",
+              "ValidityState",
+              "VTTCue",
+              "UserActivation",
+              "URLSearchParams",
+              "URLPattern",
+              "URL",
+              "UIEvent",
+              "TrustedTypePolicyFactory",
+              "TrustedTypePolicy",
+              "TrustedScriptURL",
+              "TrustedScript",
+              "TrustedHTML",
+              "TreeWalker",
+              "TransitionEvent",
+              "TransformStreamDefaultController",
+              "TransformStream",
+              "TrackEvent",
+              "TouchList",
+              "TouchEvent",
+              "Touch",
+              "ToggleEvent",
+              "TimeRanges",
+              "TextUpdateEvent",
+              "TextTrackList",
+              "TextTrackCueList",
+              "TextTrackCue",
+              "TextTrack",
+              "TextMetrics",
+              "TextFormatUpdateEvent",
+              "TextFormat",
+              "TextEvent",
+              "TextEncoderStream",
+              "TextEncoder",
+              "TextDecoderStream",
+              "TextDecoder",
+              "Text",
+              "TaskSignal",
+              "TaskPriorityChangeEvent",
+              "TaskController",
+              "TaskAttributionTiming",
+              "SyncManager",
+              "Subscriber",
+              "SubmitEvent",
+              "StyleSheetList",
+              "StyleSheet",
+              "StylePropertyMapReadOnly",
+              "StylePropertyMap",
+              "StorageEvent",
+              "Storage",
+              "StereoPannerNode",
+              "StaticRange",
+              "SourceBufferList",
+              "SourceBuffer",
+              "ShadowRoot",
+              "Selection",
+              "SecurityPolicyViolationEvent",
+              "ScrollTimeline",
+              "ScriptProcessorNode",
+              "ScreenOrientation",
+              "Screen",
+              "Scheduling",
+              "Scheduler",
+              "SVGViewElement",
+              "SVGUseElement",
+              "SVGUnitTypes",
+              "SVGTransformList",
+              "SVGTransform",
+              "SVGTitleElement",
+              "SVGTextPositioningElement",
+              "SVGTextPathElement",
+              "SVGTextElement",
+              "SVGTextContentElement",
+              "SVGTSpanElement",
+              "SVGSymbolElement",
+              "SVGSwitchElement",
+              "SVGStyleElement",
+              "SVGStringList",
+              "SVGStopElement",
+              "SVGSetElement",
+              "SVGScriptElement",
+              "SVGSVGElement",
+              "SVGRectElement",
+              "SVGRect",
+              "SVGRadialGradientElement",
+              "SVGPreserveAspectRatio",
+              "SVGPolylineElement",
+              "SVGPolygonElement",
+              "SVGPointList",
+              "SVGPoint",
+              "SVGPatternElement",
+              "SVGPathElement",
+              "SVGNumberList",
+              "SVGNumber",
+              "SVGMetadataElement",
+              "SVGMatrix",
+              "SVGMaskElement",
+              "SVGMarkerElement",
+              "SVGMPathElement",
+              "SVGLinearGradientElement",
+              "SVGLineElement",
+              "SVGLengthList",
+              "SVGLength",
+              "SVGImageElement",
+              "SVGGraphicsElement",
+              "SVGGradientElement",
+              "SVGGeometryElement",
+              "SVGGElement",
+              "SVGForeignObjectElement",
+              "SVGFilterElement",
+              "SVGFETurbulenceElement",
+              "SVGFETileElement",
+              "SVGFESpotLightElement",
+              "SVGFESpecularLightingElement",
+              "SVGFEPointLightElement",
+              "SVGFEOffsetElement",
+              "SVGFEMorphologyElement",
+              "SVGFEMergeNodeElement",
+              "SVGFEMergeElement",
+              "SVGFEImageElement",
+              "SVGFEGaussianBlurElement",
+              "SVGFEFuncRElement",
+              "SVGFEFuncGElement",
+              "SVGFEFuncBElement",
+              "SVGFEFuncAElement",
+              "SVGFEFloodElement",
+              "SVGFEDropShadowElement",
+              "SVGFEDistantLightElement",
+              "SVGFEDisplacementMapElement",
+              "SVGFEDiffuseLightingElement",
+              "SVGFEConvolveMatrixElement",
+              "SVGFECompositeElement",
+              "SVGFEComponentTransferElement",
+              "SVGFEColorMatrixElement",
+              "SVGFEBlendElement",
+              "SVGEllipseElement",
+              "SVGElement",
+              "SVGDescElement",
+              "SVGDefsElement",
+              "SVGComponentTransferFunctionElement",
+              "SVGClipPathElement",
+              "SVGCircleElement",
+              "SVGAnimationElement",
+              "SVGAnimatedTransformList",
+              "SVGAnimatedString",
+              "SVGAnimatedRect",
+              "SVGAnimatedPreserveAspectRatio",
+              "SVGAnimatedNumberList",
+              "SVGAnimatedNumber",
+              "SVGAnimatedLengthList",
+              "SVGAnimatedLength",
+              "SVGAnimatedInteger",
+              "SVGAnimatedEnumeration",
+              "SVGAnimatedBoolean",
+              "SVGAnimatedAngle",
+              "SVGAnimateTransformElement",
+              "SVGAnimateMotionElement",
+              "SVGAnimateElement",
+              "SVGAngle",
+              "SVGAElement",
+              "Response",
+              "ResizeObserverSize",
+              "ResizeObserverEntry",
+              "ResizeObserver",
+              "Request",
+              "ReportingObserver",
+              "ReportBody",
+              "ReadableStreamDefaultReader",
+              "ReadableStreamDefaultController",
+              "ReadableStreamBYOBRequest",
+              "ReadableStreamBYOBReader",
+              "ReadableStream",
+              "ReadableByteStreamController",
+              "Range",
+              "RadioNodeList",
+              "RTCTrackEvent",
+              "RTCStatsReport",
+              "RTCSessionDescription",
+              "RTCSctpTransport",
+              "RTCRtpTransceiver",
+              "RTCRtpSender",
+              "RTCRtpReceiver",
+              "RTCPeerConnectionIceEvent",
+              "RTCPeerConnectionIceErrorEvent",
+              "RTCPeerConnection",
+              "RTCIceTransport",
+              "RTCIceCandidate",
+              "RTCErrorEvent",
+              "RTCError",
+              "RTCEncodedVideoFrame",
+              "RTCEncodedAudioFrame",
+              "RTCDtlsTransport",
+              "RTCDataChannelEvent",
+              "RTCDTMFToneChangeEvent",
+              "RTCDTMFSender",
+              "RTCCertificate",
+              "PromiseRejectionEvent",
+              "ProgressEvent",
+              "ProcessingInstruction",
+              "PopStateEvent",
+              "PointerEvent",
+              "PluginArray",
+              "Plugin",
+              "PictureInPictureWindow",
+              "PictureInPictureEvent",
+              "PermissionsPolicy",
+              "Permissions",
+              "PermissionStatus",
+              "PeriodicWave",
+              "PerformanceTimingConfidence",
+              "PerformanceTiming",
+              "PerformanceServerTiming",
+              "PerformanceResourceTiming",
+              "PerformancePaintTiming",
+              "PerformanceObserverEntryList",
+              "PerformanceObserver",
+              "PerformanceNavigationTiming",
+              "PerformanceNavigation",
+              "PerformanceMeasure",
+              "PerformanceMark",
+              "PerformanceLongTaskTiming",
+              "PerformanceEventTiming",
+              "PerformanceEntry",
+              "PerformanceElementTiming",
+              "Performance",
+              "Path2D",
+              "PannerNode",
+              "PageTransitionEvent",
+              "PageRevealEvent",
+              "OverconstrainedError",
+              "OscillatorNode",
+              "OffscreenCanvasRenderingContext2D",
+              "OffscreenCanvas",
+              "OfflineAudioContext",
+              "OfflineAudioCompletionEvent",
+              "Observable",
+              "NodeList",
+              "NodeIterator",
+              "NodeFilter",
+              "Node",
+              "NetworkInformation",
+              "NavigatorUAData",
+              "Navigator",
+              "NavigationTransition",
+              "NavigationPrecommitController",
+              "NavigationHistoryEntry",
+              "NavigationDestination",
+              "NavigationCurrentEntryChangeEvent",
+              "NavigationActivation",
+              "Navigation",
+              "NavigateEvent",
+              "NamedNodeMap",
+              "MutationRecord",
+              "MutationObserver",
+              "MouseEvent",
+              "MimeTypeArray",
+              "MimeType",
+              "MessagePort",
+              "MessageEvent",
+              "MessageChannel",
+              "MediaStreamTrackVideoStats",
+              "MediaStreamTrackProcessor",
+              "MediaStreamTrackGenerator",
+              "MediaStreamTrackEvent",
+              "MediaStreamTrackAudioStats",
+              "MediaStreamTrack",
+              "MediaStreamEvent",
+              "MediaStreamAudioSourceNode",
+              "MediaStreamAudioDestinationNode",
+              "MediaStream",
+              "MediaSourceHandle",
+              "MediaSource",
+              "MediaRecorder",
+              "MediaQueryListEvent",
+              "MediaQueryList",
+              "MediaList",
+              "MediaError",
+              "MediaEncryptedEvent",
+              "MediaElementAudioSourceNode",
+              "MediaCapabilities",
+              "MathMLElement",
+              "Location",
+              "LayoutShiftAttribution",
+              "LayoutShift",
+              "LargestContentfulPaint",
+              "KeyframeEffect",
+              "KeyboardEvent",
+              "IntersectionObserverEntry",
+              "IntersectionObserver",
+              "InterestEvent",
+              "InputEvent",
+              "InputDeviceInfo",
+              "InputDeviceCapabilities",
+              "Ink",
+              "ImageData",
+              "ImageBitmapRenderingContext",
+              "ImageBitmap",
+              "IdleDeadline",
+              "IIRFilterNode",
+              "IDBVersionChangeEvent",
+              "IDBTransaction",
+              "IDBRequest",
+              "IDBRecord",
+              "IDBOpenDBRequest",
+              "IDBObjectStore",
+              "IDBKeyRange",
+              "IDBIndex",
+              "IDBFactory",
+              "IDBDatabase",
+              "IDBCursorWithValue",
+              "IDBCursor",
+              "History",
+              "HighlightRegistry",
+              "Highlight",
+              "Headers",
+              "HashChangeEvent",
+              "HTMLVideoElement",
+              "HTMLUnknownElement",
+              "HTMLUListElement",
+              "HTMLTrackElement",
+              "HTMLTitleElement",
+              "HTMLTimeElement",
+              "HTMLTextAreaElement",
+              "HTMLTemplateElement",
+              "HTMLTableSectionElement",
+              "HTMLTableRowElement",
+              "HTMLTableElement",
+              "HTMLTableColElement",
+              "HTMLTableCellElement",
+              "HTMLTableCaptionElement",
+              "HTMLStyleElement",
+              "HTMLSpanElement",
+              "HTMLSourceElement",
+              "HTMLSlotElement",
+              "HTMLSelectedContentElement",
+              "HTMLSelectElement",
+              "HTMLScriptElement",
+              "HTMLQuoteElement",
+              "HTMLProgressElement",
+              "HTMLPreElement",
+              "HTMLPictureElement",
+              "HTMLParamElement",
+              "HTMLParagraphElement",
+              "HTMLOutputElement",
+              "HTMLOptionsCollection",
+              "HTMLOptionElement",
+              "HTMLOptGroupElement",
+              "HTMLObjectElement",
+              "HTMLOListElement",
+              "HTMLModElement",
+              "HTMLMeterElement",
+              "HTMLMetaElement",
+              "HTMLMenuElement",
+              "HTMLMediaElement",
+              "HTMLMarqueeElement",
+              "HTMLMapElement",
+              "HTMLLinkElement",
+              "HTMLLegendElement",
+              "HTMLLabelElement",
+              "HTMLLIElement",
+              "HTMLInputElement",
+              "HTMLImageElement",
+              "HTMLIFrameElement",
+              "HTMLHtmlElement",
+              "HTMLHeadingElement",
+              "HTMLHeadElement",
+              "HTMLHRElement",
+              "HTMLFrameSetElement",
+              "HTMLFrameElement",
+              "HTMLFormElement",
+              "HTMLFormControlsCollection",
+              "HTMLFontElement",
+              "HTMLFieldSetElement",
+              "HTMLEmbedElement",
+              "HTMLElement",
+              "HTMLDocument",
+              "HTMLDivElement",
+              "HTMLDirectoryElement",
+              "HTMLDialogElement",
+              "HTMLDetailsElement",
+              "HTMLDataListElement",
+              "HTMLDataElement",
+              "HTMLDListElement",
+              "HTMLCollection",
+              "HTMLCanvasElement",
+              "HTMLButtonElement",
+              "HTMLBodyElement",
+              "HTMLBaseElement",
+              "HTMLBRElement",
+              "HTMLAudioElement",
+              "HTMLAreaElement",
+              "HTMLAnchorElement",
+              "HTMLAllCollection",
+              "GeolocationPositionError",
+              "GeolocationPosition",
+              "GeolocationCoordinates",
+              "Geolocation",
+              "GamepadHapticActuator",
+              "GamepadEvent",
+              "GamepadButton",
+              "Gamepad",
+              "GainNode",
+              "FormDataEvent",
+              "FormData",
+              "FontFaceSetLoadEvent",
+              "FontFaceSet",
+              "FontFace",
+              "FocusEvent",
+              "FileReader",
+              "FileList",
+              "File",
+              "External",
+              "EventTarget",
+              "EventSource",
+              "EventCounts",
+              "Event",
+              "ErrorEvent",
+              "EncodedVideoChunk",
+              "EncodedAudioChunk",
+              "ElementInternals",
+              "Element",
+              "EditContext",
+              "DynamicsCompressorNode",
+              "DragEvent",
+              "DocumentType",
+              "DocumentTimeline",
+              "DocumentFragment",
+              "Document",
+              "DelegatedInkTrailPresenter",
+              "DelayNode",
+              "DecompressionStream",
+              "DataTransferItemList",
+              "DataTransferItem",
+              "DataTransfer",
+              "DOMTokenList",
+              "DOMStringMap",
+              "DOMStringList",
+              "DOMRectReadOnly",
+              "DOMRectList",
+              "DOMRect",
+              "DOMQuad",
+              "DOMPointReadOnly",
+              "DOMPoint",
+              "DOMParser",
+              "DOMMatrixReadOnly",
+              "DOMMatrix",
+              "DOMImplementation",
+              "DOMException",
+              "DOMError",
+              "CustomStateSet",
+              "CustomEvent",
+              "CustomElementRegistry",
+              "Crypto",
+              "CountQueuingStrategy",
+              "ConvolverNode",
+              "ContentVisibilityAutoStateChangeEvent",
+              "ConstantSourceNode",
+              "CompressionStream",
+              "CompositionEvent",
+              "Comment",
+              "CommandEvent",
+              "CloseWatcher",
+              "CloseEvent",
+              "ClipboardEvent",
+              "CharacterData",
+              "CharacterBoundsUpdateEvent",
+              "ChannelSplitterNode",
+              "ChannelMergerNode",
+              "CaretPosition",
+              "CanvasRenderingContext2D",
+              "CanvasPattern",
+              "CanvasGradient",
+              "CanvasCaptureMediaStreamTrack",
+              "CSSViewTransitionRule",
+              "CSSVariableReferenceValue",
+              "CSSUnparsedValue",
+              "CSSUnitValue",
+              "CSSTranslate",
+              "CSSTransition",
+              "CSSTransformValue",
+              "CSSTransformComponent",
+              "CSSSupportsRule",
+              "CSSStyleValue",
+              "CSSStyleSheet",
+              "CSSStyleRule",
+              "CSSStyleDeclaration",
+              "CSSStartingStyleRule",
+              "CSSSkewY",
+              "CSSSkewX",
+              "CSSSkew",
+              "CSSScopeRule",
+              "CSSScale",
+              "CSSRuleList",
+              "CSSRule",
+              "CSSRotate",
+              "CSSPropertyRule",
+              "CSSPositionValue",
+              "CSSPositionTryRule",
+              "CSSPositionTryDescriptors",
+              "CSSPerspective",
+              "CSSPageRule",
+              "CSSNumericValue",
+              "CSSNumericArray",
+              "CSSNestedDeclarations",
+              "CSSNamespaceRule",
+              "CSSMediaRule",
+              "CSSMatrixComponent",
+              "CSSMathValue",
+              "CSSMathSum",
+              "CSSMathProduct",
+              "CSSMathNegate",
+              "CSSMathMin",
+              "CSSMathMax",
+              "CSSMathInvert",
+              "CSSMathClamp",
+              "CSSMarginRule",
+              "CSSLayerStatementRule",
+              "CSSLayerBlockRule",
+              "CSSKeywordValue",
+              "CSSKeyframesRule",
+              "CSSKeyframeRule",
+              "CSSImportRule",
+              "CSSImageValue",
+              "CSSGroupingRule",
+              "CSSFontPaletteValuesRule",
+              "CSSFontFaceRule",
+              "CSSCounterStyleRule",
+              "CSSContainerRule",
+              "CSSConditionRule",
+              "CSSAnimation",
+              "CSS",
+              "CSPViolationReportBody",
+              "CDATASection",
+              "ByteLengthQueuingStrategy",
+              "BrowserCaptureMediaStreamTrack",
+              "BroadcastChannel",
+              "BlobEvent",
+              "Blob",
+              "BiquadFilterNode",
+              "BeforeUnloadEvent",
+              "BeforeInstallPromptEvent",
+              "BaseAudioContext",
+              "BarProp",
+              "AudioWorkletNode",
+              "AudioSinkInfo",
+              "AudioScheduledSourceNode",
+              "AudioProcessingEvent",
+              "AudioParamMap",
+              "AudioParam",
+              "AudioNode",
+              "AudioListener",
+              "AudioDestinationNode",
+              "AudioData",
+              "AudioContext",
+              "AudioBufferSourceNode",
+              "AudioBuffer",
+              "Attr",
+              "AnimationTimeline",
+              "AnimationPlaybackEvent",
+              "AnimationEvent",
+              "AnimationEffect",
+              "Animation",
+              "AnalyserNode",
+              "AbstractRange",
+              "AbortSignal",
+              "AbortController",
+              "window",
+              "self",
+              "document",
+              "name",
+              "location",
+              "customElements",
+              "history",
+              "navigation",
+              "locationbar",
+              "menubar",
+              "personalbar",
+              "scrollbars",
+              "statusbar",
+              "toolbar",
+              "status",
+              "closed",
+              "frames",
+              "length",
+              "top",
+              "opener",
+              "parent",
+              "frameElement",
+              "navigator",
+              "origin",
+              "external",
+              "screen",
+              "innerWidth",
+              "innerHeight",
+              "scrollX",
+              "pageXOffset",
+              "scrollY",
+              "pageYOffset",
+              "visualViewport",
+              "screenX",
+              "screenY",
+              "outerWidth",
+              "outerHeight",
+              "devicePixelRatio",
+              "onpagereveal",
+              "event",
+              "clientInformation",
+              "offscreenBuffering",
+              "screenLeft",
+              "screenTop",
+              "styleMedia",
+              "onsearch",
+              "onappinstalled",
+              "onbeforeinstallprompt",
+              "onabort",
+              "onbeforeinput",
+              "onbeforematch",
+              "onbeforetoggle",
+              "onblur",
+              "oncancel",
+              "oncanplay",
+              "oncanplaythrough",
+              "onchange",
+              "onclick",
+              "onclose",
+              "oncommand",
+              "oncontentvisibilityautostatechange",
+              "oncontextlost",
+              "oncontextmenu",
+              "oncontextrestored",
+              "oncuechange",
+              "ondblclick",
+              "ondrag",
+              "ondragend",
+              "ondragenter",
+              "ondragleave",
+              "ondragover",
+              "ondragstart",
+              "ondrop",
+              "ondurationchange",
+              "onemptied",
+              "onended",
+              "onerror",
+              "onfocus",
+              "onformdata",
+              "oninput",
+              "oninvalid",
+              "onkeydown",
+              "onkeypress",
+              "onkeyup",
+              "onload",
+              "onloadeddata",
+              "onloadedmetadata",
+              "onloadstart",
+              "onmousedown",
+              "onmouseenter",
+              "onmouseleave",
+              "onmousemove",
+              "onmouseout",
+              "onmouseover",
+              "onmouseup",
+              "onmousewheel",
+              "onpause",
+              "onplay",
+              "onplaying",
+              "onprogress",
+              "onratechange",
+              "onreset",
+              "onresize",
+              "onscroll",
+              "onscrollend",
+              "onsecuritypolicyviolation",
+              "onseeked",
+              "onseeking",
+              "onselect",
+              "onslotchange",
+              "onstalled",
+              "onsubmit",
+              "onsuspend",
+              "ontimeupdate",
+              "ontoggle",
+              "onvolumechange",
+              "onwaiting",
+              "onwebkitanimationend",
+              "onwebkitanimationiteration",
+              "onwebkitanimationstart",
+              "onwebkittransitionend",
+              "onwheel",
+              "onauxclick",
+              "ongotpointercapture",
+              "onlostpointercapture",
+              "onpointerdown",
+              "onpointermove",
+              "onpointerup",
+              "onpointercancel",
+              "onpointerover",
+              "onpointerout",
+              "onpointerenter",
+              "onpointerleave",
+              "onselectstart",
+              "onselectionchange",
+              "onanimationcancel",
+              "onanimationend",
+              "onanimationiteration",
+              "onanimationstart",
+              "ontransitionrun",
+              "ontransitionstart",
+              "ontransitionend",
+              "ontransitioncancel",
+              "onbeforexrselect",
+              "onafterprint",
+              "onbeforeprint",
+              "onbeforeunload",
+              "onhashchange",
+              "onlanguagechange",
+              "onmessage",
+              "onmessageerror",
+              "onoffline",
+              "ononline",
+              "onpagehide",
+              "onpageshow",
+              "onpopstate",
+              "onrejectionhandled",
+              "onstorage",
+              "onunhandledrejection",
+              "onunload",
+              "isSecureContext",
+              "crossOriginIsolated",
+              "scheduler",
+              "performance",
+              "trustedTypes",
+              "crypto",
+              "indexedDB",
+              "localStorage",
+              "sessionStorage",
+              "alert",
+              "atob",
+              "blur",
+              "btoa",
+              "cancelAnimationFrame",
+              "cancelIdleCallback",
+              "captureEvents",
+              "clearInterval",
+              "clearTimeout",
+              "close",
+              "confirm",
+              "createImageBitmap",
+              "fetch",
+              "find",
+              "focus",
+              "getComputedStyle",
+              "getSelection",
+              "matchMedia",
+              "moveBy",
+              "moveTo",
+              "open",
+              "postMessage",
+              "print",
+              "prompt",
+              "queueMicrotask",
+              "releaseEvents",
+              "reportError",
+              "requestAnimationFrame",
+              "requestIdleCallback",
+              "resizeBy",
+              "resizeTo",
+              "scroll",
+              "scrollBy",
+              "scrollTo",
+              "setInterval",
+              "setTimeout",
+              "stop",
+              "structuredClone",
+              "webkitCancelAnimationFrame",
+              "webkitRequestAnimationFrame",
+              "Temporal",
+              "SuppressedError",
+              "DisposableStack",
+              "AsyncDisposableStack",
+              "Float16Array",
+              "WebAssembly",
+              "chrome",
+              "crashReport",
+              "cookieStore",
+              "ondevicemotion",
+              "ondeviceorientation",
+              "ondeviceorientationabsolute",
+              "onpointerrawupdate",
+              "caches",
+              "documentPictureInPicture",
+              "AbsoluteOrientationSensor",
+              "Accelerometer",
+              "AudioDecoder",
+              "AudioEncoder",
+              "AudioWorklet",
+              "BatteryManager",
+              "Cache",
+              "CacheStorage",
+              "Clipboard",
+              "ClipboardChangeEvent",
+              "ClipboardItem",
+              "CookieChangeEvent",
+              "CookieStore",
+              "CookieStoreManager",
+              "CreateMonitor",
+              "Credential",
+              "CredentialsContainer",
+              "CryptoKey",
+              "DeviceMotionEvent",
+              "DeviceMotionEventAcceleration",
+              "DeviceMotionEventRotationRate",
+              "DeviceOrientationEvent",
+              "FederatedCredential",
+              "GPU",
+              "GPUAdapter",
+              "GPUAdapterInfo",
+              "GPUBindGroup",
+              "GPUBindGroupLayout",
+              "GPUBuffer",
+              "GPUBufferUsage",
+              "GPUCanvasContext",
+              "GPUColorWrite",
+              "GPUCommandBuffer",
+              "GPUCommandEncoder",
+              "GPUCompilationInfo",
+              "GPUCompilationMessage",
+              "GPUComputePassEncoder",
+              "GPUComputePipeline",
+              "GPUDevice",
+              "GPUDeviceLostInfo",
+              "GPUError",
+              "GPUExternalTexture",
+              "GPUInternalError",
+              "GPUMapMode",
+              "GPUOutOfMemoryError",
+              "GPUPipelineError",
+              "GPUPipelineLayout",
+              "GPUQuerySet",
+              "GPUQueue",
+              "GPURenderBundle",
+              "GPURenderBundleEncoder",
+              "GPURenderPassEncoder",
+              "GPURenderPipeline",
+              "GPUSampler",
+              "GPUShaderModule",
+              "GPUShaderStage",
+              "GPUSupportedFeatures",
+              "GPUSupportedLimits",
+              "GPUTexture",
+              "GPUTextureUsage",
+              "GPUTextureView",
+              "GPUUncapturedErrorEvent",
+              "GPUValidationError",
+              "GravitySensor",
+              "Gyroscope",
+              "IdleDetector",
+              "ImageCapture",
+              "ImageDecoder",
+              "ImageTrack",
+              "ImageTrackList",
+              "Keyboard",
+              "KeyboardLayoutMap",
+              "LinearAccelerationSensor",
+              "MIDIAccess",
+              "MIDIConnectionEvent",
+              "MIDIInput",
+              "MIDIInputMap",
+              "MIDIMessageEvent",
+              "MIDIOutput",
+              "MIDIOutputMap",
+              "MIDIPort",
+              "MediaDeviceInfo",
+              "MediaDevices",
+              "MediaKeyMessageEvent",
+              "MediaKeySession",
+              "MediaKeyStatusMap",
+              "MediaKeySystemAccess",
+              "MediaKeys",
+              "NavigationPreloadManager",
+              "NavigatorManagedData",
+              "OrientationSensor",
+              "PasswordCredential",
+              "ProtectedAudience",
+              "RelativeOrientationSensor",
+              "ScreenDetailed",
+              "ScreenDetails",
+              "Sensor",
+              "SensorErrorEvent",
+              "ServiceWorkerRegistration",
+              "StorageManager",
+              "SubtleCrypto",
+              "VideoDecoder",
+              "VideoEncoder",
+              "VirtualKeyboard",
+              "WGSLLanguageFeatures",
+              "WebTransport",
+              "WebTransportBidirectionalStream",
+              "WebTransportDatagramDuplexStream",
+              "WebTransportError",
+              "Worklet",
+              "XRDOMOverlayState",
+              "XRLayer",
+              "XRWebGLBinding",
+              "AudioPlaybackStats",
+              "AuthenticatorAssertionResponse",
+              "AuthenticatorAttestationResponse",
+              "AuthenticatorResponse",
+              "PublicKeyCredential",
+              "Bluetooth",
+              "BluetoothCharacteristicProperties",
+              "BluetoothDevice",
+              "BluetoothRemoteGATTCharacteristic",
+              "BluetoothRemoteGATTDescriptor",
+              "BluetoothRemoteGATTServer",
+              "BluetoothRemoteGATTService",
+              "CaptureController",
+              "CrashReportContext",
+              "DevicePosture",
+              "DigitalCredential",
+              "DocumentPictureInPicture",
+              "EyeDropper",
+              "FetchLaterResult",
+              "FileSystemDirectoryHandle",
+              "FileSystemFileHandle",
+              "FileSystemHandle",
+              "FileSystemWritableFileStream",
+              "FileSystemObserver",
+              "FontData",
+              "FragmentDirective",
+              "HID",
+              "HIDConnectionEvent",
+              "HIDDevice",
+              "HIDInputReportEvent",
+              "IdentityCredential",
+              "IdentityCredentialError",
+              "IdentityProvider",
+              "NavigatorLogin",
+              "LanguageDetector",
+              "LanguageModel",
+              "Lock",
+              "LockManager",
+              "ServiceWorker",
+              "ServiceWorkerContainer",
+              "ModelContext",
+              "NotRestoredReasonDetails",
+              "NotRestoredReasons",
+              "OTPCredential",
+              "PaymentAddress",
+              "PaymentRequest",
+              "PaymentRequestUpdateEvent",
+              "PaymentResponse",
+              "PaymentManager",
+              "PaymentMethodChangeEvent",
+              "Presentation",
+              "PresentationAvailability",
+              "PresentationConnection",
+              "PresentationConnectionAvailableEvent",
+              "PresentationConnectionCloseEvent",
+              "PresentationConnectionList",
+              "PresentationReceiver",
+              "PresentationRequest",
+              "PressureObserver",
+              "PressureRecord",
+              "Serial",
+              "SerialPort",
+              "SpeechRecognitionPhrase",
+              "StorageBucket",
+              "StorageBucketManager",
+              "Summarizer",
+              "Translator",
+              "USB",
+              "USBAlternateInterface",
+              "USBConfiguration",
+              "USBConnectionEvent",
+              "USBDevice",
+              "USBEndpoint",
+              "USBInTransferResult",
+              "USBInterface",
+              "USBIsochronousInTransferPacket",
+              "USBIsochronousInTransferResult",
+              "USBIsochronousOutTransferPacket",
+              "USBIsochronousOutTransferResult",
+              "USBOutTransferResult",
+              "WakeLock",
+              "WakeLockSentinel",
+              "WebMCPEvent",
+              "XRAnchor",
+              "XRAnchorSet",
+              "XRBoundedReferenceSpace",
+              "XRCPUDepthInformation",
+              "XRCamera",
+              "XRDepthInformation",
+              "XRFrame",
+              "XRHand",
+              "XRHitTestResult",
+              "XRHitTestSource",
+              "XRInputSource",
+              "XRInputSourceArray",
+              "XRInputSourceEvent",
+              "XRInputSourcesChangeEvent",
+              "XRJointPose",
+              "XRJointSpace",
+              "XRLightEstimate",
+              "XRLightProbe",
+              "XRPose",
+              "XRRay",
+              "XRReferenceSpace",
+              "XRReferenceSpaceEvent",
+              "XRRenderState",
+              "XRRigidTransform",
+              "XRSession",
+              "XRSessionEvent",
+              "XRSpace",
+              "XRSystem",
+              "XRTransientInputHitTestResult",
+              "XRTransientInputHitTestSource",
+              "XRView",
+              "XRViewerPose",
+              "XRViewport",
+              "XRWebGLDepthInformation",
+              "XRWebGLLayer",
+              "XRCompositionLayer",
+              "XRProjectionLayer",
+              "XRCubeLayer",
+              "XRCylinderLayer",
+              "XREquirectLayer",
+              "XRLayerEvent",
+              "XRQuadLayer",
+              "XRSubImage",
+              "XRWebGLSubImage",
+              "XRPlane",
+              "XRPlaneSet",
+              "XRVisibilityMaskChangeEvent",
+              "fetchLater",
+              "getScreenDetails",
+              "queryLocalFonts",
+              "showDirectoryPicker",
+              "showOpenFilePicker",
+              "showSaveFilePicker",
+              "originAgentCluster",
+              "viewport",
+              "onpageswap",
+              "credentialless",
+              "fence",
+              "launchQueue",
+              "speechSynthesis",
+              "onscrollsnapchange",
+              "onscrollsnapchanging",
+              "ongamepadconnected",
+              "ongamepaddisconnected",
+              "AnimationTrigger",
+              "BackgroundFetchManager",
+              "BackgroundFetchRecord",
+              "BackgroundFetchRegistration",
+              "BluetoothUUID",
+              "CSSFontFeatureValuesRule",
+              "CSSFunctionDeclarations",
+              "CSSFunctionDescriptors",
+              "CSSFunctionRule",
+              "CSSPseudoElement",
+              "ChapterInformation",
+              "CropTarget",
+              "DocumentPictureInPictureEvent",
+              "Fence",
+              "FencedFrameConfig",
+              "HTMLFencedFrameElement",
+              "HTMLGeolocationElement",
+              "HTMLUserMediaElement",
+              "IntegrityViolationReportBody",
+              "InteractionContentfulPaint",
+              "PerformanceSoftNavigation",
+              "LaunchParams",
+              "LaunchQueue",
+              "MediaMetadata",
+              "MediaSession",
+              "NodeRange",
+              "OpaqueRange",
+              "Notification",
+              "Origin",
+              "PageSwapEvent",
+              "PerformanceLongAnimationFrameTiming",
+              "PerformanceScriptTiming",
+              "RTCDataChannel",
+              "PeriodicSyncManager",
+              "Profiler",
+              "PushManager",
+              "PushSubscription",
+              "PushSubscriptionOptions",
+              "QuotaExceededError",
+              "RTCRtpScriptTransform",
+              "RemotePlayback",
+              "RestrictionTarget",
+              "Sanitizer",
+              "SharedWorker",
+              "SnapEvent",
+              "SpeechGrammar",
+              "SpeechGrammarList",
+              "SpeechRecognition",
+              "SpeechRecognitionErrorEvent",
+              "SpeechRecognitionEvent",
+              "SpeechSynthesis",
+              "SpeechSynthesisErrorEvent",
+              "SpeechSynthesisEvent",
+              "SpeechSynthesisUtterance",
+              "SpeechSynthesisVoice",
+              "TimelineTrigger",
+              "TimelineTriggerRange",
+              "TimelineTriggerRangeList",
+              "Viewport",
+              "WebSocketError",
+              "WebSocketStream",
+              "webkitSpeechGrammar",
+              "webkitSpeechGrammarList",
+              "webkitSpeechRecognition",
+              "webkitSpeechRecognitionError",
+              "webkitSpeechRecognitionEvent",
+              "webkitRequestFileSystem",
+              "webkitResolveLocalFileSystemURL"
+            ],
+            [
+              "Object",
+              "Function",
+              "Array",
+              "Number",
+              "parseFloat",
+              "parseInt",
+              "Infinity",
+              "NaN",
+              "undefined",
+              "Boolean",
+              "String",
+              "Symbol",
+              "Date",
+              "Promise",
+              "RegExp",
+              "Error",
+              "AggregateError",
+              "EvalError",
+              "RangeError",
+              "ReferenceError",
+              "SyntaxError",
+              "TypeError",
+              "URIError",
+              "globalThis",
+              "JSON",
+              "Math",
+              "Intl",
+              "ArrayBuffer",
+              "Atomics",
+              "Uint8Array",
+              "Int8Array",
+              "Uint16Array",
+              "Int16Array",
+              "Uint32Array",
+              "Int32Array",
+              "BigUint64Array",
+              "BigInt64Array",
+              "Uint8ClampedArray",
+              "Float32Array",
+              "Float64Array",
+              "DataView",
+              "Map",
+              "BigInt",
+              "Set",
+              "Iterator",
+              "WeakMap",
+              "WeakSet",
+              "Proxy",
+              "Reflect",
+              "FinalizationRegistry",
+              "WeakRef",
+              "decodeURI",
+              "decodeURIComponent",
+              "encodeURI",
+              "encodeURIComponent",
+              "escape",
+              "unescape",
+              "eval",
+              "isFinite",
+              "isNaN",
+              "console",
+              "Option",
+              "Image",
+              "Audio",
+              "webkitURL",
+              "webkitRTCPeerConnection",
+              "webkitMediaStream",
+              "WebKitMutationObserver",
+              "WebKitCSSMatrix",
+              "FeaturePolicy",
+              "XPathResult",
+              "XPathExpression",
+              "XPathEvaluator",
+              "XMLSerializer",
+              "XMLHttpRequestUpload",
+              "XMLHttpRequestEventTarget",
+              "XMLHttpRequest",
+              "XMLDocument",
+              "WritableStreamDefaultWriter",
+              "WritableStreamDefaultController",
+              "WritableStream",
+              "Worker",
+              "WindowControlsOverlayGeometryChangeEvent",
+              "WindowControlsOverlay",
+              "Window",
+              "WheelEvent",
+              "WebSocket",
+              "WebGLVertexArrayObject",
+              "WebGLUniformLocation",
+              "WebGLTransformFeedback",
+              "WebGLTexture",
+              "WebGLSync",
+              "WebGLShaderPrecisionFormat",
+              "WebGLShader",
+              "WebGLSampler",
+              "WebGLRenderingContext",
+              "WebGLRenderbuffer",
+              "WebGLQuery",
+              "WebGLProgram",
+              "WebGLObject",
+              "WebGLFramebuffer",
+              "WebGLContextEvent",
+              "WebGLBuffer",
+              "WebGLActiveInfo",
+              "WebGL2RenderingContext",
+              "WaveShaperNode",
+              "VisualViewport",
+              "VisibilityStateEntry",
+              "VirtualKeyboardGeometryChangeEvent",
+              "ViewTransitionTypeSet",
+              "ViewTransition",
+              "ViewTimeline",
+              "VideoPlaybackQuality",
+              "VideoFrame",
+              "VideoColorSpace",
+              "ValidityState",
+              "VTTCue",
+              "UserActivation",
+              "URLSearchParams",
+              "URLPattern",
+              "URL",
+              "UIEvent",
+              "TrustedTypePolicyFactory",
+              "TrustedTypePolicy",
+              "TrustedScriptURL",
+              "TrustedScript",
+              "TrustedHTML",
+              "TreeWalker",
+              "TransitionEvent",
+              "TransformStreamDefaultController",
+              "TransformStream",
+              "TrackEvent",
+              "TouchList",
+              "TouchEvent",
+              "Touch",
+              "ToggleEvent",
+              "TimeRanges",
+              "TextUpdateEvent",
+              "TextTrackList",
+              "TextTrackCueList",
+              "TextTrackCue",
+              "TextTrack",
+              "TextMetrics",
+              "TextFormatUpdateEvent",
+              "TextFormat",
+              "TextEvent",
+              "TextEncoderStream",
+              "TextEncoder",
+              "TextDecoderStream",
+              "TextDecoder",
+              "Text",
+              "TaskSignal",
+              "TaskPriorityChangeEvent",
+              "TaskController",
+              "TaskAttributionTiming",
+              "SyncManager",
+              "Subscriber",
+              "SubmitEvent",
+              "StyleSheetList",
+              "StyleSheet",
+              "StylePropertyMapReadOnly",
+              "StylePropertyMap",
+              "StorageEvent",
+              "Storage",
+              "StereoPannerNode",
+              "StaticRange",
+              "SourceBufferList",
+              "SourceBuffer",
+              "ShadowRoot",
+              "Selection",
+              "SecurityPolicyViolationEvent",
+              "ScrollTimeline",
+              "ScriptProcessorNode",
+              "ScreenOrientation",
+              "Screen",
+              "Scheduling",
+              "Scheduler",
+              "SVGViewElement",
+              "SVGUseElement",
+              "SVGUnitTypes",
+              "SVGTransformList",
+              "SVGTransform",
+              "SVGTitleElement",
+              "SVGTextPositioningElement",
+              "SVGTextPathElement",
+              "SVGTextElement",
+              "SVGTextContentElement",
+              "SVGTSpanElement",
+              "SVGSymbolElement",
+              "SVGSwitchElement",
+              "SVGStyleElement",
+              "SVGStringList",
+              "SVGStopElement",
+              "SVGSetElement",
+              "SVGScriptElement",
+              "SVGSVGElement",
+              "SVGRectElement",
+              "SVGRect",
+              "SVGRadialGradientElement",
+              "SVGPreserveAspectRatio",
+              "SVGPolylineElement",
+              "SVGPolygonElement",
+              "SVGPointList",
+              "SVGPoint",
+              "SVGPatternElement",
+              "SVGPathElement",
+              "SVGNumberList",
+              "SVGNumber",
+              "SVGMetadataElement",
+              "SVGMatrix",
+              "SVGMaskElement",
+              "SVGMarkerElement",
+              "SVGMPathElement",
+              "SVGLinearGradientElement",
+              "SVGLineElement",
+              "SVGLengthList",
+              "SVGLength",
+              "SVGImageElement",
+              "SVGGraphicsElement",
+              "SVGGradientElement",
+              "SVGGeometryElement",
+              "SVGGElement",
+              "SVGForeignObjectElement",
+              "SVGFilterElement",
+              "SVGFETurbulenceElement",
+              "SVGFETileElement",
+              "SVGFESpotLightElement",
+              "SVGFESpecularLightingElement",
+              "SVGFEPointLightElement",
+              "SVGFEOffsetElement",
+              "SVGFEMorphologyElement",
+              "SVGFEMergeNodeElement",
+              "SVGFEMergeElement",
+              "SVGFEImageElement",
+              "SVGFEGaussianBlurElement",
+              "SVGFEFuncRElement",
+              "SVGFEFuncGElement",
+              "SVGFEFuncBElement",
+              "SVGFEFuncAElement",
+              "SVGFEFloodElement",
+              "SVGFEDropShadowElement",
+              "SVGFEDistantLightElement",
+              "SVGFEDisplacementMapElement",
+              "SVGFEDiffuseLightingElement",
+              "SVGFEConvolveMatrixElement",
+              "SVGFECompositeElement",
+              "SVGFEComponentTransferElement",
+              "SVGFEColorMatrixElement",
+              "SVGFEBlendElement",
+              "SVGEllipseElement",
+              "SVGElement",
+              "SVGDescElement",
+              "SVGDefsElement",
+              "SVGComponentTransferFunctionElement",
+              "SVGClipPathElement",
+              "SVGCircleElement",
+              "SVGAnimationElement",
+              "SVGAnimatedTransformList",
+              "SVGAnimatedString",
+              "SVGAnimatedRect",
+              "SVGAnimatedPreserveAspectRatio",
+              "SVGAnimatedNumberList",
+              "SVGAnimatedNumber",
+              "SVGAnimatedLengthList",
+              "SVGAnimatedLength",
+              "SVGAnimatedInteger",
+              "SVGAnimatedEnumeration",
+              "SVGAnimatedBoolean",
+              "SVGAnimatedAngle",
+              "SVGAnimateTransformElement",
+              "SVGAnimateMotionElement",
+              "SVGAnimateElement",
+              "SVGAngle",
+              "SVGAElement",
+              "Response",
+              "ResizeObserverSize",
+              "ResizeObserverEntry",
+              "ResizeObserver",
+              "Request",
+              "ReportingObserver",
+              "ReportBody",
+              "ReadableStreamDefaultReader",
+              "ReadableStreamDefaultController",
+              "ReadableStreamBYOBRequest",
+              "ReadableStreamBYOBReader",
+              "ReadableStream",
+              "ReadableByteStreamController",
+              "Range",
+              "RadioNodeList",
+              "RTCTrackEvent",
+              "RTCStatsReport",
+              "RTCSessionDescription",
+              "RTCSctpTransport",
+              "RTCRtpTransceiver",
+              "RTCRtpSender",
+              "RTCRtpReceiver",
+              "RTCPeerConnectionIceEvent",
+              "RTCPeerConnectionIceErrorEvent",
+              "RTCPeerConnection",
+              "RTCIceTransport",
+              "RTCIceCandidate",
+              "RTCErrorEvent",
+              "RTCError",
+              "RTCEncodedVideoFrame",
+              "RTCEncodedAudioFrame",
+              "RTCDtlsTransport",
+              "RTCDataChannelEvent",
+              "RTCDTMFToneChangeEvent",
+              "RTCDTMFSender",
+              "RTCCertificate",
+              "PromiseRejectionEvent",
+              "ProgressEvent",
+              "ProcessingInstruction",
+              "PopStateEvent",
+              "PointerEvent",
+              "PluginArray",
+              "Plugin",
+              "PictureInPictureWindow",
+              "PictureInPictureEvent",
+              "PermissionsPolicy",
+              "Permissions",
+              "PermissionStatus",
+              "PeriodicWave",
+              "PerformanceTimingConfidence",
+              "PerformanceTiming",
+              "PerformanceServerTiming",
+              "PerformanceResourceTiming",
+              "PerformancePaintTiming",
+              "PerformanceObserverEntryList",
+              "PerformanceObserver",
+              "PerformanceNavigationTiming",
+              "PerformanceNavigation",
+              "PerformanceMeasure",
+              "PerformanceMark",
+              "PerformanceLongTaskTiming",
+              "PerformanceEventTiming",
+              "PerformanceEntry",
+              "PerformanceElementTiming",
+              "Performance",
+              "Path2D",
+              "PannerNode",
+              "PageTransitionEvent",
+              "PageRevealEvent",
+              "OverconstrainedError",
+              "OscillatorNode",
+              "OffscreenCanvasRenderingContext2D",
+              "OffscreenCanvas",
+              "OfflineAudioContext",
+              "OfflineAudioCompletionEvent",
+              "Observable",
+              "NodeList",
+              "NodeIterator",
+              "NodeFilter",
+              "Node",
+              "NetworkInformation",
+              "NavigatorUAData",
+              "Navigator",
+              "NavigationTransition",
+              "NavigationPrecommitController",
+              "NavigationHistoryEntry",
+              "NavigationDestination",
+              "NavigationCurrentEntryChangeEvent",
+              "NavigationActivation",
+              "Navigation",
+              "NavigateEvent",
+              "NamedNodeMap",
+              "MutationRecord",
+              "MutationObserver",
+              "MouseEvent",
+              "MimeTypeArray",
+              "MimeType",
+              "MessagePort",
+              "MessageEvent",
+              "MessageChannel",
+              "MediaStreamTrackVideoStats",
+              "MediaStreamTrackProcessor",
+              "MediaStreamTrackGenerator",
+              "MediaStreamTrackEvent",
+              "MediaStreamTrackAudioStats",
+              "MediaStreamTrack",
+              "MediaStreamEvent",
+              "MediaStreamAudioSourceNode",
+              "MediaStreamAudioDestinationNode",
+              "MediaStream",
+              "MediaSourceHandle",
+              "MediaSource",
+              "MediaRecorder",
+              "MediaQueryListEvent",
+              "MediaQueryList",
+              "MediaList",
+              "MediaError",
+              "MediaEncryptedEvent",
+              "MediaElementAudioSourceNode",
+              "MediaCapabilities",
+              "MathMLElement",
+              "Location",
+              "LayoutShiftAttribution",
+              "LayoutShift",
+              "LargestContentfulPaint",
+              "KeyframeEffect",
+              "KeyboardEvent",
+              "IntersectionObserverEntry",
+              "IntersectionObserver",
+              "InterestEvent",
+              "InputEvent",
+              "InputDeviceInfo",
+              "InputDeviceCapabilities",
+              "Ink",
+              "ImageData",
+              "ImageBitmapRenderingContext",
+              "ImageBitmap",
+              "IdleDeadline",
+              "IIRFilterNode",
+              "IDBVersionChangeEvent",
+              "IDBTransaction",
+              "IDBRequest",
+              "IDBRecord",
+              "IDBOpenDBRequest",
+              "IDBObjectStore",
+              "IDBKeyRange",
+              "IDBIndex",
+              "IDBFactory",
+              "IDBDatabase",
+              "IDBCursorWithValue",
+              "IDBCursor",
+              "History",
+              "HighlightRegistry",
+              "Highlight",
+              "Headers",
+              "HashChangeEvent",
+              "HTMLVideoElement",
+              "HTMLUnknownElement",
+              "HTMLUListElement",
+              "HTMLTrackElement",
+              "HTMLTitleElement",
+              "HTMLTimeElement",
+              "HTMLTextAreaElement",
+              "HTMLTemplateElement",
+              "HTMLTableSectionElement",
+              "HTMLTableRowElement",
+              "HTMLTableElement",
+              "HTMLTableColElement",
+              "HTMLTableCellElement",
+              "HTMLTableCaptionElement",
+              "HTMLStyleElement",
+              "HTMLSpanElement",
+              "HTMLSourceElement",
+              "HTMLSlotElement",
+              "HTMLSelectedContentElement",
+              "HTMLSelectElement",
+              "HTMLScriptElement",
+              "HTMLQuoteElement",
+              "HTMLProgressElement",
+              "HTMLPreElement",
+              "HTMLPictureElement",
+              "HTMLParamElement",
+              "HTMLParagraphElement",
+              "HTMLOutputElement",
+              "HTMLOptionsCollection",
+              "HTMLOptionElement",
+              "HTMLOptGroupElement",
+              "HTMLObjectElement",
+              "HTMLOListElement",
+              "HTMLModElement",
+              "HTMLMeterElement",
+              "HTMLMetaElement",
+              "HTMLMenuElement",
+              "HTMLMediaElement",
+              "HTMLMarqueeElement",
+              "HTMLMapElement",
+              "HTMLLinkElement",
+              "HTMLLegendElement",
+              "HTMLLabelElement",
+              "HTMLLIElement",
+              "HTMLInputElement",
+              "HTMLImageElement",
+              "HTMLIFrameElement",
+              "HTMLHtmlElement",
+              "HTMLHeadingElement",
+              "HTMLHeadElement",
+              "HTMLHRElement",
+              "HTMLFrameSetElement",
+              "HTMLFrameElement",
+              "HTMLFormElement",
+              "HTMLFormControlsCollection",
+              "HTMLFontElement",
+              "HTMLFieldSetElement",
+              "HTMLEmbedElement",
+              "HTMLElement",
+              "HTMLDocument",
+              "HTMLDivElement",
+              "HTMLDirectoryElement",
+              "HTMLDialogElement",
+              "HTMLDetailsElement",
+              "HTMLDataListElement",
+              "HTMLDataElement",
+              "HTMLDListElement",
+              "HTMLCollection",
+              "HTMLCanvasElement",
+              "HTMLButtonElement",
+              "HTMLBodyElement",
+              "HTMLBaseElement",
+              "HTMLBRElement",
+              "HTMLAudioElement",
+              "HTMLAreaElement",
+              "HTMLAnchorElement",
+              "HTMLAllCollection",
+              "GeolocationPositionError",
+              "GeolocationPosition",
+              "GeolocationCoordinates",
+              "Geolocation",
+              "GamepadHapticActuator",
+              "GamepadEvent",
+              "GamepadButton",
+              "Gamepad",
+              "GainNode",
+              "FormDataEvent",
+              "FormData",
+              "FontFaceSetLoadEvent",
+              "FontFaceSet",
+              "FontFace",
+              "FocusEvent",
+              "FileReader",
+              "FileList",
+              "File",
+              "External",
+              "EventTarget",
+              "EventSource",
+              "EventCounts",
+              "Event",
+              "ErrorEvent",
+              "EncodedVideoChunk",
+              "EncodedAudioChunk",
+              "ElementInternals",
+              "Element",
+              "EditContext",
+              "DynamicsCompressorNode",
+              "DragEvent",
+              "DocumentType",
+              "DocumentTimeline",
+              "DocumentFragment",
+              "Document",
+              "DelegatedInkTrailPresenter",
+              "DelayNode",
+              "DecompressionStream",
+              "DataTransferItemList",
+              "DataTransferItem",
+              "DataTransfer",
+              "DOMTokenList",
+              "DOMStringMap",
+              "DOMStringList",
+              "DOMRectReadOnly",
+              "DOMRectList",
+              "DOMRect",
+              "DOMQuad",
+              "DOMPointReadOnly",
+              "DOMPoint",
+              "DOMParser",
+              "DOMMatrixReadOnly",
+              "DOMMatrix",
+              "DOMImplementation",
+              "DOMException",
+              "DOMError",
+              "CustomStateSet",
+              "CustomEvent",
+              "CustomElementRegistry",
+              "Crypto",
+              "CountQueuingStrategy",
+              "ConvolverNode",
+              "ContentVisibilityAutoStateChangeEvent",
+              "ConstantSourceNode",
+              "CompressionStream",
+              "CompositionEvent",
+              "Comment",
+              "CommandEvent",
+              "CloseWatcher",
+              "CloseEvent",
+              "ClipboardEvent",
+              "CharacterData",
+              "CharacterBoundsUpdateEvent",
+              "ChannelSplitterNode",
+              "ChannelMergerNode",
+              "CaretPosition",
+              "CanvasRenderingContext2D",
+              "CanvasPattern",
+              "CanvasGradient",
+              "CanvasCaptureMediaStreamTrack",
+              "CSSViewTransitionRule",
+              "CSSVariableReferenceValue",
+              "CSSUnparsedValue",
+              "CSSUnitValue",
+              "CSSTranslate",
+              "CSSTransition",
+              "CSSTransformValue",
+              "CSSTransformComponent",
+              "CSSSupportsRule",
+              "CSSStyleValue",
+              "CSSStyleSheet",
+              "CSSStyleRule",
+              "CSSStyleDeclaration",
+              "CSSStartingStyleRule",
+              "CSSSkewY",
+              "CSSSkewX",
+              "CSSSkew",
+              "CSSScopeRule",
+              "CSSScale",
+              "CSSRuleList",
+              "CSSRule",
+              "CSSRotate",
+              "CSSPropertyRule",
+              "CSSPositionValue",
+              "CSSPositionTryRule",
+              "CSSPositionTryDescriptors",
+              "CSSPerspective",
+              "CSSPageRule",
+              "CSSNumericValue",
+              "CSSNumericArray",
+              "CSSNestedDeclarations",
+              "CSSNamespaceRule",
+              "CSSMediaRule",
+              "CSSMatrixComponent",
+              "CSSMathValue",
+              "CSSMathSum",
+              "CSSMathProduct",
+              "CSSMathNegate",
+              "CSSMathMin",
+              "CSSMathMax",
+              "CSSMathInvert",
+              "CSSMathClamp",
+              "CSSMarginRule",
+              "CSSLayerStatementRule",
+              "CSSLayerBlockRule",
+              "CSSKeywordValue",
+              "CSSKeyframesRule",
+              "CSSKeyframeRule",
+              "CSSImportRule",
+              "CSSImageValue",
+              "CSSGroupingRule",
+              "CSSFontPaletteValuesRule",
+              "CSSFontFaceRule",
+              "CSSCounterStyleRule",
+              "CSSContainerRule",
+              "CSSConditionRule",
+              "CSSAnimation",
+              "CSS",
+              "CSPViolationReportBody",
+              "CDATASection",
+              "ByteLengthQueuingStrategy",
+              "BrowserCaptureMediaStreamTrack",
+              "BroadcastChannel",
+              "BlobEvent",
+              "Blob",
+              "BiquadFilterNode",
+              "BeforeUnloadEvent",
+              "BeforeInstallPromptEvent",
+              "BaseAudioContext",
+              "BarProp",
+              "AudioWorkletNode",
+              "AudioSinkInfo",
+              "AudioScheduledSourceNode",
+              "AudioProcessingEvent",
+              "AudioParamMap",
+              "AudioParam",
+              "AudioNode",
+              "AudioListener",
+              "AudioDestinationNode",
+              "AudioData",
+              "AudioContext",
+              "AudioBufferSourceNode",
+              "AudioBuffer",
+              "Attr",
+              "AnimationTimeline",
+              "AnimationPlaybackEvent",
+              "AnimationEvent",
+              "AnimationEffect",
+              "Animation",
+              "AnalyserNode",
+              "AbstractRange",
+              "AbortSignal",
+              "AbortController",
+              "window",
+              "self",
+              "document",
+              "name",
+              "location",
+              "customElements",
+              "history",
+              "navigation",
+              "locationbar",
+              "menubar",
+              "personalbar",
+              "scrollbars",
+              "statusbar",
+              "toolbar",
+              "status",
+              "closed",
+              "frames",
+              "length",
+              "top",
+              "opener",
+              "parent",
+              "frameElement",
+              "navigator",
+              "origin",
+              "external",
+              "screen",
+              "innerWidth",
+              "innerHeight",
+              "scrollX",
+              "pageXOffset",
+              "scrollY",
+              "pageYOffset",
+              "visualViewport",
+              "screenX",
+              "screenY",
+              "outerWidth",
+              "outerHeight",
+              "devicePixelRatio",
+              "onpagereveal",
+              "event",
+              "clientInformation",
+              "offscreenBuffering",
+              "screenLeft",
+              "screenTop",
+              "styleMedia",
+              "onsearch",
+              "onappinstalled",
+              "onbeforeinstallprompt",
+              "onabort",
+              "onbeforeinput",
+              "onbeforematch",
+              "onbeforetoggle",
+              "onblur",
+              "oncancel",
+              "oncanplay",
+              "oncanplaythrough",
+              "onchange",
+              "onclick",
+              "onclose",
+              "oncommand",
+              "oncontentvisibilityautostatechange",
+              "oncontextlost",
+              "oncontextmenu",
+              "oncontextrestored",
+              "oncuechange",
+              "ondblclick",
+              "ondrag",
+              "ondragend",
+              "ondragenter",
+              "ondragleave",
+              "ondragover",
+              "ondragstart",
+              "ondrop",
+              "ondurationchange",
+              "onemptied",
+              "onended",
+              "onerror",
+              "onfocus",
+              "onformdata",
+              "oninput",
+              "oninvalid",
+              "onkeydown",
+              "onkeypress",
+              "onkeyup",
+              "onload",
+              "onloadeddata",
+              "onloadedmetadata",
+              "onloadstart",
+              "onmousedown",
+              "onmouseenter",
+              "onmouseleave",
+              "onmousemove",
+              "onmouseout",
+              "onmouseover",
+              "onmouseup",
+              "onmousewheel",
+              "onpause",
+              "onplay",
+              "onplaying",
+              "onprogress",
+              "onratechange",
+              "onreset",
+              "onresize",
+              "onscroll",
+              "onscrollend",
+              "onsecuritypolicyviolation",
+              "onseeked",
+              "onseeking",
+              "onselect",
+              "onslotchange",
+              "onstalled",
+              "onsubmit",
+              "onsuspend",
+              "ontimeupdate",
+              "ontoggle",
+              "onvolumechange",
+              "onwaiting",
+              "onwebkitanimationend",
+              "onwebkitanimationiteration",
+              "onwebkitanimationstart",
+              "onwebkittransitionend",
+              "onwheel",
+              "onauxclick",
+              "ongotpointercapture",
+              "onlostpointercapture",
+              "onpointerdown",
+              "onpointermove",
+              "onpointerup",
+              "onpointercancel",
+              "onpointerover",
+              "onpointerout",
+              "onpointerenter",
+              "onpointerleave",
+              "onselectstart",
+              "onselectionchange",
+              "onanimationcancel",
+              "onanimationend",
+              "onanimationiteration",
+              "onanimationstart",
+              "ontransitionrun",
+              "ontransitionstart",
+              "ontransitionend",
+              "ontransitioncancel",
+              "onbeforexrselect",
+              "onafterprint",
+              "onbeforeprint",
+              "onbeforeunload",
+              "onhashchange",
+              "onlanguagechange",
+              "onmessage",
+              "onmessageerror",
+              "onoffline",
+              "ononline",
+              "onpagehide",
+              "onpageshow",
+              "onpopstate",
+              "onrejectionhandled",
+              "onstorage",
+              "onunhandledrejection",
+              "onunload",
+              "isSecureContext",
+              "crossOriginIsolated",
+              "scheduler",
+              "performance",
+              "trustedTypes",
+              "crypto",
+              "indexedDB",
+              "localStorage",
+              "sessionStorage",
+              "alert",
+              "atob",
+              "blur",
+              "btoa",
+              "cancelAnimationFrame",
+              "cancelIdleCallback",
+              "captureEvents",
+              "clearInterval",
+              "clearTimeout",
+              "close",
+              "confirm",
+              "createImageBitmap",
+              "fetch",
+              "find",
+              "focus",
+              "getComputedStyle",
+              "getSelection",
+              "matchMedia",
+              "moveBy",
+              "moveTo",
+              "open",
+              "postMessage",
+              "print",
+              "prompt",
+              "queueMicrotask",
+              "releaseEvents",
+              "reportError",
+              "requestAnimationFrame",
+              "requestIdleCallback",
+              "resizeBy",
+              "resizeTo",
+              "scroll",
+              "scrollBy",
+              "scrollTo",
+              "setInterval",
+              "setTimeout",
+              "stop",
+              "structuredClone",
+              "webkitCancelAnimationFrame",
+              "webkitRequestAnimationFrame",
+              "Temporal",
+              "SuppressedError",
+              "DisposableStack",
+              "AsyncDisposableStack",
+              "Float16Array",
+              "WebAssembly",
+              "chrome",
+              "crashReport",
+              "cookieStore",
+              "ondevicemotion",
+              "ondeviceorientation",
+              "ondeviceorientationabsolute",
+              "onpointerrawupdate",
+              "caches",
+              "documentPictureInPicture",
+              "AbsoluteOrientationSensor",
+              "Accelerometer",
+              "AudioDecoder",
+              "AudioEncoder",
+              "AudioWorklet",
+              "BatteryManager",
+              "Cache",
+              "CacheStorage",
+              "Clipboard",
+              "ClipboardChangeEvent",
+              "ClipboardItem",
+              "CookieChangeEvent",
+              "CookieStore",
+              "CookieStoreManager",
+              "CreateMonitor",
+              "Credential",
+              "CredentialsContainer",
+              "CryptoKey",
+              "DeviceMotionEvent",
+              "DeviceMotionEventAcceleration",
+              "DeviceMotionEventRotationRate",
+              "DeviceOrientationEvent",
+              "FederatedCredential",
+              "GPU",
+              "GPUAdapter",
+              "GPUAdapterInfo",
+              "GPUBindGroup",
+              "GPUBindGroupLayout",
+              "GPUBuffer",
+              "GPUBufferUsage",
+              "GPUCanvasContext",
+              "GPUColorWrite",
+              "GPUCommandBuffer",
+              "GPUCommandEncoder",
+              "GPUCompilationInfo",
+              "GPUCompilationMessage",
+              "GPUComputePassEncoder",
+              "GPUComputePipeline",
+              "GPUDevice",
+              "GPUDeviceLostInfo",
+              "GPUError",
+              "GPUExternalTexture",
+              "GPUInternalError",
+              "GPUMapMode",
+              "GPUOutOfMemoryError",
+              "GPUPipelineError",
+              "GPUPipelineLayout",
+              "GPUQuerySet",
+              "GPUQueue",
+              "GPURenderBundle",
+              "GPURenderBundleEncoder",
+              "GPURenderPassEncoder",
+              "GPURenderPipeline",
+              "GPUSampler",
+              "GPUShaderModule",
+              "GPUShaderStage",
+              "GPUSupportedFeatures",
+              "GPUSupportedLimits",
+              "GPUTexture",
+              "GPUTextureUsage",
+              "GPUTextureView",
+              "GPUUncapturedErrorEvent",
+              "GPUValidationError",
+              "GravitySensor",
+              "Gyroscope",
+              "IdleDetector",
+              "ImageCapture",
+              "ImageDecoder",
+              "ImageTrack",
+              "ImageTrackList",
+              "Keyboard",
+              "KeyboardLayoutMap",
+              "LinearAccelerationSensor",
+              "MIDIAccess",
+              "MIDIConnectionEvent",
+              "MIDIInput",
+              "MIDIInputMap",
+              "MIDIMessageEvent",
+              "MIDIOutput",
+              "MIDIOutputMap",
+              "MIDIPort",
+              "MediaDeviceInfo",
+              "MediaDevices",
+              "MediaKeyMessageEvent",
+              "MediaKeySession",
+              "MediaKeyStatusMap",
+              "MediaKeySystemAccess",
+              "MediaKeys",
+              "NavigationPreloadManager",
+              "NavigatorManagedData",
+              "OrientationSensor",
+              "PasswordCredential",
+              "ProtectedAudience",
+              "RelativeOrientationSensor",
+              "ScreenDetailed",
+              "ScreenDetails",
+              "Sensor",
+              "SensorErrorEvent",
+              "ServiceWorkerRegistration",
+              "StorageManager",
+              "SubtleCrypto",
+              "VideoDecoder",
+              "VideoEncoder",
+              "VirtualKeyboard",
+              "WGSLLanguageFeatures",
+              "WebTransport",
+              "WebTransportBidirectionalStream",
+              "WebTransportDatagramDuplexStream",
+              "WebTransportError",
+              "Worklet",
+              "XRDOMOverlayState",
+              "XRLayer",
+              "XRWebGLBinding",
+              "AudioPlaybackStats",
+              "AuthenticatorAssertionResponse",
+              "AuthenticatorAttestationResponse",
+              "AuthenticatorResponse",
+              "PublicKeyCredential",
+              "Bluetooth",
+              "BluetoothCharacteristicProperties",
+              "BluetoothDevice",
+              "BluetoothRemoteGATTCharacteristic",
+              "BluetoothRemoteGATTDescriptor",
+              "BluetoothRemoteGATTServer",
+              "BluetoothRemoteGATTService",
+              "CaptureController",
+              "CrashReportContext",
+              "DevicePosture",
+              "DigitalCredential",
+              "DocumentPictureInPicture",
+              "EyeDropper",
+              "FetchLaterResult",
+              "FileSystemDirectoryHandle",
+              "FileSystemFileHandle",
+              "FileSystemHandle",
+              "FileSystemWritableFileStream",
+              "FileSystemObserver",
+              "FontData",
+              "FragmentDirective",
+              "HID",
+              "HIDConnectionEvent",
+              "HIDDevice",
+              "HIDInputReportEvent",
+              "IdentityCredential",
+              "IdentityCredentialError",
+              "IdentityProvider",
+              "NavigatorLogin",
+              "LanguageDetector",
+              "LanguageModel",
+              "Lock",
+              "LockManager",
+              "ServiceWorker",
+              "ServiceWorkerContainer",
+              "ModelContext",
+              "NotRestoredReasonDetails",
+              "NotRestoredReasons",
+              "OTPCredential",
+              "PaymentAddress",
+              "PaymentRequest",
+              "PaymentRequestUpdateEvent",
+              "PaymentResponse",
+              "PaymentManager",
+              "PaymentMethodChangeEvent",
+              "Presentation",
+              "PresentationAvailability",
+              "PresentationConnection",
+              "PresentationConnectionAvailableEvent",
+              "PresentationConnectionCloseEvent",
+              "PresentationConnectionList",
+              "PresentationReceiver",
+              "PresentationRequest",
+              "PressureObserver",
+              "PressureRecord",
+              "Serial",
+              "SerialPort",
+              "SpeechRecognitionPhrase",
+              "StorageBucket",
+              "StorageBucketManager",
+              "Summarizer",
+              "Translator",
+              "USB",
+              "USBAlternateInterface",
+              "USBConfiguration",
+              "USBConnectionEvent",
+              "USBDevice",
+              "USBEndpoint",
+              "USBInTransferResult",
+              "USBInterface",
+              "USBIsochronousInTransferPacket",
+              "USBIsochronousInTransferResult",
+              "USBIsochronousOutTransferPacket",
+              "USBIsochronousOutTransferResult",
+              "USBOutTransferResult",
+              "WakeLock",
+              "WakeLockSentinel",
+              "WebMCPEvent",
+              "XRAnchor",
+              "XRAnchorSet",
+              "XRBoundedReferenceSpace",
+              "XRCPUDepthInformation",
+              "XRCamera",
+              "XRDepthInformation",
+              "XRFrame",
+              "XRHand",
+              "XRHitTestResult",
+              "XRHitTestSource",
+              "XRInputSource",
+              "XRInputSourceArray",
+              "XRInputSourceEvent",
+              "XRInputSourcesChangeEvent",
+              "XRJointPose",
+              "XRJointSpace",
+              "XRLightEstimate",
+              "XRLightProbe",
+              "XRPose",
+              "XRRay",
+              "XRReferenceSpace",
+              "XRReferenceSpaceEvent",
+              "XRRenderState",
+              "XRRigidTransform",
+              "XRSession",
+              "XRSessionEvent",
+              "XRSpace",
+              "XRSystem",
+              "XRTransientInputHitTestResult",
+              "XRTransientInputHitTestSource",
+              "XRView",
+              "XRViewerPose",
+              "XRViewport",
+              "XRWebGLDepthInformation",
+              "XRWebGLLayer",
+              "XRCompositionLayer",
+              "XRProjectionLayer",
+              "XRCubeLayer",
+              "XRCylinderLayer",
+              "XREquirectLayer",
+              "XRLayerEvent",
+              "XRQuadLayer",
+              "XRSubImage",
+              "XRWebGLSubImage",
+              "XRPlane",
+              "XRPlaneSet",
+              "XRVisibilityMaskChangeEvent",
+              "fetchLater",
+              "getScreenDetails",
+              "queryLocalFonts",
+              "showDirectoryPicker",
+              "showOpenFilePicker",
+              "showSaveFilePicker",
+              "originAgentCluster",
+              "viewport",
+              "onpageswap",
+              "credentialless",
+              "fence",
+              "launchQueue",
+              "speechSynthesis",
+              "onscrollsnapchange",
+              "onscrollsnapchanging",
+              "ongamepadconnected",
+              "ongamepaddisconnected",
+              "AnimationTrigger",
+              "BackgroundFetchManager",
+              "BackgroundFetchRecord",
+              "BackgroundFetchRegistration",
+              "BluetoothUUID",
+              "CSSFontFeatureValuesRule",
+              "CSSFunctionDeclarations",
+              "CSSFunctionDescriptors",
+              "CSSFunctionRule",
+              "CSSPseudoElement",
+              "ChapterInformation",
+              "CropTarget",
+              "DocumentPictureInPictureEvent",
+              "Fence",
+              "FencedFrameConfig",
+              "HTMLFencedFrameElement",
+              "HTMLGeolocationElement",
+              "HTMLUserMediaElement",
+              "IntegrityViolationReportBody",
+              "InteractionContentfulPaint",
+              "PerformanceSoftNavigation",
+              "LaunchParams",
+              "LaunchQueue",
+              "MediaMetadata",
+              "MediaSession",
+              "NodeRange",
+              "OpaqueRange",
+              "Notification",
+              "Origin",
+              "PageSwapEvent",
+              "PerformanceLongAnimationFrameTiming",
+              "PerformanceScriptTiming",
+              "RTCDataChannel",
+              "PeriodicSyncManager",
+              "Profiler",
+              "PushManager",
+              "PushSubscription",
+              "PushSubscriptionOptions",
+              "QuotaExceededError",
+              "RTCRtpScriptTransform",
+              "RemotePlayback",
+              "RestrictionTarget",
+              "Sanitizer",
+              "SharedWorker",
+              "SnapEvent",
+              "SpeechGrammar",
+              "SpeechGrammarList",
+              "SpeechRecognition",
+              "SpeechRecognitionErrorEvent",
+              "SpeechRecognitionEvent",
+              "SpeechSynthesis",
+              "SpeechSynthesisErrorEvent",
+              "SpeechSynthesisEvent",
+              "SpeechSynthesisUtterance",
+              "SpeechSynthesisVoice",
+              "TimelineTrigger",
+              "TimelineTriggerRange",
+              "TimelineTriggerRangeList",
+              "Viewport",
+              "WebSocketError",
+              "WebSocketStream",
+              "webkitSpeechGrammar",
+              "webkitSpeechGrammarList",
+              "webkitSpeechRecognition",
+              "webkitSpeechRecognitionError",
+              "webkitSpeechRecognitionEvent",
+              "webkitRequestFileSystem",
+              "webkitResolveLocalFileSystemURL",
+              {
+                "symbol": "Symbol(Symbol.toStringTag)"
+              }
+            ]
+          ]
+        ]
+      },
+      {
+        "id": "4055936baf635d06",
+        "category": "legacy",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "4c01ec91c8369240",
+        "category": "brand-check",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "4d8f2d7aa415e51f",
+        "category": "brand-check",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "56e9263979f49328",
+        "category": "descriptor",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "6dad37e5c7073bd2",
+        "category": "realm",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "76be3fd8e5525b76",
+        "category": "brand-check",
+        "fixed": false,
+        "signatureFixed": false,
+        "remaining": [
+          [
+            [
+              "value",
+              "class"
+            ],
+            "[object Error]",
+            {
+              "$missing": true
+            }
+          ],
+          [
+            [
+              "value",
+              "exception"
+            ],
+            "TypeError",
+            {
+              "$missing": true
+            }
+          ],
+          [
+            [
+              "value",
+              "messageCategory"
+            ],
+            "illegal-receiver",
+            {
+              "$missing": true
+            }
+          ],
+          [
+            [
+              "value",
+              "ok"
+            ],
+            {
+              "$missing": true
+            },
+            {
+              "type": "undefined"
+            }
+          ]
+        ]
+      },
+      {
+        "id": "7ce0490158dc72b8",
+        "category": "surface",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "8279f9ac1a699ee3",
+        "category": "realm",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "90dd2730882e2b50",
+        "category": "brand-check",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "91b505855c3b52b5",
+        "category": "surface",
+        "fixed": false,
+        "signatureFixed": false,
+        "remaining": [
+          [
+            [
+              "value",
+              "ownKeys",
+              0
+            ],
+            "availWidth",
+            "constructor"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              1
+            ],
+            "availHeight",
+            "width"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              2
+            ],
+            "width",
+            "height"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              3
+            ],
+            "height",
+            "availWidth"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              4
+            ],
+            "colorDepth",
+            "availHeight"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              5
+            ],
+            "pixelDepth",
+            "colorDepth"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              6
+            ],
+            "availLeft",
+            "pixelDepth"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              7
+            ],
+            "availTop",
+            "availLeft"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              8
+            ],
+            "orientation",
+            "availTop"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              9
+            ],
+            "constructor",
+            "onchange"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              10
+            ],
+            "onchange",
+            "isExtended"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              11
+            ],
+            "isExtended",
+            "orientation"
+          ]
+        ]
+      },
+      {
+        "id": "931e39fff24f9387",
+        "category": "legacy",
+        "fixed": false,
+        "signatureFixed": false,
+        "remaining": [
+          [
+            [
+              "value",
+              "descriptor"
+            ],
+            {
+              "depth": 2,
+              "configurable": true,
+              "enumerable": false,
+              "kind": "data",
+              "writable": true,
+              "value": {
+                "type": "object",
+                "tag": "[object HTMLFormElement]"
+              }
+            },
+            null
+          ],
+          [
+            [
+              "value",
+              "documentNamed"
+            ],
+            true,
+            false
+          ],
+          [
+            [
+              "value",
+              "windowNamed"
+            ],
+            true,
+            false
+          ]
+        ]
+      },
+      {
+        "id": "98f341941429c165",
+        "category": "descriptor",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "a6c93c3a079303c5",
+        "category": "surface",
+        "fixed": false,
+        "signatureFixed": false,
+        "remaining": [
+          [
+            [
+              "value",
+              "functionShape",
+              "length",
+              "ok",
+              "value"
+            ],
+            2,
+            3
+          ],
+          [
+            [
+              "value",
+              "ownKeys"
+            ],
+            [
+              "length",
+              "name"
+            ],
+            [
+              "length",
+              "name",
+              "prototype"
+            ]
+          ]
+        ]
+      },
+      {
+        "id": "a99b7b19d5053e5d",
+        "category": "surface",
+        "fixed": false,
+        "signatureFixed": false,
+        "remaining": [
+          [
+            [
+              "value",
+              "ownKeys",
+              0
+            ],
+            "timeOrigin",
+            "constructor"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              1
+            ],
+            "onresourcetimingbufferfull",
+            "timeOrigin"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              2
+            ],
+            "clearMarks",
+            "timing"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              3
+            ],
+            "clearMeasures",
+            "now"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              4
+            ],
+            "clearResourceTimings",
+            "mark"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              6
+            ],
+            "getEntriesByName",
+            "getEntriesByType"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              7
+            ],
+            "getEntriesByType",
+            "getEntriesByName"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              8
+            ],
+            "mark",
+            "clearResourceTimings"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              9
+            ],
+            "measure",
+            "setResourceTimingBufferSize"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              10
+            ],
+            "setResourceTimingBufferSize",
+            "onresourcetimingbufferfull"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              11
+            ],
+            "toJSON",
+            "navigation"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              12
+            ],
+            "now",
+            "clearMarks"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              13
+            ],
+            "constructor",
+            "measure"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              14
+            ],
+            "timing",
+            "clearMeasures"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              15
+            ],
+            "navigation",
+            "memory"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              16
+            ],
+            "memory",
+            "eventCounts"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              17
+            ],
+            "eventCounts",
+            "interactionCount"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              18
+            ],
+            "interactionCount",
+            "toJSON"
+          ]
+        ]
+      },
+      {
+        "id": "a9a67828d18d5d5b",
+        "category": "surface",
+        "fixed": false,
+        "signatureFixed": false,
+        "remaining": [
+          [
+            [
+              "value",
+              "ownKeys",
+              0
+            ],
+            "vendorSub",
+            "constructor"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              1
+            ],
+            "productSub",
+            "userAgent"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              2
+            ],
+            "vendor",
+            "appVersion"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              3
+            ],
+            "maxTouchPoints",
+            "platform"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              4
+            ],
+            "scheduling",
+            "languages"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              5
+            ],
+            "userActivation",
+            "language"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              6
+            ],
+            "geolocation",
+            "hardwareConcurrency"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              7
+            ],
+            "doNotTrack",
+            "deviceMemory"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              8
+            ],
+            "webkitTemporaryStorage",
+            "onLine"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              9
+            ],
+            "webkitPersistentStorage",
+            "cookieEnabled"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              10
+            ],
+            "windowControlsOverlay",
+            "vendor"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              11
+            ],
+            "hardwareConcurrency",
+            "product"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              12
+            ],
+            "cookieEnabled",
+            "appName"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              13
+            ],
+            "appCodeName",
+            "maxTouchPoints"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              14
+            ],
+            "appName",
+            "webdriver"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              15
+            ],
+            "appVersion",
+            "pdfViewerEnabled"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              16
+            ],
+            "platform",
+            "userAgentData"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              17
+            ],
+            "product",
+            "plugins"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              18
+            ],
+            "userAgent",
+            "mimeTypes"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              19
+            ],
+            "language",
+            "gpu"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              20
+            ],
+            "languages",
+            "vendorSub"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              21
+            ],
+            "onLine",
+            "productSub"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              22
+            ],
+            "webdriver",
+            "cpuPerformance"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              23
+            ],
+            "plugins",
+            "scheduling"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              24
+            ],
+            "mimeTypes",
+            "userActivation"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              25
+            ],
+            "pdfViewerEnabled",
+            "geolocation"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              26
+            ],
+            "connection",
+            "joinAdInterestGroup"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              27
+            ],
+            "getGamepads",
+            "leaveAdInterestGroup"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              28
+            ],
+            "javaEnabled",
+            "clearOriginJoinedAdInterestGroups"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              29
+            ],
+            "sendBeacon",
+            "updateAdInterestGroups"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              30
+            ],
+            "vibrate",
+            "createAuctionNonce"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              31
+            ],
+            "constructor",
+            "runAdAuction"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              32
+            ],
+            "cpuPerformance",
+            "adAuctionComponents"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              33
+            ],
+            "deprecatedRunAdAuctionEnforcesKAnonymity",
+            "deprecatedURNToURL"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              34
+            ],
+            "protectedAudience",
+            "deprecatedReplaceInURN"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              35
+            ],
+            "bluetooth",
+            "getInterestGroupAdAuctionData"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              36
+            ],
+            "clipboard",
+            "canLoadAdAuctionFencedFrame"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              37
+            ],
+            "credentials",
+            "deprecatedRunAdAuctionEnforcesKAnonymity"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              38
+            ],
+            "keyboard",
+            "protectedAudience"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              39
+            ],
+            "managed",
+            "getBattery"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              40
+            ],
+            "mediaDevices",
+            "sendBeacon"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              41
+            ],
+            "serviceWorker",
+            "bluetooth"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              42
+            ],
+            "virtualKeyboard",
+            "clipboard"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              43
+            ],
+            "wakeLock",
+            "credentials"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              44
+            ],
+            "deviceMemory",
+            "login"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              45
+            ],
+            "userAgentData",
+            "ink"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              46
+            ],
+            "locks",
+            "devicePosture"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              47
+            ],
+            "storage",
+            "doNotTrack"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              48
+            ],
+            "gpu",
+            "requestMediaKeySystemAccess"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              49
+            ],
+            "login",
+            "getGamepads"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              50
+            ],
+            "ink",
+            "hid"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              51
+            ],
+            "mediaCapabilities",
+            "getInstalledRelatedApps"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              52
+            ],
+            "permissions",
+            "keyboard"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              53
+            ],
+            "devicePosture",
+            "managed"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              54
+            ],
+            "hid",
+            "mediaCapabilities"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              56
+            ],
+            "presentation",
+            "getUserMedia"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              57
+            ],
+            "serial",
+            "webkitGetUserMedia"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              58
+            ],
+            "usb",
+            "mediaDevices"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              59
+            ],
+            "xr",
+            "permissions"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              60
+            ],
+            "storageBuckets",
+            "presentation"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              61
+            ],
+            "adAuctionComponents",
+            "webkitTemporaryStorage"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              62
+            ],
+            "runAdAuction",
+            "webkitPersistentStorage"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              63
+            ],
+            "canLoadAdAuctionFencedFrame",
+            "serial"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              64
+            ],
+            "canShare",
+            "serviceWorker"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              65
+            ],
+            "share",
+            "vibrate"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              66
+            ],
+            "clearAppBadge",
+            "virtualKeyboard"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              67
+            ],
+            "getBattery",
+            "wakeLock"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              68
+            ],
+            "getUserMedia",
+            "requestMIDIAccess"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              69
+            ],
+            "requestMIDIAccess",
+            "canShare"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              70
+            ],
+            "requestMediaKeySystemAccess",
+            "share"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              71
+            ],
+            "setAppBadge",
+            "usb"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              72
+            ],
+            "webkitGetUserMedia",
+            "windowControlsOverlay"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              73
+            ],
+            "clearOriginJoinedAdInterestGroups",
+            "xr"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              74
+            ],
+            "createAuctionNonce",
+            "appCodeName"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              75
+            ],
+            "joinAdInterestGroup",
+            "javaEnabled"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              76
+            ],
+            "leaveAdInterestGroup",
+            "setAppBadge"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              77
+            ],
+            "updateAdInterestGroups",
+            "clearAppBadge"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              78
+            ],
+            "deprecatedReplaceInURN",
+            "storageBuckets"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              79
+            ],
+            "deprecatedURNToURL",
+            "locks"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              80
+            ],
+            "getInstalledRelatedApps",
+            "registerProtocolHandler"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              81
+            ],
+            "getInterestGroupAdAuctionData",
+            "unregisterProtocolHandler"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              82
+            ],
+            "registerProtocolHandler",
+            "connection"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              83
+            ],
+            "unregisterProtocolHandler",
+            "storage"
+          ]
+        ]
+      },
+      {
+        "id": "babc848f0fbe86db",
+        "category": "brand-check",
+        "fixed": false,
+        "signatureFixed": false,
+        "remaining": [
+          [
+            [
+              "value",
+              "ok",
+              "type"
+            ],
+            "boolean",
+            "undefined"
+          ],
+          [
+            [
+              "value",
+              "ok",
+              "value"
+            ],
+            true,
+            {
+              "$missing": true
+            }
+          ]
+        ]
+      },
+      {
+        "id": "c035c36945679951",
+        "category": "realm",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "c5a808c0f491bb2b",
+        "category": "surface",
+        "fixed": false,
+        "signatureFixed": false,
+        "remaining": [
+          [
+            [
+              "value",
+              "functionShape",
+              "length",
+              "ok",
+              "value"
+            ],
+            0,
+            1
+          ],
+          [
+            [
+              "value",
+              "functionShape",
+              "source",
+              "ok",
+              "value"
+            ],
+            "function AbortSignal() { [native code] }",
+            "class AbortSignal extends EventTarget {\r\n      constructor(token){super();if(token!==hostToken)throw new TypeError('Illegal constructor');abortSlots.set(this,{aborted:false,reason:undefined,onabort:null})}\r\n      get aborted(){return abortSlots.get(this).aborted} get reason(){return abortSlots.get(this).reason}\r\n      get onabort(){return abortSlots.get(this).onabort} set onabort(value){abortSlots.get(this).onabort=value}\r\n      throwIfAborted(){if(this.aborted)throw this.reason}\r\n      static abort(reason){const signal=new AbortSignal(hostToken);abort(signal,reason);return signal}\r\n      static timeout(ms){ms=Number(ms);if(ms<0||!Number.isFinite(ms))throw new RangeError('Invalid timeout');const signal=new AbortSignal(hostToken);setTimeout(()=>abort(signal,new DOMException('signal timed out','TimeoutError')),ms);return signal}\r\n      static any(signals){const result=new AbortSignal(hostToken);for(const signal of signals){if(!(signal instanceof AbortSignal))throw new TypeError('Expected AbortSignal');if(signal.aborted){abort(result,signal.reason);break}signal.addEventListener('abort',()=>abort(result,signal.reason))}return result}\r\n    }"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              4
+            ],
+            "any",
+            "timeout"
+          ],
+          [
+            [
+              "value",
+              "ownKeys",
+              5
+            ],
+            "timeout",
+            "any"
+          ]
+        ]
+      },
+      {
+        "id": "d4c44ff9b4314406",
+        "category": "descriptor",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "d7352700b9d1b6e4",
+        "category": "surface",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "f5bf6be29751c1f4",
+        "category": "surface",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "fb77ad41b9b7b4e0",
+        "category": "realm",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      }
+    ]
+  },
+  "control": {
+    "checks": 236,
+    "matches": 236,
+    "fixedProbes": [
+      "legacy.window-named",
+      "call.document.hasFocus.correct.missing",
+      "call.document.hasFocus.correct.undefined",
+      "call.document.hasFocus.correct.null",
+      "call.document.hasFocus.correct.primitive",
+      "call.document.hasFocus.correct.object",
+      "call.document.hasFocus.correct.symbol",
+      "call.document.hasFocus.object.missing",
+      "call.document.hasFocus.object.undefined",
+      "call.document.hasFocus.object.null",
+      "call.document.hasFocus.object.primitive",
+      "call.document.hasFocus.object.object",
+      "call.document.hasFocus.object.symbol",
+      "call.document.hasFocus.null.missing",
+      "call.document.hasFocus.null.undefined",
+      "call.document.hasFocus.null.null",
+      "call.document.hasFocus.null.primitive",
+      "call.document.hasFocus.null.object",
+      "call.document.hasFocus.null.symbol",
+      "call.document.hasFocus.foreign.missing",
+      "call.document.hasFocus.foreign.undefined",
+      "call.document.hasFocus.foreign.null",
+      "call.document.hasFocus.foreign.primitive",
+      "call.document.hasFocus.foreign.object",
+      "call.document.hasFocus.foreign.symbol",
+      "surface.window",
+      "property.window.AbortController",
+      "property.window.AbortSignal",
+      "property.navigator.__proto__",
+      "property.performance.__proto__",
+      "property.screen.__proto__",
+      "property.history.__proto__",
+      "property.performance.addEventListener",
+      "property.screen.addEventListener"
+    ],
+    "regressions": [],
+    "newDifferences": [],
+    "oracleDrift": [],
+    "groups": [
+      {
+        "id": "040b06ea0edd0d8b",
+        "category": "descriptor",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "16623006f5e14633",
+        "category": "surface",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "21a81b154f26e799",
+        "category": "surface",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "261de7a21e7145d7",
+        "category": "legacy",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "2e3fa5c55a4a766c",
+        "category": "surface",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "2f13fa24fe6af546",
+        "category": "surface",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "4055936baf635d06",
+        "category": "legacy",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "4c01ec91c8369240",
+        "category": "brand-check",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "4d8f2d7aa415e51f",
+        "category": "brand-check",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "56e9263979f49328",
+        "category": "descriptor",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "6dad37e5c7073bd2",
+        "category": "realm",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "76be3fd8e5525b76",
+        "category": "brand-check",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "7ce0490158dc72b8",
+        "category": "surface",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "8279f9ac1a699ee3",
+        "category": "realm",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "90dd2730882e2b50",
+        "category": "brand-check",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "91b505855c3b52b5",
+        "category": "surface",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "931e39fff24f9387",
+        "category": "legacy",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "98f341941429c165",
+        "category": "descriptor",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "a6c93c3a079303c5",
+        "category": "surface",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "a99b7b19d5053e5d",
+        "category": "surface",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "a9a67828d18d5d5b",
+        "category": "surface",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "babc848f0fbe86db",
+        "category": "brand-check",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "c035c36945679951",
+        "category": "realm",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "c5a808c0f491bb2b",
+        "category": "surface",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "d4c44ff9b4314406",
+        "category": "descriptor",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "d7352700b9d1b6e4",
+        "category": "surface",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "f5bf6be29751c1f4",
+        "category": "surface",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      },
+      {
+        "id": "fb77ad41b9b7b4e0",
+        "category": "realm",
+        "fixed": true,
+        "signatureFixed": true,
+        "remaining": []
+      }
+    ]
+  },
+  "fuzzer": {
+    "schemaVersion": 1,
+    "captureMetadata": {
+      "schemaVersion": 1,
+      "chromeVersion": "152.0.7977.82",
+      "chromiumRevision": 1669021,
+      "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+      "v8Version": "15.2.124.21",
+      "platform": "windows-x64",
+      "browserMode": "headful",
+      "commandLineFeatureOverrides": [],
+      "viewport": {
+        "width": 1272,
+        "height": 653,
+        "deviceScaleFactor": 1
+      },
+      "window": {
+        "left": 0,
+        "top": 0,
+        "width": 1280,
+        "height": 800,
+        "windowState": "normal"
+      },
+      "secureContextState": true,
+      "isolationState": false,
+      "environmentProfileId": "cleanup-bindings-20260911",
+      "profileFreshness": "unverified",
+      "visibilityState": "visible",
+      "hasFocus": true
+    },
+    "mimicProduct": "Mimic/152.0.7977.82",
+    "summary": {
+      "checks": 236,
+      "matched": 202,
+      "unstable": 0,
+      "errors": 0,
+      "divergences": 34,
+      "uniqueGroups": 11,
+      "surfaceGenerated": 3533,
+      "surfaceLimit": 100
+    },
+    "groups": [
+      {
+        "id": "931e39fff24f9387",
+        "category": "legacy",
+        "members": [
+          "legacy.window-named"
+        ]
+      },
+      {
+        "id": "babc848f0fbe86db",
+        "category": "brand-check",
+        "members": [
+          "call.document.hasFocus.correct.missing",
+          "call.document.hasFocus.correct.undefined",
+          "call.document.hasFocus.correct.null",
+          "call.document.hasFocus.correct.primitive",
+          "call.document.hasFocus.correct.object",
+          "call.document.hasFocus.correct.symbol"
+        ]
+      },
+      {
+        "id": "76be3fd8e5525b76",
+        "category": "brand-check",
+        "members": [
+          "call.document.hasFocus.object.missing",
+          "call.document.hasFocus.object.undefined",
+          "call.document.hasFocus.object.null",
+          "call.document.hasFocus.object.primitive",
+          "call.document.hasFocus.object.object",
+          "call.document.hasFocus.object.symbol",
+          "call.document.hasFocus.null.missing",
+          "call.document.hasFocus.null.undefined",
+          "call.document.hasFocus.null.null",
+          "call.document.hasFocus.null.primitive",
+          "call.document.hasFocus.null.object",
+          "call.document.hasFocus.null.symbol",
+          "call.document.hasFocus.foreign.missing",
+          "call.document.hasFocus.foreign.undefined",
+          "call.document.hasFocus.foreign.null",
+          "call.document.hasFocus.foreign.primitive",
+          "call.document.hasFocus.foreign.object",
+          "call.document.hasFocus.foreign.symbol"
+        ]
+      },
+      {
+        "id": "794ec39135797271",
+        "category": "surface",
+        "members": [
+          "surface.window"
+        ]
+      },
+      {
+        "id": "21a81b154f26e799",
+        "category": "surface",
+        "members": [
+          "property.window.AbortController"
+        ]
+      },
+      {
+        "id": "c5a808c0f491bb2b",
+        "category": "surface",
+        "members": [
+          "property.window.AbortSignal"
+        ]
+      },
+      {
+        "id": "a9a67828d18d5d5b",
+        "category": "surface",
+        "members": [
+          "property.navigator.__proto__"
+        ]
+      },
+      {
+        "id": "a99b7b19d5053e5d",
+        "category": "surface",
+        "members": [
+          "property.performance.__proto__"
+        ]
+      },
+      {
+        "id": "91b505855c3b52b5",
+        "category": "surface",
+        "members": [
+          "property.screen.__proto__"
+        ]
+      },
+      {
+        "id": "2e3fa5c55a4a766c",
+        "category": "surface",
+        "members": [
+          "property.history.__proto__"
+        ]
+      },
+      {
+        "id": "a6c93c3a079303c5",
+        "category": "surface",
+        "members": [
+          "property.performance.addEventListener",
+          "property.screen.addEventListener"
+        ]
+      }
+    ],
+    "errors": [],
+    "fixtureOrigin": "http://127.0.0.1:19444"
+  },
+  "sweep": {
+    "executed": 130,
+    "uniqueExpressions": 127,
+    "skipped": 36,
+    "classifications": {
+      "candidate": 12,
+      "environment_or_timing_review": 3,
+      "exception_mismatch": 2,
+      "match": 113
+    }
+  },
+  "corpora": {
+    "brand": {
+      "validated": {
+        "corpusSHA256": "836c268e2f702ac315f59502df89819d2d7e971199dfed08c86bc664b457825a",
+        "cases": [
+          {
+            "id": "brand-matrix",
+            "category": "webidl-receivers-and-function-shape",
+            "valid": true,
+            "incomplete": {},
+            "differingLeaves": 1319,
+            "differencesSHA256": "116a5565062b7e97a1096c3aa646799195068a02de2ef6c737c8c4ae7a2ef542",
+            "fullEvidence": "compatibility/private-captures/cleanup-location-20260911/brand-validated/report.json"
+          }
+        ]
+      },
+      "validated-control": {
+        "corpusSHA256": "836c268e2f702ac315f59502df89819d2d7e971199dfed08c86bc664b457825a",
+        "cases": [
+          {
+            "id": "brand-matrix",
+            "category": "webidl-receivers-and-function-shape",
+            "valid": true,
+            "incomplete": {},
+            "differences": []
+          }
+        ]
+      }
+    },
+    "relations": {
+      "validated": {
+        "corpusSHA256": "14322bffa0d6e65b5905847d7463e5e0523cb932fd95b53c691f8955ad5b2b39",
+        "cases": [
+          {
+            "id": "state-relations",
+            "category": "state-and-origin",
+            "valid": true,
+            "incomplete": {},
+            "differences": [
+              {
+                "path": "/observations/0/value/remotePrototypeMutation/changed",
+                "chrome": true,
+                "mimic": false
+              },
+              {
+                "path": "/observations/0/value/remotePrototypeMutation/marker",
+                "chrome": true,
+                "mimic": false
+              }
+            ]
+          }
+        ]
+      },
+      "validated-control": {
+        "corpusSHA256": "14322bffa0d6e65b5905847d7463e5e0523cb932fd95b53c691f8955ad5b2b39",
+        "cases": [
+          {
+            "id": "state-relations",
+            "category": "state-and-origin",
+            "valid": true,
+            "incomplete": {},
+            "differences": []
+          }
+        ]
+      }
+    },
+    "corpus": {
+      "validated": {
+        "corpusSHA256": "12d4f3bd616f19f3aa6dbc4f9bf2f987f0686eb0d4044ce09b738bc2635b4928",
+        "cases": [
+          {
+            "id": "value-normalization",
+            "category": "harness-self-test",
+            "valid": true,
+            "incomplete": {},
+            "differences": []
+          },
+          {
+            "id": "network",
+            "category": "network",
+            "valid": true,
+            "incomplete": {},
+            "differences": [
+              {
+                "path": "/observations/0/value/0/received/headers/connection",
+                "chrome": "keep-alive",
+                "mimic": null,
+                "missing": "mimic"
+              },
+              {
+                "path": "/observations/0/value/0/received/headers/priority",
+                "chrome": null,
+                "mimic": "u=1, i",
+                "missing": "chrome"
+              },
+              {
+                "path": "/observations/0/value/1/received/headers/connection",
+                "chrome": "keep-alive",
+                "mimic": null,
+                "missing": "mimic"
+              },
+              {
+                "path": "/observations/0/value/1/received/headers/priority",
+                "chrome": null,
+                "mimic": "u=1, i",
+                "missing": "chrome"
+              },
+              {
+                "path": "/observations/0/value/2/received/headers/connection",
+                "chrome": "keep-alive",
+                "mimic": null,
+                "missing": "mimic"
+              },
+              {
+                "path": "/observations/0/value/2/received/headers/priority",
+                "chrome": null,
+                "mimic": "u=1, i",
+                "missing": "chrome"
+              },
+              {
+                "path": "/observations/0/value/3/received/headers/connection",
+                "chrome": "keep-alive",
+                "mimic": null,
+                "missing": "mimic"
+              },
+              {
+                "path": "/observations/0/value/3/received/headers/priority",
+                "chrome": null,
+                "mimic": "u=1, i",
+                "missing": "chrome"
+              },
+              {
+                "path": "/observations/0/value/4/received/headers/connection",
+                "chrome": "keep-alive",
+                "mimic": null,
+                "missing": "mimic"
+              },
+              {
+                "path": "/observations/0/value/4/received/headers/priority",
+                "chrome": null,
+                "mimic": "u=1, i",
+                "missing": "chrome"
+              },
+              {
+                "path": "/observations/0/value/5/received/headers/connection",
+                "chrome": "keep-alive",
+                "mimic": null,
+                "missing": "mimic"
+              },
+              {
+                "path": "/observations/0/value/5/received/headers/priority",
+                "chrome": null,
+                "mimic": "u=1, i",
+                "missing": "chrome"
+              }
+            ]
+          },
+          {
+            "id": "temporal",
+            "category": "timing-lifecycle",
+            "valid": true,
+            "incomplete": {},
+            "differences": []
+          },
+          {
+            "id": "frame-task-interleaving",
+            "category": "timing-lifecycle",
+            "valid": true,
+            "incomplete": {},
+            "differences": []
+          },
+          {
+            "id": "frame-microtask-checkpoint",
+            "category": "timing-lifecycle",
+            "valid": true,
+            "incomplete": {},
+            "differences": []
+          },
+          {
+            "id": "resource-realm-isolation",
+            "category": "timing-lifecycle",
+            "valid": true,
+            "incomplete": {},
+            "differences": []
+          },
+          {
+            "id": "resource-json",
+            "category": "timing-lifecycle",
+            "valid": true,
+            "incomplete": {},
+            "differences": []
+          },
+          {
+            "id": "worker-microtasks",
+            "category": "timing-lifecycle",
+            "valid": true,
+            "incomplete": {},
+            "differences": []
+          },
+          {
+            "id": "surface",
+            "category": "interface-surface",
+            "valid": true,
+            "incomplete": {},
+            "differences": [
+              {
+                "path": "/observations/0/value/CanvasRenderingContext2D/props/createConicGradient",
+                "chrome": {
+                  "enumerable": true,
+                  "configurable": true,
+                  "writable": true,
+                  "type": "function",
+                  "name": "createConicGradient",
+                  "length": 3
+                },
+                "mimic": null,
+                "missing": "mimic"
+              },
+              {
+                "path": "/observations/0/value/CanvasRenderingContext2D/props/createPattern",
+                "chrome": {
+                  "enumerable": true,
+                  "configurable": true,
+                  "writable": true,
+                  "type": "function",
+                  "name": "createPattern",
+                  "length": 2
+                },
+                "mimic": null,
+                "missing": "mimic"
+              },
+              {
+                "path": "/observations/0/value/CanvasRenderingContext2D/props/drawFocusIfNeeded",
+                "chrome": {
+                  "enumerable": true,
+                  "configurable": true,
+                  "writable": true,
+                  "type": "function",
+                  "name": "drawFocusIfNeeded",
+                  "length": 1
+                },
+                "mimic": null,
+                "missing": "mimic"
+              },
+              {
+                "path": "/observations/0/value/CanvasRenderingContext2D/props/lang",
+                "chrome": {
+                  "enumerable": true,
+                  "configurable": true,
+                  "get": "function",
+                  "set": "function"
+                },
+                "mimic": null,
+                "missing": "mimic"
+              },
+              {
+                "path": "/observations/0/value/FontFaceSet/props/forEach/length",
+                "chrome": 1,
+                "mimic": 2
+              },
+              {
+                "path": "/observations/0/value/GPUAdapter/props/isFallbackAdapter",
+                "chrome": null,
+                "mimic": {
+                  "configurable": true,
+                  "enumerable": true,
+                  "get": "function",
+                  "set": "undefined"
+                },
+                "missing": "chrome"
+              },
+              {
+                "path": "/observations/0/value/HTMLMediaElement/props/controlsList/set",
+                "chrome": "function",
+                "mimic": "undefined"
+              }
+            ]
+          },
+          {
+            "id": "samesite",
+            "category": "cookie-storage",
+            "valid": true,
+            "incomplete": {},
+            "differences": []
+          },
+          {
+            "id": "samesite-navigation",
+            "category": "cookie-storage",
+            "valid": true,
+            "incomplete": {},
+            "differences": []
+          },
+          {
+            "id": "partition",
+            "category": "cookie-storage",
+            "valid": true,
+            "incomplete": {},
+            "differences": []
+          },
+          {
+            "id": "svg-values",
+            "category": "geometry",
+            "valid": true,
+            "incomplete": {},
+            "differences": []
+          },
+          {
+            "id": "observations",
+            "category": "fonts-canvas-media-rtc",
+            "valid": true,
+            "incomplete": {},
+            "differences": [
+              {
+                "path": "/observations/0/value/canvas/invalid/exception/message",
+                "chrome": "Failed to execute 'getImageData' on 'CanvasRenderingContext2D': The source width is 0.",
+                "mimic": "ImageData dimensions must be nonzero"
+              },
+              {
+                "path": "/observations/0/value/fonts/metrics/value/ascent",
+                "chrome": 12,
+                "mimic": 12.8
+              },
+              {
+                "path": "/observations/0/value/fonts/metrics/value/descent",
+                "chrome": 0,
+                "mimic": 3.2
+              },
+              {
+                "path": "/observations/0/value/fonts/metrics/value/left",
+                "chrome": 1,
+                "mimic": {
+                  "$jsValue": "-0"
+                }
+              },
+              {
+                "path": "/observations/0/value/fonts/metrics/value/right",
+                "chrome": 43.015625,
+                "mimic": 36.959999999999994
+              },
+              {
+                "path": "/observations/0/value/fonts/metrics/value/width",
+                "chrome": 42.6875,
+                "mimic": 38.4
+              },
+              {
+                "path": "/observations/0/value/media/0/1/exception",
+                "chrome": null,
+                "mimic": {
+                  "message": "audio.canPlayType is not a function",
+                  "name": "TypeError"
+                },
+                "missing": "chrome"
+              },
+              {
+                "path": "/observations/0/value/media/0/1/value",
+                "chrome": "probably",
+                "mimic": null,
+                "missing": "mimic"
+              },
+              {
+                "path": "/observations/0/value/media/0/2/exception",
+                "chrome": null,
+                "mimic": {
+                  "message": "video.canPlayType is not a function",
+                  "name": "TypeError"
+                },
+                "missing": "chrome"
+              },
+              {
+                "path": "/observations/0/value/media/0/2/value",
+                "chrome": "probably",
+                "mimic": null,
+                "missing": "mimic"
+              },
+              {
+                "path": "/observations/0/value/media/1/1/exception",
+                "chrome": null,
+                "mimic": {
+                  "message": "audio.canPlayType is not a function",
+                  "name": "TypeError"
+                },
+                "missing": "chrome"
+              },
+              {
+                "path": "/observations/0/value/media/1/1/value",
+                "chrome": "probably",
+                "mimic": null,
+                "missing": "mimic"
+              },
+              {
+                "path": "/observations/0/value/media/1/2/exception",
+                "chrome": null,
+                "mimic": {
+                  "message": "video.canPlayType is not a function",
+                  "name": "TypeError"
+                },
+                "missing": "chrome"
+              },
+              {
+                "path": "/observations/0/value/media/1/2/value",
+                "chrome": "probably",
+                "mimic": null,
+                "missing": "mimic"
+              },
+              {
+                "path": "/observations/0/value/media/2/1/exception",
+                "chrome": null,
+                "mimic": {
+                  "message": "audio.canPlayType is not a function",
+                  "name": "TypeError"
+                },
+                "missing": "chrome"
+              },
+              {
+                "path": "/observations/0/value/media/2/1/value",
+                "chrome": "probably",
+                "mimic": null,
+                "missing": "mimic"
+              },
+              {
+                "path": "/observations/0/value/media/2/2/exception",
+                "chrome": null,
+                "mimic": {
+                  "message": "video.canPlayType is not a function",
+                  "name": "TypeError"
+                },
+                "missing": "chrome"
+              },
+              {
+                "path": "/observations/0/value/media/2/2/value",
+                "chrome": "probably",
+                "mimic": null,
+                "missing": "mimic"
+              },
+              {
+                "path": "/observations/0/value/media/3/1/exception",
+                "chrome": null,
+                "mimic": {
+                  "message": "audio.canPlayType is not a function",
+                  "name": "TypeError"
+                },
+                "missing": "chrome"
+              },
+              {
+                "path": "/observations/0/value/media/3/1/value",
+                "chrome": "probably",
+                "mimic": null,
+                "missing": "mimic"
+              },
+              {
+                "path": "/observations/0/value/media/3/2/exception",
+                "chrome": null,
+                "mimic": {
+                  "message": "video.canPlayType is not a function",
+                  "name": "TypeError"
+                },
+                "missing": "chrome"
+              },
+              {
+                "path": "/observations/0/value/media/3/2/value",
+                "chrome": "probably",
+                "mimic": null,
+                "missing": "mimic"
+              }
+            ]
+          },
+          {
+            "id": "webgpu-lifecycle",
+            "category": "graphics",
+            "valid": true,
+            "incomplete": {},
+            "differences": []
+          }
+        ]
+      },
+      "validated-control": {
+        "corpusSHA256": "12d4f3bd616f19f3aa6dbc4f9bf2f987f0686eb0d4044ce09b738bc2635b4928",
+        "cases": [
+          {
+            "id": "value-normalization",
+            "category": "harness-self-test",
+            "valid": true,
+            "incomplete": {},
+            "differences": []
+          },
+          {
+            "id": "network",
+            "category": "network",
+            "valid": true,
+            "incomplete": {},
+            "differences": []
+          },
+          {
+            "id": "temporal",
+            "category": "timing-lifecycle",
+            "valid": true,
+            "incomplete": {},
+            "differences": []
+          },
+          {
+            "id": "frame-task-interleaving",
+            "category": "timing-lifecycle",
+            "valid": true,
+            "incomplete": {},
+            "differences": []
+          },
+          {
+            "id": "frame-microtask-checkpoint",
+            "category": "timing-lifecycle",
+            "valid": true,
+            "incomplete": {},
+            "differences": []
+          },
+          {
+            "id": "resource-realm-isolation",
+            "category": "timing-lifecycle",
+            "valid": true,
+            "incomplete": {},
+            "differences": []
+          },
+          {
+            "id": "resource-json",
+            "category": "timing-lifecycle",
+            "valid": true,
+            "incomplete": {},
+            "differences": []
+          },
+          {
+            "id": "worker-microtasks",
+            "category": "timing-lifecycle",
+            "valid": true,
+            "incomplete": {},
+            "differences": []
+          },
+          {
+            "id": "surface",
+            "category": "interface-surface",
+            "valid": true,
+            "incomplete": {},
+            "differences": []
+          },
+          {
+            "id": "samesite",
+            "category": "cookie-storage",
+            "valid": true,
+            "incomplete": {},
+            "differences": []
+          },
+          {
+            "id": "samesite-navigation",
+            "category": "cookie-storage",
+            "valid": true,
+            "incomplete": {},
+            "differences": []
+          },
+          {
+            "id": "partition",
+            "category": "cookie-storage",
+            "valid": true,
+            "incomplete": {},
+            "differences": []
+          },
+          {
+            "id": "svg-values",
+            "category": "geometry",
+            "valid": true,
+            "incomplete": {},
+            "differences": []
+          },
+          {
+            "id": "observations",
+            "category": "fonts-canvas-media-rtc",
+            "valid": true,
+            "incomplete": {},
+            "differences": []
+          },
+          {
+            "id": "webgpu-lifecycle",
+            "category": "graphics",
+            "valid": true,
+            "incomplete": {},
+            "differences": []
+          }
+        ]
+      }
+    }
+  },
+  "focused": [
+    {
+      "name": "location_reflection",
+      "sha256": "cc49dbe32ed36877462f10957ff3fdd1a14ab141da6f97730d81f7104996ea87",
+      "controlDifferences": [],
+      "afterDifferences": [],
+      "beforeExecutionComplete": true,
+      "beforeDifferences": [
+        [
+          [
+            "ancestors",
+            "length"
+          ],
+          0,
+          {
+            "$missing": true
+          }
+        ],
+        [
+          [
+            "ancestors",
+            "tag"
+          ],
+          "[object DOMStringList]",
+          "[object Undefined]"
+        ],
+        [
+          [
+            "descriptors",
+            "Symbol(Symbol.toPrimitive)"
+          ],
+          {
+            "enumerable": false,
+            "configurable": false,
+            "writable": false,
+            "get": "undefined",
+            "set": "undefined",
+            "type": "undefined"
+          },
+          {
+            "$missing": true
+          }
+        ],
+        [
+          [
+            "descriptors",
+            "ancestorOrigins"
+          ],
+          {
+            "enumerable": true,
+            "configurable": false,
+            "get": "function",
+            "set": "undefined",
+            "type": "undefined"
+          },
+          {
+            "$missing": true
+          }
+        ],
+        [
+          [
+            "descriptors",
+            "assign",
+            "writable"
+          ],
+          false,
+          true
+        ],
+        [
+          [
+            "descriptors",
+            "hash",
+            "configurable"
+          ],
+          false,
+          true
+        ],
+        [
+          [
+            "descriptors",
+            "host",
+            "configurable"
+          ],
+          false,
+          true
+        ],
+        [
+          [
+            "descriptors",
+            "hostname",
+            "configurable"
+          ],
+          false,
+          true
+        ],
+        [
+          [
+            "descriptors",
+            "href",
+            "configurable"
+          ],
+          false,
+          true
+        ],
+        [
+          [
+            "descriptors",
+            "origin",
+            "configurable"
+          ],
+          false,
+          true
+        ],
+        [
+          [
+            "descriptors",
+            "origin",
+            "set"
+          ],
+          "undefined",
+          "function"
+        ],
+        [
+          [
+            "descriptors",
+            "pathname",
+            "configurable"
+          ],
+          false,
+          true
+        ],
+        [
+          [
+            "descriptors",
+            "port",
+            "configurable"
+          ],
+          false,
+          true
+        ],
+        [
+          [
+            "descriptors",
+            "protocol",
+            "configurable"
+          ],
+          false,
+          true
+        ],
+        [
+          [
+            "descriptors",
+            "reload",
+            "writable"
+          ],
+          false,
+          true
+        ],
+        [
+          [
+            "descriptors",
+            "replace",
+            "writable"
+          ],
+          false,
+          true
+        ],
+        [
+          [
+            "descriptors",
+            "search",
+            "configurable"
+          ],
+          false,
+          true
+        ],
+        [
+          [
+            "descriptors",
+            "toString",
+            "writable"
+          ],
+          false,
+          true
+        ],
+        [
+          [
+            "descriptors",
+            "valueOf"
+          ],
+          {
+            "enumerable": false,
+            "configurable": false,
+            "writable": false,
+            "get": "undefined",
+            "set": "undefined",
+            "type": "function",
+            "name": "valueOf",
+            "length": 0
+          },
+          {
+            "$missing": true
+          }
+        ],
+        [
+          [
+            "ownKeys"
+          ],
+          [
+            "valueOf",
+            "ancestorOrigins",
+            "href",
+            "origin",
+            "protocol",
+            "host",
+            "hostname",
+            "port",
+            "pathname",
+            "search",
+            "hash",
+            "assign",
+            "reload",
+            "replace",
+            "toString",
+            "Symbol(Symbol.toPrimitive)"
+          ],
+          [
+            "href",
+            "origin",
+            "protocol",
+            "host",
+            "hostname",
+            "port",
+            "pathname",
+            "search",
+            "hash",
+            "assign",
+            "replace",
+            "reload",
+            "toString"
+          ]
+        ]
+      ]
+    },
+    {
+      "name": "ancestor_origins",
+      "sha256": "358a11eb62480f182a23f9d81a10e405b785b350d3251eda3172d1a2d5f2e2b6",
+      "controlDifferences": [],
+      "afterDifferences": [],
+      "beforeExecutionComplete": false,
+      "beforeDifferences": [
+        [
+          [
+            "after"
+          ],
+          {
+            "newList": true,
+            "oldLength": 1,
+            "oldFirst": true
+          },
+          {
+            "$missing": true
+          }
+        ],
+        [
+          [
+            "bindings"
+          ],
+          {
+            "forged": {
+              "ok": false,
+              "name": "TypeError",
+              "local": true
+            },
+            "missing": {
+              "ok": false,
+              "name": "TypeError",
+              "local": true
+            },
+            "containsMissing": {
+              "ok": false,
+              "name": "TypeError",
+              "local": true
+            },
+            "symbol": {
+              "ok": false,
+              "name": "TypeError",
+              "local": true
+            },
+            "borrowed": true
+          },
+          {
+            "$missing": true
+          }
+        ],
+        [
+          [
+            "detached"
+          ],
+          {
+            "length": 1,
+            "first": true
+          },
+          {
+            "$missing": true
+          }
+        ],
+        [
+          [
+            "executionComplete"
+          ],
+          {
+            "$missing": true
+          },
+          false
+        ],
+        [
+          [
+            "mutations"
+          ],
+          {
+            "setIndex": true,
+            "setMissing": true,
+            "defineIndex": true,
+            "defineMissing": true,
+            "deleteIndex": false,
+            "deleteMissing": true,
+            "preventExtensions": false,
+            "unchanged": true
+          },
+          {
+            "$missing": true
+          }
+        ],
+        [
+          [
+            "nested"
+          ],
+          {
+            "length": 2,
+            "values": true
+          },
+          {
+            "$missing": true
+          }
+        ],
+        [
+          [
+            "protocolError"
+          ],
+          {
+            "$missing": true
+          },
+          "Protocol error (Runtime.evaluate): promise rejected: TypeError: undefined is not iterable (cannot read property Symbol(Symbol.iterator))"
+        ],
+        [
+          [
+            "shape"
+          ],
+          {
+            "keys": [
+              "length",
+              "contains",
+              "item",
+              "constructor",
+              "Symbol(Symbol.toStringTag)",
+              "Symbol(Symbol.iterator)"
+            ],
+            "iterator": "function",
+            "constructor": {
+              "ok": false,
+              "name": "TypeError",
+              "local": true
+            },
+            "own": [
+              "0"
+            ],
+            "indexDescriptor": {
+              "value": "origin",
+              "writable": false,
+              "enumerable": true,
+              "configurable": true
+            }
+          },
+          {
+            "$missing": true
+          }
+        ],
+        [
+          [
+            "values"
+          ],
+          {
+            "length": 1,
+            "first": true,
+            "missing": true,
+            "item": true,
+            "itemMissing": null,
+            "contains": true,
+            "notContained": false
+          },
+          {
+            "$missing": true
+          }
+        ],
+        [
+          [
+            "windowOrigin"
+          ],
+          {
+            "type": "string",
+            "matchesURL": true,
+            "childMatches": true,
+            "get": "function",
+            "set": "function",
+            "enumerable": true,
+            "configurable": true,
+            "forged": {
+              "ok": false,
+              "name": "TypeError",
+              "local": true
+            },
+            "borrowed": true,
+            "replaceable": true
+          },
+          {
+            "$missing": true
+          }
+        ]
+      ]
+    },
+    {
+      "name": "realm_property_mutation",
+      "sha256": "bd7875c63f2fbeb4a3902bdc9f96bacc00534122a120a55246792836225ce30e",
+      "controlDifferences": [],
+      "afterDifferences": [],
+      "beforeExecutionComplete": false,
+      "beforeDifferences": [
+        [
+          [
+            "accessor"
+          ],
+          true,
+          {
+            "$missing": true
+          }
+        ],
+        [
+          [
+            "array"
+          ],
+          true,
+          {
+            "$missing": true
+          }
+        ],
+        [
+          [
+            "define"
+          ],
+          true,
+          {
+            "$missing": true
+          }
+        ],
+        [
+          [
+            "defineException"
+          ],
+          true,
+          {
+            "$missing": true
+          }
+        ],
+        [
+          [
+            "deleteException"
+          ],
+          true,
+          {
+            "$missing": true
+          }
+        ],
+        [
+          [
+            "executionComplete"
+          ],
+          {
+            "$missing": true
+          },
+          false
+        ],
+        [
+          [
+            "firstDescriptor"
+          ],
+          true,
+          {
+            "$missing": true
+          }
+        ],
+        [
+          [
+            "identity"
+          ],
+          true,
+          {
+            "$missing": true
+          }
+        ],
+        [
+          [
+            "lock"
+          ],
+          true,
+          {
+            "$missing": true
+          }
+        ],
+        [
+          [
+            "lockedIdentity"
+          ],
+          true,
+          {
+            "$missing": true
+          }
+        ],
+        [
+          [
+            "protocolError"
+          ],
+          {
+            "$missing": true
+          },
+          "Protocol error (Runtime.evaluate): __pyppeteer_evaluation_script__: NotSupportedError: Cross-realm defineProperty is not implemented (mimic:webapi-surface:1429:100)"
+        ],
+        [
+          [
+            "reject"
+          ],
+          {
+            "define": false,
+            "remove": false
+          },
+          {
+            "$missing": true
+          }
+        ],
+        [
+          [
+            "remove"
+          ],
+          true,
+          {
+            "$missing": true
+          }
+        ],
+        [
+          [
+            "removeMissing"
+          ],
+          true,
+          {
+            "$missing": true
+          }
+        ],
+        [
+          [
+            "retained"
+          ],
+          true,
+          {
+            "$missing": true
+          }
+        ],
+        [
+          [
+            "symbol"
+          ],
+          true,
+          {
+            "$missing": true
+          }
+        ]
+      ]
+    }
+  ],
+  "navigation": [
+    {
+      "probe": "internal\\browser\\testdata\\navigation_cross_window_reflection_oracle.js",
+      "sha256": "95a72922c1b2b0d3198d0d666227dc4416dc0d547b20acb85e6c39fa27e8d70a",
+      "chrome": {
+        "value": {
+          "tag": "[object Object]",
+          "toStringTag": "undefined",
+          "tagDescriptor": {
+            "configurable": true,
+            "enumerable": false,
+            "writable": false,
+            "value": "undefined"
+          },
+          "ownKeys": [
+            "window",
+            "self",
+            "location",
+            "closed",
+            "frames",
+            "length",
+            "top",
+            "opener",
+            "parent",
+            "blur",
+            "close",
+            "focus",
+            "postMessage",
+            "then",
+            "Symbol(Symbol.toStringTag)",
+            "Symbol(Symbol.hasInstance)",
+            "Symbol(Symbol.isConcatSpreadable)"
+          ],
+          "iterator": {
+            "error": "SecurityError"
+          },
+          "hasInstance": "undefined",
+          "isConcatSpreadable": "undefined",
+          "then": "undefined",
+          "uniqueSymbol": {
+            "error": "SecurityError"
+          },
+          "toPrimitive": {
+            "error": "SecurityError"
+          }
+        }
+      },
+      "mimic": {
+        "value": {
+          "hasInstance": "undefined",
+          "isConcatSpreadable": "undefined",
+          "iterator": {
+            "error": "SecurityError"
+          },
+          "ownKeys": [
+            "window",
+            "self",
+            "location",
+            "closed",
+            "frames",
+            "length",
+            "top",
+            "opener",
+            "parent",
+            "blur",
+            "close",
+            "focus",
+            "postMessage",
+            "then",
+            "Symbol(Symbol.toStringTag)",
+            "Symbol(Symbol.hasInstance)",
+            "Symbol(Symbol.isConcatSpreadable)"
+          ],
+          "tag": "[object Object]",
+          "tagDescriptor": {
+            "configurable": true,
+            "enumerable": false,
+            "value": "undefined",
+            "writable": false
+          },
+          "then": "undefined",
+          "toPrimitive": {
+            "error": "SecurityError"
+          },
+          "toStringTag": "undefined",
+          "uniqueSymbol": {
+            "error": "SecurityError"
+          }
+        }
+      },
+      "control": {
+        "value": {
+          "tag": "[object Object]",
+          "toStringTag": "undefined",
+          "tagDescriptor": {
+            "configurable": true,
+            "enumerable": false,
+            "writable": false,
+            "value": "undefined"
+          },
+          "ownKeys": [
+            "window",
+            "self",
+            "location",
+            "closed",
+            "frames",
+            "length",
+            "top",
+            "opener",
+            "parent",
+            "blur",
+            "close",
+            "focus",
+            "postMessage",
+            "then",
+            "Symbol(Symbol.toStringTag)",
+            "Symbol(Symbol.hasInstance)",
+            "Symbol(Symbol.isConcatSpreadable)"
+          ],
+          "iterator": {
+            "error": "SecurityError"
+          },
+          "hasInstance": "undefined",
+          "isConcatSpreadable": "undefined",
+          "then": "undefined",
+          "uniqueSymbol": {
+            "error": "SecurityError"
+          },
+          "toPrimitive": {
+            "error": "SecurityError"
+          }
+        }
+      },
+      "differences": [],
+      "controlDifferences": []
+    },
+    {
+      "probe": "internal\\browser\\testdata\\navigation_nested_window_oracle.js",
+      "sha256": "4b0d2dd989877d89b7c770c3c98ddc3869212119c9637637029bf67519862e44",
+      "chrome": {
+        "value": {
+          "title": "retained nested",
+          "self": true,
+          "defaultViewNull": true,
+          "eval": 17,
+          "bodyReadable": true
+        }
+      },
+      "mimic": {
+        "value": {
+          "bodyReadable": true,
+          "defaultViewNull": true,
+          "eval": 17,
+          "self": true,
+          "title": "retained nested"
+        }
+      },
+      "control": {
+        "value": {
+          "title": "retained nested",
+          "self": true,
+          "defaultViewNull": true,
+          "eval": 17,
+          "bodyReadable": true
+        }
+      },
+      "differences": [],
+      "controlDifferences": []
+    },
+    {
+      "probe": "internal\\browser\\testdata\\navigation_realm_lifecycle_oracle.js",
+      "sha256": "746dbc08a8417847725baeae9b841cf239cf02668d72da92e129f8b3a45cbb57",
+      "chrome": {
+        "value": {
+          "activeEvents": [
+            "microtask",
+            "promise",
+            "timer"
+          ],
+          "afterNavigation": {
+            "sameDocument": true,
+            "events": []
+          },
+          "detached": {
+            "contentWindowNull": true,
+            "oldDocumentReadable": true,
+            "currentDocumentReadable": true,
+            "currentFunctionDocument": true,
+            "savedEvalPrimitive": 17,
+            "savedEvalDocument": true,
+            "oldDefaultViewNull": true,
+            "detachedDefaultViewNull": true
+          }
+        }
+      },
+      "mimic": {
+        "value": {
+          "activeEvents": [
+            "microtask",
+            "promise",
+            "timer"
+          ],
+          "afterNavigation": {
+            "events": [],
+            "sameDocument": true
+          },
+          "detached": {
+            "contentWindowNull": true,
+            "currentDocumentReadable": true,
+            "currentFunctionDocument": true,
+            "detachedDefaultViewNull": true,
+            "oldDefaultViewNull": true,
+            "oldDocumentReadable": true,
+            "savedEvalDocument": true,
+            "savedEvalPrimitive": 17
+          }
+        }
+      },
+      "control": {
+        "value": {
+          "activeEvents": [
+            "microtask",
+            "promise",
+            "timer"
+          ],
+          "afterNavigation": {
+            "sameDocument": true,
+            "events": []
+          },
+          "detached": {
+            "contentWindowNull": true,
+            "oldDocumentReadable": true,
+            "currentDocumentReadable": true,
+            "currentFunctionDocument": true,
+            "savedEvalPrimitive": 17,
+            "savedEvalDocument": true,
+            "oldDefaultViewNull": true,
+            "detachedDefaultViewNull": true
+          }
+        }
+      },
+      "differences": [],
+      "controlDifferences": []
+    },
+    {
+      "probe": "internal\\browser\\testdata\\navigation_realm_ownership_oracle.js",
+      "sha256": "f408ce661cdf9645d0b45f9f4f16d48aab4564a99c791e8bf77241ebc825f865",
+      "chrome": {
+        "value": {
+          "sameOrigin": {
+            "windowStable": true,
+            "currentDocument": false,
+            "contentDocumentNull": false,
+            "oldDocumentValue": 23,
+            "oldDocumentBody": true,
+            "oldDocumentConstructor": true,
+            "oldDefaultViewNull": true,
+            "oldObjectValue": 17,
+            "oldObjectPrototype": true,
+            "constructOldObject": true,
+            "oldSymbolIdentity": true,
+            "oldFunctionDocument": true,
+            "oldFunctionWindow": true,
+            "oldEvalDocument": true,
+            "oldEvalWindow": true,
+            "oldEvalResultType": "object",
+            "oldEvalPrimitive": 17,
+            "oldEvalObjectArgument": true,
+            "oldEvalThrow": {
+              "error": "Error"
+            },
+            "oldWindowRoundtrip": true,
+            "parentWindowRoundtrip": true,
+            "oldSymbolRoundtrip": true,
+            "oldSymbolKey": true,
+            "newWindowRoundtrip": true,
+            "newSymbolKey": true,
+            "oldFunctionGlobal": true,
+            "oldDocumentMutation": true,
+            "currentHasOldMutation": false,
+            "currentHasOldGlobal": false,
+            "currentConstructorReplaced": true
+          },
+          "crossOrigin": {
+            "windowStable": true,
+            "currentDocument": {
+              "error": "SecurityError"
+            },
+            "contentDocumentNull": true,
+            "oldDocumentValue": 23,
+            "oldDocumentBody": true,
+            "oldDocumentConstructor": true,
+            "oldDefaultViewNull": true,
+            "oldObjectValue": 17,
+            "oldObjectPrototype": true,
+            "constructOldObject": true,
+            "oldSymbolIdentity": true,
+            "oldFunctionDocument": true,
+            "oldFunctionWindow": true,
+            "oldEvalDocument": false,
+            "oldEvalWindow": false,
+            "oldEvalResultType": "undefined",
+            "oldEvalPrimitive": "undefined",
+            "oldEvalObjectArgument": "undefined",
+            "oldEvalThrow": "undefined",
+            "oldWindowRoundtrip": true,
+            "parentWindowRoundtrip": true,
+            "oldSymbolRoundtrip": true,
+            "oldSymbolKey": true,
+            "newWindowRoundtrip": {
+              "error": "SecurityError"
+            },
+            "newSymbolKey": {
+              "error": "SecurityError"
+            },
+            "oldFunctionGlobal": {
+              "error": "SecurityError"
+            },
+            "oldDocumentMutation": true,
+            "currentHasOldMutation": {
+              "error": "SecurityError"
+            },
+            "currentHasOldGlobal": {
+              "error": "SecurityError"
+            },
+            "currentConstructorReplaced": {
+              "error": "SecurityError"
+            }
+          }
+        }
+      },
+      "mimic": {
+        "value": {
+          "crossOrigin": {
+            "constructOldObject": true,
+            "contentDocumentNull": true,
+            "currentConstructorReplaced": {
+              "error": "SecurityError"
+            },
+            "currentDocument": {
+              "error": "SecurityError"
+            },
+            "currentHasOldGlobal": {
+              "error": "SecurityError"
+            },
+            "currentHasOldMutation": {
+              "error": "SecurityError"
+            },
+            "newSymbolKey": {
+              "error": "SecurityError"
+            },
+            "newWindowRoundtrip": {
+              "error": "SecurityError"
+            },
+            "oldDefaultViewNull": true,
+            "oldDocumentBody": true,
+            "oldDocumentConstructor": true,
+            "oldDocumentMutation": true,
+            "oldDocumentValue": 23,
+            "oldEvalDocument": false,
+            "oldEvalObjectArgument": "undefined",
+            "oldEvalPrimitive": "undefined",
+            "oldEvalResultType": "undefined",
+            "oldEvalThrow": "undefined",
+            "oldEvalWindow": false,
+            "oldFunctionDocument": true,
+            "oldFunctionGlobal": false,
+            "oldFunctionWindow": true,
+            "oldObjectPrototype": true,
+            "oldObjectValue": 17,
+            "oldSymbolIdentity": true,
+            "oldSymbolKey": true,
+            "oldSymbolRoundtrip": true,
+            "oldWindowRoundtrip": true,
+            "parentWindowRoundtrip": true,
+            "windowStable": true
+          },
+          "sameOrigin": {
+            "constructOldObject": true,
+            "contentDocumentNull": false,
+            "currentConstructorReplaced": true,
+            "currentDocument": false,
+            "currentHasOldGlobal": false,
+            "currentHasOldMutation": false,
+            "newSymbolKey": true,
+            "newWindowRoundtrip": true,
+            "oldDefaultViewNull": true,
+            "oldDocumentBody": true,
+            "oldDocumentConstructor": true,
+            "oldDocumentMutation": true,
+            "oldDocumentValue": 23,
+            "oldEvalDocument": true,
+            "oldEvalObjectArgument": true,
+            "oldEvalPrimitive": 17,
+            "oldEvalResultType": "object",
+            "oldEvalThrow": {
+              "error": "Error"
+            },
+            "oldEvalWindow": true,
+            "oldFunctionDocument": true,
+            "oldFunctionGlobal": false,
+            "oldFunctionWindow": true,
+            "oldObjectPrototype": true,
+            "oldObjectValue": 17,
+            "oldSymbolIdentity": true,
+            "oldSymbolKey": true,
+            "oldSymbolRoundtrip": true,
+            "oldWindowRoundtrip": true,
+            "parentWindowRoundtrip": true,
+            "windowStable": true
+          }
+        }
+      },
+      "control": {
+        "value": {
+          "sameOrigin": {
+            "windowStable": true,
+            "currentDocument": false,
+            "contentDocumentNull": false,
+            "oldDocumentValue": 23,
+            "oldDocumentBody": true,
+            "oldDocumentConstructor": true,
+            "oldDefaultViewNull": true,
+            "oldObjectValue": 17,
+            "oldObjectPrototype": true,
+            "constructOldObject": true,
+            "oldSymbolIdentity": true,
+            "oldFunctionDocument": true,
+            "oldFunctionWindow": true,
+            "oldEvalDocument": true,
+            "oldEvalWindow": true,
+            "oldEvalResultType": "object",
+            "oldEvalPrimitive": 17,
+            "oldEvalObjectArgument": true,
+            "oldEvalThrow": {
+              "error": "Error"
+            },
+            "oldWindowRoundtrip": true,
+            "parentWindowRoundtrip": true,
+            "oldSymbolRoundtrip": true,
+            "oldSymbolKey": true,
+            "newWindowRoundtrip": true,
+            "newSymbolKey": true,
+            "oldFunctionGlobal": true,
+            "oldDocumentMutation": true,
+            "currentHasOldMutation": false,
+            "currentHasOldGlobal": false,
+            "currentConstructorReplaced": true
+          },
+          "crossOrigin": {
+            "windowStable": true,
+            "currentDocument": {
+              "error": "SecurityError"
+            },
+            "contentDocumentNull": true,
+            "oldDocumentValue": 23,
+            "oldDocumentBody": true,
+            "oldDocumentConstructor": true,
+            "oldDefaultViewNull": true,
+            "oldObjectValue": 17,
+            "oldObjectPrototype": true,
+            "constructOldObject": true,
+            "oldSymbolIdentity": true,
+            "oldFunctionDocument": true,
+            "oldFunctionWindow": true,
+            "oldEvalDocument": false,
+            "oldEvalWindow": false,
+            "oldEvalResultType": "undefined",
+            "oldEvalPrimitive": "undefined",
+            "oldEvalObjectArgument": "undefined",
+            "oldEvalThrow": "undefined",
+            "oldWindowRoundtrip": true,
+            "parentWindowRoundtrip": true,
+            "oldSymbolRoundtrip": true,
+            "oldSymbolKey": true,
+            "newWindowRoundtrip": {
+              "error": "SecurityError"
+            },
+            "newSymbolKey": {
+              "error": "SecurityError"
+            },
+            "oldFunctionGlobal": {
+              "error": "SecurityError"
+            },
+            "oldDocumentMutation": true,
+            "currentHasOldMutation": {
+              "error": "SecurityError"
+            },
+            "currentHasOldGlobal": {
+              "error": "SecurityError"
+            },
+            "currentConstructorReplaced": {
+              "error": "SecurityError"
+            }
+          }
+        }
+      },
+      "differences": [
+        [
+          [
+            "value",
+            "crossOrigin",
+            "oldFunctionGlobal"
+          ],
+          {
+            "error": "SecurityError"
+          },
+          false
+        ],
+        [
+          [
+            "value",
+            "sameOrigin",
+            "oldFunctionGlobal"
+          ],
+          true,
+          false
+        ]
+      ],
+      "controlDifferences": []
+    },
+    {
+      "probe": "internal\\browser\\testdata\\navigation_window_edges_oracle.js",
+      "sha256": "5fef19b92d54db1fd8fa88eb0d4fa55f9b582cfda7bdc8732ea6d644f5125150",
+      "chrome": {
+        "value": {
+          "nested": {
+            "title": "retained nested",
+            "self": true,
+            "defaultViewNull": true,
+            "eval": 17,
+            "bodyReadable": true
+          },
+          "eval": {
+            "direct": "undefined",
+            "call": "undefined",
+            "apply": "undefined",
+            "bound": "undefined",
+            "reflectApply": "undefined"
+          }
+        }
+      },
+      "mimic": {
+        "value": {
+          "eval": {
+            "apply": 17,
+            "bound": 17,
+            "call": 17,
+            "direct": "undefined",
+            "reflectApply": "undefined"
+          },
+          "nested": {
+            "bodyReadable": true,
+            "defaultViewNull": true,
+            "eval": 17,
+            "self": true,
+            "title": "retained nested"
+          }
+        }
+      },
+      "control": {
+        "value": {
+          "nested": {
+            "title": "retained nested",
+            "self": true,
+            "defaultViewNull": true,
+            "eval": 17,
+            "bodyReadable": true
+          },
+          "eval": {
+            "direct": "undefined",
+            "call": "undefined",
+            "apply": "undefined",
+            "bound": "undefined",
+            "reflectApply": "undefined"
+          }
+        }
+      },
+      "differences": [
+        [
+          [
+            "value",
+            "eval",
+            "apply"
+          ],
+          "undefined",
+          17
+        ],
+        [
+          [
+            "value",
+            "eval",
+            "bound"
+          ],
+          "undefined",
+          17
+        ],
+        [
+          [
+            "value",
+            "eval",
+            "call"
+          ],
+          "undefined",
+          17
+        ]
+      ],
+      "controlDifferences": []
+    }
+  ],
+  "tests": {
+    "packages": [
+      {
+        "Action": "skip",
+        "Package": "github.com/moreveal/mimic/internal/engine",
+        "Elapsed": 0.001
+      },
+      {
+        "Action": "pass",
+        "Package": "github.com/moreveal/mimic/internal/engine/goja",
+        "Elapsed": 0.22
+      },
+      {
+        "Action": "pass",
+        "Package": "github.com/moreveal/mimic/internal/engine/quickjs",
+        "Elapsed": 0.266
+      },
+      {
+        "Action": "pass",
+        "Package": "github.com/moreveal/mimic/internal/webapi",
+        "Elapsed": 0.324
+      },
+      {
+        "Action": "pass",
+        "Package": "github.com/moreveal/mimic/internal/network",
+        "Elapsed": 0.351
+      },
+      {
+        "Action": "pass",
+        "Package": "github.com/moreveal/mimic/internal/dom",
+        "Elapsed": 0.439
+      },
+      {
+        "Action": "pass",
+        "Package": "github.com/moreveal/mimic/internal/scheduler",
+        "Elapsed": 0.454
+      },
+      {
+        "Action": "pass",
+        "Package": "github.com/moreveal/mimic/internal/engine/v8",
+        "Elapsed": 0.762
+      },
+      {
+        "Action": "pass",
+        "Package": "github.com/moreveal/mimic/internal/cdp",
+        "Elapsed": 2.284
+      },
+      {
+        "Action": "pass",
+        "Package": "github.com/moreveal/mimic/internal/browser",
+        "Elapsed": 422.093
+      }
+    ],
+    "failures": [],
+    "skips": [
+      {
+        "test": null,
+        "package": "github.com/moreveal/mimic/internal/engine"
+      },
+      {
+        "test": "TestOwnerModelProbe",
+        "package": "github.com/moreveal/mimic/internal/engine/v8"
+      },
+      {
+        "test": "TestHostBoundaryProfile",
+        "package": "github.com/moreveal/mimic/internal/engine/v8"
+      },
+      {
+        "test": "TestBootstrapSnapshotConcurrentPageLifecycles",
+        "package": "github.com/moreveal/mimic/internal/browser"
+      },
+      {
+        "test": "TestBootstrapSnapshotBarrierConcurrentBuilders",
+        "package": "github.com/moreveal/mimic/internal/browser"
+      },
+      {
+        "test": "TestBootstrapSnapshotBarrierSequentialBuilders",
+        "package": "github.com/moreveal/mimic/internal/browser"
+      },
+      {
+        "test": "TestBootstrapSnapshotConcurrentPagesSequentialBuilders",
+        "package": "github.com/moreveal/mimic/internal/browser"
+      },
+      {
+        "test": "TestOrdinaryConcurrentPageLifecycles",
+        "package": "github.com/moreveal/mimic/internal/browser"
+      },
+      {
+        "test": "TestFrameBridgeBreakdown",
+        "package": "github.com/moreveal/mimic/internal/browser"
+      },
+      {
+        "test": "TestNativeFrameMicrotasksBeforeNextTask/goja",
+        "package": "github.com/moreveal/mimic/internal/browser"
+      },
+      {
+        "test": "TestPerformanceDensityProfile",
+        "package": "github.com/moreveal/mimic/internal/browser"
+      },
+      {
+        "test": "TestPerformanceParallelPages",
+        "package": "github.com/moreveal/mimic/internal/browser"
+      },
+      {
+        "test": "TestPerformanceProfile",
+        "package": "github.com/moreveal/mimic/internal/browser"
+      }
+    ],
+    "supersededFailures": [
+      "full-tests.txt: goja bootstrap receiver",
+      "targeted-race.txt: same goja bootstrap receiver",
+      "full-tests-receiver-fix.txt: obsolete unsupported mutation requirement",
+      "focused-final.txt: goja Proxy descriptor presence",
+      "focused-descriptor-fix.txt: missing captured Object.create; corrected before final validation"
+    ]
+  },
+  "probeHashes": {
+    "compatibility\\compat_fuzz.py": "7328f1dce1bebd4d4a3d8898a6f362bafd137efe0dfd49f7ffb7719e86a7ffa2",
+    "compatibility\\fuzz_probes.py": "922e0cc6db7ae3669f7adc5602c649afde8c6060fee7eb8b55e19229567b0e10",
+    "tools\\compatibility\\differential.py": "31a05b0b77ccff45ce2d551c246786e976c7b4e2e8a5e190c9f7e4380b67e405",
+    "tools\\compatibility\\sweep.py": "b57b961f8ceac324c5ef68a81bfc5f291a07f670c10fe9d84a7ea59d5bcc847b",
+    "compatibility\\corpus\\index.json": "12d4f3bd616f19f3aa6dbc4f9bf2f987f0686eb0d4044ce09b738bc2635b4928",
+    "compatibility\\corpus\\brand-matrix.js": "9e6ed118d24accf857f272b7660c92749ed20f488c9304032084cbfeafcc9433",
+    "compatibility\\corpus\\state-relations-audit.js": "d59dac409ce127f675711fcb61f2708d5fe628fdd3ca846c390b4c8be18e19e1",
+    "docs\\compatibility\\cleanup-20260911\\fixed-probes.json": "0a342f61b8447ce408d1a6686de295d41e317117dcc41828a9b10be342b37209"
+  }
+}

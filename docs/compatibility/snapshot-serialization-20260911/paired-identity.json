@@ -1,0 +1,22 @@
+{
+  "before": {
+    "revision": "71d54f043fe55ab4ee3cee188862d4e178bd143f",
+    "dirty": [],
+    "binarySHA256": "070f29dfffe73dca1bf82078789f2aa1738e7cd8b233db5a23c3f52050aa3ed6",
+    "sourceSHA256": "ab70b22ec127a7233d9788e845a6fb942ff4293283af1200f490ef18a624748b"
+  },
+  "after": {
+    "revision": "7c25e257f660f3d44778c7a331b54508fbcbe8f3",
+    "dirty": [
+      " M internal/webapi/document_compatibility.js",
+      " M internal/webapi/surface.go",
+      "?? docs/compatibility/document-getter-ownership-2026-09-11.md",
+      "?? docs/compatibility/document-getter-ownership-20260911/",
+      "?? internal/browser/document_getter_ownership_test.go",
+      "?? internal/browser/testdata/document_getter_ownership_chrome152.json",
+      "?? internal/browser/testdata/document_getter_ownership_oracle.js"
+    ],
+    "binarySHA256": "d427fdf064a939d86e6e65855ecf5cc4fcd82fc8255b1d8aaa28f0b2a100ca64",
+    "sourceSHA256": "ab70b22ec127a7233d9788e845a6fb942ff4293283af1200f490ef18a624748b"
+  }
+}

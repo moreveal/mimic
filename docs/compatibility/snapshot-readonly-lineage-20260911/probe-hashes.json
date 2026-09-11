@@ -1,0 +1,11 @@
+{
+  "compatibility/compat_fuzz.py": "7328f1dce1bebd4d4a3d8898a6f362bafd137efe0dfd49f7ffb7719e86a7ffa2",
+  "compatibility/fuzz_probes.py": "922e0cc6db7ae3669f7adc5602c649afde8c6060fee7eb8b55e19229567b0e10",
+  "tools/compatibility/differential.py": "31a05b0b77ccff45ce2d551c246786e976c7b4e2e8a5e190c9f7e4380b67e405",
+  "tools/compatibility/sweep.py": "b57b961f8ceac324c5ef68a81bfc5f291a07f670c10fe9d84a7ea59d5bcc847b",
+  "compatibility/corpus/index.json": "12d4f3bd616f19f3aa6dbc4f9bf2f987f0686eb0d4044ce09b738bc2635b4928",
+  "compatibility/corpus/brand-matrix.js": "9e6ed118d24accf857f272b7660c92749ed20f488c9304032084cbfeafcc9433",
+  "compatibility/corpus/state-relations-audit.js": "d59dac409ce127f675711fcb61f2708d5fe628fdd3ca846c390b4c8be18e19e1",
+  "docs/compatibility/cleanup-20260911/fixed-probes.json": "0a342f61b8447ce408d1a6686de295d41e317117dcc41828a9b10be342b37209",
+  "internal/engine/v8/bootstrap_snapshot_lineage_test.go": "6dc6db938ecbacd703cdc3c12f7bd9ede2c47de583ae8d17bec498cb33b1abd0"
+}

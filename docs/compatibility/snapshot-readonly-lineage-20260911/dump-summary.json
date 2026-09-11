@@ -1,0 +1,36 @@
+{
+  "dump": "compatibility\\private-captures\\p0-layout-gate-before-20260911\\dumps\\52114.dmp",
+  "exceptionCode": "0xc0000005",
+  "exceptionAddress": "0x7ffc86bcd99c",
+  "thread": 71604,
+  "module": {
+    "base": 140722567774208,
+    "size": 46104576,
+    "name": "C:\\Users\\moreveal\\AppData\\Local\\gov8\\shim\\abi-44\\919522b4d4ed80671586a1b7a0efc144a533e91e08319715e76ed27962cee0ff\\gov8_shim.dll"
+  },
+  "rva": "0x12d99c",
+  "nearestMapSymbol": [
+    1235264,
+    "?LookupString@StringTable@internal@v8@@QEAA?AV?$DirectHandle@VInternalizedString@internal@v8@@@23@PEAVIsolate@23@V?$DirectHandle@VString@internal@v8@@@23@@Z"
+  ],
+  "offset": 92,
+  "registers": {
+    "rax": "0x30fa2404fc9",
+    "rcx": "0x636e657571657246",
+    "rdx": "0x30fa2404fc9",
+    "rbx": "0xef62dfe4a0",
+    "rsp": "0xef62dfe110",
+    "rbp": "0xef62dfe468",
+    "rsi": "0xef62dfe1f0",
+    "rdi": "0x2187fb63000",
+    "r8": "0x2187fb63000",
+    "r9": "0xef62dfe4a0",
+    "r10": "0x2fe",
+    "r11": "0x3",
+    "r12": "0x39914d40000",
+    "r13": "0x2187fb63080",
+    "r14": "0x21a3375fe90",
+    "r15": "0x218dfebc490",
+    "rip": "0x7ffc86bcd99c"
+  }
+}

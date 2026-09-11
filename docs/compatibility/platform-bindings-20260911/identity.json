@@ -1,0 +1,34 @@
+{
+  "revision": "6bfa2456e5e181383237d4a60e19afde275bc777",
+  "dirty": " M chrome/152/generated/artifact-hashes.json\n M chrome/152/generated/exposure_data.go\n M compatibility/bundle.go\n M internal/browser/bootstrap_snapshot_test.go\n M internal/webapi/dom_compatibility.js\n M internal/webapi/exposure_transport.go\n M internal/webapi/exposure_transport_test.go\n M internal/webapi/form_controls.js\n M internal/webapi/native_functions.js\n M internal/webapi/surface.go\n M internal/webapi/surface.js\n?? chrome/152/generated/window-secure-member-order.json\n?? chrome/152/generated/window-secure-member-order.md\n?? docs/compatibility/snapshot-numeric-allocator-20260911/\n?? internal/browser/goja_child_profile_test.go\n?? internal/browser/platform_collection_binding_test.go\n?? internal/browser/testdata/collection_binding_oracle.js\n?? internal/browser/testdata/singleton_accessor_chrome152.json\n?? internal/browser/testdata/singleton_accessor_oracle.js\n?? internal/browser/testdata/window_member_order_oracle.js\n",
+  "binarySHA256": "9959abe0c784a96ef4af4ffe61e66ac7810413e9c68e3f16cd0f04d2c6c7979a",
+  "beforeBinarySHA256": "ef86f669f2cd97773fa213872dd986b228daced11e280ad5ebdc80367a4ebd71",
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": -65,
+      "top": 222,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "unverified-reused-controlled",
+    "visibilityState": "visible",
+    "hasFocus": true
+  }
+}

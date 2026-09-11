@@ -1141,7 +1141,13 @@ func (a *adapter) marshal(scope *gov8.Scope, realm *gov8.Context, value any) (go
 			if err != nil {
 				return gov8.Value{}, err
 			}
-			ok, err := object.SetByName(scope, realm, iter.Key().String(), member)
+			key, err := scope.NewString(iter.Key().String())
+			if err != nil {
+				return gov8.Value{}, err
+			}
+			// Host records carry own data properties, not assignments through
+			// Object.prototype setters (including the legacy __proto__ setter).
+			ok, err := object.CreateDataProperty(scope, realm, key, member)
 			if err != nil || !ok {
 				return gov8.Value{}, err
 			}
@@ -1551,7 +1557,15 @@ func callbackValue(scope *gov8.CallbackScope, realm *gov8.Context, result gov8.R
 				if err != nil {
 					return gov8.Value{}, err
 				}
-				ok, err := scope.ObjectSet(object, iter.Key().String(), member)
+				key, err := scope.NewString(iter.Key().String())
+				if err != nil {
+					return gov8.Value{}, err
+				}
+				obj, err := gov8.AsObject(object)
+				if err != nil {
+					return gov8.Value{}, err
+				}
+				ok, err := obj.CreateDataProperty(scope.Scope(), realm, key, member)
 				if err != nil || !ok {
 					return gov8.Value{}, err
 				}

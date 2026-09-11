@@ -1,0 +1,49 @@
+[
+  {
+    "side": "before",
+    "command": [
+      "go",
+      "test",
+      "-race",
+      "./internal/browser",
+      "-run",
+      "^TestIframeSrcdocRetainsExportedDescendant$/goja$",
+      "-count=1",
+      "-cpuprofile",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\goja-observer-profile-20260911\\before.cpu.pprof",
+      "-o",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\goja-observer-profile-20260911\\before.browser.test.exe"
+    ],
+    "cwd": "E:\\GitHub\\mimic\\.build\\goja-observer-baseline",
+    "revision": "78eb990ce0c2eb9b82de660d9f94bfecf558597b",
+    "dirty": [
+      " M internal/engine/goja/runtime_test.go"
+    ],
+    "exitCode": 1,
+    "binarySHA256": "94be0cbdd10acf7353b587dedf339a6a085a49fd016a0b49a82bb604fc86a676"
+  },
+  {
+    "side": "after",
+    "command": [
+      "go",
+      "test",
+      "-race",
+      "./internal/browser",
+      "-run",
+      "^TestIframeSrcdocRetainsExportedDescendant$/goja$",
+      "-count=1",
+      "-cpuprofile",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\goja-observer-profile-20260911\\after.cpu.pprof",
+      "-o",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\goja-observer-profile-20260911\\after.browser.test.exe"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "revision": "78eb990ce0c2eb9b82de660d9f94bfecf558597b",
+    "dirty": [
+      " M internal/engine/goja/runtime.go",
+      " M internal/engine/goja/runtime_test.go"
+    ],
+    "exitCode": 1,
+    "binarySHA256": "c1dc473d7d65514eb0d3c1c4e5616412f4701ab0926e1767b7c59814325cbb11"
+  }
+]

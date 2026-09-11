@@ -1,0 +1,473 @@
+{
+  "brand-final": {
+    "versions": {
+      "chrome": {
+        "Browser": "Chrome/152.0.7977.82",
+        "Protocol-Version": "1.3",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+        "V8-Version": "15.2.124.21",
+        "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+        "webSocketDebuggerUrl": "ws://127.0.0.1:19533/devtools/browser/c97058d6-c7fe-4505-ab69-996d011b5f7a"
+      },
+      "mimic": {
+        "Browser": "Mimic/152.0.7977.82",
+        "Protocol-Version": "1.3",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+        "V8-Version": "virtual",
+        "webSocketDebuggerUrl": "ws://127.0.0.1:19531/devtools/page/0c4b98fd-ef93-46c3-8325-bac28d1a9754"
+      }
+    },
+    "cases": [
+      {
+        "id": "brand-matrix",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 1319,
+        "differenceSHA256": "116a5565062b7e97a1096c3aa646799195068a02de2ef6c737c8c4ae7a2ef542"
+      }
+    ],
+    "frozenReference": true,
+    "corpusSHA256": "836c268e2f702ac315f59502df89819d2d7e971199dfed08c86bc664b457825a",
+    "fixtures": {
+      "compatibility/corpus/brand-matrix.js": "9e6ed118d24accf857f272b7660c92749ed20f488c9304032084cbfeafcc9433",
+      "compatibility/corpus/normalize.js": "160591c37d3ea64e3b80f690fc64ded8f6c811cf7aaa68eaf50f0fed8d1fde20"
+    },
+    "limitations": [
+      "Loopback HTTP/1.1 wire oracle; TLS and QUIC are not measured.",
+      "Mimic context is shared by its test-only process; Chrome context is fresh per case.",
+      "Server timestamps are raw; runtime probes compare causal relations, not absolute durations.",
+      "A top-level probe exception marks incomplete coverage, even if both runtimes throw."
+    ]
+  },
+  "brand-final-control": {
+    "versions": {
+      "chrome": {
+        "Browser": "Chrome/152.0.7977.82",
+        "Protocol-Version": "1.3",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+        "V8-Version": "15.2.124.21",
+        "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+        "webSocketDebuggerUrl": "ws://127.0.0.1:19533/devtools/browser/c97058d6-c7fe-4505-ab69-996d011b5f7a"
+      },
+      "mimic": {
+        "Browser": "Chrome/152.0.7977.82",
+        "Protocol-Version": "1.3",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+        "V8-Version": "15.2.124.21",
+        "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+        "webSocketDebuggerUrl": "ws://127.0.0.1:19533/devtools/browser/c97058d6-c7fe-4505-ab69-996d011b5f7a"
+      }
+    },
+    "cases": [
+      {
+        "id": "brand-matrix",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 0,
+        "differenceSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    ],
+    "frozenReference": true,
+    "corpusSHA256": "836c268e2f702ac315f59502df89819d2d7e971199dfed08c86bc664b457825a",
+    "fixtures": {
+      "compatibility/corpus/brand-matrix.js": "9e6ed118d24accf857f272b7660c92749ed20f488c9304032084cbfeafcc9433",
+      "compatibility/corpus/normalize.js": "160591c37d3ea64e3b80f690fc64ded8f6c811cf7aaa68eaf50f0fed8d1fde20"
+    },
+    "limitations": [
+      "Loopback HTTP/1.1 wire oracle; TLS and QUIC are not measured.",
+      "Mimic context is shared by its test-only process; Chrome context is fresh per case.",
+      "Server timestamps are raw; runtime probes compare causal relations, not absolute durations.",
+      "A top-level probe exception marks incomplete coverage, even if both runtimes throw."
+    ]
+  },
+  "relations-final": {
+    "versions": {
+      "chrome": {
+        "Browser": "Chrome/152.0.7977.82",
+        "Protocol-Version": "1.3",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+        "V8-Version": "15.2.124.21",
+        "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+        "webSocketDebuggerUrl": "ws://127.0.0.1:19533/devtools/browser/c97058d6-c7fe-4505-ab69-996d011b5f7a"
+      },
+      "mimic": {
+        "Browser": "Mimic/152.0.7977.82",
+        "Protocol-Version": "1.3",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+        "V8-Version": "virtual",
+        "webSocketDebuggerUrl": "ws://127.0.0.1:19531/devtools/page/0c4b98fd-ef93-46c3-8325-bac28d1a9754"
+      }
+    },
+    "cases": [
+      {
+        "id": "state-relations",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 2,
+        "differenceSHA256": "725099d314b43567bab248d69e58e5bdc7f1bf71163952abf9c7e51bacb672ee"
+      }
+    ],
+    "frozenReference": true,
+    "corpusSHA256": "14322bffa0d6e65b5905847d7463e5e0523cb932fd95b53c691f8955ad5b2b39",
+    "fixtures": {
+      "compatibility/corpus/normalize.js": "160591c37d3ea64e3b80f690fc64ded8f6c811cf7aaa68eaf50f0fed8d1fde20",
+      "compatibility/corpus/state-relations-audit.js": "d59dac409ce127f675711fcb61f2708d5fe628fdd3ca846c390b4c8be18e19e1"
+    },
+    "limitations": [
+      "Loopback HTTP/1.1 wire oracle; TLS and QUIC are not measured.",
+      "Mimic context is shared by its test-only process; Chrome context is fresh per case.",
+      "Server timestamps are raw; runtime probes compare causal relations, not absolute durations.",
+      "A top-level probe exception marks incomplete coverage, even if both runtimes throw."
+    ]
+  },
+  "relations-final-control": {
+    "versions": {
+      "chrome": {
+        "Browser": "Chrome/152.0.7977.82",
+        "Protocol-Version": "1.3",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+        "V8-Version": "15.2.124.21",
+        "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+        "webSocketDebuggerUrl": "ws://127.0.0.1:19533/devtools/browser/c97058d6-c7fe-4505-ab69-996d011b5f7a"
+      },
+      "mimic": {
+        "Browser": "Chrome/152.0.7977.82",
+        "Protocol-Version": "1.3",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+        "V8-Version": "15.2.124.21",
+        "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+        "webSocketDebuggerUrl": "ws://127.0.0.1:19533/devtools/browser/c97058d6-c7fe-4505-ab69-996d011b5f7a"
+      }
+    },
+    "cases": [
+      {
+        "id": "state-relations",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 0,
+        "differenceSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    ],
+    "frozenReference": true,
+    "corpusSHA256": "14322bffa0d6e65b5905847d7463e5e0523cb932fd95b53c691f8955ad5b2b39",
+    "fixtures": {
+      "compatibility/corpus/normalize.js": "160591c37d3ea64e3b80f690fc64ded8f6c811cf7aaa68eaf50f0fed8d1fde20",
+      "compatibility/corpus/state-relations-audit.js": "d59dac409ce127f675711fcb61f2708d5fe628fdd3ca846c390b4c8be18e19e1"
+    },
+    "limitations": [
+      "Loopback HTTP/1.1 wire oracle; TLS and QUIC are not measured.",
+      "Mimic context is shared by its test-only process; Chrome context is fresh per case.",
+      "Server timestamps are raw; runtime probes compare causal relations, not absolute durations.",
+      "A top-level probe exception marks incomplete coverage, even if both runtimes throw."
+    ]
+  },
+  "corpus-final": {
+    "versions": {
+      "chrome": {
+        "Browser": "Chrome/152.0.7977.82",
+        "Protocol-Version": "1.3",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+        "V8-Version": "15.2.124.21",
+        "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+        "webSocketDebuggerUrl": "ws://127.0.0.1:19533/devtools/browser/c97058d6-c7fe-4505-ab69-996d011b5f7a"
+      },
+      "mimic": {
+        "Browser": "Mimic/152.0.7977.82",
+        "Protocol-Version": "1.3",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+        "V8-Version": "virtual",
+        "webSocketDebuggerUrl": "ws://127.0.0.1:19531/devtools/page/0c4b98fd-ef93-46c3-8325-bac28d1a9754"
+      }
+    },
+    "cases": [
+      {
+        "id": "value-normalization",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 0,
+        "differenceSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "id": "network",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 12,
+        "differenceSHA256": "7159e8b894a158d50cd2edeee6905f13b1a41971c819f5ec76eff4e5f3a6c98a"
+      },
+      {
+        "id": "temporal",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 0,
+        "differenceSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "id": "frame-task-interleaving",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 0,
+        "differenceSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "id": "frame-microtask-checkpoint",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 0,
+        "differenceSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "id": "resource-realm-isolation",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 0,
+        "differenceSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "id": "resource-json",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 0,
+        "differenceSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "id": "worker-microtasks",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 0,
+        "differenceSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "id": "surface",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 7,
+        "differenceSHA256": "19d5d3602778959f882e98de03fed418d82280faf144d83b9fb58bcecf5d0950"
+      },
+      {
+        "id": "samesite",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 0,
+        "differenceSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "id": "samesite-navigation",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 0,
+        "differenceSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "id": "partition",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 0,
+        "differenceSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "id": "svg-values",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 0,
+        "differenceSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "id": "observations",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 22,
+        "differenceSHA256": "19ba082cc06855e440e9d57df9f833d81dabb11e1a9b2ddc11cbf90248f05c1d"
+      },
+      {
+        "id": "webgpu-lifecycle",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 0,
+        "differenceSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    ],
+    "frozenReference": true,
+    "corpusSHA256": "12d4f3bd616f19f3aa6dbc4f9bf2f987f0686eb0d4044ce09b738bc2635b4928",
+    "fixtures": {
+      "compatibility/corpus/frame-microtask-checkpoint.js": "8dc918220dd2c292e4c7369ec5a5ec0437fa5c0977a12c1abdce0d37ecc66436",
+      "compatibility/corpus/frame-task-interleaving.js": "187a69cf8fd56078dc65d62379700074d00949bea6eba81daf1aa7077e381409",
+      "compatibility/corpus/network.js": "0cd46d6dea3f38f439083cc79e28f43b4256707d04585492f566f3fa6658ea27",
+      "compatibility/corpus/normalize.js": "160591c37d3ea64e3b80f690fc64ded8f6c811cf7aaa68eaf50f0fed8d1fde20",
+      "compatibility/corpus/observations.js": "5771269022a17956af106be508280bdd0fed58a760b2ac68491fe5f38100e5d8",
+      "compatibility/corpus/partition-revisit.js": "c6a149ed1ec9940c02c3af85f0fcdf8d02e4ff1aa6fc18cb6336f0519ae66474",
+      "compatibility/corpus/partition.js": "51019a0bc140f4f991f642b2262ab443c2d9e93f2a0de50f57892465bfa13adf",
+      "compatibility/corpus/resource-json.js": "c3d2fbdc2d566dbd12255bb057c26455d9d2483b896f5d6ba48d88b134f6a154",
+      "compatibility/corpus/resource-realm-isolation.js": "06fe5bbf913e237d3a7891b20118be21b681914dae049cf2950a55f7bc46e94d",
+      "compatibility/corpus/samesite-init.js": "06e726431a42570b7f873ab1532c1dbfa67d23f9b68a6a78a286c13120767bf5",
+      "compatibility/corpus/samesite-navigation.js": "b6ebebe63d5c49993b05a78719029d929b983d24e3697dfc7ad1b3457125e359",
+      "compatibility/corpus/samesite.js": "87ca9ba49f4374401e263c4c746b448e9b434ae83fb8b1186b4d82a7c3b789c9",
+      "compatibility/corpus/surface.js": "485dd5ad89a7e79488f746d192744c06d345590913e7937c0a2209ddf6fac9a3",
+      "compatibility/corpus/temporal.js": "4b66cbe9ca5a4edef041dbca867b5cb440eb9e68c8cbe21a9951f9c641d47503",
+      "compatibility/corpus/values.js": "14733ae3f7e30fd20569f43f2733829efd45f56300ec095177a9820b40f0c73a",
+      "compatibility/corpus/worker-microtasks.js": "dd14c8773d67ea01710efaac39111d2ea648c67ef1b2f0e54c5edfaf796fdbfa",
+      "internal/browser/testdata/svg_values_oracle.js": "b28c3b20e43cd6dec0a855892ca5feb12000f607e3c71ff832af3885ac0b5c9f",
+      "internal/browser/testdata/webgpu_lifecycle_oracle.js": "c0918bc66a4cf1cb5d4e0a7d22da73734499dafd81835f8ae8bcc25d39263428"
+    },
+    "limitations": [
+      "Loopback HTTP/1.1 wire oracle; TLS and QUIC are not measured.",
+      "Mimic context is shared by its test-only process; Chrome context is fresh per case.",
+      "Server timestamps are raw; runtime probes compare causal relations, not absolute durations.",
+      "A top-level probe exception marks incomplete coverage, even if both runtimes throw."
+    ]
+  },
+  "corpus-final-control": {
+    "versions": {
+      "chrome": {
+        "Browser": "Chrome/152.0.7977.82",
+        "Protocol-Version": "1.3",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+        "V8-Version": "15.2.124.21",
+        "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+        "webSocketDebuggerUrl": "ws://127.0.0.1:19533/devtools/browser/c97058d6-c7fe-4505-ab69-996d011b5f7a"
+      },
+      "mimic": {
+        "Browser": "Chrome/152.0.7977.82",
+        "Protocol-Version": "1.3",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+        "V8-Version": "15.2.124.21",
+        "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+        "webSocketDebuggerUrl": "ws://127.0.0.1:19533/devtools/browser/c97058d6-c7fe-4505-ab69-996d011b5f7a"
+      }
+    },
+    "cases": [
+      {
+        "id": "value-normalization",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 0,
+        "differenceSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "id": "network",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 0,
+        "differenceSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "id": "temporal",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 0,
+        "differenceSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "id": "frame-task-interleaving",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 0,
+        "differenceSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "id": "frame-microtask-checkpoint",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 0,
+        "differenceSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "id": "resource-realm-isolation",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 0,
+        "differenceSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "id": "resource-json",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 0,
+        "differenceSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "id": "worker-microtasks",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 0,
+        "differenceSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "id": "surface",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 0,
+        "differenceSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "id": "samesite",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 0,
+        "differenceSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "id": "samesite-navigation",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 0,
+        "differenceSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "id": "partition",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 0,
+        "differenceSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "id": "svg-values",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 0,
+        "differenceSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "id": "observations",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 0,
+        "differenceSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      },
+      {
+        "id": "webgpu-lifecycle",
+        "valid": true,
+        "incomplete": {},
+        "differingRecords": 0,
+        "differenceSHA256": "4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"
+      }
+    ],
+    "frozenReference": true,
+    "corpusSHA256": "12d4f3bd616f19f3aa6dbc4f9bf2f987f0686eb0d4044ce09b738bc2635b4928",
+    "fixtures": {
+      "compatibility/corpus/frame-microtask-checkpoint.js": "8dc918220dd2c292e4c7369ec5a5ec0437fa5c0977a12c1abdce0d37ecc66436",
+      "compatibility/corpus/frame-task-interleaving.js": "187a69cf8fd56078dc65d62379700074d00949bea6eba81daf1aa7077e381409",
+      "compatibility/corpus/network.js": "0cd46d6dea3f38f439083cc79e28f43b4256707d04585492f566f3fa6658ea27",
+      "compatibility/corpus/normalize.js": "160591c37d3ea64e3b80f690fc64ded8f6c811cf7aaa68eaf50f0fed8d1fde20",
+      "compatibility/corpus/observations.js": "5771269022a17956af106be508280bdd0fed58a760b2ac68491fe5f38100e5d8",
+      "compatibility/corpus/partition-revisit.js": "c6a149ed1ec9940c02c3af85f0fcdf8d02e4ff1aa6fc18cb6336f0519ae66474",
+      "compatibility/corpus/partition.js": "51019a0bc140f4f991f642b2262ab443c2d9e93f2a0de50f57892465bfa13adf",
+      "compatibility/corpus/resource-json.js": "c3d2fbdc2d566dbd12255bb057c26455d9d2483b896f5d6ba48d88b134f6a154",
+      "compatibility/corpus/resource-realm-isolation.js": "06fe5bbf913e237d3a7891b20118be21b681914dae049cf2950a55f7bc46e94d",
+      "compatibility/corpus/samesite-init.js": "06e726431a42570b7f873ab1532c1dbfa67d23f9b68a6a78a286c13120767bf5",
+      "compatibility/corpus/samesite-navigation.js": "b6ebebe63d5c49993b05a78719029d929b983d24e3697dfc7ad1b3457125e359",
+      "compatibility/corpus/samesite.js": "87ca9ba49f4374401e263c4c746b448e9b434ae83fb8b1186b4d82a7c3b789c9",
+      "compatibility/corpus/surface.js": "485dd5ad89a7e79488f746d192744c06d345590913e7937c0a2209ddf6fac9a3",
+      "compatibility/corpus/temporal.js": "4b66cbe9ca5a4edef041dbca867b5cb440eb9e68c8cbe21a9951f9c641d47503",
+      "compatibility/corpus/values.js": "14733ae3f7e30fd20569f43f2733829efd45f56300ec095177a9820b40f0c73a",
+      "compatibility/corpus/worker-microtasks.js": "dd14c8773d67ea01710efaac39111d2ea648c67ef1b2f0e54c5edfaf796fdbfa",
+      "internal/browser/testdata/svg_values_oracle.js": "b28c3b20e43cd6dec0a855892ca5feb12000f607e3c71ff832af3885ac0b5c9f",
+      "internal/browser/testdata/webgpu_lifecycle_oracle.js": "c0918bc66a4cf1cb5d4e0a7d22da73734499dafd81835f8ae8bcc25d39263428"
+    },
+    "limitations": [
+      "Loopback HTTP/1.1 wire oracle; TLS and QUIC are not measured.",
+      "Mimic context is shared by its test-only process; Chrome context is fresh per case.",
+      "Server timestamps are raw; runtime probes compare causal relations, not absolute durations.",
+      "A top-level probe exception marks incomplete coverage, even if both runtimes throw."
+    ]
+  }
+}

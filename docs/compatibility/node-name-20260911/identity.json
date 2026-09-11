@@ -1,0 +1,48 @@
+{
+  "revision": "cee1376920a445781ac384d31110ddfb597af5c3",
+  "dirty": [
+    " M internal/webapi/document_compatibility.js",
+    " M internal/webapi/surface.go",
+    " M internal/webapi/surface.js",
+    "?? docs/compatibility/node-name-20260911/",
+    "?? internal/browser/node_name_test.go",
+    "?? internal/browser/testdata/node_name_chrome152.json",
+    "?? internal/browser/testdata/node_name_oracle.js"
+  ],
+  "beforeBinarySHA256": "7d7cea8db9d465ab89fc8bddfc8533f565ce70dc8ff951f58fdc1d67e7ac27f9",
+  "afterBinarySHA256": "d497513c7cd642e51de6e7cfeec6a1cae315baa5d9fd84cad1639342d461f979",
+  "probeSHA256": "be9b63c1c43efa067e0c3bb3146e675af32fd9c6aece7097bb2b6e72414bbac8",
+  "chromeMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "unverified-reused-controlled",
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "focused": {
+    "before": 19,
+    "after": 0,
+    "control": 0
+  }
+}

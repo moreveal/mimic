@@ -37,7 +37,10 @@ func TestFrameReflectionPreservesDescriptorsAndKeys(t *testing.T) {
  if(object[localA]!==11||object[localB]!==12||Object.getOwnPropertyDescriptor(object,localA).value!==11||!Reflect.ownKeys(object).includes(localA)||!Reflect.ownKeys(object).includes(localB))return 'local symbols';
  if(Object.getOwnPropertyDescriptor(object,'fixed').value!==7)return 'fixed initial';
  object.fixed=9;if(Object.getOwnPropertyDescriptor(object,'fixed').value!==9||object.fixed!==9)return 'fixed update';
- for(const operation of [()=>Object.defineProperty(object,'visible',{value:99}),()=>Reflect.deleteProperty(object,'visible'),()=>Object.preventExtensions(object),()=>Object.setPrototypeOf(object,null)]){
+ if(Object.defineProperty(object,'visible',{value:99})!==object||child.eval('(object=>object.visible)')(object)!==99)return 'define owner';
+ if(!Reflect.deleteProperty(object,'visible')||child.eval('(object=>"visible" in object)')(object))return 'delete owner';
+ Object.defineProperty(object,'visible',{value:1,writable:true,enumerable:true,configurable:true});
+ for(const operation of [()=>Object.preventExtensions(object),()=>Object.setPrototypeOf(object,null)]){
  let rejected=false;try{operation()}catch(error){rejected=error.name==='NotSupportedError'}if(!rejected)return 'unsupported mutation accepted';
  }
  if(object.visible!==1||!Object.isExtensible(object)||!Object.keys(object).includes('visible'))return 'rejected mutation changed source';

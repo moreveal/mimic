@@ -45,6 +45,9 @@ func (r *Realm) installFrameDocumentBridge(host map[string]any) {
 			return nil, fmt.Errorf("frame reference bridge already installed")
 		}
 		r.frameReferenceImport, r.frameReferenceDescribe = args[0], args[1]
+		if len(args) > 4 {
+			r.frameBindingDescribe = args[4]
+		}
 		if len(args) > 3 {
 			r.frameGlobalRead = args[3]
 		}
@@ -347,6 +350,7 @@ type frameReflection struct {
 // Capture intrinsics before document scripts can replace Reflect or Symbol.
 // Reflection uses the remote canonical object, never exported object copies.
 const frameReflectionSource = `(()=>{
+ const create=Object.create,descriptorFields=['enumerable','configurable','value','writable','get','set'];
  const arrayIteratorNext=Object.getPrototypeOf([][Symbol.iterator]()).next,freshIteratorResults=new WeakSet(),freshAdd=WeakSet.prototype.add,freshDelete=WeakSet.prototype.delete;
  const ids=new WeakMap(),weakGet=WeakMap.prototype.get,weakSet=WeakMap.prototype.set,P=Proxy,isArray=Array.isArray,integer=BigInt,keys=Reflect.ownKeys,descriptor=Reflect.getOwnPropertyDescriptor,get=Reflect.get,set=Reflect.set,define=Reflect.defineProperty,remove=Reflect.deleteProperty,contains=Reflect.has,prototype=Reflect.getPrototypeOf,construct=Reflect.construct,apply=Reflect.apply,has=Object.prototype.hasOwnProperty,S=Symbol,forKey=Symbol.for,keyFor=Symbol.keyFor,description=descriptor(Symbol.prototype,'description').get;
  const wellKnown=[],names=keys(Symbol);for(let i=0;i<names.length;i++){const name=names[i];if(typeof Symbol[name]==='symbol')wellKnown[wellKnown.length]=[name,Symbol[name]]}
@@ -367,6 +371,20 @@ const frameReflectionSource = `(()=>{
   if(op==='symbol')return info(object);
   if(op==='keys'){const source=keys(object),out=[];for(let i=0;i<source.length;i++)out[i]=info(source[i]);return out}
   if(op==='get'){const value=get(object,key);return{value,valueType:typeof value,symbol:typeof value==='symbol'?info(value):null}}
+  if(op==='mutateDefine'||op==='mutateDelete'){
+    let result,threw=false;
+    try{
+      if(op==='mutateDefine'){
+        // Materialize presence before passing the descriptor to the engine.
+        // goja's descriptor conversion treats a Proxy's missing get/set
+        // (undefined) as present, incorrectly mixing data and accessor fields.
+        const local=create(null);
+        for(let i=0;i<descriptorFields.length;i++){const field=descriptorFields[i];if(contains(value,field))local[field]=get(value,field)}
+        result=define(object,key,local);
+      }else result=remove(object,key);
+    }catch(error){result=error;threw=true}
+    return{threw,value:result,valueType:typeof result,symbol:typeof result==='symbol'?info(result):null}
+  }
   if(op==='set')return set(object,key,value);
   if(op==='define')return define(object,key,value);
   if(op==='delete')return remove(object,key);
@@ -381,7 +399,7 @@ const frameReflectionSource = `(()=>{
 // and never cache arbitrary property values, prototypes or access checks.
 // Fresh intrinsic Array iterator results are the sole data-field exception;
 // the importer invalidates those fields before mutation or reference escape.
-const frameValueEncoderSource = `((describe,node,reflect,retain,symbol,frame,realm,parent)=>{
+const frameValueEncoderSource = `((describe,node,reflect,retain,symbol,frame,realm,parent,binding)=>{
  const global=globalThis,intrinsicEval=globalThis.eval,stringify=JSON.stringify,create=Object.create,keys=Object.keys;
  const plain=data=>{const out=create(null),names=keys(data);for(let i=0;i<names.length;i++){const key=names[i];out[key]=data[key]}return out};
  const encode=value=>{
@@ -399,6 +417,7 @@ const frameValueEncoderSource = `((describe,node,reflect,retain,symbol,frame,rea
   let id=reflect('lookup',value);
   if(id===undefined)id=reflect('handle',value,retain(value));
   const out=plain({__mimicCrossRealm:type==='undefined'?'undetectable':type,frame,realm,handle:id});
+  const bound=binding(value);if(bound)out.binding=plain({kind:bound.kind,invoke:plain(encode(bound.invoke)),unpreventable:bound.unpreventable});
   if(value===global.document)out.document=true;
   if(value===intrinsicEval)out.eval=true;
   if(type==='object'){const nodeId=node(value);if(nodeId)out.nodeId=nodeId;out.array=reflect('shape',value).array}
@@ -425,7 +444,7 @@ func (r *Realm) installFrameValueEncoder() error {
 	if frame, ok := r.agent.(*Frame); ok && frame.parent != nil {
 		parent = frame.parent.ID
 	}
-	encoder, err := r.runtime.Call(context.Background(), factory, nil, r.frameReferenceDescribe, r.frameNodeDescribe, r.frameReflection.operation, r.frameValueRetain, r.frameValueEncoder, r.val(r.agent.ContextID()), r.val(r.ID), r.val(parent))
+	encoder, err := r.runtime.Call(context.Background(), factory, nil, r.frameReferenceDescribe, r.frameNodeDescribe, r.frameReflection.operation, r.frameValueRetain, r.frameValueEncoder, r.val(r.agent.ContextID()), r.val(r.ID), r.val(parent), r.frameBindingDescribe)
 	if err == nil {
 		r.frameValueEncoder = encoder
 		r.frameValueEncoderJSON = true
@@ -436,6 +455,39 @@ func (r *Realm) installFrameValueEncoder() error {
 func (r *Realm) installFrameReflection(host map[string]any) {
 	operation, err := r.runtime.Eval(context.Background(), frameReflectionSource, "mimic:frame-reflection")
 	r.frameReflection = &frameReflection{operation: operation, err: err, symbolSources: make(map[string]int64), symbolOrigins: make(map[int64]map[string]any)}
+	host["frameMutateProperty"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		target, err := r.referenceRealm(strarg(args, 0), strarg(args, 5))
+		if err != nil {
+			return nil, err
+		}
+		object := target.crossValues[int64(numarg(args, 1))]
+		if object == nil {
+			return nil, fmt.Errorf("cross-realm object is no longer available")
+		}
+		operation := strarg(args, 2)
+		if operation != "mutateDefine" && operation != "mutateDelete" {
+			return nil, fmt.Errorf("invalid cross-realm property mutation")
+		}
+		return r.crossFrameData(target, func(ctx context.Context) (any, error) {
+			key, err := target.decodeFrameKey(ctx, arg(args, 3))
+			if err != nil {
+				return nil, err
+			}
+			value, err := target.decodeFrameArgument(arg(args, 4))
+			if err != nil {
+				return nil, err
+			}
+			record, err := target.callFrameReflection(ctx, operation, object, key, value)
+			if err != nil {
+				return nil, err
+			}
+			encoded, err := target.encodeReflectedValue(record)
+			if err != nil {
+				return nil, err
+			}
+			return map[string]any{"threw": target.runtime.GetProperty(record, "threw").Export(), "value": encoded}, nil
+		})
+	})
 	for _, name := range []string{"frameOwnKeys", "frameDescriptor", "frameHas"} {
 		name := name
 		host[name] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {

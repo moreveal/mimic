@@ -54,6 +54,15 @@ type Realm struct {
 }
 
 var initialize = sync.OnceValues(func() (bool, error) {
+	// The pinned V8 shares read-only artifacts across isolates in its default
+	// isolate group. Extending that heap for independently built snapshots gives
+	// their read-only references incompatible layouts; release V8 omits the
+	// artifact checksum assertion and can restore invalid string pointers.
+	// Keep the shared heap at the stock layout. Custom bootstrap objects remain
+	// serialized in each snapshot's private heap; Pages still run concurrently.
+	if err := gov8.SetFlagsFromString("--no-extensible-ro-snapshot"); err != nil {
+		return false, err
+	}
 	return true, gov8.Initialize()
 })
 

@@ -1,0 +1,40 @@
+[
+  {
+    "name": "p0-browser",
+    "command": [
+      "go",
+      "tool",
+      "test2json",
+      "-t",
+      "-p",
+      "github.com/moreveal/mimic/internal/browser",
+      "E:\\GitHub\\mimic\\.build\\plateau-browser-test.exe",
+      "-test.v",
+      "-test.timeout=5m",
+      "-test.run=TestBootstrapSnapshot|TestOrdinaryConcurrentPageLifecycles",
+      "-test.count=3"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 48.23098397254944,
+    "logSHA256": "e6d1d169e1e509f564d6b7830cec77dc384375ea06a4f691e1599593a562cf68"
+  },
+  {
+    "name": "p0-v8",
+    "command": [
+      "go",
+      "tool",
+      "test2json",
+      "-t",
+      "-p",
+      "github.com/moreveal/mimic/internal/engine/v8",
+      "E:\\GitHub\\mimic\\.build\\plateau-v8-test.exe",
+      "-test.v",
+      "-test.timeout=5m",
+      "-test.run=TestBootstrapSnapshot|TestConcurrentNumericSnapshotsPreserveLiveGraphs|TestConcurrentBootstrapSnapshotSerialization",
+      "-test.count=3"
+    ],
+    "exitCode": 0,
+    "elapsedSeconds": 1.9528727531433105,
+    "logSHA256": "8f3407c073266b145f55b1f42764ac5dc1a0492dcb55e9721edf0829c1f429dd"
+  }
+]

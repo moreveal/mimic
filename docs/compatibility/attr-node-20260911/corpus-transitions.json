@@ -1,0 +1,104 @@
+{
+  "brand": {
+    "before": 578,
+    "after": 558,
+    "removed": [
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Attr.nodeName"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Attr.nodeType"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Attr.nodeValue"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Attr.ownerDocument"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Attr.parentElement"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Attr.parentNode"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Attr.textContent"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Node.nodeName/exception"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Node.nodeName/result"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Node.nodeType/exception"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Node.nodeType/result"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Node.nodeValue/exception"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Node.nodeValue/result"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Node.ownerDocument/exception"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Node.ownerDocument/result"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Node.parentElement/exception"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Node.parentElement/result"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Node.parentNode/exception"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/getters/Node.parentNode/result"
+      ],
+      [
+        "brand-matrix",
+        "/observations/0/value/methods/Attr.cloneNode"
+      ]
+    ],
+    "added": [],
+    "changed": []
+  },
+  "relations": {
+    "before": 2,
+    "after": 2,
+    "removed": [],
+    "added": [],
+    "changed": []
+  },
+  "corpus": {
+    "before": 40,
+    "after": 40,
+    "removed": [],
+    "added": [],
+    "changed": []
+  }
+}

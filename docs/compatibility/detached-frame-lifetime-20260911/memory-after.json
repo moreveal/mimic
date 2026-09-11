@@ -1,0 +1,79 @@
+[
+  {
+    "go_heap": 1476672,
+    "go_released": 6078464,
+    "go_sys": 12732664,
+    "goroutines": 2,
+    "phase": "initial",
+    "private": 79867904,
+    "realms": 1,
+    "retained_frames": 0,
+    "rss": 15183872
+  },
+  {
+    "go_heap": 49248632,
+    "go_released": 15196160,
+    "go_sys": 92383480,
+    "goroutines": 3,
+    "phase": "removed8",
+    "private": 253747200,
+    "realms": 1,
+    "retained_frames": 0,
+    "rss": 208736256
+  },
+  {
+    "go_heap": 78489848,
+    "go_released": 14516224,
+    "go_sys": 125946104,
+    "goroutines": 3,
+    "phase": "removed16",
+    "private": 296431616,
+    "realms": 1,
+    "retained_frames": 0,
+    "rss": 252203008
+  },
+  {
+    "go_heap": 78580624,
+    "go_released": 9723904,
+    "go_sys": 125946104,
+    "goroutines": 3,
+    "phase": "removed24",
+    "private": 301711360,
+    "realms": 1,
+    "retained_frames": 0,
+    "rss": 257331200
+  },
+  {
+    "go_heap": 78631144,
+    "go_released": 10715136,
+    "go_sys": 126224632,
+    "goroutines": 3,
+    "phase": "removed32",
+    "private": 301465600,
+    "realms": 1,
+    "retained_frames": 0,
+    "rss": 256450560
+  },
+  {
+    "go_heap": 78686392,
+    "go_released": 10715136,
+    "go_sys": 126224632,
+    "goroutines": 2,
+    "phase": "closed",
+    "private": 262729728,
+    "realms": 0,
+    "retained_frames": 0,
+    "rss": 221179904
+  },
+  {
+    "go_heap": 78687792,
+    "go_released": 10715136,
+    "go_sys": 126224632,
+    "goroutines": 2,
+    "phase": "closed250ms",
+    "private": 262729728,
+    "realms": 0,
+    "retained_frames": 0,
+    "rss": 221179904
+  }
+]

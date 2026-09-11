@@ -1,0 +1,136 @@
+[
+  {
+    "name": "fixed",
+    "command": [
+      "E:\\GitHub\\mimic-compat-fuzz\\.build\\fuzz-venv\\Scripts\\python.exe",
+      ".build/checkpoint_fixed.py"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 0,
+    "elapsedSeconds": 70.92285513877869
+  },
+  {
+    "name": "brand-before",
+    "command": [
+      "E:\\GitHub\\mimic-compat-fuzz\\.build\\fuzz-venv\\Scripts\\python.exe",
+      "tools/compatibility/differential.py",
+      "--chrome",
+      "http://127.0.0.1:19533",
+      "--mimic",
+      "http://127.0.0.1:19556",
+      "--corpus",
+      "compatibility/private-captures/audit-20260911-3faacc6/brand-index.json",
+      "--output",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\semantic-checkpoint-20260911\\brand-before"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 1,
+    "elapsedSeconds": 0.9602956771850586
+  },
+  {
+    "name": "brand-after",
+    "command": [
+      "E:\\GitHub\\mimic-compat-fuzz\\.build\\fuzz-venv\\Scripts\\python.exe",
+      "tools/compatibility/differential.py",
+      "--chrome",
+      "http://127.0.0.1:19533",
+      "--mimic",
+      "http://127.0.0.1:19555",
+      "--corpus",
+      "compatibility/private-captures/audit-20260911-3faacc6/brand-index.json",
+      "--output",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\semantic-checkpoint-20260911\\brand-after"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 1,
+    "elapsedSeconds": 0.9493753910064697
+  },
+  {
+    "name": "relations-before",
+    "command": [
+      "E:\\GitHub\\mimic-compat-fuzz\\.build\\fuzz-venv\\Scripts\\python.exe",
+      "tools/compatibility/differential.py",
+      "--chrome",
+      "http://127.0.0.1:19533",
+      "--mimic",
+      "http://127.0.0.1:19556",
+      "--corpus",
+      "compatibility/private-captures/audit-20260911-3faacc6/relations-index.json",
+      "--output",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\semantic-checkpoint-20260911\\relations-before"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 1,
+    "elapsedSeconds": 1.0742430686950684
+  },
+  {
+    "name": "relations-after",
+    "command": [
+      "E:\\GitHub\\mimic-compat-fuzz\\.build\\fuzz-venv\\Scripts\\python.exe",
+      "tools/compatibility/differential.py",
+      "--chrome",
+      "http://127.0.0.1:19533",
+      "--mimic",
+      "http://127.0.0.1:19555",
+      "--corpus",
+      "compatibility/private-captures/audit-20260911-3faacc6/relations-index.json",
+      "--output",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\semantic-checkpoint-20260911\\relations-after"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 1,
+    "elapsedSeconds": 1.0382814407348633
+  },
+  {
+    "name": "corpus-before",
+    "command": [
+      "E:\\GitHub\\mimic-compat-fuzz\\.build\\fuzz-venv\\Scripts\\python.exe",
+      "tools/compatibility/differential.py",
+      "--chrome",
+      "http://127.0.0.1:19533",
+      "--mimic",
+      "http://127.0.0.1:19556",
+      "--corpus",
+      "compatibility/corpus/index.json",
+      "--output",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\semantic-checkpoint-20260911\\corpus-before"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 1,
+    "elapsedSeconds": 16.693996906280518
+  },
+  {
+    "name": "corpus-after",
+    "command": [
+      "E:\\GitHub\\mimic-compat-fuzz\\.build\\fuzz-venv\\Scripts\\python.exe",
+      "tools/compatibility/differential.py",
+      "--chrome",
+      "http://127.0.0.1:19533",
+      "--mimic",
+      "http://127.0.0.1:19555",
+      "--corpus",
+      "compatibility/corpus/index.json",
+      "--output",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\semantic-checkpoint-20260911\\corpus-after"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 1,
+    "elapsedSeconds": 17.004476070404053
+  },
+  {
+    "name": "corpus-control",
+    "command": [
+      "E:\\GitHub\\mimic-compat-fuzz\\.build\\fuzz-venv\\Scripts\\python.exe",
+      "tools/compatibility/differential.py",
+      "--chrome",
+      "http://127.0.0.1:19533",
+      "--mimic",
+      "http://127.0.0.1:19533",
+      "--output",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\semantic-checkpoint-20260911\\corpus-control"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 0,
+    "elapsedSeconds": 19.526753187179565
+  }
+]

@@ -1,0 +1,36 @@
+{
+  "dump": "compatibility\\private-captures\\p0-build-only-20260911\\before-concurrent\\native.dmp",
+  "exceptionCode": "0xc0000005",
+  "exceptionAddress": "0x7ffc86afe4be",
+  "thread": 53616,
+  "module": {
+    "base": 140722567774208,
+    "size": 46104576,
+    "name": "C:\\Users\\moreveal\\AppData\\Local\\gov8\\shim\\abi-44\\919522b4d4ed80671586a1b7a0efc144a533e91e08319715e76ed27962cee0ff\\gov8_shim.dll"
+  },
+  "rva": "0x5e4be",
+  "nearestMapSymbol": [
+    386064,
+    "?CreateFillerObjectAt@Heap@internal@v8@@QEAAX_KHV?$StrongAlias@UClearFreedMemoryModeTag@internal@v8@@_N@base@3@V?$optional@W4AllocationType@internal@v8@@@__Cr@std@@@Z"
+  ],
+  "offset": 174,
+  "registers": {
+    "rax": "0x2063d300999",
+    "rcx": "0x15f03907b70",
+    "rdx": "0x2dc6f4d4828",
+    "rbx": "0x0",
+    "rsp": "0x4af37ff720",
+    "rbp": "0x38",
+    "rsi": "0x2dc6f4d4828",
+    "rdi": "0x15f03907b70",
+    "r8": "0x7d8",
+    "r9": "0x0",
+    "r10": "0x1",
+    "r11": "0xfffffffff8ca5793",
+    "r12": "0x1",
+    "r13": "0x6db6db6db6db6db7",
+    "r14": "0x7d8",
+    "r15": "0x15f513f5b70",
+    "rip": "0x7ffc86afe4be"
+  }
+}

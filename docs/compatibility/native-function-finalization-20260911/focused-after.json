@@ -1,0 +1,389 @@
+{
+  "sha256": "58e8fee5c3678ae45544f9f1f8e5d6c389abccc69925debdcfd44a02158a4677",
+  "chrome": {
+    "AbortController": {
+      "source": "function AbortController() { [native code] }",
+      "methods": {
+        "abort": "function abort() { [native code] }",
+        "get signal": "function get signal() { [native code] }"
+      }
+    },
+    "AbortSignal": {
+      "source": "function AbortSignal() { [native code] }",
+      "methods": {
+        "get aborted": "function get aborted() { [native code] }",
+        "get reason": "function get reason() { [native code] }",
+        "get onabort": "function get onabort() { [native code] }",
+        "set onabort": "function set onabort() { [native code] }",
+        "throwIfAborted": "function throwIfAborted() { [native code] }"
+      }
+    },
+    "TextDecoder": {
+      "source": "function TextDecoder() { [native code] }",
+      "methods": {
+        "decode": "function decode() { [native code] }",
+        "get encoding": "function get encoding() { [native code] }",
+        "get fatal": "function get fatal() { [native code] }",
+        "get ignoreBOM": "function get ignoreBOM() { [native code] }"
+      }
+    },
+    "TextEncoder": {
+      "source": "function TextEncoder() { [native code] }",
+      "methods": {
+        "encode": "function encode() { [native code] }",
+        "encodeInto": "function encodeInto() { [native code] }",
+        "get encoding": "function get encoding() { [native code] }"
+      }
+    },
+    "Headers": {
+      "source": "function Headers() { [native code] }",
+      "methods": {
+        "append": "function append() { [native code] }",
+        "delete": "function delete() { [native code] }",
+        "set": "function set() { [native code] }"
+      }
+    },
+    "Request": {
+      "source": "function Request() { [native code] }",
+      "methods": {
+        "bytes": "function bytes() { [native code] }",
+        "arrayBuffer": "function arrayBuffer() { [native code] }",
+        "text": "function text() { [native code] }",
+        "json": "function json() { [native code] }",
+        "blob": "function blob() { [native code] }"
+      }
+    },
+    "Response": {
+      "source": "function Response() { [native code] }",
+      "methods": {
+        "bytes": "function bytes() { [native code] }",
+        "arrayBuffer": "function arrayBuffer() { [native code] }",
+        "text": "function text() { [native code] }",
+        "json": "function json() { [native code] }",
+        "blob": "function blob() { [native code] }"
+      }
+    },
+    "ReadableStream": {
+      "source": "function ReadableStream() { [native code] }",
+      "methods": {
+        "get locked": "function get locked() { [native code] }",
+        "cancel": "function cancel() { [native code] }",
+        "getReader": "function getReader() { [native code] }",
+        "pipeThrough": "function pipeThrough() { [native code] }",
+        "pipeTo": "function pipeTo() { [native code] }",
+        "tee": "function tee() { [native code] }",
+        "values": "function values() { [native code] }",
+        "Symbol(Symbol.asyncIterator)": "function values() { [native code] }"
+      }
+    },
+    "WritableStream": {
+      "source": "function WritableStream() { [native code] }",
+      "methods": {
+        "get locked": "function get locked() { [native code] }",
+        "abort": "function abort() { [native code] }",
+        "close": "function close() { [native code] }",
+        "getWriter": "function getWriter() { [native code] }"
+      }
+    },
+    "TransformStream": {
+      "source": "function TransformStream() { [native code] }",
+      "methods": {
+        "get readable": "function get readable() { [native code] }",
+        "get writable": "function get writable() { [native code] }"
+      }
+    },
+    "DOMStringList": {
+      "source": "function DOMStringList() { [native code] }",
+      "methods": {
+        "item": "function item() { [native code] }",
+        "contains": "function contains() { [native code] }",
+        "Symbol(Symbol.iterator)": "function values() { [native code] }"
+      }
+    },
+    "statics": {
+      "AbortSignal.abort": "function abort() { [native code] }",
+      "AbortSignal.any": "function any() { [native code] }",
+      "AbortSignal.timeout": "function timeout() { [native code] }",
+      "Response.error": "function error() { [native code] }",
+      "Response.json": "function json() { [native code] }",
+      "Response.redirect": "function redirect() { [native code] }"
+    },
+    "bodyNames": {
+      "Request.bytes": "bytes",
+      "Request.arrayBuffer": "arrayBuffer",
+      "Request.text": "text",
+      "Request.json": "json",
+      "Request.blob": "blob",
+      "Response.bytes": "bytes",
+      "Response.arrayBuffer": "arrayBuffer",
+      "Response.text": "text",
+      "Response.json": "json",
+      "Response.blob": "blob"
+    },
+    "intrinsics": {
+      "arrayValues": "function values() { [native code] }",
+      "arrayIterator": "function values() { [native code] }",
+      "mapEntries": "function entries() { [native code] }"
+    },
+    "aliasIdentity": true,
+    "userSource": "function visibleUserFunction(){return 42}"
+  },
+  "mimic": {
+    "AbortController": {
+      "methods": {
+        "abort": "function abort() { [native code] }",
+        "get signal": "function get signal() { [native code] }"
+      },
+      "source": "function AbortController() { [native code] }"
+    },
+    "AbortSignal": {
+      "methods": {
+        "get aborted": "function get aborted() { [native code] }",
+        "get onabort": "function get onabort() { [native code] }",
+        "get reason": "function get reason() { [native code] }",
+        "set onabort": "function set onabort() { [native code] }",
+        "throwIfAborted": "function throwIfAborted() { [native code] }"
+      },
+      "source": "function AbortSignal() { [native code] }"
+    },
+    "DOMStringList": {
+      "methods": {
+        "Symbol(Symbol.iterator)": "function values() { [native code] }",
+        "contains": "function contains() { [native code] }",
+        "item": "function item() { [native code] }"
+      },
+      "source": "function DOMStringList() { [native code] }"
+    },
+    "Headers": {
+      "methods": {
+        "append": "function append() { [native code] }",
+        "delete": "function delete() { [native code] }",
+        "set": "function set() { [native code] }"
+      },
+      "source": "function Headers() { [native code] }"
+    },
+    "ReadableStream": {
+      "methods": {
+        "Symbol(Symbol.asyncIterator)": "function values() { [native code] }",
+        "cancel": "function cancel() { [native code] }",
+        "get locked": "function get locked() { [native code] }",
+        "getReader": "function getReader() { [native code] }",
+        "pipeThrough": "function pipeThrough() { [native code] }",
+        "pipeTo": "function pipeTo() { [native code] }",
+        "tee": "function tee() { [native code] }",
+        "values": "function values() { [native code] }"
+      },
+      "source": "function ReadableStream() { [native code] }"
+    },
+    "Request": {
+      "methods": {
+        "arrayBuffer": "function arrayBuffer() { [native code] }",
+        "blob": "function blob() { [native code] }",
+        "bytes": "function bytes() { [native code] }",
+        "json": "function json() { [native code] }",
+        "text": "function text() { [native code] }"
+      },
+      "source": "function Request() { [native code] }"
+    },
+    "Response": {
+      "methods": {
+        "arrayBuffer": "function arrayBuffer() { [native code] }",
+        "blob": "function blob() { [native code] }",
+        "bytes": "function bytes() { [native code] }",
+        "json": "function json() { [native code] }",
+        "text": "function text() { [native code] }"
+      },
+      "source": "function Response() { [native code] }"
+    },
+    "TextDecoder": {
+      "methods": {
+        "decode": "function decode() { [native code] }",
+        "get encoding": "function get encoding() { [native code] }",
+        "get fatal": "function get fatal() { [native code] }",
+        "get ignoreBOM": "function get ignoreBOM() { [native code] }"
+      },
+      "source": "function TextDecoder() { [native code] }"
+    },
+    "TextEncoder": {
+      "methods": {
+        "encode": "function encode() { [native code] }",
+        "encodeInto": "function encodeInto() { [native code] }",
+        "get encoding": "function get encoding() { [native code] }"
+      },
+      "source": "function TextEncoder() { [native code] }"
+    },
+    "TransformStream": {
+      "methods": {
+        "get readable": "function get readable() { [native code] }",
+        "get writable": "function get writable() { [native code] }"
+      },
+      "source": "function TransformStream() { [native code] }"
+    },
+    "WritableStream": {
+      "methods": {
+        "abort": "function abort() { [native code] }",
+        "close": "function close() { [native code] }",
+        "get locked": "function get locked() { [native code] }",
+        "getWriter": "function getWriter() { [native code] }"
+      },
+      "source": "function WritableStream() { [native code] }"
+    },
+    "aliasIdentity": true,
+    "bodyNames": {
+      "Request.arrayBuffer": "arrayBuffer",
+      "Request.blob": "blob",
+      "Request.bytes": "bytes",
+      "Request.json": "json",
+      "Request.text": "text",
+      "Response.arrayBuffer": "arrayBuffer",
+      "Response.blob": "blob",
+      "Response.bytes": "bytes",
+      "Response.json": "json",
+      "Response.text": "text"
+    },
+    "intrinsics": {
+      "arrayIterator": "function values() { [native code] }",
+      "arrayValues": "function values() { [native code] }",
+      "mapEntries": "function entries() { [native code] }"
+    },
+    "statics": {
+      "AbortSignal.abort": "function abort() { [native code] }",
+      "AbortSignal.any": "function any() { [native code] }",
+      "AbortSignal.timeout": "function timeout() { [native code] }",
+      "Response.error": "function error() { [native code] }",
+      "Response.json": "function json() { [native code] }",
+      "Response.redirect": "function redirect() { [native code] }"
+    },
+    "userSource": "function visibleUserFunction(){return 42}"
+  },
+  "control": {
+    "AbortController": {
+      "source": "function AbortController() { [native code] }",
+      "methods": {
+        "abort": "function abort() { [native code] }",
+        "get signal": "function get signal() { [native code] }"
+      }
+    },
+    "AbortSignal": {
+      "source": "function AbortSignal() { [native code] }",
+      "methods": {
+        "get aborted": "function get aborted() { [native code] }",
+        "get reason": "function get reason() { [native code] }",
+        "get onabort": "function get onabort() { [native code] }",
+        "set onabort": "function set onabort() { [native code] }",
+        "throwIfAborted": "function throwIfAborted() { [native code] }"
+      }
+    },
+    "TextDecoder": {
+      "source": "function TextDecoder() { [native code] }",
+      "methods": {
+        "decode": "function decode() { [native code] }",
+        "get encoding": "function get encoding() { [native code] }",
+        "get fatal": "function get fatal() { [native code] }",
+        "get ignoreBOM": "function get ignoreBOM() { [native code] }"
+      }
+    },
+    "TextEncoder": {
+      "source": "function TextEncoder() { [native code] }",
+      "methods": {
+        "encode": "function encode() { [native code] }",
+        "encodeInto": "function encodeInto() { [native code] }",
+        "get encoding": "function get encoding() { [native code] }"
+      }
+    },
+    "Headers": {
+      "source": "function Headers() { [native code] }",
+      "methods": {
+        "append": "function append() { [native code] }",
+        "delete": "function delete() { [native code] }",
+        "set": "function set() { [native code] }"
+      }
+    },
+    "Request": {
+      "source": "function Request() { [native code] }",
+      "methods": {
+        "bytes": "function bytes() { [native code] }",
+        "arrayBuffer": "function arrayBuffer() { [native code] }",
+        "text": "function text() { [native code] }",
+        "json": "function json() { [native code] }",
+        "blob": "function blob() { [native code] }"
+      }
+    },
+    "Response": {
+      "source": "function Response() { [native code] }",
+      "methods": {
+        "bytes": "function bytes() { [native code] }",
+        "arrayBuffer": "function arrayBuffer() { [native code] }",
+        "text": "function text() { [native code] }",
+        "json": "function json() { [native code] }",
+        "blob": "function blob() { [native code] }"
+      }
+    },
+    "ReadableStream": {
+      "source": "function ReadableStream() { [native code] }",
+      "methods": {
+        "get locked": "function get locked() { [native code] }",
+        "cancel": "function cancel() { [native code] }",
+        "getReader": "function getReader() { [native code] }",
+        "pipeThrough": "function pipeThrough() { [native code] }",
+        "pipeTo": "function pipeTo() { [native code] }",
+        "tee": "function tee() { [native code] }",
+        "values": "function values() { [native code] }",
+        "Symbol(Symbol.asyncIterator)": "function values() { [native code] }"
+      }
+    },
+    "WritableStream": {
+      "source": "function WritableStream() { [native code] }",
+      "methods": {
+        "get locked": "function get locked() { [native code] }",
+        "abort": "function abort() { [native code] }",
+        "close": "function close() { [native code] }",
+        "getWriter": "function getWriter() { [native code] }"
+      }
+    },
+    "TransformStream": {
+      "source": "function TransformStream() { [native code] }",
+      "methods": {
+        "get readable": "function get readable() { [native code] }",
+        "get writable": "function get writable() { [native code] }"
+      }
+    },
+    "DOMStringList": {
+      "source": "function DOMStringList() { [native code] }",
+      "methods": {
+        "item": "function item() { [native code] }",
+        "contains": "function contains() { [native code] }",
+        "Symbol(Symbol.iterator)": "function values() { [native code] }"
+      }
+    },
+    "statics": {
+      "AbortSignal.abort": "function abort() { [native code] }",
+      "AbortSignal.any": "function any() { [native code] }",
+      "AbortSignal.timeout": "function timeout() { [native code] }",
+      "Response.error": "function error() { [native code] }",
+      "Response.json": "function json() { [native code] }",
+      "Response.redirect": "function redirect() { [native code] }"
+    },
+    "bodyNames": {
+      "Request.bytes": "bytes",
+      "Request.arrayBuffer": "arrayBuffer",
+      "Request.text": "text",
+      "Request.json": "json",
+      "Request.blob": "blob",
+      "Response.bytes": "bytes",
+      "Response.arrayBuffer": "arrayBuffer",
+      "Response.text": "text",
+      "Response.json": "json",
+      "Response.blob": "blob"
+    },
+    "intrinsics": {
+      "arrayValues": "function values() { [native code] }",
+      "arrayIterator": "function values() { [native code] }",
+      "mapEntries": "function entries() { [native code] }"
+    },
+    "aliasIdentity": true,
+    "userSource": "function visibleUserFunction(){return 42}"
+  },
+  "differences": [],
+  "controlDifferences": []
+}

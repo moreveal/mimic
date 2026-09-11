@@ -1,0 +1,336 @@
+{
+  "gates": [
+    {
+      "recovery": [
+        {
+          "private": 167485440,
+          "workload": "static",
+          "rss": 133681152
+        },
+        {
+          "private": 178819072,
+          "workload": "react",
+          "rss": 147234816
+        }
+      ],
+      "sha256": "5EDEFD348DEB43649FD78F39CADAC0B7807CA95D7C9318FA2B1C646BECBDE404",
+      "summary": {
+        "dom": {
+          "session_create_ms": 16.57300000078976,
+          "execution_ms": 452.58940001076553,
+          "completion_ms": 485.3908000077354
+        },
+        "static": {
+          "session_create_ms": 8.815100009087473,
+          "execution_ms": 3.0217999883461744,
+          "completion_ms": 29.318100001546554
+        },
+        "react": {
+          "session_create_ms": 2.92250000347849,
+          "execution_ms": 49.8379000055138,
+          "completion_ms": 81.96219999808818
+        }
+      },
+      "capture": "bootstrap-transport-gate-before-20260911",
+      "concurrency": [
+        {
+          "workload": "static",
+          "n": 10,
+          "wave": -1,
+          "excluded": true,
+          "throughput": 21.009502387427297,
+          "elapsed_s": 0.4759751000092365,
+          "marginal_private_mib": 42.0703125
+        },
+        {
+          "workload": "static",
+          "n": 10,
+          "wave": 0,
+          "excluded": false,
+          "throughput": 37.006075288405555,
+          "elapsed_s": 0.2702258999925107,
+          "marginal_private_mib": 49.844140625
+        },
+        {
+          "workload": "static",
+          "n": 10,
+          "wave": 1,
+          "excluded": false,
+          "throughput": 69.42135220241902,
+          "elapsed_s": 0.14404790000116918,
+          "marginal_private_mib": 36.360546875
+        },
+        {
+          "workload": "static",
+          "n": 10,
+          "wave": 2,
+          "excluded": false,
+          "throughput": 74.93757700121624,
+          "elapsed_s": 0.13344439999491442,
+          "marginal_private_mib": 37.9046875
+        },
+        {
+          "workload": "static",
+          "n": 25,
+          "wave": -1,
+          "excluded": true,
+          "throughput": 32.29551063958078,
+          "elapsed_s": 0.7741014000057476,
+          "marginal_private_mib": 36.93
+        },
+        {
+          "workload": "static",
+          "n": 25,
+          "wave": 0,
+          "excluded": false,
+          "throughput": 45.67338741398359,
+          "elapsed_s": 0.5473647000035271,
+          "marginal_private_mib": 38.5571875
+        },
+        {
+          "workload": "static",
+          "n": 25,
+          "wave": 1,
+          "excluded": false,
+          "throughput": 71.48310282210657,
+          "elapsed_s": 0.34973300001001917,
+          "marginal_private_mib": 34.12015625
+        },
+        {
+          "workload": "static",
+          "n": 25,
+          "wave": 2,
+          "excluded": false,
+          "throughput": 72.21470066083043,
+          "elapsed_s": 0.3461898999958066,
+          "marginal_private_mib": 38.9140625
+        }
+      ],
+      "build": {
+        "command": [
+          "go",
+          "build",
+          "-o",
+          "E:\\GitHub\\mimic\\compatibility\\private-captures\\bootstrap-transport-gate-before-20260911\\mimic.exe",
+          "./cmd/mimic"
+        ],
+        "source": "E:\\GitHub\\mimic\\.build\\goja-bootstrap-baseline",
+        "revision": "bda67db780ce5e9c8e447e78060f16117de86568",
+        "status": " M internal/browser/deferred_runtime_test.go\n?? internal/browser/goja_bootstrap_profile_test.go\n?? internal/engine/v8/host_record_test.go\n",
+        "executable": "E:\\GitHub\\mimic\\compatibility\\private-captures\\bootstrap-transport-gate-before-20260911\\mimic.exe",
+        "sha256": "534f0569401feb2925cee21a8f6ca6baf9a6da8882f4ad16b25e828c64976af9",
+        "harness_sha256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7",
+        "harness_files": {
+          "compare.py": "274b156ee88e67085f5e556ef79629146f5e7287ee54af844476a0c005e65a5b",
+          "report.py": "f12e393341c00e9e03748a06913fa639c1069f66dc7acb71959cffd51647f214",
+          "requirements.txt": "06e6d87d17f39a59fe7b2576545231fe65d5a1940d22e63fc2b32b6cfa12123b",
+          "run.ps1": "6c50b0a55886278de7c1e4d92b77b42bf2cfad59fa451dbaa766b0e0eae84fa6",
+          "run.py": "67718e844bce74b7757f2238716233b9d8683a17294f2b02017667b9c1e44cd3",
+          "test_harness.py": "ddb8dcf74a192d3403971833cf5e011dd8578a9acd9a060b3b265cc6d79aef2a",
+          "v8_version.go": "669a669b0545ba599edb2f7923617f154b976e7377de89d8b2e1f477bdb12f09",
+          "windows_metrics.py": "57ba1e10dfb1f1cb439a52ad5f7f5795c3ba4eef25ae22c9514ecfe115434cd5",
+          "fixtures/workload.js": "484019063e33e131756f67ab6f3076ad2c18e3959072fbae42f540455448c214",
+          "fixtures/vendor/react-dom.production.min.js": "35f4f974f4b2bcd44da73963347f8952e341f83909e4498227d4e26b98f66f0d",
+          "fixtures/vendor/REACT-LICENSE.txt": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85",
+          "fixtures/vendor/react.production.min.js": "d949f1c3687aedadcedac85261865f29b17cd273997e7f6b2bfc53b2f9d4c4dd"
+        },
+        "built_at": "2026-09-11T16:57:10.94468+04:00"
+      }
+    },
+    {
+      "recovery": [
+        {
+          "private": 179236864,
+          "workload": "static",
+          "rss": 148738048
+        },
+        {
+          "private": 171778048,
+          "workload": "react",
+          "rss": 140374016
+        }
+      ],
+      "sha256": "6ABC64247F32BE6E91B341712D84E4EBBEE01060FCD84493F7D5166417CF7639",
+      "summary": {
+        "dom": {
+          "session_create_ms": 16.550100001040846,
+          "execution_ms": 462.36900000076275,
+          "completion_ms": 498.49559999711346
+        },
+        "static": {
+          "session_create_ms": 5.2761000115424395,
+          "execution_ms": 3.253200004110113,
+          "completion_ms": 30.6062000017846
+        },
+        "react": {
+          "session_create_ms": 11.758900000131689,
+          "execution_ms": 56.31559999892488,
+          "completion_ms": 90.43959999689832
+        }
+      },
+      "capture": "node-exception-gate-after-20260911",
+      "concurrency": [
+        {
+          "workload": "static",
+          "n": 10,
+          "wave": -1,
+          "excluded": true,
+          "throughput": 23.4066452865523,
+          "elapsed_s": 0.4272291000088444,
+          "marginal_private_mib": 40.89375
+        },
+        {
+          "workload": "static",
+          "n": 10,
+          "wave": 0,
+          "excluded": false,
+          "throughput": 36.51647440874232,
+          "elapsed_s": 0.27384899999015033,
+          "marginal_private_mib": 48.46484375
+        },
+        {
+          "workload": "static",
+          "n": 10,
+          "wave": 1,
+          "excluded": false,
+          "throughput": 74.58534278344578,
+          "elapsed_s": 0.13407460000598803,
+          "marginal_private_mib": 38.912109375
+        },
+        {
+          "workload": "static",
+          "n": 10,
+          "wave": 2,
+          "excluded": false,
+          "throughput": 71.01349753439833,
+          "elapsed_s": 0.14081830000213813,
+          "marginal_private_mib": 42.805859375
+        },
+        {
+          "workload": "static",
+          "n": 25,
+          "wave": -1,
+          "excluded": true,
+          "throughput": 34.6691543404414,
+          "elapsed_s": 0.7211020999966422,
+          "marginal_private_mib": 37.700625
+        },
+        {
+          "workload": "static",
+          "n": 25,
+          "wave": 0,
+          "excluded": false,
+          "throughput": 47.387094561693736,
+          "elapsed_s": 0.5275697999895783,
+          "marginal_private_mib": 39.03640625
+        },
+        {
+          "workload": "static",
+          "n": 25,
+          "wave": 1,
+          "excluded": false,
+          "throughput": 69.67462230162516,
+          "elapsed_s": 0.3588106999959564,
+          "marginal_private_mib": 33.67515625
+        },
+        {
+          "workload": "static",
+          "n": 25,
+          "wave": 2,
+          "excluded": false,
+          "throughput": 72.09718007744621,
+          "elapsed_s": 0.34675419999985024,
+          "marginal_private_mib": 34.0703125
+        }
+      ],
+      "build": {
+        "command": [
+          "go",
+          "build",
+          "-o",
+          "E:\\GitHub\\mimic\\compatibility\\private-captures\\node-exception-gate-after-20260911\\mimic.exe",
+          "./cmd/mimic"
+        ],
+        "source": "E:\\GitHub\\mimic\\.build\\node-specializations",
+        "revision": "660713a8ca630588bf794f38734a51d8fa6ef6c2",
+        "status": " M docs/architecture.md\n?? docs/compatibility/domexception-state-2026-09-11.md\n?? docs/compatibility/node-exception-20260911/\n?? docs/compatibility/node-name-2026-09-11.md\n?? docs/compatibility/node-name-20260911/\n",
+        "executable": "E:\\GitHub\\mimic\\compatibility\\private-captures\\node-exception-gate-after-20260911\\mimic.exe",
+        "sha256": "8b8bfbddf42a905f9154838346b72c27bec8bc1a62cdbcff7061cf25b0cff9d3",
+        "harness_sha256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7",
+        "harness_files": {
+          "compare.py": "274b156ee88e67085f5e556ef79629146f5e7287ee54af844476a0c005e65a5b",
+          "report.py": "f12e393341c00e9e03748a06913fa639c1069f66dc7acb71959cffd51647f214",
+          "requirements.txt": "06e6d87d17f39a59fe7b2576545231fe65d5a1940d22e63fc2b32b6cfa12123b",
+          "run.ps1": "6c50b0a55886278de7c1e4d92b77b42bf2cfad59fa451dbaa766b0e0eae84fa6",
+          "run.py": "67718e844bce74b7757f2238716233b9d8683a17294f2b02017667b9c1e44cd3",
+          "test_harness.py": "ddb8dcf74a192d3403971833cf5e011dd8578a9acd9a060b3b265cc6d79aef2a",
+          "v8_version.go": "669a669b0545ba599edb2f7923617f154b976e7377de89d8b2e1f477bdb12f09",
+          "windows_metrics.py": "57ba1e10dfb1f1cb439a52ad5f7f5795c3ba4eef25ae22c9514ecfe115434cd5",
+          "fixtures/workload.js": "484019063e33e131756f67ab6f3076ad2c18e3959072fbae42f540455448c214",
+          "fixtures/vendor/react-dom.production.min.js": "35f4f974f4b2bcd44da73963347f8952e341f83909e4498227d4e26b98f66f0d",
+          "fixtures/vendor/REACT-LICENSE.txt": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85",
+          "fixtures/vendor/react.production.min.js": "d949f1c3687aedadcedac85261865f29b17cd273997e7f6b2bfc53b2f9d4c4dd"
+        },
+        "built_at": "2026-09-11T16:58:09.928224+04:00"
+      }
+    }
+  ],
+  "limitation": "Separate branch validation; integration and full cleanup remain open.",
+  "tests": [
+    {
+      "name": "node-suite",
+      "command": [
+        "go",
+        "test",
+        "-json",
+        "-timeout=30m",
+        "./internal/browser",
+        "./internal/webapi",
+        "./internal/engine/v8",
+        "./internal/cdp",
+        "./internal/network",
+        "./internal/scheduler"
+      ],
+      "cwd": "E:\\GitHub\\mimic\\.build\\node-specializations",
+      "exitCode": 0
+    },
+    {
+      "name": "node-race",
+      "command": [
+        "go",
+        "test",
+        "-race",
+        "./internal/browser",
+        "-run",
+        "^(TestDOMExceptionStateMatchesFrozenChrome|TestNodeNameBindingsMatchFrozenChrome|TestAttrNodeBindingsMatchFrozenChrome|TestCharacterDataErrorsUseDOMExceptionCodes|TestFetchResponseBodyAbortUsesIndependentDOMException)$",
+        "-count=1"
+      ],
+      "cwd": "E:\\GitHub\\mimic\\.build\\node-specializations",
+      "exitCode": 0
+    },
+    {
+      "name": "semantic-engine-race",
+      "command": [
+        "go",
+        "test",
+        "-race",
+        "./internal/engine/v8",
+        "./internal/webapi",
+        "-count=1"
+      ],
+      "cwd": "E:\\GitHub\\mimic\\.build\\node-specializations",
+      "exitCode": 0
+    },
+    {
+      "name": "semantic-gate",
+      "command": [
+        "E:\\GitHub\\mimic\\.build\\benchmark-venv\\Scripts\\python.exe",
+        ".build/p0_full_gate.py",
+        "node-exception-gate-after-20260911",
+        "E:\\GitHub\\mimic\\.build\\node-specializations"
+      ],
+      "cwd": "E:\\GitHub\\mimic",
+      "exitCode": 0
+    }
+  ]
+}

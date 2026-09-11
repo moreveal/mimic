@@ -1,0 +1,4 @@
+ok  	github.com/moreveal/mimic/internal/browser	333.875s
+ok  	github.com/moreveal/mimic/internal/webapi	0.220s
+ok  	github.com/moreveal/mimic/internal/dom	0.402s
+ok  	github.com/moreveal/mimic/internal/cdp	2.269s

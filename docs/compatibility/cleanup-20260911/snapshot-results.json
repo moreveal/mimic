@@ -1,0 +1,92 @@
+[
+  {
+    "side": "before",
+    "test": "TestBootstrapSnapshotConcurrentPageLifecycles",
+    "count": 3,
+    "command": [
+      "E:\\GitHub\\mimic\\.build\\cleanup-snapshot-before.test.exe",
+      "-test.run=^TestBootstrapSnapshotConcurrentPageLifecycles$",
+      "-test.count=3",
+      "-test.timeout=90s",
+      "-test.v"
+    ],
+    "exit": 0,
+    "seconds": 3.71346116065979,
+    "sha256": "ffbbba1c005581106b56e7a2c0a5c9325a95487345407009e511facbe45146bf"
+  },
+  {
+    "side": "before",
+    "test": "TestOrdinaryConcurrentPageLifecycles",
+    "count": 1,
+    "command": [
+      "E:\\GitHub\\mimic\\.build\\cleanup-snapshot-before.test.exe",
+      "-test.run=^TestOrdinaryConcurrentPageLifecycles$",
+      "-test.count=1",
+      "-test.timeout=90s",
+      "-test.v"
+    ],
+    "exit": 0,
+    "seconds": 2.3541860580444336,
+    "sha256": "ffbbba1c005581106b56e7a2c0a5c9325a95487345407009e511facbe45146bf"
+  },
+  {
+    "side": "before",
+    "test": "TestBootstrapSnapshotBarrierConcurrentBuilders",
+    "count": 3,
+    "command": [
+      "E:\\GitHub\\mimic\\.build\\cleanup-snapshot-before.test.exe",
+      "-test.run=^TestBootstrapSnapshotBarrierConcurrentBuilders$",
+      "-test.count=3",
+      "-test.timeout=90s",
+      "-test.v"
+    ],
+    "exit": 0,
+    "seconds": 3.7620580196380615,
+    "sha256": "ffbbba1c005581106b56e7a2c0a5c9325a95487345407009e511facbe45146bf"
+  },
+  {
+    "side": "final",
+    "test": "TestBootstrapSnapshotConcurrentPageLifecycles",
+    "count": 3,
+    "command": [
+      "E:\\GitHub\\mimic\\.build\\cleanup-snapshot-final.test.exe",
+      "-test.run=^TestBootstrapSnapshotConcurrentPageLifecycles$",
+      "-test.count=3",
+      "-test.timeout=90s",
+      "-test.v"
+    ],
+    "exit": 0,
+    "seconds": 3.7364230155944824,
+    "sha256": "f55b8b790e98220c13f68e08913aa046d4bd7726d47aca452cbcde5793c4bfa4"
+  },
+  {
+    "side": "final",
+    "test": "TestOrdinaryConcurrentPageLifecycles",
+    "count": 1,
+    "command": [
+      "E:\\GitHub\\mimic\\.build\\cleanup-snapshot-final.test.exe",
+      "-test.run=^TestOrdinaryConcurrentPageLifecycles$",
+      "-test.count=1",
+      "-test.timeout=90s",
+      "-test.v"
+    ],
+    "exit": 0,
+    "seconds": 2.397170305252075,
+    "sha256": "f55b8b790e98220c13f68e08913aa046d4bd7726d47aca452cbcde5793c4bfa4"
+  },
+  {
+    "side": "final",
+    "test": "TestBootstrapSnapshotBarrierConcurrentBuilders",
+    "count": 3,
+    "command": [
+      "E:\\GitHub\\mimic\\.build\\cleanup-snapshot-final.test.exe",
+      "-test.run=^TestBootstrapSnapshotBarrierConcurrentBuilders$",
+      "-test.count=3",
+      "-test.timeout=90s",
+      "-test.v"
+    ],
+    "exit": 0,
+    "seconds": 3.839460849761963,
+    "sha256": "f55b8b790e98220c13f68e08913aa046d4bd7726d47aca452cbcde5793c4bfa4"
+  }
+]

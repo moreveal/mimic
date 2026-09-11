@@ -1,0 +1,22 @@
+{
+  "fixed": {
+    "checks": 236,
+    "beforeMatches": 154,
+    "afterMatches": 154,
+    "v8Matches": 205,
+    "changes": [],
+    "errors": [],
+    "chromeDrift": [],
+    "v8ChangedLeaves": []
+  },
+  "representative": {
+    "checks": 28,
+    "beforeMatches": 17,
+    "afterMatches": 17,
+    "v8Matches": 19,
+    "changes": [],
+    "errors": [],
+    "chromeDrift": [],
+    "v8ChangedLeaves": []
+  }
+}

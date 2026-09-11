@@ -63,6 +63,14 @@ composed per realm with the selected bundle's generated Blink WebIDL surface.
 Generated bindings describe known shape and route operations to semantic hosts;
 they never own independent browser state.
 
+DOMException name, message and legacy code share private state in Window and
+Worker bindings. Its current native Error backing preserves Error.isError but
+still exposes a different Object.prototype.toString tag after prototype removal.
+See the measured [exception branding boundary](compatibility/domexception-state-2026-09-11.md).
+Host-record conversion creates own data properties; inherited setters must not
+intercept fields transported into V8. This does not establish complete structured
+clone semantics or preserve ordering lost in a Go map.
+
 ### Graphics observations without rendering
 
 Mimic does not render a display and must not require a GPU or an embedded graphics
@@ -103,7 +111,11 @@ answers. The same observable model applies to ordinary application code.
   value registries preserve identity; they do not own a second DOM. WebIDL Node
   checks use private brands, including synthetic Attr objects, rather than the
   calling realm's `instanceof`. Removed frames can retain a realm for existing
-  WindowProxy references until the owning realm closes. Arena nodes remain
+  WindowProxy references until the owning realm closes. The detached-frame
+  lookup is not a reachability root: unobserved removed browsing contexts and
+  their descendant Page-tree entries are released after the current JS turn.
+  Exported Window/object references still participate in Page-local tracing.
+  Arena nodes remain
   retained until Page teardown; incremental collection is not implemented.
 - Page clock establishes navigation epochs; scheduler time is authoritative during
   a turn, including microtasks. Worker schedulers have their own agent clock.
@@ -131,6 +143,13 @@ answers. The same observable model applies to ordinary application code.
   Snapshot failure falls back to ordinary bootstrap with diagnostics. See
   [bootstrap snapshot measurements](performance/bootstrap-snapshot-20260910.md)
   for admission, profiling bypass and the live-memory tradeoff.
+  The pinned native engine must keep the stock shared read-only heap sealed
+  (`--no-extensible-ro-snapshot` before initialization). Custom snapshot objects
+  remain in private serialized heaps. Independent custom read-only layouts can
+  corrupt restoration; concurrent late read-only finalization can write to an
+  already protected page. This requirement preserves concurrent builders and
+  Pages without a runtime lock. See the
+  [serialization regression](compatibility/snapshot-serialization-2026-09-11.md).
 - Keep runtime behavior target-blind. Domain names, vendor tokens, challenge
   patterns and captured payload structures must never select runtime semantics.
 

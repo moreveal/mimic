@@ -1,0 +1,64 @@
+[
+  {
+    "side": "before",
+    "kind": "density",
+    "command": [
+      "C:\\Users\\moreveal\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "E:\\GitHub\\mimic\\.build\\native-shape-baseline\\tools\\performance\\profile_gate.py",
+      "--output",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\native-shape-profile-20260911\\before-density",
+      "--density"
+    ],
+    "cwd": "E:\\GitHub\\mimic\\.build\\native-shape-baseline",
+    "exitCode": 0
+  },
+  {
+    "side": "before",
+    "kind": "native",
+    "command": [
+      "C:\\Users\\moreveal\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "E:\\GitHub\\mimic\\.build\\native-shape-baseline\\tools\\performance\\profile_gate.py",
+      "--output",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\native-shape-profile-20260911\\before-native",
+      "--native",
+      "--workloads",
+      "static",
+      "react",
+      "--iterations",
+      "5"
+    ],
+    "cwd": "E:\\GitHub\\mimic\\.build\\native-shape-baseline",
+    "exitCode": 0
+  },
+  {
+    "side": "after",
+    "kind": "density",
+    "command": [
+      "C:\\Users\\moreveal\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "E:\\GitHub\\mimic\\.build\\callable-metadata-baseline\\tools\\performance\\profile_gate.py",
+      "--output",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\native-shape-profile-20260911\\after-density",
+      "--density"
+    ],
+    "cwd": "E:\\GitHub\\mimic\\.build\\callable-metadata-baseline",
+    "exitCode": 0
+  },
+  {
+    "side": "after",
+    "kind": "native",
+    "command": [
+      "C:\\Users\\moreveal\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      "E:\\GitHub\\mimic\\.build\\callable-metadata-baseline\\tools\\performance\\profile_gate.py",
+      "--output",
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\native-shape-profile-20260911\\after-native",
+      "--native",
+      "--workloads",
+      "static",
+      "react",
+      "--iterations",
+      "5"
+    ],
+    "cwd": "E:\\GitHub\\mimic\\.build\\callable-metadata-baseline",
+    "exitCode": 0
+  }
+]

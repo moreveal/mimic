@@ -1,0 +1,43 @@
+{
+  "revision": "26f3e123e252c4d2fd410e5ee07281db0528d023",
+  "dirty": [
+    " M internal/webapi/document_compatibility.js",
+    "?? docs/compatibility/document-setters-20260911/",
+    "?? internal/browser/document_setter_test.go",
+    "?? internal/browser/testdata/document_setter_chrome152.json",
+    "?? internal/browser/testdata/document_setter_oracle.js"
+  ],
+  "binaries": {
+    "mimic-document-descriptors-final.exe": "a0290a4fd64ae393f13c2570532f4804eb033b5341fa4b7394ae17a0f8382432",
+    "mimic-document-setters-final.exe": "8a9c545e66f8cca97378617d525be8db7f7a4b325a8ef92e0a3bd7ebc94e7514"
+  },
+  "probeSHA256": "977ae61e15a91429a18c91d56a109e5b9221abc553d41746dbfa4f17d58334a3",
+  "chromeMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "unverified-reused-controlled",
+    "visibilityState": "visible",
+    "hasFocus": true
+  }
+}

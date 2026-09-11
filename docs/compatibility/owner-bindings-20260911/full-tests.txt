@@ -1,0 +1,10 @@
+ok  	github.com/moreveal/mimic/internal/browser	342.362s
+ok  	github.com/moreveal/mimic/internal/webapi	0.209s
+ok  	github.com/moreveal/mimic/internal/dom	(cached)
+ok  	github.com/moreveal/mimic/internal/network	(cached)
+ok  	github.com/moreveal/mimic/internal/scheduler	(cached)
+ok  	github.com/moreveal/mimic/internal/cdp	2.136s
+?   	github.com/moreveal/mimic/internal/engine	[no test files]
+ok  	github.com/moreveal/mimic/internal/engine/goja	(cached)
+ok  	github.com/moreveal/mimic/internal/engine/quickjs	(cached)
+ok  	github.com/moreveal/mimic/internal/engine/v8	(cached)

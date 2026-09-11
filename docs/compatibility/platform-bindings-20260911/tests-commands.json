@@ -1,0 +1,73 @@
+[
+  {
+    "name": "suite",
+    "command": [
+      "go",
+      "test",
+      "-json",
+      "-timeout=25m",
+      "./internal/browser",
+      "./internal/webapi",
+      "./internal/engine/v8",
+      "./internal/engine/goja",
+      "./internal/cdp",
+      "./internal/network",
+      "./internal/scheduler",
+      "./chrome/152/...",
+      "./compatibility"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 0,
+    "elapsedSeconds": 262.9157621860504
+  },
+  {
+    "name": "browser-race",
+    "command": [
+      "go",
+      "test",
+      "-race",
+      "-json",
+      "-timeout=15m",
+      "./internal/browser",
+      "-run",
+      "TestSingletonAccessorOwnership|TestCollectionPrototypeBindings|TestWindowMemberOrder|TestHTMLCollectionReflection|TestLivePairIterators|TestFormUTF8|TestTextEncoder|TestIterationAndEncoding|TestHeaders|TestNativeFunctionFinalization|TestCrossFrameIteratorResultCache|TestInitialBlankRealmIsDeferredAndIndependent|TestUnobserved|TestPartitionCookiesFrameAndWorkerTransport|TestFrameDocumentEntryFollowsSynchronousCalls|TestFrameNavigationTimingIsDocumentScoped|TestChildNavigationObserverWaitsForChildLoad|TestFrameInsertionAfterInnerHTMLAndFragmentMove|TestResourceTimingDoesNotLeakParentInflightFetch",
+      "-count=1"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 0,
+    "elapsedSeconds": 56.796127796173096
+  },
+  {
+    "name": "core-race",
+    "command": [
+      "go",
+      "test",
+      "-race",
+      "-json",
+      "-timeout=15m",
+      "./internal/webapi",
+      "./internal/engine/v8",
+      "./internal/engine/goja",
+      "./internal/cdp",
+      "./internal/network",
+      "./internal/scheduler"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 0,
+    "elapsedSeconds": 9.091622352600098
+  },
+  {
+    "name": "python",
+    "command": [
+      "E:\\GitHub\\mimic-compat-fuzz\\.build\\fuzz-venv\\Scripts\\python.exe",
+      "-m",
+      "unittest",
+      "compatibility.test_oracle",
+      "compatibility.test_fuzz_probes",
+      "compatibility.test_compat_fuzz"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 1,
+    "elapsedSeconds": 0.10299062728881836
+  }
+]

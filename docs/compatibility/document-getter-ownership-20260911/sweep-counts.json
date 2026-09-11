@@ -1,0 +1,11 @@
+{
+  "executed": 130,
+  "uniqueExpressions": 127,
+  "skipped": 36,
+  "classifications": {
+    "candidate": 11,
+    "environment_or_timing_review": 3,
+    "exception_mismatch": 2,
+    "match": 114
+  }
+}

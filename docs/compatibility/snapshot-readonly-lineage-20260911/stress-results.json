@@ -1,0 +1,192 @@
+[
+  {
+    "case": "TestBootstrapSnapshotConcurrentPageLifecycles",
+    "side": "baseline",
+    "count": 3,
+    "command": [
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-distinct-layout-20260911\\baseline.browser.test.exe",
+      "-test.run=^TestBootstrapSnapshotConcurrentPageLifecycles$",
+      "-test.count=3",
+      "-test.timeout=120s",
+      "-test.v"
+    ],
+    "binarySHA256": "c4f7585de624f24c09325417e239b4d11f8f67f29097a1aa77ae6ace5e25c501",
+    "exitCode": 0,
+    "timeout": false,
+    "elapsedSeconds": 3.8543625000020256,
+    "log": "compatibility\\private-captures\\p0-distinct-layout-20260911\\baseline-TestBootstrapSnapshotConcurrentPageLifecycles.log",
+    "logSHA256": "e9a86df5b2a220e3aea750652625299fc4cf3cd5a8b2b41494eb15ed62f07a02",
+    "capture": "stderr/native stack; no first-chance debugger on these stress processes"
+  },
+  {
+    "case": "TestBootstrapSnapshotConcurrentPageLifecycles",
+    "side": "after",
+    "count": 3,
+    "command": [
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-distinct-layout-20260911\\after.browser.test.exe",
+      "-test.run=^TestBootstrapSnapshotConcurrentPageLifecycles$",
+      "-test.count=3",
+      "-test.timeout=120s",
+      "-test.v"
+    ],
+    "binarySHA256": "7fbd754eb38745f9f127bf1612f2ea053a97204b030e6e17c0dc1537f67c336f",
+    "exitCode": 0,
+    "timeout": false,
+    "elapsedSeconds": 3.8186519000009866,
+    "log": "compatibility\\private-captures\\p0-distinct-layout-20260911\\after-TestBootstrapSnapshotConcurrentPageLifecycles.log",
+    "logSHA256": "1b85ca71f51d7387f1ba323c237d5a18d8392f7f7f4c01a4bcf85adf3c478bba",
+    "capture": "stderr/native stack; no first-chance debugger on these stress processes"
+  },
+  {
+    "case": "TestBootstrapSnapshotBarrierConcurrentBuilders",
+    "side": "baseline",
+    "count": 3,
+    "command": [
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-distinct-layout-20260911\\baseline.browser.test.exe",
+      "-test.run=^TestBootstrapSnapshotBarrierConcurrentBuilders$",
+      "-test.count=3",
+      "-test.timeout=120s",
+      "-test.v"
+    ],
+    "binarySHA256": "c4f7585de624f24c09325417e239b4d11f8f67f29097a1aa77ae6ace5e25c501",
+    "exitCode": 0,
+    "timeout": false,
+    "elapsedSeconds": 3.6875989000109257,
+    "log": "compatibility\\private-captures\\p0-distinct-layout-20260911\\baseline-TestBootstrapSnapshotBarrierConcurrentBuilders.log",
+    "logSHA256": "a0d1433491d0796f8ed1b2b9e12fd07191535649000712adce7a28ea9b534be7",
+    "capture": "stderr/native stack; no first-chance debugger on these stress processes"
+  },
+  {
+    "case": "TestBootstrapSnapshotBarrierConcurrentBuilders",
+    "side": "after",
+    "count": 3,
+    "command": [
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-distinct-layout-20260911\\after.browser.test.exe",
+      "-test.run=^TestBootstrapSnapshotBarrierConcurrentBuilders$",
+      "-test.count=3",
+      "-test.timeout=120s",
+      "-test.v"
+    ],
+    "binarySHA256": "7fbd754eb38745f9f127bf1612f2ea053a97204b030e6e17c0dc1537f67c336f",
+    "exitCode": 0,
+    "timeout": false,
+    "elapsedSeconds": 3.721369099992444,
+    "log": "compatibility\\private-captures\\p0-distinct-layout-20260911\\after-TestBootstrapSnapshotBarrierConcurrentBuilders.log",
+    "logSHA256": "f06f18d578e44efdb4e6a4329c35618b7c77c6a5a8a11bed78e9a7de66ea420a",
+    "capture": "stderr/native stack; no first-chance debugger on these stress processes"
+  },
+  {
+    "case": "TestBootstrapSnapshotBarrierSequentialBuilders",
+    "side": "baseline",
+    "count": 3,
+    "command": [
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-distinct-layout-20260911\\baseline.browser.test.exe",
+      "-test.run=^TestBootstrapSnapshotBarrierSequentialBuilders$",
+      "-test.count=3",
+      "-test.timeout=120s",
+      "-test.v"
+    ],
+    "binarySHA256": "c4f7585de624f24c09325417e239b4d11f8f67f29097a1aa77ae6ace5e25c501",
+    "exitCode": 0,
+    "timeout": false,
+    "elapsedSeconds": 4.81339090000256,
+    "log": "compatibility\\private-captures\\p0-distinct-layout-20260911\\baseline-TestBootstrapSnapshotBarrierSequentialBuilders.log",
+    "logSHA256": "8eb5e1c479913abe5943905b2bb36740221c64dcc33ff08fd8fa228b56d6c5df",
+    "capture": "stderr/native stack; no first-chance debugger on these stress processes"
+  },
+  {
+    "case": "TestBootstrapSnapshotBarrierSequentialBuilders",
+    "side": "after",
+    "count": 3,
+    "command": [
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-distinct-layout-20260911\\after.browser.test.exe",
+      "-test.run=^TestBootstrapSnapshotBarrierSequentialBuilders$",
+      "-test.count=3",
+      "-test.timeout=120s",
+      "-test.v"
+    ],
+    "binarySHA256": "7fbd754eb38745f9f127bf1612f2ea053a97204b030e6e17c0dc1537f67c336f",
+    "exitCode": 0,
+    "timeout": false,
+    "elapsedSeconds": 4.775249800004531,
+    "log": "compatibility\\private-captures\\p0-distinct-layout-20260911\\after-TestBootstrapSnapshotBarrierSequentialBuilders.log",
+    "logSHA256": "a69c02b082be398eb70bd1b3660a52b856163659ce402b86ea25a0a9504a01e1",
+    "capture": "stderr/native stack; no first-chance debugger on these stress processes"
+  },
+  {
+    "case": "TestBootstrapSnapshotConcurrentPagesSequentialBuilders",
+    "side": "baseline",
+    "count": 3,
+    "command": [
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-distinct-layout-20260911\\baseline.browser.test.exe",
+      "-test.run=^TestBootstrapSnapshotConcurrentPagesSequentialBuilders$",
+      "-test.count=3",
+      "-test.timeout=120s",
+      "-test.v"
+    ],
+    "binarySHA256": "c4f7585de624f24c09325417e239b4d11f8f67f29097a1aa77ae6ace5e25c501",
+    "exitCode": 0,
+    "timeout": false,
+    "elapsedSeconds": 4.830003900002339,
+    "log": "compatibility\\private-captures\\p0-distinct-layout-20260911\\baseline-TestBootstrapSnapshotConcurrentPagesSequentialBuilders.log",
+    "logSHA256": "c685fa7cbd7c871a12a52b17a7196f5a05a10e40adfa811568aecddccfb1e241",
+    "capture": "stderr/native stack; no first-chance debugger on these stress processes"
+  },
+  {
+    "case": "TestBootstrapSnapshotConcurrentPagesSequentialBuilders",
+    "side": "after",
+    "count": 3,
+    "command": [
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-distinct-layout-20260911\\after.browser.test.exe",
+      "-test.run=^TestBootstrapSnapshotConcurrentPagesSequentialBuilders$",
+      "-test.count=3",
+      "-test.timeout=120s",
+      "-test.v"
+    ],
+    "binarySHA256": "7fbd754eb38745f9f127bf1612f2ea053a97204b030e6e17c0dc1537f67c336f",
+    "exitCode": 0,
+    "timeout": false,
+    "elapsedSeconds": 4.876665499992669,
+    "log": "compatibility\\private-captures\\p0-distinct-layout-20260911\\after-TestBootstrapSnapshotConcurrentPagesSequentialBuilders.log",
+    "logSHA256": "eeffcd73e54647075aab66d7941e8fb4aba1f6059cb66af8eef0c95db4a44d29",
+    "capture": "stderr/native stack; no first-chance debugger on these stress processes"
+  },
+  {
+    "case": "TestOrdinaryConcurrentPageLifecycles",
+    "side": "baseline",
+    "count": 3,
+    "command": [
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-distinct-layout-20260911\\baseline.browser.test.exe",
+      "-test.run=^TestOrdinaryConcurrentPageLifecycles$",
+      "-test.count=3",
+      "-test.timeout=120s",
+      "-test.v"
+    ],
+    "binarySHA256": "c4f7585de624f24c09325417e239b4d11f8f67f29097a1aa77ae6ace5e25c501",
+    "exitCode": 0,
+    "timeout": false,
+    "elapsedSeconds": 6.438457299998845,
+    "log": "compatibility\\private-captures\\p0-distinct-layout-20260911\\baseline-TestOrdinaryConcurrentPageLifecycles.log",
+    "logSHA256": "9c3618ddf9566fc26fe61baf5b3b784732b389316d41989289591ec3b3343733",
+    "capture": "stderr/native stack; no first-chance debugger on these stress processes"
+  },
+  {
+    "case": "TestOrdinaryConcurrentPageLifecycles",
+    "side": "after",
+    "count": 3,
+    "command": [
+      "E:\\GitHub\\mimic\\compatibility\\private-captures\\p0-distinct-layout-20260911\\after.browser.test.exe",
+      "-test.run=^TestOrdinaryConcurrentPageLifecycles$",
+      "-test.count=3",
+      "-test.timeout=120s",
+      "-test.v"
+    ],
+    "binarySHA256": "7fbd754eb38745f9f127bf1612f2ea053a97204b030e6e17c0dc1537f67c336f",
+    "exitCode": 0,
+    "timeout": false,
+    "elapsedSeconds": 6.421091299998807,
+    "log": "compatibility\\private-captures\\p0-distinct-layout-20260911\\after-TestOrdinaryConcurrentPageLifecycles.log",
+    "logSHA256": "f7e6d270d1f78c40064fe965019d83f7087d90928d9cc99b1e65eb927d6e7617",
+    "capture": "stderr/native stack; no first-chance debugger on these stress processes"
+  }
+]

@@ -1,0 +1,193 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 222,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "unverified-reused-controlled",
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "probeSHA256": "55c38c1209c2e6b4ce918033c7fe76b8bf44465c4ce9d92c192327bac5314a26",
+  "result": {
+    "result": {
+      "value": {
+        "History.pushState": {
+          "invalid": {
+            "error": "TypeError"
+          },
+          "trace": [],
+          "missing": {
+            "error": "TypeError"
+          }
+        },
+        "History.replaceState": {
+          "invalid": {
+            "error": "TypeError"
+          },
+          "trace": [],
+          "missing": {
+            "error": "TypeError"
+          }
+        },
+        "History.back": {
+          "invalid": {
+            "error": "TypeError"
+          },
+          "trace": [],
+          "missing": null
+        },
+        "History.forward": {
+          "invalid": {
+            "error": "TypeError"
+          },
+          "trace": [],
+          "missing": null
+        },
+        "History.go": {
+          "invalid": {
+            "error": "TypeError"
+          },
+          "trace": [],
+          "missing": null
+        },
+        "Storage.getItem": {
+          "invalid": {
+            "error": "TypeError"
+          },
+          "trace": [],
+          "missing": {
+            "error": "TypeError"
+          }
+        },
+        "Storage.setItem": {
+          "invalid": {
+            "error": "TypeError"
+          },
+          "trace": [],
+          "missing": {
+            "error": "TypeError"
+          }
+        },
+        "Storage.removeItem": {
+          "invalid": {
+            "error": "TypeError"
+          },
+          "trace": [],
+          "missing": {
+            "error": "TypeError"
+          }
+        },
+        "Storage.key": {
+          "invalid": {
+            "error": "TypeError"
+          },
+          "trace": [],
+          "missing": {
+            "error": "TypeError"
+          }
+        },
+        "Storage.clear": {
+          "invalid": {
+            "error": "TypeError"
+          },
+          "trace": [],
+          "missing": null
+        },
+        "pushState.order": {
+          "result": {
+            "value": "undefined"
+          },
+          "trace": [
+            "title",
+            "url",
+            "state"
+          ]
+        },
+        "pushState.titleSymbol": {
+          "error": "TypeError"
+        },
+        "pushState.urlSymbol": {
+          "error": "TypeError"
+        },
+        "replaceState.order": {
+          "result": {
+            "value": "undefined"
+          },
+          "trace": [
+            "title",
+            "url",
+            "state"
+          ]
+        },
+        "replaceState.titleSymbol": {
+          "error": "TypeError"
+        },
+        "replaceState.urlSymbol": {
+          "error": "TypeError"
+        },
+        "goBigInt": {
+          "error": "TypeError"
+        },
+        "keyBigInt": {
+          "error": "TypeError"
+        },
+        "getItem.symbol": {
+          "error": "TypeError"
+        },
+        "removeItem.symbol": {
+          "error": "TypeError"
+        },
+        "setItem.symbol": {
+          "error": "TypeError"
+        },
+        "setOrder": {
+          "result": {
+            "value": "undefined"
+          },
+          "trace": [
+            "key",
+            "value"
+          ]
+        },
+        "stored": "value",
+        "wrappedKey": "key",
+        "owner": {
+          "session": "child",
+          "local": null,
+          "borrowed": "child",
+          "length": 1
+        },
+        "childHistory": {
+          "value": "undefined"
+        },
+        "childState": 7,
+        "parentState": {
+          "x": 1
+        },
+        "detachedPrototype": {
+          "value": "value"
+        }
+      }
+    }
+  }
+}

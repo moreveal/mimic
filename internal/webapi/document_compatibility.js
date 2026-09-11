@@ -1,13 +1,14 @@
 // Every Document has its own canonical host root. The wrapper map preserves
 // identity when traversal reaches an inert document through one of its nodes.
 const documentWrappers = new Map();
+let registerDocumentGetterBinding;
 const documentImplementations = new WeakMap();
 const fragmentOwnerDocuments = new WeakMap();
 function wrapDocumentNode(data) {
   if(data.nodeId===host.documentRootID())return document;
   let value=documentWrappers.get(data.nodeId);
   if(!value){const reference=host.documentReference(data.nodeId);if(reference){value=unwrapCrossRealm(reference.frame,reference);documentWrappers.set(data.nodeId,value)}}
-  if(!value){value=Object.create((data.contentType&&data.contentType!=='text/html'?globalThis.XMLDocument:HTMLDocument).prototype);elementData.set(value,data);documentWrappers.set(data.nodeId,value)}
+  if(!value){value=Object.create((data.contentType&&data.contentType!=='text/html'?globalThis.XMLDocument:HTMLDocument).prototype);elementData.set(value,data);Object.defineProperty(value,'location',documentLocationDescriptor);documentWrappers.set(data.nodeId,value);if(registerDocumentGetterBinding)registerDocumentGetterBinding(value)}
   return value;
 }
 {
@@ -38,9 +39,19 @@ function wrapDocumentNode(data) {
   };
   accessor(Node.prototype,'ownerDocument',function(){return ownerOf(this)});
   const originalType=Object.getOwnPropertyDescriptor(Node.prototype,'nodeType').get;
-  const originalName=Object.getOwnPropertyDescriptor(Node.prototype,'nodeName').get;
   accessor(Node.prototype,'nodeType',function(){const type=elementSlot(this)?.type;return this instanceof Document?9:type==='doctype'?10:originalType.call(this)});
-  accessor(Node.prototype,'nodeName',function(){return this instanceof Document?'#document':elementSlot(this)?.type==='doctype'?elementSlot(this).tagName:originalName.call(this)});
+  // Node's inherited binding must select private state, not an Element getter
+  // moved here during exposure publication or a shadowable public tagName.
+  accessor(Node.prototype,'nodeName',function(){
+    const slot=elementSlot(this);
+    if(this===document||slot?.type==='document')return '#document';
+    if(slot?.type==='element')return slot.qualifiedName||slot.tagName;
+    if(slot?.type==='doctype')return slot.tagName;
+    if(slot?.type==='text')return '#text';
+    if(slot?.type==='comment')return '#comment';
+    if(isDOMFragment(this))return '#document-fragment';
+    throw new TypeError('Illegal invocation');
+  });
   if(globalThis.DocumentType){
     accessor(globalThis.DocumentType.prototype,'name',function(){return elementSlot(this)?.tagName||''});
     for(const name of ['publicId','systemId'])accessor(globalThis.DocumentType.prototype,name,function(){return host.nodeData(elementSlot(this).nodeId).attributes?.[name==='publicId'?'public':'system']||''});
@@ -66,7 +77,13 @@ function wrapDocumentNode(data) {
       return adopt(original.apply(this,args),this)});
   }
   accessor(Document.prototype,'documentElement',function(){validDocument(this);return Array.from(this.childNodes).find(node=>node.nodeType===1)||null});
-  accessor(Document.prototype,'firstChild',function(){validDocument(this);return this.childNodes.item(0)});
+  const firstChild=Object.getOwnPropertyDescriptor(Node.prototype,'firstChild').get;
+  accessor(Node.prototype,'firstChild',function(){
+    if(!isDOMNode(this))throw new TypeError('Illegal invocation');
+    if(this===document||elementSlot(this)?.type==='document')return documentFirstChild(this);
+    return functionSourceApply(firstChild,this,[]);
+  });
+  delete Document.prototype.firstChild;
   for(const name of ['head','body'])accessor(Document.prototype,name,function(){validDocument(this);const root=this.documentElement;if(root?.namespaceURI!=='http://www.w3.org/1999/xhtml'||root.localName!=='html')return null;return Array.from(root.children).find(node=>node.namespaceURI==='http://www.w3.org/1999/xhtml'&&(node.localName===name||name==='body'&&node.localName==='frameset'))||null});
   const tagName=Object.getOwnPropertyDescriptor(Element.prototype,'tagName').get;
   accessor(Element.prototype,'tagName',function(){return elementSlot(this)?.qualifiedName||tagName.call(this)});
@@ -78,9 +95,19 @@ function wrapDocumentNode(data) {
     return cachedHTMLCollection(root,'tag',name,()=>Array.from(root.querySelectorAll('*')).filter(node=>name==='*'||node.localName===(node.namespaceURI==='http://www.w3.org/1999/xhtml'?lower:name)).map(node=>elementSlot(node).nodeId));
   });
   accessor(Document.prototype,'defaultView',function(){validDocument(this);return this===document&&host.documentActive()?window:null});
-  accessor(Document.prototype,'textContent',function(){validDocument(this);return null},function(){validDocument(this)});
+  const nodeTextContent=Object.getOwnPropertyDescriptor(Node.prototype,'textContent');
+  const nullTextContent=value=>{const type=elementSlot(value)?.type;return value===document||type==='document'||type==='doctype'};
+  accessor(Node.prototype,'textContent',function(){
+    if(!isDOMNode(this))throw new TypeError('Illegal invocation');
+    return nullTextContent(this)?null:functionSourceApply(nodeTextContent.get,this,[]);
+  },function(value){
+    if(!isDOMNode(this))throw new TypeError('Illegal invocation');
+    if(nullTextContent(this)){if(value!=null)bindingString(value);return}
+    return functionSourceApply(nodeTextContent.set,this,[value]);
+  });
+  delete Document.prototype.textContent;
   for(const name of ['URL','documentURI'])accessor(Document.prototype,name,function(){validDocument(this);return this===document?location.href:elementSlot(this)?.documentURL||'about:blank'});
-  accessor(Document.prototype,'location',function(){validDocument(this);return this===document?location:null});
+  delete Document.prototype.location;
   const ready=Object.getOwnPropertyDescriptor(Document.prototype,'readyState').get;
   accessor(Document.prototype,'readyState',function(){validDocument(this);return this===document?ready.call(this):'complete'});
   accessor(Document.prototype,'compatMode',function(){validDocument(this);return contentType(this)==='text/html'&&(this===document||elementSlot(this)?.parsedDocument)&&!Array.from(this.childNodes).some(node=>node.nodeType===10)?'BackCompat':'CSS1Compat'});
@@ -161,3 +188,69 @@ function wrapDocumentNode(data) {
 }
 
 for(const name of ['hasStorageAccess','hasUnpartitionedCookieAccess'])if(name in Document.prototype){const method=function(){if(!(this instanceof Document))throw new TypeError('Illegal invocation');if(this!==document)return Promise.reject(new DOMException('Document is not fully active','InvalidStateError'));return Promise.resolve(host.hasStorageAccess())};Object.defineProperty(method,'name',{value:name,configurable:true});if(typeof markNative==='function')markNative(method,name);Object.defineProperty(Document.prototype,name,{value:method,writable:true,enumerable:true,configurable:true})}
+
+// Document's unforgeable Location attribute is installed on each instance;
+// Node specializations remain on Node.prototype and dispatch by private brand.
+function documentLocation(value) {
+  if(value===document)return host.documentActive()?loc:null;
+  const reference=referenceGet(value);
+  if(reference?.binding?.kind==='Document')return callRealmBinding(value,reference,'location',[]);
+  if(elementSlot(value)?.type==='document')return null;
+  throw new TypeError('Illegal invocation');
+}
+function documentFirstChild(value) {
+  const reference=referenceGet(value);
+  if(reference?.binding?.kind==='Document')return callRealmBinding(value,reference,'firstChild',[]);
+  return wrap(host.firstChild(value===document?host.documentRootID():elementSlot(value).nodeId));
+}
+
+// Capture installed getters only after all semantic layers have been installed.
+// Borrowing an accessor must dispatch through the Document owner, rather than
+// mistake a foreign active document for a local inert document. Public property
+// and prototype replacements must not change a previously borrowed accessor.
+function finalizeDocumentGetterBindings() {
+  // Frozen Document WebIDL marks only these three attributes LegacyLenientThis.
+  // Their getter returns undefined for a receiver without the Document brand.
+  const lenientThis=new Set(['onreadystatechange','onmouseenter','onmouseleave']);
+  const lenientSetter=new Set(['fullscreen','fullscreenElement','fullscreenEnabled']);
+  const stringSetters=new Set(['xmlVersion','domain','cookie','title','dir','designMode','fgColor','linkColor','vlinkColor','alinkColor','bgColor']);
+  const nullToEmpty=new Set(['fgColor','linkColor','vlinkColor','alinkColor','bgColor']);
+  const documentReceiver=value=>value===document||elementSlot(value)?.type==='document'||referenceGet(value)?.binding?.kind==='Document';
+  const getters=new Map();
+  for(const name of Reflect.ownKeys(Document.prototype)){
+    const descriptor=Object.getOwnPropertyDescriptor(Document.prototype,name);
+    if(!descriptor.get||!descriptor.configurable)continue;
+    const original=descriptor.get;
+    getters.set(name,original);
+    descriptor.get=function(){
+      const reference=referenceGet(this);
+      if(reference?.binding?.kind==='Document')return callRealmBinding(this,reference,'get',[name]);
+      if(this!==document&&elementSlot(this)?.type!=='document'){
+        if(lenientThis.has(name))return undefined;
+        throw new TypeError('Illegal invocation');
+      }
+      return functionSourceApply(original,this,[]);
+    };
+    // LegacyLenientSetter is an actual no-op setter, not an absent setter.
+    // All setters check the receiver before touching or converting the value.
+    const originalSetter=descriptor.set||(lenientSetter.has(name)?function(value){}:undefined);
+    if(originalSetter)descriptor.set=function(value){
+      if(!documentReceiver(this)){
+        if(lenientThis.has(name))return;
+        throw new TypeError('Illegal invocation');
+      }
+      // Perform WebIDL string coercion in the binding realm, including Symbol
+      // rejection; preserve nullable and LegacyNullToEmptyString inputs.
+      if(stringSetters.has(name))value=name==='xmlVersion'&&value==null?null:bindingString(value===null&&nullToEmpty.has(name)?'':value);
+      return functionSourceApply(originalSetter,this,[value]);
+    };
+    Object.defineProperty(Document.prototype,name,descriptor);
+  }
+  registerDocumentGetterBinding=value=>registerRealmBinding(value,'Document',{
+    get:name=>functionSourceApply(getters.get(name),value,[]),
+    location:()=>documentLocation(value),
+    firstChild:()=>documentFirstChild(value)
+  });
+  registerDocumentGetterBinding(document);
+  for(const value of documentWrappers.values())if(!referenceGet(value))registerDocumentGetterBinding(value);
+}

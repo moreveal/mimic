@@ -1,0 +1,39 @@
+{
+  "brand": {
+    "before": 558,
+    "after": 556,
+    "removed": [
+      {
+        "path": "/observations/0/value/getters/DOMException.code/exception",
+        "chrome": "TypeError",
+        "mimic": null,
+        "missing": "mimic"
+      },
+      {
+        "path": "/observations/0/value/getters/DOMException.code/result",
+        "chrome": null,
+        "mimic": "number",
+        "missing": "chrome"
+      }
+    ],
+    "added": [],
+    "changed": [],
+    "valid": true
+  },
+  "relations": {
+    "before": 2,
+    "after": 2,
+    "removed": [],
+    "added": [],
+    "changed": [],
+    "valid": true
+  },
+  "corpus": {
+    "before": 40,
+    "after": 40,
+    "removed": [],
+    "added": [],
+    "changed": [],
+    "valid": true
+  }
+}

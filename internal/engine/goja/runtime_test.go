@@ -19,3 +19,59 @@ func TestEvalHonorsContextCancellationAndRuntimeRemainsUsable(t *testing.T) {
 		t.Fatalf("runtime unusable after interruption: value=%v err=%v", value, err)
 	}
 }
+
+func TestGlobalAccessObserverPreservesAccessorReceiverAndException(t *testing.T) {
+	r := Factory{}.New().(*runtime)
+	defer r.Close()
+	r.SetGlobalAccessObserver(func(string, bool) {})
+	if err := r.vm.Set("observedGlobal", r.vm.GlobalObject()); err != nil {
+		t.Fatal(err)
+	}
+	value, err := r.Eval(context.Background(), `(() => {
+		const marker = {};
+		Object.defineProperty(observedGlobal, 'receiverProbe', {get() { return this; }});
+		Object.defineProperty(observedGlobal, 'throwProbe', {get() { throw marker; }});
+		const child = Object.create(observedGlobal);
+		if (observedGlobal.receiverProbe !== observedGlobal || child.receiverProbe !== child) return false;
+		try { observedGlobal.throwProbe; } catch (error) { return error === marker; }
+		return false;
+	})()`, "global-observer.js")
+	if err != nil || value.Export() != true {
+		t.Fatalf("observer changed accessor semantics: value=%v err=%v", value, err)
+	}
+}
+
+func TestGlobalAccessObserverDeduplicatesSupportQueriesWithoutCachingHas(t *testing.T) {
+	r := Factory{}.New().(*runtime)
+	defer r.Close()
+	if _, err := r.Eval(context.Background(), `(() => {
+  const original = Reflect.has;
+  let queries = 0;
+  Reflect.has = function(target, key) { if (key === 'subject') queries++; return original(target, key); };
+  globalThis.readSupportQueries = () => queries;
+  globalThis.subject = 42;
+ })()`, "support-query-counter.js"); err != nil {
+		t.Fatal(err)
+	}
+	observations := 0
+	r.SetGlobalAccessObserver(func(name string, supported bool) {
+		if name == "subject" {
+			observations++
+			if !supported {
+				t.Error("first subject observation should be supported")
+			}
+		}
+	})
+	if err := r.vm.Set("observedGlobal", r.vm.GlobalObject()); err != nil {
+		t.Fatal(err)
+	}
+	value, err := r.Eval(context.Background(), `(() => {
+  for (let i = 0; i < 20; i++) if (observedGlobal.subject !== 42) return false;
+  delete observedGlobal.subject;
+  if (observedGlobal.subject !== undefined || 'subject' in observedGlobal) return false;
+  return readSupportQueries() === 2;
+ })()`, "deduplicated-support.js")
+	if err != nil || value.Export() != true || observations != 1 {
+		t.Fatalf("support observation: value=%v err=%v observations=%d", value, err, observations)
+	}
+}
