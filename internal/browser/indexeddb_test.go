@@ -8,6 +8,7 @@ import (
 	"net/http/httptest"
 	"os"
 	"reflect"
+	"strings"
 	"testing"
 	"time"
 )
@@ -16,17 +17,25 @@ func TestIndexedDBChromeOracles(t *testing.T) {
 	for _, name := range []string{"indexeddb_storage", "indexeddb_lifecycle", "indexeddb_realms"} {
 		t.Run(name, func(t *testing.T) {
 			historyTestPages(t, func(t *testing.T, p *Page) {
-				if name == "indexeddb_lifecycle" {
-					if _, ok := p.Top.Realm.runtime.(interface{ NativeCallbackCheckpoint() error }); !ok {
-						t.Skip("Goja cannot perform a native callback microtask checkpoint between event listeners")
-					}
-				}
 				ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 				defer cancel()
 				server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { fmt.Fprint(w, "<!doctype html><body>") }))
 				defer server.Close()
 				if err := p.Navigate(ctx, server.URL); err != nil {
 					t.Fatal(err)
+				}
+				if name == "indexeddb_lifecycle" {
+					// Navigation without script can retain deferredRuntime. Realize
+					// the engine before inspecting its checkpoint capability.
+					if _, err := p.Evaluate(ctx, "void 0"); err != nil {
+						t.Fatal(err)
+					}
+					if _, ok := p.Top.Realm.runtime.(interface{ NativeCallbackCheckpoint() error }); !ok {
+						if strings.HasSuffix(t.Name(), "/goja") {
+							t.Skip("Goja cannot perform a native callback microtask checkpoint between event listeners")
+						}
+						t.Fatal("realized engine is missing the native callback checkpoint capability")
+					}
 				}
 				source, err := os.ReadFile("testdata/" + name + "_oracle.js")
 				if err != nil {
