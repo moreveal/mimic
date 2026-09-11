@@ -138,8 +138,13 @@ func addWindowServiceHosts(r *Realm, h map[string]any) {
 	addLaunchHosts(r, h)
 	h["enqueueWebTask"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		fn := a[0]
+		var abort engine.Value
+		if len(a) > 5 {
+			abort = a[5]
+		}
 		id := r.scheduler.Post(scheduler.WebTask, time.Duration(numarg(a, 2)*float64(time.Millisecond)), func(ctx context.Context) error {
 			p := r.agent.Page()
+			r.webTaskAbort = abort
 			p.userScriptDepth++
 			defer func() { p.userScriptDepth-- }()
 			_, err := r.runtime.Call(ctx, fn, nil)
@@ -147,6 +152,7 @@ func addWindowServiceHosts(r *Realm, h map[string]any) {
 		})
 		continuation, _ := arg(a, 3).(bool)
 		r.scheduler.SetWebTaskPriority(id, int(numarg(a, 1)), continuation)
+		r.scheduler.SetWebTaskSignal(id, uint64(numarg(a, 4)))
 		return r.val(id), nil
 	})
 	h["changeWebTask"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
@@ -160,7 +166,28 @@ func addWindowServiceHosts(r *Realm, h map[string]any) {
 		return nil, nil
 	})
 	h["currentWebTask"] = r.fn(func(_ engine.Value, _ []engine.Value) (engine.Value, error) {
-		return r.val(r.scheduler.ExecutionStatus().TaskID), nil
+		id, priority, signal := r.scheduler.CurrentWebTask()
+		reply := r.val([]any{id, priority, signal, nil})
+		if id != 0 && r.webTaskAbort != nil {
+			if err := r.runtime.SetProperty(reply, "3", r.webTaskAbort); err != nil {
+				return nil, err
+			}
+		}
+		return reply, nil
+	})
+	h["newWebTaskSignal"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return r.val(r.scheduler.NewWebTaskSignal(int(numarg(a, 0)))), nil
+	})
+	h["webTaskSignalPriority"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return r.val(r.scheduler.WebTaskSignalPriority(uint64(numarg(a, 0)))), nil
+	})
+	h["beginWebTaskPriorityChange"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		previous, status := r.scheduler.BeginWebTaskPriorityChange(uint64(numarg(a, 0)), int(numarg(a, 1)))
+		return r.val([]any{previous, status}), nil
+	})
+	h["endWebTaskPriorityChange"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		r.scheduler.EndWebTaskPriorityChange(uint64(numarg(a, 0)))
+		return nil, nil
 	})
 	h["requestCrashReport"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(r.crashReport.request(uint32(numarg(a, 0)))), nil

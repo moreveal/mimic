@@ -44,36 +44,34 @@
     Object.defineProperty(globalThis,'TaskPriorityChangeEvent',{value:TaskPriorityChangeEvent,writable:true,configurable:true});
     if(taskSignalProto){
       Object.setPrototypeOf(taskSignalProto,AbortSignal.prototype);
-      getter(taskSignalProto,'priority',function(){const s=signals.get(this);if(!s)throw new TypeError('Illegal invocation');return s.priority});
+      getter(taskSignalProto,'priority',function(){const s=signals.get(this);if(!s)throw new TypeError('Illegal invocation');return priorities[host.webTaskSignalPriority(s)]});
       Object.defineProperty(taskSignalProto,'onprioritychange',{get(){return eventHandlerRecord(this,'prioritychange').value},set(value){if(!signals.has(this))throw new TypeError('Illegal invocation');setEventHandlerValue(this,'prioritychange',value)},enumerable:true,configurable:true});
       class TaskController extends AbortController {
-        constructor(options={}){super();const p=priority(options?.priority??'user-visible');const signal=this.signal;Object.setPrototypeOf(signal,taskSignalProto);signals.set(signal,{priority:p,changing:false,tasks:new Set()});controllers.set(this,signal)}
-        setPriority(value){const signal=controllers.get(this);if(!signal)throw new TypeError('Illegal invocation');requireArgs('setPriority','TaskController',1,arguments);const p=priority(value),s=signals.get(signal);if(s.changing)throw new DOMException('Cannot change priority during a prioritychange event.','NotAllowedError');if(p===s.priority)return;const previous=s.priority;s.priority=p;for(const task of s.tasks)host.changeWebTask(task.id,priorities.indexOf(p),task.continuation);s.changing=true;try{dispatchTrusted(signal,new TaskPriorityChangeEvent('prioritychange',{previousPriority:previous}))}finally{s.changing=false}}
+        constructor(options={}){super();const p=priority(options?.priority??'user-visible');const signal=this.signal;Object.setPrototypeOf(signal,taskSignalProto);signals.set(signal,host.newWebTaskSignal(priorities.indexOf(p)));controllers.set(this,signal)}
+        setPriority(value){const signal=controllers.get(this);if(!signal)throw new TypeError('Illegal invocation');requireArgs('setPriority','TaskController',1,arguments);const p=priority(value),id=signals.get(signal),[previous,status]=host.beginWebTaskPriorityChange(id,priorities.indexOf(p));if(status<0)throw new DOMException('Cannot change priority during a prioritychange event.','NotAllowedError');if(!status)return;try{dispatchTrusted(signal,new TaskPriorityChangeEvent('prioritychange',{previousPriority:priorities[previous]}))}finally{host.endWebTaskPriorityChange(id)}}
       }
       Object.defineProperty(TaskController.prototype,Symbol.toStringTag,{value:'TaskController',configurable:true});markNative(TaskController,'TaskController');Object.defineProperty(globalThis,'TaskController',{value:TaskController,writable:true,configurable:true});
     }
-    let current=null;
     const enqueue=(callback,options,continuation)=>{
       const signal=options.signal;
       if(signal!==undefined&&!(signal instanceof AbortSignal))throw new TypeError('signal must be an AbortSignal');
       const variable=options.priority===undefined&&signals.has(signal)?signals.get(signal):null;
-      const p=priority(options.priority??variable?.priority??'user-visible');
+      const p=priority(options.priority??(variable?priorities[host.webTaskSignalPriority(variable)]:'user-visible'));
       const delay=options.delay===undefined?0:Number(options.delay);
       if(!Number.isFinite(delay)||delay<0||delay>Number.MAX_SAFE_INTEGER)throw new TypeError('delay is outside the accepted range');
       if(signal?.aborted)return Promise.reject(signal.reason);
       return new Promise((resolve,reject)=>{
-        const task={id:0,continuation};
-        const cleanup=()=>{variable?.tasks.delete(task);signal?.removeEventListener('abort',cancel)};
-        const cancel=()=>{host.changeWebTask(task.id,-1,false);cleanup();reject(signal.reason)};
-        task.id=host.enqueueWebTask(()=>{
-          variable?.tasks.delete(task);current={id:task.id,signal,priority:variable?undefined:p};
+        let taskID=0;
+        const cleanup=()=>{signal?.removeEventListener('abort',cancel)};
+        const cancel=()=>{host.changeWebTask(taskID,-1,false);cleanup();reject(signal.reason)};
+        taskID=host.enqueueWebTask(()=>{
           try{Promise.resolve(callback()).then(value=>{cleanup();resolve(value)},error=>{cleanup();reject(error)})}catch(e){cleanup();reject(e)}
-        },priorities.indexOf(p),Math.trunc(delay),continuation);
-        variable?.tasks.add(task);signal?.addEventListener('abort',cancel,{once:true});
+        },priorities.indexOf(p),Math.trunc(delay),continuation,variable??0,signal);
+        signal?.addEventListener('abort',cancel,{once:true});
       });
     };
     nativeMethod(Scheduler.prototype,'postTask',function postTask(callback,options={}){try{if(this!==schedulerObject)throw new TypeError('Illegal invocation');requireArgs('postTask','Scheduler',1,arguments);if(typeof callback!=='function')throw new TypeError('The callback must be a function');return enqueue(callback,options??{},false)}catch(e){return Promise.reject(e)}});
-    nativeMethod(Scheduler.prototype,'yield',function yield_(){try{if(this!==schedulerObject)throw new TypeError('Illegal invocation');const options=current&&current.id===host.currentWebTask()?current:{};return enqueue(()=>undefined,options,true)}catch(e){return Promise.reject(e)}});
+    nativeMethod(Scheduler.prototype,'yield',function yield_(){try{if(this!==schedulerObject)throw new TypeError('Illegal invocation');const [id,p,variable,signal]=host.currentWebTask(),options=id?{signal:signal??undefined,priority:variable?undefined:priorities[p]}:{};return enqueue(()=>undefined,options,true)}catch(e){return Promise.reject(e)}});
   }
 
   if(typeof CookieStore==='function'){
