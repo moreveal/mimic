@@ -1,0 +1,33 @@
+{
+  "schemaVersion": 1,
+  "source": "Chrome /json/protocol",
+  "sourcePath": "internal/cdp/protocol/chrome152.json",
+  "sha256": "ca1bd8d0bc16123902b7be1b2282eb1f788ebfa565a5c6cd9a0538a7e3711d31",
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "viewport": {
+      "width": 1272,
+      "height": 709,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "x": 0,
+      "y": 0,
+      "outerWidth": 1280,
+      "outerHeight": 800
+    },
+    "secureContextState": false,
+    "isolationState": false,
+    "visibilityState": "visible",
+    "hasFocus": false
+  }
+}

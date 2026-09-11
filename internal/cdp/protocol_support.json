@@ -1,0 +1,1080 @@
+{
+  "Audits.disable": {
+    "status": "unsupported",
+    "notes": "Client subscription state only; no Audits issue engine or WebMCP model-context backend. Semantic support is not claimed.",
+    "tests": [
+      "compatibility/cdp_automation.mjs#browser.connect"
+    ]
+  },
+  "Audits.enable": {
+    "status": "unsupported",
+    "notes": "Client subscription state only; no Audits issue engine or WebMCP model-context backend. Semantic support is not claimed.",
+    "tests": [
+      "compatibility/cdp_automation.mjs#browser.connect"
+    ]
+  },
+  "Browser.close": {
+    "status": "partial",
+    "notes": "Acknowledges then closes CDP server and owned Pages; embedding process lifetime is separate.",
+    "tests": []
+  },
+  "Browser.getVersion": {
+    "status": "partial",
+    "notes": "Pinned protocol and product identity; Mimic product name and virtual JS engine version identify the actual implementation.",
+    "tests": [
+      "internal/cdp/transport_test.go#TestProtocolDiscoveryAndErrorCodes",
+      "compatibility/cdp_automation.py#browser.version"
+    ]
+  },
+  "DOM.describeNode": {
+    "status": "partial",
+    "notes": "Canonical node IDs, metadata, attributes, children and depth traversal. Shadow piercing, whitespace modes, distributed nodes and full frontend node lifecycle are incomplete.",
+    "tests": [
+      "internal/cdp/dom_query_test.go#TestDOMQueryInitialDocumentBootstrapsRealm",
+      "compatibility/cdp_automation.mjs#dom.selectors_element_evaluation"
+    ]
+  },
+  "DOM.disable": {
+    "status": "partial",
+    "notes": "Subscription state; includeWhitespace and complete incremental mutation tracking are not implemented.",
+    "tests": [
+      "internal/cdp/dom_query_test.go#TestDOMQueriesShareRealmSelectorEngine"
+    ]
+  },
+  "DOM.enable": {
+    "status": "partial",
+    "notes": "Subscription state; includeWhitespace and complete incremental mutation tracking are not implemented.",
+    "tests": [
+      "internal/cdp/dom_query_test.go#TestDOMQueriesShareRealmSelectorEngine"
+    ]
+  },
+  "DOM.focus": {
+    "status": "partial",
+    "notes": "Canonical focus shared with trusted input/isolated worlds; full browser focusability/shadow focus is incomplete.",
+    "tests": [
+      "internal/browser/input_test.go#TestProtocolInputSharesFocusAndFormStateAcrossWorlds"
+    ]
+  },
+  "DOM.getAttributes": {
+    "status": "partial",
+    "notes": "Alternating canonical attribute names/values for live elements; full DOM frontend lifecycle is not modeled.",
+    "tests": [
+      "compatibility/cdp_automation.mjs#dom.selectors_element_evaluation"
+    ]
+  },
+  "DOM.getBoxModel": {
+    "status": "partial",
+    "notes": "Same modeled rectangle/CSS edges as JS and hit testing. No complete layout/transforms/SVG quads or multiple inline fragments.",
+    "tests": [
+      "internal/browser/input_test.go#TestDefaultControlGeometryMatchesChrome152",
+      "compatibility/cdp_automation.py#input.pointer_click",
+      "compatibility/cdp_automation.mjs#input.pointer_click"
+    ]
+  },
+  "DOM.getContentQuads": {
+    "status": "partial",
+    "notes": "Same modeled rectangle/CSS edges as JS and hit testing. No complete layout/transforms/SVG quads or multiple inline fragments.",
+    "tests": [
+      "internal/browser/input_test.go#TestDefaultControlGeometryMatchesChrome152",
+      "compatibility/cdp_automation.py#input.pointer_click",
+      "compatibility/cdp_automation.mjs#input.pointer_click"
+    ]
+  },
+  "DOM.getDocument": {
+    "status": "partial",
+    "notes": "Canonical node IDs, metadata, attributes, children and depth traversal. Shadow piercing, whitespace modes, distributed nodes and full frontend node lifecycle are incomplete.",
+    "tests": [
+      "internal/cdp/dom_query_test.go#TestDOMQueryInitialDocumentBootstrapsRealm",
+      "compatibility/cdp_automation.mjs#dom.selectors_element_evaluation"
+    ]
+  },
+  "DOM.getOuterHTML": {
+    "status": "partial",
+    "notes": "Serializes live nodeId/backendNodeId; objectId and includeShadowDOM are not implemented.",
+    "tests": [
+      "internal/cdp/dom_serialization_test.go#TestDOMOuterHTMLSerializesRequestedLiveNode"
+    ]
+  },
+  "DOM.querySelector": {
+    "status": "partial",
+    "notes": "Uses canonical page JavaScript selector engine; selector completeness follows that engine.",
+    "tests": [
+      "internal/cdp/dom_query_test.go#TestDOMQueriesShareRealmSelectorEngine"
+    ]
+  },
+  "DOM.querySelectorAll": {
+    "status": "partial",
+    "notes": "Uses canonical page JavaScript selector engine; selector completeness follows that engine.",
+    "tests": [
+      "internal/cdp/dom_query_test.go#TestDOMQueriesShareRealmSelectorEngine"
+    ]
+  },
+  "DOM.removeAttribute": {
+    "status": "partial",
+    "notes": "Mutates canonical DOM through normal realm operations. Full CDP mutation notifications/frontend bookkeeping are incomplete.",
+    "tests": []
+  },
+  "DOM.removeNode": {
+    "status": "partial",
+    "notes": "Mutates canonical DOM through normal realm operations. Full CDP mutation notifications/frontend bookkeeping are incomplete.",
+    "tests": []
+  },
+  "DOM.requestChildNodes": {
+    "status": "partial",
+    "notes": "Canonical node IDs, metadata, attributes, children and depth traversal. Shadow piercing, whitespace modes, distributed nodes and full frontend node lifecycle are incomplete.",
+    "tests": [
+      "internal/cdp/dom_query_test.go#TestDOMQueryInitialDocumentBootstrapsRealm",
+      "compatibility/cdp_automation.mjs#dom.selectors_element_evaluation"
+    ]
+  },
+  "DOM.requestNode": {
+    "status": "partial",
+    "notes": "Maps canonical nodes to realm/session handles and emits ancestor projections; complete frontend lifecycle is not verified.",
+    "tests": [
+      "internal/browser/debugger_test.go#TestDebuggerCanonicalNodeAndSessionIsolation",
+      "compatibility/cdp_automation.mjs#dom.selectors_element_evaluation"
+    ]
+  },
+  "DOM.resolveNode": {
+    "status": "partial",
+    "notes": "Maps canonical nodes to realm/session handles and emits ancestor projections; complete frontend lifecycle is not verified.",
+    "tests": [
+      "internal/browser/debugger_test.go#TestDebuggerCanonicalNodeAndSessionIsolation",
+      "compatibility/cdp_automation.mjs#dom.selectors_element_evaluation"
+    ]
+  },
+  "DOM.scrollIntoViewIfNeeded": {
+    "status": "partial",
+    "notes": "Canonical element scroll operation; optional rect and full nested layout/scrolling are not implemented.",
+    "tests": [
+      "compatibility/cdp_automation.mjs#input.pointer_click"
+    ]
+  },
+  "DOM.setAttributeValue": {
+    "status": "partial",
+    "notes": "Mutates canonical DOM through normal realm operations. Full CDP mutation notifications/frontend bookkeeping are incomplete.",
+    "tests": []
+  },
+  "DOM.setChildNodes": {
+    "status": "partial",
+    "notes": "Requested child/ancestor projection; full incremental frontend DOM mutation stream is absent.",
+    "tests": [
+      "compatibility/cdp_automation.mjs#dom.selectors_element_evaluation"
+    ]
+  },
+  "DOM.setNodeValue": {
+    "status": "partial",
+    "notes": "Mutates canonical DOM through normal realm operations. Full CDP mutation notifications/frontend bookkeeping are incomplete.",
+    "tests": []
+  },
+  "DOM.setOuterHTML": {
+    "status": "partial",
+    "notes": "Mutates canonical DOM through normal realm operations. Full CDP mutation notifications/frontend bookkeeping are incomplete.",
+    "tests": []
+  },
+  "Emulation.clearDeviceMetricsOverride": {
+    "status": "partial",
+    "notes": "Canonical viewport/device scale/screen dimensions/orientation and reset. Mobile layout, scale/position/dontSetVisibleSize are incomplete; clipping/display features/posture reject.",
+    "tests": [
+      "compatibility/cdp_automation.py#emulation.viewport",
+      "internal/browser/consumed_window_state_test.go#TestConsumedWindowStateNavigationAndViewportResize",
+      "internal/cdp/automation_commands_test.go#TestDeviceAndUserAgentOverridesShareObservationsAndRemainPageLocal"
+    ]
+  },
+  "Emulation.setDeviceMetricsOverride": {
+    "status": "partial",
+    "notes": "Canonical viewport/device scale/screen dimensions/orientation and reset. Mobile layout, scale/position/dontSetVisibleSize are incomplete; clipping/display features/posture reject.",
+    "tests": [
+      "compatibility/cdp_automation.py#emulation.viewport",
+      "internal/browser/consumed_window_state_test.go#TestConsumedWindowStateNavigationAndViewportResize",
+      "internal/cdp/automation_commands_test.go#TestDeviceAndUserAgentOverridesShareObservationsAndRemainPageLocal"
+    ]
+  },
+  "Emulation.setEmulatedMedia": {
+    "status": "partial",
+    "notes": "Screen media and canonical prefers-color-scheme/reduced-motion. Other media/features reject; complete dynamic cascade/query-change events are not verified.",
+    "tests": [
+      "internal/browser/page_test.go#TestMatchMediaDerivesFromCanonicalPreferences"
+    ]
+  },
+  "Emulation.setTouchEmulationEnabled": {
+    "status": "partial",
+    "notes": "Desktop reset only: enabled=false accepted; enabled=true explicitly rejects because touch/gesture/media emulation is absent.",
+    "tests": [
+      "compatibility/cdp_automation.mjs#emulation.viewport"
+    ]
+  },
+  "Emulation.setUserAgentOverride": {
+    "status": "partial",
+    "notes": "Canonical Navigator/languages/platform, User-Agent and Client Hints request projection. formFactors, full metadata validation and all Client Hints negotiation cases are incomplete.",
+    "tests": [
+      "compatibility/cdp_automation.py#network.user_agent_override",
+      "internal/cdp/automation_commands_test.go#TestDeviceAndUserAgentOverridesShareObservationsAndRemainPageLocal"
+    ]
+  },
+  "Fetch.continueRequest": {
+    "status": "partial",
+    "notes": "Resumes/overrides URL/method/headers/body in same loader; Fetch supports per-request response interception. Auth/complete redirect semantics are unsupported.",
+    "tests": [
+      "compatibility/cdp_automation.py#network.interception_continue_post",
+      "internal/cdp/intercept_test.go#TestInterceptionResponsePatternsAndPerRequestOverride"
+    ]
+  },
+  "Fetch.continueResponse": {
+    "status": "partial",
+    "notes": "Response-stage resume with status/header overrides; responsePhrase/binaryResponseHeaders and complete redirects are unsupported.",
+    "tests": [
+      "internal/cdp/intercept_test.go#TestInterceptionResponsePatternsAndPerRequestOverride"
+    ]
+  },
+  "Fetch.disable": {
+    "status": "implemented",
+    "notes": "Disables interception, resumes/releases pending pauses and response overrides.",
+    "tests": [
+      "internal/cdp/intercept_test.go#TestInterceptionDisableResumesPendingRequestAndResponse",
+      "internal/cdp/intercept_test.go#TestInterceptionCanceledResponseOverrideIsReleased",
+      "internal/cdp/automation_commands_test.go#TestDetachReleasesFetchPauseAndPreservesPageNavigation"
+    ]
+  },
+  "Fetch.enable": {
+    "status": "partial",
+    "notes": "Shared-loader URL/resource/stage pattern matching; explicit empty list pauses nothing. Auth challenges are unsupported.",
+    "tests": [
+      "internal/cdp/intercept_test.go#TestInterceptionPatternsAndExplicitEmptyList",
+      "internal/cdp/intercept_test.go#TestInterceptionRequestStageDefaultDoesNotPauseResponse",
+      "internal/cdp/intercept_test.go#TestInterceptionResponsePatternsAndPerRequestOverride"
+    ]
+  },
+  "Fetch.failRequest": {
+    "status": "partial",
+    "notes": "Aborts paused requests; distinct errorReason mappings are incomplete.",
+    "tests": [
+      "compatibility/cdp_automation.py#network.interception_abort",
+      "internal/cdp/intercept_test.go#TestInterceptionCancellationDoesNotRetainPendingRequests"
+    ]
+  },
+  "Fetch.fulfillRequest": {
+    "status": "partial",
+    "notes": "Fulfills paused loader request with responseCode/headers/base64 body. responsePhrase/binaryResponseHeaders and all cookie/cache/redirect interactions are incomplete.",
+    "tests": [
+      "compatibility/cdp_automation.py#network.interception_fulfill_body",
+      "internal/cdp/intercept_test.go#TestInterceptionResponseBodySharesPausedLoaderBytes"
+    ]
+  },
+  "Fetch.getResponseBody": {
+    "status": "partial",
+    "notes": "Reads shared response-stage paused bytes; stream handles and exact invalid-stage/error text are not implemented.",
+    "tests": [
+      "internal/cdp/intercept_test.go#TestInterceptionResponseBodySharesPausedLoaderBytes"
+    ]
+  },
+  "Fetch.requestPaused": {
+    "status": "partial",
+    "notes": "Shared-loader request/response-stage pauses; auth and some redirect metadata are unsupported.",
+    "tests": [
+      "internal/cdp/intercept_test.go#TestInterceptionResponsePatternsAndPerRequestOverride",
+      "compatibility/cdp_automation.py#network.interception_fulfill_body"
+    ]
+  },
+  "Input.dispatchKeyEvent": {
+    "status": "partial",
+    "notes": "Trusted text-control editing, cancellation, beforeinput/input/change, focus, selection and basic deletion/navigation keys. IME/contenteditable/complex editor commands are unsupported. Cross-world listeners are grouped by world.",
+    "tests": [
+      "internal/browser/input_test.go#TestProtocolKeyboardAndTextMatchChrome152",
+      "internal/browser/input_snapshot_test.go#TestProtocolInputRestoredWorldOwnership",
+      "compatibility/cdp_automation.py#dom.form_input_select_dom_click"
+    ]
+  },
+  "Input.dispatchMouseEvent": {
+    "status": "partial",
+    "notes": "Trusted mouse/pointer/click events and form/link defaults using canonical modeled boxes. Wheel/pen reject. Drag/capture/precise layout/multi-click defaults and full enter/leave semantics are incomplete.",
+    "tests": [
+      "internal/browser/input_test.go#TestProtocolSelectAndContentClickAcrossWorlds",
+      "compatibility/cdp_automation.mjs#input.pointer_click"
+    ]
+  },
+  "Input.insertText": {
+    "status": "partial",
+    "notes": "Trusted text-control editing, cancellation, beforeinput/input/change, focus, selection and basic deletion/navigation keys. IME/contenteditable/complex editor commands are unsupported. Cross-world listeners are grouped by world.",
+    "tests": [
+      "internal/browser/input_test.go#TestProtocolKeyboardAndTextMatchChrome152",
+      "internal/browser/input_snapshot_test.go#TestProtocolInputRestoredWorldOwnership",
+      "compatibility/cdp_automation.py#dom.form_input_select_dom_click"
+    ]
+  },
+  "Input.setIgnoreInputEvents": {
+    "status": "implemented",
+    "notes": "Page-local suppression persists across navigation.",
+    "tests": [
+      "internal/browser/input_test.go#TestProtocolInputSuppressionSurvivesNavigation"
+    ]
+  },
+  "Inspector.disable": {
+    "status": "partial",
+    "notes": "Per-session subscription flags only; no complete corresponding event producers/replay. Performance timeDomain is not implemented.",
+    "tests": [
+      "internal/cdp/server_test.go#TestPyppeteerBrowserAndSessionHandshake"
+    ]
+  },
+  "Inspector.enable": {
+    "status": "partial",
+    "notes": "Per-session subscription flags only; no complete corresponding event producers/replay. Performance timeDomain is not implemented.",
+    "tests": [
+      "internal/cdp/server_test.go#TestPyppeteerBrowserAndSessionHandshake"
+    ]
+  },
+  "Log.disable": {
+    "status": "partial",
+    "notes": "Per-session subscription flags only; no complete corresponding event producers/replay. Performance timeDomain is not implemented.",
+    "tests": [
+      "internal/cdp/server_test.go#TestPyppeteerBrowserAndSessionHandshake"
+    ]
+  },
+  "Log.enable": {
+    "status": "partial",
+    "notes": "Per-session subscription flags only; no complete corresponding event producers/replay. Performance timeDomain is not implemented.",
+    "tests": [
+      "internal/cdp/server_test.go#TestPyppeteerBrowserAndSessionHandshake"
+    ]
+  },
+  "Network.clearBrowserCache": {
+    "status": "partial",
+    "notes": "Clears canonical browser-context cache entries used by Page loaders; full Chrome cache topology/revalidation is not modeled.",
+    "tests": [
+      "internal/network/loader_test.go#TestCacheDisabledIsCanonicalPolicy"
+    ]
+  },
+  "Network.clearBrowserCookies": {
+    "status": "partial",
+    "notes": "Clears selected canonical cookie store; Storage resolves explicit/default BrowserContext.",
+    "tests": [
+      "compatibility/cdp_automation.py#network.cookies",
+      "compatibility/cdp_automation.py#target.browser_context_storage_isolation"
+    ]
+  },
+  "Network.continueInterceptedRequest": {
+    "status": "partial",
+    "notes": "Resumes/overrides URL/method/headers/body in same loader; Fetch supports per-request response interception. Auth/complete redirect semantics are unsupported.",
+    "tests": [
+      "compatibility/cdp_automation.py#network.interception_continue_post",
+      "internal/cdp/intercept_test.go#TestInterceptionResponsePatternsAndPerRequestOverride"
+    ]
+  },
+  "Network.deleteCookies": {
+    "status": "partial",
+    "notes": "Canonical expiry/security/SameSite/partition identity/scoped deletion; explicit Storage context. Opaque partitions reject. priority/sameParty/sourceScheme/sourcePort metadata and all invalid-cookie errors are incomplete.",
+    "tests": [
+      "internal/cdp/cookies_test.go#TestCDPCookiesPreservePartitionAndEffectiveAttributes",
+      "internal/network/cookie_partition_test.go#TestCookiePartitionIdentityAndDeletion",
+      "compatibility/cdp_automation.py#network.cookies"
+    ]
+  },
+  "Network.disable": {
+    "status": "partial",
+    "notes": "Per-session network stream; buffer sizing/durable messages/direct-socket options are not implemented.",
+    "tests": [
+      "internal/cdp/server_test.go#TestCDPProtocolProjectsActualTransportProtocol",
+      "compatibility/cdp_automation.py#network.response_body_extra_headers"
+    ]
+  },
+  "Network.emulateNetworkConditions": {
+    "status": "partial",
+    "notes": "Offline only; latency/throughput/connection/packet-loss/queue options are not implemented.",
+    "tests": []
+  },
+  "Network.enable": {
+    "status": "partial",
+    "notes": "Per-session network stream; buffer sizing/durable messages/direct-socket options are not implemented.",
+    "tests": [
+      "internal/cdp/server_test.go#TestCDPProtocolProjectsActualTransportProtocol",
+      "compatibility/cdp_automation.py#network.response_body_extra_headers"
+    ]
+  },
+  "Network.getAllCookies": {
+    "status": "partial",
+    "notes": "Canonical cookies; Network URL/current-frame filtering and explicit Storage BrowserContext scoping. Detailed source/priority metadata and opaque partitions are incomplete.",
+    "tests": [
+      "internal/cdp/cookies_test.go#TestCDPCookiesPreservePartitionAndEffectiveAttributes",
+      "compatibility/cdp_automation.py#network.cookies",
+      "compatibility/cdp_automation.py#target.browser_context_storage_isolation"
+    ]
+  },
+  "Network.getCookies": {
+    "status": "partial",
+    "notes": "Canonical cookies; Network URL/current-frame filtering and explicit Storage BrowserContext scoping. Detailed source/priority metadata and opaque partitions are incomplete.",
+    "tests": [
+      "internal/cdp/cookies_test.go#TestCDPCookiesPreservePartitionAndEffectiveAttributes",
+      "compatibility/cdp_automation.py#network.cookies",
+      "compatibility/cdp_automation.py#target.browser_context_storage_isolation",
+      "internal/cdp/automation_commands_test.go#TestStorageCookiesUseRequestedBrowserContextAndNetworkURLFilter"
+    ]
+  },
+  "Network.getResponseBody": {
+    "status": "partial",
+    "notes": "Bounded completed loader bytes; invalid UTF-8 uses base64. Streaming/eviction/redirect-body error fidelity is incomplete.",
+    "tests": [
+      "internal/cdp/response_body_test.go#TestResponseBodyPreservesBinaryBytes",
+      "compatibility/cdp_automation.py#network.response_body_extra_headers"
+    ]
+  },
+  "Network.loadingFailed": {
+    "status": "partial",
+    "notes": "Canonical request/response/failure, frame/loader identity and transport protocol. Initiator stacks, redirect-ID reuse, extra-info and complete timing/security/error details are incomplete.",
+    "tests": [
+      "internal/cdp/server_test.go#TestCDPProtocolProjectsActualTransportProtocol",
+      "internal/cdp/server_test.go#TestCDPProjectsChildFrameTreeLifecycleAndExecutionContext",
+      "compatibility/cdp_automation.py#network.response_body_extra_headers"
+    ]
+  },
+  "Network.loadingFinished": {
+    "status": "partial",
+    "notes": "Canonical request/response/failure, frame/loader identity and transport protocol. Initiator stacks, redirect-ID reuse, extra-info and complete timing/security/error details are incomplete.",
+    "tests": [
+      "internal/cdp/server_test.go#TestCDPProtocolProjectsActualTransportProtocol",
+      "internal/cdp/server_test.go#TestCDPProjectsChildFrameTreeLifecycleAndExecutionContext",
+      "compatibility/cdp_automation.py#network.response_body_extra_headers"
+    ]
+  },
+  "Network.requestIntercepted": {
+    "status": "partial",
+    "notes": "Shared-loader request/response-stage pauses; auth and some redirect metadata are unsupported.",
+    "tests": [
+      "internal/cdp/intercept_test.go#TestInterceptionResponsePatternsAndPerRequestOverride",
+      "compatibility/cdp_automation.py#network.interception_fulfill_body"
+    ]
+  },
+  "Network.requestWillBeSent": {
+    "status": "partial",
+    "notes": "Canonical request/response/failure, frame/loader identity and transport protocol. Initiator stacks, redirect-ID reuse, extra-info and complete timing/security/error details are incomplete.",
+    "tests": [
+      "internal/cdp/server_test.go#TestCDPProtocolProjectsActualTransportProtocol",
+      "internal/cdp/server_test.go#TestCDPProjectsChildFrameTreeLifecycleAndExecutionContext",
+      "compatibility/cdp_automation.py#network.response_body_extra_headers"
+    ]
+  },
+  "Network.responseReceived": {
+    "status": "partial",
+    "notes": "Canonical request/response/failure, frame/loader identity and transport protocol. Initiator stacks, redirect-ID reuse, extra-info and complete timing/security/error details are incomplete.",
+    "tests": [
+      "internal/cdp/server_test.go#TestCDPProtocolProjectsActualTransportProtocol",
+      "internal/cdp/server_test.go#TestCDPProjectsChildFrameTreeLifecycleAndExecutionContext",
+      "compatibility/cdp_automation.py#network.response_body_extra_headers"
+    ]
+  },
+  "Network.setCacheDisabled": {
+    "status": "implemented",
+    "notes": "Canonical cache policy used by shared Page resource paths.",
+    "tests": [
+      "internal/network/loader_test.go#TestCacheDisabledIsCanonicalPolicy"
+    ]
+  },
+  "Network.setCookie": {
+    "status": "partial",
+    "notes": "Canonical expiry/security/SameSite/partition identity/scoped deletion; explicit Storage context. Opaque partitions reject. priority/sameParty/sourceScheme/sourcePort metadata and all invalid-cookie errors are incomplete.",
+    "tests": [
+      "internal/cdp/cookies_test.go#TestCDPCookiesPreservePartitionAndEffectiveAttributes",
+      "internal/network/cookie_partition_test.go#TestCookiePartitionIdentityAndDeletion",
+      "compatibility/cdp_automation.py#network.cookies"
+    ]
+  },
+  "Network.setCookies": {
+    "status": "partial",
+    "notes": "Canonical expiry/security/SameSite/partition identity/scoped deletion; explicit Storage context. Opaque partitions reject. priority/sameParty/sourceScheme/sourcePort metadata and all invalid-cookie errors are incomplete.",
+    "tests": [
+      "internal/cdp/cookies_test.go#TestCDPCookiesPreservePartitionAndEffectiveAttributes",
+      "internal/network/cookie_partition_test.go#TestCookiePartitionIdentityAndDeletion",
+      "compatibility/cdp_automation.py#network.cookies"
+    ]
+  },
+  "Network.setExtraHTTPHeaders": {
+    "status": "partial",
+    "notes": "Canonical header overrides for document/subresources. Full forbidden-header validation and ordering nuances are incomplete.",
+    "tests": [
+      "compatibility/cdp_automation.py#network.response_body_extra_headers"
+    ]
+  },
+  "Network.setRequestInterception": {
+    "status": "partial",
+    "notes": "Shared-loader URL/resource/stage pattern matching; explicit empty list pauses nothing. Auth challenges are unsupported.",
+    "tests": [
+      "internal/cdp/intercept_test.go#TestInterceptionPatternsAndExplicitEmptyList",
+      "internal/cdp/intercept_test.go#TestInterceptionRequestStageDefaultDoesNotPauseResponse",
+      "internal/cdp/intercept_test.go#TestInterceptionResponsePatternsAndPerRequestOverride"
+    ]
+  },
+  "Network.setUserAgentOverride": {
+    "status": "partial",
+    "notes": "Canonical Navigator/languages/platform, User-Agent and Client Hints request projection. formFactors, full metadata validation and all Client Hints negotiation cases are incomplete.",
+    "tests": [
+      "compatibility/cdp_automation.py#network.user_agent_override",
+      "internal/cdp/automation_commands_test.go#TestDeviceAndUserAgentOverridesShareObservationsAndRemainPageLocal"
+    ]
+  },
+  "Page.addScriptToEvaluateOnNewDocument": {
+    "status": "partial",
+    "notes": "Stored scripts precede author scripts in default/named isolated worlds. runImmediately/includeCommandLineAPI options are not implemented.",
+    "tests": [
+      "internal/browser/page_test.go#TestV8InitScriptRunsInChildRealmBeforeDocumentScripts",
+      "compatibility/cdp_automation.py#page.init_script"
+    ]
+  },
+  "Page.bringToFront": {
+    "status": "unsupported",
+    "notes": "Acknowledged for clients, but native window activation and foreground-tab switching are not modeled; activation semantics are unsupported.",
+    "tests": []
+  },
+  "Page.close": {
+    "status": "partial",
+    "notes": "Closes Page asynchronously; beforeunload dialogs and handlers are not modeled.",
+    "tests": [
+      "compatibility/cdp_automation.py#page.create"
+    ]
+  },
+  "Page.createIsolatedWorld": {
+    "status": "partial",
+    "notes": "Independent globals/wrappers share canonical DOM, forms/focus and Page event loop. Universal access grants and complete cross-world listener registration order are not implemented.",
+    "tests": [
+      "internal/browser/debugger_worlds_test.go#TestDebuggerIsolatedWorldSharesDOMWithoutSharingGlobals",
+      "internal/browser/input_snapshot_test.go#TestProtocolInputRestoredWorldOwnership"
+    ]
+  },
+  "Page.disable": {
+    "status": "partial",
+    "notes": "Per-session event subscription; experimental options and complete lifecycle vocabulary are not implemented.",
+    "tests": [
+      "internal/cdp/server_test.go#TestCDPTopLegacyLifecycleEventsPrecedeLifecycleEvents"
+    ]
+  },
+  "Page.domContentEventFired": {
+    "status": "partial",
+    "notes": "Top-frame DOMContentLoaded/load ordered before corresponding lifecycle events.",
+    "tests": [
+      "internal/cdp/server_test.go#TestCDPTopLegacyLifecycleEventsPrecedeLifecycleEvents"
+    ]
+  },
+  "Page.enable": {
+    "status": "partial",
+    "notes": "Per-session event subscription; experimental options and complete lifecycle vocabulary are not implemented.",
+    "tests": [
+      "internal/cdp/server_test.go#TestCDPTopLegacyLifecycleEventsPrecedeLifecycleEvents"
+    ]
+  },
+  "Page.frameAttached": {
+    "status": "partial",
+    "notes": "Canonical frame attach/commit/removal; OOPIF and every transient/error-frame state are not modeled.",
+    "tests": [
+      "internal/cdp/server_test.go#TestCDPProjectsChildFrameTreeLifecycleAndExecutionContext",
+      "compatibility/cdp_automation.py#page.child_frame_events_evaluation"
+    ]
+  },
+  "Page.frameDetached": {
+    "status": "partial",
+    "notes": "Canonical frame attach/commit/removal; OOPIF and every transient/error-frame state are not modeled.",
+    "tests": [
+      "internal/cdp/server_test.go#TestCDPProjectsChildFrameTreeLifecycleAndExecutionContext",
+      "compatibility/cdp_automation.py#page.child_frame_events_evaluation"
+    ]
+  },
+  "Page.frameNavigated": {
+    "status": "partial",
+    "notes": "Canonical frame attach/commit/removal; OOPIF and every transient/error-frame state are not modeled.",
+    "tests": [
+      "internal/cdp/server_test.go#TestCDPProjectsChildFrameTreeLifecycleAndExecutionContext",
+      "compatibility/cdp_automation.py#page.child_frame_events_evaluation"
+    ]
+  },
+  "Page.getFrameTree": {
+    "status": "partial",
+    "notes": "Canonical top/child frame hierarchy and loader/realm identity; no OOPIF target graph.",
+    "tests": [
+      "internal/cdp/server_test.go#TestCDPProjectsChildFrameTreeLifecycleAndExecutionContext",
+      "compatibility/cdp_automation.py#page.child_frame_events_evaluation"
+    ]
+  },
+  "Page.getLayoutMetrics": {
+    "status": "partial",
+    "notes": "Canonical viewport/scroll/visual viewport and modeled document bounds. No full layout; legacy device-pixel/CSS differences and multi-fragment geometry are incomplete.",
+    "tests": [
+      "compatibility/cdp_automation.mjs#input.pointer_click",
+      "internal/browser/input_test.go#TestDefaultControlGeometryMatchesChrome152"
+    ]
+  },
+  "Page.getNavigationHistory": {
+    "status": "partial",
+    "notes": "Canonical joint Page history and traversal. Full UI/BFCache projection and all transient history states are not verified.",
+    "tests": [
+      "compatibility/cdp_automation.py#navigation.history",
+      "internal/browser/history_test.go#TestFrameHistoryIsJointAndDocumentScoped"
+    ]
+  },
+  "Page.lifecycleEvent": {
+    "status": "partial",
+    "notes": "Frame init/commit/DOMContentLoaded/load and top-frame networkIdle/networkAlmostIdle after 500ms quiet loader activity. Not all lifecycle vocabulary/timestamps.",
+    "tests": [
+      "internal/cdp/server_test.go#TestCDPTopLegacyLifecycleEventsPrecedeLifecycleEvents",
+      "internal/cdp/blank_frame_test.go#TestCDPInitialBlankFramesCompleteLifecycle",
+      "compatibility/cdp_automation.py#navigation.networkidle0",
+      "internal/cdp/automation_commands_test.go#TestNetworkIdleWaitsForQuietWindowAfterLoad"
+    ]
+  },
+  "Page.loadEventFired": {
+    "status": "partial",
+    "notes": "Top-frame DOMContentLoaded/load ordered before corresponding lifecycle events.",
+    "tests": [
+      "internal/cdp/server_test.go#TestCDPTopLegacyLifecycleEventsPrecedeLifecycleEvents"
+    ]
+  },
+  "Page.navigate": {
+    "status": "partial",
+    "notes": "Asynchronous top-frame navigation owned by Page, surviving debugger detachment. frameId/referrer/transition/referrerPolicy/download options and full synchronous navigation-error results are not implemented.",
+    "tests": [
+      "internal/cdp/server_test.go#TestNavigateOverCDP",
+      "internal/cdp/server_test.go#TestIndependentPageCommandsDuringNavigation",
+      "compatibility/cdp_automation.py#navigation.goto",
+      "internal/cdp/automation_commands_test.go#TestDetachReleasesFetchPauseAndPreservesPageNavigation"
+    ]
+  },
+  "Page.navigateToHistoryEntry": {
+    "status": "partial",
+    "notes": "Canonical joint Page history and traversal. Full UI/BFCache projection and all transient history states are not verified.",
+    "tests": [
+      "compatibility/cdp_automation.py#navigation.history",
+      "internal/browser/history_test.go#TestFrameHistoryIsJointAndDocumentScoped"
+    ]
+  },
+  "Page.navigatedWithinDocument": {
+    "status": "partial",
+    "notes": "Same-document history/hash notification; full navigation-type and ordering fidelity is not verified.",
+    "tests": [
+      "compatibility/cdp_automation.py#navigation.history"
+    ]
+  },
+  "Page.reload": {
+    "status": "partial",
+    "notes": "Reloads canonical current document/history; ignoreCache and scriptToEvaluateOnLoad options are not implemented.",
+    "tests": [
+      "compatibility/cdp_automation.py#navigation.reload"
+    ]
+  },
+  "Page.removeScriptToEvaluateOnNewDocument": {
+    "status": "implemented",
+    "notes": "Removes a stored future-document script; unknown identifiers fail.",
+    "tests": [
+      "compatibility/cdp_automation.py#page.init_script_removal"
+    ]
+  },
+  "Page.setBypassCSP": {
+    "status": "partial",
+    "notes": "Changes canonical Page bypass policy used by supported script/resource/content-handler checks; full Chrome CSP/reporting is outside the implementation.",
+    "tests": [
+      "internal/browser/page_test.go#TestCSPUsesOnePolicyForInlineAndExternalScripts"
+    ]
+  },
+  "Page.setDocumentContent": {
+    "status": "partial",
+    "notes": "Writes selected frame document through normal parser/lifecycle; complete error/transition ordering is not verified.",
+    "tests": [
+      "compatibility/cdp_automation.py#page.set_content"
+    ]
+  },
+  "Page.setLifecycleEventsEnabled": {
+    "status": "partial",
+    "notes": "Per-session opt-in with current commit/load replay and shared-loader 500ms idle windows; not every Chrome lifecycle phase/timestamp is modeled.",
+    "tests": [
+      "internal/cdp/server_test.go#TestCDPTopLegacyLifecycleEventsPrecedeLifecycleEvents",
+      "compatibility/cdp_automation.py#navigation.networkidle0",
+      "internal/cdp/automation_commands_test.go#TestNetworkIdleWaitsForQuietWindowAfterLoad"
+    ]
+  },
+  "Page.stopLoading": {
+    "status": "partial",
+    "notes": "Cancels active Page navigation/execution while retaining committed DOM.",
+    "tests": [
+      "internal/cdp/server_test.go#TestStopLoadingCancelsNavigationAndKeepsCommittedDOM"
+    ]
+  },
+  "Performance.disable": {
+    "status": "partial",
+    "notes": "Per-session subscription flags only; no complete corresponding event producers/replay. Performance timeDomain is not implemented.",
+    "tests": [
+      "internal/cdp/server_test.go#TestPyppeteerBrowserAndSessionHandshake"
+    ]
+  },
+  "Performance.enable": {
+    "status": "partial",
+    "notes": "Per-session subscription flags only; no complete corresponding event producers/replay. Performance timeDomain is not implemented.",
+    "tests": [
+      "internal/cdp/server_test.go#TestPyppeteerBrowserAndSessionHandshake"
+    ]
+  },
+  "Performance.getMetrics": {
+    "status": "partial",
+    "notes": "Timestamp only; Chrome metric set, counters, navigation timings and selected time domain are not implemented.",
+    "tests": []
+  },
+  "Runtime.addBinding": {
+    "status": "partial",
+    "notes": "Per-session payload subscriptions, current-context/future-world scoping, navigation persistence. Removal unsubscribes without removing the page callable.",
+    "tests": [
+      "internal/browser/debugger_bindings_test.go#TestDebuggerBindingsPersistAcrossDocumentsAndRemoveOnlySubscription",
+      "internal/browser/debugger_bindings_test.go#TestDebuggerBindingExecutionContextNameMatchesFutureWorld",
+      "compatibility/cdp_automation.py#runtime.exposed_function_navigation"
+    ]
+  },
+  "Runtime.awaitPromise": {
+    "status": "partial",
+    "notes": "Promise waits yield the Page turn for commands/timers/input. Object previews and deep serialization are unsupported.",
+    "tests": [
+      "internal/browser/debugger_test.go#TestDebuggerReturnByValueAndAwait",
+      "internal/cdp/runtime_test.go#TestCDPAwaitPromiseAllowsSameSessionResolverAndMultipleWaiters"
+    ]
+  },
+  "Runtime.bindingCalled": {
+    "status": "partial",
+    "notes": "Subscribed string payload/name/context from realm-local binding callables.",
+    "tests": [
+      "internal/browser/debugger_bindings_test.go#TestDebuggerBindingsPersistAcrossDocumentsAndRemoveOnlySubscription",
+      "compatibility/cdp_automation.py#runtime.exposed_function_navigation"
+    ]
+  },
+  "Runtime.callFunctionOn": {
+    "status": "partial",
+    "notes": "Realm/session-owned handles, by-value JSON, promises, unserializable arguments, exceptions and context/uniqueContextId selection. Deep serialization rejects. Previews, side-effect restrictions, REPL/CLI mode, userGesture and complete debugger options are not implemented.",
+    "tests": [
+      "internal/browser/debugger_test.go#TestDebuggerRemoteValuesMatchChrome152",
+      "internal/browser/debugger_test.go#TestDebuggerPreservesHandlesAndDescriptorSemantics",
+      "internal/cdp/runtime_test.go#TestCDPAwaitPromiseAllowsSameSessionResolverAndMultipleWaiters"
+    ]
+  },
+  "Runtime.consoleAPICalled": {
+    "status": "partial",
+    "notes": "Live remote-object arguments in emitting context; no historical replay or full async stacks.",
+    "tests": [
+      "internal/cdp/runtime_test.go#TestCDPConsoleArgumentsHaveObjectHandles",
+      "compatibility/cdp_automation.py#runtime.console_arguments"
+    ]
+  },
+  "Runtime.disable": {
+    "status": "partial",
+    "notes": "Live context/event subscription across default/isolated worlds; no historical console replay.",
+    "tests": [
+      "internal/cdp/server_test.go#TestCDPProjectsChildFrameTreeLifecycleAndExecutionContext",
+      "compatibility/cdp_automation.py#page.child_frame_events_evaluation"
+    ]
+  },
+  "Runtime.discardConsoleEntries": {
+    "status": "partial",
+    "notes": "Releases console object group; no retained message buffer or replay model.",
+    "tests": [
+      "internal/cdp/runtime_test.go#TestCDPConsoleArgumentsHaveObjectHandles"
+    ]
+  },
+  "Runtime.enable": {
+    "status": "partial",
+    "notes": "Live context/event subscription across default/isolated worlds; no historical console replay.",
+    "tests": [
+      "internal/cdp/server_test.go#TestCDPProjectsChildFrameTreeLifecycleAndExecutionContext",
+      "compatibility/cdp_automation.py#page.child_frame_events_evaluation"
+    ]
+  },
+  "Runtime.evaluate": {
+    "status": "partial",
+    "notes": "Realm/session-owned handles, by-value JSON, promises, unserializable arguments, exceptions and context/uniqueContextId selection. Deep serialization rejects. Previews, side-effect restrictions, REPL/CLI mode, userGesture and complete debugger options are not implemented.",
+    "tests": [
+      "internal/browser/debugger_test.go#TestDebuggerRemoteValuesMatchChrome152",
+      "internal/browser/debugger_test.go#TestDebuggerPreservesHandlesAndDescriptorSemantics",
+      "internal/cdp/runtime_test.go#TestCDPAwaitPromiseAllowsSameSessionResolverAndMultipleWaiters"
+    ]
+  },
+  "Runtime.exceptionThrown": {
+    "status": "partial",
+    "notes": "Asynchronous page errors in current context. Full exception object/stack/location fidelity and every task/promise source are incomplete.",
+    "tests": [
+      "compatibility/cdp_automation.py#runtime.pageerror"
+    ]
+  },
+  "Runtime.executionContextCreated": {
+    "status": "partial",
+    "notes": "Default/isolated frame context creation/teardown. Complete ordering/unique-id fields across all transitions are not verified.",
+    "tests": [
+      "internal/cdp/server_test.go#TestCDPProjectsChildFrameTreeLifecycleAndExecutionContext",
+      "internal/browser/debugger_worlds_test.go#TestDebuggerIsolatedWorldSharesDOMWithoutSharingGlobals"
+    ]
+  },
+  "Runtime.executionContextDestroyed": {
+    "status": "partial",
+    "notes": "Default/isolated frame context creation/teardown. Complete ordering/unique-id fields across all transitions are not verified.",
+    "tests": [
+      "internal/cdp/server_test.go#TestCDPProjectsChildFrameTreeLifecycleAndExecutionContext",
+      "internal/browser/debugger_worlds_test.go#TestDebuggerIsolatedWorldSharesDOMWithoutSharingGlobals"
+    ]
+  },
+  "Runtime.executionContextsCleared": {
+    "status": "partial",
+    "notes": "Default/isolated frame context creation/teardown. Complete ordering/unique-id fields across all transitions are not verified.",
+    "tests": [
+      "internal/cdp/server_test.go#TestCDPProjectsChildFrameTreeLifecycleAndExecutionContext",
+      "internal/browser/debugger_worlds_test.go#TestDebuggerIsolatedWorldSharesDOMWithoutSharingGlobals"
+    ]
+  },
+  "Runtime.getProperties": {
+    "status": "partial",
+    "notes": "Own/inherited descriptors, accessor filtering and live values without invoking getters. V8 private/internal slots and previews are incomplete.",
+    "tests": [
+      "internal/browser/debugger_test.go#TestDebuggerPreservesHandlesAndDescriptorSemantics",
+      "compatibility/cdp_automation.py#runtime.handles_properties"
+    ]
+  },
+  "Runtime.releaseObject": {
+    "status": "implemented",
+    "notes": "Releases session-owned handles/groups while preserving page object identity and state.",
+    "tests": [
+      "internal/browser/debugger_test.go#TestDebuggerPreservesHandlesAndDescriptorSemantics",
+      "internal/browser/debugger_test.go#TestDebuggerCanonicalNodeAndSessionIsolation"
+    ]
+  },
+  "Runtime.releaseObjectGroup": {
+    "status": "implemented",
+    "notes": "Releases session-owned handles/groups while preserving page object identity and state.",
+    "tests": [
+      "internal/browser/debugger_test.go#TestDebuggerPreservesHandlesAndDescriptorSemantics",
+      "internal/browser/debugger_test.go#TestDebuggerCanonicalNodeAndSessionIsolation"
+    ]
+  },
+  "Runtime.removeBinding": {
+    "status": "partial",
+    "notes": "Per-session payload subscriptions, current-context/future-world scoping, navigation persistence. Removal unsubscribes without removing the page callable.",
+    "tests": [
+      "internal/browser/debugger_bindings_test.go#TestDebuggerBindingsPersistAcrossDocumentsAndRemoveOnlySubscription",
+      "internal/browser/debugger_bindings_test.go#TestDebuggerBindingExecutionContextNameMatchesFutureWorld",
+      "compatibility/cdp_automation.py#runtime.exposed_function_navigation"
+    ]
+  },
+  "Runtime.runIfWaitingForDebugger": {
+    "status": "partial",
+    "notes": "Resumes navigation queued by start-paused Target attachment; no Debugger-domain breakpoints.",
+    "tests": [
+      "compatibility/cdp_automation.mjs#page.create"
+    ]
+  },
+  "Security.disable": {
+    "status": "partial",
+    "notes": "Per-session subscription flags only; no complete corresponding event producers/replay. Performance timeDomain is not implemented.",
+    "tests": [
+      "internal/cdp/server_test.go#TestPyppeteerBrowserAndSessionHandshake"
+    ]
+  },
+  "Security.enable": {
+    "status": "partial",
+    "notes": "Per-session subscription flags only; no complete corresponding event producers/replay. Performance timeDomain is not implemented.",
+    "tests": [
+      "internal/cdp/server_test.go#TestPyppeteerBrowserAndSessionHandshake"
+    ]
+  },
+  "Security.setIgnoreCertificateErrors": {
+    "status": "partial",
+    "notes": "Actual certificate policy: browser-root subscription covers current/future Pages, page subscription affects its target; active requests combine with OR and detach restores remaining policy. Verified/unverified transport pools are separate; unknown injected transports reject enabling.",
+    "tests": [
+      "internal/network/certificate_policy_test.go#TestCertificateOverrideDoesNotChangeOtherLoadersOrReuseUnverifiedConnections"
+    ]
+  },
+  "Storage.clearCookies": {
+    "status": "partial",
+    "notes": "Clears selected canonical cookie store; Storage resolves explicit/default BrowserContext.",
+    "tests": [
+      "compatibility/cdp_automation.py#network.cookies",
+      "compatibility/cdp_automation.py#target.browser_context_storage_isolation",
+      "internal/cdp/automation_commands_test.go#TestStorageCookiesUseRequestedBrowserContextAndNetworkURLFilter"
+    ]
+  },
+  "Storage.getCookies": {
+    "status": "partial",
+    "notes": "Canonical cookies; Network URL/current-frame filtering and explicit Storage BrowserContext scoping. Detailed source/priority metadata and opaque partitions are incomplete.",
+    "tests": [
+      "internal/cdp/cookies_test.go#TestCDPCookiesPreservePartitionAndEffectiveAttributes",
+      "compatibility/cdp_automation.py#network.cookies",
+      "compatibility/cdp_automation.py#target.browser_context_storage_isolation",
+      "internal/cdp/automation_commands_test.go#TestStorageCookiesUseRequestedBrowserContextAndNetworkURLFilter"
+    ]
+  },
+  "Storage.setCookies": {
+    "status": "partial",
+    "notes": "Canonical expiry/security/SameSite/partition identity/scoped deletion; explicit Storage context. Opaque partitions reject. priority/sameParty/sourceScheme/sourcePort metadata and all invalid-cookie errors are incomplete.",
+    "tests": [
+      "internal/cdp/cookies_test.go#TestCDPCookiesPreservePartitionAndEffectiveAttributes",
+      "internal/network/cookie_partition_test.go#TestCookiePartitionIdentityAndDeletion",
+      "compatibility/cdp_automation.py#network.cookies",
+      "internal/cdp/automation_commands_test.go#TestStorageCookiesUseRequestedBrowserContextAndNetworkURLFilter"
+    ]
+  },
+  "Target.activateTarget": {
+    "status": "unsupported",
+    "notes": "Acknowledged for clients, but native window activation and foreground-tab switching are not modeled; activation semantics are unsupported.",
+    "tests": []
+  },
+  "Target.attachToBrowserTarget": {
+    "status": "partial",
+    "notes": "Independent sessions, object registries and request ID spaces for page/tab/browser targets.",
+    "tests": [
+      "internal/cdp/transport_test.go#TestFlattenedSessionsKeepIndependentPagesAndDuplicateCommandIDs",
+      "internal/cdp/server_test.go#TestPyppeteerBrowserAndSessionHandshake"
+    ]
+  },
+  "Target.attachToTarget": {
+    "status": "partial",
+    "notes": "Independent sessions, object registries and request ID spaces for page/tab/browser targets.",
+    "tests": [
+      "internal/cdp/transport_test.go#TestFlattenedSessionsKeepIndependentPagesAndDuplicateCommandIDs",
+      "internal/cdp/server_test.go#TestPyppeteerBrowserAndSessionHandshake"
+    ]
+  },
+  "Target.attachedToTarget": {
+    "status": "partial",
+    "notes": "Flattened/nested transport lifecycle and messages with independent IDs; no worker/OOPIF graph.",
+    "tests": [
+      "internal/cdp/transport_test.go#TestFlattenedSessionsKeepIndependentPagesAndDuplicateCommandIDs",
+      "internal/cdp/server_test.go#TestPyppeteerBrowserAndSessionHandshake"
+    ]
+  },
+  "Target.closeTarget": {
+    "status": "implemented",
+    "notes": "Closes a live target and cancels its tasks including synchronous JavaScript.",
+    "tests": [
+      "internal/cdp/snapshot_boundary_test.go#TestCloseTargetCancelsBusyPumpBeforeLock",
+      "internal/cdp/snapshot_boundary_test.go#TestCloseTargetCancelsUnboundedParserScript"
+    ]
+  },
+  "Target.createBrowserContext": {
+    "status": "partial",
+    "notes": "Independent storage/cookies/Pages and disposeOnDetach. Proxy settings and universal-network-access origins reject.",
+    "tests": [
+      "internal/cdp/transport_test.go#TestBrowserContextsOwnPagesAndAreDisposed",
+      "compatibility/cdp_automation.py#target.browser_context_storage_isolation"
+    ]
+  },
+  "Target.createTarget": {
+    "status": "partial",
+    "notes": "Independent Page in selected context with scheduled URL navigation. Window/position/background/hidden/begin-frame options are not modeled.",
+    "tests": [
+      "internal/cdp/server_test.go#TestTargetCreateTargetCreatesIndependentPage",
+      "compatibility/cdp_automation.mjs#target.parallel_pages_isolation"
+    ]
+  },
+  "Target.detachFromTarget": {
+    "status": "partial",
+    "notes": "Session-ID routing and teardown; legacy targetId-only addressing is not supported.",
+    "tests": [
+      "internal/cdp/server_test.go#TestPyppeteerBrowserAndSessionHandshake",
+      "internal/cdp/intercept_test.go#TestInterceptionDetachResumesRequest",
+      "internal/cdp/automation_commands_test.go#TestDetachReleasesFetchPauseAndPreservesPageNavigation"
+    ]
+  },
+  "Target.detachedFromTarget": {
+    "status": "partial",
+    "notes": "Flattened/nested transport lifecycle and messages with independent IDs; no worker/OOPIF graph.",
+    "tests": [
+      "internal/cdp/transport_test.go#TestFlattenedSessionsKeepIndependentPagesAndDuplicateCommandIDs",
+      "internal/cdp/server_test.go#TestPyppeteerBrowserAndSessionHandshake"
+    ]
+  },
+  "Target.disposeBrowserContext": {
+    "status": "implemented",
+    "notes": "Disposes the named context and all its Pages.",
+    "tests": [
+      "internal/cdp/transport_test.go#TestBrowserContextsOwnPagesAndAreDisposed"
+    ]
+  },
+  "Target.getBrowserContexts": {
+    "status": "implemented",
+    "notes": "Lists non-default contexts owned by this browser.",
+    "tests": [
+      "internal/cdp/transport_test.go#TestBrowserContextsOwnPagesAndAreDisposed"
+    ]
+  },
+  "Target.getTargetInfo": {
+    "status": "partial",
+    "notes": "Live page/tab target projection and type filtering; workers/service-workers/prerender targets are absent.",
+    "tests": [
+      "internal/cdp/server_test.go#TestTargetCreateTargetCreatesIndependentPage",
+      "compatibility/cdp_automation.mjs#target.parallel_pages_isolation"
+    ]
+  },
+  "Target.getTargets": {
+    "status": "partial",
+    "notes": "Live page/tab target projection and type filtering; workers/service-workers/prerender targets are absent.",
+    "tests": [
+      "internal/cdp/server_test.go#TestTargetCreateTargetCreatesIndependentPage",
+      "compatibility/cdp_automation.mjs#target.parallel_pages_isolation"
+    ]
+  },
+  "Target.receivedMessageFromTarget": {
+    "status": "partial",
+    "notes": "Flattened/nested transport lifecycle and messages with independent IDs; no worker/OOPIF graph.",
+    "tests": [
+      "internal/cdp/transport_test.go#TestFlattenedSessionsKeepIndependentPagesAndDuplicateCommandIDs",
+      "internal/cdp/server_test.go#TestPyppeteerBrowserAndSessionHandshake"
+    ]
+  },
+  "Target.sendMessageToTarget": {
+    "status": "partial",
+    "notes": "Session-ID routing and teardown; legacy targetId-only addressing is not supported.",
+    "tests": [
+      "internal/cdp/server_test.go#TestPyppeteerBrowserAndSessionHandshake",
+      "internal/cdp/intercept_test.go#TestInterceptionDetachResumesRequest"
+    ]
+  },
+  "Target.setAutoAttach": {
+    "status": "partial",
+    "notes": "Nested/flattened browser-tab-page attachment, type filters and start-paused navigation. No worker/OOPIF/prerender graph.",
+    "tests": [
+      "internal/cdp/transport_test.go#TestFlattenedSessionsKeepIndependentPagesAndDuplicateCommandIDs",
+      "compatibility/cdp_automation.mjs#page.create"
+    ]
+  },
+  "Target.setDiscoverTargets": {
+    "status": "partial",
+    "notes": "Per-session discovery/filter state and live page/tab create/change/destroy events; no worker targets.",
+    "tests": [
+      "internal/cdp/server_test.go#TestPyppeteerBrowserAndSessionHandshake",
+      "compatibility/cdp_automation.py#page.create"
+    ]
+  },
+  "Target.targetCreated": {
+    "status": "partial",
+    "notes": "Live page/tab creation, URL changes and teardown. Worker/prerender targets and complete target metadata are not modeled.",
+    "tests": [
+      "compatibility/cdp_automation.mjs#target.parallel_pages_isolation",
+      "internal/cdp/server_test.go#TestTargetCreateTargetCreatesIndependentPage"
+    ]
+  },
+  "Target.targetDestroyed": {
+    "status": "partial",
+    "notes": "Live page/tab creation, URL changes and teardown. Worker/prerender targets and complete target metadata are not modeled.",
+    "tests": [
+      "compatibility/cdp_automation.mjs#target.parallel_pages_isolation",
+      "internal/cdp/server_test.go#TestTargetCreateTargetCreatesIndependentPage"
+    ]
+  },
+  "Target.targetInfoChanged": {
+    "status": "partial",
+    "notes": "Live page/tab creation, URL changes and teardown. Worker/prerender targets and complete target metadata are not modeled.",
+    "tests": [
+      "compatibility/cdp_automation.mjs#target.parallel_pages_isolation",
+      "internal/cdp/server_test.go#TestTargetCreateTargetCreatesIndependentPage"
+    ]
+  },
+  "WebMCP.disable": {
+    "status": "unsupported",
+    "notes": "Client subscription state only; no Audits issue engine or WebMCP model-context backend. Semantic support is not claimed.",
+    "tests": [
+      "compatibility/cdp_automation.mjs#browser.connect"
+    ]
+  },
+  "WebMCP.enable": {
+    "status": "unsupported",
+    "notes": "Client subscription state only; no Audits issue engine or WebMCP model-context backend. Semantic support is not claimed.",
+    "tests": [
+      "compatibility/cdp_automation.mjs#browser.connect"
+    ]
+  }
+}
