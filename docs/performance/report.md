@@ -1535,3 +1535,23 @@ No workload was excluded or retried into a pass.
 
 [Complete receipts](../compatibility/native-function-finalization-20260911/gates.json)
 and [semantic scope and validation](../compatibility/native-function-finalization-2026-09-11.md).
+
+
+## Callable metadata - 2026-09-11
+
+Clean 706fc15 and the metadata-normalization build both completed the full
+monitored fast gate, including mandatory correctness, 10/25-Page concurrency
+and teardown memory. No native dump or workload exclusion occurred.
+
+Warm execution/completion before / after (ms): DOM 443.43/476.26 /
+450.52/506.93, static 2.96/31.10 / 2.74/33.02, React 48.95/83.16 / 50.90/81.79.
+Throughput is 73.01 / 64.62 sessions/s at 10 Pages and 69.98 / 62.49 at 25.
+Static private memory after recovery is 150.80 / 159.03 MiB; React 170.87 /
+169.02 MiB. Throughput/latency remain a performance concern, with profiling
+pending; no neutrality or whole-delta attribution is claimed. The full browser
+suite passed in 515.399 s versus 435.027 s in the preceding package, which is
+retained as an uncontrolled suite-timing observation. Targeted browser race
+passed; the separate prior Goja deadline issue is not closed by that filter.
+
+[Complete receipts](../compatibility/callable-metadata-20260911/gates.json) and
+[semantic coverage and limits](../compatibility/callable-metadata-2026-09-11.md).

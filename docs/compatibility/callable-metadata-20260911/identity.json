@@ -1,0 +1,22 @@
+{
+  "revision": "706fc1508ce51205d4f7a8ce80dc2350922f5689",
+  "dirty": [
+    " M internal/webapi/surface.go",
+    " M internal/webapi/surface.js",
+    "?? docs/compatibility/callable-metadata-2026-09-11.md",
+    "?? internal/browser/callable_metadata_test.go",
+    "?? internal/browser/testdata/callable_metadata_chrome152.json",
+    "?? internal/browser/testdata/callable_metadata_oracle.js"
+  ],
+  "binary": ".build/mimic-callable-metadata-final.exe",
+  "binarySHA256": "d8c71abfb225c9f11fc75ea7b3af57312cb406cce4bca722ea31f709dc9ff454",
+  "sourceHashes": {
+    "internal/webapi/surface.js": "7b4f53894693ed2bf21bf425e0f7dbf9f458b37e26220264e83db0c724abda9c",
+    "internal/webapi/surface.go": "189573628f01a540408ea7045ea6df9af64881a7a44a0e85129a131cb96b0695",
+    "internal/browser/testdata/callable_metadata_oracle.js": "ba6007f55983c34c7e366fa0b0cefedc073ffd524d86cb3f2f75b51ced8a78fc",
+    "docs/compatibility/cleanup-20260911/fixed-probes.json": "0a342f61b8447ce408d1a6686de295d41e317117dcc41828a9b10be342b37209"
+  },
+  "servedBinarySHA256": "d8c71abfb225c9f11fc75ea7b3af57312cb406cce4bca722ea31f709dc9ff454",
+  "baselineServerBinarySHA256": "1aafade462b4e03d56fa9b271c03fd22f9c81283942e9860eb42a3e78a6f91b4",
+  "baselineNote": "server runtime source equals 706fc15; gate baseline freshly builds clean 706fc15"
+}

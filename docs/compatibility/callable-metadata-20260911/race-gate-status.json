@@ -1,0 +1,39 @@
+[
+  {
+    "name": "targeted-race",
+    "command": [
+      "go",
+      "test",
+      "-race",
+      "./internal/browser",
+      "./internal/webapi",
+      "-run",
+      "TestCallableMetadata|TestNativeFunctionFinalization|TestFetch|TestFrameIterator|TestWindowReflection|TestRealmPropertyMutation",
+      "-count=1"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 0
+  },
+  {
+    "name": "callable-metadata-gate-before-20260911",
+    "command": [
+      "C:\\Users\\moreveal\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      ".build/p0_full_gate.py",
+      "callable-metadata-gate-before-20260911",
+      "E:\\GitHub\\mimic\\.build\\callable-metadata-baseline"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 0
+  },
+  {
+    "name": "callable-metadata-gate-after-20260911",
+    "command": [
+      "C:\\Users\\moreveal\\AppData\\Local\\Programs\\Python\\Python314\\python.exe",
+      ".build/p0_full_gate.py",
+      "callable-metadata-gate-after-20260911",
+      "E:\\GitHub\\mimic"
+    ],
+    "cwd": "E:\\GitHub\\mimic",
+    "exitCode": 0
+  }
+]
