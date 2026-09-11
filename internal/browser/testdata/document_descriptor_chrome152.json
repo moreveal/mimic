@@ -1,0 +1,139 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "fixtureOrigin": "http://127.0.0.1:9599",
+  "result": {
+    "result": {
+      "type": "object",
+      "value": {
+        "prototype": {
+          "firstChild": null,
+          "location": null,
+          "textContent": null
+        },
+        "locations": {
+          "active": {
+            "get": "function",
+            "set": "function",
+            "enumerable": true,
+            "configurable": false
+          },
+          "inert": {
+            "get": "function",
+            "set": "function",
+            "enumerable": true,
+            "configurable": false
+          },
+          "sameGetter": true
+        },
+        "borrowed": {
+          "inertLocation": {
+            "value": true
+          },
+          "invalidLocation": {
+            "exception": "TypeError"
+          },
+          "nodeText": {
+            "value": true
+          },
+          "inertNodeText": {
+            "value": true
+          },
+          "nodeFirst": {
+            "value": true
+          },
+          "foreignLocation": {
+            "value": true
+          }
+        },
+        "setters": {
+          "invalid": {
+            "outcome": {
+              "exception": "TypeError"
+            },
+            "calls": []
+          },
+          "inert": {
+            "outcome": {
+              "exception": "TypeError"
+            },
+            "calls": []
+          },
+          "active": {
+            "outcome": {
+              "value": true
+            },
+            "calls": [
+              "convert"
+            ]
+          }
+        },
+        "nodeConversions": {
+          "invalid": {
+            "outcome": {
+              "exception": "TypeError"
+            },
+            "calls": [],
+            "symbol": {
+              "exception": "TypeError"
+            }
+          },
+          "inert": {
+            "outcome": {
+              "value": null
+            },
+            "calls": [
+              "convert"
+            ],
+            "symbol": {
+              "exception": "TypeError"
+            }
+          },
+          "doctype": {
+            "outcome": {
+              "value": null
+            },
+            "calls": [
+              "convert"
+            ],
+            "symbol": {
+              "exception": "TypeError"
+            }
+          }
+        },
+        "firstChildPrivateState": true,
+        "afterRemoval": {
+          "borrowedLocationNull": true,
+          "locationNull": true,
+          "defaultViewNull": true
+        }
+      }
+    }
+  }
+}

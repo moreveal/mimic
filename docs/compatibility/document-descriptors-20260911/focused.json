@@ -1,0 +1,717 @@
+{
+  "sha256": "7e87fec635d27aabf4a90ecf25e8cf9b2b10edcb4082015665e139f788f74c10",
+  "chrome": {
+    "prototype": {
+      "firstChild": null,
+      "location": null,
+      "textContent": null
+    },
+    "locations": {
+      "active": {
+        "get": "function",
+        "set": "function",
+        "enumerable": true,
+        "configurable": false
+      },
+      "inert": {
+        "get": "function",
+        "set": "function",
+        "enumerable": true,
+        "configurable": false
+      },
+      "sameGetter": true
+    },
+    "borrowed": {
+      "inertLocation": {
+        "value": true
+      },
+      "invalidLocation": {
+        "exception": "TypeError"
+      },
+      "nodeText": {
+        "value": true
+      },
+      "inertNodeText": {
+        "value": true
+      },
+      "nodeFirst": {
+        "value": true
+      },
+      "foreignLocation": {
+        "value": true
+      }
+    },
+    "setters": {
+      "invalid": {
+        "outcome": {
+          "exception": "TypeError"
+        },
+        "calls": []
+      },
+      "inert": {
+        "outcome": {
+          "exception": "TypeError"
+        },
+        "calls": []
+      },
+      "active": {
+        "outcome": {
+          "value": true
+        },
+        "calls": [
+          "convert"
+        ]
+      }
+    },
+    "nodeConversions": {
+      "invalid": {
+        "outcome": {
+          "exception": "TypeError"
+        },
+        "calls": [],
+        "symbol": {
+          "exception": "TypeError"
+        }
+      },
+      "inert": {
+        "outcome": {
+          "value": null
+        },
+        "calls": [
+          "convert"
+        ],
+        "symbol": {
+          "exception": "TypeError"
+        }
+      },
+      "doctype": {
+        "outcome": {
+          "value": null
+        },
+        "calls": [
+          "convert"
+        ],
+        "symbol": {
+          "exception": "TypeError"
+        }
+      }
+    },
+    "firstChildPrivateState": true,
+    "afterRemoval": {
+      "borrowedLocationNull": true,
+      "locationNull": true,
+      "defaultViewNull": true
+    }
+  },
+  "mimic": {
+    "afterRemoval": {
+      "borrowedLocationNull": false,
+      "defaultViewNull": true,
+      "locationNull": false
+    },
+    "borrowed": {
+      "foreignLocation": {
+        "value": false
+      },
+      "inertLocation": {
+        "value": false
+      },
+      "inertNodeText": {
+        "value": false
+      },
+      "invalidLocation": {
+        "value": {
+          "ancestorOrigins": {},
+          "hash": "",
+          "host": "127.0.0.1:19444",
+          "hostname": "127.0.0.1",
+          "href": "http://127.0.0.1:19444/",
+          "origin": "http://127.0.0.1:19444",
+          "pathname": "/",
+          "port": "19444",
+          "protocol": "http:",
+          "search": ""
+        }
+      },
+      "nodeFirst": {
+        "value": false
+      },
+      "nodeText": {
+        "exception": "TypeError"
+      }
+    },
+    "firstChildPrivateState": false,
+    "locations": {
+      "active": {
+        "configurable": false,
+        "enumerable": true,
+        "get": "function",
+        "set": "undefined"
+      },
+      "inert": null,
+      "sameGetter": false
+    },
+    "nodeConversions": {
+      "doctype": {
+        "calls": [
+          "convert"
+        ],
+        "outcome": {
+          "value": "ignored"
+        },
+        "symbol": {
+          "value": true
+        }
+      },
+      "inert": {
+        "calls": [
+          "convert"
+        ],
+        "outcome": {
+          "value": "ignored"
+        },
+        "symbol": {
+          "value": true
+        }
+      },
+      "invalid": {
+        "calls": [],
+        "outcome": {
+          "exception": "TypeError"
+        },
+        "symbol": {
+          "exception": "TypeError"
+        }
+      }
+    },
+    "prototype": {
+      "firstChild": {
+        "configurable": true,
+        "enumerable": true,
+        "get": "function",
+        "set": "undefined"
+      },
+      "location": {
+        "configurable": true,
+        "enumerable": true,
+        "get": "function",
+        "set": "undefined"
+      },
+      "textContent": {
+        "configurable": true,
+        "enumerable": true,
+        "get": "function",
+        "set": "function"
+      }
+    },
+    "setters": {}
+  },
+  "after": {
+    "afterRemoval": {
+      "borrowedLocationNull": true,
+      "defaultViewNull": true,
+      "locationNull": true
+    },
+    "borrowed": {
+      "foreignLocation": {
+        "value": true
+      },
+      "inertLocation": {
+        "value": true
+      },
+      "inertNodeText": {
+        "value": true
+      },
+      "invalidLocation": {
+        "exception": "TypeError"
+      },
+      "nodeFirst": {
+        "value": true
+      },
+      "nodeText": {
+        "value": true
+      }
+    },
+    "firstChildPrivateState": true,
+    "locations": {
+      "active": {
+        "configurable": false,
+        "enumerable": true,
+        "get": "function",
+        "set": "function"
+      },
+      "inert": {
+        "configurable": false,
+        "enumerable": true,
+        "get": "function",
+        "set": "function"
+      },
+      "sameGetter": true
+    },
+    "nodeConversions": {
+      "doctype": {
+        "calls": [
+          "convert"
+        ],
+        "outcome": {
+          "value": null
+        },
+        "symbol": {
+          "exception": "TypeError"
+        }
+      },
+      "inert": {
+        "calls": [
+          "convert"
+        ],
+        "outcome": {
+          "value": null
+        },
+        "symbol": {
+          "exception": "TypeError"
+        }
+      },
+      "invalid": {
+        "calls": [],
+        "outcome": {
+          "exception": "TypeError"
+        },
+        "symbol": {
+          "exception": "TypeError"
+        }
+      }
+    },
+    "prototype": {
+      "firstChild": null,
+      "location": null,
+      "textContent": null
+    },
+    "setters": {
+      "active": {
+        "calls": [
+          "convert"
+        ],
+        "outcome": {
+          "value": true
+        }
+      },
+      "inert": {
+        "calls": [],
+        "outcome": {
+          "exception": "TypeError"
+        }
+      },
+      "invalid": {
+        "calls": [],
+        "outcome": {
+          "exception": "TypeError"
+        }
+      }
+    }
+  },
+  "control": {
+    "prototype": {
+      "firstChild": null,
+      "location": null,
+      "textContent": null
+    },
+    "locations": {
+      "active": {
+        "get": "function",
+        "set": "function",
+        "enumerable": true,
+        "configurable": false
+      },
+      "inert": {
+        "get": "function",
+        "set": "function",
+        "enumerable": true,
+        "configurable": false
+      },
+      "sameGetter": true
+    },
+    "borrowed": {
+      "inertLocation": {
+        "value": true
+      },
+      "invalidLocation": {
+        "exception": "TypeError"
+      },
+      "nodeText": {
+        "value": true
+      },
+      "inertNodeText": {
+        "value": true
+      },
+      "nodeFirst": {
+        "value": true
+      },
+      "foreignLocation": {
+        "value": true
+      }
+    },
+    "setters": {
+      "invalid": {
+        "outcome": {
+          "exception": "TypeError"
+        },
+        "calls": []
+      },
+      "inert": {
+        "outcome": {
+          "exception": "TypeError"
+        },
+        "calls": []
+      },
+      "active": {
+        "outcome": {
+          "value": true
+        },
+        "calls": [
+          "convert"
+        ]
+      }
+    },
+    "nodeConversions": {
+      "invalid": {
+        "outcome": {
+          "exception": "TypeError"
+        },
+        "calls": [],
+        "symbol": {
+          "exception": "TypeError"
+        }
+      },
+      "inert": {
+        "outcome": {
+          "value": null
+        },
+        "calls": [
+          "convert"
+        ],
+        "symbol": {
+          "exception": "TypeError"
+        }
+      },
+      "doctype": {
+        "outcome": {
+          "value": null
+        },
+        "calls": [
+          "convert"
+        ],
+        "symbol": {
+          "exception": "TypeError"
+        }
+      }
+    },
+    "firstChildPrivateState": true,
+    "afterRemoval": {
+      "borrowedLocationNull": true,
+      "locationNull": true,
+      "defaultViewNull": true
+    }
+  },
+  "differences": [
+    [
+      [
+        "afterRemoval",
+        "borrowedLocationNull"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "afterRemoval",
+        "locationNull"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "borrowed",
+        "foreignLocation",
+        "value"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "borrowed",
+        "inertLocation",
+        "value"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "borrowed",
+        "inertNodeText",
+        "value"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "borrowed",
+        "invalidLocation",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "borrowed",
+        "invalidLocation",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      {
+        "ancestorOrigins": {},
+        "hash": "",
+        "host": "127.0.0.1:19444",
+        "hostname": "127.0.0.1",
+        "href": "http://127.0.0.1:19444/",
+        "origin": "http://127.0.0.1:19444",
+        "pathname": "/",
+        "port": "19444",
+        "protocol": "http:",
+        "search": ""
+      }
+    ],
+    [
+      [
+        "borrowed",
+        "nodeFirst",
+        "value"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "borrowed",
+        "nodeText",
+        "exception"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "borrowed",
+        "nodeText",
+        "value"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "firstChildPrivateState"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "locations",
+        "active",
+        "set"
+      ],
+      "function",
+      "undefined"
+    ],
+    [
+      [
+        "locations",
+        "inert"
+      ],
+      {
+        "get": "function",
+        "set": "function",
+        "enumerable": true,
+        "configurable": false
+      },
+      null
+    ],
+    [
+      [
+        "locations",
+        "sameGetter"
+      ],
+      true,
+      false
+    ],
+    [
+      [
+        "nodeConversions",
+        "doctype",
+        "outcome",
+        "value"
+      ],
+      null,
+      "ignored"
+    ],
+    [
+      [
+        "nodeConversions",
+        "doctype",
+        "symbol",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "nodeConversions",
+        "doctype",
+        "symbol",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      true
+    ],
+    [
+      [
+        "nodeConversions",
+        "inert",
+        "outcome",
+        "value"
+      ],
+      null,
+      "ignored"
+    ],
+    [
+      [
+        "nodeConversions",
+        "inert",
+        "symbol",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "nodeConversions",
+        "inert",
+        "symbol",
+        "value"
+      ],
+      {
+        "$missing": true
+      },
+      true
+    ],
+    [
+      [
+        "prototype",
+        "firstChild"
+      ],
+      null,
+      {
+        "configurable": true,
+        "enumerable": true,
+        "get": "function",
+        "set": "undefined"
+      }
+    ],
+    [
+      [
+        "prototype",
+        "location"
+      ],
+      null,
+      {
+        "configurable": true,
+        "enumerable": true,
+        "get": "function",
+        "set": "undefined"
+      }
+    ],
+    [
+      [
+        "prototype",
+        "textContent"
+      ],
+      null,
+      {
+        "configurable": true,
+        "enumerable": true,
+        "get": "function",
+        "set": "function"
+      }
+    ],
+    [
+      [
+        "setters",
+        "active"
+      ],
+      {
+        "outcome": {
+          "value": true
+        },
+        "calls": [
+          "convert"
+        ]
+      },
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "setters",
+        "inert"
+      ],
+      {
+        "outcome": {
+          "exception": "TypeError"
+        },
+        "calls": []
+      },
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "setters",
+        "invalid"
+      ],
+      {
+        "outcome": {
+          "exception": "TypeError"
+        },
+        "calls": []
+      },
+      {
+        "$missing": true
+      }
+    ]
+  ],
+  "afterDifferences": [],
+  "controlDifferences": []
+}

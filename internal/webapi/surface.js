@@ -573,7 +573,14 @@
     countReset:{value:function countReset(label=undefined){consoleCount(label,true)},writable:true,configurable:true}
   });
   const document=observe('Document',new HTMLDocument(hostToken));
-  Object.defineProperty(document,'location',{get:()=>loc,enumerable:true,configurable:false});
+  const documentLocationDescriptor=Object.getOwnPropertyDescriptor({
+    get location(){return documentLocation(this)},
+    set location(value){const target=documentLocation(this);if(target===null)throw new TypeError('Document has no browsing context');target.href=value}
+  },'location');
+  documentLocationDescriptor.configurable=false;
+  markNative(documentLocationDescriptor.get,'location','get ');
+  markNative(documentLocationDescriptor.set,'location','set ');
+  Object.defineProperty(document,'location',documentLocationDescriptor);
   let frameElementCache;
   const frameElement=()=>{const result=host.frameElement();return result?unwrapCrossRealm(result.frame,result):null};
   const remoteWindowCache=new Map(),remoteDocumentCache=new Map(),crossRealmCache=new Map(),crossRealmReferences=new WeakMap();
