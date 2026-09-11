@@ -941,15 +941,21 @@
         const current=Object.getOwnPropertyDescriptor(prototype,property.name);
         if(current){
           if(current.configurable){
-            const normalized=Object.assign({},current,{enumerable:property.enumerable,configurable:property.configurable});
-            if('value' in normalized){
-              normalized.writable=property.writable!==false;
-              if(typeof normalized.value==='function'){
-                if(property.functionName&&normalized.value.name!==property.functionName)Object.defineProperty(normalized.value,'name',{value:property.functionName,configurable:true});
-                if(property.functionLength!==null&&property.functionLength!==undefined&&normalized.value.length!==property.functionLength)Object.defineProperty(normalized.value,'length',{value:property.functionLength,configurable:true});
+            const data='value' in current,writable=property.writable!==false;
+            if(data){
+              if(typeof current.value==='function'){
+                if(property.functionName&&current.value.name!==property.functionName)Object.defineProperty(current.value,'name',{value:property.functionName,configurable:true});
+                if(property.functionLength!==null&&property.functionLength!==undefined&&current.value.length!==property.functionLength)Object.defineProperty(current.value,'length',{value:property.functionLength,configurable:true});
               }
             }
-            Object.defineProperty(prototype,property.name,normalized);
+            // Updating a function's own metadata does not require reinstalling
+            // its containing property. Avoid rewriting thousands of already
+            // normalized descriptors on every realm bootstrap.
+            if(current.enumerable!==property.enumerable||current.configurable!==property.configurable||(data&&current.writable!==writable)){
+              const normalized=Object.assign({},current,{enumerable:property.enumerable,configurable:property.configurable});
+              if(data)normalized.writable=writable;
+              Object.defineProperty(prototype,property.name,normalized);
+            }
           }
           continue;
         }
@@ -1060,10 +1066,11 @@
         if(member.name==='constructor')continue;
         const descriptor=Object.getOwnPropertyDescriptor(prototype,member.name);
         if(!descriptor||!descriptor.configurable)continue;
+        const previousValue=descriptor.value,previousGet=descriptor.get,previousSet=descriptor.set;
         if(typeof descriptor.value==='function')descriptor.value=normalize(descriptor.value,member.functionName||member.name,member.functionLength,true);
         if(descriptor.get)descriptor.get=normalize(descriptor.get,'get '+member.name,0,true);
         if(descriptor.set)descriptor.set=normalize(descriptor.set,'set '+member.name,1,true);
-        Object.defineProperty(prototype,member.name,descriptor);
+        if(descriptor.value!==previousValue||descriptor.get!==previousGet||descriptor.set!==previousSet)Object.defineProperty(prototype,member.name,descriptor);
       }
     }
   };
