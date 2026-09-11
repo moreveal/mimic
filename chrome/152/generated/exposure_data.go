@@ -21,6 +21,11 @@ var windowSecureJSON []byte
 //go:embed window-secure-order.json
 var windowSecureOrderJSON []byte
 
+// Separate observed member order; the descriptor capture remains alphabetized.
+//
+//go:embed window-secure-member-order.json
+var windowSecureMemberOrderJSON []byte
+
 //go:embed window-insecure-order.json
 var windowInsecureOrderJSON []byte
 
@@ -54,7 +59,11 @@ func parseWindowExposure(raw []byte) compatibility.RealmExposure {
 }
 
 var windowSecureOnce = sync.OnceValue(func() compatibility.RealmExposure {
-	return parseOrderedWindowExposure(windowSecureJSON, windowSecureOrderJSON)
+	exposure := parseOrderedWindowExposure(windowSecureJSON, windowSecureOrderJSON)
+	if err := json.Unmarshal(windowSecureMemberOrderJSON, &exposure); err != nil {
+		panic("invalid Chrome 152 member order: " + err.Error())
+	}
+	return exposure
 })
 
 func parseOrderedWindowExposure(raw, order []byte) compatibility.RealmExposure {

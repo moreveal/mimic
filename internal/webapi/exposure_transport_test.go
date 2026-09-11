@@ -33,7 +33,7 @@ func TestExposureTransportPreservesDescriptorFields(t *testing.T) {
 			properties = append(properties, p)
 		}
 	}
-	for _, want := range []compatibility.RealmExposure{{}, {Properties: []compatibility.SurfaceProperty{}, Prototypes: map[string][]compatibility.SurfaceProperty{}}, {PropertyOrder: []string{"b", "a"}, Properties: properties, Prototypes: map[string][]compatibility.SurfaceProperty{"__proto__": properties, "empty": nil}}} {
+	for _, want := range []compatibility.RealmExposure{{}, {Properties: []compatibility.SurfaceProperty{}, Prototypes: map[string][]compatibility.SurfaceProperty{}}, {PropertyOrder: []string{"b", "a"}, PrototypeOrder: map[string][]string{"__proto__": {"b", "a"}}, InterfaceOrder: map[string][]string{"Example": {"length", "name", "prototype", "create"}}, Properties: properties, Prototypes: map[string][]compatibility.SurfaceProperty{"__proto__": properties, "empty": nil}}} {
 		data, err := marshalExposure(want)
 		if err != nil {
 			t.Fatal(err)
