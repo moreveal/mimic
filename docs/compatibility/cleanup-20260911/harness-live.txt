@@ -1,0 +1,30 @@
+test_timeout_leaves_endpoint_usable (test_compat_fuzz.EndpointLiveTests.test_timeout_leaves_endpoint_usable) ... E:\GitHub\mimic-compat-fuzz\.build\fuzz-venv\Lib\site-packages\websockets\legacy\client.py:488: DeprecationWarning: remove loop argument
+  warnings.warn("remove loop argument", DeprecationWarning)
+E:\GitHub\mimic-compat-fuzz\.build\fuzz-venv\Lib\site-packages\websockets\legacy\protocol.py:206: DeprecationWarning: remove loop argument
+  warnings.warn("remove loop argument", DeprecationWarning)
+ok
+test_all_irrelevant_setup_can_be_deleted (test_compat_fuzz.ReducerTests.test_all_irrelevant_setup_can_be_deleted) ... ok
+test_dependent_setup_preserves_exact_signature_and_is_one_minimal (test_compat_fuzz.ReducerTests.test_dependent_setup_preserves_exact_signature_and_is_one_minimal) ... ok
+test_fixed_point_reconsiders_earlier_statements (test_compat_fuzz.ReducerTests.test_fixed_point_reconsiders_earlier_statements) ... ok
+test_indispensable_setup_and_empty_input (test_compat_fuzz.ReducerTests.test_indispensable_setup_and_empty_input) ... ok
+test_array_length_difference_projects_whole_array (test_compat_fuzz.TypedDiffTests.test_array_length_difference_projects_whole_array) ... ok
+test_array_order_is_observable (test_compat_fuzz.TypedDiffTests.test_array_order_is_observable) ... ok
+test_boolean_and_number_are_distinct (test_compat_fuzz.TypedDiffTests.test_boolean_and_number_are_distinct) ... ok
+test_missing_is_not_null_in_either_direction (test_compat_fuzz.TypedDiffTests.test_missing_is_not_null_in_either_direction) ... ok
+test_object_insertion_order_is_ignored (test_compat_fuzz.TypedDiffTests.test_object_insertion_order_is_ignored) ... ok
+test_paths_are_deterministic_and_projectable (test_compat_fuzz.TypedDiffTests.test_paths_are_deterministic_and_projectable) ... ok
+test_projection_handles_missing_nested_values (test_compat_fuzz.TypedDiffTests.test_projection_handles_missing_nested_values) ... ok
+test_same_uses_typed_nested_equality (test_compat_fuzz.TypedDiffTests.test_same_uses_typed_nested_equality) ... ok
+test_discovery_and_realm_observation (test_fuzz_probes.ChromeNormalizerTests.test_discovery_and_realm_observation) ... ok
+test_exception_categories_and_descriptor (test_fuzz_probes.ChromeNormalizerTests.test_exception_categories_and_descriptor) ... ok
+test_html_dda_is_not_normalized_as_undefined (test_fuzz_probes.ChromeNormalizerTests.test_html_dda_is_not_normalized_as_undefined) ... ok
+test_job_and_mutation_ordering (test_fuzz_probes.ChromeNormalizerTests.test_job_and_mutation_ordering) ... ok
+test_special_primitives_remain_distinct_json (test_fuzz_probes.ChromeNormalizerTests.test_special_primitives_remain_distinct_json) ... ok
+test_bounded_surface_covers_every_root_before_properties (test_fuzz_probes.GenerationTests.test_bounded_surface_covers_every_root_before_properties) ... ok
+test_unique_ids_and_required_corpora (test_fuzz_probes.GenerationTests.test_unique_ids_and_required_corpora) ... ok
+test_volatile_clock_values_excluded (test_fuzz_probes.GenerationTests.test_volatile_clock_values_excluded) ... ok
+
+----------------------------------------------------------------------
+Ran 21 tests in 3.863s
+
+OK

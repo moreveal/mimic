@@ -1,0 +1,1587 @@
+[
+  {
+    "id": "legacy.document-all",
+    "category": "legacy",
+    "setup": [],
+    "expression": "inspect(document.all)"
+  },
+  {
+    "id": "legacy.document-all-descriptor",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "({all:descriptor(document,'all'),name:descriptor(document.all,'name'),length:descriptor(document.all,'length'),prototype:attempt(()=>Object.getPrototypeOf(document.all)===HTMLAllCollection.prototype),constructor:attempt(()=>document.all.constructor===HTMLAllCollection),source:attempt(()=>Function.prototype.toString.call(document.all))})"
+  },
+  {
+    "id": "realm.window-proxy-navigation",
+    "category": "realm",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;",
+      "const saved=other;const savedDocument=other.document;",
+      "await new Promise((resolve,reject)=>{frame.onload=resolve;frame.onerror=()=>reject(new Error('iframe navigation failed'));frame.src='about:blank?compat_navigation';});"
+    ],
+    "expression": "({proxy:saved===frame.contentWindow,documentChanged:savedDocument!==frame.contentDocument,parent:frame.contentWindow.parent===window})"
+  },
+  {
+    "id": "legacy.document-all-call",
+    "category": "legacy",
+    "setup": [
+      "const item=document.createElement('div');item.id='compat_named';document.body.appendChild(item);"
+    ],
+    "expression": "({callable:attempt(()=>document.all('compat_named')===document.getElementById('compat_named')), indexed:attempt(()=>document.all[0]===document.documentElement),missing:attempt(()=>document.all('compat_missing'))})"
+  },
+  {
+    "id": "legacy.window-named",
+    "category": "legacy",
+    "setup": [
+      "const item=document.createElement('form');item.name='compat_named';document.body.appendChild(item);"
+    ],
+    "expression": "({windowNamed:window.compat_named===item,documentNamed:document.compat_named===item,descriptor:descriptor(window,'compat_named')})"
+  },
+  {
+    "id": "legacy.collection-indexed-named",
+    "category": "legacy",
+    "setup": [
+      "const item=document.createElement('form');item.id='compat_named';document.body.appendChild(item);",
+      "const nodes=document.forms;"
+    ],
+    "expression": "({collection:inspect(nodes),index:nodes[0]===item,named:nodes.compat_named===item,namedItem:nodes.namedItem('compat_named')===item,missing:attempt(()=>nodes.item(9)),listIndex:document.querySelectorAll('form')[0]===item,listMissing:attempt(()=>document.querySelectorAll('form').item(9))})"
+  },
+  {
+    "id": "legacy.live-collection",
+    "category": "legacy",
+    "setup": [
+      "const live=document.getElementsByTagName('span');const fixed=document.querySelectorAll('span');const liveBefore=live.length;const staticBefore=fixed.length;",
+      "document.body.appendChild(document.createElement('span'));"
+    ],
+    "expression": "({liveBefore,staticBefore,liveAfter:live.length,staticAfter:fixed.length,identity:live===document.getElementsByTagName('span')})"
+  },
+  {
+    "id": "realm.main-window",
+    "category": "realm",
+    "setup": [],
+    "expression": "({tag:tag(window),instance:window instanceof Window,prototype:Object.getPrototypeOf(window)===Window.prototype,constructor:window.constructor===Window,self:window===globalThis})"
+  },
+  {
+    "id": "realm.same-origin",
+    "category": "realm",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "({differentObject:other.Object!==Object,sameProxy:other===frame.contentWindow,frameElement:other.frameElement===frame,parent:other.parent===window,document:other.document===frame.contentDocument,instance:other.document instanceof other.Document,notMainInstance:other.document instanceof Document})"
+  },
+  {
+    "id": "realm.inside-iframe",
+    "category": "realm",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "other.eval('({self:window===globalThis,parentDifferent:parent!==window,ownObject:Object===window.Object,documentBrand:Object.prototype.toString.call(document)})')"
+  },
+  {
+    "id": "realm.detached-iframe",
+    "category": "realm",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;",
+      "const saved=other;const savedEval=other.eval;const savedDocument=other.document;",
+      "frame.remove();"
+    ],
+    "expression": "({proxy:other===saved,eval:attempt(()=>savedEval('6*7')),document:attempt(()=>saved.document===savedDocument),frameWindow:attempt(()=>frame.contentWindow===saved)})"
+  },
+  {
+    "id": "realm.about-blank-inheritance",
+    "category": "realm",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "({accessible:other.document===frame.contentDocument,url:other.location.href,parentOrigin:other.parent.location.origin===location.origin,origin:other.origin===window.origin})"
+  },
+  {
+    "id": "realm.cross-origin",
+    "category": "realm",
+    "setup": [
+      "const frame=document.createElement('iframe');frame.src='http://localhost:19444/';",
+      "await new Promise((resolve,reject)=>{frame.onload=resolve;frame.onerror=()=>reject(new Error('iframe load failed'));document.body.appendChild(frame);});",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "({document:attempt(()=>other.document),location:attempt(()=>other.location.href),postMessage:attempt(()=>typeof other.postMessage),self:attempt(()=>other===frame.contentWindow),tag:attempt(()=>tag(other))})"
+  },
+  {
+    "id": "timing.jobs",
+    "category": "timing",
+    "setup": [
+      "const order=[];",
+      "queueMicrotask(()=>order.push('microtask'));Promise.resolve().then(()=>order.push('promise'));",
+      "await new Promise(resolve=>setTimeout(()=>{order.push('timeout');resolve();},0));"
+    ],
+    "expression": "order"
+  },
+  {
+    "id": "timing.mutation-observer",
+    "category": "timing",
+    "setup": [
+      "const order=[];const node=document.createElement('div');",
+      "const observer=new MutationObserver(()=>order.push('observer'));observer.observe(node,{attributes:true});",
+      "Promise.resolve().then(()=>order.push('promise-before'));node.setAttribute('data-x','1');queueMicrotask(()=>order.push('microtask-after'));",
+      "await new Promise(resolve=>setTimeout(resolve,0));observer.disconnect();"
+    ],
+    "expression": "order"
+  },
+  {
+    "id": "timing.performance-monotonic",
+    "category": "timing",
+    "setup": [
+      "const values=Array.from({length:128},()=>performance.now());"
+    ],
+    "expression": "({finite:values.every(Number.isFinite),nonnegative:values.every(v=>v>=0),monotonic:values.every((v,i)=>i===0||v>=values[i-1])})"
+  },
+  {
+    "id": "call.document.hasFocus.correct.missing",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.hasFocus,document,[]))"
+  },
+  {
+    "id": "call.document.hasFocus.correct.undefined",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.hasFocus,document,[undefined]))"
+  },
+  {
+    "id": "call.document.hasFocus.correct.null",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.hasFocus,document,[null]))"
+  },
+  {
+    "id": "call.document.hasFocus.correct.primitive",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.hasFocus,document,['compat_missing']))"
+  },
+  {
+    "id": "call.document.hasFocus.correct.object",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.hasFocus,document,[{}]))"
+  },
+  {
+    "id": "call.document.hasFocus.correct.symbol",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.hasFocus,document,[Symbol('compat')]))"
+  },
+  {
+    "id": "call.document.hasFocus.object.missing",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.hasFocus,{},[]))"
+  },
+  {
+    "id": "call.document.hasFocus.object.undefined",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.hasFocus,{},[undefined]))"
+  },
+  {
+    "id": "call.document.hasFocus.object.null",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.hasFocus,{},[null]))"
+  },
+  {
+    "id": "call.document.hasFocus.object.primitive",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.hasFocus,{},['compat_missing']))"
+  },
+  {
+    "id": "call.document.hasFocus.object.object",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.hasFocus,{},[{}]))"
+  },
+  {
+    "id": "call.document.hasFocus.object.symbol",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.hasFocus,{},[Symbol('compat')]))"
+  },
+  {
+    "id": "call.document.hasFocus.null.missing",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.hasFocus,null,[]))"
+  },
+  {
+    "id": "call.document.hasFocus.null.undefined",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.hasFocus,null,[undefined]))"
+  },
+  {
+    "id": "call.document.hasFocus.null.null",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.hasFocus,null,[null]))"
+  },
+  {
+    "id": "call.document.hasFocus.null.primitive",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.hasFocus,null,['compat_missing']))"
+  },
+  {
+    "id": "call.document.hasFocus.null.object",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.hasFocus,null,[{}]))"
+  },
+  {
+    "id": "call.document.hasFocus.null.symbol",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.hasFocus,null,[Symbol('compat')]))"
+  },
+  {
+    "id": "call.document.hasFocus.foreign.missing",
+    "category": "brand-check",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "attempt(()=>Reflect.apply(document.hasFocus,new other.Object(),[]))"
+  },
+  {
+    "id": "call.document.hasFocus.foreign.undefined",
+    "category": "brand-check",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "attempt(()=>Reflect.apply(document.hasFocus,new other.Object(),[undefined]))"
+  },
+  {
+    "id": "call.document.hasFocus.foreign.null",
+    "category": "brand-check",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "attempt(()=>Reflect.apply(document.hasFocus,new other.Object(),[null]))"
+  },
+  {
+    "id": "call.document.hasFocus.foreign.primitive",
+    "category": "brand-check",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "attempt(()=>Reflect.apply(document.hasFocus,new other.Object(),['compat_missing']))"
+  },
+  {
+    "id": "call.document.hasFocus.foreign.object",
+    "category": "brand-check",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "attempt(()=>Reflect.apply(document.hasFocus,new other.Object(),[{}]))"
+  },
+  {
+    "id": "call.document.hasFocus.foreign.symbol",
+    "category": "brand-check",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "attempt(()=>Reflect.apply(document.hasFocus,new other.Object(),[Symbol('compat')]))"
+  },
+  {
+    "id": "call.document.getElementById.correct.missing",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.getElementById,document,[]))"
+  },
+  {
+    "id": "call.document.getElementById.correct.undefined",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.getElementById,document,[undefined]))"
+  },
+  {
+    "id": "call.document.getElementById.correct.null",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.getElementById,document,[null]))"
+  },
+  {
+    "id": "call.document.getElementById.correct.primitive",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.getElementById,document,['compat_missing']))"
+  },
+  {
+    "id": "call.document.getElementById.correct.object",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.getElementById,document,[{}]))"
+  },
+  {
+    "id": "call.document.getElementById.correct.symbol",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.getElementById,document,[Symbol('compat')]))"
+  },
+  {
+    "id": "call.document.getElementById.object.missing",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.getElementById,{},[]))"
+  },
+  {
+    "id": "call.document.getElementById.object.undefined",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.getElementById,{},[undefined]))"
+  },
+  {
+    "id": "call.document.getElementById.object.null",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.getElementById,{},[null]))"
+  },
+  {
+    "id": "call.document.getElementById.object.primitive",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.getElementById,{},['compat_missing']))"
+  },
+  {
+    "id": "call.document.getElementById.object.object",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.getElementById,{},[{}]))"
+  },
+  {
+    "id": "call.document.getElementById.object.symbol",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.getElementById,{},[Symbol('compat')]))"
+  },
+  {
+    "id": "call.document.getElementById.null.missing",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.getElementById,null,[]))"
+  },
+  {
+    "id": "call.document.getElementById.null.undefined",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.getElementById,null,[undefined]))"
+  },
+  {
+    "id": "call.document.getElementById.null.null",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.getElementById,null,[null]))"
+  },
+  {
+    "id": "call.document.getElementById.null.primitive",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.getElementById,null,['compat_missing']))"
+  },
+  {
+    "id": "call.document.getElementById.null.object",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.getElementById,null,[{}]))"
+  },
+  {
+    "id": "call.document.getElementById.null.symbol",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.getElementById,null,[Symbol('compat')]))"
+  },
+  {
+    "id": "call.document.getElementById.foreign.missing",
+    "category": "brand-check",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "attempt(()=>Reflect.apply(document.getElementById,new other.Object(),[]))"
+  },
+  {
+    "id": "call.document.getElementById.foreign.undefined",
+    "category": "brand-check",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "attempt(()=>Reflect.apply(document.getElementById,new other.Object(),[undefined]))"
+  },
+  {
+    "id": "call.document.getElementById.foreign.null",
+    "category": "brand-check",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "attempt(()=>Reflect.apply(document.getElementById,new other.Object(),[null]))"
+  },
+  {
+    "id": "call.document.getElementById.foreign.primitive",
+    "category": "brand-check",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "attempt(()=>Reflect.apply(document.getElementById,new other.Object(),['compat_missing']))"
+  },
+  {
+    "id": "call.document.getElementById.foreign.object",
+    "category": "brand-check",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "attempt(()=>Reflect.apply(document.getElementById,new other.Object(),[{}]))"
+  },
+  {
+    "id": "call.document.getElementById.foreign.symbol",
+    "category": "brand-check",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "attempt(()=>Reflect.apply(document.getElementById,new other.Object(),[Symbol('compat')]))"
+  },
+  {
+    "id": "call.document.querySelector.correct.missing",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.querySelector,document,[]))"
+  },
+  {
+    "id": "call.document.querySelector.correct.undefined",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.querySelector,document,[undefined]))"
+  },
+  {
+    "id": "call.document.querySelector.correct.null",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.querySelector,document,[null]))"
+  },
+  {
+    "id": "call.document.querySelector.correct.primitive",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.querySelector,document,['compat_missing']))"
+  },
+  {
+    "id": "call.document.querySelector.correct.object",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.querySelector,document,[{}]))"
+  },
+  {
+    "id": "call.document.querySelector.correct.symbol",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.querySelector,document,[Symbol('compat')]))"
+  },
+  {
+    "id": "call.document.querySelector.object.missing",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.querySelector,{},[]))"
+  },
+  {
+    "id": "call.document.querySelector.object.undefined",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.querySelector,{},[undefined]))"
+  },
+  {
+    "id": "call.document.querySelector.object.null",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.querySelector,{},[null]))"
+  },
+  {
+    "id": "call.document.querySelector.object.primitive",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.querySelector,{},['compat_missing']))"
+  },
+  {
+    "id": "call.document.querySelector.object.object",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.querySelector,{},[{}]))"
+  },
+  {
+    "id": "call.document.querySelector.object.symbol",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.querySelector,{},[Symbol('compat')]))"
+  },
+  {
+    "id": "call.document.querySelector.null.missing",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.querySelector,null,[]))"
+  },
+  {
+    "id": "call.document.querySelector.null.undefined",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.querySelector,null,[undefined]))"
+  },
+  {
+    "id": "call.document.querySelector.null.null",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.querySelector,null,[null]))"
+  },
+  {
+    "id": "call.document.querySelector.null.primitive",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.querySelector,null,['compat_missing']))"
+  },
+  {
+    "id": "call.document.querySelector.null.object",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.querySelector,null,[{}]))"
+  },
+  {
+    "id": "call.document.querySelector.null.symbol",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(document.querySelector,null,[Symbol('compat')]))"
+  },
+  {
+    "id": "call.document.querySelector.foreign.missing",
+    "category": "brand-check",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "attempt(()=>Reflect.apply(document.querySelector,new other.Object(),[]))"
+  },
+  {
+    "id": "call.document.querySelector.foreign.undefined",
+    "category": "brand-check",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "attempt(()=>Reflect.apply(document.querySelector,new other.Object(),[undefined]))"
+  },
+  {
+    "id": "call.document.querySelector.foreign.null",
+    "category": "brand-check",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "attempt(()=>Reflect.apply(document.querySelector,new other.Object(),[null]))"
+  },
+  {
+    "id": "call.document.querySelector.foreign.primitive",
+    "category": "brand-check",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "attempt(()=>Reflect.apply(document.querySelector,new other.Object(),['compat_missing']))"
+  },
+  {
+    "id": "call.document.querySelector.foreign.object",
+    "category": "brand-check",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "attempt(()=>Reflect.apply(document.querySelector,new other.Object(),[{}]))"
+  },
+  {
+    "id": "call.document.querySelector.foreign.symbol",
+    "category": "brand-check",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "attempt(()=>Reflect.apply(document.querySelector,new other.Object(),[Symbol('compat')]))"
+  },
+  {
+    "id": "call.navigator.javaEnabled.correct.missing",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(navigator.javaEnabled,navigator,[]))"
+  },
+  {
+    "id": "call.navigator.javaEnabled.correct.undefined",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(navigator.javaEnabled,navigator,[undefined]))"
+  },
+  {
+    "id": "call.navigator.javaEnabled.correct.null",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(navigator.javaEnabled,navigator,[null]))"
+  },
+  {
+    "id": "call.navigator.javaEnabled.correct.primitive",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(navigator.javaEnabled,navigator,['compat_missing']))"
+  },
+  {
+    "id": "call.navigator.javaEnabled.correct.object",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(navigator.javaEnabled,navigator,[{}]))"
+  },
+  {
+    "id": "call.navigator.javaEnabled.correct.symbol",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(navigator.javaEnabled,navigator,[Symbol('compat')]))"
+  },
+  {
+    "id": "call.navigator.javaEnabled.object.missing",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(navigator.javaEnabled,{},[]))"
+  },
+  {
+    "id": "call.navigator.javaEnabled.object.undefined",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(navigator.javaEnabled,{},[undefined]))"
+  },
+  {
+    "id": "call.navigator.javaEnabled.object.null",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(navigator.javaEnabled,{},[null]))"
+  },
+  {
+    "id": "call.navigator.javaEnabled.object.primitive",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(navigator.javaEnabled,{},['compat_missing']))"
+  },
+  {
+    "id": "call.navigator.javaEnabled.object.object",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(navigator.javaEnabled,{},[{}]))"
+  },
+  {
+    "id": "call.navigator.javaEnabled.object.symbol",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(navigator.javaEnabled,{},[Symbol('compat')]))"
+  },
+  {
+    "id": "call.navigator.javaEnabled.null.missing",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(navigator.javaEnabled,null,[]))"
+  },
+  {
+    "id": "call.navigator.javaEnabled.null.undefined",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(navigator.javaEnabled,null,[undefined]))"
+  },
+  {
+    "id": "call.navigator.javaEnabled.null.null",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(navigator.javaEnabled,null,[null]))"
+  },
+  {
+    "id": "call.navigator.javaEnabled.null.primitive",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(navigator.javaEnabled,null,['compat_missing']))"
+  },
+  {
+    "id": "call.navigator.javaEnabled.null.object",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(navigator.javaEnabled,null,[{}]))"
+  },
+  {
+    "id": "call.navigator.javaEnabled.null.symbol",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(navigator.javaEnabled,null,[Symbol('compat')]))"
+  },
+  {
+    "id": "call.navigator.javaEnabled.foreign.missing",
+    "category": "brand-check",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "attempt(()=>Reflect.apply(navigator.javaEnabled,new other.Object(),[]))"
+  },
+  {
+    "id": "call.navigator.javaEnabled.foreign.undefined",
+    "category": "brand-check",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "attempt(()=>Reflect.apply(navigator.javaEnabled,new other.Object(),[undefined]))"
+  },
+  {
+    "id": "call.navigator.javaEnabled.foreign.null",
+    "category": "brand-check",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "attempt(()=>Reflect.apply(navigator.javaEnabled,new other.Object(),[null]))"
+  },
+  {
+    "id": "call.navigator.javaEnabled.foreign.primitive",
+    "category": "brand-check",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "attempt(()=>Reflect.apply(navigator.javaEnabled,new other.Object(),['compat_missing']))"
+  },
+  {
+    "id": "call.navigator.javaEnabled.foreign.object",
+    "category": "brand-check",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "attempt(()=>Reflect.apply(navigator.javaEnabled,new other.Object(),[{}]))"
+  },
+  {
+    "id": "call.navigator.javaEnabled.foreign.symbol",
+    "category": "brand-check",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "attempt(()=>Reflect.apply(navigator.javaEnabled,new other.Object(),[Symbol('compat')]))"
+  },
+  {
+    "id": "call.performance.getEntriesByName.correct.missing",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(performance.getEntriesByName,performance,[]))"
+  },
+  {
+    "id": "call.performance.getEntriesByName.correct.undefined",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(performance.getEntriesByName,performance,[undefined]))"
+  },
+  {
+    "id": "call.performance.getEntriesByName.correct.null",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(performance.getEntriesByName,performance,[null]))"
+  },
+  {
+    "id": "call.performance.getEntriesByName.correct.primitive",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(performance.getEntriesByName,performance,['compat_missing']))"
+  },
+  {
+    "id": "call.performance.getEntriesByName.correct.object",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(performance.getEntriesByName,performance,[{}]))"
+  },
+  {
+    "id": "call.performance.getEntriesByName.correct.symbol",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(performance.getEntriesByName,performance,[Symbol('compat')]))"
+  },
+  {
+    "id": "call.performance.getEntriesByName.object.missing",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(performance.getEntriesByName,{},[]))"
+  },
+  {
+    "id": "call.performance.getEntriesByName.object.undefined",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(performance.getEntriesByName,{},[undefined]))"
+  },
+  {
+    "id": "call.performance.getEntriesByName.object.null",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(performance.getEntriesByName,{},[null]))"
+  },
+  {
+    "id": "call.performance.getEntriesByName.object.primitive",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(performance.getEntriesByName,{},['compat_missing']))"
+  },
+  {
+    "id": "call.performance.getEntriesByName.object.object",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(performance.getEntriesByName,{},[{}]))"
+  },
+  {
+    "id": "call.performance.getEntriesByName.object.symbol",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(performance.getEntriesByName,{},[Symbol('compat')]))"
+  },
+  {
+    "id": "call.performance.getEntriesByName.null.missing",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(performance.getEntriesByName,null,[]))"
+  },
+  {
+    "id": "call.performance.getEntriesByName.null.undefined",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(performance.getEntriesByName,null,[undefined]))"
+  },
+  {
+    "id": "call.performance.getEntriesByName.null.null",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(performance.getEntriesByName,null,[null]))"
+  },
+  {
+    "id": "call.performance.getEntriesByName.null.primitive",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(performance.getEntriesByName,null,['compat_missing']))"
+  },
+  {
+    "id": "call.performance.getEntriesByName.null.object",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(performance.getEntriesByName,null,[{}]))"
+  },
+  {
+    "id": "call.performance.getEntriesByName.null.symbol",
+    "category": "brand-check",
+    "setup": [],
+    "expression": "attempt(()=>Reflect.apply(performance.getEntriesByName,null,[Symbol('compat')]))"
+  },
+  {
+    "id": "call.performance.getEntriesByName.foreign.missing",
+    "category": "brand-check",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "attempt(()=>Reflect.apply(performance.getEntriesByName,new other.Object(),[]))"
+  },
+  {
+    "id": "call.performance.getEntriesByName.foreign.undefined",
+    "category": "brand-check",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "attempt(()=>Reflect.apply(performance.getEntriesByName,new other.Object(),[undefined]))"
+  },
+  {
+    "id": "call.performance.getEntriesByName.foreign.null",
+    "category": "brand-check",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "attempt(()=>Reflect.apply(performance.getEntriesByName,new other.Object(),[null]))"
+  },
+  {
+    "id": "call.performance.getEntriesByName.foreign.primitive",
+    "category": "brand-check",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "attempt(()=>Reflect.apply(performance.getEntriesByName,new other.Object(),['compat_missing']))"
+  },
+  {
+    "id": "call.performance.getEntriesByName.foreign.object",
+    "category": "brand-check",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "attempt(()=>Reflect.apply(performance.getEntriesByName,new other.Object(),[{}]))"
+  },
+  {
+    "id": "call.performance.getEntriesByName.foreign.symbol",
+    "category": "brand-check",
+    "setup": [
+      "const frame=document.createElement('iframe');",
+      "document.body.appendChild(frame);",
+      "const other=frame.contentWindow;"
+    ],
+    "expression": "attempt(()=>Reflect.apply(performance.getEntriesByName,new other.Object(),[Symbol('compat')]))"
+  },
+  {
+    "id": "surface.window",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(window)"
+  },
+  {
+    "id": "surface.document",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(document)"
+  },
+  {
+    "id": "surface.navigator",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(navigator)"
+  },
+  {
+    "id": "surface.performance",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(performance)"
+  },
+  {
+    "id": "surface.screen",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(screen)"
+  },
+  {
+    "id": "surface.history",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(history)"
+  },
+  {
+    "id": "surface.location",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(location)"
+  },
+  {
+    "id": "descriptor.window.AbortController",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(window,\"AbortController\")"
+  },
+  {
+    "id": "descriptor.document.ATTRIBUTE_NODE",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(document,\"ATTRIBUTE_NODE\")"
+  },
+  {
+    "id": "descriptor.navigator.__defineGetter__",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(navigator,\"__defineGetter__\")"
+  },
+  {
+    "id": "descriptor.performance.__defineGetter__",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(performance,\"__defineGetter__\")"
+  },
+  {
+    "id": "descriptor.screen.__defineGetter__",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(screen,\"__defineGetter__\")"
+  },
+  {
+    "id": "descriptor.history.__defineGetter__",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(history,\"__defineGetter__\")"
+  },
+  {
+    "id": "descriptor.location.__defineGetter__",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(location,\"__defineGetter__\")"
+  },
+  {
+    "id": "property.window.AbortController",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(window[\"AbortController\"])"
+  },
+  {
+    "id": "property.document.ATTRIBUTE_NODE",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(document[\"ATTRIBUTE_NODE\"])"
+  },
+  {
+    "id": "property.navigator.__defineGetter__",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(navigator[\"__defineGetter__\"])"
+  },
+  {
+    "id": "property.performance.__defineGetter__",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(performance[\"__defineGetter__\"])"
+  },
+  {
+    "id": "property.screen.__defineGetter__",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(screen[\"__defineGetter__\"])"
+  },
+  {
+    "id": "property.history.__defineGetter__",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(history[\"__defineGetter__\"])"
+  },
+  {
+    "id": "property.location.__defineGetter__",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(location[\"__defineGetter__\"])"
+  },
+  {
+    "id": "descriptor.window.AbortSignal",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(window,\"AbortSignal\")"
+  },
+  {
+    "id": "descriptor.document.CDATA_SECTION_NODE",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(document,\"CDATA_SECTION_NODE\")"
+  },
+  {
+    "id": "descriptor.navigator.__defineSetter__",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(navigator,\"__defineSetter__\")"
+  },
+  {
+    "id": "descriptor.performance.__defineSetter__",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(performance,\"__defineSetter__\")"
+  },
+  {
+    "id": "descriptor.screen.__defineSetter__",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(screen,\"__defineSetter__\")"
+  },
+  {
+    "id": "descriptor.history.__defineSetter__",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(history,\"__defineSetter__\")"
+  },
+  {
+    "id": "descriptor.location.__defineSetter__",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(location,\"__defineSetter__\")"
+  },
+  {
+    "id": "property.window.AbortSignal",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(window[\"AbortSignal\"])"
+  },
+  {
+    "id": "property.document.CDATA_SECTION_NODE",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(document[\"CDATA_SECTION_NODE\"])"
+  },
+  {
+    "id": "property.navigator.__defineSetter__",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(navigator[\"__defineSetter__\"])"
+  },
+  {
+    "id": "property.performance.__defineSetter__",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(performance[\"__defineSetter__\"])"
+  },
+  {
+    "id": "property.screen.__defineSetter__",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(screen[\"__defineSetter__\"])"
+  },
+  {
+    "id": "property.history.__defineSetter__",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(history[\"__defineSetter__\"])"
+  },
+  {
+    "id": "property.location.__defineSetter__",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(location[\"__defineSetter__\"])"
+  },
+  {
+    "id": "descriptor.window.AbsoluteOrientationSensor",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(window,\"AbsoluteOrientationSensor\")"
+  },
+  {
+    "id": "descriptor.document.COMMENT_NODE",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(document,\"COMMENT_NODE\")"
+  },
+  {
+    "id": "descriptor.navigator.__lookupGetter__",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(navigator,\"__lookupGetter__\")"
+  },
+  {
+    "id": "descriptor.performance.__lookupGetter__",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(performance,\"__lookupGetter__\")"
+  },
+  {
+    "id": "descriptor.screen.__lookupGetter__",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(screen,\"__lookupGetter__\")"
+  },
+  {
+    "id": "descriptor.history.__lookupGetter__",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(history,\"__lookupGetter__\")"
+  },
+  {
+    "id": "descriptor.location.__lookupGetter__",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(location,\"__lookupGetter__\")"
+  },
+  {
+    "id": "property.window.AbsoluteOrientationSensor",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(window[\"AbsoluteOrientationSensor\"])"
+  },
+  {
+    "id": "property.document.COMMENT_NODE",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(document[\"COMMENT_NODE\"])"
+  },
+  {
+    "id": "property.navigator.__lookupGetter__",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(navigator[\"__lookupGetter__\"])"
+  },
+  {
+    "id": "property.performance.__lookupGetter__",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(performance[\"__lookupGetter__\"])"
+  },
+  {
+    "id": "property.screen.__lookupGetter__",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(screen[\"__lookupGetter__\"])"
+  },
+  {
+    "id": "property.history.__lookupGetter__",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(history[\"__lookupGetter__\"])"
+  },
+  {
+    "id": "property.location.__lookupGetter__",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(location[\"__lookupGetter__\"])"
+  },
+  {
+    "id": "descriptor.window.AbstractRange",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(window,\"AbstractRange\")"
+  },
+  {
+    "id": "descriptor.document.DOCUMENT_FRAGMENT_NODE",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(document,\"DOCUMENT_FRAGMENT_NODE\")"
+  },
+  {
+    "id": "descriptor.navigator.__lookupSetter__",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(navigator,\"__lookupSetter__\")"
+  },
+  {
+    "id": "descriptor.performance.__lookupSetter__",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(performance,\"__lookupSetter__\")"
+  },
+  {
+    "id": "descriptor.screen.__lookupSetter__",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(screen,\"__lookupSetter__\")"
+  },
+  {
+    "id": "descriptor.history.__lookupSetter__",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(history,\"__lookupSetter__\")"
+  },
+  {
+    "id": "descriptor.location.__lookupSetter__",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(location,\"__lookupSetter__\")"
+  },
+  {
+    "id": "property.window.AbstractRange",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(window[\"AbstractRange\"])"
+  },
+  {
+    "id": "property.document.DOCUMENT_FRAGMENT_NODE",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(document[\"DOCUMENT_FRAGMENT_NODE\"])"
+  },
+  {
+    "id": "property.navigator.__lookupSetter__",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(navigator[\"__lookupSetter__\"])"
+  },
+  {
+    "id": "property.performance.__lookupSetter__",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(performance[\"__lookupSetter__\"])"
+  },
+  {
+    "id": "property.screen.__lookupSetter__",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(screen[\"__lookupSetter__\"])"
+  },
+  {
+    "id": "property.history.__lookupSetter__",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(history[\"__lookupSetter__\"])"
+  },
+  {
+    "id": "property.location.__lookupSetter__",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(location[\"__lookupSetter__\"])"
+  },
+  {
+    "id": "descriptor.window.Accelerometer",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(window,\"Accelerometer\")"
+  },
+  {
+    "id": "descriptor.document.DOCUMENT_NODE",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(document,\"DOCUMENT_NODE\")"
+  },
+  {
+    "id": "descriptor.navigator.__proto__",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(navigator,\"__proto__\")"
+  },
+  {
+    "id": "descriptor.performance.__proto__",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(performance,\"__proto__\")"
+  },
+  {
+    "id": "descriptor.screen.__proto__",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(screen,\"__proto__\")"
+  },
+  {
+    "id": "descriptor.history.__proto__",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(history,\"__proto__\")"
+  },
+  {
+    "id": "descriptor.location.__proto__",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(location,\"__proto__\")"
+  },
+  {
+    "id": "property.window.Accelerometer",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(window[\"Accelerometer\"])"
+  },
+  {
+    "id": "property.document.DOCUMENT_NODE",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(document[\"DOCUMENT_NODE\"])"
+  },
+  {
+    "id": "property.navigator.__proto__",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(navigator[\"__proto__\"])"
+  },
+  {
+    "id": "property.performance.__proto__",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(performance[\"__proto__\"])"
+  },
+  {
+    "id": "property.screen.__proto__",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(screen[\"__proto__\"])"
+  },
+  {
+    "id": "property.history.__proto__",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(history[\"__proto__\"])"
+  },
+  {
+    "id": "property.location.__proto__",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(location[\"__proto__\"])"
+  },
+  {
+    "id": "descriptor.window.AggregateError",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(window,\"AggregateError\")"
+  },
+  {
+    "id": "descriptor.document.DOCUMENT_POSITION_CONTAINED_BY",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(document,\"DOCUMENT_POSITION_CONTAINED_BY\")"
+  },
+  {
+    "id": "descriptor.navigator.adAuctionComponents",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(navigator,\"adAuctionComponents\")"
+  },
+  {
+    "id": "descriptor.performance.addEventListener",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(performance,\"addEventListener\")"
+  },
+  {
+    "id": "descriptor.screen.addEventListener",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(screen,\"addEventListener\")"
+  },
+  {
+    "id": "descriptor.history.back",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(history,\"back\")"
+  },
+  {
+    "id": "descriptor.location.ancestorOrigins",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(location,\"ancestorOrigins\")"
+  },
+  {
+    "id": "property.window.AggregateError",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(window[\"AggregateError\"])"
+  },
+  {
+    "id": "property.document.DOCUMENT_POSITION_CONTAINED_BY",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(document[\"DOCUMENT_POSITION_CONTAINED_BY\"])"
+  },
+  {
+    "id": "property.navigator.adAuctionComponents",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(navigator[\"adAuctionComponents\"])"
+  },
+  {
+    "id": "property.performance.addEventListener",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(performance[\"addEventListener\"])"
+  },
+  {
+    "id": "property.screen.addEventListener",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(screen[\"addEventListener\"])"
+  },
+  {
+    "id": "property.history.back",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(history[\"back\"])"
+  },
+  {
+    "id": "property.location.ancestorOrigins",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(location[\"ancestorOrigins\"])"
+  },
+  {
+    "id": "descriptor.window.AnalyserNode",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(window,\"AnalyserNode\")"
+  },
+  {
+    "id": "descriptor.document.DOCUMENT_POSITION_CONTAINS",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(document,\"DOCUMENT_POSITION_CONTAINS\")"
+  },
+  {
+    "id": "descriptor.navigator.appCodeName",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(navigator,\"appCodeName\")"
+  },
+  {
+    "id": "descriptor.performance.clearMarks",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(performance,\"clearMarks\")"
+  },
+  {
+    "id": "descriptor.screen.availHeight",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(screen,\"availHeight\")"
+  },
+  {
+    "id": "descriptor.history.constructor",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(history,\"constructor\")"
+  },
+  {
+    "id": "descriptor.location.assign",
+    "category": "descriptor",
+    "setup": [],
+    "expression": "descriptor(location,\"assign\")"
+  },
+  {
+    "id": "property.window.AnalyserNode",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(window[\"AnalyserNode\"])"
+  },
+  {
+    "id": "property.document.DOCUMENT_POSITION_CONTAINS",
+    "category": "surface",
+    "setup": [],
+    "expression": "inspect(document[\"DOCUMENT_POSITION_CONTAINS\"])"
+  }
+]
