@@ -1,0 +1,26 @@
+{
+  "engine-race.txt": {
+    "originalSHA256": "4918ad0b74d33c3363fc4b3dc79fa4ebbe88d5ee60bac26f96acd83bc39e5a76",
+    "normalization": "tabs expanded to four-column stops, trailing whitespace removed, LF line endings; original logs remain in private capture"
+  },
+  "goja-race-after.txt": {
+    "originalSHA256": "a9a56c4d33d8a3c8cff98d76abdebcb76ac3a22cb2b5879bee6f54ff8b1f0ac3",
+    "normalization": "tabs expanded to four-column stops, trailing whitespace removed, LF line endings; original logs remain in private capture"
+  },
+  "goja-race-before.txt": {
+    "originalSHA256": "9b1177848e283127d3ddd24d6546fa0e03d6f20a87ae63921a23d08d4198f7de",
+    "normalization": "tabs expanded to four-column stops, trailing whitespace removed, LF line endings; original logs remain in private capture"
+  },
+  "regression-after.txt": {
+    "originalSHA256": "2f3b28bf2e5b078ad7420bd3b70adba6e478ff8efeac31deb2999cd29da15b4e",
+    "normalization": "tabs expanded to four-column stops, trailing whitespace removed, LF line endings; original logs remain in private capture"
+  },
+  "regression-before.txt": {
+    "originalSHA256": "69039a178b5c4a2b27f40168e755610bcc4a9546913c9adee0211c3a8ee8127e",
+    "normalization": "tabs expanded to four-column stops, trailing whitespace removed, LF line endings; original logs remain in private capture"
+  },
+  "targeted-race.txt": {
+    "originalSHA256": "e42cb59d262e5673975cffb018dd5063319551a8f76cfccbc547e488a687d8ec",
+    "normalization": "tabs expanded to four-column stops, trailing whitespace removed, LF line endings; original logs remain in private capture"
+  }
+}

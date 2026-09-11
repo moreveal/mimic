@@ -1,0 +1,26 @@
+=== RUN   TestBootstrapSnapshotsWithDistinctReadOnlyLayouts
+    bootstrap_snapshot_lineage_test.go:31: child diagnostics:
+        === RUN   TestBootstrapSnapshotsWithDistinctReadOnlyLayouts
+            bootstrap_snapshot_lineage_test.go:61: firstSnapshotKey read-only checksum: dd98d97a
+            bootstrap_snapshot_lineage_test.go:61: aDifferentLongerSnapshotKey read-only checksum: fbb45232
+        --- PASS: TestBootstrapSnapshotsWithDistinctReadOnlyLayouts (0.06s)
+        PASS
+--- PASS: TestBootstrapSnapshotsWithDistinctReadOnlyLayouts (0.13s)
+=== RUN   TestBootstrapSnapshotsWithDistinctReadOnlyLayouts
+    bootstrap_snapshot_lineage_test.go:31: child diagnostics:
+        === RUN   TestBootstrapSnapshotsWithDistinctReadOnlyLayouts
+            bootstrap_snapshot_lineage_test.go:61: firstSnapshotKey read-only checksum: 390c30ea
+            bootstrap_snapshot_lineage_test.go:61: aDifferentLongerSnapshotKey read-only checksum: 33c3b902
+        --- PASS: TestBootstrapSnapshotsWithDistinctReadOnlyLayouts (0.06s)
+        PASS
+--- PASS: TestBootstrapSnapshotsWithDistinctReadOnlyLayouts (0.07s)
+=== RUN   TestBootstrapSnapshotsWithDistinctReadOnlyLayouts
+    bootstrap_snapshot_lineage_test.go:31: child diagnostics:
+        === RUN   TestBootstrapSnapshotsWithDistinctReadOnlyLayouts
+            bootstrap_snapshot_lineage_test.go:61: firstSnapshotKey read-only checksum: fc344879
+            bootstrap_snapshot_lineage_test.go:61: aDifferentLongerSnapshotKey read-only checksum: b229282d
+        --- PASS: TestBootstrapSnapshotsWithDistinctReadOnlyLayouts (0.06s)
+        PASS
+--- PASS: TestBootstrapSnapshotsWithDistinctReadOnlyLayouts (0.07s)
+PASS
+ok      github.com/moreveal/mimic/internal/engine/v8    0.414s
