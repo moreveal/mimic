@@ -202,6 +202,7 @@ func (r *runtime) SetGlobalAccessObserver(observer func(name string, supported b
 	}
 	reflect := r.vm.Get("Reflect").ToObject(r.vm)
 	hasFn, _ := goja.AssertFunction(reflect.Get("has"))
+	getFn, _ := goja.AssertFunction(reflect.Get("get"))
 	has := func(property string) bool {
 		v, err := hasFn(goja.Undefined(), target, r.vm.ToValue(property))
 		return err == nil && v.ToBoolean()
@@ -212,10 +213,16 @@ func (r *runtime) SetGlobalAccessObserver(observer func(name string, supported b
 			report(property, supported)
 			return supported
 		},
-		Get: func(_ *goja.Object, property string, _ goja.Value) goja.Value {
+		Get: func(_ *goja.Object, property string, receiver goja.Value) goja.Value {
 			supported := has(property)
 			report(property, supported)
-			return target.Get(property)
+			// Observation must preserve accessor receivers, including inherited
+			// access through an object whose prototype is the global proxy.
+			v, err := getFn(goja.Undefined(), target, r.vm.ToValue(property), receiver)
+			if err != nil {
+				panic(err)
+			}
+			return v
 		},
 	})
 	r.vm.SetGlobalObject(r.vm.ToValue(proxy).(*goja.Object))

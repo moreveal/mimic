@@ -19,3 +19,20 @@ func TestEvalHonorsContextCancellationAndRuntimeRemainsUsable(t *testing.T) {
 		t.Fatalf("runtime unusable after interruption: value=%v err=%v", value, err)
 	}
 }
+
+func TestGlobalAccessObserverPreservesAccessorReceiverAndException(t *testing.T) {
+	runtime := Factory{}.New()
+	runtime.SetGlobalAccessObserver(func(string, bool) {})
+	value, err := runtime.Eval(context.Background(), `(() => {
+		const marker = {};
+		Object.defineProperty(globalThis, 'receiverProbe', {get() { return this; }});
+		Object.defineProperty(globalThis, 'throwProbe', {get() { throw marker; }});
+		const child = Object.create(globalThis);
+		if (globalThis.receiverProbe !== globalThis || child.receiverProbe !== child) return false;
+		try { globalThis.throwProbe; } catch (error) { return error === marker; }
+		return false;
+	})()`, "global-observer.js")
+	if err != nil || value.Export() != true {
+		t.Fatalf("observer changed accessor semantics: value=%v err=%v", value, err)
+	}
+}

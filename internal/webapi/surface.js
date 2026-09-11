@@ -11,13 +11,13 @@
   const realmBindings=new WeakMap();
   const bindingGet=Function.prototype.call.bind(WeakMap.prototype.get,realmBindings);
   const bindingSet=Function.prototype.call.bind(WeakMap.prototype.set,realmBindings);
-  const registerRealmBinding=(value,kind,operations)=>{
+  const registerRealmBinding=(value,kind,operations,unpreventable=false)=>{
     const invoke=(receiver,operation,args)=>{
       const binding=bindingGet(receiver);
       if(!binding||binding.kind!==kind)throw new TypeError('Illegal invocation');
       return binding.operations[operation](...args);
     };
-    bindingSet(value,{kind,operations,invoke});
+    bindingSet(value,{kind,operations,invoke,unpreventable});
   };
   const requireRealmBinding=(value,kind)=>{
     const local=bindingGet(value);
@@ -307,7 +307,25 @@
   const uaDataSlots=new WeakMap();
   class NavigatorUAData { constructor(token,data){if(token!==hostToken)illegal('NavigatorUAData');uaDataSlots.set(this,data)} get brands(){return uaDataSlots.get(this).uaBrands.map(x=>({brand:x.brand,version:x.version}))} get mobile(){return false} get platform(){return'Windows'} getHighEntropyValues(hints=[]){const data=uaDataSlots.get(this),out={brands:this.brands,mobile:this.mobile,platform:this.platform};for(const hint of hints.map(String)){if(hint==='architecture')out.architecture=data.architecture;if(hint==='bitness')out.bitness=data.bitness;if(hint==='model')out.model=data.model;if(hint==='platformVersion')out.platformVersion=data.platformVersion;if(hint==='uaFullVersion')out.uaFullVersion=data.uaFullVersion;if(hint==='fullVersionList')out.fullVersionList=data.uaBrands.map(x=>({brand:x.brand,version:x.fullVersion}))}return Promise.resolve(out)} toJSON(){return{brands:this.brands,mobile:this.mobile,platform:this.platform}} }
   class Screen { constructor(){illegal('Screen')} }
-  class Location { constructor(){illegal('Location')} assign(v){host.navigate(String(v))} replace(v){host.navigate(String(v),true)} reload(){host.navigate(host.location(),true,true)} toString(){return this.href} }
+  class Location { constructor(){illegal('Location')} assign(value){const binding=requireRealmBinding(this,'Location');if(!arguments.length)throw new TypeError('Not enough arguments');value=bindingString(value);callRealmBinding(this,binding,'assign',[value])} replace(value){const binding=requireRealmBinding(this,'Location');if(!arguments.length)throw new TypeError('Not enough arguments');value=bindingString(value);callRealmBinding(this,binding,'replace',[value])} reload(){const binding=requireRealmBinding(this,'Location');callRealmBinding(this,binding,'reload',[])} toString(){const binding=requireRealmBinding(this,'Location');return callRealmBinding(this,binding,'get',['href'])} }
+  class DOMStringList { constructor(){illegal('DOMStringList')} }
+  delete DOMStringList.prototype.constructor;
+  Object.defineProperties(DOMStringList.prototype,{
+    length:{get(){const binding=requireRealmBinding(this,'DOMStringList');return callRealmBinding(this,binding,'length',[])},enumerable:true,configurable:true},
+    contains:{value:{contains(value){const binding=requireRealmBinding(this,'DOMStringList');if(!arguments.length)throw new TypeError('Not enough arguments');value=bindingString(value);return callRealmBinding(this,binding,'contains',[value])}}.contains,writable:true,enumerable:true,configurable:true},
+    item:{value:{item(index){const binding=requireRealmBinding(this,'DOMStringList');if(!arguments.length)throw new TypeError('Not enough arguments');index=(+index)>>>0;return callRealmBinding(this,binding,'item',[index])}}.item,writable:true,enumerable:true,configurable:true},
+    constructor:{value:DOMStringList,writable:true,configurable:true},
+    [Symbol.toStringTag]:{value:'DOMStringList',configurable:true},
+    [Symbol.iterator]:{value:Array.prototype.values,writable:true,configurable:true}
+  });
+  const createDOMStringList=values=>{
+    const target=Object.create(DOMStringList.prototype),index=key=>typeof key==='string'&&/^(0|[1-9]\d*)$/.test(key)&&Number(key)<4294967295;
+    for(let i=0;i<values.length;i++)Object.defineProperty(target,String(i),{value:values[i],enumerable:true,configurable:true});
+    const list=new Proxy(target,{set:(target,key,value,receiver)=>index(key)||Reflect.set(target,key,value,receiver),defineProperty:(target,key,descriptor)=>index(key)||Reflect.defineProperty(target,key,descriptor),deleteProperty:(target,key)=>index(key)?Number(key)>=values.length:Reflect.deleteProperty(target,key),preventExtensions:()=>false});
+    registerRealmBinding(list,'DOMStringList',{length:()=>values.length,item:index=>values[index]??null,contains:value=>values.includes(value)},true);
+    return list;
+  };
+
   const historySlots=new WeakMap();
   // History keeps a private storage copy and a separate cached state object.
   // Native V8 cloning handles ECMAScript exotic objects without invoking proxy traps.
@@ -502,8 +520,23 @@
   def(Navigator.prototype,'plugins',{get:()=>pluginArray});def(Navigator.prototype,'mimeTypes',{get:()=>mimeTypeArray});
   def(Navigator.prototype,'gpu',{get:()=>gpu});
   for(const k of ['width','height','availWidth','availHeight','colorDepth','pixelDepth'])def(Screen.prototype,k,{get:()=>host.screen()[k]});
-  for(const k of ['href','origin','protocol','host','hostname','port','pathname','search','hash'])def(loc,k,{get:()=>host.locationPart(k),set:v=>host.setLocationPart(k,String(v))});
-  for(const k of ['assign','replace','reload','toString'])Object.defineProperty(loc,k,Object.assign({},Object.getOwnPropertyDescriptor(Location.prototype,k),{enumerable:true,configurable:false}));
+  let locationAncestors;
+  bootstrapRestoreHooks.push(()=>{locationAncestors=undefined});
+  registerRealmBinding(loc,'Location',{
+    get:key=>key==='ancestorOrigins'?(locationAncestors??=createDOMStringList(host.locationAncestorOrigins())):host.locationPart(key),
+    set:(key,value)=>host.setLocationPart(key,value),assign:value=>host.navigate(value),replace:value=>host.navigate(value,true),reload:()=>host.navigate(host.location(),true,true)
+  });
+  Object.defineProperty(loc,'valueOf',{value:Object.prototype.valueOf});
+  for(const key of ['ancestorOrigins','href','origin','protocol','host','hostname','port','pathname','search','hash']){
+    const get=Object.getOwnPropertyDescriptor({get [key](){const binding=requireRealmBinding(this,'Location');return callRealmBinding(this,binding,'get',[key])}},key).get;
+    const set=['origin','ancestorOrigins'].includes(key)?undefined:Object.getOwnPropertyDescriptor({set [key](value){const binding=requireRealmBinding(this,'Location');value=bindingString(value);callRealmBinding(this,binding,'set',[key,value])}},key).set;
+    markNative(get,key,'get ');markNative(set,key,'set ');Object.defineProperty(loc,key,{get,set,enumerable:true});
+  }
+  for(const key of ['assign','reload','replace','toString']){
+    const value=Location.prototype[key];markNative(value,key);Object.defineProperty(loc,key,{value,enumerable:true});delete Location.prototype[key];
+  }
+  Object.defineProperty(loc,Symbol.toPrimitive,{value:undefined});
+
   const consoleString=String,consoleParseInt=parseInt,consoleParseFloat=parseFloat;
   const consoleArguments=args=>{
     if(args.length>1&&typeof args[0]==='string'){
@@ -635,9 +668,21 @@
         if(outcome.threw)throw value;
         return value;
       },
-      defineProperty(){if(iteratorFields)iteratorFields.valid=false;return unsupported('defineProperty')},
-      deleteProperty(){if(iteratorFields)iteratorFields.valid=false;return unsupported('deleteProperty')},
-      preventExtensions(){if(iteratorFields)iteratorFields.valid=false;return unsupported('preventExtensions')},
+      defineProperty(_target,property,descriptor){
+        if(iteratorFields)iteratorFields.valid=false;bridgeAccess(id,result.realm);
+        const outcome=host.frameMutateProperty(id,result.handle,'mutateDefine',encodeCrossRealmKey(property),encodeCrossRealmArgument(descriptor),result.realm),value=unwrapCrossRealm(id,outcome.value);
+        if(outcome.threw)throw value;
+        // Materialize only the descriptor required by the local Proxy invariant.
+        // The owner remains authoritative for configurable properties.
+        if(value&&(descriptor.configurable===false||descriptor.writable===false))traps.getOwnPropertyDescriptor(target,property);
+        return value;
+      },
+      deleteProperty(_target,property){
+        if(iteratorFields)iteratorFields.valid=false;bridgeAccess(id,result.realm);
+        const outcome=host.frameMutateProperty(id,result.handle,'mutateDelete',encodeCrossRealmKey(property),encodeCrossRealmArgument(undefined),result.realm),value=unwrapCrossRealm(id,outcome.value);
+        if(outcome.threw)throw value;return value;
+      },
+      preventExtensions(){if(iteratorFields)iteratorFields.valid=false;if(result.binding?.unpreventable){bridgeAccess(id,result.realm);return false}return unsupported('preventExtensions')},
       setPrototypeOf(){if(iteratorFields)iteratorFields.valid=false;return unsupported('setPrototypeOf')},
       getPrototypeOf(){bridgeAccess(id,result.realm);return unwrapCrossRealm(id,host.framePrototype(id,result.handle,result.realm))},
       ownKeys(){bridgeAccess(id,result.realm);return host.frameOwnKeys(id,result.handle,result.realm).map(decodeCrossRealmKey)},
@@ -687,7 +732,7 @@
       return null;
     },(value,importNode=false)=>importNode?wrap(host.nodeData(value)):value===document?host.documentRootID():bridgeApply(bridgeWeakGet,elementData,[value])?.nodeId||0,
     key=>{const value=Reflect.get(globalThis,key);return{value,intrinsic:key==='eval'&&value===bridgeOriginalEval||key==='postMessage'&&value===bridgeOriginalPostMessage}},
-    value=>{const binding=bindingGet(value);return binding?{kind:binding.kind,invoke:binding.invoke}:null});
+    value=>{const binding=bindingGet(value);return binding?{kind:binding.kind,invoke:binding.invoke,unpreventable:binding.unpreventable}:null});
   const remoteWindow=id=>{
     if(id===host.selfFrameID())return globalThis;
     if(remoteWindowCache.has(id))return remoteWindowCache.get(id);
@@ -769,6 +814,17 @@
     Object.defineProperty(fn,'name',{value:prefix+name,configurable:true});markNative(fn,name,prefix);
   }
   Object.defineProperties(window,{top:{get:getWindowTop,enumerable:true,configurable:true},parent:{get:getWindowParent,set:setWindowParent,enumerable:true,configurable:true}});
+  const originWindowID=value=>{
+    if(value===window)return '';
+    for(const [id,proxy] of remoteWindowCache)if(value===proxy){bridgeAccess(id);return id}
+    throw new TypeError('Illegal invocation');
+  };
+  const originDescriptor=Object.getOwnPropertyDescriptor({
+    get origin(){return host.windowOrigin(originWindowID(this))},
+    set origin(value){originWindowID(this);Object.defineProperty(this,'origin',{value,writable:true,enumerable:true,configurable:true})}
+  },'origin');
+  markNative(originDescriptor.get,'origin','get ');markNative(originDescriptor.set,'origin','set ');
+  Object.defineProperty(window,'origin',{...originDescriptor,enumerable:true,configurable:true});
   window.__receiveFrameMessage=(data,origin,sourceId)=>dispatchTrusted(window,new MessageEvent('message',{data,origin,source:remoteWindow(sourceId)}));globalThis.__receiveFrameMessage=window.__receiveFrameMessage;
   Object.assign(window,{CharacterData,Text,Comment,SVGSVGElement,SVGRect,HTMLLinkElement,HTMLMetaElement,IntersectionObserver,BroadcastChannel,CryptoKey,SubtleCrypto,PerformanceMark,PerformanceTiming});
   window.__receiveFrameMessage=(data,origin,sourceId,portIds=[])=>dispatchTrusted(window,new MessageEvent('message',{data,origin,source:remoteWindow(sourceId),ports:Array.from(portIds,wrapBrowserMessagePort)}));globalThis.__receiveFrameMessage=window.__receiveFrameMessage;
@@ -789,7 +845,7 @@
     entriesByType:type=>host.performanceEntries([type],true).map(makePerformanceEntry).concat(type==='mark'?performanceMarks:[]),
     entriesByName:(name,type)=>performanceEntries().filter(entry=>entry.name===name&&(type===undefined||entry.entryType===type))
   };
-  window.performance=Object.create(Performance.prototype);registerRealmBinding(window.performance,'Performance',performanceOperations);window.Performance=Performance;window.PerformanceEntry=PerformanceEntry;window.PerformanceServerTiming=PerformanceServerTiming;window.PerformanceResourceTiming=PerformanceResourceTiming;window.PerformanceNavigationTiming=PerformanceNavigationTiming;window.PerformanceObserverEntryList=PerformanceObserverEntryList;window.PerformanceObserver=PerformanceObserver;
+  window.performance=Object.create(Performance.prototype);registerRealmBinding(window.performance,'Performance',performanceOperations);window.DOMStringList=DOMStringList;window.Performance=Performance;window.PerformanceEntry=PerformanceEntry;window.PerformanceServerTiming=PerformanceServerTiming;window.PerformanceResourceTiming=PerformanceResourceTiming;window.PerformanceNavigationTiming=PerformanceNavigationTiming;window.PerformanceObserverEntryList=PerformanceObserverEntryList;window.PerformanceObserver=PerformanceObserver;
   window.getComputedStyle=e=>cssDeclaration(e,true);window.matchMedia=q=>({matches:host.media(String(q)),media:String(q),onchange:null,addEventListener(){},removeEventListener(){}});
   const handwrittenInterfaceConstructors=new Set(Object.getOwnPropertyNames(globalThis).map(name=>globalThis[name]).filter(value=>typeof value==='function'));
   const attributeUnsafeInterfaces=globalThis.__mimicAttributeUnsafeInterfaces;

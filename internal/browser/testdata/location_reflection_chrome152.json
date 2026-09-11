@@ -1,0 +1,241 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "fixtureOrigin": "http://127.0.0.1:63829",
+  "result": {
+    "result": {
+      "type": "object",
+      "value": {
+        "prototype": {
+          "keys": [
+            "constructor",
+            "Symbol(Symbol.toStringTag)"
+          ],
+          "parent": true
+        },
+        "ownKeys": [
+          "valueOf",
+          "ancestorOrigins",
+          "href",
+          "origin",
+          "protocol",
+          "host",
+          "hostname",
+          "port",
+          "pathname",
+          "search",
+          "hash",
+          "assign",
+          "reload",
+          "replace",
+          "toString",
+          "Symbol(Symbol.toPrimitive)"
+        ],
+        "descriptors": {
+          "valueOf": {
+            "enumerable": false,
+            "configurable": false,
+            "writable": false,
+            "get": "undefined",
+            "set": "undefined",
+            "type": "function",
+            "name": "valueOf",
+            "length": 0
+          },
+          "ancestorOrigins": {
+            "enumerable": true,
+            "configurable": false,
+            "get": "function",
+            "set": "undefined",
+            "type": "undefined"
+          },
+          "href": {
+            "enumerable": true,
+            "configurable": false,
+            "get": "function",
+            "set": "function",
+            "type": "undefined"
+          },
+          "origin": {
+            "enumerable": true,
+            "configurable": false,
+            "get": "function",
+            "set": "undefined",
+            "type": "undefined"
+          },
+          "protocol": {
+            "enumerable": true,
+            "configurable": false,
+            "get": "function",
+            "set": "function",
+            "type": "undefined"
+          },
+          "host": {
+            "enumerable": true,
+            "configurable": false,
+            "get": "function",
+            "set": "function",
+            "type": "undefined"
+          },
+          "hostname": {
+            "enumerable": true,
+            "configurable": false,
+            "get": "function",
+            "set": "function",
+            "type": "undefined"
+          },
+          "port": {
+            "enumerable": true,
+            "configurable": false,
+            "get": "function",
+            "set": "function",
+            "type": "undefined"
+          },
+          "pathname": {
+            "enumerable": true,
+            "configurable": false,
+            "get": "function",
+            "set": "function",
+            "type": "undefined"
+          },
+          "search": {
+            "enumerable": true,
+            "configurable": false,
+            "get": "function",
+            "set": "function",
+            "type": "undefined"
+          },
+          "hash": {
+            "enumerable": true,
+            "configurable": false,
+            "get": "function",
+            "set": "function",
+            "type": "undefined"
+          },
+          "assign": {
+            "enumerable": true,
+            "configurable": false,
+            "writable": false,
+            "get": "undefined",
+            "set": "undefined",
+            "type": "function",
+            "name": "assign",
+            "length": 1
+          },
+          "reload": {
+            "enumerable": true,
+            "configurable": false,
+            "writable": false,
+            "get": "undefined",
+            "set": "undefined",
+            "type": "function",
+            "name": "reload",
+            "length": 0
+          },
+          "replace": {
+            "enumerable": true,
+            "configurable": false,
+            "writable": false,
+            "get": "undefined",
+            "set": "undefined",
+            "type": "function",
+            "name": "replace",
+            "length": 1
+          },
+          "toString": {
+            "enumerable": true,
+            "configurable": false,
+            "writable": false,
+            "get": "undefined",
+            "set": "undefined",
+            "type": "function",
+            "name": "toString",
+            "length": 0
+          },
+          "Symbol(Symbol.toPrimitive)": {
+            "enumerable": false,
+            "configurable": false,
+            "writable": false,
+            "get": "undefined",
+            "set": "undefined",
+            "type": "undefined"
+          }
+        },
+        "methods": {
+          "assign": {
+            "name": "assign",
+            "length": 1,
+            "keys": [
+              "length",
+              "name"
+            ],
+            "constructible": false,
+            "native": true
+          },
+          "replace": {
+            "name": "replace",
+            "length": 1,
+            "keys": [
+              "length",
+              "name"
+            ],
+            "constructible": false,
+            "native": true
+          },
+          "reload": {
+            "name": "reload",
+            "length": 0,
+            "keys": [
+              "length",
+              "name"
+            ],
+            "constructible": false,
+            "native": true
+          },
+          "toString": {
+            "name": "toString",
+            "length": 0,
+            "keys": [
+              "length",
+              "name"
+            ],
+            "constructible": false,
+            "native": true
+          }
+        },
+        "ancestors": {
+          "same": true,
+          "tag": "[object DOMStringList]",
+          "length": 0,
+          "keys": []
+        }
+      }
+    }
+  }
+}

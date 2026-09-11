@@ -116,6 +116,7 @@ type Realm struct {
 	performanceOrigin  time.Time
 	navigationLoadEnd  time.Time
 	documentEntry      *Realm
+	ancestorOrigins    []string
 }
 
 // documentURL is the URL observed by this realm. For the top-level realm it
@@ -182,6 +183,13 @@ func newRealmStateWithNavigation(p *Page, agent ExecutionAgent, d *dom.Document,
 	resourceContext, cancelResources := context.WithCancel(p.ctx.lifetime)
 	r := &Realm{ID: uuid.NewString(), agent: agent, document: d, url: u, origin: originOf(u.String()), token: uuid.NewString(), detached: map[int64]dom.Node{}, apiSeen: map[string]bool{}, readyState: "loading", workers: map[int64]*DedicatedWorker{}, childFrames: map[int64]*Frame{}, retainedFrames: map[string]*Frame{}, crossValues: map[int64]engine.Value{}, resourceContext: resourceContext, cancelResources: cancelResources}
 	r.navigationURL, r.navigationLoaderID, r.performanceOrigin = u.String(), loaderID, performanceOrigin
+	if frame, ok := agent.(*Frame); ok {
+		for ancestor := frame.parent; ancestor != nil; ancestor = ancestor.parent {
+			if ancestor.Realm != nil {
+				r.ancestorOrigins = append(r.ancestorOrigins, ancestor.Realm.origin)
+			}
+		}
+	}
 	policyHeader := ""
 	if frame, ok := agent.(*Frame); ok && frame.parent == nil {
 		policyHeader = r.securityState().permissionsPolicy
@@ -1449,6 +1457,20 @@ func (r *Realm) installBindings() error {
 			}
 		}
 		return r.val(""), nil
+	})
+	host["locationAncestorOrigins"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		origins := append([]string{}, r.ancestorOrigins...)
+		return r.val(origins), nil
+	})
+	host["windowOrigin"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		if id := strarg(args, 0); id != "" {
+			frame := p.frame(id)
+			if !r.canAccess(frame) {
+				return nil, fmt.Errorf("blocked cross-origin Window access")
+			}
+			return r.val(frame.Realm.origin), nil
+		}
+		return r.val(r.origin), nil
 	})
 	installURLHost(host, r.runtime, r.documentURL)
 	host["setLocationPart"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
