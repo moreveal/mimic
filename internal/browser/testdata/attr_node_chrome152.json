@@ -1,0 +1,93 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "unverified-reused-controlled",
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "fixtureOrigin": "http://127.0.0.1:29127",
+  "result": {
+    "result": {
+      "type": "object",
+      "value": {
+        "placement": {
+          "nodeName": false,
+          "nodeType": false,
+          "nodeValue": false,
+          "ownerDocument": false,
+          "parentNode": false,
+          "parentElement": false,
+          "textContent": false
+        },
+        "borrowed": {
+          "nodeName": "data-test",
+          "nodeType": 2,
+          "nodeValue": "initial",
+          "ownerDocument": "document",
+          "parentNode": null,
+          "parentElement": null,
+          "textContent": "initial"
+        },
+        "invalid": {
+          "nodeName": {
+            "exception": "TypeError"
+          },
+          "nodeType": {
+            "exception": "TypeError"
+          },
+          "nodeValue": {
+            "exception": "TypeError"
+          },
+          "ownerDocument": {
+            "exception": "TypeError"
+          },
+          "parentNode": {
+            "exception": "TypeError"
+          },
+          "parentElement": {
+            "exception": "TypeError"
+          },
+          "textContent": {
+            "exception": "TypeError"
+          }
+        },
+        "clonePlacement": false,
+        "clone": "data-test:initial:true",
+        "writes": {
+          "nodeValue": "changed",
+          "nodeValueSymbol": {
+            "exception": "TypeError"
+          },
+          "textContent": "changed",
+          "textContentSymbol": {
+            "exception": "TypeError"
+          }
+        },
+        "attached": "initial",
+        "privateBrand": "data-test"
+      }
+    }
+  }
+}
