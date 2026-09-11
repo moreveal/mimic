@@ -774,7 +774,7 @@ func (s *session) handleRouted(m message, route string) {
 		defer cancel()
 		result, err = s.page.CaptureSnapshot(ctx)
 	case "Mimic.getTrace":
-		result = map[string]any{"events": s.page.Trace().Events()}
+		result = map[string]any{"events": s.page.Trace().Events(), "crashReports": s.page.CrashReports()}
 	case "Mimic.getStatus":
 		activity := s.page.ExecutionStatus()
 		result = map[string]any{

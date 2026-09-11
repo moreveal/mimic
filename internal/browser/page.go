@@ -31,6 +31,7 @@ type documentSecurity struct {
 	permissionsPolicy   string
 }
 type Page struct {
+	launches           []string
 	performanceClamper performanceClamper
 	commandMu          sync.Mutex
 	taskSequence       atomic.Uint64
@@ -68,6 +69,7 @@ type Page struct {
 	// These fields are owned by the Page event loop, never by network goroutines.
 	pendingCheckpoints []*Realm
 	checkpointDraining bool
+	userScriptDepth    int
 	crossRealmDepth    int
 }
 
@@ -116,6 +118,7 @@ func (p *Page) NetworkSession() *network.SessionState { return p.ctx.network }
 func (p *Page) Close() error {
 	p.mu.Lock()
 	p.Top.Realm = nil
+	p.launches = nil
 	realms := make([]*Realm, 0, len(p.realmOwners))
 	for _, r := range p.realmOwners {
 		realms = append(realms, r)
@@ -207,7 +210,35 @@ func (p *Page) allowsScript(resource *url.URL, inline, dynamic bool, nonce strin
 	p.trace.Add(trace.CSP, "scriptDecision", map[string]any{"allowed": allowed, "inline": inline, "dynamic": dynamic, "nonce": nonce != "", "resource": urlString(resource), "reason": reason})
 	return allowed
 }
+
+// Resize observations share the existing environment and iframe box state.
+func (p *Page) viewportObservationChange(before bool) {
+	p.mu.RLock()
+	realms := make([]*Realm, 0, len(p.frames))
+	for _, f := range p.frames {
+		if f.Realm != nil && f.Realm.viewportNotifier != nil {
+			realms = append(realms, f.Realm)
+		}
+	}
+	p.mu.RUnlock()
+	for _, r := range realms {
+		notify := func(ctx context.Context) error {
+			_, err := r.runtime.Call(ctx, r.viewportNotifier, nil, r.val(before))
+			return err
+		}
+		if before {
+			if err := r.runOnOwner(context.Background(), notify); err != nil {
+				p.trace.Add(trace.Error, "viewportObservation", map[string]any{"realm": r.ID, "error": err.Error()})
+			}
+		} else {
+			r.scheduler.Post(scheduler.UserInteraction, 0, notify)
+		}
+	}
+}
+
 func (p *Page) SetViewport(width, height int) error {
+	p.viewportObservationChange(true)
+	defer p.viewportObservationChange(false)
 	p.mu.Lock()
 	defer p.mu.Unlock()
 	if width <= 0 || height <= 0 {

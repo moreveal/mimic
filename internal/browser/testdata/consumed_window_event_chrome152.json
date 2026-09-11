@@ -1,0 +1,162 @@
+{
+  "descriptor": {
+    "exists": true,
+    "enumerable": true,
+    "configurable": true,
+    "get": "function",
+    "set": "function"
+  },
+  "log": [
+    {
+      "label": "initial",
+      "local": "undefined",
+      "localSame": false,
+      "child": "undefined",
+      "childSame": false
+    },
+    {
+      "label": "outer-enter",
+      "local": "outer",
+      "localSame": true,
+      "child": "undefined",
+      "childSame": false
+    },
+    {
+      "label": "nested-inner",
+      "local": "inner",
+      "localSame": true,
+      "child": "undefined",
+      "childSame": false
+    },
+    {
+      "label": "outer-after-inner",
+      "local": "outer",
+      "localSame": true,
+      "child": "undefined",
+      "childSame": false
+    },
+    {
+      "label": "after-dispatch",
+      "local": "undefined",
+      "localSame": false,
+      "child": "undefined",
+      "childSame": false
+    },
+    {
+      "label": "microtask-after-outer",
+      "local": "undefined",
+      "localSame": false,
+      "child": "undefined",
+      "childSame": false
+    },
+    {
+      "label": "child-callback-parent-target",
+      "local": "childcallback",
+      "localSame": true,
+      "parent": "undefined",
+      "parentSame": false
+    },
+    {
+      "label": "after-child-callback",
+      "local": "undefined",
+      "localSame": false,
+      "child": "undefined",
+      "childSame": false
+    },
+    {
+      "label": "parent-callback-child-target",
+      "local": "parentcallback",
+      "localSame": true,
+      "child": "undefined",
+      "childSame": false
+    },
+    {
+      "label": "after-parent-callback",
+      "local": "undefined",
+      "localSame": false,
+      "child": "undefined",
+      "childSame": false
+    },
+    {
+      "label": "child-function-parent-listener-object",
+      "local": "undefined",
+      "localSame": false,
+      "parent": "objectcallback",
+      "parentSame": true
+    },
+    {
+      "label": "after-object-callback",
+      "local": "undefined",
+      "localSame": false,
+      "child": "undefined",
+      "childSame": false
+    },
+    {
+      "label": "shadow-window-capture",
+      "local": "shadowtest",
+      "localSame": true,
+      "child": "undefined",
+      "childSame": false
+    },
+    {
+      "label": "shadow-inner",
+      "local": "undefined",
+      "localSame": false,
+      "child": "undefined",
+      "childSame": false
+    },
+    {
+      "label": "shadow-root",
+      "local": "undefined",
+      "localSame": false,
+      "child": "undefined",
+      "childSame": false
+    },
+    {
+      "label": "shadow-host",
+      "local": "shadowtest",
+      "localSame": true,
+      "child": "undefined",
+      "childSame": false
+    },
+    {
+      "label": "after-shadow",
+      "local": "undefined",
+      "localSame": false,
+      "child": "undefined",
+      "childSame": false
+    },
+    {
+      "label": "trusted-message",
+      "local": "message",
+      "localSame": true,
+      "child": "undefined",
+      "childSame": false
+    },
+    {
+      "label": "after-trusted-message",
+      "local": "message",
+      "localSame": false,
+      "child": "undefined",
+      "childSame": false
+    },
+    {
+      "label": "later-task-after-message",
+      "local": "undefined",
+      "localSame": false,
+      "child": "undefined",
+      "childSame": false
+    }
+  ],
+  "trusted": true,
+  "replaced": {
+    "afterAssignment": "sentinel",
+    "inDispatch": "sentinel",
+    "descriptor": {
+      "kind": "data",
+      "enumerable": true,
+      "configurable": true,
+      "writable": true
+    }
+  }
+}

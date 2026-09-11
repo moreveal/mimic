@@ -306,11 +306,20 @@ func (c *bootstrapSnapshotCache) invalidate(key [32]byte, reason error) {
 func (r *Realm) retryBootstrap(err error) error {
 	r.agent.Page().trace.Add(trace.Error, "bootstrapSnapshotBindingFailed", map[string]any{"error": err.Error()})
 	r.agent.Page().ctx.bootstrapSnapshots.invalidate(r.bootstrapSource().key, err)
+	if r.cookieUnsubscribe != nil {
+		r.cookieUnsubscribe()
+		r.cookieUnsubscribe = nil
+	}
+	r.cookieNotifier = nil
+	r.launchNotifier = nil
 	if closeErr := r.runtime.Close(); closeErr != nil {
 		return fmt.Errorf("snapshot binding: %v; close failed runtime: %w", err, closeErr)
 	}
 	r.bootstrapRestored = false
 	r.frameReflection = nil
+	r.viewportNotifier = nil
+	r.frameViewportRead = nil
+	r.eventListenerInvoker = nil
 	r.frameReferenceImport = nil
 	r.frameReferenceDescribe = nil
 	r.frameGlobalRead = nil

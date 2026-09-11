@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"io"
 	"net/http"
 	"os"
@@ -120,5 +121,35 @@ func TestReadCaptureAccountsForCriticalRetry(t *testing.T) {
 	}
 	if !strings.Contains(c.DocumentURL, "example.test") {
 		t.Fatal("missing document")
+	}
+}
+
+func TestReadCaptureDoesNotInventMissingBodies(t *testing.T) {
+	for _, synthetic := range []bool{false, true} {
+		t.Run(fmt.Sprint(synthetic), func(t *testing.T) {
+			dir := t.TempDir()
+			events := []trace.Event{{Sequence: 1, Kind: trace.Network, Name: "request", Data: map[string]any{"id": "missing", "url": "https://example.test/", "method": "GET", "context": "top", "initiator": "navigation"}}, {Sequence: 2, Kind: trace.Network, Name: "response", Data: map[string]any{"id": "missing", "synthetic": synthetic}}}
+			data, _ := json.Marshal(map[string]any{"result": map[string]any{"events": events}})
+			if err := os.WriteFile(filepath.Join(dir, "trace.json"), data, 0600); err != nil {
+				t.Fatal(err)
+			}
+			body := `{"response":{"url":"https://example.test/","status":200},"error":{"code":-32000,"message":"unknown request id"}}`
+			if err := os.WriteFile(filepath.Join(dir, "root-missing.json"), []byte(body), 0600); err != nil {
+				t.Fatal(err)
+			}
+			c, err := readCapture(dir)
+			if !synthetic {
+				if err == nil {
+					t.Fatal("missing transport body accepted")
+				}
+				return
+			}
+			if err != nil {
+				t.Fatal(err)
+			}
+			if len(c.Fixtures) != 1 || !c.Fixtures[0].UnavailableBody || c.Fixtures[0].Local != "synthetic" {
+				t.Fatal("missing synthetic body was not recorded")
+			}
+		})
 	}
 }

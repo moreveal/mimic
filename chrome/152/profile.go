@@ -54,6 +54,9 @@ func environment(mode state.BrowserMode) state.Environment {
 		environment.Capabilities.KeyboardLayout["Digit"+string(digit)] = string(digit)
 	}
 	environment.Platform.OSVersion = "19.0.0"
+	// Frozen Chrome 152 local oracle on this profile reports CPU performance class 4.
+	environment.Hardware.CPUPerformance = 4
+	environment.Hardware.CPUPerformanceKnown = true
 	environment.Hardware.LogicalProcessors = 28
 	environment.Hardware.DeviceMemoryGB = 32
 	environment.Display.PhysicalWidth = 2560

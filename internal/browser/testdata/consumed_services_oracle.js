@@ -1,0 +1,8 @@
+(async()=>{const out={};const cap=async f=>{try{const v=await f();return v===undefined?'ok':v}catch(e){return e.name}};
+if(!globalThis.scheduler)return out;
+const order=[];const c=new TaskController({priority:'background'});c.signal.addEventListener('prioritychange',e=>order.push('priority:'+e.previousPriority+':'+c.signal.priority));
+const jobs=[scheduler.postTask(()=>order.push('background'),{priority:'background'}),scheduler.postTask(()=>order.push('visible')),scheduler.postTask(()=>order.push('blocking'),{priority:'user-blocking'}),scheduler.postTask(()=>order.push('changed'),{signal:c.signal})];c.setPriority('user-blocking');await Promise.all(jobs);out.order=order;
+const a=new AbortController();const t=scheduler.postTask(()=>99,{signal:a.signal});a.abort('cancelled');out.abort=await t.catch(e=>e);
+const y=[];await Promise.all([scheduler.postTask(async()=>{y.push(1);await scheduler.yield();y.push(2)}),scheduler.postTask(()=>y.push(3))]);out.yield=y;
+out.crash=[];for(const size of [0,2,8,9,65536,65537]){const f=document.createElement('iframe');document.body.append(f);const r=f.contentWindow.crashReport;out.crash.push([size,await cap(()=>r.initialize(size)),await cap(()=>r.set('a','b')),await cap(()=>r.delete('a')),await cap(()=>r.initialize(size))]);f.remove()}
+out.webdriver=[navigator.webdriver,(()=>{const f=document.createElement('iframe');document.body.append(f);return f.contentWindow.navigator.webdriver})()];return JSON.stringify(out)})()

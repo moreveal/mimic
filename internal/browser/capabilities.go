@@ -82,6 +82,10 @@ func (c *Context) setPermissionLocked(origin, name, value string) {
 	}
 }
 
+// navigatorWebDriver is a product invariant, independent of CDP attachment,
+// debugging ports, headless flags, and environment overrides.
+const navigatorWebDriver = false
+
 func addCapabilityHosts(r *Realm, h map[string]any) {
 	p := r.agent.Page()
 	h["capabilityState"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {

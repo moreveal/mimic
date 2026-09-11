@@ -20,8 +20,11 @@ type Platform struct {
 	Mobile                      bool
 }
 type Hardware struct {
-	LogicalProcessors int
-	DeviceMemoryGB    float64
+	// CPUPerformance is the measured Chrome performance class of the selected machine profile.
+	CPUPerformance      int
+	CPUPerformanceKnown bool
+	LogicalProcessors   int
+	DeviceMemoryGB      float64
 }
 type Display struct {
 	PhysicalWidth, PhysicalHeight   int
@@ -150,7 +153,7 @@ func ChromeDesktopWindows(product Product) Environment {
 		Presentation: Presentation{Mode: BrowserModeHeadful},
 		Product:      product,
 		Platform:     Platform{"Windows", "10.0.0", "x86", false},
-		Hardware:     Hardware{8, 8},
+		Hardware:     Hardware{LogicalProcessors: 8, DeviceMemoryGB: 8},
 		Display:      Display{PhysicalWidth: 1920, PhysicalHeight: 1080, AvailableWidth: 1920, AvailableHeight: 1040, DeviceScaleFactor: 1, ColorDepth: 24},
 		Window:       Window{0, 0, 1280, 800, 1280, 720},
 		Graphics: Graphics{

@@ -43,6 +43,8 @@ func (b *Browser) Environment() state.Environment      { b.mu.RLock(); defer b.m
 func (b *Browser) Compatibility() compatibility.Bundle { return b.compat }
 
 type Context struct {
+	cacheNames         map[string]map[string]*cacheBucket
+	cacheSequence      uint64
 	bootstrapSnapshots bootstrapSnapshotCache
 	storageMu          sync.Mutex
 	permissionRealms   map[*Realm]struct{}
@@ -132,6 +134,7 @@ func (c *Context) store(origin string) map[string]string {
 }
 
 type Frame struct {
+	windowName         string
 	ID                 string
 	page               *Page
 	parent             *Frame

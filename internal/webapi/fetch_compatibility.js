@@ -158,4 +158,5 @@
   for(const name of ['encoding','fatal','ignoreBOM','readable','writable'])Object.defineProperty(TextDecoderStream.prototype,name,{get(){const state=slot(decoderStreams,this);return name==='readable'||name==='writable'?state.stream[name]:state.decoder[name]},configurable:true,enumerable:true});
   Object.defineProperty(TextDecoderStream.prototype,Symbol.toStringTag,{value:'TextDecoderStream',configurable:true});
   for(const [name,value] of Object.entries({Headers:FetchHeaders,Request:FetchRequest,Response:FetchResponse,TextDecoderStream,fetch}))Object.defineProperty(globalThis,name,{value,writable:true,configurable:true});
+  /* cache_storage */
 }
