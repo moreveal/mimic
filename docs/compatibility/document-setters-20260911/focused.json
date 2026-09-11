@@ -1,0 +1,2873 @@
+{
+  "sha256": "262f0694676d256e6e3f37ee1440551a78ecf18390390cf3dc2e1a4862f1cfbf",
+  "chrome": {
+    "adoptedStyleSheets": {
+      "object": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "null": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "undefined": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "primitive": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "documentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "element": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "window": {
+        "exception": "TypeError",
+        "calls": []
+      }
+    },
+    "cookie": {
+      "object": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "null": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "undefined": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "primitive": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "documentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "element": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "window": {
+        "exception": "TypeError",
+        "calls": []
+      }
+    },
+    "domain": {
+      "object": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "null": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "undefined": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "primitive": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "documentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "element": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "window": {
+        "exception": "TypeError",
+        "calls": []
+      }
+    },
+    "title": {
+      "object": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "null": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "undefined": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "primitive": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "documentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "element": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "window": {
+        "exception": "TypeError",
+        "calls": []
+      }
+    },
+    "designMode": {
+      "object": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "null": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "undefined": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "primitive": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "documentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "element": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "window": {
+        "exception": "TypeError",
+        "calls": []
+      }
+    },
+    "onabort": {
+      "object": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "null": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "undefined": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "primitive": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "documentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "element": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "window": {
+        "exception": "TypeError",
+        "calls": []
+      }
+    },
+    "onreadystatechange": {
+      "object": {
+        "status": "returned",
+        "calls": []
+      },
+      "null": {
+        "status": "returned",
+        "calls": []
+      },
+      "undefined": {
+        "status": "returned",
+        "calls": []
+      },
+      "primitive": {
+        "status": "returned",
+        "calls": []
+      },
+      "documentPrototype": {
+        "status": "returned",
+        "calls": []
+      },
+      "htmlDocumentPrototype": {
+        "status": "returned",
+        "calls": []
+      },
+      "element": {
+        "status": "returned",
+        "calls": []
+      },
+      "window": {
+        "status": "returned",
+        "calls": []
+      }
+    },
+    "onmouseenter": {
+      "object": {
+        "status": "returned",
+        "calls": []
+      },
+      "null": {
+        "status": "returned",
+        "calls": []
+      },
+      "undefined": {
+        "status": "returned",
+        "calls": []
+      },
+      "primitive": {
+        "status": "returned",
+        "calls": []
+      },
+      "documentPrototype": {
+        "status": "returned",
+        "calls": []
+      },
+      "htmlDocumentPrototype": {
+        "status": "returned",
+        "calls": []
+      },
+      "element": {
+        "status": "returned",
+        "calls": []
+      },
+      "window": {
+        "status": "returned",
+        "calls": []
+      }
+    },
+    "onmouseleave": {
+      "object": {
+        "status": "returned",
+        "calls": []
+      },
+      "null": {
+        "status": "returned",
+        "calls": []
+      },
+      "undefined": {
+        "status": "returned",
+        "calls": []
+      },
+      "primitive": {
+        "status": "returned",
+        "calls": []
+      },
+      "documentPrototype": {
+        "status": "returned",
+        "calls": []
+      },
+      "htmlDocumentPrototype": {
+        "status": "returned",
+        "calls": []
+      },
+      "element": {
+        "status": "returned",
+        "calls": []
+      },
+      "window": {
+        "status": "returned",
+        "calls": []
+      }
+    },
+    "fullscreen": {
+      "object": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "null": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "undefined": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "primitive": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "documentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "element": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "window": {
+        "exception": "TypeError",
+        "calls": []
+      }
+    },
+    "fullscreenElement": {
+      "object": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "null": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "undefined": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "primitive": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "documentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "element": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "window": {
+        "exception": "TypeError",
+        "calls": []
+      }
+    },
+    "fullscreenEnabled": {
+      "object": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "null": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "undefined": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "primitive": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "documentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "element": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "window": {
+        "exception": "TypeError",
+        "calls": []
+      }
+    },
+    "validReadonly": {
+      "fullscreen": {
+        "same": true,
+        "calls": []
+      },
+      "fullscreenElement": {
+        "same": true,
+        "calls": []
+      },
+      "fullscreenEnabled": {
+        "same": true,
+        "calls": []
+      }
+    },
+    "symbolConversion": {
+      "xmlVersion": "TypeError",
+      "domain": "TypeError",
+      "cookie": "TypeError",
+      "title": "TypeError",
+      "dir": "TypeError",
+      "designMode": "TypeError",
+      "fgColor": "TypeError",
+      "linkColor": "TypeError",
+      "vlinkColor": "TypeError",
+      "alinkColor": "TypeError",
+      "bgColor": "TypeError"
+    },
+    "validHandlers": {
+      "onabort": true,
+      "onreadystatechange": true,
+      "onmouseenter": true,
+      "onmouseleave": true
+    },
+    "privateBrand": true
+  },
+  "mimic": {
+    "adoptedStyleSheets": {
+      "documentPrototype": {
+        "calls": [
+          "iterator"
+        ],
+        "status": "returned"
+      },
+      "element": {
+        "calls": [
+          "iterator"
+        ],
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "calls": [
+          "iterator"
+        ],
+        "status": "returned"
+      },
+      "null": {
+        "calls": [
+          "iterator"
+        ],
+        "exception": "TypeError"
+      },
+      "object": {
+        "calls": [
+          "iterator"
+        ],
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "calls": [
+          "iterator"
+        ],
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "calls": [
+          "iterator"
+        ],
+        "exception": "TypeError"
+      },
+      "window": {
+        "calls": [
+          "iterator"
+        ],
+        "exception": "TypeError"
+      }
+    },
+    "cookie": {
+      "documentPrototype": {
+        "calls": [
+          "string"
+        ],
+        "status": "returned"
+      },
+      "element": {
+        "calls": [
+          "string"
+        ],
+        "status": "returned"
+      },
+      "htmlDocumentPrototype": {
+        "calls": [
+          "string"
+        ],
+        "status": "returned"
+      },
+      "null": {
+        "calls": [
+          "string"
+        ],
+        "status": "returned"
+      },
+      "object": {
+        "calls": [
+          "string"
+        ],
+        "status": "returned"
+      },
+      "primitive": {
+        "calls": [
+          "string"
+        ],
+        "status": "returned"
+      },
+      "undefined": {
+        "calls": [
+          "string"
+        ],
+        "status": "returned"
+      },
+      "window": {
+        "calls": [
+          "string"
+        ],
+        "status": "returned"
+      }
+    },
+    "designMode": {
+      "documentPrototype": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "element": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "null": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "object": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "window": {
+        "calls": [],
+        "exception": "TypeError"
+      }
+    },
+    "domain": {
+      "documentPrototype": {
+        "calls": [],
+        "status": "returned"
+      },
+      "element": {
+        "calls": [],
+        "status": "returned"
+      },
+      "htmlDocumentPrototype": {
+        "calls": [],
+        "status": "returned"
+      },
+      "null": {
+        "calls": [],
+        "status": "returned"
+      },
+      "object": {
+        "calls": [],
+        "status": "returned"
+      },
+      "primitive": {
+        "calls": [],
+        "status": "returned"
+      },
+      "undefined": {
+        "calls": [],
+        "status": "returned"
+      },
+      "window": {
+        "calls": [],
+        "status": "returned"
+      }
+    },
+    "onabort": {
+      "documentPrototype": {
+        "calls": [],
+        "status": "returned"
+      },
+      "element": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "calls": [],
+        "status": "returned"
+      },
+      "null": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "object": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "window": {
+        "calls": [],
+        "exception": "TypeError"
+      }
+    },
+    "onmouseenter": {
+      "documentPrototype": {
+        "calls": [],
+        "status": "returned"
+      },
+      "element": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "calls": [],
+        "status": "returned"
+      },
+      "null": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "object": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "window": {
+        "calls": [],
+        "exception": "TypeError"
+      }
+    },
+    "onmouseleave": {
+      "documentPrototype": {
+        "calls": [],
+        "status": "returned"
+      },
+      "element": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "calls": [],
+        "status": "returned"
+      },
+      "null": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "object": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "window": {
+        "calls": [],
+        "exception": "TypeError"
+      }
+    },
+    "onreadystatechange": {
+      "documentPrototype": {
+        "calls": [],
+        "status": "returned"
+      },
+      "element": {
+        "calls": [],
+        "status": "returned"
+      },
+      "htmlDocumentPrototype": {
+        "calls": [],
+        "status": "returned"
+      },
+      "null": {
+        "calls": [],
+        "status": "returned"
+      },
+      "object": {
+        "calls": [],
+        "status": "returned"
+      },
+      "primitive": {
+        "calls": [],
+        "status": "returned"
+      },
+      "undefined": {
+        "calls": [],
+        "status": "returned"
+      },
+      "window": {
+        "calls": [],
+        "status": "returned"
+      }
+    },
+    "privateBrand": true,
+    "symbolConversion": {
+      "alinkColor": "returned",
+      "bgColor": "returned",
+      "cookie": "returned",
+      "designMode": "returned",
+      "dir": "returned",
+      "domain": "returned",
+      "fgColor": "returned",
+      "linkColor": "returned",
+      "title": "returned",
+      "vlinkColor": "returned",
+      "xmlVersion": "NotSupportedError"
+    },
+    "title": {
+      "documentPrototype": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "element": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "null": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "object": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "window": {
+        "calls": [],
+        "exception": "TypeError"
+      }
+    },
+    "validHandlers": {
+      "onabort": true,
+      "onmouseenter": true,
+      "onmouseleave": true,
+      "onreadystatechange": true
+    },
+    "validReadonly": {
+      "fullscreen": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "fullscreenElement": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "fullscreenEnabled": {
+        "calls": [],
+        "exception": "TypeError"
+      }
+    }
+  },
+  "after": {
+    "adoptedStyleSheets": {
+      "documentPrototype": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "element": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "null": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "object": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "window": {
+        "calls": [],
+        "exception": "TypeError"
+      }
+    },
+    "cookie": {
+      "documentPrototype": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "element": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "null": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "object": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "window": {
+        "calls": [],
+        "exception": "TypeError"
+      }
+    },
+    "designMode": {
+      "documentPrototype": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "element": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "null": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "object": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "window": {
+        "calls": [],
+        "exception": "TypeError"
+      }
+    },
+    "domain": {
+      "documentPrototype": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "element": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "null": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "object": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "window": {
+        "calls": [],
+        "exception": "TypeError"
+      }
+    },
+    "fullscreen": {
+      "documentPrototype": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "element": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "null": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "object": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "window": {
+        "calls": [],
+        "exception": "TypeError"
+      }
+    },
+    "fullscreenElement": {
+      "documentPrototype": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "element": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "null": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "object": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "window": {
+        "calls": [],
+        "exception": "TypeError"
+      }
+    },
+    "fullscreenEnabled": {
+      "documentPrototype": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "element": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "null": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "object": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "window": {
+        "calls": [],
+        "exception": "TypeError"
+      }
+    },
+    "onabort": {
+      "documentPrototype": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "element": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "null": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "object": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "window": {
+        "calls": [],
+        "exception": "TypeError"
+      }
+    },
+    "onmouseenter": {
+      "documentPrototype": {
+        "calls": [],
+        "status": "returned"
+      },
+      "element": {
+        "calls": [],
+        "status": "returned"
+      },
+      "htmlDocumentPrototype": {
+        "calls": [],
+        "status": "returned"
+      },
+      "null": {
+        "calls": [],
+        "status": "returned"
+      },
+      "object": {
+        "calls": [],
+        "status": "returned"
+      },
+      "primitive": {
+        "calls": [],
+        "status": "returned"
+      },
+      "undefined": {
+        "calls": [],
+        "status": "returned"
+      },
+      "window": {
+        "calls": [],
+        "status": "returned"
+      }
+    },
+    "onmouseleave": {
+      "documentPrototype": {
+        "calls": [],
+        "status": "returned"
+      },
+      "element": {
+        "calls": [],
+        "status": "returned"
+      },
+      "htmlDocumentPrototype": {
+        "calls": [],
+        "status": "returned"
+      },
+      "null": {
+        "calls": [],
+        "status": "returned"
+      },
+      "object": {
+        "calls": [],
+        "status": "returned"
+      },
+      "primitive": {
+        "calls": [],
+        "status": "returned"
+      },
+      "undefined": {
+        "calls": [],
+        "status": "returned"
+      },
+      "window": {
+        "calls": [],
+        "status": "returned"
+      }
+    },
+    "onreadystatechange": {
+      "documentPrototype": {
+        "calls": [],
+        "status": "returned"
+      },
+      "element": {
+        "calls": [],
+        "status": "returned"
+      },
+      "htmlDocumentPrototype": {
+        "calls": [],
+        "status": "returned"
+      },
+      "null": {
+        "calls": [],
+        "status": "returned"
+      },
+      "object": {
+        "calls": [],
+        "status": "returned"
+      },
+      "primitive": {
+        "calls": [],
+        "status": "returned"
+      },
+      "undefined": {
+        "calls": [],
+        "status": "returned"
+      },
+      "window": {
+        "calls": [],
+        "status": "returned"
+      }
+    },
+    "privateBrand": true,
+    "symbolConversion": {
+      "alinkColor": "TypeError",
+      "bgColor": "TypeError",
+      "cookie": "TypeError",
+      "designMode": "TypeError",
+      "dir": "TypeError",
+      "domain": "TypeError",
+      "fgColor": "TypeError",
+      "linkColor": "TypeError",
+      "title": "TypeError",
+      "vlinkColor": "TypeError",
+      "xmlVersion": "TypeError"
+    },
+    "title": {
+      "documentPrototype": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "element": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "htmlDocumentPrototype": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "null": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "object": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "primitive": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "undefined": {
+        "calls": [],
+        "exception": "TypeError"
+      },
+      "window": {
+        "calls": [],
+        "exception": "TypeError"
+      }
+    },
+    "validHandlers": {
+      "onabort": true,
+      "onmouseenter": true,
+      "onmouseleave": true,
+      "onreadystatechange": true
+    },
+    "validReadonly": {
+      "fullscreen": {
+        "calls": [],
+        "same": true
+      },
+      "fullscreenElement": {
+        "calls": [],
+        "same": true
+      },
+      "fullscreenEnabled": {
+        "calls": [],
+        "same": true
+      }
+    }
+  },
+  "control": {
+    "adoptedStyleSheets": {
+      "object": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "null": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "undefined": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "primitive": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "documentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "element": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "window": {
+        "exception": "TypeError",
+        "calls": []
+      }
+    },
+    "cookie": {
+      "object": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "null": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "undefined": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "primitive": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "documentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "element": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "window": {
+        "exception": "TypeError",
+        "calls": []
+      }
+    },
+    "domain": {
+      "object": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "null": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "undefined": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "primitive": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "documentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "element": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "window": {
+        "exception": "TypeError",
+        "calls": []
+      }
+    },
+    "title": {
+      "object": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "null": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "undefined": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "primitive": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "documentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "element": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "window": {
+        "exception": "TypeError",
+        "calls": []
+      }
+    },
+    "designMode": {
+      "object": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "null": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "undefined": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "primitive": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "documentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "element": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "window": {
+        "exception": "TypeError",
+        "calls": []
+      }
+    },
+    "onabort": {
+      "object": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "null": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "undefined": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "primitive": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "documentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "element": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "window": {
+        "exception": "TypeError",
+        "calls": []
+      }
+    },
+    "onreadystatechange": {
+      "object": {
+        "status": "returned",
+        "calls": []
+      },
+      "null": {
+        "status": "returned",
+        "calls": []
+      },
+      "undefined": {
+        "status": "returned",
+        "calls": []
+      },
+      "primitive": {
+        "status": "returned",
+        "calls": []
+      },
+      "documentPrototype": {
+        "status": "returned",
+        "calls": []
+      },
+      "htmlDocumentPrototype": {
+        "status": "returned",
+        "calls": []
+      },
+      "element": {
+        "status": "returned",
+        "calls": []
+      },
+      "window": {
+        "status": "returned",
+        "calls": []
+      }
+    },
+    "onmouseenter": {
+      "object": {
+        "status": "returned",
+        "calls": []
+      },
+      "null": {
+        "status": "returned",
+        "calls": []
+      },
+      "undefined": {
+        "status": "returned",
+        "calls": []
+      },
+      "primitive": {
+        "status": "returned",
+        "calls": []
+      },
+      "documentPrototype": {
+        "status": "returned",
+        "calls": []
+      },
+      "htmlDocumentPrototype": {
+        "status": "returned",
+        "calls": []
+      },
+      "element": {
+        "status": "returned",
+        "calls": []
+      },
+      "window": {
+        "status": "returned",
+        "calls": []
+      }
+    },
+    "onmouseleave": {
+      "object": {
+        "status": "returned",
+        "calls": []
+      },
+      "null": {
+        "status": "returned",
+        "calls": []
+      },
+      "undefined": {
+        "status": "returned",
+        "calls": []
+      },
+      "primitive": {
+        "status": "returned",
+        "calls": []
+      },
+      "documentPrototype": {
+        "status": "returned",
+        "calls": []
+      },
+      "htmlDocumentPrototype": {
+        "status": "returned",
+        "calls": []
+      },
+      "element": {
+        "status": "returned",
+        "calls": []
+      },
+      "window": {
+        "status": "returned",
+        "calls": []
+      }
+    },
+    "fullscreen": {
+      "object": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "null": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "undefined": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "primitive": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "documentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "element": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "window": {
+        "exception": "TypeError",
+        "calls": []
+      }
+    },
+    "fullscreenElement": {
+      "object": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "null": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "undefined": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "primitive": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "documentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "element": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "window": {
+        "exception": "TypeError",
+        "calls": []
+      }
+    },
+    "fullscreenEnabled": {
+      "object": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "null": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "undefined": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "primitive": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "documentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "htmlDocumentPrototype": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "element": {
+        "exception": "TypeError",
+        "calls": []
+      },
+      "window": {
+        "exception": "TypeError",
+        "calls": []
+      }
+    },
+    "validReadonly": {
+      "fullscreen": {
+        "same": true,
+        "calls": []
+      },
+      "fullscreenElement": {
+        "same": true,
+        "calls": []
+      },
+      "fullscreenEnabled": {
+        "same": true,
+        "calls": []
+      }
+    },
+    "symbolConversion": {
+      "xmlVersion": "TypeError",
+      "domain": "TypeError",
+      "cookie": "TypeError",
+      "title": "TypeError",
+      "dir": "TypeError",
+      "designMode": "TypeError",
+      "fgColor": "TypeError",
+      "linkColor": "TypeError",
+      "vlinkColor": "TypeError",
+      "alinkColor": "TypeError",
+      "bgColor": "TypeError"
+    },
+    "validHandlers": {
+      "onabort": true,
+      "onreadystatechange": true,
+      "onmouseenter": true,
+      "onmouseleave": true
+    },
+    "privateBrand": true
+  },
+  "differences": [
+    [
+      [
+        "adoptedStyleSheets",
+        "documentPrototype",
+        "calls"
+      ],
+      [],
+      [
+        "iterator"
+      ]
+    ],
+    [
+      [
+        "adoptedStyleSheets",
+        "documentPrototype",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "adoptedStyleSheets",
+        "documentPrototype",
+        "status"
+      ],
+      {
+        "$missing": true
+      },
+      "returned"
+    ],
+    [
+      [
+        "adoptedStyleSheets",
+        "element",
+        "calls"
+      ],
+      [],
+      [
+        "iterator"
+      ]
+    ],
+    [
+      [
+        "adoptedStyleSheets",
+        "htmlDocumentPrototype",
+        "calls"
+      ],
+      [],
+      [
+        "iterator"
+      ]
+    ],
+    [
+      [
+        "adoptedStyleSheets",
+        "htmlDocumentPrototype",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "adoptedStyleSheets",
+        "htmlDocumentPrototype",
+        "status"
+      ],
+      {
+        "$missing": true
+      },
+      "returned"
+    ],
+    [
+      [
+        "adoptedStyleSheets",
+        "null",
+        "calls"
+      ],
+      [],
+      [
+        "iterator"
+      ]
+    ],
+    [
+      [
+        "adoptedStyleSheets",
+        "object",
+        "calls"
+      ],
+      [],
+      [
+        "iterator"
+      ]
+    ],
+    [
+      [
+        "adoptedStyleSheets",
+        "primitive",
+        "calls"
+      ],
+      [],
+      [
+        "iterator"
+      ]
+    ],
+    [
+      [
+        "adoptedStyleSheets",
+        "undefined",
+        "calls"
+      ],
+      [],
+      [
+        "iterator"
+      ]
+    ],
+    [
+      [
+        "adoptedStyleSheets",
+        "window",
+        "calls"
+      ],
+      [],
+      [
+        "iterator"
+      ]
+    ],
+    [
+      [
+        "cookie",
+        "documentPrototype",
+        "calls"
+      ],
+      [],
+      [
+        "string"
+      ]
+    ],
+    [
+      [
+        "cookie",
+        "documentPrototype",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "cookie",
+        "documentPrototype",
+        "status"
+      ],
+      {
+        "$missing": true
+      },
+      "returned"
+    ],
+    [
+      [
+        "cookie",
+        "element",
+        "calls"
+      ],
+      [],
+      [
+        "string"
+      ]
+    ],
+    [
+      [
+        "cookie",
+        "element",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "cookie",
+        "element",
+        "status"
+      ],
+      {
+        "$missing": true
+      },
+      "returned"
+    ],
+    [
+      [
+        "cookie",
+        "htmlDocumentPrototype",
+        "calls"
+      ],
+      [],
+      [
+        "string"
+      ]
+    ],
+    [
+      [
+        "cookie",
+        "htmlDocumentPrototype",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "cookie",
+        "htmlDocumentPrototype",
+        "status"
+      ],
+      {
+        "$missing": true
+      },
+      "returned"
+    ],
+    [
+      [
+        "cookie",
+        "null",
+        "calls"
+      ],
+      [],
+      [
+        "string"
+      ]
+    ],
+    [
+      [
+        "cookie",
+        "null",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "cookie",
+        "null",
+        "status"
+      ],
+      {
+        "$missing": true
+      },
+      "returned"
+    ],
+    [
+      [
+        "cookie",
+        "object",
+        "calls"
+      ],
+      [],
+      [
+        "string"
+      ]
+    ],
+    [
+      [
+        "cookie",
+        "object",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "cookie",
+        "object",
+        "status"
+      ],
+      {
+        "$missing": true
+      },
+      "returned"
+    ],
+    [
+      [
+        "cookie",
+        "primitive",
+        "calls"
+      ],
+      [],
+      [
+        "string"
+      ]
+    ],
+    [
+      [
+        "cookie",
+        "primitive",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "cookie",
+        "primitive",
+        "status"
+      ],
+      {
+        "$missing": true
+      },
+      "returned"
+    ],
+    [
+      [
+        "cookie",
+        "undefined",
+        "calls"
+      ],
+      [],
+      [
+        "string"
+      ]
+    ],
+    [
+      [
+        "cookie",
+        "undefined",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "cookie",
+        "undefined",
+        "status"
+      ],
+      {
+        "$missing": true
+      },
+      "returned"
+    ],
+    [
+      [
+        "cookie",
+        "window",
+        "calls"
+      ],
+      [],
+      [
+        "string"
+      ]
+    ],
+    [
+      [
+        "cookie",
+        "window",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "cookie",
+        "window",
+        "status"
+      ],
+      {
+        "$missing": true
+      },
+      "returned"
+    ],
+    [
+      [
+        "domain",
+        "documentPrototype",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "domain",
+        "documentPrototype",
+        "status"
+      ],
+      {
+        "$missing": true
+      },
+      "returned"
+    ],
+    [
+      [
+        "domain",
+        "element",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "domain",
+        "element",
+        "status"
+      ],
+      {
+        "$missing": true
+      },
+      "returned"
+    ],
+    [
+      [
+        "domain",
+        "htmlDocumentPrototype",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "domain",
+        "htmlDocumentPrototype",
+        "status"
+      ],
+      {
+        "$missing": true
+      },
+      "returned"
+    ],
+    [
+      [
+        "domain",
+        "null",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "domain",
+        "null",
+        "status"
+      ],
+      {
+        "$missing": true
+      },
+      "returned"
+    ],
+    [
+      [
+        "domain",
+        "object",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "domain",
+        "object",
+        "status"
+      ],
+      {
+        "$missing": true
+      },
+      "returned"
+    ],
+    [
+      [
+        "domain",
+        "primitive",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "domain",
+        "primitive",
+        "status"
+      ],
+      {
+        "$missing": true
+      },
+      "returned"
+    ],
+    [
+      [
+        "domain",
+        "undefined",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "domain",
+        "undefined",
+        "status"
+      ],
+      {
+        "$missing": true
+      },
+      "returned"
+    ],
+    [
+      [
+        "domain",
+        "window",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "domain",
+        "window",
+        "status"
+      ],
+      {
+        "$missing": true
+      },
+      "returned"
+    ],
+    [
+      [
+        "fullscreen"
+      ],
+      {
+        "object": {
+          "exception": "TypeError",
+          "calls": []
+        },
+        "null": {
+          "exception": "TypeError",
+          "calls": []
+        },
+        "undefined": {
+          "exception": "TypeError",
+          "calls": []
+        },
+        "primitive": {
+          "exception": "TypeError",
+          "calls": []
+        },
+        "documentPrototype": {
+          "exception": "TypeError",
+          "calls": []
+        },
+        "htmlDocumentPrototype": {
+          "exception": "TypeError",
+          "calls": []
+        },
+        "element": {
+          "exception": "TypeError",
+          "calls": []
+        },
+        "window": {
+          "exception": "TypeError",
+          "calls": []
+        }
+      },
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "fullscreenElement"
+      ],
+      {
+        "object": {
+          "exception": "TypeError",
+          "calls": []
+        },
+        "null": {
+          "exception": "TypeError",
+          "calls": []
+        },
+        "undefined": {
+          "exception": "TypeError",
+          "calls": []
+        },
+        "primitive": {
+          "exception": "TypeError",
+          "calls": []
+        },
+        "documentPrototype": {
+          "exception": "TypeError",
+          "calls": []
+        },
+        "htmlDocumentPrototype": {
+          "exception": "TypeError",
+          "calls": []
+        },
+        "element": {
+          "exception": "TypeError",
+          "calls": []
+        },
+        "window": {
+          "exception": "TypeError",
+          "calls": []
+        }
+      },
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "fullscreenEnabled"
+      ],
+      {
+        "object": {
+          "exception": "TypeError",
+          "calls": []
+        },
+        "null": {
+          "exception": "TypeError",
+          "calls": []
+        },
+        "undefined": {
+          "exception": "TypeError",
+          "calls": []
+        },
+        "primitive": {
+          "exception": "TypeError",
+          "calls": []
+        },
+        "documentPrototype": {
+          "exception": "TypeError",
+          "calls": []
+        },
+        "htmlDocumentPrototype": {
+          "exception": "TypeError",
+          "calls": []
+        },
+        "element": {
+          "exception": "TypeError",
+          "calls": []
+        },
+        "window": {
+          "exception": "TypeError",
+          "calls": []
+        }
+      },
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "onabort",
+        "documentPrototype",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "onabort",
+        "documentPrototype",
+        "status"
+      ],
+      {
+        "$missing": true
+      },
+      "returned"
+    ],
+    [
+      [
+        "onabort",
+        "htmlDocumentPrototype",
+        "exception"
+      ],
+      "TypeError",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "onabort",
+        "htmlDocumentPrototype",
+        "status"
+      ],
+      {
+        "$missing": true
+      },
+      "returned"
+    ],
+    [
+      [
+        "onmouseenter",
+        "element",
+        "exception"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "onmouseenter",
+        "element",
+        "status"
+      ],
+      "returned",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "onmouseenter",
+        "null",
+        "exception"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "onmouseenter",
+        "null",
+        "status"
+      ],
+      "returned",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "onmouseenter",
+        "object",
+        "exception"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "onmouseenter",
+        "object",
+        "status"
+      ],
+      "returned",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "onmouseenter",
+        "primitive",
+        "exception"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "onmouseenter",
+        "primitive",
+        "status"
+      ],
+      "returned",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "onmouseenter",
+        "undefined",
+        "exception"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "onmouseenter",
+        "undefined",
+        "status"
+      ],
+      "returned",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "onmouseenter",
+        "window",
+        "exception"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "onmouseenter",
+        "window",
+        "status"
+      ],
+      "returned",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "onmouseleave",
+        "element",
+        "exception"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "onmouseleave",
+        "element",
+        "status"
+      ],
+      "returned",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "onmouseleave",
+        "null",
+        "exception"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "onmouseleave",
+        "null",
+        "status"
+      ],
+      "returned",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "onmouseleave",
+        "object",
+        "exception"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "onmouseleave",
+        "object",
+        "status"
+      ],
+      "returned",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "onmouseleave",
+        "primitive",
+        "exception"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "onmouseleave",
+        "primitive",
+        "status"
+      ],
+      "returned",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "onmouseleave",
+        "undefined",
+        "exception"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "onmouseleave",
+        "undefined",
+        "status"
+      ],
+      "returned",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "onmouseleave",
+        "window",
+        "exception"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "onmouseleave",
+        "window",
+        "status"
+      ],
+      "returned",
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "symbolConversion",
+        "alinkColor"
+      ],
+      "TypeError",
+      "returned"
+    ],
+    [
+      [
+        "symbolConversion",
+        "bgColor"
+      ],
+      "TypeError",
+      "returned"
+    ],
+    [
+      [
+        "symbolConversion",
+        "cookie"
+      ],
+      "TypeError",
+      "returned"
+    ],
+    [
+      [
+        "symbolConversion",
+        "designMode"
+      ],
+      "TypeError",
+      "returned"
+    ],
+    [
+      [
+        "symbolConversion",
+        "dir"
+      ],
+      "TypeError",
+      "returned"
+    ],
+    [
+      [
+        "symbolConversion",
+        "domain"
+      ],
+      "TypeError",
+      "returned"
+    ],
+    [
+      [
+        "symbolConversion",
+        "fgColor"
+      ],
+      "TypeError",
+      "returned"
+    ],
+    [
+      [
+        "symbolConversion",
+        "linkColor"
+      ],
+      "TypeError",
+      "returned"
+    ],
+    [
+      [
+        "symbolConversion",
+        "title"
+      ],
+      "TypeError",
+      "returned"
+    ],
+    [
+      [
+        "symbolConversion",
+        "vlinkColor"
+      ],
+      "TypeError",
+      "returned"
+    ],
+    [
+      [
+        "symbolConversion",
+        "xmlVersion"
+      ],
+      "TypeError",
+      "NotSupportedError"
+    ],
+    [
+      [
+        "validReadonly",
+        "fullscreen",
+        "exception"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "validReadonly",
+        "fullscreen",
+        "same"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "validReadonly",
+        "fullscreenElement",
+        "exception"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "validReadonly",
+        "fullscreenElement",
+        "same"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ],
+    [
+      [
+        "validReadonly",
+        "fullscreenEnabled",
+        "exception"
+      ],
+      {
+        "$missing": true
+      },
+      "TypeError"
+    ],
+    [
+      [
+        "validReadonly",
+        "fullscreenEnabled",
+        "same"
+      ],
+      true,
+      {
+        "$missing": true
+      }
+    ]
+  ],
+  "afterDifferences": [],
+  "controlDifferences": []
+}
