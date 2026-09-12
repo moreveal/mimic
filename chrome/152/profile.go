@@ -33,6 +33,7 @@ func environment(mode state.BrowserMode) state.Environment {
 		environment.Permissions[name] = "granted"
 	}
 	environment.Permissions["periodic-background-sync"] = "denied"
+	environment.Permissions["fullscreen"] = "denied"
 	environment.Features = map[string]bool{"GenericSensorExtraClasses": false, "WebNFC": false, "SystemWakeLock": false, "SpeakerSelection": false, "WebAppInstallation": false, "ApproximateGeolocationPermission": false}
 	environment.Capabilities = state.Capabilities{
 		StorageQuotaBytes: 10 * 1024 * 1024 * 1024,

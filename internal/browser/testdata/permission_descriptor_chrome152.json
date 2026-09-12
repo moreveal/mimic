@@ -1,0 +1,592 @@
+{
+  "captureMetadata": {
+    "href": "http://127.0.0.1:64606/plain",
+    "isSecureContext": true,
+    "crossOriginIsolated": false,
+    "innerWidth": 1272,
+    "innerHeight": 653,
+    "outerWidth": 1280,
+    "outerHeight": 800,
+    "devicePixelRatio": 1,
+    "visibility": "visible",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "platform": "Win32"
+  },
+  "passport": {
+    "revision": "4ec0cbce15bc9a05cfb04d2ed1e7c221d047abf7",
+    "dirtyState": " M chrome/152/profile.go\n M internal/webapi/capabilities.js\n?? internal/browser/testdata/permission_descriptor_oracle.js\n",
+    "sourceSHA256": "19a7225631fb65b368aa8b74ea797df798c70a8d5feebb3dc3829414174ef4f7",
+    "probeSHA256": "827d5a3707af7118f16562908c86874f3a37700313b55a7da6f2d2bf5ca858d8",
+    "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+    "mimicSHA256": "96ec9e1203deb0d5ffbe9e4532bc1b52dcde86db641167653033b66d99416c49",
+    "args": [
+      "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "--remote-debugging-port=20181",
+      "--user-data-dir=E:\\GitHub\\mimic\\.build\\residual-permissions\\after\\chrome-profile-b",
+      "--no-first-run",
+      "--no-default-browser-check",
+      "--window-size=1280,800",
+      "about:blank"
+    ],
+    "profile": "E:\\GitHub\\mimic\\.build\\residual-permissions\\after\\chrome-profile",
+    "browserMode": "headful",
+    "environmentProfile": "chrome-152-windows-x64-headful-controlled-v1",
+    "featureOverrides": [],
+    "records": [
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      }
+    ],
+    "exitCodes": {
+      "chrome": 1,
+      "mimic": 1
+    },
+    "chromeControl": [],
+    "chromeMimic": []
+  },
+  "observation": {
+    "names": {
+      "geolocation": {
+        "name": "geolocation",
+        "state": "prompt",
+        "tag": "[object PermissionStatus]",
+        "own": []
+      },
+      "notifications": {
+        "name": "notifications",
+        "state": "prompt",
+        "tag": "[object PermissionStatus]",
+        "own": []
+      },
+      "camera": {
+        "name": "video_capture",
+        "state": "prompt",
+        "tag": "[object PermissionStatus]",
+        "own": []
+      },
+      "microphone": {
+        "name": "audio_capture",
+        "state": "prompt",
+        "tag": "[object PermissionStatus]",
+        "own": []
+      },
+      "midi": {
+        "name": "midi",
+        "state": "prompt",
+        "tag": "[object PermissionStatus]",
+        "own": []
+      },
+      "persistent-storage": {
+        "name": "durable_storage",
+        "state": "prompt",
+        "tag": "[object PermissionStatus]",
+        "own": []
+      },
+      "push": {
+        "name": "notifications",
+        "state": "prompt",
+        "tag": "[object PermissionStatus]",
+        "own": []
+      },
+      "clipboard-read": {
+        "name": "clipboard_read",
+        "state": "prompt",
+        "tag": "[object PermissionStatus]",
+        "own": []
+      },
+      "clipboard-write": {
+        "name": "clipboard_read",
+        "state": "prompt",
+        "tag": "[object PermissionStatus]",
+        "own": []
+      },
+      "accelerometer": {
+        "name": "sensors",
+        "state": "granted",
+        "tag": "[object PermissionStatus]",
+        "own": []
+      },
+      "gyroscope": {
+        "name": "sensors",
+        "state": "granted",
+        "tag": "[object PermissionStatus]",
+        "own": []
+      },
+      "magnetometer": {
+        "name": "sensors",
+        "state": "granted",
+        "tag": "[object PermissionStatus]",
+        "own": []
+      },
+      "background-sync": {
+        "name": "background_sync",
+        "state": "granted",
+        "tag": "[object PermissionStatus]",
+        "own": []
+      },
+      "display-capture": {
+        "name": "display_capture",
+        "state": "prompt",
+        "tag": "[object PermissionStatus]",
+        "own": []
+      },
+      "storage-access": {
+        "name": "storage-access",
+        "state": "granted",
+        "tag": "[object PermissionStatus]",
+        "own": []
+      },
+      "local-network-access": {
+        "name": "local-network-access",
+        "state": "prompt",
+        "tag": "[object PermissionStatus]",
+        "own": []
+      },
+      "window-management": {
+        "name": "window-management",
+        "state": "prompt",
+        "tag": "[object PermissionStatus]",
+        "own": []
+      },
+      "fullscreen": {
+        "name": "fullscreen",
+        "state": "denied",
+        "tag": "[object PermissionStatus]",
+        "own": []
+      }
+    },
+    "conversion": {
+      "missing": {
+        "immediate": [
+          "returned"
+        ],
+        "log": [
+          "returned",
+          "rejected:TypeError:Failed to execute 'query' on 'Permissions': Failed to read the 'name' property from 'PermissionDescriptor': Required member is undefined."
+        ]
+      },
+      "undefined": {
+        "immediate": [
+          "returned"
+        ],
+        "log": [
+          "returned",
+          "rejected:TypeError:Failed to execute 'query' on 'Permissions': Failed to read the 'name' property from 'PermissionDescriptor': Required member is undefined."
+        ]
+      },
+      "null": {
+        "immediate": [
+          "returned"
+        ],
+        "log": [
+          "returned",
+          "rejected:TypeError:Failed to execute 'query' on 'Permissions': parameter 1 is not of type 'object'."
+        ]
+      },
+      "number": {
+        "immediate": [
+          "returned"
+        ],
+        "log": [
+          "returned",
+          "rejected:TypeError:Failed to execute 'query' on 'Permissions': parameter 1 is not of type 'object'."
+        ]
+      },
+      "symbol": {
+        "immediate": [
+          "returned"
+        ],
+        "log": [
+          "returned",
+          "rejected:TypeError:Failed to execute 'query' on 'Permissions': Failed to read the 'name' property from 'PermissionDescriptor': Cannot convert a Symbol value to a string"
+        ]
+      },
+      "getter": {
+        "immediate": [
+          "get",
+          "get",
+          "returned"
+        ],
+        "log": [
+          "get",
+          "get",
+          "returned",
+          "resolved:video_capture"
+        ]
+      },
+      "proxy": {
+        "immediate": [
+          "get:name",
+          "get:name",
+          "get:panTiltZoom",
+          "returned"
+        ],
+        "log": [
+          "get:name",
+          "get:name",
+          "get:panTiltZoom",
+          "returned",
+          "resolved:video_capture"
+        ]
+      },
+      "throwing": {
+        "immediate": [
+          "get",
+          "returned"
+        ],
+        "log": [
+          "get",
+          "returned",
+          "rejected:Error:author"
+        ]
+      }
+    },
+    "descriptors": {
+      "geolocation:false": {
+        "log": [
+          "name"
+        ],
+        "name": "geolocation",
+        "state": "prompt"
+      },
+      "geolocation:true": {
+        "log": [
+          "name"
+        ],
+        "name": "geolocation",
+        "state": "prompt"
+      },
+      "notifications:false": {
+        "log": [
+          "name"
+        ],
+        "name": "notifications",
+        "state": "prompt"
+      },
+      "notifications:true": {
+        "log": [
+          "name"
+        ],
+        "name": "notifications",
+        "state": "prompt"
+      },
+      "microphone:false": {
+        "log": [
+          "name"
+        ],
+        "name": "audio_capture",
+        "state": "prompt"
+      },
+      "microphone:true": {
+        "log": [
+          "name"
+        ],
+        "name": "audio_capture",
+        "state": "prompt"
+      },
+      "camera:false": {
+        "log": [
+          "name",
+          "name",
+          "panTiltZoom"
+        ],
+        "name": "video_capture",
+        "state": "prompt"
+      },
+      "camera:true": {
+        "log": [
+          "name",
+          "name",
+          "panTiltZoom"
+        ],
+        "name": "video_capture",
+        "state": "prompt"
+      },
+      "midi:false": {
+        "log": [
+          "name",
+          "name",
+          "sysex"
+        ],
+        "name": "midi",
+        "state": "prompt"
+      },
+      "midi:true": {
+        "log": [
+          "name",
+          "name",
+          "sysex"
+        ],
+        "name": "midi",
+        "state": "prompt"
+      },
+      "push:false": {
+        "log": [
+          "name",
+          "name",
+          "userVisibleOnly"
+        ],
+        "error": "NotSupportedError",
+        "message": "Failed to execute 'query' on 'Permissions': Push Permission without userVisibleOnly:true isn't supported yet."
+      },
+      "push:true": {
+        "log": [
+          "name",
+          "name",
+          "userVisibleOnly"
+        ],
+        "name": "notifications",
+        "state": "prompt"
+      },
+      "clipboard-read:false": {
+        "log": [
+          "name",
+          "name",
+          "allowWithoutGesture",
+          "allowWithoutSanitization"
+        ],
+        "name": "clipboard_read",
+        "state": "prompt"
+      },
+      "clipboard-read:true": {
+        "log": [
+          "name",
+          "name",
+          "allowWithoutGesture",
+          "allowWithoutSanitization"
+        ],
+        "name": "clipboard_read",
+        "state": "prompt"
+      },
+      "clipboard-write:false": {
+        "log": [
+          "name",
+          "name",
+          "allowWithoutGesture",
+          "allowWithoutSanitization"
+        ],
+        "name": "clipboard_write",
+        "state": "granted"
+      },
+      "clipboard-write:true": {
+        "log": [
+          "name",
+          "name",
+          "allowWithoutGesture",
+          "allowWithoutSanitization"
+        ],
+        "name": "clipboard_read",
+        "state": "prompt"
+      },
+      "fullscreen:false": {
+        "log": [
+          "name",
+          "name",
+          "allowWithoutGesture"
+        ],
+        "error": "TypeError",
+        "message": "Failed to execute 'query' on 'Permissions': Fullscreen Permission only supports allowWithoutGesture:true."
+      },
+      "fullscreen:true": {
+        "log": [
+          "name",
+          "name",
+          "allowWithoutGesture"
+        ],
+        "name": "fullscreen",
+        "state": "denied"
+      },
+      "top-level-storage-access:false": {
+        "log": [
+          "name",
+          "name",
+          "requestedOrigin"
+        ],
+        "name": "top-level-storage-access",
+        "state": "prompt"
+      },
+      "top-level-storage-access:true": {
+        "log": [
+          "name",
+          "name",
+          "requestedOrigin"
+        ],
+        "name": "top-level-storage-access",
+        "state": "prompt"
+      },
+      "accelerometer:false": {
+        "log": [
+          "name"
+        ],
+        "name": "sensors",
+        "state": "granted"
+      },
+      "accelerometer:true": {
+        "log": [
+          "name"
+        ],
+        "name": "sensors",
+        "state": "granted"
+      },
+      "background-fetch:false": {
+        "log": [
+          "name"
+        ],
+        "name": "background_fetch",
+        "state": "granted"
+      },
+      "background-fetch:true": {
+        "log": [
+          "name"
+        ],
+        "name": "background_fetch",
+        "state": "granted"
+      },
+      "periodic-background-sync:false": {
+        "log": [
+          "name"
+        ],
+        "name": "periodic_background_sync",
+        "state": "denied"
+      },
+      "periodic-background-sync:true": {
+        "log": [
+          "name"
+        ],
+        "name": "periodic_background_sync",
+        "state": "denied"
+      },
+      "screen-wake-lock:false": {
+        "log": [
+          "name"
+        ],
+        "name": "screen_wake_lock",
+        "state": "granted"
+      },
+      "screen-wake-lock:true": {
+        "log": [
+          "name"
+        ],
+        "name": "screen_wake_lock",
+        "state": "granted"
+      },
+      "payment-handler:false": {
+        "log": [
+          "name"
+        ],
+        "name": "payment_handler",
+        "state": "granted"
+      },
+      "payment-handler:true": {
+        "log": [
+          "name"
+        ],
+        "name": "payment_handler",
+        "state": "granted"
+      },
+      "pointer-lock:false": {
+        "log": [
+          "name"
+        ],
+        "name": "pointer-lock",
+        "state": "granted"
+      },
+      "pointer-lock:true": {
+        "log": [
+          "name"
+        ],
+        "name": "pointer-lock",
+        "state": "granted"
+      },
+      "window-management:false": {
+        "log": [
+          "name"
+        ],
+        "name": "window-management",
+        "state": "prompt"
+      },
+      "window-management:true": {
+        "log": [
+          "name"
+        ],
+        "name": "window-management",
+        "state": "prompt"
+      },
+      "local-network:false": {
+        "log": [
+          "name"
+        ],
+        "name": "local-network",
+        "state": "prompt"
+      },
+      "local-network:true": {
+        "log": [
+          "name"
+        ],
+        "name": "local-network",
+        "state": "prompt"
+      },
+      "loopback-network:false": {
+        "log": [
+          "name"
+        ],
+        "name": "loopback-network",
+        "state": "prompt"
+      },
+      "loopback-network:true": {
+        "log": [
+          "name"
+        ],
+        "name": "loopback-network",
+        "state": "prompt"
+      }
+    },
+    "clipboard": {
+      "false:false": {
+        "name": "clipboard_write",
+        "state": "granted"
+      },
+      "false:true": {
+        "name": "clipboard_read",
+        "state": "prompt"
+      },
+      "true:false": {
+        "name": "clipboard_read",
+        "state": "prompt"
+      },
+      "true:true": {
+        "name": "clipboard_read",
+        "state": "prompt"
+      }
+    }
+  },
+  "version": {
+    "Browser": "Chrome/152.0.7977.82",
+    "Protocol-Version": "1.3",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "V8-Version": "15.2.124.21",
+    "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:20181/devtools/browser/60d65058-15de-4adb-9610-a484c9df8c7c"
+  }
+}
