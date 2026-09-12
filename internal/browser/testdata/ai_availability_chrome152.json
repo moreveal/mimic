@@ -1,0 +1,601 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "width": 1280,
+      "height": 800
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "two-fresh-controlled-profiles",
+    "origin": "http://127.0.0.1:54820/plain",
+    "visibilityState": "visible",
+    "permissionsPolicy": "summarizer=(), language-model=(), translator=(), language-detector=()"
+  },
+  "probeSHA256": "daaf7748dfb5d39922a8bde0d731cb98c55450b977ae70d5239229ce5d8cfa14",
+  "chromeBinarySHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+  "controlEqual": true,
+  "result": {
+    "result": {
+      "value": {
+        "Summarizer": {
+          "type": "function",
+          "own": [
+            "length",
+            "name",
+            "prototype",
+            "availability",
+            "create"
+          ],
+          "prototypeHasAvailability": false,
+          "availability": {
+            "name": "availability",
+            "length": 0,
+            "writable": true,
+            "enumerable": true,
+            "configurable": true,
+            "constructable": false
+          },
+          "create": {
+            "name": "create",
+            "length": 0,
+            "writable": true,
+            "enumerable": true,
+            "configurable": true,
+            "constructable": false
+          }
+        },
+        "LanguageModel": {
+          "type": "function",
+          "own": [
+            "length",
+            "name",
+            "prototype",
+            "availability",
+            "create"
+          ],
+          "prototypeHasAvailability": false,
+          "availability": {
+            "name": "availability",
+            "length": 0,
+            "writable": true,
+            "enumerable": true,
+            "configurable": true,
+            "constructable": false
+          },
+          "create": {
+            "name": "create",
+            "length": 0,
+            "writable": true,
+            "enumerable": true,
+            "configurable": true,
+            "constructable": false
+          }
+        },
+        "Writer": {
+          "type": "undefined"
+        },
+        "Rewriter": {
+          "type": "undefined"
+        },
+        "Translator": {
+          "type": "function",
+          "own": [
+            "length",
+            "name",
+            "prototype",
+            "availability",
+            "create"
+          ],
+          "prototypeHasAvailability": false,
+          "availability": {
+            "name": "availability",
+            "length": 1,
+            "writable": true,
+            "enumerable": true,
+            "configurable": true,
+            "constructable": false
+          },
+          "create": {
+            "name": "create",
+            "length": 1,
+            "writable": true,
+            "enumerable": true,
+            "configurable": true,
+            "constructable": false
+          }
+        },
+        "LanguageDetector": {
+          "type": "function",
+          "own": [
+            "length",
+            "name",
+            "prototype",
+            "availability",
+            "create"
+          ],
+          "prototypeHasAvailability": false,
+          "availability": {
+            "name": "availability",
+            "length": 0,
+            "writable": true,
+            "enumerable": true,
+            "configurable": true,
+            "constructable": false
+          },
+          "create": {
+            "name": "create",
+            "length": 0,
+            "writable": true,
+            "enumerable": true,
+            "configurable": true,
+            "constructable": false
+          }
+        },
+        "Summarizer-availability-missing": {
+          "promise": true,
+          "value": "unavailable"
+        },
+        "Summarizer-availability-null": {
+          "promise": true,
+          "value": "unavailable"
+        },
+        "Summarizer-availability-number": {
+          "promise": true,
+          "error": "TypeError",
+          "message": "Failed to execute 'availability' on 'Summarizer': The provided value is not of type 'SummarizerCreateCoreOptions'."
+        },
+        "Summarizer-availability-valid": {
+          "promise": true,
+          "value": "unavailable"
+        },
+        "Summarizer-availability-reads": {
+          "promise": true,
+          "value": "unavailable"
+        },
+        "Summarizer-availability-optionReads": [
+          "expectedContextLanguages",
+          "expectedInputLanguages",
+          "format",
+          "length",
+          "outputLanguage",
+          "type"
+        ],
+        "Summarizer-create-missing": {
+          "promise": true,
+          "error": "NotAllowedError",
+          "message": "Access denied because the Permission Policy is not enabled."
+        },
+        "Summarizer-create-null": {
+          "promise": true,
+          "error": "NotAllowedError",
+          "message": "Access denied because the Permission Policy is not enabled."
+        },
+        "Summarizer-create-number": {
+          "promise": true,
+          "error": "TypeError",
+          "message": "Failed to execute 'create' on 'Summarizer': The provided value is not of type 'SummarizerCreateOptions'."
+        },
+        "Summarizer-create-valid": {
+          "promise": true,
+          "error": "NotAllowedError",
+          "message": "Access denied because the Permission Policy is not enabled."
+        },
+        "Summarizer-create-reads": {
+          "promise": true,
+          "error": "NotAllowedError",
+          "message": "Access denied because the Permission Policy is not enabled."
+        },
+        "Summarizer-create-optionReads": [
+          "expectedContextLanguages",
+          "expectedInputLanguages",
+          "format",
+          "length",
+          "outputLanguage",
+          "type",
+          "monitor",
+          "sharedContext",
+          "signal"
+        ],
+        "LanguageModel-availability-missing": {
+          "promise": true,
+          "value": "unavailable"
+        },
+        "LanguageModel-availability-null": {
+          "promise": true,
+          "value": "unavailable"
+        },
+        "LanguageModel-availability-number": {
+          "promise": true,
+          "error": "TypeError",
+          "message": "Failed to execute 'availability' on 'LanguageModel': The provided value is not of type 'LanguageModelCreateCoreOptions'."
+        },
+        "LanguageModel-availability-valid": {
+          "promise": true,
+          "value": "unavailable"
+        },
+        "LanguageModel-availability-reads": {
+          "promise": true,
+          "value": "unavailable"
+        },
+        "LanguageModel-availability-optionReads": [
+          "expectedInputs",
+          "expectedOutputs",
+          "temperature",
+          "topK"
+        ],
+        "LanguageModel-create-missing": {
+          "promise": true,
+          "error": "NotAllowedError",
+          "message": "Access denied because the Permission Policy is not enabled."
+        },
+        "LanguageModel-create-null": {
+          "promise": true,
+          "error": "NotAllowedError",
+          "message": "Access denied because the Permission Policy is not enabled."
+        },
+        "LanguageModel-create-number": {
+          "promise": true,
+          "error": "TypeError",
+          "message": "Failed to execute 'create' on 'LanguageModel': The provided value is not of type 'LanguageModelCreateOptions'."
+        },
+        "LanguageModel-create-valid": {
+          "promise": true,
+          "error": "NotAllowedError",
+          "message": "Access denied because the Permission Policy is not enabled."
+        },
+        "LanguageModel-create-reads": {
+          "promise": true,
+          "error": "NotAllowedError",
+          "message": "Access denied because the Permission Policy is not enabled."
+        },
+        "LanguageModel-create-optionReads": [
+          "expectedInputs",
+          "expectedOutputs",
+          "temperature",
+          "topK",
+          "initialPrompts",
+          "monitor",
+          "signal"
+        ],
+        "Translator-availability-missing": {
+          "promise": true,
+          "error": "TypeError",
+          "message": "Failed to execute 'availability' on 'Translator': The provided value is not of type 'TranslatorCreateCoreOptions'."
+        },
+        "Translator-availability-null": {
+          "promise": true,
+          "error": "TypeError",
+          "message": "Failed to execute 'availability' on 'Translator': The provided value is not of type 'TranslatorCreateCoreOptions'."
+        },
+        "Translator-availability-number": {
+          "promise": true,
+          "error": "TypeError",
+          "message": "Failed to execute 'availability' on 'Translator': The provided value is not of type 'TranslatorCreateCoreOptions'."
+        },
+        "Translator-availability-valid": {
+          "promise": true,
+          "value": "unavailable"
+        },
+        "Translator-availability-reads": {
+          "promise": true,
+          "value": "unavailable"
+        },
+        "Translator-availability-optionReads": [
+          "sourceLanguage",
+          "targetLanguage"
+        ],
+        "Translator-create-missing": {
+          "promise": true,
+          "error": "TypeError",
+          "message": "Failed to execute 'create' on 'Translator': The provided value is not of type 'TranslatorCreateOptions'."
+        },
+        "Translator-create-null": {
+          "promise": true,
+          "error": "TypeError",
+          "message": "Failed to execute 'create' on 'Translator': The provided value is not of type 'TranslatorCreateOptions'."
+        },
+        "Translator-create-number": {
+          "promise": true,
+          "error": "TypeError",
+          "message": "Failed to execute 'create' on 'Translator': The provided value is not of type 'TranslatorCreateOptions'."
+        },
+        "Translator-create-valid": {
+          "promise": true,
+          "error": "NotAllowedError",
+          "message": "Access denied because the Permission Policy is not enabled."
+        },
+        "Translator-create-reads": {
+          "promise": true,
+          "error": "NotAllowedError",
+          "message": "Access denied because the Permission Policy is not enabled."
+        },
+        "Translator-create-optionReads": [
+          "sourceLanguage",
+          "targetLanguage",
+          "monitor",
+          "signal"
+        ],
+        "LanguageDetector-availability-missing": {
+          "promise": true,
+          "value": "unavailable"
+        },
+        "LanguageDetector-availability-null": {
+          "promise": true,
+          "value": "unavailable"
+        },
+        "LanguageDetector-availability-number": {
+          "promise": true,
+          "error": "TypeError",
+          "message": "Failed to execute 'availability' on 'LanguageDetector': The provided value is not of type 'LanguageDetectorCreateCoreOptions'."
+        },
+        "LanguageDetector-availability-valid": {
+          "promise": true,
+          "value": "unavailable"
+        },
+        "LanguageDetector-availability-reads": {
+          "promise": true,
+          "value": "unavailable"
+        },
+        "LanguageDetector-availability-optionReads": [
+          "expectedInputLanguages"
+        ],
+        "LanguageDetector-create-missing": {
+          "promise": true,
+          "error": "NotAllowedError",
+          "message": "Access denied because the Permission Policy is not enabled."
+        },
+        "LanguageDetector-create-null": {
+          "promise": true,
+          "error": "NotAllowedError",
+          "message": "Access denied because the Permission Policy is not enabled."
+        },
+        "LanguageDetector-create-number": {
+          "promise": true,
+          "error": "TypeError",
+          "message": "Failed to execute 'create' on 'LanguageDetector': The provided value is not of type 'LanguageDetectorCreateOptions'."
+        },
+        "LanguageDetector-create-valid": {
+          "promise": true,
+          "error": "NotAllowedError",
+          "message": "Access denied because the Permission Policy is not enabled."
+        },
+        "LanguageDetector-create-reads": {
+          "promise": true,
+          "error": "NotAllowedError",
+          "message": "Access denied because the Permission Policy is not enabled."
+        },
+        "LanguageDetector-create-optionReads": [
+          "expectedInputLanguages",
+          "monitor",
+          "signal"
+        ],
+        "availability-missing": {
+          "promise": true,
+          "value": "unavailable"
+        },
+        "availability-null": {
+          "promise": true,
+          "value": "unavailable"
+        },
+        "availability-number": {
+          "promise": true,
+          "error": "TypeError",
+          "message": "Failed to execute 'availability' on 'Summarizer': The provided value is not of type 'SummarizerCreateCoreOptions'."
+        },
+        "availability-typeBad": {
+          "promise": true,
+          "error": "TypeError",
+          "message": "Failed to execute 'availability' on 'Summarizer': Failed to read the 'type' property from 'SummarizerCreateCoreOptions': The provided value 'bad' is not a valid enum value of type SummarizerType."
+        },
+        "availability-formatBad": {
+          "promise": true,
+          "error": "TypeError",
+          "message": "Failed to execute 'availability' on 'Summarizer': Failed to read the 'format' property from 'SummarizerCreateCoreOptions': The provided value 'bad' is not a valid enum value of type SummarizerFormat."
+        },
+        "availability-lengthBad": {
+          "promise": true,
+          "error": "TypeError",
+          "message": "Failed to execute 'availability' on 'Summarizer': Failed to read the 'length' property from 'SummarizerCreateCoreOptions': The provided value 'bad' is not a valid enum value of type SummarizerLength."
+        },
+        "availability-languageBad": {
+          "promise": true,
+          "value": "unavailable"
+        },
+        "availability-valid": {
+          "promise": true,
+          "value": "unavailable"
+        },
+        "receiver-null": {
+          "promise": true,
+          "value": "unavailable"
+        },
+        "receiver-object": {
+          "promise": true,
+          "value": "unavailable"
+        },
+        "receiver-window": {
+          "promise": true,
+          "value": "unavailable"
+        },
+        "invalid-expectedInputLanguages": {
+          "promise": true,
+          "error": "TypeError",
+          "message": "Failed to execute 'availability' on 'Summarizer': Failed to read the 'expectedInputLanguages' property from 'SummarizerCreateCoreOptions': The provided value cannot be converted to a sequence."
+        },
+        "invalid-expectedContextLanguages": {
+          "promise": true,
+          "error": "TypeError",
+          "message": "Failed to execute 'availability' on 'Summarizer': Failed to read the 'expectedContextLanguages' property from 'SummarizerCreateCoreOptions': The provided value cannot be converted to a sequence."
+        },
+        "invalid-outputLanguage": {
+          "promise": true,
+          "error": "TypeError",
+          "message": "Failed to execute 'availability' on 'Summarizer': Failed to read the 'outputLanguage' property from 'SummarizerCreateCoreOptions': Cannot convert a Symbol value to a string"
+        },
+        "invalid-create-monitor": {
+          "promise": true,
+          "error": "TypeError",
+          "message": "Failed to execute 'create' on 'Summarizer': Failed to read the 'monitor' property from 'SummarizerCreateOptions': The given value is not a function."
+        },
+        "invalid-create-signal": {
+          "promise": true,
+          "error": "TypeError",
+          "message": "Failed to execute 'create' on 'Summarizer': Failed to read the 'signal' property from 'SummarizerCreateOptions': Failed to convert value to 'AbortSignal'."
+        },
+        "create-aborted": {
+          "promise": true
+        },
+        "model-0-temperature": {
+          "promise": true,
+          "error": "TypeError",
+          "message": "Failed to execute 'availability' on 'LanguageModel': Failed to read the 'temperature' property from 'LanguageModelCreateCoreOptions': Cannot convert a BigInt value to a number"
+        },
+        "model-1-topK": {
+          "promise": true,
+          "error": "TypeError",
+          "message": "Failed to execute 'availability' on 'LanguageModel': Failed to read the 'topK' property from 'LanguageModelCreateCoreOptions': Cannot convert a BigInt value to a number"
+        },
+        "model-2-temperature": {
+          "promise": true,
+          "value": "unavailable"
+        },
+        "model-3-expectedInputs": {
+          "promise": true,
+          "error": "TypeError",
+          "message": "Failed to execute 'availability' on 'LanguageModel': Failed to read the 'expectedInputs' property from 'LanguageModelCreateCoreOptions': The provided value cannot be converted to a sequence."
+        },
+        "model-4-expectedOutputs": {
+          "promise": true,
+          "error": "TypeError",
+          "message": "Failed to execute 'availability' on 'LanguageModel': Failed to read the 'expectedOutputs' property from 'LanguageModelCreateCoreOptions': The provided value cannot be converted to a sequence."
+        },
+        "model-5-expectedInputs": {
+          "promise": true,
+          "error": "TypeError",
+          "message": "Failed to execute 'availability' on 'LanguageModel': Failed to read the 'expectedInputs' property from 'LanguageModelCreateCoreOptions': Failed to read the 'type' property from 'LanguageModelExpected': The provided value 'bad' is not a valid enum value of type LanguageModelMessageType."
+        },
+        "model-6-expectedInputs": {
+          "promise": true,
+          "value": "unavailable"
+        },
+        "model-7-expectedInputs": {
+          "promise": true,
+          "error": "TypeError",
+          "message": "Failed to execute 'availability' on 'LanguageModel': Failed to read the 'expectedInputs' property from 'LanguageModelCreateCoreOptions': Failed to read the 'type' property from 'LanguageModelExpected': Required member is undefined."
+        },
+        "model-8-expectedOutputs": {
+          "promise": true,
+          "value": "unavailable"
+        },
+        "model-prompts": {
+          "promise": true,
+          "error": "TypeError",
+          "message": "Failed to execute 'create' on 'LanguageModel': Failed to read the 'initialPrompts' property from 'LanguageModelCreateOptions': Failed to read the 'role' property from 'LanguageModelMessage': The provided value 'bad' is not a valid enum value of type LanguageModelMessageRole."
+        },
+        "sequence-custom": {
+          "promise": true,
+          "value": "unavailable"
+        },
+        "iteratorReads": [
+          "iterator"
+        ],
+        "model-nested": {
+          "promise": true,
+          "value": "unavailable"
+        },
+        "nestedReads": [
+          "languages",
+          "type"
+        ],
+        "model-prompt-reads": {
+          "promise": true,
+          "error": "NotAllowedError",
+          "message": "Access denied because the Permission Policy is not enabled."
+        },
+        "promptReads": [
+          "content",
+          "prefix",
+          "role"
+        ],
+        "options": {
+          "promise": true,
+          "value": "unavailable"
+        },
+        "optionReads": [
+          "expectedContextLanguages",
+          "expectedInputLanguages",
+          "format",
+          "length",
+          "outputLanguage",
+          "type"
+        ],
+        "getterThrow": {
+          "promise": true,
+          "error": "Error",
+          "message": "sentinel"
+        },
+        "iterator-get-throw": {
+          "same": true,
+          "name": "TypeError",
+          "message": "author sentinel",
+          "log": [
+            "iterator"
+          ]
+        },
+        "iterator-call-throw": {
+          "same": true,
+          "name": "TypeError",
+          "message": "author sentinel",
+          "log": [
+            "call"
+          ]
+        },
+        "iterator-string-throw": {
+          "same": true,
+          "name": "TypeError",
+          "message": "author sentinel",
+          "log": []
+        },
+        "iterator-symbol-conversion": {
+          "same": false,
+          "name": "TypeError",
+          "message": "Failed to execute 'availability' on 'Summarizer': Failed to read the 'expectedInputLanguages' property from 'SummarizerCreateCoreOptions': Cannot convert a Symbol value to a string",
+          "log": []
+        },
+        "iterator-next-throw": {
+          "same": true,
+          "name": "TypeError",
+          "message": "author sentinel",
+          "log": []
+        },
+        "iterator-primitive": {
+          "same": false,
+          "name": "TypeError",
+          "message": "Failed to execute 'availability' on 'Summarizer': Failed to read the 'expectedInputLanguages' property from 'SummarizerCreateCoreOptions': Iterator object must be an object.",
+          "log": []
+        },
+        "iterator-step-primitive": {
+          "same": false,
+          "name": "TypeError",
+          "message": "Failed to execute 'availability' on 'Summarizer': Failed to read the 'expectedInputLanguages' property from 'SummarizerCreateCoreOptions': Expected iterator.next() to return an Object.",
+          "log": []
+        },
+        "numberAuthorException": true
+      }
+    }
+  }
+}

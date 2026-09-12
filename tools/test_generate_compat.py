@@ -4,6 +4,12 @@ import json
 from generate_compat import normalize_idl, extended, surface_catalog
 
 class ProvenanceTests(unittest.TestCase):
+    def test_retained_conditional_exposure_preserves_statics(self):
+        catalog={'declarations':[{'kind':'interface','name':'Example','extended':{'Exposed(Window Feature, Worker WorkerFeature)':True},'members':[{'kind':'operation','name':'availability','static':True}]}]}
+        projected=json.loads(surface_catalog(catalog))[0]
+        self.assertEqual(projected['exposed'],['Window','Worker'])
+        self.assertTrue(projected['members'][0]['static'])
+        self.assertNotIn('Exposed',catalog['declarations'][0]['extended'])
     def test_namespace_constants_survive_projection(self):
         catalog=normalize_idl({'flags.idl':'[Exposed=(Window, Worker), SecureContext] namespace ExampleFlags { const unsigned long READ = 0x0001; const unsigned long WRITE = 2; };'}, {'chrome_version':'test','chromium_ref':'pinned'})
         projected=json.loads(surface_catalog(catalog))

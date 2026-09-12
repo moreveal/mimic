@@ -91,6 +91,10 @@ func addCapabilityHosts(r *Realm, h map[string]any) {
 	h["capabilityState"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		e := p.Environment()
 		switch strarg(a, 0) {
+		case "ai":
+			// The selected runtime has no model service. Exposure is independent
+			// of backend availability; creation still respects document policy.
+			return r.val(map[string]any{"available": false, "policyAllowed": r.aiPolicyAllows(strarg(a, 1))}), nil
 		case "feature":
 			enabled, ok := e.Features[strarg(a, 1)]
 			return r.val(!ok || enabled), nil
