@@ -122,6 +122,51 @@ func TestBrowserContextsOwnPagesAndAreDisposed(t *testing.T) {
 	}
 }
 
+func TestTargetDestroyedRespectsDiscoveryFilter(t *testing.T) {
+	for _, tc := range []struct {
+		name       string
+		filter     []any
+		wantPageID bool
+	}{
+		{name: "default page discovery", wantPageID: true},
+		{name: "explicit tab discovery", filter: []any{map[string]any{"type": "tab"}}},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			_, addr := runningServer(t)
+			c := browserConnection(t, addr)
+			discoveryParams := map[string]any{"discover": true}
+			if tc.filter != nil {
+				discoveryParams["filter"] = tc.filter
+			}
+			wireCall(t, c, 1, "Target.setDiscoverTargets", discoveryParams)
+			targetID := wireCall(t, c, 2, "Target.createTarget", map[string]any{"url": "about:blank"})["targetId"].(string)
+
+			if err := c.WriteJSON(map[string]any{"id": 3, "method": "Target.closeTarget", "params": map[string]any{"targetId": targetID}}); err != nil {
+				t.Fatal(err)
+			}
+			var destroyed []string
+			for {
+				var message map[string]any
+				if err := c.ReadJSON(&message); err != nil {
+					t.Fatal(err)
+				}
+				if message["method"] == "Target.targetDestroyed" {
+					destroyed = append(destroyed, message["params"].(map[string]any)["targetId"].(string))
+				}
+				if message["id"] == float64(3) {
+					break
+				}
+			}
+			if len(destroyed) != 1 {
+				t.Fatalf("targetDestroyed IDs = %v, want exactly one discovered target", destroyed)
+			}
+			if got := destroyed[0] == targetID; got != tc.wantPageID {
+				t.Fatalf("targetDestroyed ID = %q (page ID %q), page match = %v, want %v", destroyed[0], targetID, got, tc.wantPageID)
+			}
+		})
+	}
+}
+
 func TestProtocolDiscoveryAndErrorCodes(t *testing.T) {
 	s, addr := runningServer(t)
 	c := browserConnection(t, addr)

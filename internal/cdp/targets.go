@@ -201,11 +201,16 @@ func (s *Server) closePage(page *browser.Page) bool {
 		for _, conn := range s.clientSnapshot() {
 			for _, ss := range conn.snapshot() {
 				ss.stateMu.RLock()
-				discover := ss.discover
+				discover, filter := ss.discover, ss.targetFilter
 				ss.stateMu.RUnlock()
 				if discover {
-					for _, id := range []string{page.ID, s.tabID(page)} {
-						ss.event("Target.targetDestroyed", map[string]any{"targetId": id})
+					for _, target := range []struct {
+						typ string
+						id  string
+					}{{"tab", s.tabID(page)}, {"page", page.ID}} {
+						if targetMatches(filter, target.typ) {
+							ss.event("Target.targetDestroyed", map[string]any{"targetId": target.id})
+						}
 					}
 				}
 			}
