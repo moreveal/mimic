@@ -1,0 +1,201 @@
+{
+  "captureMetadata": {
+    "href": "http://127.0.0.1:52831/plain",
+    "isSecureContext": true,
+    "crossOriginIsolated": false,
+    "innerWidth": 1272,
+    "innerHeight": 653,
+    "outerWidth": 1280,
+    "outerHeight": 800,
+    "devicePixelRatio": 1,
+    "visibility": "visible",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "platform": "Win32",
+    "browserMode": "headful",
+    "environmentProfile": "chrome-152-windows-x64-headful-controlled-v1",
+    "featureOverrides": [],
+    "versions": {
+      "Browser": "Chrome/152.0.7977.82",
+      "Protocol-Version": "1.3",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "V8-Version": "15.2.124.21",
+      "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+      "webSocketDebuggerUrl": "ws://127.0.0.1:19981/devtools/browser/b93aee94-db89-4624-838e-01b2613451a1"
+    },
+    "chromiumRevision": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "controls": {
+      "a": {
+        "href": "http://127.0.0.1:52831/plain",
+        "isSecureContext": true,
+        "crossOriginIsolated": false,
+        "innerWidth": 1272,
+        "innerHeight": 653,
+        "outerWidth": 1280,
+        "outerHeight": 800,
+        "devicePixelRatio": 1,
+        "visibility": "visible",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+        "platform": "Win32"
+      },
+      "b": {
+        "href": "http://127.0.0.1:52831/plain",
+        "isSecureContext": true,
+        "crossOriginIsolated": false,
+        "innerWidth": 1272,
+        "innerHeight": 653,
+        "outerWidth": 1280,
+        "outerHeight": 800,
+        "devicePixelRatio": 1,
+        "visibility": "visible",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+        "platform": "Win32"
+      }
+    },
+    "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+    "probeSHA256": "c3c9c00c79d424722d5a94e8eb5151fb2c37c1ce004ebfbde8ac5bac0735614f",
+    "freshProcessesAndProfiles": true
+  },
+  "result": {
+    "result": {
+      "value": {
+        "audio-file": {
+          "microtask": true,
+          "value": {
+            "powerEfficient": true,
+            "smooth": true,
+            "supported": true,
+            "keySystemAccess": null
+          },
+          "error": null
+        },
+        "video-file": {
+          "microtask": false,
+          "value": {
+            "powerEfficient": true,
+            "smooth": true,
+            "supported": true,
+            "keySystemAccess": null
+          },
+          "error": null
+        },
+        "audio-media-source": {
+          "microtask": true,
+          "value": {
+            "powerEfficient": true,
+            "smooth": true,
+            "supported": true,
+            "keySystemAccess": null
+          },
+          "error": null
+        },
+        "video-media-source": {
+          "microtask": false,
+          "value": {
+            "powerEfficient": true,
+            "smooth": true,
+            "supported": true,
+            "keySystemAccess": null
+          },
+          "error": null
+        },
+        "audio-webrtc": {
+          "microtask": true,
+          "value": {
+            "powerEfficient": false,
+            "smooth": false,
+            "supported": false,
+            "keySystemAccess": null
+          },
+          "error": null
+        },
+        "video-webrtc": {
+          "microtask": true,
+          "value": {
+            "powerEfficient": false,
+            "smooth": false,
+            "supported": false,
+            "keySystemAccess": null
+          },
+          "error": null
+        },
+        "unsupported-video": {
+          "microtask": true,
+          "value": {
+            "powerEfficient": false,
+            "smooth": false,
+            "supported": false,
+            "keySystemAccess": null
+          },
+          "error": null
+        },
+        "width-0": {
+          "microtask": false,
+          "value": {
+            "powerEfficient": false,
+            "smooth": true,
+            "supported": true,
+            "keySystemAccess": null
+          },
+          "error": null
+        },
+        "height-0": {
+          "microtask": false,
+          "value": {
+            "powerEfficient": false,
+            "smooth": true,
+            "supported": true,
+            "keySystemAccess": null
+          },
+          "error": null
+        },
+        "width--1": {
+          "microtask": false,
+          "value": {
+            "powerEfficient": false,
+            "smooth": true,
+            "supported": true,
+            "keySystemAccess": null
+          },
+          "error": null
+        },
+        "bitrate--1": {
+          "microtask": false,
+          "value": {
+            "powerEfficient": true,
+            "smooth": true,
+            "supported": true,
+            "keySystemAccess": null
+          },
+          "error": null
+        },
+        "framerate-0": {
+          "microtask": true,
+          "value": null,
+          "error": "TypeError"
+        },
+        "framerate--1": {
+          "microtask": true,
+          "value": null,
+          "error": "TypeError"
+        },
+        "cached-video": {
+          "microtask": false,
+          "value": {
+            "powerEfficient": true,
+            "smooth": true,
+            "supported": true,
+            "keySystemAccess": null
+          },
+          "error": null
+        },
+        "authorTimer": true,
+        "concurrent": [
+          true,
+          true,
+          true,
+          true
+        ]
+      }
+    }
+  }
+}
