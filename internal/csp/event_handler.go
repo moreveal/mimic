@@ -12,6 +12,9 @@ import (
 // hashes require unsafe-hashes and cover the exact decoded attribute source.
 func (set PolicySet) AllowsEventHandler(source string) bool {
 	for _, policy := range set {
+		if policy.reportOnly {
+			continue
+		}
 		sources, exists := policy.directives["script-src-attr"]
 		if !exists {
 			sources, exists = policy.directives["script-src"]

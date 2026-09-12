@@ -1,0 +1,2 @@
+ok  	github.com/moreveal/mimic/chrome/152	0.139s
+ok  	github.com/moreveal/mimic/internal/dom	0.454s

@@ -181,11 +181,15 @@ func (r *Realm) installFrameDocumentBridge(host map[string]any) {
 			if err != nil {
 				return nil, err
 			}
-			result, err := target.callFrameReflection(ctx, "set", object, key, value)
+			result, err := target.callFrameReflection(ctx, "setOutcome", object, key, value)
 			if err != nil {
 				return nil, err
 			}
-			return result.Export(), nil
+			encoded, err := target.encodeReflectedValue(result)
+			if err != nil {
+				return nil, err
+			}
+			return map[string]any{"threw": target.runtime.GetProperty(result, "threw").Export(), "value": encoded}, nil
 		})
 	})
 }
@@ -411,6 +415,7 @@ const frameReflectionSource = `(()=>{
     }catch(error){result=error;threw=true}
     return{threw,value:result,valueType:typeof result,symbol:typeof result==='symbol'?info(result):null}
   }
+  if(op==='setOutcome'){let result,threw=false;try{result=set(object,key,value)}catch(error){result=error;threw=true}return{threw,value:result,valueType:typeof result,symbol:typeof result==='symbol'?info(result):null}}
   if(op==='set')return set(object,key,value);
   if(op==='define')return define(object,key,value);
   if(op==='delete')return remove(object,key);

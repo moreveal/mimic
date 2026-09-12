@@ -15,7 +15,7 @@
       // element constructor for a temporary, unobservable parsing container.
       const owner = shadowSlots.get(this).host;
       const parsed = wrap(host.createNS(owner.namespaceURI, owner.localName));
-      host.setInnerHTML(elementSlot(parsed).nodeId, value == null ? '' : String(value));
+      host.setInnerHTML(elementSlot(parsed).nodeId, trustedConvert(value === null ? '' : value,'TrustedHTML','ShadowRoot innerHTML',"Failed to set the 'innerHTML' property on 'ShadowRoot': ",owner));
       const children = Array.from(parsed.childNodes);
       for (const child of children) parsed.removeChild(child);
       this.replaceChildren(...children);

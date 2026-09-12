@@ -14,8 +14,8 @@
   };
   const methods={
     open(...args){if(args.length>=3)throw new DOMException('The window.open overload is unsupported.','NotSupportedError');invoke(this,'open');return this},
-    write(...args){invoke(this,'write',args.map(String).join(''))},
-    writeln(...args){invoke(this,'write',args.map(String).join('')+'\n')},
+    write(...args){frameOf(this);invoke(this,'write',trustedDocumentWrite(this,args,'write'))},
+    writeln(...args){frameOf(this);invoke(this,'write',trustedDocumentWrite(this,args,'writeln')+'\n')},
     close(){invoke(this,'close')}
   };
   for(const [name,value] of Object.entries(methods)){

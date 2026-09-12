@@ -1,0 +1,70 @@
+{
+  "implementationHead": "82a6b04c38ed1b94b118cd153dc738e33f24fe4e",
+  "goVersion": "go version go1.26.4 windows/amd64",
+  "fullSuite": {
+    "command": "go test -json ./internal/browser ./internal/csp ./internal/webapi -count=1 -timeout 12m",
+    "status": "pass",
+    "packages": [
+      {
+        "package": "github.com/moreveal/mimic/internal/browser",
+        "status": "pass",
+        "elapsedSeconds": 349.485,
+        "passedTestEvents": 1489
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/csp",
+        "status": "pass",
+        "elapsedSeconds": 0.366,
+        "passedTestEvents": 4
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/webapi",
+        "status": "pass",
+        "elapsedSeconds": 0.257,
+        "passedTestEvents": 7
+      }
+    ],
+    "logSHA256": "788bc8b30c7b69dd08801d2d9b042960ef3ca047c026e025dc55702ba82fbb61"
+  },
+  "focused": {
+    "status": "pass",
+    "oracleScenarios": 32,
+    "observations": 1288,
+    "differentBefore": 828,
+    "differentAfter": 8,
+    "explicitUnsupportedAfter": 8,
+    "defaultPolicyMask": {
+      "chrome": 7,
+      "before": 0,
+      "after": 7
+    }
+  },
+  "race": {
+    "command": "go test -race ./internal/browser ./internal/csp -run 'TestTrustedTypes|TestTrustedScriptEval|TestWorkerTrustedScriptEval|TestFrameEvalArguments|TestCSP|TestDynamicScript|TestScript' -count=1 -timeout 3m",
+    "status": "pass",
+    "log": "race.txt"
+  },
+  "adjacentCDP": {
+    "command": "go test ./internal/cdp ./chrome/152 ./internal/dom -run 'Test.*Snapshot|TestDiscoveryAndRuntimeEvaluate|TestCDPProjectsChildFrameTree|TestCSP|TestTrustedTypes|TestDynamicScript|TestScript' -count=1 -timeout 3m",
+    "status": "pass",
+    "log": "cdp-snapshot-frame.txt"
+  },
+  "domAndBundle": {
+    "command": "go test ./chrome/152 ./internal/dom -count=1 -timeout 3m",
+    "status": "pass",
+    "log": "dom-bundle.txt"
+  },
+  "comparedBinaries": {
+    "baseline": {
+      "sourceHead": "da4f93e873d508323832efafe6870d378d79d1c4",
+      "path": "E:\\GitHub\\mimic-trusted-types\\.build\\trusted-types\\mimic-before.exe",
+      "sha256": "4db2b2f1f5338205262f63bdb2de6c2f6baf91caff36b2f3bb604dc78abaf854"
+    },
+    "after": {
+      "sourceMatchesImplementationHead": "82a6b04c38ed1b94b118cd153dc738e33f24fe4e",
+      "path": "E:\\GitHub\\mimic-trusted-types\\.build\\trusted-types\\mimic-release-check.exe",
+      "sha256": "2d19cf7cc03b14af7fb1841a667ecfdf446b6ae03c23e69dd34da7e0bbb2e34b"
+    }
+  },
+  "finalArtifact": "Final clean-HEAD build and its SHA256 are recorded in .build/trusted-types/artifact.json after the evidence commit."
+}

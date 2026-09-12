@@ -122,9 +122,7 @@ func (r *Realm) invokeInputWorld(ctx context.Context, target *Realm, nodeID int6
 func (r *Realm) installProtocolInput(host map[string]any) {
 	host["allowContentEventHandler"] = r.transientFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		page := r.agent.Page()
-		page.mu.RLock()
-		allowed := page.bypassCSP || page.policy.AllowsEventHandler(strarg(args, 0))
-		page.mu.RUnlock()
+		allowed := page.cspBypassed() || r.contentPolicy().AllowsEventHandler(strarg(args, 0))
 		return r.val(allowed), nil
 	})
 	host["activateProtocolInput"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {

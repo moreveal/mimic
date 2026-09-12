@@ -1,0 +1,3 @@
+ok  	github.com/moreveal/mimic/internal/cdp	1.146s
+ok  	github.com/moreveal/mimic/chrome/152	0.119s [no tests to run]
+ok  	github.com/moreveal/mimic/internal/dom	0.447s
