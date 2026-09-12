@@ -336,6 +336,7 @@
       throw error('NotFoundError','Requested device not found');
     },true);
     method('MediaDevices','getDisplayMedia',()=>{throw error('NotAllowedError','Permission denied')},true);
+    for(const [type,role]of [['RTCRtpSender','sender'],['RTCRtpReceiver','receiver']]){const C=globalThis[type];if(!C)continue;const getCapabilities=({getCapabilities(kind){if(arguments.length===0)throw new TypeError(`Failed to execute 'getCapabilities' on '${type}': 1 argument required, but only 0 present.`);if(typeof kind==='symbol')throw new TypeError('Cannot convert a Symbol value to a string');return host.rtpCapabilities(String(kind),role)}}).getCapabilities;native(getCapabilities,'getCapabilities');Object.defineProperty(C,'getCapabilities',{value:getCapabilities,writable:true,configurable:true,enumerable:true})}
     for(const name of ['decodingInfo','encodingInfo'])method('MediaCapabilities',name,(_s,configuration)=>{
       if(!configuration||(!configuration.audio&&!configuration.video))throw new TypeError('The provided configuration is not valid.');
       const supported=name==='decodingInfo'&&[configuration.video,configuration.audio].filter(Boolean).every(track=>(state('media').decoding||[]).includes(track.contentType));
