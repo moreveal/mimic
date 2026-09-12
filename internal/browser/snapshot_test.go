@@ -96,7 +96,7 @@ func TestSnapshotPreservesSelfContainedCSSURLQuoting(t *testing.T) {
 		`.icon { mask: url('#local-mask'); }`,
 	} {
 		for _, external := range []bool{false, true} {
-			if got := b.rewriteCSS(source, base, external); got != source {
+			if got := b.rewriteCSS(source, base, external, ""); got != source {
 				t.Fatalf("self-contained CSS changed: %s", got)
 			}
 		}
@@ -179,6 +179,49 @@ func TestSnapshotPortableAssetsAndCurrentDOM(t *testing.T) {
 	}
 }
 
+func TestSnapshotCapturesNestedFramesAsPortableDocuments(t *testing.T) {
+	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.URL.Path {
+		case "/child":
+			fmt.Fprint(w, `<html><body><p id="child">child state</p><img src="data:image/png;base64,AA=="></body></html>`)
+		case "/grandchild":
+			fmt.Fprint(w, `<html><body><p id="grandchild">grandchild state</p></body></html>`)
+		default:
+			fmt.Fprint(w, `<html><body><h1>top</h1><iframe src="/child"></iframe></body></html>`)
+		}
+	}))
+	defer ts.Close()
+	p := testPage(t)
+	defer p.Close()
+	if err := p.Navigate(context.Background(), ts.URL); err != nil {
+		t.Fatal(err)
+	}
+	if _, err := p.Evaluate(context.Background(), `new Promise(resolve=>{const childDocument=document.querySelector('iframe').contentDocument,frame=childDocument.createElement('iframe');frame.onload=()=>{frame.contentDocument.body.innerHTML='<p id="grandchild">grandchild state</p>';resolve()};frame.src='/grandchild';childDocument.body.append(frame)})`); err != nil {
+		t.Fatal(err)
+	}
+	deadline := time.Now().Add(2 * time.Second)
+	for time.Now().Before(deadline) {
+		children := p.Top.Children()
+		if len(children) == 1 && len(children[0].Children()) == 1 && children[0].Children()[0].ReadyState() == "complete" {
+			break
+		}
+		time.Sleep(10 * time.Millisecond)
+	}
+	snapshot, err := p.CaptureSnapshot(context.Background())
+	if err != nil {
+		t.Fatal(err)
+	}
+	index := string(snapshot.Files["index.html"])
+	child := string(snapshot.Files["frames/frame-1.html"])
+	grandchild := string(snapshot.Files["frames/frame-2.html"])
+	if !strings.Contains(index, `src="frames/frame-1.html"`) || !strings.Contains(child, `id="child">child state`) || !strings.Contains(child, `src="data:image/png;base64,AA=="`) || strings.Contains(child, `../data:`) || !strings.Contains(child, `src="frame-2.html"`) || !strings.Contains(grandchild, `id="grandchild">grandchild state`) {
+		t.Fatalf("nested frame snapshot was not portable: files=%v index=%s child=%s grandchild=%s", len(snapshot.Files), index, child, grandchild)
+	}
+	if len(snapshot.Warnings) != 0 {
+		t.Fatal(snapshot.Warnings)
+	}
+}
+
 func TestSnapshotMissingResourceAndCSSCycle(t *testing.T) {
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
@@ -201,11 +244,11 @@ func TestSnapshotMissingResourceAndCSSCycle(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	if len(snapshot.Files) != 2 || len(snapshot.Warnings) != 2 {
+	if len(snapshot.Files) != 3 || len(snapshot.Warnings) != 1 {
 		t.Fatalf("unexpected snapshot: %#v", snapshot)
 	}
-	if strings.Contains(string(snapshot.Files["index.html"]), "<iframe") {
-		t.Fatal("live frame retained")
+	if !strings.Contains(string(snapshot.Files["index.html"]), `src="frames/frame-1.html"`) || snapshot.Files["frames/frame-1.html"] == nil {
+		t.Fatal("embedded frame was not exported")
 	}
 	ctx, cancel := context.WithCancel(context.Background())
 	cancel()

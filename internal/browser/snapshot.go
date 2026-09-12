@@ -13,6 +13,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/moreveal/mimic/internal/dom"
 	"github.com/moreveal/mimic/internal/network"
 	"golang.org/x/net/html"
 )
@@ -34,6 +35,7 @@ type snapshotBuilder struct {
 	prefetched       map[string]snapshotAssetLoad
 	prefetchComplete bool
 	count            int
+	frameCount       int
 }
 
 type snapshotAssetSpec struct {
@@ -59,31 +61,11 @@ func (p *Page) CaptureSnapshot(ctx context.Context) (*Snapshot, error) {
 	timings := map[string]int64{}
 	stage := time.Now()
 	mark := func(name string) {
-		timings[name] = time.Since(stage).Milliseconds()
+		timings[name] += time.Since(stage).Milliseconds()
 		stage = time.Now()
 	}
-	d, ok := p.Document()
-	if !ok {
+	if p.Top == nil || p.Top.Realm == nil {
 		return nil, fmt.Errorf("page has no document")
-	}
-	shadows, err := p.Top.Realm.ShadowSnapshots(ctx)
-	if err != nil {
-		return nil, err
-	}
-	mark("shadowState")
-	forms, err := p.Top.Realm.FormSnapshots(ctx)
-	if err != nil {
-		return nil, err
-	}
-	mark("formState")
-	root, err := d.SnapshotTreeWithFormState(d.Root().ID, shadows, forms)
-	if err != nil {
-		return nil, err
-	}
-	mark("cloneDOM")
-	base, err := url.Parse(p.URL())
-	if err != nil {
-		return nil, err
 	}
 	b := &snapshotBuilder{
 		page:       p,
@@ -91,6 +73,36 @@ func (p *Page) CaptureSnapshot(ctx context.Context) (*Snapshot, error) {
 		out:        Snapshot{URL: p.URL(), Files: map[string][]byte{}, Warnings: []string{}, TimingsMS: timings},
 		seen:       map[string]string{},
 		prefetched: map[string]snapshotAssetLoad{},
+	}
+	if err := b.captureFrame(p.Top, "index.html", "", mark); err != nil {
+		return nil, err
+	}
+	return &b.out, nil
+}
+
+func (b *snapshotBuilder) captureFrame(frame *Frame, filename, htmlPrefix string, mark func(string)) error {
+	if frame == nil || frame.Realm == nil || frame.Realm.document == nil {
+		return fmt.Errorf("frame has no document")
+	}
+	d := frame.Realm.document
+	shadows, err := frame.Realm.ShadowSnapshots(b.ctx)
+	if err != nil {
+		return err
+	}
+	mark("shadowState")
+	forms, err := frame.Realm.FormSnapshots(b.ctx)
+	if err != nil {
+		return err
+	}
+	mark("formState")
+	root, err := d.SnapshotTreeWithFormState(d.Root().ID, shadows, forms)
+	if err != nil {
+		return err
+	}
+	mark("cloneDOM")
+	base, err := url.Parse(frame.URL())
+	if err != nil {
+		return err
 	}
 	var findBase func(*html.Node) bool
 	findBase = func(n *html.Node) bool {
@@ -115,7 +127,9 @@ func (p *Page) CaptureSnapshot(ctx context.Context) (*Snapshot, error) {
 	mark("findBase")
 	b.prefetchHTMLAssets(root, base)
 	mark("fetchAssets")
-	b.rewriteHTML(root, base)
+	iframeNodes := d.FindAllByTagName("iframe")
+	iframeIndex := 0
+	b.rewriteHTML(root, base, htmlPrefix, frame, iframeNodes, &iframeIndex, mark)
 	mark("rewriteDOM")
 	var output bytes.Buffer
 	// Portable snapshots use the historical HTML5 preamble exactly once.
@@ -129,14 +143,14 @@ func (p *Page) CaptureSnapshot(ctx context.Context) (*Snapshot, error) {
 	}
 	output.WriteString("<!doctype html>\n")
 	if err := html.Render(&output, root); err != nil {
-		return nil, err
+		return err
 	}
 	mark("renderHTML")
-	if err := ctx.Err(); err != nil {
-		return nil, err
+	if err := b.ctx.Err(); err != nil {
+		return err
 	}
-	b.out.Files["index.html"] = output.Bytes()
-	return &b.out, nil
+	b.out.Files[filename] = output.Bytes()
+	return nil
 }
 
 func snapshotAssetURL(raw string, base *url.URL) (string, *url.URL, bool) {
@@ -372,7 +386,7 @@ func (b *snapshotBuilder) asset(raw string, base *url.URL, css bool) string {
 		if response.URL != nil {
 			resourceBase = response.URL
 		}
-		body = []byte(b.rewriteCSS(string(body), resourceBase, true))
+		body = []byte(b.rewriteCSS(string(body), resourceBase, true, ""))
 	}
 	// A successful empty response is a zero-byte file. A nil Go slice would
 	// encode as JSON null instead of the base64 string promised by Snapshot.
@@ -397,7 +411,7 @@ var snapshotMediaExtensions = map[string]string{
 // are outside the current snapshot contract.
 var snapshotCSSURL = regexp.MustCompile(`(?i)url\(\s*(?:"([^"\r\n]*)"|'([^'\r\n]*)'|([^)'"\s]*))\s*\)|@import\s+(?:"([^"\r\n]*)"|'([^'\r\n]*)')`)
 
-func (b *snapshotBuilder) rewriteCSS(source string, base *url.URL, external bool) string {
+func (b *snapshotBuilder) rewriteCSS(source string, base *url.URL, external bool, htmlPrefix string) string {
 	return snapshotCSSURL.ReplaceAllStringFunc(source, func(match string) string {
 		groups := snapshotCSSURL.FindStringSubmatch(match)
 		raw := ""
@@ -417,6 +431,8 @@ func (b *snapshotBuilder) rewriteCSS(source string, base *url.URL, external bool
 		name := b.asset(raw, base, imported)
 		if external {
 			name = strings.TrimPrefix(name, "assets/")
+		} else {
+			name = htmlPrefix + name
 		}
 		if imported {
 			return `@import "` + name + `"`
@@ -425,13 +441,50 @@ func (b *snapshotBuilder) rewriteCSS(source string, base *url.URL, external bool
 	})
 }
 
-func (b *snapshotBuilder) rewriteHTML(n *html.Node, base *url.URL) {
+func (b *snapshotBuilder) rewriteHTML(n *html.Node, base *url.URL, htmlPrefix string, frame *Frame, iframeNodes []dom.Node, iframeIndex *int, mark func(string)) {
 	for c := n.FirstChild; c != nil; {
 		next := c.NextSibling
-		if c.Type == html.ElementNode && (c.Data == "script" || c.Data == "base" || c.Data == "iframe" || c.Data == "object" || c.Data == "embed") {
-			if c.Data == "iframe" {
-				b.out.Warnings = append(b.out.Warnings, "Embedded frame omitted")
+		if c.Type == html.ElementNode && c.Data == "iframe" {
+			var child *Frame
+			if *iframeIndex < len(iframeNodes) {
+				elementID := iframeNodes[*iframeIndex].ID
+				for _, candidate := range frame.Children() {
+					if candidate.ElementNodeID() == elementID {
+						child = candidate
+						break
+					}
+				}
 			}
+			*iframeIndex++
+			if child == nil || child.Realm == nil {
+				b.out.Warnings = append(b.out.Warnings, "Embedded frame unavailable")
+				n.RemoveChild(c)
+				c = next
+				continue
+			}
+			b.frameCount++
+			childName := fmt.Sprintf("frames/frame-%d.html", b.frameCount)
+			if err := b.captureFrame(child, childName, "../", mark); err != nil {
+				b.out.Warnings = append(b.out.Warnings, "Embedded frame unavailable: "+err.Error())
+				n.RemoveChild(c)
+				c = next
+				continue
+			}
+			localName := childName
+			if htmlPrefix != "" {
+				localName = path.Base(childName)
+			}
+			attrs := c.Attr[:0]
+			for _, attribute := range c.Attr {
+				if attribute.Key != "src" && attribute.Key != "srcdoc" && !strings.HasPrefix(attribute.Key, "on") {
+					attrs = append(attrs, attribute)
+				}
+			}
+			c.Attr = append(attrs, html.Attribute{Key: "src", Val: localName})
+			c = next
+			continue
+		}
+		if c.Type == html.ElementNode && (c.Data == "script" || c.Data == "base" || c.Data == "object" || c.Data == "embed") {
 			n.RemoveChild(c)
 			c = next
 			continue
@@ -449,7 +502,7 @@ func (b *snapshotBuilder) rewriteHTML(n *html.Node, base *url.URL) {
 				continue
 			}
 		}
-		b.rewriteHTML(c, base)
+		b.rewriteHTML(c, base, htmlPrefix, frame, iframeNodes, iframeIndex, mark)
 		c = next
 	}
 	if n.Type != html.ElementNode {
@@ -468,10 +521,13 @@ func (b *snapshotBuilder) rewriteHTML(n *html.Node, base *url.URL) {
 			continue
 		}
 		if a.Key == "style" {
-			a.Val = b.rewriteCSS(a.Val, base, false)
+			a.Val = b.rewriteCSS(a.Val, base, false, htmlPrefix)
 		}
 		if a.Key == "src" || a.Key == "poster" || a.Key == "background" || (a.Key == "href" && n.Data == "link" && (strings.Contains(rel, "stylesheet") || strings.Contains(rel, "icon"))) {
 			a.Val = b.asset(a.Val, base, n.Data == "link" && strings.Contains(rel, "stylesheet"))
+			if strings.HasPrefix(a.Val, "assets/") {
+				a.Val = htmlPrefix + a.Val
+			}
 		} else if a.Key == "href" {
 			if strings.HasPrefix(strings.TrimSpace(strings.ToLower(a.Val)), "javascript:") {
 				continue
@@ -487,12 +543,12 @@ func (b *snapshotBuilder) rewriteHTML(n *html.Node, base *url.URL) {
 	if n.Data == "style" {
 		for c := n.FirstChild; c != nil; c = c.NextSibling {
 			if c.Type == html.TextNode {
-				c.Data = b.rewriteCSS(c.Data, base, false)
+				c.Data = b.rewriteCSS(c.Data, base, false, htmlPrefix)
 			}
 		}
 	}
 	if n.Data == "head" {
-		policy := &html.Node{Type: html.ElementNode, Data: "meta", Attr: []html.Attribute{{Key: "http-equiv", Val: "Content-Security-Policy"}, {Key: "content", Val: "default-src 'self' file: data:; script-src 'none'; connect-src 'none'; frame-src 'none'; object-src 'none'; style-src 'self' file: 'unsafe-inline'; form-action 'none'"}}}
+		policy := &html.Node{Type: html.ElementNode, Data: "meta", Attr: []html.Attribute{{Key: "http-equiv", Val: "Content-Security-Policy"}, {Key: "content", Val: "default-src 'self' file: data:; script-src 'none'; connect-src 'none'; frame-src 'self' file:; object-src 'none'; style-src 'self' file: 'unsafe-inline'; form-action 'none'"}}}
 		n.InsertBefore(policy, n.FirstChild)
 		meta := &html.Node{Type: html.ElementNode, Data: "meta", Attr: []html.Attribute{{Key: "charset", Val: "utf-8"}}}
 		n.InsertBefore(meta, n.FirstChild)
