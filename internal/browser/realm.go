@@ -87,6 +87,7 @@ type Realm struct {
 	eventListenerInvoker     engine.Value
 	frameViewportRead        engine.Value
 	frameLayoutRead          engine.Value
+	computedStyleFlatRead    engine.Value
 	frameReferenceImport     engine.Value
 	frameReferenceDescribe   engine.Value
 	frameGlobalRead          engine.Value
