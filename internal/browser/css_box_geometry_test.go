@@ -11,7 +11,7 @@ import (
 func TestCSSBoxGraphMatchesFrozenChrome(t *testing.T) { testCSSObservation(t, "css_box_geometry") }
 
 func TestCSSComputedCatalogMatchesFrozenChrome(t *testing.T) {
-	for _, name := range []string{"css_line_rounding", "css_wrapper_flow", "css_specified_values", "css_zero_font", "css_computed_initial", "css_computed_catalog", "css_computed_dynamic"} {
+	for _, name := range []string{"css_shadow_inheritance", "css_line_rounding", "css_wrapper_flow", "css_specified_values", "css_zero_font", "css_computed_initial", "css_computed_catalog", "css_computed_dynamic"} {
 		t.Run(name, func(t *testing.T) { testCSSObservation(t, name) })
 	}
 }

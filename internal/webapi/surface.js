@@ -191,7 +191,7 @@
   // Resolve fallback geometry only when its value is read. Unrelated style reads
   // and property enumeration must not run layout or invoke author-defined getters.
   const inlineCSSDeclarations=element=>{const value=host.inlineStyleState(elementSlot(element).nodeId);return value[0]==='j'?JSON.parse(value.slice(1)):parseCSS(value.slice(1))};
-  const cssResolvedColor=element=>{for(let n=element;n&&elementSlot(n);n=n.parentElement){const value=computedCSSDeclarations(n).find(e=>e.name==='color')?.value;if(!value||['inherit','unset','currentcolor'].includes(value.toLowerCase()))continue;if(value==='initial')break;const rgba=cssColorRGBA(value);if(rgba)return cssSerializeColor(rgba);host.semanticMissingAt('surface.js/cssResolvedColor','CSS.colorResolution',JSON.stringify({reason:'unsupported computed color',value}));return value}return 'rgb(0, 0, 0)'};
+  const cssResolvedColor=element=>{for(let n=element;n&&elementSlot(n);n=cssFontParent(n)){const value=computedCSSDeclarations(n).find(e=>e.name==='color')?.value;if(!value||['inherit','unset','currentcolor'].includes(value.toLowerCase()))continue;if(value==='initial')break;const rgba=cssColorRGBA(value);if(rgba)return cssSerializeColor(rgba);host.semanticMissingAt('surface.js/cssResolvedColor','CSS.colorResolution',JSON.stringify({reason:'unsupported computed color',value}));return value}return 'rgb(0, 0, 0)'};
   // Resolved style requires flat-tree participation as well as connectivity.
   // Derive named distribution from the existing shadow/DOM ownership; a light
   // child of a shadow host without a matching slot is connected but excluded.
