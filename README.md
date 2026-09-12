@@ -1,169 +1,170 @@
-# Mimic
+<p align="center">
+  <img src="docs/assets/readme-hero.png" alt="Mimic — Run the web. Skip the rendering. A lightweight runtime between HTTP and a full browser." width="1200">
+</p>
 
-Mimic models Chrome-visible JavaScript and browser state in Go without running
-or embedding Chromium. It has an explicit browser scheduler, resource loader,
-separate document/frame/Worker realms, and a subset of CDP.
+<p align="center">
+  <strong>Browser logic, without the rendering pipeline.</strong><br>
+  Execute website JavaScript and work with Chrome-visible browser state in a lightweight Go runtime.
+</p>
 
-It is not a renderer, a Chromium wrapper, or a fully compatible Chrome browser.
-Generated API names describe known shape; they do not imply implemented semantics.
-No external-site result or performance claim is a product guarantee.
+<p align="center">
+  <a href="go.mod"><img src="https://img.shields.io/badge/Go-1.26.4%2B-00ADD8?style=flat-square&amp;logo=go&amp;logoColor=white" alt="Go 1.26.4+"></a>
+  <a href="docs/getting-started.md"><img src="https://img.shields.io/badge/engine-V8-81B5FF?style=flat-square&amp;logo=v8&amp;logoColor=white" alt="V8 engine"></a>
+  <a href="docs/architecture.md"><img src="https://img.shields.io/badge/runs-JavaScript-F7DF1E?style=flat-square&amp;logo=javascript&amp;logoColor=black" alt="Runs JavaScript"></a>
+  <a href="docs/cdp-compatibility.md"><img src="https://img.shields.io/badge/automation-CDP-AC9FFF?style=flat-square" alt="CDP automation"></a>
+  <a href="docs/compatibility.md"><img src="https://img.shields.io/badge/status-in_development-FFCA91?style=flat-square" alt="In development"></a>
+</p>
 
-The [reproducible Windows benchmark](benchmark/README.md) compares the V8 backend
-with exact Chrome 152.0.7977.82 using local correctness-gated workloads, process-tree
-CPU/memory accounting and cold, warm and concurrent sessions. See its
-[measured report](benchmark/results/report.md) for results and limitations.
+<p align="center">
+  <a href="#quick-start">Quick start</a> ·
+  <a href="#measured-not-assumed">Benchmarks</a> ·
+  <a href="docs/cdp-compatibility.md">CDP support</a> ·
+  <a href="docs/product-vision.md">Product vision</a> ·
+  <a href="docs/architecture.md">Architecture</a>
+</p>
 
-## Build and run
+## Let the website do the work
 
-The current build is **Windows amd64**, Go **1.26.4+**, with CGO and a compatible
-C compiler (tested with `gcc`). Platform support is intentionally unchanged.
-Dependencies are pinned in `go.mod`/`go.sum`; the local `third_party/tls-client`
-replacement is required. A first build needs those module dependencies available.
-The AVIF decoder requires Go 1.26.4; standard Go toolchain auto-selection can
-download that pinned toolchain when the installed patch version is older.
+Raw HTTP is lean, but complex websites push you into reconstructing private APIs,
+tokens, authentication flows, and client-side state. Full browsers execute that
+logic for you—and bring a rendering engine along with it.
+
+**Mimic fills the space between them.** It runs the website’s own JavaScript and
+browser logic without embedding Chromium or producing pixels. The goal is
+browser-level automation with runtime costs closer to direct HTTP.
+
+That is the product direction. Today, Mimic implements a subset of Chrome behavior
+and CDP; compatibility and performance depend on the workload.
+
+| Start with HTTP | Reach for Mimic | Use a full browser |
+| :--- | :--- | :--- |
+| The response already contains what you need. | You need JavaScript execution, browser state, or a hydrated DOM within the supported surface. | You need screenshots, full layout, media playback, or complete browser behavior. |
+
+## Built for execution
+
+| Website logic | Observable browser state | Automation & capture |
+| :--- | :--- | :--- |
+| V8 executes JavaScript alongside the resource loader and browser scheduler. | DOM, navigation, and CDP share canonical state, with separate document, frame, and Worker realms. | Connect over the supported CDP surface, evaluate JavaScript, navigate, and export static DOM snapshots. |
+
+Each Page owns its event loop. Independent Pages can execute concurrently, while
+callbacks and microtasks remain ordered within each Page. See
+[architecture](docs/architecture.md) and [compatibility boundaries](docs/compatibility.md).
+
+## Measured, not assumed
+
+Selected results from the **September 9, 2026 historical checkpoint**, comparing
+Mimic V8 with Chrome 152 in `headless=new` mode on Windows 11 x64
+(Intel i7-14700KF, 31.83 GiB RAM). These describe the recorded build, not current HEAD.
+
+<table>
+  <tr>
+    <td width="33%"><a href="benchmark/runs/07-catalog-milestone/report.md"><img src="docs/assets/metric-startup.svg" alt="CDP readiness median: Mimic 214.90 ms; Chrome 278.03 ms. 10 fresh processes." width="380"></a></td>
+    <td width="33%"><a href="benchmark/runs/07-catalog-milestone/report.md"><img src="docs/assets/metric-memory.svg" alt="Process-tree RSS at CDP ready: Mimic 25.69 MiB; Chrome 392.20 MiB." width="380"></a></td>
+    <td width="33%"><a href="benchmark/runs/07-catalog-milestone/report.md"><img src="docs/assets/metric-latency.svg" alt="Warm static completion median: Mimic 44.18 ms; Chrome 20.65 ms. 20 runs; Mimic is slower." width="380"></a></td>
+  </tr>
+</table>
+
+The checkpoint shows lower startup memory and earlier CDP readiness, alongside
+slower static workload completion. Memory at readiness is **not per-Page memory**;
+completion includes navigation and execution, and excludes Page creation and
+teardown. All six local correctness workloads passed for both systems. These
+fixtures do not establish general website compatibility or a universal speedup.
+
+[Full checkpoint, methodology & raw data](benchmark/runs/07-catalog-milestone/report.md)
+· [Subsequent measurements & remaining bottlenecks](docs/performance/report.md)
+· [Reproduce the benchmark](benchmark/README.md)
+
+## Quick start
+
+**Current supported build:** Windows amd64, Go 1.26.4+, CGO, and a compatible
+C compiler (tested with `gcc`). Other platforms are a development direction;
+see [platforms and browser targets](#platforms-and-browser-targets).
+
+### 1. Build and start
 
 ```powershell
+git clone https://github.com/moreveal/mimic.git
+cd mimic
 go build -o .build/mimic.exe ./cmd/mimic
 ./.build/mimic.exe -listen 127.0.0.1:9222 -chrome 152
-# Explicit fallback, using the same binary:
-./.build/mimic.exe -listen 127.0.0.1:9222 -chrome 152 -engine quickjs
 ```
 
-V8 is the default (`github.com/maclof/gov8 v0.1.1`); its bundled native engine
-reports **15.2.124.1-rusty**. QuickJS (`quickjs-go v0.7.7`) is retained as an
-explicit fallback; goja is retained for development and regression tests.
-Neither fallback promises V8-equivalent ECMAScript behavior. gov8 extracts its
-packaged DLL into its user cache; no repository-local V8/Chrome download is needed.
-No `.env` file or secret is required. Stop the foreground server with Ctrl+C.
-The AVIF resource decoder is pinned to `gav1d v0.2.5` and needs Go 1.26.4;
-standard Go toolchain selection downloads that patch version when necessary.
-It decodes image bytes in Go without a GPU or external codec DLL.
+Keep the local `third_party` dependencies in the checkout. The first build needs
+module dependencies available; Go can download the pinned toolchain automatically.
+V8 is the default. No separate Chromium installation, GPU, or `.env` file is
+required to run Mimic. Stop the server with Ctrl+C.
 
-CDP listens on loopback by default. It has no authentication and is intended for
-trusted local clients. Navigation has no arbitrary deadline by default
-(`-navigation-timeout 0`); set e.g. `-navigation-timeout 30s` explicitly if needed.
-This setting does not terminate background application callbacks. Individual CDP
-evaluations and snapshot serialization retain independent 30-second bounds.
-Mimic is not a security sandbox for hostile code.
+### 2. Connect over CDP
 
-## CDP
+In another PowerShell window, discover the available targets:
 
-Read `http://127.0.0.1:9222/json/version` or `/json/list`, then connect a WebSocket
-client to the returned `webSocketDebuggerUrl`. Send, for example:
+```powershell
+Invoke-RestMethod http://127.0.0.1:9222/json/list
+```
+
+Connect a WebSocket client to a returned `webSocketDebuggerUrl` and send:
 
 ```json
 {"id":1,"method":"Runtime.evaluate","params":{"expression":"1 + 2"}}
 ```
 
-`Page.navigate` accepts an HTTP(S) URL. Its reply acknowledges navigation start;
-wait for lifecycle events before treating the page as loaded. See the
-[CDP matrix](docs/cdp-compatibility.md) for the actual supported contract.
-An optional static snapshot exporter is available as
-`python compatibility/save_snapshot.py --endpoint http://127.0.0.1:9222 --output snapshots/example`
-Use `--wait-selector '#ready'` when the application exposes a readiness marker:
-the browser's `load` event can precede application hydration. The exporter also
-accepts `--timeout` in milliseconds for that wait.
-with Pyppeteer 2.0.0 installed. It may load referenced resources and does not
-capture canvas pixels, live form state or embedded frames.
+`Page.navigate` starts navigation; wait for lifecycle events or an application
+readiness marker before consuming the result. Check the
+[CDP matrix](docs/cdp-compatibility.md) for supported commands and behavior.
 
-For navigation and capture in one command, use
-`python tools/mimic_snapshot.py URL OUTPUT --settle-ms 2500`. Its `--timeout`
-is a no-progress threshold rather than a hard navigation deadline: network,
-lifecycle and active browser-turn progress all keep the wait alive. Readiness
-uses Chrome's `networkidle2` shape by default; change the accepted number of
-active transports with `--idle-connections`. If progress stops, the tool stops
-the outstanding load and preserves the committed DOM with diagnostics in
-`snapshot.json`. `--max-wait` supplies a separate absolute safety cap; when a
-reported JavaScript/browser turn exceeds it, the tool identifies and interrupts
-that turn before taking a consistent snapshot instead of waiting forever.
-Interactive terminals get a live progress bar with HTTP status, lifecycle state,
-active/request counts, transferred bytes, quiet time and the latest resource.
-Redirected output emits the same progress every `--log-interval` seconds. The
-bar shows elapsed time against the wait budget, not a predicted completion
-percentage. The final summary and `snapshot.json` include per-stage timings.
-Portable asset capture uses a bounded concurrent fetch pool and reports its own internal
-clone/fetch/rewrite breakdown. Use `--no-progress` to disable animation while
-retaining ordinary logs.
+### 3. Capture a page
 
-No Poetry is needed. Start the freshly built server above, then in a second
-PowerShell window, from the **same checkout**:
+With the server running, use a second PowerShell window in the same checkout:
 
 ```powershell
 python -m venv .venv
 ./.venv/Scripts/python.exe -m pip install pyppeteer==2.0.0
-./.venv/Scripts/python.exe tools/mimic_snapshot.py "https://youtube.com/" snapshots/youtube --settle-ms 2500
+./.venv/Scripts/python.exe tools/mimic_snapshot.py "https://example.com/" snapshots/example --settle-ms 2500
 ```
 
-The legacy `tools/mimic/_snapshot.py` entry point forwards to this tool. Pass a
-plain URL (not Markdown link syntax) and a new output directory; existing captures
-are never overwritten. Connecting to an old server binary does not enable the
-new runtime fixes, even when the Python script is current.
+The tool exports a static DOM snapshot and available assets, with progress and
+diagnostics. Use a new output directory for each capture. Readiness is a heuristic;
+exports exclude scripts, embedded frames, and canvas pixels. See the
+[complete setup and capture guide](docs/getting-started.md) for wait controls,
+partial captures, engine fallbacks, and troubleshooting details.
 
-Readiness is a heuristic based on main-document lifecycle, network quiet and
-running-task diagnostics, not proof that an application is fully hydrated.
-The default absolute budget is 120 seconds (`--max-wait 0` disables it).
-When it expires, capture reserves a task boundary and interrupts current work;
-`navigation.partial` and `interruptRequested` distinguish this from normal capture.
-Asset downloads reuse the runtime's resource loader, with up to 32 concurrent
-fetches, 512 resources and an eight-second fetch budget; missing assets are listed
-as warnings instead of silently adding serial waits. Scripts and embedded frames
-are not exported. Media decoding/playback remains unsupported, and geometry,
-including intersection observations, uses the runtime's approximate box model;
-it does not implement full layout, scrolling or paint visibility.
-Independent resource transfers run concurrently; author JavaScript callbacks
-and their microtask checkpoints remain ordered on each Page. Adding Python
-threads cannot shorten a busy browser callback. The
-[snapshot investigation](docs/performance/snapshot-hydration-20260911.md) records
-the measured runtime bottlenecks and the limits of the live-site checks.
+## Platforms and browser targets
 
-## Architecture and target
+Mimic’s direction is a portable execution runtime that can follow new Chrome
+versions. The current OS and reference version are checkpoints in that work.
 
-`CDP -> browser commands -> canonical state / scheduler / resource loader -> engine`.
-`chrome/152` is selected through a version-neutral compatibility registry.
-Handwritten Web API semantics consume the generated Blink WebIDL/CDP surface.
-Transport/session observations remain authoritative for network protocol,
-connection reuse and Resource Timing.
+| Area | Available today | Direction |
+| :--- | :--- | :--- |
+| Platforms | Windows amd64 build and validation. | Linux at minimum, with OS-specific code isolated so more of Go’s portability carries through. Native engine and CGO dependencies still need platform support and validation. |
+| Browser behavior | Frozen Chrome **152.0.7977.82** as the measured reference. | Additional Chrome versions through the version-neutral compatibility registry, backed by version-specific observations and tests. |
 
-The target is **Chrome 152.0.7977.82**, Chromium
-`d04cdb24d67b081f6cf80200ffc5233f44b61109` (r1669021). Exact Blink, V8/CDP and
-WPT identifiers are in `chrome/152/target.json`. The target V8 source revision
-and the packaged gov8 binary are separately identified; their equivalence has
-not been established by this cleanup.
-The authoritative behavioral oracle is normal **headful** Windows x64 Chrome with
-a fresh controlled profile. Headless observations are explicitly mode-scoped and
-non-authoritative until a probe is proven invariant. See
-[the oracle policy](docs/oracle-policy.md) and [the headless audit](docs/oracle-headless-audit.md).
+The `-chrome 152` flag selects the current compatibility target. It does not
+install or launch Chrome. See the [target manifest](chrome/152/target.json) and
+[oracle policy](docs/oracle-policy.md) for the exact behavioral reference.
 
-Read [architecture and invariants](docs/architecture.md),
-[compatibility limits](docs/compatibility.md), and
-[generated-data provenance](docs/generated-data.md) before changing state ownership.
+## Current boundaries
 
-## Verification
+Mimic models what scripts can observe; it does not render pages. Full CSS layout,
+Canvas/WebGL pixels, media playback, and complete Web API/CDP compatibility remain
+outside the current implementation. Generated API names are not proof of working
+semantics. Follow the [compatibility notes](docs/compatibility.md) when evaluating
+a workload.
 
-```powershell
-go test ./...
-go test -race ./...
-python tools/generate_compat.py --check
-python tools/check_repository.py
-```
+CDP has no authentication and is intended for trusted local clients. Mimic is not
+a security sandbox for hostile code. Navigation has no deadline by default;
+configure `-navigation-timeout 30s` when your workflow needs one.
 
-Tests use local fixtures; no external E2E investigation is part of this baseline.
-The race detector makes generated-surface bootstrap substantially slower; retain
-Go's default test timeout. See [the stabilization audit](docs/stabilization.md)
-for exact successful and failed runs, including the original hangs.
-The nested transport module has its own focused tests documented there.
+## Go deeper
 
-The [Navigator capability matrix](docs/navigator-capabilities.md) links exact
-Chrome captures, before/after differentials and tested semantics. Shape parity
-and intentionally unavailable service/hardware backends are reported separately.
+| Guide | What you’ll find |
+| :--- | :--- |
+| [Setup & automation](docs/getting-started.md) | Build requirements, engine choices, snapshots, and verification commands. |
+| [Product vision](docs/product-vision.md) | Why Mimic exists and where it is going. |
+| [Architecture](docs/architecture.md) | State ownership, Page isolation, scheduling, and the graphics observation boundary. |
+| [CDP compatibility](docs/cdp-compatibility.md) | The supported automation contract. |
+| [Behavioral oracle](docs/oracle-policy.md) | How frozen headful Chrome defines correctness. |
+| [Performance work](docs/performance/report.md) | Measured improvements, tradeoffs, and unresolved costs. |
 
-`--check` is offline: it verifies retained artifact hashes, pins and deterministic
-IDL/CDP projections. Full upstream regeneration is a separate explicit operation.
-Historical observations and small before/after captures are retained under
-`docs/` and `compatibility/captures/`; optional site-oriented tools live in
-`compatibility/research/` and are never loaded by production code.
-
-Known gaps include rendering, complete CSS layout, Canvas/WebGL pixels, media,
-full DOM/Web API algorithms, full CDP object handles, cookie/CORS completeness,
-Streams backpressure/BYOB and complete fallback microtask semantics. Do not infer
-full Chrome compatibility from a passing focused suite.
+Contributing? Start with [AGENTS.md](AGENTS.md) and the
+[verification guide](docs/getting-started.md#verification). Compatibility changes
+should be backed by focused regression tests and Chrome observations.
