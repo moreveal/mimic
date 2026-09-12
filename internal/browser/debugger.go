@@ -23,11 +23,12 @@ type Debugger struct {
 	// Pending promises release the command boundary only while waiting for a
 	// Page task. The embedding supplies both hooks, or neither, and reacquires
 	// exactly the locks it released before the debugger touches realm state.
-	BeforeWait    func()
-	AfterWait     func()
-	Console       func(realmID, name string, args []any)
-	BindingCalled func(realmID, name, payload string)
-	bindings      map[string][]debuggerBindingScope
+	BeforeWait     func()
+	AfterWait      func()
+	Console        func(realmID, name string, args []any)
+	ConsoleEnabled func() bool
+	BindingCalled  func(realmID, name, payload string)
+	bindings       map[string][]debuggerBindingScope
 }
 
 type debuggerRealm struct {
