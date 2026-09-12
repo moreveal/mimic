@@ -2,6 +2,7 @@ package browser
 
 import (
 	"context"
+	"fmt"
 
 	"github.com/moreveal/mimic/internal/engine"
 )
@@ -21,20 +22,20 @@ func (r *Realm) installDocumentCompatibility(host map[string]any) {
 		id := int64(numarg(args, 0))
 		kind, property := strarg(args, 1), strarg(args, 2)
 		root := r.document.OwnerDocumentID(id)
-		if root == r.document.Root().ID {
+		if root == r.document.Root().ID && r.mainWorld == nil {
 			return r.val(nil), nil
 		}
 		p := r.agent.Page()
 		p.mu.RLock()
 		var owner *Realm
 		for _, candidate := range p.realmOwners {
-			if !candidate.inactive && !candidate.closed && candidate.document.SharesNodeArena(r.document) && candidate.document.Root().ID == root {
+			if candidate.mainWorld == nil && !candidate.inactive && !candidate.closed && candidate.document.SharesNodeArena(r.document) && candidate.document.Root().ID == root {
 				owner = candidate
 				break
 			}
 		}
 		p.mu.RUnlock()
-		if owner == nil || owner.computedStyleFlatRead == nil {
+		if owner == nil {
 			switch kind {
 			case "value":
 				return r.val(""), nil
@@ -46,10 +47,23 @@ func (r *Realm) installDocumentCompatibility(host map[string]any) {
 		}
 		var observation any
 		run := func(ctx context.Context) error {
+			if deferred, ok := owner.runtime.(*deferredRuntime); ok {
+				if _, err := deferred.ready(); err != nil {
+					return err
+				}
+			}
 			return owner.runOnOwner(ctx, func(ctx context.Context) error {
+				if owner.computedStyleFlatRead == nil {
+					return fmt.Errorf("computed style owner is unavailable")
+				}
 				restore := r.enterFrameDocumentEntry(owner)
 				defer restore()
-				value, err := owner.runtime.Call(ctx, owner.computedStyleFlatRead, nil, owner.val(id), owner.val(kind), owner.val(property))
+				values := []engine.Value{owner.val(id), owner.val(kind), owner.val(property)}
+				for _, value := range values {
+					defer releaseDebuggerValue(owner, value)
+				}
+				value, err := owner.runtime.Call(ctx, owner.computedStyleFlatRead, nil, values...)
+				defer releaseDebuggerValue(owner, value)
 				if err == nil {
 					observation = value.Export()
 				}

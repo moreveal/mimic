@@ -413,7 +413,7 @@
     return connected;
   });
   registerBootstrapCallback('installFrameViewport',readFrameViewport,frameHasLayout);
-  registerBootstrapCallback('installComputedStyleFlatTree',(nodeID,kind,name)=>{const element=wrap(nodeID);return kind==='box'?cssBoxModel.hasBox(element):kind==='value'?cssComputedValue(element,name):kind==='rect'?clientRectFor(element):kind==='layout'?layoutRectFor(element):kind==='document'?computedStyleDocumentAvailable(element):computedStyleAvailable(element)});
+  registerBootstrapCallback('installComputedStyleFlatTree',(nodeID,kind,name)=>{const element=wrap(nodeID);return kind==='visibility'?observeElementVisibility(element,JSON.parse(name)):kind==='box'?cssBoxModel.hasBox(element):kind==='value'?cssComputedValue(element,name):kind==='rect'?clientRectFor(element):kind==='layout'?layoutRectFor(element):kind==='document'?computedStyleDocumentAvailable(element):computedStyleAvailable(element)});
   let constructCustomElement=null,customElementCloneInert=0;
   let templateTreeIsInert=()=>false;
   const viewportClientElement=element=>element===document.documentElement&&document.compatMode!=='BackCompat'||element===document.body&&document.compatMode==='BackCompat';
