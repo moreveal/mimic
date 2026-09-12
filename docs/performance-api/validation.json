@@ -1,0 +1,853 @@
+{
+  "releaseTestSourceRevision": "6a7edee8454070601371b6bf371aa879fd3381c0",
+  "test-all.jsonl": {
+    "sha256": "2962128a8cb7e2e2b9bda0e057adab3072d20276757ad78a902f8c54ffbb3b0f",
+    "start": "2026-09-12T06:14:49.6488352+04:00",
+    "end": "2026-09-12T06:20:47.8959967+04:00",
+    "packages": [
+      {
+        "package": "github.com/moreveal/mimic/benchmark",
+        "action": "skip",
+        "elapsed": 0.001
+      },
+      {
+        "package": "github.com/moreveal/mimic/chrome/152/generated",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/cmd/engine-spike",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/chrome",
+        "action": "pass",
+        "elapsed": 0.163
+      },
+      {
+        "package": "github.com/moreveal/mimic/chrome/152",
+        "action": "pass",
+        "elapsed": 0.173
+      },
+      {
+        "package": "github.com/moreveal/mimic/cmd/mimic-diff",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/compatibility",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/cmd/mimic",
+        "action": "pass",
+        "elapsed": 0.275
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/engine",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/htmlstream",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/engine/goja",
+        "action": "pass",
+        "elapsed": 0.17
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/engine/quickjs",
+        "action": "pass",
+        "elapsed": 0.265
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/network",
+        "action": "pass",
+        "elapsed": 0.3
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/monotime",
+        "action": "pass",
+        "elapsed": 0.339
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/csp",
+        "action": "pass",
+        "elapsed": 0.347
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/dom",
+        "action": "pass",
+        "elapsed": 0.395
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/scheduler",
+        "action": "pass",
+        "elapsed": 0.411
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/imageresource",
+        "action": "pass",
+        "elapsed": 0.432
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/engine/v8",
+        "action": "pass",
+        "elapsed": 1.226
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/trace",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/tools/networkprobe",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/tools/compatibility/offline_replay",
+        "action": "pass",
+        "elapsed": 0.202
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/webapi",
+        "action": "fail",
+        "elapsed": 0.23
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/speech",
+        "action": "pass",
+        "elapsed": 0.264
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/state",
+        "action": "pass",
+        "elapsed": 0.323
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/textmetrics",
+        "action": "pass",
+        "elapsed": 1.135
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/cdp",
+        "action": "pass",
+        "elapsed": 24.263
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/browser",
+        "action": "pass",
+        "elapsed": 353.244
+      }
+    ],
+    "testPasses": 1934,
+    "failures": [
+      "TestWorkerFetchSharedSemantics",
+      "github.com/moreveal/mimic/internal/webapi"
+    ],
+    "skips": [
+      "TestStartupPhaseProfile",
+      "TestOwnerModelProbe",
+      "TestHostBoundaryProfile",
+      "TestWindowsProviderNativeNotifications",
+      "TestBootstrapSnapshotConcurrentPageLifecycles",
+      "TestBootstrapSnapshotBarrierConcurrentBuilders",
+      "TestBootstrapSnapshotBarrierSequentialBuilders",
+      "TestBootstrapSnapshotConcurrentPagesSequentialBuilders",
+      "TestOrdinaryConcurrentPageLifecycles",
+      "TestConsumedWindowEventChromeOracle/goja",
+      "TestConsumedNativeListenerCheckpoint/goja",
+      "TestDetachedFrameMemoryProfile",
+      "TestFrameBridgeBreakdown",
+      "TestNativeFrameMicrotasksBeforeNextTask/goja",
+      "TestGojaBootstrapProfile",
+      "TestGojaBootstrapPhases",
+      "TestGojaBootstrapChildProfile",
+      "TestIndexedDBChromeOracles/indexeddb_lifecycle/goja",
+      "TestPerformanceDensityProfile",
+      "TestPerformanceParallelPages",
+      "TestPerformanceProfile",
+      "TestPerformanceNetworkAndLifecycleMatchFrozenChrome/ordinary/performance_resource/opaque",
+      "TestPerformanceNetworkAndLifecycleMatchFrozenChrome/ordinary/performance_navigation_events/rows/0",
+      "TestPerformanceNetworkAndLifecycleMatchFrozenChrome/snapshot/performance_resource/opaque",
+      "TestPerformanceNetworkAndLifecycleMatchFrozenChrome/snapshot/performance_navigation_events/rows/0",
+      "TestRuntimeLatencyProfile",
+      "TestSnapshotWorkloadProfile"
+    ],
+    "diagnostics": [
+      "--- FAIL: TestWorkerFetchSharedSemantics (0.02s)",
+      "<unknown>:13: Uncaught TypeError: Converting circular structure to JSON",
+      "<unknown>:13: Uncaught TypeError: Converting circular structure to JSON"
+    ]
+  },
+  "test-all-final.jsonl": {
+    "sha256": "8b0864948c3aa52618481bdc7e8c7bc9fabf5919dbef29faaf1381bc5f7afe67",
+    "start": "2026-09-12T06:22:05.0571119+04:00",
+    "end": "2026-09-12T06:27:44.9048264+04:00",
+    "packages": [
+      {
+        "package": "github.com/moreveal/mimic/benchmark",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/chrome/152/generated",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/cmd/engine-spike",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/chrome",
+        "action": "pass",
+        "elapsed": 0.207
+      },
+      {
+        "package": "github.com/moreveal/mimic/chrome/152",
+        "action": "pass",
+        "elapsed": 0.215
+      },
+      {
+        "package": "github.com/moreveal/mimic/cmd/mimic-diff",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/compatibility",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/cmd/mimic",
+        "action": "pass",
+        "elapsed": 0.302
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/engine",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/htmlstream",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/trace",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/tools/networkprobe",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/engine/goja",
+        "action": "pass",
+        "elapsed": 0.216
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/speech",
+        "action": "pass",
+        "elapsed": 0.248
+      },
+      {
+        "package": "github.com/moreveal/mimic/tools/compatibility/offline_replay",
+        "action": "pass",
+        "elapsed": 0.316
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/engine/quickjs",
+        "action": "pass",
+        "elapsed": 0.349
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/webapi",
+        "action": "pass",
+        "elapsed": 0.37
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/state",
+        "action": "pass",
+        "elapsed": 0.461
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/csp",
+        "action": "pass",
+        "elapsed": 0.472
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/monotime",
+        "action": "pass",
+        "elapsed": 0.506
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/network",
+        "action": "pass",
+        "elapsed": 0.507
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/dom",
+        "action": "pass",
+        "elapsed": 0.527
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/scheduler",
+        "action": "pass",
+        "elapsed": 0.551
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/imageresource",
+        "action": "pass",
+        "elapsed": 0.591
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/textmetrics",
+        "action": "pass",
+        "elapsed": 1.049
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/engine/v8",
+        "action": "pass",
+        "elapsed": 1.4889999999999999
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/cdp",
+        "action": "pass",
+        "elapsed": 24.669
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/browser",
+        "action": "pass",
+        "elapsed": 334.474
+      }
+    ],
+    "testPasses": 1935,
+    "failures": [],
+    "skips": [
+      "TestStartupPhaseProfile",
+      "TestWindowsProviderNativeNotifications",
+      "TestOwnerModelProbe",
+      "TestHostBoundaryProfile",
+      "TestBootstrapSnapshotConcurrentPageLifecycles",
+      "TestBootstrapSnapshotBarrierConcurrentBuilders",
+      "TestBootstrapSnapshotBarrierSequentialBuilders",
+      "TestBootstrapSnapshotConcurrentPagesSequentialBuilders",
+      "TestOrdinaryConcurrentPageLifecycles",
+      "TestConsumedWindowEventChromeOracle/goja",
+      "TestConsumedNativeListenerCheckpoint/goja",
+      "TestDetachedFrameMemoryProfile",
+      "TestFrameBridgeBreakdown",
+      "TestNativeFrameMicrotasksBeforeNextTask/goja",
+      "TestGojaBootstrapProfile",
+      "TestGojaBootstrapPhases",
+      "TestGojaBootstrapChildProfile",
+      "TestIndexedDBChromeOracles/indexeddb_lifecycle/goja",
+      "TestPerformanceDensityProfile",
+      "TestPerformanceParallelPages",
+      "TestPerformanceProfile",
+      "TestPerformanceNetworkAndLifecycleMatchFrozenChrome/ordinary/performance_resource/opaque",
+      "TestPerformanceNetworkAndLifecycleMatchFrozenChrome/ordinary/performance_navigation_events/rows/0",
+      "TestPerformanceNetworkAndLifecycleMatchFrozenChrome/snapshot/performance_resource/opaque",
+      "TestPerformanceNetworkAndLifecycleMatchFrozenChrome/snapshot/performance_navigation_events/rows/0",
+      "TestRuntimeLatencyProfile",
+      "TestSnapshotWorkloadProfile"
+    ],
+    "diagnostics": [
+      "<unknown>:13: Uncaught TypeError: Converting circular structure to JSON",
+      "<unknown>:13: Uncaught TypeError: Converting circular structure to JSON"
+    ]
+  },
+  "test-all-release.jsonl": {
+    "sha256": "b33b4f3152a1bc30d5c146803e7e8f2b9f1cc2ab1e32a1b07095c8942041da9a",
+    "start": "2026-09-12T07:06:07.4894416+04:00",
+    "end": "2026-09-12T07:12:21.7577255+04:00",
+    "packages": [
+      {
+        "package": "github.com/moreveal/mimic/benchmark",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/chrome/152/generated",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/cmd/engine-spike",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/chrome",
+        "action": "pass",
+        "elapsed": 0.182
+      },
+      {
+        "package": "github.com/moreveal/mimic/chrome/152",
+        "action": "pass",
+        "elapsed": 0.188
+      },
+      {
+        "package": "github.com/moreveal/mimic/cmd/mimic-diff",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/compatibility",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/cmd/mimic",
+        "action": "pass",
+        "elapsed": 0.287
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/engine",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/htmlstream",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/trace",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/tools/networkprobe",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/speech",
+        "action": "pass",
+        "elapsed": 0.196
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/engine/goja",
+        "action": "pass",
+        "elapsed": 0.211
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/webapi",
+        "action": "pass",
+        "elapsed": 0.263
+      },
+      {
+        "package": "github.com/moreveal/mimic/tools/compatibility/offline_replay",
+        "action": "pass",
+        "elapsed": 0.275
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/engine/quickjs",
+        "action": "pass",
+        "elapsed": 0.299
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/network",
+        "action": "pass",
+        "elapsed": 0.336
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/state",
+        "action": "pass",
+        "elapsed": 0.364
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/csp",
+        "action": "pass",
+        "elapsed": 0.376
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/monotime",
+        "action": "pass",
+        "elapsed": 0.386
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/dom",
+        "action": "pass",
+        "elapsed": 0.421
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/imageresource",
+        "action": "pass",
+        "elapsed": 0.444
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/scheduler",
+        "action": "pass",
+        "elapsed": 0.451
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/textmetrics",
+        "action": "pass",
+        "elapsed": 0.833
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/engine/v8",
+        "action": "pass",
+        "elapsed": 1.226
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/cdp",
+        "action": "pass",
+        "elapsed": 24.07
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/browser",
+        "action": "fail",
+        "elapsed": 368.135
+      }
+    ],
+    "testPasses": 1937,
+    "failures": [
+      "TestPerformanceNetworkAndLifecycleMatchFrozenChrome/snapshot/performance_navigation_events/rows/1",
+      "TestPerformanceNetworkAndLifecycleMatchFrozenChrome/snapshot/performance_navigation_events/rows/2",
+      "TestPerformanceNetworkAndLifecycleMatchFrozenChrome/snapshot/performance_navigation_events/rows/3",
+      "TestPerformanceNetworkAndLifecycleMatchFrozenChrome/snapshot/performance_navigation_events/rows",
+      "TestPerformanceNetworkAndLifecycleMatchFrozenChrome/snapshot/performance_navigation_events",
+      "TestPerformanceNetworkAndLifecycleMatchFrozenChrome/snapshot",
+      "TestPerformanceNetworkAndLifecycleMatchFrozenChrome",
+      "github.com/moreveal/mimic/internal/browser"
+    ],
+    "skips": [
+      "TestStartupPhaseProfile",
+      "TestWindowsProviderNativeNotifications",
+      "TestOwnerModelProbe",
+      "TestHostBoundaryProfile",
+      "TestBootstrapSnapshotConcurrentPageLifecycles",
+      "TestBootstrapSnapshotBarrierConcurrentBuilders",
+      "TestBootstrapSnapshotBarrierSequentialBuilders",
+      "TestBootstrapSnapshotConcurrentPagesSequentialBuilders",
+      "TestOrdinaryConcurrentPageLifecycles",
+      "TestConsumedWindowEventChromeOracle/goja",
+      "TestConsumedNativeListenerCheckpoint/goja",
+      "TestDetachedFrameMemoryProfile",
+      "TestFrameBridgeBreakdown",
+      "TestNativeFrameMicrotasksBeforeNextTask/goja",
+      "TestGojaBootstrapProfile",
+      "TestGojaBootstrapPhases",
+      "TestGojaBootstrapChildProfile",
+      "TestIndexedDBChromeOracles/indexeddb_lifecycle/goja",
+      "TestPerformanceDensityProfile",
+      "TestPerformanceParallelPages",
+      "TestPerformanceProfile",
+      "TestPerformanceIsolatedSurfaceMatchesFrozenChrome/ordinary/agentClusterMemoryAttribution",
+      "TestPerformanceIsolatedSurfaceMatchesFrozenChrome/snapshot/agentClusterMemoryAttribution",
+      "TestPerformanceNetworkAndLifecycleMatchFrozenChrome/ordinary/performance_resource/opaque",
+      "TestPerformanceNetworkAndLifecycleMatchFrozenChrome/ordinary/performance_navigation_events/rows/0",
+      "TestPerformanceNetworkAndLifecycleMatchFrozenChrome/snapshot/performance_resource/opaque",
+      "TestPerformanceNetworkAndLifecycleMatchFrozenChrome/snapshot/performance_navigation_events/rows/0",
+      "TestRuntimeLatencyProfile",
+      "TestSnapshotWorkloadProfile"
+    ],
+    "diagnostics": [
+      "--- FAIL: TestPerformanceNetworkAndLifecycleMatchFrozenChrome/snapshot/performance_navigation_events/rows/1 (0.00s)",
+      "--- FAIL: TestPerformanceNetworkAndLifecycleMatchFrozenChrome/snapshot/performance_navigation_events/rows/2 (0.00s)",
+      "--- FAIL: TestPerformanceNetworkAndLifecycleMatchFrozenChrome/snapshot/performance_navigation_events/rows/3 (0.00s)",
+      "--- FAIL: TestPerformanceNetworkAndLifecycleMatchFrozenChrome/snapshot/performance_navigation_events/rows (0.00s)",
+      "--- FAIL: TestPerformanceNetworkAndLifecycleMatchFrozenChrome/snapshot/performance_navigation_events (0.10s)",
+      "--- FAIL: TestPerformanceNetworkAndLifecycleMatchFrozenChrome/snapshot (1.47s)",
+      "--- FAIL: TestPerformanceNetworkAndLifecycleMatchFrozenChrome (3.41s)",
+      "<unknown>:13: Uncaught TypeError: Converting circular structure to JSON",
+      "<unknown>:13: Uncaught TypeError: Converting circular structure to JSON"
+    ]
+  },
+  "test-race-all.jsonl": {
+    "sha256": "b48d1337dedb845603c75433a9200cfe18f164f8e64175ee9869813d075b7b3f",
+    "start": "2026-09-12T06:29:36.3872157+04:00",
+    "end": "2026-09-12T06:39:47.5053014+04:00",
+    "packages": [
+      {
+        "package": "github.com/moreveal/mimic/benchmark",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/chrome/152/generated",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/cmd/engine-spike",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/chrome/152",
+        "action": "pass",
+        "elapsed": 1.231
+      },
+      {
+        "package": "github.com/moreveal/mimic/chrome",
+        "action": "pass",
+        "elapsed": 1.248
+      },
+      {
+        "package": "github.com/moreveal/mimic/cmd/mimic-diff",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/compatibility",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/cmd/mimic",
+        "action": "pass",
+        "elapsed": 1.219
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/engine",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/htmlstream",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/trace",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/tools/networkprobe",
+        "action": "skip",
+        "elapsed": 0.001
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/csp",
+        "action": "pass",
+        "elapsed": 1.199
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/state",
+        "action": "pass",
+        "elapsed": 1.231
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/dom",
+        "action": "pass",
+        "elapsed": 1.264
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/speech",
+        "action": "pass",
+        "elapsed": 1.2690000000000001
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/scheduler",
+        "action": "pass",
+        "elapsed": 1.278
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/monotime",
+        "action": "pass",
+        "elapsed": 1.29
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/engine/quickjs",
+        "action": "pass",
+        "elapsed": 1.308
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/imageresource",
+        "action": "pass",
+        "elapsed": 1.318
+      },
+      {
+        "package": "github.com/moreveal/mimic/tools/compatibility/offline_replay",
+        "action": "pass",
+        "elapsed": 1.3820000000000001
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/network",
+        "action": "pass",
+        "elapsed": 1.573
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/engine/goja",
+        "action": "pass",
+        "elapsed": 1.62
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/webapi",
+        "action": "pass",
+        "elapsed": 2.174
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/textmetrics",
+        "action": "pass",
+        "elapsed": 2.597
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/engine/v8",
+        "action": "pass",
+        "elapsed": 5.322
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/cdp",
+        "action": "pass",
+        "elapsed": 29.008
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/browser",
+        "action": "fail",
+        "elapsed": 600.632
+      }
+    ],
+    "testPasses": 1001,
+    "failures": [
+      "github.com/moreveal/mimic/internal/browser"
+    ],
+    "skips": [
+      "TestStartupPhaseProfile",
+      "TestWindowsProviderNativeNotifications",
+      "TestOwnerModelProbe",
+      "TestHostBoundaryProfile",
+      "TestBootstrapSnapshotConcurrentPageLifecycles",
+      "TestBootstrapSnapshotBarrierConcurrentBuilders",
+      "TestBootstrapSnapshotBarrierSequentialBuilders",
+      "TestBootstrapSnapshotConcurrentPagesSequentialBuilders",
+      "TestOrdinaryConcurrentPageLifecycles",
+      "TestConsumedWindowEventChromeOracle/goja",
+      "TestConsumedNativeListenerCheckpoint/goja",
+      "TestDetachedFrameMemoryProfile",
+      "TestFrameBridgeBreakdown",
+      "TestNativeFrameMicrotasksBeforeNextTask/goja",
+      "TestGojaBootstrapProfile",
+      "TestGojaBootstrapPhases",
+      "TestGojaBootstrapChildProfile"
+    ],
+    "diagnostics": [
+      "panic: test timed out after 10m0s",
+      "<unknown>:13: Uncaught TypeError: Converting circular structure to JSON"
+    ]
+  },
+  "test-race-focused.jsonl": {
+    "sha256": "08cbc7975ef278b2a1b0697f4eae9bd6d7084168ff32657118f0e6826a3d9ab3",
+    "start": "2026-09-12T06:40:06.1179348+04:00",
+    "end": "2026-09-12T06:41:25.0072598+04:00",
+    "packages": [
+      {
+        "package": "github.com/moreveal/mimic/internal/trace",
+        "action": "skip",
+        "elapsed": 0
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/scheduler",
+        "action": "pass",
+        "elapsed": 1.255
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/engine/v8",
+        "action": "pass",
+        "elapsed": 1.263
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/network",
+        "action": "pass",
+        "elapsed": 1.263
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/cdp",
+        "action": "pass",
+        "elapsed": 1.374
+      },
+      {
+        "package": "github.com/moreveal/mimic/internal/browser",
+        "action": "pass",
+        "elapsed": 78.889
+      }
+    ],
+    "testPasses": 137,
+    "failures": [],
+    "skips": [
+      "TestPerformanceDensityProfile",
+      "TestPerformanceParallelPages",
+      "TestPerformanceProfile",
+      "TestPerformanceIsolatedSurfaceMatchesFrozenChrome/ordinary/agentClusterMemoryAttribution",
+      "TestPerformanceIsolatedSurfaceMatchesFrozenChrome/snapshot/agentClusterMemoryAttribution",
+      "TestPerformanceNetworkAndLifecycleMatchFrozenChrome/ordinary/performance_resource/opaque",
+      "TestPerformanceNetworkAndLifecycleMatchFrozenChrome/ordinary/performance_navigation_events/rows/0",
+      "TestPerformanceNetworkAndLifecycleMatchFrozenChrome/snapshot/performance_resource/opaque",
+      "TestPerformanceNetworkAndLifecycleMatchFrozenChrome/snapshot/performance_navigation_events/rows/0"
+    ],
+    "diagnostics": []
+  },
+  "test-performance-parallel-race.jsonl": {
+    "sha256": "142dfd132c57ae9c1737ef135966b6581c482d6e8994889f22377216238718d7",
+    "start": "2026-09-12T06:32:07.0199822+04:00",
+    "end": "2026-09-12T06:32:09.6819113+04:00",
+    "packages": [
+      {
+        "package": "github.com/moreveal/mimic/internal/browser",
+        "action": "pass",
+        "elapsed": 2.662
+      }
+    ],
+    "testPasses": 1,
+    "failures": [],
+    "skips": [],
+    "diagnostics": []
+  },
+  "test-performance-clone-race.jsonl": {
+    "sha256": "3b0ba4652fbfe95c7ea3c2425895bcd8499f27a6dd28a0601d4a6eb8f5abf5f5",
+    "start": "2026-09-12T06:50:59.7463402+04:00",
+    "end": "2026-09-12T06:51:08.6158164+04:00",
+    "packages": [
+      {
+        "package": "github.com/moreveal/mimic/internal/browser",
+        "action": "pass",
+        "elapsed": 8.869
+      }
+    ],
+    "testPasses": 19,
+    "failures": [],
+    "skips": [],
+    "diagnostics": []
+  },
+  "offlineChecks": {
+    "performanceSchema": "28 interface shapes; 23 frozen .82 captures and fixture hashes pass",
+    "existingOracleProvenance": "27 existing captures pass",
+    "generatedCompat": "FAIL: Artifact manifest does not cover exactly the retained files; identical at clean base da4f93e",
+    "repositoryAudit": {
+      "currentIssues": 278,
+      "baselineIssues": 278,
+      "added": 0,
+      "removed": 0
+    }
+  },
+  "captureBinaries": {
+    "mimic-before.exe": {
+      "sha256": "256143d8e7dc84a0d7a648f39ea2cece6294cc481364c6943816877dbffa0ffd"
+    },
+    "mimic-validation.exe": {
+      "sha256": "d0a1360d7bec3e6330508272951b083922b76da9c01d6b95077a5a6d0990dd16"
+    },
+    "mimic-boundary-validation.exe": {
+      "sha256": "f9f7c4c70833c632d0db25015b071eff60268b00bab7882080e6c638dce18aa8"
+    },
+    "mimic-clone-validation.exe": {
+      "sha256": "a1f06ec3321eaccd726e42faa71744b7c0b74c6ee3baef995d7d6cdf4f74db0e"
+    }
+  }
+}

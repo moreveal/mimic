@@ -56,6 +56,7 @@ func (w *DedicatedWorker) installFetch(host map[string]any, lifetime context.Con
 					if loadErr != nil {
 						return promise.Reject(loadErr.Error())
 					}
+					w.performance.sync()
 					return promise.Resolve(fetchResponse(response))
 				})
 				w.signal()

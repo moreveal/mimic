@@ -1,0 +1,11 @@
+<!doctype html><link rel="icon" href="data:,"><script>
+window.performanceLifecycleRows=[];
+window.performanceLifecycleEntry=performance.getEntriesByType('navigation')[0];
+window.performanceLifecycleNormal=[];window.performanceLifecycleBuffered=[];
+new PerformanceObserver(list=>performanceLifecycleNormal.push(...list.getEntries())).observe({type:'navigation'});
+new PerformanceObserver(list=>performanceLifecycleBuffered.push(...list.getEntries())).observe({type:'navigation',buffered:true});
+function samplePerformanceLifecycle(label){const e=performanceLifecycleEntry;performanceLifecycleRows.push({label,same:e===performance.getEntriesByType('navigation')[0],response:e.responseEnd>0,interactive:e.domInteractive>0,dclStart:e.domContentLoadedEventStart>0,dclEnd:e.domContentLoadedEventEnd>0,complete:e.domComplete>0,loadStart:e.loadEventStart>0,loadEnd:e.loadEventEnd>0,durationZero:e.duration===0})}
+samplePerformanceLifecycle('script');
+document.addEventListener('DOMContentLoaded',()=>samplePerformanceLifecycle('DOMContentLoaded'));
+addEventListener('load',()=>samplePerformanceLifecycle('load'));
+</script><body>Controlled lifecycle</body>

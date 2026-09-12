@@ -1,0 +1,12 @@
+(async () => {
+  performance.clearMarks();performance.clearMeasures();const out={},err=fn=>{try{fn();return 'ok'}catch(e){return e.name}};
+  const opts=[{},null,{type:'mark',entryTypes:['mark']},{entryTypes:[]},{entryTypes:['mark'],buffered:true},{type:'unknown'},{type:'mark',durationThreshold:NaN}];
+  out.options=opts.map(o=>{const p=new PerformanceObserver(()=>{});const e=err(()=>p.observe(o));p.disconnect();return e});
+  const mixed=new PerformanceObserver(()=>{});mixed.observe({type:'mark'});out.mix=err(()=>mixed.observe({entryTypes:['mark']}));mixed.disconnect();out.mixAfterDisconnect=err(()=>mixed.observe({entryTypes:['mark']}));mixed.disconnect();
+  const old=performance.mark('old',{startTime:1}), observer=new PerformanceObserver(()=>{});observer.observe({type:'mark',buffered:true});out.buffered=observer.takeRecords().map(e=>({name:e.name,brand:e instanceof PerformanceMark,identity:e===old}));
+  observer.observe({type:'measure'});const a=performance.mark('same',{startTime:2}),b=performance.mark('same',{startTime:2});performance.measure('measure',{start:1,end:2});out.records=observer.takeRecords().map(e=>({name:e.name,type:e.entryType,brand:e instanceof PerformanceEntry,identity:e===a||e===b}));out.empty=observer.takeRecords().length;
+  observer.observe({type:'mark',buffered:true});out.rebuffered=observer.takeRecords().map(e=>e.name);observer.disconnect();
+  const pending=new PerformanceObserver(()=>{});pending.observe({type:'mark'});performance.mark('cleared',{startTime:3});performance.clearMarks('cleared');out.clearDoesNotDrop=pending.takeRecords().map(e=>e.name);pending.disconnect();
+  out.callback=await new Promise(resolve=>{const sequence=[];const o=new PerformanceObserver(function(list,self,options){sequence.push('observer');const entries=list.getEntries();resolve({sequence,thisObserver:this===o,self:self===o,options:Object.keys(options),dropped:options.droppedEntriesCount,brand:Object.prototype.toString.call(list),names:entries.map(e=>e.name),sorted:entries[0].startTime<=entries[1].startTime,identity:entries[0]===first,arraysFresh:entries!==list.getEntries(),byType:list.getEntriesByType('mark').length,byName:list.getEntriesByName('second','mark').length});o.disconnect()});o.observe({type:'mark'});performance.mark('second',{startTime:9});const first=performance.mark('first',{startTime:4});sequence.push('sync');queueMicrotask(()=>sequence.push('microtask'));setTimeout(()=>{o.disconnect();resolve({timeout:true,sequence})},500)});
+  performance.clearMarks();performance.clearMeasures();return out;
+})()

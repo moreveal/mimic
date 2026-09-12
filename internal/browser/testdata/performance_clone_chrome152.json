@@ -1,0 +1,65 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "fixtureOrigin": "http://127.0.0.1:53374",
+  "fixture": "internal/browser/testdata/performance_clone_oracle.js",
+  "fixtureSHA256": "defcf1c9d9d43f51cc4c3490f66b6749e16257bc29079a818930d684f87ba15d",
+  "worker": false,
+  "result": {
+    "result": {
+      "type": "object",
+      "value": {
+        "mark": {
+          "error": "DataCloneError"
+        },
+        "nestedMark": {
+          "error": "DataCloneError"
+        },
+        "performance": {
+          "error": "DataCloneError"
+        },
+        "observer": {
+          "error": "DataCloneError"
+        },
+        "timing": {
+          "error": "DataCloneError"
+        },
+        "memory": {
+          "error": "DataCloneError"
+        },
+        "eventCounts": {
+          "error": "DataCloneError"
+        },
+        "foreignMark": {
+          "error": "DataCloneError"
+        }
+      }
+    }
+  }
+}

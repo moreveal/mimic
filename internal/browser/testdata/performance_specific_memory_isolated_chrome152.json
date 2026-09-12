@@ -1,0 +1,111 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": true,
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "fixtureOrigin": "http://127.0.0.1:42679",
+  "fixture": "internal/browser/testdata/performance_specific_memory_oracle.js",
+  "fixtureSHA256": "f687bdc4c3bbd745a63915b8168dcff6ea4a9b63bd65af67c35c5c9b12da1c51",
+  "worker": false,
+  "result": {
+    "result": {
+      "type": "object",
+      "value": {
+        "isolated": true,
+        "exposed": "function",
+        "receiver": "async:TypeError",
+        "promise": true,
+        "result": {
+          "keys": [
+            "breakdown",
+            "bytes"
+          ],
+          "positive": true,
+          "breakdown": true,
+          "sum": true,
+          "rows": [
+            {
+              "keys": [
+                "attribution",
+                "bytes",
+                "types"
+              ],
+              "bytesNonnegative": true,
+              "types": [],
+              "attribution": []
+            },
+            {
+              "keys": [
+                "attribution",
+                "bytes",
+                "types"
+              ],
+              "bytesNonnegative": true,
+              "types": [
+                "DOM"
+              ],
+              "attribution": []
+            },
+            {
+              "keys": [
+                "attribution",
+                "bytes",
+                "types"
+              ],
+              "bytesNonnegative": true,
+              "types": [
+                "JavaScript"
+              ],
+              "attribution": [
+                {
+                  "keys": [
+                    "scope",
+                    "url"
+                  ],
+                  "scope": "Window",
+                  "url": "self"
+                }
+              ]
+            },
+            {
+              "keys": [
+                "attribution",
+                "bytes",
+                "types"
+              ],
+              "bytesNonnegative": true,
+              "types": [
+                "Shared"
+              ],
+              "attribution": []
+            }
+          ]
+        }
+      }
+    }
+  }
+}

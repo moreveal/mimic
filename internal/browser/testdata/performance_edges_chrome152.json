@@ -1,0 +1,125 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "fixtureOrigin": "http://127.0.0.1:7342",
+  "fixture": "internal/browser/testdata/performance_edges_oracle.js",
+  "fixtureSHA256": "bd4581973340ac1b705e4e126e0a5f7134854bcad2b62d25ed97877264e93ba8",
+  "worker": false,
+  "result": {
+    "result": {
+      "type": "object",
+      "value": {
+        "latest": 12,
+        "emptyType": 0,
+        "undefinedDetail": null,
+        "constructPrototype": [
+          true,
+          true,
+          "sub",
+          0
+        ],
+        "entrySerializer": "data",
+        "measureCases": [
+          {
+            "startZero": true,
+            "negative": false,
+            "detail": null
+          },
+          {
+            "startZero": true,
+            "negative": false,
+            "detail": null
+          },
+          "SyntaxError",
+          {
+            "startZero": true,
+            "negative": false,
+            "detail": null
+          },
+          "SyntaxError",
+          "SyntaxError",
+          "SyntaxError",
+          {
+            "startZero": true,
+            "negative": false,
+            "detail": null
+          },
+          {
+            "startZero": true,
+            "negative": false,
+            "detail": null
+          },
+          "TypeError",
+          "SyntaxError",
+          {
+            "startZero": true,
+            "negative": false,
+            "detail": null
+          },
+          "TypeError",
+          "SyntaxError",
+          {
+            "startZero": true,
+            "negative": false,
+            "detail": null
+          },
+          {
+            "startZero": false,
+            "negative": false,
+            "detail": null
+          },
+          "InvalidAccessError"
+        ],
+        "takeOrder": [
+          "z",
+          "y"
+        ],
+        "legacySerializer": true,
+        "confidence": {
+          "tag": "[object PerformanceTimingConfidence]",
+          "same": false,
+          "keys": [],
+          "prototype": [
+            "randomizedTriggerRate",
+            "value",
+            "toJSON",
+            "constructor"
+          ],
+          "rateRange": true,
+          "value": true,
+          "jsonKeys": [
+            "randomizedTriggerRate",
+            "value"
+          ],
+          "rateStable": true
+        }
+      }
+    }
+  }
+}

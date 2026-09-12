@@ -27,6 +27,16 @@ var consoleSurface string
 //go:embed structured_clone.js
 var structuredCloneSurface string
 
+//go:embed performance.js
+var performanceSurface string
+
+//go:embed performance_interfaces.json
+var performanceInterfaces string
+
+func performanceSource() string {
+	return strings.Replace(performanceSurface, "/* performance_interface_schema */", performanceInterfaces, 1)
+}
+
 //go:embed base64.js
 var base64Surface string
 
@@ -301,12 +311,13 @@ func composeSurface(generated, exposureSource string) string {
 	base = strings.Replace(base, "/* shared_console */", consoleSurface, 1)
 	base = strings.Replace(base, "/* shared_trusted_types */", trustedTypesSurface, 1)
 	base = strings.Replace(base, "/* shared_structured_clone */", structuredCloneSurface, 1)
+	base = strings.Replace(base, "/* shared_performance */", performanceSource(), 1)
 	base = strings.Replace(base, "/* shared_native_functions */", nativeFunctionsSurface, 1)
 	base = strings.Replace(base, "/* shared_base64 */", base64Surface, 1)
 	base = strings.Replace(base, "/* shared_webkit_css */", webkitCSSNamesSurface+webkitCSSSurface+cssShorthandsSurface+cssValueGrammarSurface+cssAnimationGrammarSurface+cssFontMetricsSurface, 1)
 	base = strings.Replace(base, "/* shared_dom_matrix */", cssColorsSurface+domMatrixSurface, 1)
 	base = strings.Replace(base, "/* shared_intersection_observer */", intersectionObserverSurface, 1)
-	return strings.Replace(base, marker, strings.Join(parts, "\n"), 1)
+	return strings.Replace(strings.Replace(base, marker, strings.Join(parts, "\n"), 1), "finalizeDocumentGetterBindings();finalizeSingletonGetterBindings();finalizeCallableBindings();", "finalizeDocumentGetterBindings();finalizeSingletonGetterBindings();finalizePerformanceBindings();finalizeCallableBindings();", 1)
 }
 
 func WorkerSurface(generated string, exposure *compatibility.RealmExposure) string {
@@ -320,6 +331,7 @@ func WorkerSurface(generated string, exposure *compatibility.RealmExposure) stri
 	}
 	shared := structuredCloneSurface + "\n" + fetchPrimitivesSurface + "\ninstallFileReader();Object.assign(globalThis,{TextEncoder,DOMException,URL,URLSearchParams,Blob,File,FormData,FileReader,Headers});\n" + abortEncodingSurface + "\n{let structuredClone;\n" + streamsVendorSurface + "\n}\n" + fetchCompatibilitySurface
 	base := strings.Replace(strings.Replace(handwrittenWorkerSurface, "/* shared_trusted_types */", trustedTypesSurface, 1), "/* shared_worker_fetch */", shared, 1)
+	base = strings.Replace(base, "/* shared_performance */", performanceSource(), 1)
 	return base + "\n" + generated + "\n" + exposureSource + "__finishWorkerSurface();if(typeof __workerExposure!=='undefined')__applyWorkerPrototypeExposure(__workerExposure);delete globalThis.__applyWorkerExposure;delete globalThis.__applyWorkerPrototypeExposure;delete globalThis.__finishWorkerSurface;delete globalThis.__mimic;delete globalThis.__mimicIDLExposure;\n{const host=__workerHost;\n" + nativeFunctionsSurface + consoleSurface + "\nglobalThis.console=consoleObject;\n" + base64Surface + cssColorsSurface + "\nfor(const [name,value] of Object.entries({atob,btoa}))Object.defineProperty(WorkerGlobalScope.prototype,name,{value,writable:true,enumerable:true,configurable:true});\n" + domMatrixSurface + "\n" + strings.Replace(canvasStateSurface, "/* shared_canvas_paths */", canvasPathObservationsSurface, 1) + "\n" + webglObservationsSource() + "\n" + webgpuStateSurface + "\n" + fontFacesSurface + `
 // Worker operations need the same ordinary function shape and private source
 // registration as Window operations. This does not replace their implementations.
