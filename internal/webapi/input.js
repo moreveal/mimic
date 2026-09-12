@@ -226,9 +226,10 @@
     const checkable=target.localName==='input'&&['checkbox','radio'].includes(target.type),previous=checkable?control(target,'get','checked'):false;
     if(checkable)control(target,'set','checked',[target.type==='radio'?true:!previous]);
     if(!emit(target,'PointerEvent','click',init,trusted,trusted)){if(checkable)control(target,'set','checked',[previous]);return}
-    let activator=target;while(activator&&activator.localName!=='button'&&activator.localName!=='a')activator=activator.parentElement;
+    let activator=target;while(activator&&!['button','input','a'].includes(activator.localName))activator=activator.parentElement;
     if(activator?.localName==='button')activateCommand(activator);
     if(checkable&&previous!==control(target,'get','checked')){emit(target,'Event','input',{bubbles:true,composed:true},true,trusted);emit(target,'Event','change',{bubbles:true},true,trusted)}
+    compatibilityElementState.activateFormControl(activator,(form,submitter)=>emit(form,'SubmitEvent','submit',{bubbles:true,cancelable:true,submitterNode:nodeID(submitter)},true,true));
     if(activator?.localName==='a'&&activator.hasAttribute('href'))host.navigate(activator.href);
   };
   const clicking=new WeakSet();

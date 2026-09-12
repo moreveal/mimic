@@ -158,31 +158,45 @@
   define('HTMLFormElement','encoding',{get(){return this.enctype},set(value){this.enctype=value}});
   define('HTMLFormElement','action',{get(){formCheck(this);const raw=this.getAttribute('action');if(!raw)return document.URL;try{return new URL(raw,document.baseURI).href}catch{return raw}},set(value){formCheck(this);this.setAttribute('action',String(value))}});
   string('HTMLFormElement','name');string('HTMLFormElement','target');string('HTMLFormElement','acceptCharset','accept-charset');
-  define('HTMLFormElement','submit',{value:function submit(){
+  string('HTMLButtonElement','value');
+  const submitForm=function(submitter=null){
     formCheck(this);if(!this.isConnected)return;
     const missing=reason=>{host.semanticMissingAt('form_controls.js:submit','HTMLFormElement.submit',reason);throw new DOMException(reason,'NotSupportedError')};
-    const target=this.target.toLowerCase();if(target&&target!=='_self'&&!(target==='_top'&&window.top===window))return missing('Named, parent, and new browsing-context form targets are not implemented');
-    if(this.method==='dialog')return missing('Dialog form submission is not implemented');
+    const override=(attribute,fallback)=>submitter?.hasAttribute(attribute)?submitter.getAttribute(attribute):fallback;
+    const target=override('formtarget',this.target).toLowerCase();if(target&&target!=='_self'&&!(target==='_top'&&window.top===window))return missing('Named, parent, and new browsing-context form targets are not implemented');
+    let method=override('formmethod',this.method).toLowerCase();if(!['get','post','dialog'].includes(method))method='get';
+    if(method==='dialog')return missing('Dialog form submission is not implemented');
     if((listenersFor(this).get('formdata')||[]).length)return missing('FormData mutation during submission is not implemented');
     const entries=[],crlf=value=>String(value).replace(/\r\n|\r|\n/g,'\r\n');
     const disabled=control=>{if(control.hasAttribute('disabled'))return true;for(let ancestor=control.parentElement;ancestor;ancestor=ancestor.parentElement){if(ancestor.localName==='datalist')return true;if(ancestor.localName==='fieldset'&&ancestor.hasAttribute('disabled')){const legend=Array.from(ancestor.children).find(e=>e.localName==='legend');if(!legend||!legend.contains(control))return true}}return false};
     for(const control of associated(this)){
-      const name=control.name;if(!name||disabled(control)||control.localName==='button')continue;
+      const name=control.name;if(!name||disabled(control)||control.localName==='button'&&control!==submitter)continue;
       if(control.localName==='input'){
-        const type=typeOf(control);if(['submit','image','reset','button'].includes(type)||['checkbox','radio'].includes(type)&&!control.checked)continue;
+        const type=typeOf(control);if(['submit','image','reset','button'].includes(type)&&control!==submitter||['checkbox','radio'].includes(type)&&!control.checked)continue;
         if(type==='file')return missing('File controls in form submission are not implemented');
       }
       if(control.localName==='select'){for(const option of optionList(control))if(option.selected&&!option.hasAttribute('disabled')&&!(option.parentElement?.localName==='optgroup'&&option.parentElement.hasAttribute('disabled')))entries.push([crlf(name),crlf(option.value)])}
       else entries.push([crlf(name),crlf(control.localName==='input'&&typeOf(control)==='hidden'&&name==='_charset_'?'UTF-8':control.value)]);
     }
-    let action;try{action=new URL(this.action,document.baseURI)}catch{return}
-    let body='',type=this.enctype;
-    if(this.method==='get'){action.search=new URLSearchParams(entries).toString()}
+    let action;try{action=new URL(override('formaction',this.action)||document.URL,document.baseURI)}catch{return}
+    let body='',type=override('formenctype',this.enctype).toLowerCase();if(!['application/x-www-form-urlencoded','multipart/form-data','text/plain'].includes(type))type='application/x-www-form-urlencoded';
+    if(method==='get'){action.search=new URLSearchParams(entries).toString()}
     else if(type==='application/x-www-form-urlencoded')body=new URLSearchParams(entries).toString();
     else if(type==='text/plain')body=entries.map(([name,value])=>name+'='+value+'\r\n').join('');
     else {const alphabet='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789',bytes=crypto.getRandomValues(new Uint8Array(16)),boundary='----WebKitFormBoundary'+Array.from(bytes,b=>alphabet[b%alphabet.length]).join('');const quoted=value=>value.replace(/\r/g,'%0D').replace(/\n/g,'%0A').replace(/"/g,'%22');body=entries.map(([name,value])=>'--'+boundary+'\r\nContent-Disposition: form-data; name="'+quoted(name)+'"\r\n\r\n'+value+'\r\n').join('')+'--'+boundary+'--\r\n';type+='; boundary='+boundary}
-    const reason=host.submitForm(action.href,this.method.toUpperCase(),body,type);if(reason)return missing(reason);
-  },writable:true});
+    const reason=host.submitForm(action.href,method.toUpperCase(),body,type);if(reason)return missing(reason);
+  };
+  define('HTMLFormElement','submit',{value:function submit(){submitForm.call(this)},writable:true});
+  const submittingForms=new WeakSet();
+  compatibilityElementState.activateFormControl=(control,dispatchSubmit)=>{
+    if(!control?.isConnected||control.disabled)return;
+    const type=control.localName==='button'?String(control.getAttribute('type')||'submit').toLowerCase():typeOf(control);
+    if(control.localName==='button'&&['button','reset'].includes(type)||control.localName==='input'&&type!=='submit')return;
+    if(!['button','input'].includes(control.localName))return;
+    const form=formOwner(control);if(!form||submittingForms.has(form))return;
+    submittingForms.add(form);
+    try{if(dispatchSubmit(form,control)&&form.isConnected)submitForm.call(form,control)}finally{submittingForms.delete(form)}
+  };
   define('HTMLFormElement','reset',{value:function(){if(!this.dispatchEvent(new Event('reset',{bubbles:true,cancelable:true})))return;for(const control of associated(this)){
     if(control.localName==='input'){const s=inputState(control);s.dirty=false;s.value='';s.dirtyChecked=false;s.checked=false}
     if(control.localName==='textarea'){const s=textareaState(control);s.dirty=false;s.value=''}
