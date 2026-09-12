@@ -1,0 +1,573 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": "1669021",
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled-profile-and-browser-context",
+    "actual": {
+      "href": "http://127.0.0.1:40367/plain",
+      "isSecureContext": true,
+      "crossOriginIsolated": false,
+      "innerWidth": 1272,
+      "innerHeight": 653,
+      "outerWidth": 1280,
+      "outerHeight": 800,
+      "devicePixelRatio": 1,
+      "visibility": "visible",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "platform": "Win32"
+    },
+    "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+    "probeSHA256": "a884ac67a6302adb35ccf447f64ddb031dd5cf7443373cdb48904cf425b8dc6d",
+    "controlDiffCount": 0
+  },
+  "result": {
+    "result": {
+      "value": {
+        "rtp": {
+          "RTCRtpSender": {
+            "audio": {
+              "ok": true,
+              "value": {
+                "codecs": [
+                  {
+                    "channels": 2,
+                    "clockRate": 48000,
+                    "mimeType": "audio/opus",
+                    "sdpFmtpLine": "minptime=10;useinbandfec=1"
+                  },
+                  {
+                    "channels": 2,
+                    "clockRate": 48000,
+                    "mimeType": "audio/red"
+                  },
+                  {
+                    "channels": 1,
+                    "clockRate": 8000,
+                    "mimeType": "audio/G722"
+                  },
+                  {
+                    "channels": 1,
+                    "clockRate": 8000,
+                    "mimeType": "audio/PCMU"
+                  },
+                  {
+                    "channels": 1,
+                    "clockRate": 8000,
+                    "mimeType": "audio/PCMA"
+                  },
+                  {
+                    "channels": 1,
+                    "clockRate": 8000,
+                    "mimeType": "audio/CN"
+                  },
+                  {
+                    "channels": 1,
+                    "clockRate": 48000,
+                    "mimeType": "audio/telephone-event"
+                  },
+                  {
+                    "channels": 1,
+                    "clockRate": 8000,
+                    "mimeType": "audio/telephone-event"
+                  }
+                ],
+                "headerExtensions": [
+                  {
+                    "direction": "sendrecv",
+                    "uri": "urn:ietf:params:rtp-hdrext:ssrc-audio-level"
+                  },
+                  {
+                    "direction": "sendrecv",
+                    "uri": "http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time"
+                  },
+                  {
+                    "direction": "sendrecv",
+                    "uri": "http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01"
+                  },
+                  {
+                    "direction": "sendrecv",
+                    "uri": "urn:ietf:params:rtp-hdrext:sdes:mid"
+                  }
+                ]
+              }
+            },
+            "video": {
+              "ok": true,
+              "value": {
+                "codecs": [
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/VP8"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/rtx"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/H264",
+                    "sdpFmtpLine": "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42001f"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/H264",
+                    "sdpFmtpLine": "level-asymmetry-allowed=1;packetization-mode=0;profile-level-id=42001f"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/H264",
+                    "sdpFmtpLine": "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42e01f"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/H264",
+                    "sdpFmtpLine": "level-asymmetry-allowed=1;packetization-mode=0;profile-level-id=42e01f"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/H264",
+                    "sdpFmtpLine": "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=4d001f"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/H264",
+                    "sdpFmtpLine": "level-asymmetry-allowed=1;packetization-mode=0;profile-level-id=4d001f"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/AV1",
+                    "sdpFmtpLine": "level-idx=5;profile=0;tier=0"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/VP9",
+                    "sdpFmtpLine": "profile-id=0"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/VP9",
+                    "sdpFmtpLine": "profile-id=2"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/H264",
+                    "sdpFmtpLine": "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=640033"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/H265",
+                    "sdpFmtpLine": "level-id=180;profile-id=1;tier-flag=0;tx-mode=SRST"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/H265",
+                    "sdpFmtpLine": "level-id=180;profile-id=2;tier-flag=0;tx-mode=SRST"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/red"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/ulpfec"
+                  }
+                ],
+                "headerExtensions": [
+                  {
+                    "direction": "sendrecv",
+                    "uri": "urn:ietf:params:rtp-hdrext:toffset"
+                  },
+                  {
+                    "direction": "sendrecv",
+                    "uri": "http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time"
+                  },
+                  {
+                    "direction": "sendrecv",
+                    "uri": "urn:3gpp:video-orientation"
+                  },
+                  {
+                    "direction": "sendrecv",
+                    "uri": "http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01"
+                  },
+                  {
+                    "direction": "sendrecv",
+                    "uri": "http://www.webrtc.org/experiments/rtp-hdrext/playout-delay"
+                  },
+                  {
+                    "direction": "sendrecv",
+                    "uri": "http://www.webrtc.org/experiments/rtp-hdrext/video-content-type"
+                  },
+                  {
+                    "direction": "sendrecv",
+                    "uri": "http://www.webrtc.org/experiments/rtp-hdrext/video-timing"
+                  },
+                  {
+                    "direction": "sendrecv",
+                    "uri": "http://www.webrtc.org/experiments/rtp-hdrext/color-space"
+                  },
+                  {
+                    "direction": "sendrecv",
+                    "uri": "urn:ietf:params:rtp-hdrext:sdes:mid"
+                  },
+                  {
+                    "direction": "sendrecv",
+                    "uri": "urn:ietf:params:rtp-hdrext:sdes:rtp-stream-id"
+                  },
+                  {
+                    "direction": "sendrecv",
+                    "uri": "urn:ietf:params:rtp-hdrext:sdes:repaired-rtp-stream-id"
+                  }
+                ]
+              }
+            },
+            "AUDIO": {
+              "ok": true,
+              "value": null
+            },
+            "": {
+              "ok": true,
+              "value": null
+            },
+            "null": {
+              "ok": true,
+              "value": null
+            },
+            "undefined": {
+              "ok": true,
+              "value": null
+            },
+            "missing": {
+              "name": "TypeError",
+              "message": "Failed to execute 'getCapabilities' on 'RTCRtpSender': 1 argument required, but only 0 present."
+            }
+          },
+          "RTCRtpReceiver": {
+            "audio": {
+              "ok": true,
+              "value": {
+                "codecs": [
+                  {
+                    "channels": 2,
+                    "clockRate": 48000,
+                    "mimeType": "audio/opus",
+                    "sdpFmtpLine": "minptime=10;useinbandfec=1"
+                  },
+                  {
+                    "channels": 2,
+                    "clockRate": 48000,
+                    "mimeType": "audio/red"
+                  },
+                  {
+                    "channels": 1,
+                    "clockRate": 8000,
+                    "mimeType": "audio/G722"
+                  },
+                  {
+                    "channels": 1,
+                    "clockRate": 8000,
+                    "mimeType": "audio/PCMU"
+                  },
+                  {
+                    "channels": 1,
+                    "clockRate": 8000,
+                    "mimeType": "audio/PCMA"
+                  },
+                  {
+                    "channels": 1,
+                    "clockRate": 8000,
+                    "mimeType": "audio/CN"
+                  },
+                  {
+                    "channels": 1,
+                    "clockRate": 48000,
+                    "mimeType": "audio/telephone-event"
+                  },
+                  {
+                    "channels": 1,
+                    "clockRate": 8000,
+                    "mimeType": "audio/telephone-event"
+                  }
+                ],
+                "headerExtensions": [
+                  {
+                    "direction": "sendrecv",
+                    "uri": "urn:ietf:params:rtp-hdrext:ssrc-audio-level"
+                  },
+                  {
+                    "direction": "sendrecv",
+                    "uri": "http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time"
+                  },
+                  {
+                    "direction": "sendrecv",
+                    "uri": "http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01"
+                  },
+                  {
+                    "direction": "sendrecv",
+                    "uri": "urn:ietf:params:rtp-hdrext:sdes:mid"
+                  }
+                ]
+              }
+            },
+            "video": {
+              "ok": true,
+              "value": {
+                "codecs": [
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/VP8"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/rtx"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/VP9",
+                    "sdpFmtpLine": "profile-id=0"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/VP9",
+                    "sdpFmtpLine": "profile-id=2"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/VP9",
+                    "sdpFmtpLine": "profile-id=1"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/VP9",
+                    "sdpFmtpLine": "profile-id=3"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/H264",
+                    "sdpFmtpLine": "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42001f"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/H264",
+                    "sdpFmtpLine": "level-asymmetry-allowed=1;packetization-mode=0;profile-level-id=42001f"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/H264",
+                    "sdpFmtpLine": "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=42e01f"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/H264",
+                    "sdpFmtpLine": "level-asymmetry-allowed=1;packetization-mode=0;profile-level-id=42e01f"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/H264",
+                    "sdpFmtpLine": "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=4d001f"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/H264",
+                    "sdpFmtpLine": "level-asymmetry-allowed=1;packetization-mode=0;profile-level-id=4d001f"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/H264",
+                    "sdpFmtpLine": "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=f4001f"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/H264",
+                    "sdpFmtpLine": "level-asymmetry-allowed=1;packetization-mode=0;profile-level-id=f4001f"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/AV1",
+                    "sdpFmtpLine": "level-idx=5;profile=0;tier=0"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/AV1",
+                    "sdpFmtpLine": "level-idx=5;profile=1;tier=0"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/H264",
+                    "sdpFmtpLine": "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=64001f"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/H264",
+                    "sdpFmtpLine": "level-asymmetry-allowed=1;packetization-mode=0;profile-level-id=64001f"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/H265",
+                    "sdpFmtpLine": "level-id=180;profile-id=1;tier-flag=0;tx-mode=SRST"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/H265",
+                    "sdpFmtpLine": "level-id=180;profile-id=2;tier-flag=0;tx-mode=SRST"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/red"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/ulpfec"
+                  },
+                  {
+                    "clockRate": 90000,
+                    "mimeType": "video/flexfec-03",
+                    "sdpFmtpLine": "repair-window=10000000"
+                  }
+                ],
+                "headerExtensions": [
+                  {
+                    "direction": "sendrecv",
+                    "uri": "urn:ietf:params:rtp-hdrext:toffset"
+                  },
+                  {
+                    "direction": "sendrecv",
+                    "uri": "http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time"
+                  },
+                  {
+                    "direction": "sendrecv",
+                    "uri": "urn:3gpp:video-orientation"
+                  },
+                  {
+                    "direction": "sendrecv",
+                    "uri": "http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01"
+                  },
+                  {
+                    "direction": "sendrecv",
+                    "uri": "http://www.webrtc.org/experiments/rtp-hdrext/playout-delay"
+                  },
+                  {
+                    "direction": "sendrecv",
+                    "uri": "http://www.webrtc.org/experiments/rtp-hdrext/video-content-type"
+                  },
+                  {
+                    "direction": "sendrecv",
+                    "uri": "http://www.webrtc.org/experiments/rtp-hdrext/video-timing"
+                  },
+                  {
+                    "direction": "sendrecv",
+                    "uri": "http://www.webrtc.org/experiments/rtp-hdrext/color-space"
+                  },
+                  {
+                    "direction": "sendrecv",
+                    "uri": "urn:ietf:params:rtp-hdrext:sdes:mid"
+                  },
+                  {
+                    "direction": "sendrecv",
+                    "uri": "urn:ietf:params:rtp-hdrext:sdes:rtp-stream-id"
+                  },
+                  {
+                    "direction": "sendrecv",
+                    "uri": "urn:ietf:params:rtp-hdrext:sdes:repaired-rtp-stream-id"
+                  }
+                ]
+              }
+            },
+            "AUDIO": {
+              "ok": true,
+              "value": null
+            },
+            "": {
+              "ok": true,
+              "value": null
+            },
+            "null": {
+              "ok": true,
+              "value": null
+            },
+            "undefined": {
+              "ok": true,
+              "value": null
+            },
+            "missing": {
+              "name": "TypeError",
+              "message": "Failed to execute 'getCapabilities' on 'RTCRtpReceiver': 1 argument required, but only 0 present."
+            }
+          }
+        },
+        "rtpMutation": {
+          "ok": true,
+          "value": {
+            "codecs": [
+              {
+                "channels": 2,
+                "clockRate": 48000,
+                "mimeType": "audio/opus",
+                "sdpFmtpLine": "minptime=10;useinbandfec=1"
+              },
+              {
+                "channels": 2,
+                "clockRate": 48000,
+                "mimeType": "audio/red"
+              },
+              {
+                "channels": 1,
+                "clockRate": 8000,
+                "mimeType": "audio/G722"
+              },
+              {
+                "channels": 1,
+                "clockRate": 8000,
+                "mimeType": "audio/PCMU"
+              },
+              {
+                "channels": 1,
+                "clockRate": 8000,
+                "mimeType": "audio/PCMA"
+              },
+              {
+                "channels": 1,
+                "clockRate": 8000,
+                "mimeType": "audio/CN"
+              },
+              {
+                "channels": 1,
+                "clockRate": 48000,
+                "mimeType": "audio/telephone-event"
+              },
+              {
+                "channels": 1,
+                "clockRate": 8000,
+                "mimeType": "audio/telephone-event"
+              }
+            ],
+            "headerExtensions": [
+              {
+                "direction": "sendrecv",
+                "uri": "urn:ietf:params:rtp-hdrext:ssrc-audio-level"
+              },
+              {
+                "direction": "sendrecv",
+                "uri": "http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time"
+              },
+              {
+                "direction": "sendrecv",
+                "uri": "http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01"
+              },
+              {
+                "direction": "sendrecv",
+                "uri": "urn:ietf:params:rtp-hdrext:sdes:mid"
+              }
+            ]
+          }
+        }
+      }
+    }
+  }
+}

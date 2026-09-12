@@ -39,6 +39,7 @@ func environment(mode state.BrowserMode) state.Environment {
 		StorageQuotaBytes: 10 * 1024 * 1024 * 1024,
 		Devices:           state.DeviceCapabilities{Posture: "continuous"},
 		Media: state.MediaCapabilities{
+			RTP:                  rtpCatalog(),
 			Kinds:                []string{"audioinput", "videoinput", "audiooutput"},
 			DecodingContentTypes: []string{`video/mp4; codecs="avc1.42E01E"`},
 			SupportedConstraints: strings.Fields("aspectRatio autoGainControl brightness channelCount colorTemperature contrast deviceId displaySurface echoCancellation exposureCompensation exposureMode exposureTime facingMode focusDistance focusMode frameRate groupId height iso latency noiseSuppression pan pointsOfInterest resizeMode restrictOwnAudio sampleRate sampleSize saturation sharpness suppressLocalAudioPlayback tilt torch voiceIsolation whiteBalanceMode width zoom"),

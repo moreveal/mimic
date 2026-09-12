@@ -15,6 +15,7 @@ type DeviceCapabilities struct {
 }
 
 type MediaCapabilities struct {
+	RTP RTPCatalog
 	// Kinds are the machine's installed device classes. Before permission,
 	// enumeration discloses at most one redacted device per class.
 	Kinds                []string

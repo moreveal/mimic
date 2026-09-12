@@ -88,6 +88,13 @@ const navigatorWebDriver = false
 
 func addCapabilityHosts(r *Realm, h map[string]any) {
 	p := r.agent.Page()
+	h["rtpCapabilities"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return r.val(p.Environment().Capabilities.Media.RTP.Capabilities(strarg(a, 0), strarg(a, 1))), nil
+	})
+	h["rtpMedia"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		m := p.Environment().Capabilities.Media.RTP.Media(strarg(a, 0))
+		return r.val(map[string]any{"payloads": m.Payloads, "extensions": m.Extensions, "attributes": m.Attributes}), nil
+	})
 	h["capabilityState"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		e := p.Environment()
 		switch strarg(a, 0) {
