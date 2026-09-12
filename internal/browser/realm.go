@@ -1871,7 +1871,7 @@ func (r *Realm) installBindings() error {
 	})
 	host["xhr"] = r.fn(r.hostXHR)
 	installConsoleKind(host, r.runtime)
-	host["consoleActive"] = r.fn(func(_ engine.Value, _ []engine.Value) (engine.Value, error) { return r.val(!r.inactive), nil })
+	host["executionContextActive"] = r.fn(func(_ engine.Value, _ []engine.Value) (engine.Value, error) { return r.val(!r.inactive), nil })
 	host["console"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		if len(a) > 2 {
 			r.debuggerConsole(strarg(a, 0), a[2])

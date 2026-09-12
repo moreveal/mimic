@@ -83,7 +83,7 @@ const consoleObject=(()=>{
     clear(){emit('clear',['console.clear'],false)},time(...a){timer(a[0],'start',[])},timeLog(...a){timer(a[0],'log',apply(slice,a,[1]))},timeEnd(...a){timer(a[0],'end',[])}
   };
   for(const [name,method]of Object.entries(methods)){
-    const value=(...args)=>{if(host.consoleActive&&!host.consoleActive())return;return apply(method,undefined,args)};
+    const value=(...args)=>{if(host.executionContextActive&&!host.executionContextActive())return;return apply(method,undefined,args)};
     Object.defineProperty(value,'name',{value:name,configurable:true});
     markNative(value,name);Object.defineProperty(object,name,{value,writable:true,enumerable:true,configurable:true});
   }
