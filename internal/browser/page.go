@@ -667,7 +667,7 @@ func (p *Page) navigateRequestWithHistory(ctx context.Context, raw, loaderID str
 	iconInitiatorType := "link"
 	if len(iconURLs) == 0 {
 		iconURLs = []*url.URL{u.ResolveReference(&url.URL{Path: "/favicon.ico"})}
-		iconInitiatorType = "img"
+		iconInitiatorType = "other"
 	}
 	for _, favicon := range iconURLs {
 		favicon := favicon

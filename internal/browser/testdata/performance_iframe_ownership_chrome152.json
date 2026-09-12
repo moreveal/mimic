@@ -1,0 +1,132 @@
+{
+  "version": {
+    "Browser": "Chrome/152.0.7977.82",
+    "Protocol-Version": "1.3",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "V8-Version": "15.2.124.21",
+    "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:20581/devtools/browser/1171d5bf-bc19-4084-88e1-891d985c5f82"
+  },
+  "observation": {
+    "parent": [
+      {
+        "type": "navigation",
+        "name": "/plain",
+        "initiator": "navigation",
+        "responseEndPositive": true
+      },
+      {
+        "type": "resource",
+        "name": "/favicon.ico",
+        "initiator": "other",
+        "responseEndPositive": true
+      },
+      {
+        "type": "resource",
+        "name": "/child-owned",
+        "initiator": "iframe",
+        "responseEndPositive": true
+      }
+    ],
+    "child": [
+      {
+        "type": "navigation",
+        "name": "/child-owned",
+        "initiator": "navigation",
+        "responseEndPositive": true
+      }
+    ],
+    "early": [
+      "navigation",
+      "navigation"
+    ],
+    "late": [
+      "navigation"
+    ]
+  },
+  "metadata": {
+    "href": "http://127.0.0.1:40515/plain",
+    "isSecureContext": true,
+    "crossOriginIsolated": false,
+    "innerWidth": 1272,
+    "innerHeight": 653,
+    "outerWidth": 1280,
+    "outerHeight": 800,
+    "devicePixelRatio": 1,
+    "visibility": "visible",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "platform": "Win32"
+  },
+  "passport": {
+    "revision": "620131caf46b78193d53380bb69619f990c5b312",
+    "dirtyState": "?? internal/browser/testdata/performance_iframe_ownership_oracle.js\n",
+    "sourceSHA256": "3933bd5c73a7fbf1fb49a229224133e25fc83d03c55aa1deb126f4cd85339930",
+    "probeSHA256": "a57f95943c0e5bac4f92f8c542e8620d161c3df2331417a88065e958ba001d02",
+    "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+    "mimicSHA256": "cd1bf13252480fdcc822f35af21b48eae42eafe4d7cd113395b3ec2ba56bb848",
+    "args": [
+      "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "--remote-debugging-port=20581",
+      "--user-data-dir=E:\\GitHub\\mimic\\.build\\residual-canvas\\performance-load-order\\chrome-profile-b",
+      "--no-first-run",
+      "--no-default-browser-check",
+      "--window-size=1280,800",
+      "about:blank"
+    ],
+    "profile": "E:\\GitHub\\mimic\\.build\\residual-canvas\\performance-load-order\\chrome-profile",
+    "browserMode": "headful",
+    "environmentProfile": "chrome-152-windows-x64-headful-controlled-v1",
+    "featureOverrides": [],
+    "records": [
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/child-owned"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/child-owned"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/child-owned"
+      }
+    ],
+    "exitCodes": {
+      "chrome": 1,
+      "mimic": 1
+    },
+    "chromeControl": [],
+    "chromeMimic": [
+      {
+        "mode": "plain",
+        "path": "/parent/1/initiator",
+        "chrome": "other",
+        "mimic": "img"
+      }
+    ]
+  }
+}
