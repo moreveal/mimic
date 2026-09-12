@@ -21,11 +21,11 @@
     "isolationState": false,
     "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
     "profileFreshness": "two-fresh-controlled-profiles",
-    "origin": "http://127.0.0.1:53990/plain",
+    "origin": "http://127.0.0.1:54820/plain",
     "visibilityState": "visible",
     "permissionsPolicy": "summarizer=(), language-model=(), translator=(), language-detector=()"
   },
-  "probeSHA256": "d3dc4dbca9e1580654405dfae427194b5928583388b62cd1a1a84fba768a6468",
+  "probeSHA256": "daaf7748dfb5d39922a8bde0d731cb98c55450b977ae70d5239229ce5d8cfa14",
   "chromeBinarySHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
   "controlEqual": true,
   "result": {
@@ -547,7 +547,54 @@
           "promise": true,
           "error": "Error",
           "message": "sentinel"
-        }
+        },
+        "iterator-get-throw": {
+          "same": true,
+          "name": "TypeError",
+          "message": "author sentinel",
+          "log": [
+            "iterator"
+          ]
+        },
+        "iterator-call-throw": {
+          "same": true,
+          "name": "TypeError",
+          "message": "author sentinel",
+          "log": [
+            "call"
+          ]
+        },
+        "iterator-string-throw": {
+          "same": true,
+          "name": "TypeError",
+          "message": "author sentinel",
+          "log": []
+        },
+        "iterator-symbol-conversion": {
+          "same": false,
+          "name": "TypeError",
+          "message": "Failed to execute 'availability' on 'Summarizer': Failed to read the 'expectedInputLanguages' property from 'SummarizerCreateCoreOptions': Cannot convert a Symbol value to a string",
+          "log": []
+        },
+        "iterator-next-throw": {
+          "same": true,
+          "name": "TypeError",
+          "message": "author sentinel",
+          "log": []
+        },
+        "iterator-primitive": {
+          "same": false,
+          "name": "TypeError",
+          "message": "Failed to execute 'availability' on 'Summarizer': Failed to read the 'expectedInputLanguages' property from 'SummarizerCreateCoreOptions': Iterator object must be an object.",
+          "log": []
+        },
+        "iterator-step-primitive": {
+          "same": false,
+          "name": "TypeError",
+          "message": "Failed to execute 'availability' on 'Summarizer': Failed to read the 'expectedInputLanguages' property from 'SummarizerCreateCoreOptions': Expected iterator.next() to return an Object.",
+          "log": []
+        },
+        "numberAuthorException": true
       }
     }
   }
