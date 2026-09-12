@@ -33,7 +33,28 @@ type opfsAccess struct {
 	data     []byte
 	writable bool
 }
-type opfsOwner struct{ stores map[*opfsStore]bool }
+
+// Owner dispatch and teardown share a lock: a late callback cannot add a store
+// after close has released that owner's access handles. Store locks are acquired
+// only inside this owner lock, never the reverse.
+type opfsOwner struct {
+	mu     sync.Mutex
+	closed bool
+	stores map[*opfsStore]bool
+}
+
+func (o *opfsOwner) dispatch(s *opfsStore, op string, id int, value any) any {
+	o.mu.Lock()
+	defer o.mu.Unlock()
+	if o.closed {
+		return opfsError("InvalidStateError")
+	}
+	if o.stores == nil {
+		o.stores = map[*opfsStore]bool{}
+	}
+	o.stores[s] = true
+	return s.call(o, op, id, value)
+}
 
 func newOPFSStore() *opfsStore {
 	return &opfsStore{next: 1, nodes: map[int]*opfsNode{1: {id: 1, kind: "directory", store: uuid.NewString(), children: map[string]int{}}}, access: map[int]*opfsAccess{}}
@@ -53,6 +74,12 @@ func (o *opfsOwner) close() {
 	if o == nil {
 		return
 	}
+	o.mu.Lock()
+	defer o.mu.Unlock()
+	if o.closed {
+		return
+	}
+	o.closed = true
 	for s := range o.stores {
 		s.mu.Lock()
 		for id, a := range s.access {
@@ -68,8 +95,7 @@ func installOPFSHost(host map[string]any, rt engine.Runtime, c *Context, origin 
 	o := &opfsOwner{stores: map[*opfsStore]bool{}}
 	host["fileSystem"] = rt.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		s := c.opfs(origin())
-		o.stores[s] = true
-		return rt.Value(s.call(o, strarg(args, 0), int(numarg(args, 1)), arg(args, 2))), nil
+		return rt.Value(o.dispatch(s, strarg(args, 0), int(numarg(args, 1)), arg(args, 2))), nil
 	})
 	return o
 }
@@ -230,6 +256,9 @@ func (s *opfsStore) call(owner *opfsOwner, op string, id int, value any) any {
 		}
 		return out
 	case "resolve":
+		if str("store") != n.store {
+			return nil
+		}
 		child := s.nodes[number("target")]
 		path := []string{}
 		for child != nil && !child.deleted {

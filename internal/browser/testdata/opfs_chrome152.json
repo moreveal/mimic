@@ -11,7 +11,7 @@
     "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
     "profileFreshness": "fresh-controlled-profile-and-browser-context",
     "actual": {
-      "href": "http://127.0.0.1:39956/plain",
+      "href": "http://127.0.0.1:21736/plain",
       "isSecureContext": true,
       "crossOriginIsolated": false,
       "innerWidth": 1272,
@@ -24,7 +24,7 @@
       "platform": "Win32"
     },
     "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
-    "probeSHA256": "d4c6a5711927c0c4cca5e07f755131e8b8bba5e2f2dc2834590333e91003b4ef",
+    "probeSHA256": "6f2a261c8bd1db9c46ca741e75296e0b0e8355068b802de86de48fcb234132ec",
     "controlDiffCount": 0
   },
   "result": {
@@ -259,6 +259,18 @@
           ]
         },
         "aboutBlankOrigin": 5,
+        "crossRealm": [
+          true,
+          true,
+          [
+            "async.bin"
+          ],
+          [
+            "sub",
+            "test.txt"
+          ],
+          true
+        ],
         "entries": [
           [
             "async.bin",

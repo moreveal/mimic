@@ -13,7 +13,8 @@ inherited-origin about:blank frames and dedicated workers see the same entries.
 Independent origins and contexts have distinct store identities and locks. Each
 store has its own mutex; there is no global execution lock. Realm and worker
 owners release access locks and discard uncommitted writable streams at teardown.
-Context close drops its stores. Deletion releases file bytes and retains small
+Owner dispatch and teardown are serialized, so a racing callback cannot reopen
+access after cleanup. Context close drops its stores. Deletion releases file bytes and retains small
 entry tombstones so stale handles cannot resurrect an entry.
 
 The shared Window/worker binding projects directories, file handles, File
@@ -43,14 +44,18 @@ DPR 1, not cross-origin isolated. The committed receipt includes actual metadata
 and binary/probe hashes. No environment-derived times are equality expectations.
 
 `internal/browser/testdata/opfs_oracle.js` and `opfs_chrome152.json` contain
-20 top-level observations, including nested worker cases. Final A/B control and
+21 top-level observations, including nested worker cases. Final A/B control and
 fresh production comparisons both have **0 differing leaves**. The probe covers
 root/entry identity; invalid names; missing/type-mismatched/nonempty/deleted
 entries; bytes and MIME; Window exclusion of sync access; cursor/truncate/flush;
 read-only/unsafe/exclusive access; closed errors; staged commit/abort; constructor
 and iterator reflection; worker termination releasing its lock; inherited frame
 origin; cyclic mixed graph clone; getter non-observation; history; IndexedDB;
-and alias-preserving Window→worker→Window handle messages.
+and alias-preserving Window→worker→Window handle messages. Direct same-origin
+foreign-realm isSameEntry (both directions), resolve and borrowed receiver calls
+are also captured: Chrome accepts them. A private realm binding carries identity;
+no ids or store tokens appear on author-visible handle properties. Entry equality
+compares both store and node identity, and resolve validates the target store.
 
 Private runner, measured binary, full A/B/production outputs, passport and logs
 are preserved outside the disposable worktree at
