@@ -66,9 +66,9 @@ func (s *Server) Serve(listener net.Listener) error {
 	if s.Browser.DevPreviewEnabled() {
 		s.registerPreview(mux)
 	}
-	mux.HandleFunc("/json/version", s.version)
-	mux.HandleFunc("/json", s.list)
-	mux.HandleFunc("/json/list", s.list)
+	handleDiscoveryRoute(mux, "/json/version", s.version)
+	handleDiscoveryRoute(mux, "/json", s.list)
+	handleDiscoveryRoute(mux, "/json/list", s.list)
 	mux.HandleFunc("/json/protocol", s.protocol)
 	mux.HandleFunc("/json/new", s.newTarget)
 	mux.HandleFunc("/json/close/", s.closeTargetHTTP)
@@ -84,6 +84,12 @@ func (s *Server) Serve(listener net.Listener) error {
 	server := s.http
 	s.lifecycleMu.Unlock()
 	return server.Serve(listener)
+}
+func handleDiscoveryRoute(mux *http.ServeMux, pattern string, handler http.HandlerFunc) {
+	mux.HandleFunc(pattern, handler)
+	if !strings.HasSuffix(pattern, "/") {
+		mux.HandleFunc(pattern+"/", handler)
+	}
 }
 func (s *Server) Close(ctx context.Context) error {
 	s.lifecycleMu.Lock()
