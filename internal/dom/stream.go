@@ -228,7 +228,14 @@ func (b streamBackend) SetAttributes(id int64, attrs []html.Attribute) {
 	}
 }
 func (b streamBackend) updateTitle(id int64) {
-	if n, ok := b.d.Get(id); ok && n.TagName == "TITLE" && b.d.IsConnected(id) {
-		b.d.SetTitle(b.d.TextContent(id))
+	if n, ok := b.d.Get(id); ok && n.TagName == "TITLE" && n.Namespace == "http://www.w3.org/1999/xhtml" && b.d.IsConnected(id) {
+		for _, title := range b.d.FindAllByTagName("title") {
+			if title.Namespace == "http://www.w3.org/1999/xhtml" {
+				if title.ID == id {
+					b.d.SetTitle(b.d.TextContent(id))
+				}
+				break
+			}
+		}
 	}
 }
