@@ -106,15 +106,15 @@
  function GainNode(context,options={}){if(!new.target)throw new TypeError('Expected new');const object=makeGain(context);Object.setPrototypeOf(object,new.target.prototype);options=options??{};if(options.gain!==undefined)object.gain.value=options.gain;for(const key of ['channelCount','channelCountMode','channelInterpretation'])if(options[key]!==undefined)object[key]=options[key];return object}
  install('GainNode',GainNode);getter('GainNode','gain',nodes);
  // Band-limited periodic PCM follows Chrome 152's pitch ranges and Fourier
- // coefficients. A portable radix-2 transform replaces its native FFT backend;
- // FFT/libm last-bit differences are measured, not claimed bit-identical.
+ // coefficients. Float32 mixed-radix arithmetic follows the frozen RustFFT
+ // path without requiring Rust or native audio/FFT code.
  const f=Math.fround,clamp=(v,lo,hi)=>Math.max(lo,Math.min(hi,v));
  const waveSize=rate=>rate<=24000?2048:rate<=88200?4096:16384;
  function makeWave(context,real,imag,disableNormalization){
   const c=requireSlot(contexts,context);real=Float32Array.from(real,float);imag=Float32Array.from(imag,float);
   if(real.length!==imag.length||real.length<2)throw exception('IndexSizeError');
   const object=Object.create(PeriodicWave.prototype),size=waveSize(c.sampleRate),count=Math.min(real.length,size/2);
-  waves.set(object,{context,size,rate:c.sampleRate,real:real.slice(0,count),imag:imag.slice(0,count),tables:new Map(),normalization:disableNormalization?1:null,ranges:3*Math.log2(size)});return object;
+  waves.set(object,{context,size,rate:c.sampleRate,real:real.slice(0,count),imag:imag.slice(0,count),tables:new Map(),normalization:disableNormalization?.5:null,ranges:3*Math.log2(size)});return object;
  }
  function PeriodicWave(context,options={}){if(!new.target)throw new TypeError('Expected new');options=options??{};let real=options.real,imag=options.imag;if(real===undefined&&imag===undefined){real=[0,0];imag=[0,1]}else if(real===undefined)real=new Float32Array(imag.length);else if(imag===undefined)imag=new Float32Array(real.length);const object=makeWave(context,real,imag,!!options.disableNormalization);Object.setPrototypeOf(object,new.target.prototype);return object}
  install('PeriodicWave',PeriodicWave);
@@ -124,17 +124,52 @@
   for(let n=1;n<size;n++){const p=f(2/f(n*f(Math.PI)));imag[n]=type==='sine'?(n===1?1:0):type==='square'?(n&1?f(2*p):0):type==='sawtooth'?p*(n&1?1:-1):(n&1?f(2*f(p*p))*(((n-1)>>1)&1?-1:1):0)}
   const wave=makeWave(context,real,imag,false);c.waves.set(type,wave);return wave;
  }
+ // Portable Float32 projection of RustFFT 6.4.1's AVX power-of-two plan and
+ // Chromium rustfft_ffi.rs real reconstruction. See vendor/rustfft/NOTICE.
+ // Complex multiplication preserves the separate rounded imaginary product
+ // followed by fused multiply-add; reversing its operands changes rounding.
+ function inverseRealFFT(real,imag){
+  const n=real.length*2,m=n/2,add=(a,b)=>[f(a[0]+b[0]),f(a[1]+b[1])],sub=(a,b)=>[f(a[0]-b[0]),f(a[1]-b[1])],rot=a=>[-a[1],a[0]],scale=(a,s)=>[f(a[0]*s),f(a[1]*s)];
+  const mul=(a,b)=>[f(a[0]*b[0]-f(a[1]*b[1])),f(a[0]*b[1]+f(a[1]*b[0]))],plainMul=(a,b)=>[f(f(a[0]*b[0])-f(a[1]*b[1])),f(f(a[0]*b[1])+f(a[1]*b[0]))];
+  const tw=(i,len)=>{const angle=(-2*Math.PI/len)*i;return [f(Math.cos(angle)),-f(Math.sin(angle))]},root=f(Math.SQRT1_2),eighth=(a,third=false)=>scale(third?sub(rot(a),a):add(rot(a),a),root);
+  function b4(a){const x=add(a[0],a[2]),y=sub(a[0],a[2]),z=add(a[1],a[3]),t=rot(sub(a[1],a[3]));return [add(x,z),add(y,t),sub(x,z),sub(y,t)]}
+  function b8(a){const x=b4([a[0],a[2],a[4],a[6]]),y=b4([a[1],a[3],a[5],a[7]]);y[1]=eighth(y[1]);y[2]=rot(y[2]);y[3]=eighth(y[3],true);return [...x.map((v,i)=>add(v,y[i])),...x.map((v,i)=>sub(v,y[i]))]}
+  function b32(a){
+   const rows=Array.from({length:8},(_,j)=>b4([a[j],a[j+8],a[j+16],a[j+24]]));
+   for(let j=1;j<8;j++)for(let k=1;k<4;k++){
+    const index=j*k,v=rows[j][k];
+    if(index===4)rows[j][k]=eighth(v);else if(index===8)rows[j][k]=rot(v);else if(index===12)rows[j][k]=eighth(v,true);
+    else {let t=index>16?scale(tw(index-16,32),-1):index>8?rot(tw(index-8,32)):tw(index,32);rows[j][k]=mul(v,t)}
+   }
+   const out=new Array(32);for(let k=0;k<4;k++){const values=b8(rows.map(row=>row[k]));for(let j=0;j<8;j++)out[k+4*j]=values[j]}return out;
+  }
+  function mixed(a,radix,inner,twiddleFirst){
+   const length=a.length,width=length/radix,rows=Array.from({length:radix},()=>new Array(width));
+   for(let j=0;j<width;j++){
+    const input=Array.from({length:radix},(_,r)=>a[j+r*width]),v=radix===4?b4(input):b8(input);
+    rows[0][j]=v[0];for(let r=1;r<radix;r++)rows[r][j]=twiddleFirst?mul(tw(j*r,length),v[r]):mul(v[r],tw(j*r,length));
+   }
+   const out=new Array(length);for(let r=0;r<radix;r++){const v=inner(rows[r]);for(let j=0;j<width;j++)out[j*radix+r]=v[j]}return out;
+  }
+  // Table sizes 2048/4096/16384 require complex plans 1024/2048/8192:
+  // a 256 (8 x 32) base followed by the planner's radix-4/radix-8 stages.
+  const b256=a=>mixed(a,8,b32,false);
+  function fft(a){if(a.length===256)return b256(a);const radix=a.length===1024||a.length===8192?4:8;return mixed(a,radix,fft,true)}
+  const z=new Array(m);z[0]=[f(.5*f(real[0]+imag[0])),f(.5*f(real[0]-imag[0]))];
+  for(let k=1;k<m/2;k++){
+   const a=[real[k],imag[k]],b=[real[m-k],-imag[m-k]],even=scale(add(a,b),.5),angle=-2*Math.PI*k/n,t=[f(.5*Math.cos(angle)),-f(.5*Math.sin(angle))],odd=rot(plainMul(t,sub(a,b)));
+   z[k]=add(even,odd);const v=sub(even,odd);z[m-k]=[v[0],-v[1]];
+  }
+  z[m/2]=[real[m/2],-imag[m/2]];const v=fft(z),out=new Float32Array(n);for(let i=0;i<m;i++){out[i*2]=f(v[i][0]/m);out[i*2+1]=f(v[i][1]/m)}return out;
+ }
  function waveTable(w,range){
   if(w.tables.has(range))return w.tables.get(range);
   if(w.normalization===null&&range!==0)waveTable(w,0);
   const owner=contexts.get(w.context);owner.waveStorage=(owner.waveStorage||0)+w.size;if(owner.waveStorage>16*1024*1024)unsupported('wavetable storage limit');
-  const size=w.size,re=new Float64Array(size),im=new Float64Array(size),partials=Math.floor(f(Math.pow(2,f(-range/3)))*size/2);
-  for(let i=1;i<Math.min(w.real.length,partials+1);i++){re[i]=re[size-i]=w.real[i]/2;im[i]=-w.imag[i]/2;im[size-i]=w.imag[i]/2}
-  // Inverse transform of conjugate-symmetric coefficients, without 1/N scaling.
-  for(let i=1,j=0;i<size;i++){let bit=size>>1;for(;j&bit;bit>>=1)j^=bit;j^=bit;if(i<j){let t=re[i];re[i]=re[j];re[j]=t;t=im[i];im[i]=im[j];im[j]=t}}
-  for(let width=2;width<=size;width*=2){const half=width/2;for(let k=0;k<half;k++){const angle=2*Math.PI*k/width,cos=Math.cos(angle),sin=Math.sin(angle);for(let i=k;i<size;i+=width){const j=i+half,r=cos*re[j]-sin*im[j],v=sin*re[j]+cos*im[j];re[j]=re[i]-r;im[j]=im[i]-v;re[i]+=r;im[i]+=v}}}
-  const table=Float32Array.from(re);
-  if(w.normalization===null){let peak=0;for(const value of table)peak=Math.max(peak,Math.abs(value));w.normalization=peak?f(1/peak):1}
+  const size=w.size,re=new Float32Array(size/2),im=new Float32Array(size/2),partials=Math.floor(f(Math.pow(2,f(-range/3)))*size/2);
+  for(let i=1;i<Math.min(w.real.length,partials+1);i++){re[i]=f(w.real[i]*size);im[i]=f(-w.imag[i]*size)}
+  const table=inverseRealFFT(re,im);
+  if(w.normalization===null){let peak=0;for(const value of table)peak=Math.max(peak,Math.abs(value));w.normalization=peak?f(1/peak):.5}
   for(let i=0;i<size;i++)table[i]=f(table[i]*w.normalization);w.tables.set(range,table);return table;
  }
  function waveSample(w,phase,frequency,increment){

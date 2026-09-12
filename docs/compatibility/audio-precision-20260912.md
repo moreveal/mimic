@@ -46,3 +46,33 @@ the main checkout under `.build/residual-media-delegated/audio-before`,
 
 Source: pinned Chromium
 [`audio_utilities.cc`](https://raw.githubusercontent.com/chromium/chromium/152.0.7977.82/third_party/blink/renderer/platform/audio/audio_utilities.cc).
+
+## Portable FFT closure
+
+The subsequent implementation replaces the Float64 radix-2 transform with a
+portable Float32 mixed-radix model of the demonstrated RustFFT path. It models
+real-spectrum reconstruction, radix-4/radix-8/radix-32 butterflies, the 256-point
+base and the larger power-of-two plans, preserving twiddle multiplication order
+and fused arithmetic. Normalization-disabled custom waves retain Chrome's 0.5
+default scaling. There is no Rust, native FFT, device or OS backend dependency.
+All per-transform arrays remain owned by the local evaluation.
+
+Fresh default-feature Chrome A/B and Mimic now have **zero differing leaves**
+in the expanded 21-graph oracle, including every one of its 9840 PCM samples:
+the original six isolation graphs and all four built-in waveforms plus custom
+unnormalized waves at 22050, 44100 and 96000 Hz. This covers every supported
+table size. Reduction and context state/time are also exact. Ordinary and
+restored-bootstrap tests compare all fields exactly, with no tolerance or
+hash substitution. `TestOfflineAudio` remains unchanged and passes on its
+existing backend matrix. Its broader automation/scheduling error budgets are
+not a claim of globally bit-identical WebAudio.
+
+The no-feature-override oracle and passport are in `audio-fft` beside the
+earlier diagnostic captures. The earlier numerical residual figures above
+describe the state before this FFT correction. The original graph's remaining
+oscillator numerical residual is now resolved.
+
+Algorithm references: Chromium
+[`rustfft_ffi.rs`](https://raw.githubusercontent.com/chromium/chromium/152.0.7977.82/third_party/blink/renderer/platform/audio/rustfft_ffi.rs)
+and [RustFFT 6.4.1](https://crates.io/crates/rustfft/6.4.1). The RustFFT MIT notice
+is retained under `internal/webapi/vendor/rustfft/NOTICE`.

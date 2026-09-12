@@ -1,0 +1,6 @@
+(async()=>{const out={};for(const source of ['triangle','sine','constant'])for(const compressed of [false,true]){const c=new OfflineAudioContext(1,1000,44100);let s;if(source==='constant'){s=c.createBufferSource();s.buffer=c.createBuffer(1,1000,44100);s.buffer.getChannelData(0).fill(.5)}else{s=c.createOscillator();s.type=source;s.frequency.value=9998.123456}let end=s,n;if(compressed){n=c.createDynamicsCompressor();n.threshold.value=-52;n.knee.value=40;n.ratio.value=12;n.attack.value=.0001;n.release.value=.25;s.connect(n);end=n}end.connect(c.destination);s.start(0);const b=await c.startRendering();out[source+'|'+compressed]={pcm:Array.from(b.getChannelData(0)),reduction:n?.reduction??null,currentTime:c.currentTime,state:c.state};}for(const rate of [22050,44100,96000])for(const type of ['sine','triangle','square','sawtooth','custom']){
+ const c=new OfflineAudioContext(1,256,rate),s=c.createOscillator();
+ if(type==='custom')s.setPeriodicWave(c.createPeriodicWave(new Float32Array([0,.125,-.25,.2]),new Float32Array([0,1,.5,-.25]),{disableNormalization:true}));else s.type=type;
+ s.frequency.value=997;s.connect(c.destination);s.start(0);const b=await c.startRendering();
+ out[rate+'|'+type]={pcm:Array.from(b.getChannelData(0)),state:c.state,currentTime:c.currentTime};
+ }return out})()

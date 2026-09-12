@@ -108,7 +108,7 @@ automation, 8/44.1/48/96 kHz sample rates, and oscillator/compressor composition
 They compare every captured PCM sample on V8 and Goja. Existing buffer-source,
 gain and automation captures still compare exactly and are unchanged.
 
-The portable radix-2 transform computes band-limited waveform tables from Fourier
+The original portable radix-2 transform computed band-limited waveform tables from Fourier
 coefficients. It follows Chrome 152's three pitch ranges per octave, table sizes,
 normalization and interpolation, but is not its native FFT implementation. New
 synthesis tests allow an explicit absolute numeric error of 1e-5; API states,
@@ -117,6 +117,12 @@ errors, dimensions and types are checked exactly. The final 5000-frame triangle/
 4096-frame compressor cases match within 8.95e-8 (three cases match exactly).
 These results establish a measured approximate PCM model, not arbitrary or
 precomputed samples and not bit-identical native FFT/libm output.
+
+The later [precision follow-up](audio-precision-20260912.md) replaces that
+transform with a portable Float32 model of the frozen RustFFT plan and corrects
+compressor decibel rounding. Its 21 focused graphs (9840 PCM samples) now match
+exactly, including all supported table sizes and the original residual graph.
+The historical broader synthesis test tolerances above remain unchanged.
 
 The DSP algorithm references are the Chrome 152.0.7977.82 sources
 [periodic_wave.cc](https://github.com/chromium/chromium/blob/152.0.7977.82/third_party/blink/renderer/modules/webaudio/periodic_wave.cc),
