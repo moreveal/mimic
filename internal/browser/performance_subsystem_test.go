@@ -33,6 +33,9 @@ func TestPerformanceConversionMatchesFrozenChrome(t *testing.T) {
 func TestPerformanceMemoryMatchesFrozenChrome(t *testing.T) {
 	documentAllOracle(t, "performance_memory")
 }
+func TestPerformanceCloneBrandsMatchFrozenChrome(t *testing.T) {
+	documentAllOracle(t, "performance_clone")
+}
 func TestPerformanceLongTasksMatchFrozenChrome(t *testing.T) {
 	documentAllOracle(t, "performance_longtask")
 }

@@ -610,11 +610,12 @@
   };
 
   const historySlots=new WeakMap();
+  const historyCloneBrandRejectors=[];
   // History keeps a private storage copy and a separate cached state object.
   // Native V8 cloning handles ECMAScript exotic objects without invoking proxy traps.
   const historyUncloneableHost=value=>{
     if(blobSlots.has(value)||fileSlots.has(value))throw new DOMException('History storage of Blob and File requires platform serialization support.','NotSupportedError');
-    return value===globalThis||value===document||elementData.has(value)||documentWrappers.has(value)||eventSlots.has(value);
+    return value===globalThis||value===document||elementData.has(value)||documentWrappers.has(value)||eventSlots.has(value)||historyCloneBrandRejectors.some(reject=>reject(value));
   };
   let cloneCrossRealmHistoryState=null;
   const cloneHistoryState=value=>{
