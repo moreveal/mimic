@@ -1,6 +1,6 @@
 // Shared computed font-size resolution. No layout, rasterization or persistent
 // element cache: mutations and adoption are observed on the next query.
-const cssFontParent=n=>syntheticParents.get(n)||shadowSlots.get(n)?.host||(elementSlot(n)?wrap(host.parentNode(elementSlot(n).nodeId)):null);
+const cssFontParent=n=>{const parent=syntheticParents.get(n)||(elementSlot(n)?wrap(host.parentNode(elementSlot(n).nodeId)):null);return shadowSlots.get(parent)?.host||parent||shadowSlots.get(n)?.host||null};
 const cssResolveLength=(input,context)=>{
  const value=String(input).trim().toLowerCase();
  if(cssNumberRegex.test(value))return Number(value)===0||context.unitless?Number(value):null;

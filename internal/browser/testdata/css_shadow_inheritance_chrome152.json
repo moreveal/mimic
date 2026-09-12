@@ -1,0 +1,150 @@
+{
+  "captureMetadata": {
+    "href": "http://127.0.0.1:36110/plain",
+    "isSecureContext": true,
+    "crossOriginIsolated": false,
+    "innerWidth": 1272,
+    "innerHeight": 653,
+    "outerWidth": 1280,
+    "outerHeight": 800,
+    "devicePixelRatio": 1,
+    "visibility": "visible",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "platform": "Win32"
+  },
+  "observation": {
+    "openInitial": {
+      "font": "28px",
+      "family": "Arial",
+      "color": "rgb(2, 3, 4)",
+      "line": "42px",
+      "height": 42
+    },
+    "openChanged": {
+      "font": "36px",
+      "family": "Arial",
+      "color": "rgb(5, 6, 7)",
+      "line": "54px",
+      "height": 54
+    },
+    "openOverride": {
+      "font": "36px",
+      "family": "\"Times New Roman\"",
+      "color": "rgb(5, 6, 7)",
+      "line": "54px",
+      "height": 54
+    },
+    "openDetached": "",
+    "openReconnect": {
+      "font": "36px",
+      "family": "\"Times New Roman\"",
+      "color": "rgb(5, 6, 7)",
+      "line": "54px",
+      "height": 54
+    },
+    "closedInitial": {
+      "font": "28px",
+      "family": "Arial",
+      "color": "rgb(2, 3, 4)",
+      "line": "42px",
+      "height": 42
+    },
+    "closedChanged": {
+      "font": "36px",
+      "family": "Arial",
+      "color": "rgb(5, 6, 7)",
+      "line": "54px",
+      "height": 54
+    },
+    "closedOverride": {
+      "font": "36px",
+      "family": "\"Times New Roman\"",
+      "color": "rgb(5, 6, 7)",
+      "line": "54px",
+      "height": 54
+    },
+    "closedDetached": "",
+    "closedReconnect": {
+      "font": "36px",
+      "family": "\"Times New Roman\"",
+      "color": "rgb(5, 6, 7)",
+      "line": "54px",
+      "height": 54
+    }
+  },
+  "provenance": {
+    "revision": "fb7d432775e5b1ec752b932fbf9cbf7cc09e2779",
+    "dirtyState": " M internal/webapi/css_font_metrics.js\n M internal/webapi/surface.js\n",
+    "sourceSHA256": "cd53b990c56d915503a6df2cfac114a491f88ef89981770e4fe3fd770893cabc",
+    "probeSHA256": "c8d5b3a50669a0c420444c7dfd76a8da2d0f5a7e9412e75c3b08cd6f73c0338e",
+    "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+    "mimicSHA256": "0c90e9efcbffdd920bfb5e951cd4915c62d28dff96280a1b8cbbbb005bdb3b9e",
+    "args": [
+      "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "--remote-debugging-port=20081",
+      "--user-data-dir=E:\\GitHub\\mimic\\.build\\residual-dom-delegated\\shadow-inheritance-controls\\chrome-profile-b",
+      "--no-first-run",
+      "--no-default-browser-check",
+      "--window-size=1280,800",
+      "about:blank"
+    ],
+    "profile": "E:\\GitHub\\mimic\\.build\\residual-dom-delegated\\shadow-inheritance-controls\\chrome-profile",
+    "browserMode": "headful",
+    "environmentProfile": "chrome-152-windows-x64-headful-controlled-v1",
+    "featureOverrides": [],
+    "records": [
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      }
+    ],
+    "exitCodes": {
+      "chrome": 1,
+      "mimic": 1
+    },
+    "chromeControl": [],
+    "chromeMimic": [],
+    "chromeVersion": {
+      "Browser": "Chrome/152.0.7977.82",
+      "Protocol-Version": "1.3",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "V8-Version": "15.2.124.21",
+      "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+      "webSocketDebuggerUrl": "ws://127.0.0.1:20081/devtools/browser/c4f39576-657b-4870-9c1b-e3a4578f08c3"
+    },
+    "independentControlMetadata": {
+      "href": "http://127.0.0.1:36110/plain",
+      "isSecureContext": true,
+      "crossOriginIsolated": false,
+      "innerWidth": 1272,
+      "innerHeight": 653,
+      "outerWidth": 1280,
+      "outerHeight": 800,
+      "devicePixelRatio": 1,
+      "visibility": "visible",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "platform": "Win32"
+    },
+    "independentControlEqual": true
+  }
+}

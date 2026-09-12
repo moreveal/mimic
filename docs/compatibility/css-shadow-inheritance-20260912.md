@@ -1,0 +1,7 @@
+# CSS inheritance through shadow hosts
+
+The saved HPcn5 geometry fixture is connected inside a ShadowRoot. The earlier light-DOM reconstruction missed that boundary. An instrumented offline replay records a 16px Times New Roman computed font in Mimic; the frozen reference inherits the challenge document 14px system-ui font (the selected local Ubuntu resource). This explains the first box height, table intrinsic width/caption wrapping and the progress/disclosure container dimensions.
+
+The shared font/style inheritance parent now traverses a ShadowRoot to its canonical host before constructing the element ancestor chain. Color inheritance uses the same traversal. No shadow rule leaks into the document cascade, and no target values are introduced. Generic open/closed nested roots cover relative font sizes, host and inner overrides, color and unitless line-height, detach/reconnect and live mutations. Independent headful Chrome152 A/B and both execution engines match.
+
+Raw diagnostic evidence: .build/residual-dom-delegated/hp-diagnostic-c and hp-diagnostic-observations.json; focused native receipts: shadow-inheritance-controls. Separate controls also expose a remaining foreign-realm projection boundary: a borrowed getter cannot yet see realm-local synthetic shadow connectivity, and viewport-derived geometry uses the caller viewport. Those are recorded separately, not claimed fixed by this local inheritance change. Parent integration replay checks the actual complete HPcn5 vector; transform precision is owned by the separate typed CSS numeric-state fix.
