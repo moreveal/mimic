@@ -27,7 +27,7 @@ func TestDocumentAllRetainedRealmDiagnostic(t *testing.T) {
 	documentAllOracle(t, "document_all_navigation")
 }
 
-func documentAllOracle(t *testing.T, name string) {
+func documentAllOracle(t *testing.T, name string, headers ...map[string]string) {
 	t.Helper()
 	for _, mode := range []string{"ordinary", "snapshot"} {
 		t.Run(mode, func(t *testing.T) {
@@ -48,6 +48,11 @@ func documentAllOracle(t *testing.T, name string) {
 						t.Fatal(err)
 					}
 					server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+						for _, values := range headers {
+							for name, value := range values {
+								w.Header().Set(name, value)
+							}
+						}
 						w.Header().Set("Content-Type", "text/html")
 						fmt.Fprint(w, `<!doctype html><body><p id="newDocument"></p></body>`)
 					}))
