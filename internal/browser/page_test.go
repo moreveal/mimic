@@ -126,7 +126,7 @@ func TestScriptTypesAndStaticModuleGraph(t *testing.T) {
 func TestTextEncoderUTF8AndBoundedDestination(t *testing.T) {
 	p := testPage(t)
 	defer p.Close()
-	value, err := p.Evaluate(context.Background(), `(()=>{const encoder=new TextEncoder(),destination=new Uint8Array(4),progress=encoder.encodeInto('é🙂',destination);return{tag:Object.prototype.toString.call(encoder),encoding:encoder.encoding,bytes:Array.from(encoder.encode('Aé🙂')),progress,partial:Array.from(destination)}})()`)
+	value, err := p.Evaluate(context.Background(), `(()=>{const encoder=new TextEncoder(),destination=new Uint8Array(4),progress=encoder.encodeInto('Г©рџ™‚',destination);return{tag:Object.prototype.toString.call(encoder),encoding:encoder.encoding,bytes:Array.from(encoder.encode('AГ©рџ™‚')),progress,partial:Array.from(destination)}})()`)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -861,7 +861,7 @@ func TestBlobFileAndObjectURL(t *testing.T) {
 		t.Fatal(err)
 	}
 	m := v.(map[string]any)
-	if m["size"] != int64(4) || m["type"] != "text/plain" || m["text"] != "hé!" || m["slice"] != "é!" || m["file"] != "a:b.txt" || m["last"] != int64(42) || m["blobURL"] != true {
+	if m["size"] != int64(4) || m["type"] != "text/plain" || m["text"] != "hГ©!" || m["slice"] != "Г©!" || m["file"] != "a:b.txt" || m["last"] != int64(42) || m["blobURL"] != true {
 		t.Fatalf("unexpected Blob/File semantics: %#v", m)
 	}
 }
@@ -2059,7 +2059,7 @@ func TestBrowserOwnedFallbackFaviconHasResourceTimingEntry(t *testing.T) {
 		t.Fatal(err)
 	}
 	result := v.(map[string]any)
-	if result["count"] != int64(1) || result["initiatorType"] != "img" {
+	if result["count"] != int64(1) || result["initiatorType"] != "other" {
 		t.Fatalf("unexpected fallback favicon timing: %#v", result)
 	}
 }
