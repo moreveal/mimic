@@ -38,7 +38,14 @@ func (r *Realm) installDocumentCompatibility(host map[string]any) {
 		if !ok || res.URL == nil || res.Status < 200 || res.Status >= 300 {
 			return nil, nil
 		}
-		return r.val(map[string]any{"body": string(res.Body), "url": res.URL.String(), "crossOrigin": res.URL.Scheme != r.documentURL().Scheme || res.URL.Host != r.documentURL().Host}), nil
+		result := map[string]any{"url": res.URL.String(), "crossOrigin": res.URL.Scheme != r.documentURL().Scheme || res.URL.Host != r.documentURL().Host}
+		// The CSSOM owner already keys sheet identity by the resolved URL. On
+		// revalidation it needs availability and identity, not another copy of
+		// the entire response through the Go/V8 bridge.
+		if strarg(args, 1) != res.URL.String() {
+			result["body"] = string(res.Body)
+		}
+		return r.val(result), nil
 	})
 
 	host["notificationPermission"] = r.fn(func(_ engine.Value, _ []engine.Value) (engine.Value, error) {

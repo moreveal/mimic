@@ -209,7 +209,39 @@ const compatibilitySelectors = (() => {
       throw error;
     }
   }
-  const matchingStyles=(node,rules)=>run(()=>rules.filter(rule=>rule.matches(node)));
+  // Index immutable rule programs by a necessary leaf in the rightmost
+  // compound. Functional/compound selectors still use the complete matcher;
+  // unsupported shapes go in the fallback bucket. No match result is cached.
+  const styleIndexes=new WeakMap();
+  function styleKey(rule) {
+    const selector=rule.pseudo?rule.selector.replace(/::?(before|after)$/,''):rule.selector;
+    let groups;try{groups=library.parse(selector)}catch{return '*'}
+    if(groups.length!==1)return '*';
+    let key='*';
+    for(let i=groups[0].length-1;i>=0;i--){
+      const token=groups[0][i];
+      if(['descendant','child','adjacent','sibling','parent','column-combinator'].includes(token.type))break;
+      if(token.type==='attribute'&&token.namespace===null){
+        if(token.name==='id'&&token.action==='equals')return '#'+token.value.toLowerCase();
+        if(token.name==='class'&&token.action==='element')key='.'+token.value.toLowerCase();
+      }else if(key==='*'&&token.type==='tag'&&token.namespace===null)key='t:'+token.name.toLowerCase();
+    }
+    return key;
+  }
+  const matchingStyles=(node,rules,pseudo='')=>run(()=>{
+    let index=styleIndexes.get(rules);
+    if(!index){
+      index=new Map();
+      for(const rule of rules){const key=rule.pseudo+'|'+styleKey(rule);let bucket=index.get(key);if(!bucket)index.set(key,bucket=[]);bucket.push(rule)}
+      styleIndexes.set(rules,index);
+    }
+    const keys=new Set(['*','t:'+adapter.getName(node)]),id=attribute(node,'id'),classes=attribute(node,'class');
+    if(id!==undefined)keys.add('#'+id.toLowerCase());
+    if(classes)for(const name of classes.split(/[\t\n\f\r ]+/))if(name)keys.add('.'+name.toLowerCase());
+    const matched=[];
+    for(const key of keys)for(const rule of index.get(pseudo+'|'+key)||[])if(rule.matches(node))matched.push(rule);
+    return matched.sort((a,b)=>a.order-b.order);
+  });
   function closest(node,selector) {
     selector=String(selector);
     return run(()=>{
