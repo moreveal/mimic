@@ -43,6 +43,7 @@ const cssComputedValue=(element,name)=>withStyleReadCache(()=>{
  if(cssComputedShorthands[name])return cssComputedShorthand(element,name);
  if(value===undefined){if(name==='page')return 'auto';if(/^background-position-[xy]$/.test(name)){const pair=(entries.find(e=>e.name==='background-position')?.value||'0% 0%').split(' ');return pair[name.endsWith('x')?0:1]||'0%'}return ''}
  if(name==='color')return cssResolvedColor(element);
+ if(['opacity','fill-opacity','stroke-opacity','stop-opacity','flood-opacity'].includes(name)&&cssNumberRegex.test(value))return cssSerializeNumber(Math.max(0,Math.min(1,Number(value))));
  if(value==='currentcolor'||name==='caret-color'&&value==='auto')return cssResolvedColor(element);
  if(/color$/.test(name)||['fill','stroke'].includes(name)){const rgba=cssColorRGBA(value);if(rgba)return cssSerializeColor(rgba)}
  if(name==='font-size')return cssSerializeNumber((cssComputedFontSize(element)??16))+'px';

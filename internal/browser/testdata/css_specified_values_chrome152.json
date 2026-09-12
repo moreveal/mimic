@@ -1,0 +1,186 @@
+{
+  "captureMetadata": {
+    "href": "http://127.0.0.1:45251/plain",
+    "isSecureContext": true,
+    "crossOriginIsolated": false,
+    "innerWidth": 1272,
+    "innerHeight": 709,
+    "outerWidth": 0,
+    "outerHeight": 0,
+    "devicePixelRatio": 1,
+    "visibility": "hidden",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "platform": "Win32"
+  },
+  "observation": {
+    "outline": [
+      "outline: rgb(170, 187, 204) solid 2px;",
+      "outline: none;",
+      "outline: solid;"
+    ],
+    "inset": [
+      "inset: 0px;",
+      "inset: 1px auto -2px;"
+    ],
+    "gap": [
+      "gap: 0px;",
+      "gap: 1px 2px;"
+    ],
+    "background": [
+      "background: rgb(255, 255, 255);"
+    ],
+    "font-family": [
+      "font-family: Arial, \"A,B\", sans-serif;"
+    ],
+    "border-spacing": [
+      "border-spacing: 0px;",
+      "border-spacing: 2px 3px;"
+    ],
+    "transform": [
+      "",
+      "",
+      "transform: perspective(none);",
+      "",
+      "",
+      "transform: skew(0deg);",
+      "transform: scale(0.6);",
+      "transform: rotate(0deg) translateY(0px);",
+      "transform: rotate(calc(30deg));",
+      "transform: scale(calc(3));",
+      "transform: rotate(calc(171.887deg));",
+      "transform: translate(calc(3px), 4px);",
+      "",
+      "",
+      "transform: scale(0.5);",
+      "transform: translate(-2px, 0px);",
+      "transform: var(--x, scale(.6));"
+    ],
+    "opacity": [
+      "opacity: 0.8;",
+      "opacity: 1.5;",
+      "opacity: -1;"
+    ],
+    "color": [
+      "color: rgb(170, 187, 204);",
+      "color: red;",
+      "color: rgba(1, 2, 3, 0.5);"
+    ],
+    "fill": [
+      "fill: rgb(170, 187, 204);",
+      "fill: none;",
+      "fill: url(\"#x\") red;"
+    ],
+    "stroke": [
+      "stroke: rgb(255, 255, 255);",
+      "stroke: none;"
+    ],
+    "box-shadow": [
+      "",
+      "",
+      "box-shadow: rgb(170, 187, 204) 0px 0px 0px inset;",
+      "box-shadow: red 1px 2px;",
+      "box-shadow: rgba(0, 0, 0, 0.2) 0px 1px 2px 3px, blue 1px 0px inset;"
+    ],
+    "text-shadow": [
+      "text-shadow: red 0px 1px;"
+    ],
+    "transform-origin": [
+      "transform-origin: center center;",
+      "transform-origin: center top;",
+      "transform-origin: left bottom;",
+      "transform-origin: 20% center;",
+      "transform-origin: 0px 0px;"
+    ],
+    "grid-area": [
+      "grid-area: 1 / 1;",
+      "grid-area: a / b / c / d;"
+    ],
+    "stroke-dasharray": [
+      "",
+      "",
+      "stroke-dasharray: 0, 100, 0;",
+      "stroke-dasharray: 1, 2, 3;"
+    ],
+    "opacityComputed": [
+      "1",
+      "0",
+      "0.8"
+    ],
+    "rule": ".a > .b + .c ~ .d { color: red; stroke-width: 3px; }"
+  },
+  "provenance": {
+    "revision": "889490e3fef23ce4e1215b0e01a560007c58a137",
+    "dirtyState": " M internal/browser/css_box_geometry_test.go\n M internal/browser/page_test.go\n M internal/webapi/css_computed_values.js\n M internal/webapi/css_value_grammar.js\n M internal/webapi/cssom_compatibility.js\n M internal/webapi/surface.go\n M internal/webapi/surface.js\n?? internal/browser/testdata/css_specified_values_chrome152.json\n?? internal/browser/testdata/css_specified_values_oracle.js\n?? internal/webapi/css_observable_values.js\n",
+    "sourceSHA256": "f0cda2efb5a9ebde6d02a56f5b361a951a62cbb01c2b59d976b4bf9a0d5c9a32",
+    "probeSHA256": "34b4f18487598d12508f4a6cc56e1387d5bf0830cb508cf02a97df97cb0aa56b",
+    "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+    "mimicSHA256": "77d4dd72ce22804c5b7aaeb90aff2ff3e24865805a780c6c1bcae774296ec5ba",
+    "args": [
+      "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "--remote-debugging-port=20081",
+      "--user-data-dir=E:\\GitHub\\mimic\\.build\\residual-dom-delegated\\specified-values-controls\\chrome-profile-b",
+      "--no-first-run",
+      "--no-default-browser-check",
+      "--window-size=1280,800",
+      "about:blank"
+    ],
+    "profile": "E:\\GitHub\\mimic\\.build\\residual-dom-delegated\\specified-values-controls\\chrome-profile",
+    "browserMode": "headful",
+    "environmentProfile": "chrome-152-windows-x64-headful-controlled-v1",
+    "featureOverrides": [],
+    "records": [
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      }
+    ],
+    "exitCodes": {
+      "chrome": 1,
+      "mimic": 1
+    },
+    "chromeControl": [],
+    "chromeMimic": [],
+    "chromeVersion": {
+      "Browser": "Chrome/152.0.7977.82",
+      "Protocol-Version": "1.3",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "V8-Version": "15.2.124.21",
+      "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+      "webSocketDebuggerUrl": "ws://127.0.0.1:20081/devtools/browser/8aeadf93-3b7f-4973-a31b-38bd5b0a568b"
+    },
+    "independentControlMetadata": {
+      "href": "http://127.0.0.1:45251/plain",
+      "isSecureContext": true,
+      "crossOriginIsolated": false,
+      "innerWidth": 1272,
+      "innerHeight": 709,
+      "outerWidth": 0,
+      "outerHeight": 0,
+      "devicePixelRatio": 1,
+      "visibility": "hidden",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "platform": "Win32"
+    },
+    "independentControlEqual": true
+  }
+}
