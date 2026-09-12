@@ -41,35 +41,47 @@
       LanguageDetector:{policy:'language-detector',core:['expectedInputLanguages'],create:['monitor','signal']}
     };
     const aiEnums={format:['SummarizerFormat',['plain-text','markdown']],length:['SummarizerLength',['short','medium','long']],type:['SummarizerType',['tl;dr','key-points','teaser','headline']]};
-    const aiString=value=>{if(typeof value==='symbol')throw new TypeError('Cannot convert a Symbol value to a string');return String(value)};
-    const aiSequence=(value,convert)=>{
-      if(value===null||!['object','function'].includes(typeof value))throw new TypeError('The provided value cannot be converted to a sequence.');
-      const method=value[Symbol.iterator];if(typeof method!=='function')throw new TypeError('The object must have a callable @@iterator property.');
-      // An iterator record reads @@iterator and next exactly once.
-      const iterator=Reflect.apply(method,value,[]),next=iterator.next,out=[];
-      for(;;){const step=Reflect.apply(next,iterator,[]);if(Object(step)!==step)throw new TypeError('Iterator result is not an object');if(step.done)return out;out.push(convert(step.value))}
+    const aiConversionErrors=new WeakSet(),aiTypeError=message=>{const error=new TypeError(message);aiConversionErrors.add(error);return error};
+    // Keep author exceptions intact; only locally produced WebIDL conversion
+    // failures acquire dictionary/member context. Coercion callbacks can throw
+    // a TypeError too, and its identity belongs to the author.
+    const aiPrimitive=(value,hint)=>{
+      if(value===null||!['object','function'].includes(typeof value))return value;
+      const primitive=value[Symbol.toPrimitive];
+      if(primitive!=null){if(typeof primitive!=='function')throw aiTypeError('Cannot convert object to primitive value');const result=Reflect.apply(primitive,value,[hint]);if(Object(result)===result)throw aiTypeError('Cannot convert object to primitive value');return result}
+      for(const name of hint==='string'?['toString','valueOf']:['valueOf','toString']){const method=value[name];if(typeof method==='function'){const result=Reflect.apply(method,value,[]);if(Object(result)!==result)return result}}
+      throw aiTypeError('Cannot convert object to primitive value');
     };
-    const aiConvert=(context,convert,value)=>{try{return convert(value)}catch(error){if(error instanceof TypeError)throw new TypeError(context+error.message);throw error}};
+    const aiString=value=>{value=aiPrimitive(value,'string');if(typeof value==='symbol')throw aiTypeError('Cannot convert a Symbol value to a string');return String(value)};
+    const aiNumber=value=>{value=aiPrimitive(value,'number');if(typeof value==='bigint')throw aiTypeError('Cannot convert a BigInt value to a number');if(typeof value==='symbol')throw aiTypeError('Cannot convert a Symbol value to a number');return +value};
+    const aiSequence=(value,convert)=>{
+      if(value===null||!['object','function'].includes(typeof value))throw aiTypeError('The provided value cannot be converted to a sequence.');
+      const method=value[Symbol.iterator];if(typeof method!=='function')throw aiTypeError('The object must have a callable @@iterator property.');
+      // An iterator record reads @@iterator and next exactly once.
+      const iterator=Reflect.apply(method,value,[]);if(Object(iterator)!==iterator)throw aiTypeError('Iterator object must be an object.');const next=iterator.next,out=[];
+      for(;;){const step=Reflect.apply(next,iterator,[]);if(Object(step)!==step)throw aiTypeError('Expected iterator.next() to return an Object.');if(step.done)return out;out.push(convert(step.value))}
+    };
+    const aiConvert=(context,convert,value)=>{try{return convert(value)}catch(error){if(aiConversionErrors.has(error))throw aiTypeError(context+error.message);throw error}};
     const aiMember=(options,key,dictionary,convert,required=false)=>{
-      const value=options[key];if(value===undefined){if(required)throw new TypeError(`Failed to read the '${key}' property from '${dictionary}': Required member is undefined.`);return undefined}
+      const value=options[key];if(value===undefined){if(required)throw aiTypeError(`Failed to read the '${key}' property from '${dictionary}': Required member is undefined.`);return undefined}
       return aiConvert(`Failed to read the '${key}' property from '${dictionary}': `,convert,value);
     };
-    const aiEnum=(name,values)=>value=>{const text=aiString(value);if(!values.includes(text))throw new TypeError(`The provided value '${text}' is not a valid enum value of type ${name}.`);return text};
+    const aiEnum=(name,values)=>value=>{const text=aiString(value);if(!values.includes(text))throw aiTypeError(`The provided value '${text}' is not a valid enum value of type ${name}.`);return text};
     const aiExpected=value=>{
-      if(value!=null&&!['object','function'].includes(typeof value))throw new TypeError("The provided value is not of type 'LanguageModelExpected'.");
+      if(value!=null&&!['object','function'].includes(typeof value))throw aiTypeError("The provided value is not of type 'LanguageModelExpected'.");
       const options=value||{},languages=aiMember(options,'languages','LanguageModelExpected',v=>aiSequence(v,aiString));
       const type=aiMember(options,'type','LanguageModelExpected',aiEnum('LanguageModelMessageType',['text','image','audio','tool-call','tool-response']),true);
       return {languages,type};
     };
     const aiMessage=value=>{
-      if(value!=null&&!['object','function'].includes(typeof value))throw new TypeError("The provided value is not of type 'LanguageModelMessage'.");
+      if(value!=null&&!['object','function'].includes(typeof value))throw aiTypeError("The provided value is not of type 'LanguageModelMessage'.");
       const options=value||{},content=aiMember(options,'content','LanguageModelMessage',v=>{if(v!==null&&typeof v==='object')throw new DOMException('Structured model prompt content is unsupported.','NotSupportedError');return aiString(v)},true),prefix=aiMember(options,'prefix','LanguageModelMessage',Boolean);
       const role=aiMember(options,'role','LanguageModelMessage',aiEnum('LanguageModelMessageRole',['system','user','assistant']),true);
       return {content,prefix,role};
     };
     const aiOptions=(type,operation,args)=>{
       const schema=aiSchemas[type],dictionary=type+(operation==='create'?'CreateOptions':'CreateCoreOptions'),core=type+'CreateCoreOptions',prefix=`Failed to execute '${operation}' on '${type}': `;
-      const fail=message=>{throw new TypeError(prefix+message)};
+      const fail=message=>{throw aiTypeError(prefix+message)};
       if(schema.required&&!args.length)fail('1 argument required, but only 0 present.');
       const input=args[0];
       if(input!=null&&!['object','function'].includes(typeof input)||schema.required&&input==null)fail(`The provided value is not of type '${dictionary}'.`);
@@ -83,9 +95,9 @@
         else if(['expectedInputLanguages','expectedContextLanguages'].includes(key))convert=v=>aiSequence(v,aiString);
         else if(['expectedInputs','expectedOutputs'].includes(key))convert=v=>aiSequence(v,aiExpected);
         else if(key==='initialPrompts')convert=v=>aiSequence(v,aiMessage);
-        else if(key==='monitor')convert=v=>{if(typeof v!=='function')throw new TypeError('The given value is not a function.');return v};
-        else if(key==='signal')convert=v=>{try{Object.getOwnPropertyDescriptor(AbortSignal.prototype,'aborted').get.call(v)}catch{throw new TypeError("Failed to convert value to 'AbortSignal'.")}return v};
-        else if(key==='temperature'||key==='topK')convert=v=>+v;
+        else if(key==='monitor')convert=v=>{if(typeof v!=='function')throw aiTypeError('The given value is not a function.');return v};
+        else if(key==='signal')convert=v=>{try{Object.getOwnPropertyDescriptor(AbortSignal.prototype,'aborted').get.call(v)}catch{throw aiTypeError("Failed to convert value to 'AbortSignal'.")}return v};
+        else if(key==='temperature'||key==='topK')convert=aiNumber;
         converted[key]=aiConvert(prefix+`Failed to read the '${key}' property from '${owner}': `,convert,value);
       }
       return converted;
@@ -104,7 +116,7 @@
             if(options.signal?.aborted)return Promise.reject(options.signal.reason);
             if(!capability.policyAllowed)return deny('NotAllowedError','Access denied because the Permission Policy is not enabled.');
             return deny('NotSupportedError',`${type} backend is unavailable.`);
-          }catch(error){return Promise.reject(error)}
+          }catch(error){aiConversionErrors.delete(error);return Promise.reject(error)}
         }}[operation];
         Object.defineProperty(implementation,'length',{value:schema.required?1:0,configurable:true});native(implementation,operation);
         Object.defineProperty(constructor,operation,{value:implementation,writable:true,enumerable:true,configurable:true});

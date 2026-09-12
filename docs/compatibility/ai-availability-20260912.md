@@ -24,7 +24,7 @@ backend. No model/session objects or successful fake creations are produced.
 
 Frozen headful Chrome 152.0.7977.82 observations:
 
-- 90 observations under explicit denied AI permissions policy agree between two
+- 98 observations under explicit denied AI permissions policy agree between two
   fresh Chrome profiles and a fresh Mimic binary. They cover all four static
   pairs, reflection, receiver borrowing, invalid/throwing dictionaries, ordered
   fields, sequence iterator getter count, nested expected types/simple prompts,
@@ -36,7 +36,7 @@ Frozen headful Chrome 152.0.7977.82 observations:
   semantic expectation. Unavailable backend state is an explicit Mimic capability
   boundary, not a claim about every machine's top-level Chrome state.
 
-Local receipts: `.build/style-lifecycle-compat-delegated/ai-conversions2` and
+Local receipts: `.build/style-lifecycle-compat-delegated/ai-iterator-final` and
 `ai-cross-origin` in the main checkout. The former's probe and Chrome binary hashes
 are retained with `internal/browser/testdata/ai_availability_chrome152.json`.
 The cross-origin receipt's script hash covers its inline controller/child source;
@@ -55,3 +55,9 @@ Boundaries: no model execution/download, no multimodal prompt-content conversion
 AI worker/backend implementation. This is a bounded correction of publication,
 unavailable capability, policy and common dictionary semantics, not full AI API
 support. Performance and Trusted Types behavior are outside this change.
+
+Follow-up iterator controls preserve author-thrown TypeError identity across
+iterator getters/calls/next and string/number coercion. Context is attached only
+to private conversion failures. Frozen Chrome does not call iterator.return when
+a yielded value fails DOMString conversion; the regression explicitly preserves
+that behavior. Primitive iterator/result diagnostics are covered too.

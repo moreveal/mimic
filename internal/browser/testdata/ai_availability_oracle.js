@@ -25,5 +25,14 @@
  const promptReads=[];await run('model-prompt-reads',()=>LanguageModel.create({initialPrompts:[new Proxy({role:'user',content:'x'},{get(t,k){promptReads.push(String(k));return t[k]}})]}));out.promptReads=promptReads;
  const seen=[];await run('options',()=>Summarizer.availability(new Proxy({},{get(t,k){seen.push(String(k));return undefined}})));out.optionReads=seen;
  await run('getterThrow',()=>Summarizer.availability({get type(){throw new Error('sentinel')}}));
+ const sentinel=new TypeError('author sentinel'),edge=async(name,make)=>{const log=[];try{await Summarizer.availability({expectedInputLanguages:make(log)});out[name]={ok:true,log}}catch(e){out[name]={same:e===sentinel,name:e.name,message:e.message,log}}};
+ await edge('iterator-get-throw',log=>({get [Symbol.iterator](){log.push('iterator');throw sentinel}}));
+ await edge('iterator-call-throw',log=>({[Symbol.iterator](){log.push('call');throw sentinel}}));
+ await edge('iterator-string-throw',log=>({[Symbol.iterator](){let n=0;return{next(){return n++?{done:true}:{value:{toString(){throw sentinel}},done:false}},return(){log.push('return');return{done:true}}}}}));
+ await edge('iterator-symbol-conversion',log=>({[Symbol.iterator](){let n=0;return{next(){return n++?{done:true}:{value:Symbol('x'),done:false}},return(){log.push('return');return{done:true}}}}}));
+ await edge('iterator-next-throw',log=>({[Symbol.iterator](){return{next(){throw sentinel},return(){log.push('return');return{done:true}}}}}));
+ await edge('iterator-primitive',log=>({[Symbol.iterator](){return 3}}));
+ await edge('iterator-step-primitive',log=>({[Symbol.iterator](){return{next(){return 3},return(){log.push('return');return{done:true}}}}}));
+ try{await LanguageModel.availability({temperature:{valueOf(){throw sentinel}}});out.numberAuthorException=false}catch(e){out.numberAuthorException=e===sentinel}
  return out;
 })()
