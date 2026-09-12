@@ -230,6 +230,9 @@ var screenFocusSurface string
 //go:embed css_colors.js
 var cssColorsSurface string
 
+//go:embed css_box_geometry.js
+var cssBoxGeometrySurface string
+
 //go:embed dom_matrix.js
 var domMatrixSurface string
 
@@ -322,6 +325,7 @@ func composeSurface(generated, exposureSource string) string {
 	base = strings.Replace(base, "/* shared_native_functions */", nativeFunctionsSurface, 1)
 	base = strings.Replace(base, "/* shared_base64 */", base64Surface, 1)
 	base = strings.Replace(base, "/* shared_webkit_css */", webkitCSSNamesSurface+webkitCSSSurface+cssShorthandsSurface+cssValueGrammarSurface+cssAnimationGrammarSurface+cssFontMetricsSurface, 1)
+	base = strings.Replace(base, "/* shared_css_box_geometry */", cssBoxGeometrySurface, 1)
 	base = strings.Replace(base, "/* shared_dom_matrix */", cssColorsSurface+domMatrixSurface, 1)
 	base = strings.Replace(base, "/* shared_intersection_observer */", intersectionObserverSurface, 1)
 	return strings.Replace(strings.Replace(base, marker, strings.Join(parts, "\n"), 1), "finalizeDocumentGetterBindings();finalizeSingletonGetterBindings();finalizeCallableBindings();", "finalizeDocumentGetterBindings();finalizeSingletonGetterBindings();finalizePerformanceBindings();finalizeCallableBindings();", 1)

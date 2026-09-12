@@ -166,6 +166,19 @@ const cssLonghandParsers=new Map([
  ['flex-direction',value=>{value=value.toLowerCase();return ['row','row-reverse','column','column-reverse'].includes(value)?value:null}],
  ['flex-wrap',value=>{value=value.toLowerCase();return ['nowrap','wrap','wrap-reverse'].includes(value)?value:null}]
 ]);
+const cssPhysicalSides=['top','right','bottom','left'];
+const cssBoxLength=(value,negative=false)=>{if(value==='auto'&&negative)return value;const term=cssLengthTerm(value);if(term)return term.number>=0||negative?cssSerializeNumber(term.number)+term.unit:null;return cssLengthValue(value)};
+const cssFourValues=(value,parser)=>{const tokens=cssValueTokens(value);if(!tokens||tokens.length<1||tokens.length>4)return null;const values=tokens.map(parser);if(values.includes(null))return null;return [values[0],values[1]??values[0],values[2]??values[0],values[3]??values[1]??values[0]]};
+const cssBorderImageReset=['border-image-source','border-image-slice','border-image-width','border-image-outset','border-image-repeat'];
+cssShorthandComponents.border=[...cssPhysicalSides.flatMap(side=>['width','style','color'].map(part=>'border-'+side+'-'+part)),...cssBorderImageReset];
+cssShorthandParsers.set('border',value=>{const triple=parseCSSBorder(value);return triple?[...cssPhysicalSides.flatMap(()=>triple),...['none','100%','1','0','stretch']]:null});
+for(const family of ['margin','padding']){
+ const parser=value=>cssBoxLength(value,family==='margin');cssShorthandComponents[family]=cssPhysicalSides.map(side=>family+'-'+side);cssShorthandParsers.set(family,value=>cssFourValues(value,parser));for(const name of cssShorthandComponents[family])cssLonghandParsers.set(name,parser);
+}
+for(const [part,parser] of [['width',cssBorderWidth],['style',value=>cssBorderStyles.has(value.toLowerCase())?value.toLowerCase():null],['color',cssColorValue]]){
+ cssShorthandComponents['border-'+part]=cssPhysicalSides.map(side=>'border-'+side+'-'+part);cssShorthandParsers.set('border-'+part,value=>cssFourValues(value,parser));for(const name of cssShorthandComponents['border-'+part])cssLonghandParsers.set(name,parser);
+}
+for(const side of cssPhysicalSides){cssShorthandComponents['border-'+side]=['width','style','color'].map(part=>'border-'+side+'-'+part);cssShorthandParsers.set('border-'+side,parseCSSBorder)}
 for(const name of ['border-block-start','border-block-end','border-inline-start','border-inline-end']){
  cssShorthandParsers.set(name,value=>parseCSSBorder(value));
  cssLonghandParsers.set(name+'-width',cssBorderWidth);cssLonghandParsers.set(name+'-style',value=>cssBorderStyles.has(value.toLowerCase())?value.toLowerCase():null);cssLonghandParsers.set(name+'-color',cssColorValue);
@@ -186,6 +199,9 @@ for(const name of cssShorthandComponents['border-radius'])cssLonghandParsers.set
 });
 cssLonghandParsers.set('text-emphasis-color',cssColorValue);
 const serializeOrdinaryCSSShorthand=(name,values)=>{
+ if(name==='border'){if(values.slice(0,12).some((v,i)=>v!==values[i%3])||values.slice(12).some((v,i)=>v!=='initial'&&v!==['none','100%','1','0','stretch'][i]))return '';return values.slice(0,3).filter(v=>v!=='initial').join(' ')}
+ if(['margin','padding','border-width','border-style','border-color'].includes(name))return values.some(v=>!v||cssWideValue(v))?'':cssCompressFour(values);
+ if(/^border-(top|right|bottom|left)$/.test(name))return values.some(v=>!v||cssWideValue(v)&&v!=='initial')?'':values.filter(v=>v!=='initial').join(' ');
  if(name==='font'){
   if(values.slice(2,14).some((v,i)=>v!==cssFontDefaults[i+2]))return '';
   const prefix=[0,1,14,15].map(i=>values[i]).filter(v=>v!=='normal');

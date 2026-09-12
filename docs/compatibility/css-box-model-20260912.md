@@ -1,0 +1,15 @@
+# Canonical CSS box observations
+
+This change closes the simple-flow geometry causes underlying the saved 045102 HPcn5 fixture. The previous Go rectangle host reparsed inline styles independently of the CSS cascade, and treated visibility:hidden as display:none. Its JS overlay could not recover line metrics, box edges, sibling collapse, table intrinsic sizing, or anonymous control lines consistently.
+
+The replacement is a transient graph over canonical DOM/CSS state within each style read. Dimensions, positions and text shapes are memoized only for that read. DOM bindings observe the same graph; no renderer, native graphics dependency or second retained geometry state is introduced. Internal reads use private DOM operations rather than author selector, textContent or parentElement hooks. Physical edge shorthands expand through existing declaration machinery; border resets border-image components.
+
+Supported controls include block and absolute flow, simple inline boxes and controls, margins/borders/padding, relative offsets, percentage widths, basic intrinsic tables/captions, disclosure markers, visibility/display and reconnect changes, and finite/saturated transform projection. Font metrics come from selected font resources (see frozen-font-profile-20260912.json). CSS lengths use the signed 26.6 LayoutUnit safe range; projected coordinates use float geometry saturation. These numeric boundaries are general browser representation limits, not payload values.
+
+Frozen evidence: testdata/css_box_geometry_oracle.js and css_box_geometry_chrome152.json retain a headful Chrome 152.0.7977.82 independent A/B observation, launch/source hashes and metadata. Both Chrome controls and Mimic agree exactly for 27 flow nodes plus lifecycle, hostile method access, disclosure sizes, large transforms and border reset. Raw captures remain in .build/residual-dom-delegated/box-final-controls. The autoRoot control also corrects the older unfrozen test assumption that an auto BODY fills the viewport: its height follows its content (65px in the explicit fixture).
+
+The private exact 045102 reconstruction using explicit Ubuntu isolates the selected host font profile: 38/40 coordinates agree exactly; two huge-scale coordinates differ by about 3e-5 CSS px from float arithmetic order. No captured coordinates or hashes enter the implementation.
+
+This is a bounded box model, not full layout. Flex/grid placement, complex table spans and border collapse, mixed bidi/line fragmentation, ancestor transform accumulation and perspective camera-plane clipping remain outside this increment. The actual API wrapper geometry field lgWCE7 still requires its own context replay; this report does not claim it closed. Computed-style inventory and typed transform calc serialization remain separate pending semantic work.
+
+Primary explanatory Chromium sources (current source, frozen behavior verified separately): third_party/blink/renderer/core/css/css_primitive_value.cc (CSS length clamp), core/layout/list/list_marker.cc (disclosure metrics), ui/gfx/geometry/clamp_float_geometry.h (projection bounds). Source snapshots are retained beside raw controls.

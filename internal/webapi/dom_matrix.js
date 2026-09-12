@@ -92,6 +92,10 @@ const DOMMatrix=(()=>{
  class DOMPoint extends DOMPointReadOnly {constructor(x=0,y=0,z=0,w=1){super(x,y,z,w)}}
  for(const [name,ctor]of [['DOMPointReadOnly',DOMPointReadOnly],['DOMPoint',DOMPoint]]){for(const [i,key]of ['x','y','z','w'].entries()){const d={get(){return pointSlot(this)[i]},enumerable:true,configurable:true};if(name==='DOMPoint')d.set=function(value){pointSlot(this)[i]=+value};Object.defineProperty(ctor.prototype,key,d)}for(const key of Object.getOwnPropertyNames(ctor.prototype)){if(key==='constructor')continue;const d=Object.getOwnPropertyDescriptor(ctor.prototype,key);Object.defineProperty(ctor.prototype,key,{...d,enumerable:true})}Object.defineProperty(ctor.prototype,Symbol.toStringTag,{value:name,configurable:true});Object.defineProperty(globalThis,name,{value:ctor,writable:true,configurable:true})}
  compatibilityMatrix.parse=(source,resolveLength)=>source==='none'?identity():parseTransforms(source,resolveLength).m;
+ // gfx::ClampFloatGeometry reserves exponent headroom for later operations;
+ // this belongs to client-coordinate projection, not DOMMatrix double algebra.
+ const geometryLimit=Math.fround((2-Math.pow(2,-23))*Math.pow(2,127)/1e6);
+ compatibilityMatrix.geometryCoordinate=value=>Number.isNaN(value)?0:Math.fround(Math.max(-geometryLimit,Math.min(geometryLimit,value)));
  compatibilityMatrix.point=(m,x,y,z=0,w=1)=>Array.from({length:4},(_,i)=>m[i]*x+m[4+i]*y+m[8+i]*z+m[12+i]*w);
  return DOMMatrix;
 })();
