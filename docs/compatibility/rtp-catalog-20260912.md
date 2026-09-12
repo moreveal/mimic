@@ -39,3 +39,10 @@ implementation; only the catalog projection is asserted here until the parent
 integrates its negotiation work. Codec availability is frozen profile policy,
 not a claim that Mimic performs hardware media encoding/decoding. No full suite,
 race gate or performance matrix was run.
+
+Direction follow-up: a second fresh A/B oracle captures audio/video offers for
+sendrecv, sendonly, recvonly, inactive, and legacy offerToReceive options.
+Only video recvonly/legacy selects the receiver codec order and its additional
+profiles. Preferred payload metadata now covers these receive-only codecs too.
+`host.rtpMedia(kind, direction)` accepts this direction (omission preserves
+sendrecv). `TestRTPDirectionSDPMatchesFrozenChrome` checks all ten projections.
