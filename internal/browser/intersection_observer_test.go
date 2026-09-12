@@ -11,9 +11,11 @@ import (
 	v8engine "github.com/moreveal/mimic/internal/engine/v8"
 )
 
-// The same fixture is also executed unchanged against frozen Chrome 152.
+// The original frozen fixture is retained. This independent successor corrects
+// its static-position assertion using the frozen geometry receipt; see
+// docs/compatibility/geometry-integration-20260912.md.
 //
-//go:embed testdata/intersection_observer_regressions.js
+//go:embed testdata/intersection_observer_regressions_v2.js
 var intersectionObserverRegressions string
 
 func TestIntersectionObserverInitialAndChangedObservations(t *testing.T) {
@@ -70,7 +72,9 @@ func TestUnchangedIntersectionSampleAvoidsGeometryWork(t *testing.T) {
 		if err := json.Unmarshal(data, &result); err != nil {
 			t.Fatal(err)
 		}
-		return result.Costs["host:rect"].Count
+		// Canonical JS geometry replaced host:rect. Eligibility is queried only
+		// when sampling boxes, so retain the same no-work/invalidation invariant.
+		return result.Costs["host:computedStyleAvailable"].Count
 	}
 	advance()
 	before := count()
