@@ -12,7 +12,10 @@ import (
 
 func TestFontCollectionsOracle(t *testing.T) {
 	for _, name := range []string{"loading", "collections", "descriptors", "constructor", "documents"} {
-		t.Run(name, func(t *testing.T) { fontOracle(t, name) })
+		t.Run(name, func(t *testing.T) {
+			parallelOracle(t)
+			fontOracle(t, name)
+		})
 	}
 }
 func fontOracle(t *testing.T, name string) {

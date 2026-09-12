@@ -33,11 +33,12 @@ func testPage(t *testing.T) *Page {
 	if err != nil {
 		t.Fatal(err)
 	}
-	p, err := b.NewContext().NewPage()
+	c := b.NewContext()
+	t.Cleanup(func() { _ = c.Close() })
+	p, err := c.NewPage()
 	if err != nil {
 		t.Fatal(err)
 	}
-	t.Cleanup(func() { _ = p.Close() })
 	return p
 }
 func TestRealmUsesSelectedCompatibilityBundleSurface(t *testing.T) {

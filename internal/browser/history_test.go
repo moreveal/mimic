@@ -23,11 +23,12 @@ func historyTestPages(t *testing.T, run func(*testing.T, *Page)) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			page, err := browser.NewContext().NewPage()
+			c := browser.NewContext()
+			t.Cleanup(func() { _ = c.Close() })
+			page, err := c.NewPage()
 			if err != nil {
 				t.Fatal(err)
 			}
-			t.Cleanup(func() { _ = page.Close() })
 			run(t, page)
 		})
 	}
