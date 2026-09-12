@@ -1529,8 +1529,9 @@ func TestOutOfFlowChildrenDoNotContributeToParentHeight(t *testing.T) {
 			t.Fatalf("unexpected %s child layout: %#v", position, box)
 		}
 	}
+	// Frozen receipt: css_geometry_integration_chrome152.json (inlineFrame).
 	static := result["static"].(map[string]any)
-	if numberValue(static["height"]) != 1 || numberValue(static["offsetHeight"]) != 1 || numberValue(static["childHeight"]) != 1 || static["childDisplay"] != "inline" || static["childPosition"] != "static" {
+	if numberValue(static["height"]) != 18 || numberValue(static["offsetHeight"]) != 18 || numberValue(static["childHeight"]) != 1 || static["childDisplay"] != "inline" || static["childPosition"] != "static" {
 		t.Fatalf("unexpected in-flow child layout: %#v", static)
 	}
 }
@@ -1566,7 +1567,8 @@ func TestComputedStyleAppliesGenericAuthorCascade(t *testing.T) {
 		t.Fatal(err)
 	}
 	result := v.(map[string]any)
-	if result["display"] != "flex" || result["transform"] != "translateX(2px)" || result["opacity"] != "0.8" || result["visibility"] != "visible" || result["boxSizing"] != "border-box" {
+	// Frozen receipt: css_geometry_integration_chrome152.json (computedTransform).
+	if result["display"] != "flex" || result["transform"] != "matrix(1, 0, 0, 1, 2, 0)" || result["opacity"] != "0.8" || result["visibility"] != "visible" || result["boxSizing"] != "border-box" {
 		t.Fatalf("unexpected author cascade: %#v", result)
 	}
 }

@@ -111,6 +111,7 @@ const cssBoxModel=(()=>{
   const minimum=s.length(s.get('min-width'),basis),maximum=s.length(s.get('max-width'),basis);
   if(minimum!==null)value=Math.max(value,minimum+(borderBox?0:extra));if(maximum!==null)value=Math.min(value,maximum+(borderBox?0:extra));cache.set(element,value);return value;
  };
+ const positionedContainer=element=>{if(state(element).position==='fixed')return null;for(let p=geometryParent(element);p;p=geometryParent(p))if(state(p).position!=='static')return p;return null};
  const size=element=>{
   const cache=styleReadCache.boxSizes||(styleReadCache.boxSizes=new WeakMap());
   for(let parent=geometryParent(element);parent;parent=geometryParent(parent))if(state(parent).display==='table'){if(!cache.has(parent))size(parent);break}
@@ -119,7 +120,10 @@ const cssBoxModel=(()=>{
   if(!['absolute','fixed'].includes(s.position)&&!['inline','inline-block'].includes(s.display)){const left=s.get('margin-left')==='auto',right=s.get('margin-right')==='auto',free=Math.max(0,basis-value.width-e.mleft-e.mright);if(left)e.mleft=free/(right?2:1);if(right)e.mright=free/(left?2:1)}
   if(!rendered(element)||!computedStyleDocumentAvailable(element)||!computedStyleAvailable(element)){value.width=0;return value;}
   if(s.display==='table')return tableSize(element,value);
-  const parent=geometryParent(element),rawHeight=s.get('height'),height=rawHeight?.endsWith('%')&&!definiteGeometryHeight(parent)?null:s.length(rawHeight,rawHeight?.endsWith('%')&&parent?size(parent).height:0);
+  const parent=geometryParent(element),rawHeight=s.get('height');let height=rawHeight?.endsWith('%')&&!definiteGeometryHeight(parent)?null:s.length(rawHeight,rawHeight?.endsWith('%')&&parent?size(parent).height:0);
+  // Opposing insets stretch an auto-sized non-replaced absolute box in its
+  // containing padding box. Querying it first must also complete parent flow.
+  if(height===null&&['absolute','fixed'].includes(s.position)&&!replacedGeometryTags.has(tag(element))){const container=positionedContainer(element),cb=container?size(container):null,basis=cb?cb.height-cb.edges.btop-cb.edges.bbottom:host.viewport().height,top=s.length(s.get('top'),basis),bottom=s.length(s.get('bottom'),basis);if(top!==null&&bottom!==null)height=Math.max(0,basis-top-bottom-e.mtop-e.mbottom-(s.get('box-sizing')==='border-box'?0:e.ptop+e.pbottom+e.btop+e.bbottom))}
   value.height=height===null?0:height+(s.get('box-sizing')==='border-box'?0:e.ptop+e.pbottom+e.btop+e.bbottom);
   const own=controlSize(element);if(own){value.height=height===null?own.height:value.height;return value}
   const text=textOf(element),font=textInfo(element,text),contentWidth=Math.max(0,value.width-e.pleft-e.pright-e.bleft-e.bright);
@@ -151,7 +155,7 @@ const cssBoxModel=(()=>{
   const local=parentBox?.positions.get(element)||{x:0,y:0};
   value.x=parentRect.x+(parentBox?parentBox.edges.bleft+parentBox.edges.pleft:0)+local.x;value.y=parentRect.y+(parentBox?parentBox.edges.btop+parentBox.edges.ptop:0)+local.y;
   if(['absolute','fixed'].includes(s.position)){
-   let ancestor=null;if(s.position!=='fixed')for(let p=parent;p;p=geometryParent(p))if(state(p).position!=='static'){ancestor=p;break}
+   const ancestor=positionedContainer(element);
    const r=ancestor?rect(ancestor):{x:0,y:0,...host.viewport()},a=ancestor?size(ancestor).edges:{bleft:0,btop:0};
    const left=s.length(s.get('left'),r.width),right=s.length(s.get('right'),r.width),top=s.length(s.get('top'),r.height),bottom=s.length(s.get('bottom'),r.height);
    if(left!==null)value.x=r.x+a.bleft+left;else if(right!==null)value.x=r.x+r.width-right-value.width;
@@ -160,7 +164,13 @@ const cssBoxModel=(()=>{
   }else if(s.position==='relative'){
    const left=s.length(s.get('left'),parentRect.width),right=s.length(s.get('right'),parentRect.width),top=s.length(s.get('top'),parentRect.height),bottom=s.length(s.get('bottom'),parentRect.height);value.x+=left??-(right||0);value.y+=top??-(bottom||0);
   }
-  value.left=value.x;value.top=value.y;value.right=value.x+value.width;value.bottom=value.y+value.height;value.offsetLeft=value.x-parentRect.x;value.offsetTop=value.y-parentRect.y;return value;
+  value.left=value.x;value.top=value.y;value.right=value.x+value.width;value.bottom=value.y+value.height;
+  // Offset coordinates use the offset parent's padding edge, not the DOM
+  // parent's box. A static BODY denotes the initial containing block.
+  let offsetParent=null;if(s.position!=='fixed')for(let p=parent;p;p=geometryParent(p))if(state(p).position!=='static'||['BODY','TD','TH','TABLE'].includes(tag(p))){offsetParent=p;break}
+  const origin=offsetParent&&!(tag(offsetParent)==='BODY'&&state(offsetParent).position==='static')?rect(offsetParent):null,oe=origin?size(offsetParent).edges:null;
+  value.clientWidth=Math.max(0,value.width-box.edges.bleft-box.edges.bright);value.clientHeight=Math.max(0,value.height-box.edges.btop-box.edges.bbottom);
+  value.offsetLeft=value.x-(origin?origin.x+oe.bleft:0);value.offsetTop=value.y-(origin?origin.y+oe.btop:0);return value;
  };
  const hasBox=element=>withStyleReadCache(()=>foreignCSSObservation(element,'box')??(computedStyleDocumentAvailable(element)&&computedStyleAvailable(element)&&rendered(element)));
  return {width,rect,state,size,hasBox};
