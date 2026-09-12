@@ -20,3 +20,19 @@ Validation: TestInputInternalsDoNotReenterAuthorSelectors,
 TestDefaultControlGeometryMatchesChrome152, TestProtocolKeyboardAndTextMatchChrome152.
 
 CSS serialization/inventory and geometry remain under investigation separately.
+
+## CSS rule serialization
+
+Shared specified-value transform serialization now emits comma separators and
+uses the existing simple CSS length calculation reducer; `var`/`env` token streams
+remain unmodified. The same serializer feeds inline declarations and stylesheet
+rules. Keyframes retain their distinct newline grammar, including empty blocks,
+and canonicalize `from`/`to` selectors. Media feature ranges serialize their AST
+comparison operators with required spacing; grouping rules keep their own format.
+
+Independent frozen controls cover 5 rule families and 11 transform values,
+including matrices, scale/translate/rotate3d/skew, multiple transforms, calc and
+unresolved substitution. Zero Chrome A/B and Chrome/Mimic differences. The retained
+synthetic oracle runs ordinary/restored; raw captures are in
+`.build/residual-dom-delegated/css-controls`. This does not claim a complete CSS
+math expression parser or all keyframe editing interfaces.
