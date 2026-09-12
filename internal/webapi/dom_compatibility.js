@@ -366,6 +366,10 @@ const compatibilityElementState={};
     compatibilityElementState.hasModal=()=>modalDialogs.size!==0;
     compatibilityElementState.modal=node=>modalDialogs.has(node)&&node.isConnected;
     compatibilityElementState.detached=node=>modalDialogs.delete(node);
+    if(globalThis.HTMLDetailsElement){
+      const node=value=>{const data=elementSlot(value);if(data?.tagName!=='DETAILS')throw new TypeError('Illegal invocation');return data.nodeId};
+      Object.defineProperty(HTMLDetailsElement.prototype,'open',{get(){return host.getAttribute(node(this),'open')!==null},set(value){const id=node(this),old=host.getAttribute(id,'open');if(value)host.setAttribute(id,'open','');else host.removeAttribute(id,'open');if(value||old!==null)attributeChanged(this,'open',old)},enumerable:true,configurable:true});
+    }
     if(globalThis.HTMLDialogElement){
       const proto=HTMLDialogElement.prototype;
       const dialog=node=>{if(!(node instanceof HTMLDialogElement))throw new TypeError('Illegal invocation');return node};

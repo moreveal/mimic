@@ -35,11 +35,8 @@ const cssBoxModel=(()=>{
  };
  const children=element=>{const root=elementShadows.get(element)||element,data=elementSlot(root);return data?host.nodeChildren(data.nodeId).map(wrap):Array.from(fragmentState(root).children)};
  const rendered=element=>{
-  let branch=element;
-  for(let parent=element;parent;branch=parent,parent=geometryParent(parent)){
-   if(state(parent).display==='none')return false;
-   if(parent!==element&&tag(parent)==='DETAILS'&&host.getAttribute(elementSlot(parent).nodeId,'open')===null&&children(parent).find(n=>tag(n)==='SUMMARY')!==branch)return false;
-  }return true;
+  for(let parent=element;parent;parent=geometryParent(parent))if(state(parent).display==='none')return false;
+  return true;
  };
  const textInfo=(element,text)=>{
   const s=state(element),family=s.inherited('font-family')||'"Times New Roman"',weight=Number(s.inherited('font-weight'))|| (tag(element)==='TH'?700:400),italic=s.inherited('font-style')==='italic';
@@ -138,7 +135,11 @@ const cssBoxModel=(()=>{
    if(isInline){const w=box.width+ce.mleft+ce.mright;if(lineWidth&&lineWidth+w>contentWidth)flush();lineHeight=Math.max(lineHeight,font.height,box.height+ce.mtop+ce.mbottom);value.positions.set(child,{x:lineWidth+ce.mleft,y:cursor+ce.mtop});line.push(child);lineWidth+=w;continue}
    flush();if(box.height===0&&ce.btop===0&&ce.bbottom===0&&ce.ptop===0&&ce.pbottom===0){adjoiningMargins.push(ce.mtop,ce.mbottom);value.positions.set(child,{x:ce.mleft,y:cursor+collapsedMargin([])});continue}cursor+=collapsedMargin([ce.mtop]);adjoiningMargins=[];value.positions.set(child,{x:ce.mleft,y:cursor});cursor+=box.height;margin=ce.mbottom;
   }
-  flush();cursor+=collapsedMargin([])+generated('after');value.contentHeight=cursor;
+  flush();cursor+=collapsedMargin([])+generated('after');
+  // Closed disclosure content still has queryable boxes. Only the summary
+  // contributes to the disclosure's visible normal-flow height.
+  if(tag(element)==='DETAILS'&&host.getAttribute(elementSlot(element).nodeId,'open')===null){const summary=children(element).find(node=>tag(node)==='SUMMARY');if(summary){const box=size(summary);cursor=(value.positions.get(summary)?.y||0)+box.height+box.edges.mbottom}}
+  value.contentHeight=cursor;
   value.height=(height===null?cursor:height)+(s.get('box-sizing')==='border-box'&&height!==null?0:e.ptop+e.pbottom+e.btop+e.bbottom);
   const min=s.length(s.get('min-height')),max=s.length(s.get('max-height'));if(min!==null)value.height=Math.max(value.height,min);if(max!==null)value.height=Math.min(value.height,max);return value;
  };
@@ -161,5 +162,6 @@ const cssBoxModel=(()=>{
   }
   value.left=value.x;value.top=value.y;value.right=value.x+value.width;value.bottom=value.y+value.height;value.offsetLeft=value.x-parentRect.x;value.offsetTop=value.y-parentRect.y;return value;
  };
- return {width,rect,state,size};
+ const hasBox=element=>withStyleReadCache(()=>foreignCSSObservation(element,'box')??(computedStyleDocumentAvailable(element)&&computedStyleAvailable(element)&&rendered(element)));
+ return {width,rect,state,size,hasBox};
 })();
