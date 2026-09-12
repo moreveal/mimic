@@ -170,12 +170,21 @@ func numberParameter(value any) (float64, bool) {
 }
 
 func (r *Realm) invokeInputWorld(ctx context.Context, target *Realm, nodeID int64, operation, payload string) (string, error) {
-	if target.inputDispatcher == nil || target.closed || target.inactive {
+	if target.closed || target.inactive {
 		return "", fmt.Errorf("input dispatcher is unavailable")
 	}
 	var result string
 	invoke := func(ctx context.Context) error {
+		// An isolated world can observe CSS/input before the main world runs JS.
+		if deferred, ok := target.runtime.(*deferredRuntime); ok {
+			if _, err := deferred.ready(); err != nil {
+				return err
+			}
+		}
 		return target.runOnOwner(ctx, func(ctx context.Context) error {
+			if target.inputDispatcher == nil {
+				return fmt.Errorf("input dispatcher is unavailable")
+			}
 			values := []engine.Value{target.val(nodeID), target.val(operation), target.val(payload)}
 			for _, value := range values {
 				defer releaseDebuggerValue(target, value)

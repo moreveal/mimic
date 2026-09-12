@@ -174,9 +174,9 @@
   };
   let pointTargetVersion=null;
   const pointObservationVersion=()=>host.observationVersion()+':'+(constructedStyleSheets.revision?.()||0)+':'+compatibilityElementState.observationVersion();
-  const pointTarget=(x,y)=>withStyleReadCache(()=>{
-    const version=pointObservationVersion();
-    if(pointerTarget?.isConnected&&x===pointerX&&y===pointerY&&version===pointTargetVersion)return pointerTarget;
+  const pointTargets=(x,y)=>withStyleReadCache(()=>{
+    const viewport=host.viewport();
+    if(!Number.isFinite(x)||!Number.isFinite(y)||x<0||y<0||x>=viewport.width||y>=viewport.height)return [];
     const elements=compatibilitySelectors.query(document,'*'),orders=new WeakMap(elements.map((e,i)=>[e,i])),scopes=new WeakMap();
     // z-index belongs to a stacking context, not an isolated element. Children
     // paint above their context's background; a high-z descendant cannot escape
@@ -190,16 +190,30 @@
       const rank=context?path:path.concat([[0,group===null?0:1,group??order,order]]),result={path,group,rank};scopes.set(element,result);return result;
     };
     const above=(a,b)=>{if(!b)return true;for(let i=0;i<Math.min(a.length,b.length);i++)for(let j=0;j<4;j++)if(a[i][j]!==b[i][j])return a[i][j]>b[i][j];return a.length>=b.length};
-    let selected=null,rank=null;
+    const hits=[];
     for(const element of elements){
       const entries=computedCSSDeclarations(element),get=name=>entries.find(e=>e.name===name)?.value;
       if(get('visibility')==='hidden'||get('pointer-events')==='none')continue;
       const box=layoutRectFor(element);if(box.width<=0||box.height<=0||x<box.left||x>=box.right||y<box.top||y>=box.bottom)continue;
-      const candidate=scope(element).rank;if(above(candidate,rank)){selected=element;rank=candidate}
+      hits.push(element);
     }
-    pointTargetVersion=version;
-    return selected||document.body||document.documentElement;
+    hits.sort((a,b)=>a===b?0:above(scope(a).rank,scope(b).rank)?-1:1);
+    const root=document.documentElement;if(root&&!hits.includes(root))hits.push(root);
+    return hits;
   });
+  const pointTarget=(x,y)=>{
+    const version=pointObservationVersion();
+    if(pointerTarget?.isConnected&&x===pointerX&&y===pointerY&&version===pointTargetVersion)return pointerTarget;
+    const target=pointTargets(x,y)[0];pointTargetVersion=version;
+    return target||document.body||document.documentElement;
+  };
+  for(const [name,all] of [['elementFromPoint',false],['elementsFromPoint',true]]){
+    Object.defineProperty(Document.prototype,name,{value:function(x,y){
+      if(this!==document)throw new TypeError('Illegal invocation');
+      if(arguments.length<2)throw new TypeError('Not enough arguments');
+      const hits=pointTargets(Number(x),Number(y));return all?hits:hits[0]||null;
+    },writable:true,enumerable:true,configurable:true});
+  }
   let pointerTarget=null,pointerX=0,pointerY=0,mouseButtons=0;
   const pressed=new Map(),buttons={none:-1,left:0,middle:1,right:2,back:3,forward:4},buttonMasks={left:1,middle:4,right:2,back:8,forward:16};
   const click=(target,init,trusted=true)=>{
