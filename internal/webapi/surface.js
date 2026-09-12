@@ -843,42 +843,7 @@
   }
   Object.defineProperty(loc,Symbol.toPrimitive,{value:undefined});
 
-  const consoleString=String,consoleParseInt=parseInt,consoleParseFloat=parseFloat;
-  const consoleArguments=args=>{
-    args=args.slice();
-    if(args.length>1&&typeof args[0]==='string'){
-      const format=args[0];let argument=1;
-      for(let index=0;index<format.length-1&&argument<args.length;index++){
-        if(format[index]!=='%')continue;
-        const specifier=format[++index];
-        if(specifier!=='s'&&specifier!=='d'&&specifier!=='i'&&specifier!=='f'&&specifier!=='o'&&specifier!=='O'&&specifier!=='c')continue;
-        const value=args[argument];
-        if(specifier==='s')args[argument]=consoleString(value);
-        else if(specifier==='d'||specifier==='i'||specifier==='f')args[argument]=typeof value==='symbol'?NaN:(specifier==='f'?consoleParseFloat(value):consoleParseInt(value));
-        argument++;
-      }
-    }
-    // Trace diagnostics are strings, not remote-object inspection handles.
-    // Never traverse or stringify application objects merely to log them.
-    for(let index=0;index<args.length;index++){const value=args[index];args[index]=value!==null&&typeof value==='object'?'[object]':typeof value==='function'?'[function]':consoleString(value)}
-    return args;
-  };
-  class Console { group(...a){host.console('startGroup',a.length?consoleArguments(a):['console.group'],a)} groupCollapsed(...a){host.console('startGroupCollapsed',a.length?consoleArguments(a):['console.groupCollapsed'],a)} groupEnd(...a){host.console('endGroup',a.length?consoleArguments(a):['console.groupEnd'],a)} debug(...a){host.console('debug',consoleArguments(a),a)} log(...a){host.console('log',consoleArguments(a),a)} info(...a){host.console('info',consoleArguments(a),a)} warn(...a){host.console('warn',consoleArguments(a),a)} error(...a){host.console('error',consoleArguments(a),a)} }
-  const consoleCounts=new Map();
-  const consoleCountGet=Function.prototype.call.bind(Map.prototype.get),consoleCountSet=Function.prototype.call.bind(Map.prototype.set),consoleCountDelete=Function.prototype.call.bind(Map.prototype.delete);
-  const consoleCount=(label,reset)=>{
-    let key='default',failure,failed=false;
-    try{if(label!==undefined){if(typeof label==='symbol')throw new TypeError('Cannot convert a Symbol value to a string');key=consoleString(label)}}catch(error){failure=error;failed=true}
-    // Chrome applies the operation to the default label even if conversion
-    // fails, then propagates the original exception.
-    if(reset){if(!consoleCountDelete(consoleCounts,key))host.console('warning',["Count for '"+key+"' does not exist"])}
-    else{const count=(consoleCountGet(consoleCounts,key)||0)+1;consoleCountSet(consoleCounts,key,count);host.console('count',[key+': '+count])}
-    if(failed)throw failure;
-  };
-  Object.defineProperties(Console.prototype,{
-    count:{value:function count(label=undefined){consoleCount(label,false)},writable:true,configurable:true},
-    countReset:{value:function countReset(label=undefined){consoleCount(label,true)},writable:true,configurable:true}
-  });
+  /* shared_console */
   const document=observe('Document',new HTMLDocument(hostToken));
   const documentLocationDescriptor=Object.getOwnPropertyDescriptor({
     get location(){return documentLocation(this)},
@@ -1152,7 +1117,7 @@
   globalThis.Option=function Option(text='',value,defaultSelected=false,selected=false){const element=document.createElement('option');element.text=String(text);if(value!==undefined)element.value=String(value);element.defaultSelected=Boolean(defaultSelected);element.selected=Boolean(selected);return element};
   Object.defineProperty(globalThis,'FormData',{value:FormData,writable:true,configurable:true});
   installFileReader();
-  const window=globalThis;window.addEventListener=(...a)=>EventTarget.prototype.addEventListener.apply(window,a);window.removeEventListener=(...a)=>EventTarget.prototype.removeEventListener.apply(window,a);window.dispatchEvent=(...a)=>EventTarget.prototype.dispatchEvent.apply(window,a);window.onmessage=null;window.onerror=null;const NodeFilter={NodeFilter(){throw new TypeError('Illegal constructor')}}.NodeFilter;for(const [name,value] of Object.entries({FILTER_ACCEPT:1,FILTER_REJECT:2,FILTER_SKIP:3,SHOW_ALL:0xffffffff,SHOW_ELEMENT:1,SHOW_ATTRIBUTE:2,SHOW_TEXT:4,SHOW_CDATA_SECTION:8,SHOW_ENTITY_REFERENCE:16,SHOW_ENTITY:32,SHOW_PROCESSING_INSTRUCTION:64,SHOW_COMMENT:128,SHOW_DOCUMENT:256,SHOW_DOCUMENT_TYPE:512,SHOW_DOCUMENT_FRAGMENT:1024,SHOW_NOTATION:2048}))Object.defineProperty(NodeFilter,name,{value,enumerable:true});Object.assign(window,{window:null,self:null,top:null,parent:null,document,navigator:nav,screen:scr,location:loc,history:hist,localStorage:storage,sessionStorage,crypto,trustedTypes,console:new Console(),atob,btoa,TextEncoder,Headers,Request,Response,Event,MessageEvent,ErrorEvent,EventTarget,Node,DocumentFragment,ShadowRoot,Element,HTMLElement,SVGElement,HTMLScriptElement,HTMLImageElement,HTMLMediaElement,HTMLAudioElement,HTMLVideoElement,HTMLIFrameElement,HTMLAnchorElement,HTMLCollection,NodeList,DOMTokenList,CSSStyleDeclaration,Crypto,DOMException,PermissionsPolicy,FeaturePolicy,TrustedHTML,TrustedScript,TrustedScriptURL,TrustedTypePolicy,TrustedTypePolicyFactory,URL,URLSearchParams,ReadableStream,ReadableStreamDefaultReader,ReadableStreamDefaultController,WritableStream,WritableStreamDefaultWriter,TransformStream,TransformStreamDefaultController,Blob,File,FileReader,Worker,Document,HTMLDocument,Navigator,NavigatorUAData,Screen,Location,History,Storage,XMLHttpRequestEventTarget,XMLHttpRequest,GPU,GPUAdapter,GPUAdapterInfo,GPUSupportedFeatures,GPUSupportedLimits,GPUDevice,RTCPeerConnection,RTCSessionDescription,RTCIceCandidate,PerformanceEntry,PerformanceServerTiming,PerformanceResourceTiming,PerformanceNavigationTiming,NodeFilter});let security=host.documentSecurity();for(const [name,key] of Object.entries({isSecureContext:'secureContext',crossOriginIsolated:'crossOriginIsolated',credentialless:'credentialless',originAgentCluster:'originAgentCluster'}))Object.defineProperty(window,name,{get:()=>security[key],enumerable:true,configurable:true});let windowRelations=host.windowRelations();window.window=window;window.self=window;let windowTop,windowParent;
+  const window=globalThis;window.addEventListener=(...a)=>EventTarget.prototype.addEventListener.apply(window,a);window.removeEventListener=(...a)=>EventTarget.prototype.removeEventListener.apply(window,a);window.dispatchEvent=(...a)=>EventTarget.prototype.dispatchEvent.apply(window,a);window.onmessage=null;window.onerror=null;const NodeFilter={NodeFilter(){throw new TypeError('Illegal constructor')}}.NodeFilter;for(const [name,value] of Object.entries({FILTER_ACCEPT:1,FILTER_REJECT:2,FILTER_SKIP:3,SHOW_ALL:0xffffffff,SHOW_ELEMENT:1,SHOW_ATTRIBUTE:2,SHOW_TEXT:4,SHOW_CDATA_SECTION:8,SHOW_ENTITY_REFERENCE:16,SHOW_ENTITY:32,SHOW_PROCESSING_INSTRUCTION:64,SHOW_COMMENT:128,SHOW_DOCUMENT:256,SHOW_DOCUMENT_TYPE:512,SHOW_DOCUMENT_FRAGMENT:1024,SHOW_NOTATION:2048}))Object.defineProperty(NodeFilter,name,{value,enumerable:true});Object.assign(window,{window:null,self:null,top:null,parent:null,document,navigator:nav,screen:scr,location:loc,history:hist,localStorage:storage,sessionStorage,crypto,trustedTypes,console:consoleObject,atob,btoa,TextEncoder,Headers,Request,Response,Event,MessageEvent,ErrorEvent,EventTarget,Node,DocumentFragment,ShadowRoot,Element,HTMLElement,SVGElement,HTMLScriptElement,HTMLImageElement,HTMLMediaElement,HTMLAudioElement,HTMLVideoElement,HTMLIFrameElement,HTMLAnchorElement,HTMLCollection,NodeList,DOMTokenList,CSSStyleDeclaration,Crypto,DOMException,PermissionsPolicy,FeaturePolicy,TrustedHTML,TrustedScript,TrustedScriptURL,TrustedTypePolicy,TrustedTypePolicyFactory,URL,URLSearchParams,ReadableStream,ReadableStreamDefaultReader,ReadableStreamDefaultController,WritableStream,WritableStreamDefaultWriter,TransformStream,TransformStreamDefaultController,Blob,File,FileReader,Worker,Document,HTMLDocument,Navigator,NavigatorUAData,Screen,Location,History,Storage,XMLHttpRequestEventTarget,XMLHttpRequest,GPU,GPUAdapter,GPUAdapterInfo,GPUSupportedFeatures,GPUSupportedLimits,GPUDevice,RTCPeerConnection,RTCSessionDescription,RTCIceCandidate,PerformanceEntry,PerformanceServerTiming,PerformanceResourceTiming,PerformanceNavigationTiming,NodeFilter});let security=host.documentSecurity();for(const [name,key] of Object.entries({isSecureContext:'secureContext',crossOriginIsolated:'crossOriginIsolated',credentialless:'credentialless',originAgentCluster:'originAgentCluster'}))Object.defineProperty(window,name,{get:()=>security[key],enumerable:true,configurable:true});let windowRelations=host.windowRelations();window.window=window;window.self=window;let windowTop,windowParent;
   // Top stays an unforgeable accessor after exposure normalization. Parent is
   // replaceable: assignment creates an own data property, as in Chrome.
   let installedWindowFrameCount=0;
@@ -1543,7 +1508,7 @@
       markNative(descriptor&&descriptor.set,String(member),'set ');
     }
   };
-  markMembers(Console.prototype);
+
   // Window operations have no interface prototype; unlike constructors they
   // must reject [[Construct]] and expose no own prototype property.
   for(const name of ['setTimeout','setInterval','clearTimeout','clearInterval','fetch','atob','btoa','getComputedStyle','matchMedia']){

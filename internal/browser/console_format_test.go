@@ -8,7 +8,7 @@ import (
 	"github.com/moreveal/mimic/internal/trace"
 )
 
-func TestConsoleFormattingOnlyCoercesRequestedArguments(t *testing.T) {
+func TestConsoleFormattingPreservesObjectArguments(t *testing.T) {
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		value, err := p.Evaluate(context.Background(), `(()=>{
  let effects=[];const value={toString(){effects.push('string');return '12.75'},valueOf(){effects.push('value');return 99}},proxy=new Proxy({},{get(){throw Error('proxy read')}});
@@ -40,7 +40,7 @@ func TestConsoleFormattingOnlyCoercesRequestedArguments(t *testing.T) {
 			args := fmt.Sprint(event.Data["args"])
 			found[args] = true
 		}
-		for _, want := range []string{"[[object] [object] [function] null Symbol(token)]", "[numeric %s %d %i %f 12.75 12 12 12.75]", "[symbols %s %d %i %f Symbol(token) NaN NaN NaN]", "[intrinsics %d 19]"} {
+		for _, want := range []string{"[[object] [object] function(){} null Symbol(token)]", "[numeric %s %d %i %f 12.75 12 12 12.75]", "[symbols %s %d %i %f Symbol(token) NaN NaN NaN]", "[intrinsics %d 19]"} {
 			if !found[want] {
 				t.Errorf("missing trace args %s; got %v", want, found)
 			}

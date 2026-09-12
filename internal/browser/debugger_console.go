@@ -8,7 +8,7 @@ import (
 
 func (r *Realm) debuggerConsole(name string, values engine.Value) {
 	for debugger := range r.agent.Page().debuggers {
-		if debugger.Console == nil {
+		if debugger.Console == nil || (debugger.ConsoleEnabled != nil && !debugger.ConsoleEnabled()) {
 			continue
 		}
 		state, err := debugger.state(context.Background(), r.agent.ContextID(), r.ID)

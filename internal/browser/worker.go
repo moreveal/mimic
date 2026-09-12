@@ -158,6 +158,11 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 	})
 	host := map[string]any{}
 	installStructuredCloneHost(host, runtime)
+	installConsoleKind(host, runtime)
+	host["console"] = runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		p.trace.Add(trace.Console, strarg(args, 0), map[string]any{"args": arg(args, 1), "worker": w.id})
+		return nil, nil
+	})
 	installExceptionDescription(host, runtime)
 	host["reportUnhandledException"] = runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		return nil, w.reportError(fmt.Errorf("%s", strarg(args, 0)))

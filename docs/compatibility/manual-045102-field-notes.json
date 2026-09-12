@@ -9,7 +9,7 @@
   },
   "SbVZ3": {
     "status": "localized",
-    "review": "90/62: missing four console methods replace 8 tokens with2 each (-24); console log toString observations produce four additional Chrome tokens (-4). Error name/message accessor observation otherwise same. Console custom-toString observations are Runtime.enable inspector-conditioned; ordinary unattached page behavior is not established."
+    "review": "90/62: missing four console methods replace 8 tokens with2 each (-24); console log toString observations produce four additional Chrome tokens (-4). Error name/message accessor observation otherwise same. Subsequent independent no-CDP Chrome A/B confirms ordinary console message-text ToString effects; Runtime.enable additionally inspects Error.name. See console-family-2026-09-12.md."
   },
   "OjmeV1": {
     "status": "localized",
