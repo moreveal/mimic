@@ -278,6 +278,7 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 		})
 		return promise.Value, nil
 	})
+	installTextureDecoder(host, runtime)
 	host["graphics"] = runtime.Function(func(engine.Value, []engine.Value) (engine.Value, error) {
 		g := p.Environment().Graphics
 		return runtime.Value(map[string]any{"vendor": g.Vendor, "renderer": g.Renderer, "maxTextureSize": g.MaxTextureSize, "capabilitiesJSON": g.WebGLCapabilities()}), nil

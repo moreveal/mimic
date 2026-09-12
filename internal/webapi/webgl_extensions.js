@@ -41,7 +41,7 @@ const restoreState=s=>{
  s.color=[0,0,0,0];s.mask=[true,true,true,true];s.viewport=[0,0,s.dim.width,s.dim.height];s.scissor=s.viewport.slice();s.pack=4;
  s.depthClear=1;s.stencilClear=0;s.depthMask=true;s.depthValue=1;s.stencilValue=0;s.stencilMaskFront=s.stencilMaskBack=4294967295;s.derivativeHint=s.mipmapHint=4352;
  for(const key of s.enabled.keys())s.enabled.set(key,key===3024);
- s.pixels=null;s.samplePixels=null;s.drawCommands=[];s.activeQueries?.clear();s.pendingQueries?.clear();s.drawingBufferColorSpace=s.unpackColorSpace='srgb';
+ s.textureUnits?.clear();s.activeTexture=0;s.unpackAlignment=4;s.pixels=null;s.samplePixels=null;s.drawCommands=[];s.activeQueries?.clear();s.pendingQueries?.clear();s.drawingBufferColorSpace=s.unpackColorSpace='srgb';
 };
 extension('WEBGL_lose_context','WebGLLoseContext',{}, {
  loseContext:{length:0,call:s=>{if(s.lost){s.error=1282;return}s.lost=true;s.error=37442;s.generation=(s.generation||0)+1;s.restoreAllowed=false;for(const q of s.pendingQueries||[])q.pending=false;setTimeout(()=>{const event=new Event('webglcontextlost',{cancelable:true});Object.defineProperty(event,'statusMessage',{value:'',enumerable:true});s.canvas.dispatchEvent(event);s.restoreAllowed=event.defaultPrevented},0)}},
@@ -49,3 +49,4 @@ extension('WEBGL_lose_context','WebGLLoseContext',{}, {
 });
 
 
+extension('WEBGL_debug_shaders','WebGLDebugShaders',{}, {getTranslatedShaderSource:{length:1,call:(s,value)=>{const shader=resource(s,value,'WebGLShader');if(!shader)return '';return shader.compiled&&shader.evaluation?JSON.stringify(shader.evaluation,(key,value)=>value instanceof Set?[...value]:value):''}}});

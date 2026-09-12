@@ -38,7 +38,7 @@
       if(kind==='webgl2')method('getInternalformatParameter',(s,target,format,pname)=>{target=Number(target)>>>0;format=Number(format)>>>0;pname=Number(pname)>>>0;if(target!==36161||pname!==32937){error(s,1280);return null}let values=profile.samples[format];if(values===undefined&&(s.extensions.has('EXT_color_buffer_float')||s.extensions.has('EXT_color_buffer_half_float')&&[33325,33327,34842].includes(format)))values=profile.floatSamples[format];if(values===undefined){error(s,1280);return null}return new Int32Array(values)});
       method('getShaderPrecisionFormat',(s,shader,precision)=>{const data=profile.precision?.[(Number(shader)>>>0)+','+(Number(precision)>>>0)];if(!data){error(s,1280);return null}const value=Object.create(WebGLShaderPrecisionFormat.prototype);precisionFormats.set(value,{...data});return value});
       method('getParameter',(s,p)=>{
-        p=Number(p)>>>0;if(p===36006)return s.drawFramebuffer||null;if(p===36010&&kind==='webgl2')return s.readFramebuffer||null;if(p===36007)return s.renderbuffer||null;if(p===35725)return s.program||null;if(p===34964)return s.bindings.get(34962)||null;if(p===34965)return s.bindings.get(34963)||null;
+        p=Number(p)>>>0;if(p===34016)return 33984+(s.activeTexture||0);if([32873,34068,32874,35869].includes(p))return textureUnit(s).get({32873:3553,34068:34067,32874:32879,35869:35866}[p])||null;if(p===3317)return s.unpackAlignment||4;if(p===36006)return s.drawFramebuffer||null;if(p===36010&&kind==='webgl2')return s.readFramebuffer||null;if(p===36007)return s.renderbuffer||null;if(p===35725)return s.program||null;if(p===34964)return s.bindings.get(34962)||null;if(p===34965)return s.bindings.get(34963)||null;
         // Chrome's masked API identification is independent of the selected GPU.
         // Unmasked machine identity continues to come from Environment.Graphics.
         if(p===7936)return 'WebKit';if(p===7937)return 'WebKit WebGL';
@@ -47,7 +47,7 @@
         if(p===3106)return new Float32Array(s.color);if(p===3107)return s.mask.slice();if(p===2978)return new Int32Array(s.viewport);if(p===3088)return new Int32Array(s.scissor);if(p===3333)return s.pack;if(p===2931)return s.depthClear;if(p===2961)return s.stencilClear;if(p===2930)return s.depthMask;
         if(p===3379)return graphics.maxTextureSize;
         if(profile.parameters[p])return parameterValue(profile.parameters[p]);
-        if(p===34467)return new Uint32Array(0);
+        if(p===34467)return new Uint32Array([...compressedFormats].filter(([format,d])=>s.extensions.has(d.extension)).map(([format])=>format));
         if(p===35738)return 5121;if(p===35739)return 6408;
         if([3410,3411,3412].includes(p))return 8;if(p===3413)return s.attributes.alpha?8:0;if(p===3414)return s.attributes.depth?24:0;if(p===3415)return s.attributes.stencil?8:0;
         if(p===32936)return s.attributes.antialias?1:0;if(p===32937)return s.attributes.antialias?4:0;
@@ -76,6 +76,7 @@
       method('getShaderParameter',(s,value,p)=>{const r=resource(s,value,'WebGLShader');if(!r)return null;if(Number(p)===35663)return r.shaderType;if(Number(p)===35713)return false;if(Number(p)===35712)return false;error(s,1280);return null});
       method('deleteShader',(s,value)=>{if(value===null)return;const r=resource(s,value,'WebGLShader');if(r)r.deleted=true});
       method('compileShader',(s,value)=>{if(resource(s,value,'WebGLShader'))fail('compileShader')});
+      /* shared_webgl_textures */
       /* shared_webgl_programs */
       /* shared_webgl_framebuffers */
       method('clearColor',(s,r,g,b,a)=>{s.color=[r,g,b,a].map(v=>Math.fround(Math.min(1,Math.max(0,Number(v)))))});
@@ -90,7 +91,7 @@
       method('viewport',(s,...args)=>rectangle(s,'viewport',...args));method('scissor',(s,...args)=>rectangle(s,'scissor',...args));
       for(const name of ['enable','disable'])method(name,(s,p)=>{p=Number(p);if(!s.enabled.has(p)){error(s,1280);return}s.enabled.set(p,name==='enable')});
       method('isEnabled',(s,p)=>{p=Number(p);if(!s.enabled.has(p)){error(s,1280);return false}return s.enabled.get(p)});
-      method('pixelStorei',(s,p,value)=>{if(Number(p)!==3333)return fail('pixelStorei');value=Number(value);if(![1,2,4,8].includes(value)){error(s,1281);return}s.pack=value});
+      method('pixelStorei',(s,p,value)=>{if(![3333,3317].includes(Number(p)))return fail('pixelStorei');value=Number(value);if(![1,2,4,8].includes(value)){error(s,1281);return}if(Number(p)===3317)s.unpackAlignment=value;else s.pack=value});
       const storage=s=>{const {width,height}=s.dim;if(width*height>16*1024*1024)fail('drawing buffer allocation limit');if(!s.pixels||s.width!==width||s.height!==height){s.width=width;s.height=height;s.pixels=new Uint8Array(width*height*4);s.samplePixels=null;if(!s.attributes.alpha)for(let i=3;i<s.pixels.length;i+=4)s.pixels[i]=255}materializePrograms(s);return s.pixels};
       method('clear',(s,mask)=>{if(s.drawFramebuffer)fail('attachment clear');mask=Number(mask)>>>0;if(mask&~(16384|256|1024)){error(s,1281);return}if(mask&256)s.depthValue=s.depthMask?s.depthClear:s.depthValue;if(mask&1024)s.stencilValue=s.stencilClear;if(!(mask&16384))return;const pixels=storage(s),rect=s.enabled.get(3089)?s.scissor:[0,0,s.width,s.height];for(let y=Math.max(0,rect[1]);y<Math.min(s.height,rect[1]+rect[3]);y++)for(let x=Math.max(0,rect[0]);x<Math.min(s.width,rect[0]+rect[2]);x++)for(let c=0;c<4;c++)if(s.mask[c]&&(c!==3||s.attributes.alpha)){const i=(y*s.width+x)*4+c,v=Math.floor(s.color[c]*255);pixels[i]=v;if(s.samplePixels)for(const sample of s.samplePixels)sample[i]=v}});
       method('readPixels',(s,x,y,w,h,format,pixelType,dest,...extra)=>{if(s.readFramebuffer)fail('attachment readPixels');if(extra.length)fail('readPixels destination offset');x=Number(x)|0;y=Number(y)|0;w=Number(w)|0;h=Number(h)|0;if(w<0||h<0){error(s,1281);return}if(Number(format)!==6408||Number(pixelType)!==5121)fail('readPixels format');if(!(dest instanceof Uint8Array))throw new TypeError('Expected Uint8Array');const stride=Math.ceil(w*4/s.pack)*s.pack;if(dest.length<(h?stride*(h-1)+w*4:0)){error(s,1282);return}const pixels=storage(s);for(let row=0;row<h;row++)for(let col=0;col<w;col++)for(let c=0;c<4;c++){const inside=x+col>=0&&x+col<s.width&&y+row>=0&&y+row<s.height;dest[row*stride+col*4+c]=inside?pixels[((y+row)*s.width+x+col)*4+c]:0}});
