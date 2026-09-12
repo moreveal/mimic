@@ -779,6 +779,9 @@ func (s *session) handle(m message) {
 func targetInfo(page *browser.Page, attached bool) map[string]any {
 	return map[string]any{"targetId": page.ID, "type": "page", "title": page.Title(), "url": page.URL(), "attached": attached}
 }
+func browserTargetInfo(id string) map[string]any {
+	return map[string]any{"targetId": id, "type": "browser", "title": "", "url": "", "attached": true, "canAccessOpener": false}
+}
 func (s *session) frameLoaderID(frameID string) string {
 	if frameID == "" || frameID == s.page.Top.ID {
 		return s.page.LoaderID()

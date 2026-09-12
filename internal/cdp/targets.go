@@ -292,6 +292,9 @@ func (s *session) handleTarget(m message, p map[string]any) (any, bool, error) {
 	case "Target.getTargetInfo":
 		id := stringValue(p["targetId"])
 		if id == "" {
+			if s.browserSession {
+				return map[string]any{"targetInfo": browserTargetInfo(s.server.browserID)}, true, nil
+			}
 			id = s.targetID
 		}
 		page, typ, ok := s.server.target(id)
