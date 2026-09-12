@@ -50,6 +50,45 @@ func TestModuleThrowIsTracedWithoutStoppingOtherScripts(t *testing.T) {
 	}
 }
 
+func TestImportMetaResolveUsesImmutableModuleBaseWithoutFetching(t *testing.T) {
+	b, err := New(v8engine.Factory{}, chrome152.New())
+	if err != nil {
+		t.Fatal(err)
+	}
+	c := b.NewContext()
+	defer c.Close()
+	p, err := c.NewPage()
+	if err != nil {
+		t.Fatal(err)
+	}
+	ctx := context.Background()
+	_, err = p.Top.Realm.EvaluateModule(ctx, `
+const resolve=import.meta.resolve;
+const descriptor=Object.getOwnPropertyDescriptor(import.meta,'resolve');
+if(resolve.name!=='resolve'||resolve.length!==1||!descriptor.writable||!descriptor.enumerable||!descriptor.configurable)throw Error('descriptor');
+import.meta.url='https://changed.test/';
+globalThis.moduleResolved=[resolve('./x'),resolve('../y'),resolve('/z'),resolve('https://a.test/f')];
+for(const value of ['bare','?q','#f',undefined,Symbol('x')]){try{resolve(value);throw Error('accepted invalid specifier')}catch(e){if(!(e instanceof TypeError))throw e}}
+try{new resolve('./x');throw Error('constructable')}catch(e){if(!(e instanceof TypeError))throw e}
+globalThis.retainedResolve=resolve;
+`, "https://example.test/modules/entry.js", func(string, string) (string, string, error) {
+		t.Error("resolve fetched a module")
+		return "", "", fmt.Errorf("unexpected fetch")
+	})
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, err = p.Top.Realm.EvaluateModule(ctx, `globalThis.anotherResolve=import.meta.resolve`, "https://other.test/entry.js", func(string, string) (string, string, error) { return "", "", fmt.Errorf("unexpected fetch") })
+	if err != nil {
+		t.Fatal(err)
+	}
+	value, err := p.Evaluate(ctx, `moduleResolved.concat(retainedResolve('./late'),anotherResolve('./late'),Object.hasOwn(globalThis,'__mimicImportMetaResolveFactory')).join('|')`)
+	const want = "https://example.test/modules/x|https://example.test/y|https://example.test/z|https://a.test/f|https://example.test/modules/late|https://other.test/late|false"
+	if err != nil || value != want {
+		t.Fatalf("resolve: %v %v", value, err)
+	}
+}
+
 func TestModulePendingEvaluationDoesNotPumpMicrotasks(t *testing.T) {
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {

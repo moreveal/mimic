@@ -2,6 +2,8 @@ package browser
 
 import (
 	"context"
+	chrome152 "github.com/moreveal/mimic/chrome/152"
+	v8engine "github.com/moreveal/mimic/internal/engine/v8"
 	"net/http"
 	"net/http/httptest"
 	"reflect"
@@ -9,6 +11,52 @@ import (
 	"testing"
 	"time"
 )
+
+func TestDebuggerUnsafeEvalScopeMatchesChrome152(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		w.Header().Set("Content-Type", "text/html")
+		w.Header().Set("Content-Security-Policy", "script-src 'nonce-test'; require-trusted-types-for 'script'")
+		_, _ = w.Write([]byte(`<body>strict CSP</body>`))
+	}))
+	defer server.Close()
+	b, err := New(v8engine.Factory{}, chrome152.New())
+	if err != nil {
+		t.Fatal(err)
+	}
+	c := b.NewContext()
+	defer c.Close()
+	p, err := c.NewPage()
+	if err != nil {
+		t.Fatal(err)
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err = p.Navigate(ctx, server.URL); err != nil {
+		t.Fatal(err)
+	}
+	d := NewDebugger(p)
+	defer d.Close()
+	got := debuggerEval(t, d, `new Function('return 42')()`, DebuggerOptions{})
+	if got["value"] != float64(42) {
+		t.Fatal(got)
+	}
+	blocked, err := d.Evaluate(ctx, "", "", `new Function('return 42')()`, DebuggerOptions{RespectCSP: true})
+	if err != nil || blocked["exceptionDetails"] == nil {
+		t.Fatalf("explicit CSP: %v %v", blocked, err)
+	}
+	called, err := d.CallFunction(ctx, "", "", `function(){return new Function('return 43')()}`, map[string]any{}, DebuggerOptions{})
+	if err != nil || called["exceptionDetails"] != nil || called["result"].(map[string]any)["value"] != float64(43) {
+		t.Fatalf("callFunctionOn: %v %v", called, err)
+	}
+	got = debuggerEval(t, d, `new Promise(resolve=>setTimeout(()=>{try{new Function('return 1')();resolve('leaked')}catch(e){resolve(e.name)}},0))`, DebuggerOptions{AwaitPromise: true})
+	if got["value"] != "EvalError" {
+		t.Fatalf("inspector scope leaked to timer: %v", got)
+	}
+	author, err := p.Evaluate(ctx, `(()=>{try{new Function('return 1')();return 'leaked'}catch(e){return e.name}})()`)
+	if err != nil || author != "EvalError" {
+		t.Fatalf("inspector scope leaked to author: %v %v", author, err)
+	}
+}
 
 func debuggerEval(t *testing.T, d *Debugger, source string, options DebuggerOptions) map[string]any {
 	t.Helper()
@@ -116,6 +164,10 @@ func TestDebuggerReturnByValueAndAwait(t *testing.T) {
 		}
 		got := debuggerEval(t, d, `new Promise(resolve=>setTimeout(()=>resolve(17),5))`, DebuggerOptions{AwaitPromise: true})
 		if got["value"] != float64(17) {
+			t.Fatal(got)
+		}
+		got = debuggerEval(t, d, `new Promise(resolve=>{setTimeout(()=>{throw new EvalError('unrelated task')},0);setTimeout(()=>resolve(19),1)})`, DebuggerOptions{AwaitPromise: true})
+		if got["value"] != float64(19) {
 			t.Fatal(got)
 		}
 		for _, source := range []string{`throw 42`, `Promise.reject(42)`} {

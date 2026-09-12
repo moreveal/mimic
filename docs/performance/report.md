@@ -1825,3 +1825,70 @@ viewport geometry depends on the owned Chrome window's startup UI, and native
 event delivery varied with hidden-window scheduling; exact event timing is not
 certified by this capture. Focused regression tests cover Page-task media changes
 and duplicate-change suppression separately.
+
+## Automation waits, dialog activation and font fallback (2026-09-12)
+
+The automation failure was not evidence that synchronous module fetching needed
+an architectural rewrite. A bounded native profile attributed 9.67 seconds to
+202 text-shaping calls; six module responses accounted for only about 0.2 seconds
+of network time. Repeated missing-glyph coverage searches reopened and decoded
+the installed font catalog. The Page-local cache now retains only proven misses
+(at most 8,192 resource/cluster keys, clusters at most 128 UTF-8 bytes), not the
+decoded rejected fonts. Intrinsic and control sizes are shared only within one
+style read, and hidden boxes return before sizing descendants. Closed dialogs
+participate in the same computed-display state used by geometry.
+
+`BenchmarkMissingGlyphFallback` measured a repeated unsupported codepoint at
+123,200 ns/op, 57,558 B/op and 774 allocations with the coverage cache, versus
+1,677,422,900 ns/op, 2,896,188,920 B/op and 9,636,256 allocations when that cache
+is cleared before each operation. These are cumulative allocation bytes, not
+retained memory, and a narrowly targeted microbenchmark, not a whole-page speedup.
+
+The fresh final [gate receipt](automation-activation-20260912.json) records
+**184 VALID executions and eight verified binary launches**, with the frozen
+harness unchanged. Warm completion medians are DOM 197.10 ms, static 36.72 ms,
+and React 99.60 ms. Static 10/25-Page wave medians are 52.61/70.31 Pages/s.
+Static/React 10-Page private memory is about 532/559 MiB active and 158/171 MiB
+after teardown and recovery. This is a correctness/resource checkpoint, not a
+paired clean-base performance comparison. The built executable hash is retained
+with the dirty-source receipt; subsequent edits only added these results.
+
+Related semantic fixes use the existing browser state: CSS font variables resolve
+before shaping (including invalid-variable inheritance and zero sizes), module
+metadata resolves URLs without fetching, and button commands activate dialogs
+through their existing modal state. Fabricated 1x1 intersection and 16x16 CDP
+fallback boxes were removed. Pointer input hit-tests the current boxes rather
+than trusting a previously queried node. Stacking-context order keeps a panel's
+children above its background without letting them escape its z-index boundary;
+positioned auto-z groups are distinguished from actual stacking contexts.
+Chrome 152.0.7977.83 probes establish
+command-event flags and the inspector-only unsafe-eval/Trusted Types exception;
+ordinary author tasks still enforce the document policy.
+
+`compatibility/pyppeteer_activation_smoke.py` is an independent local end-to-end
+test for XPath, strict-CSP waits, a hidden duplicate button, real pointer clicks
+inside a stacking context, dialog opening, occlusion and unrelated task exceptions.
+It passes against both the final Mimic binary and Chrome. Four additional native
+pointer probes cover child targeting, higher overlays, escaping auto-z groups and
+confinement inside lower-z contexts. Focused browser, V8,
+CDP and text-metrics regressions pass. A full-suite attempt completed the browser
+package in 398.72 seconds but exposed missing optional-constructor guards; those
+were fixed and every failed group was rerun successfully. That attempt's QUIC
+tests failed to bind UDP sockets because Windows reported exhausted socket
+resources. System DNS also failed, including GitHub resolution; an unrelated
+MSI process held approximately 15,500 UDP endpoints. No system service was changed.
+After the environment recovered, the entire network package passed on rerun.
+The complete final suite was not rerun as one invocation; the previously failing
+groups and the affected regression groups passed individually.
+
+The final gate binary also completed the live user-script flow: DOMContentLoaded
+in 3.63 seconds and the actual login dialog open at 6.86 seconds from script start,
+with both `open` and `:modal` checked. The script selects a visible element handle
+instead of re-querying the first hidden duplicate with `page.click(selector)`.
+These live timings are observations, not a frozen website benchmark.
+
+Import maps, general bidirectional shaping, complete layout/top-layer behavior
+and popover commands remain unsupported boundaries; this patch does not claim
+complete CSS or browser API coverage. Network navigation failures are currently
+traced but can still surface as an automation navigation timeout after the early
+`Page.navigate` acknowledgement.

@@ -11,6 +11,8 @@ import (
 	"golang.org/x/text/unicode/norm"
 )
 
+type coverageKey struct{ resource, cluster string }
+
 func coversCluster(face *loaded, cluster []rune) bool {
 	if coversNominalCluster(face, cluster) {
 		return true
@@ -91,12 +93,17 @@ func (e *Engine) fallbackFace(primary *loaded, cluster []rune, families string, 
 		names = append(names, "Segoe UI Emoji", "Segoe UI Symbol", "Segoe UI", "Arial")
 	}
 	seen := map[string]bool{}
+	clusterText := string(cluster)
 	try := func(r resource) (*loaded, error) {
 		key := fmt.Sprintf("%s#%d", r.path, r.index)
 		if seen[key] {
 			return nil, nil
 		}
 		seen[key] = true
+		coverage := coverageKey{key, clusterText}
+		if _, missing := e.missingCoverage[coverage]; missing {
+			return nil, nil
+		}
 		retained := e.faces[key] != nil
 		face, err := e.load(r)
 		if err != nil {
@@ -106,6 +113,16 @@ func (e *Engine) fallbackFace(primary *loaded, cluster []rune, families string, 
 		}
 		if coversCluster(face, cluster) {
 			return face, nil
+		}
+		// Remember proven coverage misses without retaining decoded fallback
+		// faces. Otherwise every layout read reopens and reparses the entire
+		// installed font catalog for the same missing character. This bounded
+		// cache belongs to the Page's font resources, never to a global engine.
+		if len(clusterText) <= 128 {
+			if e.missingCoverage == nil || len(e.missingCoverage) >= 8192 {
+				e.missingCoverage = make(map[coverageKey]struct{})
+			}
+			e.missingCoverage[coverage] = struct{}{}
 		}
 		// Unsuccessful coverage candidates are temporary, not selected faces.
 		// Retaining them exhausted the Page cache and broke unrelated later text.

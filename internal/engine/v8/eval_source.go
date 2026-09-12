@@ -3,6 +3,7 @@
 package v8
 
 import (
+	"context"
 	"fmt"
 
 	gov8 "github.com/maclof/gov8"
@@ -50,7 +51,12 @@ func (a *adapter) SetEvalSourceResolver(resolver engine.Value) error {
 			if err != nil {
 				return false, nil
 			}
-			result, ok, err := fn.Call(scope, receiver, source, codeLike)
+			unsafeEval, err := scope.Boolean(a.debuggerUnsafeEval)
+			if err != nil {
+				_ = catcher.Close()
+				return false, nil
+			}
+			result, ok, err := fn.Call(scope, receiver, source, codeLike, unsafeEval)
 			if err != nil || !ok {
 				// Preserve callback exception identity; returning false alone would
 				// replace a thrown application object with an engine EvalError.
@@ -75,6 +81,16 @@ func (a *adapter) SetEvalSourceResolver(resolver engine.Value) error {
 			return nil, err
 		}
 		return nil, realm.AllowCodeGenerationFromStrings(false)
+	})
+	return err
+}
+
+func (a *adapter) RunWithUnsafeEval(ctx context.Context, operation func(context.Context) error) error {
+	_, err := a.runContext(ctx, func(_ *state, _ *gov8.Context, _ *gov8.Scope) (engine.Value, error) {
+		previous := a.debuggerUnsafeEval
+		a.debuggerUnsafeEval = true
+		defer func() { a.debuggerUnsafeEval = previous }()
+		return nil, operation(ctx)
 	})
 	return err
 }

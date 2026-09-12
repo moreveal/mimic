@@ -176,7 +176,10 @@ const trustedConvert=(value,kind,sink,prefix,owner=null)=>{
 };
 // The engine invokes this for native eval and every dynamic Function kind.
 // Non-string eval preserves identity, including boxed strings and wrong kinds.
-const evalSourceResolver=(value,isCodeLike=false)=>{
+const evalSourceResolver=(value,isCodeLike=false,debuggerUnsafeEval=false)=>{
+  // Chrome's inspector compilation scope also skips Trusted Types string-code
+  // checks. This does not change DOM sinks or later author tasks.
+  if(debuggerUnsafeEval&&typeof value==='string')return value;
   const sink=typeof value==='string'?trustedCodeSink(value):'eval';
   const kind=trustedTypeOf(value);
   if(typeof value!=='string'&&kind!=='TrustedScript')return undefined;
@@ -184,7 +187,7 @@ const evalSourceResolver=(value,isCodeLike=false)=>{
   try{source=kind==='TrustedScript'?trustedSource(value,kind):trustedEnforceString(value,'TrustedScript',sink,'',true)}
   catch{failed=true}
   const blocked=host.trustedTypesPolicy().evalBlocked;
-  if(blocked)throw new EvalError("Evaluating a string as JavaScript violates the following Content Security Policy directive because 'unsafe-eval' is not an allowed source of script: "+blocked+'".\n');
+  if(blocked&&!debuggerUnsafeEval)throw new EvalError("Evaluating a string as JavaScript violates the following Content Security Policy directive because 'unsafe-eval' is not an allowed source of script: "+blocked+'".\n');
   if(failed)throw new EvalError("Evaluating a string as JavaScript violates this document's Trusted Type assignment requirements.");
   return source;
 };

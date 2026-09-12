@@ -50,6 +50,7 @@ type Engine struct {
 	scanned          bool
 	faces            map[string]*loaded
 	bytes            int
+	missingCoverage  map[coverageKey]struct{}
 }
 
 func New() *Engine {

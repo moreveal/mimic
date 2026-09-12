@@ -1,0 +1,305 @@
+{
+  "build": {
+    "command": [
+      "go",
+      "build",
+      "-o",
+      "E:\\GitHub\\mimic\\.build\\perf-activation-stacking-final-20260912\\mimic.exe",
+      "./cmd/mimic"
+    ],
+    "source": "E:\\GitHub\\mimic",
+    "revision": "917b50845bd8df0b34a9879540b62fd9f9b25788",
+    "status": " M compatibility/pyppeteer_activation_smoke.py\n M internal/webapi/input.js\n?? internal/browser/input_stacking_test.go\n",
+    "executable": "E:\\GitHub\\mimic\\.build\\perf-activation-stacking-final-20260912\\mimic.exe",
+    "sha256": "507f144f9867a44afb426f5200e65a345e993816cab71935d1897c0a3060a2d7",
+    "harness_sha256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7",
+    "harness_files": {
+      "compare.py": "274b156ee88e67085f5e556ef79629146f5e7287ee54af844476a0c005e65a5b",
+      "report.py": "f12e393341c00e9e03748a06913fa639c1069f66dc7acb71959cffd51647f214",
+      "requirements.txt": "06e6d87d17f39a59fe7b2576545231fe65d5a1940d22e63fc2b32b6cfa12123b",
+      "run.ps1": "6c50b0a55886278de7c1e4d92b77b42bf2cfad59fa451dbaa766b0e0eae84fa6",
+      "run.py": "67718e844bce74b7757f2238716233b9d8683a17294f2b02017667b9c1e44cd3",
+      "test_harness.py": "ddb8dcf74a192d3403971833cf5e011dd8578a9acd9a060b3b265cc6d79aef2a",
+      "v8_version.go": "669a669b0545ba599edb2f7923617f154b976e7377de89d8b2e1f477bdb12f09",
+      "windows_metrics.py": "57ba1e10dfb1f1cb439a52ad5f7f5795c3ba4eef25ae22c9514ecfe115434cd5",
+      "fixtures/workload.js": "484019063e33e131756f67ab6f3076ad2c18e3959072fbae42f540455448c214",
+      "fixtures/vendor/react-dom.production.min.js": "35f4f974f4b2bcd44da73963347f8952e341f83909e4498227d4e26b98f66f0d",
+      "fixtures/vendor/REACT-LICENSE.txt": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85",
+      "fixtures/vendor/react.production.min.js": "d949f1c3687aedadcedac85261865f29b17cd273997e7f6b2bfc53b2f9d4c4dd"
+    },
+    "built_at": "2026-09-12T20:59:05.55692+04:00"
+  },
+  "finished": "2026-09-12T20:59:27.045477+04:00",
+  "summary": {
+    "dom": {
+      "session_create_ms": 12.108499999158084,
+      "execution_ms": 163.23050000937656,
+      "completion_ms": 197.10429999395274
+    },
+    "static": {
+      "session_create_ms": 3.0123000033199787,
+      "execution_ms": 3.22239997331053,
+      "completion_ms": 36.71869999379851
+    },
+    "react": {
+      "session_create_ms": 12.395300000207499,
+      "execution_ms": 56.166800000937656,
+      "completion_ms": 99.60099999443628
+    }
+  },
+  "validExecutions": 184,
+  "launches": [
+    {
+      "label": "correctness",
+      "executable": "E:\\GitHub\\mimic\\.build\\perf-activation-stacking-final-20260912\\mimic.exe",
+      "sha256": "507f144f9867a44afb426f5200e65a345e993816cab71935d1897c0a3060a2d7",
+      "verified_at": "2026-09-12T20:59:05.628726+04:00"
+    },
+    {
+      "label": "warm dom",
+      "executable": "E:\\GitHub\\mimic\\.build\\perf-activation-stacking-final-20260912\\mimic.exe",
+      "sha256": "507f144f9867a44afb426f5200e65a345e993816cab71935d1897c0a3060a2d7",
+      "verified_at": "2026-09-12T20:59:07.176229+04:00"
+    },
+    {
+      "label": "warm static",
+      "executable": "E:\\GitHub\\mimic\\.build\\perf-activation-stacking-final-20260912\\mimic.exe",
+      "sha256": "507f144f9867a44afb426f5200e65a345e993816cab71935d1897c0a3060a2d7",
+      "verified_at": "2026-09-12T20:59:10.802093+04:00"
+    },
+    {
+      "label": "warm react",
+      "executable": "E:\\GitHub\\mimic\\.build\\perf-activation-stacking-final-20260912\\mimic.exe",
+      "sha256": "507f144f9867a44afb426f5200e65a345e993816cab71935d1897c0a3060a2d7",
+      "verified_at": "2026-09-12T20:59:13.354296+04:00"
+    },
+    {
+      "label": "static concurrency 10",
+      "executable": "E:\\GitHub\\mimic\\.build\\perf-activation-stacking-final-20260912\\mimic.exe",
+      "sha256": "507f144f9867a44afb426f5200e65a345e993816cab71935d1897c0a3060a2d7",
+      "verified_at": "2026-09-12T20:59:16.300961+04:00"
+    },
+    {
+      "label": "static concurrency 25",
+      "executable": "E:\\GitHub\\mimic\\.build\\perf-activation-stacking-final-20260912\\mimic.exe",
+      "sha256": "507f144f9867a44afb426f5200e65a345e993816cab71935d1897c0a3060a2d7",
+      "verified_at": "2026-09-12T20:59:19.331459+04:00"
+    },
+    {
+      "label": "memory 10 static",
+      "executable": "E:\\GitHub\\mimic\\.build\\perf-activation-stacking-final-20260912\\mimic.exe",
+      "sha256": "507f144f9867a44afb426f5200e65a345e993816cab71935d1897c0a3060a2d7",
+      "verified_at": "2026-09-12T20:59:24.39299+04:00"
+    },
+    {
+      "label": "memory 10 react",
+      "executable": "E:\\GitHub\\mimic\\.build\\perf-activation-stacking-final-20260912\\mimic.exe",
+      "sha256": "507f144f9867a44afb426f5200e65a345e993816cab71935d1897c0a3060a2d7",
+      "verified_at": "2026-09-12T20:59:25.663621+04:00"
+    }
+  ],
+  "concurrency": [
+    {
+      "workload": "static",
+      "n": 10,
+      "wave": -1,
+      "excluded": true,
+      "throughput": 17.241206898208826,
+      "stop_reason": null
+    },
+    {
+      "workload": "static",
+      "n": 10,
+      "wave": 0,
+      "excluded": false,
+      "throughput": 31.630455066721023,
+      "stop_reason": null
+    },
+    {
+      "workload": "static",
+      "n": 10,
+      "wave": 1,
+      "excluded": false,
+      "throughput": 52.6102856329501,
+      "stop_reason": null
+    },
+    {
+      "workload": "static",
+      "n": 10,
+      "wave": 2,
+      "excluded": false,
+      "throughput": 74.92028481068942,
+      "stop_reason": null
+    },
+    {
+      "workload": "static",
+      "n": 25,
+      "wave": -1,
+      "excluded": true,
+      "throughput": 23.405399494667456,
+      "stop_reason": null
+    },
+    {
+      "workload": "static",
+      "n": 25,
+      "wave": 0,
+      "excluded": false,
+      "throughput": 39.70896820793065,
+      "stop_reason": null
+    },
+    {
+      "workload": "static",
+      "n": 25,
+      "wave": 1,
+      "excluded": false,
+      "throughput": 71.81093387760873,
+      "stop_reason": null
+    },
+    {
+      "workload": "static",
+      "n": 25,
+      "wave": 2,
+      "excluded": false,
+      "throughput": 70.31355909620011,
+      "stop_reason": null
+    }
+  ],
+  "memory": [
+    {
+      "workload": "static",
+      "n": 10,
+      "ready_memory": {
+        "t": 203233.6597663,
+        "rss": 31649792,
+        "private": 84643840,
+        "user_s": 0.046875,
+        "kernel_s": 0.015625,
+        "cpu_s": 0.0625,
+        "active_processes": 2,
+        "total_processes": 2,
+        "memory_access_denied": 0,
+        "system_available": 10538323968,
+        "system_memory_percent": 69.2,
+        "page_faults": 8016,
+        "system_pages_input_s": 58.94925893412863,
+        "paging_counter_error": null
+      },
+      "active_memory": {
+        "t": 203234.1570401,
+        "rss": 505815040,
+        "private": 558022656,
+        "user_s": 2.28125,
+        "kernel_s": 1.46875,
+        "cpu_s": 3.75,
+        "active_processes": 2,
+        "total_processes": 2,
+        "memory_access_denied": 0,
+        "system_available": 10052407296,
+        "system_memory_percent": 70.6,
+        "page_faults": 236460,
+        "system_pages_input_s": 41.95123588340913,
+        "paging_counter_error": null
+      },
+      "after_teardown": {
+        "t": 203234.187534,
+        "rss": 136470528,
+        "private": 165228544,
+        "user_s": 2.296875,
+        "kernel_s": 1.46875,
+        "cpu_s": 3.765625,
+        "active_processes": 2,
+        "total_processes": 2,
+        "memory_access_denied": 0,
+        "system_available": 10432860160,
+        "system_memory_percent": 69.5,
+        "page_faults": 236885,
+        "system_pages_input_s": 41.95123588340913,
+        "paging_counter_error": null
+      },
+      "after_recovery": {
+        "t": 203234.4392993,
+        "rss": 136470528,
+        "private": 165228544,
+        "user_s": 2.296875,
+        "kernel_s": 1.46875,
+        "cpu_s": 3.765625,
+        "active_processes": 2,
+        "total_processes": 2,
+        "memory_access_denied": 0,
+        "system_available": 10451161088,
+        "system_memory_percent": 69.4,
+        "page_faults": 236885,
+        "system_pages_input_s": 41.95123588340913,
+        "paging_counter_error": null
+      }
+    },
+    {
+      "workload": "react",
+      "n": 10,
+      "ready_memory": {
+        "t": 203234.9331193,
+        "rss": 31244288,
+        "private": 84910080,
+        "user_s": 0.03125,
+        "kernel_s": 0,
+        "cpu_s": 0.03125,
+        "active_processes": 2,
+        "total_processes": 2,
+        "memory_access_denied": 0,
+        "system_available": 10551971840,
+        "system_memory_percent": 69.1,
+        "page_faults": 7896,
+        "system_pages_input_s": 41.95123588340913,
+        "paging_counter_error": null
+      },
+      "active_memory": {
+        "t": 203235.5331589,
+        "rss": 534999040,
+        "private": 586637312,
+        "user_s": 3.34375,
+        "kernel_s": 1.578125,
+        "cpu_s": 4.921875,
+        "active_processes": 2,
+        "total_processes": 2,
+        "memory_access_denied": 0,
+        "system_available": 10030194688,
+        "system_memory_percent": 70.7,
+        "page_faults": 241401,
+        "system_pages_input_s": 12.742302228197383,
+        "paging_counter_error": null
+      },
+      "after_teardown": {
+        "t": 203235.5653061,
+        "rss": 149835776,
+        "private": 179138560,
+        "user_s": 3.375,
+        "kernel_s": 1.578125,
+        "cpu_s": 4.953125,
+        "active_processes": 2,
+        "total_processes": 2,
+        "memory_access_denied": 0,
+        "system_available": 10423197696,
+        "system_memory_percent": 69.5,
+        "page_faults": 241823,
+        "system_pages_input_s": 12.742302228197383,
+        "paging_counter_error": null
+      },
+      "after_recovery": {
+        "t": 203235.8172162,
+        "rss": 149983232,
+        "private": 178974720,
+        "user_s": 3.375,
+        "kernel_s": 1.578125,
+        "cpu_s": 4.953125,
+        "active_processes": 2,
+        "total_processes": 2,
+        "memory_access_denied": 0,
+        "system_available": 10438275072,
+        "system_memory_percent": 69.5,
+        "page_faults": 241969,
+        "system_pages_input_s": 12.742302228197383,
+        "paging_counter_error": null
+      }
+    }
+  ]
+}

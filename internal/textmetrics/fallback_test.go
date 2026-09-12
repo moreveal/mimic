@@ -72,6 +72,59 @@ func TestMissingGlyphDoesNotRetainFallbackCandidates(t *testing.T) {
 	}
 }
 
+func TestCoverageMissCacheIsBoundedAndPageLocal(t *testing.T) {
+	if _, err := os.Stat(filepath.Join(os.Getenv("WINDIR"), "Fonts", "arial.ttf")); err != nil {
+		t.Skip("requires reference fonts")
+	}
+	e := New()
+	first, err := e.Shape("\u0378", "Arial", 16, 400, false, false, false)
+	if err != nil {
+		t.Fatal(err)
+	}
+	count := len(e.missingCoverage)
+	if count == 0 || count > 8192 {
+		t.Fatalf("coverage cache size %d", count)
+	}
+	faces, bytes := len(e.faces), e.bytes
+	for i := 0; i < 3; i++ {
+		got, err := e.Shape("\u0378", "Arial", 16, 400, false, false, false)
+		if err != nil || !reflect.DeepEqual(got, first) {
+			t.Fatalf("cached result changed: %v", err)
+		}
+	}
+	if len(e.missingCoverage) != count || len(e.faces) != faces || e.bytes != bytes {
+		t.Fatal("repeated coverage grew retained state")
+	}
+	if len(New().missingCoverage) != 0 {
+		t.Fatal("coverage leaked into another Page")
+	}
+}
+
+func BenchmarkMissingGlyphFallback(b *testing.B) {
+	for _, cold := range []bool{false, true} {
+		name := "cached"
+		if cold {
+			name = "coverage-cache-reset"
+		}
+		b.Run(name, func(b *testing.B) {
+			e := New()
+			if _, err := e.Shape("\u0378", "Arial", 16, 400, false, false, false); err != nil {
+				b.Skip(err)
+			}
+			b.ReportAllocs()
+			b.ResetTimer()
+			for i := 0; i < b.N; i++ {
+				if cold {
+					e.missingCoverage = nil
+				}
+				if _, err := e.Shape("\u0378", "Arial", 16, 400, false, false, false); err != nil {
+					b.Fatal(err)
+				}
+			}
+		})
+	}
+}
+
 func TestCanonicalCompositionPreservesPrimaryFace(t *testing.T) {
 	if _, err := os.Stat(filepath.Join(os.Getenv("WINDIR"), "Fonts", "seguiemj.ttf")); err != nil {
 		t.Skip("requires reference font")

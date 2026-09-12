@@ -15,7 +15,7 @@ const cssComputedFontSize=element=>{
  let size=16,rootSize=16;
  for(let i=chain.length-1;i>=0;i--){const n=chain[i],entries=computedCSSDeclarations(n);let raw=entries.find(e=>e.name==='font-size')?.value;const source=raw==null?'presentation-or-inherited':'css';
   if(raw==null&&elementSlot(n).namespaceURI==='http://www.w3.org/2000/svg')raw=host.getAttribute(elementSlot(n).nodeId,'font-size');
-  const specified=String(raw??'inherit');raw=specified.trim().toLowerCase();
+  const specified=String(raw??'inherit');raw=(geometryValue(n,specified.trim())??'inherit').trim().toLowerCase();
   if(raw==='inherit'||raw==='unset'||raw===''){}else if(raw==='initial')size=16;
   else {const keywords={'xx-small':9,'x-small':10,small:13,medium:16,large:18,'x-large':24,'xx-large':32,'xxx-large':48};
    const next=Object.prototype.hasOwnProperty.call(keywords,raw)?keywords[raw]:raw==='smaller'?size/1.2:raw==='larger'?size*1.2:cssResolveLength(raw,{em:size,rem:i===chain.length-1?16:rootSize,percent:size,unitless:elementSlot(n).namespaceURI==='http://www.w3.org/2000/svg'});

@@ -90,6 +90,9 @@ func (s *session) handleRuntime(ctx context.Context, method string, params map[s
 	options := browser.DebuggerOptions{ObjectGroup: stringValue(params["objectGroup"])}
 	options.ReturnByValue, _ = params["returnByValue"].(bool)
 	options.AwaitPromise, _ = params["awaitPromise"].(bool)
+	if allow, ok := params["allowUnsafeEvalBlockedByCSP"].(bool); ok {
+		options.RespectCSP = !allow
+	}
 	if serialization, ok := params["serializationOptions"].(map[string]any); ok {
 		switch stringValue(serialization["serialization"]) {
 		case "json":

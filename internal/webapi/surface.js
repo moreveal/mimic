@@ -185,7 +185,7 @@
     }
     cache?.set(root,rules);return rules;
   };
-  const uncachedCSSDeclarations=(element,pseudo='')=>{const winners=new Map();const accept=(entry,specificity,order)=>{if(entry.name==='all'){for(const name of cssComputedNames)if(name!=='direction'&&name!=='unicode-bidi')accept({name,value:entry.value==='initial'?(cssInitialValues.get(name)||'initial'):entry.value,priority:entry.priority,allReset:true},specificity,order);return}const old=winners.get(entry.name),important=entry.priority==='important';if(!old||Number(important)>Number(old.important)||(important===old.important&&(specificity>old.specificity||(specificity===old.specificity&&order>=old.order))))winners.set(entry.name,{entry,specificity,order,important})};for(const rule of compatibilitySelectors.matchingStyles(element,styleSheetRules(element),pseudo))for(const entry of rule.declarations())accept(entry,rule.specificity,rule.order);if(!pseudo)for(const entry of inlineCSSDeclarations(element))accept(entry,1000,Number.MAX_SAFE_INTEGER);return Array.from(winners.values(),value=>({...value.entry}))};
+  const uncachedCSSDeclarations=(element,pseudo='')=>{const winners=new Map();const accept=(entry,specificity,order)=>{if(entry.name==='all'){for(const name of cssComputedNames)if(name!=='direction'&&name!=='unicode-bidi')accept({name,value:entry.value==='initial'?(cssInitialValues.get(name)||'initial'):entry.value,priority:entry.priority,allReset:true},specificity,order);return}const old=winners.get(entry.name),important=entry.priority==='important';if(!old||Number(important)>Number(old.important)||(important===old.important&&(specificity>old.specificity||(specificity===old.specificity&&order>=old.order))))winners.set(entry.name,{entry,specificity,order,important})};if(!pseudo&&elementSlot(element)?.tagName==='DIALOG')accept({name:'display',value:host.getAttribute(elementSlot(element).nodeId,'open')===null?'none':'block',priority:''},-1,-1);for(const rule of compatibilitySelectors.matchingStyles(element,styleSheetRules(element),pseudo))for(const entry of rule.declarations())accept(entry,rule.specificity,rule.order);if(!pseudo)for(const entry of inlineCSSDeclarations(element))accept(entry,1000,Number.MAX_SAFE_INTEGER);return Array.from(winners.values(),value=>({...value.entry}))};
   const computedCSSDeclarations=element=>{const cache=styleReadCache?.declarations;if(cache?.has(element))return cache.get(element).map(entry=>({...entry}));const entries=uncachedCSSDeclarations(element);cache?.set(element,entries.map(entry=>({...entry})));return entries};
   const blockifiedDisplay=value=>({inline:'block','inline-block':'block','inline-table':'table','inline-flex':'flex','inline-grid':'grid'}[String(value).toLowerCase()]||value);
   // Resolve fallback geometry only when its value is read. Unrelated style reads
@@ -1520,6 +1520,16 @@
     known=new Set(Reflect.ownKeys(globalThis));
     for(const [name,callbacks] of bootstrapCallbacks)host[name](...callbacks);
     host.ready();
+  };
+  // Resolution is synchronous and never fetches. Import maps are not yet
+  // supported; unprefixed names must fail rather than become relative URLs.
+  globalThis.__mimicImportMetaResolveFactory=base=>{
+    const resolve={resolve(specifier){
+      const text=`${specifier}`;
+      if(!/^(?:[A-Za-z][A-Za-z0-9+.-]*:|\/|\.\.?\/)/.test(text))throw new TypeError('Failed to resolve module specifier '+JSON.stringify(text));
+      try{return host.urlParts(text,base).href}catch{throw new TypeError('Failed to resolve module specifier '+JSON.stringify(text))}
+    }}.resolve;
+    markNative(resolve,'resolve');return resolve;
   };
   globalThis.__mimicEvalSourceResolver=evalSourceResolver;known=new Set(Reflect.ownKeys(globalThis));host.ready();globalThis.__mimicUnsupportedProbe=n=>{if(!known.has(n))host.unsupported(String(n))};
 })(__mimic);
