@@ -139,7 +139,11 @@
       else if(text!=='\r')edit(target,text);
     }
   };
+  let pointTargetVersion=null;
+  const pointObservationVersion=()=>host.observationVersion()+':'+(constructedStyleSheets.revision?.()||0)+':'+compatibilityElementState.observationVersion();
   const pointTarget=(x,y)=>{
+    const version=pointObservationVersion();
+    if(pointerTarget?.isConnected&&x===pointerX&&y===pointerY&&version===pointTargetVersion)return pointerTarget;
     let selected=null,rank=-Infinity;
     for(const element of compatibilitySelectors.query(document,'*')){
       const entries=computedCSSDeclarations(element),get=name=>entries.find(e=>e.name===name)?.value;
@@ -147,6 +151,7 @@
       const box=layoutRectFor(element);if(box.width<=0||box.height<=0||x<box.left||x>=box.right||y<box.top||y>=box.bottom)continue;
       const z=Number(get('z-index'))||0;if(z>=rank){selected=element;rank=z}
     }
+    pointTargetVersion=version;
     return selected||document.body||document.documentElement;
   };
   let pointerTarget=null,pointerX=0,pointerY=0,mouseButtons=0;
@@ -164,8 +169,8 @@
     try{click(target,{bubbles:true,cancelable:true,composed:true,pointerId:-1,pointerType:'',isPrimary:false,button:0,buttons:0,detail:0},false)}finally{clicking.delete(target)}
   };
   Object.defineProperty(HTMLElement.prototype,'click',{value:function(){if(isolated){main(this,'click');return}syntheticClick(this)},writable:true,enumerable:true,configurable:true});
-  const mouseCommand=params=>{
-    const x=Number(params.x),y=Number(params.y),target=pointTarget(x,y),buttonName=params.button||'none',button=buttons[buttonName]??-1,mask=buttonMasks[buttonName]||0;
+  const mouseCommand=(params,preferred)=>{
+    const x=Number(params.x),y=Number(params.y),target=preferred?.isConnected?preferred:pointTarget(x,y),buttonName=params.button||'none',button=buttons[buttonName]??-1,mask=buttonMasks[buttonName]||0;
     if(params.type==='mousePressed')mouseButtons|=mask;else if(params.type==='mouseReleased')mouseButtons&=~mask;
     if(params.buttons!==undefined)mouseButtons=params.buttons;
     const init={bubbles:true,cancelable:true,composed:true,clientX:x,clientY:y,screenX:x+(window.screenX||0),screenY:y+(window.screenY||0),button,buttons:mouseButtons,detail:params.clickCount||0,movementX:x-pointerX,movementY:y-pointerY,...modifiers(params.modifiers||0),pointerId:1,pointerType:'mouse',isPrimary:true,pressure:mouseButtons ? .5 : 0};
@@ -173,7 +178,7 @@
       if(pointerTarget){emit(pointerTarget,'PointerEvent','pointerout',{...init,relatedNode:nodeID(target)});emit(pointerTarget,'MouseEvent','mouseout',{...init,relatedNode:nodeID(target)})}
       emit(target,'PointerEvent','pointerover',{...init,relatedNode:nodeID(pointerTarget)});emit(target,'MouseEvent','mouseover',{...init,relatedNode:nodeID(pointerTarget)});pointerTarget=target;
     }
-    pointerX=x;pointerY=y;
+    pointerX=x;pointerY=y;pointTargetVersion=pointObservationVersion();
     const disabled=target.disabled&&['input','button','select','textarea','option'].includes(target.localName);
     if(params.type==='mouseMoved'){emit(target,'PointerEvent','pointermove',{...init,button:-1});if(!disabled)emit(target,'MouseEvent','mousemove',{...init,button:0});return}
     if(params.type==='mousePressed'){
@@ -192,6 +197,10 @@
     if(operation==='form')return stringify({value:control(element,params.operation,params.key,params.args)});
     if(operation==='active')return stringify({nodeID:nodeID(active.call(document))});
     if(operation==='focused')return stringify({nodeID:nodeID(originalFocused())});
+    if(operation==='rect'){
+      const rect=layoutRectFor(element);
+      return stringify({x:rect.x,y:rect.y,width:rect.width,height:rect.height});
+    }
     if(operation==='focus'){focus(element);return '{}'}
     if(operation==='blur'){originalBlur.call(element);return '{}'}
     if(operation==='click'){syntheticClick(element);return '{}'}
@@ -202,7 +211,7 @@
     if(operation==='key'&&['keyDown','rawKeyDown'].includes(params.type)||operation==='mouse'&&params.type==='mousePressed')host.activateProtocolInput();
     if(operation==='key')keyCommand(params);
     else if(operation==='text')edit(active.call(document),params.text);
-    else if(operation==='mouse')mouseCommand(params);
+    else if(operation==='mouse')mouseCommand(params,element);
     else throw new Error('Unsupported trusted input operation '+operation);
     return '{}';
   };
