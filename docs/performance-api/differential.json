@@ -1,0 +1,1908 @@
+{
+  "reference": "Chrome/152.0.7977.82",
+  "comparison": "Exact equality of controlled structural results and relations; no absolute wall-clock or heap-byte matching.",
+  "fixtures": [
+    {
+      "fixture": "performance_buffers",
+      "reference": "internal/browser/testdata/performance_buffers_chrome152.json",
+      "before": {
+        "status": "DIFFERENT",
+        "differences": [
+          {
+            "path": ".clear.batches",
+            "expected": [
+              {
+                "count": 1
+              }
+            ],
+            "actual": []
+          },
+          {
+            "path": ".clear.buffer",
+            "expected": 1,
+            "actual": 3
+          },
+          {
+            "path": ".clear.events",
+            "expected": [
+              "first",
+              "clear",
+              "last"
+            ],
+            "actual": []
+          },
+          {
+            "path": ".drop.batches",
+            "expected": [
+              {
+                "count": 1
+              }
+            ],
+            "actual": []
+          },
+          {
+            "path": ".drop.buffer",
+            "expected": 1,
+            "actual": 4
+          },
+          {
+            "path": ".drop.events",
+            "expected": [
+              "first",
+              "last"
+            ],
+            "actual": []
+          },
+          {
+            "path": ".grow.batches",
+            "expected": [
+              {
+                "count": 1,
+                "dropped": 1
+              }
+            ],
+            "actual": []
+          },
+          {
+            "path": ".grow.buffer",
+            "expected": 1,
+            "actual": 2
+          },
+          {
+            "path": ".grow.events",
+            "expected": [
+              "first",
+              "replacement",
+              "last"
+            ],
+            "actual": []
+          }
+        ]
+      },
+      "after": {
+        "status": "MATCH",
+        "differences": []
+      }
+    },
+    {
+      "fixture": "performance_buffers_worker",
+      "reference": "internal/browser/testdata/performance_buffers_worker_chrome152.json",
+      "before": {
+        "status": "CAPTURE_ERROR",
+        "error": "Evaluation failed: Error: TypeError: Illegal constructor"
+      },
+      "after": {
+        "status": "MATCH",
+        "differences": []
+      }
+    },
+    {
+      "fixture": "performance_clone",
+      "reference": "internal/browser/testdata/performance_clone_chrome152.json",
+      "before": {
+        "status": "DIFFERENT",
+        "differences": [
+          {
+            "path": ".eventCounts.error",
+            "expected": "DataCloneError",
+            "actual": "TypeError"
+          },
+          {
+            "path": ".foreignMark.error",
+            "expected": "DataCloneError",
+            "actual": null
+          },
+          {
+            "path": ".foreignMark.keys",
+            "expected": null,
+            "actual": []
+          },
+          {
+            "path": ".foreignMark.success",
+            "expected": null,
+            "actual": true
+          },
+          {
+            "path": ".mark.error",
+            "expected": "DataCloneError",
+            "actual": null
+          },
+          {
+            "path": ".mark.keys",
+            "expected": null,
+            "actual": []
+          },
+          {
+            "path": ".mark.success",
+            "expected": null,
+            "actual": true
+          },
+          {
+            "path": ".memory.error",
+            "expected": "DataCloneError",
+            "actual": "TypeError"
+          },
+          {
+            "path": ".nestedMark.error",
+            "expected": "DataCloneError",
+            "actual": null
+          },
+          {
+            "path": ".nestedMark.keys",
+            "expected": null,
+            "actual": [
+              "mark"
+            ]
+          },
+          {
+            "path": ".nestedMark.success",
+            "expected": null,
+            "actual": true
+          },
+          {
+            "path": ".observer.error",
+            "expected": "DataCloneError",
+            "actual": null
+          },
+          {
+            "path": ".observer.keys",
+            "expected": null,
+            "actual": []
+          },
+          {
+            "path": ".observer.success",
+            "expected": null,
+            "actual": true
+          },
+          {
+            "path": ".performance.error",
+            "expected": "DataCloneError",
+            "actual": null
+          },
+          {
+            "path": ".performance.keys",
+            "expected": null,
+            "actual": []
+          },
+          {
+            "path": ".performance.success",
+            "expected": null,
+            "actual": true
+          },
+          {
+            "path": ".timing.error",
+            "expected": "DataCloneError",
+            "actual": null
+          },
+          {
+            "path": ".timing.keys",
+            "expected": null,
+            "actual": [
+              "navigationStart",
+              "unloadEventStart",
+              "unloadEventEnd",
+              "redirectStart",
+              "redirectEnd",
+              "fetchStart",
+              "domainLookupStart",
+              "domainLookupEnd",
+              "connectStart",
+              "connectEnd",
+              "secureConnectionStart",
+              "requestStart",
+              "responseStart",
+              "responseEnd",
+              "domLoading",
+              "domInteractive",
+              "domContentLoadedEventStart",
+              "domContentLoadedEventEnd",
+              "domComplete",
+              "loadEventStart",
+              "loadEventEnd"
+            ]
+          },
+          {
+            "path": ".timing.success",
+            "expected": null,
+            "actual": true
+          }
+        ]
+      },
+      "after": {
+        "status": "MATCH",
+        "differences": []
+      }
+    },
+    {
+      "fixture": "performance_conversion",
+      "reference": "internal/browser/testdata/performance_conversion_chrome152.json",
+      "before": {
+        "status": "DIFFERENT",
+        "differences": [
+          {
+            "path": ".legacy.dns",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".mark[1]",
+            "expected": "detail",
+            "actual": "startTime"
+          },
+          {
+            "path": ".mark[4]",
+            "expected": "clone",
+            "actual": "detail"
+          },
+          {
+            "path": ".measure",
+            "expected": [
+              "detail",
+              "duration",
+              "end",
+              "start",
+              "SyntaxError"
+            ],
+            "actual": []
+          },
+          {
+            "path": ".observe",
+            "expected": [
+              "buffered",
+              "durationThreshold",
+              "number",
+              "entryTypes",
+              "type",
+              "string"
+            ],
+            "actual": [
+              "entryTypes",
+              "type",
+              "type",
+              "string",
+              "buffered"
+            ]
+          }
+        ]
+      },
+      "after": {
+        "status": "MATCH",
+        "differences": []
+      }
+    },
+    {
+      "fixture": "performance_conversion_worker",
+      "reference": "internal/browser/testdata/performance_conversion_worker_chrome152.json",
+      "before": {
+        "status": "CAPTURE_ERROR",
+        "error": "Evaluation failed: Error: TypeError: Illegal constructor"
+      },
+      "after": {
+        "status": "MATCH",
+        "differences": []
+      }
+    },
+    {
+      "fixture": "performance_edges",
+      "reference": "internal/browser/testdata/performance_edges_chrome152.json",
+      "before": {
+        "status": "CAPTURE_ERROR",
+        "error": "Evaluation failed: TypeError: Cannot read properties of undefined (reading 'startTime')"
+      },
+      "after": {
+        "status": "MATCH",
+        "differences": []
+      }
+    },
+    {
+      "fixture": "performance_input",
+      "reference": "internal/browser/testdata/performance_input_chrome152.json",
+      "before": {
+        "status": "CAPTURE_ERROR",
+        "error": "Evaluation failed: TypeError: Cannot read properties of undefined (reading 'get')"
+      },
+      "after": {
+        "status": "MATCH",
+        "differences": []
+      }
+    },
+    {
+      "fixture": "performance_lifecycle",
+      "reference": "internal/browser/testdata/performance_lifecycle_chrome152.json",
+      "before": {
+        "status": "CAPTURE_ERROR",
+        "error": "Evaluation failed: TypeError: Cannot convert undefined or null to object"
+      },
+      "after": {
+        "status": "MATCH",
+        "differences": []
+      }
+    },
+    {
+      "fixture": "performance_longtask",
+      "reference": "internal/browser/testdata/performance_longtask_chrome152.json",
+      "before": {
+        "status": "DIFFERENT",
+        "differences": [
+          {
+            "path": ".buffered",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".task",
+            "expected": {
+              "type": "longtask",
+              "name": "self",
+              "brand": true,
+              "duration": true,
+              "start": true,
+              "own": [],
+              "jsonKeys": [
+                "name",
+                "entryType",
+                "startTime",
+                "duration",
+                "navigationId",
+                "attribution"
+              ],
+              "attribution": [
+                {
+                  "type": "taskattribution",
+                  "name": "unknown",
+                  "start": 0,
+                  "duration": 0,
+                  "containerType": "window",
+                  "containerSrc": "",
+                  "containerId": "",
+                  "containerName": "",
+                  "brand": true
+                }
+              ],
+              "frozen": true,
+              "same": true,
+              "entrySame": true
+            },
+            "actual": null
+          }
+        ]
+      },
+      "after": {
+        "status": "MATCH",
+        "differences": []
+      }
+    },
+    {
+      "fixture": "performance_longtask_frames",
+      "reference": "internal/browser/testdata/performance_longtask_frames_chrome152.json",
+      "before": {
+        "status": "DIFFERENT",
+        "differences": [
+          {
+            "path": ".child",
+            "expected": [
+              {
+                "name": "self",
+                "brand": false,
+                "navigation": true,
+                "attribution": [
+                  {
+                    "name": "unknown",
+                    "type": "iframe",
+                    "id": "perf-frame",
+                    "frameName": "named-frame",
+                    "src": "/frame",
+                    "brand": false
+                  }
+                ]
+              }
+            ],
+            "actual": []
+          },
+          {
+            "path": ".top",
+            "expected": [
+              {
+                "name": "same-origin-descendant",
+                "brand": true,
+                "navigation": true,
+                "attribution": [
+                  {
+                    "name": "unknown",
+                    "type": "iframe",
+                    "id": "perf-frame",
+                    "frameName": "named-frame",
+                    "src": "/frame",
+                    "brand": true
+                  }
+                ]
+              }
+            ],
+            "actual": []
+          }
+        ]
+      },
+      "after": {
+        "status": "MATCH",
+        "differences": []
+      }
+    },
+    {
+      "fixture": "performance_memory",
+      "reference": "internal/browser/testdata/performance_memory_chrome152.json",
+      "before": {
+        "status": "CAPTURE_ERROR",
+        "error": "Evaluation failed: TypeError: Cannot read properties of undefined (reading 'usedJSHeapSize')"
+      },
+      "after": {
+        "status": "MATCH",
+        "differences": []
+      }
+    },
+    {
+      "fixture": "performance_navigation_events",
+      "reference": "internal/browser/testdata/performance_navigation_events_chrome152.json",
+      "before": {
+        "status": "DIFFERENT",
+        "differences": [
+          {
+            "path": ".bufferedSame",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".normalSame",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".rows[0].response",
+            "expected": false,
+            "actual": true
+          },
+          {
+            "path": ".rows[0].same",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".rows[1].dclStart",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".rows[1].interactive",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".rows[1].same",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".rows[2].complete",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".rows[2].dclEnd",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".rows[2].dclStart",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".rows[2].interactive",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".rows[2].loadStart",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".rows[2].same",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".rows[3].complete",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".rows[3].dclEnd",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".rows[3].dclStart",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".rows[3].durationZero",
+            "expected": false,
+            "actual": true
+          },
+          {
+            "path": ".rows[3].interactive",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".rows[3].loadEnd",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".rows[3].loadStart",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".rows[3].same",
+            "expected": true,
+            "actual": false
+          }
+        ]
+      },
+      "after": {
+        "status": "DIFFERENT",
+        "differences": [
+          {
+            "path": ".rows[0].response",
+            "expected": false,
+            "actual": true
+          }
+        ]
+      }
+    },
+    {
+      "fixture": "performance_observer",
+      "reference": "internal/browser/testdata/performance_observer_chrome152.json",
+      "before": {
+        "status": "DIFFERENT",
+        "differences": [
+          {
+            "path": ".buffered",
+            "expected": [
+              {
+                "name": "old",
+                "brand": true,
+                "identity": true
+              }
+            ],
+            "actual": []
+          },
+          {
+            "path": ".callback.arraysFresh",
+            "expected": true,
+            "actual": null
+          },
+          {
+            "path": ".callback.brand",
+            "expected": "[object PerformanceObserverEntryList]",
+            "actual": null
+          },
+          {
+            "path": ".callback.byName",
+            "expected": 1,
+            "actual": null
+          },
+          {
+            "path": ".callback.byType",
+            "expected": 2,
+            "actual": null
+          },
+          {
+            "path": ".callback.dropped",
+            "expected": 0,
+            "actual": null
+          },
+          {
+            "path": ".callback.identity",
+            "expected": true,
+            "actual": null
+          },
+          {
+            "path": ".callback.names",
+            "expected": [
+              "first",
+              "second"
+            ],
+            "actual": null
+          },
+          {
+            "path": ".callback.options",
+            "expected": [
+              "droppedEntriesCount"
+            ],
+            "actual": null
+          },
+          {
+            "path": ".callback.self",
+            "expected": true,
+            "actual": null
+          },
+          {
+            "path": ".callback.sequence",
+            "expected": [
+              "sync",
+              "microtask",
+              "observer"
+            ],
+            "actual": [
+              "sync",
+              "microtask"
+            ]
+          },
+          {
+            "path": ".callback.sorted",
+            "expected": true,
+            "actual": null
+          },
+          {
+            "path": ".callback.thisObserver",
+            "expected": true,
+            "actual": null
+          },
+          {
+            "path": ".callback.timeout",
+            "expected": null,
+            "actual": true
+          },
+          {
+            "path": ".clearDoesNotDrop",
+            "expected": [
+              "cleared"
+            ],
+            "actual": []
+          },
+          {
+            "path": ".mix",
+            "expected": "InvalidModificationError",
+            "actual": "ok"
+          },
+          {
+            "path": ".mixAfterDisconnect",
+            "expected": "InvalidModificationError",
+            "actual": "ok"
+          },
+          {
+            "path": ".options[2]",
+            "expected": "TypeError",
+            "actual": "ok"
+          },
+          {
+            "path": ".options[3]",
+            "expected": "ok",
+            "actual": "TypeError"
+          },
+          {
+            "path": ".options[6]",
+            "expected": "TypeError",
+            "actual": "ok"
+          },
+          {
+            "path": ".rebuffered",
+            "expected": [
+              "old",
+              "same",
+              "same"
+            ],
+            "actual": []
+          },
+          {
+            "path": ".records",
+            "expected": [
+              {
+                "name": "same",
+                "type": "mark",
+                "brand": true,
+                "identity": true
+              },
+              {
+                "name": "same",
+                "type": "mark",
+                "brand": true,
+                "identity": true
+              },
+              {
+                "name": "measure",
+                "type": "measure",
+                "brand": true,
+                "identity": false
+              }
+            ],
+            "actual": []
+          }
+        ]
+      },
+      "after": {
+        "status": "MATCH",
+        "differences": []
+      }
+    },
+    {
+      "fixture": "performance_observer_worker",
+      "reference": "internal/browser/testdata/performance_observer_worker_chrome152.json",
+      "before": {
+        "status": "CAPTURE_ERROR",
+        "error": "Evaluation failed: Error: TypeError: Illegal constructor"
+      },
+      "after": {
+        "status": "MATCH",
+        "differences": []
+      }
+    },
+    {
+      "fixture": "performance_redirect",
+      "reference": "internal/browser/testdata/performance_redirect_chrome152.json",
+      "before": {
+        "status": "DIFFERENT",
+        "differences": [
+          {
+            "path": ".count",
+            "expected": 1,
+            "actual": 3
+          },
+          {
+            "path": ".redirect.duration",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".redirect.order",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".redirect.status",
+            "expected": 200,
+            "actual": 302
+          },
+          {
+            "path": ".redirect.visible",
+            "expected": true,
+            "actual": false
+          }
+        ]
+      },
+      "after": {
+        "status": "MATCH",
+        "differences": []
+      }
+    },
+    {
+      "fixture": "performance_redirect_privacy",
+      "reference": "internal/browser/testdata/performance_redirect_privacy_chrome152.json",
+      "before": {
+        "status": "DIFFERENT",
+        "differences": [
+          {
+            "path": ".allAllowed.body",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".allAllowed.duration",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".allAllowed.hiddenStart",
+            "expected": false,
+            "actual": true
+          },
+          {
+            "path": ".allAllowed.redirect",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".allAllowed.status",
+            "expected": 200,
+            "actual": 302
+          },
+          {
+            "path": ".allowed.details",
+            "expected": false,
+            "actual": true
+          },
+          {
+            "path": ".allowed.duration",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".allowed.status",
+            "expected": 200,
+            "actual": 302
+          },
+          {
+            "path": ".hiddenFinal.details",
+            "expected": false,
+            "actual": true
+          },
+          {
+            "path": ".hiddenFinal.duration",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".hiddenFinal.status",
+            "expected": 200,
+            "actual": 302
+          },
+          {
+            "path": ".hiddenHop.details",
+            "expected": false,
+            "actual": true
+          },
+          {
+            "path": ".hiddenHop.duration",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".hiddenHop.status",
+            "expected": 200,
+            "actual": 302
+          },
+          {
+            "path": ".navigation.order",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".navigation.redirectCount",
+            "expected": 1,
+            "actual": 0
+          },
+          {
+            "path": ".navigation.redirectEnd",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".same.body",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".same.hiddenStart",
+            "expected": false,
+            "actual": true
+          },
+          {
+            "path": ".same.redirect",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".same.status",
+            "expected": 200,
+            "actual": 302
+          }
+        ]
+      },
+      "after": {
+        "status": "MATCH",
+        "differences": []
+      }
+    },
+    {
+      "fixture": "performance_resource",
+      "reference": "internal/browser/testdata/performance_resource_chrome152.json",
+      "before": {
+        "status": "DIFFERENT",
+        "differences": [
+          {
+            "path": ".buffer.count",
+            "expected": 1,
+            "actual": 8
+          },
+          {
+            "path": ".buffer.events",
+            "expected": [
+              {
+                "trusted": true,
+                "target": true,
+                "thisValue": true,
+                "type": "resourcetimingbufferfull",
+                "bubbles": false,
+                "cancelable": false
+              },
+              {
+                "trusted": true,
+                "target": true,
+                "thisValue": true,
+                "type": "resourcetimingbufferfull",
+                "bubbles": false,
+                "cancelable": false
+              }
+            ],
+            "actual": []
+          },
+          {
+            "path": ".clear.empty",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".hidden.contentEncoding",
+            "expected": "",
+            "actual": null
+          },
+          {
+            "path": ".hidden.contentType",
+            "expected": "text/plain",
+            "actual": ""
+          },
+          {
+            "path": ".hidden.duration",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".hidden.finalHeaders",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".hidden.identity",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".hidden.keys",
+            "expected": [
+              "name",
+              "entryType",
+              "startTime",
+              "duration",
+              "navigationId",
+              "initiatorType",
+              "deliveryType",
+              "nextHopProtocol",
+              "renderBlockingStatus",
+              "contentType",
+              "contentEncoding",
+              "workerStart",
+              "workerRouterEvaluationStart",
+              "workerCacheLookupStart",
+              "workerMatchedSourceType",
+              "workerFinalSourceType",
+              "redirectStart",
+              "redirectEnd",
+              "fetchStart",
+              "domainLookupStart",
+              "domainLookupEnd",
+              "connectStart",
+              "secureConnectionStart",
+              "connectEnd",
+              "requestStart",
+              "responseStart",
+              "firstInterimResponseStart",
+              "finalResponseHeadersStart",
+              "responseEnd",
+              "transferSize",
+              "encodedBodySize",
+              "decodedBodySize",
+              "responseStatus",
+              "serverTiming"
+            ],
+            "actual": [
+              "name",
+              "entryType",
+              "startTime",
+              "duration",
+              "navigationId",
+              "initiatorType",
+              "deliveryType",
+              "nextHopProtocol",
+              "contentType",
+              "workerStart",
+              "redirectStart",
+              "redirectEnd",
+              "fetchStart",
+              "domainLookupStart",
+              "domainLookupEnd",
+              "connectStart",
+              "secureConnectionStart",
+              "connectEnd",
+              "requestStart",
+              "responseStart",
+              "firstInterimResponseStart",
+              "responseEnd",
+              "transferSize",
+              "encodedBodySize",
+              "decodedBodySize",
+              "responseStatus",
+              "serverTiming"
+            ]
+          },
+          {
+            "path": ".hidden.renderBlocking",
+            "expected": "non-blocking",
+            "actual": null
+          },
+          {
+            "path": ".hidden.status",
+            "expected": 200,
+            "actual": 0
+          },
+          {
+            "path": ".opaque.body",
+            "expected": null,
+            "actual": 20
+          },
+          {
+            "path": ".opaque.brand",
+            "expected": null,
+            "actual": true
+          },
+          {
+            "path": ".opaque.contentType",
+            "expected": null,
+            "actual": "application/javascript"
+          },
+          {
+            "path": ".opaque.duration",
+            "expected": null,
+            "actual": false
+          },
+          {
+            "path": ".opaque.finalHeaders",
+            "expected": null,
+            "actual": false
+          },
+          {
+            "path": ".opaque.hidden",
+            "expected": null,
+            "actual": false
+          },
+          {
+            "path": ".opaque.identity",
+            "expected": null,
+            "actual": false
+          },
+          {
+            "path": ".opaque.initiator",
+            "expected": null,
+            "actual": "fetch"
+          },
+          {
+            "path": ".opaque.jsonServerSame",
+            "expected": null,
+            "actual": false
+          },
+          {
+            "path": ".opaque.keys",
+            "expected": null,
+            "actual": [
+              "name",
+              "entryType",
+              "startTime",
+              "duration",
+              "navigationId",
+              "initiatorType",
+              "deliveryType",
+              "nextHopProtocol",
+              "contentType",
+              "workerStart",
+              "redirectStart",
+              "redirectEnd",
+              "fetchStart",
+              "domainLookupStart",
+              "domainLookupEnd",
+              "connectStart",
+              "secureConnectionStart",
+              "connectEnd",
+              "requestStart",
+              "responseStart",
+              "firstInterimResponseStart",
+              "responseEnd",
+              "transferSize",
+              "encodedBodySize",
+              "decodedBodySize",
+              "responseStatus",
+              "serverTiming"
+            ]
+          },
+          {
+            "path": ".opaque.name",
+            "expected": null,
+            "actual": "cross"
+          },
+          {
+            "path": ".opaque.order",
+            "expected": null,
+            "actual": true
+          },
+          {
+            "path": ".opaque.own",
+            "expected": null,
+            "actual": []
+          },
+          {
+            "path": ".opaque.phases",
+            "expected": null,
+            "actual": true
+          },
+          {
+            "path": ".opaque.present",
+            "expected": false,
+            "actual": null
+          },
+          {
+            "path": ".opaque.protocol",
+            "expected": null,
+            "actual": ""
+          },
+          {
+            "path": ".opaque.server",
+            "expected": null,
+            "actual": [
+              {
+                "description": "database, primary",
+                "duration": 12.5,
+                "name": "db"
+              },
+              {
+                "description": "hit",
+                "duration": 0,
+                "name": "cache"
+              },
+              {
+                "description": "last",
+                "duration": 7,
+                "name": "dup"
+              },
+              {
+                "description": "",
+                "duration": -2,
+                "name": "neg"
+              }
+            ]
+          },
+          {
+            "path": ".opaque.serverBrand",
+            "expected": null,
+            "actual": true
+          },
+          {
+            "path": ".opaque.serverEntrySame",
+            "expected": null,
+            "actual": false
+          },
+          {
+            "path": ".opaque.serverFrozen",
+            "expected": null,
+            "actual": true
+          },
+          {
+            "path": ".opaque.serverSame",
+            "expected": null,
+            "actual": false
+          },
+          {
+            "path": ".opaque.status",
+            "expected": null,
+            "actual": 200
+          },
+          {
+            "path": ".opaque.transferRelation",
+            "expected": null,
+            "actual": true
+          },
+          {
+            "path": ".opaque.type",
+            "expected": null,
+            "actual": "resource"
+          },
+          {
+            "path": ".same.contentEncoding",
+            "expected": "",
+            "actual": null
+          },
+          {
+            "path": ".same.finalHeaders",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".same.identity",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".same.keys",
+            "expected": [
+              "name",
+              "entryType",
+              "startTime",
+              "duration",
+              "navigationId",
+              "initiatorType",
+              "deliveryType",
+              "nextHopProtocol",
+              "renderBlockingStatus",
+              "contentType",
+              "contentEncoding",
+              "workerStart",
+              "workerRouterEvaluationStart",
+              "workerCacheLookupStart",
+              "workerMatchedSourceType",
+              "workerFinalSourceType",
+              "redirectStart",
+              "redirectEnd",
+              "fetchStart",
+              "domainLookupStart",
+              "domainLookupEnd",
+              "connectStart",
+              "secureConnectionStart",
+              "connectEnd",
+              "requestStart",
+              "responseStart",
+              "firstInterimResponseStart",
+              "finalResponseHeadersStart",
+              "responseEnd",
+              "transferSize",
+              "encodedBodySize",
+              "decodedBodySize",
+              "responseStatus",
+              "serverTiming"
+            ],
+            "actual": [
+              "name",
+              "entryType",
+              "startTime",
+              "duration",
+              "navigationId",
+              "initiatorType",
+              "deliveryType",
+              "nextHopProtocol",
+              "contentType",
+              "workerStart",
+              "redirectStart",
+              "redirectEnd",
+              "fetchStart",
+              "domainLookupStart",
+              "domainLookupEnd",
+              "connectStart",
+              "secureConnectionStart",
+              "connectEnd",
+              "requestStart",
+              "responseStart",
+              "firstInterimResponseStart",
+              "responseEnd",
+              "transferSize",
+              "encodedBodySize",
+              "decodedBodySize",
+              "responseStatus",
+              "serverTiming"
+            ]
+          },
+          {
+            "path": ".same.protocol",
+            "expected": "http/1.0",
+            "actual": ""
+          },
+          {
+            "path": ".same.renderBlocking",
+            "expected": "non-blocking",
+            "actual": null
+          },
+          {
+            "path": ".same.server[2].description",
+            "expected": "first",
+            "actual": "last"
+          },
+          {
+            "path": ".same.server[2].duration",
+            "expected": 1,
+            "actual": 7
+          },
+          {
+            "path": ".same.serverEntrySame",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".tao.contentEncoding",
+            "expected": "",
+            "actual": null
+          },
+          {
+            "path": ".tao.duration",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".tao.finalHeaders",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".tao.identity",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".tao.keys",
+            "expected": [
+              "name",
+              "entryType",
+              "startTime",
+              "duration",
+              "navigationId",
+              "initiatorType",
+              "deliveryType",
+              "nextHopProtocol",
+              "renderBlockingStatus",
+              "contentType",
+              "contentEncoding",
+              "workerStart",
+              "workerRouterEvaluationStart",
+              "workerCacheLookupStart",
+              "workerMatchedSourceType",
+              "workerFinalSourceType",
+              "redirectStart",
+              "redirectEnd",
+              "fetchStart",
+              "domainLookupStart",
+              "domainLookupEnd",
+              "connectStart",
+              "secureConnectionStart",
+              "connectEnd",
+              "requestStart",
+              "responseStart",
+              "firstInterimResponseStart",
+              "finalResponseHeadersStart",
+              "responseEnd",
+              "transferSize",
+              "encodedBodySize",
+              "decodedBodySize",
+              "responseStatus",
+              "serverTiming"
+            ],
+            "actual": [
+              "name",
+              "entryType",
+              "startTime",
+              "duration",
+              "navigationId",
+              "initiatorType",
+              "deliveryType",
+              "nextHopProtocol",
+              "contentType",
+              "workerStart",
+              "redirectStart",
+              "redirectEnd",
+              "fetchStart",
+              "domainLookupStart",
+              "domainLookupEnd",
+              "connectStart",
+              "secureConnectionStart",
+              "connectEnd",
+              "requestStart",
+              "responseStart",
+              "firstInterimResponseStart",
+              "responseEnd",
+              "transferSize",
+              "encodedBodySize",
+              "decodedBodySize",
+              "responseStatus",
+              "serverTiming"
+            ]
+          },
+          {
+            "path": ".tao.protocol",
+            "expected": "http/1.0",
+            "actual": ""
+          },
+          {
+            "path": ".tao.renderBlocking",
+            "expected": "non-blocking",
+            "actual": null
+          },
+          {
+            "path": ".tao.server[2].description",
+            "expected": "first",
+            "actual": "last"
+          },
+          {
+            "path": ".tao.server[2].duration",
+            "expected": 1,
+            "actual": 7
+          },
+          {
+            "path": ".tao.serverEntrySame",
+            "expected": true,
+            "actual": false
+          }
+        ]
+      },
+      "after": {
+        "status": "DIFFERENT",
+        "differences": [
+          {
+            "path": ".opaque.body",
+            "expected": null,
+            "actual": 20
+          },
+          {
+            "path": ".opaque.brand",
+            "expected": null,
+            "actual": true
+          },
+          {
+            "path": ".opaque.contentEncoding",
+            "expected": null,
+            "actual": ""
+          },
+          {
+            "path": ".opaque.contentType",
+            "expected": null,
+            "actual": "application/javascript"
+          },
+          {
+            "path": ".opaque.duration",
+            "expected": null,
+            "actual": true
+          },
+          {
+            "path": ".opaque.finalHeaders",
+            "expected": null,
+            "actual": true
+          },
+          {
+            "path": ".opaque.hidden",
+            "expected": null,
+            "actual": false
+          },
+          {
+            "path": ".opaque.identity",
+            "expected": null,
+            "actual": true
+          },
+          {
+            "path": ".opaque.initiator",
+            "expected": null,
+            "actual": "fetch"
+          },
+          {
+            "path": ".opaque.jsonServerSame",
+            "expected": null,
+            "actual": false
+          },
+          {
+            "path": ".opaque.keys",
+            "expected": null,
+            "actual": [
+              "name",
+              "entryType",
+              "startTime",
+              "duration",
+              "navigationId",
+              "initiatorType",
+              "deliveryType",
+              "nextHopProtocol",
+              "renderBlockingStatus",
+              "contentType",
+              "contentEncoding",
+              "workerStart",
+              "workerRouterEvaluationStart",
+              "workerCacheLookupStart",
+              "workerMatchedSourceType",
+              "workerFinalSourceType",
+              "redirectStart",
+              "redirectEnd",
+              "fetchStart",
+              "domainLookupStart",
+              "domainLookupEnd",
+              "connectStart",
+              "secureConnectionStart",
+              "connectEnd",
+              "requestStart",
+              "responseStart",
+              "firstInterimResponseStart",
+              "finalResponseHeadersStart",
+              "responseEnd",
+              "transferSize",
+              "encodedBodySize",
+              "decodedBodySize",
+              "responseStatus",
+              "serverTiming"
+            ]
+          },
+          {
+            "path": ".opaque.name",
+            "expected": null,
+            "actual": "cross"
+          },
+          {
+            "path": ".opaque.order",
+            "expected": null,
+            "actual": true
+          },
+          {
+            "path": ".opaque.own",
+            "expected": null,
+            "actual": []
+          },
+          {
+            "path": ".opaque.phases",
+            "expected": null,
+            "actual": true
+          },
+          {
+            "path": ".opaque.present",
+            "expected": false,
+            "actual": null
+          },
+          {
+            "path": ".opaque.protocol",
+            "expected": null,
+            "actual": "http/1.0"
+          },
+          {
+            "path": ".opaque.renderBlocking",
+            "expected": null,
+            "actual": "non-blocking"
+          },
+          {
+            "path": ".opaque.server",
+            "expected": null,
+            "actual": [
+              {
+                "description": "database, primary",
+                "duration": 12.5,
+                "name": "db"
+              },
+              {
+                "description": "hit",
+                "duration": 0,
+                "name": "cache"
+              },
+              {
+                "description": "first",
+                "duration": 1,
+                "name": "dup"
+              },
+              {
+                "description": "",
+                "duration": -2,
+                "name": "neg"
+              }
+            ]
+          },
+          {
+            "path": ".opaque.serverBrand",
+            "expected": null,
+            "actual": true
+          },
+          {
+            "path": ".opaque.serverEntrySame",
+            "expected": null,
+            "actual": true
+          },
+          {
+            "path": ".opaque.serverFrozen",
+            "expected": null,
+            "actual": true
+          },
+          {
+            "path": ".opaque.serverSame",
+            "expected": null,
+            "actual": false
+          },
+          {
+            "path": ".opaque.status",
+            "expected": null,
+            "actual": 200
+          },
+          {
+            "path": ".opaque.transferRelation",
+            "expected": null,
+            "actual": true
+          },
+          {
+            "path": ".opaque.type",
+            "expected": null,
+            "actual": "resource"
+          }
+        ]
+      }
+    },
+    {
+      "fixture": "performance_specific_memory_isolated",
+      "reference": "internal/browser/testdata/performance_specific_memory_isolated_chrome152.json",
+      "before": {
+        "status": "DIFFERENT",
+        "differences": [
+          {
+            "path": ".promise",
+            "expected": true,
+            "actual": false
+          },
+          {
+            "path": ".receiver",
+            "expected": "async:TypeError",
+            "actual": "resolved"
+          },
+          {
+            "path": ".result.breakdown",
+            "expected": true,
+            "actual": null
+          },
+          {
+            "path": ".result.error",
+            "expected": null,
+            "actual": "TypeError"
+          },
+          {
+            "path": ".result.keys",
+            "expected": [
+              "breakdown",
+              "bytes"
+            ],
+            "actual": null
+          },
+          {
+            "path": ".result.positive",
+            "expected": true,
+            "actual": null
+          },
+          {
+            "path": ".result.rows",
+            "expected": [
+              {
+                "keys": [
+                  "attribution",
+                  "bytes",
+                  "types"
+                ],
+                "bytesNonnegative": true,
+                "types": [],
+                "attribution": []
+              },
+              {
+                "keys": [
+                  "attribution",
+                  "bytes",
+                  "types"
+                ],
+                "bytesNonnegative": true,
+                "types": [
+                  "DOM"
+                ],
+                "attribution": []
+              },
+              {
+                "keys": [
+                  "attribution",
+                  "bytes",
+                  "types"
+                ],
+                "bytesNonnegative": true,
+                "types": [
+                  "JavaScript"
+                ],
+                "attribution": [
+                  {
+                    "keys": [
+                      "scope",
+                      "url"
+                    ],
+                    "scope": "Window",
+                    "url": "self"
+                  }
+                ]
+              },
+              {
+                "keys": [
+                  "attribution",
+                  "bytes",
+                  "types"
+                ],
+                "bytesNonnegative": true,
+                "types": [
+                  "Shared"
+                ],
+                "attribution": []
+              }
+            ],
+            "actual": null
+          },
+          {
+            "path": ".result.sum",
+            "expected": true,
+            "actual": null
+          }
+        ]
+      },
+      "after": {
+        "status": "DIFFERENT",
+        "differences": [
+          {
+            "path": ".result.breakdown",
+            "expected": true,
+            "actual": null
+          },
+          {
+            "path": ".result.error",
+            "expected": null,
+            "actual": "NotSupportedError"
+          },
+          {
+            "path": ".result.keys",
+            "expected": [
+              "breakdown",
+              "bytes"
+            ],
+            "actual": null
+          },
+          {
+            "path": ".result.positive",
+            "expected": true,
+            "actual": null
+          },
+          {
+            "path": ".result.rows",
+            "expected": [
+              {
+                "keys": [
+                  "attribution",
+                  "bytes",
+                  "types"
+                ],
+                "bytesNonnegative": true,
+                "types": [],
+                "attribution": []
+              },
+              {
+                "keys": [
+                  "attribution",
+                  "bytes",
+                  "types"
+                ],
+                "bytesNonnegative": true,
+                "types": [
+                  "DOM"
+                ],
+                "attribution": []
+              },
+              {
+                "keys": [
+                  "attribution",
+                  "bytes",
+                  "types"
+                ],
+                "bytesNonnegative": true,
+                "types": [
+                  "JavaScript"
+                ],
+                "attribution": [
+                  {
+                    "keys": [
+                      "scope",
+                      "url"
+                    ],
+                    "scope": "Window",
+                    "url": "self"
+                  }
+                ]
+              },
+              {
+                "keys": [
+                  "attribution",
+                  "bytes",
+                  "types"
+                ],
+                "bytesNonnegative": true,
+                "types": [
+                  "Shared"
+                ],
+                "attribution": []
+              }
+            ],
+            "actual": null
+          },
+          {
+            "path": ".result.sum",
+            "expected": true,
+            "actual": null
+          }
+        ]
+      }
+    },
+    {
+      "fixture": "performance_surface",
+      "reference": "internal/browser/testdata/performance_surface_chrome152.json",
+      "before": {
+        "status": "CAPTURE_ERROR",
+        "error": "Evaluation failed: TypeError: Cannot convert undefined or null to object"
+      },
+      "after": {
+        "status": "MATCH",
+        "differences": []
+      }
+    },
+    {
+      "fixture": "performance_surface_isolated",
+      "reference": "internal/browser/testdata/performance_surface_isolated_chrome152.json",
+      "before": {
+        "status": "CAPTURE_ERROR",
+        "error": "Evaluation failed: TypeError: Cannot convert undefined or null to object"
+      },
+      "after": {
+        "status": "MATCH",
+        "differences": []
+      }
+    },
+    {
+      "fixture": "performance_surface_worker",
+      "reference": "internal/browser/testdata/performance_surface_worker_chrome152.json",
+      "before": {
+        "status": "CAPTURE_ERROR",
+        "error": "Evaluation failed: Error: TypeError: Cannot convert undefined or null to object"
+      },
+      "after": {
+        "status": "MATCH",
+        "differences": []
+      }
+    },
+    {
+      "fixture": "performance_user_timing",
+      "reference": "internal/browser/testdata/performance_user_timing_chrome152.json",
+      "before": {
+        "status": "CAPTURE_ERROR",
+        "error": "Evaluation failed: TypeError: Cannot read properties of undefined (reading 'toJSON')"
+      },
+      "after": {
+        "status": "MATCH",
+        "differences": []
+      }
+    },
+    {
+      "fixture": "performance_user_timing_worker",
+      "reference": "internal/browser/testdata/performance_user_timing_worker_chrome152.json",
+      "before": {
+        "status": "CAPTURE_ERROR",
+        "error": "Evaluation failed: Error: TypeError: Cannot read properties of undefined (reading 'toJSON')"
+      },
+      "after": {
+        "status": "MATCH",
+        "differences": []
+      }
+    }
+  ]
+}

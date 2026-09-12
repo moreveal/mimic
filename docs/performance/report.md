@@ -1745,3 +1745,31 @@ Chrome's 25.1, using 1.7 versus 4.0 GiB active RSS. This concurrency advantage
 predates the patch. The patch's own parallel throughput change is not established;
 100-Page medians decline in both pairs with wide wave-to-wave variance. See the
 checkpoint for recovery memory, test limitations and executed binary receipts.
+
+## Performance API semantic subsystem (2026-09-12)
+
+The [Chrome 152.0.7977.82 compatibility package](../performance-api/README.md)
+introduces authoritative document/worker timelines, observers, transport and
+lifecycle timing, task/input observations and a synthetic memory projection.
+The controlled differential improves from zero to 20 complete matches across
+23 groups; three explicit streaming/opaque/agent-cluster boundaries remain.
+
+Four unchanged fast gates complete with 184 VALID executions and eight verified
+fresh-binary launches each. Initial-base/intermediate/final/repeated-base React
+completion medians are 87.09/87.15/104.50/97.83 ms. Final 10/25-Page throughput is
+68.20/68.19 Pages/s versus repeated-base 75.15/90.16, a 9.2%/24.4% decline. Host
+variation is visible, but the throughput regression remains unresolved;
+performance neutrality is not established. The full
+[receipt](../performance-api/performance.json) preserves all runs rather than
+selecting the approximately neutral intermediate pair.
+
+Final 10-Page static/React private memory is 494.61/536.34 MiB active and
+151.29/162.00 MiB after teardown plus 250 ms, versus repeated-base
+488.66/538.45 and 155.07/165.18 MiB. Long-run retention and allocation-pressure
+neutrality were not established. Concurrency regression profiling remains open.
+Focused Performance race checks pass. Ordinary full tests passed earlier, but
+the final repeat fails the snapshot navigation responseEnd relation after body
+completion; this remains an open semantic defect. The full race
+attempt times out at ten minutes in the browser package's Goja child-navigation
+test without a preceding data-race report. See the compatibility report for
+all skips, initial failed attempts and unchanged baseline audit failures.
