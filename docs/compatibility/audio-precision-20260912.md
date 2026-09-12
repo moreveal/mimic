@@ -24,6 +24,18 @@ exactly. These remaining differences are deterministic numerical residuals,
 not timing or random variation, and are not claimed resolved by this patch.
 The existing portable FFT synthesis contract and tolerances remain unchanged.
 
+Backend localization: Chromium's pinned `WebAudioRustFft` feature is stable.
+The frozen binary's default output equals an explicitly enabled RustFFT run
+for every sample in all six graphs. A diagnostic run disabling that feature
+changes 642 uncompressed triangle and 640 sine samples, leaving both constant
+buffer graphs unchanged. Those feature-overridden runs are diagnostics only,
+not reference oracles. The active backend uses RustFFT 6.4.1 with Float32
+half-size complex transforms and reconstruction (`rustfft_ffi.rs`); Mimic uses
+a full-size Float64 radix-2 transform. Exact synthesis closure requires matching
+that arithmetic rather than adjusting PCM hashes or treating it as randomness.
+The two diagnostic runners and passports are retained in `audio-rust` and
+`audio-pffft` beside the clean controls.
+
 Validation: `go test ./internal/browser -run
 'TestAudioCompressorPrecision|TestOfflineAudio' -count=1` passes. No whole-suite,
 race or performance gate was run for this arithmetic correction.
