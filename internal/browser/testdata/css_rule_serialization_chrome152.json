@@ -1,0 +1,156 @@
+{
+  "captureMetadata": {
+    "href": "http://127.0.0.1:64248/plain",
+    "isSecureContext": true,
+    "crossOriginIsolated": false,
+    "innerWidth": 1272,
+    "innerHeight": 653,
+    "outerWidth": 1280,
+    "outerHeight": 800,
+    "devicePixelRatio": 1,
+    "visibility": "visible",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "platform": "Win32"
+  },
+  "provenance": {
+    "revision": "2cfaf478c7936dcfb9dabe8c935d76430b8da865",
+    "dirtyState": " M internal/webapi/cssom_compatibility.js\n M internal/webapi/webkit_css.js\n",
+    "sourceSHA256": "577d4604c1eaa1d627a149ee3d4038842a6b91356e14bf1dbd78b00f7b98f657",
+    "probeSHA256": "b699b86c44d7ba976d20a1e59cb58b4ab688fcd6df8a77b8e1e6de921b7fb1e9",
+    "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+    "mimicSHA256": "f0adde4b6b734859ab38cac1b6a12bcc8b286406b7f323dbb4dfa85c97e4aee9",
+    "args": [
+      "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "--remote-debugging-port=20081",
+      "--user-data-dir=E:\\GitHub\\mimic\\.build\\residual-dom-delegated\\css-controls\\chrome-profile-b",
+      "--no-first-run",
+      "--no-default-browser-check",
+      "--window-size=1280,800",
+      "about:blank"
+    ],
+    "profile": "E:\\GitHub\\mimic\\.build\\residual-dom-delegated\\css-controls\\chrome-profile",
+    "browserMode": "headful",
+    "environmentProfile": "chrome-152-windows-x64-headful-controlled-v1",
+    "featureOverrides": [],
+    "records": [
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      }
+    ],
+    "exitCodes": {
+      "chrome": 1,
+      "mimic": 1
+    },
+    "chromeControl": [],
+    "chromeMimic": []
+  },
+  "version": {
+    "Browser": "Chrome/152.0.7977.82",
+    "Protocol-Version": "1.3",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "V8-Version": "15.2.124.21",
+    "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:20081/devtools/browser/4ac66a57-05b0-4daa-b79c-cdab633f52b5"
+  },
+  "result": {
+    "result": {
+      "value": {
+        "rules": [
+          [
+            "@keyframes a { \n  0% { transform: scale3d(1, 1, 1); }\n  100% { transform: translate(1px, 2px); }\n}"
+          ],
+          [
+            "@media (width > 1px) {\n  .a { color: red; }\n  .b { color: blue; }\n}"
+          ],
+          [
+            "@supports (display:grid) {\n  .a { display: grid; }\n}"
+          ],
+          [
+            "@layer a {\n  .a { color: red; }\n}"
+          ],
+          [
+            "@keyframes empty { \n}"
+          ]
+        ],
+        "transforms": [
+          [
+            "matrix(1,0,0,1,2,3)",
+            "matrix(1, 0, 0, 1, 2, 3)",
+            "transform: matrix(1, 0, 0, 1, 2, 3);"
+          ],
+          [
+            "translate(1px,2px)",
+            "translate(1px, 2px)",
+            "transform: translate(1px, 2px);"
+          ],
+          [
+            "translateX(2px)",
+            "translateX(2px)",
+            "transform: translateX(2px);"
+          ],
+          [
+            "translate3d(1px,2px,3px)",
+            "translate3d(1px, 2px, 3px)",
+            "transform: translate3d(1px, 2px, 3px);"
+          ],
+          [
+            "scale(1,2)",
+            "scale(1, 2)",
+            "transform: scale(1, 2);"
+          ],
+          [
+            "scale3d(1,2,3)",
+            "scale3d(1, 2, 3)",
+            "transform: scale3d(1, 2, 3);"
+          ],
+          [
+            "rotate3d(1,0,0,20deg)",
+            "rotate3d(1, 0, 0, 20deg)",
+            "transform: rotate3d(1, 0, 0, 20deg);"
+          ],
+          [
+            "skew(1deg,2deg)",
+            "skew(1deg, 2deg)",
+            "transform: skew(1deg, 2deg);"
+          ],
+          [
+            "var(--a,translate(1px,2px))",
+            "var(--a,translate(1px,2px))",
+            "transform: var(--a,translate(1px,2px));"
+          ],
+          [
+            "translate(calc(1px + 2px),4px)",
+            "translate(calc(3px), 4px)",
+            "transform: translate(calc(3px), 4px);"
+          ],
+          [
+            "perspective(200px) rotate(20deg)",
+            "perspective(200px) rotate(20deg)",
+            "transform: perspective(200px) rotate(20deg);"
+          ]
+        ]
+      }
+    }
+  }
+}

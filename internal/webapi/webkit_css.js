@@ -40,6 +40,11 @@ const webkitCSSKeywords=new Map(Object.entries({
 const normalizeCSSValue=(name,value,inputName=name)=>{
  value=String(value).trim();if(!value)return '';if(cssTopLevelBang(value)>=0)return null;
  value=cssAliasInputValue(name,value,inputName);
+ // Parsed transform lists serialize argument separators, while substitution
+ // functions remain author token streams until computed-value resolution.
+ if(name==='transform'&&!/\b(?:var|env)\s*\(/i.test(value)){
+  value=value.replace(/calc\([^()]*\)/gi,term=>cssLengthValue(term)||term).replace(/\s*,\s*/g,', ');
+ }
  const parser=cssShorthandParsers.get(name)||cssLonghandParsers.get(name);
  if(parser&&cssWideValue(value.toLowerCase()))return value.toLowerCase();
  if(parser&&!cssWideValue(value.toLowerCase())&&!/^var\(/.test(value)){

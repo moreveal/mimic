@@ -36,13 +36,19 @@ const constructedStyleSheets = (() => {
     if(node.type==='SelectorList'||node.type==='MediaQueryList')return children().join(', ');
     if(node.type==='AtrulePrelude'||node.type==='Condition')return children().join(' ');
     if(node.type==='Feature')return '('+node.name+(node.value?': '+generate(node.value):'')+')';
+    if(node.type==='FeatureRange')return '('+[generate(node.left),node.leftComparison,generate(node.middle),node.rightComparison,node.right&&generate(node.right)].filter(Boolean).join(' ')+')';
     if(node.type==='MediaQuery')return [node.modifier,node.mediaType,node.condition&&(node.mediaType?'and ':'')+preludeText(node.condition)].filter(Boolean).join(' ');
     return generate(node);
   }
   function ruleText(rule) {
     const state=rules.get(rule),node=state.node;
-    if(node.type==='Rule')return preludeText(node.prelude)+' { '+declarationText(node.block)+(state.children.length?' '+state.children.map(ruleText).join(' '):'')+' }';
+    if(node.type==='Rule'){
+      let selector=preludeText(node.prelude);
+      if(rules.get(state.parent)?.node.name==='keyframes')selector=selector.split(',').map(part=>{part=part.trim();return part==='from'?'0%':part==='to'?'100%':part}).join(', ');
+      return selector+' { '+declarationText(node.block)+(state.children.length?' '+state.children.map(ruleText).join(' '):'')+' }';
+    }
     const prelude=node.prelude?' '+preludeText(node.prelude):'';
+    if(node.name==='keyframes')return '@'+node.name+prelude+' { \n'+state.children.map(child=>'  '+ruleText(child)+'\n').join('')+'}';
     return '@'+node.name+prelude+(node.block?(state.children.length?' {\n'+state.children.map(child=>'  '+ruleText(child).replace(/\n/g,'\n  ')).join('\n')+'\n}':' { '+declarationText(node.block)+' }'):';');
   }
   function makeStyle(state) {
