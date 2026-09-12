@@ -1,0 +1,306 @@
+{
+  "IGBuA2": {
+    "status": "localized",
+    "review": "Five extra indices: missing console.dir/dirxml/table/trace and Summarizer.availability. Direct read-before-push and local oracle; former debug/log/digest mapping was wrong."
+  },
+  "oHIQ6": {
+    "status": "localized",
+    "review": "23 indices: fetch prototype (652); cyclic self-prototype mutation of proxied Function.prototype.toString (690); Object.toString stack substring (699); four Window getter source/name groups (20 indices). Local cycle oracle confirms setPrototypeOf succeeds only for Mimic Function.prototype.toString then toString lookup overflows, versus immediate Chrome TypeError."
+  },
+  "SbVZ3": {
+    "status": "localized",
+    "review": "90/62: missing four console methods replace 8 tokens with2 each (-24); console log toString observations produce four additional Chrome tokens (-4). Error name/message accessor observation otherwise same. Console custom-toString observations are Runtime.enable inspector-conditioned; ordinary unattached page behavior is not established."
+  },
+  "OjmeV1": {
+    "status": "localized",
+    "review": "75 Math.random-derived variable;82 getComputedStyle(div).display empty/flex;118/119 structuredClone boxed BigInt/RegExp returns object/undefined, then success/error paths. Clone delegated separately. Exact detached/hidden-frame CSS fixture boundary remains to be minimized; do not claim the entire CSS display root fixed."
+  },
+  "BMnw0": {
+    "status": "localized",
+    "review": "performance.memory object vs undefined; presence selects heap collection vs null. Heap values themselves fluctuate."
+  },
+  "xWWV8": {
+    "status": "localized",
+    "review": "performance.memory object vs undefined; presence selects heap collection vs null. Heap values themselves fluctuate."
+  },
+  "knVv1": {
+    "status": "localized",
+    "review": "CSP Trusted Types eval/sink enforcement and default-policy callbacks; prior local oracle. Mask7/0 and eval success/error token."
+  },
+  "UYbIv2": {
+    "status": "localized",
+    "review": "CSP Trusted Types eval/sink enforcement and default-policy callbacks; prior local oracle. Mask7/0 and eval success/error token."
+  },
+  "MlWrD5": {
+    "status": "localized",
+    "review": "Summarizer.availability exists and resolves unavailable in Chrome; missing member selects Ljcm8 in Mimic. Same API absence as IGBuA2[84]."
+  },
+  "XCvwf5": {
+    "status": "localized",
+    "review": "Notification.permission denied/default. Other subfields source navigation decoded/encoded size/serverTiming, secure-context and touch presence. Instrumentation changes body-size observations."
+  },
+  "xVwa3": {
+    "status": "localized",
+    "review": "Permissions query states and exposed PermissionStatus.name: notifications denied/prompt; Chrome video_capture/audio_capture versus Mimic camera/microphone. Profile/policy and API projection must be distinguished."
+  },
+  "zYUn5": {
+    "status": "environment",
+    "review": "navigator.connection.rtt/downlink; observed environment values, downlink variable in Chrome controls."
+  },
+  "CYsxg7": {
+    "status": "environment",
+    "review": "navigator.connection.rtt/downlink; observed environment values, downlink variable in Chrome controls."
+  },
+  "gsLi5": {
+    "status": "environment-and-enumeration",
+    "review": "Inverted 1666 names each: exactly10 value differences in pair2: two dynamic URLs,lastModified,webdriver,four visibility projections,outerWidth/Height. Bucket order is not independent missing APIs."
+  },
+  "MfOHt6": {
+    "status": "environment",
+    "review": "document.visibilityState; hidden diagnostic Chrome window versus Mimic environment, changes among diagnostic runs."
+  },
+  "RlMmu2": {
+    "status": "environment",
+    "review": "document.visibilityState; hidden diagnostic Chrome window versus Mimic environment, changes among diagnostic runs."
+  },
+  "qIEN4": {
+    "status": "timing",
+    "review": "Elapsed timings around callbacks/work/ICE; inspected data and operations. Instrumentation and scheduling perturb values; not measured performance conclusions."
+  },
+  "hCKCP8": {
+    "status": "timing",
+    "review": "Elapsed timings around callbacks/work/ICE; inspected data and operations. Instrumentation and scheduling perturb values; not measured performance conclusions."
+  },
+  "jBVrk8": {
+    "status": "timing",
+    "review": "Elapsed timings around callbacks/work/ICE; inspected data and operations. Instrumentation and scheduling perturb values; not measured performance conclusions."
+  },
+  "qdVjJ1": {
+    "status": "timing",
+    "review": "Elapsed timings around callbacks/work/ICE; inspected data and operations. Instrumentation and scheduling perturb values; not measured performance conclusions."
+  },
+  "lIEA1": {
+    "status": "timing",
+    "review": "Elapsed timings around callbacks/work/ICE; inspected data and operations. Instrumentation and scheduling perturb values; not measured performance conclusions."
+  },
+  "uZjT5": {
+    "status": "timing",
+    "review": "Elapsed timings around callbacks/work/ICE; inspected data and operations. Instrumentation and scheduling perturb values; not measured performance conclusions."
+  },
+  "jyDXx2": {
+    "status": "response-observation",
+    "review": "status_401 from saved response; equal in first cycle, compare repeat/cycle rather than treating field name as uniform defect."
+  },
+  "Jpzg5": {
+    "status": "graphics-profile",
+    "review": "WebGL vendor/renderer: NVIDIA hardware Chrome vs Intel configured Mimic; direct profile observation."
+  },
+  "qydV6": {
+    "status": "reviewed-aggregate-unresolved",
+    "review": "WebGL extensions35 vs4, supported/missing lists; basic size and precision fields agree. Detailed nested parameter/context list inspected; not every differing subindex independently reduced."
+  },
+  "etmnR7": {
+    "status": "localized-aggregate",
+    "review": "WebGL2 numeric parameter projection indices0..33 same in first packet. Differences34[1] and34[5] are context attributes (antialias and powerPreference: true/false and low-power/default);35/36 color-space strings equal. Context request/attribute projection differs, not general limit mismatch."
+  },
+  "OYbs6": {
+    "status": "reviewed-aggregate-unresolved",
+    "review": "WebGL extensions, numeric parameters, context attributes/readback metadata; differing supported lists/context values. Exact individual predicates not all reduced to minimal probes."
+  },
+  "KMUh5": {
+    "status": "reviewed-aggregate-unresolved",
+    "review": "Graphics/codec capability boolean arrays. Reviewed values and broad host trace; precise source of every subindex remains unresolved."
+  },
+  "ZwhIC5": {
+    "status": "reviewed-branch-unresolved",
+    "review": "WebGL shader draws -> readPixels16x16 and4x1 -> TextDecoder.decode -> TextEncoder.encode -> SHA256, first32hex. Both runtimes execute digest and register then/catch. Chrome success callback IP190033 writes hash; targeted Mimic trace never enters that callback and field retains sentinel. Promise scheduling/continuation cause not isolated; not evidence of missing WebGL or bad SHA256."
+  },
+  "gAtz0": {
+    "status": "reviewed-aggregate-unresolved",
+    "review": "Canvas/WebGL image/path/text readbacks and aggregates; gAtz0 and auHG6 duplicate same tokenized hash in first packet. No evidence of hash algorithm mismatch. Every low-level graphics difference not isolated."
+  },
+  "auHG6": {
+    "status": "reviewed-aggregate-unresolved",
+    "review": "Canvas/WebGL image/path/text readbacks and aggregates; gAtz0 and auHG6 duplicate same tokenized hash in first packet. No evidence of hash algorithm mismatch. Every low-level graphics difference not isolated."
+  },
+  "XYvy9": {
+    "status": "reviewed-aggregate-unresolved",
+    "review": "2x2 Canvas getImageData after fillRect/arc/fill yields intermediate edge pixels Chrome versus hard255/0 Mimic; measureText gives width/ascent/descent and metric rows, distinct metrics count8/2; thumbnail raster hash also differs. Text measurement and edge readback generators identified; every raster/shaping formula not isolated."
+  },
+  "zfym0": {
+    "status": "reviewed-aggregate-unresolved",
+    "review": "Canvas/WebGL image/path/text readbacks and aggregates; gAtz0 and auHG6 duplicate same tokenized hash in first packet. No evidence of hash algorithm mismatch. Every low-level graphics difference not isolated."
+  },
+  "lDUiR4": {
+    "status": "reviewed-aggregate-unresolved",
+    "review": "WebGPU adapter info agrees in first packet (NVIDIA/blackwell), unlike WebGL profile. Limits38/33 entries and values differ; same20 feature names have different iteration order; wgslLanguageFeatures populated/empty; preferred format agrees. No GPU hardware implementation proposed."
+  },
+  "RKUE0": {
+    "status": "localized-aggregate",
+    "review": "SVG group getBBox component sum; first-character extent sum; distinct text lengths sum/100000 respectively feed SHA256. Earlier local operation trace retained; shaping/geometry differs."
+  },
+  "JRzmw6": {
+    "status": "localized-aggregate",
+    "review": "SVG group getBBox component sum; first-character extent sum; distinct text lengths sum/100000 respectively feed SHA256. Earlier local operation trace retained; shaping/geometry differs."
+  },
+  "oSIr8": {
+    "status": "localized-aggregate",
+    "review": "SVG group getBBox component sum; first-character extent sum; distinct text lengths sum/100000 respectively feed SHA256. Earlier local operation trace retained; shaping/geometry differs."
+  },
+  "HPcn5": {
+    "status": "localized-aggregate",
+    "review": "Ten DOMRect measurements for CSS flow/table/control/extreme transforms; earlier inspected fixture and local operation trace. Not ten independent root causes."
+  },
+  "MnIr8": {
+    "status": "localized-aggregate",
+    "review": "OfflineAudioContext.startRendering/getChannelData sample aggregate/hash; both fields duplicate same first-cycle hash. Exact DSP source of differing samples not isolated."
+  },
+  "CzUP6": {
+    "status": "localized-aggregate",
+    "review": "OfflineAudioContext.startRendering/getChannelData sample aggregate/hash; both fields duplicate same first-cycle hash. Exact DSP source of differing samples not isolated."
+  },
+  "ZkTjK2": {
+    "status": "localized",
+    "review": "CSSStyleSheet.cssRules[].cssText serialization before hashing; keyframe whitespace and scale3d comma spacing differ. Minimal CSS oracle confirms."
+  },
+  "NNZHC4": {
+    "status": "localized",
+    "review": "JSON.stringify(getComputedStyle(iframe document.body)); indexed property-name values/order differ before hashing, starts accent-color vs color."
+  },
+  "DdIVt1": {
+    "status": "localized",
+    "review": "StorageManager.getDirectory rejects backend unavailable in Mimic; Chrome worker getFileHandle/createSyncAccessHandle/write/flush/close supplies timing. Unsupported backend changes continuation."
+  },
+  "uUOw3": {
+    "status": "localized",
+    "review": "StorageManager.getDirectory rejects backend unavailable in Mimic; Chrome worker getFileHandle/createSyncAccessHandle/write/flush/close supplies timing. Unsupported backend changes continuation."
+  },
+  "RPKTR7": {
+    "status": "environment",
+    "review": "StorageManager.estimate().quota; first cycle same10737418240, later quota/environment variation. Not automatically API defect."
+  },
+  "HDEX5": {
+    "status": "localized-aggregate",
+    "review": "Media canPlayType/MediaSource.isTypeSupported/mediaCapabilities results and support/smooth/powerEfficient aggregation; missing/false support shifts result."
+  },
+  "Aqcaj8": {
+    "status": "localized-aggregate",
+    "review": "Media canPlayType/MediaSource.isTypeSupported/mediaCapabilities results and support/smooth/powerEfficient aggregation; missing/false support shifts result."
+  },
+  "XqEQ3": {
+    "status": "localized-aggregate",
+    "review": "Media canPlayType/MediaSource.isTypeSupported/mediaCapabilities results and support/smooth/powerEfficient aggregation; missing/false support shifts result."
+  },
+  "xkNI3": {
+    "status": "localized",
+    "review": "RTCRtpSender/Receiver.getCapabilities audio/video codec results; Chrome populated8/23 versus Mimic empty in prior focused operation evidence."
+  },
+  "uHNG9": {
+    "status": "environment-and-rtc",
+    "review": "ICE candidates/event timing and SDP. Chrome has3 m-lines vs Mimic1; IDs/ports/random origin are not semantic defects. Nonproxy UDP disabled only in Chrome harness, so candidate counts are not like-for-like network proof."
+  },
+  "KnOhl5": {
+    "status": "environment-and-rtc",
+    "review": "ICE candidates/event timing and SDP. Chrome has3 m-lines vs Mimic1; IDs/ports/random origin are not semantic defects. Nonproxy UDP disabled only in Chrome harness, so candidate counts are not like-for-like network proof."
+  },
+  "lgWCE7": {
+    "status": "localized-aggregate",
+    "review": "Serialized _cf_chl_opt.vVvpJ8 xp/wp values; observation/counter differences, originating public operation not fully isolated."
+  },
+  "Pdbt7": {
+    "status": "localized-aggregate",
+    "review": "performance.mark/getEntries selection; entry composition/timing differences. Timing replay not equivalent to original transport. Detailed independent entry root cause pending."
+  },
+  "thhSb9": {
+    "status": "localized",
+    "review": "Image width/height46x23 and naturalWidth46 in Chrome versus fallback token/0 in Mimic. Image decode result differs; not independent three defects."
+  },
+  "ppMls5": {
+    "status": "localized",
+    "review": "Image width/height46x23 and naturalWidth46 in Chrome versus fallback token/0 in Mimic. Image decode result differs; not independent three defects."
+  },
+  "cHIoX8": {
+    "status": "localized",
+    "review": "Image width/height46x23 and naturalWidth46 in Chrome versus fallback token/0 in Mimic. Image decode result differs; not independent three defects."
+  },
+  "gPuVs8": {
+    "status": "stack-and-timing",
+    "review": "Captured Error.stack plus timing. Dynamic URLs/call sites, native wrapper frames and instrumentation need normalization; stack difference alone is not a new thrown workload exception."
+  },
+  "PWGF4": {
+    "status": "stack-and-timing",
+    "review": "Captured Error.stack plus timing. Dynamic URLs/call sites, native wrapper frames and instrumentation need normalization; stack difference alone is not a new thrown workload exception."
+  },
+  "maNnU6": {
+    "status": "localized-aggregate",
+    "review": "Recorded public selector accesses: extra option/collection selector reentry in Mimic plus dynamic widget IDs. Existing precise selector-operation evidence retained."
+  },
+  "rPXg2": {
+    "status": "localized-aggregate",
+    "review": "Performance navigation/resource entries. Composition and timings differ; earlier root-document duplication observation, full entry-source reconciliation remains pending."
+  },
+  "NnqX6": {
+    "status": "variable-metadata-reviewed",
+    "review": "Root packet numeric metadata/timing/counters inspected across controls. Variable values, exact generating expression for each not yet localized; not automatically timing-only or defect."
+  },
+  "TzZRB1": {
+    "status": "variable-metadata-reviewed",
+    "review": "Root packet numeric metadata/timing/counters inspected across controls. Variable values, exact generating expression for each not yet localized; not automatically timing-only or defect."
+  },
+  "ZMSOw0": {
+    "status": "variable-metadata-reviewed",
+    "review": "Root packet numeric metadata/timing/counters inspected across controls. Variable values, exact generating expression for each not yet localized; not automatically timing-only or defect."
+  },
+  "twvE0": {
+    "status": "variable-metadata-reviewed",
+    "review": "Root packet numeric metadata/timing/counters inspected across controls. Variable values, exact generating expression for each not yet localized; not automatically timing-only or defect."
+  },
+  "Blsob5": {
+    "status": "variable-metadata-reviewed",
+    "review": "Root packet numeric metadata/timing/counters inspected across controls. Variable values, exact generating expression for each not yet localized; not automatically timing-only or defect."
+  },
+  "WHTpH6": {
+    "status": "variable-metadata-reviewed",
+    "review": "Root packet numeric metadata/timing/counters inspected across controls. Variable values, exact generating expression for each not yet localized; not automatically timing-only or defect."
+  },
+  "eaaP6": {
+    "status": "variable-metadata-reviewed",
+    "review": "Root packet numeric metadata/timing/counters inspected across controls. Variable values, exact generating expression for each not yet localized; not automatically timing-only or defect."
+  },
+  "poqG1": {
+    "status": "variable-metadata-reviewed",
+    "review": "Root packet numeric metadata/timing/counters inspected across controls. Variable values, exact generating expression for each not yet localized; not automatically timing-only or defect."
+  },
+  "tZwbF3": {
+    "status": "variable-metadata-reviewed",
+    "review": "Root packet numeric metadata/timing/counters inspected across controls. Variable values, exact generating expression for each not yet localized; not automatically timing-only or defect."
+  },
+  "uGyjw9": {
+    "status": "variable-metadata-reviewed",
+    "review": "Root packet numeric metadata/timing/counters inspected across controls. Variable values, exact generating expression for each not yet localized; not automatically timing-only or defect."
+  },
+  "wOvYJ5": {
+    "status": "variable-metadata-reviewed",
+    "review": "Root packet numeric metadata/timing/counters inspected across controls. Variable values, exact generating expression for each not yet localized; not automatically timing-only or defect."
+  },
+  "myWtu3": {
+    "status": "variable-metadata-reviewed",
+    "review": "Root packet numeric metadata/timing/counters inspected across controls. Variable values, exact generating expression for each not yet localized; not automatically timing-only or defect."
+  },
+  "KDQCx4": {
+    "status": "unresolved-reviewed",
+    "review": "Parent packet copies _cf_chl_opt.KDQCx4 at IP27188/27217 (0 Chrome,1 Mimic); child packet source is0 both. Divergence exists before parent packer; writer of parent option not captured. Reviewed with full field write/read trace, not attributed to server judgment."
+  },
+  "TPpkV4": {
+    "status": "timing",
+    "review": "Per-stage finish/start epoch milliseconds and elapsed difference. TPpkV4 - Vtvy6 = hCfV6 in all79 stages per baseline runtime. Full scan hCfV6 write follows Date.now and saved start timestamp. Not an independent branch defect or authoritative performance benchmark."
+  },
+  "Vtvy6": {
+    "status": "timing",
+    "review": "Per-stage finish/start epoch milliseconds and elapsed difference. TPpkV4 - Vtvy6 = hCfV6 in all79 stages per baseline runtime. Full scan hCfV6 write follows Date.now and saved start timestamp. Not an independent branch defect or authoritative performance benchmark."
+  },
+  "hCfV6": {
+    "status": "timing",
+    "review": "Per-stage finish/start epoch milliseconds and elapsed difference. TPpkV4 - Vtvy6 = hCfV6 in all79 stages per baseline runtime. Full scan hCfV6 write follows Date.now and saved start timestamp. Not an independent branch defect or authoritative performance benchmark."
+  }
+}
