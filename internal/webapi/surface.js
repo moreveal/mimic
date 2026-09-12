@@ -1039,6 +1039,7 @@
     // Platform source identity belongs to the owning realm. Transport only
     // explicit private binding metadata; never inspect author callable fields.
     if(result.nativeName!==undefined)markNative(proxy,result.nativeName);
+    else if(result.functionSource!==undefined)markForeignFunctionSource(proxy,result.functionSource);
     if(result.nodeId){const data=host.nodeData(result.nodeId);if(data){elementData.set(proxy,data);elementWrappers.set(String(result.nodeId),proxy)}}
     referenceSet(proxy,{frame:id,realm:result.realm,handle:result.handle,type:kind,array:result.array,constructable:result.constructable,nodeId:result.nodeId,document:result.document,eval:result.eval,binding:result.binding,nativeName:result.nativeName});crossRealmCache.set(key,proxy);
     if(result.document){remoteDocumentCache.set(result.realm,proxy);if(result.nodeId)documentWrappers.set(result.nodeId,proxy)}
@@ -1057,7 +1058,7 @@
       return null;
     },(value,importNode=false)=>importNode?wrap(host.nodeData(value)):value===document?host.documentRootID():bridgeApply(bridgeWeakGet,elementData,[value])?.nodeId||0,
     key=>{const value=Reflect.get(globalThis,key);return{value,intrinsic:key==='eval'&&value===bridgeOriginalEval||key==='postMessage'&&value===bridgeOriginalPostMessage}},
-    value=>{const binding=bindingGet(value);return binding?{kind:binding.kind,invoke:binding.invoke,unpreventable:binding.unpreventable}:null},nativeFunctionNameGet);
+    value=>{const binding=bindingGet(value);return binding?{kind:binding.kind,invoke:binding.invoke,unpreventable:binding.unpreventable}:null},nativeFunctionNameGet,value=>functionSourceApply(engineFunctionToString,value,[]));
   const postToFrame=(id,args)=>{
     if(args.length===0)throw new TypeError("Failed to execute 'postMessage' on 'Window': 1 argument required, but only 0 present.");
     const message=args[0];let targetOrigin=args[1]===undefined?'/':args[1],transfer=args[2]===undefined?[]:args[2];
@@ -1523,7 +1524,7 @@
   const operation=(method,name)=>{
     if(typeof method!=='function')return method;
     let result=method;
-    if(Object.getOwnPropertyDescriptor(method,'prototype')){
+    if(Object.getOwnPropertyDescriptor(method,'prototype')||Object.getPrototypeOf(method)!==Function.prototype){
       result=operationWrappers.get(method);
       if(!result){result={ [name](...args){return functionSourceApply(method,this,args)} }[name];Object.defineProperty(result,'length',{value:method.length,configurable:true});operationWrappers.set(method,result)}
     }
@@ -1553,6 +1554,10 @@
   for(const key of Reflect.ownKeys(globalThis)){
     if(engineGlobals.has(key))continue;
     const globalDescriptor=Object.getOwnPropertyDescriptor(globalThis,key);
+    for(const [kind,prefix] of [['get','get '],['set','set ']]){
+      const accessor=globalDescriptor?.[kind];if(typeof accessor!=='function')continue;
+      Object.defineProperty(accessor,'name',{value:prefix+String(key),configurable:true});markNative(accessor,String(key),prefix);
+    }
     const value=globalDescriptor&&globalDescriptor.value;
     if(typeof value!=='function')continue;
     // A LegacyWindowAlias is another property pointing at the same interface

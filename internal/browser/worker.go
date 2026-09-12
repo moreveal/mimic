@@ -375,6 +375,10 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 		_ = w.reportError(err)
 		return
 	}
+	if err := installNativeFunctionSource(runtime); err != nil {
+		_ = w.reportError(err)
+		return
+	}
 	if err := installEvalSourceResolver(runtime); err != nil {
 		_ = w.reportError(err)
 		return
