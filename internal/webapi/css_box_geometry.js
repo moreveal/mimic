@@ -5,13 +5,14 @@ const cssGeometryLength=value=>Math.fround(Math.max(-(2**31)/64+2,Math.min(Math.
 const cssBoxModel=(()=>{
  const tag=element=>elementSlot(element)?.tagName||'',textContent=element=>host.textContent(elementSlot(element).nodeId);
  const unit=value=>Math.trunc(cssGeometryLength(value)*64)/64,collapse=(a,b)=>Math.max(a,b,0)+Math.min(a,b,0);
- const invisible=new Set(['STYLE','SCRIPT','HEAD','TITLE','META','LINK','TEMPLATE','OPTION']);
+ const invisible=new Set(['STYLE','SCRIPT','HEAD','TITLE','META','LINK','TEMPLATE','OPTION','NOSCRIPT']);
  const tableDisplays={TABLE:'table',CAPTION:'table-caption',TBODY:'table-row-group',THEAD:'table-header-group',TFOOT:'table-footer-group',TR:'table-row',TD:'table-cell',TH:'table-cell'};
  const blocks=new Set(['HTML','BODY','DIV','P','SECTION','MAIN','ARTICLE','ASIDE','HEADER','FOOTER','NAV','FORM','FIELDSET','DETAILS','SUMMARY','H1','H2','H3','H4','H5','H6','UL','OL','LI','TABLE','CAPTION','TBODY','THEAD','TFOOT','TR','TD','TH']);
  const state=element=>{
   const cache=styleReadCache.boxStyles||(styleReadCache.boxStyles=new WeakMap());if(cache.has(element))return cache.get(element);
   const entries=computedCSSDeclarations(element),get=name=>geometryValue(element,entries.find(e=>e.name===name)?.value??(tag(element)==='BODY'&&/^margin-(top|right|bottom|left)$/.test(name)?'8px':undefined));
-  const display=get('display')||(invisible.has(tag(element))||host.getAttribute(elementSlot(element).nodeId,'hidden')!==null?'none':tableDisplays[tag(element)]|| (tag(element)==='SUMMARY'?'list-item':blocks.has(tag(element))?'block':'inline')),position=get('position')||'static';
+  const hiddenInput=tag(element)==='INPUT'&&String(host.getAttribute(elementSlot(element).nodeId,'type')||'').toLowerCase()==='hidden';
+  const display=hiddenInput?'none':get('display')||(invisible.has(tag(element))||host.getAttribute(elementSlot(element).nodeId,'hidden')!==null?'none':tableDisplays[tag(element)]|| (tag(element)==='SUMMARY'?'list-item':blocks.has(tag(element))?'block':'inline')),position=get('position')||'static';
   const result={element,entries,get,display,position};cache.set(element,result);
   result.inherited=name=>{for(let p=element;p;p=geometryParent(p)){const v=computedCSSDeclarations(p).find(e=>e.name===name)?.value;if(v&&!['inherit','unset'].includes(v))return v}return null};
   result.fontSize=(cssComputedFontSize(element)??16);
@@ -118,6 +119,7 @@ const cssBoxModel=(()=>{
   for(let parent=geometryParent(element);parent;parent=geometryParent(parent))if(state(parent).display==='table'){if(!cache.has(parent))size(parent);break}
   if(cache.has(element))return cache.get(element);
   const s=state(element),basis=containingWidth(element),e=s.edges(basis),value={width:layoutWidthFor(element),height:0,edges:e,positions:new Map(),contentHeight:0};cache.set(element,value);
+  if(!['absolute','fixed'].includes(s.position)&&!['inline','inline-block'].includes(s.display)){const left=s.get('margin-left')==='auto',right=s.get('margin-right')==='auto',free=Math.max(0,basis-value.width-e.mleft-e.mright);if(left)e.mleft=free/(right?2:1);if(right)e.mright=free/(left?2:1)}
   if(!rendered(element)||!computedStyleDocumentAvailable(element)||!computedStyleAvailable(element)){value.width=0;return value;}
   if(s.display==='table')return tableSize(element,value);
   const parent=geometryParent(element),rawHeight=s.get('height'),height=rawHeight?.endsWith('%')&&!definiteGeometryHeight(parent)?null:s.length(rawHeight,rawHeight?.endsWith('%')&&parent?size(parent).height:0);
@@ -125,16 +127,18 @@ const cssBoxModel=(()=>{
   const own=controlSize(element);if(own){value.height=height===null?own.height:value.height;return value}
   const text=textOf(element),font=textInfo(element,text),contentWidth=Math.max(0,value.width-e.pleft-e.pright-e.bleft-e.bright);
   const generated=pseudo=>{const entries=uncachedCSSDeclarations(element,pseudo),get=name=>entries.find(e=>e.name===name)?.value;if(get('display')==='none'||!['\"\"',"''"].includes(get('content'))||['absolute','fixed'].includes(get('position')))return 0;return (s.length(get('height'))||0)+(s.length(get('padding-top'),value.width)||0)+(s.length(get('padding-bottom'),value.width)||0)};
-  let cursor=generated('before'),margin=0,lineWidth=0,lineHeight=text?font.height:0,line=[];
+  let textLines=text?1:0,lastTextWidth=0;const wrapping=!['nowrap','pre'].includes(s.inherited('white-space'));if(text)for(const word of text.split(' ')){const advance=textInfo(element,(lastTextWidth?' ':'')+word).width;if(wrapping&&lastTextWidth&&lastTextWidth+advance>contentWidth){textLines++;lastTextWidth=textInfo(element,word).width}else lastTextWidth+=advance}
+  let cursor=generated('before'),margin=0,lineWidth=lastTextWidth,lineHeight=textLines*font.height,line=[],adjoiningMargins=[];
+  const collapsedMargin=extra=>{const values=[margin,...adjoiningMargins,...extra];return Math.max(0,...values)+Math.min(0,...values)};
   const flush=()=>{if(!lineHeight)return;for(const child of line){const box=size(child),c=state(child);value.positions.set(child,{x:lineWidth===0?0:value.positions.get(child)?.x||0,y:cursor+(c.display==='inline'||replacedGeometryTags.has(tag(child))?(tag(child)==='BUTTON'&&!textContent(child)?font.ascent-box.height/2:tag(child)==='PROGRESS'?font.ascent+unit(state(child).fontSize*.2)-box.height:Math.max(0,lineHeight-box.height)):0)})}cursor+=lineHeight;line=[];lineWidth=0;lineHeight=0};
   for(const child of children(element)){
    if(elementSlot(child)?.type!=='element')continue;const c=state(child);if(!rendered(child))continue;
    if(['absolute','fixed'].includes(c.position)){value.positions.set(child,{x:0,y:cursor+lineHeight});continue}
    const box=size(child),ce=box.edges,isInline=c.display==='inline'||c.display==='inline-block'||replacedGeometryTags.has(tag(child))||tag(child)==='PROGRESS';
    if(isInline){const w=box.width+ce.mleft+ce.mright;if(lineWidth&&lineWidth+w>contentWidth)flush();lineHeight=Math.max(lineHeight,font.height,box.height+ce.mtop+ce.mbottom);value.positions.set(child,{x:lineWidth+ce.mleft,y:cursor+ce.mtop});line.push(child);lineWidth+=w;continue}
-   flush();cursor+=collapse(margin,ce.mtop);value.positions.set(child,{x:ce.mleft,y:cursor});cursor+=box.height;margin=ce.mbottom;
+   flush();if(box.height===0&&ce.btop===0&&ce.bbottom===0&&ce.ptop===0&&ce.pbottom===0){adjoiningMargins.push(ce.mtop,ce.mbottom);value.positions.set(child,{x:ce.mleft,y:cursor+collapsedMargin([])});continue}cursor+=collapsedMargin([ce.mtop]);adjoiningMargins=[];value.positions.set(child,{x:ce.mleft,y:cursor});cursor+=box.height;margin=ce.mbottom;
   }
-  flush();cursor+=margin+generated('after');value.contentHeight=cursor;
+  flush();cursor+=collapsedMargin([])+generated('after');value.contentHeight=cursor;
   value.height=(height===null?cursor:height)+(s.get('box-sizing')==='border-box'&&height!==null?0:e.ptop+e.pbottom+e.btop+e.bbottom);
   const min=s.length(s.get('min-height')),max=s.length(s.get('max-height'));if(min!==null)value.height=Math.max(value.height,min);if(max!==null)value.height=Math.min(value.height,max);return value;
  };

@@ -38,7 +38,7 @@
   Object.defineProperty(styleMediaPrototype,Symbol.toStringTag,{value:'StyleMedia',configurable:true});
   singleton('styleMedia',styleMediaPrototype,media);
   getter(styleMediaPrototype,'type',function(){check(media,this);return 'screen'});
-  method(styleMediaPrototype,'matchMedium',function matchMedium(query){check(media,this);return host.media(query===undefined?'':String(query))});
+  method(styleMediaPrototype,'matchMedium',function matchMedium(query){check(media,this);return cssMediaMatches(query===undefined?'':String(query))});
   }
   if(Object.hasOwn(window,'fence'))Object.defineProperty(window,'fence',{get:()=>null,enumerable:true,configurable:true});
   if(typeof VisualViewport==='function'){

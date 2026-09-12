@@ -1,3 +1,4 @@
+const compatibilityCSSSupports={};
 (()=>{
  if(!globalThis.CSS)return;
  const prior=CSS.supports;
@@ -26,5 +27,6 @@
   return match?declaration(match[1],match[2].replace(/\s*!important\s*$/i,'')):(condition(inner)??false);
  };
  const supports={supports(property,value){if(arguments.length===0)throw new TypeError('Not enough arguments');return arguments.length>1?declaration(String(property),String(value)):condition(String(property))===true}}.supports;
+ compatibilityCSSSupports.matches=text=>supports(text);
  Object.defineProperty(supports,'length',{value:1,configurable:true});markNative(supports,'supports');Object.defineProperty(CSS,'supports',{value:supports,writable:true,enumerable:true,configurable:true});
 })();

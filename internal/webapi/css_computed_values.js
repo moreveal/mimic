@@ -49,6 +49,7 @@ const cssComputedValue=(element,name)=>withStyleReadCache(()=>{
  if(name==='font-size')return cssSerializeNumber((cssComputedFontSize(element)??16))+'px';
  if(/^margin-(top|right|bottom|left)$/.test(name)&&specified==null&&elementSlot(element).tagName==='BODY')return '8px';
  if(name==='font-weight')return value==='normal'?'400':value==='bold'?'700':value;
+ if(name==='display'&&elementSlot(element).tagName==='INPUT'&&String(host.getAttribute(elementSlot(element).nodeId,'type')||'').toLowerCase()==='hidden')return 'none';
  if(name==='display'){const display=specified==null?cssBoxModel.state(element).display:value;const position=entries.find(e=>e.name==='position')?.value;return ['absolute','fixed'].includes(position)?blockifiedDisplay(display):display}
  if(name==='unicode-bidi'&&specified==null&&['DIV','P','SECTION','ARTICLE','HEADER','FOOTER','MAIN','LI','TABLE'].includes(elementSlot(element).tagName))return 'isolate';
  const writing=(()=>{for(let p=element;elementSlot(p)?.type==='element';p=cssFontParent(p)){const v=computedCSSDeclarations(p).find(e=>e.name==='writing-mode')?.value;if(v&&!['inherit','unset'].includes(v))return v==='initial'?'horizontal-tb':v}return 'horizontal-tb'})(),vertical=writing.startsWith('vertical')||writing.startsWith('sideways'),rtl=(name==='direction'?value:cssComputedValue(element,'direction'))==='rtl';
@@ -58,6 +59,7 @@ const cssComputedValue=(element,name)=>withStyleReadCache(()=>{
  const physical=/^(border|padding|margin)-(block|inline)-(start|end)(.*)$/.exec(name);
  if(physical&&(specified==null||declaration?.allReset))return cssComputedValue(element,physical[1]+'-'+sides[physical[2]][physical[3]]+physical[4]);
  const box=()=>cssBoxModel.size(element),state=cssBoxModel.state(element),length=(v,basis=0)=>cssResolveLength(v,{em:(cssComputedFontSize(element)??16),rem:(cssComputedFontSize(document.documentElement)??16),percent:basis});
+ if(/^margin-(left|right)$/.test(name)&&value==='auto'&&!['inline','inline-block'].includes(state.display))return cssSerializeNumber(box().edges[name.endsWith('left')?'mleft':'mright'])+'px';
  if(name==='width'||name==='height'){
   for(let p=element;p;p=geometryParent(p))if(cssBoxModel.state(p).display==='none'){const n=value.endsWith('%')?null:length(value);return n===null?value:cssSerializeNumber(n)+'px'}
   const dimension=box()[name],edges=box().edges;
