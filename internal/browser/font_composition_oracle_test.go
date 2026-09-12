@@ -1,0 +1,7 @@
+//go:build windows && amd64
+
+package browser
+
+import "testing"
+
+func TestFontCompositionFrozenChrome152(t *testing.T) { documentAllOracle(t, "font_composition") }

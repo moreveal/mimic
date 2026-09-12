@@ -2,14 +2,28 @@ package textmetrics
 
 import (
 	"fmt"
+	"strings"
+	"unicode"
+
 	"github.com/go-text/typesetting/font"
 	"github.com/go-text/typesetting/font/opentype/tables"
 	"github.com/go-text/typesetting/harfbuzz"
-	"strings"
-	"unicode"
+	"golang.org/x/text/unicode/norm"
 )
 
 func coversCluster(face *loaded, cluster []rune) bool {
+	if coversNominalCluster(face, cluster) {
+		return true
+	}
+	// HarfBuzz can canonically compose a base and combining mark even when
+	// the font has no standalone mark glyph. Coverage must not prematurely
+	// switch the entire cluster to a fallback face. Keep original runes and
+	// offsets for shaping; normalization here is only a coverage check.
+	source := string(cluster)
+	composed := norm.NFC.String(source)
+	return composed != source && coversNominalCluster(face, []rune(composed))
+}
+func coversNominalCluster(face *loaded, cluster []rune) bool {
 	for i, ch := range cluster {
 		if i > 0 && (ch == 0xfe0e || ch == 0xfe0f) {
 			gid, ok := face.face.VariationGlyph(cluster[i-1], ch)
