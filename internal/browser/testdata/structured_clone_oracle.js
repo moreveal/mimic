@@ -1,0 +1,38 @@
+(async()=>{
+ const out={}, cap=(name,fn)=>{try{out[name]=fn()}catch(e){out[name]={error:e.name}}};
+ const describe=v=>{const tag=Object.prototype.toString.call(v);if(v===undefined)return {type:'undefined'};if(v===null)return null;
+  if(typeof v==='bigint')return {type:'bigint',value:String(v)};
+  if(typeof v!=='object')return {type:typeof v,value:typeof v==='number'?String(v):v};
+  if(tag==='[object RegExp]')return {tag,source:v.source,flags:v.flags,lastIndex:v.lastIndex,local:Object.getPrototypeOf(v)===RegExp.prototype,keys:Object.keys(v)};
+  if(['[object Number]','[object Boolean]','[object String]','[object BigInt]'].includes(tag))return {tag,value:describe(v.valueOf()),local:Object.getPrototypeOf(v)===Object(v.valueOf()).__proto__,keys:Object.keys(v)};
+  return {tag,keys:Object.keys(v)};
+ };
+ for(const [name,make]of Object.entries({undefined:()=>undefined,null:()=>null,bigint:()=>611n,number:()=>new Number(-0),nan:()=>new Number(NaN),boolean:()=>new Boolean(false),string:()=>new String('abc'),boxedBigint:()=>Object(611n),regexp:()=>{let r=/gul e/dgimsuy;r.lastIndex=7;r.extra=1;return r},symbol:()=>Symbol(),boxedSymbol:()=>Object(Symbol()),function:()=>()=>{},promise:()=>Promise.resolve(),weakMap:()=>new WeakMap(),proxy:()=>new Proxy({},{}),node:()=>document.body}))cap(name,()=>describe(structuredClone(make())));
+ cap('boxedHooks',()=>{let calls=0;const n=Object(12n);n.valueOf=()=>{calls++;throw 1};n.toString=()=>{calls++;throw 2};Object.defineProperty(n,Symbol.toStringTag,{get(){calls++;throw 3}});const c=structuredClone(n);return {value:String(BigInt.prototype.valueOf.call(c)),calls,keys:Object.keys(c)}});
+ cap('regexpHooks',()=>{let calls=0;const r=/a+/gi;for(const key of ['source','flags'])Object.defineProperty(r,key,{get(){calls++;throw 1}});return {clone:describe(structuredClone(r)),calls}});
+ cap('graph',()=>{const box=Object(3n),r=/x/g,buffer=new ArrayBuffer(8),v={box,again:box,r,map:new Map([[box,r]]),set:new Set([box]),buffer,view:new Uint16Array(buffer,2,2),date:new Date(123),error:new TypeError('x',{cause:box})};v.self=v;new Uint8Array(buffer)[3]=9;const c=structuredClone(v);return {cycle:c.self===c,alias:c.box===c.again,map:c.map.get(c.box)===c.r,set:c.set.has(c.box),buffer:c.view.buffer===c.buffer,bytes:Array.from(new Uint8Array(c.buffer)),date:c.date.getTime(),error:[c.error.name,c.error.message,c.error.cause===c.box],separate:c.box!==box}});
+ cap('descriptors',()=>{let reads=0;const v=Object.create({inherited:1});Object.defineProperty(v,'x',{get(){reads++;return 3},enumerable:true});Object.defineProperty(v,'hidden',{value:4});v[Symbol()]=5;const c=structuredClone(v),d=Object.getOwnPropertyDescriptor(c,'x');return {reads,keys:Reflect.ownKeys(c),proto:Object.getPrototypeOf(c)===Object.prototype,descriptor:[d.value,d.writable,d.enumerable,d.configurable]}});
+ cap('getterException',()=>{const token={};try{structuredClone({get x(){throw token}})}catch(e){return e===token}});
+ cap('proxyTraps',()=>{let n=0;try{structuredClone(new Proxy({},{ownKeys(){n++;return[]},get(){n++}}))}catch(e){return {name:e.name,n}}});
+ cap('transfer',()=>{const a=new ArrayBuffer(4);new Uint8Array(a)[0]=7;const c=structuredClone({a,v:new Uint8Array(a)},{transfer:[a]});return {source:a.byteLength,bytes:Array.from(c.v),alias:c.v.buffer===c.a}});
+ cap('failedTransfer',()=>{const a=new ArrayBuffer(4);try{structuredClone({f(){}},{transfer:[a]})}catch(e){return {name:e.name,bytes:a.byteLength}}});
+ cap('duplicateTransfer',()=>{const a=new ArrayBuffer(4);try{structuredClone(a,{transfer:[a,a]})}catch(e){return {name:e.name,bytes:a.byteLength}}});
+ cap('transferOrder',()=>{const trace=[],a=new ArrayBuffer(4);const list={get [Symbol.iterator](){trace.push('iterator-get');return function(){trace.push('iterator-call');let n=0;return {next(){trace.push('next');return n++?{done:true}:{done:false,value:a}}}}}};const value={get x(){trace.push('value-get');return 1}};const c=structuredClone(value,{get transfer(){trace.push('transfer-get');return list}});return {trace,x:c.x,bytes:a.byteLength}});
+ cap('transferDetachedByGetter',()=>{const a=new ArrayBuffer(4),b=new ArrayBuffer(4);try{structuredClone({get x(){a.transfer();return 1}},{transfer:[b,a]})}catch(e){return {name:e.name,a:a.byteLength,b:b.byteLength}}});
+ cap('transferResizable',()=>{const a=new ArrayBuffer(4,{maxByteLength:16});new Uint8Array(a)[0]=9;const c=structuredClone(a,{transfer:[a]});return {source:a.byteLength,length:c.byteLength,max:c.maxByteLength,resizable:c.resizable,byte:new Uint8Array(c)[0]}});
+ cap('transferEmpty',()=>structuredClone(5,{transfer:[]}));
+ for(const [name,transfer]of Object.entries({null:null,number:3,plain:{},string:'x',element:[3]}))cap('transferInvalid.'+name,()=>structuredClone(5,{transfer}));
+ const frame=document.createElement('iframe');document.body.appendChild(frame);const w=frame.contentWindow;
+ for(const [name,source] of Object.entries({box:'Object(611n)',regexp:'/gul e/gi',nested:'({box:Object(8n),r:/x/g})'}))cap('crossRealm.'+name,()=>{const c=structuredClone(w.eval(source));return name==='nested'?{box:describe(c.box),regexp:describe(c.r),proto:Object.getPrototypeOf(c)===Object.prototype}:describe(c)});
+ cap('crossRealm.borrowed',()=>{const c=w.structuredClone(Object(611n));return {tag:Object.prototype.toString.call(c),value:String(c.valueOf()),local:Object.getPrototypeOf(c)===w.BigInt.prototype}});
+ cap('history',()=>{const b=Object(611n),r=/x/gi;r.lastIndex=5;history.replaceState({b,r},'');return {b:describe(history.state.b),r:describe(history.state.r),copy:history.state.b!==b}});
+ cap('navigation',()=>{navigation.updateCurrentEntry({state:{b:Object(611n),r:/x/g}});const c=navigation.currentEntry.getState();return {b:describe(c.b),r:describe(c.r)}});
+ const receive=(send,setup)=>new Promise(resolve=>{const timer=setTimeout(()=>resolve({error:'timeout'}),5000);const done=x=>{clearTimeout(timer);resolve(x)};setup(done);try{send()}catch(e){done({error:e.name})}});
+ const value=()=>({b:Object(611n),r:/x/gi}), summary=c=>({b:describe(c.b),r:describe(c.r)});
+ out.messagePort=await receive(()=>{const v=value();port.port1.postMessage(v);v.r=/changed/},done=>{globalThis.port=new MessageChannel();port.port2.onmessage=e=>{done(summary(e.data));port.port1.close();port.port2.close()}});delete globalThis.port;
+ out.windowMessage=await receive(()=>window.postMessage(value(),'*'),done=>{const listener=e=>{removeEventListener('message',listener);done(summary(e.data))};addEventListener('message',listener)});
+ out.worker=await receive(()=>worker.postMessage(value()),done=>{globalThis.worker=new Worker(URL.createObjectURL(new Blob(['onmessage=e=>postMessage(structuredClone(e.data))'],{type:'text/javascript'})));worker.onmessage=e=>{worker.terminate();done(summary(e.data))};worker.onerror=()=>{worker.terminate();done({error:'workerError'})}});delete globalThis.worker;
+ out.broadcast=await receive(()=>{const v=value();broadcastA.postMessage(v);v.r=/changed/},done=>{globalThis.broadcastA=new BroadcastChannel('clone-oracle');globalThis.broadcastB=new BroadcastChannel('clone-oracle');broadcastB.onmessage=e=>{broadcastA.close();broadcastB.close();done(summary(e.data))}});delete globalThis.broadcastA;delete globalThis.broadcastB;
+ out.indexedDB=await new Promise(resolve=>{const request=indexedDB.open('structured-clone-oracle',1);request.onupgradeneeded=()=>request.result.createObjectStore('s');request.onerror=()=>resolve({error:request.error.name});request.onsuccess=()=>{const db=request.result,tx=db.transaction('s','readwrite'),s=tx.objectStore('s');s.put(value(),'k');const get=s.get('k');get.onsuccess=()=>{resolve(summary(get.result));db.close()};get.onerror=()=>resolve({error:get.error.name})}});
+ frame.remove();return out;
+})()

@@ -9,31 +9,13 @@ if(typeof Navigation==='function'){
  const check=o=>{if(o!==nav)throw new TypeError('Illegal invocation')};
  const entries=new Map(),entrySlots=new WeakMap(),destinationSlots=new WeakMap(),eventData=new WeakMap();
  let current=null,list=[],pending=null,transition=null,activation=null;
- // Clone first, then encode the cloned graph into host-owned history storage.
- // This retains cycles, undefined, BigInt, maps, sets, dates and typed buffers
- // without retaining handles to a retired V8 realm.
+ // Browser-owned storage uses the same immutable wire graph as messages and
+ // structuredClone; deserialization constructs objects in the receiving realm.
  const encode=value=>{
   const reference=referenceGet(value);if(reference){const reply=host.navigationEncodeReference(reference.frame,reference.realm,reference.handle);if(!reply[0])throw new DOMException(reply[2],reply[1]);return reply[1]}
-  value=cloneHistoryState(value);const seen=new Map(),nodes=[];
-  const put=v=>{
-   if(v===undefined)return ['u'];if(typeof v==='bigint')return ['b',String(v)];if(typeof v==='number'&&(!Number.isFinite(v)||Object.is(v,-0)))return ['n',Object.is(v,-0)?'-0':String(v)];
-   if(v===null||typeof v!=='object')return ['v',v];if(seen.has(v))return ['r',seen.get(v)];
-   const id=nodes.length;seen.set(v,id);nodes.push(null);let n;
-   if(v instanceof Error)n=['e',v.name,v.message,v.stack,Object.hasOwn(v,'cause')?put(v.cause):null];else if(v instanceof Date)n=['d',Number.isNaN(v.getTime())?null:v.getTime()];else if(v instanceof RegExp)n=['x',v.source,v.flags];
-   else if(v instanceof Map)n=['m',[...v].map(([k,x])=>[put(k),put(x)])];else if(v instanceof Set)n=['s',[...v].map(put)];
-   else if(v instanceof ArrayBuffer)n=['a',Array.from(new Uint8Array(v))];
-   else if(ArrayBuffer.isView(v))n=['t',v.constructor.name,put(v.buffer),v.byteOffset,v instanceof DataView?v.byteLength:v.length];
-   else n=[Array.isArray(v)?'l':'o',Object.keys(v).map(k=>[k,put(v[k])]),v.length];
-   nodes[id]=n;return ['r',id];
-  };const root=put(value);return JSON.stringify([root,nodes]);
+  return cloneCodec.encode(value);
  };
- const decode=raw=>{
-  if(!raw)return undefined;const [root,nodes]=JSON.parse(raw),values=new Map();
-  const get=t=>{if(t[0]==='u')return undefined;if(t[0]==='b')return BigInt(t[1]);if(t[0]==='n')return Number(t[1]);if(t[0]==='v')return t[1];
-   const id=t[1];if(values.has(id))return values.get(id);const n=nodes[id];let v;
-   switch(n[0]){case'e':{const C=globalThis[n[1]];v=typeof C==='function'&&C.prototype instanceof Error?new C(n[2]):new Error(n[2]);if(n[3]!==undefined)v.stack=n[3];break}case'd':v=new Date(n[1]===null?NaN:n[1]);break;case'x':v=new RegExp(n[1],n[2]);break;case'm':v=new Map();break;case's':v=new Set();break;case'a':v=new Uint8Array(n[1]).buffer;break;case't':v=new globalThis[n[1]](get(n[2]),n[3],n[4]);break;case'l':v=new Array(n[2]);break;default:v={}}
-   values.set(id,v);if(n[0]==='e'&&n[4]!==null)Object.defineProperty(v,'cause',{value:get(n[4]),writable:true,configurable:true});if(n[0]==='m')for(const [k,x]of n[1])v.set(get(k),get(x));else if(n[0]==='s')for(const x of n[1])v.add(get(x));else if(n[0]==='o'||n[0]==='l')for(const [k,x]of n[1])Object.defineProperty(v,k,{value:get(x),writable:true,configurable:true,enumerable:true});return v};return get(root);
- };
+ const decode=raw=>raw?cloneCodec.decode(raw):undefined;
  cloneCrossRealmHistoryState=value=>decode(encode(value));
  const refresh=()=>{
   const state=host.navigationEntries(),seen=new Set();list=[];

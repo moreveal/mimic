@@ -664,6 +664,7 @@ func (r *Realm) installBindings() error {
 
 	p := r.agent.Page()
 	host := map[string]any{}
+	installStructuredCloneHost(host, r.runtime)
 	r.installDocumentStream(host)
 	host["token"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(r.token), nil })
 	host["ready"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) { r.apiTracking = true; return nil, nil })
@@ -1962,7 +1963,7 @@ func (r *Realm) installBindings() error {
 		p.trace.Add(trace.JS, "workerPostMessage", map[string]any{"worker": id, "realm": r.ID})
 		worker := r.workers[id]
 		if worker != nil {
-			worker.PostMessage(arg(a, 1))
+			worker.PostMessage(arg(a, 1), strarg(a, 2))
 		}
 		return nil, nil
 	})

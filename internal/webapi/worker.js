@@ -1,5 +1,6 @@
 (function(host){
   'use strict';
+  let cloneCodec;
   const listenerTargets=new WeakMap(),handlers={message:null,messageerror:null,error:null},handlerRecords={};
   const targetListeners=target=>{let result=listenerTargets.get(target);if(!result){result=new Map();listenerTargets.set(target,result)}return result};
   class EventTarget {
@@ -106,7 +107,7 @@
     addEventListener:(...args)=>EventTarget.prototype.addEventListener.apply(globalThis,args),
     removeEventListener:(...args)=>EventTarget.prototype.removeEventListener.apply(globalThis,args),
     dispatchEvent:(...args)=>EventTarget.prototype.dispatchEvent.apply(globalThis,args),
-    postMessage:data=>host.postMessage(data),
+    postMessage:data=>{const wire=cloneCodec.encode(data);host.postMessage(wire,cloneCodec.trace(wire))},
     close:()=>host.close(),
     setTimeout:(fn,delay=0,...args)=>host.setTimer(()=>fn(...args),Number(delay),false),
     setInterval:(fn,delay=0,...args)=>host.setTimer(()=>fn(...args),Number(delay),true),
@@ -114,7 +115,7 @@
     clearInterval:id=>host.clearTimer(Number(id)),
   };
   Object.assign(globalThis,operations);
-  globalThis.__deliver=data=>dispatchWorkerEvent(globalThis,new MessageEvent('message',{data}),true);
+  globalThis.__deliver=data=>dispatchWorkerEvent(globalThis,new MessageEvent('message',{data:cloneCodec.decode(data)}),true);
   globalThis.__applyWorkerExposure=exposure=>{
     const expected=new Map((exposure.properties||[]).map(property=>[property.name,property]));
     for(const name of Object.getOwnPropertyNames(globalThis)){
@@ -148,10 +149,17 @@
     const expose=(name,value)=>Object.defineProperty(globalThis,name,{value,writable:true,configurable:true});
     const dispatchTrusted=(target,event)=>dispatchWorkerEvent(target,event,true);
     /* shared_worker_fetch */
+  cloneCodec=createStructuredCloneCodec(value=>{
+    if(blobSlots.has(value))throw new DOMException('Platform serialization of Blob and File is not supported.','NotSupportedError');
+    return value===globalThis||eventSlots.has(value);
+  });
+  globalThis.structuredClone=cloneCodec.clone;
+
     globalThis.__mimicEvalSourceResolver=evalSourceResolver;
     const workerPrototype=globalThis.WorkerGlobalScope&&globalThis.WorkerGlobalScope.prototype;
     const dedicatedPrototype=globalThis.DedicatedWorkerGlobalScope&&globalThis.DedicatedWorkerGlobalScope.prototype;
     if(workerPrototype){
+      Object.defineProperty(workerPrototype,'structuredClone',{value:cloneCodec.clone,writable:true,enumerable:true,configurable:true});delete globalThis.structuredClone;
 	  Object.defineProperty(workerPrototype,'fetch',{value:globalThis.fetch,writable:true,enumerable:true,configurable:true});
 	  delete globalThis.fetch;
 	  Object.defineProperty(workerPrototype,Symbol.toStringTag,{value:'WorkerGlobalScope',configurable:true});

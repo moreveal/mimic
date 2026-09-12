@@ -16,11 +16,11 @@ type cloneErrorReporter struct {
 
 func (d *cloneErrorReporter) HasCustomHostObject() bool { return d.reject != nil }
 func (d *cloneErrorReporter) GetSharedArrayBufferID(*gov8.SharedArrayBuffer) (uint32, bool) {
-	d.message = "SharedArrayBuffer cannot be stored in history."
+	d.message = "SharedArrayBuffer serialization is not supported."
 	return 0, false
 }
 func (d *cloneErrorReporter) GetWasmModuleTransferID(gov8.Value) (uint32, bool) {
-	d.message = "WebAssembly.Module cannot be stored in history."
+	d.message = "WebAssembly.Module serialization is not supported."
 	return 0, false
 }
 func (d *cloneErrorReporter) IsHostObject(object *gov8.Object) (bool, bool) {
@@ -44,8 +44,12 @@ func (d *cloneErrorReporter) ThrowDataCloneError(message string) bool {
 	return false
 }
 
-func (a *adapter) StructuredClone(value engine.Value, rejectHostObject engine.Value) (engine.Value, error) {
-	clone := func(iso *gov8.Isolate, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
+// SerializeStructuredClone owns wire bytes rather than engine handles. The
+// receiver can deserialize them in its own realm without exporting JS objects
+// through Go (which loses exotic brands, aliases and cycles).
+func (a *adapter) SerializeStructuredClone(value engine.Value, rejectHostObject engine.Value) ([]byte, error) {
+	var bytes []byte
+	_, err := a.withCloneScope(func(iso *gov8.Isolate, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
 		input, err := a.local(scope, value)
 		if err != nil {
 			return nil, err
@@ -87,16 +91,29 @@ func (a *adapter) StructuredClone(value engine.Value, rejectHostObject engine.Va
 		if !ok {
 			return nil, &engine.DataCloneError{Message: "The value could not be cloned."}
 		}
-		bytes, err := serializer.Release()
+		bytes, err = serializer.Release()
 		if err != nil {
 			return nil, err
 		}
+
+		return nil, err
+	})
+	return bytes, err
+}
+
+func (a *adapter) DeserializeStructuredClone(bytes []byte) (engine.Value, error) {
+	return a.withCloneScope(func(iso *gov8.Isolate, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
+		tc, err := iso.NewTryCatch()
+		if err != nil {
+			return nil, err
+		}
+		defer tc.Close()
 		deserializer, err := gov8.NewValueDeserializer(scope, realm, bytes)
 		if err != nil {
 			return nil, err
 		}
 		defer deserializer.Close()
-		ok, err = deserializer.ReadHeader(realm)
+		ok, err := deserializer.ReadHeader(realm)
 		if err != nil {
 			return nil, err
 		}
@@ -108,7 +125,18 @@ func (a *adapter) StructuredClone(value engine.Value, rejectHostObject engine.Va
 			return nil, err
 		}
 		return a.persist(scope, output)
+	})
+}
+
+func (a *adapter) StructuredClone(value engine.Value, rejectHostObject engine.Value) (engine.Value, error) {
+	bytes, err := a.SerializeStructuredClone(value, rejectHostObject)
+	if err != nil {
+		return nil, err
 	}
+	return a.DeserializeStructuredClone(bytes)
+}
+
+func (a *adapter) withCloneScope(clone func(*gov8.Isolate, *gov8.Context, *gov8.Scope) (engine.Value, error)) (engine.Value, error) {
 	if callback := a.onCallback(); callback != nil {
 		return clone(callback.scope.Isolate(), callback.ctx, callback.scope.Scope())
 	}
