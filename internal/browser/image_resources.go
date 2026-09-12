@@ -33,6 +33,6 @@ func (r *Realm) installImageResources(host map[string]any) {
 			return nil, nil
 		}
 		decoded := state.decoded
-		return r.val(map[string]any{"width": decoded.Width, "height": decoded.Height, "vector": decoded.Vector, "originClean": state.originClean, "pixels": base64.StdEncoding.EncodeToString(decoded.Pixels)}), nil
+		return r.val(map[string]any{"width": decoded.Width, "height": decoded.Height, "vector": decoded.Vector, "unavailable": decoded.PixelsUnavailable, "originClean": state.originClean, "pixels": base64.StdEncoding.EncodeToString(decoded.Pixels)}), nil
 	})
 }
