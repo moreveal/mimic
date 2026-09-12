@@ -19,7 +19,7 @@ func newTextMetricsEngine(fonts state.Fonts) *textmetrics.Engine {
 }
 func (p *Page) textMetricsEngine() *textmetrics.Engine {
 	if p.textMetrics == nil {
-		p.textMetrics = newTextMetricsEngine(p.Environment().Fonts)
+		p.textMetrics = newTextMetricsEngine(p.environmentView().Fonts)
 	}
 	return p.textMetrics
 }

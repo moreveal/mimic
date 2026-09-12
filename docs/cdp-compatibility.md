@@ -1,5 +1,9 @@
 # CDP compatibility
 
+For context creation and dynamic environment overrides, see the
+[versioned `Mimic.*` profile contract](environment-profiles.md). Custom commands
+have their own strict parameter validation; the frozen Chrome schema is unchanged.
+
 The pinned reference is Chrome **152.0.7977.82**, Windows x64, Chromium
 r1669021 / d04cdb24d67b081f6cf80200ffc5233f44b61109. The current automation
 checkpoint passes **34/34 Pyppeteer 2.0.0 checks and 34/34 Puppeteer 25.10.0

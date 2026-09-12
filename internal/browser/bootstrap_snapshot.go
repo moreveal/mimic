@@ -82,7 +82,7 @@ func (r *Realm) bootstrapSource() *bootstrapSource {
 	} else {
 		plan.source = webapi.Surface(generated, exposure)
 	}
-	env := r.agent.Page().Environment()
+	env := r.agent.Page().environmentView()
 	profile, _ := json.Marshal(struct {
 		Features                                             map[string]bool
 		Graphics                                             state.Graphics

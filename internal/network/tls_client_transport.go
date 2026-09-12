@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/binary"
+	"fmt"
 	"io"
 	"math/bits"
 	"net/http"
@@ -28,6 +29,7 @@ type TLSClientTransport struct {
 	insecureMu     sync.Mutex
 	insecureClient tls_client.HttpClient
 	clientOptions  []tls_client.HttpClientOption
+	proxied        bool
 }
 
 func blinkHeaderHash(name string) uint32 {
@@ -115,10 +117,26 @@ func NewTLSClientTransport(profile profiles.ClientProfile, options ...tls_client
 func (t *TLSClientTransport) RoundTrip(request *http.Request) (*http.Response, error) {
 	return t.roundTrip(request, t.client)
 }
+func NewProxyTLSClientTransport(profile profiles.ClientProfile, proxyURL string, options ...tls_client.HttpClientOption) (*TLSClientTransport, error) {
+	dialer, err := newProfileProxyDialer(proxyURL, nil)
+	if err != nil {
+		return nil, err
+	}
+	return newProxyTLSClientTransport(profile, dialer, options...)
+}
+func newProxyTLSClientTransport(profile profiles.ClientProfile, dialer *profileProxyDialer, options ...tls_client.HttpClientOption) (*TLSClientTransport, error) {
+	options = append(options, tls_client.WithDialContext(dialer.DialContext), tls_client.WithDisableHttp3())
+	t, err := NewTLSClientTransport(profile, options...)
+	if err != nil {
+		return nil, fmt.Errorf("proxy transport initialization failed")
+	}
+	t.proxied = true
+	return t, nil
+}
 func (t *TLSClientTransport) roundTrip(request *http.Request, client tls_client.HttpClient) (*http.Response, error) {
 	// Browser TLS behavior is irrelevant for clear-text local development and
 	// retaining net/http here makes ordinary httptest servers deterministic.
-	if request.URL.Scheme != "https" {
+	if request.URL.Scheme != "https" && !t.proxied {
 		return t.fallback.RoundTrip(request)
 	}
 	body, err := requestBytes(request)
@@ -162,6 +180,12 @@ func (t *TLSClientTransport) roundTrip(request *http.Request, client tls_client.
 
 	nativeResponse, err := client.Do(nativeRequest)
 	if err != nil {
+		if t.proxied {
+			if request.Context().Err() != nil {
+				return nil, request.Context().Err()
+			}
+			return nil, proxyRequestError(err)
+		}
 		return nil, err
 	}
 	if timing := transportTimingFromContext(request.Context()); timing != nil {

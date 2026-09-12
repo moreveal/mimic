@@ -141,6 +141,12 @@ func newTransport() (http.RoundTripper, error) {
 	)
 }
 
+func newProxyTransport(proxyURL string) (http.RoundTripper, error) {
+	return network.NewProxyTLSClientTransport(profiles.Chrome_152_PSK, proxyURL,
+		tls_client.WithNotFollowRedirects(), tls_client.WithTimeoutSeconds(30),
+		tls_client.WithRandomTLSExtensionOrder(), tls_client.WithTransportOptions(&tls_client.TransportOptions{DisableCompression: true}))
+}
+
 type Bundle struct{ mode state.BrowserMode }
 
 func New() *Bundle { return &Bundle{mode: state.BrowserModeHeadful} }
@@ -178,7 +184,7 @@ func (*Bundle) CDP() *compatibility.ProtocolSchema {
 }
 func (b *Bundle) Environment() *compatibility.EnvironmentProfile {
 	e := environment(b.mode)
-	return &compatibility.EnvironmentProfile{ID: e.ProfileID, Mode: e.Presentation.Mode, State: e, NewTransport: newTransport}
+	return &compatibility.EnvironmentProfile{ID: e.ProfileID, Mode: e.Presentation.Mode, State: e, NewTransport: newTransport, NewProxyTransport: newProxyTransport}
 }
 func (*Bundle) Expectations() *compatibility.CompatExpectations {
 	return &compatibility.CompatExpectations{

@@ -1773,3 +1773,55 @@ completion; this remains an open semantic defect. The full race
 attempt times out at ten minutes in the browser package's Goja child-navigation
 test without a preceding data-race report. See the compatibility report for
 all skips, initial failed attempts and unchanged baseline audit failures.
+
+
+## Environment profile contract and test setup (2026-09-12)
+
+The versioned [Mimic profile contract](../environment-profiles.md) shares one
+Context/Page environment with standard CDP. Public getters deep-copy mutable
+values; internal read-only projections avoid copying complete graphics and
+capability catalogs on each host call. Proxy pools remain Context-owned.
+
+The unchanged final fast gate completes **184 VALID executions and eight fresh
+binary launches**, including 10/25-Page waves and teardown-memory observations.
+The [retained receipt](environment-profiles-20260912.json) records build/hash,
+latency, throughput and memory. Warm static/DOM/React completion medians are
+41.57/209.84/103.62 ms. Median measured static throughput is 49.18/59.96 Pages/s
+at 10/25 Pages. Static/React 10-Page private memory is 537.16/561.71 MiB active
+and 159.73/175.23 MiB after teardown plus recovery. This is a correctness and
+resource checkpoint, not evidence of performance neutrality: no paired clean
+base comparison was made, and these throughput values do not resolve the prior
+Performance API regression.
+
+An earlier gate lost its runtime connection during a 25-Page wave while a full
+Go suite was active. Its process log was not retained by the frozen runner; the
+cause is unestablished. A separate unchanged-workload diagnostic completed
+100/100 executions across four 25-Page waves with the process alive, and the
+final complete gate above passed. This does not prove the earlier failure fixed.
+
+The full Go suite passed with the browser package taking 608.839 seconds; a
+subsequent instrumented browser run passed in 693.682 seconds while other
+validation was active. The default ten-minute package timeout was insufficient
+in an earlier full run without a preceding assertion failure. Focused profile,
+state, network, browser and CDP race checks pass, as do CLI validation and proxy
+authentication/remote-DNS/no-direct-fallback checks.
+
+Test-only commit `4923dd7` removes the unused ordinary-oracle seed navigation,
+closes Context resources in the common test helpers, and limits independent
+oracle cases to two concurrent executions. Both engines, snapshot-restoration
+assertions and frozen expectations remain intact. Eight affected groups passed
+together; representative parallel cases passed under the race detector. The
+instrumented pre-change run identified the computed CSS catalog at 77.27 seconds
+(57.47 seconds in two Goja cases). A final isolated before/after speed claim is
+not yet established. Use `python tools/testing/timings.py <go-test-json-log>` to
+inspect group wall time, or `--leaves` for individual cases. Parallel parent Go
+Elapsed values omit children; the report measures run-to-completion instead.
+
+The [controlled Chrome profile probe](../compatibility/environment-profile-contract-20260912.json)
+retains native version, binary and script hashes. Stable screen/available-area,
+outer-window, DPR, UA and language observations agree after metrics overrides.
+Existing Workers retain their startup UA/languages in both runtimes. Initial
+viewport geometry depends on the owned Chrome window's startup UI, and native
+event delivery varied with hidden-window scheduling; exact event timing is not
+certified by this capture. Focused regression tests cover Page-task media changes
+and duplicate-change suppression separately.

@@ -11,11 +11,13 @@ import (
 	"github.com/moreveal/mimic/compatibility"
 	"github.com/moreveal/mimic/internal/engine"
 	"github.com/moreveal/mimic/internal/network"
+	"github.com/moreveal/mimic/internal/profile"
 	"github.com/moreveal/mimic/internal/speech"
 	"github.com/moreveal/mimic/internal/state"
 )
 
 type Browser struct {
+	defaultProfile *profile.Document
 	speechProvider speech.Provider
 	mu             sync.RWMutex
 	factory        engine.Factory
@@ -25,6 +27,7 @@ type Browser struct {
 }
 
 type Options struct {
+	ProfileJSON []byte
 	// SpeechProvider is an optional portable synthesis driver. Nil selects the
 	// system provider. It creates document-owned resources only on first use.
 	SpeechProvider speech.Provider
@@ -45,20 +48,42 @@ func NewWithOptions(factory engine.Factory, bundle compatibility.Bundle, options
 	if provider == nil {
 		provider = speech.Open
 	}
-	return &Browser{speechProvider: provider, factory: factory, env: env, compat: bundle, contexts: map[string]*Context{}}, nil
+	b := &Browser{speechProvider: provider, factory: factory, env: env.Clone(), compat: bundle, contexts: map[string]*Context{}}
+	if len(options.ProfileJSON) > 0 {
+		d, err := profile.Normalize(options.ProfileJSON, env, nil)
+		if err != nil {
+			return nil, err
+		}
+		b.defaultProfile = &d
+	}
+	return b, nil
 }
 func (b *Browser) NewContext() *Context {
+	return b.newContext(b.defaultProfile)
+}
+func (b *Browser) newContext(d *profile.Document) *Context {
 	b.mu.Lock()
 	defer b.mu.Unlock()
 	lifetime, cancel := context.WithCancel(context.Background())
 	c := &Context{lifetime: lifetime, cancel: cancel, ID: uuid.NewString(), browser: b, cookies: network.NewCookieStore(), network: network.NewSessionState(), storage: map[string]map[string]string{}, pages: map[string]*Page{}}
+	c.env = b.env.Clone()
+	if d != nil {
+		c.env = d.Apply(b.env)
+		c.proxy = d.Network.Proxy
+	}
 	b.contexts[c.ID] = c
 	return c
 }
-func (b *Browser) Environment() state.Environment      { b.mu.RLock(); defer b.mu.RUnlock(); return b.env }
+func (b *Browser) Environment() state.Environment {
+	b.mu.RLock()
+	defer b.mu.RUnlock()
+	return b.env.Clone()
+}
 func (b *Browser) Compatibility() compatibility.Bundle { return b.compat }
 
 type Context struct {
+	env                state.Environment
+	proxy              profile.Proxy
 	files              map[string]*opfsStore
 	indexedDatabases   map[string]map[string]*indexedDatabase
 	indexedSequence    uint64
@@ -89,7 +114,17 @@ func (c *Context) NewPage() (*Page, error) {
 	if c.transport == nil {
 		profile := c.browser.Compatibility().Environment()
 		if profile.NewTransport != nil {
-			transport, err := profile.NewTransport()
+			var transport network.Transport
+			var err error
+			if c.proxy.Server != "" {
+				if profile.NewProxyTransport == nil {
+					err = fmt.Errorf("proxy transport is unsupported")
+				} else {
+					transport, err = profile.NewProxyTransport(c.proxy.URL())
+				}
+			} else {
+				transport, err = profile.NewTransport()
+			}
 			if err != nil {
 				c.mu.Unlock()
 				return nil, fmt.Errorf("create %s network transport: %w", c.browser.Environment().Network.WireProfile, err)

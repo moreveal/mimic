@@ -61,7 +61,8 @@ type EnvironmentProfile struct {
 	// NewTransport constructs the wire implementation selected by this exact
 	// compatibility bundle. The browser core only consumes net/http's neutral
 	// RoundTripper boundary and never imports a version package.
-	NewTransport func() (http.RoundTripper, error)
+	NewTransport      func() (http.RoundTripper, error)
+	NewProxyTransport func(string) (http.RoundTripper, error)
 }
 
 type CompatExpectations struct {

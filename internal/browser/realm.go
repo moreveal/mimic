@@ -300,7 +300,7 @@ func newRealmStateWithNavigation(p *Page, agent ExecutionAgent, d *dom.Document,
 	r.scheduler = scheduler.New(p.ClockNow(), func(ctx context.Context) error {
 		return r.checkpoint(ctx)
 	})
-	r.scheduler.SetExecutionScale(p.Environment().Time.ExecutionScale)
+	r.scheduler.SetExecutionScale(p.environmentView().Time.ExecutionScale)
 	var previousClock *scheduler.Scheduler
 	r.scheduler.SetTaskStarted(func() { previousClock = p.activeClock.Swap(r.scheduler) })
 	r.scheduler.SetTaskObserver(func(start, end time.Time) {
@@ -943,7 +943,7 @@ func (r *Realm) installBindings() error {
 	})
 	host["navigator"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		p.trace.Add(trace.API, "Navigator", map[string]any{"realm": r.ID})
-		environment := p.Environment()
+		environment := p.environmentView()
 		n := environment.Navigator()
 		metadata := environment.UserAgentData()
 		brands := make([]map[string]any, 0, len(environment.Product.UserAgentBrands))
@@ -975,7 +975,7 @@ func (r *Realm) installBindings() error {
 		return r.val(values), nil
 	})
 	host["intlEnvironment"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
-		environment := p.Environment()
+		environment := p.environmentView()
 		locale := environment.Locale.IntlLocale
 		if locale == "" && len(environment.Locale.Languages) > 0 {
 			locale = environment.Locale.Languages[0]
@@ -987,7 +987,7 @@ func (r *Realm) installBindings() error {
 	})
 	host["screen"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		p.trace.Add(trace.API, "Screen", map[string]any{"realm": r.ID})
-		environment := p.Environment()
+		environment := p.environmentView()
 		s := environment.Screen()
 		orientation := environment.ScreenOrientation
 		orientationType, orientationAngle := "landscape-primary", 0
@@ -1046,7 +1046,7 @@ func (r *Realm) installBindings() error {
 		return nil, nil
 	})
 	host["viewport"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
-		w := p.Environment().Window
+		w := p.environmentView().Window
 		p.mu.RLock()
 		frame, isFrame := r.agent.(*Frame)
 		detached := isFrame && frame != p.Top && p.frames[frame.ID] != frame
@@ -1081,7 +1081,7 @@ func (r *Realm) installBindings() error {
 		return r.val(map[string]any{"width": w.ViewportWidth, "height": w.ViewportHeight, "outerWidth": w.OuterWidth, "outerHeight": w.OuterHeight, "screenX": w.X, "screenY": w.Y}), nil
 	})
 	host["observationVersion"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
-		w := p.Environment().Window
+		w := p.environmentView().Window
 		return r.val(fmt.Sprintf("%d:%d:%d:%d:%d", r.document.Revision(), r.resourceRevision.Load(), w.ViewportWidth, w.ViewportHeight, r.selectorTargetID)), nil
 	})
 	if detacher, ok := r.runtime.(engine.ArrayBufferDetacher); ok {
@@ -1094,11 +1094,11 @@ func (r *Realm) installBindings() error {
 	}
 	installTextureDecoder(host, r.runtime)
 	host["graphics"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
-		g := p.Environment().Graphics
+		g := p.environmentView().Graphics
 		return r.val(map[string]any{"vendor": g.Vendor, "renderer": g.Renderer, "maxTextureSize": g.MaxTextureSize, "capabilitiesJSON": g.WebGLCapabilities()}), nil
 	})
 	host["rtcEnvironment"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
-		ice := p.Environment().Network.ICE
+		ice := p.environmentView().Network.ICE
 		count := ice.HostCandidateCount
 		if count < 0 {
 			count = 0
@@ -1124,16 +1124,16 @@ func (r *Realm) installBindings() error {
 		return r.val(map[string]any{"hostCandidateCount": count, "reflexiveCandidateCount": reflexiveCount, "portOffsets": offsets, "reflexivePortOffsets": reflexiveOffsets, "publicAddress": ice.PublicAddress, "networkCost": ice.NetworkCost, "hostDelayMillis": ice.HostDelayMillis, "reflexiveDelayMillis": ice.ReflexiveDelayMillis, "endDelayMillis": ice.EndDelayMillis}), nil
 	})
 	host["hasStorageAccess"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
-		return r.val(p.Environment().Network.CookiesEnabled && r.origin != "null"), nil
+		return r.val(p.environmentView().Network.CookiesEnabled && r.origin != "null"), nil
 	})
 	host["gpuCapabilities"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
-		return r.val(p.Environment().Graphics.WebGPUProjection()), nil
+		return r.val(p.environmentView().Graphics.WebGPUProjection()), nil
 	})
 	host["gpuRequestAdapter"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		promise := r.runtime.NewPromise()
-		delay := time.Duration(p.Environment().Graphics.WebGPU.InitializationDelayMillis * float64(time.Millisecond))
+		delay := time.Duration(p.environmentView().Graphics.WebGPU.InitializationDelayMillis * float64(time.Millisecond))
 		r.scheduler.Post(scheduler.Control, delay, func(context.Context) error {
-			g := p.Environment().Graphics
+			g := p.environmentView().Graphics
 			return promise.Resolve(map[string]any{"vendor": g.WebGPU.Vendor, "architecture": g.WebGPU.Architecture, "device": g.WebGPU.Device, "description": g.WebGPU.Description, "features": g.WebGPU.Features, "maxTextureSize": g.MaxTextureSize})
 		})
 		return promise.Value, nil
@@ -1895,7 +1895,7 @@ func (r *Realm) installBindings() error {
 	})
 	host["media"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		q := strings.ToLower(strarg(a, 0))
-		e := p.Environment()
+		e := p.environmentView()
 		match := strings.TrimSpace(q) == "screen" || strings.TrimSpace(q) == "all" || strings.TrimSpace(q) == ""
 		if strings.Contains(q, "prefers-color-scheme: light") {
 			match = e.Preferences.ColorScheme == "light"
@@ -1937,7 +1937,7 @@ func (r *Realm) installBindings() error {
 		return r.val(map[string]any{"header": policy, "origin": origin, "clientHints": hints}), nil
 	})
 	host["documentCookie"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
-		if !p.Environment().Network.CookiesEnabled {
+		if !p.environmentView().Network.CookiesEnabled {
 			return r.val(""), nil
 		}
 		pairs := []string{}
@@ -1949,7 +1949,7 @@ func (r *Realm) installBindings() error {
 		return r.val(strings.Join(pairs, "; ")), nil
 	})
 	host["setDocumentCookie"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		if !p.Environment().Network.CookiesEnabled {
+		if !p.environmentView().Network.CookiesEnabled {
 			return nil, nil
 		}
 		p.ctx.cookies.SetFromDocument(r.documentURL(), strarg(a, 0), r.cookieContext())

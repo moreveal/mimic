@@ -137,7 +137,7 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 		}
 		return nil
 	})
-	workerScheduler.SetExecutionScale(p.Environment().Time.ExecutionScale)
+	workerScheduler.SetExecutionScale(p.environmentView().Time.ExecutionScale)
 	w.mu.Lock()
 	w.runtime = runtime
 	w.scheduler = workerScheduler
@@ -186,7 +186,7 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 	var workerFonts *textmetrics.Engine
 	installFontResourceHosts(host, runtime, func() *textmetrics.Engine {
 		if workerFonts == nil {
-			workerFonts = newTextMetricsEngine(p.Environment().Fonts)
+			workerFonts = newTextMetricsEngine(p.environmentView().Fonts)
 		}
 		return workerFonts
 	})
@@ -250,7 +250,7 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 		return nil, nil
 	})
 	host["navigator"] = runtime.Function(func(engine.Value, []engine.Value) (engine.Value, error) {
-		environment := p.Environment()
+		environment := p.environmentView()
 		n := environment.Navigator()
 		return runtime.Value(map[string]any{
 			"userAgent": n.UserAgent, "appVersion": environment.AppVersion(), "platform": n.Platform,
@@ -267,20 +267,20 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 		})
 	}
 	host["gpuCapabilities"] = runtime.Function(func(engine.Value, []engine.Value) (engine.Value, error) {
-		return runtime.Value(p.Environment().Graphics.WebGPUProjection()), nil
+		return runtime.Value(p.environmentView().Graphics.WebGPUProjection()), nil
 	})
 	host["gpuRequestAdapter"] = runtime.Function(func(engine.Value, []engine.Value) (engine.Value, error) {
 		promise := runtime.NewPromise()
-		delay := time.Duration(p.Environment().Graphics.WebGPU.InitializationDelayMillis * float64(time.Millisecond))
+		delay := time.Duration(p.environmentView().Graphics.WebGPU.InitializationDelayMillis * float64(time.Millisecond))
 		workerScheduler.Post(scheduler.Control, delay, func(context.Context) error {
-			g := p.Environment().Graphics
+			g := p.environmentView().Graphics
 			return promise.Resolve(map[string]any{"vendor": g.WebGPU.Vendor, "architecture": g.WebGPU.Architecture, "device": g.WebGPU.Device, "description": g.WebGPU.Description, "features": g.WebGPU.Features, "maxTextureSize": g.MaxTextureSize})
 		})
 		return promise.Value, nil
 	})
 	installTextureDecoder(host, runtime)
 	host["graphics"] = runtime.Function(func(engine.Value, []engine.Value) (engine.Value, error) {
-		g := p.Environment().Graphics
+		g := p.environmentView().Graphics
 		return runtime.Value(map[string]any{"vendor": g.Vendor, "renderer": g.Renderer, "maxTextureSize": g.MaxTextureSize, "capabilitiesJSON": g.WebGLCapabilities()}), nil
 	})
 	host["location"] = runtime.Function(func(engine.Value, []engine.Value) (engine.Value, error) {
@@ -406,7 +406,7 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 			if status >= 300 && status < 400 && status != 304 {
 				continue
 			}
-			entry := performanceResourceEntry(event.Data, w.performanceOrigin, originOf(w.securityURL.String()), p.Environment().Time.NetworkScale, p.performanceClamper, w.performanceIsolated)
+			entry := performanceResourceEntry(event.Data, w.performanceOrigin, originOf(w.securityURL.String()), p.environmentView().Time.NetworkScale, p.performanceClamper, w.performanceIsolated)
 			if entry != nil {
 				w.performance.append(w.performance.create(entry, nil))
 			}

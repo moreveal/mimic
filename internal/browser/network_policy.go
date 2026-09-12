@@ -10,7 +10,7 @@ import (
 func (p *Page) NetworkPolicy() *network.RequestPolicy { return p.loader.Policy() }
 
 func (p *Page) networkOnline() bool {
-	return p.Environment().Navigator().Online && !p.NetworkPolicy().Offline()
+	return p.environmentView().Navigator().Online && !p.NetworkPolicy().Offline()
 }
 
 // SetNetworkOffline applies to this Page's requests, Window realms and workers.

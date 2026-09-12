@@ -120,7 +120,7 @@ func (r *Realm) installDocumentCompatibility(host map[string]any) {
 	})
 
 	host["notificationPermission"] = r.fn(func(_ engine.Value, _ []engine.Value) (engine.Value, error) {
-		permission := r.agent.Page().Environment().Permissions["notifications"]
+		permission := r.agent.Page().environmentView().Permissions["notifications"]
 		if permission != "granted" && permission != "denied" {
 			permission = "default"
 		}
