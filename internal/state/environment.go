@@ -53,7 +53,10 @@ type GPUAdapter struct {
 
 // Fonts selects resource families, never captured glyph metrics. Empty names use
 // the normal desktop defaults. The selected resources must exist in the font engine.
-type Fonts struct{ Serif, SansSerif, Monospace, SystemUI string }
+type Fonts struct {
+	Serif, SansSerif, Monospace, SystemUI string
+	Fallback                              []string
+}
 
 type Locale struct {
 	// Languages retains the complete ordered preference list. Reduction affects

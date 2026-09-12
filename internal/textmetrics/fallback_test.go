@@ -48,3 +48,26 @@ func TestMissingFontsRemainExplicit(t *testing.T) {
 		t.Fatalf("missing font: %v", err)
 	}
 }
+
+func TestMissingGlyphDoesNotRetainFallbackCandidates(t *testing.T) {
+	if _, err := os.Stat(filepath.Join(os.Getenv("WINDIR"), "Fonts", "arial.ttf")); err != nil {
+		t.Skip("requires reference fonts")
+	}
+	e := New()
+	if _, err := e.Shape("A", "Arial", 16, 400, false, false, false); err != nil {
+		t.Fatal(err)
+	}
+	faces, bytes := len(e.faces), e.bytes
+	for _, text := range []string{"\u0098", "\u0378"} {
+		value, err := e.Shape(text, "Arial", 16, 400, false, false, false)
+		if err != nil || len(value.Glyphs) != 1 || value.Glyphs[0].Advance <= 0 {
+			t.Fatalf("missing glyph: %v %v", value, err)
+		}
+		if len(e.faces) != faces || e.bytes != bytes {
+			t.Fatalf("unselected candidate retained: faces=%d bytes=%d", len(e.faces), e.bytes)
+		}
+	}
+	if _, err := e.Shape("Later ordinary text", "serif", 16, 400, true, false, false); err != nil {
+		t.Fatal(err)
+	}
+}

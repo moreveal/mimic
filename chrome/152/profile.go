@@ -29,6 +29,7 @@ func environment(mode state.BrowserMode) state.Environment {
 	environment.ProfileID = "chrome-152-windows-x64-headful-controlled-v1"
 	environment.Presentation.Mode = mode
 	environment.Platform.Architecture = "x86_64"
+	environment.Fonts.Fallback = []string{"Segoe UI Emoji", "Tahoma", "SimSun", "Segoe UI Symbol", "Segoe UI", "Arial"}
 	for _, name := range strings.Fields("background-fetch background-sync accelerometer gyroscope magnetometer screen-wake-lock clipboard-write payment-handler storage-access pointer-lock") {
 		environment.Permissions[name] = "granted"
 	}
