@@ -4,11 +4,27 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+
 	"github.com/moreveal/mimic/internal/engine"
 	"github.com/moreveal/mimic/internal/textmetrics"
 )
 
 func installFontResourceHosts(host map[string]any, runtime engine.Runtime, resources func() *textmetrics.Engine) {
+	host["shapeText"] = runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		shape := resources().ShapeWithFonts
+		if numarg(args, 7) != 0 {
+			shape = resources().ShapeCanvasWithFonts
+		}
+		result, err := shape(strarg(args, 0), strarg(args, 1), numarg(args, 2), numarg(args, 3), numarg(args, 4) != 0, numarg(args, 5) != 0, numarg(args, 6) != 0, nil)
+		if err != nil {
+			return runtime.Value(`{"error":"Unsupported local font resource or shaping operation"}`), nil
+		}
+		data, err := json.Marshal(result)
+		if err != nil {
+			return nil, err
+		}
+		return runtime.Value(string(data)), nil
+	})
 	host["fontLocal"] = runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		id, err := resources().LocalFont(strarg(args, 0))
 		reason := ""

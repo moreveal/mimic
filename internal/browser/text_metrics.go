@@ -32,7 +32,11 @@ func (r *Realm) installTextMetrics(host map[string]any) {
 
 	host["shapeText"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		p := r.agent.Page()
-		result, err := p.textMetricsEngine().ShapeWithFonts(strarg(args, 0), strarg(args, 1), numarg(args, 2), numarg(args, 3), numarg(args, 4) != 0, numarg(args, 5) != 0, numarg(args, 6) != 0, r.fontChoices)
+		shape := p.textMetricsEngine().ShapeWithFonts
+		if numarg(args, 7) != 0 {
+			shape = p.textMetricsEngine().ShapeCanvasWithFonts
+		}
+		result, err := shape(strarg(args, 0), strarg(args, 1), numarg(args, 2), numarg(args, 3), numarg(args, 4) != 0, numarg(args, 5) != 0, numarg(args, 6) != 0, r.fontChoices)
 		if err != nil {
 			// Private trace only: author-facing exceptions must not expose local paths.
 			bounded := func(value string, limit int) string {

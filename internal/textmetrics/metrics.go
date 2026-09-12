@@ -18,6 +18,9 @@ import (
 	"github.com/go-text/typesetting/font/opentype/tables"
 	"github.com/go-text/typesetting/harfbuzz"
 	"github.com/go-text/typesetting/segmenter"
+	"github.com/golang/freetype/truetype"
+	xfont "golang.org/x/image/font"
+	"golang.org/x/image/math/fixed"
 )
 
 type resource struct {
@@ -31,6 +34,9 @@ type loaded struct {
 	face                     *font.Face
 	shaper                   *harfbuzz.Font
 	ascent, descent, lineGap float64
+	emAscent, emDescent      float64
+	hintFont                 *truetype.Font
+	hintGlyph                truetype.GlyphBuf
 }
 
 type Engine struct {
@@ -240,12 +246,17 @@ func (e *Engine) load(r resource) (*loaded, error) {
 	if !ok {
 		return nil, fmt.Errorf("missing horizontal font metrics")
 	}
-	value := &loaded{face: face, shaper: harfbuzz.NewFont(face), ascent: float64(metrics.Ascender), descent: -float64(metrics.Descender), lineGap: float64(metrics.LineGap)}
+	value := &loaded{face: face, shaper: harfbuzz.NewFont(face), ascent: float64(metrics.Ascender), descent: -float64(metrics.Descender), lineGap: float64(metrics.LineGap), emAscent: float64(metrics.Ascender), emDescent: -float64(metrics.Descender)}
+	if r.index == 0 {
+		value.hintFont, _ = truetype.Parse(data)
+	}
 	// The Windows Chrome profile uses Windows ascender/descender rather than
 	// the optional typographic line metrics (notably different in Consolas).
 	if os2, err := loader.RawTable(ot.MustNewTag("OS/2")); err == nil && len(os2) >= 78 {
 		value.ascent = float64(binary.BigEndian.Uint16(os2[74:76]))
 		value.descent = float64(binary.BigEndian.Uint16(os2[76:78]))
+		value.emAscent = float64(int16(binary.BigEndian.Uint16(os2[68:70])))
+		value.emDescent = -float64(int16(binary.BigEndian.Uint16(os2[70:72])))
 	}
 	e.faces[key] = value
 	e.bytes += len(data)
@@ -259,22 +270,36 @@ type Glyph struct {
 	YOffset float64 `json:"yOffset"`
 	Left    float64 `json:"left"`
 	Right   float64 `json:"right"`
+	Top     float64 `json:"top"`
+	Bottom  float64 `json:"bottom"`
 	Ink     bool    `json:"ink"`
 }
 
 type Result struct {
-	Glyphs  []Glyph `json:"glyphs"`
-	Ascent  float64 `json:"ascent"`
-	LineGap float64 `json:"lineGap"`
-	Descent float64 `json:"descent"`
-	XHeight float64 `json:"xHeight"`
-	Family  string  `json:"family"`
+	Glyphs    []Glyph `json:"glyphs"`
+	Ascent    float64 `json:"ascent"`
+	LineGap   float64 `json:"lineGap"`
+	Descent   float64 `json:"descent"`
+	XHeight   float64 `json:"xHeight"`
+	Family    string  `json:"family"`
+	EmAscent  float64 `json:"emAscent"`
+	EmDescent float64 `json:"emDescent"`
 }
 
 func (e *Engine) Shape(text, families string, size, weight float64, italic, noKern, noLigatures bool) (Result, error) {
 	return e.ShapeWithFonts(text, families, size, weight, italic, noKern, noLigatures, nil)
 }
 func (e *Engine) ShapeWithFonts(text, families string, size, weight float64, italic, noKern, noLigatures bool, choices []FontReference) (Result, error) {
+	return e.shapeWithFonts(text, families, size, weight, italic, noKern, noLigatures, choices, false)
+}
+
+// ShapeCanvasWithFonts also evaluates TrueType vertical hinting for observable
+// ink bounds. DOM line boxes and SVG advances do not need this extra work.
+func (e *Engine) ShapeCanvasWithFonts(text, families string, size, weight float64, italic, noKern, noLigatures bool, choices []FontReference) (Result, error) {
+	return e.shapeWithFonts(text, families, size, weight, italic, noKern, noLigatures, choices, true)
+}
+
+func (e *Engine) shapeWithFonts(text, families string, size, weight float64, italic, noKern, noLigatures bool, choices []FontReference, hintInk bool) (Result, error) {
 	if !finite(size) || size <= 0 || size > 4096 || !finite(weight) {
 		return Result{}, fmt.Errorf("unsupported font size or weight")
 	}
@@ -329,6 +354,8 @@ func (e *Engine) ShapeWithFonts(text, families string, size, weight float64, ita
 	}
 	primaryScale := size / float64(f.face.Upem())
 	result := Result{Glyphs: []Glyph{}, Ascent: math.Round(f.ascent * primaryScale), Descent: math.Round(f.descent * primaryScale), LineGap: math.Round(f.lineGap * primaryScale), XHeight: float64(f.face.LineMetric(font.XHeight)) * primaryScale, Family: r.family}
+	result.EmAscent = f.emAscent * primaryScale
+	result.EmDescent = f.emDescent * primaryScale
 	for _, run := range runs {
 		buffer := harfbuzz.NewBuffer()
 		buffer.AddRunes(runes, run.start, run.end-run.start)
@@ -345,6 +372,12 @@ func (e *Engine) ShapeWithFonts(text, families string, size, weight float64, ita
 				g.Ink = true
 				g.Left = math.Floor(float64(bounds.XBearing) * scale)
 				g.Right = math.Ceil(float64(bounds.XBearing+bounds.Width) * scale)
+				g.Top = math.Round(-float64(bounds.YBearing) * scale)
+				g.Bottom = math.Round(-float64(bounds.YBearing+bounds.Height) * scale)
+				if hintInk && run.face.hintFont != nil && run.face.hintGlyph.Load(run.face.hintFont, fixed.Int26_6(math.Round(size*64)), truetype.Index(info.Glyph), xfont.HintingFull) == nil {
+					g.Top = -float64(run.face.hintGlyph.Bounds.Max.Y) / 64
+					g.Bottom = -float64(run.face.hintGlyph.Bounds.Min.Y) / 64
+				}
 			}
 			result.Glyphs = append(result.Glyphs, g)
 		}
