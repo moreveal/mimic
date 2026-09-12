@@ -13,9 +13,17 @@ import (
 	"time"
 
 	chrome "github.com/moreveal/mimic/chrome/152"
+	"github.com/moreveal/mimic/compatibility"
 	"github.com/moreveal/mimic/internal/browser"
 	v8 "github.com/moreveal/mimic/internal/engine/v8"
 )
+
+type replayEnvironmentBundle struct {
+	compatibility.Bundle
+	profile *compatibility.EnvironmentProfile
+}
+
+func (b replayEnvironmentBundle) Environment() *compatibility.EnvironmentProfile { return b.profile }
 
 func main() {
 	if err := run(); err != nil {
@@ -28,6 +36,7 @@ func run() error {
 	out := flag.String("out", "", "private output directory")
 	pattern := flag.String("dynamic-segment", "", "optional private route regexp with one captured dynamic ID; explicit response substitution")
 	overrides := flag.String("body-overrides", "", "optional JSON map from fixture index to replacement body path, for separate instrumentation runs")
+	environmentOverlay := flag.String("environment-overlay", "", "optional partial Environment JSON for independently measured environment controls; recorded in replay provenance")
 	deadline := flag.Duration("timeout", 60*time.Second, "bounded wall time")
 	steps := flag.Int("steps", 1600, "maximum scheduler advances")
 	sleep := flag.Duration("sleep", 20*time.Millisecond, "wall time between advances")
@@ -89,7 +98,23 @@ func run() error {
 	ctx, cancel := context.WithTimeout(context.Background(), *deadline)
 	defer cancel()
 	t := newReplay(c, cancel, segment, *maxRequests)
-	b, err := browser.New(v8.Factory{}, chrome.New())
+	var bundle compatibility.Bundle = chrome.New()
+	if *environmentOverlay != "" {
+		data, err := os.ReadFile(*environmentOverlay)
+		if err != nil {
+			return err
+		}
+		profile := *bundle.Environment()
+		if err := json.Unmarshal(data, &profile.State); err != nil {
+			return err
+		}
+		if err := profile.State.Validate(); err != nil {
+			return err
+		}
+		c.SourceHashes["environment-overlay"] = digest(data)
+		bundle = replayEnvironmentBundle{Bundle: bundle, profile: &profile}
+	}
+	b, err := browser.New(v8.Factory{}, bundle)
 	if err != nil {
 		return err
 	}
@@ -125,6 +150,7 @@ func run() error {
 		return err
 	}
 	summary := t.summary()
+	summary["environment"] = bundle.Environment().State
 	summary["navigationError"] = fmt.Sprint(navigation)
 	summary["pumpError"] = fmt.Sprint(pump)
 	summary["contextError"] = fmt.Sprint(ctx.Err())
