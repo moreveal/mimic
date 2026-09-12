@@ -35,7 +35,7 @@ for(const [name,build]of Object.entries({translate:(x,y)=>[1,0,0,1,svgDouble(x),
 const svgPoint=(x=0,y=0,state={})=>svgMake('SVGPoint',{x,y,...state});
 for(const key of ['x','y'])svgProp('SVGPoint',key,function(){const s=svgSlot(this,'SVGPoint');return s.read?s.read()[key]:s[key]},function(value){const s=svgSlot(this,'SVGPoint');svgWrite(s);s[key]=svgFloat(value);if(s.changed)s.changed()});
 svgMethod('SVGPoint','matrixTransform',function(m){const p=svgSlot(this,'SVGPoint'),v=point(svgMatrixValues(m),this.x,this.y);return svgPoint(Math.fround(v[0]),Math.fround(v[1]))});
-const svgRect=(box=[0,0,0,0],state={})=>{const r=new SVGRect(hostToken);Object.assign(svgRectSlots.get(r),{x:box[0],y:box[1],width:box[2]-box[0],height:box[3]-box[1]},state);return r};
+const svgRect=(box=[0,0,0,0],state={})=>{const r=new SVGRect(hostToken);Object.assign(svgRectSlots.get(r),{x:Math.fround(box[0]),y:Math.fround(box[1]),width:Math.fround(box[2]-box[0]),height:Math.fround(box[3]-box[1])},state);return r};
 for(const key of ['x','y','width','height'])svgProp('SVGRect',key,function(){const s=svgRectSlots.get(this);if(!s)throw new TypeError('Illegal invocation');return s.read?s.read()[key]:s[key]},function(value){const s=svgRectSlots.get(this);if(!s)throw new TypeError('Illegal invocation');svgWrite(s);const v=svgFloat(value);s[key]=v;if(s.changed)s.changed(key,v)});
 const svgTransform=(state={})=>{const t=svgMake('SVGTransform',{kind:1,angle:0,...state}),s=svgSlots.get(t);s.matrix=svgMatrix(ident,{readonly:s.readonly,changed:()=>{s.kind=1;s.angle=0;if(s.changed)s.changed()}});return t};
 for(const [key,slot]of [['type','kind'],['angle','angle'],['matrix','matrix']])svgProp('SVGTransform',key,function(){return svgSlot(this,'SVGTransform')[slot]});
