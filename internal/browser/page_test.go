@@ -1506,12 +1506,12 @@ func TestExplicitElementDimensionsProjectAsDOMRect(t *testing.T) {
 
 func TestAutoBlockLayoutDerivesFromChildrenAndViewport(t *testing.T) {
 	p := testPage(t)
-	v, err := p.Evaluate(context.Background(), `(()=>{const box=document.createElement('div'),child=document.createElement('iframe');child.style.width='300px';child.style.height='65px';box.appendChild(child);document.body.appendChild(box);const rect=box.getBoundingClientRect();return{width:rect.width,height:rect.height,bodyWidth:document.body.getBoundingClientRect().width,bodyHeight:document.body.getBoundingClientRect().height}})()`)
+	v, err := p.Evaluate(context.Background(), `(()=>{const box=document.createElement('div'),child=document.createElement('iframe');document.body.style.margin='0';child.style.cssText='display:block;border:0;width:300px;height:65px';box.appendChild(child);document.body.appendChild(box);const rect=box.getBoundingClientRect();return{width:rect.width,height:rect.height,bodyWidth:document.body.getBoundingClientRect().width,bodyHeight:document.body.getBoundingClientRect().height}})()`)
 	if err != nil {
 		t.Fatal(err)
 	}
 	result := v.(map[string]any)
-	if numberValue(result["width"]) != float64(p.Environment().Window.ViewportWidth) || numberValue(result["height"]) != 65 || numberValue(result["bodyWidth"]) != float64(p.Environment().Window.ViewportWidth) || numberValue(result["bodyHeight"]) < float64(p.Environment().Window.ViewportHeight) {
+	if numberValue(result["width"]) != float64(p.Environment().Window.ViewportWidth) || numberValue(result["height"]) != 65 || numberValue(result["bodyWidth"]) != float64(p.Environment().Window.ViewportWidth) || numberValue(result["bodyHeight"]) != 65 {
 		t.Fatalf("unexpected auto block layout: %#v", result)
 	}
 }

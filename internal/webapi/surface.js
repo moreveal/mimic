@@ -325,7 +325,7 @@
   class DOMRect extends DOMRectReadOnly { constructor(x=0,y=0,width=0,height=0){super(x,y,width,height)} get x(){return domRectSlots.get(this).x} set x(value){const state=domRectSlots.get(this);state.x=Number(value);state.left=Math.min(state.x,state.x+state.width);state.right=Math.max(state.x,state.x+state.width)} get y(){return domRectSlots.get(this).y} set y(value){const state=domRectSlots.get(this);state.y=Number(value);state.top=Math.min(state.y,state.y+state.height);state.bottom=Math.max(state.y,state.y+state.height)} get width(){return domRectSlots.get(this).width} set width(value){const state=domRectSlots.get(this);state.width=Number(value);state.left=Math.min(state.x,state.x+state.width);state.right=Math.max(state.x,state.x+state.width)} get height(){return domRectSlots.get(this).height} set height(value){const state=domRectSlots.get(this);state.height=Number(value);state.top=Math.min(state.y,state.y+state.height);state.bottom=Math.max(state.y,state.y+state.height)} static fromRect(other={}){return new DOMRect(other.x||0,other.y||0,other.width||0,other.height||0)} }
   /* shared_dom_matrix */
   const layoutPositionFor=element=>String(computedCSSDeclarations(element).find(entry=>entry.name==='position')?.value||'static').toLowerCase(),participatesInFlow=element=>!['absolute','fixed'].includes(layoutPositionFor(element));
-  const geometryParent=element=>element.parentElement||shadowSlots.get(syntheticParents.get(element))?.host||null;
+  const geometryParent=element=>{const parent=syntheticParents.get(element)||(elementSlot(element)?wrap(host.parentNode(elementSlot(element).nodeId)):null);return elementSlot(parent)?.type==='element'?parent:shadowSlots.get(parent)?.host||null};
   // Resolve variable-valued lengths at their defining element, so inherited
   // variables do not accidentally pick up a descendant's custom properties.
   // Other CSS math expressions remain outside the approximate size model.
@@ -354,105 +354,14 @@
   };
   const geometryPixels=text=>text&&/^[+-]?(?:\d+(?:\.\d+)?|\.\d+)px$/.test(text)?Number.parseFloat(text):text==='0'?0:null;
   const replacedGeometryTags=new Set(['IMG','INPUT','TEXTAREA','SELECT','BUTTON','VIDEO','AUDIO','CANVAS','IFRAME','OBJECT','EMBED']);
-  const layoutWidthFor=element=>{
-    const cache=styleReadCache.widths;if(cache.has(element))return cache.get(element);
-    const entries=computedCSSDeclarations(element),property=name=>geometryValue(element,entries.find(entry=>entry.name===name)?.value);
-    const display=property('display')||(element.hasAttribute('hidden')?'none':inlineDisplayTags.has(element.tagName)||element.localName.includes('-')?'inline':'block');
-    cache.set(element,0);
-    if(display==='none')return 0;
-    const parent=geometryParent(element),parentWidth=()=>parent?layoutWidthFor(parent):host.viewport().width;
-    const dimension=text=>text&&/^(?:\d+(?:\.\d+)?|\.\d+)%$/.test(text)?Number.parseFloat(text)*parentWidth()/100:geometryPixels(text);
-    let width=dimension(property('width'));
-    if(width===null){
-      const attribute=element.getAttribute('width');width=attribute&&/^\d+(?:\.\d+)?$/.test(attribute)?Number(attribute):(compatibilityElementState.controlGeometry?.(element,entries)?.width||0);
-      if((!property('width')||property('width')==='auto')&&['block','flex','grid','flow-root','table'].includes(display)&&!replacedGeometryTags.has(element.tagName)&&element.isConnected)width=parentWidth();
-    }
-    width=Math.max(dimension(property('min-width'))||0,Math.min(dimension(property('max-width'))??Infinity,width));
-    cache.set(element,width);return width;
-  };
-  const layoutRectFor=element=>withStyleReadCache(()=>{
-    const cache=styleReadCache.rects,resolving=styleReadCache.resolvingRects,provisional=styleReadCache.provisionalRects;
-    if(cache.has(element)){
-      // Parent percentage resolution can read an unfinished descendant box.
-      // Every observation depending on that provisional value must be retried
-      // on the next independent read, not retained as a final rectangle.
-      if(resolving.has(element))for(const active of resolving)provisional.add(active);
-      return cache.get(element);
-    }
-    const value=host.rect(elementSlot(element).nodeId),entries=computedCSSDeclarations(element);
-    const property=name=>geometryValue(element,entries.find(entry=>entry.name===name)?.value);
-    const display=property('display')||(element.hasAttribute('hidden')?'none':inlineDisplayTags.has(element.tagName)||element.localName.includes('-')?'inline':'block');
-    cache.set(element,value);
-    resolving.add(element);
-    try{
-    if(display==='none'){value.width=value.height=value.right=value.bottom=0;return value}
-    // Extend the existing approximate box model with author stylesheet sizes.
-    // Auto block/flex/grid containers fill their containing block; an unknown
-    // custom tag must not report zero solely because it isn't a native DIV.
-    const parent=geometryParent(element);
-    let containing;
-    const parentBox=()=>containing||(containing=parent?layoutRectFor(parent):host.viewport());
-    const pixels=geometryPixels;
-    // Resolving a width must not compute every ancestor's content height and
-    // recursively revisit its descendants. The two axes have separate read
-    // caches; percentage heights consult full boxes only when actually needed.
-    const dimension=(text,axis)=>text&&/^(?:\d+(?:\.\d+)?|\.\d+)%$/.test(text)?axis==='height'&&participatesInFlow(element)&&element!==document.documentElement&&!definiteGeometryHeight(parent)?null:Number.parseFloat(text)*(axis==='width'?(parent?layoutWidthFor(parent):host.viewport().width):parentBox().height)/100:pixels(text);
-    const height=dimension(property('height'),'height');
-    value.width=layoutWidthFor(element);
-    const clamp=(size,axis)=>Math.max(dimension(property('min-'+axis),axis)||0,Math.min(dimension(property('max-'+axis),axis)??Infinity,size));
-    // Percentage padding is relative to containing-block width, including its
-    // vertical sides. Empty generated blocks are a common aspect-ratio box.
-    const padding=dimension(property('padding-top'),'width')+dimension(property('padding-bottom'),'width');
-    let generatedHeight=0;
-    if(height===null){
-      for(const pseudo of ['before','after']){
-        const declarations=uncachedCSSDeclarations(element,pseudo),get=name=>declarations.find(e=>e.name===name)?.value;
-        if(get('display')==='none'||!['\"\"',"''"].includes(get('content'))||['absolute','fixed'].includes(get('position')))continue;
-        const length=text=>text?.endsWith('%')?Number.parseFloat(text)*value.width/100:pixels(text)||0;
-        generatedHeight+=length(get('height'))+length(get('padding-top'))+length(get('padding-bottom'));
-      }
-    }
-    if(height===null){const control=compatibilityElementState.controlGeometry?.(element,entries);if(control)value.height=control.height}
-    if(height!==null)value.height=height;
-    else if(value.height===0||generatedHeight||property('height')?.endsWith('%')){
-      value.height=generatedHeight;
-      for(const child of Array.from(element.children||[])){
-        if(!participatesInFlow(child))continue;
-        value.height=Math.max(value.height,layoutRectFor(child).height);
-      }
-      const shadow=elementShadows.get(element),state=shadow&&fragmentState(shadow);
-      if(state)for(const child of state.children){
-        if(child instanceof Element&&participatesInFlow(child))value.height=Math.max(value.height,layoutRectFor(child).height);
-      }
-    }
-    value.height=clamp(value.height,'height');
-    if(property('box-sizing')!=='border-box')value.height+=padding;
-    if(property('position')==='absolute'&&height===null&&property('top')==='0px'&&property('bottom')==='0px')value.height=parentBox().height;
-    // Position offsets belong to the untransformed layout box. Transforms are
-    // applied only when projecting a client rectangle, never to offset metrics.
-    const position=property('position')||'static';
-    if(['absolute','fixed','relative'].includes(position)){
-      let containingElement=null;
-      if(position!=='fixed')for(let p=parent;p;p=geometryParent(p)){
-        const style=computedCSSDeclarations(p),get=k=>style.find(e=>e.name===k)?.value;
-        if((get('position')||'static')!=='static'){containingElement=p;break}
-      }
-      const box=containingElement?layoutRectFor(containingElement):{x:0,y:0,...host.viewport()};
-      const offset=(name,size)=>{const text=property(name);return text?.endsWith('%')?Number.parseFloat(text)*size/100:pixels(text)};
-      let left=offset('left',box.width),top=offset('top',box.height);
-      if(left===null){const right=offset('right',box.width);left=right===null?0:position==='relative'?-right:box.width-right-value.width}
-      if(top===null){const bottom=offset('bottom',box.height);top=bottom===null?0:position==='relative'?-bottom:box.height-bottom-value.height}
-      value.x=value.left=(box.x||0)+left;value.y=value.top=(box.y||0)+top;
-      value.offsetLeft=left;value.offsetTop=top;
-    }
-    value.right=value.left+value.width;value.bottom=value.top+value.height;
-    return value;
-    }finally{resolving.delete(element);if(provisional.has(element)){provisional.delete(element);cache.delete(element)}}
-  }),makeDOMRect=(value,element)=>{const resolved=element?clientRectFor(element):value;return new DOMRect(resolved.x,resolved.y,resolved.width,resolved.height)};
+  /* shared_css_box_geometry */
+  const layoutWidthFor=element=>cssBoxModel.width(element);
+  const layoutRectFor=element=>withStyleReadCache(()=>cssBoxModel.rect(element));
+  const makeDOMRect=(value,element)=>{const resolved=element?clientRectFor(element):value;return new DOMRect(resolved.x,resolved.y,resolved.width,resolved.height)};
   const clientRectFor=element=>withStyleReadCache(()=>{
     const box=layoutRectFor(element),entries=computedCSSDeclarations(element),get=k=>entries.find(e=>e.name===k)?.value;
     const raw=get('transform');if(!raw||raw==='none'||get('display')==='none')return box;
-    const len=(v,size)=>v?.endsWith('%')?parseFloat(v)*size/100:geometryPixels(v);
+    const len=(v,size)=>{const resolved=cssResolveLength(v,{em:cssComputedFontSize(element)||16,rem:cssComputedFontSize(document.documentElement)||16,percent:size});return resolved===null?null:cssGeometryLength(resolved)};
     let matrix;
     try{matrix=compatibilityMatrix.parse(raw,(value,axis)=>len(value,axis===0?box.width:axis===1?box.height:0))}
     catch{host.semanticMissingAt('surface.js/clientRectFor','CSS.clientRectTransform',raw);return box}
@@ -463,9 +372,9 @@
     if(oz===null){host.semanticMissingAt('surface.js/clientRectFor','CSS.clientRectTransformOrigin');return box}
     const projected=[[0,0],[box.width,0],[0,box.height],[box.width,box.height]].map(([x,y])=>compatibilityMatrix.point(matrix,x-ox,y-oy,-oz));
     if(projected.some(point=>point[3]<=0)){host.semanticMissingAt('surface.js/clientRectFor','CSS.clientRectPerspectiveClipping');return box}
-    const points=projected.map(point=>[point[0]/point[3]+ox+box.x,point[1]/point[3]+oy+box.y]);
+    const points=projected.map(point=>[compatibilityMatrix.geometryCoordinate(point[0]/point[3]+ox+box.x),compatibilityMatrix.geometryCoordinate(point[1]/point[3]+oy+box.y)]);
     const xs=points.map(p=>p[0]),ys=points.map(p=>p[1]),x=Math.min(...xs),y=Math.min(...ys);
-    return {x,y,width:Math.max(...xs)-x,height:Math.max(...ys)-y};
+    return {x,y,width:Math.fround(Math.max(...xs)-x),height:Math.fround(Math.max(...ys)-y)};
   });
   const frameViewportSizes=new WeakMap();
   const readFrameViewport=nodeID=>withStyleReadCache(()=>{

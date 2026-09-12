@@ -1695,11 +1695,6 @@ func (r *Realm) installBindings() error {
 		}
 		return r.val(node.Nonce), nil
 	})
-	host["rect"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		viewport := p.Environment().Window
-		width, height := r.layoutBox(int64(numarg(a, 0)), float64(viewport.ViewportWidth), float64(viewport.ViewportHeight), 0)
-		return r.val(map[string]any{"x": 0, "y": 0, "top": 0, "left": 0, "right": width, "bottom": height, "width": width, "height": height}), nil
-	})
 	host["documentReferrer"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(r.documentReferrer), nil })
 	host["documentDomain"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		u, _ := url.Parse(r.origin)
@@ -2596,77 +2591,6 @@ func int64Number(v any) int64 {
 		return int64(n)
 	}
 	return 0
-}
-
-func parseInlineStyle(value string) map[string]string {
-	result := map[string]string{}
-	for _, declaration := range strings.Split(value, ";") {
-		name, raw, ok := strings.Cut(declaration, ":")
-		if ok {
-			result[strings.ToLower(strings.TrimSpace(name))] = strings.TrimSpace(raw)
-		}
-	}
-	return result
-}
-
-func layoutDimension(cssValue, attributeValue string, viewport float64) float64 {
-	value := strings.TrimSpace(strings.ToLower(cssValue))
-	if strings.HasSuffix(value, "px") {
-		if parsed, err := strconv.ParseFloat(strings.TrimSpace(strings.TrimSuffix(value, "px")), 64); err == nil && parsed >= 0 {
-			return parsed
-		}
-	}
-	if strings.HasSuffix(value, "%") {
-		if parsed, err := strconv.ParseFloat(strings.TrimSpace(strings.TrimSuffix(value, "%")), 64); err == nil && parsed >= 0 {
-			return viewport * parsed / 100
-		}
-	}
-	if parsed, err := strconv.ParseFloat(strings.TrimSpace(attributeValue), 64); err == nil && parsed >= 0 {
-		return parsed
-	}
-	return 0
-}
-
-func (r *Realm) layoutBox(nodeID int64, containingWidth, viewportHeight float64, depth int) (float64, float64) {
-	if depth > 64 {
-		return 0, 0
-	}
-	node, ok := r.document.Get(nodeID)
-	if !ok || node.Type != "element" {
-		return 0, 0
-	}
-	style := parseInlineStyle(node.Attributes["style"])
-	if strings.EqualFold(style["display"], "none") || strings.EqualFold(style["visibility"], "hidden") {
-		return 0, 0
-	}
-	width := layoutDimension(style["width"], node.Attributes["width"], containingWidth)
-	height := layoutDimension(style["height"], node.Attributes["height"], viewportHeight)
-	block := map[string]bool{"HTML": true, "BODY": true, "DIV": true, "P": true, "H1": true, "H2": true, "H3": true, "SECTION": true, "MAIN": true, "FORM": true, "NOSCRIPT": true}
-	if width == 0 && block[node.TagName] {
-		width = containingWidth
-	}
-	if height == 0 {
-		for _, childID := range node.Children {
-			child, childOK := r.document.Get(childID)
-			if childOK {
-				position := strings.ToLower(strings.TrimSpace(parseInlineStyle(child.Attributes["style"])["position"]))
-				if position == "absolute" || position == "fixed" {
-					continue
-				}
-			}
-			_, childHeight := r.layoutBox(childID, width, viewportHeight, depth+1)
-			height += childHeight
-		}
-	}
-	if node.TagName == "HTML" || node.TagName == "BODY" {
-		if width == 0 {
-			width = containingWidth
-		}
-		if height < viewportHeight {
-			height = viewportHeight
-		}
-	}
-	return width, height
 }
 
 func performanceHeader(raw any, name string) string {
