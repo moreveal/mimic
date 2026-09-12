@@ -1,3 +1,4 @@
+let svgComputedTransform=null;
 // Computed values project the cascade, font resources and canonical box graph.
 // The catalog supplies initial semantics, never measured element coordinates.
 const cssComputedShorthand=(element,name)=>{
@@ -46,6 +47,7 @@ const cssComputedValue=(element,name)=>withStyleReadCache(()=>{
  if(name==='transform'&&value!=='none'){
   const raw=declaration?.parsedValue??value;
   try{
+   const svg=svgComputedTransform?.(element,raw);if(svg!==null&&svg!==undefined)return svg;
    const box=layoutRectFor(element),em=cssComputedFontSize(element)??16,rem=cssComputedFontSize(document.documentElement)??16;
    const matrix=compatibilityMatrix.parse(raw,(text,axis)=>cssResolveLength(text,{em,rem,percent:axis===0?box.width:axis===1?box.height:0}));
    const two=[2,3,6,7,8,9,11,14].every(i=>matrix[i]===0)&&matrix[10]===1&&matrix[15]===1;

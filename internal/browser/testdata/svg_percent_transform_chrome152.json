@@ -1,0 +1,193 @@
+{
+  "result": {
+    "result": {
+      "value": {
+        "view-box": {
+          "computed": "matrix(1, 0, 0, 1, 200, 50)",
+          "matrix": [
+            0.5,
+            0,
+            0,
+            0.5,
+            100,
+            25
+          ]
+        },
+        "view-box-resized": {
+          "computed": "matrix(1, 0, 0, 1, 200, 50)",
+          "matrix": [
+            0.5,
+            0,
+            0,
+            0.5,
+            100,
+            25
+          ]
+        },
+        "fill-box": {
+          "computed": "matrix(1, 0, 0, 1, 20, 7.5)",
+          "matrix": [
+            0.5,
+            0,
+            0,
+            0.5,
+            10,
+            3.75
+          ]
+        },
+        "fill-box-resized": {
+          "computed": "matrix(1, 0, 0, 1, 40, 7.5)",
+          "matrix": [
+            0.5,
+            0,
+            0,
+            0.5,
+            20,
+            3.75
+          ]
+        },
+        "content-box": {
+          "computed": "matrix(1, 0, 0, 1, 20, 7.5)",
+          "matrix": [
+            0.5,
+            0,
+            0,
+            0.5,
+            10,
+            3.75
+          ]
+        },
+        "content-box-resized": {
+          "computed": "matrix(1, 0, 0, 1, 40, 7.5)",
+          "matrix": [
+            0.5,
+            0,
+            0,
+            0.5,
+            20,
+            3.75
+          ]
+        },
+        "border-box": {
+          "computed": "matrix(1, 0, 0, 1, 25, 10)",
+          "matrix": [
+            0.5,
+            0,
+            0,
+            0.5,
+            12.5,
+            5
+          ]
+        },
+        "border-box-resized": {
+          "computed": "matrix(1, 0, 0, 1, 45, 10)",
+          "matrix": [
+            0.5,
+            0,
+            0,
+            0.5,
+            22.5,
+            5
+          ]
+        },
+        "stroke-box": {
+          "computed": "matrix(1, 0, 0, 1, 25, 10)",
+          "matrix": [
+            0.5,
+            0,
+            0,
+            0.5,
+            12.5,
+            5
+          ]
+        },
+        "stroke-box-resized": {
+          "computed": "matrix(1, 0, 0, 1, 45, 10)",
+          "matrix": [
+            0.5,
+            0,
+            0,
+            0.5,
+            22.5,
+            5
+          ]
+        },
+        "viewbox-changed": {
+          "computed": "matrix(1, 0, 0, 1, 400, 100)",
+          "matrix": [
+            0.25,
+            0,
+            0,
+            0.25,
+            100,
+            25
+          ]
+        },
+        "fill-origin": {
+          "computed": "matrix(0, 1, -1, 0, 0, 0)",
+          "matrix": [
+            0,
+            0.25,
+            -0.25,
+            0,
+            16.25,
+            1.25
+          ]
+        },
+        "stroke-width-changed": {
+          "computed": "matrix(1, 0, 0, 1, 30, 12.5)",
+          "matrix": [
+            0.25,
+            0,
+            0,
+            0.25,
+            7.5,
+            3.125
+          ]
+        },
+        "no-stroke": {
+          "computed": "matrix(1, 0, 0, 1, 20, 7.5)",
+          "matrix": [
+            0.25,
+            0,
+            0,
+            0.25,
+            5,
+            1.875
+          ]
+        },
+        "css-stroke": {
+          "computed": "matrix(1, 0, 0, 1, 30, 12.5)",
+          "matrix": [
+            0.25,
+            0,
+            0,
+            0.25,
+            7.5,
+            3.125
+          ]
+        },
+        "border-origin": {
+          "computed": "matrix(0, 1, -1, 0, 0, 0)",
+          "matrix": [
+            0,
+            0.25,
+            -0.25,
+            0,
+            16.25,
+            1.25
+          ]
+        },
+        "nonplanar-computed": "matrix3d(1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 400, 100, 3, 1)"
+      }
+    }
+  },
+  "captureMetadata": {
+    "browser": "Chrome/152.0.7977.82",
+    "independentRuns": 2,
+    "fixture": "local HTTP; SVG view/fill/content/border/stroke reference boxes",
+    "date": "2026-09-12",
+    "nativeControlDifferences": 0,
+    "chromeBinarySHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9"
+  }
+}

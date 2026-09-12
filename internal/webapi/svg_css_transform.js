@@ -1,11 +1,25 @@
 // CSS transform matrices act on a child's contribution to its parent box.
 // The child's own getBBox remains in its local coordinate system.
-const cssTransform=(n,box,raw)=>{
+// Reference boxes are shared by CSSOM and the SVG coordinate projection.
+const cssReferenceBox=(n,box)=>{
+ const mode=specified(n,'transform-box')||'view-box';
+ if(mode==='view-box'){const [w,h]=viewport(n);return [0,0,w,h]}
+ const fill=box||[0,0,0,0];
+ if(mode==='fill-box'||mode==='content-box')return fill;
+ if(mode==='stroke-box'||mode==='border-box'){
+  if((specified(n,'stroke')||'none')==='none')return fill;
+  // Analytic stroke bounds for closed primitives. Arbitrary joins and
+  // non-scaling strokes remain an explicit geometry boundary.
+  if(!['rect','circle','ellipse'].includes(tag(n))||(specified(n,'vector-effect')||'none')!=='none')return unsupported('strokeReferenceBox');
+  const half=Math.max(0,length(n,'stroke-width','other',1))/2;
+  return [fill[0]-half,fill[1]-half,fill[2]+half,fill[3]+half];
+ }
+ return unsupported('transformReferenceBox');
+};
+const cssTransform=(n,box,raw,applyOrigin=true)=>{
  const entries=computedCSSDeclarations(n),get=key=>entries.find(e=>e.name===key)?.value;
  const fail=reason=>{host.semanticMissingAt('svg_css_transform.js:5','SVG.cssTransformResolution',JSON.stringify({reason,value:String(raw).slice(0,256),origin:get('transform-origin'),referenceBox:get('transform-box'),nodeId:elementSlot(n).nodeId}));return unsupported('cssTransform')};
- const mode=get('transform-box')||'view-box';let reference;
- if(mode==='fill-box'||mode==='content-box')reference=box||[0,0,0,0];
- else if(mode==='view-box'){const [w,h]=viewport(n);reference=[0,0,w,h]}else return fail('unsupported-reference-box');
+ const reference=cssReferenceBox(n,box);
  const size=cssComputedFontSize(n);if(size===null)return fail('unresolved-font-size');
  let root=n;for(let p=parent(root);elementSlot(p)?.type==='element';p=parent(root))root=p;
  const rootSize=cssComputedFontSize(root),width=reference[2]-reference[0],height=reference[3]-reference[1];
@@ -41,6 +55,7 @@ const cssTransform=(n,box,raw)=>{
   else return fail('unsupported-transform-function:'+name);
   matrix=multiply(matrix,m);
  }
+ if(!applyOrigin)return matrix;
  let origin=String(get('transform-origin')??attr(n,'transform-origin')??'0 0').trim().split(/\s+/);
  if(origin.length===3){if(len(origin.pop(),0)!==0)return fail('nonzero-origin-z')}
  if(origin.length<1||origin.length>2)return fail('unsupported-origin');
@@ -49,4 +64,17 @@ const cssTransform=(n,box,raw)=>{
  const keywords={left:'0%',top:'0%',center:'50%',right:'100%',bottom:'100%'};
  const x=reference[0]+len(keywords[origin[0]]||origin[0],0),y=reference[1]+len(keywords[origin[1]]||origin[1],1);
  return multiply(multiply([1,0,0,1,x,y],matrix),[1,0,0,1,-x,-y]);
+};
+
+svgComputedTransform=(n,raw)=>{
+ if(elementSlot(n)?.namespaceURI!==ns)return null;
+ // Nonplanar computed matrices retain the generic 4D algebra while using
+ // the same SVG percentage reference box. CTM's planar boundary is unchanged.
+ if(/(?:matrix3d|translate3d|translatez|scale3d|scalez|rotate3d|rotatex|rotatey|perspective)\s*\(/i.test(raw)){
+  const box=cssReferenceBox(n,bounds(n)),em=cssComputedFontSize(n)??16,rem=cssComputedFontSize(document.documentElement)??16;
+  const matrix=compatibilityMatrix.parse(raw,(text,axis)=>cssResolveLength(text,{em,rem,percent:axis===0?box[2]-box[0]:axis===1?box[3]-box[1]:0}));
+  const two=[2,3,6,7,8,9,11,14].every(i=>matrix[i]===0)&&matrix[10]===1&&matrix[15]===1;
+  return (two?'matrix(':'matrix3d(')+(two?[0,1,4,5,12,13].map(i=>matrix[i]):matrix).map(cssSerializeNumber).join(', ')+')';
+ }
+ return 'matrix('+cssTransform(n,bounds(n),raw,false).map(cssSerializeNumber).join(', ')+')';
 };
