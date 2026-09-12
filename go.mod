@@ -29,9 +29,10 @@ require (
 	github.com/klauspost/compress v1.18.2
 	github.com/maclof/gov8 v0.1.1
 	github.com/tdewolff/font v0.0.0-20241125190050-d899fdc808fc
+	github.com/woozymasta/bcn v0.7.0
 	golang.org/x/image v0.23.0
 	golang.org/x/net v0.51.0
-	golang.org/x/sys v0.41.0
+	golang.org/x/sys v0.47.0
 )
 
 require (

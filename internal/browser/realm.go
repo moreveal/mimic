@@ -1092,6 +1092,7 @@ func (r *Realm) installBindings() error {
 			return nil, detacher.DetachArrayBuffer(args[0])
 		})
 	}
+	installTextureDecoder(host, r.runtime)
 	host["graphics"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		g := p.Environment().Graphics
 		return r.val(map[string]any{"vendor": g.Vendor, "renderer": g.Renderer, "maxTextureSize": g.MaxTextureSize, "capabilitiesJSON": g.WebGLCapabilities()}), nil
