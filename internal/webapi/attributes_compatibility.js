@@ -6,6 +6,11 @@ const attributeCompatibility=(()=>{
   const member=(prototype,name,value)=>{Object.defineProperty(value,'name',{value:name,configurable:true});markNative(value,name);Object.defineProperty(prototype,name,{value,writable:true,enumerable:true,configurable:true})};
   const accessor=(prototype,name,get,set)=>{if(get)Object.defineProperty(get,'name',{value:'get '+name,configurable:true});if(set)Object.defineProperty(set,'name',{value:'set '+name,configurable:true});markNative(get,name,'get ');markNative(set,name,'set ');Object.defineProperty(prototype,name,{get,set,enumerable:true,configurable:true})};
   const htmlElement=value=>{if(!(value instanceof HTMLElement)||!elementSlot(value))throw new TypeError('Illegal invocation');return value};
+  const setSlotAttribute=Element.prototype.setAttribute;
+  // Slot assignment derives from canonical attributes, including property writes.
+  for(const [C,name]of [[Element,'slot'],[globalThis.HTMLSlotElement,'name']])if(C)accessor(C.prototype,name,function(){
+    const data=elementSlot(this);if(data?.type!=='element'||name==='name'&&data.tagName!=='SLOT')throw new TypeError('Illegal invocation');return host.getAttribute(data.nodeId,name)||'';
+  },function(value){const data=elementSlot(this);if(data?.type!=='element'||name==='name'&&data.tagName!=='SLOT')throw new TypeError('Illegal invocation');if(typeof value==='symbol')throw new TypeError('Cannot convert a Symbol value to a string');Reflect.apply(setSlotAttribute,this,[name,String(value)])});
   for(const C of [globalThis.HTMLInputElement,globalThis.HTMLTextAreaElement]){
     if(typeof C!=='function')continue;
     const control=value=>{if(!(value instanceof C)||!elementSlot(value))throw new TypeError('Illegal invocation');return value};

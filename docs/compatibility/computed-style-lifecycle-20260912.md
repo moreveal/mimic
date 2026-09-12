@@ -4,7 +4,9 @@ Chrome 152.0.7977.82 headful resolves an empty CSSStyleDeclaration for a detache
 element or a node whose owner document has no active browsing context. The
 declaration stays live across insertion, removal and adoption. `display:none`
 on the element, an ancestor or the connected embedding iframe does not make
-the declaration empty. This explains the reduced `OjmeV1[82]` observation.
+the declaration empty. This was a related lifecycle defect, but subsequent
+offline replay showed it did not fix `OjmeV1[82]`; see
+`computed-style-flat-tree-20260912.md` for the actual closed-shadow-root cause.
 
 Resolution now checks canonical DOM connectivity and the owning realm's active
 document, with the existing synthetic shadow-root ownership supplement. It does
