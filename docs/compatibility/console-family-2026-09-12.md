@@ -1,5 +1,22 @@
 # Console family compatibility, Chrome 152
 
+The cross-realm follow-up fixes native brand classification at the reference
+owner: browser-owned wrappers are not author Proxies. Function, Date, RegExp and
+Error arguments passed between live consoles now receive the same message-text
+conversion as local values. Author Proxies, including wrappers around foreign
+functions, remain uncoerced. No object is cloned to discover its brand.
+
+Frozen A/B controls also show that retained values from a removed iframe still
+work in a live console, while the removed iframe's own console methods stop
+before argument conversion. Console checks the existing Realm.inactive state;
+no public DOM property or duplicate lifecycle state supplies that decision.
+The cross-realm fixture covers both argument origins, null receivers, retained
+console methods and native/proxy values. Ordinary and restored regressions pass.
+Private independent matrices are retained in `.build/console-residual-delegated/`:
+`before/` had 48 differing leaves; `verified/` has zero for connected receivers;
+`retained/` exposed 96 inactive-receiver differences, and `lifecycle/` has zero
+after the lifecycle guard. Every native A/B control has zero differences.
+
 The Console namespace now owns its methods with Chrome's enumerable/writable/
 configurable descriptors, zero arity, native names and `[object console]` tag.
 Its immediate prototype is an empty object. The same implementation serves

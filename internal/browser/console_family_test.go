@@ -89,6 +89,46 @@ func TestConsoleDescriptionNativeBrandsAndFailures(t *testing.T) {
 	historyEval(t, p, `(()=>{for(const make of [()=>function(){},()=>/x/,()=>new Date(0),()=>new Error('x')]){let n=0;const v=make();v.toString=()=>{n++;throw Error('description failure')};console.log(v);if(n!==1)return 'native description';const proxy=new Proxy(v,{get(){throw Error('proxy get')},getPrototypeOf(){throw Error('proxy prototype')}});console.log(proxy);if(n!==1)return 'proxy description'}let reads=0;const plain={get toString(){reads++;throw Error('ordinary object')}};console.dir(plain);console.table(plain);return reads===0})()`, true)
 }
 
+func TestConsoleForeignArgumentsFrozenChrome(t *testing.T) {
+	source, err := os.ReadFile("testdata/console_cross_realm_oracle.js")
+	if err != nil {
+		t.Fatal(err)
+	}
+	data, err := os.ReadFile("testdata/console_cross_realm_chrome152.json")
+	if err != nil {
+		t.Fatal(err)
+	}
+	var capture struct {
+		Observation map[string]any `json:"observation"`
+	}
+	if err = json.Unmarshal(data, &capture); err != nil {
+		t.Fatal(err)
+	}
+	for _, restored := range []bool{false, true} {
+		t.Run(strconv.FormatBool(restored), func(t *testing.T) {
+			t.Setenv("MIMIC_DISABLE_BOOTSTRAP_SNAPSHOT", map[bool]string{false: "1", true: "0"}[restored])
+			seed := bootstrapSnapshotPage(t)
+			navigateCapabilityFixture(t, seed)
+			if restored {
+				bootstrapSnapshotWarm(t, seed)
+			}
+			p, err := seed.ctx.NewPage()
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer p.Close()
+			navigateCapabilityFixture(t, p)
+			value, err := p.Evaluate(context.Background(), string(source))
+			if err != nil {
+				t.Fatal(err)
+			}
+			if d := bootstrapSnapshotDifference("console foreign", capture.Observation, value); d != "" {
+				t.Fatal(d)
+			}
+		})
+	}
+}
+
 func TestConsoleTimerFailedLabelStillUsesDefault(t *testing.T) {
 	p := bootstrapSnapshotPage(t)
 	historyEval(t, p, `(()=>{const failure={};for(const method of ['time','timeLog','timeEnd']){let caught=false;try{console[method]({toString(){throw failure}})}catch(e){caught=e===failure}if(!caught)return false}console.timeEnd();return true})()`, true)
