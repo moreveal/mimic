@@ -7,6 +7,8 @@ import (
 	"net/http/httptrace"
 	"sync"
 	"time"
+
+	"github.com/moreveal/mimic/internal/monotime"
 )
 
 type transportTimingKey struct{}
@@ -38,7 +40,7 @@ type TransportTimingSnapshot struct {
 }
 
 func newTransportTiming(origin, connectionKey string) *TransportTiming {
-	return &TransportTiming{started: time.Now(), origin: origin, connectionKey: connectionKey, phases: map[string]float64{}}
+	return &TransportTiming{started: monotime.Now(), origin: origin, connectionKey: connectionKey, phases: map[string]float64{}}
 }
 
 func withTransportTiming(ctx context.Context, timing *TransportTiming) context.Context {
@@ -56,7 +58,7 @@ func (t *TransportTiming) mark(name string) {
 	}
 	t.mu.Lock()
 	if _, exists := t.phases[name]; !exists {
-		t.phases[name] = float64(time.Since(t.started)) / float64(time.Millisecond)
+		t.phases[name] = float64(monotime.Since(t.started)) / float64(time.Millisecond)
 	}
 	t.mu.Unlock()
 }

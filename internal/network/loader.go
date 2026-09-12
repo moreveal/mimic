@@ -20,6 +20,7 @@ import (
 	"github.com/andybalholm/brotli"
 	"github.com/google/uuid"
 	"github.com/klauspost/compress/zstd"
+	"github.com/moreveal/mimic/internal/monotime"
 	"github.com/moreveal/mimic/internal/state"
 	"github.com/moreveal/mimic/internal/trace"
 )
@@ -196,7 +197,7 @@ func (l *Loader) Load(ctx context.Context, r Request) (response Response, loadEr
 		return Response{}, err
 	}
 	if r.operationStarted.IsZero() {
-		r.operationStarted = time.Now()
+		r.operationStarted = monotime.Now()
 	}
 	if r.ID == "" {
 		r.ID = uuid.NewString()
@@ -282,7 +283,7 @@ func (l *Loader) Load(ctx context.Context, r Request) (response Response, loadEr
 		r.Headers.Set("Cookie", strings.Join(cookiePairs, "; "))
 	}
 	visibleHeaders := headerStrings(r.Headers)
-	requestStarted := time.Now()
+	requestStarted := monotime.Now()
 	l.trace.Add(trace.Network, "request", map[string]any{"id": r.ID, "url": r.URL.String(), "method": r.Method, "headers": visibleHeaders, "postData": string(r.Body), "initiator": r.Initiator, "context": r.ContextID, "performanceOwner": r.PerformanceOwner, "performanceStart": r.PerformanceStart})
 	l.trace.Add(trace.Resource, "loadStart", map[string]any{"id": r.ID, "url": r.URL.String(), "type": r.Initiator, "context": r.ContextID})
 	if snapshot.Offline && r.URL.Scheme != "blob" {
@@ -325,7 +326,7 @@ func (l *Loader) Load(ctx context.Context, r Request) (response Response, loadEr
 		cached.FromCache = true
 		// The bytes/headers describe the stored representation; elapsed time and
 		// transport phases belong to this retrieval, not its original download.
-		cached.Duration = time.Since(requestStarted)
+		cached.Duration = monotime.Since(requestStarted)
 		cached.TransportTiming.Phases = nil
 		cached.BrowserVisibleTiming = TransportTimingSnapshot{Phases: map[string]float64{
 			"firstResponseByte": float64(cached.Duration) / float64(time.Millisecond),
@@ -335,7 +336,7 @@ func (l *Loader) Load(ctx context.Context, r Request) (response Response, loadEr
 	}
 	attempt := l.session.BeginConnection(r.URL)
 	timing := newTransportTiming(attempt.Origin, attempt.Key)
-	start := time.Now()
+	start := timing.started
 	req, err := http.NewRequestWithContext(ctx, r.Method, r.URL.String(), bytes.NewReader(r.Body))
 	if err != nil {
 		return Response{}, err
@@ -378,7 +379,7 @@ func (l *Loader) Load(ctx context.Context, r Request) (response Response, loadEr
 	record := l.session.CompleteConnection(attempt, timingSnapshot, raw.Proto, raw.Close)
 	l.trace.Add(trace.Network, "transport", map[string]any{"id": r.ID, "url": r.URL.String(), "timing": timingSnapshot, "sessionCold": attempt.Cold, "connectionState": record.Status})
 	browserTiming := timingSnapshot.shifted(float64(start.Sub(r.operationStarted)) / float64(time.Millisecond))
-	res := Response{Status: raw.StatusCode, Headers: raw.Header.Clone(), Body: body, URL: r.URL, Duration: time.Since(start), EncodedBodySize: encodedBodySize, Protocol: raw.Proto, TransportTiming: timingSnapshot, BrowserVisibleTiming: browserTiming}
+	res := Response{Status: raw.StatusCode, Headers: raw.Header.Clone(), Body: body, URL: r.URL, Duration: monotime.Since(start), EncodedBodySize: encodedBodySize, Protocol: raw.Proto, TransportTiming: timingSnapshot, BrowserVisibleTiming: browserTiming}
 	acceptedBefore := l.session.ClientHints(r.URL)
 	l.session.AcceptClientHints(r.URL, res.Headers.Get("Accept-CH"))
 	if l.env().Network.CookiesEnabled && requestIncludesCredentials(r) {
@@ -630,7 +631,7 @@ func (l *Loader) after(ctx context.Context, r Request, res Response) (Response, 
 				r.Headers.Del(name)
 			}
 			r.redirectChain(u)
-			r.redirectEnd = float64(time.Since(r.operationStarted)) / float64(time.Millisecond)
+			r.redirectEnd = float64(monotime.Since(r.operationStarted)) / float64(time.Millisecond)
 			r.timingAllowFailed = r.timingAllowFailed || !requestTimingAllowed(r, res.Headers)
 			r.URL = u
 			r.redirectCount++
