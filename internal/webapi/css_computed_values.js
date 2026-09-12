@@ -42,6 +42,15 @@ const cssComputedValue=(element,name)=>withStyleReadCache(()=>{
  if(value==null||['initial','unset','revert','revert-layer'].includes(value))value=initial;
  if(cssComputedShorthands[name])return cssComputedShorthand(element,name);
  if(value===undefined){if(name==='page')return 'auto';if(/^background-position-[xy]$/.test(name)){const pair=(entries.find(e=>e.name==='background-position')?.value||'0% 0%').split(' ');return pair[name.endsWith('x')?0:1]||'0%'}return ''}
+ if(name==='transform'&&value!=='none'){
+  const raw=declaration?.parsedValue??value;
+  try{
+   const box=layoutRectFor(element),em=cssComputedFontSize(element)??16,rem=cssComputedFontSize(document.documentElement)??16;
+   const matrix=compatibilityMatrix.parse(raw,(text,axis)=>cssResolveLength(text,{em,rem,percent:axis===0?box.width:axis===1?box.height:0}));
+   const two=[2,3,6,7,8,9,11,14].every(i=>matrix[i]===0)&&matrix[10]===1&&matrix[15]===1;
+   return (two?'matrix(':'matrix3d(')+(two?[0,1,4,5,12,13].map(i=>matrix[i]):matrix).map(cssSerializeNumber).join(', ')+')';
+  }catch{return value}
+ }
  if(name==='color')return cssResolvedColor(element);
  if(['opacity','fill-opacity','stroke-opacity','stop-opacity','flood-opacity'].includes(name)&&cssNumberRegex.test(value))return cssSerializeNumber(Math.max(0,Math.min(1,Number(value))));
  if(value==='currentcolor'||name==='caret-color'&&value==='auto')return cssResolvedColor(element);

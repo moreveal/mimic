@@ -24,7 +24,7 @@
   const transformBox=(b,m)=>{if(!b)return null;const F=Math.fround,x=F(b[0]),y=F(b[1]),r=F(x+F(b[2]-b[0])),bottom=F(y+F(b[3]-b[1]));m=m.map(F);let out=null;for(const [px,py] of [[x,y],[r,y],[r,bottom],[x,bottom]]){const p=point(m,px,py).map(F);out=union(out,pointBox(...p))}return out};
   /* shared_svg_css_transform */
   const transform=(n,box)=>{
-   const css=computedCSSDeclarations(n).find(e=>e.name==='transform');if(css)return cssTransform(n,box,css.value);
+   const css=computedCSSDeclarations(n).find(e=>e.name==='transform');if(css)return cssTransform(n,box,css.parsedValue??css.value);
    const raw=attr(n,'transform')||'';let m=ident,rest=raw;
    const re=/^\s*(matrix|translate|scale|rotate|skewX|skewY)\s*\(([^)]*)\)\s*,?/;
    while(rest.trim()){const match=re.exec(rest);if(!match)return ident;rest=rest.slice(match[0].length);const a=numbers(match[2]);if(!a.every(Number.isFinite))return ident;let v;switch(match[1]){
