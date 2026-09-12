@@ -1,0 +1,637 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": "1669021",
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled-profile-and-browser-context",
+    "actual": {
+      "href": "http://127.0.0.1:21734/plain",
+      "isSecureContext": true,
+      "crossOriginIsolated": false,
+      "innerWidth": 1272,
+      "innerHeight": 709,
+      "outerWidth": 0,
+      "outerHeight": 0,
+      "devicePixelRatio": 1,
+      "visibility": "hidden",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "platform": "Win32"
+    },
+    "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+    "probeSHA256": "57cb988877b2e879e16a1de18c07a49c65121f539b3230f9305905fe135b168f",
+    "controlDiffCount": 0,
+    "controlRuns": 2
+  },
+  "result": {
+    "result": {
+      "value": {
+        "webgl": {
+          "names": [
+            "ANGLE_instanced_arrays",
+            "EXT_blend_minmax",
+            "EXT_clip_control",
+            "EXT_color_buffer_half_float",
+            "EXT_depth_clamp",
+            "EXT_disjoint_timer_query",
+            "EXT_float_blend",
+            "EXT_frag_depth",
+            "EXT_polygon_offset_clamp",
+            "EXT_shader_texture_lod",
+            "EXT_texture_compression_bptc",
+            "EXT_texture_compression_rgtc",
+            "EXT_texture_filter_anisotropic",
+            "EXT_texture_mirror_clamp_to_edge",
+            "EXT_sRGB",
+            "KHR_parallel_shader_compile",
+            "OES_element_index_uint",
+            "OES_fbo_render_mipmap",
+            "OES_standard_derivatives",
+            "OES_texture_float",
+            "OES_texture_float_linear",
+            "OES_texture_half_float",
+            "OES_texture_half_float_linear",
+            "OES_vertex_array_object",
+            "WEBGL_blend_func_extended",
+            "WEBGL_color_buffer_float",
+            "WEBGL_compressed_texture_s3tc",
+            "WEBGL_compressed_texture_s3tc_srgb",
+            "WEBGL_debug_renderer_info",
+            "WEBGL_debug_shaders",
+            "WEBGL_depth_texture",
+            "WEBGL_draw_buffers",
+            "WEBGL_lose_context",
+            "WEBGL_multi_draw",
+            "WEBGL_polygon_mode"
+          ],
+          "extensions": {
+            "ANGLE_instanced_arrays": {
+              "tag": "[object ANGLEInstancedArrays]",
+              "same": true,
+              "operation": 2,
+              "error": 0
+            },
+            "EXT_blend_minmax": {
+              "tag": "[object EXTBlendMinMax]",
+              "same": true,
+              "operation": 32775,
+              "error": 0
+            },
+            "EXT_clip_control": {
+              "tag": "[object EXTClipControl]",
+              "same": true,
+              "operation": [
+                36002,
+                37727
+              ],
+              "error": 0
+            },
+            "EXT_color_buffer_half_float": {
+              "tag": "[object EXTColorBufferHalfFloat]",
+              "same": true,
+              "operation": [
+                1280,
+                36054,
+                0,
+                0
+              ],
+              "error": 0
+            },
+            "EXT_depth_clamp": {
+              "tag": "[object EXTDepthClamp]",
+              "same": true,
+              "operation": true,
+              "error": 0
+            },
+            "EXT_disjoint_timer_query": {
+              "tag": "[object EXTDisjointTimerQuery]",
+              "same": true,
+              "operation": [
+                64,
+                false,
+                true
+              ],
+              "error": 0
+            },
+            "EXT_float_blend": {
+              "tag": "[object EXTFloatBlend]",
+              "same": true,
+              "operation": [
+                [
+                  0,
+                  36053,
+                  5126,
+                  0
+                ],
+                true,
+                0
+              ],
+              "error": 0
+            },
+            "EXT_frag_depth": {
+              "tag": "[object EXTFragDepth]",
+              "same": true,
+              "operation": true,
+              "error": 0
+            },
+            "EXT_polygon_offset_clamp": {
+              "tag": "[object EXTPolygonOffsetClamp]",
+              "same": true,
+              "operation": [
+                1,
+                2,
+                3
+              ],
+              "error": 0
+            },
+            "EXT_shader_texture_lod": {
+              "tag": "[object EXTShaderTextureLOD]",
+              "same": true,
+              "operation": true,
+              "error": 0
+            },
+            "EXT_texture_compression_bptc": {
+              "tag": "[object EXTTextureCompressionBPTC]",
+              "same": true,
+              "operation": true,
+              "error": 0
+            },
+            "EXT_texture_compression_rgtc": {
+              "tag": "[object EXTTextureCompressionRGTC]",
+              "same": true,
+              "operation": true,
+              "error": 0
+            },
+            "EXT_texture_filter_anisotropic": {
+              "tag": "[object EXTTextureFilterAnisotropic]",
+              "same": true,
+              "operation": [
+                2,
+                16
+              ],
+              "error": 0
+            },
+            "EXT_texture_mirror_clamp_to_edge": {
+              "tag": "[object EXTTextureMirrorClampToEdge]",
+              "same": true,
+              "operation": 34627,
+              "error": 0
+            },
+            "EXT_sRGB": {
+              "tag": "[object EXTsRGB]",
+              "same": true,
+              "operation": 0,
+              "error": 0
+            },
+            "KHR_parallel_shader_compile": {
+              "tag": "[object KHRParallelShaderCompile]",
+              "same": true,
+              "operation": "boolean",
+              "error": 0
+            },
+            "OES_element_index_uint": {
+              "tag": "[object OESElementIndexUint]",
+              "same": true,
+              "operation": 4,
+              "error": 0
+            },
+            "OES_fbo_render_mipmap": {
+              "tag": "[object OESFboRenderMipmap]",
+              "same": true,
+              "operation": 36054,
+              "error": 0
+            },
+            "OES_standard_derivatives": {
+              "tag": "[object OESStandardDerivatives]",
+              "same": true,
+              "operation": 4354,
+              "error": 0
+            },
+            "OES_texture_float": {
+              "tag": "[object OESTextureFloat]",
+              "same": true,
+              "operation": 0,
+              "error": 0
+            },
+            "OES_texture_float_linear": {
+              "tag": "[object OESTextureFloatLinear]",
+              "same": true,
+              "operation": 9729,
+              "error": 0
+            },
+            "OES_texture_half_float": {
+              "tag": "[object OESTextureHalfFloat]",
+              "same": true,
+              "operation": 0,
+              "error": 0
+            },
+            "OES_texture_half_float_linear": {
+              "tag": "[object OESTextureHalfFloatLinear]",
+              "same": true,
+              "operation": 9729,
+              "error": 0
+            },
+            "OES_vertex_array_object": {
+              "tag": "[object OESVertexArrayObject]",
+              "same": true,
+              "operation": [
+                true,
+                true
+              ],
+              "error": 0
+            },
+            "WEBGL_blend_func_extended": {
+              "tag": "[object WebGLBlendFuncExtended]",
+              "same": true,
+              "operation": [
+                35065,
+                1
+              ],
+              "error": 0
+            },
+            "WEBGL_color_buffer_float": {
+              "tag": "[object WebGLColorBufferFloat]",
+              "same": true,
+              "operation": [
+                0,
+                36053,
+                5126,
+                0
+              ],
+              "error": 0
+            },
+            "WEBGL_compressed_texture_s3tc": {
+              "tag": "[object WebGLCompressedTextureS3TC]",
+              "same": true,
+              "operation": true,
+              "error": 0
+            },
+            "WEBGL_compressed_texture_s3tc_srgb": {
+              "tag": "[object WebGLCompressedTextureS3TCsRGB]",
+              "same": true,
+              "operation": true,
+              "error": 0
+            },
+            "WEBGL_debug_renderer_info": {
+              "tag": "[object WebGLDebugRendererInfo]",
+              "same": true,
+              "operation": [
+                "string",
+                "string"
+              ],
+              "error": 0
+            },
+            "WEBGL_debug_shaders": {
+              "tag": "[object WebGLDebugShaders]",
+              "same": true,
+              "operation": [
+                true,
+                true
+              ],
+              "error": 0
+            },
+            "WEBGL_depth_texture": {
+              "tag": "[object WebGLDepthTexture]",
+              "same": true,
+              "operation": 0,
+              "error": 0
+            },
+            "WEBGL_draw_buffers": {
+              "tag": "[object WebGLDrawBuffers]",
+              "same": true,
+              "operation": [
+                0,
+                8
+              ],
+              "error": 0
+            },
+            "WEBGL_lose_context": {
+              "tag": "[object WebGLLoseContext]",
+              "same": true,
+              "operation": [
+                true,
+                37442
+              ],
+              "error": 0
+            },
+            "WEBGL_multi_draw": {
+              "tag": "[object WebGLMultiDraw]",
+              "same": true,
+              "operation": 1282,
+              "error": 0
+            },
+            "WEBGL_polygon_mode": {
+              "tag": "[object WebGLPolygonMode]",
+              "same": true,
+              "operation": 6913,
+              "error": 0
+            }
+          }
+        },
+        "webgl2": {
+          "names": [
+            "EXT_clip_control",
+            "EXT_color_buffer_float",
+            "EXT_color_buffer_half_float",
+            "EXT_conservative_depth",
+            "EXT_depth_clamp",
+            "EXT_disjoint_timer_query_webgl2",
+            "EXT_float_blend",
+            "EXT_polygon_offset_clamp",
+            "EXT_render_snorm",
+            "EXT_texture_compression_bptc",
+            "EXT_texture_compression_rgtc",
+            "EXT_texture_filter_anisotropic",
+            "EXT_texture_mirror_clamp_to_edge",
+            "EXT_texture_norm16",
+            "KHR_parallel_shader_compile",
+            "NV_shader_noperspective_interpolation",
+            "OES_draw_buffers_indexed",
+            "OES_sample_variables",
+            "OES_shader_multisample_interpolation",
+            "OES_texture_float_linear",
+            "OVR_multiview2",
+            "WEBGL_blend_func_extended",
+            "WEBGL_clip_cull_distance",
+            "WEBGL_compressed_texture_s3tc",
+            "WEBGL_compressed_texture_s3tc_srgb",
+            "WEBGL_debug_renderer_info",
+            "WEBGL_debug_shaders",
+            "WEBGL_lose_context",
+            "WEBGL_multi_draw",
+            "WEBGL_polygon_mode",
+            "WEBGL_provoking_vertex",
+            "WEBGL_stencil_texturing"
+          ],
+          "extensions": {
+            "EXT_clip_control": {
+              "tag": "[object EXTClipControl]",
+              "same": true,
+              "operation": [
+                36002,
+                37727
+              ],
+              "error": 0
+            },
+            "EXT_color_buffer_float": {
+              "tag": "[object EXTColorBufferFloat]",
+              "same": true,
+              "operation": [
+                0,
+                36053,
+                5126,
+                0
+              ],
+              "error": 0
+            },
+            "EXT_color_buffer_half_float": {
+              "tag": "[object EXTColorBufferHalfFloat]",
+              "same": true,
+              "operation": [
+                0,
+                36053,
+                5126,
+                0
+              ],
+              "error": 0
+            },
+            "EXT_conservative_depth": {
+              "tag": "[object EXTConservativeDepth]",
+              "same": true,
+              "operation": true,
+              "error": 0
+            },
+            "EXT_depth_clamp": {
+              "tag": "[object EXTDepthClamp]",
+              "same": true,
+              "operation": true,
+              "error": 0
+            },
+            "EXT_disjoint_timer_query_webgl2": {
+              "tag": "[object EXTDisjointTimerQueryWebGL2]",
+              "same": true,
+              "operation": [
+                64,
+                false,
+                true
+              ],
+              "error": 0
+            },
+            "EXT_float_blend": {
+              "tag": "[object EXTFloatBlend]",
+              "same": true,
+              "operation": [
+                [
+                  0,
+                  36053,
+                  5126,
+                  0
+                ],
+                true,
+                0
+              ],
+              "error": 0
+            },
+            "EXT_polygon_offset_clamp": {
+              "tag": "[object EXTPolygonOffsetClamp]",
+              "same": true,
+              "operation": [
+                1,
+                2,
+                3
+              ],
+              "error": 0
+            },
+            "EXT_render_snorm": {
+              "tag": "[object EXTRenderSnorm]",
+              "same": true,
+              "operation": [
+                0,
+                36053,
+                36764,
+                0
+              ],
+              "error": 0
+            },
+            "EXT_texture_compression_bptc": {
+              "tag": "[object EXTTextureCompressionBPTC]",
+              "same": true,
+              "operation": true,
+              "error": 0
+            },
+            "EXT_texture_compression_rgtc": {
+              "tag": "[object EXTTextureCompressionRGTC]",
+              "same": true,
+              "operation": true,
+              "error": 0
+            },
+            "EXT_texture_filter_anisotropic": {
+              "tag": "[object EXTTextureFilterAnisotropic]",
+              "same": true,
+              "operation": [
+                2,
+                16
+              ],
+              "error": 0
+            },
+            "EXT_texture_mirror_clamp_to_edge": {
+              "tag": "[object EXTTextureMirrorClampToEdge]",
+              "same": true,
+              "operation": 34627,
+              "error": 0
+            },
+            "EXT_texture_norm16": {
+              "tag": "[object EXTTextureNorm16]",
+              "same": true,
+              "operation": [
+                0,
+                36053,
+                35863,
+                0
+              ],
+              "error": 0
+            },
+            "KHR_parallel_shader_compile": {
+              "tag": "[object KHRParallelShaderCompile]",
+              "same": true,
+              "operation": "boolean",
+              "error": 0
+            },
+            "NV_shader_noperspective_interpolation": {
+              "tag": "[object NVShaderNoperspectiveInterpolation]",
+              "same": true,
+              "operation": true,
+              "error": 0
+            },
+            "OES_draw_buffers_indexed": {
+              "tag": "[object OESDrawBuffersIndexed]",
+              "same": true,
+              "operation": [
+                false,
+                true,
+                false,
+                true
+              ],
+              "error": 0
+            },
+            "OES_sample_variables": {
+              "tag": "[object OESSampleVariables]",
+              "same": true,
+              "operation": true,
+              "error": 0
+            },
+            "OES_shader_multisample_interpolation": {
+              "tag": "[object OESShaderMultisampleInterpolation]",
+              "same": true,
+              "operation": [
+                -0.5,
+                0.4375,
+                4
+              ],
+              "error": 0
+            },
+            "OES_texture_float_linear": {
+              "tag": "[object OESTextureFloatLinear]",
+              "same": true,
+              "operation": 9729,
+              "error": 0
+            },
+            "OVR_multiview2": {
+              "tag": "[object OVRMultiview2]",
+              "same": true,
+              "operation": 4,
+              "error": 0
+            },
+            "WEBGL_blend_func_extended": {
+              "tag": "[object WebGLBlendFuncExtended]",
+              "same": true,
+              "operation": [
+                35065,
+                1
+              ],
+              "error": 0
+            },
+            "WEBGL_clip_cull_distance": {
+              "tag": "[object WebGLClipCullDistance]",
+              "same": true,
+              "operation": [
+                true,
+                8,
+                8
+              ],
+              "error": 0
+            },
+            "WEBGL_compressed_texture_s3tc": {
+              "tag": "[object WebGLCompressedTextureS3TC]",
+              "same": true,
+              "operation": true,
+              "error": 0
+            },
+            "WEBGL_compressed_texture_s3tc_srgb": {
+              "tag": "[object WebGLCompressedTextureS3TCsRGB]",
+              "same": true,
+              "operation": true,
+              "error": 0
+            },
+            "WEBGL_debug_renderer_info": {
+              "tag": "[object WebGLDebugRendererInfo]",
+              "same": true,
+              "operation": [
+                "string",
+                "string"
+              ],
+              "error": 0
+            },
+            "WEBGL_debug_shaders": {
+              "tag": "[object WebGLDebugShaders]",
+              "same": true,
+              "operation": [
+                true,
+                true
+              ],
+              "error": 0
+            },
+            "WEBGL_lose_context": {
+              "tag": "[object WebGLLoseContext]",
+              "same": true,
+              "operation": [
+                true,
+                37442
+              ],
+              "error": 0
+            },
+            "WEBGL_multi_draw": {
+              "tag": "[object WebGLMultiDraw]",
+              "same": true,
+              "operation": 1282,
+              "error": 0
+            },
+            "WEBGL_polygon_mode": {
+              "tag": "[object WebGLPolygonMode]",
+              "same": true,
+              "operation": 6913,
+              "error": 0
+            },
+            "WEBGL_provoking_vertex": {
+              "tag": "[object WebGLProvokingVertex]",
+              "same": true,
+              "operation": 36429,
+              "error": 0
+            },
+            "WEBGL_stencil_texturing": {
+              "tag": "[object WebGLStencilTexturing]",
+              "same": true,
+              "operation": 6401,
+              "error": 0
+            }
+          }
+        }
+      }
+    }
+  }
+}

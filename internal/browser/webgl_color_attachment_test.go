@@ -1,0 +1,9 @@
+//go:build windows && amd64
+
+package browser
+
+import "testing"
+
+func TestWebGLColorAttachmentMatchesFrozenChrome(t *testing.T) {
+	documentAllOracle(t, "webgl_color_attachment")
+}

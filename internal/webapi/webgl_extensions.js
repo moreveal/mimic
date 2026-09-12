@@ -11,6 +11,7 @@ const extension=(name,tag,constants={},methods={},enable=()=>{})=>{
 };
 extension('WEBGL_debug_renderer_info','WebGLDebugRendererInfo',{UNMASKED_VENDOR_WEBGL:37445,UNMASKED_RENDERER_WEBGL:37446},{},s=>{s.debug=true});
 extension('EXT_texture_filter_anisotropic','EXTTextureFilterAnisotropic',{TEXTURE_MAX_ANISOTROPY_EXT:34046,MAX_TEXTURE_MAX_ANISOTROPY_EXT:34047});
+if(kind==='webgl')extension('WEBGL_color_buffer_float','WebGLColorBufferFloat',{RGBA32F_EXT:34836,FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE_EXT:33297,UNSIGNED_NORMALIZED_EXT:35863});
 extension('EXT_color_buffer_half_float','EXTColorBufferHalfFloat',{RGBA16F_EXT:34842,RGB16F_EXT:34843,FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE_EXT:33297,UNSIGNED_NORMALIZED_EXT:35863});
 if(kind==='webgl2')extension('EXT_color_buffer_float','EXTColorBufferFloat');else extension('OES_standard_derivatives','OESStandardDerivatives',{FRAGMENT_SHADER_DERIVATIVE_HINT_OES:35723});
 extension('KHR_parallel_shader_compile','KHRParallelShaderCompile',{COMPLETION_STATUS_KHR:37297});
