@@ -1,0 +1,350 @@
+{
+  "version": {
+    "Browser": "Chrome/152.0.7977.82",
+    "Protocol-Version": "1.3",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "V8-Version": "15.2.124.21",
+    "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:20581/devtools/browser/94ce33f3-33a3-4004-97e1-66702b38d77b"
+  },
+  "observation": {
+    "srgb": {
+      "alias": true,
+      "read": {
+        "space": "srgb",
+        "format": "rgba-float16",
+        "type": "Float16Array",
+        "data": [
+          1.5,
+          0.25,
+          -0.5,
+          1,
+          0.5,
+          1,
+          0.25,
+          0.5
+        ]
+      },
+      "overlap": {
+        "space": "srgb",
+        "format": "rgba-float16",
+        "type": "Float16Array",
+        "data": [
+          0.5,
+          1,
+          0.25,
+          0.5
+        ]
+      },
+      "copy": {
+        "space": "srgb",
+        "format": "rgba-float16",
+        "type": "Float16Array",
+        "data": [
+          1.5,
+          0.25,
+          -0.5,
+          1,
+          0.5,
+          1,
+          0.25,
+          0.5
+        ]
+      },
+      "direct": {
+        "space": "srgb",
+        "format": "rgba-float16",
+        "type": "Float16Array",
+        "data": [
+          1.5,
+          0.25,
+          -0.5,
+          1,
+          0.5,
+          1,
+          0.25,
+          0.5
+        ]
+      },
+      "noConversion": {
+        "space": "srgb",
+        "format": "rgba-float16",
+        "type": "Float16Array",
+        "data": [
+          1.5,
+          0.25,
+          -0.5,
+          1,
+          0.5,
+          1,
+          0.25,
+          0.5
+        ]
+      },
+      "closed": [
+        0,
+        0
+      ],
+      "local": {
+        "space": "srgb",
+        "format": "rgba-float16",
+        "type": "Float16Array",
+        "data": [
+          0,
+          0,
+          0,
+          0,
+          0.5,
+          1,
+          0.25,
+          0.5
+        ]
+      },
+      "copyStable": {
+        "space": "srgb",
+        "format": "rgba-float16",
+        "type": "Float16Array",
+        "data": [
+          1.5,
+          0.25,
+          -0.5,
+          1,
+          0.5,
+          1,
+          0.25,
+          0.5
+        ]
+      },
+      "reset": {
+        "space": "srgb",
+        "format": "rgba-float16",
+        "type": "Float16Array",
+        "data": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "attributes": {
+        "alpha": true,
+        "colorSpace": "srgb",
+        "colorType": "float16",
+        "desynchronized": false,
+        "toneMapping": {
+          "mode": "standard"
+        },
+        "willReadFrequently": true
+      }
+    },
+    "display-p3": {
+      "alias": true,
+      "read": {
+        "space": "display-p3",
+        "format": "rgba-float16",
+        "type": "Float16Array",
+        "data": [
+          1.5,
+          0.25,
+          -0.5,
+          1,
+          0.5,
+          1,
+          0.25,
+          0.5
+        ]
+      },
+      "overlap": {
+        "space": "display-p3",
+        "format": "rgba-float16",
+        "type": "Float16Array",
+        "data": [
+          0.5,
+          1,
+          0.25,
+          0.5
+        ]
+      },
+      "copy": {
+        "space": "display-p3",
+        "format": "rgba-float16",
+        "type": "Float16Array",
+        "data": [
+          1,
+          0.2509765625,
+          0,
+          1,
+          0.5,
+          1,
+          0.25,
+          0.501953125
+        ]
+      },
+      "direct": {
+        "space": "display-p3",
+        "format": "rgba-float16",
+        "type": "Float16Array",
+        "data": [
+          1,
+          0.2509765625,
+          0,
+          1,
+          0.5,
+          1,
+          0.25,
+          0.501953125
+        ]
+      },
+      "noConversion": {
+        "space": "display-p3",
+        "format": "rgba-float16",
+        "type": "Float16Array",
+        "data": [
+          1,
+          0.2509765625,
+          0,
+          1,
+          0.5,
+          1,
+          0.25,
+          0.501953125
+        ]
+      },
+      "closed": [
+        0,
+        0
+      ],
+      "local": {
+        "space": "display-p3",
+        "format": "rgba-float16",
+        "type": "Float16Array",
+        "data": [
+          0,
+          0,
+          0,
+          0,
+          0.5,
+          1,
+          0.25,
+          0.5
+        ]
+      },
+      "copyStable": {
+        "space": "display-p3",
+        "format": "rgba-float16",
+        "type": "Float16Array",
+        "data": [
+          1,
+          0.2509765625,
+          0,
+          1,
+          0.5,
+          1,
+          0.25,
+          0.501953125
+        ]
+      },
+      "reset": {
+        "space": "display-p3",
+        "format": "rgba-float16",
+        "type": "Float16Array",
+        "data": [
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0,
+          0
+        ]
+      },
+      "attributes": {
+        "alpha": true,
+        "colorSpace": "display-p3",
+        "colorType": "float16",
+        "desynchronized": false,
+        "toneMapping": {
+          "mode": "standard"
+        },
+        "willReadFrequently": true
+      }
+    },
+    "errors": {
+      "badSpace": "TypeError",
+      "badFormat": "TypeError",
+      "mismatched": "InvalidStateError",
+      "zero": "InvalidStateError"
+    }
+  },
+  "metadata": {
+    "href": "http://127.0.0.1:8429/plain",
+    "isSecureContext": true,
+    "crossOriginIsolated": false,
+    "innerWidth": 1272,
+    "innerHeight": 653,
+    "outerWidth": 1280,
+    "outerHeight": 800,
+    "devicePixelRatio": 1,
+    "visibility": "visible",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "platform": "Win32"
+  },
+  "passport": {
+    "revision": "01926fe069dee0c8e1934b1fc864d30f09bf6e63",
+    "dirtyState": " M internal/webapi/canvas_path_observations.js\n M internal/webapi/canvas_state.js\n M internal/webapi/surface.go\n?? internal/browser/testdata/canvas_color_space_oracle.js\n?? internal/browser/testdata/canvas_color_state_oracle.js\n?? internal/webapi/canvas_color_spaces.js\n",
+    "sourceSHA256": "bff44d0da87918dd4de3039c03cc4ad950ba6524ae2f8101830ce4a8b2833d1c",
+    "probeSHA256": "8742cc260099ee84c88aec454e4bbb5e2b9d388e15fe5083e83dc67e37abe282",
+    "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+    "mimicSHA256": "15058851dcd0005875de238ea83661e36854b9395cc9f19e0305e0f8b2535cb5",
+    "args": [
+      "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "--remote-debugging-port=20581",
+      "--user-data-dir=E:\\GitHub\\mimic\\.build\\residual-canvas\\color-state-final\\chrome-profile-b",
+      "--no-first-run",
+      "--no-default-browser-check",
+      "--window-size=1280,800",
+      "about:blank"
+    ],
+    "profile": "E:\\GitHub\\mimic\\.build\\residual-canvas\\color-state-final\\chrome-profile",
+    "browserMode": "headful",
+    "environmentProfile": "chrome-152-windows-x64-headful-controlled-v1",
+    "featureOverrides": [],
+    "records": [
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      }
+    ],
+    "exitCodes": {
+      "chrome": 1,
+      "mimic": 1
+    },
+    "chromeControl": [],
+    "chromeMimic": []
+  }
+}
