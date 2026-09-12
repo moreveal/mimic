@@ -50,6 +50,11 @@ type GPUAdapter struct {
 	// process, driver and host state; it is not a browser-version constant.
 	InitializationDelayMillis float64
 }
+
+// Fonts selects resource families, never captured glyph metrics. Empty names use
+// the normal desktop defaults. The selected resources must exist in the font engine.
+type Fonts struct{ Serif, SansSerif, Monospace, SystemUI string }
+
 type Locale struct {
 	// Languages retains the complete ordered preference list. Reduction affects
 	// navigator observations and document requests, but not Worker fetch headers.
@@ -130,6 +135,7 @@ type Environment struct {
 	Display           Display
 	Window            Window
 	Graphics          Graphics
+	Fonts             Fonts
 	Locale            Locale
 	Preferences       Preferences
 	Time              Time

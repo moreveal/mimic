@@ -1,0 +1,261 @@
+{
+  "selectedEnvironmentOverlay": {
+    "Fonts": {
+      "SystemUI": "Ubuntu"
+    }
+  },
+  "classification": "selected Environment profile state; not a Chrome release constant",
+  "platformFontsA": {
+    "fonts": [
+      {
+        "familyName": "Ubuntu",
+        "postScriptName": "Ubuntu",
+        "isCustomFont": false,
+        "glyphCount": 5
+      }
+    ]
+  },
+  "platformFontsB": {
+    "fonts": [
+      {
+        "familyName": "Ubuntu",
+        "postScriptName": "Ubuntu",
+        "isCustomFont": false,
+        "glyphCount": 5
+      }
+    ]
+  },
+  "captureMetadata": {
+    "href": "http://127.0.0.1:51920/plain",
+    "isSecureContext": true,
+    "crossOriginIsolated": false,
+    "innerWidth": 1272,
+    "innerHeight": 653,
+    "outerWidth": 1280,
+    "outerHeight": 800,
+    "devicePixelRatio": 1,
+    "visibility": "visible",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "platform": "Win32"
+  },
+  "version": {
+    "Browser": "Chrome/152.0.7977.82",
+    "Protocol-Version": "1.3",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "V8-Version": "15.2.124.21",
+    "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:20081/devtools/browser/4924eaa2-fbf4-4323-8da1-276ef197d7a9"
+  },
+  "provenance": {
+    "revision": "a18894219a84a56ed9e6dc5427a9e09e9690b18f",
+    "dirtyState": " M internal/textmetrics/metrics.go\n M internal/webapi/css_value_grammar.js\n M internal/webapi/surface.go\n M internal/webapi/surface.js\n?? internal/webapi/css_box_geometry.js\n",
+    "sourceSHA256": "19066c7e92fc32945d965b824d40f8e79bfaa255570dd1763a990182826d5ad9",
+    "probeSHA256": "56e99d6babf34289297ae067b7cd98b2ab47c97488a6a39f4a2a2fad33bb4ab2",
+    "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+    "mimicSHA256": "b91d88dc724e86fc578a95aab5cb3a3f9daf047c6dcb958e0bde17f8002b702f",
+    "args": [
+      "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "--remote-debugging-port=20081",
+      "--user-data-dir=E:\\GitHub\\mimic\\.build\\residual-dom-delegated\\platform-font-controls\\chrome-profile-b",
+      "--no-first-run",
+      "--no-default-browser-check",
+      "--window-size=1280,800",
+      "about:blank"
+    ],
+    "profile": "E:\\GitHub\\mimic\\.build\\residual-dom-delegated\\platform-font-controls\\chrome-profile",
+    "browserMode": "headful",
+    "environmentProfile": "chrome-152-windows-x64-headful-controlled-v1",
+    "featureOverrides": [],
+    "records": [
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      }
+    ],
+    "exitCodes": {
+      "chrome": 1,
+      "mimic": 1
+    },
+    "chromeControl": [],
+    "chromeMimic": [
+      {
+        "mode": "plain",
+        "path": "/0/ascent",
+        "chrome": 13,
+        "mimic": 11.200000000000001
+      },
+      {
+        "mode": "plain",
+        "path": "/0/descent",
+        "chrome": 3,
+        "mimic": 2.8000000000000003
+      },
+      {
+        "mode": "plain",
+        "path": "/0/height",
+        "chrome": 16,
+        "mimic": 19
+      },
+      {
+        "mode": "plain",
+        "path": "/0/width",
+        "chrome": 36.65196228027344,
+        "mimic": 42
+      },
+      {
+        "mode": "plain",
+        "path": "/1/ascent",
+        "chrome": 12,
+        "mimic": 11.200000000000001
+      },
+      {
+        "mode": "plain",
+        "path": "/1/descent",
+        "chrome": 3,
+        "mimic": 2.8000000000000003
+      },
+      {
+        "mode": "plain",
+        "path": "/1/height",
+        "chrome": 16,
+        "mimic": 19
+      },
+      {
+        "mode": "plain",
+        "path": "/1/width",
+        "chrome": 34.2138671875,
+        "mimic": 42
+      },
+      {
+        "mode": "plain",
+        "path": "/2/ascent",
+        "chrome": 15,
+        "mimic": 11.200000000000001
+      },
+      {
+        "mode": "plain",
+        "path": "/2/descent",
+        "chrome": 4,
+        "mimic": 2.8000000000000003
+      },
+      {
+        "mode": "plain",
+        "path": "/2/height",
+        "chrome": 19,
+        "mimic": 16
+      },
+      {
+        "mode": "plain",
+        "path": "/2/width",
+        "chrome": 35.697265625,
+        "mimic": 42
+      },
+      {
+        "mode": "plain",
+        "path": "/3/ascent",
+        "chrome": 15,
+        "mimic": 11.200000000000001
+      },
+      {
+        "mode": "plain",
+        "path": "/3/descent",
+        "chrome": 4,
+        "mimic": 2.8000000000000003
+      },
+      {
+        "mode": "plain",
+        "path": "/3/height",
+        "chrome": 19,
+        "mimic": 16
+      },
+      {
+        "mode": "plain",
+        "path": "/3/width",
+        "chrome": 35.1162109375,
+        "mimic": 42
+      },
+      {
+        "mode": "plain",
+        "path": "/4/ascent",
+        "chrome": 15,
+        "mimic": 11.200000000000001
+      },
+      {
+        "mode": "plain",
+        "path": "/4/descent",
+        "chrome": 4,
+        "mimic": 2.8000000000000003
+      },
+      {
+        "mode": "plain",
+        "path": "/4/height",
+        "chrome": 19,
+        "mimic": 16
+      },
+      {
+        "mode": "plain",
+        "path": "/4/width",
+        "chrome": 37.009765625,
+        "mimic": 42
+      },
+      {
+        "mode": "plain",
+        "path": "/5/ascent",
+        "chrome": 13,
+        "mimic": 11.200000000000001
+      },
+      {
+        "mode": "plain",
+        "path": "/5/descent",
+        "chrome": 3,
+        "mimic": 2.8000000000000003
+      },
+      {
+        "mode": "plain",
+        "path": "/5/height",
+        "chrome": 16,
+        "mimic": 19
+      },
+      {
+        "mode": "plain",
+        "path": "/5/width",
+        "chrome": 36.65196228027344,
+        "mimic": 42
+      }
+    ]
+  },
+  "independentExplicitFamilyControl": {
+    "system-ui": [
+      36.65625,
+      16
+    ],
+    "Ubuntu": [
+      36.65625,
+      16
+    ],
+    "\"Segoe UI\"": [
+      35.703125,
+      19
+    ]
+  }
+}
