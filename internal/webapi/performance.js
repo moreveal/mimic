@@ -245,3 +245,12 @@ function perfEventCounts(){
 }
 if(!perfWorker)Object.defineProperty(globalThis,'__mimicNotifyPerformanceObservers',{value:()=>{},configurable:true});
 if(!perfWorker)perfEventCounts();
+
+function finalizePerformanceBindings(){
+  if(!Object.prototype.hasOwnProperty.call(Performance.prototype,'measureUserAgentSpecificMemory'))return;
+  Object.defineProperty(Performance.prototype,'measureUserAgentSpecificMemory',{value:async function measureUserAgentSpecificMemory(){
+    perfBound(this,'Performance','brand');
+    host.semanticMissingAt?.('performance.js','Performance.measureUserAgentSpecificMemory');
+    throw new DOMException('Agent-cluster memory attribution is not implemented','NotSupportedError');
+  },writable:true,enumerable:true,configurable:true});
+}
