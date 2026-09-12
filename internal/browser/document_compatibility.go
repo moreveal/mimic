@@ -13,6 +13,7 @@ func (r *Realm) installDocumentCompatibility(host map[string]any) {
 	})
 	host["foreignComputedStyleFlatTree"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		id := int64(numarg(args, 0))
+		kind, property := strarg(args, 1), strarg(args, 2)
 		root := r.document.OwnerDocumentID(id)
 		if root == r.document.Root().ID {
 			return r.val(nil), nil
@@ -21,24 +22,43 @@ func (r *Realm) installDocumentCompatibility(host map[string]any) {
 		p.mu.RLock()
 		var owner *Realm
 		for _, candidate := range p.realmOwners {
-			if !candidate.inactive && candidate.document.SharesNodeArena(r.document) && candidate.document.Root().ID == root {
+			if !candidate.inactive && !candidate.closed && candidate.document.SharesNodeArena(r.document) && candidate.document.Root().ID == root {
 				owner = candidate
 				break
 			}
 		}
 		p.mu.RUnlock()
 		if owner == nil || owner.computedStyleFlatRead == nil {
-			return r.val(false), nil
-		}
-		available := false
-		err := owner.runOnOwner(context.Background(), func(ctx context.Context) error {
-			value, err := owner.runtime.Call(ctx, owner.computedStyleFlatRead, nil, owner.val(id))
-			if err == nil {
-				available, _ = value.Export().(bool)
+			switch kind {
+			case "value":
+				return r.val(""), nil
+			case "rect", "layout":
+				return r.val(map[string]any{"x": 0, "y": 0, "width": 0, "height": 0, "left": 0, "top": 0, "right": 0, "bottom": 0, "offsetLeft": 0, "offsetTop": 0}), nil
+			default:
+				return r.val(false), nil
 			}
-			return err
-		})
-		return r.val(available), err
+		}
+		var observation any
+		run := func(ctx context.Context) error {
+			return owner.runOnOwner(ctx, func(ctx context.Context) error {
+				restore := r.enterFrameDocumentEntry(owner)
+				defer restore()
+				value, err := owner.runtime.Call(ctx, owner.computedStyleFlatRead, nil, owner.val(id), owner.val(kind), owner.val(property))
+				if err == nil {
+					observation = value.Export()
+				}
+				return err
+			})
+		}
+		// Borrowed getters can enter this bridge directly, without an outer
+		// cross-frame call. Yield the current isolate while the owner runs.
+		var err error
+		if nested, ok := r.runtime.(engine.ReentrantRuntime); ok {
+			err = nested.RunNested(context.Background(), run)
+		} else {
+			err = run(context.Background())
+		}
+		return r.val(observation), err
 	})
 	// Resolved declarations exist only for nodes connected to a live browsing
 	// document. Visibility and display:none do not make that document inactive.

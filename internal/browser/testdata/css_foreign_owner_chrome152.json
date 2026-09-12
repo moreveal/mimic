@@ -1,0 +1,188 @@
+{
+  "captureMetadata": {
+    "href": "http://127.0.0.1:33004/plain",
+    "isSecureContext": true,
+    "crossOriginIsolated": false,
+    "innerWidth": 1272,
+    "innerHeight": 653,
+    "outerWidth": 1280,
+    "outerHeight": 800,
+    "devicePixelRatio": 1,
+    "visibility": "visible",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "platform": "Win32",
+    "chromeVersion": {
+      "Browser": "Chrome/152.0.7977.82",
+      "Protocol-Version": "1.3",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "V8-Version": "15.2.124.21",
+      "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+      "webSocketDebuggerUrl": "ws://127.0.0.1:20081/devtools/browser/4d397f41-fa67-4140-ad3a-a7ea9460ad58"
+    },
+    "browserMode": "headful",
+    "environmentProfile": "chrome-152-windows-x64-headful-controlled-v1",
+    "featureOverrides": []
+  },
+  "observation": {
+    "own": {
+      "font": "14px",
+      "family": "Arial",
+      "color": "rgb(2, 3, 4)",
+      "line": "21px",
+      "ratio": 0.5,
+      "height": 21,
+      "length": 476
+    },
+    "foreign": {
+      "font": "14px",
+      "family": "Arial",
+      "color": "rgb(2, 3, 4)",
+      "line": "21px",
+      "ratio": 0.5,
+      "height": 21,
+      "length": 476
+    },
+    "styleRealm": true,
+    "rectRealm": false,
+    "rectNodeRealm": true,
+    "listNodeRealm": true,
+    "clientRects": [
+      {
+        "ratio": 0.5,
+        "height": 21
+      }
+    ],
+    "offsetHeight": 21,
+    "changed": {
+      "font": "18px",
+      "family": "Arial",
+      "color": "rgb(2, 3, 4)",
+      "line": "27px",
+      "ratio": 0.5,
+      "height": 27,
+      "length": 476
+    },
+    "liveFont": "18px",
+    "detached": {
+      "font": "",
+      "family": "",
+      "color": "",
+      "line": "",
+      "ratio": 0,
+      "height": 0,
+      "length": 0
+    },
+    "reconnect": {
+      "font": "18px",
+      "family": "Arial",
+      "color": "rgb(2, 3, 4)",
+      "line": "27px",
+      "ratio": 0.5,
+      "height": 27,
+      "length": 476
+    },
+    "privateOwner": {
+      "font": "18px",
+      "family": "Arial",
+      "color": "rgb(2, 3, 4)",
+      "line": "27px",
+      "ratio": 0.5,
+      "height": 27,
+      "length": 476
+    },
+    "adopted": {
+      "font": "18px",
+      "family": "Arial",
+      "color": "rgb(0, 0, 0)",
+      "line": "36px",
+      "ratio": 1,
+      "height": 36,
+      "length": 476
+    },
+    "adoptedRectNodeRealm": true,
+    "removedOwner": {
+      "font": "",
+      "family": "",
+      "color": "",
+      "line": "",
+      "ratio": 0,
+      "height": 0,
+      "length": 0
+    }
+  },
+  "provenance": {
+    "revision": "c7d6e9c814ae4d5756606c0e635612fbb5a9be09",
+    "dirtyState": " M internal/browser/css_box_geometry_test.go\n M internal/browser/document_compatibility.go\n M internal/webapi/css_computed_values.js\n M internal/webapi/input.js\n M internal/webapi/surface.js\n?? docs/compatibility/css-foreign-owner-20260912.md\n?? internal/browser/testdata/css_foreign_owner_chrome152.json\n?? internal/browser/testdata/css_foreign_owner_oracle.js\n",
+    "sourceSHA256": "b45cbbf8634002ced43fa855264eb536c91b4c6c54e584059ff136c62485529a",
+    "probeSHA256": "4d3b481467cad24f30ef2c4ea59492f53f61c2c291376e661190e1d2e652de95",
+    "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+    "mimicSHA256": "ed294fc9cdd4adbea0c602a3da3b4adafa16f483fc7289cbd5d3f8a8a42a5ec7",
+    "args": [
+      "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "--remote-debugging-port=20081",
+      "--user-data-dir=E:\\GitHub\\mimic\\.build\\residual-dom-delegated\\foreign-css-owner-final-controls\\chrome-profile-b-1789209962808433200",
+      "--no-first-run",
+      "--no-default-browser-check",
+      "--window-size=1280,800",
+      "about:blank"
+    ],
+    "profile": "E:\\GitHub\\mimic\\.build\\residual-dom-delegated\\foreign-css-owner-final-controls\\chrome-profile-1789209961862283900",
+    "browserMode": "headful",
+    "environmentProfile": "chrome-152-windows-x64-headful-controlled-v1",
+    "featureOverrides": [],
+    "records": [
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      }
+    ],
+    "exitCodes": {
+      "chrome": 1,
+      "mimic": 1
+    },
+    "chromeControl": [],
+    "chromeMimic": [],
+    "chromeVersion": {
+      "Browser": "Chrome/152.0.7977.82",
+      "Protocol-Version": "1.3",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "V8-Version": "15.2.124.21",
+      "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+      "webSocketDebuggerUrl": "ws://127.0.0.1:20081/devtools/browser/4d397f41-fa67-4140-ad3a-a7ea9460ad58"
+    },
+    "independentControlMetadata": {
+      "href": "http://127.0.0.1:33004/plain",
+      "isSecureContext": true,
+      "crossOriginIsolated": false,
+      "innerWidth": 1272,
+      "innerHeight": 653,
+      "outerWidth": 1280,
+      "outerHeight": 800,
+      "devicePixelRatio": 1,
+      "visibility": "visible",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "platform": "Win32"
+    },
+    "independentControlEqual": true
+  }
+}

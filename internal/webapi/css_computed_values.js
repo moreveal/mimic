@@ -34,6 +34,7 @@ const cssComputedShorthand=(element,name)=>{
  const ordinary=serializeOrdinaryCSSShorthand(name,values);return ordinary||values.join(' ');
 };
 const cssComputedValue=(element,name)=>withStyleReadCache(()=>{
+ const foreign=foreignCSSObservation(element,"value",name);if(foreign!==null)return foreign;
  if(!computedStyleDocumentAvailable(element)||!computedStyleAvailable(element))return '';
  const initial=cssInitialValues.get(name),entries=computedCSSDeclarations(element);
  const declaration=entries.find(e=>e.name===name),specified=declaration?.value;
