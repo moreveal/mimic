@@ -344,18 +344,26 @@
       const prefix=`Failed to execute '${name}' on 'MediaCapabilities': `,fail=message=>{throw new TypeError(prefix+message)},decode=name==='decodingInfo';
       if(!args.length)fail('1 argument required, but only 0 present.');const configuration=args[0]??{};
       const tracks={};for(const kind of ['audio','video']){const raw=configuration[kind];if(raw===undefined)continue;const value={};const keys=kind==='video'?['bitrate','contentType','framerate','height','width']:['bitrate','channels','contentType','samplerate'];
-       for(const key of keys){const v=raw?.[key];if(v===undefined){if(kind==='video'||key==='contentType')fail(`Failed to read the '${kind}' property from 'MediaConfiguration': Failed to read the '${key}' property from '${kind==='video'?'Video':'Audio'}Configuration': Required member is undefined.`);continue}value[key]=key==='contentType'||key==='channels'?mediaString(v):Number(v)}tracks[kind]=value;
+       for(const key of keys){const v=raw?.[key];if(v===undefined){if(kind==='video'||key==='contentType')fail(`Failed to read the '${kind}' property from 'MediaConfiguration': Failed to read the '${key}' property from '${kind==='video'?'Video':'Audio'}Configuration': Required member is undefined.`);continue}value[key]=key==='contentType'||key==='channels'?mediaString(v):key==='width'||key==='height'?Number(v)>>>0:Number(v)}tracks[kind]=value;
       }
       const rawType=configuration.type;if(rawType===undefined)fail(`Failed to read the 'type' property from '${decode?'MediaDecodingConfiguration':'MediaEncodingConfiguration'}': Required member is undefined.`);
       const type=mediaString(rawType),allowed=decode?['file','media-source','webrtc']:['webrtc'];if(!allowed.includes(type))fail((decode?"Failed to read the 'type' property from 'MediaDecodingConfiguration': ":'')+`The provided value '${type}' is not a valid enum value of type ${decode?'MediaDecodingType':'MediaEncodingType'}.`);
       if(!tracks.audio&&!tracks.video)fail('The configuration dictionary has neither |video| nor |audio| specified and needs at least one of them.');
       let supported=true,powerEfficient=true;
       for(const [kind,track]of Object.entries(tracks)){
-       const parsed=host.mediaTypeSupport(track.contentType);if(!track.contentType.toLowerCase().startsWith(kind+'/')||(kind==='video'&&(!(track.width>0)||!(track.height>0)||!(track.bitrate>=0)||!(track.framerate>0))))fail(`The ${kind} configuration dictionary is not valid.`);
+       const parsed=host.mediaTypeSupport(track.contentType);if(!track.contentType.toLowerCase().startsWith(kind+'/')||(kind==='video'&&!(track.framerate>0)))fail(`The ${kind} configuration dictionary is not valid.`);
        if(type==='webrtc'){const caps=host.rtpCapabilities(kind,decode?'receiver':'sender');const mime=track.contentType.split(';')[0].trim().toLowerCase();const has=caps.codecs.some(c=>c.mimeType.toLowerCase()===mime);supported&&=has;powerEfficient&&=has&&kind==='audio'}
        else{supported&&=parsed.precise&&(type!=='media-source'||parsed.mediaSource);powerEfficient&&=parsed.efficient}
       }
-      return {powerEfficient:supported&&powerEfficient,smooth:supported,supported,keySystemAccess:null};
+      // Blink accepts unsigned zero/wrapped image dimensions; they cannot form
+      // a positive signed decoder extent, but do not make the codec unsupported.
+      if(tracks.video&&(!(tracks.video.width>0)||!(tracks.video.height>0)||tracks.video.width>0x7fffffff||tracks.video.height>0x7fffffff))powerEfficient=false;
+      const result={powerEfficient:supported&&powerEfficient,smooth:supported,supported,keySystemAccess:null};
+      // Supported file video asks the decoder capability service for its answer.
+      // Keep this completion outside the caller's microtask checkpoint; audio,
+      // unsupported configurations and RTP capabilities have no decoder query.
+      if(decode&&tracks.video&&supported&&type!=='webrtc')return new Promise(resolve=>host.setTimer(()=>resolve(result),0,false));
+      return result;
     },true);
     attribute('MediaSession','metadata',s=>s.metadata||null,(s,v)=>{if(v!==null&&!(v instanceof MediaMetadata))throw new TypeError('Invalid MediaMetadata');s.metadata=v});
     attribute('MediaSession','playbackState',s=>s.playbackState||'none',(s,v)=>{if(!['none','paused','playing'].includes(String(v)))throw new TypeError('Invalid MediaSessionPlaybackState');s.playbackState=String(v)});
