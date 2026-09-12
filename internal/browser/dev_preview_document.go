@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/url"
 	"strings"
 
@@ -39,6 +40,18 @@ func (p *Page) previewDocument(frame *Frame) (string, error) {
 		return "", err
 	}
 	base, _ := url.Parse(frame.URL())
+	var data struct {
+		Styles []struct{ Text, Base string }
+		Modals []int64
+	}
+	wire, _ := json.Marshal(observation)
+	if err := json.Unmarshal(wire, &data); err != nil {
+		return "", err
+	}
+	modals := make(map[string]int, len(data.Modals))
+	for i, id := range data.Modals {
+		modals[fmt.Sprintf("%s:%d", r.ID, id)] = i + 1
+	}
 	var head *html.Node
 	var find func(*html.Node)
 	find = func(n *html.Node) {
@@ -81,12 +94,23 @@ func (p *Page) previewDocument(frame *Frame) (string, error) {
 				}
 				attrs := c.Attr[:0]
 				for _, a := range c.Attr {
+					if a.Key == "data-mimic-preview-modal" {
+						continue
+					}
 					if strings.HasPrefix(strings.ToLower(a.Key), "on") || a.Key == "srcdoc" || a.Key == "autofocus" || a.Key == "action" || a.Key == "formaction" || (c.Data == "a" && a.Key == "href") || (c.Data == "iframe" && (a.Key == "src" || a.Key == "sandbox")) {
 						continue
 					}
 					attrs = append(attrs, a)
 				}
 				c.Attr = attrs
+				if c.Data == "dialog" {
+					for _, a := range attrs {
+						if a.Key == "data-mimic-preview-node" && modals[a.Val] > 0 {
+							c.Attr = append(c.Attr, html.Attribute{Key: "data-mimic-preview-modal", Val: fmt.Sprint(modals[a.Val])})
+							break
+						}
+					}
+				}
 				if c.Data == "iframe" {
 					markup := ""
 					if index < len(iframes) {
@@ -121,11 +145,6 @@ func (p *Page) previewDocument(frame *Frame) (string, error) {
 		head.AppendChild(&html.Node{Type: html.ElementNode, Data: "base", Attr: []html.Attribute{{Key: "href", Val: base.String()}}})
 		// Preserve stylesheet mutations, including rules changed via CSSOM. The
 		// existing snapshot path already preserves adopted and shadow styles.
-		var data struct{ Styles []struct{ Text, Base string } }
-		wire, _ := json.Marshal(observation)
-		if err := json.Unmarshal(wire, &data); err != nil {
-			return "", err
-		}
 		for _, sheet := range data.Styles {
 			u, e := url.Parse(sheet.Base)
 			if e != nil {

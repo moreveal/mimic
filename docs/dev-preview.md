@@ -36,6 +36,11 @@ focus and selection survive ordinary updates; a new document resets scroll.
 The iframe gets one empty bootstrap document, not a new `srcdoc` per update.
 Snapshot work itself runs under the Page command lock.
 
+Dialog top-layer membership is projected separately from the `open` attribute.
+The viewer restores native modal state after reconciling the connected tree, so
+`:modal`, backdrops and centering apply without running site scripts in the mirror.
+Closing a mirrored dialog also removes the viewer's top-layer membership.
+
 Without `-dev-preview`, debug HTTP/WebSocket routes are not registered, debug JS
 is excluded from the realm bootstrap, no debug form tracking is installed, and
 no preview serialization, revision reads, resource requests or network messages
@@ -59,3 +64,5 @@ Browser regression: serve `internal/cdp` with a local static server and open
 `testdata/dev_preview_dom_test.html`. It checks repeated updates, node/document
 identity, nested iframe and shadow content, scroll, focus, selection, identical
 updates, script isolation and navigation.
+It also checks modal centering, persistence across updates, closing and reopening.
+`tools/compatibility/preview_dom_smoke.py` runs it in a temporary Chrome 152 context.

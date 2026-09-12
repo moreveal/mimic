@@ -49,18 +49,17 @@
     command:{get(){return commandOf(buttonReceiver(this))},set(value){buttonReceiver(this).setAttribute('command',String(value))},enumerable:true,configurable:true},
     commandForElement:{get(){return commandFor(buttonReceiver(this))},set(value){buttonReceiver(this);if(value!==null&&!(value instanceof Element))throw new TypeError('commandForElement must be an Element');commandTargets.delete(this);if(value===null)this.removeAttribute('commandfor');else{this.setAttribute('commandfor','');commandTargets.set(this,value)}},enumerable:true,configurable:true}
   });
-  // Default activation uses the same dialog state as its public methods. Keep
-  // intrinsic methods captured so author replacements cannot intercept UA work.
-  const showDialog=HTMLDialogElement.prototype.showModal,closeDialog=HTMLDialogElement.prototype.close;
+  // Default activation uses private dialog operations shared with public methods;
+  // author replacements cannot intercept UA work or lose the command source.
   activateCommand=button=>{
     const target=commandFor(button),command=commandOf(button);
     if(!target||!command||button.disabled)return;
     if(command.endsWith('popover')){host.semanticMissingAt('input.js/activateCommand','HTMLButtonElement.popoverCommand');return}
     if(!command.startsWith('--')&&!(target instanceof HTMLDialogElement))return;
     if(!dispatchTrusted(target,new CommandEvent('command',{command,source:button,cancelable:true,composed:true})))return;
-    if(command==='show-modal'&&!target.open&&target.isConnected)Reflect.apply(showDialog,target,[]);
-    else if(command==='close')Reflect.apply(closeDialog,target,[]);
-    else if(command==='request-close'&&target.open&&dispatchTrusted(target,new Event('cancel',{cancelable:true})))Reflect.apply(closeDialog,target,[]);
+    if(command==='show-modal'&&!target.open&&target.isConnected)compatibilityElementState.showDialog(target,button);
+    else if(command==='close')compatibilityElementState.closeDialog(target,undefined,button);
+    else if(command==='request-close'&&target.open&&dispatchTrusted(target,new Event('cancel',{cancelable:true})))compatibilityElementState.closeDialog(target,undefined,button);
   };
   }
   compatibilityElementState.controlGeometry=(element,entries)=>{

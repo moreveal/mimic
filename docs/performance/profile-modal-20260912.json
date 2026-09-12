@@ -1,0 +1,323 @@
+[
+  {
+    "label": "perf-profile-modal-baseline-now-20260912",
+    "build": {
+      "command": [
+        "go",
+        "build",
+        "-o",
+        "E:\\GitHub\\mimic\\.build\\perf-profile-modal-baseline-now-20260912\\mimic.exe",
+        "./cmd/mimic"
+      ],
+      "source": "E:\\GitHub\\mimic\\.build\\profile-modal-baseline-source",
+      "revision": "c3610c3c8042a6ab7c7a94ea710f3f0feb1bb8c0",
+      "status": "",
+      "executable": "E:\\GitHub\\mimic\\.build\\perf-profile-modal-baseline-now-20260912\\mimic.exe",
+      "sha256": "380de1cbc6d682ba17dec896dd1f314e451e0e18b04f2dad4c62b5589e3ed3f8",
+      "harness_sha256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7",
+      "harness_files": {
+        "compare.py": "274b156ee88e67085f5e556ef79629146f5e7287ee54af844476a0c005e65a5b",
+        "report.py": "f12e393341c00e9e03748a06913fa639c1069f66dc7acb71959cffd51647f214",
+        "requirements.txt": "06e6d87d17f39a59fe7b2576545231fe65d5a1940d22e63fc2b32b6cfa12123b",
+        "run.ps1": "6c50b0a55886278de7c1e4d92b77b42bf2cfad59fa451dbaa766b0e0eae84fa6",
+        "run.py": "67718e844bce74b7757f2238716233b9d8683a17294f2b02017667b9c1e44cd3",
+        "test_harness.py": "ddb8dcf74a192d3403971833cf5e011dd8578a9acd9a060b3b265cc6d79aef2a",
+        "v8_version.go": "669a669b0545ba599edb2f7923617f154b976e7377de89d8b2e1f477bdb12f09",
+        "windows_metrics.py": "57ba1e10dfb1f1cb439a52ad5f7f5795c3ba4eef25ae22c9514ecfe115434cd5",
+        "fixtures/workload.js": "484019063e33e131756f67ab6f3076ad2c18e3959072fbae42f540455448c214",
+        "fixtures/vendor/react-dom.production.min.js": "35f4f974f4b2bcd44da73963347f8952e341f83909e4498227d4e26b98f66f0d",
+        "fixtures/vendor/REACT-LICENSE.txt": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85",
+        "fixtures/vendor/react.production.min.js": "d949f1c3687aedadcedac85261865f29b17cd273997e7f6b2bfc53b2f9d4c4dd"
+      },
+      "built_at": "2026-09-12T21:57:57.451059+04:00"
+    },
+    "finished": "2026-09-12T21:58:18.925007+04:00",
+    "summary": {
+      "dom": {
+        "session_create_ms": 2.4902999866753817,
+        "execution_ms": 171.91179998917505,
+        "completion_ms": 209.10320000257343
+      },
+      "static": {
+        "session_create_ms": 2.575299993623048,
+        "execution_ms": 3.016100003151223,
+        "completion_ms": 36.07870000996627
+      },
+      "react": {
+        "session_create_ms": 2.136800001608208,
+        "execution_ms": 57.28370000724681,
+        "completion_ms": 99.16959999827668
+      }
+    },
+    "validExecutions": 184,
+    "totalExecutions": 184,
+    "memory": [
+      {
+        "workload": "static",
+        "marginal_rss_mib": 45.222265625,
+        "marginal_private_mib": 45.05234375,
+        "after_teardown_rss": 135569408,
+        "after_recovery_rss": 123998208
+      },
+      {
+        "workload": "react",
+        "marginal_rss_mib": 47.5640625,
+        "marginal_private_mib": 47.4359375,
+        "after_teardown_rss": 147668992,
+        "after_recovery_rss": 147668992
+      }
+    ],
+    "concurrency": [
+      {
+        "n": 10,
+        "wave": 0,
+        "throughput": 32.06126008854876,
+        "stop_reason": null
+      },
+      {
+        "n": 10,
+        "wave": 1,
+        "throughput": 53.3868055588956,
+        "stop_reason": null
+      },
+      {
+        "n": 10,
+        "wave": 2,
+        "throughput": 53.3662923579537,
+        "stop_reason": null
+      },
+      {
+        "n": 25,
+        "wave": 0,
+        "throughput": 41.623981275519846,
+        "stop_reason": null
+      },
+      {
+        "n": 25,
+        "wave": 1,
+        "throughput": 87.04271673802236,
+        "stop_reason": null
+      },
+      {
+        "n": 25,
+        "wave": 2,
+        "throughput": 90.16680498151685,
+        "stop_reason": null
+      }
+    ]
+  },
+  {
+    "label": "perf-profile-modal-release-20260912",
+    "build": {
+      "command": [
+        "go",
+        "build",
+        "-o",
+        "E:\\GitHub\\mimic\\.build\\perf-profile-modal-release-20260912\\mimic.exe",
+        "./cmd/mimic"
+      ],
+      "source": "E:\\GitHub\\mimic",
+      "revision": "1b592cc6a4b41af8bb40d706d42bde6a8949e536",
+      "status": " M docs/dev-preview.md\n M internal/browser/dev_preview_document.go\n M internal/browser/dev_preview_test.go\n M internal/browser/realm.go\n M internal/browser/stylesheet_load.go\n M internal/cdp/dev_preview_dom.js\n M internal/cdp/testdata/dev_preview_dom_test.html\n M internal/webapi/css_value_grammar.js\n M internal/webapi/dev_preview.js\n M internal/webapi/dom_compatibility.js\n M internal/webapi/input.js\n M internal/webapi/surface.go\n?? internal/browser/css_percentage_tokens_test.go\n?? internal/browser/dialog_lifecycle_test.go\n?? internal/browser/stylesheet_lifecycle_test.go\n?? internal/browser/testdata/dialog_lifecycle_chrome152.json\n?? internal/browser/testdata/dialog_lifecycle_oracle.js\n?? internal/webapi/dialog.js\n?? tools/compatibility/dialog_lifecycle_oracle.py\n?? tools/compatibility/live_browser_comparison.py\n?? tools/compatibility/live_browser_light_probe.py\n?? tools/compatibility/preview_dom_smoke.py\n?? tools/compatibility/summarize_live_comparison.py\n",
+      "executable": "E:\\GitHub\\mimic\\.build\\perf-profile-modal-release-20260912\\mimic.exe",
+      "sha256": "e0dc307761e5f091a9d1a0816e06d3c4f00df25e01a47f295244c8d36b079f3e",
+      "harness_sha256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7",
+      "harness_files": {
+        "compare.py": "274b156ee88e67085f5e556ef79629146f5e7287ee54af844476a0c005e65a5b",
+        "report.py": "f12e393341c00e9e03748a06913fa639c1069f66dc7acb71959cffd51647f214",
+        "requirements.txt": "06e6d87d17f39a59fe7b2576545231fe65d5a1940d22e63fc2b32b6cfa12123b",
+        "run.ps1": "6c50b0a55886278de7c1e4d92b77b42bf2cfad59fa451dbaa766b0e0eae84fa6",
+        "run.py": "67718e844bce74b7757f2238716233b9d8683a17294f2b02017667b9c1e44cd3",
+        "test_harness.py": "ddb8dcf74a192d3403971833cf5e011dd8578a9acd9a060b3b265cc6d79aef2a",
+        "v8_version.go": "669a669b0545ba599edb2f7923617f154b976e7377de89d8b2e1f477bdb12f09",
+        "windows_metrics.py": "57ba1e10dfb1f1cb439a52ad5f7f5795c3ba4eef25ae22c9514ecfe115434cd5",
+        "fixtures/workload.js": "484019063e33e131756f67ab6f3076ad2c18e3959072fbae42f540455448c214",
+        "fixtures/vendor/react-dom.production.min.js": "35f4f974f4b2bcd44da73963347f8952e341f83909e4498227d4e26b98f66f0d",
+        "fixtures/vendor/REACT-LICENSE.txt": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85",
+        "fixtures/vendor/react.production.min.js": "d949f1c3687aedadcedac85261865f29b17cd273997e7f6b2bfc53b2f9d4c4dd"
+      },
+      "built_at": "2026-09-12T21:55:40.013779+04:00"
+    },
+    "finished": "2026-09-12T21:56:01.67312+04:00",
+    "summary": {
+      "dom": {
+        "session_create_ms": 12.461100006476045,
+        "execution_ms": 168.46370001439936,
+        "completion_ms": 201.78050000686198
+      },
+      "static": {
+        "session_create_ms": 2.3363000073004514,
+        "execution_ms": 3.2711000239942223,
+        "completion_ms": 39.565299986861646
+      },
+      "react": {
+        "session_create_ms": 2.9294000123627484,
+        "execution_ms": 61.02470000041649,
+        "completion_ms": 116.9860000081826
+      }
+    },
+    "validExecutions": 184,
+    "totalExecutions": 184,
+    "memory": [
+      {
+        "workload": "static",
+        "marginal_rss_mib": 45.103515625,
+        "marginal_private_mib": 44.796875,
+        "after_teardown_rss": 135290880,
+        "after_recovery_rss": 135290880
+      },
+      {
+        "workload": "react",
+        "marginal_rss_mib": 47.871484375,
+        "marginal_private_mib": 48.017578125,
+        "after_teardown_rss": 149659648,
+        "after_recovery_rss": 149659648
+      }
+    ],
+    "concurrency": [
+      {
+        "n": 10,
+        "wave": 0,
+        "throughput": 31.976853873552663,
+        "stop_reason": null
+      },
+      {
+        "n": 10,
+        "wave": 1,
+        "throughput": 76.34322078993246,
+        "stop_reason": null
+      },
+      {
+        "n": 10,
+        "wave": 2,
+        "throughput": 77.0538313399842,
+        "stop_reason": null
+      },
+      {
+        "n": 25,
+        "wave": 0,
+        "throughput": 39.066797347599675,
+        "stop_reason": null
+      },
+      {
+        "n": 25,
+        "wave": 1,
+        "throughput": 88.38860155198665,
+        "stop_reason": null
+      },
+      {
+        "n": 25,
+        "wave": 2,
+        "throughput": 90.08739558371715,
+        "stop_reason": null
+      }
+    ]
+  },
+  {
+    "label": "perf-profile-modal-release-repeat-20260912",
+    "build": {
+      "command": [
+        "go",
+        "build",
+        "-o",
+        "E:\\GitHub\\mimic\\.build\\perf-profile-modal-release-repeat-20260912\\mimic.exe",
+        "./cmd/mimic"
+      ],
+      "source": "E:\\GitHub\\mimic",
+      "revision": "1b592cc6a4b41af8bb40d706d42bde6a8949e536",
+      "status": " M docs/dev-preview.md\n M internal/browser/dev_preview_document.go\n M internal/browser/dev_preview_test.go\n M internal/browser/realm.go\n M internal/browser/stylesheet_load.go\n M internal/cdp/dev_preview_dom.js\n M internal/cdp/testdata/dev_preview_dom_test.html\n M internal/webapi/css_value_grammar.js\n M internal/webapi/dev_preview.js\n M internal/webapi/dom_compatibility.js\n M internal/webapi/input.js\n M internal/webapi/surface.go\n?? internal/browser/css_percentage_tokens_test.go\n?? internal/browser/dialog_lifecycle_test.go\n?? internal/browser/stylesheet_lifecycle_test.go\n?? internal/browser/testdata/dialog_lifecycle_chrome152.json\n?? internal/browser/testdata/dialog_lifecycle_oracle.js\n?? internal/webapi/dialog.js\n?? tools/compatibility/dialog_lifecycle_oracle.py\n?? tools/compatibility/live_browser_comparison.py\n?? tools/compatibility/live_browser_light_probe.py\n?? tools/compatibility/preview_dom_smoke.py\n?? tools/compatibility/summarize_live_comparison.py\n",
+      "executable": "E:\\GitHub\\mimic\\.build\\perf-profile-modal-release-repeat-20260912\\mimic.exe",
+      "sha256": "e0dc307761e5f091a9d1a0816e06d3c4f00df25e01a47f295244c8d36b079f3e",
+      "harness_sha256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7",
+      "harness_files": {
+        "compare.py": "274b156ee88e67085f5e556ef79629146f5e7287ee54af844476a0c005e65a5b",
+        "report.py": "f12e393341c00e9e03748a06913fa639c1069f66dc7acb71959cffd51647f214",
+        "requirements.txt": "06e6d87d17f39a59fe7b2576545231fe65d5a1940d22e63fc2b32b6cfa12123b",
+        "run.ps1": "6c50b0a55886278de7c1e4d92b77b42bf2cfad59fa451dbaa766b0e0eae84fa6",
+        "run.py": "67718e844bce74b7757f2238716233b9d8683a17294f2b02017667b9c1e44cd3",
+        "test_harness.py": "ddb8dcf74a192d3403971833cf5e011dd8578a9acd9a060b3b265cc6d79aef2a",
+        "v8_version.go": "669a669b0545ba599edb2f7923617f154b976e7377de89d8b2e1f477bdb12f09",
+        "windows_metrics.py": "57ba1e10dfb1f1cb439a52ad5f7f5795c3ba4eef25ae22c9514ecfe115434cd5",
+        "fixtures/workload.js": "484019063e33e131756f67ab6f3076ad2c18e3959072fbae42f540455448c214",
+        "fixtures/vendor/react-dom.production.min.js": "35f4f974f4b2bcd44da73963347f8952e341f83909e4498227d4e26b98f66f0d",
+        "fixtures/vendor/REACT-LICENSE.txt": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85",
+        "fixtures/vendor/react.production.min.js": "d949f1c3687aedadcedac85261865f29b17cd273997e7f6b2bfc53b2f9d4c4dd"
+      },
+      "built_at": "2026-09-12T21:56:51.488421+04:00"
+    },
+    "finished": "2026-09-12T21:57:13.912904+04:00",
+    "summary": {
+      "dom": {
+        "session_create_ms": 12.631399993551895,
+        "execution_ms": 186.85959998401813,
+        "completion_ms": 223.14330001245253
+      },
+      "static": {
+        "session_create_ms": 2.740099997026846,
+        "execution_ms": 3.6570999945979565,
+        "completion_ms": 37.857300019823015
+      },
+      "react": {
+        "session_create_ms": 2.074999996693805,
+        "execution_ms": 58.02070000208914,
+        "completion_ms": 100.44119998929091
+      }
+    },
+    "validExecutions": 184,
+    "totalExecutions": 184,
+    "memory": [
+      {
+        "workload": "static",
+        "marginal_rss_mib": 45.76875,
+        "marginal_private_mib": 45.525,
+        "after_teardown_rss": 144449536,
+        "after_recovery_rss": 144990208
+      },
+      {
+        "workload": "react",
+        "marginal_rss_mib": 48.010546875,
+        "marginal_private_mib": 47.9671875,
+        "after_teardown_rss": 150171648,
+        "after_recovery_rss": 150171648
+      }
+    ],
+    "concurrency": [
+      {
+        "n": 10,
+        "wave": 0,
+        "throughput": 31.958101649845606,
+        "stop_reason": null
+      },
+      {
+        "n": 10,
+        "wave": 1,
+        "throughput": 74.62396981531086,
+        "stop_reason": null
+      },
+      {
+        "n": 10,
+        "wave": 2,
+        "throughput": 54.0572390475584,
+        "stop_reason": null
+      },
+      {
+        "n": 25,
+        "wave": 0,
+        "throughput": 37.67184388356419,
+        "stop_reason": null
+      },
+      {
+        "n": 25,
+        "wave": 1,
+        "throughput": 71.64409734474894,
+        "stop_reason": null
+      },
+      {
+        "n": 25,
+        "wave": 2,
+        "throughput": 73.90985185806309,
+        "stop_reason": null
+      }
+    ]
+  }
+]

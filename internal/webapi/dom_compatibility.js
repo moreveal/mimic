@@ -208,6 +208,7 @@ const compatibilityElementState={};
       member(proto,'replaceChildren',function(...nodes){const fragment=document.createDocumentFragment();fragment.append(...nodes);while(this.firstChild)this.removeChild(this.firstChild);this.appendChild(fragment)});
     }
     const attributeChanged=(node,name,oldValue)=>{
+      compatibilityElementState.dialogAttributeChanged?.(node,name,oldValue);
       queueRecord('attributes',node,{attributeName:name,oldValue});
       const definition=upgraded.get(node);
       if(definition&&definition.attributes.includes(name))reaction(node,'attributeChangedCallback',[name,oldValue,node.getAttribute(name),null]);
@@ -365,22 +366,13 @@ const compatibilityElementState={};
     compatibilityElementState.observationVersion=()=>[elementSlot(focused)?.nodeId||0,keyboardFocus,upgradeRevision,modalDialogs.size].join(':');
     compatibilityElementState.hasModal=()=>modalDialogs.size!==0;
     compatibilityElementState.modal=node=>modalDialogs.has(node)&&node.isConnected;
+    compatibilityElementState.modalNodes=()=>Array.from(modalDialogs).filter(node=>node.isConnected).map(node=>elementSlot(node).nodeId);
     compatibilityElementState.detached=node=>modalDialogs.delete(node);
     if(globalThis.HTMLDetailsElement){
       const node=value=>{const data=elementSlot(value);if(data?.tagName!=='DETAILS')throw new TypeError('Illegal invocation');return data.nodeId};
       Object.defineProperty(HTMLDetailsElement.prototype,'open',{get(){return host.getAttribute(node(this),'open')!==null},set(value){const id=node(this),old=host.getAttribute(id,'open');if(value)host.setAttribute(id,'open','');else host.removeAttribute(id,'open');if(value||old!==null)attributeChanged(this,'open',old)},enumerable:true,configurable:true});
     }
-    if(globalThis.HTMLDialogElement){
-      const proto=HTMLDialogElement.prototype;
-      const dialog=node=>{if(!(node instanceof HTMLDialogElement))throw new TypeError('Illegal invocation');return node};
-      Object.defineProperties(proto,{
-        open:{get(){return dialog(this).hasAttribute('open')},set(value){dialog(this);if(value)this.setAttribute('open','');else this.removeAttribute('open')},configurable:true,enumerable:true},
-        returnValue:{get(){dialog(this);return dialogReturnValues.get(this)||''},set(value){dialog(this);dialogReturnValues.set(this,String(value))},configurable:true,enumerable:true},
-        show:{value:function(){dialog(this);if(this.open){if(modalDialogs.has(this))throw new DOMException('Dialog is already modal','InvalidStateError');return}this.open=true},writable:true,configurable:true,enumerable:true},
-        showModal:{value:function(){dialog(this);if(this.open){if(!modalDialogs.has(this))throw new DOMException('Dialog is already open','InvalidStateError');return}if(!this.isConnected)throw new DOMException('Dialog is not connected','InvalidStateError');modalDialogs.add(this);this.open=true},writable:true,configurable:true,enumerable:true},
-        close:{value:function(value){dialog(this);if(!this.open)return;if(value!==undefined)this.returnValue=value;this.open=false;modalDialogs.delete(this);setTimeout(()=>dispatchTrusted(this,new Event('close')),0)},writable:true,configurable:true,enumerable:true}
-      });
-    }
+    /* dialog_lifecycle */
     compatibilityElementState.focusVisible=node=>compatibilityElementState.focused()===node&&
       (keyboardFocus||node.localName==='textarea'||node.localName==='input'&&!['button','checkbox','color','file','hidden','image','radio','range','reset','submit'].includes(String(node.type)));
     compatibilityElementState.noteTrustedInput=type=>{

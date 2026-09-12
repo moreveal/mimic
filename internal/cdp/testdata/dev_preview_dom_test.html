@@ -42,7 +42,20 @@
     let mutations=0;const observer=new MutationObserver(events=>mutations+=events.length);observer.observe(doc,{subtree:true,childList:true,attributes:true,characterData:true});mirror.update(frame,markup(25));await tick();observer.disconnect();check(mutations===0,'Identical snapshot mutated DOM');
     mirror.update(frame,markup(26,'navigation'));await tick();check(frame.contentWindow.scrollY===0,'Navigation did not reset scroll');
     check(doc.querySelector('#counter').textContent==='Count 26','Navigation not applied');
-    result.textContent='PASS: 25 live updates; stable document, image, input, iframe, shadow nodes; scroll, focus and selection preserved; identical updates skipped; navigation reset; scripts blocked';
+    const modalMarkup=(text,modal=true,open=true)=>markup(26,'navigation').replace('</body>',`<style>dialog{left:-4000px}dialog:modal{inset:0;margin:auto;width:240px;height:100px}</style><dialog id="modal" data-mimic-preview-node="navigation:20" ${modal?'data-mimic-preview-modal="1"':''} ${open?'open':''}>${text}</dialog></body>`);
+    mirror.update(frame,modalMarkup('first'));await tick();
+    const dialog=doc.querySelector('#modal');
+    check(dialog.open&&dialog.matches(':modal'),'Modal top layer not restored');
+    const box=dialog.getBoundingClientRect();check(box.left>=0&&box.right<=frame.clientWidth,'Modal is offscreen');
+    for(let i=0;i<10;i++){mirror.update(frame,modalMarkup('update '+i));await tick()}
+    check(doc.querySelector('#modal')===dialog&&dialog.open&&dialog.matches(':modal'),'Modal disappeared/replaced on live updates');
+    mirror.update(frame,modalMarkup('closed',false,false));await tick();
+    check(!dialog.open&&!dialog.matches(':modal'),'Closed dialog remains in top layer');
+    mirror.update(frame,modalMarkup('reopened'));await tick();check(dialog.matches(':modal'),'Dialog failed to reopen');
+    const pair=modalMarkup('first').replace('</body>','<dialog id="second" data-mimic-preview-node="navigation:21" data-mimic-preview-modal="2" open>Second</dialog></body>');
+    mirror.update(frame,pair);await tick();check(doc.elementFromPoint(400,200).closest('dialog')?.id==='second','Modal insertion order lost');
+    mirror.update(frame,pair.replace('data-mimic-preview-modal="1"','data-mimic-preview-modal="3"'));await tick();check(doc.elementFromPoint(400,200).closest('dialog')?.id==='modal','Modal reopening order lost');
+    result.textContent='PASS: 25 live updates; stable document, image, input, iframe, shadow nodes; scroll, focus and selection preserved; identical updates skipped; navigation reset; scripts blocked; centered modal survives 10 updates and closes/reopens';
   }catch(error){result.textContent='FAIL: '+error.stack;throw error}
 })();
 </script>

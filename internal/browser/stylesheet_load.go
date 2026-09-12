@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/moreveal/mimic/internal/network"
+	"github.com/moreveal/mimic/internal/scheduler"
 	"github.com/moreveal/mimic/internal/trace"
 )
 
@@ -14,6 +15,7 @@ import (
 func (r *Realm) startParserStylesheets() []*resourcePreload {
 	if r.stylesheetLoads == nil {
 		r.stylesheetLoads = make(map[preloadKey]*resourcePreload)
+		r.parserStylesheetEvents = make(map[int64]preloadKey)
 		r.stylesheetFetchSlots = make(chan struct{}, 32)
 	}
 	var pending []*resourcePreload
@@ -49,6 +51,30 @@ func (r *Realm) startParserStylesheets() []*resourcePreload {
 			}(load)
 		}
 		pending = append(pending, load)
+		if previous, exists := r.parserStylesheetEvents[link.ID]; !exists || previous != key {
+			r.parserStylesheetEvents[link.ID] = key
+			id := link.ID
+			r.resourceWG.Add(1)
+			go func() {
+				defer r.resourceWG.Done()
+				response, err := load.wait(r.resourceContext)
+				if r.resourceContext.Err() != nil {
+					return
+				}
+				kind := "load"
+				if err != nil || response.Status < 200 || response.Status >= 300 {
+					kind = "error"
+				}
+				// The retained response/sheet is visible before load, including to
+				// inline handlers. Parser scripts and these events share one loop.
+				r.scheduler.Post(scheduler.Network, 0, func(ctx context.Context) error {
+					if r.parserStylesheetEvents[id] != key {
+						return nil
+					}
+					return r.dispatchResourceEvent(ctx, id, kind)
+				})
+			}()
+		}
 	}
 	return pending
 }
