@@ -77,6 +77,7 @@ func Parse(source string) (*Document, error) {
 		return nil, err
 	}
 	d := &Document{nodeArena: &nodeArena{nodes: map[int64]*Node{}}, source: source}
+	titleFound := false
 	var walk func(*html.Node, int64)
 	walk = func(n *html.Node, parent int64) {
 		d.next++
@@ -122,8 +123,15 @@ func Parse(source string) (*Document, error) {
 		} else {
 			d.nodes[parent].Children = append(d.nodes[parent].Children, id)
 		}
-		if node.TagName == "TITLE" && n.FirstChild != nil && d.isConnectedLocked(id) {
-			d.title = n.FirstChild.Data
+		if !titleFound && node.TagName == "TITLE" && node.Namespace == "http://www.w3.org/1999/xhtml" && d.isConnectedLocked(id) {
+			titleFound = true
+			var text strings.Builder
+			for child := n.FirstChild; child != nil; child = child.NextSibling {
+				if child.Type == html.TextNode {
+					text.WriteString(child.Data)
+				}
+			}
+			d.title = normalizeTitle(text.String())
 		}
 		childParent := id
 		if node.TagName == "TEMPLATE" && node.Namespace == "http://www.w3.org/1999/xhtml" {
@@ -137,7 +145,13 @@ func Parse(source string) (*Document, error) {
 	return d, nil
 }
 func (d *Document) Title() string     { d.mu.RLock(); defer d.mu.RUnlock(); return d.title }
-func (d *Document) SetTitle(v string) { d.mu.Lock(); d.title = v; d.mu.Unlock() }
+func (d *Document) SetTitle(v string) { d.mu.Lock(); d.title = normalizeTitle(v); d.mu.Unlock() }
+
+func normalizeTitle(v string) string {
+	return strings.Join(strings.FieldsFunc(v, func(r rune) bool {
+		return r == ' ' || r == '\t' || r == '\n' || r == '\r' || r == '\f'
+	}), " ")
+}
 func (d *Document) Source() string    { return d.source }
 
 // HasFrameElements is conservative: detached nodes remain reusable, so once an
