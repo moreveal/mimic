@@ -3,15 +3,22 @@
 package v8
 
 import (
+	"bytes"
+	"encoding/binary"
+	"encoding/json"
 	"fmt"
+
 	"github.com/maclof/gov8"
 	"github.com/moreveal/mimic/internal/engine"
 )
 
 type cloneErrorReporter struct {
-	message string
-	scope   *gov8.Scope
-	reject  *gov8.Function
+	message   string
+	scope     *gov8.Scope
+	reject    *gov8.Function
+	realm     *gov8.Context
+	payload   string
+	platforms []string
 }
 
 func (d *cloneErrorReporter) HasCustomHostObject() bool { return d.reject != nil }
@@ -26,7 +33,20 @@ func (d *cloneErrorReporter) GetWasmModuleTransferID(gov8.Value) (uint32, bool) 
 func (d *cloneErrorReporter) IsHostObject(object *gov8.Object) (bool, bool) {
 	result, ok, err := d.reject.Call(d.scope, object.Value, object.Value)
 	if err != nil || !ok {
+		if err != nil {
+			d.message = err.Error()
+		}
 		return false, false
+	}
+	if text, e := result.IsString(); e != nil {
+		d.message = e.Error()
+		return false, false
+	} else if text {
+		d.payload, err = result.ToString(d.realm)
+		if err != nil {
+			d.message = err.Error()
+		}
+		return err == nil, err == nil
 	}
 	reject, err := result.BooleanValue()
 	if err != nil {
@@ -38,6 +58,32 @@ func (d *cloneErrorReporter) IsHostObject(object *gov8.Object) (bool, bool) {
 	}
 	return false, true
 }
+
+func (d *cloneErrorReporter) WriteHostObject(_ *gov8.Object, w *gov8.DelegateValueSerializer) (bool, bool) {
+	index := len(d.platforms)
+	d.platforms = append(d.platforms, d.payload)
+	if err := w.WriteUint32(uint32(index)); err != nil {
+		d.message = err.Error()
+		return false, false
+	}
+	return true, true
+}
+
+type platformCloneReader struct {
+	objects []*gov8.Object
+	err     error
+}
+
+func (d *platformCloneReader) ReadHostObject(r *gov8.DelegateValueDeserializer) (*gov8.Object, bool) {
+	index, ok, err := r.ReadUint32()
+	if err != nil || !ok || int(index) >= len(d.objects) {
+		d.err = err
+		return nil, false
+	}
+	return d.objects[index], true
+}
+
+const platformCloneMagic = "MimicClone1\x00"
 
 func (d *cloneErrorReporter) ThrowDataCloneError(message string) bool {
 	d.message = message
@@ -59,7 +105,7 @@ func (a *adapter) SerializeStructuredClone(value engine.Value, rejectHostObject 
 			return nil, err
 		}
 		defer tc.Close()
-		reporter := &cloneErrorReporter{scope: scope}
+		reporter := &cloneErrorReporter{scope: scope, realm: realm}
 		if rejectHostObject != nil {
 			predicate, err := a.local(scope, rejectHostObject)
 			if err != nil {
@@ -92,6 +138,16 @@ func (a *adapter) SerializeStructuredClone(value engine.Value, rejectHostObject 
 			return nil, &engine.DataCloneError{Message: "The value could not be cloned."}
 		}
 		bytes, err = serializer.Release()
+		if err == nil && len(reporter.platforms) > 0 {
+			table, e := json.Marshal(reporter.platforms)
+			if e != nil {
+				return nil, e
+			}
+			header := []byte(platformCloneMagic)
+			header = binary.LittleEndian.AppendUint32(header, uint32(len(table)))
+			header = append(header, table...)
+			bytes = append(header, bytes...)
+		}
 		if err != nil {
 			return nil, err
 		}
@@ -102,18 +158,77 @@ func (a *adapter) SerializeStructuredClone(value engine.Value, rejectHostObject 
 }
 
 func (a *adapter) DeserializeStructuredClone(bytes []byte) (engine.Value, error) {
+	return a.DeserializeStructuredClonePlatform(bytes, nil)
+}
+
+func (a *adapter) DeserializeStructuredClonePlatform(wire []byte, decoder engine.Value) (engine.Value, error) {
 	return a.withCloneScope(func(iso *gov8.Isolate, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
 		tc, err := iso.NewTryCatch()
 		if err != nil {
 			return nil, err
 		}
 		defer tc.Close()
-		deserializer, err := gov8.NewValueDeserializer(scope, realm, bytes)
+		reader := &platformCloneReader{}
+		if bytes.HasPrefix(wire, []byte(platformCloneMagic)) {
+			wire = wire[len(platformCloneMagic):]
+			if len(wire) < 4 {
+				return nil, fmt.Errorf("invalid platform clone table")
+			}
+			length := binary.LittleEndian.Uint32(wire)
+			wire = wire[4:]
+			if uint64(length) > uint64(len(wire)) {
+				return nil, fmt.Errorf("invalid platform clone length")
+			}
+			var table []string
+			if err = json.Unmarshal(wire[:length], &table); err != nil {
+				return nil, err
+			}
+			wire = wire[length:]
+			if decoder == nil {
+				return nil, &engine.DataCloneError{Message: "Platform clone decoder is unavailable."}
+			}
+			v, e := a.local(scope, decoder)
+			if e != nil {
+				return nil, e
+			}
+			decode, ok, e := gov8.AsFunction(v, realm)
+			if e != nil {
+				return nil, e
+			}
+			if !ok {
+				return nil, fmt.Errorf("invalid platform clone decoder")
+			}
+			// V8's ReadHostObject forbids JavaScript. Materialize registered projections
+			// before entering ReadValue, then return only native locals from the hook.
+			for _, payload := range table {
+				v, e := scope.NewString(payload)
+				if e != nil {
+					return nil, e
+				}
+				out, ok, e := decode.Call(scope, v, v)
+				if caught, _ := tc.HasCaught(); caught {
+					return nil, a.callError(tc, scope, realm)
+				}
+				if e != nil {
+					return nil, e
+				}
+				if !ok {
+					return nil, fmt.Errorf("platform clone decoder returned no value")
+				}
+				obj, e := out.ToObject(scope, realm, tc)
+				if e != nil {
+					return nil, e
+				}
+				reader.objects = append(reader.objects, obj)
+			}
+		}
+
+		deserializer, err := gov8.NewDelegateValueDeserializer(scope, realm, wire, reader)
 		if err != nil {
 			return nil, err
 		}
 		defer deserializer.Close()
-		ok, err := deserializer.ReadHeader(realm)
+		ok, err := deserializer.ReadHeader(realm, tc)
 		if err != nil {
 			return nil, err
 		}
@@ -121,6 +236,12 @@ func (a *adapter) DeserializeStructuredClone(bytes []byte) (engine.Value, error)
 			return nil, fmt.Errorf("invalid structured clone header")
 		}
 		output, err := deserializer.ReadValue(realm, tc)
+		if caught, _ := tc.HasCaught(); caught {
+			return nil, a.callError(tc, scope, realm)
+		}
+		if reader.err != nil {
+			return nil, reader.err
+		}
 		if err != nil {
 			return nil, err
 		}

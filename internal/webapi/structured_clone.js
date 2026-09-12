@@ -1,17 +1,23 @@
 // One engine serializer is used by the public operation and message transports.
 // Do not export live JS graphs through host.Value: that loses brands and aliases.
+const clonePlatformCodecs=[];
 function createStructuredCloneCodec(rejectHost, foreign) {
   const apply = Reflect.apply, Uint8 = Uint8Array;
+ const platformStringify=JSON.stringify,platformParse=JSON.parse,platformSetPrototype=Object.setPrototypeOf;
+ const platforms=clonePlatformCodecs;
+ const platformEncode=value=>{for(const codec of platforms){const data=codec.encode(value);if(data!==undefined)return platformStringify(platformSetPrototype([codec.tag,data],null))}};
+ const classify=value=>platformEncode(value)??rejectHost(value);
+ const readPlatform=raw=>{const[tag,data]=platformParse(raw);for(const codec of platforms)if(codec.tag===tag)return codec.decode(data);fail('The platform object is unavailable in this realm.')};
   const native = typeof host.serializeClone === 'function';
   const fail = message => { throw new DOMException(message || 'The value could not be cloned.', 'DataCloneError'); };
   const encode = value => {
     if (foreign) value = foreign(value);
     if (!native) return 'js:' + encodeGraph(value);
-    const result = host.serializeClone(value, rejectHost);
+    const result = host.serializeClone(value, classify);
     if (!result[0]) fail(result[1]);
     return 'v8:' + result[1];
   };
-  const decode = value => value.startsWith('v8:') ? host.deserializeClone(value.slice(3)) : decodeGraph(value.slice(3));
+  const decode = value => value.startsWith('v8:') ? host.deserializeClone(value.slice(3),readPlatform) : decodeGraph(value.slice(3));
   // Engines without a native codec use the same bounded wire graph for all
   // consumers. This fallback is not a Chrome equivalence claim: brand discovery
   // uses script-visible tags/getters. Native V8 owns the authoritative path.
@@ -23,10 +29,12 @@ function createStructuredCloneCodec(rejectHost, foreign) {
       if (typeof value === 'bigint') return ['b', String(value)];
       if (typeof value === 'number') return ['n', Object.is(value,-0) ? '-0' : String(value)];
       if (value === null || typeof value === 'string' || typeof value === 'boolean') return ['p',value];
-      if (typeof value !== 'object' || host.cloneIsProxy?.(value) || rejectHost(value)) fail();
+      if (typeof value !== 'object' || host.cloneIsProxy?.(value)) fail();
       if (seen.has(value)) return ['r',seen.get(value)];
       const id = nodes.length; seen.set(value,id); nodes.push(null);
-      let row, brand = tag(value);
+      let row, brand = tag(value),platform=classify(value);if(platform===true)fail();
+ if(typeof platform==='string')row=['Platform',platform];
+ else
       if (Array.isArray(value)) row = ['Array',value.length,Object.keys(value).map(k=>[k,visit(value[k])])];
       else if (['[object Number]','[object String]','[object Boolean]','[object BigInt]'].includes(brand)) {
         const C = ({'[object Number]':Number,'[object String]':String,'[object Boolean]':Boolean,'[object BigInt]':BigInt})[brand];
@@ -50,6 +58,7 @@ function createStructuredCloneCodec(rejectHost, foreign) {
       if(item[0]==='u')return undefined;if(item[0]==='p')return item[1];if(item[0]==='b')return BigInt(item[1]);if(item[0]==='n')return Number(item[1]);
       const id=item[1];if(seen.has(id))return seen.get(id);const row=nodes[id];let value;
       switch(row[0]) {
+        case 'Platform':value=readPlatform(row[1]);break;
         case 'Box':value=Object(read(row[1]));break;
         case 'Array':value=new Array(row[1]);break;
         case 'Object':value={};break;
@@ -121,5 +130,5 @@ function createStructuredCloneCodec(rejectHost, foreign) {
       return stringify(copy(decode(wire)));
     }catch{return ''}
   };
-  return {encode, decode, clone, native, trace};
+  return {encode, decode, clone, native, trace,platformEncode,platformDecode:readPlatform};
 }

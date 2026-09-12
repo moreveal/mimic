@@ -160,6 +160,7 @@
     return value===globalThis||eventSlots.has(value);
   });
   globalThis.structuredClone=cloneCodec.clone;
+ globalThis.__mimicClonePlatforms=clonePlatformCodecs;
 
     globalThis.__mimicEvalSourceResolver=evalSourceResolver;
     const workerPrototype=globalThis.WorkerGlobalScope&&globalThis.WorkerGlobalScope.prototype;

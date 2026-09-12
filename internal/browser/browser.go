@@ -59,6 +59,7 @@ func (b *Browser) Environment() state.Environment      { b.mu.RLock(); defer b.m
 func (b *Browser) Compatibility() compatibility.Bundle { return b.compat }
 
 type Context struct {
+	files              map[string]*opfsStore
 	indexedDatabases   map[string]map[string]*indexedDatabase
 	indexedSequence    uint64
 	cacheNames         map[string]map[string]*cacheBucket
@@ -243,6 +244,9 @@ func (c *Context) Close() error {
 	for _, p := range c.Pages() {
 		c.ClosePage(p.ID)
 	}
+	c.storageMu.Lock()
+	c.files = nil
+	c.storageMu.Unlock()
 	snapshotErr := c.bootstrapSnapshots.close()
 	c.mu.Lock()
 	defer c.mu.Unlock()

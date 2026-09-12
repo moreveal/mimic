@@ -34,6 +34,7 @@ import (
 )
 
 type Realm struct {
+	files                    *opfsOwner
 	policyMetaCursor         int64
 	policyMetaCandidates     []int64
 	policy                   csp.PolicySet
@@ -430,6 +431,7 @@ func (r *Realm) Close() error {
 	r.speech = nil
 	r.speechNotifier = nil
 	r.closeIndexedDatabases()
+	r.files.close()
 	if r.cookieUnsubscribe != nil {
 		r.cookieUnsubscribe()
 		r.cookieUnsubscribe = nil
@@ -699,6 +701,7 @@ func (r *Realm) installBindings() error {
 	p := r.agent.Page()
 	host := map[string]any{}
 	installStructuredCloneHost(host, r.runtime)
+	r.files = installOPFSHost(host, r.runtime, r.agent.Page().ctx, func() string { return r.origin })
 	r.installDocumentStream(host)
 	host["token"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(r.token), nil })
 	host["ready"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {

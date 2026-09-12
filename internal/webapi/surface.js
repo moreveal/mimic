@@ -648,9 +648,6 @@
     if(cloneCrossRealmHistoryState&&referenceGet(value))return cloneCrossRealmHistoryState(value);
     const fail=()=>{throw new DOMException('The value could not be cloned.','DataCloneError')};
     if(historyUncloneableHost(value))fail();
-    if(typeof host.cloneHistoryValue==='function'){
-      const reply=host.cloneHistoryValue(value,historyUncloneableHost);if(!reply[0])throw new DOMException(reply[1],'DataCloneError');return reply[1];
-    }
     return cloneCodec.clone(value);
   };
   registerBootstrapCallback('installHistoryClone',cloneHistoryState);

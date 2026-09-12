@@ -1,0 +1,291 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": "1669021",
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled-profile-and-browser-context",
+    "actual": {
+      "href": "http://127.0.0.1:39956/plain",
+      "isSecureContext": true,
+      "crossOriginIsolated": false,
+      "innerWidth": 1272,
+      "innerHeight": 653,
+      "outerWidth": 1280,
+      "outerHeight": 800,
+      "devicePixelRatio": 1,
+      "visibility": "visible",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "platform": "Win32"
+    },
+    "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+    "probeSHA256": "d4c6a5711927c0c4cca5e07f755131e8b8bba5e2f2dc2834590333e91003b4ef",
+    "controlDiffCount": 0
+  },
+  "result": {
+    "result": {
+      "value": {
+        "root": [
+          "",
+          "directory",
+          "[object FileSystemDirectoryHandle]",
+          true
+        ],
+        "names": {
+          "": {
+            "name": "TypeError",
+            "message": "Failed to execute 'getFileHandle' on 'FileSystemDirectoryHandle': Name is not allowed."
+          },
+          ".": {
+            "name": "TypeError",
+            "message": "Failed to execute 'getFileHandle' on 'FileSystemDirectoryHandle': Name is not allowed."
+          },
+          "..": {
+            "name": "TypeError",
+            "message": "Failed to execute 'getFileHandle' on 'FileSystemDirectoryHandle': Name is not allowed."
+          },
+          "a/b": {
+            "name": "TypeError",
+            "message": "Failed to execute 'getFileHandle' on 'FileSystemDirectoryHandle': Name is not allowed."
+          },
+          "a\\b": {
+            "name": "TypeError",
+            "message": "Failed to execute 'getFileHandle' on 'FileSystemDirectoryHandle': Name is not allowed."
+          }
+        },
+        "missing": {
+          "name": "NotFoundError",
+          "message": "A requested file or directory could not be found at the time an operation was processed."
+        },
+        "handles": [
+          "test.txt",
+          "file",
+          [
+            "sub",
+            "test.txt"
+          ],
+          true,
+          null
+        ],
+        "typeMismatch": {
+          "name": "TypeMismatchError",
+          "message": "The path supplied exists, but was not an entry of requested type."
+        },
+        "file": [
+          "test.txt",
+          0,
+          "text/plain",
+          ""
+        ],
+        "windowSync": "undefined",
+        "worker": {
+          "shape": [
+            "[object FileSystemSyncAccessHandle]",
+            "readwrite",
+            "function",
+            "function"
+          ],
+          "write": 3,
+          "size": 5,
+          "read": [
+            5,
+            [
+              0,
+              0,
+              1,
+              2,
+              3,
+              0,
+              0,
+              0
+            ]
+          ],
+          "truncated": 3,
+          "lock": {
+            "name": "NoModificationAllowedError",
+            "message": "Failed to execute 'createSyncAccessHandle' on 'FileSystemFileHandle': Access Handles cannot be created if there is another open Access Handle or Writable stream associated with the same file."
+          },
+          "remove": {
+            "name": "NoModificationAllowedError",
+            "message": "Failed to execute 'removeEntry' on 'FileSystemDirectoryHandle': An attempt was made to modify an object where modifications are not allowed."
+          },
+          "closed": {
+            "getSize": {
+              "name": "InvalidStateError",
+              "message": "Failed to execute 'getSize' on 'FileSystemSyncAccessHandle': The file was already closed"
+            },
+            "flush": {
+              "name": "InvalidStateError",
+              "message": "Failed to execute 'flush' on 'FileSystemSyncAccessHandle': The file was already closed"
+            },
+            "truncate": {
+              "name": "InvalidStateError",
+              "message": "Failed to execute 'truncate' on 'FileSystemSyncAccessHandle': The file was already closed"
+            },
+            "read": {
+              "name": "InvalidStateError",
+              "message": "Failed to execute 'read' on 'FileSystemSyncAccessHandle': The access handle was already closed"
+            },
+            "write": {
+              "name": "InvalidStateError",
+              "message": "Failed to execute 'write' on 'FileSystemSyncAccessHandle': The access handle was already closed"
+            },
+            "close": {
+              "ok": true
+            }
+          },
+          "readonly": [
+            "read-only",
+            {
+              "name": "NoModificationAllowedError",
+              "message": "Failed to execute 'write' on 'FileSystemSyncAccessHandle': Cannot write to access handle in 'read-only' mode"
+            },
+            {
+              "name": "NoModificationAllowedError",
+              "message": "Failed to execute 'truncate' on 'FileSystemSyncAccessHandle': Cannot write to access handle in 'read-only' mode"
+            },
+            {
+              "name": "NoModificationAllowedError",
+              "message": "Failed to execute 'flush' on 'FileSystemSyncAccessHandle': Cannot write to access handle in 'read-only' mode"
+            }
+          ],
+          "snapshot": [
+            "worker.bin",
+            3,
+            [
+              0,
+              0,
+              1
+            ]
+          ],
+          "readonlySecond": {
+            "ok": true,
+            "value": true
+          },
+          "unsafeSecond": {
+            "ok": true,
+            "value": true
+          },
+          "mixed": {
+            "name": "NoModificationAllowedError",
+            "message": "Failed to execute 'createSyncAccessHandle' on 'FileSystemFileHandle': Access Handles cannot be created if there is another open Access Handle or Writable stream associated with the same file."
+          },
+          "cursor": [
+            2,
+            0,
+            3,
+            [
+              7,
+              8,
+              9,
+              0
+            ]
+          ]
+        },
+        "writable": {
+          "ok": true,
+          "value": [
+            0,
+            0,
+            5,
+            [
+              4,
+              5,
+              8,
+              0,
+              0
+            ]
+          ]
+        },
+        "clone": {
+          "ok": true,
+          "value": [
+            "file",
+            "test.txt",
+            true
+          ]
+        },
+        "cloneGraph": {
+          "ok": true,
+          "value": [
+            0,
+            true,
+            true,
+            true,
+            true,
+            "9",
+            "a",
+            "file",
+            true
+          ]
+        },
+        "messageClone": [
+          true,
+          true,
+          "test.txt",
+          true
+        ],
+        "abortWritable": {
+          "ok": true,
+          "value": [
+            4,
+            5,
+            8,
+            0,
+            0
+          ]
+        },
+        "reflection": [
+          0,
+          0,
+          0,
+          0,
+          true,
+          true,
+          "function getFileHandle() { [native code] }"
+        ],
+        "termination": 3,
+        "indexedDB": {
+          "ok": true,
+          "value": [
+            true,
+            "test.txt",
+            true
+          ]
+        },
+        "aboutBlankOrigin": 5,
+        "entries": [
+          [
+            "async.bin",
+            "file"
+          ],
+          [
+            "sub",
+            "directory"
+          ],
+          [
+            "terminate.bin",
+            "file"
+          ],
+          [
+            "worker.bin",
+            "file"
+          ]
+        ],
+        "nonempty": {
+          "name": "InvalidModificationError",
+          "message": "The object can not be modified in this way."
+        },
+        "deleted": {
+          "name": "NotFoundError",
+          "message": "A requested file or directory could not be found at the time an operation was processed."
+        }
+      }
+    }
+  }
+}

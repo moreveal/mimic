@@ -46,7 +46,8 @@ if(typeof IDBFactory==='function'&&host.indexedDB){
   if(typeof v==='bigint')return ['b',String(v)];if(v===null||typeof v==='string'||typeof v==='boolean')return ['p',v];
   if(typeof v!=='object')fail('DataCloneError');if(host.historyCloneIsProxy?.(v))fail('DataCloneError');
   if(seen.has(v))return ['r',seen.get(v)];const id=nodes.length;seen.set(v,id);nodes.push(null);let row;
-  if(blobSlots.has(v)){const b=blobSlots.get(v),f=fileSlots.get(v);row=['Blob',Array.from(b.bytes),b.type,f||null]}
+  const platform=cloneCodec.platformEncode(v);if(platform!==undefined)row=['Platform',platform];
+  else if(blobSlots.has(v)){const b=blobSlots.get(v),f=fileSlots.get(v);row=['Blob',Array.from(b.bytes),b.type,f||null]}
   else if(Array.isArray(v)){row=['Array',v.length,Object.keys(v).map(k=>[k,visit(v[k])])]}
   else if(v instanceof Number||v instanceof String||v instanceof Boolean)row=['Box',typeof v.valueOf(),visit(v.valueOf())];
   else if(Object.prototype.toString.call(v)==='[object BigInt]')row=['Box','bigint',visit(v.valueOf())];
@@ -62,7 +63,7 @@ if(typeof IDBFactory==='function'&&host.indexedDB){
   else fail('DataCloneError');nodes[id]=row;return ['r',id];
  };return JSON.stringify([visit(value),nodes])};
  const decode=encoded=>{const [root,nodes]=JSON.parse(encoded),seen=new Map();const read=x=>{if(x[0]==='u')return undefined;if(x[0]==='p')return x[1];if(x[0]==='n')return x[1]==='-0'?-0:Number(x[1]);if(x[0]==='b')return BigInt(x[1]);const i=x[1];if(seen.has(i))return seen.get(i);const n=nodes[i];let v;
-  switch(n[0]){case'Box':v=Object(read(n[2]));break;case'DOMException':v=new DOMException(n[2],n[1]);break;case'Array':v=new Array(n[1]);break;case'Object':v={};break;case'Date':v=new Date(read(n[1]));break;case'RegExp':v=new RegExp(n[1],n[2]);break;case'ArrayBuffer':v=new Uint8Array(n[1]).buffer;break;case'View':v=new globalThis[n[1]](read(n[2]),n[3],n[4]);break;case'Map':v=new Map();break;case'Set':v=new Set();break;case'Blob':v=n[3]?new File([new Uint8Array(n[1])],n[3].name,{type:n[2],lastModified:n[3].lastModified}):new Blob([new Uint8Array(n[1])],{type:n[2]});break;case'Error':v=new (globalThis[n[1]]&&globalThis[n[1]].prototype instanceof Error?globalThis[n[1]]:Error)(n[2]);v.stack=n[3];break;default:fail('DataCloneError')}
+  switch(n[0]){case'Platform':v=cloneCodec.platformDecode(n[1]);break;case'Box':v=Object(read(n[2]));break;case'DOMException':v=new DOMException(n[2],n[1]);break;case'Array':v=new Array(n[1]);break;case'Object':v={};break;case'Date':v=new Date(read(n[1]));break;case'RegExp':v=new RegExp(n[1],n[2]);break;case'ArrayBuffer':v=new Uint8Array(n[1]).buffer;break;case'View':v=new globalThis[n[1]](read(n[2]),n[3],n[4]);break;case'Map':v=new Map();break;case'Set':v=new Set();break;case'Blob':v=n[3]?new File([new Uint8Array(n[1])],n[3].name,{type:n[2],lastModified:n[3].lastModified}):new Blob([new Uint8Array(n[1])],{type:n[2]});break;case'Error':v=new (globalThis[n[1]]&&globalThis[n[1]].prototype instanceof Error?globalThis[n[1]]:Error)(n[2]);v.stack=n[3];break;default:fail('DataCloneError')}
   seen.set(i,v);if(n[0]==='Array'||n[0]==='Object')for(const [k,x]of n[n[0]==='Array'?2:1])Object.defineProperty(v,k,{value:read(x),writable:true,enumerable:true,configurable:true});if(n[0]==='Map')for(const[k,x]of n[1])v.set(read(k),read(x));if(n[0]==='Set')for(const x of n[1])v.add(read(x));if(n[0]==='Error'&&n[4])v.cause=read(n[4]);return v;
  };return read(root)};
  const pathValue=(v,path)=>{if(Array.isArray(path)){const out=[];for(const p of path){const x=pathValue(v,p);if(x===undefined)return undefined;out.push(x)}return out}if(path==='')return v;for(const p of path.split('.')){if(v==null||!(p in Object(v)))return undefined;v=v[p]}return v};
