@@ -1,0 +1,218 @@
+{
+  "captureMetadata": {
+    "href": "http://127.0.0.1:23461/plain",
+    "isSecureContext": true,
+    "crossOriginIsolated": false,
+    "innerWidth": 1272,
+    "innerHeight": 653,
+    "outerWidth": 1280,
+    "outerHeight": 800,
+    "devicePixelRatio": 1,
+    "visibility": "visible",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "platform": "Win32"
+  },
+  "observation": [
+    {
+      "family": "Arial",
+      "size": 13,
+      "text": "vvvv sssss ttttt tttt",
+      "width": 114.75,
+      "height": 27.90625
+    },
+    {
+      "family": "Arial",
+      "size": 13,
+      "text": "alpha beta gamma delta",
+      "width": 152.390625,
+      "height": 27.90625
+    },
+    {
+      "family": "Arial",
+      "size": 13,
+      "text": "The quick brown fox",
+      "width": 129.25,
+      "height": 27.90625
+    },
+    {
+      "family": "Arial",
+      "size": 14,
+      "text": "vvvv sssss ttttt tttt",
+      "width": 122.59375,
+      "height": 28.90625
+    },
+    {
+      "family": "Arial",
+      "size": 14,
+      "text": "alpha beta gamma delta",
+      "width": 163.125,
+      "height": 28.90625
+    },
+    {
+      "family": "Arial",
+      "size": 14,
+      "text": "The quick brown fox",
+      "width": 138.203125,
+      "height": 28.90625
+    },
+    {
+      "family": "Arial",
+      "size": 17,
+      "text": "vvvv sssss ttttt tttt",
+      "width": 146.09375,
+      "height": 32.90625
+    },
+    {
+      "family": "Arial",
+      "size": 17,
+      "text": "alpha beta gamma delta",
+      "width": 195.3125,
+      "height": 32.90625
+    },
+    {
+      "family": "Arial",
+      "size": 17,
+      "text": "The quick brown fox",
+      "width": 165.046875,
+      "height": 32.90625
+    },
+    {
+      "family": "Times New Roman",
+      "size": 13,
+      "text": "vvvv sssss ttttt tttt",
+      "width": 106.46875,
+      "height": 28.90625
+    },
+    {
+      "family": "Times New Roman",
+      "size": 13,
+      "text": "alpha beta gamma delta",
+      "width": 136,
+      "height": 28.90625
+    },
+    {
+      "family": "Times New Roman",
+      "size": 13,
+      "text": "The quick brown fox",
+      "width": 122.296875,
+      "height": 28.90625
+    },
+    {
+      "family": "Times New Roman",
+      "size": 14,
+      "text": "vvvv sssss ttttt tttt",
+      "width": 113.65625,
+      "height": 28.90625
+    },
+    {
+      "family": "Times New Roman",
+      "size": 14,
+      "text": "alpha beta gamma delta",
+      "width": 145.46875,
+      "height": 28.90625
+    },
+    {
+      "family": "Times New Roman",
+      "size": 14,
+      "text": "The quick brown fox",
+      "width": 130.71875,
+      "height": 28.90625
+    },
+    {
+      "family": "Times New Roman",
+      "size": 17,
+      "text": "vvvv sssss ttttt tttt",
+      "width": 135.25,
+      "height": 32.90625
+    },
+    {
+      "family": "Times New Roman",
+      "size": 17,
+      "text": "alpha beta gamma delta",
+      "width": 173.859375,
+      "height": 32.90625
+    },
+    {
+      "family": "Times New Roman",
+      "size": 17,
+      "text": "The quick brown fox",
+      "width": 155.96875,
+      "height": 32.90625
+    }
+  ],
+  "provenance": {
+    "revision": "eb32af4a85b88f89516c1dc2190134f3f8564d2f",
+    "dirtyState": " M internal/webapi/css_box_geometry.js\n",
+    "sourceSHA256": "6c1e696e70a3fb4907671f80aac459907fc14a527438567f286824c211bbec8c",
+    "probeSHA256": "d74fb7c9786828482635af9aae6581b8a84fb11ceb2a24a4bb15b46b6ca9e0c3",
+    "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+    "mimicSHA256": "1c075fcb073a23f57c49fbdea09c04c20d6aa37d53d5f32fdf8a8e6b2914d1a5",
+    "args": [
+      "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "--remote-debugging-port=20081",
+      "--user-data-dir=E:\\GitHub\\mimic\\.build\\residual-dom-delegated\\line-rounding-controls\\chrome-profile-b",
+      "--no-first-run",
+      "--no-default-browser-check",
+      "--window-size=1280,800",
+      "about:blank"
+    ],
+    "profile": "E:\\GitHub\\mimic\\.build\\residual-dom-delegated\\line-rounding-controls\\chrome-profile",
+    "browserMode": "headful",
+    "environmentProfile": "chrome-152-windows-x64-headful-controlled-v1",
+    "featureOverrides": [],
+    "records": [
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      }
+    ],
+    "exitCodes": {
+      "chrome": 1,
+      "mimic": 1
+    },
+    "chromeControl": [],
+    "chromeMimic": [],
+    "chromeVersion": {
+      "Browser": "Chrome/152.0.7977.82",
+      "Protocol-Version": "1.3",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "V8-Version": "15.2.124.21",
+      "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+      "webSocketDebuggerUrl": "ws://127.0.0.1:20081/devtools/browser/85f7745a-7808-40d5-a875-6334c8221c81"
+    },
+    "independentControlMetadata": {
+      "href": "http://127.0.0.1:23461/plain",
+      "isSecureContext": true,
+      "crossOriginIsolated": false,
+      "innerWidth": 1272,
+      "innerHeight": 653,
+      "outerWidth": 1280,
+      "outerHeight": 800,
+      "devicePixelRatio": 1,
+      "visibility": "visible",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "platform": "Win32"
+    },
+    "independentControlEqual": true
+  }
+}
