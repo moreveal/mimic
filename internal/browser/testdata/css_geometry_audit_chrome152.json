@@ -1,0 +1,1456 @@
+{
+  "captureMetadata": {
+    "href": "http://127.0.0.1:39894/plain",
+    "isSecureContext": true,
+    "crossOriginIsolated": false,
+    "innerWidth": 1272,
+    "innerHeight": 709,
+    "outerWidth": 0,
+    "outerHeight": 0,
+    "devicePixelRatio": 1,
+    "visibility": "hidden",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "platform": "Win32",
+    "chromeVersion": {
+      "Browser": "Chrome/152.0.7977.82",
+      "Protocol-Version": "1.3",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "V8-Version": "15.2.124.21",
+      "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+      "webSocketDebuggerUrl": "ws://127.0.0.1:20081/devtools/browser/2786ad19-407d-4d36-8c0a-8965ba6d7978"
+    },
+    "browserMode": "headful",
+    "environmentProfile": "chrome-152-windows-x64-headful-controlled-v1",
+    "featureOverrides": []
+  },
+  "observation": {
+    "light/zero": [
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "realm": true
+      }
+    ],
+    "light/flat": [
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            0,
+            20,
+            0
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            20,
+            0
+          ]
+        ],
+        "realm": true
+      }
+    ],
+    "light/narrow": [
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            0,
+            0,
+            20
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            0,
+            20
+          ]
+        ],
+        "realm": true
+      }
+    ],
+    "light/flowzero": [
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            0,
+            300,
+            12
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            300,
+            12
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            12,
+            0,
+            0
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            12,
+            0,
+            0
+          ]
+        ],
+        "realm": true
+      }
+    ],
+    "light/closedDetails": [
+      {
+        "tag": "DETAILS",
+        "own": [
+          [
+            0,
+            0,
+            300,
+            18
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            300,
+            18
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "SUMMARY",
+        "own": [
+          [
+            0,
+            0,
+            300,
+            18
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            300,
+            18
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            18,
+            10,
+            10
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            18,
+            10,
+            10
+          ]
+        ],
+        "realm": true
+      }
+    ],
+    "light/hidden": [
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            0,
+            20,
+            10
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            20,
+            10
+          ]
+        ],
+        "realm": true
+      }
+    ],
+    "light/none": [
+      {
+        "tag": "DIV",
+        "own": [],
+        "foreign": [],
+        "realm": true
+      }
+    ],
+    "light/table": [
+      {
+        "tag": "TABLE",
+        "own": [
+          [
+            0,
+            0,
+            85.125,
+            78
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            85.125,
+            78
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "CAPTION",
+        "own": [
+          [
+            0,
+            0,
+            85.125,
+            50
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            85.125,
+            50
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "TBODY",
+        "own": [
+          [
+            4,
+            54,
+            77.125,
+            20
+          ]
+        ],
+        "foreign": [
+          [
+            4,
+            54,
+            77.125,
+            20
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "TR",
+        "own": [
+          [
+            4,
+            54,
+            77.125,
+            20
+          ]
+        ],
+        "foreign": [
+          [
+            4,
+            54,
+            77.125,
+            20
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "TH",
+        "own": [
+          [
+            4,
+            54,
+            43.796875,
+            20
+          ]
+        ],
+        "foreign": [
+          [
+            4,
+            54,
+            43.796875,
+            20
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "TD",
+        "own": [
+          [
+            49.796875,
+            54,
+            31.328125,
+            20
+          ]
+        ],
+        "foreign": [
+          [
+            49.796875,
+            54,
+            31.328125,
+            20
+          ]
+        ],
+        "realm": true
+      }
+    ],
+    "light/controls": [
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            0,
+            300,
+            22
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            300,
+            22
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "BUTTON",
+        "own": [
+          [
+            2,
+            13,
+            16,
+            6
+          ]
+        ],
+        "foreign": [
+          [
+            2,
+            13,
+            16,
+            6
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            22,
+            300,
+            22
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            22,
+            300,
+            22
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "PROGRESS",
+        "own": [
+          [
+            2,
+            25.1875,
+            160,
+            16
+          ]
+        ],
+        "foreign": [
+          [
+            2,
+            25.1875,
+            160,
+            16
+          ]
+        ],
+        "realm": true
+      }
+    ],
+    "light/extreme": [
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            0,
+            3.4028232737618185e+32,
+            40
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            3.4028232737618185e+32,
+            40
+          ]
+        ],
+        "realm": true
+      }
+    ],
+    "light/zeroScale": [
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "realm": true
+      }
+    ],
+    "light/authorConnected": 1,
+    "light/detached": 0,
+    "light/reconnect": 1,
+    "open/zero": [
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "realm": true
+      }
+    ],
+    "open/flat": [
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            0,
+            20,
+            0
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            20,
+            0
+          ]
+        ],
+        "realm": true
+      }
+    ],
+    "open/narrow": [
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            0,
+            0,
+            20
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            0,
+            20
+          ]
+        ],
+        "realm": true
+      }
+    ],
+    "open/flowzero": [
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            0,
+            300,
+            12
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            300,
+            12
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            12,
+            0,
+            0
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            12,
+            0,
+            0
+          ]
+        ],
+        "realm": true
+      }
+    ],
+    "open/closedDetails": [
+      {
+        "tag": "DETAILS",
+        "own": [
+          [
+            0,
+            0,
+            300,
+            18
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            300,
+            18
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "SUMMARY",
+        "own": [
+          [
+            0,
+            0,
+            300,
+            18
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            300,
+            18
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            18,
+            10,
+            10
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            18,
+            10,
+            10
+          ]
+        ],
+        "realm": true
+      }
+    ],
+    "open/hidden": [
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            0,
+            20,
+            10
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            20,
+            10
+          ]
+        ],
+        "realm": true
+      }
+    ],
+    "open/none": [
+      {
+        "tag": "DIV",
+        "own": [],
+        "foreign": [],
+        "realm": true
+      }
+    ],
+    "open/table": [
+      {
+        "tag": "TABLE",
+        "own": [
+          [
+            0,
+            0,
+            85.125,
+            78
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            85.125,
+            78
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "CAPTION",
+        "own": [
+          [
+            0,
+            0,
+            85.125,
+            50
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            85.125,
+            50
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "TBODY",
+        "own": [
+          [
+            4,
+            54,
+            77.125,
+            20
+          ]
+        ],
+        "foreign": [
+          [
+            4,
+            54,
+            77.125,
+            20
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "TR",
+        "own": [
+          [
+            4,
+            54,
+            77.125,
+            20
+          ]
+        ],
+        "foreign": [
+          [
+            4,
+            54,
+            77.125,
+            20
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "TH",
+        "own": [
+          [
+            4,
+            54,
+            43.796875,
+            20
+          ]
+        ],
+        "foreign": [
+          [
+            4,
+            54,
+            43.796875,
+            20
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "TD",
+        "own": [
+          [
+            49.796875,
+            54,
+            31.328125,
+            20
+          ]
+        ],
+        "foreign": [
+          [
+            49.796875,
+            54,
+            31.328125,
+            20
+          ]
+        ],
+        "realm": true
+      }
+    ],
+    "open/controls": [
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            0,
+            300,
+            22
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            300,
+            22
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "BUTTON",
+        "own": [
+          [
+            2,
+            13,
+            16,
+            6
+          ]
+        ],
+        "foreign": [
+          [
+            2,
+            13,
+            16,
+            6
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            22,
+            300,
+            22
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            22,
+            300,
+            22
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "PROGRESS",
+        "own": [
+          [
+            2,
+            25.1875,
+            160,
+            16
+          ]
+        ],
+        "foreign": [
+          [
+            2,
+            25.1875,
+            160,
+            16
+          ]
+        ],
+        "realm": true
+      }
+    ],
+    "open/extreme": [
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            0,
+            3.4028232737618185e+32,
+            40
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            3.4028232737618185e+32,
+            40
+          ]
+        ],
+        "realm": true
+      }
+    ],
+    "open/zeroScale": [
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "realm": true
+      }
+    ],
+    "open/authorConnected": 1,
+    "open/detached": 0,
+    "open/reconnect": 1,
+    "closed/zero": [
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "realm": true
+      }
+    ],
+    "closed/flat": [
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            0,
+            20,
+            0
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            20,
+            0
+          ]
+        ],
+        "realm": true
+      }
+    ],
+    "closed/narrow": [
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            0,
+            0,
+            20
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            0,
+            20
+          ]
+        ],
+        "realm": true
+      }
+    ],
+    "closed/flowzero": [
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            0,
+            300,
+            12
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            300,
+            12
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            12,
+            0,
+            0
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            12,
+            0,
+            0
+          ]
+        ],
+        "realm": true
+      }
+    ],
+    "closed/closedDetails": [
+      {
+        "tag": "DETAILS",
+        "own": [
+          [
+            0,
+            0,
+            300,
+            18
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            300,
+            18
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "SUMMARY",
+        "own": [
+          [
+            0,
+            0,
+            300,
+            18
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            300,
+            18
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            18,
+            10,
+            10
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            18,
+            10,
+            10
+          ]
+        ],
+        "realm": true
+      }
+    ],
+    "closed/hidden": [
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            0,
+            20,
+            10
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            20,
+            10
+          ]
+        ],
+        "realm": true
+      }
+    ],
+    "closed/none": [
+      {
+        "tag": "DIV",
+        "own": [],
+        "foreign": [],
+        "realm": true
+      }
+    ],
+    "closed/table": [
+      {
+        "tag": "TABLE",
+        "own": [
+          [
+            0,
+            0,
+            85.125,
+            78
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            85.125,
+            78
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "CAPTION",
+        "own": [
+          [
+            0,
+            0,
+            85.125,
+            50
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            85.125,
+            50
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "TBODY",
+        "own": [
+          [
+            4,
+            54,
+            77.125,
+            20
+          ]
+        ],
+        "foreign": [
+          [
+            4,
+            54,
+            77.125,
+            20
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "TR",
+        "own": [
+          [
+            4,
+            54,
+            77.125,
+            20
+          ]
+        ],
+        "foreign": [
+          [
+            4,
+            54,
+            77.125,
+            20
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "TH",
+        "own": [
+          [
+            4,
+            54,
+            43.796875,
+            20
+          ]
+        ],
+        "foreign": [
+          [
+            4,
+            54,
+            43.796875,
+            20
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "TD",
+        "own": [
+          [
+            49.796875,
+            54,
+            31.328125,
+            20
+          ]
+        ],
+        "foreign": [
+          [
+            49.796875,
+            54,
+            31.328125,
+            20
+          ]
+        ],
+        "realm": true
+      }
+    ],
+    "closed/controls": [
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            0,
+            300,
+            22
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            300,
+            22
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "BUTTON",
+        "own": [
+          [
+            2,
+            13,
+            16,
+            6
+          ]
+        ],
+        "foreign": [
+          [
+            2,
+            13,
+            16,
+            6
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            22,
+            300,
+            22
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            22,
+            300,
+            22
+          ]
+        ],
+        "realm": true
+      },
+      {
+        "tag": "PROGRESS",
+        "own": [
+          [
+            2,
+            25.1875,
+            160,
+            16
+          ]
+        ],
+        "foreign": [
+          [
+            2,
+            25.1875,
+            160,
+            16
+          ]
+        ],
+        "realm": true
+      }
+    ],
+    "closed/extreme": [
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            0,
+            3.4028232737618185e+32,
+            40
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            3.4028232737618185e+32,
+            40
+          ]
+        ],
+        "realm": true
+      }
+    ],
+    "closed/zeroScale": [
+      {
+        "tag": "DIV",
+        "own": [
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "foreign": [
+          [
+            0,
+            0,
+            0,
+            0
+          ]
+        ],
+        "realm": true
+      }
+    ],
+    "closed/authorConnected": 1,
+    "closed/detached": 0,
+    "closed/reconnect": 1
+  },
+  "provenance": {
+    "revision": "06c24820136655e1d2a2536bea934e7988f072ac",
+    "dirtyState": " M internal/webapi/css_box_geometry.js\n M internal/webapi/dom_compatibility.js\n M internal/webapi/input.js\n M internal/webapi/surface.js\n",
+    "sourceSHA256": "e11cd70282f3235fd674b2e73fc6273e1b5f95cb288614ff69e812d7123a27fe",
+    "probeSHA256": "88f9a96b8dfc0101c10ee2cb6424437759033c12ba40bbfa75b416f124df5582",
+    "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+    "mimicSHA256": "9eb9b307648646296d1bb4c6ff26ea36e6a93f5b3a4f79135f1c38ec84644a8b",
+    "args": [
+      "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "--remote-debugging-port=20081",
+      "--user-data-dir=E:\\GitHub\\mimic\\.build\\residual-dom-delegated\\geometry-audit-controls\\chrome-profile-b-1789210651561297000",
+      "--no-first-run",
+      "--no-default-browser-check",
+      "--window-size=1280,800",
+      "about:blank"
+    ],
+    "profile": "E:\\GitHub\\mimic\\.build\\residual-dom-delegated\\geometry-audit-controls\\chrome-profile-1789210650667134000",
+    "browserMode": "headful",
+    "environmentProfile": "chrome-152-windows-x64-headful-controlled-v1",
+    "featureOverrides": [],
+    "records": [
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      }
+    ],
+    "exitCodes": {
+      "chrome": 1,
+      "mimic": 1
+    },
+    "chromeControl": [],
+    "chromeMimic": [],
+    "chromeVersion": {
+      "Browser": "Chrome/152.0.7977.82",
+      "Protocol-Version": "1.3",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "V8-Version": "15.2.124.21",
+      "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+      "webSocketDebuggerUrl": "ws://127.0.0.1:20081/devtools/browser/2786ad19-407d-4d36-8c0a-8965ba6d7978"
+    },
+    "independentControlMetadata": {
+      "href": "http://127.0.0.1:39894/plain",
+      "isSecureContext": true,
+      "crossOriginIsolated": false,
+      "innerWidth": 1272,
+      "innerHeight": 709,
+      "outerWidth": 0,
+      "outerHeight": 0,
+      "devicePixelRatio": 1,
+      "visibility": "hidden",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "platform": "Win32"
+    },
+    "independentControlEqual": true
+  }
+}

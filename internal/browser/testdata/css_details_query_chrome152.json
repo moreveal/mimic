@@ -1,0 +1,197 @@
+{
+  "captureMetadata": {
+    "href": "http://127.0.0.1:17542/plain",
+    "isSecureContext": true,
+    "crossOriginIsolated": false,
+    "innerWidth": 1272,
+    "innerHeight": 709,
+    "outerWidth": 0,
+    "outerHeight": 0,
+    "devicePixelRatio": 1,
+    "visibility": "hidden",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "platform": "Win32",
+    "chromeVersion": {
+      "Browser": "Chrome/152.0.7977.82",
+      "Protocol-Version": "1.3",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "V8-Version": "15.2.124.21",
+      "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+      "webSocketDebuggerUrl": "ws://127.0.0.1:20081/devtools/browser/a834b512-8542-46c1-b24f-c7f954c283cd"
+    },
+    "browserMode": "headful",
+    "environmentProfile": "chrome-152-windows-x64-headful-controlled-v1",
+    "featureOverrides": []
+  },
+  "observation": {
+    "false": [
+      [
+        0,
+        200,
+        18,
+        1
+      ],
+      [
+        0,
+        200,
+        18,
+        1
+      ],
+      [
+        18,
+        20,
+        10,
+        1
+      ],
+      [
+        28,
+        30,
+        12,
+        1
+      ],
+      [
+        18,
+        300,
+        5,
+        1
+      ]
+    ],
+    "reflection/false": {
+      "instance": true,
+      "open": false,
+      "attribute": false,
+      "records": [
+        [
+          "open",
+          null
+        ],
+        [
+          "open",
+          ""
+        ]
+      ]
+    },
+    "true": [
+      [
+        0,
+        200,
+        40,
+        1
+      ],
+      [
+        0,
+        200,
+        18,
+        1
+      ],
+      [
+        18,
+        20,
+        10,
+        1
+      ],
+      [
+        28,
+        30,
+        12,
+        1
+      ],
+      [
+        40,
+        300,
+        5,
+        1
+      ]
+    ],
+    "reflection/true": {
+      "instance": true,
+      "open": true,
+      "attribute": true,
+      "records": [
+        [
+          "open",
+          ""
+        ],
+        [
+          "open",
+          null
+        ]
+      ]
+    }
+  },
+  "provenance": {
+    "revision": "06c24820136655e1d2a2536bea934e7988f072ac",
+    "dirtyState": " M internal/browser/css_box_geometry_test.go\n M internal/webapi/css_box_geometry.js\n M internal/webapi/dom_compatibility.js\n M internal/webapi/input.js\n M internal/webapi/surface.js\n?? internal/browser/testdata/css_details_query_chrome152.json\n?? internal/browser/testdata/css_details_query_oracle.js\n?? internal/browser/testdata/css_geometry_audit_chrome152.json\n?? internal/browser/testdata/css_geometry_audit_oracle.js\n",
+    "sourceSHA256": "d33ae8fa6fd37b974e0bafde9c072fc17f1079a5df402e848a6642e61cdcb7c7",
+    "probeSHA256": "cfe426cca9b880c72258adfc9572fa7edd890c33fea44fae4ad87dcb331074a7",
+    "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+    "mimicSHA256": "c66392d2c02a41056e79cf656db692b808628b01c4a6820e1a1308a5f61d73af",
+    "args": [
+      "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "--remote-debugging-port=20081",
+      "--user-data-dir=E:\\GitHub\\mimic\\.build\\residual-dom-delegated\\details-query-controls\\chrome-profile-b-1789210848177186600",
+      "--no-first-run",
+      "--no-default-browser-check",
+      "--window-size=1280,800",
+      "about:blank"
+    ],
+    "profile": "E:\\GitHub\\mimic\\.build\\residual-dom-delegated\\details-query-controls\\chrome-profile-1789210847271882900",
+    "browserMode": "headful",
+    "environmentProfile": "chrome-152-windows-x64-headful-controlled-v1",
+    "featureOverrides": [],
+    "records": [
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      }
+    ],
+    "exitCodes": {
+      "chrome": 1,
+      "mimic": 1
+    },
+    "chromeControl": [],
+    "chromeMimic": [],
+    "chromeVersion": {
+      "Browser": "Chrome/152.0.7977.82",
+      "Protocol-Version": "1.3",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "V8-Version": "15.2.124.21",
+      "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+      "webSocketDebuggerUrl": "ws://127.0.0.1:20081/devtools/browser/a834b512-8542-46c1-b24f-c7f954c283cd"
+    },
+    "independentControlMetadata": {
+      "href": "http://127.0.0.1:17542/plain",
+      "isSecureContext": true,
+      "crossOriginIsolated": false,
+      "innerWidth": 1272,
+      "innerHeight": 709,
+      "outerWidth": 0,
+      "outerHeight": 0,
+      "devicePixelRatio": 1,
+      "visibility": "hidden",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "platform": "Win32"
+    },
+    "independentControlEqual": true
+  }
+}

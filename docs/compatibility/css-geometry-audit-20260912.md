@@ -1,0 +1,11 @@
+# Independent box-observation audit
+
+The audit expands the existing synthetic table, control, normal-flow and extreme-transform fixtures across light DOM, open/closed shadow roots and borrowed foreign-realm getters. Thirty-three case/tree combinations plus reconnect and author-connectivity controls cover empty boxes, one zero axis, visibility:hidden versus display:none, normal-flow placement, tables/captions, button/progress controls, closed disclosure content, large scale and zero scale. Exact transform parsing/precision is unchanged.
+
+The frozen controls confirm that a CSS box can exist with zero width or height. getClientRects previously discarded such boxes by testing positive area. It now uses canonical box eligibility, including current owner-document and flat-tree state, so a connected zero box contributes one rectangle while absent boxes contribute none.
+
+A separate closed/open details control confirms that direct geometry queries expose descendant boxes even when only the summary contributes to the closed container height. The transient box graph now computes content positions while retaining the closed container's summary height. HTMLDetailsElement was also missing from the canonical tag-to-interface map; its open property now reflects the canonical boolean attribute and enters the existing attribute mutation-record machinery. Replaced author get/set/removeAttribute methods do not intercept reflection, and MutationObserver receives the normal old values.
+
+The new independent headful Chrome152 A/B receipts and both execution engines match. The tests also execute the fixtures inside restored snapshot realms. Raw evidence is retained in .build/residual-dom-delegated/{geometry-audit-controls,details-query-controls}; no external workload or captured program contributes fixture expectations. Existing frozen fixtures were not edited.
+
+Scope remains the current one-box normal-flow model and explicit-summary disclosure controls. This increment does not introduce a renderer, fragmented inline layout, disclosure animations/toggle-event scheduling, or a transform precision change. The neighboring CSS/computed-style/box/input/bootstrap tests pass (76.382s); the final reflection-specific tests additionally cover author getter replacement.
