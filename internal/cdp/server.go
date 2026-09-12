@@ -452,6 +452,10 @@ func (s *session) traceEvent(e trace.Event) {
 	}
 }
 func (s *session) handle(m message) {
+	if value, handled, err := s.handleProfile(m); handled {
+		s.reply(m.ID, value, err)
+		return
+	}
 	s.page.Trace().Add(trace.CDP, "method", map[string]any{"method": m.Method, "sessionId": s.id})
 	if !strings.HasPrefix(m.Method, "Mimic.") {
 		if err := validateCommand(m.Method, m.Params); err != nil {

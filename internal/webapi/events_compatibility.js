@@ -30,9 +30,10 @@
     if(list.some(record=>record.callback===callback&&record.capture===capture&&!record.removed))return;
     const record={callback,capture,once:!!options?.once,passive:!!options?.passive,removed:false};
     list.push(record);listeners.set(type,list);
-    if(signal)signal.addEventListener('abort',()=>{record.removed=true;const index=list.indexOf(record);if(index>=0)list.splice(index,1)},{once:true});
+    if(type==='change')compatibilityElementState.mediaListenerChanged(target);
+    if(signal)signal.addEventListener('abort',()=>{record.removed=true;const index=list.indexOf(record);if(index>=0)list.splice(index,1);if(type==='change')compatibilityElementState.mediaListenerChanged(target)},{once:true});
   });
-  member(EventTarget.prototype,'removeEventListener',function(type,callback,options){const list=listenersFor(this==null?window:this).get(String(type))||[],capture=optionCapture(options),index=list.findIndex(record=>record.callback===callback&&record.capture===capture);if(index>=0){list[index].removed=true;list.splice(index,1)}});
+  member(EventTarget.prototype,'removeEventListener',function(type,callback,options){const target=this==null?window:this;type=String(type);const list=listenersFor(target).get(type)||[],capture=optionCapture(options),index=list.findIndex(record=>record.callback===callback&&record.capture===capture);if(index>=0){list[index].removed=true;list.splice(index,1)}if(type==='change')compatibilityElementState.mediaListenerChanged(target)});
   // Handler properties occupy their first assigned position in the same
   // listener list. Replacing a callback keeps order; clearing removes it.
   for(const C of [Document,HTMLElement]){

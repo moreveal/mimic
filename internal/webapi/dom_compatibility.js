@@ -393,13 +393,34 @@ const compatibilityElementState={};
     const focusEvent=(target,type,related,bubbles=false)=>compatibilityElementState.dispatchFocus?compatibilityElementState.dispatchFocus(target,type,related,bubbles):dispatchTrusted(target,new Event(type,{bubbles,composed:true}));
     Object.defineProperty(HTMLElement.prototype,'focus',{value:function(){if(!this.isConnected||focused===this)return;const previous=focused;focused=null;if(previous){focusEvent(previous,'blur',this);focusEvent(previous,'focusout',this,true)}focused=this;focusEvent(this,'focus',previous);focusEvent(this,'focusin',previous,true)},writable:true,configurable:true,enumerable:true});
     Object.defineProperty(HTMLElement.prototype,'blur',{value:function(){if(focused!==this)return;focused=null;focusEvent(this,'blur',null);focusEvent(this,'focusout',null,true)},writable:true,configurable:true,enumerable:true});
-    const mediaSlots=new WeakMap();
+    const mediaSlots=new WeakMap(),observedMedia=new Set(),mediaEventSlots=new WeakMap();
+    class MediaQueryListEvent extends Event {
+      constructor(type,init={}){super(type,init);mediaEventSlots.set(this,{media:String(init.media??''),matches:!!init.matches})}
+      get media(){const s=mediaEventSlots.get(this);if(!s)throw new TypeError('Illegal invocation');return s.media}
+      get matches(){const s=mediaEventSlots.get(this);if(!s)throw new TypeError('Illegal invocation');return s.matches}
+    }
+    expose('MediaQueryListEvent',MediaQueryListEvent);
     class MediaQueryList extends EventTarget {
       constructor(query){super();mediaSlots.set(this,{query:String(query),onchange:null})}
       get media(){return mediaSlots.get(this).query}get matches(){return !!cssMediaMatches(mediaSlots.get(this).query)}
       get onchange(){return mediaSlots.get(this).onchange}set onchange(value){const s=mediaSlots.get(this);if(s.onchange)this.removeEventListener('change',s.onchange);s.onchange=value;if(typeof value==='function')this.addEventListener('change',value)}
       addListener(callback){this.addEventListener('change',callback)}removeListener(callback){this.removeEventListener('change',callback)}
     }
+    compatibilityElementState.mediaListenerChanged=target=>{
+      if(!mediaSlots.has(target))return;
+      if((listenersFor(target).get('change')||[]).length)observedMedia.add(target);else observedMedia.delete(target);
+    };
+    // Only lists with observers are retained. Evaluation and delivery use the
+    // existing Page viewport task, so no independent polling clock is added.
+    compatibilityElementState.mediaObservationChange=before=>{
+      for(const list of observedMedia){
+        if(!(listenersFor(list).get('change')||[]).length){observedMedia.delete(list);continue}
+        const s=mediaSlots.get(list),matches=list.matches;
+        if(before){s.previousMatches=matches;continue}
+        const changed=s.previousMatches!==undefined&&s.previousMatches!==matches;s.previousMatches=matches;
+        if(changed){dispatchNative(list,new MediaQueryListEvent('change',{media:list.media,matches}));compatibilityElementState.mediaListenerChanged(list)}
+      }
+    };
     expose('MediaQueryList',MediaQueryList);expose('matchMedia',query=>new MediaQueryList(query));
     expose('requestIdleCallback',function(callback,options={}){if(typeof callback!=='function')throw new TypeError('Expected callback');const requested=performance.now();return setTimeout(()=>{const start=performance.now(),didTimeout=options.timeout!==undefined&&start-requested>=Number(options.timeout);callback({didTimeout,timeRemaining:()=>didTimeout?0:Math.max(0,50-(performance.now()-start))})},1)});
     expose('cancelIdleCallback',id=>clearTimeout(id));

@@ -28,6 +28,7 @@ func main() {
 	navigationTimeout := flag.Duration("navigation-timeout", 0, "optional navigation execution cap; 0 keeps loading until completion or cancellation")
 	engineName := flag.String("engine", "v8", "ECMAScript engine adapter: v8, quickjs, or goja")
 	browserMode := flag.String("browser-mode", "headful", "selected environment profile: headful or headless")
+	profilePath := flag.String("profile", "", "JSON environment profile for new contexts")
 	flag.Parse()
 	bundle, err := chrome.GetForMode(*milestone, state.BrowserMode(*browserMode))
 	if err != nil {
@@ -44,7 +45,14 @@ func main() {
 	default:
 		log.Fatalf("unsupported JavaScript engine %q", *engineName)
 	}
-	b, err := browser.New(factory, bundle)
+	var profileJSON []byte
+	if *profilePath != "" {
+		profileJSON, err = os.ReadFile(*profilePath)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+	b, err := browser.NewWithOptions(factory, bundle, browser.Options{ProfileJSON: profileJSON})
 	if err != nil {
 		log.Fatal(err)
 	}

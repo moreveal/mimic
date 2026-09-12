@@ -1,0 +1,441 @@
+{
+  "chrome": {
+    "captureMetadata": {
+      "browser": "Chrome/152.0.7977.82",
+      "version": {
+        "protocolVersion": "1.3",
+        "product": "Chrome/152.0.7977.82",
+        "revision": "@d04cdb24d67b081f6cf80200ffc5233f44b61109",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+        "jsVersion": "15.2.124.21"
+      },
+      "platform": "Windows x64",
+      "browserMode": "headful",
+      "freshControlledProfile": true,
+      "profileId": "profile-contract-headful-controlled-v1",
+      "command": [
+        "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+        "--remote-debugging-port=60337",
+        "--user-data-dir=C:\\Users\\moreveal\\AppData\\Local\\Temp\\mimic-profile-oracle-i9desrlb",
+        "--no-first-run",
+        "--no-default-browser-check",
+        "--window-size=1280,800",
+        "about:blank"
+      ],
+      "binarySHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "probeSHA256": "200b53e403f7e8eb71b667cd951ddf3c2387183770330f4d12ce4815ea57f3c6",
+      "secureContext": false,
+      "crossOriginIsolated": false,
+      "featureOverrides": [],
+      "capturedAtUnix": 1789221354.0092545
+    },
+    "observations": {
+      "initial": {
+        "viewport": [
+          1272,
+          653
+        ],
+        "outer": [
+          1280,
+          800
+        ],
+        "screen": [
+          2560,
+          1440,
+          2560,
+          1392
+        ],
+        "dpr": 1,
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+        "languages": [
+          "ru-RU"
+        ],
+        "dark": true,
+        "reduced": false,
+        "events": [],
+        "worker": {
+          "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+          "languages": [
+            "ru-RU"
+          ]
+        }
+      },
+      "largeMetrics": {
+        "viewport": [
+          800,
+          600
+        ],
+        "outer": [
+          1280,
+          800
+        ],
+        "screen": [
+          3000,
+          1800,
+          3000,
+          1800
+        ],
+        "dpr": 2,
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+        "languages": [
+          "ru-RU"
+        ],
+        "dark": true,
+        "reduced": false,
+        "events": [],
+        "worker": {
+          "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+          "languages": [
+            "ru-RU"
+          ]
+        }
+      },
+      "implicitScreen": {
+        "viewport": [
+          800,
+          600
+        ],
+        "outer": [
+          1280,
+          800
+        ],
+        "screen": [
+          2560,
+          1440,
+          2560,
+          1440
+        ],
+        "dpr": 2,
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+        "languages": [
+          "ru-RU"
+        ],
+        "dark": true,
+        "reduced": false,
+        "events": [],
+        "worker": {
+          "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+          "languages": [
+            "ru-RU"
+          ]
+        }
+      },
+      "metrics": {
+        "viewport": [
+          800,
+          600
+        ],
+        "outer": [
+          1280,
+          800
+        ],
+        "screen": [
+          1000,
+          700,
+          1000,
+          700
+        ],
+        "dpr": 2,
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+        "languages": [
+          "ru-RU"
+        ],
+        "dark": true,
+        "reduced": false,
+        "events": [],
+        "worker": {
+          "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+          "languages": [
+            "ru-RU"
+          ]
+        }
+      },
+      "identityMedia": {
+        "viewport": [
+          800,
+          600
+        ],
+        "outer": [
+          1280,
+          800
+        ],
+        "screen": [
+          1000,
+          700,
+          1000,
+          700
+        ],
+        "dpr": 2,
+        "ua": "ProfileOracle/1",
+        "languages": [
+          "fr-FR",
+          "en"
+        ],
+        "dark": true,
+        "reduced": true,
+        "events": [],
+        "worker": {
+          "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+          "languages": [
+            "ru-RU"
+          ]
+        }
+      },
+      "reset": {
+        "viewport": [
+          1272,
+          653
+        ],
+        "outer": [
+          1280,
+          800
+        ],
+        "screen": [
+          2560,
+          1440,
+          2560,
+          1392
+        ],
+        "dpr": 1,
+        "ua": "ProfileOracle/1",
+        "languages": [
+          "fr-FR",
+          "en"
+        ],
+        "dark": true,
+        "reduced": true,
+        "events": [],
+        "worker": {
+          "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+          "languages": [
+            "ru-RU"
+          ]
+        }
+      }
+    }
+  },
+  "mimic": {
+    "captureMetadata": {
+      "browser": "Mimic/152.0.7977.82",
+      "version": {
+        "jsVersion": "virtual",
+        "product": "Mimic/152.0.7977.82",
+        "protocolVersion": "1.3",
+        "revision": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+        "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+      },
+      "platform": "Windows x64",
+      "browserMode": "headful",
+      "freshControlledProfile": true,
+      "profileId": "profile-contract-headful-controlled-v1",
+      "command": [
+        "E:\\GitHub\\mimic\\.build\\mimic-profile.exe",
+        "-listen",
+        "127.0.0.1:39027"
+      ],
+      "binarySHA256": "e98a14b4c62a1f4176585ce4cee7d67730ffc306f775dcd11367c5bd87db1bae",
+      "probeSHA256": "200b53e403f7e8eb71b667cd951ddf3c2387183770330f4d12ce4815ea57f3c6",
+      "secureContext": false,
+      "crossOriginIsolated": false,
+      "featureOverrides": [],
+      "capturedAtUnix": 1789221355.5418322
+    },
+    "observations": {
+      "initial": {
+        "dark": true,
+        "dpr": 1,
+        "events": [],
+        "languages": [
+          "ru-RU"
+        ],
+        "outer": [
+          1280,
+          800
+        ],
+        "reduced": false,
+        "screen": [
+          2560,
+          1440,
+          2560,
+          1392
+        ],
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+        "viewport": [
+          1272,
+          653
+        ],
+        "worker": {
+          "languages": [
+            "ru-RU"
+          ],
+          "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+        }
+      },
+      "largeMetrics": {
+        "dark": true,
+        "dpr": 2,
+        "events": [
+          "resize"
+        ],
+        "languages": [
+          "ru-RU"
+        ],
+        "outer": [
+          1280,
+          800
+        ],
+        "reduced": false,
+        "screen": [
+          3000,
+          1800,
+          3000,
+          1800
+        ],
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+        "viewport": [
+          800,
+          600
+        ],
+        "worker": {
+          "languages": [
+            "ru-RU"
+          ],
+          "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+        }
+      },
+      "implicitScreen": {
+        "dark": true,
+        "dpr": 2,
+        "events": [
+          "resize"
+        ],
+        "languages": [
+          "ru-RU"
+        ],
+        "outer": [
+          1280,
+          800
+        ],
+        "reduced": false,
+        "screen": [
+          2560,
+          1440,
+          2560,
+          1440
+        ],
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+        "viewport": [
+          800,
+          600
+        ],
+        "worker": {
+          "languages": [
+            "ru-RU"
+          ],
+          "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+        }
+      },
+      "metrics": {
+        "dark": true,
+        "dpr": 2,
+        "events": [
+          "resize"
+        ],
+        "languages": [
+          "ru-RU"
+        ],
+        "outer": [
+          1280,
+          800
+        ],
+        "reduced": false,
+        "screen": [
+          1000,
+          700,
+          1000,
+          700
+        ],
+        "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+        "viewport": [
+          800,
+          600
+        ],
+        "worker": {
+          "languages": [
+            "ru-RU"
+          ],
+          "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+        }
+      },
+      "identityMedia": {
+        "dark": true,
+        "dpr": 2,
+        "events": [
+          "resize",
+          "reduced-motion"
+        ],
+        "languages": [
+          "fr-FR",
+          "en"
+        ],
+        "outer": [
+          1280,
+          800
+        ],
+        "reduced": true,
+        "screen": [
+          1000,
+          700,
+          1000,
+          700
+        ],
+        "ua": "ProfileOracle/1",
+        "viewport": [
+          800,
+          600
+        ],
+        "worker": {
+          "languages": [
+            "ru-RU"
+          ],
+          "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+        }
+      },
+      "reset": {
+        "dark": true,
+        "dpr": 1,
+        "events": [
+          "resize",
+          "reduced-motion",
+          "resize"
+        ],
+        "languages": [
+          "fr-FR",
+          "en"
+        ],
+        "outer": [
+          1280,
+          800
+        ],
+        "reduced": true,
+        "screen": [
+          2560,
+          1440,
+          2560,
+          1392
+        ],
+        "ua": "ProfileOracle/1",
+        "viewport": [
+          1272,
+          653
+        ],
+        "worker": {
+          "languages": [
+            "ru-RU"
+          ],
+          "ua": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36"
+        }
+      }
+    }
+  }
+}

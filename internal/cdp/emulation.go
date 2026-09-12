@@ -75,7 +75,7 @@ func (s *session) handleEmulation(method string, p map[string]any) (any, bool, e
 		if media := stringValue(p["media"]); media != "" && media != "screen" {
 			return nil, true, fmt.Errorf("Media type %s is not supported", media)
 		}
-		base := s.server.Browser.Environment().Preferences
+		base := s.page.BaseEnvironment().Preferences
 		scheme := base.ColorScheme
 		reduced := &base.ReducedMotion
 		if features, ok := p["features"].([]any); ok {
@@ -85,7 +85,7 @@ func (s *session) handleEmulation(method string, p map[string]any) (any, bool, e
 				case "prefers-color-scheme":
 					scheme = stringValue(f["value"])
 					if scheme != "dark" && scheme != "light" {
-						scheme = s.server.Browser.Environment().Preferences.ColorScheme
+						scheme = s.page.BaseEnvironment().Preferences.ColorScheme
 					}
 				case "prefers-reduced-motion":
 					v := stringValue(f["value"]) == "reduce"

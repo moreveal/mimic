@@ -12,7 +12,7 @@ func (p *Page) SetDeviceMetrics(width, height int, scale float64, screenWidth, s
 	if width < 0 || height < 0 || width > 10000000 || height > 10000000 || scale < 0 || math.IsInf(scale, 0) || math.IsNaN(scale) {
 		return fmt.Errorf("Invalid device metrics")
 	}
-	base := p.ctx.browser.Environment()
+	base := p.ctx.Environment()
 	if width == 0 {
 		width = base.Window.ViewportWidth
 	}
@@ -38,8 +38,10 @@ func (p *Page) SetDeviceMetrics(width, height int, scale float64, screenWidth, s
 	p.env.Display.DeviceScaleFactor = scale
 	p.env.Display.PhysicalWidth = int(math.Round(float64(screenWidth) * scale))
 	p.env.Display.PhysicalHeight = int(math.Round(float64(screenHeight) * scale))
-	p.env.Display.AvailableWidth = int(math.Round(float64(screen.AvailWidth) * scale))
-	p.env.Display.AvailableHeight = int(math.Round(float64(screen.AvailHeight) * scale))
+	// Frozen headful Chrome's metrics override exposes the entire emulated
+	// screen as available, including when screen dimensions are omitted.
+	p.env.Display.AvailableWidth = p.env.Display.PhysicalWidth
+	p.env.Display.AvailableHeight = p.env.Display.PhysicalHeight
 	p.env.Window.ViewportWidth = width
 	p.env.Window.ViewportHeight = height
 	return nil
@@ -47,17 +49,19 @@ func (p *Page) SetDeviceMetrics(width, height int, scale float64, screenWidth, s
 func (p *Page) ClearDeviceMetrics() {
 	p.viewportObservationChange(true)
 	defer p.viewportObservationChange(false)
-	base := p.ctx.browser.Environment()
+	base := p.ctx.Environment()
 	p.mu.Lock()
 	p.env.Window.ViewportWidth = base.Window.ViewportWidth
 	p.env.Window.ViewportHeight = base.Window.ViewportHeight
 	p.env.Display = base.Display
-	p.env.ScreenOrientation = nil
+	p.env.ScreenOrientation = base.ScreenOrientation
 	p.mu.Unlock()
 }
 func (p *Page) SetUserAgentOverride(o *state.UserAgentOverride) {
 	p.mu.Lock()
 	p.env.UserAgentOverride = o
+	// External callers retain no references to mutable identity metadata.
+	p.env = p.env.Clone()
 	p.mu.Unlock()
 }
 

@@ -50,7 +50,7 @@ func (r *Realm) syncPerformanceEntries() {
 		if numberValue(event.Data["status"]) >= 300 && numberValue(event.Data["status"]) < 400 && numberValue(event.Data["status"]) != 304 {
 			continue
 		}
-		entry := performanceResourceEntry(event.Data, r.performanceOrigin, r.origin, p.Environment().Time.NetworkScale, p.performanceClamper, r.securityState().crossOriginIsolated)
+		entry := performanceResourceEntry(event.Data, r.performanceOrigin, r.origin, p.environmentView().Time.NetworkScale, p.performanceClamper, r.securityState().crossOriginIsolated)
 		if entry != nil {
 			r.performance.append(r.performance.create(entry, nil))
 		}
@@ -146,7 +146,7 @@ func (r *Realm) performanceNavigationEntry() map[string]any {
 			data[k] = v
 		}
 		data["performanceStart"] = r.performanceOrigin
-		entry = performanceResourceEntry(data, r.performanceOrigin, r.origin, p.Environment().Time.NavigationScale, p.performanceClamper, r.securityState().crossOriginIsolated)
+		entry = performanceResourceEntry(data, r.performanceOrigin, r.origin, p.environmentView().Time.NavigationScale, p.performanceClamper, r.securityState().crossOriginIsolated)
 		if entry == nil {
 			entry = map[string]any{}
 		}
@@ -164,7 +164,7 @@ func (r *Realm) performanceNavigationEntry() map[string]any {
 			if _, err := rand.Read(random[:]); err != nil {
 				panic(err)
 			}
-			typical := r.performanceOrigin.Sub(p.Environment().Time.WallOrigin) >= time.Second
+			typical := r.performanceOrigin.Sub(p.environmentView().Time.WallOrigin) >= time.Second
 			if random[0] < 128 {
 				typical = random[1] < 128
 			}

@@ -37,7 +37,7 @@ func addPictureInPictureHosts(r *Realm, h map[string]any) {
 		p := r.agent.Page()
 		opener := r.agent.(*Frame)
 		width, height := numarg(a, 0), numarg(a, 1)
-		screen := p.Environment().Screen()
+		screen := p.environmentView().Screen()
 		if width > float64(screen.AvailWidth) {
 			width = float64(screen.AvailWidth)
 		}
@@ -47,8 +47,8 @@ func addPictureInPictureHosts(r *Realm, h map[string]any) {
 		f := &Frame{ID: uuid.NewString(), page: p, auxiliaryOpener: opener, auxiliaryOwner: r, auxiliaryBase: r.documentBaseURL(), auxiliaryWidth: int(width), auxiliaryHeight: int(height), children: map[string]*Frame{}}
 		// Dimensions belong to this auxiliary context, never to the opener's profile.
 		if f.auxiliaryWidth == 0 {
-			f.auxiliaryWidth = p.Environment().Window.ViewportWidth
-			f.auxiliaryHeight = p.Environment().Window.ViewportHeight
+			f.auxiliaryWidth = p.environmentView().Window.ViewportWidth
+			f.auxiliaryHeight = p.environmentView().Window.ViewportHeight
 		}
 		d, err := dom.Parse("<html><head></head><body></body></html>")
 		if err != nil {

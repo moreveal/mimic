@@ -44,7 +44,7 @@ func (c *Context) originCapabilities(origin string) *originCapabilities {
 	s := c.capabilities[origin]
 	if s == nil {
 		s = &originCapabilities{permissions: map[string]string{}}
-		for name, value := range c.browser.Environment().Permissions {
+		for name, value := range c.env.Permissions {
 			if value == "default" {
 				value = "prompt"
 			}
@@ -89,18 +89,18 @@ const navigatorWebDriver = false
 func addCapabilityHosts(r *Realm, h map[string]any) {
 	p := r.agent.Page()
 	h["rtpCapabilities"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		return r.val(p.Environment().Capabilities.Media.RTP.Capabilities(strarg(a, 0), strarg(a, 1))), nil
+		return r.val(p.environmentView().Capabilities.Media.RTP.Capabilities(strarg(a, 0), strarg(a, 1))), nil
 	})
 	h["rtpMedia"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		m := p.Environment().Capabilities.Media.RTP.Media(strarg(a, 0), strarg(a, 1))
+		m := p.environmentView().Capabilities.Media.RTP.Media(strarg(a, 0), strarg(a, 1))
 		return r.val(map[string]any{"payloads": m.Payloads, "extensions": m.Extensions, "attributes": m.Attributes}), nil
 	})
 	h["mediaTypeSupport"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		m := p.Environment().Capabilities.Media.Formats.Support(strarg(a, 0))
+		m := p.environmentView().Capabilities.Media.Formats.Support(strarg(a, 0))
 		return r.val(map[string]any{"play": m.Play, "mediaSource": m.MediaSource, "precise": m.Precise, "efficient": m.Efficient, "kind": m.Kind}), nil
 	})
 	h["capabilityState"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		e := p.Environment()
+		e := p.environmentView()
 		switch strarg(a, 0) {
 		case "ai":
 			// The selected runtime has no model service. Exposure is independent

@@ -7,6 +7,7 @@
   const method=(prototype,name,fn)=>{markNative(fn,name);Object.defineProperty(prototype,name,{value:fn,writable:true,enumerable:true,configurable:true})};
   const singleton=(name,prototype,brand)=>{const object=Object.create(prototype);brand.add(object);replaceableWindow(name,()=>object);return object};
   const viewportNotifiers=[];
+  viewportNotifiers.push(before=>compatibilityElementState.mediaObservationChange(before));
   if(typeof ScreenOrientation==='function'){
   const orientation=new EventTarget();Object.setPrototypeOf(orientation,ScreenOrientation.prototype);
   getter(Screen.prototype,'orientation',function(){if(this!==scr)throw new TypeError('Illegal invocation');return orientation});

@@ -85,7 +85,7 @@ func (p *Page) LockCommands()   { p.commandMu.Lock() }
 func (p *Page) UnlockCommands() { p.commandMu.Unlock() }
 
 func newPage(c *Context) (*Page, error) {
-	environment := c.browser.Environment()
+	environment := c.env.Clone()
 	p := &Page{performanceClamper: newPerformanceClamper(), ID: uuid.NewString(), ctx: c, env: environment, trace: trace.New(), historyIndex: -1, clock: environment.Time.WallOrigin, performanceOrigin: environment.Time.WallOrigin, sessionStorage: map[string]map[string]string{}, frames: map[string]*Frame{}, messagePorts: map[string]*messagePortState{}}
 	p.loader = network.NewLoaderWithSession(func() state.Environment { p.mu.RLock(); defer p.mu.RUnlock(); return p.env }, c.cookies, c.network, p.trace)
 	if c.transport != nil {
@@ -355,7 +355,7 @@ func (p *Page) navigateRequestWithHistory(ctx context.Context, raw, loaderID str
 	if res.URL != nil {
 		u = res.URL
 	}
-	navigationScale := p.Environment().Time.NavigationScale
+	navigationScale := p.environmentView().Time.NavigationScale
 	p.mu.Lock()
 	completion := max(res.Duration, time.Duration(res.BrowserVisibleTiming.Phases["responseComplete"]*float64(time.Millisecond)))
 	responseTime := performanceOrigin.Add(time.Duration(float64(completion) * navigationScale))
@@ -895,7 +895,11 @@ func (p *Page) Document() (*dom.Document, bool) {
 	}
 	return p.Top.Realm.document, true
 }
-func (p *Page) Environment() state.Environment { p.mu.RLock(); defer p.mu.RUnlock(); return p.env }
+func (p *Page) Environment() state.Environment {
+	p.mu.RLock()
+	defer p.mu.RUnlock()
+	return p.env.Clone()
+}
 func (p *Page) Pause() {
 	p.mu.RLock()
 	defer p.mu.RUnlock()
