@@ -17,6 +17,7 @@ import (
 )
 
 type Browser struct {
+	devPreview     bool
 	defaultProfile *profile.Document
 	speechProvider speech.Provider
 	mu             sync.RWMutex
@@ -27,6 +28,8 @@ type Browser struct {
 }
 
 type Options struct {
+	// DevPreview enables private debug observations and the CDP preview routes.
+	DevPreview  bool
 	ProfileJSON []byte
 	// SpeechProvider is an optional portable synthesis driver. Nil selects the
 	// system provider. It creates document-owned resources only on first use.
@@ -48,7 +51,7 @@ func NewWithOptions(factory engine.Factory, bundle compatibility.Bundle, options
 	if provider == nil {
 		provider = speech.Open
 	}
-	b := &Browser{speechProvider: provider, factory: factory, env: env.Clone(), compat: bundle, contexts: map[string]*Context{}}
+	b := &Browser{devPreview: options.DevPreview, speechProvider: provider, factory: factory, env: env.Clone(), compat: bundle, contexts: map[string]*Context{}}
 	if len(options.ProfileJSON) > 0 {
 		d, err := profile.Normalize(options.ProfileJSON, env, nil)
 		if err != nil {

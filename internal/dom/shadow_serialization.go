@@ -43,6 +43,16 @@ func (d *Document) SnapshotTree(rootID int64, shadows []ShadowSnapshot) (*html.N
 }
 
 func (d *Document) SnapshotTreeWithFormState(rootID int64, shadows []ShadowSnapshot, forms []FormSnapshot) (*html.Node, error) {
+	return d.snapshotTree(rootID, shadows, forms, "")
+}
+
+// PreviewTree adds stable identities only to the immutable debug projection.
+// Ordinary exports and canonical attributes are unaffected.
+func (d *Document) PreviewTree(rootID int64, shadows []ShadowSnapshot, forms []FormSnapshot, realmID string) (*html.Node, error) {
+	return d.snapshotTree(rootID, shadows, forms, realmID)
+}
+
+func (d *Document) snapshotTree(rootID int64, shadows []ShadowSnapshot, forms []FormSnapshot, previewRealm string) (*html.Node, error) {
 	d.mu.RLock()
 	defer d.mu.RUnlock()
 	if d.nodes[rootID] == nil {
@@ -64,6 +74,15 @@ func (d *Document) SnapshotTreeWithFormState(rootID int64, shadows []ShadowSnaps
 		}
 		active[id] = true
 		defer delete(active, id)
+		if previewRealm != "" && out.Type == html.ElementNode {
+			attrs := out.Attr[:0]
+			for _, a := range out.Attr {
+				if a.Key != "data-mimic-preview-node" {
+					attrs = append(attrs, a)
+				}
+			}
+			out.Attr = append(attrs, html.Attribute{Key: "data-mimic-preview-node", Val: fmt.Sprintf("%s:%d", previewRealm, id)})
+		}
 		n := d.nodes[id]
 		children := n.Children
 		if n.TemplateContent != 0 {

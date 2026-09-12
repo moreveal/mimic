@@ -82,6 +82,9 @@ func (r *Realm) bootstrapSource() *bootstrapSource {
 	} else {
 		plan.source = webapi.Surface(generated, exposure)
 	}
+	if r.agent.Page().ctx.browser.devPreview {
+		plan.source = webapi.WithDevPreview(plan.source)
+	}
 	env := r.agent.Page().environmentView()
 	profile, _ := json.Marshal(struct {
 		Features                                             map[string]bool
@@ -328,6 +331,7 @@ func (r *Realm) retryBootstrap(err error) error {
 	r.frameViewportRead = nil
 	r.frameLayoutRead = nil
 	r.computedStyleFlatRead = nil
+	r.previewRead = nil
 	r.frameNativeNameDescribe = nil
 	r.frameSourceDescribe = nil
 	r.eventListenerInvoker = nil

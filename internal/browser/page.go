@@ -30,6 +30,7 @@ type documentSecurity struct {
 	permissionsPolicy   string
 }
 type Page struct {
+	previewObservers   map[*PreviewSubscription]struct{} // command-owned; nil without viewers
 	debuggers          map[*Debugger]struct{}
 	inputIgnored       bool // Page command owned; survives document navigation.
 	debuggerWaitMu     sync.Mutex
@@ -81,8 +82,13 @@ type Page struct {
 // LockCommands serializes an external command and its complete event-loop turn.
 // The boundary belongs to the Page, so all CDP sessions observe the same loop.
 // Library callers must use the same boundary when sharing a Page concurrently.
-func (p *Page) LockCommands()   { p.commandMu.Lock() }
-func (p *Page) UnlockCommands() { p.commandMu.Unlock() }
+func (p *Page) LockCommands() { p.commandMu.Lock() }
+func (p *Page) UnlockCommands() {
+	if p.previewObservers != nil {
+		p.publishPreview()
+	}
+	p.commandMu.Unlock()
+}
 
 func newPage(c *Context) (*Page, error) {
 	environment := c.env.Clone()

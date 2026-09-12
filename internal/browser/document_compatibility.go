@@ -7,6 +7,12 @@ import (
 )
 
 func (r *Realm) installDocumentCompatibility(host map[string]any) {
+	if r.agent.Page().ctx.browser.devPreview {
+		host["installDevPreview"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+			r.previewRead = args[0]
+			return nil, nil
+		})
+	}
 	host["installComputedStyleFlatTree"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		r.computedStyleFlatRead = args[0]
 		return nil, nil
