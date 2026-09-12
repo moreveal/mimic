@@ -133,6 +133,40 @@ func TestPerformanceClearedEntriesReleaseRuntimeRoots(t *testing.T) {
 	}
 }
 
+func TestPerformanceIsolatedSurfaceMatchesFrozenChrome(t *testing.T) {
+	for _, mode := range []string{"ordinary", "snapshot"} {
+		t.Run(mode, func(t *testing.T) {
+			if mode == "ordinary" {
+				t.Setenv("MIMIC_DISABLE_BOOTSTRAP_SNAPSHOT", "1")
+			} else {
+				t.Setenv("MIMIC_DISABLE_BOOTSTRAP_SNAPSHOT", "0")
+			}
+			seed := bootstrapSnapshotPage(t)
+			navigateCapabilityFixtureMode(t, seed, true)
+			if mode == "snapshot" {
+				bootstrapSnapshotWarm(t, seed)
+			}
+			p, err := seed.ctx.NewPage()
+			if err != nil {
+				t.Fatal(err)
+			}
+			navigateCapabilityFixtureMode(t, p, true)
+			source, err := os.ReadFile("testdata/performance_surface_oracle.js")
+			if err != nil {
+				t.Fatal(err)
+			}
+			value := bootstrapSnapshotEvaluate(t, p, `JSON.stringify(`+string(source)+`)`).(string)
+			assertPerformanceOracle(t, "performance_surface_isolated", value)
+			if mode == "snapshot" && !p.Top.Realm.bootstrapRestored {
+				t.Fatal("expected restored realm")
+			}
+			t.Run("agentClusterMemoryAttribution", func(t *testing.T) {
+				t.Skip("Frozen .82 returns asynchronous agent-cluster memory attribution; Mimic explicitly rejects with NotSupportedError until that ownership model exists")
+			})
+		})
+	}
+}
+
 func assertPerformanceOracle(t *testing.T, name, actualJSON string) {
 	t.Helper()
 	data, err := os.ReadFile("testdata/" + name + "_chrome152.json")

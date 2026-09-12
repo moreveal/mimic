@@ -302,7 +302,7 @@ func composeSurface(generated, exposureSource string) string {
 	base = strings.Replace(base, "/* shared_webkit_css */", webkitCSSNamesSurface+webkitCSSSurface+cssShorthandsSurface+cssValueGrammarSurface+cssAnimationGrammarSurface+cssFontMetricsSurface, 1)
 	base = strings.Replace(base, "/* shared_dom_matrix */", cssColorsSurface+domMatrixSurface, 1)
 	base = strings.Replace(base, "/* shared_intersection_observer */", intersectionObserverSurface, 1)
-	return strings.Replace(base, marker, strings.Join(parts, "\n"), 1)
+	return strings.Replace(strings.Replace(base, marker, strings.Join(parts, "\n"), 1), "finalizeDocumentGetterBindings();finalizeSingletonGetterBindings();finalizeCallableBindings();", "finalizeDocumentGetterBindings();finalizeSingletonGetterBindings();finalizePerformanceBindings();finalizeCallableBindings();", 1)
 }
 
 func WorkerSurface(generated string, exposure *compatibility.RealmExposure) string {

@@ -12,6 +12,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[2]
 sys.path.insert(0, str(ROOT / 'compatibility'))
 
 class Handler(BaseHTTPRequestHandler):
+    isolated=False
     def do_GET(self):
         parsed = urllib.parse.urlsplit(self.path)
         query = urllib.parse.parse_qs(parsed.query)
@@ -32,6 +33,9 @@ class Handler(BaseHTTPRequestHandler):
         self.send_header('Content-Type',mime)
         self.send_header('Content-Length',str(len(body)))
         self.send_header('Cache-Control','no-store')
+        if self.isolated:
+            self.send_header('Cross-Origin-Opener-Policy','same-origin')
+            self.send_header('Cross-Origin-Embedder-Policy','require-corp')
         self.send_header('Access-Control-Allow-Origin','*')
         if 'tao' in query:self.send_header('Timing-Allow-Origin',query['tao'][0])
         self.send_header('Server-Timing', 'db;dur=12.5;desc="database, primary", cache;desc="hit", dup;dur=1;dur=7;desc="first";desc="last", neg;dur=-2')
@@ -42,6 +46,7 @@ async def run(args):
     version=json.load(urllib.request.urlopen(args.endpoint+'/json/version'))
     if not args.mimic and version['Browser']!='Chrome/152.0.7977.82':raise RuntimeError(version)
     browser=await pyppeteer.connect(browserURL=args.endpoint,defaultViewport=None)
+    Handler.isolated=args.isolated
     server=ThreadingHTTPServer(('127.0.0.1',0),Handler)
     threading.Thread(target=server.serve_forever,daemon=True).start()
     origin=f'http://127.0.0.1:{server.server_port}'
@@ -58,7 +63,12 @@ async def run(args):
                     expression='new Promise((resolve,reject)=>{const w=new Worker("/worker.js");w.onmessage=e=>{w.terminate();e.data.error?reject(Error(e.data.error)):resolve(e.data.value)};w.onerror=e=>reject(Error(e.message));w.postMessage('+json.dumps(source)+')})'
                 else:expression=source
                 try:
-                    value=await asyncio.wait_for(page.evaluate(expression,force_expr=True),45)
+                    pending=asyncio.ensure_future(page.evaluate(expression,force_expr=True))
+                    if args.gc:
+                        for _ in range(3):
+                            await asyncio.sleep(.25)
+                            await page._client.send('HeapProfiler.collectGarbage')
+                    value=await asyncio.wait_for(pending,45)
                     if args.input:
                         await page._client.send('Input.dispatchKeyEvent',{'type':'keyDown','key':'a','code':'KeyA','windowsVirtualKeyCode':65})
                         await page._client.send('Input.dispatchKeyEvent',{'type':'keyUp','key':'a','code':'KeyA','windowsVirtualKeyCode':65})
@@ -67,7 +77,7 @@ async def run(args):
                 except Exception as e:value={'captureError':str(e)}
                 out={'captureMetadata':metadata,'fixtureOrigin':origin,'fixture':str(path.relative_to(ROOT)).replace('\\','/'),'fixtureSHA256':hashlib.sha256(source.encode()).hexdigest(),'worker':args.worker,'result':{'result':{'type':'object','value':value}}}
                 if args.mimic:out['captureMetadata']={'runtime':'Mimic','comparisonReference':'Chrome/152.0.7977.82'}
-                target=pathlib.Path(args.output)/f'{fixture}{"_worker" if args.worker else ""}_{"mimic" if args.mimic else "chrome152"}.json'
+                target=pathlib.Path(args.output)/f'{fixture}{"_worker" if args.worker else ""}{"_isolated" if args.isolated else ""}_{"mimic" if args.mimic else "chrome152"}.json'
                 target.parent.mkdir(parents=True,exist_ok=True)
                 target.write_text(json.dumps(out,ensure_ascii=False,indent=2)+'\n',encoding='utf8')
                 print(target.name, 'ERROR '+value['captureError'] if isinstance(value,dict) and 'captureError' in value else 'captured',flush=True)
@@ -82,4 +92,6 @@ if __name__=='__main__':
     parser.add_argument('--output',default=str(ROOT/'internal/browser/testdata'))
     parser.add_argument('--worker',action='store_true');parser.add_argument('--mimic',action='store_true')
     parser.add_argument('--input',action='store_true')
+    parser.add_argument('--isolated',action='store_true')
+    parser.add_argument('--gc',action='store_true',help='Force GC only in the controlled oracle page, for asynchronous memory measurements')
     asyncio.run(run(parser.parse_args()))

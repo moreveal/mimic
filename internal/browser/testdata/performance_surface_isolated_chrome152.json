@@ -1,0 +1,2518 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": true,
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "fixtureOrigin": "http://127.0.0.1:19380",
+  "fixture": "internal/browser/testdata/performance_surface_oracle.js",
+  "fixtureSHA256": "614a4b2e50cee208c6ca81a11fa7bf9d942e524dc0de20ffb9c9d0a96a1a8e0d",
+  "worker": false,
+  "result": {
+    "result": {
+      "type": "object",
+      "value": {
+        "Performance": {
+          "length": 0,
+          "parent": "EventTarget",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object Performance]",
+          "members": [
+            {
+              "key": "timeOrigin",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "onresourcetimingbufferfull",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": true,
+              "brand": "TypeError"
+            },
+            {
+              "key": "clearMarks",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "clearMeasures",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "clearResourceTimings",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "getEntries",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "getEntriesByName",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 1
+            },
+            {
+              "key": "getEntriesByType",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 1
+            },
+            {
+              "key": "mark",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 1
+            },
+            {
+              "key": "measure",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 1
+            },
+            {
+              "key": "setResourceTimingBufferSize",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 1
+            },
+            {
+              "key": "toJSON",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "now",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "timing",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "navigation",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "memory",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "eventCounts",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "interactionCount",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "measureUserAgentSpecificMemory",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "PerformanceEntry": {
+          "length": 0,
+          "parent": "Object",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object PerformanceEntry]",
+          "members": [
+            {
+              "key": "name",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "entryType",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "startTime",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "duration",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "toJSON",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "navigationId",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "PerformanceMark": {
+          "length": 1,
+          "parent": "PerformanceEntry",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object PerformanceMark]",
+          "members": [
+            {
+              "key": "detail",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 1
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "PerformanceMeasure": {
+          "length": 0,
+          "parent": "PerformanceEntry",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object PerformanceMeasure]",
+          "members": [
+            {
+              "key": "detail",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "PerformanceResourceTiming": {
+          "length": 0,
+          "parent": "PerformanceEntry",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object PerformanceResourceTiming]",
+          "members": [
+            {
+              "key": "initiatorType",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "nextHopProtocol",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "deliveryType",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "workerStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "redirectStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "redirectEnd",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "fetchStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "domainLookupStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "domainLookupEnd",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "connectStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "connectEnd",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "secureConnectionStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "requestStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "responseStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "responseEnd",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "transferSize",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "encodedBodySize",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "decodedBodySize",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "serverTiming",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "renderBlockingStatus",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "responseStatus",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "contentType",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "contentEncoding",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "finalResponseHeadersStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "firstInterimResponseStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "toJSON",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "workerRouterEvaluationStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "workerCacheLookupStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "workerMatchedSourceType",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "workerFinalSourceType",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "PerformanceNavigationTiming": {
+          "length": 0,
+          "parent": "PerformanceResourceTiming",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object PerformanceNavigationTiming]",
+          "members": [
+            {
+              "key": "unloadEventStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "unloadEventEnd",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "domInteractive",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "domContentLoadedEventStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "domContentLoadedEventEnd",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "domComplete",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "loadEventStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "loadEventEnd",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "type",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "redirectCount",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "confidence",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "criticalCHRestart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "activationStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "toJSON",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "notRestoredReasons",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "PerformanceServerTiming": {
+          "length": 0,
+          "parent": "Object",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object PerformanceServerTiming]",
+          "members": [
+            {
+              "key": "name",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "duration",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "description",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "toJSON",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "PerformanceObserver": {
+          "length": 1,
+          "parent": "Object",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object PerformanceObserver]",
+          "members": [
+            {
+              "key": "disconnect",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "observe",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "takeRecords",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 1
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "PerformanceObserverEntryList": {
+          "length": 0,
+          "parent": "Object",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object PerformanceObserverEntryList]",
+          "members": [
+            {
+              "key": "getEntries",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "getEntriesByName",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 1
+            },
+            {
+              "key": "getEntriesByType",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 1
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "PerformanceTiming": {
+          "length": 0,
+          "parent": "Object",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object PerformanceTiming]",
+          "members": [
+            {
+              "key": "navigationStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "unloadEventStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "unloadEventEnd",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "redirectStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "redirectEnd",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "fetchStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "domainLookupStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "domainLookupEnd",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "connectStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "connectEnd",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "secureConnectionStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "requestStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "responseStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "responseEnd",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "domLoading",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "domInteractive",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "domContentLoadedEventStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "domContentLoadedEventEnd",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "domComplete",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "loadEventStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "loadEventEnd",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "toJSON",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "PerformanceNavigation": {
+          "length": 0,
+          "parent": "Object",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object PerformanceNavigation]",
+          "members": [
+            {
+              "key": "type",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "redirectCount",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "TYPE_NAVIGATE",
+              "enumerable": true,
+              "configurable": false,
+              "writable": false,
+              "kind": "number"
+            },
+            {
+              "key": "TYPE_RELOAD",
+              "enumerable": true,
+              "configurable": false,
+              "writable": false,
+              "kind": "number"
+            },
+            {
+              "key": "TYPE_BACK_FORWARD",
+              "enumerable": true,
+              "configurable": false,
+              "writable": false,
+              "kind": "number"
+            },
+            {
+              "key": "TYPE_RESERVED",
+              "enumerable": true,
+              "configurable": false,
+              "writable": false,
+              "kind": "number"
+            },
+            {
+              "key": "toJSON",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "MemoryInfo": "undefined",
+        "PerformanceEventTiming": {
+          "length": 0,
+          "parent": "PerformanceEntry",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object PerformanceEventTiming]",
+          "members": [
+            {
+              "key": "processingStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "processingEnd",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "cancelable",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "target",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "interactionId",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "toJSON",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "PerformanceLongTaskTiming": {
+          "length": 0,
+          "parent": "PerformanceEntry",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object PerformanceLongTaskTiming]",
+          "members": [
+            {
+              "key": "attribution",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "toJSON",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "TaskAttributionTiming": {
+          "length": 0,
+          "parent": "PerformanceEntry",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object TaskAttributionTiming]",
+          "members": [
+            {
+              "key": "containerType",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "containerSrc",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "containerId",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "containerName",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "toJSON",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "PerformancePaintTiming": {
+          "length": 0,
+          "parent": "PerformanceEntry",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object PerformancePaintTiming]",
+          "members": [
+            {
+              "key": "toJSON",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "paintTime",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "presentationTime",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "PerformanceElementTiming": {
+          "length": 0,
+          "parent": "PerformanceEntry",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object PerformanceElementTiming]",
+          "members": [
+            {
+              "key": "renderTime",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "loadTime",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "intersectionRect",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "identifier",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "naturalWidth",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "naturalHeight",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "id",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "element",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "url",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "toJSON",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "paintTime",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "presentationTime",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "LargestContentfulPaint": {
+          "length": 0,
+          "parent": "PerformanceEntry",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object LargestContentfulPaint]",
+          "members": [
+            {
+              "key": "renderTime",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "loadTime",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "size",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "id",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "url",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "element",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "toJSON",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "paintTime",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "presentationTime",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "LayoutShift": {
+          "length": 0,
+          "parent": "PerformanceEntry",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object LayoutShift]",
+          "members": [
+            {
+              "key": "value",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "hadRecentInput",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "lastInputTime",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "sources",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "toJSON",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "LayoutShiftAttribution": {
+          "length": 0,
+          "parent": "Object",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object LayoutShiftAttribution]",
+          "members": [
+            {
+              "key": "node",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "previousRect",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "currentRect",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "toJSON",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "PerformanceLongAnimationFrameTiming": {
+          "length": 0,
+          "parent": "PerformanceEntry",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object PerformanceLongAnimationFrameTiming]",
+          "members": [
+            {
+              "key": "renderStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "styleAndLayoutStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "firstUIEventTimestamp",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "blockingDuration",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "scripts",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "toJSON",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "paintTime",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "presentationTime",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "PerformanceScriptTiming": {
+          "length": 0,
+          "parent": "PerformanceEntry",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object PerformanceScriptTiming]",
+          "members": [
+            {
+              "key": "invokerType",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "invoker",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "executionStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "forcedStyleAndLayoutDuration",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "pauseDuration",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "sourceURL",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "sourceFunctionName",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "sourceCharPosition",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "toJSON",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "windowAttribution",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "window",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "VisibilityStateEntry": {
+          "length": 0,
+          "parent": "PerformanceEntry",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object VisibilityStateEntry]",
+          "members": [
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "NotRestoredReasons": {
+          "length": 0,
+          "parent": "Object",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object NotRestoredReasons]",
+          "members": [
+            {
+              "key": "src",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "id",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "name",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "url",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "reasons",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "children",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "toJSON",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "NotRestoredReasonDetails": {
+          "length": 0,
+          "parent": "Object",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object NotRestoredReasonDetails]",
+          "members": [
+            {
+              "key": "reason",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "toJSON",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "PerformanceTimingConfidence": {
+          "length": 0,
+          "parent": "Object",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object PerformanceTimingConfidence]",
+          "members": [
+            {
+              "key": "randomizedTriggerRate",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "value",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "toJSON",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "PerformanceSoftNavigation": {
+          "length": 0,
+          "parent": "PerformanceEntry",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object PerformanceSoftNavigation]",
+          "members": [
+            {
+              "key": "navigationType",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "interactionId",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "getLargestInteractionContentfulPaint",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "paintTime",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "presentationTime",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "InteractionContentfulPaint": {
+          "length": 0,
+          "parent": "PerformanceEntry",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object InteractionContentfulPaint]",
+          "members": [
+            {
+              "key": "largestContentfulPaint",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "interactionId",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "toJSON",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "paintTime",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "presentationTime",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "EventCounts": {
+          "length": 0,
+          "parent": "Object",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object EventCounts]",
+          "members": [
+            {
+              "key": "size",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "entries",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "forEach",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 1
+            },
+            {
+              "key": "get",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 1
+            },
+            {
+              "key": "has",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 1
+            },
+            {
+              "key": "keys",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "values",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            },
+            {
+              "key": "Symbol(Symbol.iterator)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            }
+          ]
+        },
+        "performance": {
+          "same": true,
+          "tag": "[object Performance]",
+          "ownKeys": [],
+          "eventTarget": true,
+          "jsonKeys": [
+            "timeOrigin",
+            "timing",
+            "navigation"
+          ],
+          "jsonOrigin": true,
+          "allSorted": true,
+          "supported": [
+            "element",
+            "event",
+            "first-input",
+            "interaction-contentful-paint",
+            "largest-contentful-paint",
+            "layout-shift",
+            "long-animation-frame",
+            "longtask",
+            "mark",
+            "measure",
+            "navigation",
+            "paint",
+            "resource",
+            "soft-navigation",
+            "visibility-state"
+          ],
+          "supportedFrozen": true,
+          "supportedSame": true
+        },
+        "receiver:now": {
+          "forged": "TypeError",
+          "conversions": 0,
+          "proxy": "TypeError",
+          "missing": "ok",
+          "symbol": "ok"
+        },
+        "receiver:toJSON": {
+          "forged": "TypeError",
+          "conversions": 0,
+          "proxy": "TypeError",
+          "missing": "ok",
+          "symbol": "ok"
+        },
+        "receiver:getEntries": {
+          "forged": "TypeError",
+          "conversions": 0,
+          "proxy": "TypeError",
+          "missing": "ok",
+          "symbol": "ok"
+        },
+        "receiver:getEntriesByType": {
+          "forged": "TypeError",
+          "conversions": 0,
+          "proxy": "TypeError",
+          "missing": "TypeError",
+          "symbol": "TypeError"
+        },
+        "receiver:getEntriesByName": {
+          "forged": "TypeError",
+          "conversions": 0,
+          "proxy": "TypeError",
+          "missing": "TypeError",
+          "symbol": "TypeError"
+        },
+        "receiver:mark": {
+          "forged": "TypeError",
+          "conversions": 0,
+          "proxy": "TypeError",
+          "missing": "TypeError",
+          "symbol": "TypeError"
+        },
+        "receiver:measure": {
+          "forged": "TypeError",
+          "conversions": 0,
+          "proxy": "TypeError",
+          "missing": "TypeError",
+          "symbol": "TypeError"
+        },
+        "receiver:clearMarks": {
+          "forged": "TypeError",
+          "conversions": 0,
+          "proxy": "TypeError",
+          "missing": "ok",
+          "symbol": "TypeError"
+        },
+        "receiver:clearMeasures": {
+          "forged": "TypeError",
+          "conversions": 0,
+          "proxy": "TypeError",
+          "missing": "ok",
+          "symbol": "TypeError"
+        },
+        "receiver:clearResourceTimings": {
+          "forged": "TypeError",
+          "conversions": 0,
+          "proxy": "TypeError",
+          "missing": "ok",
+          "symbol": "ok"
+        },
+        "receiver:setResourceTimingBufferSize": {
+          "forged": "TypeError",
+          "conversions": 0,
+          "proxy": "TypeError",
+          "missing": "TypeError",
+          "symbol": "TypeError"
+        },
+        "memory": {
+          "tag": "[object MemoryInfo]",
+          "same": false,
+          "keys": [],
+          "prototypeKeys": [
+            "totalJSHeapSize",
+            "usedJSHeapSize",
+            "jsHeapSizeLimit"
+          ],
+          "finite": true,
+          "positive": true,
+          "ordered": true,
+          "stable": [
+            true,
+            true,
+            true
+          ]
+        },
+        "legacy": {
+          "timingSame": true,
+          "navigationSame": true,
+          "timingOwn": [],
+          "navigationOwn": [],
+          "timingJSONKeys": [
+            "connectStart",
+            "secureConnectionStart",
+            "unloadEventEnd",
+            "domainLookupStart",
+            "domainLookupEnd",
+            "responseStart",
+            "connectEnd",
+            "responseEnd",
+            "requestStart",
+            "domLoading",
+            "redirectStart",
+            "loadEventEnd",
+            "domComplete",
+            "navigationStart",
+            "loadEventStart",
+            "domContentLoadedEventEnd",
+            "unloadEventStart",
+            "redirectEnd",
+            "domInteractive",
+            "fetchStart",
+            "domContentLoadedEventStart"
+          ],
+          "navigationJSON": {
+            "type": 0,
+            "redirectCount": 0
+          }
+        }
+      }
+    }
+  }
+}
