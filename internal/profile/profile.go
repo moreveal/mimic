@@ -13,6 +13,8 @@ import (
 	"net/url"
 	"reflect"
 	"strings"
+	"time"
+	_ "time/tzdata"
 	"unicode"
 
 	"github.com/moreveal/mimic/internal/state"
@@ -28,7 +30,7 @@ func (e *Error) Error() string     { return e.Path + ": " + e.Reason + ": " + e.
 func (e *Error) ProtocolCode() int { return -32602 }
 func (e *Error) ProtocolData() any { return e }
 func Limitations() []string {
-	return []string{"Custom timezone/Intl locale, font resources and unvalidated graphics/device/media backends are unavailable; unchanged baseline values are accepted.", "Graphics observations remain bounded approximations, not arbitrary GPU or Chrome pixel equivalence.", "Proxy routes resource-loader HTTP(S) traffic only; ICE metadata does not route WebRTC or change the public IP.", "Changing identity does not change the installed Chrome implementation; proxy transport disables HTTP/3."}
+	return []string{"Custom timezone/Intl locale requires the native Intl backend. Custom font resources and unvalidated graphics/device/media backends are unavailable; unchanged baseline values are accepted.", "Graphics observations remain bounded approximations, not arbitrary GPU or Chrome pixel equivalence.", "Proxy routes resource-loader HTTP(S) traffic only; ICE metadata does not route WebRTC or change the public IP.", "Changing identity does not change the installed Chrome implementation; proxy transport disables HTTP/3."}
 }
 func failure(path, reason, message string) error { return &Error{path, reason, message} }
 
@@ -200,10 +202,10 @@ func dynamic(path string) bool {
 	return path == "identity" || strings.HasPrefix(path, "identity.") || path == "window" || strings.HasPrefix(path, "window.") || path == "display" || strings.HasPrefix(path, "display.") && path != "display.colorDepth" || path == "locale.languages" || path == "preferences.colorScheme" || path == "preferences.reducedMotion"
 }
 
-// Fields requiring new backends or per-isolate Date semantics are explicit
+// Fields requiring new resource backends are explicit
 // boundaries. Reading their measured baseline remains supported.
 func boundary(path string) string {
-	for _, p := range []string{"locale.timezone", "locale.intlLocale", "fonts", "graphics.webGLCapabilitiesJSON", "graphics.webGPU", "capabilities.devices", "capabilities.media"} {
+	for _, p := range []string{"fonts", "graphics.webGLCapabilitiesJSON", "graphics.webGPU", "capabilities.devices", "capabilities.media"} {
 		if path == p || strings.HasPrefix(path, p+".") {
 			return "custom values are not yet validated by the available engine/backend"
 		}
@@ -355,6 +357,15 @@ func Normalize(raw []byte, base state.Environment, current *Document) (Document,
 	return d, nil
 }
 func (d Document) Validate(base state.Environment) error {
+	if d.Locale.Timezone == "" || d.Locale.Timezone == "Local" {
+		return failure("locale.timezone", "invalidValue", "expected an explicit IANA time zone")
+	}
+	if _, err := time.LoadLocation(d.Locale.Timezone); err != nil {
+		return failure("locale.timezone", "invalidValue", "unknown IANA time zone")
+	}
+	if _, err := language.Parse(d.Locale.IntlLocale); err != nil || d.Locale.IntlLocale == "" || strings.Contains(d.Locale.IntlLocale, "_") {
+		return failure("locale.intlLocale", "invalidValue", "expected a BCP 47 locale")
+	}
 	if d.Display.Width < 1 || d.Display.Height < 1 || d.Display.Width > 10000000 || d.Display.Height > 10000000 || d.Display.DeviceScaleFactor <= 0 || d.Display.DeviceScaleFactor > 100 {
 		return failure("display", "invalidValue", "invalid dimensions or scale")
 	}

@@ -42,7 +42,7 @@ func TestNormalizeProfileRoundTrip(t *testing.T) {
 }
 func TestProfileRejections(t *testing.T) {
 	b := testBase()
-	for _, tail := range []string{`,"unknown":1`, `,"display":{"width":null}`, `,"hardware":{"logicalProcessors":1.5}`, `,"hardware":{"logicalProcessors":"8"}`, `,"window":{"viewportWidth":99999}`, `,"locale":{"timezone":"Europe/Paris"}`, `,"network":{"proxy":{"server":"http://user:secret@localhost:8080"}}`, `,"identity":{"metadata":{"mobile":true}}`, `,"locale":{"languages":[]}`} {
+	for _, tail := range []string{`,"unknown":1`, `,"display":{"width":null}`, `,"hardware":{"logicalProcessors":1.5}`, `,"hardware":{"logicalProcessors":"8"}`, `,"window":{"viewportWidth":99999}`, `,"locale":{"timezone":"Invalid/Zone"}`, `,"locale":{"timezone":"Local"}`, `,"locale":{"intlLocale":"not_a_locale!"}`, `,"network":{"proxy":{"server":"http://user:secret@localhost:8080"}}`, `,"identity":{"metadata":{"mobile":true}}`, `,"locale":{"languages":[]}`} {
 		t.Run(tail, func(t *testing.T) {
 			_, err := Normalize(input(b, tail), b, nil)
 			if err == nil {

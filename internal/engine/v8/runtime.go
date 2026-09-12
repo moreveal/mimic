@@ -22,6 +22,8 @@ import (
 // Browser code never imports this package directly.
 type Factory struct{}
 
+func (Factory) NativeIntl() bool { return true }
+
 func (Factory) New() engine.Runtime {
 	profile := newDiagnostics()
 	var started time.Time

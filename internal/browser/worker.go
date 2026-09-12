@@ -165,6 +165,7 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 		}
 	})
 	host := map[string]any{}
+	installLocaleHost(host, runtime, p.environmentView().Locale)
 	installStructuredCloneHost(host, runtime)
 	files := installOPFSHost(host, runtime, p.ctx, func() string {
 		u := w.url

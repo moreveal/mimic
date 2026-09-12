@@ -28,7 +28,12 @@ Save as `profile.json`:
     "viewportHeight": 720
   },
   "hardware": {"logicalProcessors": 8, "deviceMemoryGB": 8},
-  "locale": {"languages": ["fr-FR", "en"]},
+  "locale": {
+    "languages": ["en-US", "en"],
+    "reduceAcceptLanguage": false,
+    "timezone": "America/New_York",
+    "intlLocale": "en-US"
+  },
   "preferences": {"colorScheme": "dark", "reducedMotion": false}
 }
 ```
@@ -97,7 +102,7 @@ notify registered `MediaQueryList` listeners through the Page task queue.
 | `display`, `window` | Dynamic screen/available area, DPR, orientation, position, outer size and viewport; color depth at creation | Positive coherent dimensions; no mobile layout |
 | `identity` | Dynamic `userAgent`, `platform`, `metadata` Client Hints | Full profiles retain the loaded desktop Chrome identity; standard CDP remains permissive |
 | `hardware` | CPU count, memory bucket, CPU performance class at creation | Observations, not allocation of physical CPU/RAM |
-| `locale` | Languages dynamically; language reduction at creation | Custom `timezone` and `intlLocale` currently reject: independent Date/Intl behavior is not certified across engines |
+| `locale` | Languages dynamically; language reduction, IANA timezone and Intl locale at creation | Custom timezone/Intl locale requires the native Intl (V8) backend; experimental engines reject rather than simulate formatting |
 | `graphics` | Vendor, renderer, maximum texture size at creation | Custom capability JSON and WebGPU adapter overrides reject; graph/pixel approximations remain documented |
 | `fonts` | Read baseline selection | Custom selections reject until resource validation is implemented |
 | `preferences` | Theme/reduced motion dynamically; DNT at creation | Existing modeled preferences only |
@@ -111,6 +116,19 @@ Unsupported fields may be read or round-tripped unchanged; their custom values
 return `unsupported` with a reason. The schema describes their shape without
 claiming that every value is executable. Browser security still controls exposure:
 for example, `navigator.deviceMemory` is not exposed in an insecure document.
+
+Date local construction, parsing, getters/setters and formatting use the Context
+zone, including DST gaps/repeats. UTC methods and stored timestamps remain native
+engine values. Window, frames and workers share the same implementation; neither
+the host timezone nor process-global ICU defaults are changed. Eight cached
+transition intervals bound realm-local lookup overhead. Default Intl formatting
+and Date/Number/BigInt locale methods use `intlLocale`, independently of the
+language list. Explicit formatter arguments still take precedence. These two
+fields require a new Context, not an in-place update of existing documents.
+
+The US example changes language/time observations, not network geolocation. A
+US public IP requires a real US proxy. Other unsupported resource/device/graphics
+fields remain explicit boundaries; accepting arbitrary JSON is not compatibility.
 
 ## Proxy
 

@@ -53,7 +53,7 @@ func NewWithOptions(factory engine.Factory, bundle compatibility.Bundle, options
 	}
 	b := &Browser{devPreview: options.DevPreview, speechProvider: provider, factory: factory, env: env.Clone(), compat: bundle, contexts: map[string]*Context{}}
 	if len(options.ProfileJSON) > 0 {
-		d, err := profile.Normalize(options.ProfileJSON, env, nil)
+		d, err := b.ValidateProfile(options.ProfileJSON)
 		if err != nil {
 			return nil, err
 		}

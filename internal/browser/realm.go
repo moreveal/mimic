@@ -701,6 +701,7 @@ func (r *Realm) installBindings() error {
 
 	p := r.agent.Page()
 	host := map[string]any{}
+	installLocaleHost(host, r.runtime, p.environmentView().Locale)
 	installStructuredCloneHost(host, r.runtime)
 	r.files = installOPFSHost(host, r.runtime, r.agent.Page().ctx, func() string { return r.origin })
 	r.installDocumentStream(host)
@@ -974,17 +975,6 @@ func (r *Realm) installBindings() error {
 			values["cpuPerformance"] = environment.Hardware.CPUPerformance
 		}
 		return r.val(values), nil
-	})
-	host["intlEnvironment"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
-		environment := p.environmentView()
-		locale := environment.Locale.IntlLocale
-		if locale == "" && len(environment.Locale.Languages) > 0 {
-			locale = environment.Locale.Languages[0]
-		}
-		if locale == "" {
-			locale = "en-US"
-		}
-		return r.val(map[string]any{"locale": locale, "timeZone": environment.Locale.Timezone}), nil
 	})
 	host["screen"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		p.trace.Add(trace.API, "Screen", map[string]any{"realm": r.ID})

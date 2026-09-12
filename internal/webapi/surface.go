@@ -12,6 +12,12 @@ import (
 // Surface is kept separate from semantic host implementations so it can be
 // replaced by generated WebIDL bindings without changing browser services.
 //
+//go:embed locale.js
+var localeSurface string
+
+//go:embed intl.js
+var intlSurface string
+
 //go:embed trusted_types_sinks.js
 var trustedTypesSinksSurface string
 
@@ -359,6 +365,8 @@ func composeSurface(generated, exposureSource string) string {
 		templatesCompatibilitySurface, selectorsVendorSurface, selectorsCompatibilitySurface, xpathCompatibilitySurface, cssomCompatibilitySurface, strings.Replace(strings.Replace(strings.Replace(strings.Replace(svgGeometrySurface, "/* shared_svg_boundaries */", svgBoundariesSurface, 1), "/* shared_svg_text */", svgTextSurface, 1), "/* shared_svg_css_transform */", svgCSSTransformSurface, 1), "/* shared_svg_types */", svgTypesSurface+svgCoordinatesSurface+svgReflectionsSurface+svgPathMetricsSurface+svgUseSurface+svgAttributeDefaultsSurface+svgAttributeSemanticsSurface, 1), streamPrelude,
 		streamsVendorSurface, "}", strings.Replace(fetchCompatibilitySurface, "/* cache_storage */", cacheStorageSurface, 1), formControlsSurface, traversalCompatibilitySurface, strings.Replace(documentCompatibilitySurface, "/* shared_document_state */", documentStateSurface, 1), documentAllSurface, attributesCompatibilitySurface, imageResourcesSurface, screenFocusSurface, eventsCompatibilitySurface, windowErrorsSurface, inputSurface, windowObservationsSurface, windowServicesSurface, speechSynthesisSurface, documentPictureInPictureSurface, navigationSurface, indexedDBSurface, fileSystemSurface, documentStreamSurface, shadowSerializationSurface, canvasObservationsSource(), webglObservationsSource(), webgpuObservationsSource(), fontFacesSurface, offlineAudioSurface, rtcSessionSurface, trustedTypesSinksSurface, "trustedCaptureEvents();registerBootstrapCallback('installTrustedTypesEnforcer',trustedEnforceString);", "finalizeDocumentGetterBindings();finalizeSingletonGetterBindings();finalizeCallableBindings();finalizeNativeBindings();globalThis.__mimicNativeFunctionSources=nativeFunctionSourceState;", marker}
 	base := strings.Replace(handwrittenSurface, "/* shared_fetch_primitives */", fetchPrimitivesSurface, 1)
+	base = strings.Replace(base, "/* profile_locale */", localeSurface, 1)
+	base = strings.Replace(base, "/* native_intl */", intlSurface, 1)
 
 	base = strings.Replace(base, "/* shared_console */", consoleSurface, 1)
 	base = strings.Replace(base, "/* shared_trusted_types */", trustedTypesSurface, 1)
@@ -385,6 +393,7 @@ func WorkerSurface(generated string, exposure *compatibility.RealmExposure) stri
 	shared := structuredCloneSurface + "\n" + fetchPrimitivesSurface + "\ninstallFileReader();Object.assign(globalThis,{TextEncoder,DOMException,URL,URLSearchParams,Blob,File,FormData,FileReader,Headers});\n" + abortEncodingSurface + "\n{let structuredClone;\n" + streamsVendorSurface + "\n}\n" + fetchCompatibilitySurface
 	base := strings.Replace(strings.Replace(handwrittenWorkerSurface, "/* shared_trusted_types */", trustedTypesSurface, 1), "/* shared_worker_fetch */", shared, 1)
 	base = strings.Replace(base, "/* shared_performance */", performanceSource(), 1)
+	base += "\n{const host=__workerHost,bootstrapRestoreHooks=[];let intlEnvironment=host.intlEnvironment();const nativeIntl=typeof Intl!=='undefined';const bindingString=value=>{if(typeof value==='symbol')throw new TypeError('Cannot convert a Symbol value to a string');return String(value)};\n" + nativeFunctionsSurface + "\nif(nativeIntl){\n" + intlSurface + "\n}\n" + localeSurface + "\n}\n"
 	return base + "\n" + generated + "\n" + exposureSource + "__finishWorkerSurface();if(typeof __workerExposure!=='undefined')__applyWorkerPrototypeExposure(__workerExposure);delete globalThis.__applyWorkerExposure;delete globalThis.__applyWorkerPrototypeExposure;delete globalThis.__finishWorkerSurface;delete globalThis.__mimic;delete globalThis.__mimicIDLExposure;\n{const host=__workerHost;\n" + nativeFunctionsSurface + fileSystemSurface + "\ndelete globalThis.__mimicClonePlatforms;\n" + consoleSurface + "\nglobalThis.console=consoleObject;\n" + base64Surface + cssColorsSurface + "\nfor(const [name,value] of Object.entries({atob,btoa}))Object.defineProperty(WorkerGlobalScope.prototype,name,{value,writable:true,enumerable:true,configurable:true});\n" + domMatrixSurface + "\n" + canvasObservationsSource() + "\n" + webglObservationsSource() + "\n" + webgpuObservationsSource() + "\n" + fontFacesSurface + `
 // Worker operations need the same ordinary function shape and private source
 // registration as Window operations. This does not replace their implementations.
