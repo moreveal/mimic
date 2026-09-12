@@ -33,6 +33,8 @@ const constructedStyleSheets = (() => {
   function preludeText(node) {
     if(!node)return '';
     const children=()=>Array.from(node.children,preludeText);
+    if(node.type==='Selector')return children().join('').trim();
+    if(node.type==='Combinator')return node.name===' '?' ':' '+node.name+' ';
     if(node.type==='SelectorList'||node.type==='MediaQueryList')return children().join(', ');
     if(node.type==='AtrulePrelude'||node.type==='Condition')return children().join(' ');
     if(node.type==='Feature')return '('+node.name+(node.value?': '+generate(node.value):'')+')';

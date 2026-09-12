@@ -52,6 +52,9 @@ var webkitCSSNamesSurface string
 //go:embed css_property_catalog.js
 var cssPropertyCatalogSurface string
 
+//go:embed css_observable_values.js
+var cssObservableValuesSurface string
+
 //go:embed css_computed_values.js
 var cssComputedValuesSurface string
 
@@ -340,7 +343,7 @@ func composeSurface(generated, exposureSource string) string {
 	base = strings.Replace(base, "/* shared_performance */", performanceSource(), 1)
 	base = strings.Replace(base, "/* shared_native_functions */", nativeFunctionsSurface, 1)
 	base = strings.Replace(base, "/* shared_base64 */", base64Surface, 1)
-	base = strings.Replace(base, "/* shared_webkit_css */", webkitCSSNamesSurface+cssPropertyCatalogSurface+cssComputedValuesSurface+webkitCSSSurface+cssShorthandsSurface+cssValueGrammarSurface+cssAnimationGrammarSurface+cssFontMetricsSurface, 1)
+	base = strings.Replace(base, "/* shared_webkit_css */", webkitCSSNamesSurface+cssPropertyCatalogSurface+cssComputedValuesSurface+webkitCSSSurface+cssShorthandsSurface+cssValueGrammarSurface+cssAnimationGrammarSurface+cssFontMetricsSurface+cssObservableValuesSurface, 1)
 	base = strings.Replace(base, "/* shared_css_box_geometry */", cssBoxGeometrySurface, 1)
 	base = strings.Replace(base, "/* shared_dom_matrix */", cssColorsSurface+domMatrixSurface, 1)
 	base = strings.Replace(base, "/* shared_intersection_observer */", intersectionObserverSurface, 1)

@@ -17,7 +17,9 @@ const cssNumberRegex=new RegExp('^'+cssNumberPattern+'$','i');
 const cssSerializeNumber=value=>{
  // Chrome's specified-value number serialization uses six significant digits
  // and saturates finite CSS numeric tokens at the float range (including 1e999).
- value=Number(Math.max(-3.4028234663852886e38,Math.min(3.4028234663852886e38,value)).toPrecision(6));
+ value=Math.max(-3.4028234663852886e38,Math.min(3.4028234663852886e38,value));
+ // Format magnitude separately: some adapters misformat negative exponents.
+ value=Math.sign(value)*Number(Math.abs(value).toPrecision(6));
  if(value!==0&&(Math.abs(value)<0.0001||Math.abs(value)>=1000000))return value.toExponential().replace(/e([+-])(\d)$/, 'e$10$2');
  return String(value);
 };
@@ -199,6 +201,9 @@ for(const name of cssShorthandComponents['border-radius'])cssLonghandParsers.set
 });
 cssLonghandParsers.set('text-emphasis-color',cssColorValue);
 const serializeOrdinaryCSSShorthand=(name,values)=>{
+ if(name==='outline')return [values[2],values[1],values[0]].filter(v=>v!=='initial').join(' ');
+ if(name==='border-image')return values.every((v,i)=>v===['none','100%','1','0','stretch'][i]||v==='initial')?'none':'';
+ if(name==='inset')return cssCompressFour(values);
  if(name==='border'){if(values.slice(0,12).some((v,i)=>v!==values[i%3])||values.slice(12).some((v,i)=>v!=='initial'&&v!==['none','100%','1','0','stretch'][i]))return '';return values.slice(0,3).filter(v=>v!=='initial').join(' ')}
  if(['margin','padding','border-width','border-style','border-color'].includes(name))return values.some(v=>!v||cssWideValue(v))?'':cssCompressFour(values);
  if(/^border-(top|right|bottom|left)$/.test(name))return values.some(v=>!v||cssWideValue(v)&&v!=='initial')?'':values.filter(v=>v!=='initial').join(' ');

@@ -1566,7 +1566,7 @@ func TestComputedStyleAppliesGenericAuthorCascade(t *testing.T) {
 		t.Fatal(err)
 	}
 	result := v.(map[string]any)
-	if result["display"] != "flex" || result["transform"] != "translateX(2px)" || result["opacity"] != ".8" || result["visibility"] != "visible" || result["boxSizing"] != "border-box" {
+	if result["display"] != "flex" || result["transform"] != "translateX(2px)" || result["opacity"] != "0.8" || result["visibility"] != "visible" || result["boxSizing"] != "border-box" {
 		t.Fatalf("unexpected author cascade: %#v", result)
 	}
 }
@@ -1578,7 +1578,7 @@ func TestComputedStyleUsesContainingShadowRootStyleSheets(t *testing.T) {
 		t.Fatal(err)
 	}
 	result := v.(map[string]any)
-	if result["outsideDisplay"] != "grid" || result["insideDisplay"] != "block" || result["insideOpacity"] != ".4" {
+	if result["outsideDisplay"] != "grid" || result["insideDisplay"] != "block" || result["insideOpacity"] != "0.4" {
 		t.Fatalf("unexpected shadow-root cascade: %#v", result)
 	}
 }
