@@ -7,6 +7,39 @@ import (
 )
 
 func (r *Realm) installDocumentCompatibility(host map[string]any) {
+	host["installComputedStyleFlatTree"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		r.computedStyleFlatRead = args[0]
+		return nil, nil
+	})
+	host["foreignComputedStyleFlatTree"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		id := int64(numarg(args, 0))
+		root := r.document.OwnerDocumentID(id)
+		if root == r.document.Root().ID {
+			return r.val(nil), nil
+		}
+		p := r.agent.Page()
+		p.mu.RLock()
+		var owner *Realm
+		for _, candidate := range p.realmOwners {
+			if !candidate.inactive && candidate.document.SharesNodeArena(r.document) && candidate.document.Root().ID == root {
+				owner = candidate
+				break
+			}
+		}
+		p.mu.RUnlock()
+		if owner == nil || owner.computedStyleFlatRead == nil {
+			return r.val(false), nil
+		}
+		available := false
+		err := owner.runOnOwner(context.Background(), func(ctx context.Context) error {
+			value, err := owner.runtime.Call(ctx, owner.computedStyleFlatRead, nil, owner.val(id))
+			if err == nil {
+				available, _ = value.Export().(bool)
+			}
+			return err
+		})
+		return r.val(available), err
+	})
 	// Resolved declarations exist only for nodes connected to a live browsing
 	// document. Visibility and display:none do not make that document inactive.
 	host["computedStyleAvailable"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
