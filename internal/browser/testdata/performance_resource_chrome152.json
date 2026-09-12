@@ -1,0 +1,298 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "fixtureOrigin": "http://127.0.0.1:46457",
+  "fixture": "internal/browser/testdata/performance_resource_oracle.js",
+  "fixtureSHA256": "711b550d3ff54416a27e9d52a7d6bb5d1cb562bd108ab505515fa727b626616a",
+  "worker": false,
+  "result": {
+    "result": {
+      "type": "object",
+      "value": {
+        "same": {
+          "keys": [
+            "name",
+            "entryType",
+            "startTime",
+            "duration",
+            "navigationId",
+            "initiatorType",
+            "deliveryType",
+            "nextHopProtocol",
+            "renderBlockingStatus",
+            "contentType",
+            "contentEncoding",
+            "workerStart",
+            "workerRouterEvaluationStart",
+            "workerCacheLookupStart",
+            "workerMatchedSourceType",
+            "workerFinalSourceType",
+            "redirectStart",
+            "redirectEnd",
+            "fetchStart",
+            "domainLookupStart",
+            "domainLookupEnd",
+            "connectStart",
+            "secureConnectionStart",
+            "connectEnd",
+            "requestStart",
+            "responseStart",
+            "firstInterimResponseStart",
+            "finalResponseHeadersStart",
+            "responseEnd",
+            "transferSize",
+            "encodedBodySize",
+            "decodedBodySize",
+            "responseStatus",
+            "serverTiming"
+          ],
+          "name": "same",
+          "type": "resource",
+          "initiator": "fetch",
+          "brand": true,
+          "identity": true,
+          "own": [],
+          "duration": true,
+          "order": true,
+          "phases": true,
+          "hidden": false,
+          "body": 20,
+          "transferRelation": true,
+          "status": 200,
+          "protocol": "http/1.0",
+          "contentType": "text/plain",
+          "contentEncoding": "",
+          "renderBlocking": "non-blocking",
+          "finalHeaders": true,
+          "serverFrozen": true,
+          "serverSame": false,
+          "serverEntrySame": true,
+          "server": [
+            {
+              "name": "db",
+              "duration": 12.5,
+              "description": "database, primary"
+            },
+            {
+              "name": "cache",
+              "duration": 0,
+              "description": "hit"
+            },
+            {
+              "name": "dup",
+              "duration": 1,
+              "description": "first"
+            },
+            {
+              "name": "neg",
+              "duration": -2,
+              "description": ""
+            }
+          ],
+          "serverBrand": true,
+          "jsonServerSame": false
+        },
+        "tao": {
+          "keys": [
+            "name",
+            "entryType",
+            "startTime",
+            "duration",
+            "navigationId",
+            "initiatorType",
+            "deliveryType",
+            "nextHopProtocol",
+            "renderBlockingStatus",
+            "contentType",
+            "contentEncoding",
+            "workerStart",
+            "workerRouterEvaluationStart",
+            "workerCacheLookupStart",
+            "workerMatchedSourceType",
+            "workerFinalSourceType",
+            "redirectStart",
+            "redirectEnd",
+            "fetchStart",
+            "domainLookupStart",
+            "domainLookupEnd",
+            "connectStart",
+            "secureConnectionStart",
+            "connectEnd",
+            "requestStart",
+            "responseStart",
+            "firstInterimResponseStart",
+            "finalResponseHeadersStart",
+            "responseEnd",
+            "transferSize",
+            "encodedBodySize",
+            "decodedBodySize",
+            "responseStatus",
+            "serverTiming"
+          ],
+          "name": "cross",
+          "type": "resource",
+          "initiator": "fetch",
+          "brand": true,
+          "identity": true,
+          "own": [],
+          "duration": true,
+          "order": true,
+          "phases": true,
+          "hidden": false,
+          "body": 20,
+          "transferRelation": true,
+          "status": 200,
+          "protocol": "http/1.0",
+          "contentType": "text/plain",
+          "contentEncoding": "",
+          "renderBlocking": "non-blocking",
+          "finalHeaders": true,
+          "serverFrozen": true,
+          "serverSame": false,
+          "serverEntrySame": true,
+          "server": [
+            {
+              "name": "db",
+              "duration": 12.5,
+              "description": "database, primary"
+            },
+            {
+              "name": "cache",
+              "duration": 0,
+              "description": "hit"
+            },
+            {
+              "name": "dup",
+              "duration": 1,
+              "description": "first"
+            },
+            {
+              "name": "neg",
+              "duration": -2,
+              "description": ""
+            }
+          ],
+          "serverBrand": true,
+          "jsonServerSame": false
+        },
+        "hidden": {
+          "keys": [
+            "name",
+            "entryType",
+            "startTime",
+            "duration",
+            "navigationId",
+            "initiatorType",
+            "deliveryType",
+            "nextHopProtocol",
+            "renderBlockingStatus",
+            "contentType",
+            "contentEncoding",
+            "workerStart",
+            "workerRouterEvaluationStart",
+            "workerCacheLookupStart",
+            "workerMatchedSourceType",
+            "workerFinalSourceType",
+            "redirectStart",
+            "redirectEnd",
+            "fetchStart",
+            "domainLookupStart",
+            "domainLookupEnd",
+            "connectStart",
+            "secureConnectionStart",
+            "connectEnd",
+            "requestStart",
+            "responseStart",
+            "firstInterimResponseStart",
+            "finalResponseHeadersStart",
+            "responseEnd",
+            "transferSize",
+            "encodedBodySize",
+            "decodedBodySize",
+            "responseStatus",
+            "serverTiming"
+          ],
+          "name": "cross",
+          "type": "resource",
+          "initiator": "fetch",
+          "brand": true,
+          "identity": true,
+          "own": [],
+          "duration": true,
+          "order": true,
+          "phases": true,
+          "hidden": true,
+          "body": 0,
+          "transferRelation": false,
+          "status": 200,
+          "protocol": "",
+          "contentType": "text/plain",
+          "contentEncoding": "",
+          "renderBlocking": "non-blocking",
+          "finalHeaders": true,
+          "serverFrozen": true,
+          "serverSame": false,
+          "serverEntrySame": true,
+          "server": [],
+          "serverBrand": true,
+          "jsonServerSame": false
+        },
+        "opaque": {
+          "present": false
+        },
+        "clear": {
+          "empty": true,
+          "retained": true
+        },
+        "buffer": {
+          "count": 1,
+          "events": [
+            {
+              "trusted": true,
+              "target": true,
+              "thisValue": true,
+              "type": "resourcetimingbufferfull",
+              "bubbles": false,
+              "cancelable": false
+            },
+            {
+              "trusted": true,
+              "target": true,
+              "thisValue": true,
+              "type": "resourcetimingbufferfull",
+              "bubbles": false,
+              "cancelable": false
+            }
+          ],
+          "observed": 3
+        }
+      }
+    }
+  }
+}

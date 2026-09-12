@@ -1,0 +1,111 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "fixtureOrigin": "http://127.0.0.1:46398",
+  "fixture": "internal/browser/testdata/performance_observer_oracle.js",
+  "fixtureSHA256": "35da1b1912e8cb35a5c10ab2ae1a097f0dd3f335345b5e71786be0889c242729",
+  "worker": true,
+  "result": {
+    "result": {
+      "type": "object",
+      "value": {
+        "options": [
+          "TypeError",
+          "TypeError",
+          "TypeError",
+          "ok",
+          "ok",
+          "ok",
+          "TypeError"
+        ],
+        "mix": "InvalidModificationError",
+        "mixAfterDisconnect": "InvalidModificationError",
+        "buffered": [
+          {
+            "name": "old",
+            "brand": true,
+            "identity": true
+          }
+        ],
+        "records": [
+          {
+            "name": "same",
+            "type": "mark",
+            "brand": true,
+            "identity": true
+          },
+          {
+            "name": "same",
+            "type": "mark",
+            "brand": true,
+            "identity": true
+          },
+          {
+            "name": "measure",
+            "type": "measure",
+            "brand": true,
+            "identity": false
+          }
+        ],
+        "empty": 0,
+        "rebuffered": [
+          "old",
+          "same",
+          "same"
+        ],
+        "clearDoesNotDrop": [
+          "cleared"
+        ],
+        "callback": {
+          "sequence": [
+            "sync",
+            "microtask",
+            "observer"
+          ],
+          "thisObserver": true,
+          "self": true,
+          "options": [
+            "droppedEntriesCount"
+          ],
+          "dropped": 0,
+          "brand": "[object PerformanceObserverEntryList]",
+          "names": [
+            "first",
+            "second"
+          ],
+          "sorted": true,
+          "identity": true,
+          "arraysFresh": true,
+          "byType": 2,
+          "byName": 1
+        }
+      }
+    }
+  }
+}

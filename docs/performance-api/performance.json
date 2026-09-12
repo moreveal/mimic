@@ -1,0 +1,449 @@
+{
+  "scope": "Frozen fast gate; all original workloads/expectations unchanged. Separate fresh build and verified executable hash before each launch.",
+  "runs": {
+    "before": {
+      "sourceRevision": "da4f93e873d508323832efafe6870d378d79d1c4",
+      "sourceStatus": "",
+      "executableSHA256": "b09958050046ba7b54bf2a1319a6e4a190fc3374871ea0acaeee480ae3c617cf",
+      "harnessSHA256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7",
+      "builtAt": "2026-09-12T06:44:02.750747+04:00",
+      "finished": "2026-09-12T06:44:23.052447+04:00",
+      "rawSHA256": "6f9891d7621f3f2490df1d2b1c01d51dc507577759f07c274d4ced860baf9820",
+      "rawPath": ".build/fast-gate-performance-before/raw.json",
+      "launchChecks": 8,
+      "executionCount": 184,
+      "statuses": {
+        "VALID": 184
+      },
+      "failure": null,
+      "warm": {
+        "dom": {
+          "session_create_ms": 2.0517999946605414,
+          "execution_ms": 147.57299999473616,
+          "completion_ms": 176.67479999363422
+        },
+        "static": {
+          "session_create_ms": 11.950400017667562,
+          "execution_ms": 3.0888000037521124,
+          "completion_ms": 33.0960999999661
+        },
+        "react": {
+          "session_create_ms": 12.500799988629296,
+          "execution_ms": 50.0705000013113,
+          "completion_ms": 87.0885000040289
+        }
+      },
+      "throughput": {
+        "10": {
+          "median": 77.2057091965199,
+          "waves": [
+            39.253122980566886,
+            77.2057091965199,
+            78.34000659650222
+          ]
+        },
+        "25": {
+          "median": 89.5950732743022,
+          "waves": [
+            48.305939677285714,
+            91.42449232706916,
+            89.5950732743022
+          ]
+        }
+      },
+      "memory": [
+        {
+          "workload": "static",
+          "pages": 10,
+          "ready": {
+            "rss": 31281152,
+            "private": 84537344,
+            "system_available": 10401325056
+          },
+          "before": {
+            "rss": 31281152,
+            "private": 84537344,
+            "system_available": 10401738752
+          },
+          "active": {
+            "rss": 461295616,
+            "private": 515047424,
+            "system_available": 9941860352
+          },
+          "afterTeardown": {
+            "rss": 132800512,
+            "private": 166019072,
+            "system_available": 10280599552
+          },
+          "afterRecovery250ms": {
+            "rss": 128671744,
+            "private": 161886208,
+            "system_available": 10294657024
+          }
+        },
+        {
+          "workload": "react",
+          "pages": 10,
+          "ready": {
+            "rss": 30707712,
+            "private": 84262912,
+            "system_available": 10394554368
+          },
+          "before": {
+            "rss": 30707712,
+            "private": 84262912,
+            "system_available": 10394742784
+          },
+          "active": {
+            "rss": 503508992,
+            "private": 559775744,
+            "system_available": 9904349184
+          },
+          "afterTeardown": {
+            "rss": 137043968,
+            "private": 170975232,
+            "system_available": 10276311040
+          },
+          "afterRecovery250ms": {
+            "rss": 137584640,
+            "private": 171225088,
+            "system_available": 10279837696
+          }
+        }
+      ]
+    },
+    "intermediate": {
+      "sourceRevision": "69e6b583ba6f4347ce940e3f5814237b50a77f77",
+      "sourceStatus": "?? docs/performance-api/\n",
+      "executableSHA256": "f9f7c4c70833c632d0db25015b071eff60268b00bab7882080e6c638dce18aa8",
+      "harnessSHA256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7",
+      "builtAt": "2026-09-12T06:44:58.991050+04:00",
+      "finished": "2026-09-12T06:45:19.016187+04:00",
+      "rawSHA256": "289fa0b5dd36bb2ff301ae2520ca9cf982a19250c2ff637525e65de6a5161a54",
+      "rawPath": ".build/fast-gate-performance-after/raw.json",
+      "launchChecks": 8,
+      "executionCount": 184,
+      "statuses": {
+        "VALID": 184
+      },
+      "failure": null,
+      "warm": {
+        "dom": {
+          "session_create_ms": 2.0228000066708773,
+          "execution_ms": 145.4292999987956,
+          "completion_ms": 174.62229999364354
+        },
+        "static": {
+          "session_create_ms": 12.171199981821701,
+          "execution_ms": 3.0590000096708536,
+          "completion_ms": 32.88109999266453
+        },
+        "react": {
+          "session_create_ms": 2.698600001167506,
+          "execution_ms": 51.640399993630126,
+          "completion_ms": 87.1544000110589
+        }
+      },
+      "throughput": {
+        "10": {
+          "median": 75.40619432793144,
+          "waves": [
+            38.061888632704274,
+            76.30745187103679,
+            75.40619432793144
+          ]
+        },
+        "25": {
+          "median": 91.72995728001592,
+          "waves": [
+            92.02564644494655,
+            89.09035187493082,
+            91.72995728001592
+          ]
+        }
+      },
+      "memory": [
+        {
+          "workload": "static",
+          "pages": 10,
+          "ready": {
+            "rss": 31264768,
+            "private": 84422656,
+            "system_available": 10443685888
+          },
+          "before": {
+            "rss": 31264768,
+            "private": 84422656,
+            "system_available": 10444115968
+          },
+          "active": {
+            "rss": 468385792,
+            "private": 523333632,
+            "system_available": 9982513152
+          },
+          "afterTeardown": {
+            "rss": 136773632,
+            "private": 170299392,
+            "system_available": 10324037632
+          },
+          "afterRecovery250ms": {
+            "rss": 136773632,
+            "private": 170299392,
+            "system_available": 10285248512
+          }
+        },
+        {
+          "workload": "react",
+          "pages": 10,
+          "ready": {
+            "rss": 30576640,
+            "private": 83779584,
+            "system_available": 10399981568
+          },
+          "before": {
+            "rss": 30576640,
+            "private": 83779584,
+            "system_available": 10400301056
+          },
+          "active": {
+            "rss": 506998784,
+            "private": 562323456,
+            "system_available": 9907650560
+          },
+          "afterTeardown": {
+            "rss": 141062144,
+            "private": 172740608,
+            "system_available": 10270543872
+          },
+          "afterRecovery250ms": {
+            "rss": 141606912,
+            "private": 172986368,
+            "system_available": 10269667328
+          }
+        }
+      ]
+    },
+    "final": {
+      "sourceRevision": "6a7edee8454070601371b6bf371aa879fd3381c0",
+      "sourceStatus": "?? docs/performance-api/\n",
+      "executableSHA256": "a1f06ec3321eaccd726e42faa71744b7c0b74c6ee3baef995d7d6cdf4f74db0e",
+      "harnessSHA256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7",
+      "builtAt": "2026-09-12T06:53:37.496792+04:00",
+      "finished": "2026-09-12T06:53:59.171305+04:00",
+      "rawSHA256": "8d4c1a35591d4739a18f2b98ce09ee96846e1ae7b6ce50507929b089f57445fe",
+      "rawPath": ".build/fast-gate-performance-final/raw.json",
+      "launchChecks": 8,
+      "executionCount": 184,
+      "statuses": {
+        "VALID": 184
+      },
+      "failure": null,
+      "warm": {
+        "dom": {
+          "session_create_ms": 5.739299987908453,
+          "execution_ms": 148.81159999640658,
+          "completion_ms": 180.34089999855496
+        },
+        "static": {
+          "session_create_ms": 5.871899978956208,
+          "execution_ms": 3.199099999619648,
+          "completion_ms": 34.070299996528774
+        },
+        "react": {
+          "session_create_ms": 14.248399995267391,
+          "execution_ms": 55.35979999694973,
+          "completion_ms": 104.49669999070466
+        }
+      },
+      "throughput": {
+        "10": {
+          "median": 68.20496135619095,
+          "waves": [
+            37.38742646053345,
+            68.20496135619095,
+            73.43135931098409
+          ]
+        },
+        "25": {
+          "median": 68.19412411920447,
+          "waves": [
+            42.397701975644466,
+            68.19412411920447,
+            72.53036992166649
+          ]
+        }
+      },
+      "memory": [
+        {
+          "workload": "static",
+          "pages": 10,
+          "ready": {
+            "rss": 30662656,
+            "private": 84201472,
+            "system_available": 8772857856
+          },
+          "before": {
+            "rss": 30670848,
+            "private": 84201472,
+            "system_available": 8773148672
+          },
+          "active": {
+            "rss": 462057472,
+            "private": 518635520,
+            "system_available": 8341528576
+          },
+          "afterTeardown": {
+            "rss": 128413696,
+            "private": 158633984,
+            "system_available": 8683024384
+          },
+          "afterRecovery250ms": {
+            "rss": 128413696,
+            "private": 158633984,
+            "system_available": 8681050112
+          }
+        },
+        {
+          "workload": "react",
+          "pages": 10,
+          "ready": {
+            "rss": 30629888,
+            "private": 84103168,
+            "system_available": 8776916992
+          },
+          "before": {
+            "rss": 30945280,
+            "private": 84242432,
+            "system_available": 8779423744
+          },
+          "active": {
+            "rss": 507678720,
+            "private": 562393088,
+            "system_available": 8295657472
+          },
+          "afterTeardown": {
+            "rss": 139653120,
+            "private": 169865216,
+            "system_available": 8678318080
+          },
+          "afterRecovery250ms": {
+            "rss": 139653120,
+            "private": 169865216,
+            "system_available": 8680861696
+          }
+        }
+      ]
+    },
+    "baselineRepeat": {
+      "sourceRevision": "da4f93e873d508323832efafe6870d378d79d1c4",
+      "sourceStatus": "",
+      "executableSHA256": "b09958050046ba7b54bf2a1319a6e4a190fc3374871ea0acaeee480ae3c617cf",
+      "harnessSHA256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7",
+      "builtAt": "2026-09-12T06:58:04.685699+04:00",
+      "finished": "2026-09-12T06:58:25.087401+04:00",
+      "rawSHA256": "08f0678056d3df752bfab5b28b8313994527eb61a97c210acbb679ac863ab501",
+      "rawPath": ".build/fast-gate-performance-baseline-repeat/raw.json",
+      "launchChecks": 8,
+      "executionCount": 184,
+      "statuses": {
+        "VALID": 184
+      },
+      "failure": null,
+      "warm": {
+        "dom": {
+          "session_create_ms": 12.291599996387959,
+          "execution_ms": 150.33790000597946,
+          "completion_ms": 180.17479998525232
+        },
+        "static": {
+          "session_create_ms": 11.766200012061745,
+          "execution_ms": 3.2105999998748302,
+          "completion_ms": 34.98060000129044
+        },
+        "react": {
+          "session_create_ms": 2.2880999895278364,
+          "execution_ms": 60.336299997288734,
+          "completion_ms": 97.82980001182295
+        }
+      },
+      "throughput": {
+        "10": {
+          "median": 75.14711927321653,
+          "waves": [
+            37.238400239708916,
+            75.14711927321653,
+            77.83276230671227
+          ]
+        },
+        "25": {
+          "median": 90.15815543562192,
+          "waves": [
+            49.00877786472835,
+            90.29185578635638,
+            90.15815543562192
+          ]
+        }
+      },
+      "memory": [
+        {
+          "workload": "static",
+          "pages": 10,
+          "ready": {
+            "rss": 30572544,
+            "private": 83976192,
+            "system_available": 9028349952
+          },
+          "before": {
+            "rss": 30572544,
+            "private": 83976192,
+            "system_available": 9028689920
+          },
+          "active": {
+            "rss": 460398592,
+            "private": 512393216,
+            "system_available": 8580603904
+          },
+          "afterTeardown": {
+            "rss": 133066752,
+            "private": 162598912,
+            "system_available": 8913346560
+          },
+          "afterRecovery250ms": {
+            "rss": 133066752,
+            "private": 162598912,
+            "system_available": 8924139520
+          }
+        },
+        {
+          "workload": "react",
+          "pages": 10,
+          "ready": {
+            "rss": 30588928,
+            "private": 83734528,
+            "system_available": 9017487360
+          },
+          "before": {
+            "rss": 30588928,
+            "private": 83734528,
+            "system_available": 9017724928
+          },
+          "active": {
+            "rss": 507633664,
+            "private": 564609024,
+            "system_available": 8527380480
+          },
+          "afterTeardown": {
+            "rss": 141180928,
+            "private": 173207552,
+            "system_available": 8899547136
+          },
+          "afterRecovery250ms": {
+            "rss": 141180928,
+            "private": 173207552,
+            "system_available": 8906821632
+          }
+        }
+      ]
+    }
+  }
+}

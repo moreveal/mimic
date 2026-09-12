@@ -1,6 +1,7 @@
 package trace
 
 import (
+	"sort"
 	"sync"
 	"time"
 )
@@ -59,6 +60,15 @@ func (r *Recorder) Events() []Event {
 	r.mu.RLock()
 	defer r.mu.RUnlock()
 	return append([]Event(nil), r.events...)
+}
+
+// EventsSince returns newly recorded events without copying the complete trace.
+// Sequence numbers survive Clear, so consumers cannot replay cleared history.
+func (r *Recorder) EventsSince(sequence uint64) []Event {
+	r.mu.RLock()
+	defer r.mu.RUnlock()
+	start := sort.Search(len(r.events), func(i int) bool { return r.events[i].Sequence > sequence })
+	return append([]Event(nil), r.events[start:]...)
 }
 func (r *Recorder) Clear() {
 	r.mu.Lock()
