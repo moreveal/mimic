@@ -1,0 +1,2 @@
+ok  	github.com/moreveal/mimic/internal/browser	36.560s
+ok  	github.com/moreveal/mimic/internal/csp	1.250s
