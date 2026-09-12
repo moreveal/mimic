@@ -60,7 +60,7 @@ func webGPUOracle(t *testing.T, name string) {
 func TestWebGPUUnsupportedExecutionIsExplicit(t *testing.T) {
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
-		v, err := p.Evaluate(context.Background(), `(async()=>{const a=await navigator.gpu.requestAdapter(),d=await a.requestDevice();let failures=0;for(const call of [()=>d.createShaderModule({code:'@compute @workgroup_size(1) fn main() {}'}),()=>d.createTexture({size:[2,2],format:'rgba8unorm',usage:GPUTextureUsage.RENDER_ATTACHMENT})])try{call()}catch(e){if(e.name==='NotSupportedError')failures++}d.destroy();return failures===2})()`)
+		v, err := p.Evaluate(context.Background(), `(async()=>{const a=await navigator.gpu.requestAdapter(),d=await a.requestDevice();let failures=0;for(const call of [()=>d.createShaderModule({code:'@compute @workgroup_size(1) fn main() {}'}),()=>d.createTexture({size:[2,2],format:'rgba8unorm',sampleCount:4,usage:GPUTextureUsage.RENDER_ATTACHMENT})])try{call()}catch(e){if(e.name==='NotSupportedError')failures++}d.destroy();return failures===2})()`)
 		if err != nil || v != true {
 			t.Fatalf("%v %v", v, err)
 		}

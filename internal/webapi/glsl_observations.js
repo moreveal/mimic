@@ -76,6 +76,8 @@ const glslObservations=(()=>{
   function evaluate(node,scope){tick();switch(node.op){
    case 'literal':return node.value;
    case 'variable':if(!(node.name in scope))unsupported('unbound shader variable '+node.name);return scope[node.name];
+   case 'array':return node.values.map(n=>evaluate(n,scope));
+   case 'index':{const a=evaluate(node.value,scope),i=evaluate(node.index,scope);if(!Number.isInteger(i)||i<0||i>=a.length)unsupported('shader array bounds');return a[i]}
    case 'swizzle':{const v=evaluate(node.value,scope);if(!vector(v))unsupported('scalar swizzle');const values=Array.from(node.fields,c=>v['xyzw'.includes(c)?'xyzw'.indexOf(c):'rgba'.indexOf(c)]);if(values.some(v=>v===undefined))throw new Error('Invalid vector component');return values.length===1?values[0]:values}
    case 'unary':return map(evaluate(node.value,scope),v=>node.kind==='-'?f(-v):node.kind==='!'?!v:v);
    case 'conditional':return evaluate(evaluate(node.test,scope)?node.yes:node.no,scope);
@@ -89,6 +91,7 @@ const glslObservations=(()=>{
    case 'for':{const local=Object.create(scope);run(node.init,local);let iterations=0;while(evaluate(node.test,local)){if(++iterations>1024)unsupported('shader loop limit');const result=run(node.body,local);if(result)return result;run(node.step,local)}break}
    case 'if':return evaluate(node.test,scope)?run(node.yes,scope):node.no?run(node.no,scope):undefined;
    case 'discard':return 'discard';case 'return':return 'return';
+   case 'returnValue':root[shader.output]=evaluate(node.value,scope);return 'return';
   }}
   for(const g of shader.globals)if(!Object.hasOwn(root,g.name))root[g.name]=g.value?evaluate(g.value,root):initial(g.type);
   const result=run(shader.main,root);return result==='discard'?null:root[shader.output];
