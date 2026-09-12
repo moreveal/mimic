@@ -84,12 +84,12 @@ const perfEntryJSON=(object,kind)=>{
 function perfClone(value){
   if(value===undefined||value===null)return null;
   if(!perfWorker)return cloneHistoryState(value);
-  if(host.performanceClone){const reply=host.performanceClone(value,v=>v===globalThis||perfSlots.has(v));if(!reply[0])perfFail('DataCloneError',reply[1]);return reply[1]}
+  if(host.performanceClone){const reply=host.performanceClone(value,v=>v===globalThis||perfUncloneable(v));if(!reply[0])perfFail('DataCloneError',reply[1]);return reply[1]}
   const seen=new Map(),copy=v=>{
     if(typeof v==='function'||typeof v==='symbol')perfFail('DataCloneError');
     if(v===null||typeof v!=='object')return v;
     if(seen.has(v))return seen.get(v);
-    if(v===globalThis||perfSlots.has(v))perfFail('DataCloneError');
+    if(v===globalThis||perfUncloneable(v))perfFail('DataCloneError');
     let out=Array.isArray(v)?[]:v instanceof Map?new Map():v instanceof Set?new Set():v instanceof Date?new Date(v.getTime()):v instanceof ArrayBuffer?v.slice(0):{};seen.set(v,out);
     if(v instanceof Map)for(const [k,x]of v)out.set(copy(k),copy(x));else if(v instanceof Set)for(const x of v)out.add(copy(x));else for(const k of Object.keys(v))Object.defineProperty(out,k,{value:copy(v[k]),enumerable:true,configurable:true,writable:true});return out;
   };return copy(value);
@@ -245,6 +245,8 @@ function perfEventCounts(){
 }
 if(!perfWorker)Object.defineProperty(globalThis,'__mimicNotifyPerformanceObservers',{value:()=>{},configurable:true});
 if(!perfWorker)perfEventCounts();
+const perfUncloneable=value=>perfSlots.has(value)||perfObservers.has(value)||perfLists.has(value)||perfMemorySlots.has(value)||(perfCounts!==undefined&&value===perfCounts);
+if(!perfWorker)historyCloneBrandRejectors.push(perfUncloneable);
 
 function finalizePerformanceBindings(){
   if(!Object.prototype.hasOwnProperty.call(Performance.prototype,'measureUserAgentSpecificMemory'))return;
