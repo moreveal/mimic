@@ -77,9 +77,7 @@ func (s *Server) targetInfo(page *browser.Page, typ string) map[string]any {
 		info["targetId"] = s.tabID(page)
 	}
 	info["canAccessOpener"] = false
-	if page.ContextID() != s.Context.ID {
-		info["browserContextId"] = page.ContextID()
-	}
+	info["browserContextId"] = page.ContextID()
 	return info
 }
 
