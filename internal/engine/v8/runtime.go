@@ -81,32 +81,34 @@ type callbackContext struct {
 }
 
 type adapter struct {
-	profile           *diagnosticState
-	owner             *Runtime
-	realm             *Realm
-	now               func() time.Time
-	observer          func(string, bool)
-	closed            bool
-	mu                sync.Mutex
-	callback          *callbackContext  // actor-thread only; guarded from foreign readers by actor TID
-	activeIsolate     *gov8.Isolate     // actor-thread only
-	nestedTermination bool              // clear only after the outer actor turn unwinds
-	activeContext     context.Context   // actor-thread only; inherited by cross-realm calls
-	runDepth          int               // actor-thread only; includes cooperatively serviced calls
-	transientFrames   []*transientFrame // owner-thread only; bounded scratch storage
-	packedStore       *gov8.BackingStore
-	packedMemory      *[packedBytes]byte
-	packedBuffer      *gov8.Global
-	packedFactories   map[string]*gov8.Global
-	packedFrames      []*packedFrame
-	callbackSeq       uint64
-	promiseFactory    engine.Value
-	globals           map[*gov8.Global]struct{} // retained engine.Values; released on the isolate thread
-	modules           []*gov8.Module
-	moduleCache       map[string]*gov8.Module
-	moduleNames       map[*gov8.Module]string
-	processorSamples  map[uintptr]uint64 // opt-in diagnostic sampling, actor-thread only
-	nativePending     bool               // actor-thread only; foreground/background V8 tasks
+	profile                  *diagnosticState
+	owner                    *Runtime
+	realm                    *Realm
+	now                      func() time.Time
+	observer                 func(string, bool)
+	closed                   bool
+	mu                       sync.Mutex
+	callback                 *callbackContext  // actor-thread only; guarded from foreign readers by actor TID
+	activeIsolate            *gov8.Isolate     // actor-thread only
+	nestedTermination        bool              // clear only after the outer actor turn unwinds
+	activeContext            context.Context   // actor-thread only; inherited by cross-realm calls
+	runDepth                 int               // actor-thread only; includes cooperatively serviced calls
+	transientFrames          []*transientFrame // owner-thread only; bounded scratch storage
+	packedStore              *gov8.BackingStore
+	packedMemory             *[packedBytes]byte
+	packedBuffer             *gov8.Global
+	packedFactories          map[string]*gov8.Global
+	packedFrames             []*packedFrame
+	callbackSeq              uint64
+	promiseFactory           engine.Value
+	globals                  map[*gov8.Global]struct{} // retained engine.Values; released on the isolate thread
+	modules                  []*gov8.Module
+	moduleCache              map[string]*gov8.Module
+	moduleNames              map[*gov8.Module]string
+	importMetaResolveFactory engine.Value
+	debuggerUnsafeEval       bool               // owning actor only, scoped to synchronous inspector execution
+	processorSamples         map[uintptr]uint64 // opt-in diagnostic sampling, actor-thread only
+	nativePending            bool               // actor-thread only; foreground/background V8 tasks
 }
 
 // Transient arguments cannot escape the synchronous host call. A frame stays
@@ -389,6 +391,28 @@ func (a *adapter) EvalModule(ctx context.Context, source, name string, loader en
 				return err
 			}
 			_, err = cs.ObjectSet(meta.Value, "url", value)
+			if err != nil || a.importMetaResolveFactory == nil {
+				return err
+			}
+			factoryValue, err := a.local(cs.Scope(), a.importMetaResolveFactory)
+			if err != nil {
+				return err
+			}
+			factory, ok, err := gov8.AsFunction(factoryValue, realm)
+			if err != nil {
+				return err
+			}
+			if !ok {
+				return errors.New("import.meta resolver factory is not callable")
+			}
+			resolve, ok, err := factory.Call(cs.Scope(), meta.Value, value)
+			if err != nil {
+				return err
+			}
+			if !ok {
+				return errors.New("import.meta resolver factory failed")
+			}
+			_, err = cs.ObjectSet(meta.Value, "resolve", resolve)
 			return err
 		}); err != nil {
 			return nil, err

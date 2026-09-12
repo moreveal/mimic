@@ -52,11 +52,21 @@ const cssBoxModel=(()=>{
  };
  const textOf=element=>children(element).filter(n=>elementSlot(n)?.type==='text').map(n=>textContent(n)).join('').replace(/[\t\n\r\f ]+/g,' ').trim();
  const controlSize=element=>{
+  const cache=styleReadCache.controlSizes||(styleReadCache.controlSizes=new WeakMap());
+  if(cache.has(element))return cache.get(element);
+  const result=uncachedControlSize(element);cache.set(element,result);return result;
+ };
+ const uncachedControlSize=element=>{
   const s=state(element);if(tag(element)==='BUTTON'&&!textContent(element))return {width:16,height:6};
   if(tag(element)==='PROGRESS')return {width:s.fontSize*10,height:s.fontSize};
   return compatibilityElementState.controlGeometry?.(element,s.entries)||null;
  };
  const intrinsic=element=>{
+  const cache=styleReadCache.intrinsicWidths||(styleReadCache.intrinsicWidths=new WeakMap());
+  if(cache.has(element))return cache.get(element);
+  const value=uncachedIntrinsic(element);cache.set(element,value);return value;
+ };
+ const uncachedIntrinsic=element=>{
   const s=state(element);if(s.display==='none')return 0;const own=controlSize(element);if(own)return own.width;
   if(s.display==='table')return tableColumns(element).width;
   const listType=s.get('list-style-type')||(tag(element)==='SUMMARY'?'disclosure-closed':''),inside=s.get('list-style-position')==='inside'||tag(element)==='SUMMARY';
@@ -152,8 +162,9 @@ const cssBoxModel=(()=>{
  };
  const rect=element=>{
   const cache=styleReadCache.rects;if(cache.has(element))return cache.get(element);
-  const s=state(element),box=size(element),value={x:0,y:0,left:0,top:0,width:box.width,height:box.height};cache.set(element,value);
+  const value={x:0,y:0,left:0,top:0,width:0,height:0};cache.set(element,value);
   if(!rendered(element)||!computedStyleDocumentAvailable(element)||!computedStyleAvailable(element)){value.width=value.height=0;value.right=value.bottom=0;return value}
+  const s=state(element),box=size(element);value.width=box.width;value.height=box.height;
   const parent=geometryParent(element),parentRect=parent?rect(parent):{x:0,y:0,width:host.viewport().width,height:host.viewport().height},parentBox=parent?size(parent):null;
   const local=parentBox?.positions.get(element)||{x:0,y:0};
   value.x=parentRect.x+(parentBox?parentBox.edges.bleft+parentBox.edges.pleft:0)+local.x;value.y=parentRect.y+(parentBox?parentBox.edges.btop+parentBox.edges.ptop:0)+local.y;

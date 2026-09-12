@@ -95,3 +95,42 @@ func TestUnchangedIntersectionSampleAvoidsGeometryWork(t *testing.T) {
 		t.Fatal("viewport change did not invalidate observation")
 	}
 }
+
+func TestIntersectionObserverUsesResolvedControlFontGeometry(t *testing.T) {
+	p := testPage(t)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	got, err := p.Evaluate(ctx, `(()=>{
+ const button=document.createElement('button');
+ button.style.fontSize='var(--missing-font-size)';
+ button.textContent='Log in';document.body.append(button);
+ return new Promise(resolve=>new IntersectionObserver((entries,observer)=>{
+  const actual=button.getBoundingClientRect();observer.disconnect();resolve([entries.length,entries[0].target===button,entries[0].intersectionRatio,entries[0].boundingClientRect.width===actual.width&&actual.width>16,entries[0].boundingClientRect.height===actual.height&&actual.height>1]);
+ }).observe(button));
+})()`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	values, ok := got.([]any)
+	if !ok || len(values) != 5 || values[0] != int64(1) || values[1] != true || values[3] != true || values[4] != true {
+		t.Fatalf("unexpected control observation: %#v", got)
+	}
+}
+
+func TestIntersectionObserverResolvesAncestorFontVariable(t *testing.T) {
+	p := testPage(t)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	got, err := p.Evaluate(ctx, `(()=>{
+ const parent=document.createElement('button'),target=document.createElement('span');
+ parent.style.cssText='font-size:var(--missing-font-size);overflow:hidden';parent.textContent='';parent.append(target);document.body.append(parent);
+ return new Promise(resolve=>new IntersectionObserver((entries,observer)=>{observer.disconnect();resolve([entries.length,entries[0].isIntersecting,entries[0].intersectionRatio])}).observe(target));
+})()`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	values, ok := got.([]any)
+	if !ok || len(values) != 3 || values[0] != int64(1) || values[1] != true || values[2] != int64(1) {
+		t.Fatalf("unexpected ancestor observation: %#v", got)
+	}
+}

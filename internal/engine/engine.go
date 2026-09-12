@@ -86,12 +86,25 @@ type ModuleRuntime interface {
 	EvalModule(context.Context, string, string, ModuleLoader) (Value, error)
 }
 
+// ImportMetaRuntime lets the browser supply its URL resolution semantics without
+// fetching a module. The factory receives the immutable module resource name and
+// returns a realm-owned resolve function; changing import.meta.url cannot rebase it.
+type ImportMetaRuntime interface {
+	SetImportMetaResolveFactory(Value) error
+}
+
 // EvalSourceRuntime lets the browser recognize branded code objects without
 // replacing native eval (which would destroy direct eval's lexical scope).
 // The realm-owned resolver returns a source string for a recognized object,
 // or undefined to preserve native eval's non-string identity behavior.
 type EvalSourceRuntime interface {
 	SetEvalSourceResolver(Value) error
+}
+
+// DebuggerEvalRuntime scopes the inspector's CSP unsafe-eval exception to one
+// synchronous call. It must not leak into queued tasks, other realms or Pages.
+type DebuggerEvalRuntime interface {
+	RunWithUnsafeEval(context.Context, func(context.Context) error) error
 }
 
 type Factory interface{ New() Runtime }

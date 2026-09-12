@@ -43,7 +43,8 @@ const intersectionSample=(state,target,time)=>{
     const display=computedCSSDeclarations(element).find(e=>e.name==='display')?.value;
     if(display==='none'||!display&&element.hasAttribute('hidden'))valid=false;
   }
-  const box=valid?layoutRectFor(target):zero;
+  let box=zero;
+  if(valid)box=layoutRectFor(target);
   let root=zero,intersection=zero,isIntersecting=false;
   if(valid){
     const viewport=host.viewport(),base=state.root instanceof Element?layoutRectFor(state.root):intersectionRect(0,0,viewport.width,viewport.height);
@@ -86,7 +87,8 @@ const scheduleIntersectionUpdate=()=>{
       for(const observer of intersectionObservers){
         const state=intersectionState(observer);
         for(const [target,previous] of state.targets){
-          const entry=intersectionSample(state,target,time),threshold=state.thresholds.findIndex(value=>value>entry.intersectionRatio);
+          const entry=intersectionSample(state,target,time);
+          const threshold=state.thresholds.findIndex(value=>value>entry.intersectionRatio);
           if(!previous||previous.threshold!==threshold||previous.intersects!==entry.isIntersecting){state.records.push(entry);state.targets.set(target,{threshold,intersects:entry.isIntersecting})}
         }
         if(state.records.length&&!state.queued){

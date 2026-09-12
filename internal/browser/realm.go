@@ -2043,6 +2043,11 @@ func (r *Realm) installBindings() error {
 	if err := installNativeFunctionSource(r.runtime); err != nil {
 		return err
 	}
+	if native, ok := r.runtime.(engine.ImportMetaRuntime); ok {
+		if err := native.SetImportMetaResolveFactory(r.runtime.Get("__mimicImportMetaResolveFactory")); err != nil {
+			return err
+		}
+	}
 	if err := installEvalSourceResolver(r.runtime); err != nil {
 		return err
 	}
@@ -2052,7 +2057,7 @@ func (r *Realm) installBindings() error {
 	r.inputDispatcher = r.runtime.Get("__mimicDispatchInput")
 	r.permissionNotifier = r.runtime.Get("__mimicPermissionChanged")
 	r.networkStateEvent = r.runtime.Get("__mimicNetworkStateEvent")
-	if _, err = r.runtime.Eval(context.Background(), `delete globalThis.__mimicDispatchInput;delete globalThis.__mimicPermissionChanged;delete globalThis.__mimicNetworkStateEvent;delete globalThis.__mimicEvalSourceResolver;delete globalThis.__mimicResetDocumentStream;delete globalThis.__mimicDocumentStreamEvent`, "mimic:hide-input"); err != nil {
+	if _, err = r.runtime.Eval(context.Background(), `delete globalThis.__mimicImportMetaResolveFactory;delete globalThis.__mimicDispatchInput;delete globalThis.__mimicPermissionChanged;delete globalThis.__mimicNetworkStateEvent;delete globalThis.__mimicEvalSourceResolver;delete globalThis.__mimicResetDocumentStream;delete globalThis.__mimicDocumentStreamEvent`, "mimic:hide-input"); err != nil {
 		return err
 	}
 	r.messagePortReceiver = r.runtime.Get("__receiveMessagePort")

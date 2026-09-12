@@ -10,6 +10,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/moreveal/mimic/internal/engine"
 	"github.com/moreveal/mimic/internal/scheduler"
+	"github.com/moreveal/mimic/internal/trace"
 )
 
 // Debugger owns the object groups for one protocol session. All operations,
@@ -38,6 +39,7 @@ type debuggerRealm struct {
 }
 
 type DebuggerOptions struct {
+	RespectCSP    bool // Runtime.evaluate allowUnsafeEvalBlockedByCSP=false
 	ObjectGroup   string
 	ReturnByValue bool
 	AwaitPromise  bool
@@ -197,7 +199,7 @@ func (d *Debugger) Evaluate(ctx context.Context, frameID, realmID, source string
 		return nil, err
 	}
 	var value engine.Value
-	err = state.realm.scheduler.RunInline(ctx, func(ctx context.Context) error {
+	err = state.realm.debuggerInline(ctx, !options.RespectCSP, func(ctx context.Context) error {
 		var err error
 		value, err = state.realm.Evaluate(ctx, source, "__pyppeteer_evaluation_script__")
 		return err
@@ -249,7 +251,7 @@ func (d *Debugger) CallFunction(ctx context.Context, frameID, realmID, declarati
 		}
 	}
 	var value engine.Value
-	err = state.realm.scheduler.RunInline(ctx, func(ctx context.Context) error {
+	err = state.realm.debuggerInline(ctx, true, func(ctx context.Context) error {
 		function, err := state.realm.Evaluate(ctx, "(\n"+declaration+"\n)", "__pyppeteer_evaluation_script__")
 		if err != nil {
 			return err
@@ -281,6 +283,15 @@ func (d *Debugger) finish(ctx context.Context, state *debuggerRealm, value engin
 		return nil, fmt.Errorf("Execution context was destroyed")
 	}
 	return state.json(ctx, "hold", map[string]any{"objectGroup": options.ObjectGroup, "returnByValue": options.ReturnByValue}, value)
+}
+
+func (r *Realm) debuggerInline(ctx context.Context, unsafeEval bool, operation func(context.Context) error) error {
+	return r.scheduler.RunInline(ctx, func(ctx context.Context) error {
+		if runtime, ok := r.runtime.(engine.DebuggerEvalRuntime); ok && unsafeEval {
+			return runtime.RunWithUnsafeEval(ctx, operation)
+		}
+		return operation(ctx)
+	})
 }
 
 func (d *Debugger) await(ctx context.Context, state *debuggerRealm, value engine.Value) (engine.Value, error) {
@@ -321,7 +332,13 @@ func (d *Debugger) await(ctx context.Context, state *debuggerRealm, value engine
 			return nil, err
 		}
 		if err := d.page.runEvaluationTasks(ctx, state.realm); err != nil {
-			return nil, err
+			if ctx.Err() != nil {
+				return nil, ctx.Err()
+			}
+			// An exception from another browser task is reported through its own
+			// lifecycle/exception channel. It does not reject the Promise inspected
+			// by Runtime.evaluate/callFunctionOn in Chrome.
+			d.page.trace.Add(trace.Error, "scheduler", map[string]any{"error": err.Error(), "during": "debugger Promise wait"})
 		}
 	}
 }

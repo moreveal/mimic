@@ -30,14 +30,48 @@
     markNative(value,name);Object.defineProperty(globalThis,name,{value,writable:true,configurable:true});Object.defineProperty(value.prototype,Symbol.toStringTag,{value:name,configurable:true});
   }
   const constructors={Event,KeyboardEvent,InputEvent,FocusEvent,SubmitEvent,MouseEvent,PointerEvent};
+  let activateCommand=()=>{};
+  if(globalThis.HTMLButtonElement&&globalThis.HTMLDialogElement){
+  const commandSlots=new WeakMap(),commandTargets=new WeakMap();
+  class CommandEvent extends Event {
+    constructor(type,init={}){super(type,init);const source=init.source??null;if(source!==null&&!(source instanceof Element))throw new TypeError('source must be an Element');commandSlots.set(this,{command:String(init.command??''),source})}
+  }
+  for(const key of ['command','source'])accessor(CommandEvent.prototype,key,function(){const state=commandSlots.get(this);if(!state)throw new TypeError('Illegal invocation');return state[key]});
+  markNative(CommandEvent,'CommandEvent');Object.defineProperty(globalThis,'CommandEvent',{value:CommandEvent,writable:true,configurable:true});Object.defineProperty(CommandEvent.prototype,Symbol.toStringTag,{value:'CommandEvent',configurable:true});
+  const commandFor=button=>{
+    const explicit=commandTargets.get(button);if(explicit)return explicit.getRootNode()===button.getRootNode()?explicit:null;
+    const id=button.getAttribute('commandfor');if(id===null)return null;
+    return button.getRootNode().getElementById(id);
+  };
+  const commandOf=button=>{const raw=button.getAttribute('command')||'',value=raw.toLowerCase();return raw.startsWith('--')?raw:['show-modal','close','request-close','show-popover','hide-popover','toggle-popover'].includes(value)?value:''};
+  const buttonReceiver=value=>{if(!(value instanceof HTMLButtonElement))throw new TypeError('Illegal invocation');return value};
+  Object.defineProperties(HTMLButtonElement.prototype,{
+    command:{get(){return commandOf(buttonReceiver(this))},set(value){buttonReceiver(this).setAttribute('command',String(value))},enumerable:true,configurable:true},
+    commandForElement:{get(){return commandFor(buttonReceiver(this))},set(value){buttonReceiver(this);if(value!==null&&!(value instanceof Element))throw new TypeError('commandForElement must be an Element');commandTargets.delete(this);if(value===null)this.removeAttribute('commandfor');else{this.setAttribute('commandfor','');commandTargets.set(this,value)}},enumerable:true,configurable:true}
+  });
+  // Default activation uses the same dialog state as its public methods. Keep
+  // intrinsic methods captured so author replacements cannot intercept UA work.
+  const showDialog=HTMLDialogElement.prototype.showModal,closeDialog=HTMLDialogElement.prototype.close;
+  activateCommand=button=>{
+    const target=commandFor(button),command=commandOf(button);
+    if(!target||!command||button.disabled)return;
+    if(command.endsWith('popover')){host.semanticMissingAt('input.js/activateCommand','HTMLButtonElement.popoverCommand');return}
+    if(!command.startsWith('--')&&!(target instanceof HTMLDialogElement))return;
+    if(!dispatchTrusted(target,new CommandEvent('command',{command,source:button,cancelable:true,composed:true})))return;
+    if(command==='show-modal'&&!target.open&&target.isConnected)Reflect.apply(showDialog,target,[]);
+    else if(command==='close')Reflect.apply(closeDialog,target,[]);
+    else if(command==='request-close'&&target.open&&dispatchTrusted(target,new Event('cancel',{cancelable:true})))Reflect.apply(closeDialog,target,[]);
+  };
+  }
   compatibilityElementState.controlGeometry=(element,entries)=>{
     if(!['INPUT','BUTTON','TEXTAREA','SELECT'].includes(element.tagName))return null;
     const type=element.type,own=key=>entries.find(e=>e.name===key)?.value;
     if(element.tagName==='INPUT'&&type==='hidden')return {width:0,height:0};
     if(element.tagName==='INPUT'&&['checkbox','radio'].includes(type))return {width:13,height:13};
     const size=own('font-size')?cssComputedFontSize(element):40/3,scale=size/(40/3);
+    if(size===null)throw new Error('Control font metrics unavailable');
     const family=own('font-family')||(element.tagName==='TEXTAREA'?'monospace':'Arial');
-    const measure=text=>{const shaped=parse(host.shapeText(text,family,size,400,0,0,0));if(shaped.error)throw new Error('Control font metrics unavailable');return Math.ceil(shaped.glyphs.reduce((sum,glyph)=>sum+glyph.advance,0)*64)/64};
+    const measure=text=>{if(size===0)return 0;const shaped=parse(host.shapeText(text,family,size,400,0,0,0));if(shaped.error)throw new Error('Control font metrics unavailable: '+shaped.error);return Math.ceil(shaped.glyphs.reduce((sum,glyph)=>sum+glyph.advance,0)*64)/64};
     // Frozen Windows UA metrics: author dimensions still take precedence in
     // layoutRectFor. Text-bearing buttons use the existing font shaper.
     if(element.tagName==='BUTTON'||element.tagName==='INPUT'&&['button','submit','reset'].includes(type)){
@@ -141,25 +175,40 @@
   };
   let pointTargetVersion=null;
   const pointObservationVersion=()=>host.observationVersion()+':'+(constructedStyleSheets.revision?.()||0)+':'+compatibilityElementState.observationVersion();
-  const pointTarget=(x,y)=>{
+  const pointTarget=(x,y)=>withStyleReadCache(()=>{
     const version=pointObservationVersion();
     if(pointerTarget?.isConnected&&x===pointerX&&y===pointerY&&version===pointTargetVersion)return pointerTarget;
-    let selected=null,rank=-Infinity;
-    for(const element of compatibilitySelectors.query(document,'*')){
+    const elements=compatibilitySelectors.query(document,'*'),orders=new WeakMap(elements.map((e,i)=>[e,i])),scopes=new WeakMap();
+    // z-index belongs to a stacking context, not an isolated element. Children
+    // paint above their context's background; a high-z descendant cannot escape
+    // a lower-z context. Positioned auto-z groups do not create that boundary.
+    const scope=element=>{
+      if(!element)return {path:[],group:null};if(scopes.has(element))return scopes.get(element);
+      const parent=geometryParent(element),above=scope(parent),s=cssBoxModel.state(element),position=s.get('position')||'static',z=s.get('z-index'),order=orders.get(element)??-1;
+      const parentDisplay=parent?cssBoxModel.state(parent).display:'',positioned=position!=='static';
+      const context=!parent||['fixed','sticky'].includes(position)||z&&z!=='auto'&&(positioned||/flex|grid/.test(parentDisplay))||Number(s.get('opacity')??1)<1||s.get('transform')&&s.get('transform')!=='none'||s.get('isolation')==='isolate';
+      const path=context&&parent?above.path.concat([[Number(z)||0,1,order,order]]):above.path,group=context?null:positioned?order:above.group;
+      const rank=context?path:path.concat([[0,group===null?0:1,group??order,order]]),result={path,group,rank};scopes.set(element,result);return result;
+    };
+    const above=(a,b)=>{if(!b)return true;for(let i=0;i<Math.min(a.length,b.length);i++)for(let j=0;j<4;j++)if(a[i][j]!==b[i][j])return a[i][j]>b[i][j];return a.length>=b.length};
+    let selected=null,rank=null;
+    for(const element of elements){
       const entries=computedCSSDeclarations(element),get=name=>entries.find(e=>e.name===name)?.value;
       if(get('visibility')==='hidden'||get('pointer-events')==='none')continue;
       const box=layoutRectFor(element);if(box.width<=0||box.height<=0||x<box.left||x>=box.right||y<box.top||y>=box.bottom)continue;
-      const z=Number(get('z-index'))||0;if(z>=rank){selected=element;rank=z}
+      const candidate=scope(element).rank;if(above(candidate,rank)){selected=element;rank=candidate}
     }
     pointTargetVersion=version;
     return selected||document.body||document.documentElement;
-  };
+  });
   let pointerTarget=null,pointerX=0,pointerY=0,mouseButtons=0;
   const pressed=new Map(),buttons={none:-1,left:0,middle:1,right:2,back:3,forward:4},buttonMasks={left:1,middle:4,right:2,back:8,forward:16};
   const click=(target,init,trusted=true)=>{
     const checkable=target.localName==='input'&&['checkbox','radio'].includes(target.type),previous=checkable?control(target,'get','checked'):false;
     if(checkable)control(target,'set','checked',[target.type==='radio'?true:!previous]);
     if(!emit(target,'PointerEvent','click',init,trusted,trusted)){if(checkable)control(target,'set','checked',[previous]);return}
+    let activator=target;while(activator&&activator.localName!=='button'&&activator.localName!=='a')activator=activator.parentElement;
+    if(activator?.localName==='button')activateCommand(activator);
     if(checkable&&previous!==control(target,'get','checked')){emit(target,'Event','input',{bubbles:true,composed:true},true,trusted);emit(target,'Event','change',{bubbles:true},true,trusted)}
     if(target.localName==='a'&&target.hasAttribute('href'))host.navigate(target.href);
   };
@@ -169,8 +218,8 @@
     try{click(target,{bubbles:true,cancelable:true,composed:true,pointerId:-1,pointerType:'',isPrimary:false,button:0,buttons:0,detail:0},false)}finally{clicking.delete(target)}
   };
   Object.defineProperty(HTMLElement.prototype,'click',{value:function(){if(isolated){main(this,'click');return}syntheticClick(this)},writable:true,enumerable:true,configurable:true});
-  const mouseCommand=(params,preferred)=>{
-    const x=Number(params.x),y=Number(params.y),target=preferred?.isConnected?preferred:pointTarget(x,y),buttonName=params.button||'none',button=buttons[buttonName]??-1,mask=buttonMasks[buttonName]||0;
+  const mouseCommand=params=>{
+    const x=Number(params.x),y=Number(params.y),target=pointTarget(x,y),buttonName=params.button||'none',button=buttons[buttonName]??-1,mask=buttonMasks[buttonName]||0;
     if(params.type==='mousePressed')mouseButtons|=mask;else if(params.type==='mouseReleased')mouseButtons&=~mask;
     if(params.buttons!==undefined)mouseButtons=params.buttons;
     const init={bubbles:true,cancelable:true,composed:true,clientX:x,clientY:y,screenX:x+(window.screenX||0),screenY:y+(window.screenY||0),button,buttons:mouseButtons,detail:params.clickCount||0,movementX:x-pointerX,movementY:y-pointerY,...modifiers(params.modifiers||0),pointerId:1,pointerType:'mouse',isPrimary:true,pressure:mouseButtons ? .5 : 0};

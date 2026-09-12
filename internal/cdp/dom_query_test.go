@@ -70,3 +70,41 @@ func TestDOMQueryInitialDocumentBootstrapsRealm(t *testing.T) {
 		t.Fatalf("initial query: %v %v", ids, err)
 	}
 }
+
+func TestDOMContentQuadsUseResolvedControlFontGeometry(t *testing.T) {
+	s, addr := runningServer(t)
+	if _, err := s.Page.Evaluate(context.Background(), `document.body.innerHTML='<button id="login" style="font-size:var(--missing)">Log in</button>'`); err != nil {
+		t.Fatal(err)
+	}
+	d, _ := s.Page.Document()
+	button, _ := d.Find("#login")
+	c, _, err := websocket.DefaultDialer.Dial("ws://"+addr+"/devtools/page/"+s.Page.ID, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer c.Close()
+	if err := c.WriteJSON(map[string]any{"id": 1, "method": "DOM.getContentQuads", "params": map[string]any{"nodeId": button.ID}}); err != nil {
+		t.Fatal(err)
+	}
+	reply := readReply(t, c, 1)
+	if reply["error"] != nil {
+		t.Fatal(reply)
+	}
+	quads := reply["result"].(map[string]any)["quads"].([]any)
+	if len(quads) != 1 || len(quads[0].([]any)) != 8 {
+		t.Fatalf("unexpected quads: %#v", quads)
+	}
+	quad := quads[0].([]any)
+	if width := coordinateValue(quad[2]) - coordinateValue(quad[0]); width <= 16 {
+		t.Fatalf("fabricated control geometry: %#v", quad)
+	}
+	if _, err := s.Page.Evaluate(context.Background(), `document.getElementById('login').style.fontSize='2ex'`); err != nil {
+		t.Fatal(err)
+	}
+	if err := c.WriteJSON(map[string]any{"id": 2, "method": "DOM.getContentQuads", "params": map[string]any{"nodeId": button.ID}}); err != nil {
+		t.Fatal(err)
+	}
+	if reply := readReply(t, c, 2); reply["error"] == nil {
+		t.Fatalf("unsupported geometry became a fabricated quad: %#v", reply)
+	}
+}
