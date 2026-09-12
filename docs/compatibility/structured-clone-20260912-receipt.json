@@ -1,0 +1,60 @@
+{
+  "baseRevision": "da4f93e873d508323832efafe6870d378d79d1c4",
+  "chromeVersion": {
+    "Browser": "Chrome/152.0.7977.82",
+    "Protocol-Version": "1.3",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "V8-Version": "15.2.124.21",
+    "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:19991/devtools/browser/3bdc5020-293b-499d-a8d6-fe080e305334"
+  },
+  "browserMode": "headful",
+  "launchWindowVisibility": "hidden",
+  "profileFreshness": "fresh-controlled-profile-and-browser-context",
+  "featureOverrides": [],
+  "probeSHA256": "50f501e6540ab313df807d3a8962d6eb980fe6610c00fa8c2f77c57d14f0a996",
+  "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+  "mimicSHA256": "52c8fabfecb380bf27b73fdf7dfadd29b04768ba1c305ec02143fb6c68cebda0",
+  "caseCount": 45,
+  "chromeABDifferences": [],
+  "chromeMimicDifferences": [],
+  "boundaryAudit": {
+    "probeSHA256": "62f20e200a48d236f0d80a4e795e72b02a23958a222ff1c70fe129c4490d6fdf",
+    "chromeABDifferences": [],
+    "chrome": {
+      "blob": {
+        "tag": "[object Blob]",
+        "size": 3,
+        "type": "text/plain"
+      },
+      "domException": {
+        "tag": "[object DOMException]",
+        "name": "AbortError",
+        "message": "x"
+      },
+      "wasmModule": "[object WebAssembly.Module]",
+      "mixedRealm": {
+        "box": "8",
+        "regex": "x",
+        "alias": true
+      }
+    },
+    "mimic": {
+      "blob": {
+        "error": "NotSupportedError"
+      },
+      "domException": {
+        "message": "",
+        "name": "Error",
+        "tag": "[object Error]"
+      },
+      "mixedRealm": {
+        "error": "DataCloneError"
+      },
+      "wasmModule": {
+        "error": "DataCloneError"
+      }
+    }
+  },
+  "rawEvidence": "E:/GitHub/mimic/.build/structured-clone-delegated"
+}

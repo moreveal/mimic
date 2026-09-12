@@ -1,0 +1,412 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 709,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "width": 0,
+      "height": 0
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled-profile-and-browser-context",
+    "origin": "http://127.0.0.1:1850/plain",
+    "visibilityState": "hidden"
+  },
+  "probeSHA256": "50f501e6540ab313df807d3a8962d6eb980fe6610c00fa8c2f77c57d14f0a996",
+  "result": {
+    "result": {
+      "value": {
+        "undefined": {
+          "type": "undefined"
+        },
+        "null": null,
+        "bigint": {
+          "type": "bigint",
+          "value": "611"
+        },
+        "number": {
+          "tag": "[object Number]",
+          "value": {
+            "type": "number",
+            "value": "0"
+          },
+          "local": true,
+          "keys": []
+        },
+        "nan": {
+          "tag": "[object Number]",
+          "value": {
+            "type": "number",
+            "value": "NaN"
+          },
+          "local": true,
+          "keys": []
+        },
+        "boolean": {
+          "tag": "[object Boolean]",
+          "value": {
+            "type": "boolean",
+            "value": false
+          },
+          "local": true,
+          "keys": []
+        },
+        "string": {
+          "tag": "[object String]",
+          "value": {
+            "type": "string",
+            "value": "abc"
+          },
+          "local": true,
+          "keys": [
+            "0",
+            "1",
+            "2"
+          ]
+        },
+        "boxedBigint": {
+          "tag": "[object BigInt]",
+          "value": {
+            "type": "bigint",
+            "value": "611"
+          },
+          "local": true,
+          "keys": []
+        },
+        "regexp": {
+          "tag": "[object RegExp]",
+          "source": "gul e",
+          "flags": "dgimsuy",
+          "lastIndex": 0,
+          "local": true,
+          "keys": []
+        },
+        "symbol": {
+          "error": "DataCloneError"
+        },
+        "boxedSymbol": {
+          "error": "DataCloneError"
+        },
+        "function": {
+          "error": "DataCloneError"
+        },
+        "promise": {
+          "error": "DataCloneError"
+        },
+        "weakMap": {
+          "error": "DataCloneError"
+        },
+        "proxy": {
+          "error": "DataCloneError"
+        },
+        "node": {
+          "error": "DataCloneError"
+        },
+        "boxedHooks": {
+          "value": "12",
+          "calls": 0,
+          "keys": []
+        },
+        "regexpHooks": {
+          "clone": {
+            "tag": "[object RegExp]",
+            "source": "a+",
+            "flags": "gi",
+            "lastIndex": 0,
+            "local": true,
+            "keys": []
+          },
+          "calls": 0
+        },
+        "graph": {
+          "cycle": true,
+          "alias": true,
+          "map": true,
+          "set": true,
+          "buffer": true,
+          "bytes": [
+            0,
+            0,
+            0,
+            9,
+            0,
+            0,
+            0,
+            0
+          ],
+          "date": 123,
+          "error": [
+            "TypeError",
+            "x",
+            true
+          ],
+          "separate": true
+        },
+        "descriptors": {
+          "reads": 1,
+          "keys": [
+            "x"
+          ],
+          "proto": true,
+          "descriptor": [
+            3,
+            true,
+            true,
+            true
+          ]
+        },
+        "getterException": true,
+        "proxyTraps": {
+          "name": "DataCloneError",
+          "n": 0
+        },
+        "transfer": {
+          "source": 0,
+          "bytes": [
+            7,
+            0,
+            0,
+            0
+          ],
+          "alias": true
+        },
+        "failedTransfer": {
+          "name": "DataCloneError",
+          "bytes": 4
+        },
+        "duplicateTransfer": {
+          "name": "DataCloneError",
+          "bytes": 4
+        },
+        "transferOrder": {
+          "trace": [
+            "transfer-get",
+            "iterator-get",
+            "iterator-call",
+            "next",
+            "next",
+            "value-get"
+          ],
+          "x": 1,
+          "bytes": 0
+        },
+        "transferDetachedByGetter": {
+          "name": "DataCloneError",
+          "a": 0,
+          "b": 4
+        },
+        "transferResizable": {
+          "source": 0,
+          "length": 4,
+          "max": 16,
+          "resizable": true,
+          "byte": 9
+        },
+        "transferEmpty": 5,
+        "transferInvalid.null": {
+          "error": "TypeError"
+        },
+        "transferInvalid.number": {
+          "error": "TypeError"
+        },
+        "transferInvalid.plain": {
+          "error": "TypeError"
+        },
+        "transferInvalid.string": {
+          "error": "TypeError"
+        },
+        "transferInvalid.element": {
+          "error": "TypeError"
+        },
+        "crossRealm.box": {
+          "tag": "[object BigInt]",
+          "value": {
+            "type": "bigint",
+            "value": "611"
+          },
+          "local": true,
+          "keys": []
+        },
+        "crossRealm.regexp": {
+          "tag": "[object RegExp]",
+          "source": "gul e",
+          "flags": "gi",
+          "lastIndex": 0,
+          "local": true,
+          "keys": []
+        },
+        "crossRealm.nested": {
+          "box": {
+            "tag": "[object BigInt]",
+            "value": {
+              "type": "bigint",
+              "value": "8"
+            },
+            "local": true,
+            "keys": []
+          },
+          "regexp": {
+            "tag": "[object RegExp]",
+            "source": "x",
+            "flags": "g",
+            "lastIndex": 0,
+            "local": true,
+            "keys": []
+          },
+          "proto": true
+        },
+        "crossRealm.borrowed": {
+          "tag": "[object BigInt]",
+          "value": "611",
+          "local": true
+        },
+        "history": {
+          "b": {
+            "tag": "[object BigInt]",
+            "value": {
+              "type": "bigint",
+              "value": "611"
+            },
+            "local": true,
+            "keys": []
+          },
+          "r": {
+            "tag": "[object RegExp]",
+            "source": "x",
+            "flags": "gi",
+            "lastIndex": 0,
+            "local": true,
+            "keys": []
+          },
+          "copy": true
+        },
+        "navigation": {
+          "b": {
+            "tag": "[object BigInt]",
+            "value": {
+              "type": "bigint",
+              "value": "611"
+            },
+            "local": true,
+            "keys": []
+          },
+          "r": {
+            "tag": "[object RegExp]",
+            "source": "x",
+            "flags": "g",
+            "lastIndex": 0,
+            "local": true,
+            "keys": []
+          }
+        },
+        "messagePort": {
+          "b": {
+            "tag": "[object BigInt]",
+            "value": {
+              "type": "bigint",
+              "value": "611"
+            },
+            "local": true,
+            "keys": []
+          },
+          "r": {
+            "tag": "[object RegExp]",
+            "source": "x",
+            "flags": "gi",
+            "lastIndex": 0,
+            "local": true,
+            "keys": []
+          }
+        },
+        "windowMessage": {
+          "b": {
+            "tag": "[object BigInt]",
+            "value": {
+              "type": "bigint",
+              "value": "611"
+            },
+            "local": true,
+            "keys": []
+          },
+          "r": {
+            "tag": "[object RegExp]",
+            "source": "x",
+            "flags": "gi",
+            "lastIndex": 0,
+            "local": true,
+            "keys": []
+          }
+        },
+        "worker": {
+          "b": {
+            "tag": "[object BigInt]",
+            "value": {
+              "type": "bigint",
+              "value": "611"
+            },
+            "local": true,
+            "keys": []
+          },
+          "r": {
+            "tag": "[object RegExp]",
+            "source": "x",
+            "flags": "gi",
+            "lastIndex": 0,
+            "local": true,
+            "keys": []
+          }
+        },
+        "broadcast": {
+          "b": {
+            "tag": "[object BigInt]",
+            "value": {
+              "type": "bigint",
+              "value": "611"
+            },
+            "local": true,
+            "keys": []
+          },
+          "r": {
+            "tag": "[object RegExp]",
+            "source": "x",
+            "flags": "gi",
+            "lastIndex": 0,
+            "local": true,
+            "keys": []
+          }
+        },
+        "indexedDB": {
+          "b": {
+            "tag": "[object BigInt]",
+            "value": {
+              "type": "bigint",
+              "value": "611"
+            },
+            "local": true,
+            "keys": []
+          },
+          "r": {
+            "tag": "[object RegExp]",
+            "source": "x",
+            "flags": "gi",
+            "lastIndex": 0,
+            "local": true,
+            "keys": []
+          }
+        }
+      }
+    }
+  }
+}

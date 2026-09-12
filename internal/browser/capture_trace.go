@@ -33,3 +33,15 @@ func workerMessageTrace(id int64, direction string, data any) map[string]any {
 	event["data"] = json.RawMessage(encoded)
 	return event
 }
+
+// A JSON projection is diagnostic only. The opaque wire remains authoritative
+// for delivery and preserves values (such as cycles and BigInt) JSON cannot.
+func serializedWorkerMessageTrace(id int64, direction string, wire any, projection string) map[string]any {
+	event := map[string]any{"worker": id, "direction": direction, "dataEncoding": "structured-clone", "wire": wire}
+	if json.Valid([]byte(projection)) {
+		event["data"] = json.RawMessage(projection)
+	} else {
+		event["dataCaptureError"] = "Message is not JSON representable; structured clone wire is retained."
+	}
+	return event
+}

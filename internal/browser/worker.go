@@ -157,6 +157,7 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 		}
 	})
 	host := map[string]any{}
+	installStructuredCloneHost(host, runtime)
 	installExceptionDescription(host, runtime)
 	host["reportUnhandledException"] = runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		return nil, w.reportError(fmt.Errorf("%s", strarg(args, 0)))
@@ -188,7 +189,7 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 		return runtime.Value(workerToken), nil
 	})
 	host["postMessage"] = w.runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
-		w.deliverToParent(arg(args, 0))
+		w.deliverToParent(arg(args, 0), strarg(args, 1))
 		return nil, nil
 	})
 	host["setTimer"] = runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
@@ -437,8 +438,8 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 	}
 }
 
-func (w *DedicatedWorker) PostMessage(data any) {
-	w.parent.agent.Page().trace.Add(trace.Scheduler, "workerMessageQueued", workerMessageTrace(w.id, "parent-to-worker", data))
+func (w *DedicatedWorker) PostMessage(data any, traceJSON string) {
+	w.parent.agent.Page().trace.Add(trace.Scheduler, "workerMessageQueued", serializedWorkerMessageTrace(w.id, "parent-to-worker", data, traceJSON))
 	w.mu.Lock()
 	if w.closed {
 		w.mu.Unlock()
@@ -474,11 +475,11 @@ func (w *DedicatedWorker) postMessageReady(data any) {
 	w.signal()
 }
 
-func (w *DedicatedWorker) deliverToParent(data any) {
+func (w *DedicatedWorker) deliverToParent(data any, traceJSON string) {
 	if w.isClosed() {
 		return
 	}
-	w.parent.agent.Page().trace.Add(trace.Scheduler, "workerMessageQueued", workerMessageTrace(w.id, "worker-to-parent", data))
+	w.parent.agent.Page().trace.Add(trace.Scheduler, "workerMessageQueued", serializedWorkerMessageTrace(w.id, "worker-to-parent", data, traceJSON))
 	w.parent.scheduler.Post(scheduler.DOM, 0, func(ctx context.Context) error {
 		w.parent.agent.Page().trace.Add(trace.Scheduler, "workerMessageDispatch", map[string]any{"direction": "worker-to-parent", "worker": w.id})
 		if w.isClosed() || w.parent.resourceContext.Err() != nil {

@@ -12,3 +12,10 @@ type StructuredCloneProxyRuntime interface{ IsStructuredCloneProxy(Value) bool }
 type DataCloneError struct{ Message string }
 
 func (e *DataCloneError) Error() string { return e.Message }
+
+// StructuredCloneCodec retains native ECMAScript brands across runtime owners.
+// Wire bytes are private to the engine and must not contain realm-owned handles.
+type StructuredCloneCodec interface {
+	SerializeStructuredClone(Value, Value) ([]byte, error)
+	DeserializeStructuredClone([]byte) (Value, error)
+}
