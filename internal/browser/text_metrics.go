@@ -4,26 +4,35 @@ import (
 	"encoding/json"
 
 	"github.com/moreveal/mimic/internal/engine"
+	"github.com/moreveal/mimic/internal/state"
 	"github.com/moreveal/mimic/internal/textmetrics"
 	"github.com/moreveal/mimic/internal/trace"
 )
 
+func newTextMetricsEngine(fonts state.Fonts) *textmetrics.Engine {
+	result := textmetrics.New()
+	for generic, family := range map[string]string{"serif": fonts.Serif, "sans-serif": fonts.SansSerif, "monospace": fonts.Monospace, "system-ui": fonts.SystemUI} {
+		result.SetGenericFamily(generic, family)
+	}
+	return result
+}
+func (p *Page) textMetricsEngine() *textmetrics.Engine {
+	if p.textMetrics == nil {
+		p.textMetrics = newTextMetricsEngine(p.Environment().Fonts)
+	}
+	return p.textMetrics
+}
+
 func (r *Realm) installTextMetrics(host map[string]any) {
 	installFontResourceHosts(host, r.runtime, func() *textmetrics.Engine {
 		p := r.agent.Page()
-		if p.textMetrics == nil {
-			p.textMetrics = textmetrics.New()
-		}
-		return p.textMetrics
+		return p.textMetricsEngine()
 	})
 	r.installFontCollection(host)
 
 	host["shapeText"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		p := r.agent.Page()
-		if p.textMetrics == nil {
-			p.textMetrics = textmetrics.New()
-		}
-		result, err := p.textMetrics.ShapeWithFonts(strarg(args, 0), strarg(args, 1), numarg(args, 2), numarg(args, 3), numarg(args, 4) != 0, numarg(args, 5) != 0, numarg(args, 6) != 0, r.fontChoices)
+		result, err := p.textMetricsEngine().ShapeWithFonts(strarg(args, 0), strarg(args, 1), numarg(args, 2), numarg(args, 3), numarg(args, 4) != 0, numarg(args, 5) != 0, numarg(args, 6) != 0, r.fontChoices)
 		if err != nil {
 			// Private trace only: author-facing exceptions must not expose local paths.
 			bounded := func(value string, limit int) string {

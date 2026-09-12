@@ -186,7 +186,7 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 	var workerFonts *textmetrics.Engine
 	installFontResourceHosts(host, runtime, func() *textmetrics.Engine {
 		if workerFonts == nil {
-			workerFonts = textmetrics.New()
+			workerFonts = newTextMetricsEngine(p.Environment().Fonts)
 		}
 		return workerFonts
 	})

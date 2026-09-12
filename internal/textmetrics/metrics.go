@@ -28,19 +28,20 @@ type resource struct {
 }
 
 type loaded struct {
-	face            *font.Face
-	shaper          *harfbuzz.Font
-	ascent, descent float64
+	face                     *font.Face
+	shaper                   *harfbuzz.Font
+	ascent, descent, lineGap float64
 }
 
 type Engine struct {
-	resources  map[string]resource
-	localNames map[string]resource
-	dirs       []string
-	catalog    []resource
-	scanned    bool
-	faces      map[string]*loaded
-	bytes      int
+	genericFamilies map[string]string
+	resources       map[string]resource
+	localNames      map[string]resource
+	dirs            []string
+	catalog         []resource
+	scanned         bool
+	faces           map[string]*loaded
+	bytes           int
 }
 
 func New() *Engine {
@@ -60,6 +61,18 @@ func New() *Engine {
 // installed Windows reference fonts themselves are not distributed by Mimic.
 func NewDirectories(dirs []string) *Engine {
 	return &Engine{dirs: append([]string(nil), dirs...), faces: map[string]*loaded{}, resources: map[string]resource{}, localNames: map[string]resource{}}
+}
+
+// SetGenericFamily selects a resource family for this isolated engine. It does
+// not alter named-family lookup or synthesize unavailable metrics.
+func (e *Engine) SetGenericFamily(generic, family string) {
+	if family == "" {
+		return
+	}
+	if e.genericFamilies == nil {
+		e.genericFamilies = map[string]string{}
+	}
+	e.genericFamilies[strings.ToLower(generic)] = strings.ToLower(family)
 }
 
 func (e *Engine) scan() {
@@ -142,16 +155,22 @@ func (e *Engine) selectResource(families string, weight float64, italic bool, ch
 			return e.resources[choices[bestChoice].ID], nil
 		}
 
+		configuredGeneric := false
 		if !quoted {
-			switch name {
-			case "serif":
-				name = "times new roman"
-			case "sans-serif":
-				name = "arial"
-			case "monospace":
-				name = "consolas"
-			case "system-ui":
-				name = "segoe ui"
+			if family, ok := e.genericFamilies[name]; ok {
+				configuredGeneric = true
+				name = family
+			} else {
+				switch name {
+				case "serif":
+					name = "times new roman"
+				case "sans-serif":
+					name = "arial"
+				case "monospace":
+					name = "consolas"
+				case "system-ui":
+					name = "segoe ui"
+				}
 			}
 		}
 		best := -1
@@ -175,6 +194,9 @@ func (e *Engine) selectResource(families string, weight float64, italic bool, ch
 				return resource{}, fmt.Errorf("synthetic font style is unsupported")
 			}
 			return r, nil
+		}
+		if configuredGeneric {
+			return resource{}, fmt.Errorf("selected generic font resource is unavailable: %s", name)
 		}
 	}
 	return resource{}, fmt.Errorf("no usable reference font resource")
@@ -218,7 +240,7 @@ func (e *Engine) load(r resource) (*loaded, error) {
 	if !ok {
 		return nil, fmt.Errorf("missing horizontal font metrics")
 	}
-	value := &loaded{face: face, shaper: harfbuzz.NewFont(face), ascent: float64(metrics.Ascender), descent: -float64(metrics.Descender)}
+	value := &loaded{face: face, shaper: harfbuzz.NewFont(face), ascent: float64(metrics.Ascender), descent: -float64(metrics.Descender), lineGap: float64(metrics.LineGap)}
 	// The Windows Chrome profile uses Windows ascender/descender rather than
 	// the optional typographic line metrics (notably different in Consolas).
 	if os2, err := loader.RawTable(ot.MustNewTag("OS/2")); err == nil && len(os2) >= 78 {
@@ -243,6 +265,7 @@ type Glyph struct {
 type Result struct {
 	Glyphs  []Glyph `json:"glyphs"`
 	Ascent  float64 `json:"ascent"`
+	LineGap float64 `json:"lineGap"`
 	Descent float64 `json:"descent"`
 	XHeight float64 `json:"xHeight"`
 	Family  string  `json:"family"`
@@ -305,7 +328,7 @@ func (e *Engine) ShapeWithFonts(text, families string, size, weight float64, ita
 		}
 	}
 	primaryScale := size / float64(f.face.Upem())
-	result := Result{Glyphs: []Glyph{}, Ascent: math.Round(f.ascent * primaryScale), Descent: math.Round(f.descent * primaryScale), XHeight: float64(f.face.LineMetric(font.XHeight)) * primaryScale, Family: r.family}
+	result := Result{Glyphs: []Glyph{}, Ascent: math.Round(f.ascent * primaryScale), Descent: math.Round(f.descent * primaryScale), LineGap: math.Round(f.lineGap * primaryScale), XHeight: float64(f.face.LineMetric(font.XHeight)) * primaryScale, Family: r.family}
 	for _, run := range runs {
 		buffer := harfbuzz.NewBuffer()
 		buffer.AddRunes(runes, run.start, run.end-run.start)

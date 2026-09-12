@@ -56,3 +56,19 @@ existing SVG matrix/geometry tests pass. Raw: `.build/residual-dom-delegated/mat
 Perspective camera-plane clipping remains an explicit diagnostic boundary.
 Ancestor transform accumulation and general flow/table sizing are separate
 outstanding geometry work, not solved by the matrix projection change.
+
+## Generic font resource selection
+
+The frozen host maps `system-ui` to local Ubuntu, confirmed twice by
+`CSS.getPlatformFontsForNode` (`isCustomFont:false`). Independent `Ubuntu` and
+`system-ui` boxes agree, while explicit Segoe UI differs. This is selected
+Environment state, not a Chrome-version constant. The retained receipt is
+`frozen-font-profile-20260912.json`.
+
+`Environment.Fonts` now selects generic resource families for isolated Page and
+Worker font engines; empty fields preserve existing defaults. For this captured
+host, select `Fonts.SystemUI = "Ubuntu"`. Font data still comes from the existing
+local OpenType resource engine; absent selected resources produce a diagnostic
+boundary instead of substituting captured widths. No Ubuntu metrics are stored
+in runtime code. Font line gap metadata is also retained for normal CSS line
+height; Canvas ascent/descent values are unchanged.
