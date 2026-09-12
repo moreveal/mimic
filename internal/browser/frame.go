@@ -535,7 +535,7 @@ func (r *Realm) detachChildFrame(elementID int64) {
 		frame.navigationCancel()
 	}
 	if frame.Realm != nil {
-		frame.Realm.deactivate()
+		frame.Realm.deactivateContext(true)
 	}
 	delete(r.childFrames, elementID)
 	page := r.agent.Page()

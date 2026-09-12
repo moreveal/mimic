@@ -103,9 +103,11 @@ func (r *Realm) referenceRealm(frameID, realmID string) (*Realm, error) {
 }
 
 // Inactive documents keep their objects, not their runnable browser work.
-// Promise checkpoints are disabled too, matching retained-function calls in
-// frozen Chrome. Resource cancellation and runtime disposal are separate.
-func (r *Realm) deactivate() {
+// Removing a frame preserves retained language promises; navigation destroys
+// the old document's execution context. Browser resources stop in either case.
+func (r *Realm) deactivate() { r.deactivateContext(false) }
+
+func (r *Realm) deactivateContext(keepPromiseJobs bool) {
 	defer r.agent.Page().notifyDebuggerProgress()
 	if r.inactive {
 		return
@@ -114,10 +116,10 @@ func (r *Realm) deactivate() {
 		r.closePictureInPictureWindow(r.pictureInPicture, false)
 	}
 	r.inactive = true
+	r.checkpointClosed = !keepPromiseJobs
 	for _, world := range r.isolatedWorlds {
-		world.deactivate()
+		world.deactivateContext(keepPromiseJobs)
 	}
-	r.checkpointClosed = true
 	r.scheduler.Close()
 	r.cancelResources()
 	r.closeSpeechProvider()
@@ -132,12 +134,12 @@ func (r *Realm) deactivate() {
 	r.workers = nil
 	for _, frame := range r.childFrames {
 		if frame.Realm != nil {
-			frame.Realm.deactivate()
+			frame.Realm.deactivateContext(keepPromiseJobs)
 		}
 	}
 	for _, frame := range r.retainedFrames {
 		if frame.Realm != nil {
-			frame.Realm.deactivate()
+			frame.Realm.deactivateContext(keepPromiseJobs)
 		}
 	}
 }

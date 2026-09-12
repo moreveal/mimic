@@ -1,0 +1,58 @@
+{
+  "version": {
+    "Browser": "Chrome/152.0.7977.82",
+    "Protocol-Version": "1.3",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "V8-Version": "15.2.124.21",
+    "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:19841/devtools/browser/f3eb568c-9001-462a-8bce-9ad209f5e079"
+  },
+  "metadata": {
+    "href": "http://127.0.0.1:46126/disabled",
+    "isSecureContext": true,
+    "crossOriginIsolated": false,
+    "innerWidth": 1272,
+    "innerHeight": 653,
+    "outerWidth": 1280,
+    "outerHeight": 800,
+    "devicePixelRatio": 1,
+    "visibility": "visible",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "platform": "Win32"
+  },
+  "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+  "probeSHA256": "0a89117c4a0d34ba582ca436db4d432233a31697eed65d88ff41a56a55776ca7",
+  "headful": true,
+  "featureOverrides": [],
+  "observation": {
+    "false:promise": [
+      "internal",
+      "microtask",
+      "parent",
+      "child",
+      "assimilated"
+    ],
+    "false:digest": [
+      "parent",
+      "child",
+      "assimilated"
+    ],
+    "false:digestBefore": [
+      "parent",
+      "child",
+      "assimilated"
+    ],
+    "true:promise": [
+      "internal",
+      "parent",
+      "child",
+      "assimilated"
+    ],
+    "true:digest": [],
+    "true:digestBefore": [
+      "parent",
+      "child",
+      "assimilated"
+    ]
+  }
+}
