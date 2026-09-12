@@ -1892,3 +1892,52 @@ and popover commands remain unsupported boundaries; this patch does not claim
 complete CSS or browser API coverage. Network navigation failures are currently
 traced but can still surface as an automation navigation timeout after the early
 `Page.navigate` acknowledgement.
+
+## Context locale and persistent modal follow-up (2026-09-12)
+
+Custom IANA timezone and Intl locale now use context-owned state on V8. Date
+local operations retain native Date values; an eight-entry transition cache
+avoids repeated Go crossings within a zone interval. Default formatters are
+cached per realm and invalidated on bootstrap restoration. Intl, locale string
+methods and Temporal's default zone/formatting share the profile without changing
+process-global ICU or the host timezone. Workers and frames use the same source.
+750 observations across six zones match Chrome 152.0.7977.83, including gaps,
+repeats, historical offsets, Date limits, native Temporal and explicit options.
+Concurrent contexts, navigation, iframe/worker inheritance and snapshots have
+focused tests. Non-native-Intl backends still reject custom locale profiles.
+
+The disappearing login dialog was a page reload, not a close operation. The
+site's startup watchdog observed `clientComplete: true` but
+`stylesheetSettled: false`: parser-discovered stylesheets lacked load events.
+Each owner now receives a scheduler-owned load/error after its retained response
+is available, including duplicate links sharing one fetch. Teardown releases
+stylesheet bodies and event bookkeeping. No website-specific workaround or
+watchdog suppression was added.
+
+Dialog beforetoggle/toggle coalescing, cancelation and focus restoration now match
+the focused Chrome lifecycle trace. Preview exports canonical modal membership
+and restores the native top layer, including reopening order. CSS percentage
+tokenization accepts adjacent tokens such as `50%auto`; rejecting this valid
+serialization had dropped the centering inset from CSSOM and preview. The viewer
+test checks centering, ten live updates, close/reopen, and multiple-modal order.
+The live US script reached DOMContentLoaded in 3.48 s and opened login at 6.50 s;
+site-visible languages were `en-US, en`, timezone `America/New_York`, offset 240
+minutes. A later preview still showed the centered English login dialog. These
+are live observations, not a frozen website benchmark.
+
+Fresh fast-gate builds and a freshly rebuilt `c3610c3` comparison are recorded in
+`profile-modal-20260912.json`; every run completed 184/184 valid executions.
+Last repeat versus fresh baseline completion medians (ms): DOM 223.14 vs 209.10,
+static 37.86 vs 36.08, React 100.44 vs 99.17. The preceding new-build run measured
+201.78 / 39.57 / 116.99 ms, so timing variance is material. Do not claim a speedup
+or a zero-regression result: the last repeat is about +6.7% / +4.9% / +1.3%.
+Further profiling would be needed to attribute these differences reliably.
+Marginal RSS at ten sessions was 45.77 / 48.01 MiB (static / React), versus
+45.22 / 47.56 MiB for the fresh baseline. Post-teardown reservations also vary;
+the receipts retain recovery memory and concurrency results rather than imply
+that a lower active-memory number proves complete teardown.
+
+The complete browser/CDP/webapi/profile package run passed (browser 416.63 s),
+with subsequent focused locale, Temporal, dialog, stylesheet, CSS and viewer
+checks passing on the final sources. General layout, resource/device/graphics
+customization and non-native Intl remain explicit limitations.

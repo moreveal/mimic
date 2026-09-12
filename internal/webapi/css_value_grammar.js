@@ -9,6 +9,10 @@ const cssValueTokens=input=>{
   if(c==='/'&&input[i+1]==='*'){const end=input.indexOf('*/',i+2);if(end<0)return null;i=end+1;if(!depth&&value){tokens.push(value);value=''}else value+=' ';continue}
   if(c==='(')depth++;else if(c===')'&&--depth<0)return null;
   if(/\s/.test(c)&&depth===0){if(value){tokens.push(value);value=''}}else value+=c;
+  // A percentage token ends at '%', even without whitespace before the next
+  // token. CSS syntax serializers legitimately emit e.g. `50%auto`; splitting
+  // only on spaces silently discarded valid inset/margin values in CSSOM.
+  if(c==='%'&&depth===0&&cssNumberRegex.test(value.slice(0,-1))){tokens.push(value);value=''}
  }
  if(depth||quote)return null;if(value)tokens.push(value);return tokens;
 };

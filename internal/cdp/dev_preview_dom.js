@@ -34,6 +34,7 @@ const createPreviewMirror = () => {
     const next = new DOMParser().parseFromString(markup || '<html><head></head><body></body></html>','text/html');
     const nodes = new Map(), scroll = [];
     nodes.removals = [];
+    nodes.dialogs = [];
     function collect(node) {
       const id = key(node); if (id) nodes.set(id,node);
       if (node.nodeType === 1) {
@@ -49,6 +50,20 @@ const createPreviewMirror = () => {
     patch(doc.documentElement,next.documentElement,nodes);
     // Delay removals until moves across parents have found their old nodes.
     for (const [parent,node] of nodes.removals) if(node.parentNode===parent)node.remove();
+    // `open` is not the modal/top-layer state. Restore it through the viewer's
+    // native dialog API only after the keyed tree (including shadows) is attached.
+    const modalDialogs=nodes.dialogs.filter(node=>node.hasAttribute('data-mimic-preview-modal')).sort((a,b)=>Number(a.getAttribute('data-mimic-preview-modal'))-Number(b.getAttribute('data-mimic-preview-modal')));
+    for(const node of nodes.dialogs)if(!node.hasAttribute('data-mimic-preview-modal')&&node.matches(':modal')){
+      const open=node.open;if(!open)node.setAttribute('open','');node.close();if(open)node.setAttribute('open','');
+    }
+    const naturalOrder=(state.modalOrder||[]).filter(node=>modalDialogs.includes(node)&&node.matches(':modal')).concat(modalDialogs.filter(node=>!node.matches(':modal')));
+    if(naturalOrder.some((node,index)=>node!==modalDialogs[index]))for(const node of modalDialogs)if(node.matches(':modal')){
+      const open=node.open;if(!open)node.setAttribute('open','');node.close();if(open)node.setAttribute('open','');
+    }
+    for(const node of modalDialogs)if(node.isConnected&&!node.matches(':modal')){
+      const open=node.open;node.removeAttribute('open');node.showModal();if(!open)node.removeAttribute('open');
+    }
+    state.modalOrder=modalDialogs;
     if (navigating) frame.contentWindow.scrollTo({left:0,top:0,behavior:'instant'});
     else {
       for (const [node,left,top] of scroll) if (node.isConnected) { if(node.scrollLeft!==left)node.scrollLeft=left;if(node.scrollTop!==top)node.scrollTop=top; }
@@ -72,6 +87,7 @@ const createPreviewMirror = () => {
       if (node.getAttributeNS(attr.namespaceURI,attr.localName) !== attr.value) node.setAttributeNS(attr.namespaceURI,attr.name,attr.value);
     }
     if (frame) { update(node,next.getAttribute('srcdoc')||''); return; }
+    if (node.localName==='dialog')nodes.dialogs.push(node);
     if (node.localName === 'template') children(node.content,next.content,nodes);
     else children(node,next,nodes);
     if (valueChanged && (textarea || node.localName === 'input') && node.type !== 'file') node.value = textarea ? next.textContent : next.getAttribute('value')||'';

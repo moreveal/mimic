@@ -148,6 +148,7 @@ type Realm struct {
 	cancelPreloads           context.CancelFunc
 	preloadedLinks           map[int64]bool
 	stylesheetLoads          map[preloadKey]*resourcePreload
+	parserStylesheetEvents   map[int64]preloadKey
 	stylesheetFetchSlots     chan struct{}
 	resourceRevision         atomic.Uint64
 	baseCacheDocument        *dom.Document
@@ -467,6 +468,8 @@ func (r *Realm) Close() error {
 	r.moduleFetches = nil
 	r.imageLoads = nil
 	r.preloads = nil
+	r.stylesheetLoads = nil
+	r.parserStylesheetEvents = nil
 	for _, worker := range r.workers {
 		_ = worker.Close()
 	}

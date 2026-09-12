@@ -92,6 +92,14 @@ func TestDevPreviewDisabledAndDirtyUpdates(t *testing.T) {
 		if html := read(); !strings.Contains(html, `data-step="two"`) {
 			t.Fatal("mailbox did not keep latest state")
 		}
+		eval(`document.body.insertAdjacentHTML('beforeend','<dialog id="modal" data-mimic-preview-modal="author">Dialog</dialog>');document.getElementById('modal').showModal()`)
+		if html := read(); !strings.Contains(html, `data-mimic-preview-modal="1"`) || strings.Contains(html, `data-mimic-preview-modal="author"`) {
+			t.Fatal("canonical modal state not projected")
+		}
+		eval(`document.getElementById('modal').close()`)
+		if html := read(); strings.Contains(html, `data-mimic-preview-modal=`) {
+			t.Fatal("closed dialog still marked modal")
+		}
 		p.LockCommands()
 		p.UnsubscribePreview(sub)
 		p.UnlockCommands()
