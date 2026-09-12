@@ -171,7 +171,7 @@ const constructedStyleSheets = (() => {
   for(const type of ['Document','ShadowRoot'])if(globalThis[type])Object.defineProperty(globalThis[type].prototype,'styleSheets',{get(){if(!(this instanceof globalThis[type]))throw new TypeError('Illegal invocation');return ownerCollection(this)},enumerable:true,configurable:true});
   // The cache is derived from the canonical CSSOM; rule edits invalidate it.
   // DOM-owned sheets are still revalidated against their current owner text.
-  const sourceText=sheet=>{const state=sheets.get(sheet);if(state.disabled||state.media&&!matchMedia(state.media).matches)return '';let cached=sourceCache.get(sheet);if(!cached||cached.revision!==revision){cached={revision,text:state.rules.map(ruleText).join('\n')};sourceCache.set(sheet,cached)}return cached.text};
+  const sourceText=sheet=>{const state=sheets.get(sheet);if(state.disabled||state.media&&!cssMediaMatches(state.media))return '';let cached=sourceCache.get(sheet);if(!cached||cached.revision!==revision){cached={revision,text:state.rules.map(ruleText).join('\n')};sourceCache.set(sheet,cached)}return cached.text};
   function adoption(root) {
     if(!(root instanceof Document)&&!shadowSlots.has(root))throw new TypeError('Illegal invocation');
     let value=adopted.get(root);

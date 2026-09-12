@@ -144,18 +144,23 @@
   const parsedStyleRules=text=>{
     text=String(text);
     if(parsedStyleSources.has(text))return parsedStyleSources.get(text);
-    const rules=[],source=text.replace(/\/\*[\s\S]*?\*\//g,''),pattern=/([^{}]+)\{([^{}]*)\}/g;let match;
-    while((match=pattern.exec(source))){
-      const selectors=match[1].split(',').map(value=>value.trim()).filter(value=>value&&!value.startsWith('@')&&!value.includes('%')),body=match[2];let entries;const declarations=()=>entries||(entries=parseCSS(body));
+    const rules=[],generate=mimicSelectorLibrary.generateCSS;
+    const walk=(nodes,conditions=[])=>{for(const node of nodes){
+      if(node.type==='Atrule'){
+        if(['media','supports','layer'].includes(node.name)&&node.block)walk(node.block.children,node.name==='layer'?conditions:[...conditions,{type:node.name,value:generate(node.prelude)}]);
+        continue;
+      }
+      if(node.type!=='Rule'||!node.block)continue;
+      const selectors=node.prelude?.type==='SelectorList'?Array.from(node.prelude.children,generate):[generate(node.prelude)];
+      const body=Array.from(node.block.children).filter(n=>n.type==='Declaration').map(n=>n.property+':'+generate(n.value)+(n.important?' !important':'')+';').join('');
+      let entries;const declarations=()=>entries||(entries=parseCSS(body));
       for(const selector of selectors){
         const specificity=(selector.match(/#[\w-]+/g)||[]).length*100+(selector.match(/\.[\w-]+|\[[^\]]+\]|::?[\w-]+/g)||[]).length*10+(selector.match(/(^|[\s>+~])[a-zA-Z][\w-]*/g)||[]).length;
-        const pseudo=/::?(before|after)$/.exec(selector)?.[1]||'';
-        // Most rules never become candidates (e.g. large icon fonts). Compile
-        // their full predicate only when the immutable rule index selects it.
-        let matcher;
-        rules.push({selector,declarations,specificity,pseudo,matches:node=>(matcher||(matcher=compatibilitySelectors.compileStyle(pseudo?selector.replace(/::?(before|after)$/,''):selector)))(node)});
+        const pseudo=/::?(before|after)$/.exec(selector)?.[1]||'';let matcher;
+        rules.push({selector,declarations,specificity,pseudo,matches:node=>conditions.every(condition=>condition.type==='media'?cssMediaMatches(condition.value):compatibilityCSSSupports.matches?.(condition.value)===true)&&(matcher||(matcher=compatibilitySelectors.compileStyle(pseudo?selector.replace(/::?(before|after)$/,''):selector)))(node)});
       }
-    }
+    }};
+    try{walk(mimicSelectorLibrary.parseStylesheet(text).children)}catch(error){if(error?.name!=='SyntaxError')throw error}
     const size=text.length*2;
     if(size<=8*1024*1024){
       while(parsedStyleSources.size&&(parsedStyleSources.size>=64||parsedStyleSourceBytes+size>8*1024*1024)){
@@ -1089,7 +1094,7 @@
   window.queueMicrotask=function queueMicrotask(callback){if(typeof callback!=='function')throw new TypeError('callback is not a function');Promise.resolve().then(()=>{if(host.executionContextActive())callback()})};
   window.fetch=function fetch(input,init={}){const request=input instanceof Request?new Request(input,init):new Request(input,init);return host.fetch(request.url,request.method,Object.fromEntries(request.headers),request.body==null?'':String(request.body)).then(r=>{const response=new Response(r.body,{status:r.status,headers:r.headers});const state=responseSlots.get(response);state.url=r.url;return response})};
   window.performance=installPerformanceObject(Object.create(Performance.prototype));window.DOMStringList=DOMStringList;
-  window.getComputedStyle=e=>{if(elementSlot(e)?.type!=='element')throw new TypeError("Failed to execute 'getComputedStyle' on 'Window': parameter 1 is not of type 'Element'.");return cssDeclaration(e,true)};window.matchMedia=q=>({matches:host.media(String(q)),media:String(q),onchange:null,addEventListener(){},removeEventListener(){}});
+  window.getComputedStyle=e=>{if(elementSlot(e)?.type!=='element')throw new TypeError("Failed to execute 'getComputedStyle' on 'Window': parameter 1 is not of type 'Element'.");return cssDeclaration(e,true)};window.matchMedia=q=>({matches:cssMediaMatches(String(q)),media:String(q),onchange:null,addEventListener(){},removeEventListener(){}});
   // Constructor discovery is reflection, not a read of every Window getter.
   // In a cold child, reading top/parent here would instantiate native proxies
   // before bootstrap capture ends and could traverse a foreign realm.

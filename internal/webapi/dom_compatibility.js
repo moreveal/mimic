@@ -392,7 +392,7 @@ const compatibilityElementState={};
     const mediaSlots=new WeakMap();
     class MediaQueryList extends EventTarget {
       constructor(query){super();mediaSlots.set(this,{query:String(query),onchange:null})}
-      get media(){return mediaSlots.get(this).query}get matches(){return !!host.media(this.media)}
+      get media(){return mediaSlots.get(this).query}get matches(){return !!cssMediaMatches(mediaSlots.get(this).query)}
       get onchange(){return mediaSlots.get(this).onchange}set onchange(value){const s=mediaSlots.get(this);if(s.onchange)this.removeEventListener('change',s.onchange);s.onchange=value;if(typeof value==='function')this.addEventListener('change',value)}
       addListener(callback){this.addEventListener('change',callback)}removeListener(callback){this.removeEventListener('change',callback)}
     }
