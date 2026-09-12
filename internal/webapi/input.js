@@ -213,9 +213,12 @@
   accessor(DOMRectList.prototype,'length',function(){const list=rectLists.get(this);if(!list)throw new TypeError('Illegal invocation');return list.length});
   Object.defineProperty(DOMRectList.prototype,'item',{value:function(index){if(!arguments.length)throw new TypeError('Expected index');const list=rectLists.get(this);if(!list)throw new TypeError('Illegal invocation');return list[Number(index)>>>0]??null},writable:true,enumerable:true,configurable:true});
   Object.defineProperty(DOMRectList.prototype,Symbol.iterator,{value:function(){const list=rectLists.get(this);if(!list)throw new TypeError('Illegal invocation');return list[Symbol.iterator]()},writable:true,configurable:true});
-  Object.defineProperty(Element.prototype,'getClientRects',{value:function(){
-    const values=this.isConnected&&layoutRectFor(this).width>0&&layoutRectFor(this).height>0?[makeDOMRect(null,this)]:[],list=Object.create(DOMRectList.prototype);
+  makeElementClientRects=element=>{
+    const values=computedStyleDocumentAvailable(element)&&layoutRectFor(element).width>0&&layoutRectFor(element).height>0?[makeDOMRect(null,element)]:[],list=Object.create(DOMRectList.prototype);
     rectLists.set(list,values);for(let i=0;i<values.length;i++)Object.defineProperty(list,i,{value:values[i],enumerable:true,configurable:true});return list;
+  };
+  Object.defineProperty(Element.prototype,'getClientRects',{value:function(){
+    return callRealmBinding(this,requireRealmBinding(this,'ElementGeometry'),'rects',[]);
   },writable:true,enumerable:true,configurable:true});
   }
 }
