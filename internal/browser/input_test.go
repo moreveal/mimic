@@ -209,6 +209,35 @@ func TestProtocolSelectAndContentClickAcrossWorlds(t *testing.T) {
 	})
 }
 
+func TestProtocolMouseInputRoutesThroughIframeCoordinates(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, page *Page) {
+		navigateCapabilityFixture(t, page)
+		ctx := context.Background()
+		value, err := page.Evaluate(ctx, `(()=>{
+			document.body.style.margin='0';
+			const frame=document.createElement('iframe');
+			frame.style.cssText='display:block;margin-left:40px;margin-top:30px;width:200px;height:100px;border:0';
+			document.body.append(frame);
+			frame.contentDocument.body.innerHTML='<button style="margin-left:10px;margin-top:5px;width:80px;height:30px" onclick="window.clicks=(window.clicks||0)+1">Go</button>';
+			const outer=frame.getBoundingClientRect(),inner=frame.contentDocument.querySelector('button').getBoundingClientRect();
+			return [outer.x+inner.x+inner.width/2,outer.y+inner.y+inner.height/2];
+		})()`)
+		if err != nil {
+			t.Fatal(err)
+		}
+		coordinates := value.([]any)
+		for _, kind := range []string{"mouseMoved", "mousePressed", "mouseReleased"} {
+			if err := page.DispatchProtocolInput(ctx, "Input.dispatchMouseEvent", map[string]any{"type": kind, "x": coordinates[0], "y": coordinates[1], "button": "left", "clickCount": float64(1)}); err != nil {
+				t.Fatal(err)
+			}
+		}
+		clicked, err := page.Evaluate(ctx, `document.querySelector('iframe').contentWindow.clicks`)
+		if err != nil || numberValue(clicked) != 1 {
+			t.Fatalf("iframe button was not clicked: %v %v", clicked, err)
+		}
+	})
+}
+
 func TestProtocolInputSuppressionSurvivesNavigation(t *testing.T) {
 	page := testPage(t)
 	ctx := context.Background()

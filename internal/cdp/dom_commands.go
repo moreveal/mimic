@@ -8,6 +8,44 @@ import (
 	"github.com/moreveal/mimic/internal/dom"
 )
 
+func coordinateValue(value any) float64 {
+	switch value := value.(type) {
+	case float64:
+		return value
+	case float32:
+		return float64(value)
+	case int:
+		return float64(value)
+	case int64:
+		return float64(value)
+	default:
+		return 0
+	}
+}
+
+func (s *session) applyInputHitHint(params map[string]any) {
+	if s.hitNode == 0 || len(s.hitQuad) != 8 {
+		return
+	}
+	x, y := coordinateValue(params["x"]), coordinateValue(params["y"])
+	minX, maxX := coordinateValue(s.hitQuad[0]), coordinateValue(s.hitQuad[0])
+	minY, maxY := coordinateValue(s.hitQuad[1]), coordinateValue(s.hitQuad[1])
+	for index, raw := range s.hitQuad[2:] {
+		value := coordinateValue(raw)
+		if index%2 == 0 {
+			minX, maxX = min(minX, value), max(maxX, value)
+		} else {
+			minY, maxY = min(minY, value), max(maxY, value)
+		}
+	}
+	if x < minX || x > maxX || y < minY || y > maxY {
+		return
+	}
+	params["_mimicNodeId"] = s.hitNode
+	params["_mimicLocalX"] = x - s.hitDX
+	params["_mimicLocalY"] = y - s.hitDY
+}
+
 func (s *session) nodeID(ctx context.Context, p map[string]any) (int64, error) {
 	if object := stringValue(p["objectId"]); object != "" {
 		return s.runtimeDebugger().RequestNode(ctx, object)
@@ -51,6 +89,30 @@ func (s *session) nodeFunction(ctx context.Context, p map[string]any, fn string,
 	}
 	value, _ := result["result"].(map[string]any)
 	return value["value"], nil
+}
+
+func (s *session) frameElementOffset(ctx context.Context, frame *browser.Frame) (float64, float64, error) {
+	parent := frame.Parent()
+	if parent == nil {
+		return 0, 0, nil
+	}
+	d := s.runtimeDebugger()
+	object, err := d.ResolveNode(ctx, parent.ID, "", frame.ElementNodeID(), "")
+	if err != nil {
+		return 0, 0, err
+	}
+	objectID := stringValue(object["objectId"])
+	defer d.ReleaseObject(ctx, objectID)
+	result, err := d.CallFunction(ctx, parent.ID, "", `function(){const r=this.getBoundingClientRect();return {x:r.x,y:r.y}}`, map[string]any{"objectId": objectID}, browser.DebuggerOptions{ReturnByValue: true})
+	if err != nil {
+		return 0, 0, err
+	}
+	if ex := result["exceptionDetails"]; ex != nil {
+		return 0, 0, fmt.Errorf("iframe geometry failed: %v", ex)
+	}
+	remote, _ := result["result"].(map[string]any)
+	offset, _ := remote["value"].(map[string]any)
+	return coordinateValue(offset["x"]), coordinateValue(offset["y"]), nil
 }
 
 func (s *session) describeNode(id int64, depth int) (map[string]any, error) {
@@ -147,13 +209,41 @@ func (s *session) handleDOM(ctx context.Context, method string, p map[string]any
 		_, err := s.nodeFunction(ctx, p, `function(){if(!this.isConnected)throw new Error('Node is detached from document');this.scrollIntoView({block:'center',inline:'center'})}`, nil)
 		return empty, true, err
 	case "DOM.getContentQuads", "DOM.getBoxModel":
+		id, idErr := s.nodeID(ctx, p)
+		if idErr != nil {
+			return nil, true, idErr
+		}
 		value, err := s.nodeFunction(ctx, p, `function(){if(!this.isConnected||this.nodeType!==1)throw new Error('Could not compute box model');const r=this.getBoundingClientRect(),s=getComputedStyle(this),n=k=>parseFloat(s[k])||0,q=(l,t,r,b)=>[l,t,r,t,r,b,l,b];if(s.display==='none'||!r.width||!r.height)throw new Error('Could not compute box model');const padding=q(r.left+n('borderLeftWidth'),r.top+n('borderTopWidth'),r.right-n('borderRightWidth'),r.bottom-n('borderBottomWidth'));return {border:q(r.left,r.top,r.right,r.bottom),padding,content:q(padding[0]+n('paddingLeft'),padding[1]+n('paddingTop'),padding[2]-n('paddingRight'),padding[5]-n('paddingBottom')),margin:q(r.left-n('marginLeft'),r.top-n('marginTop'),r.right+n('marginRight'),r.bottom+n('marginBottom')),width:r.width,height:r.height}}`, nil)
 		if err != nil {
 			return nil, true, err
 		}
 		model, _ := value.(map[string]any)
+		frame, _ := s.page.FrameForDOMNode(id)
+		dxTotal, dyTotal := 0.0, 0.0
+		for frame != nil && frame.Parent() != nil {
+			dx, dy, offsetErr := s.frameElementOffset(ctx, frame)
+			if offsetErr != nil {
+				return nil, true, offsetErr
+			}
+			dxTotal += dx
+			dyTotal += dy
+			for _, name := range []string{"border", "padding", "content", "margin"} {
+				quad, _ := model[name].([]any)
+				for index := range quad {
+					coordinate := coordinateValue(quad[index])
+					if index%2 == 0 {
+						quad[index] = coordinate + dx
+					} else {
+						quad[index] = coordinate + dy
+					}
+				}
+			}
+			frame = frame.Parent()
+		}
 		if method == "DOM.getContentQuads" {
-			return map[string]any{"quads": []any{model["content"]}}, true, nil
+			quad, _ := model["content"].([]any)
+			s.hitNode, s.hitDX, s.hitDY, s.hitQuad = id, dxTotal, dyTotal, append([]any(nil), quad...)
+			return map[string]any{"quads": []any{quad}}, true, nil
 		}
 		return map[string]any{"model": model}, true, nil
 	case "DOM.setAttributeValue", "DOM.removeAttribute", "DOM.setNodeValue", "DOM.setOuterHTML", "DOM.removeNode":

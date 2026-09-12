@@ -10,6 +10,13 @@ import (
 
 type inputProtocolError struct{ message string }
 
+type inputFrameRect struct {
+	X      float64 `json:"x"`
+	Y      float64 `json:"y"`
+	Width  float64 `json:"width"`
+	Height float64 `json:"height"`
+}
+
 func (e *inputProtocolError) Error() string     { return e.message }
 func (e *inputProtocolError) ProtocolCode() int { return -32602 }
 
@@ -80,9 +87,86 @@ func (p *Page) DispatchProtocolInput(ctx context.Context, method string, params 
 	p.realmEvaluationDepth++
 	defer func() { p.realmEvaluationDepth--; p.collectRealmOwners() }()
 	return r.scheduler.RunInline(ctx, func(ctx context.Context) error {
-		_, err := r.invokeInputWorld(ctx, r, 0, operation, string(encoded))
+		target := r
+		nodeID := int64(0)
+		if operation == "mouse" {
+			if hinted := int64(numberValue(params["_mimicNodeId"])); hinted != 0 {
+				if frame, ok := p.FrameForDOMNode(hinted); ok && frame.Realm != nil {
+					target, nodeID = frame.Realm, hinted
+					params["x"], params["y"] = params["_mimicLocalX"], params["_mimicLocalY"]
+				}
+			}
+			delete(params, "_mimicNodeId")
+			delete(params, "_mimicLocalX")
+			delete(params, "_mimicLocalY")
+			if nodeID == 0 {
+				var err error
+				target, params, err = p.mouseInputTarget(ctx, target, params)
+				if err != nil {
+					return err
+				}
+			}
+			encoded, err = json.Marshal(params)
+			if err != nil {
+				return err
+			}
+		}
+		_, err := r.invokeInputWorld(ctx, target, nodeID, operation, string(encoded))
 		return err
 	})
+}
+
+// mouseInputTarget maps top-level CDP coordinates through the active iframe
+// tree. CDP exposes one input surface per Page even though DOM handles belong
+// to individual frame realms.
+func (p *Page) mouseInputTarget(ctx context.Context, owner *Realm, params map[string]any) (*Realm, map[string]any, error) {
+	x, xOK := numberParameter(params["x"])
+	y, yOK := numberParameter(params["y"])
+	if !xOK || !yOK {
+		return owner, params, nil
+	}
+	frame, _ := owner.agent.(*Frame)
+	if frame == nil {
+		return owner, params, nil
+	}
+	for _, child := range frame.Children() {
+		if child.Realm == nil || child.ElementNodeID() == 0 {
+			continue
+		}
+		raw, err := owner.invokeInputWorld(ctx, owner, child.ElementNodeID(), "rect", "{}")
+		if err != nil {
+			return nil, nil, err
+		}
+		var rect inputFrameRect
+		if err := json.Unmarshal([]byte(raw), &rect); err != nil {
+			return nil, nil, err
+		}
+		if rect.Width <= 0 || rect.Height <= 0 || x < rect.X || y < rect.Y || x >= rect.X+rect.Width || y >= rect.Y+rect.Height {
+			continue
+		}
+		local := make(map[string]any, len(params))
+		for key, value := range params {
+			local[key] = value
+		}
+		local["x"], local["y"] = x-rect.X, y-rect.Y
+		return p.mouseInputTarget(ctx, child.Realm, local)
+	}
+	return owner, params, nil
+}
+
+func numberParameter(value any) (float64, bool) {
+	switch value := value.(type) {
+	case float64:
+		return value, true
+	case float32:
+		return float64(value), true
+	case int:
+		return float64(value), true
+	case int64:
+		return float64(value), true
+	default:
+		return 0, false
+	}
 }
 
 func (r *Realm) invokeInputWorld(ctx context.Context, target *Realm, nodeID int64, operation, payload string) (string, error) {

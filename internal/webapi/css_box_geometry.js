@@ -15,10 +15,9 @@ const cssBoxModel=(()=>{
   const display=hiddenInput?'none':get('display')||(invisible.has(tag(element))||host.getAttribute(elementSlot(element).nodeId,'hidden')!==null?'none':tableDisplays[tag(element)]|| (tag(element)==='SUMMARY'?'list-item':blocks.has(tag(element))?'block':'inline')),position=get('position')||'static';
   const result={element,entries,get,display,position};cache.set(element,result);
   result.inherited=name=>{for(let p=element;p;p=geometryParent(p)){const v=computedCSSDeclarations(p).find(e=>e.name===name)?.value;if(v&&!['inherit','unset'].includes(v))return v}return null};
-  result.fontSize=(cssComputedFontSize(element)??16);
   result.length=(text,basis=0)=>{
    if(text==null||['auto','none','normal','initial','unset'].includes(text))return null;
-   const value=cssResolveLength(text,{em:result.fontSize,rem:(cssComputedFontSize(document.documentElement)??16),percent:basis});
+   const value=cssResolveLength(text,{em:result.fontSize??16,rem:(cssComputedFontSize(document.documentElement)??16),percent:basis});
    if(value!==null)return unit(value);
    const viewport=/^([+-]?[\d.]+)(vw|vh|vmin|vmax)$/.exec(text);if(viewport){const size=host.viewport();return unit(Number(viewport[1])*({vw:size.width,vh:size.height,vmin:Math.min(size.width,size.height),vmax:Math.max(size.width,size.height)}[viewport[2]])/100)}
    return null;
@@ -31,6 +30,10 @@ const cssBoxModel=(()=>{
     out['m'+side]=result.length(get('margin-'+side),basis)||0;
    }return out;
   };
+  // Publish a complete recursive state before resolving font inheritance.
+  // Complex author selectors can re-enter geometry while font size walks the
+  // ancestor cascade; callers must never observe a half-built state object.
+  result.fontSize=(cssComputedFontSize(element)??16);
   return result;
  };
  const children=element=>{const root=elementShadows.get(element)||element,data=elementSlot(root);return data?host.nodeChildren(data.nodeId).map(wrap):Array.from(fragmentState(root).children)};

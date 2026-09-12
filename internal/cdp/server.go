@@ -175,6 +175,10 @@ type session struct {
 	frameByContext          map[int64]string
 	realmByFrame            map[string]string
 	worldContexts           map[int64]runtimeWorldContext
+	hitNode                 int64
+	hitDX                   float64
+	hitDY                   float64
+	hitQuad                 []any
 }
 
 func (s *session) bindPage(page *browser.Page) {
@@ -516,6 +520,9 @@ func (s *session) handle(m message) {
 	}
 	switch m.Method {
 	case "Input.dispatchKeyEvent", "Input.insertText", "Input.dispatchMouseEvent", "Input.setIgnoreInputEvents":
+		if m.Method == "Input.dispatchMouseEvent" {
+			s.applyInputHitHint(p)
+		}
 		err = s.page.DispatchProtocolInput(s.ctx, m.Method, p)
 	case "Page.enable", "Network.enable", "DOM.enable", "Log.enable", "Performance.enable", "Security.enable", "Inspector.enable":
 		s.setDomain(strings.SplitN(m.Method, ".", 2)[0], true)

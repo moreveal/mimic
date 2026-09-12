@@ -7,6 +7,20 @@ import (
 	"github.com/gorilla/websocket"
 )
 
+func TestInputHitHintUsesOnlyCoordinatesInsideQuad(t *testing.T) {
+	s := &session{hitNode: 42, hitDX: 100, hitDY: 200, hitQuad: []any{110.0, 220.0, 150.0, 220.0, 150.0, 260.0, 110.0, 260.0}}
+	inside := map[string]any{"x": 130.0, "y": 240.0}
+	s.applyInputHitHint(inside)
+	if inside["_mimicNodeId"] != int64(42) || inside["_mimicLocalX"] != 30.0 || inside["_mimicLocalY"] != 40.0 {
+		t.Fatalf("inside hint: %#v", inside)
+	}
+	outside := map[string]any{"x": 151.0, "y": 240.0}
+	s.applyInputHitHint(outside)
+	if outside["_mimicNodeId"] != nil {
+		t.Fatalf("outside point received hint: %#v", outside)
+	}
+}
+
 func TestDOMQueriesShareRealmSelectorEngine(t *testing.T) {
 	s, addr := runningServer(t)
 	if _, err := s.Page.Evaluate(context.Background(), `document.body.innerHTML='<main id="root"><i class="item"></i><i class="item" id="second"></i></main>';Element.prototype.querySelectorAll=()=>[]`); err != nil {

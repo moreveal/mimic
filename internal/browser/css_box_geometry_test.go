@@ -10,6 +10,21 @@ import (
 
 func TestCSSBoxGraphMatchesFrozenChrome(t *testing.T) { testCSSObservation(t, "css_box_geometry") }
 
+func TestCSSBoxStateIsCompleteDuringRecursiveComputedStyle(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, page *Page) {
+		navigateCapabilityFixture(t, page)
+		result, err := page.Evaluate(context.Background(), `(()=>{
+			document.head.innerHTML='<style>.submenuitem { font-size: 14px }</style>';
+			document.body.innerHTML='<div style="display:none"><a class="submenuitem">Home</a></div>';
+			const rect=document.querySelector('a').getBoundingClientRect();
+			return rect.width===0&&rect.height===0;
+		})()`)
+		if err != nil || result != true {
+			t.Fatalf("hidden descendant geometry: %v %v", result, err)
+		}
+	})
+}
+
 func TestCSSComputedCatalogMatchesFrozenChrome(t *testing.T) {
 	for _, name := range []string{"css_geometry_integration", "css_geometry_audit", "css_details_query", "css_foreign_owner", "css_shadow_inheritance", "css_line_rounding", "css_wrapper_flow", "css_specified_values", "css_zero_font", "css_computed_initial", "css_computed_catalog", "css_computed_dynamic"} {
 		t.Run(name, func(t *testing.T) { testCSSObservation(t, name) })
