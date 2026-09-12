@@ -1,0 +1,395 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 709,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "width": 0,
+      "height": 0
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "two-fresh-controlled-profiles",
+    "origin": "http://127.0.0.1:62278/plain",
+    "visibilityState": "hidden"
+  },
+  "probeSHA256": "14903708353c76e333f66bac6b25e331d1e1108026122c801082fc571397c0e1",
+  "chromeBinarySHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+  "controlEqual": true,
+  "result": {
+    "result": {
+      "value": {
+        "open-unassigned": [
+          [
+            "",
+            "",
+            false,
+            false,
+            false
+          ],
+          [
+            "",
+            "",
+            false,
+            false,
+            false
+          ],
+          true
+        ],
+        "open-assigned": [
+          [
+            "flex",
+            "rgb(1, 2, 3)",
+            false,
+            false,
+            false
+          ],
+          [
+            "flex",
+            "rgb(1, 2, 3)",
+            false,
+            false,
+            false
+          ],
+          [
+            "",
+            "",
+            false,
+            false,
+            false
+          ],
+          "flex"
+        ],
+        "open-unmatched": [
+          [
+            "",
+            "",
+            false,
+            false,
+            false
+          ],
+          [
+            "",
+            "",
+            false,
+            false,
+            false
+          ],
+          [
+            "flex",
+            "rgb(1, 2, 3)",
+            false,
+            false,
+            false
+          ],
+          ""
+        ],
+        "open-attrs": [
+          "named",
+          "named",
+          "named",
+          "named"
+        ],
+        "open-named": [
+          [
+            "flex",
+            "rgb(1, 2, 3)",
+            false,
+            false,
+            false
+          ],
+          [
+            "flex",
+            "rgb(1, 2, 3)",
+            false,
+            false,
+            false
+          ],
+          [
+            "",
+            "",
+            false,
+            false,
+            false
+          ],
+          "flex"
+        ],
+        "open-duplicate": [
+          [
+            "flex",
+            "rgb(1, 2, 3)",
+            false,
+            false,
+            false
+          ],
+          [
+            "",
+            "",
+            false,
+            false,
+            false
+          ],
+          [
+            "flex",
+            "rgb(1, 2, 3)",
+            false,
+            false,
+            false
+          ]
+        ],
+        "open-reorder": [
+          [
+            "flex",
+            "rgb(1, 2, 3)",
+            false,
+            false,
+            false
+          ],
+          [
+            "flex",
+            "rgb(1, 2, 3)",
+            false,
+            false,
+            false
+          ],
+          [
+            "",
+            "",
+            false,
+            false,
+            false
+          ]
+        ],
+        "open-slot-removed": [
+          [
+            "",
+            "",
+            false,
+            false,
+            false
+          ],
+          ""
+        ],
+        "open-moved": [
+          [
+            "flex",
+            "rgb(1, 2, 3)",
+            false,
+            false,
+            false
+          ],
+          [
+            "flex",
+            "rgb(1, 2, 3)",
+            false,
+            false,
+            false
+          ],
+          "flex"
+        ],
+        "closed-unassigned": [
+          [
+            "",
+            "",
+            false,
+            false,
+            false
+          ],
+          [
+            "",
+            "",
+            false,
+            false,
+            false
+          ],
+          true
+        ],
+        "closed-assigned": [
+          [
+            "flex",
+            "rgb(1, 2, 3)",
+            false,
+            false,
+            false
+          ],
+          [
+            "flex",
+            "rgb(1, 2, 3)",
+            false,
+            false,
+            false
+          ],
+          [
+            "",
+            "",
+            false,
+            false,
+            false
+          ],
+          "flex"
+        ],
+        "closed-unmatched": [
+          [
+            "",
+            "",
+            false,
+            false,
+            false
+          ],
+          [
+            "",
+            "",
+            false,
+            false,
+            false
+          ],
+          [
+            "flex",
+            "rgb(1, 2, 3)",
+            false,
+            false,
+            false
+          ],
+          ""
+        ],
+        "closed-attrs": [
+          "named",
+          "named",
+          "named",
+          "named"
+        ],
+        "closed-named": [
+          [
+            "flex",
+            "rgb(1, 2, 3)",
+            false,
+            false,
+            false
+          ],
+          [
+            "flex",
+            "rgb(1, 2, 3)",
+            false,
+            false,
+            false
+          ],
+          [
+            "",
+            "",
+            false,
+            false,
+            false
+          ],
+          "flex"
+        ],
+        "closed-duplicate": [
+          [
+            "flex",
+            "rgb(1, 2, 3)",
+            false,
+            false,
+            false
+          ],
+          [
+            "",
+            "",
+            false,
+            false,
+            false
+          ],
+          [
+            "flex",
+            "rgb(1, 2, 3)",
+            false,
+            false,
+            false
+          ]
+        ],
+        "closed-reorder": [
+          [
+            "flex",
+            "rgb(1, 2, 3)",
+            false,
+            false,
+            false
+          ],
+          [
+            "flex",
+            "rgb(1, 2, 3)",
+            false,
+            false,
+            false
+          ],
+          [
+            "",
+            "",
+            false,
+            false,
+            false
+          ]
+        ],
+        "closed-slot-removed": [
+          [
+            "",
+            "",
+            false,
+            false,
+            false
+          ],
+          ""
+        ],
+        "closed-moved": [
+          [
+            "flex",
+            "rgb(1, 2, 3)",
+            false,
+            false,
+            false
+          ],
+          [
+            "flex",
+            "rgb(1, 2, 3)",
+            false,
+            false,
+            false
+          ],
+          "flex"
+        ],
+        "nestedSuppressed": [
+          "",
+          "",
+          false,
+          false,
+          false
+        ],
+        "nestedAssigned": [
+          "flex",
+          "rgb(1, 2, 3)",
+          false,
+          false,
+          false
+        ],
+        "foreignUnassigned": [
+          "",
+          ""
+        ],
+        "foreignAssigned": [
+          "flex",
+          "flex"
+        ],
+        "borrowedForeignGetter": ""
+      }
+    }
+  }
+}
