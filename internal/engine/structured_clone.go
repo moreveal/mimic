@@ -19,3 +19,9 @@ type StructuredCloneCodec interface {
 	SerializeStructuredClone(Value, Value) ([]byte, error)
 	DeserializeStructuredClone([]byte) (Value, error)
 }
+
+// StructuredClonePlatformDecoder reconstructs registered host objects in the
+// receiving realm while V8 retains graph identity, cycles and native brands.
+type StructuredClonePlatformDecoder interface {
+	DeserializeStructuredClonePlatform([]byte, Value) (Value, error)
+}

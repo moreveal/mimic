@@ -35,6 +35,9 @@ func installStructuredCloneHost(host map[string]any, runtime engine.Runtime) {
 		if err != nil {
 			return nil, err
 		}
+		if decoder, ok := runtime.(engine.StructuredClonePlatformDecoder); ok && len(args) > 1 {
+			return decoder.DeserializeStructuredClonePlatform(bytes, args[1])
+		}
 		return codec.DeserializeStructuredClone(bytes)
 	})
 }
