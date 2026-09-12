@@ -378,7 +378,13 @@ def surface_catalog(catalog: dict) -> str:
     for decl in catalog["declarations"]:
         if decl["kind"] not in {"interface", "namespace"}:
             continue
-        exposed = decl.get("extended", {}).get("Exposed", [])
+        attributes = dict(decl.get("extended", {}))
+        # Retained IDL predates the conditional-Exposed parser. Normalize its
+        # spelling in every projection, not just capability feature gating.
+        for key in list(attributes):
+            if key.startswith('Exposed('):
+                attributes.update(extended('[' + key + ']'))
+        exposed = attributes.get("Exposed", [])
         if isinstance(exposed, str):
             exposed = [exposed]
         if exposed is True:

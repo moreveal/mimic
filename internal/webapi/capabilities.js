@@ -31,6 +31,85 @@
       Object.defineProperty(proto,name,descriptor);
     };
     const scalar=()=>state('identity');
+    // These interfaces are exposed even without a model service. Keep their
+    // static entry points coherent: convert dictionaries before resolving
+    // availability or rejecting creation, and never fabricate model objects.
+    const aiSchemas={
+      Summarizer:{policy:'summarizer',core:['expectedContextLanguages','expectedInputLanguages','format','length','outputLanguage','type'],create:['monitor','sharedContext','signal']},
+      LanguageModel:{policy:'language-model',core:['expectedInputs','expectedOutputs','temperature','topK'],create:['initialPrompts','monitor','signal']},
+      Translator:{policy:'translator',core:['sourceLanguage','targetLanguage'],create:['monitor','signal'],required:true},
+      LanguageDetector:{policy:'language-detector',core:['expectedInputLanguages'],create:['monitor','signal']}
+    };
+    const aiEnums={format:['SummarizerFormat',['plain-text','markdown']],length:['SummarizerLength',['short','medium','long']],type:['SummarizerType',['tl;dr','key-points','teaser','headline']]};
+    const aiString=value=>{if(typeof value==='symbol')throw new TypeError('Cannot convert a Symbol value to a string');return String(value)};
+    const aiSequence=(value,convert)=>{
+      if(value===null||!['object','function'].includes(typeof value))throw new TypeError('The provided value cannot be converted to a sequence.');
+      const method=value[Symbol.iterator];if(typeof method!=='function')throw new TypeError('The object must have a callable @@iterator property.');
+      // An iterator record reads @@iterator and next exactly once.
+      const iterator=Reflect.apply(method,value,[]),next=iterator.next,out=[];
+      for(;;){const step=Reflect.apply(next,iterator,[]);if(Object(step)!==step)throw new TypeError('Iterator result is not an object');if(step.done)return out;out.push(convert(step.value))}
+    };
+    const aiConvert=(context,convert,value)=>{try{return convert(value)}catch(error){if(error instanceof TypeError)throw new TypeError(context+error.message);throw error}};
+    const aiMember=(options,key,dictionary,convert,required=false)=>{
+      const value=options[key];if(value===undefined){if(required)throw new TypeError(`Failed to read the '${key}' property from '${dictionary}': Required member is undefined.`);return undefined}
+      return aiConvert(`Failed to read the '${key}' property from '${dictionary}': `,convert,value);
+    };
+    const aiEnum=(name,values)=>value=>{const text=aiString(value);if(!values.includes(text))throw new TypeError(`The provided value '${text}' is not a valid enum value of type ${name}.`);return text};
+    const aiExpected=value=>{
+      if(value!=null&&!['object','function'].includes(typeof value))throw new TypeError("The provided value is not of type 'LanguageModelExpected'.");
+      const options=value||{},languages=aiMember(options,'languages','LanguageModelExpected',v=>aiSequence(v,aiString));
+      const type=aiMember(options,'type','LanguageModelExpected',aiEnum('LanguageModelMessageType',['text','image','audio','tool-call','tool-response']),true);
+      return {languages,type};
+    };
+    const aiMessage=value=>{
+      if(value!=null&&!['object','function'].includes(typeof value))throw new TypeError("The provided value is not of type 'LanguageModelMessage'.");
+      const options=value||{},content=aiMember(options,'content','LanguageModelMessage',v=>{if(v!==null&&typeof v==='object')throw new DOMException('Structured model prompt content is unsupported.','NotSupportedError');return aiString(v)},true),prefix=aiMember(options,'prefix','LanguageModelMessage',Boolean);
+      const role=aiMember(options,'role','LanguageModelMessage',aiEnum('LanguageModelMessageRole',['system','user','assistant']),true);
+      return {content,prefix,role};
+    };
+    const aiOptions=(type,operation,args)=>{
+      const schema=aiSchemas[type],dictionary=type+(operation==='create'?'CreateOptions':'CreateCoreOptions'),core=type+'CreateCoreOptions',prefix=`Failed to execute '${operation}' on '${type}': `;
+      const fail=message=>{throw new TypeError(prefix+message)};
+      if(schema.required&&!args.length)fail('1 argument required, but only 0 present.');
+      const input=args[0];
+      if(input!=null&&!['object','function'].includes(typeof input)||schema.required&&input==null)fail(`The provided value is not of type '${dictionary}'.`);
+      const converted={},options=input||{};
+      for(const key of schema.core.concat(operation==='create'?schema.create:[])){
+        const value=options[key],owner=schema.core.includes(key)?core:dictionary;
+        if(value===undefined){if(schema.required&&schema.core.includes(key))fail(`Failed to read the '${key}' property from '${owner}': Required member is undefined.`);continue}
+        let convert=v=>v;
+        if(type==='Summarizer'&&aiEnums[key])convert=aiEnum(...aiEnums[key]);
+        else if(['sourceLanguage','targetLanguage','outputLanguage','sharedContext'].includes(key))convert=aiString;
+        else if(['expectedInputLanguages','expectedContextLanguages'].includes(key))convert=v=>aiSequence(v,aiString);
+        else if(['expectedInputs','expectedOutputs'].includes(key))convert=v=>aiSequence(v,aiExpected);
+        else if(key==='initialPrompts')convert=v=>aiSequence(v,aiMessage);
+        else if(key==='monitor')convert=v=>{if(typeof v!=='function')throw new TypeError('The given value is not a function.');return v};
+        else if(key==='signal')convert=v=>{try{Object.getOwnPropertyDescriptor(AbortSignal.prototype,'aborted').get.call(v)}catch{throw new TypeError("Failed to convert value to 'AbortSignal'.")}return v};
+        else if(key==='temperature'||key==='topK')convert=v=>+v;
+        converted[key]=aiConvert(prefix+`Failed to read the '${key}' property from '${owner}': `,convert,value);
+      }
+      return converted;
+    };
+    for(const [type,schema]of Object.entries(aiSchemas)){
+      const constructor=globalThis[type];if(typeof constructor!=='function')continue;
+      // The frozen profile no longer exposes LanguageModel.params. Static
+      // IDL fallback order is not authoritative for these implemented entries.
+      if(type==='LanguageModel')delete constructor.params;
+      for(const operation of ['availability','create'])delete constructor[operation];
+      for(const operation of ['availability','create']){
+        const implementation={[operation](...args){
+          try{
+            const options=aiOptions(type,operation,args),capability=state('ai',schema.policy);
+            if(operation==='availability')return Promise.resolve('unavailable');
+            if(options.signal?.aborted)return Promise.reject(options.signal.reason);
+            if(!capability.policyAllowed)return deny('NotAllowedError','Access denied because the Permission Policy is not enabled.');
+            return deny('NotSupportedError',`${type} backend is unavailable.`);
+          }catch(error){return Promise.reject(error)}
+        }}[operation];
+        Object.defineProperty(implementation,'length',{value:schema.required?1:0,configurable:true});native(implementation,operation);
+        Object.defineProperty(constructor,operation,{value:implementation,writable:true,enumerable:true,configurable:true});
+      }
+    }
     slots.set(nav,{type:'Navigator'});
     // A machine without battery/gamepad backends has observable, empty device
     // state. Battery promises and the manager are stable within this Navigator.
