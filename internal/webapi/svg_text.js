@@ -4,6 +4,10 @@
 // not depend on that approximation.
 const textLayout=target=>{
  let root=target;while(tag(root)!=='text'){root=parent(root);if(!root||!['text','tspan'].includes(tag(root)))return {box:null,length:0,characters:[]}}
+ // Blink shapes at the screen font scale, including ancestors and viewBox.
+ // The effective font cache size is truncated to hundredths; local SVG
+ // observations then unscale Float32 rectangles, not nominal-size metrics.
+ const fontScale=n=>{let m=ident;for(let p=n;elementSlot(p)?.type==='element';p=parent(p)){if(specified(p,'text-rendering')==='geometricPrecision')return 1;const local=transform(p,null);m=multiply(tag(p)==='svg'?multiply(local,viewportTransform(p)):local,m)}return Math.fround(Math.sqrt((m[0]**2+m[1]**2+m[2]**2+m[3]**2)/2))||1};
  const declarations=new Map(),styles=new Map(),records=[];
  const own=(n,key)=>{let d=declarations.get(n);if(!d){d=computedCSSDeclarations(n);declarations.set(n,d)}const entry=d.find(v=>v.name===key);return entry?entry.value:attr(n,key)};
  const inherited=(n,key,fallback)=>{for(let p=n;isDOMNode(p);p=parent(p)){if(elementSlot(p)?.type!=='element')continue;const v=own(p,key);if(v!=null&&v!==''&&v!=='inherit'&&v!=='unset'){return v==='initial'?fallback:v}}return fallback};
@@ -27,15 +31,18 @@ const textLayout=target=>{
   if(!chunk)chunk={start:x,anchor:s.anchor,items:[]};
   const selected=first.chain.includes(target),text=normalized.slice(i,end).map(r=>r.ch).join('');
   if(s.size===0){i=end;continue}
-  const shaped=JSON.parse(host.shapeText(text,s.family,s.size,s.weight,Number(s.italic),Number(s.noKern),Number(s.letter!==0)));
+  const scale=fontScale(first.node),shaped=JSON.parse(host.shapeText(text,s.family,Math.fround(Math.floor(Math.fround(Math.fround(s.size*scale)*100))/100),s.weight,Number(s.italic),Number(s.noKern),Number(s.letter!==0)));
   if(shaped.error)unsupported('textFontResource');
   let baseline=0;switch(s.baseline){case 'auto':case 'alphabetic':break;case 'middle':baseline=shaped.xHeight/2;break;case 'hanging':baseline=Math.round(shaped.ascent*.8*64)/64;break;default:unsupported('textBaseline')}
   let pen=0,ink=null;const clusters=new Map();
-  for(const glyph of shaped.glyphs){let group=clusters.get(glyph.cluster);if(!group){group={start:pen,end:pen};clusters.set(glyph.cluster,group)}const offset=pen+glyph.xOffset;if(glyph.ink)ink=union(ink,[offset+glyph.left,-shaped.ascent+baseline+glyph.yOffset,offset+glyph.right,shaped.descent+baseline+glyph.yOffset]);pen+=glyph.advance+s.letter+(normalized[i+glyph.cluster]?.ch===' '?s.word:0);group.end=pen}
-  const advance=Math.ceil(pen*64)/64;let b=union([0,-shaped.ascent+baseline,advance,shaped.descent+baseline],ink);
+  for(const glyph of shaped.glyphs){let group=clusters.get(glyph.cluster);if(!group){group={start:pen,end:pen};clusters.set(glyph.cluster,group)}const offset=pen+glyph.xOffset;if(glyph.ink)ink=union(ink,[offset+glyph.left,-shaped.ascent+baseline+glyph.yOffset,offset+glyph.right,shaped.descent+baseline+glyph.yOffset]);pen+=glyph.advance+scale*(s.letter+(normalized[i+glyph.cluster]?.ch===' '?s.word:0));group.end=pen}
+  const rawAdvance=Math.ceil(pen*64)/64,advance=Math.fround(rawAdvance/scale);let b=union([0,-shaped.ascent+baseline,rawAdvance,shaped.descent+baseline],ink);
   if(first.rotate){const a=first.rotate*Math.PI/180;b=transformBox(b,[Math.cos(a),Math.sin(a),-Math.sin(a),Math.cos(a),0,0])}
-  b=[b[0]+x,b[1]+y,b[2]+x,b[3]+y];const rows=[],keys=Array.from(clusters.keys()).sort((a,b)=>a-b),rotation=first.rotate||0,angle=rotation*Math.PI/180,rotationMatrix=[Math.cos(angle),Math.sin(angle),-Math.sin(angle),Math.cos(angle),x,y];
-  for(let k=0;k<keys.length;k++){const from=keys[k],to=keys[k+1]??(end-i),group=clusters.get(from),left=Math.floor(group.start*64)/64,width=Math.ceil((group.end-group.start)*64)/64,id={};for(let j=from;j<to;j++){for(let unit=0;unit<normalized[i+j].ch.length;unit++)rows.push({id,start:point(rotationMatrix,left,baseline),end:point(rotationMatrix,left+width,baseline),box:transformBox([left,-shaped.ascent+baseline,left+width,shaped.descent+baseline],rotationMatrix),rotation,length:width})}}
+  // gfx rectangles multiply by a rounded reciprocal. Text length separately
+  // divides by the scale; those arithmetic orders differ observably.
+  const F=Math.fround,inverseScale=F(1/scale),unscalePoint=p=>p.map(v=>F(F(v)*inverseScale)),unscaleBox=b=>{const px=F(F(b[0])*inverseScale),py=F(F(b[1])*inverseScale),w=F(F(b[2]-b[0])*inverseScale),h=F(F(b[3]-b[1])*inverseScale);return [px,py,px+w,py+h]};
+  const px=F(x*scale),py=F(y*scale),bw=F(b[2]-b[0]),bh=F(b[3]-b[1]),bx=F(b[0]+px),by=F(b[1]+py);b=unscaleBox([bx,by,bx+bw,by+bh]);const rows=[],keys=Array.from(clusters.keys()).sort((a,b)=>a-b),rotation=first.rotate||0,angle=rotation*Math.PI/180,rotationMatrix=[Math.cos(angle),Math.sin(angle),-Math.sin(angle),Math.cos(angle),px,py];
+  for(let k=0;k<keys.length;k++){const from=keys[k],to=keys[k+1]??(end-i),group=clusters.get(from),left=Math.floor(group.start*64)/64,width=Math.ceil((group.end-group.start)*64)/64,id={};for(let j=from;j<to;j++){for(let unit=0;unit<normalized[i+j].ch.length;unit++)rows.push({id,start:unscalePoint(point(rotationMatrix,left,baseline)),end:unscalePoint(point(rotationMatrix,left+width,baseline)),box:unscaleBox(transformBox([left,-shaped.ascent+baseline,left+width,shaped.descent+baseline],rotationMatrix)),rotation,length:F(width/scale)})}}
   chunk.items.push({selected,box:b,characters:rows});if(selected)computedLength+=advance;x+=advance;i=end;
  }
  flush();host.semanticMissingAt('svg_text.js:40','SVG.approximateTextInkBounds');return {box:total,length:computedLength,characters};

@@ -21,7 +21,7 @@
   const point=(m,x,y)=>[m[0]*x+m[2]*y+m[4],m[1]*x+m[3]*y+m[5]];
   const union=(a,b)=>!a?b:!b?a:[Math.min(a[0],b[0]),Math.min(a[1],b[1]),Math.max(a[2],b[2]),Math.max(a[3],b[3])];
   const pointBox=(x,y)=>[x,y,x,y],rect=(x,y,w,h)=>[x,y,x+w,y+h];
-  const transformBox=(b,m)=>{if(!b)return null;let out=null;for(const [x,y] of [[b[0],b[1]],[b[2],b[1]],[b[2],b[3]],[b[0],b[3]]]){const p=point(m,x,y);out=union(out,pointBox(...p))}return out};
+  const transformBox=(b,m)=>{if(!b)return null;const F=Math.fround,x=F(b[0]),y=F(b[1]),r=F(x+F(b[2]-b[0])),bottom=F(y+F(b[3]-b[1]));m=m.map(F);let out=null;for(const [px,py] of [[x,y],[r,y],[r,bottom],[x,bottom]]){const p=point(m,px,py).map(F);out=union(out,pointBox(...p))}return out};
   /* shared_svg_css_transform */
   const transform=(n,box)=>{
    const css=computedCSSDeclarations(n).find(e=>e.name==='transform');if(css)return cssTransform(n,box,css.value);
