@@ -241,7 +241,9 @@
   // PCM and envelope belong to this node evaluation, never to a global device.
   function compress(n,result){
    work+=processedFrames*result.length;if(work>16*1024*1024)unsupported('compressor evaluation limit');
-   const db=x=>f(20*f(Math.log10(x))),linear=x=>f(Math.pow(10,f(x/20))),safe=(x,d)=>Number.isFinite(x)?x:d;
+   // Chrome multiplies by the Float32 0.05 constant before powf. Division by
+   // 20 is algebraically equivalent but changes the rounded envelope and PCM.
+   const db=x=>f(20*f(Math.log10(x))),linear=x=>f(Math.pow(10,f(f(.05)*x))),safe=(x,d)=>Number.isFinite(x)?x:d;
    let detector=0,gain=1,meter=1,maxAttack=-1,read=0,write=Math.min(1023,Math.floor(f(f(.006)*c.sampleRate)));
    const delay=result.map(()=>new Float32Array(1024)),meterRelease=f(1-Math.exp(-1/(f(.325)*c.sampleRate)));
    const zones=[.09,.16,.42,.98].map(f),coefficients=[
