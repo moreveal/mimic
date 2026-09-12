@@ -42,3 +42,13 @@ For an opt-in live native/Go profile, set `MIMIC_LATENCY_PROFILE_URL`,
 `MIMIC_V8_CPU_PROFILE=1` plus `MIMIC_V8_CPU_PROFILE_FILTER` selects a script-name
 substring for an additional native profile during navigation. Profiling changes
 execution cost; use unprofiled binaries for latency claims.
+
+
+### Additional concurrency scaling
+
+`concurrency_scaling.py` reuses the frozen runner and checks every Page result.
+Pass fresh `--before`, `--after`, the pinned `--chrome` executable, and a new
+`--output` directory. Defaults cover 10/25/50/100 static Pages and 50 React Pages.
+Use `--cases static:100 --order before after` for a bounded repeated comparison.
+The output records binary hashes, per-Page latency, wave throughput and RSS
+before/while targets are retained/250 ms after teardown, without forced GC.

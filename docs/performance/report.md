@@ -1730,3 +1730,18 @@ intermediate checkpoint, not a controlled baseline pair or a performance
 improvement claim. Later timer/blank-frame changes are covered by the final
 semantic and race checks. Prior performance measurements and stability debt
 remain historical evidence and are not reclassified by this gate.
+
+## Style runtime and high Page concurrency (2026-09-12)
+
+The [style runtime checkpoint](style-runtime-2026-09-12.md) profiles and removes
+repeated CSS rule work, large host projections and document/base lookups, and
+adds Chrome-verified HTTP freshness heuristics. The live script median improves
+6.23 → 2.69 s; Chrome remains faster at 1.70 s. The long queued evaluation drops
+2535 → 395 ms. Two full frozen fast gates pass.
+
+The unchanged local workload runner validates 3620 Page executions up to 100
+concurrent Pages. At 50 static Pages, updated Mimic reaches 83.4 Pages/s versus
+Chrome's 25.1, using 1.7 versus 4.0 GiB active RSS. This concurrency advantage
+predates the patch. The patch's own parallel throughput change is not established;
+100-Page medians decline in both pairs with wide wave-to-wave variance. See the
+checkpoint for recovery memory, test limitations and executed binary receipts.
