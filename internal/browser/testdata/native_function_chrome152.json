@@ -1,0 +1,317 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "width": 1280,
+      "height": 800
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled-profile-and-browser-context",
+    "origin": "http://127.0.0.1:17914/plain",
+    "visibilityState": "visible"
+  },
+  "probeSHA256": "2061913f19aaae0fd4a0f749cd421c282625e77fc5ae03f488a69f9aa8536600",
+  "result": {
+    "result": {
+      "value": {
+        "toString": {
+          "name": "toString",
+          "length": 0,
+          "source": "function toString() { [native code] }",
+          "prototype": true,
+          "ownKeys": [
+            "length",
+            "name"
+          ],
+          "nameDescriptor": {
+            "value": "toString",
+            "writable": false,
+            "enumerable": false,
+            "configurable": true
+          },
+          "lengthDescriptor": {
+            "value": 0,
+            "writable": false,
+            "enumerable": false,
+            "configurable": true
+          },
+          "construct": "TypeError"
+        },
+        "fetch": {
+          "name": "fetch",
+          "length": 1,
+          "source": "function fetch() { [native code] }",
+          "prototype": true,
+          "ownKeys": [
+            "length",
+            "name"
+          ],
+          "nameDescriptor": {
+            "value": "fetch",
+            "writable": false,
+            "enumerable": false,
+            "configurable": true
+          },
+          "lengthDescriptor": {
+            "value": 1,
+            "writable": false,
+            "enumerable": false,
+            "configurable": true
+          }
+        },
+        "get.crypto": {
+          "name": "get crypto",
+          "length": 0,
+          "source": "function get crypto() { [native code] }",
+          "prototype": true,
+          "ownKeys": [
+            "length",
+            "name"
+          ],
+          "nameDescriptor": {
+            "value": "get crypto",
+            "writable": false,
+            "enumerable": false,
+            "configurable": true
+          },
+          "lengthDescriptor": {
+            "value": 0,
+            "writable": false,
+            "enumerable": false,
+            "configurable": true
+          },
+          "construct": "TypeError"
+        },
+        "get.isSecureContext": {
+          "name": "get isSecureContext",
+          "length": 0,
+          "source": "function get isSecureContext() { [native code] }",
+          "prototype": true,
+          "ownKeys": [
+            "length",
+            "name"
+          ],
+          "nameDescriptor": {
+            "value": "get isSecureContext",
+            "writable": false,
+            "enumerable": false,
+            "configurable": true
+          },
+          "lengthDescriptor": {
+            "value": 0,
+            "writable": false,
+            "enumerable": false,
+            "configurable": true
+          },
+          "construct": "TypeError"
+        },
+        "get.speechSynthesis": {
+          "name": "get speechSynthesis",
+          "length": 0,
+          "source": "function get speechSynthesis() { [native code] }",
+          "prototype": true,
+          "ownKeys": [
+            "length",
+            "name"
+          ],
+          "nameDescriptor": {
+            "value": "get speechSynthesis",
+            "writable": false,
+            "enumerable": false,
+            "configurable": true
+          },
+          "lengthDescriptor": {
+            "value": 0,
+            "writable": false,
+            "enumerable": false,
+            "configurable": true
+          },
+          "construct": "TypeError"
+        },
+        "get.crossOriginIsolated": {
+          "name": "get crossOriginIsolated",
+          "length": 0,
+          "source": "function get crossOriginIsolated() { [native code] }",
+          "prototype": true,
+          "ownKeys": [
+            "length",
+            "name"
+          ],
+          "nameDescriptor": {
+            "value": "get crossOriginIsolated",
+            "writable": false,
+            "enumerable": false,
+            "configurable": true
+          },
+          "lengthDescriptor": {
+            "value": 0,
+            "writable": false,
+            "enumerable": false,
+            "configurable": true
+          },
+          "construct": "TypeError"
+        },
+        "get.navigator": {
+          "name": "get navigator",
+          "length": 0,
+          "source": "function get navigator() { [native code] }",
+          "prototype": true,
+          "ownKeys": [
+            "length",
+            "name"
+          ],
+          "nameDescriptor": {
+            "value": "get navigator",
+            "writable": false,
+            "enumerable": false,
+            "configurable": true
+          },
+          "lengthDescriptor": {
+            "value": 0,
+            "writable": false,
+            "enumerable": false,
+            "configurable": true
+          },
+          "construct": "TypeError"
+        },
+        "get.screen": {
+          "name": "get screen",
+          "length": 0,
+          "source": "function get screen() { [native code] }",
+          "prototype": true,
+          "ownKeys": [
+            "length",
+            "name"
+          ],
+          "nameDescriptor": {
+            "value": "get screen",
+            "writable": false,
+            "enumerable": false,
+            "configurable": true
+          },
+          "lengthDescriptor": {
+            "value": 0,
+            "writable": false,
+            "enumerable": false,
+            "configurable": true
+          },
+          "construct": "TypeError"
+        },
+        "get.origin": {
+          "name": "get origin",
+          "length": 0,
+          "source": "function get origin() { [native code] }",
+          "prototype": true,
+          "ownKeys": [
+            "length",
+            "name"
+          ],
+          "nameDescriptor": {
+            "value": "get origin",
+            "writable": false,
+            "enumerable": false,
+            "configurable": true
+          },
+          "lengthDescriptor": {
+            "value": 0,
+            "writable": false,
+            "enumerable": false,
+            "configurable": true
+          },
+          "construct": "TypeError"
+        },
+        "receiver.null": {
+          "name": "TypeError",
+          "message": "Function.prototype.toString requires that 'this' be a Function",
+          "frames": [
+            "TypeError: Function.prototype.toString requires that 'this' be a Function",
+            "    at toString (<anonymous>)"
+          ]
+        },
+        "receiver.undefined": {
+          "name": "TypeError",
+          "message": "Function.prototype.toString requires that 'this' be a Function",
+          "frames": [
+            "TypeError: Function.prototype.toString requires that 'this' be a Function",
+            "    at toString (<anonymous>)"
+          ]
+        },
+        "receiver.object": {
+          "name": "TypeError",
+          "message": "Function.prototype.toString requires that 'this' be a Function",
+          "frames": [
+            "TypeError: Function.prototype.toString requires that 'this' be a Function",
+            "    at Object.toString (<anonymous>)"
+          ]
+        },
+        "receiver.number": {
+          "name": "TypeError",
+          "message": "Function.prototype.toString requires that 'this' be a Function",
+          "frames": [
+            "TypeError: Function.prototype.toString requires that 'this' be a Function",
+            "    at Number.toString (<anonymous>)"
+          ]
+        },
+        "receiver.string": {
+          "name": "TypeError",
+          "message": "Function.prototype.toString requires that 'this' be a Function",
+          "frames": [
+            "TypeError: Function.prototype.toString requires that 'this' be a Function",
+            "    at String.toString (<anonymous>)"
+          ]
+        },
+        "call": "function author(a,b){return a+b}",
+        "apply": "function author(a,b){return a+b}",
+        "bind": "function author(a,b){return a+b}",
+        "authorSource": "function author(a,b){return a+b}",
+        "authorProxy": "function () { [native code] }",
+        "revokedProxy": "function () { [native code] }",
+        "mutatedNativeName": "function fetch() { [native code] }",
+        "registryPrototypePollution": {
+          "source": "function fetch() { [native code] }",
+          "reads": 0
+        },
+        "cycle": {
+          "accepted": false,
+          "name": "TypeError",
+          "message": "Cyclic __proto__ value",
+          "frames": [
+            "TypeError: Cyclic __proto__ value",
+            "    at Object.setPrototypeOf (<anonymous>)"
+          ]
+        },
+        "reflectCycle": false,
+        "foreignIntrinsic": "function fetch() { [native code] }",
+        "localForeignFetch": "function fetch() { [native code] }",
+        "foreignLocalFetch": "function fetch() { [native code] }",
+        "foreignAuthor": "function author(a,b){return a+b}",
+        "foreignCycle": "TypeError",
+        "worker": {
+          "source": "function toString() { [native code] }",
+          "fetchSource": "function fetch() { [native code] }",
+          "fetchPrototype": true,
+          "cycle": "TypeError",
+          "receiver": [
+            "TypeError",
+            "Function.prototype.toString requires that 'this' be a Function",
+            "    at Object.toString (<anonymous>)"
+          ]
+        }
+      }
+    }
+  }
+}

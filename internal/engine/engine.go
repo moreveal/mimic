@@ -114,3 +114,10 @@ type InterceptedObjectRuntime interface {
 type ArrayBufferDetacher interface {
 	DetachArrayBuffer(Value) error
 }
+
+// NativeFunctionSourceRuntime installs an engine-owned Function#toString. The
+// resolver only describes explicitly registered browser functions; the engine
+// remains authoritative for arbitrary author functions and callable proxies.
+type NativeFunctionSourceRuntime interface {
+	InstallNativeFunctionToString(resolver Value, original Value) error
+}

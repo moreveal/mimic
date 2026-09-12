@@ -48,6 +48,9 @@ func (r *Realm) installFrameDocumentBridge(host map[string]any) {
 		if len(args) > 5 {
 			r.frameNativeNameDescribe = args[5]
 		}
+		if len(args) > 6 {
+			r.frameSourceDescribe = args[6]
+		}
 		if len(args) > 4 {
 			r.frameBindingDescribe = args[4]
 		}
@@ -422,7 +425,7 @@ const frameReflectionSource = `(()=>{
 // and never cache arbitrary property values, prototypes or access checks.
 // Fresh intrinsic Array iterator results are the sole data-field exception;
 // the importer invalidates those fields before mutation or reference escape.
-const frameValueEncoderSource = `((describe,node,reflect,retain,symbol,frame,realm,parent,binding,nativeName)=>{
+const frameValueEncoderSource = `((describe,node,reflect,retain,symbol,frame,realm,parent,binding,nativeName,functionSource)=>{
  const global=globalThis,intrinsicEval=globalThis.eval,stringify=JSON.stringify,create=Object.create,keys=Object.keys;
  const plain=data=>{const out=create(null),names=keys(data);for(let i=0;i<names.length;i++){const key=names[i];out[key]=data[key]}return out};
  const encode=value=>{
@@ -444,7 +447,7 @@ const frameValueEncoderSource = `((describe,node,reflect,retain,symbol,frame,rea
   if(value===global.document)out.document=true;
   if(value===intrinsicEval)out.eval=true;
   if(type==='object'){const nodeId=node(value);if(nodeId)out.nodeId=nodeId;out.array=reflect('shape',value).array}
-  else if(type==='function'){out.constructable=reflect('shape',value).constructable;if(reflect('iteratorNext',value))out.iteratorNext=true;const name=nativeName(value);if(name!==undefined)out.nativeName=name}
+  else if(type==='function'){out.constructable=reflect('shape',value).constructable;if(reflect('iteratorNext',value))out.iteratorNext=true;const name=nativeName(value);if(name!==undefined)out.nativeName=name;else if(functionSource)out.functionSource=functionSource(value)}
   if(type==='object'&&reflect('takeIteratorResult',value)){
    out.iteratorResult=create(null);out.iteratorResult.done=plain(encode(value.done));
    // Do not inspect object-valued results early: e.g. a revoked Proxy must
@@ -467,7 +470,7 @@ func (r *Realm) installFrameValueEncoder() error {
 	if frame, ok := r.agent.(*Frame); ok && frame.parent != nil {
 		parent = frame.parent.ID
 	}
-	encoder, err := r.runtime.Call(context.Background(), factory, nil, r.frameReferenceDescribe, r.frameNodeDescribe, r.frameReflection.operation, r.frameValueRetain, r.frameValueEncoder, r.val(r.agent.ContextID()), r.val(r.ID), r.val(parent), r.frameBindingDescribe, r.frameNativeNameDescribe)
+	encoder, err := r.runtime.Call(context.Background(), factory, nil, r.frameReferenceDescribe, r.frameNodeDescribe, r.frameReflection.operation, r.frameValueRetain, r.frameValueEncoder, r.val(r.agent.ContextID()), r.val(r.ID), r.val(parent), r.frameBindingDescribe, r.frameNativeNameDescribe, r.frameSourceDescribe)
 	if err == nil {
 		r.frameValueEncoder = encoder
 		r.frameValueEncoderJSON = true

@@ -96,6 +96,7 @@ type Realm struct {
 	frameNodeDescribe        engine.Value
 	frameBindingDescribe     engine.Value
 	frameNativeNameDescribe  engine.Value
+	frameSourceDescribe      engine.Value
 	documentStreamEvent      engine.Value
 	url                      *url.URL
 	token                    string
@@ -2152,6 +2153,9 @@ func (r *Realm) installBindings() error {
 		r.finishBootstrapCapture(finish, source, err)
 	}
 	if err != nil {
+		return err
+	}
+	if err := installNativeFunctionSource(r.runtime); err != nil {
 		return err
 	}
 	if err := installEvalSourceResolver(r.runtime); err != nil {
