@@ -79,19 +79,18 @@
   class Crypto { constructor(){throw new TypeError('Illegal constructor')} getRandomValues(view){if(!ArrayBuffer.isView(view)||view instanceof Float32Array||view instanceof Float64Array||view instanceof DataView)throw new TypeError("Failed to execute 'getRandomValues' on 'Crypto': parameter 1 is not of type 'ArrayBufferView'.");if(view.byteLength>65536)throw new DOMException('The ArrayBufferView byte length exceeds 65536 bytes','QuotaExceededError');const bytes=host.randomBytes(view.byteLength),raw=new Uint8Array(view.buffer,view.byteOffset,view.byteLength);for(let i=0;i<raw.length;i++)raw[i]=bytes[i];return view} randomUUID(){return host.randomUUID()} }
   class SubtleCrypto { constructor(){throw new TypeError('Illegal constructor')} digest(algorithm,data){const name=typeof algorithm==='string'?algorithm:algorithm&&algorithm.name;if(!ArrayBuffer.isView(data)&&!(data instanceof ArrayBuffer))return Promise.reject(new TypeError('Data must be an ArrayBuffer or ArrayBufferView'));const bytes=data instanceof ArrayBuffer?new Uint8Array(data):new Uint8Array(data.buffer,data.byteOffset,data.byteLength);return Promise.resolve(host.cryptoDigest(String(name),Array.from(bytes))).then(result=>new Uint8Array(result).buffer)} }
   class Performance { constructor(){throw new TypeError('Illegal constructor')} get timeOrigin(){return host.performanceTimeOrigin()} now(){return host.performanceNow()} getEntries(){return[]} getEntriesByType(){return[]} getEntriesByName(){return[]} }
-  const trustedValueSlots=new WeakMap(),trustedPolicySlots=new WeakMap(),trustedFactorySlots=new WeakMap(),illegalTrusted=name=>{throw new TypeError('Illegal constructor: '+name)},trustedValue=(Ctor,value)=>{const result=Object.create(Ctor.prototype);trustedValueSlots.set(result,{type:Ctor,value:String(value)});return result};
-  class TrustedHTML { constructor(){illegalTrusted('TrustedHTML')} toString(){return trustedValueSlots.get(this)?.value} toJSON(){return this.toString()} }
-  class TrustedScript { constructor(){illegalTrusted('TrustedScript')} toString(){return trustedValueSlots.get(this)?.value} toJSON(){return this.toString()} }
-  class TrustedScriptURL { constructor(){illegalTrusted('TrustedScriptURL')} toString(){return trustedValueSlots.get(this)?.value} toJSON(){return this.toString()} }
-  class TrustedTypePolicy { constructor(token,name,options){if(token!==host.token())illegalTrusted('TrustedTypePolicy');trustedPolicySlots.set(this,{name,options:options||{}})} get name(){return trustedPolicySlots.get(this).name} createHTML(input,...args){const state=trustedPolicySlots.get(this),callback=state.options.createHTML;if(typeof callback!=='function')throw new TypeError('Policy '+state.name+' disallows creating TrustedHTML');return trustedValue(TrustedHTML,callback(String(input),...args))} createScript(input,...args){const state=trustedPolicySlots.get(this),callback=state.options.createScript;if(typeof callback!=='function')throw new TypeError('Policy '+state.name+' disallows creating TrustedScript');return trustedValue(TrustedScript,callback(String(input),...args))} createScriptURL(input,...args){const state=trustedPolicySlots.get(this),callback=state.options.createScriptURL;if(typeof callback!=='function')throw new TypeError('Policy '+state.name+' disallows creating TrustedScriptURL');return trustedValue(TrustedScriptURL,callback(String(input),...args))} }
-  class TrustedTypePolicyFactory { constructor(token){if(token!==host.token())illegalTrusted('TrustedTypePolicyFactory');trustedFactorySlots.set(this,{defaultPolicy:null})} createPolicy(name,options={}){const policy=new TrustedTypePolicy(host.token(),String(name),options);if(String(name)==='default')trustedFactorySlots.get(this).defaultPolicy=policy;return policy} isHTML(value){return trustedValueSlots.get(value)?.type===TrustedHTML} isScript(value){return trustedValueSlots.get(value)?.type===TrustedScript} isScriptURL(value){return trustedValueSlots.get(value)?.type===TrustedScriptURL} get emptyHTML(){return trustedValue(TrustedHTML,'')} get emptyScript(){return trustedValue(TrustedScript,'')} get defaultPolicy(){return trustedFactorySlots.get(this).defaultPolicy} getAttributeType(tagName,attribute){const tag=String(tagName).toLowerCase(),name=String(attribute).toLowerCase();if(name.startsWith('on'))return'TrustedScript';if(tag==='script'&&name==='src')return'TrustedScriptURL';if(tag==='iframe'&&name==='srcdoc')return'TrustedHTML';return null} getPropertyType(tagName,property){const tag=String(tagName).toLowerCase(),name=String(property);if(name==='innerHTML'||name==='outerHTML'||(tag==='iframe'&&name==='srcdoc'))return'TrustedHTML';if(tag==='script'&&name==='src')return'TrustedScriptURL';if(tag==='script'&&(name==='text'||name==='textContent'||name==='innerText'))return'TrustedScript';if(name.startsWith('on'))return'TrustedScript';return null} getTypeMapping(){return{http:{script:{src:'TrustedScriptURL',text:'TrustedScript'},iframe:{srcdoc:'TrustedHTML'},'*':{innerHTML:'TrustedHTML',outerHTML:'TrustedHTML'}}}} }
+  const hostToken=host.token();
+  const bindingString=value=>{if(typeof value==='symbol')throw new TypeError('Cannot convert a Symbol value to a string');return String(value)};
+  const realmBindings=new WeakMap(),bindingGet=WeakMap.prototype.get.bind(realmBindings);
+  const referenceGet=()=>undefined;
+  const registerRealmBinding=(value,kind,operations)=>realmBindings.set(value,{kind,operations});
+  const requireRealmBinding=(value,kind)=>{const b=bindingGet(value);if(b?.kind!==kind)throw new TypeError('Illegal invocation');return b};
+  const callRealmBinding=(receiver,binding,operation,args)=>binding.operations[operation](...args);
+  /* shared_trusted_types */
   const readableSlots=new WeakMap(),readerSlots=new WeakMap();
   class ReadableStreamDefaultController { constructor(stream){this.stream=stream} enqueue(value){const state=readableSlots.get(this.stream);if(state.reads.length)state.reads.shift()({value,done:false});else state.queue.push(value)} close(){const state=readableSlots.get(this.stream);state.closed=true;while(state.reads.length)state.reads.shift()({value:undefined,done:true})} error(error){const state=readableSlots.get(this.stream);state.error=error;while(state.rejects.length)state.rejects.shift()(error)} }
   class ReadableStreamDefaultReader { constructor(stream){const state=readableSlots.get(stream);if(!state||state.locked)throw new TypeError('ReadableStream is locked');state.locked=true;readerSlots.set(this,stream)} read(){const stream=readerSlots.get(this),state=readableSlots.get(stream);if(state.queue.length)return Promise.resolve({value:state.queue.shift(),done:false});if(state.error)return Promise.reject(state.error);if(state.closed)return Promise.resolve({value:undefined,done:true});return new Promise((resolve,reject)=>{state.reads.push(resolve);state.rejects.push(reject)})} releaseLock(){const stream=readerSlots.get(this);if(stream){readableSlots.get(stream).locked=false;readerSlots.delete(this)}} cancel(reason){const stream=readerSlots.get(this);return stream?stream.cancel(reason):Promise.reject(new TypeError('Reader has been released'))} }
   class ReadableStream { constructor(source={}){const state={queue:[],reads:[],rejects:[],closed:false,error:null,locked:false,source};readableSlots.set(this,state);const controller=new ReadableStreamDefaultController(this);try{Promise.resolve(typeof source.start==='function'?source.start(controller):undefined).catch(error=>controller.error(error))}catch(error){controller.error(error)}} get locked(){return readableSlots.get(this).locked} getReader(){return new ReadableStreamDefaultReader(this)} cancel(reason){const state=readableSlots.get(this);state.closed=true;state.queue.length=0;return Promise.resolve(typeof state.source.cancel==='function'?state.source.cancel(reason):undefined)} }
-  // Use the internal brand/value, never a user-defined toString or prototype.
-  const trustedValueState=WeakMap.prototype.get.bind(trustedValueSlots);
-  const evalSourceResolver=value=>{const state=trustedValueState(value);return state?.type===TrustedScript?state.value:undefined};
   Object.assign(globalThis,{EventTarget,Event,MessageEvent,ErrorEvent,WorkerNavigator,WorkerLocation,Crypto,SubtleCrypto,Performance,TrustedHTML,TrustedScript,TrustedScriptURL,TrustedTypePolicy,TrustedTypePolicyFactory,ReadableStream,ReadableStreamDefaultController,ReadableStreamDefaultReader});
   const navigatorData=host.navigator(),workerSubtle=Object.create(SubtleCrypto.prototype);
   const workerNavigator=Object.create(WorkerNavigator.prototype),workerLocation=Object.create(WorkerLocation.prototype),workerCrypto=Object.create(Crypto.prototype),workerPerformance=Object.create(Performance.prototype),workerTrustedTypes=new TrustedTypePolicyFactory(host.token());
@@ -101,15 +100,22 @@
   if(host.isSecureContext())Object.defineProperty(Crypto.prototype,'subtle',{get(){return workerSubtle},enumerable:true,configurable:true});
   Object.defineProperty(globalThis,'trustedTypes',{value:workerTrustedTypes,writable:false,enumerable:true,configurable:true});
   if(!host.isSecureContext()){delete Crypto.prototype.randomUUID}
+  const workerTimer=(fn,delay,args,repeat)=>{
+    fn=trustedTimerArgument(fn);delay=Number(delay);
+    const name=repeat?'setInterval':'setTimeout';
+    const source=typeof fn==='function'?null:trustedConvert(fn,'TrustedScript','WorkerGlobalScope '+name,"Failed to execute '"+name+"' on 'WorkerGlobalScope': ");
+    return host.setTimer(source===null?()=>fn(...args):()=>host.runTimerSource(source),delay,repeat);
+  };
   const operations={
+    importScripts(...urls){urls=urls.map(value=>trustedTypeOf(value)==='TrustedScriptURL'?value:trustedString(value));const values=urls.map(value=>trustedConvert(value,'TrustedScriptURL','WorkerGlobalScope importScripts',"Failed to execute 'importScripts' on 'WorkerGlobalScope': "));const error=host.importScripts(values);if(error)throw new DOMException(error.message,error.name)},
     queueMicrotask,
     addEventListener:(...args)=>EventTarget.prototype.addEventListener.apply(globalThis,args),
     removeEventListener:(...args)=>EventTarget.prototype.removeEventListener.apply(globalThis,args),
     dispatchEvent:(...args)=>EventTarget.prototype.dispatchEvent.apply(globalThis,args),
     postMessage:data=>host.postMessage(data),
     close:()=>host.close(),
-    setTimeout:(fn,delay=0,...args)=>host.setTimer(()=>fn(...args),Number(delay),false),
-    setInterval:(fn,delay=0,...args)=>host.setTimer(()=>fn(...args),Number(delay),true),
+    setTimeout:(fn,delay=0,...args)=>workerTimer(fn,delay,args,false),
+    setInterval:(fn,delay=0,...args)=>workerTimer(fn,delay,args,true),
     clearTimeout:id=>host.clearTimer(Number(id)),
     clearInterval:id=>host.clearTimer(Number(id)),
   };
@@ -155,7 +161,7 @@
 	  Object.defineProperty(workerPrototype,'fetch',{value:globalThis.fetch,writable:true,enumerable:true,configurable:true});
 	  delete globalThis.fetch;
 	  Object.defineProperty(workerPrototype,Symbol.toStringTag,{value:'WorkerGlobalScope',configurable:true});
-      for(const name of ['setTimeout','setInterval','clearTimeout','clearInterval'])Object.defineProperty(workerPrototype,name,{value:operations[name],writable:true,enumerable:true,configurable:true});
+      for(const name of ['importScripts','setTimeout','setInterval','clearTimeout','clearInterval'])Object.defineProperty(workerPrototype,name,{value:operations[name],writable:true,enumerable:true,configurable:true});
       for(const name of ['onerror','onmessageerror'])Object.defineProperty(workerPrototype,name,{get(){return handlers[name.slice(2)]},set(value){setHandler(name.slice(2),value)},enumerable:true,configurable:true});
       Object.defineProperty(workerPrototype,'self',{get(){return globalThis},enumerable:true,configurable:true});
       Object.defineProperty(workerPrototype,'navigator',{get(){return workerNavigator},enumerable:true,configurable:true});

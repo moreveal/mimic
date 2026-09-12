@@ -19,7 +19,7 @@
       const slot=elementSlot(this);if(!slot||slot.tagName!=='TEMPLATE')throw new TypeError('Illegal invocation');
       // Parse once into a temporary canonical template context, then use the
       // shared replace-all algorithm so observers see one content record.
-      const parsed=document.createElement('template');host.setInnerHTML(elementSlot(parsed).nodeId,value===null?'':String(value));
+      const parsed=document.createElement('template');host.setInnerHTML(elementSlot(parsed).nodeId,trustedConvert(value===null?'':value,'TrustedHTML','Element innerHTML',"Failed to set the 'innerHTML' property on 'Element': ",this));
       this.content.replaceChildren(parsed.content);
     }
   });

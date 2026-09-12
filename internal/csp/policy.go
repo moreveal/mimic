@@ -5,11 +5,17 @@ import (
 	"strings"
 )
 
-type Policy struct{ directives map[string][]string }
+type Policy struct {
+	directives map[string][]string
+	reportOnly bool
+}
 type PolicySet []Policy
 
 func (set PolicySet) AllowsFormAction(documentURL, target *url.URL) bool {
 	for _, policy := range set {
+		if policy.reportOnly {
+			continue
+		}
 		sources, present := policy.directives["form-action"]
 		if !present {
 			continue
@@ -30,20 +36,22 @@ func (set PolicySet) AllowsFormAction(documentURL, target *url.URL) bool {
 
 func Parse(values ...string) PolicySet {
 	set := PolicySet{}
-	for _, value := range values {
-		p := Policy{directives: map[string][]string{}}
-		for _, raw := range strings.Split(value, ";") {
-			fields := strings.Fields(raw)
-			if len(fields) == 0 {
-				continue
+	for _, header := range values {
+		for _, value := range strings.Split(header, ",") {
+			p := Policy{directives: map[string][]string{}}
+			for _, raw := range strings.Split(value, ";") {
+				fields := strings.Fields(raw)
+				if len(fields) == 0 {
+					continue
+				}
+				name := strings.ToLower(fields[0])
+				if _, exists := p.directives[name]; !exists {
+					p.directives[name] = fields[1:]
+				}
 			}
-			name := strings.ToLower(fields[0])
-			if _, exists := p.directives[name]; !exists {
-				p.directives[name] = fields[1:]
+			if len(p.directives) > 0 {
+				set = append(set, p)
 			}
-		}
-		if len(p.directives) > 0 {
-			set = append(set, p)
 		}
 	}
 	return set
@@ -51,6 +59,9 @@ func Parse(values ...string) PolicySet {
 
 func (set PolicySet) AllowsScript(documentURL, resourceURL *url.URL, inline, dynamic bool, nonce string) (bool, string) {
 	for _, policy := range set {
+		if policy.reportOnly {
+			continue
+		}
 		allowed, reason := policy.allowsScript(documentURL, resourceURL, inline, dynamic, nonce)
 		if !allowed {
 			return false, reason
@@ -152,4 +163,14 @@ func hasNonceOrHash(values []string) bool {
 		}
 	}
 	return false
+}
+
+// Report-only policies participate in default Trusted Types conversion but do
+// not prohibit policy creation or ordinary string assignment.
+func ParseReportOnly(values ...string) PolicySet {
+	policies := Parse(values...)
+	for i := range policies {
+		policies[i].reportOnly = true
+	}
+	return policies
 }

@@ -198,7 +198,7 @@ function wrapDocumentNode(data) {
   const parserSlots=new WeakSet();
   class DOMParser {
     constructor(){parserSlots.add(this)}
-    parseFromString(input,type){if(!parserSlots.has(this))throw new TypeError('Illegal invocation');if(arguments.length<2)throw new TypeError('Not enough arguments');input=String(input);type=String(type);if(!['text/html','text/xml','application/xml','application/xhtml+xml','image/svg+xml'].includes(type))throw new TypeError('Invalid supported type');return wrap(host.parseInertDocument(input,type))}
+    parseFromString(input,type){if(!parserSlots.has(this))throw new TypeError('Illegal invocation');if(arguments.length<2)throw new TypeError('Not enough arguments');input=trustedConvert(input,'TrustedHTML','DOMParser parseFromString',"Failed to execute 'parseFromString' on 'DOMParser': ");type=bindingString(type);if(!['text/html','text/xml','application/xml','application/xhtml+xml','image/svg+xml'].includes(type))throw new TypeError('Invalid supported type');return wrap(host.parseInertDocument(input,type))}
   }
   Object.defineProperty(DOMParser.prototype,Symbol.toStringTag,{value:'DOMParser',configurable:true});markNative(DOMParser,'DOMParser');markNative(DOMParser.prototype.parseFromString,'parseFromString');Object.defineProperty(DOMParser.prototype,'parseFromString',{enumerable:true});Object.defineProperty(globalThis,'DOMParser',{value:DOMParser,writable:true,configurable:true});
 

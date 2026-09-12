@@ -7,7 +7,7 @@ const svgSlot=(value,type)=>{const s=svgSlots.get(value);if(!s||s.type!==type)th
 const svgFloat=value=>{const n=+value;if(!Number.isFinite(n)||!Number.isFinite(Math.fround(n)))throw new TypeError('The provided float value is non-finite.');return Math.fround(n)};
 const svgDouble=value=>{const n=+value;if(!Number.isFinite(n))throw new TypeError('The provided double value is non-finite.');return n};
 const svgWrite=s=>{if(s.readonly)throw new DOMException('The object is read-only.','NoModificationAllowedError')};
-const svgAttr=(n,key,value)=>Reflect.apply(svgSetAttribute,n,[key,String(value)]);
+const svgAttr=(n,key,value)=>Reflect.apply(svgSetAttribute,n,[key,value]);
 const svgMethod=(type,name,fn)=>{svgBindings.add(type+'.'+name);const p=globalThis[type]?.prototype;if(!p)return;const arity=Object.getOwnPropertyDescriptor(p,name)?.value?.length??fn.length;const f={[name](...args){if(args.length<arity)throw new TypeError('Not enough arguments');return fn.call(this,...args)}}[name];Object.defineProperty(f,'length',{value:arity,configurable:true});markNative(f,name);Object.defineProperty(p,name,{value:f,writable:true,configurable:true,enumerable:true})};
 const svgProp=(type,name,get,set)=>{svgBindings.add(type+'.'+name);const p=globalThis[type]?.prototype;if(!p)return;const getter={get [name](){return get.call(this)}};const g=Object.getOwnPropertyDescriptor(getter,name).get;markNative(g,'get '+name);const d={get:g,enumerable:true,configurable:true};if(set){d.set=function(value){return set.call(this,value)};markNative(d.set,'set '+name)}Object.defineProperty(p,name,d)};
 const svgMake=(type,state={})=>{const value=Object.create(globalThis[type].prototype);svgSlots.set(value,{type,...state});return value};
