@@ -1,0 +1,1447 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": "1669021",
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled-profile-and-browser-context",
+    "actual": {
+      "href": "http://127.0.0.1:18094/plain",
+      "isSecureContext": true,
+      "crossOriginIsolated": false,
+      "innerWidth": 1272,
+      "innerHeight": 653,
+      "outerWidth": 1280,
+      "outerHeight": 800,
+      "devicePixelRatio": 1,
+      "visibility": "visible",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "platform": "Win32"
+    },
+    "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+    "probeSHA256": "bcb15c5e794ac74667eca075fa251172de3f7dad99869b60c5c0befe140345ce",
+    "controlDiffCount": 0
+  },
+  "result": {
+    "result": {
+      "value": {
+        "types": {
+          "": [
+            "",
+            "",
+            false
+          ],
+          "text/plain": [
+            "",
+            "",
+            false
+          ],
+          "audio/mpeg": [
+            "probably",
+            "probably",
+            true
+          ],
+          "audio/mp3": [
+            "probably",
+            "probably",
+            false
+          ],
+          "audio/aac": [
+            "probably",
+            "probably",
+            true
+          ],
+          "audio/flac": [
+            "probably",
+            "probably",
+            false
+          ],
+          "audio/x-flac": [
+            "",
+            "",
+            false
+          ],
+          "audio/wav": [
+            "maybe",
+            "maybe",
+            false
+          ],
+          "audio/wav; codecs=\"1\"": [
+            "probably",
+            "probably",
+            false
+          ],
+          "audio/wav; codecs=\"pcm\"": [
+            "",
+            "",
+            false
+          ],
+          "audio/ogg": [
+            "maybe",
+            "maybe",
+            false
+          ],
+          "audio/ogg; codecs=\"vorbis\"": [
+            "probably",
+            "probably",
+            false
+          ],
+          "audio/ogg; codecs=\"opus\"": [
+            "probably",
+            "probably",
+            false
+          ],
+          "audio/webm": [
+            "maybe",
+            "maybe",
+            false
+          ],
+          "audio/webm; codecs=\"opus\"": [
+            "probably",
+            "probably",
+            true
+          ],
+          "audio/webm; codecs=\"vorbis\"": [
+            "probably",
+            "probably",
+            true
+          ],
+          "audio/mp4": [
+            "maybe",
+            "maybe",
+            false
+          ],
+          "audio/mp4; codecs=\"mp4a.40.2\"": [
+            "probably",
+            "probably",
+            true
+          ],
+          "audio/mp4; codecs=\"opus\"": [
+            "probably",
+            "probably",
+            true
+          ],
+          "video/webm": [
+            "maybe",
+            "maybe",
+            false
+          ],
+          "video/webm; codecs=\"vp8\"": [
+            "probably",
+            "probably",
+            true
+          ],
+          "video/webm; codecs=\"vp9\"": [
+            "probably",
+            "probably",
+            true
+          ],
+          "video/webm; codecs=\"vp09.00.10.08\"": [
+            "probably",
+            "probably",
+            true
+          ],
+          "video/webm; codecs=\"av01.0.04M.08\"": [
+            "probably",
+            "probably",
+            true
+          ],
+          "video/mp4": [
+            "maybe",
+            "maybe",
+            false
+          ],
+          "video/mp4; codecs=\"avc1.42E01E\"": [
+            "probably",
+            "probably",
+            true
+          ],
+          "video/mp4; codecs=\"avc1.640028\"": [
+            "probably",
+            "probably",
+            true
+          ],
+          "video/mp4; codecs=\"hvc1.1.6.L93.B0\"": [
+            "probably",
+            "probably",
+            true
+          ],
+          "video/mp4; codecs=\"hev1.1.6.L93.B0\"": [
+            "probably",
+            "probably",
+            true
+          ],
+          "video/mp4; codecs=\"av01.0.04M.08\"": [
+            "probably",
+            "probably",
+            true
+          ],
+          "video/mp4; codecs=\"vp09.00.10.08\"": [
+            "probably",
+            "probably",
+            true
+          ],
+          "video/mp4; codecs=\"bogus\"": [
+            "",
+            "",
+            false
+          ],
+          "video/mp4; codecs=\"avc1.42E01E,mp4a.40.2\"": [
+            "probably",
+            "probably",
+            true
+          ],
+          "video/ogg; codecs=\"theora\"": [
+            "",
+            "",
+            false
+          ],
+          "application/ogg": [
+            "maybe",
+            "maybe",
+            false
+          ],
+          "audio/opus": [
+            "",
+            "",
+            false
+          ],
+          "video/h264": [
+            "",
+            "",
+            false
+          ],
+          "Video/MP4; CODECS=\"avc1.42E01E\"": [
+            "probably",
+            "probably",
+            true
+          ],
+          "video/mp4; codecs=\"avc1\"": [
+            "maybe",
+            "maybe",
+            false
+          ],
+          "video/mp4; codecs=\"avc3.42E01E\"": [
+            "probably",
+            "probably",
+            true
+          ],
+          "video/mp4; codecs=\"avc1.bogus\"": [
+            "",
+            "",
+            false
+          ],
+          "video/webm; codecs=\"vp8.0\"": [
+            "probably",
+            "probably",
+            false
+          ],
+          "video/webm; codecs=\"vp9.0\"": [
+            "probably",
+            "probably",
+            false
+          ],
+          "video/webm; codecs=\"vp09.99.10.08\"": [
+            "",
+            "",
+            false
+          ],
+          "audio/mp4; codecs=\"mp4a.40.5\"": [
+            "probably",
+            "probably",
+            true
+          ],
+          "audio/mp4; codecs=\"mp4a.40.29\"": [
+            "probably",
+            "probably",
+            true
+          ],
+          "audio/mp4; codecs=\"mp4a.40.42\"": [
+            "probably",
+            "probably",
+            true
+          ],
+          "audio/mp4; codecs=\"flac\"": [
+            "probably",
+            "probably",
+            true
+          ],
+          "audio/mp4; codecs=\"ac-3\"": [
+            "",
+            "",
+            false
+          ],
+          "audio/mp4; codecs=\"ec-3\"": [
+            "",
+            "",
+            false
+          ],
+          "audio/mpeg; codecs=\"mp3\"": [
+            "probably",
+            "probably",
+            false
+          ],
+          "audio/x-wav; codecs=\"1\"": [
+            "probably",
+            "probably",
+            false
+          ],
+          "video/mp4; codecs=\"\"": [
+            "maybe",
+            "maybe",
+            false
+          ],
+          "audio/ogg; codecs=\"flac\"": [
+            "probably",
+            "probably",
+            false
+          ],
+          "video/mp4; codecs=\"avc1.4D401E\"": [
+            "probably",
+            "probably",
+            true
+          ],
+          "video/mp4; codecs=\"avc1.64001E\"": [
+            "probably",
+            "probably",
+            true
+          ],
+          "video/mp4; codecs=\"av01.0.01M.08\"": [
+            "probably",
+            "probably",
+            true
+          ],
+          "video/webm; codecs=\"av01.0.01M.08\"": [
+            "probably",
+            "probably",
+            true
+          ]
+        },
+        "capabilities": {
+          "file|audio/mpeg": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|audio/mpeg": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "file|audio/mp3": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|audio/mp3": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "file|audio/aac": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|audio/aac": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "file|audio/flac": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|audio/flac": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "file|audio/x-flac": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|audio/x-flac": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "file|audio/wav": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|audio/wav": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "file|audio/wav; codecs=\"1\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|audio/wav; codecs=\"1\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "file|audio/wav; codecs=\"pcm\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|audio/wav; codecs=\"pcm\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "file|audio/ogg": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|audio/ogg": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "file|audio/ogg; codecs=\"vorbis\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|audio/ogg; codecs=\"vorbis\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "file|audio/ogg; codecs=\"opus\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|audio/ogg; codecs=\"opus\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "file|audio/webm": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|audio/webm": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "file|audio/webm; codecs=\"opus\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|audio/webm; codecs=\"opus\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "file|audio/webm; codecs=\"vorbis\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|audio/webm; codecs=\"vorbis\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "file|audio/mp4": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|audio/mp4": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "file|audio/mp4; codecs=\"mp4a.40.2\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|audio/mp4; codecs=\"mp4a.40.2\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "file|audio/mp4; codecs=\"opus\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|audio/mp4; codecs=\"opus\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "file|video/webm": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|video/webm": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "file|video/webm; codecs=\"vp8\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|video/webm; codecs=\"vp8\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "file|video/webm; codecs=\"vp9\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|video/webm; codecs=\"vp9\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "file|video/webm; codecs=\"vp09.00.10.08\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|video/webm; codecs=\"vp09.00.10.08\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "file|video/webm; codecs=\"av01.0.04M.08\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|video/webm; codecs=\"av01.0.04M.08\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "file|video/mp4": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|video/mp4": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "file|video/mp4; codecs=\"avc1.42E01E\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|video/mp4; codecs=\"avc1.42E01E\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "file|video/mp4; codecs=\"avc1.640028\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|video/mp4; codecs=\"avc1.640028\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "file|video/mp4; codecs=\"hvc1.1.6.L93.B0\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|video/mp4; codecs=\"hvc1.1.6.L93.B0\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "file|video/mp4; codecs=\"hev1.1.6.L93.B0\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|video/mp4; codecs=\"hev1.1.6.L93.B0\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "file|video/mp4; codecs=\"av01.0.04M.08\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|video/mp4; codecs=\"av01.0.04M.08\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "file|video/mp4; codecs=\"vp09.00.10.08\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|video/mp4; codecs=\"vp09.00.10.08\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "file|video/mp4; codecs=\"bogus\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|video/mp4; codecs=\"bogus\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "file|video/mp4; codecs=\"avc1.42E01E,mp4a.40.2\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|video/mp4; codecs=\"avc1.42E01E,mp4a.40.2\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "file|video/ogg; codecs=\"theora\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|video/ogg; codecs=\"theora\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "file|audio/opus": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|audio/opus": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "file|video/h264": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|video/h264": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "file|video/mp4; codecs=\"avc1\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|video/mp4; codecs=\"avc1\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "file|video/mp4; codecs=\"avc3.42E01E\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|video/mp4; codecs=\"avc3.42E01E\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "file|video/mp4; codecs=\"avc1.bogus\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|video/mp4; codecs=\"avc1.bogus\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "file|video/webm; codecs=\"vp8.0\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|video/webm; codecs=\"vp8.0\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "file|video/webm; codecs=\"vp9.0\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|video/webm; codecs=\"vp9.0\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "file|video/webm; codecs=\"vp09.99.10.08\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|video/webm; codecs=\"vp09.99.10.08\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "file|audio/mp4; codecs=\"mp4a.40.5\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|audio/mp4; codecs=\"mp4a.40.5\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "file|audio/mp4; codecs=\"mp4a.40.29\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|audio/mp4; codecs=\"mp4a.40.29\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "file|audio/mp4; codecs=\"mp4a.40.42\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|audio/mp4; codecs=\"mp4a.40.42\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "file|audio/mp4; codecs=\"flac\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|audio/mp4; codecs=\"flac\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "file|audio/mp4; codecs=\"ac-3\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|audio/mp4; codecs=\"ac-3\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "file|audio/mp4; codecs=\"ec-3\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|audio/mp4; codecs=\"ec-3\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "file|audio/mpeg; codecs=\"mp3\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|audio/mpeg; codecs=\"mp3\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "file|audio/x-wav; codecs=\"1\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|audio/x-wav; codecs=\"1\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "file|video/mp4; codecs=\"\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|video/mp4; codecs=\"\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "file|audio/ogg; codecs=\"flac\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|audio/ogg; codecs=\"flac\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "file|video/mp4; codecs=\"avc1.4D401E\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|video/mp4; codecs=\"avc1.4D401E\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "file|video/mp4; codecs=\"avc1.64001E\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|video/mp4; codecs=\"avc1.64001E\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "file|video/mp4; codecs=\"av01.0.01M.08\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|video/mp4; codecs=\"av01.0.01M.08\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "file|video/webm; codecs=\"av01.0.01M.08\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "media-source|video/webm; codecs=\"av01.0.01M.08\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          }
+        },
+        "invalid": {
+          "empty": {
+            "name": "TypeError",
+            "message": "Failed to execute 'decodingInfo' on 'MediaCapabilities': Failed to read the 'type' property from 'MediaDecodingConfiguration': Required member is undefined."
+          },
+          "noTrack": {
+            "name": "TypeError",
+            "message": "Failed to execute 'decodingInfo' on 'MediaCapabilities': The configuration dictionary has neither |video| nor |audio| specified and needs at least one of them."
+          },
+          "badType": {
+            "name": "TypeError",
+            "message": "Failed to execute 'decodingInfo' on 'MediaCapabilities': Failed to read the 'type' property from 'MediaDecodingConfiguration': The provided value 'x' is not a valid enum value of type MediaDecodingType."
+          },
+          "noVideoDimensions": {
+            "name": "TypeError",
+            "message": "Failed to execute 'decodingInfo' on 'MediaCapabilities': Failed to read the 'video' property from 'MediaConfiguration': Failed to read the 'bitrate' property from 'VideoConfiguration': Required member is undefined."
+          },
+          "zeroDimensions": {
+            "name": "TypeError",
+            "message": "Failed to execute 'decodingInfo' on 'MediaCapabilities': The video configuration dictionary is not valid."
+          },
+          "audioMinimal": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "audioBadType": {
+            "name": "TypeError",
+            "message": "Failed to execute 'decodingInfo' on 'MediaCapabilities': The audio configuration dictionary is not valid."
+          }
+        },
+        "encoding": {
+          "record|audio/webm; codecs=\"opus\"": {
+            "name": "TypeError",
+            "message": "Failed to execute 'encodingInfo' on 'MediaCapabilities': The provided value 'record' is not a valid enum value of type MediaEncodingType."
+          },
+          "record|audio/opus": {
+            "name": "TypeError",
+            "message": "Failed to execute 'encodingInfo' on 'MediaCapabilities': The provided value 'record' is not a valid enum value of type MediaEncodingType."
+          },
+          "record|video/webm; codecs=\"vp8\"": {
+            "name": "TypeError",
+            "message": "Failed to execute 'encodingInfo' on 'MediaCapabilities': The provided value 'record' is not a valid enum value of type MediaEncodingType."
+          },
+          "record|video/VP8": {
+            "name": "TypeError",
+            "message": "Failed to execute 'encodingInfo' on 'MediaCapabilities': The provided value 'record' is not a valid enum value of type MediaEncodingType."
+          },
+          "webrtc|audio/webm; codecs=\"opus\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "webrtc|audio/opus": {
+            "ok": true,
+            "value": {
+              "powerEfficient": true,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          },
+          "webrtc|video/webm; codecs=\"vp8\"": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": false,
+              "supported": false,
+              "keySystemAccess": null
+            }
+          },
+          "webrtc|video/VP8": {
+            "ok": true,
+            "value": {
+              "powerEfficient": false,
+              "smooth": true,
+              "supported": true,
+              "keySystemAccess": null
+            }
+          }
+        },
+        "hdConfigurations": {
+          "video/mp4; codecs=\"avc1.42E01E\"": {
+            "powerEfficient": true,
+            "smooth": true,
+            "supported": true,
+            "keySystemAccess": null
+          },
+          "video/mp4; codecs=\"avc1.4D401E\"": {
+            "powerEfficient": true,
+            "smooth": true,
+            "supported": true,
+            "keySystemAccess": null
+          },
+          "video/mp4; codecs=\"avc1.64001E\"": {
+            "powerEfficient": true,
+            "smooth": true,
+            "supported": true,
+            "keySystemAccess": null
+          },
+          "video/mp4; codecs=\"hev1.1.6.L93.B0\"": {
+            "powerEfficient": true,
+            "smooth": true,
+            "supported": true,
+            "keySystemAccess": null
+          },
+          "video/mp4; codecs=\"av01.0.01M.08\"": {
+            "powerEfficient": true,
+            "smooth": true,
+            "supported": true,
+            "keySystemAccess": null
+          },
+          "video/mp4; codecs=\"vp09.00.10.08\"": {
+            "powerEfficient": true,
+            "smooth": true,
+            "supported": true,
+            "keySystemAccess": null
+          },
+          "video/webm; codecs=\"vp8\"": {
+            "powerEfficient": false,
+            "smooth": true,
+            "supported": true,
+            "keySystemAccess": null
+          },
+          "video/webm; codecs=\"vp09.00.10.08\"": {
+            "powerEfficient": true,
+            "smooth": true,
+            "supported": true,
+            "keySystemAccess": null
+          },
+          "video/webm; codecs=\"av01.0.01M.08\"": {
+            "powerEfficient": true,
+            "smooth": true,
+            "supported": true,
+            "keySystemAccess": null
+          }
+        }
+      }
+    }
+  }
+}

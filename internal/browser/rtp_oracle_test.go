@@ -72,3 +72,5 @@ func TestRTPDirectionSDPMatchesFrozenChrome(t *testing.T) {
 		}
 	}
 }
+
+func TestMediaSupportMatchesFrozenChrome(t *testing.T) { documentAllOracle(t, "media_support") }
