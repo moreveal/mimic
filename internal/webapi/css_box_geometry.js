@@ -10,7 +10,7 @@ const cssBoxModel=(()=>{
  const blocks=new Set(['HTML','BODY','DIV','P','SECTION','MAIN','ARTICLE','ASIDE','HEADER','FOOTER','NAV','FORM','FIELDSET','DETAILS','SUMMARY','H1','H2','H3','H4','H5','H6','UL','OL','LI','TABLE','CAPTION','TBODY','THEAD','TFOOT','TR','TD','TH']);
  const state=element=>{
   const cache=styleReadCache.boxStyles||(styleReadCache.boxStyles=new WeakMap());if(cache.has(element))return cache.get(element);
-  const entries=computedCSSDeclarations(element),get=name=>geometryValue(element,entries.find(e=>e.name===name)?.value);
+  const entries=computedCSSDeclarations(element),get=name=>geometryValue(element,entries.find(e=>e.name===name)?.value??(tag(element)==='BODY'&&/^margin-(top|right|bottom|left)$/.test(name)?'8px':undefined));
   const display=get('display')||(invisible.has(tag(element))||host.getAttribute(elementSlot(element).nodeId,'hidden')!==null?'none':tableDisplays[tag(element)]|| (tag(element)==='SUMMARY'?'list-item':blocks.has(tag(element))?'block':'inline')),position=get('position')||'static';
   const result={element,entries,get,display,position};cache.set(element,result);
   result.inherited=name=>{for(let p=element;p;p=geometryParent(p)){const v=computedCSSDeclarations(p).find(e=>e.name===name)?.value;if(v&&!['inherit','unset'].includes(v))return v}return null};

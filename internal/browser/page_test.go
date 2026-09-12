@@ -1494,7 +1494,7 @@ func TestDocumentElementParentUsesDocumentSingleton(t *testing.T) {
 
 func TestExplicitElementDimensionsProjectAsDOMRect(t *testing.T) {
 	p := testPage(t)
-	v, err := p.Evaluate(context.Background(), `(()=>{const a=document.createElement('span'),b=document.createElement('iframe');b.style.width='300px';b.style.height='65px';document.body.appendChild(a);document.body.appendChild(b);const rect=b.getBoundingClientRect(),descriptor=Object.getOwnPropertyDescriptor(DOMRect.prototype,'width');return{width:b.offsetWidth,height:b.offsetHeight,rectWidth:rect.width,right:rect.right,brand:rect instanceof DOMRect&&rect instanceof DOMRectReadOnly,writable:typeof descriptor.get==='function'&&typeof descriptor.set==='function',contains:document.body.contains(b),previous:b.previousElementSibling===a}})()`)
+	v, err := p.Evaluate(context.Background(), `(()=>{document.body.style.margin='0';const a=document.createElement('span'),b=document.createElement('iframe');b.style.width='300px';b.style.height='65px';document.body.appendChild(a);document.body.appendChild(b);const rect=b.getBoundingClientRect(),descriptor=Object.getOwnPropertyDescriptor(DOMRect.prototype,'width');return{width:b.offsetWidth,height:b.offsetHeight,rectWidth:rect.width,right:rect.right,brand:rect instanceof DOMRect&&rect instanceof DOMRectReadOnly,writable:typeof descriptor.get==='function'&&typeof descriptor.set==='function',contains:document.body.contains(b),previous:b.previousElementSibling===a}})()`)
 	if err != nil {
 		t.Fatal(err)
 	}
@@ -1537,7 +1537,7 @@ func TestOutOfFlowChildrenDoNotContributeToParentHeight(t *testing.T) {
 
 func TestShadowHostLayoutDerivesFromShadowChildren(t *testing.T) {
 	p := testPage(t)
-	v, err := p.Evaluate(context.Background(), `(()=>{const outer=document.createElement('div'),host=document.createElement('div'),root=host.attachShadow({mode:'closed'}),frame=document.createElement('iframe');frame.style.width='300px';frame.style.height='65px';root.appendChild(frame);outer.appendChild(host);document.body.appendChild(outer);return{height:host.getBoundingClientRect().height,outerHeight:outer.getBoundingClientRect().height,offsetHeight:host.offsetHeight,width:host.getBoundingClientRect().width}})()`)
+	v, err := p.Evaluate(context.Background(), `(()=>{document.body.style.margin='0';const outer=document.createElement('div'),host=document.createElement('div'),root=host.attachShadow({mode:'closed'}),frame=document.createElement('iframe');frame.style.width='300px';frame.style.height='65px';root.appendChild(frame);outer.appendChild(host);document.body.appendChild(outer);return{height:host.getBoundingClientRect().height,outerHeight:outer.getBoundingClientRect().height,offsetHeight:host.offsetHeight,width:host.getBoundingClientRect().width}})()`)
 	if err != nil {
 		t.Fatal(err)
 	}

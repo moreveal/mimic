@@ -1,0 +1,181 @@
+{
+  "captureMetadata": {
+    "href": "http://127.0.0.1:56363/plain",
+    "isSecureContext": true,
+    "crossOriginIsolated": false,
+    "innerWidth": 1272,
+    "innerHeight": 653,
+    "outerWidth": 1280,
+    "outerHeight": 800,
+    "devicePixelRatio": 1,
+    "visibility": "visible",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "platform": "Win32"
+  },
+  "observation": {
+    "horizontal-tbltr": {
+      "inline-size": "120px",
+      "block-size": "60px",
+      "margin-inline-start": "8px",
+      "margin-inline-end": "6px",
+      "margin-block-start": "5px",
+      "margin-block-end": "7px",
+      "padding-inline-start": "4px",
+      "padding-inline-end": "2px",
+      "padding-block-start": "1px",
+      "padding-block-end": "3px"
+    },
+    "horizontal-tbrtl": {
+      "inline-size": "120px",
+      "block-size": "60px",
+      "margin-inline-start": "6px",
+      "margin-inline-end": "8px",
+      "margin-block-start": "5px",
+      "margin-block-end": "7px",
+      "padding-inline-start": "2px",
+      "padding-inline-end": "4px",
+      "padding-block-start": "1px",
+      "padding-block-end": "3px"
+    },
+    "vertical-rlltr": {
+      "inline-size": "60px",
+      "block-size": "120px",
+      "margin-inline-start": "5px",
+      "margin-inline-end": "7px",
+      "margin-block-start": "6px",
+      "margin-block-end": "8px",
+      "padding-inline-start": "1px",
+      "padding-inline-end": "3px",
+      "padding-block-start": "2px",
+      "padding-block-end": "4px"
+    },
+    "vertical-rlrtl": {
+      "inline-size": "60px",
+      "block-size": "120px",
+      "margin-inline-start": "7px",
+      "margin-inline-end": "5px",
+      "margin-block-start": "6px",
+      "margin-block-end": "8px",
+      "padding-inline-start": "3px",
+      "padding-inline-end": "1px",
+      "padding-block-start": "2px",
+      "padding-block-end": "4px"
+    },
+    "vertical-lrltr": {
+      "inline-size": "60px",
+      "block-size": "120px",
+      "margin-inline-start": "5px",
+      "margin-inline-end": "7px",
+      "margin-block-start": "8px",
+      "margin-block-end": "6px",
+      "padding-inline-start": "1px",
+      "padding-inline-end": "3px",
+      "padding-block-start": "4px",
+      "padding-block-end": "2px"
+    },
+    "vertical-lrrtl": {
+      "inline-size": "60px",
+      "block-size": "120px",
+      "margin-inline-start": "7px",
+      "margin-inline-end": "5px",
+      "margin-block-start": "8px",
+      "margin-block-end": "6px",
+      "padding-inline-start": "3px",
+      "padding-inline-end": "1px",
+      "padding-block-start": "4px",
+      "padding-block-end": "2px"
+    },
+    "inherited": {
+      "font-family": "monospace",
+      "font-size": "24px",
+      "line-height": "36px",
+      "letter-spacing": "12px",
+      "text-emphasis-color": "rgb(1, 2, 3)",
+      "caret-color": "rgb(1, 2, 3)"
+    },
+    "inheritedLengths": [
+      "monospace",
+      "30px",
+      "10px"
+    ],
+    "none": [
+      "25%",
+      "60px"
+    ]
+  },
+  "provenance": {
+    "revision": "aae2e38f2623bd4fd5e3566f046c0b6bb624e33d",
+    "dirtyState": " M internal/browser/css_box_geometry_test.go\n M internal/browser/page_test.go\n M internal/webapi/css_box_geometry.js\n M internal/webapi/surface.go\n M internal/webapi/surface.js\n?? docs/compatibility/css-computed-catalog-20260912.md\n?? internal/browser/testdata/css_computed_catalog_chrome152.json\n?? internal/browser/testdata/css_computed_catalog_oracle.js\n?? internal/browser/testdata/css_computed_dynamic_chrome152.json\n?? internal/browser/testdata/css_computed_dynamic_oracle.js\n?? internal/browser/testdata/css_computed_initial_chrome152.json\n?? internal/browser/testdata/css_computed_initial_oracle.js\n?? internal/webapi/css_computed_values.js\n?? internal/webapi/css_property_catalog.js\n",
+    "sourceSHA256": "540ed60c06c7d8bf2463395b1ba52aa6cc003d92c9e64591abdfd252fee61601",
+    "probeSHA256": "cc6f19e20b32942650751520eb15e9bccf6498be9dc05eb8cb21da2c51d2fdc2",
+    "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+    "mimicSHA256": "d4d68ce500732d6fa9c1fed6b17305e93dfd6e5f129e6f2ab1f00c9c40e7f522",
+    "args": [
+      "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "--remote-debugging-port=20081",
+      "--user-data-dir=E:\\GitHub\\mimic\\.build\\residual-dom-delegated\\catalog-dynamic-controls\\chrome-profile-b",
+      "--no-first-run",
+      "--no-default-browser-check",
+      "--window-size=1280,800",
+      "about:blank"
+    ],
+    "profile": "E:\\GitHub\\mimic\\.build\\residual-dom-delegated\\catalog-dynamic-controls\\chrome-profile",
+    "browserMode": "headful",
+    "environmentProfile": "chrome-152-windows-x64-headful-controlled-v1",
+    "featureOverrides": [],
+    "records": [
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      }
+    ],
+    "exitCodes": {
+      "chrome": 1,
+      "mimic": 1
+    },
+    "chromeControl": [],
+    "chromeMimic": [],
+    "chromeVersion": {
+      "Browser": "Chrome/152.0.7977.82",
+      "Protocol-Version": "1.3",
+      "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "V8-Version": "15.2.124.21",
+      "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+      "webSocketDebuggerUrl": "ws://127.0.0.1:20081/devtools/browser/6c6a7502-d5e1-49f6-90b3-9cec91ba459a"
+    },
+    "independentControlMetadata": {
+      "href": "http://127.0.0.1:56363/plain",
+      "isSecureContext": true,
+      "crossOriginIsolated": false,
+      "innerWidth": 1272,
+      "innerHeight": 653,
+      "outerWidth": 1280,
+      "outerHeight": 800,
+      "devicePixelRatio": 1,
+      "visibility": "visible",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+      "platform": "Win32"
+    },
+    "independentControlEqual": true
+  }
+}
