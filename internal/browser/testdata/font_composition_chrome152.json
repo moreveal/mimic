@@ -1,0 +1,46 @@
+{
+  "result": {
+    "result": {
+      "value": {
+        "\"Segoe UI Emoji\"|e\u0301": 8.375,
+        "\"Segoe UI Emoji\"|\u00e9": 8.375,
+        "\"Segoe UI Emoji\"|a\u0308": 8.140625,
+        "\"Segoe UI Emoji\"|\u00e4": 8.140625,
+        "\"Segoe UI Emoji\"|n\u0303": 9.0625,
+        "\"Segoe UI Emoji\"|\u00f1": 9.0625,
+        "\"Segoe UI Emoji\"|e\u0301x": 15.71875,
+        "\"Segoe UI Emoji\"|\u00e9x": 15.71875,
+        "\"Segoe UI Emoji\", Tahoma|e\u0301": 8.375,
+        "\"Segoe UI Emoji\", Tahoma|\u00e9": 8.375,
+        "\"Segoe UI Emoji\", Tahoma|a\u0308": 8.140625,
+        "\"Segoe UI Emoji\", Tahoma|\u00e4": 8.140625,
+        "\"Segoe UI Emoji\", Tahoma|n\u0303": 9.0625,
+        "\"Segoe UI Emoji\", Tahoma|\u00f1": 9.0625,
+        "\"Segoe UI Emoji\", Tahoma|e\u0301x": 15.71875,
+        "\"Segoe UI Emoji\", Tahoma|\u00e9x": 15.71875,
+        "Tahoma|e\u0301": 8.421875,
+        "Tahoma|\u00e9": 8.421875,
+        "Tahoma|a\u0308": 8.40625,
+        "Tahoma|\u00e4": 8.40625,
+        "Tahoma|n\u0303": 8.921875,
+        "Tahoma|\u00f1": 8.921875,
+        "Tahoma|e\u0301x": 16.34375,
+        "Tahoma|\u00e9x": 16.34375,
+        "Arial|e\u0301": 8.90625,
+        "Arial|\u00e9": 8.90625,
+        "Arial|a\u0308": 8.90625,
+        "Arial|\u00e4": 8.90625,
+        "Arial|n\u0303": 8.90625,
+        "Arial|\u00f1": 8.90625,
+        "Arial|e\u0301x": 16.90625,
+        "Arial|\u00e9x": 16.90625
+      }
+    }
+  },
+  "captureMetadata": {
+    "browser": "Chrome/152.0.7977.82",
+    "date": "2026-09-12",
+    "independentRuns": 2,
+    "nativeControlDifferences": 0
+  }
+}

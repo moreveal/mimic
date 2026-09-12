@@ -71,3 +71,24 @@ func TestMissingGlyphDoesNotRetainFallbackCandidates(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestCanonicalCompositionPreservesPrimaryFace(t *testing.T) {
+	if _, err := os.Stat(filepath.Join(os.Getenv("WINDIR"), "Fonts", "seguiemj.ttf")); err != nil {
+		t.Skip("requires reference font")
+	}
+	e := New()
+	e.SetFallbackFamilies([]string{"Tahoma", "Segoe UI"})
+	for _, pair := range [][2]string{{"e\u0301", "\u00e9"}, {"a\u0308", "\u00e4"}, {"n\u0303", "\u00f1"}} {
+		a, err := e.Shape(pair[0], "Segoe UI Emoji", 16, 400, false, false, false)
+		if err != nil {
+			t.Fatal(err)
+		}
+		b, err := e.Shape(pair[1], "Segoe UI Emoji", 16, 400, false, false, false)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if !reflect.DeepEqual(a, b) {
+			t.Fatalf("canonical composition changed face/metrics: %q: %v != %v", pair, a, b)
+		}
+	}
+}
