@@ -109,6 +109,37 @@ func TestDefaultControlGeometryMatchesChrome152(t *testing.T) {
 	})
 }
 
+func TestInputInternalsDoNotReenterAuthorSelectors(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, page *Page) {
+		navigateCapabilityFixture(t, page)
+		ctx := context.Background()
+		_, err := page.Evaluate(ctx, `document.body.innerHTML='<select id="choice"><option>alpha</option><option>beta</option></select><input id="next">';
+		globalThis.selectorCalls=[];
+		for(const prototype of [Document.prototype,Element.prototype,DocumentFragment.prototype])for(const name of ['querySelector','querySelectorAll']){
+		  const original=prototype[name];prototype[name]=function(...args){selectorCalls.push(name);return Reflect.apply(original,this,args)};
+		}
+		globalThis.choice=document.getElementById('choice');choice.getBoundingClientRect();choice.getClientRects();choice.focus();`)
+		if err != nil {
+			t.Fatal(err)
+		}
+		for _, command := range []struct {
+			method string
+			params map[string]any
+		}{
+			{"Input.dispatchKeyEvent", map[string]any{"type": "keyDown", "key": "Tab"}},
+			{"Input.dispatchMouseEvent", map[string]any{"type": "mouseMoved", "x": 10, "y": 10}},
+		} {
+			if err := page.DispatchProtocolInput(ctx, command.method, command.params); err != nil {
+				t.Fatal(err)
+			}
+		}
+		actual, err := page.Evaluate(ctx, `JSON.stringify({calls:selectorCalls,active:document.activeElement.id,options:choice.options.length})`)
+		if err != nil || actual != `{"calls":[],"active":"next","options":2}` {
+			t.Fatalf("internal selector traversal: %v %v", actual, err)
+		}
+	})
+}
+
 func TestProtocolInputSharesFocusAndFormStateAcrossWorlds(t *testing.T) {
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		navigateCapabilityFixture(t, page)
