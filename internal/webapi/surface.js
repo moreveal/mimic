@@ -42,6 +42,7 @@
   // the target profile's locale/time-zone through a small deterministic Intl
   // layer while richer CLDR-backed semantics are added behind the same API.
   let intlEnvironment=host.intlEnvironment();
+  const nativeIntl=typeof globalThis.Intl!=='undefined';
   if(typeof globalThis.Intl==='undefined'){
     const canonicalLocale=value=>String(value||intlEnvironment.locale).replace(/_/g,'-');
     // ECMA-402 locale availability comes from Chrome's bundled ICU data, not
@@ -63,25 +64,9 @@
     globalThis.Intl={getCanonicalLocales(locales){recordAPIAccess('Intl.getCanonicalLocales',true);if(locales===undefined)return[];return(Array.isArray(locales)?locales:[locales]).map(canonicalLocale)},supportedValuesOf(key){recordAPIAccess('Intl.supportedValuesOf',true);if(String(key)==='timeZone')return[intlEnvironment.timeZone];return[]},Collator:callable('Collator',Collator),NumberFormat:callable('NumberFormat',NumberFormat),DateTimeFormat:callable('DateTimeFormat',DateTimeFormat),PluralRules:callable('PluralRules',PluralRules),RelativeTimeFormat:callable('RelativeTimeFormat',RelativeTimeFormat),ListFormat:callable('ListFormat',ListFormat),DisplayNames:callable('DisplayNames',DisplayNames),Locale:callable('Locale',Locale),Segmenter:callable('Segmenter',Segmenter)};
     for(const [name,value] of Object.entries(globalThis.Intl)){markNative(value,name);if(typeof value==='function'&&value.prototype)for(const member of Reflect.ownKeys(value.prototype)){if(member==='constructor')continue;const descriptor=Object.getOwnPropertyDescriptor(value.prototype,member);markNative(descriptor&&descriptor.value,String(member));markNative(descriptor&&descriptor.get,String(member),'get ')}}
   }else{
-    // V8 ships Chrome's ECMA-402 implementation. Keep it intact and project
-    // only the canonical browser environment into omitted locale/time-zone
-    // arguments; host OS defaults are not browser state and must not leak in.
-    for(const name of ['Collator','NumberFormat','DateTimeFormat','PluralRules','RelativeTimeFormat','ListFormat','DisplayNames','Segmenter']){
-      const Native=globalThis.Intl[name];
-      if(typeof Native!=='function')continue;
-      const normalize=args=>{
-        args=Array.from(args);
-        if(args[0]===undefined)args[0]=intlEnvironment.locale;
-        if(name==='DateTimeFormat'){
-          const options=args[1]===undefined?{}:{...args[1]};
-          if(options.timeZone===undefined)options.timeZone=intlEnvironment.timeZone;
-          args[1]=options;
-        }
-        return args;
-      };
-      globalThis.Intl[name]=new Proxy(Native,{apply(target,self,args){return Reflect.apply(target,self,normalize(args))},construct(target,args,newTarget){return Reflect.construct(target,normalize(args),newTarget)}});
-    }
+    /* native_intl */
   }
+  /* profile_locale */
   /* shared_fetch_primitives */
   const eventSlots=new WeakMap(),messageEventSlots=new WeakMap(),errorEventSlots=new WeakMap();
   class Event { constructor(type,init={}){eventSlots.set(this,{type:String(type),bubbles:!!init.bubbles,cancelable:!!init.cancelable,composed:!!init.composed,timeStamp:host.performanceNow(),defaultPrevented:false,trusted:false});Object.defineProperty(this,'isTrusted',{get:()=>!!eventSlots.get(this).trusted,enumerable:true,configurable:false})} get timeStamp(){return eventSlots.get(this).timeStamp} get type(){return eventSlots.get(this).type} get bubbles(){return eventSlots.get(this).bubbles} get cancelable(){return eventSlots.get(this).cancelable} get defaultPrevented(){return eventSlots.get(this).defaultPrevented} preventDefault(){const state=eventSlots.get(this);if(state.cancelable)state.defaultPrevented=true} }

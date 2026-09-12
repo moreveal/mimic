@@ -109,6 +109,10 @@ type DebuggerEvalRuntime interface {
 
 type Factory interface{ New() Runtime }
 
+// NativeIntlFactory certifies an engine's real ECMA-402 implementation, required
+// for custom locale profiles. Shape-only Intl fallbacks are not sufficient.
+type NativeIntlFactory interface{ NativeIntl() bool }
+
 // UndetectableRuntime creates a native callable object with HTMLDDA operator
 // semantics. Property operations are delegated to realm-owned JS handlers;
 // an ordinary JS Proxy cannot preserve the native undetectable flag.

@@ -1,12 +1,24 @@
 package browser
 
 import (
+	"github.com/moreveal/mimic/internal/engine"
 	"github.com/moreveal/mimic/internal/profile"
 	"github.com/moreveal/mimic/internal/state"
 )
 
 func (b *Browser) ValidateProfile(raw []byte) (profile.Document, error) {
-	return profile.Normalize(raw, b.env, nil)
+	d, err := profile.Normalize(raw, b.env, nil)
+	if err == nil {
+		capability, ok := b.factory.(engine.NativeIntlFactory)
+		if !ok || !capability.NativeIntl() {
+			for field, changed := range map[string]bool{"timezone": d.Locale.Timezone != b.env.Locale.Timezone, "intlLocale": d.Locale.IntlLocale != b.env.Locale.IntlLocale} {
+				if changed {
+					return d, &profile.Error{Path: "locale." + field, Reason: "unsupported", Message: "custom locale profiles require a native Intl engine"}
+				}
+			}
+		}
+	}
+	return d, err
 }
 func (b *Browser) NewContextWithProfile(raw []byte) (*Context, error) {
 	d, err := b.ValidateProfile(raw)
