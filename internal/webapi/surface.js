@@ -751,17 +751,20 @@
   const rtcRandomBytes=n=>Uint8Array.from(host.internalRandomBytes(n));
   const rtcHex=(bytes,separator='')=>Array.from(bytes,x=>x.toString(16).padStart(2,'0').toUpperCase()).join(separator);
   const rtcBase64=bytes=>btoa(String.fromCharCode(...bytes));
-  const rtcOfferSDP=peer=>{const state=rtcPeerPrivate.get(peer),random=rtcRandomBytes(32),ufrag=rtcBase64(random.slice(0,3)),pwd=rtcBase64(random.slice(3,21)),fingerprint=rtcHex(rtcRandomBytes(32),':'),session=String((BigInt('0x'+rtcHex(random.slice(21,29)))%9223372036854775807n)||1n),data=state.hasDataChannel?'m=application 9 UDP/DTLS/SCTP webrtc-datachannel\r\nc=IN IP4 0.0.0.0\r\n':'';state.iceUfrag=ufrag;return 'v=0\r\no=- '+session+' 2 IN IP4 127.0.0.1\r\ns=-\r\nt=0 0\r\na=group:BUNDLE 0\r\na=extmap-allow-mixed\r\na=msid-semantic: WMS\r\n'+data+'a=ice-ufrag:'+ufrag+'\r\na=ice-pwd:'+pwd+'\r\na=ice-options:trickle\r\na=fingerprint:sha-256 '+fingerprint+'\r\na=setup:actpass\r\na=mid:0\r\na=sctp-port:5000\r\na=max-message-size:262144\r\n'};
-  Object.defineProperty(RTCPeerConnection.prototype,'createOffer',{value:function(){if(rtcPeerPrivate.get(this).closed)return Promise.reject(new DOMException('The RTCPeerConnection is closed.','InvalidStateError'));return Promise.resolve(new RTCSessionDescription({type:'offer',sdp:rtcOfferSDP(this)}))},writable:true,configurable:true});
   Object.defineProperty(RTCPeerConnection.prototype,'setLocalDescription',{value:function(description){
     const state=rtcPeerPrivate.get(this);
     if(state.closed)return Promise.reject(new DOMException('The RTCPeerConnection is closed.','InvalidStateError'));
-    const value=description instanceof RTCSessionDescription?description:new RTCSessionDescription(description||{type:'offer',sdp:rtcOfferSDP(this)});
-    const observable=rtcPeerStates.get(this);observable.localDescription=value;observable.pendingLocalDescription=value;
+    const value=description instanceof RTCSessionDescription?description:new RTCSessionDescription(description||rtcSessionModel.offer(this));
+    const observable=rtcPeerStates.get(this);
+    return new Promise((resolve,reject)=>setTimeout(()=>{
+    if(state.closed){reject(new DOMException('The RTCPeerConnection is closed.','InvalidStateError'));return}
+    observable.localDescription=value;observable.pendingLocalDescription=value;
+    rtcSessionModel.applyLocal(this,value);
     if(value.type==='offer')observable.signalingState='have-local-offer';else if(value.type==='answer')observable.signalingState='stable';
+    dispatchTrusted(this,new Event('signalingstatechange'));resolve();
+    if(!/^m=/m.test(value.sdp))return;
     setTimeout(()=>{
       if(state.closed)return;
-      dispatchTrusted(this,new Event('signalingstatechange'));
       observable.iceGatheringState='gathering';dispatchTrusted(this,new Event('icegatheringstatechange'));
 	      const environment=host.rtcEnvironment(),hasSTUN=state.configuration.iceServers.some(server=>server.urls.some(url=>/^stuns?:/i.test(url))),count=hasSTUN?Math.max(1,Number(environment.hostCandidateCount)||1):1,reflexiveCount=hasSTUN?Math.max(0,Number(environment.reflexiveCandidateCount)||0):0,networkCost=Math.max(0,Number(environment.networkCost)||0),id=host.internalRandomUUID(),hostFoundation=String(parseInt(rtcHex(rtcRandomBytes(4)),16)>>>0),reflexiveFoundation=String(parseInt(rtcHex(rtcRandomBytes(4)),16)>>>0),priority=2113937151,reflexivePriority=1677729535,basePort=49152+(parseInt(rtcHex(rtcRandomBytes(2)),16)%16380),hostCandidates=[],reflexiveCandidates=[];
       for(let index=0;index<count;index++){
@@ -772,12 +775,13 @@
         const port=basePort+Number((environment.reflexivePortOffsets||environment.portOffsets||[])[index]??index*2),suffix=' generation 0 ufrag '+String(state.iceUfrag||'')+' network-cost '+networkCost;
         reflexiveCandidates.push(new RTCIceCandidate({candidate:'candidate:'+reflexiveFoundation+' 1 udp '+reflexivePriority+' '+String(environment.publicAddress)+' '+port+' typ srflx raddr 0.0.0.0 rport 0'+suffix,sdpMid:'0',sdpMLineIndex:0,usernameFragment:state.iceUfrag||null}));
       }
-      const withCandidates=candidates=>{const candidateLines=candidates.map(candidate=>'a='+candidate.candidate.replace(/ ufrag [^ ]+(?= network-cost)/,'')+'\r\n').join(''),withAddress=hasSTUN?value.sdp.replace('m=application 9 UDP/DTLS/SCTP','m=application '+basePort+' UDP/DTLS/SCTP').replace('c=IN IP4 0.0.0.0','c=IN IP4 '+String(environment.publicAddress||'0.0.0.0')):value.sdp,candidateIndex=withAddress.indexOf('a=ice-ufrag:'),sdp=candidateIndex<0?withAddress+candidateLines:withAddress.slice(0,candidateIndex)+candidateLines+withAddress.slice(candidateIndex);return new RTCSessionDescription({type:value.type,sdp})};
+      rtcSessionModel.expandCandidates(value.sdp,hostCandidates,state.configuration);rtcSessionModel.expandCandidates(value.sdp,reflexiveCandidates,state.configuration);
+      const withCandidates=candidates=>rtcSessionModel.candidateDescription(value,candidates);
       const hostDescription=withCandidates(hostCandidates);observable.localDescription=hostDescription;observable.pendingLocalDescription=hostDescription;
       for(const candidate of hostCandidates)dispatchTrusted(this,new RTCPeerConnectionIceEvent('icecandidate',{candidate}));
       setTimeout(()=>{if(state.closed)return;const allCandidates=hostCandidates.concat(reflexiveCandidates),reflexiveDescription=withCandidates(allCandidates);observable.localDescription=reflexiveDescription;observable.pendingLocalDescription=reflexiveDescription;for(const candidate of reflexiveCandidates)dispatchTrusted(this,new RTCPeerConnectionIceEvent('icecandidate',{candidate}));setTimeout(()=>{if(state.closed)return;observable.iceGatheringState='complete';dispatchTrusted(this,new Event('icegatheringstatechange'));dispatchTrusted(this,new RTCPeerConnectionIceEvent('icecandidate',{candidate:null}))},Math.max(0,Number(environment.endDelayMillis)-Number(environment.reflexiveDelayMillis)))},Math.max(0,Number(environment.reflexiveDelayMillis)-Number(environment.hostDelayMillis)));
     },Math.max(0,Number(host.rtcEnvironment().hostDelayMillis)||0));
-    return Promise.resolve()
+    },0))
   },writable:true,configurable:true});
   globalThis.RTCDataChannel=RTCDataChannel;
   Object.defineProperty(RTCDataChannel.prototype,Symbol.toStringTag,{value:'RTCDataChannel',configurable:true});
