@@ -1125,6 +1125,9 @@ func (r *Realm) installBindings() error {
 	host["hasStorageAccess"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		return r.val(p.Environment().Network.CookiesEnabled && r.origin != "null"), nil
 	})
+	host["gpuCapabilities"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		return r.val(p.Environment().Graphics.WebGPUProjection()), nil
+	})
 	host["gpuRequestAdapter"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		promise := r.runtime.NewPromise()
 		delay := time.Duration(p.Environment().Graphics.WebGPU.InitializationDelayMillis * float64(time.Millisecond))

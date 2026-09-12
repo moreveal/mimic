@@ -19,7 +19,7 @@
  for(const name of ['has','keys','values','entries'])method('GPUSupportedFeatures',name,(s,...args)=>s.values[name](...args));
  method('GPUSupportedFeatures','forEach',(s,callback,thisArg)=>{if(typeof callback!=='function')throw new TypeError('Expected callback');s.values.forEach((v,k)=>callback.call(thisArg,v,k,s.object))});
  Object.defineProperty(GPUSupportedFeatures.prototype,Symbol.iterator,{value:function(){return check(this,'GPUSupportedFeatures').values.values()},writable:true,configurable:true});
- const gpuLimitDefaults={maxTextureDimension1D:8192,maxTextureDimension2D:8192,maxTextureDimension3D:2048,maxTextureArrayLayers:256,maxBindGroups:4,maxBindGroupsPlusVertexBuffers:24,maxBindingsPerBindGroup:1000,maxDynamicUniformBuffersPerPipelineLayout:8,maxDynamicStorageBuffersPerPipelineLayout:4,maxSampledTexturesPerShaderStage:16,maxSamplersPerShaderStage:16,maxStorageBuffersPerShaderStage:8,maxStorageTexturesPerShaderStage:4,maxUniformBuffersPerShaderStage:12,maxUniformBufferBindingSize:65536,maxStorageBufferBindingSize:134217728,minUniformBufferOffsetAlignment:256,minStorageBufferOffsetAlignment:256,maxVertexBuffers:8,maxBufferSize:268435456,maxVertexAttributes:16,maxVertexBufferArrayStride:2048,maxInterStageShaderVariables:16,maxColorAttachments:8,maxColorAttachmentBytesPerSample:32,maxComputeWorkgroupStorageSize:16384,maxComputeInvocationsPerWorkgroup:256,maxComputeWorkgroupSizeX:256,maxComputeWorkgroupSizeY:256,maxComputeWorkgroupSizeZ:64,maxComputeWorkgroupsPerDimension:65535};
+ const gpuCapabilities=host.gpuCapabilities(),gpuLimitDefaults=gpuCapabilities.defaults;
  for(const name of Object.keys(gpuLimitDefaults))getter('GPUSupportedLimits',name,s=>s.values[name]);
  for(const name of ['vendor','architecture','device','description'])getter('GPUAdapterInfo',name,s=>s.values[name]||'');
  const info=values=>make('GPUAdapterInfo',{values:{...values}}),limits=values=>make('GPUSupportedLimits',{values:{...values}});
@@ -27,7 +27,13 @@
  for(const name of ['info','features','limits'])getter('GPUAdapter',name,s=>s[name]);getter('GPUAdapter','isFallbackAdapter',()=>false);
  // The navigator owns one canonical GPU object; adapters/devices own their views.
  const gpu=make('GPU');method('GPU','getPreferredCanvasFormat',()=> 'bgra8unorm');
- method('GPU','requestAdapter',()=>host.gpuRequestAdapter().then(g=>make('GPUAdapter',{info:info(g),features:makeFeatures(g.features||[]),limits:limits({...gpuLimitDefaults,maxTextureDimension2D:g.maxTextureSize}),requested:false})));
+ const languageFeatures=make('WGSLLanguageFeatures',{values:new Set(gpuCapabilities.wgsl||[])});
+ getter('GPU','wgslLanguageFeatures',()=>languageFeatures);
+ getter('WGSLLanguageFeatures','size',s=>s.values.size);
+ for(const name of ['has','keys','values','entries'])method('WGSLLanguageFeatures',name,(s,...args)=>s.values[name](...args));
+ method('WGSLLanguageFeatures','forEach',(s,callback,thisArg)=>{if(typeof callback!=='function')throw new TypeError('Expected callback');s.values.forEach((v,k)=>Reflect.apply(callback,thisArg,[v,k,languageFeatures]))});
+ Object.defineProperty(WGSLLanguageFeatures.prototype,Symbol.iterator,{value:function(){return check(this,'WGSLLanguageFeatures').values.values()},writable:true,configurable:true});
+ method('GPU','requestAdapter',()=>host.gpuRequestAdapter().then(g=>make('GPUAdapter',{info:info(g),features:makeFeatures(g.features||[]),limits:limits(gpuCapabilities.limits),requested:false})));
  const navProto=typeof WorkerNavigator==='function'?WorkerNavigator.prototype:Navigator.prototype;
  const secure=typeof host.isSecureContext==='function'?host.isSecureContext():host.documentSecurity().secureContext;
  if(secure){
