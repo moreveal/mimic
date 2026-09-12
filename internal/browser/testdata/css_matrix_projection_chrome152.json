@@ -1,0 +1,312 @@
+{
+  "captureMetadata": {
+    "href": "http://127.0.0.1:23874/plain",
+    "isSecureContext": true,
+    "crossOriginIsolated": false,
+    "innerWidth": 1272,
+    "innerHeight": 653,
+    "outerWidth": 1280,
+    "outerHeight": 800,
+    "devicePixelRatio": 1,
+    "visibility": "visible",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "platform": "Win32"
+  },
+  "provenance": {
+    "revision": "dab93822b5689b44d0416c1f6abc17babe7605b2",
+    "dirtyState": " M internal/webapi/dom_matrix.js\n M internal/webapi/surface.js\n",
+    "sourceSHA256": "f76dc8c433425288d3a0f6357e12c5f85b8f8d529fd5ee3c164c87fa4ae391bd",
+    "probeSHA256": "6375851494d91a2225d313226b1ce585611b8866bb768dedd989e6573a3e0680",
+    "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+    "mimicSHA256": "4d400c87bdb3aaafc52996a18d0dbc82bf64fbd6517150c039e32bd57796eba0",
+    "args": [
+      "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "--remote-debugging-port=20081",
+      "--user-data-dir=E:\\GitHub\\mimic\\.build\\residual-dom-delegated\\matrix-controls\\chrome-profile-b",
+      "--no-first-run",
+      "--no-default-browser-check",
+      "--window-size=1280,800",
+      "about:blank"
+    ],
+    "profile": "E:\\GitHub\\mimic\\.build\\residual-dom-delegated\\matrix-controls\\chrome-profile",
+    "browserMode": "headful",
+    "environmentProfile": "chrome-152-windows-x64-headful-controlled-v1",
+    "featureOverrides": [],
+    "records": [
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      }
+    ],
+    "exitCodes": {
+      "chrome": 1,
+      "mimic": 1
+    },
+    "chromeControl": [],
+    "chromeMimic": [
+      {
+        "mode": "plain",
+        "path": "/rects/1/width",
+        "chrome": 118.1985092163086,
+        "mimic": 118.1985117133101
+      },
+      {
+        "mode": "plain",
+        "path": "/rects/1/x",
+        "chrome": 36.36029815673828,
+        "mimic": 36.36029765733798
+      },
+      {
+        "mode": "plain",
+        "path": "/rects/2/height",
+        "chrome": 76.794921875,
+        "mimic": 76.79491924311228
+      },
+      {
+        "mode": "plain",
+        "path": "/rects/2/y",
+        "chrome": 8.564064979553223,
+        "mimic": 8.564064605510183
+      },
+      {
+        "mode": "plain",
+        "path": "/rects/3/height",
+        "chrome": 86.39702606201172,
+        "mimic": 86.39702342662022
+      },
+      {
+        "mode": "plain",
+        "path": "/rects/3/width",
+        "chrome": 108.81636047363281,
+        "mimic": 108.81634903542327
+      },
+      {
+        "mode": "plain",
+        "path": "/rects/3/x",
+        "chrome": 38.23672866821289,
+        "mimic": 38.236730192915346
+      },
+      {
+        "mode": "plain",
+        "path": "/rects/3/y",
+        "chrome": 22.72059440612793,
+        "mimic": 22.720595314675954
+      },
+      {
+        "mode": "plain",
+        "path": "/rects/6/height",
+        "chrome": 43.30126953125,
+        "mimic": 43.301270189221945
+      },
+      {
+        "mode": "plain",
+        "path": "/rects/6/y",
+        "chrome": 33.839744567871094,
+        "mimic": 33.83974596215561
+      },
+      {
+        "mode": "plain",
+        "path": "/rects/7/width",
+        "chrome": 81.91520690917969,
+        "mimic": 81.91520442889919
+      },
+      {
+        "mode": "plain",
+        "path": "/rects/7/x",
+        "chrome": 40.74907684326172,
+        "mimic": 40.74907693246493
+      },
+      {
+        "mode": "plain",
+        "path": "/rects/8/height",
+        "chrome": 81.87715148925781,
+        "mimic": 81.87715416852075
+      },
+      {
+        "mode": "plain",
+        "path": "/rects/8/width",
+        "chrome": 107.57321166992188,
+        "mimic": 107.5732009268184
+      },
+      {
+        "mode": "plain",
+        "path": "/rects/8/x",
+        "chrome": 27.491565704345703,
+        "mimic": 27.491565207535295
+      },
+      {
+        "mode": "plain",
+        "path": "/rects/8/y",
+        "chrome": 23.988548278808594,
+        "mimic": 23.98854754595569
+      },
+      {
+        "mode": "plain",
+        "path": "/rects/9/height",
+        "chrome": 54.94506072998047,
+        "mimic": 54.94505494505495
+      },
+      {
+        "mode": "plain",
+        "path": "/rects/9/width",
+        "chrome": 109.89012145996094,
+        "mimic": 109.8901098901099
+      },
+      {
+        "mode": "plain",
+        "path": "/rects/9/x",
+        "chrome": 38.021976470947266,
+        "mimic": 38.02197802197802
+      },
+      {
+        "mode": "plain",
+        "path": "/rects/9/y",
+        "chrome": 29.010988235473633,
+        "mimic": 29.01098901098901
+      },
+      {
+        "mode": "plain",
+        "path": "/rects/11/height",
+        "chrome": 66.60520935058594,
+        "mimic": 66.60520541730342
+      },
+      {
+        "mode": "plain",
+        "path": "/rects/11/width",
+        "chrome": 107.1631851196289,
+        "mimic": 107.16318418456731
+      },
+      {
+        "mode": "plain",
+        "path": "/rects/11/x",
+        "chrome": 53.35791778564453,
+        "mimic": 53.35791783307863
+      },
+      {
+        "mode": "plain",
+        "path": "/rects/11/y",
+        "chrome": 51.678958892822266,
+        "mimic": 51.678958916539315
+      }
+    ]
+  },
+  "version": {
+    "Browser": "Chrome/152.0.7977.82",
+    "Protocol-Version": "1.3",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "V8-Version": "15.2.124.21",
+    "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:20081/devtools/browser/7802b6f8-7dea-4b63-9c44-4770145e4b21"
+  },
+  "observation": {
+    "rects": [
+      {
+        "transform": "none",
+        "x": 40,
+        "y": 30,
+        "width": 100,
+        "height": 50
+      },
+      {
+        "transform": "skewX(20deg)",
+        "x": 36.36029815673828,
+        "y": 30,
+        "width": 118.1985092163086,
+        "height": 50
+      },
+      {
+        "transform": "skewY(-15deg)",
+        "x": 40,
+        "y": 8.564064979553223,
+        "width": 100,
+        "height": 76.794921875
+      },
+      {
+        "transform": "skew(10deg,20deg)",
+        "x": 38.23672866821289,
+        "y": 22.72059440612793,
+        "width": 108.81636047363281,
+        "height": 86.39702606201172
+      },
+      {
+        "transform": "scale3d(2,3,4)",
+        "x": 20,
+        "y": 10,
+        "width": 200,
+        "height": 150
+      },
+      {
+        "transform": "translate3d(10px,20px,30px)",
+        "x": 50,
+        "y": 50,
+        "width": 100,
+        "height": 50
+      },
+      {
+        "transform": "rotateX(30deg)",
+        "x": 40,
+        "y": 33.839744567871094,
+        "width": 100,
+        "height": 43.30126953125
+      },
+      {
+        "transform": "rotateY(35deg)",
+        "x": 40.74907684326172,
+        "y": 30,
+        "width": 81.91520690917969,
+        "height": 50
+      },
+      {
+        "transform": "rotate3d(1,2,3,25deg)",
+        "x": 27.491565704345703,
+        "y": 23.988548278808594,
+        "width": 107.57321166992188,
+        "height": 81.87715148925781
+      },
+      {
+        "transform": "perspective(500px) translateZ(50px)",
+        "x": 38.021976470947266,
+        "y": 29.010988235473633,
+        "width": 109.89012145996094,
+        "height": 54.94506072998047
+      },
+      {
+        "transform": "matrix3d(1,0,0,0,0,1,0,0,0,0,1,0,12,13,14,1)",
+        "x": 52,
+        "y": 43,
+        "width": 100,
+        "height": 50
+      },
+      {
+        "transform": "translate(20%,50%) rotate(10deg)",
+        "x": 53.35791778564453,
+        "y": 51.678958892822266,
+        "width": 107.1631851196289,
+        "height": 66.60520935058594
+      }
+    ],
+    "parsed": 16,
+    "privateProjection": true,
+    "calls": []
+  }
+}

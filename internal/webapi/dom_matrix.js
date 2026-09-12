@@ -1,4 +1,5 @@
 // Geometry Interfaces use column-major matrices. This is CPU algebra only.
+const compatibilityMatrix={};
 const DOMMatrix=(()=>{
  const slots=new WeakMap(),identity=()=>[1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,1],aliases={a:0,b:1,c:4,d:5,e:12,f:13};
  const slot=o=>{const s=slots.get(o);if(!s)throw new TypeError('Illegal invocation');return s};
@@ -7,23 +8,31 @@ const DOMMatrix=(()=>{
  const expand=a=>[a[0],a[1],0,0,a[2],a[3],0,0,0,0,1,0,a[4],a[5],0,1];
  const syntax=()=>{throw new DOMException('Failed to parse matrix','SyntaxError')};
  const parse=init=>{if(init===undefined)return {m:identity(),two:true};if(typeof init==='string'){if(init===''||init==='none')return {m:identity(),two:true};const match=/^\s*(matrix|matrix3d)\(([^()]*)\)\s*$/.exec(init);if(!match)return parseTransforms(init);const a=match[2].split(',').map(v=>{if(!v.trim())syntax();return +v});if(a.some(v=>!Number.isFinite(v))||a.length!==(match[1]==='matrix'?6:16))syntax();return {m:a.length===6?expand(a):a,two:a.length===6}}const a=Array.from(init,v=>+v);if(a.length!==6&&a.length!==16)throw new TypeError('Expected 6 or 16 elements');return {m:a.length===6?expand(a):a,two:a.length===6}};
- const parseTransforms=source=>{const re=/([a-zA-Z0-9]+)\(([^()]*)\)/g;let match,at=0,m=new DOMMatrix();const number=v=>{if(!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i.test(v))syntax();return +v},length=v=>{const match=/^(.+?)(px|cm|mm|q|in|pt|pc)$/.exec(v);if(!match){if(number(v)!==0)syntax();return 0}return number(match[1])*({px:1,cm:96/2.54,mm:96/25.4,q:96/101.6,in:96,pt:96/72,pc:16}[match[2]])},angle=v=>{const match=/^(.+?)(deg|rad|grad|turn)$/.exec(v);if(!match){if(number(v)!==0)syntax();return 0}return number(match[1])*({deg:1,rad:180/Math.PI,grad:.9,turn:360}[match[2]])};
- while((match=re.exec(source))){if(source.slice(at,match.index).trim())syntax();at=re.lastIndex;const name=match[1],a=match[2].split(',').map(v=>v.trim()),arity=(min,max=min)=>{if(a.length<min||a.length>max)syntax()};
-  if(name==='matrix'||name==='matrix3d'){arity(name==='matrix'?6:16);m.multiplySelf(new DOMMatrix(match[0]))}
-  else if(name==='translate'){arity(1,2);m.translateSelf(length(a[0]),a[1]===undefined?0:length(a[1]))}
-  else if(name==='translate3d'){arity(3);m.translateSelf(...a.map(length));slot(m).two=false}
-  else if(/^translate[XYZ]$/.test(name)){arity(1);const v=length(a[0]);m.translateSelf(name==='translateX'?v:0,name==='translateY'?v:0,name==='translateZ'?v:0);if(name==='translateZ')slot(m).two=false}
-  else if(name==='scale'){arity(1,2);m.scaleSelf(number(a[0]),a[1]===undefined?number(a[0]):number(a[1]))}
-  else if(name==='scale3d'){arity(3);m.scaleSelf(...a.map(number));slot(m).two=false}
-  else if(/^scale[XYZ]$/.test(name)){arity(1);const v=number(a[0]);m.scaleSelf(name==='scaleX'?v:1,name==='scaleY'?v:1,name==='scaleZ'?v:1);if(name==='scaleZ')slot(m).two=false}
-  else if(name==='rotate'||name==='rotateZ'){arity(1);m.rotateSelf(angle(a[0]));if(name==='rotateZ')slot(m).two=false}
-  else if(name==='rotateX'||name==='rotateY'){arity(1);m.rotateAxisAngleSelf(name==='rotateX'?1:0,name==='rotateY'?1:0,0,angle(a[0]));slot(m).two=false}
-  else if(name==='rotate3d'){arity(4);m.rotateAxisAngleSelf(number(a[0]),number(a[1]),number(a[2]),angle(a[3]));slot(m).two=false}
-  else if(name==='skewX'||name==='skewY'){arity(1);m[name+'Self'](angle(a[0]))}
-  else if(name==='skew'){arity(1,2);m.multiplySelf({c:Math.tan(angle(a[0])*Math.PI/180),b:a[1]===undefined?0:Math.tan(angle(a[1])*Math.PI/180)})}
-  else if(name==='perspective'){arity(1);const value=length(a[0]);if(value<0)syntax();m.multiplySelf({m34:-1/Math.max(1,value),is2D:false})}
+ const axisRotation=(x,y,z,angle)=>{
+  const m=identity(),norm=Math.hypot(x,y,z);if(!norm)return m;x/=norm;y/=norm;z/=norm;
+  const a=angle*Math.PI/180,c=Math.cos(a),s=Math.sin(a),t=1-c;
+  m[0]=t*x*x+c;m[1]=t*x*y+s*z;m[2]=t*x*z-s*y;m[4]=t*x*y-s*z;m[5]=t*y*y+c;m[6]=t*y*z+s*x;m[8]=t*x*z+s*y;m[9]=t*y*z-s*x;m[10]=t*z*z+c;return m;
+ };
+ // Internal CSS geometry and DOMMatrix construction share this parser and pure
+ // algebra. No method/accessor on an author-visible matrix is invoked here.
+ const parseTransforms=(source,resolveLength)=>{const re=/([a-zA-Z0-9]+)\(([^()]*)\)/g;let match,at=0,m=identity(),two=true;const number=v=>{if(!/^[+-]?(?:\d+(?:\.\d*)?|\.\d+)(?:e[+-]?\d+)?$/i.test(v))syntax();return +v},length=(v,axis)=>{if(resolveLength){const resolved=resolveLength(v,axis);if(resolved!==null&&resolved!==undefined)return resolved}const match=/^(.+?)(px|cm|mm|q|in|pt|pc)$/.exec(v);if(!match){if(number(v)!==0)syntax();return 0}return number(match[1])*({px:1,cm:96/2.54,mm:96/25.4,q:96/101.6,in:96,pt:96/72,pc:16}[match[2]])},angle=v=>{const match=/^(.+?)(deg|rad|grad|turn)$/.exec(v);if(!match){if(number(v)!==0)syntax();return 0}return number(match[1])*({deg:1,rad:180/Math.PI,grad:.9,turn:360}[match[2]])};
+ while((match=re.exec(source))){if(source.slice(at,match.index).trim())syntax();at=re.lastIndex;const name=match[1],a=match[2].split(',').map(v=>v.trim()),arity=(min,max=min)=>{if(a.length<min||a.length>max)syntax()};let n=identity();
+  if(name==='matrix'||name==='matrix3d'){arity(name==='matrix'?6:16);const values=a.map(number);n=values.length===6?expand(values):values;if(values.length===16)two=false}
+  else if(name==='translate'){arity(1,2);n[12]=length(a[0],0);n[13]=a[1]===undefined?0:length(a[1],1)}
+  else if(name==='translate3d'){arity(3);for(let i=0;i<3;i++)n[12+i]=length(a[i],i);two=false}
+  else if(/^translate[XYZ]$/.test(name)){arity(1);const axis='XYZ'.indexOf(name.at(-1));n[12+axis]=length(a[0],axis);if(axis===2)two=false}
+  else if(name==='scale'){arity(1,2);n[0]=number(a[0]);n[5]=a[1]===undefined?n[0]:number(a[1])}
+  else if(name==='scale3d'){arity(3);n[0]=number(a[0]);n[5]=number(a[1]);n[10]=number(a[2]);two=false}
+  else if(/^scale[XYZ]$/.test(name)){arity(1);const axis='XYZ'.indexOf(name.at(-1));n[axis*5]=number(a[0]);if(axis===2)two=false}
+  else if(name==='rotate'||name==='rotateZ'){arity(1);n=axisRotation(0,0,1,angle(a[0]));if(name==='rotateZ')two=false}
+  else if(name==='rotateX'||name==='rotateY'){arity(1);n=axisRotation(name==='rotateX'?1:0,name==='rotateY'?1:0,0,angle(a[0]));two=false}
+  else if(name==='rotate3d'){arity(4);n=axisRotation(number(a[0]),number(a[1]),number(a[2]),angle(a[3]));two=false}
+  else if(name==='skewX'||name==='skewY'){arity(1);n[name==='skewX'?4:1]=Math.tan(angle(a[0])*Math.PI/180)}
+  else if(name==='skew'){arity(1,2);n[4]=Math.tan(angle(a[0])*Math.PI/180);n[1]=a[1]===undefined?0:Math.tan(angle(a[1])*Math.PI/180)}
+  else if(name==='perspective'){arity(1);const value=length(a[0],2);if(value<0)syntax();n[11]=-1/Math.max(1,value);two=false}
   else syntax();
- }if(!at||source.slice(at).trim())syntax();return slot(m)};
+  m=product(m,n);
+ }if(!at||source.slice(at).trim())syntax();return {m,two}};
  const dict=value=>{value=value??{};const m=identity();for(let i=0;i<16;i++){const key='m'+(Math.floor(i/4)+1)+(i%4+1);if(value[key]!==undefined)m[i]=+value[key]}for(const [key,i]of Object.entries(aliases)){if(value[key]!==undefined){const v=+value[key],full='m'+(Math.floor(i/4)+1)+(i%4+1);if(value[full]!==undefined&&!Object.is(v,m[i])&&!(v===m[i]))throw new TypeError('Conflicting matrix aliases');m[i]=v}}const two=value.is2D===undefined?planar(m):!!value.is2D;if(two&&!planar(m))throw new TypeError('Inconsistent is2D');return {m,two}};
  const make=(state,ctor=DOMMatrix)=>{const result=Object.create(ctor.prototype);slots.set(result,{m:state.m.slice(),two:state.two});return result};
  const inverse=m=>{const rows=Array.from({length:4},(_,r)=>Array.from({length:8},(_,c)=>c<4?m[c*4+r]:+(c-4===r)));for(let c=0;c<4;c++){let pivot=c;for(let r=c+1;r<4;r++)if(Math.abs(rows[r][c])>Math.abs(rows[pivot][c]))pivot=r;if(!rows[pivot][c])return null;[rows[c],rows[pivot]]=[rows[pivot],rows[c]];const scale=rows[c][c];rows[c]=rows[c].map(v=>v/scale);for(let r=0;r<4;r++)if(r!==c){const factor=rows[r][c];rows[r]=rows[r].map((v,i)=>v-factor*rows[c][i])}}return Array.from({length:16},(_,i)=>rows[i%4][4+Math.floor(i/4)])};
@@ -62,7 +71,7 @@ const DOMMatrix=(()=>{
   scale3dSelf(scale=1,ox=0,oy=0,oz=0){return this.scaleSelf(scale,scale,scale,ox,oy,oz)}
   rotateSelf(x=0,y,z){x=+x;if(y===undefined&&z===undefined){z=x;x=0;y=0}else{y=+(y??0);z=+(z??0)}return this.rotateAxisAngleSelf(0,0,1,z).rotateAxisAngleSelf(0,1,0,y).rotateAxisAngleSelf(1,0,0,x)}
   rotateFromVectorSelf(x=0,y=0){return this.rotateSelf(Math.atan2(+y,+x)*180/Math.PI)}
-  rotateAxisAngleSelf(x=0,y=0,z=0,angle=0){x=+x;y=+y;z=+z;angle=+angle;const norm=Math.hypot(x,y,z);if(!norm)return this;x/=norm;y/=norm;z/=norm;const a=angle*Math.PI/180,c=Math.cos(a),s=Math.sin(a),t=1-c,m=identity();m[0]=t*x*x+c;m[1]=t*x*y+s*z;m[2]=t*x*z-s*y;m[4]=t*x*y-s*z;m[5]=t*y*y+c;m[6]=t*y*z+s*x;m[8]=t*x*z+s*y;m[9]=t*y*z-s*x;m[10]=t*z*z+c;const state=slot(this);state.m=product(state.m,m);if(angle!==0&&(x!==0||y!==0))state.two=false;return this}
+  rotateAxisAngleSelf(x=0,y=0,z=0,angle=0){x=+x;y=+y;z=+z;angle=+angle;const state=slot(this);state.m=product(state.m,axisRotation(x,y,z,angle));if(angle!==0&&(x!==0||y!==0)&&Math.hypot(x,y,z)!==0)state.two=false;return this}
   skewXSelf(angle=0){return this.multiplySelf({c:Math.tan(+angle*Math.PI/180)})}
   skewYSelf(angle=0){return this.multiplySelf({b:Math.tan(+angle*Math.PI/180)})}
   invertSelf(){const s=slot(this),m=inverse(s.m);s.m=m||Array(16).fill(NaN);if(!m)s.two=false;return this}
@@ -82,5 +91,7 @@ const DOMMatrix=(()=>{
  }
  class DOMPoint extends DOMPointReadOnly {constructor(x=0,y=0,z=0,w=1){super(x,y,z,w)}}
  for(const [name,ctor]of [['DOMPointReadOnly',DOMPointReadOnly],['DOMPoint',DOMPoint]]){for(const [i,key]of ['x','y','z','w'].entries()){const d={get(){return pointSlot(this)[i]},enumerable:true,configurable:true};if(name==='DOMPoint')d.set=function(value){pointSlot(this)[i]=+value};Object.defineProperty(ctor.prototype,key,d)}for(const key of Object.getOwnPropertyNames(ctor.prototype)){if(key==='constructor')continue;const d=Object.getOwnPropertyDescriptor(ctor.prototype,key);Object.defineProperty(ctor.prototype,key,{...d,enumerable:true})}Object.defineProperty(ctor.prototype,Symbol.toStringTag,{value:name,configurable:true});Object.defineProperty(globalThis,name,{value:ctor,writable:true,configurable:true})}
+ compatibilityMatrix.parse=(source,resolveLength)=>source==='none'?identity():parseTransforms(source,resolveLength).m;
+ compatibilityMatrix.point=(m,x,y,z=0,w=1)=>Array.from({length:4},(_,i)=>m[i]*x+m[4+i]*y+m[8+i]*z+m[12+i]*w);
  return DOMMatrix;
 })();

@@ -36,3 +36,23 @@ unresolved substitution. Zero Chrome A/B and Chrome/Mimic differences. The retai
 synthetic oracle runs ordinary/restored; raw captures are in
 `.build/residual-dom-delegated/css-controls`. This does not claim a complete CSS
 math expression parser or all keyframe editing interfaces.
+
+## Canonical transform geometry
+
+Client rectangles now use the existing DOMMatrix column-major 4x4 parser and
+algebra through a private bridge. Matrix string parsing itself no longer calls
+author-replaceable DOMMatrix methods. This replaces the separate 2D-only client
+rectangle parser and covers skew, 3D translation/scaling/rotation and perspective
+with positive homogeneous coordinates. Percentages resolve against the element's
+box; transform origin remains part of this projection. There is no new renderer,
+GPU, global state or Go/V8 crossing.
+
+Frozen controls cover 12 transform families and author method replacement.
+Chrome A/B observations are identical. Rectangle differences are at most
+0.000012 CSS px from Blink float bounds versus double CPU algebra; regression
+uses 0.0001 px tolerance, below a layout unit. Ordinary/restored regression and
+existing SVG matrix/geometry tests pass. Raw: `.build/residual-dom-delegated/matrix-controls`.
+
+Perspective camera-plane clipping remains an explicit diagnostic boundary.
+Ancestor transform accumulation and general flow/table sizing are separate
+outstanding geometry work, not solved by the matrix projection change.
