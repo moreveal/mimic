@@ -48,7 +48,7 @@ func rtpCatalog() state.RTPCatalog {
 	for _, v := range []struct {
 		key, profile   string
 		p1, r1, p0, r0 int
-	}{{"base", "42001f", 102, 103, 104, 107}, {"constrained", "42e01f", 108, 109, 114, 115}, {"main", "4d001f", 116, 117, 39, 40}, {"predictive", "f4001f", -1, -1, -1, -1}, {"high", "64001f", 118, 119, -1, -1}} {
+	}{{"base", "42001f", 102, 103, 104, 107}, {"constrained", "42e01f", 108, 109, 114, 115}, {"main", "4d001f", 116, 117, 39, 40}, {"predictive", "f4001f", 41, 42, 43, 44}, {"high", "64001f", 118, 119, 120, 121}} {
 		for _, mode := range []int{1, 0} {
 			pt, rtx := v.p1, v.r1
 			if mode == 0 {
@@ -60,17 +60,20 @@ func rtpCatalog() state.RTPCatalog {
 	high := video.Codecs["h264-high-p1"]
 	high.SenderParameters = "level-asymmetry-allowed=1;packetization-mode=1;profile-level-id=640033"
 	video.Codecs["h264-high-p1"] = high
-	for _, v := range []struct{ profile, pt, rtx int }{{0, 98, 99}, {2, 100, 101}, {1, -1, -1}, {3, -1, -1}} {
+	for _, v := range []struct{ profile, pt, rtx int }{{0, 98, 99}, {2, 100, 101}, {1, 35, 36}, {3, 37, 38}} {
 		add(fmt.Sprintf("vp9-%d", v.profile), "VP9", fmt.Sprintf("profile-id=%d", v.profile), v.pt, v.rtx, true)
 	}
 	add("av1-0", "AV1", "level-idx=5;profile=0;tier=0", 45, 46, true)
-	add("av1-1", "AV1", "level-idx=5;profile=1;tier=0", -1, -1, true)
+	add("av1-1", "AV1", "level-idx=5;profile=1;tier=0", 47, 48, true)
 	for _, v := range []struct{ profile, pt, rtx int }{{1, 49, 50}, {2, 51, 52}} {
 		add(fmt.Sprintf("h265-%d", v.profile), "H265", fmt.Sprintf("level-id=180;profile-id=%d;tier-flag=0;tx-mode=SRST", v.profile), v.pt, v.rtx, true)
 	}
 	add("red", "red", "", 122, 123, false)
 	add("ulpfec", "ulpfec", "", 124, -1, false)
-	add("flexfec", "flexfec-03", "repair-window=10000000", -1, -1, false)
+	add("flexfec", "flexfec-03", "repair-window=10000000", 53, -1, false)
+	flexfec := video.Codecs["flexfec"]
+	flexfec.Feedback = append([]string(nil), feedback[:2]...)
+	video.Codecs["flexfec"] = flexfec
 	abs := "http://www.webrtc.org/experiments/rtp-hdrext/abs-send-time"
 	transport := "http://www.ietf.org/id/draft-holmer-rmcat-transport-wide-cc-extensions-01"
 	mid := "urn:ietf:params:rtp-hdrext:sdes:mid"

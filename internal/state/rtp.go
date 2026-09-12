@@ -62,13 +62,22 @@ type RTPMediaDescription struct {
 	Attributes []string `json:"attributes"`
 }
 
-func (c RTPCatalog) Media(kind string) RTPMediaDescription {
+func (c RTPCatalog) Media(kind string, direction ...string) RTPMediaDescription {
 	out := RTPMediaDescription{Payloads: []int{}, Extensions: []string{}, Attributes: []string{}}
 	media, ok := c[kind]
 	if !ok {
 		return out
 	}
-	for _, key := range media.OfferOrder {
+	order := media.OfferOrder
+	if len(direction) > 0 && direction[0] == "recvonly" {
+		order = []string{}
+		for _, key := range media.ReceiverOrder {
+			if media.Codecs[key].Name != "rtx" {
+				order = append(order, key)
+			}
+		}
+	}
+	for _, key := range order {
 		codec := media.Codecs[key]
 		out.Payloads = append(out.Payloads, codec.Payload)
 		if codec.RTXPayload >= 0 {
@@ -84,7 +93,7 @@ func (c RTPCatalog) Media(kind string) RTPMediaDescription {
 			out.Attributes = append(out.Attributes, fmt.Sprintf("a=rtcp-fb:%d rrtr", pt))
 		}
 	}
-	for _, key := range media.OfferOrder {
+	for _, key := range order {
 		codec := media.Codecs[key]
 		mapping := fmt.Sprintf("a=rtpmap:%d %s/%d", codec.Payload, codec.Name, codec.ClockRate)
 		if codec.Channels > 1 {

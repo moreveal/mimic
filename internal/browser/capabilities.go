@@ -92,7 +92,7 @@ func addCapabilityHosts(r *Realm, h map[string]any) {
 		return r.val(p.Environment().Capabilities.Media.RTP.Capabilities(strarg(a, 0), strarg(a, 1))), nil
 	})
 	h["rtpMedia"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		m := p.Environment().Capabilities.Media.RTP.Media(strarg(a, 0))
+		m := p.Environment().Capabilities.Media.RTP.Media(strarg(a, 0), strarg(a, 1))
 		return r.val(map[string]any{"payloads": m.Payloads, "extensions": m.Extensions, "attributes": m.Attributes}), nil
 	})
 	h["capabilityState"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
