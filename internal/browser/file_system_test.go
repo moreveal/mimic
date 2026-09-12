@@ -131,3 +131,32 @@ func TestOPFSPagesShareOnlyTheirOriginContext(t *testing.T) {
 		historyEval(t, third, `(async()=>{try{await (await navigator.storage.getDirectory()).getFileHandle('shared.txt');return false}catch(e){return e.name==='NotFoundError'}})()`, true)
 	})
 }
+func TestOPFSOwnerTeardownRejectsRacingCallbacks(t *testing.T) {
+	s := newOPFSStore()
+	o := &opfsOwner{}
+	id := o.dispatch(s, "child", 1, map[string]any{"name": "close-race", "kind": "file", "create": true}).(map[string]any)["id"].(int)
+	var wg sync.WaitGroup
+	start := make(chan struct{})
+	for i := 0; i < 24; i++ {
+		wg.Add(1)
+		go func() {
+			defer wg.Done()
+			<-start
+			o.dispatch(s, "open", id, map[string]any{"mode": "readwrite-unsafe"})
+		}()
+	}
+	wg.Add(1)
+	go func() { defer wg.Done(); <-start; o.close() }()
+	close(start)
+	wg.Wait()
+	if len(s.access) != 0 {
+		t.Fatal("teardown leaked access handles")
+	}
+	if got := o.dispatch(s, "open", id, map[string]any{"mode": "readwrite"}).(map[string]any)["error"]; got != "InvalidStateError" {
+		t.Fatal(got)
+	}
+	foreign := newOPFSStore()
+	if got := s.call(o, "resolve", 1, map[string]any{"target": 1.0, "store": foreign.nodes[1].store}); got != nil {
+		t.Fatal("resolve accepted a different store with the same node id", got)
+	}
+}

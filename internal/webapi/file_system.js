@@ -2,23 +2,24 @@
 // Bytes and access locks live in Go; no host filesystem or engine object escapes.
 {
  const slots=new WeakMap(),access=new WeakMap(),writables=new WeakMap(),token={};
+ const identityStringify=JSON.stringify,identityParse=JSON.parse;
  const messages={NotFoundError:'A requested file or directory could not be found at the time an operation was processed.',TypeMismatchError:'The path supplied exists, but was not an entry of requested type.',InvalidModificationError:'The object can not be modified in this way.'};
  const invoke=(op,id,p,method,type)=>{const result=host.fileSystem(op,id,p);if(result&&result.error){const name=result.error;let message=messages[name];if(!message){if(name==='InvalidStateError')message=['read','write'].includes(method)?'The access handle was already closed':'The file was already closed';else if(name==='NoModificationAllowedError'){message=method==='createSyncAccessHandle'?'Access Handles cannot be created if there is another open Access Handle or Writable stream associated with the same file.':type==='FileSystemSyncAccessHandle'?"Cannot write to access handle in 'read-only' mode":'An attempt was made to modify an object where modifications are not allowed.';}else message='The requested operation is not supported.';message=`Failed to execute '${method}' on '${type}': ${message}`;}throw new DOMException(message,name)}return result};
- const check=(v,type)=>{const s=slots.get(v);if(!s||(type&&s.kind!==type))throw new TypeError('Illegal invocation');return s};
+ const check=(v,type)=>{let s=slots.get(v);if(!s&&typeof requireRealmBinding==='function')s=identityParse(callRealmBinding(v,requireRealmBinding(v,'FileSystemHandle'),'identity',[]));if(!s||(type&&s.kind!==type))throw new TypeError('Illegal invocation');return s};
  const handle=s=>{Object.setPrototypeOf(s,null);return new (s.kind==='directory'?FileSystemDirectoryHandle:FileSystemFileHandle)(token,s)};
  const nameArg=(value,method)=>{const name=String(value);if(!name||name==='.'||name==='..'||/[\\/\0]/.test(name))throw new TypeError(`Failed to execute '${method}' on 'FileSystemDirectoryHandle': Name is not allowed.`);return name};
  const integer=(v,method)=>{const n=Number(v);if(!Number.isFinite(n)||n<0||n>Number.MAX_SAFE_INTEGER)throw new TypeError(`Failed to execute '${method}' on 'FileSystemSyncAccessHandle': Value is outside the 'unsigned long long' value range.`);return Math.trunc(n)};
  class FileSystemHandle{
- constructor(t,s){if(t!==token)throw new TypeError('Illegal constructor');slots.set(this,s)}
+ constructor(t,s){if(t!==token)throw new TypeError('Illegal constructor');slots.set(this,s);if(typeof registerRealmBinding==='function')registerRealmBinding(this,'FileSystemHandle',{identity:()=>identityStringify(s)})}
  get kind(){return check(this).kind}get name(){return check(this).name}
- async isSameEntry(other){const s=check(this),o=check(other);return s.id===o.id}
+ async isSameEntry(other){const s=check(this),o=check(other);return s.store===o.store&&s.id===o.id}
  async queryPermission(){check(this);return 'granted'}async requestPermission(){check(this);return 'granted'}
  }
  class FileSystemDirectoryHandle extends FileSystemHandle{
  async getFileHandle(name,options={}){const s=check(this,'directory');name=nameArg(name,'getFileHandle');return handle(invoke('child',s.id,{name,kind:'file',create:!!options?.create},'getFileHandle','FileSystemDirectoryHandle'))}
  async getDirectoryHandle(name,options={}){const s=check(this,'directory');name=nameArg(name,'getDirectoryHandle');return handle(invoke('child',s.id,{name,kind:'directory',create:!!options?.create},'getDirectoryHandle','FileSystemDirectoryHandle'))}
  async removeEntry(name,options={}){const s=check(this,'directory');name=nameArg(name,'removeEntry');invoke('remove',s.id,{name,recursive:!!options?.recursive},'removeEntry','FileSystemDirectoryHandle')}
- async resolve(possibleDescendant){const s=check(this,'directory'),other=check(possibleDescendant);return invoke('resolve',s.id,{target:other.id},'resolve','FileSystemDirectoryHandle')}
+ async resolve(possibleDescendant){const s=check(this,'directory'),other=check(possibleDescendant);return invoke('resolve',s.id,{target:other.id,store:other.store},'resolve','FileSystemDirectoryHandle')}
  entries(){return directoryIterator(check(this,'directory'),'entries')}
  keys(){return directoryIterator(check(this,'directory'),'keys')}
  values(){return directoryIterator(check(this,'directory'),'values')}
