@@ -37,7 +37,7 @@ const flushQueries=s=>{storage(s);const pending=[...(s.pendingQueries||[])];setT
 method('flush',flushQueries);method('finish',flushQueries);
 const restoreState=s=>{
  s.generation=(s.generation||0)+1;s.lost=false;s.error=0;s.restoreAllowed=false;
- s.extensions.clear();s.debug=false;s.bindings.clear();s.program=null;s.attribs=null;s.drawFramebuffer=null;s.readFramebuffer=null;s.renderbuffer=null;
+ s.extensions.clear();s.debug=false;s.bindings.clear();s.program=null;s.vertexArray=null;s.defaultVertexState=null;s.genericAttribs=null;s.drawFramebuffer=null;s.readFramebuffer=null;s.renderbuffer=null;
  s.color=[0,0,0,0];s.mask=[true,true,true,true];s.viewport=[0,0,s.dim.width,s.dim.height];s.scissor=s.viewport.slice();s.pack=4;
  s.depthClear=1;s.stencilClear=0;s.depthMask=true;s.depthValue=1;s.stencilValue=0;s.stencilMaskFront=s.stencilMaskBack=4294967295;s.derivativeHint=s.mipmapHint=4352;
  for(const key of s.enabled.keys())s.enabled.set(key,key===3024);
