@@ -53,8 +53,8 @@ func TestCanvasTextObservationsAreLocalAndOrdered(t *testing.T) {
 		value, err := p.Evaluate(context.Background(), `(async()=>{
  const c=new OffscreenCanvas(80,24),x=c.getContext('2d');x.font='10px sans-serif';
  const run=text=>{x.clearRect(0,0,80,24);x.fillText(text,2,12);return Array.from(x.getImageData(0,0,80,24).data)};
- const a=run('AAAA'),b=run('AAAB'),again=run('AAAA');if(a.join(',')!==again.join(','))return 'repeatability';let changes=0;
- for(let i=0;i<a.length;i++){if(a[i]===b[i])continue;changes++;const px=Math.floor(i/4)%80;if(px<20||px>26)return 'nonlocal change'}if(!changes)return 'character ignored';
+ const a=run('AAAA'),b=run('AAAB'),again=run('AAAA');if(a.join(',')!==again.join(','))return 'repeatability';let changes=0;const prefix=x.measureText('AAA').width,last=Math.max(x.measureText('A').width,x.measureText('B').width);
+ for(let i=0;i<a.length;i++){if(a[i]===b[i])continue;changes++;const px=Math.floor(i/4)%80;if(px<Math.floor(2+prefix)-1||px>Math.ceil(2+prefix+last)+1)return 'nonlocal change'}if(!changes)return 'character ignored';
  const crop=x.getImageData(5,4,20,10).data;for(let y=0;y<10;y++)for(let xx=0;xx<20;xx++)for(let k=0;k<4;k++)if(crop[(y*20+xx)*4+k]!==again[((y+4)*80+xx+5)*4+k])return 'overlap';
  const snap=await createImageBitmap(c),copy=new OffscreenCanvas(80,24),cx=copy.getContext('2d');cx.drawImage(snap,0,0);if(Array.from(cx.getImageData(0,0,80,24).data).join(',')!==again.join(','))return 'snapshot';
  const cropped=await createImageBitmap(c,5,4,20,10),cc=new OffscreenCanvas(20,10),ccx=cc.getContext('2d');if(cropped.width!==20||cropped.height!==10)return 'crop dimensions';ccx.drawImage(cropped,0,0);if(Array.from(ccx.getImageData(0,0,20,10).data).join(',')!==Array.from(crop).join(','))return 'crop snapshot';
