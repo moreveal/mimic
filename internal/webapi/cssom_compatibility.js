@@ -29,7 +29,7 @@ const constructedStyleSheets = (() => {
     if(!entries){entries=parseCSS(declarations(block).map(node=>node.property+': '+generate(node.value).trim()+(node.important?' !important':'')+';').join(' '));blockDeclarations.set(block,entries)}
     return entries;
   };
-  function declarationText(block) {return serializeCSS(entriesForBlock(block));}
+  function declarationText(block,precise=false) {return serializeCSS(entriesForBlock(block).map(entry=>precise&&entry.parsedValue!==undefined?{...entry,value:entry.parsedValue}:entry));}
   function preludeText(node) {
     if(!node)return '';
     const children=()=>Array.from(node.children,preludeText);
@@ -42,16 +42,16 @@ const constructedStyleSheets = (() => {
     if(node.type==='MediaQuery')return [node.modifier,node.mediaType,node.condition&&(node.mediaType?'and ':'')+preludeText(node.condition)].filter(Boolean).join(' ');
     return generate(node);
   }
-  function ruleText(rule) {
+  function ruleText(rule,precise=false) {
     const state=rules.get(rule),node=state.node;
     if(node.type==='Rule'){
       let selector=preludeText(node.prelude);
       if(rules.get(state.parent)?.node.name==='keyframes')selector=selector.split(',').map(part=>{part=part.trim();return part==='from'?'0%':part==='to'?'100%':part}).join(', ');
-      return selector+' { '+declarationText(node.block)+(state.children.length?' '+state.children.map(ruleText).join(' '):'')+' }';
+      return selector+' { '+declarationText(node.block,precise)+(state.children.length?' '+state.children.map(child=>ruleText(child,precise)).join(' '):'')+' }';
     }
     const prelude=node.prelude?' '+preludeText(node.prelude):'';
-    if(node.name==='keyframes')return '@'+node.name+prelude+' { \n'+state.children.map(child=>'  '+ruleText(child)+'\n').join('')+'}';
-    return '@'+node.name+prelude+(node.block?(state.children.length?' {\n'+state.children.map(child=>'  '+ruleText(child).replace(/\n/g,'\n  ')).join('\n')+'\n}':' { '+declarationText(node.block)+' }'):';');
+    if(node.name==='keyframes')return '@'+node.name+prelude+' { \n'+state.children.map(child=>'  '+ruleText(child,precise)+'\n').join('')+'}';
+    return '@'+node.name+prelude+(node.block?(state.children.length?' {\n'+state.children.map(child=>'  '+ruleText(child,precise).replace(/\n/g,'\n  ')).join('\n')+'\n}':' { '+declarationText(node.block,precise)+' }'):';');
   }
   function makeStyle(state) {
     const target=Object.create(CSSStyleDeclaration.prototype);
@@ -65,11 +65,11 @@ const constructedStyleSheets = (() => {
       getPropertyValue:{value:name=>readCSSDeclaration(names(),cssName(name))},
       getPropertyPriority:{value:name=>{name=cssName(name);const components=cssShorthandComponents[name]||[name];return components.every(n=>names().find(e=>e.name===n)?.priority==='important')?'important':''}},
       setProperty:{value:(name,value,priority='')=>{
-        const inputName=name;name=cssName(name);if(/^webkit/i.test(name))return;value=normalizeCSSValue(name,value,inputName);if(value===null)return;priority=String(priority).toLowerCase();
+        const inputName=name;name=cssName(name);if(/^webkit/i.test(name))return;const inputValue=String(value);value=normalizeCSSValue(name,inputValue,inputName);if(value===null)return;priority=String(priority).toLowerCase();
         if(priority&&priority!=='important')return;
         const entries=names().slice(),components=cssShorthandComponents[name]||[name];
         if(value===''){for(let i=entries.length-1;i>=0;i--)if(components.includes(entries[i].name)||entries[i].name===name)entries.splice(i,1)}
-        else for(const entry of expandCSSDeclaration({name,value,priority})){const index=entries.findIndex(e=>e.name===entry.name);if(index<0)entries.push(entry);else entries[index]=entry}
+        else for(const entry of expandCSSDeclaration(cssPrecisionDeclaration({name,value,priority},inputValue))){const index=entries.findIndex(e=>e.name===entry.name);if(index<0)entries.push(entry);else entries[index]=entry}
         blockDeclarations.set(state.node.block,entries);revision++;
       }},
       removeProperty:{value:name=>{const old=target.getPropertyValue(name);target.setProperty(name,'');return webkitCSSLegacyBreakShorthands.has(String(name).toLowerCase())||cssShorthandComponents[cssName(name)]?'':old;}}
@@ -171,7 +171,7 @@ const constructedStyleSheets = (() => {
   for(const type of ['Document','ShadowRoot'])if(globalThis[type])Object.defineProperty(globalThis[type].prototype,'styleSheets',{get(){if(!(this instanceof globalThis[type]))throw new TypeError('Illegal invocation');return ownerCollection(this)},enumerable:true,configurable:true});
   // The cache is derived from the canonical CSSOM; rule edits invalidate it.
   // DOM-owned sheets are still revalidated against their current owner text.
-  const sourceText=sheet=>{const state=sheets.get(sheet);if(state.disabled||state.media&&!cssMediaMatches(state.media))return '';let cached=sourceCache.get(sheet);if(!cached||cached.revision!==revision){cached={revision,text:state.rules.map(ruleText).join('\n')};sourceCache.set(sheet,cached)}return cached.text};
+  const sourceText=sheet=>{const state=sheets.get(sheet);if(state.disabled||state.media&&!cssMediaMatches(state.media))return '';let cached=sourceCache.get(sheet);if(!cached||cached.revision!==revision){cached={revision,text:state.rules.map(rule=>ruleText(rule,true)).join('\n')};sourceCache.set(sheet,cached)}return cached.text};
   function adoption(root) {
     if(!(root instanceof Document)&&!shadowSlots.has(root))throw new TypeError('Illegal invocation');
     let value=adopted.get(root);
@@ -181,5 +181,5 @@ const constructedStyleSheets = (() => {
   for(const proto of [Document.prototype,ShadowRoot.prototype])Object.defineProperty(proto,'adoptedStyleSheets',{
     configurable:true,enumerable:true,get(){return adoption(this)},set(value){const next=Array.from(value);for(const sheet of next)if(!sheets.has(sheet))throw new TypeError('Value is not a constructed CSSStyleSheet');const current=adoption(this);current.splice(0,current.length,...next)}
   });
-  return {revision:()=>revision,ownerSheet,sources(root){return Array.from(ownerCollection(root)).concat(adopted.get(root)||[]).map(sourceText)},snapshot(root){return (adopted.get(root)||[]).filter(sheet=>!requireSheet(sheet).disabled).map(sheet=>{const state=requireSheet(sheet),text=state.rules.map(ruleText).join('\n');return state.media?'@media '+state.media+' {\n'+text+'\n}':text})}};
+  return {revision:()=>revision,ownerSheet,sources(root){return Array.from(ownerCollection(root)).concat(adopted.get(root)||[]).map(sourceText)},snapshot(root){return (adopted.get(root)||[]).filter(sheet=>!requireSheet(sheet).disabled).map(sheet=>{const state=requireSheet(sheet),text=state.rules.map(rule=>ruleText(rule,true)).join('\n');return state.media?'@media '+state.media+' {\n'+text+'\n}':text})}};
 })();

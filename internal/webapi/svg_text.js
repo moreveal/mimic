@@ -42,7 +42,14 @@ const textLayout=target=>{
   // divides by the scale; those arithmetic orders differ observably.
   const F=Math.fround,inverseScale=F(1/scale),unscalePoint=p=>p.map(v=>F(F(v)*inverseScale)),unscaleBox=b=>{const px=F(F(b[0])*inverseScale),py=F(F(b[1])*inverseScale),w=F(F(b[2]-b[0])*inverseScale),h=F(F(b[3]-b[1])*inverseScale);return [px,py,px+w,py+h]};
   const px=F(x*scale),py=F(y*scale),bw=F(b[2]-b[0]),bh=F(b[3]-b[1]),bx=F(b[0]+px),by=F(b[1]+py);b=unscaleBox([bx,by,bx+bw,by+bh]);const rows=[],keys=Array.from(clusters.keys()).sort((a,b)=>a-b),rotation=first.rotate||0,angle=rotation*Math.PI/180,rotationMatrix=[Math.cos(angle),Math.sin(angle),-Math.sin(angle),Math.cos(angle),px,py];
-  for(let k=0;k<keys.length;k++){const from=keys[k],to=keys[k+1]??(end-i),group=clusters.get(from),left=Math.floor(group.start*64)/64,width=Math.ceil((group.end-group.start)*64)/64,id={};for(let j=from;j<to;j++){for(let unit=0;unit<normalized[i+j].ch.length;unit++)rows.push({id,start:unscalePoint(point(rotationMatrix,left,baseline)),end:unscalePoint(point(rotationMatrix,left+width,baseline)),box:unscaleBox(transformBox([left,-shaped.ascent+baseline,left+width,shaped.descent+baseline],rotationMatrix)),rotation,length:F(width/scale)})}}
+  // Translation preserves the rectangle's Float32 size. Rounding both far
+  // edges first loses a bit when the translated origin is much larger.
+  const characterBox=(left,width)=>{
+   if(rotation!==0)return transformBox([left,-shaped.ascent+baseline,left+width,shaped.descent+baseline],rotationMatrix);
+   const bx=F(left+px),by=F(-shaped.ascent+baseline+py);
+   return [bx,by,bx+width,by+F(shaped.ascent+shaped.descent)];
+  };
+  for(let k=0;k<keys.length;k++){const from=keys[k],to=keys[k+1]??(end-i),group=clusters.get(from),left=Math.floor(group.start*64)/64,width=Math.ceil((group.end-group.start)*64)/64,id={};for(let j=from;j<to;j++){for(let unit=0;unit<normalized[i+j].ch.length;unit++)rows.push({id,start:unscalePoint(point(rotationMatrix,left,baseline)),end:unscalePoint(point(rotationMatrix,left+width,baseline)),box:unscaleBox(characterBox(left,width)),rotation,length:F(width/scale)})}}
   chunk.items.push({selected,box:b,characters:rows});if(selected)computedLength+=advance;x+=advance;i=end;
  }
  flush();host.semanticMissingAt('svg_text.js:40','SVG.approximateTextInkBounds');return {box:total,length:computedLength,characters};
