@@ -46,7 +46,7 @@
     }
     if(element.tagName==='TEXTAREA')return {width:(Math.max(1,Number(element.getAttribute('cols'))||20)*8+8)*scale,height:(Math.max(1,Number(element.getAttribute('rows'))||2)*15+6)*scale};
     if(element.tagName==='SELECT'){
-      const labels=Array.from(element.querySelectorAll('option'),option=>measure(option.label||option.text));
+      const labels=Array.from(compatibilitySelectors.query(element,'option'),option=>measure(option.label||option.text));
       return {width:Math.ceil(Math.max(0,...labels))+22*scale,height:19*scale};
     }
     return {width:(Math.max(1,Number(element.getAttribute('size'))||20)*7+37)*scale,height:21*scale};
@@ -110,7 +110,7 @@
   };
   const modifiers=value=>({altKey:!!(value&1),ctrlKey:!!(value&2),metaKey:!!(value&4),shiftKey:!!(value&8)});
   const tab=(element,backwards)=>{
-    const list=Array.from(document.querySelectorAll('input,textarea,button,select,a[href],[tabindex]')).filter(e=>e.tabIndex>=0&&!e.disabled&&!(e.localName==='input'&&e.type==='hidden'));
+    const list=compatibilitySelectors.query(document,'input,textarea,button,select,a[href],[tabindex]').filter(e=>e.tabIndex>=0&&!e.disabled&&!(e.localName==='input'&&e.type==='hidden'));
     if(!list.length)return;let at=list.indexOf(element);at=(at+(backwards?-1:1)+list.length)%list.length;focus(list[at]);
   };
   const keyCommand=params=>{
@@ -141,7 +141,7 @@
   };
   const pointTarget=(x,y)=>{
     let selected=null,rank=-Infinity;
-    for(const element of document.querySelectorAll('*')){
+    for(const element of compatibilitySelectors.query(document,'*')){
       const entries=computedCSSDeclarations(element),get=name=>entries.find(e=>e.name===name)?.value;
       if(get('visibility')==='hidden'||get('pointer-events')==='none')continue;
       const box=layoutRectFor(element);if(box.width<=0||box.height<=0||x<box.left||x>=box.right||y<box.top||y>=box.bottom)continue;
