@@ -19,7 +19,7 @@
     const method=(type,name,implementation,async=false)=>{
       const proto=globalThis[type]?.prototype,d=proto&&Object.getOwnPropertyDescriptor(proto,name);
       if(!d||typeof d.value!=='function')return;
-      const fn={[name](...args){const run=()=>{const slot=check(this,type);if(args.length<d.value.length)throw new TypeError(`Failed to execute '${name}' on '${type}': ${d.value.length} argument${d.value.length===1?'':'s'} required, but only ${args.length} present.`);return implementation.call(this,slot,...args)};return async?Promise.resolve().then(run):run()}}[name];
+      const fn={[name](...args){const run=()=>{const slot=check(this,type);if(args.length<d.value.length)throw new TypeError(`Failed to execute '${name}' on '${type}': ${d.value.length} argument${d.value.length===1?'':'s'} required, but only ${args.length} present.`);return implementation.call(this,slot,...args)};if(async==='immediate'){try{return Promise.resolve(run())}catch(e){return Promise.reject(e)}}return async?Promise.resolve().then(run):run()}}[name];
       Object.defineProperty(fn,'length',{value:d.value.length,configurable:true});native(fn,name);
       Object.defineProperty(proto,name,{...d,value:fn});
     };
@@ -199,11 +199,17 @@
     const permissionNames=new Set(globalThis.__mimicPermissionNames||[]);delete globalThis.__mimicPermissionNames;
     const permission=name=>documentPolicy.allowsFeature(name)?state('permission',name):'denied';
     const permissionStatuses=new Set();
+    const permissionStatusNames={'camera':'video_capture','microphone':'audio_capture','accelerometer':'sensors','gyroscope':'sensors','magnetometer':'sensors','ambient-light-sensor':'sensors','persistent-storage':'durable_storage','push':'notifications','clipboard-read':'clipboard_read','clipboard-write':'clipboard_write','background-sync':'background_sync','background-fetch':'background_fetch','periodic-background-sync':'periodic_background_sync','display-capture':'display_capture','screen-wake-lock':'screen_wake_lock','system-wake-lock':'system_wake_lock','payment-handler':'payment_handler'};
     globalThis.__mimicPermissionChanged=name=>{for(const status of permissionStatuses){const s=slots.get(status);if(s.name===name&&s.lastState!==permission(name)){s.lastState=permission(name);dispatchTrusted(status,new Event('change'))}}};
     method('Permissions','query',(_s,descriptor)=>{
-      if(!descriptor||!('name' in Object(descriptor)))throw new TypeError("Failed to execute 'query' on 'Permissions': Failed to read the 'name' property from 'PermissionDescriptor': Required member is undefined.");
-      const name=String(descriptor.name);
-      if(!permissionNames.has(name))throw new TypeError("Failed to execute 'query' on 'Permissions': Failed to read the 'name' property from 'PermissionDescriptor': The provided value '"+name+"' is not a valid enum value of type PermissionName.");
+      if(descriptor===null||!['object','function'].includes(typeof descriptor))throw new TypeError("Failed to execute 'query' on 'Permissions': parameter 1 is not of type 'object'.");
+      const readName=(dictionary)=>{
+        const prefix="Failed to execute 'query' on 'Permissions': Failed to read the 'name' property from '"+dictionary+"': ";
+        const value=descriptor.name;if(value===undefined)throw new TypeError(prefix+'Required member is undefined.');
+        let text;try{text=aiString(value)}catch(e){if(aiConversionErrors.has(e))throw new TypeError(prefix+e.message.replace(/\.$/,''));throw e}
+        if(!permissionNames.has(text))throw new TypeError(prefix+"The provided value '"+text+"' is not a valid enum value of type PermissionName.");return text;
+      };
+      const name=readName('PermissionDescriptor');
       const disabled={
         'ambient-light-sensor':['GenericSensorExtraClasses','GenericSensorExtraClasses flag is not enabled.'],
         'nfc':['WebNFC','Web NFC is not enabled.'],
@@ -213,12 +219,17 @@
         'geolocation-approximate':['ApproximateGeolocationPermission','Permission API support for approximate geolocation is not enabled.']
       }[name];
       if(disabled&&!state('feature',disabled[0]))throw new TypeError("Failed to execute 'query' on 'Permissions': "+disabled[1]);
-      if(name==='push'&&!descriptor.userVisibleOnly)throw error('NotSupportedError',"Failed to execute 'query' on 'Permissions': Push Permission without userVisibleOnly:true isn't supported yet.");
-      if(name==='fullscreen'&&!descriptor.allowWithoutGesture)throw new TypeError("Failed to execute 'query' on 'Permissions': Fullscreen Permission only supports allowWithoutGesture:true.");
-      if(name==='top-level-storage-access'&&!descriptor.requestedOrigin)throw new TypeError("Failed to execute 'query' on 'Permissions': The requested origin is invalid.");
-      const status=create('PermissionStatus',{name,lastState:permission(name)});permissionStatuses.add(status);return status;
-    },true);
-    attribute('PermissionStatus','state',s=>permission(s.name));attribute('PermissionStatus','name',s=>s.name);
+      // Blink first selects the descriptor type, then converts that dictionary.
+      // Both reads are observable; conversion runs before query returns its Promise.
+      const schema={camera:['CameraDevicePermissionDescriptor','panTiltZoom'],midi:['MidiPermissionDescriptor','sysex'],push:['PushPermissionDescriptor','userVisibleOnly'],'clipboard-read':['ClipboardPermissionDescriptor','allowWithoutGesture','allowWithoutSanitization'],'clipboard-write':['ClipboardPermissionDescriptor','allowWithoutGesture','allowWithoutSanitization'],fullscreen:['FullscreenPermissionDescriptor','allowWithoutGesture'],'top-level-storage-access':['TopLevelStorageAccessPermissionDescriptor','requestedOrigin']}[name];
+      const options={};if(schema){readName(schema[0]);for(const key of schema.slice(1))options[key]=descriptor[key]}
+      if(name==='push'&&!options.userVisibleOnly)throw error('NotSupportedError',"Failed to execute 'query' on 'Permissions': Push Permission without userVisibleOnly:true isn't supported yet.");
+      if(name==='fullscreen'&&!options.allowWithoutGesture)throw new TypeError("Failed to execute 'query' on 'Permissions': Fullscreen Permission only supports allowWithoutGesture:true.");
+      if(name==='top-level-storage-access'&&!options.requestedOrigin)throw new TypeError("Failed to execute 'query' on 'Permissions': The requested origin is invalid.");
+      const stateName=name==='push'?'notifications':name==='clipboard-write'&&(options.allowWithoutGesture||options.allowWithoutSanitization)?'clipboard-read':name;
+      const status=create('PermissionStatus',{name:stateName,statusName:permissionStatusNames[stateName]||stateName,lastState:permission(stateName)});permissionStatuses.add(status);return status;
+    },'immediate');
+    attribute('PermissionStatus','state',s=>permission(s.name));attribute('PermissionStatus','name',s=>s.statusName);
     attribute('PermissionStatus','onchange',s=>s.onchange||null,(s,v)=>s.onchange=typeof v==='function'?v:null);
     const permissionPrompt=()=>new Promise(()=>{});
     for(const [name,message] of [['get','No credential type was specified in the request.'],['create',"Only exactly one of 'password', 'federated', and 'publicKey' credential types are currently supported."]])method('CredentialsContainer',name,(_s,options={})=>{
