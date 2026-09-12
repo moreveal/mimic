@@ -97,7 +97,8 @@ func newPage(c *Context) (*Page, error) {
 	if c.transport != nil {
 		p.loader.SetTransport(c.transport)
 	}
-	p.Top = &Frame{ID: uuid.NewString(), page: p, children: map[string]*Frame{}}
+	// Chrome identifies the page target and its top-level frame with the same ID.
+	p.Top = &Frame{ID: p.ID, page: p, children: map[string]*Frame{}}
 	p.frames[p.Top.ID] = p.Top
 	p.proxy = &WindowProxy{frame: p.Top}
 	return p, nil

@@ -38,6 +38,24 @@
   const selectionTypes=new Set(['text','search','tel','url','password']);
   const types=new Set([...valueTypes,'hidden','checkbox','radio','file','submit','image','reset','button']);
   const typeOf=e=>{const value=(e.getAttribute('type')||'text').toLowerCase();return types.has(value)?value:'text'};
+  const labelable=e=>!!e&&(['button','meter','output','progress','select','textarea'].includes(e.localName)||e.localName==='input'&&typeOf(e)!=='hidden');
+  const labelControl=label=>{
+    const id=label.getAttribute('for');
+    if(id!==null){const candidate=label.getRootNode().getElementById(id);return labelable(candidate)?candidate:null}
+    return Array.from(label.querySelectorAll('*')).find(labelable)||null;
+  };
+  define('HTMLLabelElement','control',{get(){return labelControl(this)}});
+  const labelLists=new WeakMap();
+  for(const name of ['HTMLButtonElement','HTMLInputElement','HTMLMeterElement','HTMLOutputElement','HTMLProgressElement','HTMLSelectElement','HTMLTextAreaElement']){
+    define(name,'labels',{get(){
+      if(!labelable(this))return null;
+      if(!labelLists.has(this)){
+        const read=()=>Array.from(this.getRootNode().querySelectorAll('label')).filter(label=>labelControl(label)===this);
+        labelLists.set(this,nodeListView(()=>read().length,index=>read()[index]));
+      }
+      return labelLists.get(this);
+    }});
+  }
   const mode=e=>{const type=typeOf(e);return valueTypes.has(type)?'value':type==='file'?'filename':['checkbox','radio'].includes(type)?'default-on':'default'};
   function sanitize(e,value){
     const type=typeOf(e);value=String(value);

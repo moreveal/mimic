@@ -20,6 +20,32 @@ fixture, fixed client versions and reproduction commands. The retained
 contain exact Chrome provenance. The earlier expanded baseline passed 13 of 66
 checks; the current suite additionally exercises uncaught page errors in both clients.
 
+## Playwright CLI workflow checkpoint
+
+`compatibility/playwright_cli.cjs` exercises the actual CLI daemon, including
+the snapshot performed after attach. With `@playwright/cli` 0.1.19 and its
+Playwright 1.63.0-alpha-2026-08-31 dependency, the complete workflow succeeds
+against Chrome 152.0.7977.82 and Mimic: attach, HTTP navigation, evaluation,
+role/name-based fill and click, changed-content snapshot, reload, tab creation,
+listing and closure, detach, reattach and another snapshot.
+
+Run with Node, the installed `@playwright/cli/playwright-cli.js` path, a CDP
+endpoint and a unique session name. The runner serves its own local fixture.
+Use a dedicated browser instance: navigation and tab operations modify it.
+
+The page target and top frame share their canonical ID. Isolated-world CSS/input
+observations initialize the deferred main-world owner before using its bridge.
+Label associations are live DOM queries; point queries share the existing input
+stacking/box model rather than introducing another geometry model.
+
+This checkpoint does not claim every CLI command or complete Chrome layout.
+Point queries currently cover the document's modeled boxes, not shadow-root
+retargeting or arbitrary visual clipping. Visibility supports box presence,
+ancestor display/content-visibility hiding and optional visibility/opacity checks;
+offscreen `content-visibility:auto` skipping is not modeled. File chooser
+interception remains explicitly unsupported (this CLI tolerates that error).
+Screenshot, video and PDF rendering remain unsupported.
+
 ## Generated schema and semantic scope
 
 The complete runtime `/json/protocol` schema has **58 domains, 665 commands,
