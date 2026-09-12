@@ -208,11 +208,14 @@ var glslObservationsSurface string
 //go:embed webgl_framebuffer_observations.js
 var webglFramebufferObservationsSurface string
 
+//go:embed webgl_extensions.js
+var webglExtensionsSurface string
+
 //go:embed webgl_program_observations.js
 var webglProgramObservationsSurface string
 
 func webglObservationsSource() string {
-	return strings.NewReplacer("/* shared_glsl_observations */", glslObservationsSurface, "/* shared_webgl_programs */", webglProgramObservationsSurface, "/* shared_webgl_framebuffers */", webglFramebufferObservationsSurface).Replace(webglStateSurface)
+	return strings.NewReplacer("/* shared_glsl_observations */", glslObservationsSurface, "/* shared_webgl_extensions */", webglExtensionsSurface, "/* shared_webgl_programs */", webglProgramObservationsSurface, "/* shared_webgl_framebuffers */", webglFramebufferObservationsSurface).Replace(webglStateSurface)
 }
 
 //go:embed offline_audio.js

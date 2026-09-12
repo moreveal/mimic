@@ -1,7 +1,7 @@
   // WebGL resource state and bounded, query-time arithmetic observations.
   // Native graphics, unsupported language and rendering features stay explicit.
   (()=>{
-    const slots=new WeakMap(), resources=new WeakMap(), precisionFormats=new WeakMap(), activeInfos=new WeakMap();
+    const slots=new WeakMap(), resourceSlots=new WeakMap(),resources={get:value=>resourceSlots.get(value),set(value,record){record.generation=record.owner.generation||0;resourceSlots.set(value,record)}}, precisionFormats=new WeakMap(), activeInfos=new WeakMap();
     if(typeof WebGLActiveInfo==='function')for(const name of ["name","size","type"]){const get=function(){const data=activeInfos.get(this);if(!data)throw new TypeError("Illegal invocation");return data[name]};if(typeof markNative==="function")markNative(get,name,"get ");Object.defineProperty(WebGLActiveInfo.prototype,name,{get,enumerable:true,configurable:true})}
     /* shared_glsl_observations */
     if(typeof WebGLShaderPrecisionFormat==='function')for(const name of ['rangeMin','rangeMax','precision']){const get=function(){const data=precisionFormats.get(this);if(!data)throw new TypeError('Illegal invocation');return data[name]};if(typeof markNative==='function')markNative(get,name,'get ');Object.defineProperty(WebGLShaderPrecisionFormat.prototype,name,{get,enumerable:true,configurable:true})}
@@ -9,9 +9,9 @@
     const fail=name=>{host.semanticMissingAt('webgl_state.js:9','WebGL.'+name);throw new DOMException('WebGL '+name+' requires an unsupported graphics operation.','NotSupportedError')};
     const check=value=>{const s=slots.get(value);if(!s)throw new TypeError('Illegal invocation');return s};
     const error=(s,code)=>{if(!s.error)s.error=code};
-    const resource=(s,value,type)=>{const r=resources.get(value);if(!r||r.type!==type)throw new TypeError('Expected '+type);if(r.owner!==s||r.deleted){error(s,1282);return null}return r};
+    const resource=(s,value,type)=>{const r=resources.get(value);if(!r||r.type!==type)throw new TypeError('Expected '+type);if(r.owner!==s||r.deleted||r.generation!==(s.generation||0)){error(s,1282);return null}return r};
     const bytes=value=>ArrayBuffer.isView(value)?new Uint8Array(value.buffer,value.byteOffset,value.byteLength):value instanceof ArrayBuffer?new Uint8Array(value):null;
-    const define=(proto,name,fn)=>{const d=Object.getOwnPropertyDescriptor(proto,name);const f={[name](...args){const s=check(this);if(args.length<(d?.value?.length||0))throw new TypeError('Not enough arguments');return fn(s,...args)}}[name];if(d?.value)Object.defineProperty(f,'length',{value:d.value.length});if(typeof markNative==='function')markNative(f,name);Object.defineProperty(proto,name,{value:f,writable:true,enumerable:true,configurable:true})};
+    const define=(proto,name,fn)=>{const d=Object.getOwnPropertyDescriptor(proto,name);const f={[name](...args){const s=check(this);if(args.length<(d?.value?.length||0))throw new TypeError('Not enough arguments');if(s.lost&&!['getError','isContextLost'].includes(name)&&!name.startsWith('create'))return name.startsWith('is')?false:name.startsWith('get')?null:undefined;if(name.startsWith('is')&&args[0]){const r=resources.get(args[0]);if(r&&r.generation!==(s.generation||0))return false}return fn(s,...args)}}[name];if(d?.value)Object.defineProperty(f,'length',{value:d.value.length});if(typeof markNative==='function')markNative(f,name);Object.defineProperty(proto,name,{value:f,writable:true,enumerable:true,configurable:true})};
     for(const [kind,type] of [['webgl','WebGLRenderingContext'],['webgl2','WebGL2RenderingContext']]){
       const proto=globalThis[type]?.prototype;if(!proto)continue;
       const knownEnums=new Set();for(let p=proto;p&&p!==Object.prototype;p=Object.getPrototypeOf(p))for(const key of Object.getOwnPropertyNames(p)){const d=Object.getOwnPropertyDescriptor(p,key);if(typeof d.value==='number')knownEnums.add(d.value)}
@@ -28,12 +28,12 @@
       }
       for(const [name,get] of Object.entries({canvas:s=>s.canvas,drawingBufferWidth:s=>s.dim.width,drawingBufferHeight:s=>s.dim.height}))Object.defineProperty(proto,name,{get(){return get(check(this))},enumerable:true,configurable:true});
       method('getError',s=>{const code=s.error;s.error=0;return code});
-      method('isContextLost',()=>false);
+      method('isContextLost',s=>!!s.lost);
       method('getContextAttributes',s=>({...s.attributes}));
       const profile=capabilities[kind]||{parameters:{},samples:{},floatSamples:{}};
-      const extensionNames=['WEBGL_debug_renderer_info','EXT_texture_filter_anisotropic','EXT_color_buffer_half_float',kind==='webgl2'?'EXT_color_buffer_float':'OES_standard_derivatives'];
-      method('getSupportedExtensions',()=>extensionNames.slice());
-      method('getExtension',(s,name)=>{name=String(name).toLowerCase();const canonical=extensionNames.find(value=>value.toLowerCase()===name);if(!canonical)return null;if(s.extensions.has(canonical))return s.extensions.get(canonical);const ext={};if(canonical==='WEBGL_debug_renderer_info'){Object.assign(ext,{UNMASKED_VENDOR_WEBGL:37445,UNMASKED_RENDERER_WEBGL:37446});s.debug=ext}if(canonical==='EXT_texture_filter_anisotropic')Object.assign(ext,{TEXTURE_MAX_ANISOTROPY_EXT:34046,MAX_TEXTURE_MAX_ANISOTROPY_EXT:34047});if(canonical==='OES_standard_derivatives')ext.FRAGMENT_SHADER_DERIVATIVE_HINT_OES=35723;if(canonical==='EXT_color_buffer_half_float')Object.assign(ext,{RGBA16F_EXT:34842,RGB16F_EXT:34843,FRAMEBUFFER_ATTACHMENT_COMPONENT_TYPE_EXT:33297,UNSIGNED_NORMALIZED_EXT:35863});s.extensions.set(canonical,ext);return ext});
+      /* shared_webgl_extensions */
+      method('getSupportedExtensions',()=>[...extensionDefinitions.keys()].sort());
+      method('getExtension',(s,name)=>{name=String(name).toLowerCase();const canonical=[...extensionDefinitions.keys()].find(value=>value.toLowerCase()===name);if(!canonical)return null;if(s.extensions.has(canonical))return s.extensions.get(canonical);const d=extensionDefinitions.get(canonical),cache=s.extensionObjects||(s.extensionObjects=new Map()),value=cache.get(canonical)||Object.create(d.prototype);cache.set(canonical,value);extensionSlots.set(value,{owner:s,name:canonical});s.extensions.set(canonical,value);d.enable(s);return value});
       const parameterValue=entry=>{if(entry.type==='Int32Array')return new Int32Array(entry.value);if(entry.type==='Float32Array')return new Float32Array(entry.value);if(entry.type==='Uint32Array')return new Uint32Array(entry.value);return entry.value};
       if(kind==='webgl2')method('getInternalformatParameter',(s,target,format,pname)=>{target=Number(target)>>>0;format=Number(format)>>>0;pname=Number(pname)>>>0;if(target!==36161||pname!==32937){error(s,1280);return null}let values=profile.samples[format];if(values===undefined&&(s.extensions.has('EXT_color_buffer_float')||s.extensions.has('EXT_color_buffer_half_float')&&[33325,33327,34842].includes(format)))values=profile.floatSamples[format];if(values===undefined){error(s,1280);return null}return new Int32Array(values)});
       method('getShaderPrecisionFormat',(s,shader,precision)=>{const data=profile.precision?.[(Number(shader)>>>0)+','+(Number(precision)>>>0)];if(!data){error(s,1280);return null}const value=Object.create(WebGLShaderPrecisionFormat.prototype);precisionFormats.set(value,{...data});return value});
@@ -54,7 +54,7 @@
         if(p===2963||p===36004)return 4294967295;if(p===2968)return s.stencilMaskFront;if(p===36005)return s.stencilMaskBack;
         if(p===34047){if(s.extensions.has('EXT_texture_filter_anisotropic'))return profile.anisotropy;error(s,1280);return null}
         if(p===35723){if(kind==='webgl2'||s.extensions.has('OES_standard_derivatives'))return s.derivativeHint;error(s,1280);return null}
-        if(p===36795){error(s,1280);return null}
+        if(p===36795){if(s.extensions.has(timerName))return false;error(s,1280);return null}
         if((p===37445||p===37446)&&s.debug)return graphics[p===37445?'vendor':'renderer'];
         if(s.enabled.has(p))return s.enabled.get(p);
         if(!knownEnums.has(p)){error(s,1280);return null}return fail('getParameter('+p+')');
