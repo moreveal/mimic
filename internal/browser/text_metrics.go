@@ -11,6 +11,7 @@ import (
 
 func newTextMetricsEngine(fonts state.Fonts) *textmetrics.Engine {
 	result := textmetrics.New()
+	result.SetFallbackFamilies(fonts.Fallback)
 	for generic, family := range map[string]string{"serif": fonts.Serif, "sans-serif": fonts.SansSerif, "monospace": fonts.Monospace, "system-ui": fonts.SystemUI} {
 		result.SetGenericFamily(generic, family)
 	}

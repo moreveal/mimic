@@ -35,13 +35,14 @@ const canvasCompatibilityState=(()=>{
   class TextMetrics {constructor(key,data){if(key!==token)throw new TypeError('Illegal constructor');metricSlots.set(this,data)}}
   const fontSize=draw=>{const match=/(\d+(?:\.\d+)?)px(?:\s|\/|$)/.exec(draw.font);return match?Number(match[1]):10};
   const alignedX=(draw,width)=>draw.textAlign==='center'?-width/2:draw.textAlign==='right'||draw.textAlign==='end'&&draw.direction!=='rtl'||draw.textAlign==='start'&&draw.direction==='rtl'?-width:0;
+  let hintBoundaryReported=false;
   const shapeCanvasText=(draw,text,drawing=false)=>{
     text=text.replace(/[\t\n\r\f]/g,' ');
     const match=/^(.*?)((?:\d+(?:\.\d+)?|\.\d+))px(?:\/[^\s]+)?\s+(.+)$/.exec(draw.font),size=fontSize(draw),prefix=match?.[1]||'',family=match?.[3]||'sans-serif',weight=/\bbold\b/.test(prefix)?700:Number(/\b([1-9]00)\b/.exec(prefix)?.[1]||400),letter=parseFloat(draw.letterSpacing)||0;
     // Blink shapes words independently: spaces must not introduce pair kerning
     // between the preceding/following words. Preserve source cluster offsets.
     let shaped=null,cluster=0;
-    for(const part of text.match(/ +|[^ ]+/g)||['']){const run=JSON.parse(host.shapeText(part,family,size,weight,Number(/\b(?:italic|oblique)\b/.test(prefix)),Number(draw.fontKerning==='none'),Number(letter!==0),1));if(run.error)fail('NotSupportedError',run.error);if(!shaped)shaped={...run,glyphs:[]};for(const g of run.glyphs)shaped.glyphs.push({...g,cluster:g.cluster+cluster});cluster+=Array.from(part).length}
+    for(const part of text.match(/ +|[^ ]+/g)||['']){const run=JSON.parse(host.shapeText(part,family,size,weight,Number(/\b(?:italic|oblique)\b/.test(prefix)),Number(draw.fontKerning==='none'),Number(letter!==0),1));if(run.error)fail('NotSupportedError',run.error);if(run.inkApproximate&&!hintBoundaryReported){hintBoundaryReported=true;host.semanticMissingAt('canvas_state.js/shapeCanvasText','Canvas2D.fontHintingApproximation')}if(!shaped)shaped={...run,glyphs:[]};for(const g of run.glyphs)shaped.glyphs.push({...g,cluster:g.cluster+cluster});cluster+=Array.from(part).length}
     const chars=Array.from(text),glyphs=[];let width=0,left=Infinity,right=-Infinity,top=Infinity,bottom=-Infinity;
     for(const g of shaped.glyphs){const x=width+g.xOffset,y=g.yOffset;if(g.ink){left=Math.min(left,x+g.left);right=Math.max(right,x+g.right);top=Math.min(top,y+g.top);bottom=Math.max(bottom,y+g.bottom);glyphs.push({left:x+g.left,right:x+g.right,top:y+g.top,bottom:y+g.bottom,coverage:96+(chars[g.cluster].codePointAt(0)%16)*6})}width+=g.advance+letter+(drawing&&chars[g.cluster]===' '?(parseFloat(draw.wordSpacing)||0):0)}
     const emTotal=shaped.emAscent+shaped.emDescent,emAscent=emTotal?Math.floor(size*shaped.emAscent/emTotal*64)/64:shaped.ascent,hanging=Math.fround(shaped.ascent*.8);

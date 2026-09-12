@@ -37,17 +37,19 @@ type loaded struct {
 	emAscent, emDescent      float64
 	hintFont                 *truetype.Font
 	hintGlyph                truetype.GlyphBuf
+	resourceBytes            int
 }
 
 type Engine struct {
-	genericFamilies map[string]string
-	resources       map[string]resource
-	localNames      map[string]resource
-	dirs            []string
-	catalog         []resource
-	scanned         bool
-	faces           map[string]*loaded
-	bytes           int
+	fallbackFamilies []string
+	genericFamilies  map[string]string
+	resources        map[string]resource
+	localNames       map[string]resource
+	dirs             []string
+	catalog          []resource
+	scanned          bool
+	faces            map[string]*loaded
+	bytes            int
 }
 
 func New() *Engine {
@@ -79,6 +81,23 @@ func (e *Engine) SetGenericFamily(generic, family string) {
 		e.genericFamilies = map[string]string{}
 	}
 	e.genericFamilies[strings.ToLower(generic)] = strings.ToLower(family)
+}
+
+// SetFallbackFamilies selects an ordered resource policy for this engine.
+func (e *Engine) SetFallbackFamilies(families []string) {
+	e.fallbackFamilies = append([]string(nil), families...)
+}
+
+// Invalid or unsupported TrueType hint programs must not unwind a host callback.
+// Their outline remains usable; callers can identify approximate ink metrics.
+func hintGlyphBounds(face *loaded, size float64, glyph uint32) (ok bool) {
+	defer func() {
+		if recover() != nil {
+			face.hintGlyph = truetype.GlyphBuf{}
+			ok = false
+		}
+	}()
+	return face.hintFont != nil && face.hintGlyph.Load(face.hintFont, fixed.Int26_6(math.Round(size*64)), truetype.Index(glyph), xfont.HintingFull) == nil
 }
 
 func (e *Engine) scan() {
@@ -246,7 +265,7 @@ func (e *Engine) load(r resource) (*loaded, error) {
 	if !ok {
 		return nil, fmt.Errorf("missing horizontal font metrics")
 	}
-	value := &loaded{face: face, shaper: harfbuzz.NewFont(face), ascent: float64(metrics.Ascender), descent: -float64(metrics.Descender), lineGap: float64(metrics.LineGap), emAscent: float64(metrics.Ascender), emDescent: -float64(metrics.Descender)}
+	value := &loaded{face: face, shaper: harfbuzz.NewFont(face), ascent: float64(metrics.Ascender), descent: -float64(metrics.Descender), lineGap: float64(metrics.LineGap), emAscent: float64(metrics.Ascender), emDescent: -float64(metrics.Descender), resourceBytes: len(data)}
 	if r.index == 0 {
 		value.hintFont, _ = truetype.Parse(data)
 	}
@@ -276,14 +295,15 @@ type Glyph struct {
 }
 
 type Result struct {
-	Glyphs    []Glyph `json:"glyphs"`
-	Ascent    float64 `json:"ascent"`
-	LineGap   float64 `json:"lineGap"`
-	Descent   float64 `json:"descent"`
-	XHeight   float64 `json:"xHeight"`
-	Family    string  `json:"family"`
-	EmAscent  float64 `json:"emAscent"`
-	EmDescent float64 `json:"emDescent"`
+	InkApproximate bool    `json:"inkApproximate,omitempty"`
+	Glyphs         []Glyph `json:"glyphs"`
+	Ascent         float64 `json:"ascent"`
+	LineGap        float64 `json:"lineGap"`
+	Descent        float64 `json:"descent"`
+	XHeight        float64 `json:"xHeight"`
+	Family         string  `json:"family"`
+	EmAscent       float64 `json:"emAscent"`
+	EmDescent      float64 `json:"emDescent"`
 }
 
 func (e *Engine) Shape(text, families string, size, weight float64, italic, noKern, noLigatures bool) (Result, error) {
@@ -374,9 +394,13 @@ func (e *Engine) shapeWithFonts(text, families string, size, weight float64, ita
 				g.Right = math.Ceil(float64(bounds.XBearing+bounds.Width) * scale)
 				g.Top = math.Round(-float64(bounds.YBearing) * scale)
 				g.Bottom = math.Round(-float64(bounds.YBearing+bounds.Height) * scale)
-				if hintInk && run.face.hintFont != nil && run.face.hintGlyph.Load(run.face.hintFont, fixed.Int26_6(math.Round(size*64)), truetype.Index(info.Glyph), xfont.HintingFull) == nil {
-					g.Top = -float64(run.face.hintGlyph.Bounds.Max.Y) / 64
-					g.Bottom = -float64(run.face.hintGlyph.Bounds.Min.Y) / 64
+				if hintInk {
+					if hintGlyphBounds(run.face, size, uint32(info.Glyph)) {
+						g.Top = -float64(run.face.hintGlyph.Bounds.Max.Y) / 64
+						g.Bottom = -float64(run.face.hintGlyph.Bounds.Min.Y) / 64
+					} else {
+						result.InkApproximate = true
+					}
 				}
 			}
 			result.Glyphs = append(result.Glyphs, g)

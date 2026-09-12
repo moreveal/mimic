@@ -6,6 +6,7 @@ import (
 	"github.com/go-text/typesetting/font/opentype/tables"
 	"github.com/go-text/typesetting/harfbuzz"
 	"strings"
+	"unicode"
 )
 
 func coversCluster(face *loaded, cluster []rune) bool {
@@ -56,6 +57,11 @@ func (e *Engine) fallbackFace(primary *loaded, cluster []rune, families string, 
 	if coversCluster(primary, cluster) {
 		return primary, nil
 	}
+	// Control characters use this font's real missing-glyph observation. They
+	// must not force a search through every installed graphical font.
+	if len(cluster) == 1 && unicode.IsControl(cluster[0]) && cluster[0] != 0x7f {
+		return primary, nil
+	}
 	// Try the author's remaining families before Windows fallback families.
 	// This is a profile-level preference, not a codepoint-specific substitution.
 	names := strings.Split(families, ",")
@@ -65,7 +71,11 @@ func (e *Engine) fallbackFace(primary *loaded, cluster []rune, families string, 
 			break
 		}
 	}
-	names = append(names, "Segoe UI Emoji", "Segoe UI Symbol", "Segoe UI", "Arial")
+	if len(e.fallbackFamilies) > 0 {
+		names = append(names, e.fallbackFamilies...)
+	} else {
+		names = append(names, "Segoe UI Emoji", "Segoe UI Symbol", "Segoe UI", "Arial")
+	}
 	seen := map[string]bool{}
 	try := func(r resource) (*loaded, error) {
 		key := fmt.Sprintf("%s#%d", r.path, r.index)
@@ -73,12 +83,21 @@ func (e *Engine) fallbackFace(primary *loaded, cluster []rune, families string, 
 			return nil, nil
 		}
 		seen[key] = true
+		retained := e.faces[key] != nil
 		face, err := e.load(r)
 		if err != nil {
-			return nil, err
+			// Unusable optional fallback resources are not selected fonts. Their
+			// decode/size failures must not poison otherwise valid primary text.
+			return nil, nil
 		}
 		if coversCluster(face, cluster) {
 			return face, nil
+		}
+		// Unsuccessful coverage candidates are temporary, not selected faces.
+		// Retaining them exhausted the Page cache and broke unrelated later text.
+		if !retained {
+			delete(e.faces, key)
+			e.bytes -= face.resourceBytes
 		}
 		return nil, nil
 	}
@@ -109,5 +128,7 @@ func (e *Engine) fallbackFace(primary *loaded, cluster []rune, families string, 
 			return face, nil
 		}
 	}
-	return nil, fmt.Errorf("no font covers grapheme beginning U+%04X (%d runes)", cluster[0], len(cluster))
+	// A valid font can still lack a character. Shape its actual .notdef glyph;
+	// inventing a width or failing the entire browser operation is incorrect.
+	return primary, nil
 }

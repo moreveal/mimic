@@ -1,0 +1,142 @@
+{
+  "version": {
+    "Browser": "Chrome/152.0.7977.82",
+    "Protocol-Version": "1.3",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "V8-Version": "15.2.124.21",
+    "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:20581/devtools/browser/9907ebef-acd4-4932-a7fc-c2547ab1a60f"
+  },
+  "captureMetadata": {
+    "href": "http://127.0.0.1:5909/plain",
+    "isSecureContext": true,
+    "crossOriginIsolated": false,
+    "innerWidth": 1272,
+    "innerHeight": 653,
+    "outerWidth": 1280,
+    "outerHeight": 800,
+    "devicePixelRatio": 1,
+    "visibility": "visible",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "platform": "Win32"
+  },
+  "result": {
+    "result": {
+      "value": {
+        "0": {
+          "width": 12
+        },
+        "1": {
+          "width": 12
+        },
+        "9": {
+          "width": 4.4453125
+        },
+        "10": {
+          "width": 4.4453125
+        },
+        "31": {
+          "width": 12
+        },
+        "127": {
+          "width": 8
+        },
+        "128": {
+          "width": 12
+        },
+        "152": {
+          "width": 12
+        },
+        "159": {
+          "width": 12
+        },
+        "160": {
+          "width": 4.4453125
+        },
+        "888": {
+          "width": 12
+        },
+        "65533": {
+          "width": 15.5390625
+        },
+        "1114111": {
+          "width": 12
+        },
+        "after": 81.796875,
+        "Segoe UI": {
+          "replacement": 14.84375,
+          "del": 8
+        },
+        "Segoe UI Symbol": {
+          "replacement": 15.5390625,
+          "del": 8
+        },
+        "Segoe UI Emoji": {
+          "replacement": 15.5390625,
+          "del": 8
+        },
+        "Times New Roman": {
+          "replacement": 15.5390625,
+          "del": 8
+        },
+        "Arial": {
+          "replacement": 15.5390625,
+          "del": 8
+        }
+      }
+    }
+  },
+  "passport": {
+    "revision": "8c75f5b5f5f30cd71290340eb66650fd02e43355",
+    "dirtyState": " M chrome/152/profile.go\n M internal/browser/text_metrics.go\n M internal/state/environment.go\n M internal/textmetrics/fallback.go\n M internal/textmetrics/metrics.go\n?? internal/browser/testdata/font_missing_glyph_oracle.js\n",
+    "sourceSHA256": "21014c467c0ce38b48d17816c0894f3575ff77eb8339a129e4d64f64d2b22f33",
+    "probeSHA256": "a2ac8a6d34ff5ebd46b67c79789c1a63de47262e33f1af14ffe44b81d267c0bd",
+    "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+    "mimicSHA256": "7fe27750ec91c998ae8567cd4c0f82a3b15853c428d71ba6d70664db0426ca04",
+    "args": [
+      "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "--remote-debugging-port=20581",
+      "--user-data-dir=E:\\GitHub\\mimic\\.build\\residual-canvas\\missing-profile\\chrome-profile-b",
+      "--no-first-run",
+      "--no-default-browser-check",
+      "--window-size=1280,800",
+      "about:blank"
+    ],
+    "profile": "E:\\GitHub\\mimic\\.build\\residual-canvas\\missing-profile\\chrome-profile",
+    "browserMode": "headful",
+    "environmentProfile": "chrome-152-windows-x64-headful-controlled-v1",
+    "featureOverrides": [],
+    "records": [
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      }
+    ],
+    "exitCodes": {
+      "chrome": 1,
+      "mimic": 1
+    },
+    "chromeControl": [],
+    "chromeMimic": []
+  }
+}
