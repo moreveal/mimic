@@ -1,6 +1,7 @@
 // OPFS objects are realm-local projections of the Context's origin-owned store.
 // Bytes and access locks live in Go; no host filesystem or engine object escapes.
-{
+// StorageManager is the owning interface; partial bundles may omit it.
+if(globalThis.StorageManager?.prototype){
  const slots=new WeakMap(),access=new WeakMap(),writables=new WeakMap(),token={};
  const identityStringify=JSON.stringify,identityParse=JSON.parse;
  const messages={NotFoundError:'A requested file or directory could not be found at the time an operation was processed.',TypeMismatchError:'The path supplied exists, but was not an entry of requested type.',InvalidModificationError:'The object can not be modified in this way.'};

@@ -29,12 +29,14 @@
  for(const name of ['info','features','limits'])getter('GPUAdapter',name,s=>s[name]);getter('GPUAdapter','isFallbackAdapter',()=>false);
  // The navigator owns one canonical GPU object; adapters/devices own their views.
  const gpu=make('GPU');method('GPU','getPreferredCanvasFormat',()=> 'bgra8unorm');
+ if(globalThis.WGSLLanguageFeatures?.prototype){
  const languageFeatures=make('WGSLLanguageFeatures',{values:new Set(gpuCapabilities.wgsl||[])});
  getter('GPU','wgslLanguageFeatures',()=>languageFeatures);
  getter('WGSLLanguageFeatures','size',s=>s.values.size);
  for(const name of ['has','keys','values','entries'])method('WGSLLanguageFeatures',name,(s,...args)=>s.values[name](...args));
  method('WGSLLanguageFeatures','forEach',(s,callback,thisArg)=>{if(typeof callback!=='function')throw new TypeError('Expected callback');s.values.forEach((v,k)=>Reflect.apply(callback,thisArg,[v,k,languageFeatures]))});
  Object.defineProperty(WGSLLanguageFeatures.prototype,Symbol.iterator,{value:function(){return check(this,'WGSLLanguageFeatures').values.values()},writable:true,configurable:true});
+ }
  method('GPU','requestAdapter',()=>host.gpuRequestAdapter().then(g=>make('GPUAdapter',{info:info(g),features:makeFeatures(g.features||[]),limits:limits(gpuCapabilities.limits),requested:false})));
  const navProto=typeof WorkerNavigator==='function'?WorkerNavigator.prototype:Navigator.prototype;
  const secure=typeof host.isSecureContext==='function'?host.isSecureContext():host.documentSecurity().secureContext;
