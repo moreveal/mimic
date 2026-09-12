@@ -13,6 +13,7 @@ import (
 func TestOfflineAudioOracles(t *testing.T) {
 	for _, name := range []string{"audio_buffers", "offline_audio", "audio_graph", "audio_relations", "audio_lifecycle", "audio_validation", "audio_channels", "audio_fractional", "audio_interpolation", "audio_rates", "audio_reverse", "audio_phase", "audio_source_events", "audio_ramps", "audio_automation_validation", "audio_scheduled_rate", "audio_automation_cancel", "audio_scheduled_duration", "audio_automation_edges"} {
 		t.Run(name, func(t *testing.T) {
+			parallelOracle(t)
 			source, err := os.ReadFile("testdata/" + name + "_oracle.js")
 			if err != nil {
 				t.Fatal(err)

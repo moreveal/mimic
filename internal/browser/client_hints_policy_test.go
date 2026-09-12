@@ -17,6 +17,7 @@ import (
 func TestClientHintsFramePolicy(t *testing.T) {
 	for _, mode := range []string{"default", "delegate", "allow", "delegate-allow", "deny-allow", "noaccept-allow", "child-noaccept-allow"} {
 		t.Run(mode, func(t *testing.T) {
+			parallelOracle(t)
 			historyTestPages(t, func(t *testing.T, p *Page) {
 				child := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 					if !strings.Contains(mode, "child-noaccept") {

@@ -15,6 +15,7 @@ import (
 func TestSVGAuditDifferential(t *testing.T) {
 	for _, name := range []string{"svg-surface", "svg-values", "svg-reflections", "svg-coordinates", "svg-text-positions", "svg-use", "svg-path-metrics", "svg-attributes", "svg-edge-cases", "svg-states", "svg-mutations", "svg-dom-matrix", "svg-zoom", "svg-stroke"} {
 		t.Run(name, func(t *testing.T) {
+			parallelOracle(t)
 			source, err := os.ReadFile("testdata/" + strings.ReplaceAll(name, "-", "_") + "_oracle.js")
 			if err != nil {
 				t.Fatal(err)

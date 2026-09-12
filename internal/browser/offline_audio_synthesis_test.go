@@ -17,6 +17,7 @@ import (
 func TestOfflineAudioSynthesisOracles(t *testing.T) {
 	for _, name := range []string{"audio_oscillator", "audio_compressor", "audio_synthesis_graph", "audio_oscillator_schedule", "audio_synthesis_relations", "audio_oscillator_extremes"} {
 		t.Run(name, func(t *testing.T) {
+			parallelOracle(t)
 			source, err := os.ReadFile("testdata/" + name + "_oracle.js")
 			if err != nil {
 				t.Fatal(err)

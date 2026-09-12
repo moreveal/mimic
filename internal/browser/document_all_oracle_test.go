@@ -37,15 +37,21 @@ func documentAllOracle(t *testing.T, name string, headers ...map[string]string) 
 				t.Setenv("MIMIC_DISABLE_BOOTSTRAP_SNAPSHOT", "0")
 			}
 			seed := bootstrapSnapshotPage(t)
-			navigateCapabilityFixture(t, seed)
 			if mode == "snapshot" {
+				navigateCapabilityFixture(t, seed)
 				bootstrapSnapshotWarm(t, seed)
 			}
 			for _, name := range []string{name} {
 				t.Run(name, func(t *testing.T) {
-					p, err := seed.ctx.NewPage()
-					if err != nil {
-						t.Fatal(err)
+					// Ordinary mode needs only the page under test. A separate seed
+					// is required only when proving restoration into a fresh page.
+					p := seed
+					if mode == "snapshot" {
+						var err error
+						p, err = seed.ctx.NewPage()
+						if err != nil {
+							t.Fatal(err)
+						}
 					}
 					server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 						for _, values := range headers {
