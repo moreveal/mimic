@@ -1,0 +1,1647 @@
+{
+  "version": {
+    "Browser": "Chrome/152.0.7977.82",
+    "Protocol-Version": "1.3",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "V8-Version": "15.2.124.21",
+    "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:20581/devtools/browser/378e13ef-e018-4587-8293-9ea02e3fe3ce"
+  },
+  "observation": {
+    "srgb|unorm8": {
+      "attributes": {
+        "alpha": true,
+        "colorSpace": "srgb",
+        "colorType": "unorm8",
+        "desynchronized": false,
+        "toneMapping": {
+          "mode": "standard"
+        },
+        "willReadFrequently": true
+      },
+      "colors": {
+        "color(display-p3 1 .25 .5)": {
+          "style": "color(display-p3 1 0.25 0.5)",
+          "default": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              255,
+              27,
+              127,
+              255
+            ]
+          },
+          "srgb|rgba-unorm8": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              255,
+              27,
+              127,
+              255
+            ]
+          },
+          "srgb|rgba-float16": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              1,
+              0.10589599609375,
+              0.498046875,
+              1
+            ]
+          },
+          "display-p3|rgba-unorm8": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              234,
+              59,
+              127,
+              255
+            ]
+          },
+          "display-p3|rgba-float16": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.91845703125,
+              0.2314453125,
+              0.496826171875,
+              1
+            ]
+          }
+        },
+        "color(srgb .2 .4 .6 / .5)": {
+          "style": "color(srgb 0.2 0.4 0.6 / 0.5)",
+          "default": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              52,
+              102,
+              153,
+              128
+            ]
+          },
+          "srgb|rgba-unorm8": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              52,
+              102,
+              153,
+              128
+            ]
+          },
+          "srgb|rgba-float16": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.203125,
+              0.3984375,
+              0.6015625,
+              0.501953125
+            ]
+          },
+          "display-p3|rgba-unorm8": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              64,
+              100,
+              149,
+              128
+            ]
+          },
+          "display-p3|rgba-float16": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.25146484375,
+              0.393798828125,
+              0.58544921875,
+              0.501953125
+            ]
+          }
+        },
+        "#804020": {
+          "style": "#804020",
+          "default": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              128,
+              64,
+              32,
+              255
+            ]
+          },
+          "srgb|rgba-unorm8": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              128,
+              64,
+              32,
+              255
+            ]
+          },
+          "srgb|rgba-float16": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.501953125,
+              0.2509765625,
+              0.12548828125,
+              1
+            ]
+          },
+          "display-p3|rgba-unorm8": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              120,
+              67,
+              39,
+              255
+            ]
+          },
+          "display-p3|rgba-float16": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.46923828125,
+              0.26416015625,
+              0.154052734375,
+              1
+            ]
+          }
+        },
+        "color(display-p3 .1 .5 .8)": {
+          "style": "color(display-p3 0.1 0.5 0.8)",
+          "default": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              0,
+              130,
+              210,
+              255
+            ]
+          },
+          "srgb|rgba-unorm8": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              0,
+              130,
+              210,
+              255
+            ]
+          },
+          "srgb|rgba-float16": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0,
+              0.509765625,
+              0.82373046875,
+              1
+            ]
+          },
+          "display-p3|rgba-unorm8": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              56,
+              128,
+              204,
+              255
+            ]
+          },
+          "display-p3|rgba-float16": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.219970703125,
+              0.501953125,
+              0.79931640625,
+              1
+            ]
+          }
+        },
+        "color(display-p3 .5 .25 .5 / .5)": {
+          "style": "color(display-p3 0.5 0.25 0.5 / 0.5)",
+          "default": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              137,
+              60,
+              131,
+              128
+            ]
+          },
+          "srgb|rgba-unorm8": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              137,
+              60,
+              131,
+              128
+            ]
+          },
+          "srgb|rgba-float16": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.5390625,
+              0.234375,
+              0.515625,
+              0.501953125
+            ]
+          },
+          "display-p3|rgba-unorm8": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              128,
+              64,
+              128,
+              128
+            ]
+          },
+          "display-p3|rgba-float16": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.50146484375,
+              0.251953125,
+              0.501953125,
+              0.501953125
+            ]
+          }
+        },
+        "color(display-p3 .5 .5 .5)": {
+          "style": "color(display-p3 0.5 0.5 0.5)",
+          "default": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              127,
+              128,
+              128,
+              255
+            ]
+          },
+          "srgb|rgba-unorm8": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              127,
+              128,
+              128,
+              255
+            ]
+          },
+          "srgb|rgba-float16": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.498046875,
+              0.501953125,
+              0.501953125,
+              1
+            ]
+          },
+          "display-p3|rgba-unorm8": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              127,
+              128,
+              128,
+              255
+            ]
+          },
+          "display-p3|rgba-float16": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.498779296875,
+              0.501953125,
+              0.501953125,
+              1
+            ]
+          }
+        }
+      }
+    },
+    "srgb|float16": {
+      "attributes": {
+        "alpha": true,
+        "colorSpace": "srgb",
+        "colorType": "float16",
+        "desynchronized": false,
+        "toneMapping": {
+          "mode": "standard"
+        },
+        "willReadFrequently": true
+      },
+      "colors": {
+        "color(display-p3 1 .25 .5)": {
+          "style": "color(display-p3 1 0.25 0.5)",
+          "default": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              255,
+              27,
+              127,
+              255
+            ]
+          },
+          "srgb|rgba-unorm8": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              255,
+              27,
+              127,
+              255
+            ]
+          },
+          "srgb|rgba-float16": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              1.0888671875,
+              0.10601806640625,
+              0.497314453125,
+              1
+            ]
+          },
+          "display-p3|rgba-unorm8": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              255,
+              64,
+              128,
+              255
+            ]
+          },
+          "display-p3|rgba-float16": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              1,
+              0.25,
+              0.5,
+              1
+            ]
+          }
+        },
+        "color(srgb .2 .4 .6 / .5)": {
+          "style": "color(srgb 0.2 0.4 0.6 / 0.5)",
+          "default": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              51,
+              102,
+              153,
+              128
+            ]
+          },
+          "srgb|rgba-unorm8": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              51,
+              102,
+              153,
+              128
+            ]
+          },
+          "srgb|rgba-float16": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.199951171875,
+              0.39990234375,
+              0.60009765625,
+              0.5
+            ]
+          },
+          "display-p3|rgba-unorm8": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              64,
+              101,
+              149,
+              128
+            ]
+          },
+          "display-p3|rgba-float16": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.2498779296875,
+              0.39501953125,
+              0.583984375,
+              0.5
+            ]
+          }
+        },
+        "#804020": {
+          "style": "#804020",
+          "default": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              128,
+              64,
+              32,
+              255
+            ]
+          },
+          "srgb|rgba-unorm8": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              128,
+              64,
+              32,
+              255
+            ]
+          },
+          "srgb|rgba-float16": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.501953125,
+              0.2509765625,
+              0.12548828125,
+              1
+            ]
+          },
+          "display-p3|rgba-unorm8": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              120,
+              67,
+              39,
+              255
+            ]
+          },
+          "display-p3|rgba-float16": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.46923828125,
+              0.26416015625,
+              0.154052734375,
+              1
+            ]
+          }
+        },
+        "color(display-p3 .1 .5 .8)": {
+          "style": "color(display-p3 0.1 0.5 0.8)",
+          "default": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              0,
+              130,
+              210,
+              255
+            ]
+          },
+          "srgb|rgba-unorm8": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              0,
+              130,
+              210,
+              255
+            ]
+          },
+          "srgb|rgba-float16": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              -0.208740234375,
+              0.50927734375,
+              0.82470703125,
+              1
+            ]
+          },
+          "display-p3|rgba-unorm8": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              26,
+              128,
+              204,
+              255
+            ]
+          },
+          "display-p3|rgba-float16": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.10015869140625,
+              0.5,
+              0.80029296875,
+              1
+            ]
+          }
+        },
+        "color(display-p3 .5 .25 .5 / .5)": {
+          "style": "color(display-p3 0.5 0.25 0.5 / 0.5)",
+          "default": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              137,
+              59,
+              131,
+              128
+            ]
+          },
+          "srgb|rgba-unorm8": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              137,
+              59,
+              131,
+              128
+            ]
+          },
+          "srgb|rgba-float16": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.53759765625,
+              0.232177734375,
+              0.513671875,
+              0.5
+            ]
+          },
+          "display-p3|rgba-unorm8": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              127,
+              64,
+              127,
+              128
+            ]
+          },
+          "display-p3|rgba-float16": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.499755859375,
+              0.25,
+              0.5,
+              0.5
+            ]
+          }
+        },
+        "color(display-p3 .5 .5 .5)": {
+          "style": "color(display-p3 0.5 0.5 0.5)",
+          "default": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              128,
+              128,
+              128,
+              255
+            ]
+          },
+          "srgb|rgba-unorm8": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              128,
+              128,
+              128,
+              255
+            ]
+          },
+          "srgb|rgba-float16": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.5,
+              0.5,
+              0.5,
+              1
+            ]
+          },
+          "display-p3|rgba-unorm8": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              128,
+              127,
+              127,
+              255
+            ]
+          },
+          "display-p3|rgba-float16": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.5,
+              0.5,
+              0.5,
+              1
+            ]
+          }
+        }
+      }
+    },
+    "display-p3|unorm8": {
+      "attributes": {
+        "alpha": true,
+        "colorSpace": "display-p3",
+        "colorType": "unorm8",
+        "desynchronized": false,
+        "toneMapping": {
+          "mode": "standard"
+        },
+        "willReadFrequently": true
+      },
+      "colors": {
+        "color(display-p3 1 .25 .5)": {
+          "style": "color(display-p3 1 0.25 0.5)",
+          "default": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              255,
+              64,
+              127,
+              255
+            ]
+          },
+          "srgb|rgba-unorm8": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              255,
+              28,
+              126,
+              255
+            ]
+          },
+          "srgb|rgba-float16": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              1.0888671875,
+              0.10845947265625,
+              0.494873046875,
+              1
+            ]
+          },
+          "display-p3|rgba-unorm8": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              255,
+              64,
+              127,
+              255
+            ]
+          },
+          "display-p3|rgba-float16": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              1,
+              0.2509765625,
+              0.498046875,
+              1
+            ]
+          }
+        },
+        "color(srgb .2 .4 .6 / .5)": {
+          "style": "color(srgb 0.2 0.4 0.6 / 0.5)",
+          "default": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              64,
+              100,
+              147,
+              128
+            ]
+          },
+          "srgb|rgba-unorm8": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              52,
+              101,
+              151,
+              128
+            ]
+          },
+          "srgb|rgba-float16": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.202392578125,
+              0.395263671875,
+              0.59375,
+              0.501953125
+            ]
+          },
+          "display-p3|rgba-unorm8": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              64,
+              100,
+              147,
+              128
+            ]
+          },
+          "display-p3|rgba-float16": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.25,
+              0.390625,
+              0.578125,
+              0.501953125
+            ]
+          }
+        },
+        "#804020": {
+          "style": "#804020",
+          "default": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              120,
+              67,
+              39,
+              255
+            ]
+          },
+          "srgb|rgba-unorm8": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              128,
+              64,
+              32,
+              255
+            ]
+          },
+          "srgb|rgba-float16": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.50341796875,
+              0.249267578125,
+              0.1241455078125,
+              1
+            ]
+          },
+          "display-p3|rgba-unorm8": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              120,
+              67,
+              39,
+              255
+            ]
+          },
+          "display-p3|rgba-float16": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.470703125,
+              0.2626953125,
+              0.1529541015625,
+              1
+            ]
+          }
+        },
+        "color(display-p3 .1 .5 .8)": {
+          "style": "color(display-p3 0.1 0.5 0.8)",
+          "default": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              25,
+              127,
+              204,
+              255
+            ]
+          },
+          "srgb|rgba-unorm8": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              0,
+              129,
+              210,
+              255
+            ]
+          },
+          "srgb|rgba-float16": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              -0.2086181640625,
+              0.50732421875,
+              0.82470703125,
+              1
+            ]
+          },
+          "display-p3|rgba-unorm8": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              25,
+              127,
+              204,
+              255
+            ]
+          },
+          "display-p3|rgba-float16": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.0980224609375,
+              0.498046875,
+              0.7998046875,
+              1
+            ]
+          }
+        },
+        "color(display-p3 .5 .25 .5 / .5)": {
+          "style": "color(display-p3 0.5 0.25 0.5 / 0.5)",
+          "default": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              128,
+              64,
+              128,
+              128
+            ]
+          },
+          "srgb|rgba-unorm8": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              137,
+              59,
+              131,
+              128
+            ]
+          },
+          "srgb|rgba-float16": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.53759765625,
+              0.232177734375,
+              0.513671875,
+              0.501953125
+            ]
+          },
+          "display-p3|rgba-unorm8": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              128,
+              64,
+              128,
+              128
+            ]
+          },
+          "display-p3|rgba-float16": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.5,
+              0.25,
+              0.5,
+              0.501953125
+            ]
+          }
+        },
+        "color(display-p3 .5 .5 .5)": {
+          "style": "color(display-p3 0.5 0.5 0.5)",
+          "default": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              127,
+              127,
+              127,
+              255
+            ]
+          },
+          "srgb|rgba-unorm8": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              127,
+              127,
+              127,
+              255
+            ]
+          },
+          "srgb|rgba-float16": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.498046875,
+              0.498046875,
+              0.498046875,
+              1
+            ]
+          },
+          "display-p3|rgba-unorm8": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              127,
+              127,
+              127,
+              255
+            ]
+          },
+          "display-p3|rgba-float16": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.498046875,
+              0.498046875,
+              0.498046875,
+              1
+            ]
+          }
+        }
+      }
+    },
+    "display-p3|float16": {
+      "attributes": {
+        "alpha": true,
+        "colorSpace": "display-p3",
+        "colorType": "float16",
+        "desynchronized": false,
+        "toneMapping": {
+          "mode": "standard"
+        },
+        "willReadFrequently": true
+      },
+      "colors": {
+        "color(display-p3 1 .25 .5)": {
+          "style": "color(display-p3 1 0.25 0.5)",
+          "default": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              255,
+              64,
+              128,
+              255
+            ]
+          },
+          "srgb|rgba-unorm8": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              255,
+              27,
+              127,
+              255
+            ]
+          },
+          "srgb|rgba-float16": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              1.0888671875,
+              0.10601806640625,
+              0.4970703125,
+              1
+            ]
+          },
+          "display-p3|rgba-unorm8": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              255,
+              64,
+              128,
+              255
+            ]
+          },
+          "display-p3|rgba-float16": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              1,
+              0.25,
+              0.5,
+              1
+            ]
+          }
+        },
+        "color(srgb .2 .4 .6 / .5)": {
+          "style": "color(srgb 0.2 0.4 0.6 / 0.5)",
+          "default": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              64,
+              101,
+              149,
+              128
+            ]
+          },
+          "srgb|rgba-unorm8": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              51,
+              102,
+              153,
+              128
+            ]
+          },
+          "srgb|rgba-float16": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.199951171875,
+              0.400146484375,
+              0.60009765625,
+              0.5
+            ]
+          },
+          "display-p3|rgba-unorm8": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              64,
+              101,
+              149,
+              128
+            ]
+          },
+          "display-p3|rgba-float16": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.2498779296875,
+              0.395263671875,
+              0.583984375,
+              0.5
+            ]
+          }
+        },
+        "#804020": {
+          "style": "#804020",
+          "default": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              120,
+              67,
+              39,
+              255
+            ]
+          },
+          "srgb|rgba-unorm8": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              128,
+              64,
+              32,
+              255
+            ]
+          },
+          "srgb|rgba-float16": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.501953125,
+              0.2509765625,
+              0.12548828125,
+              1
+            ]
+          },
+          "display-p3|rgba-unorm8": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              120,
+              67,
+              39,
+              255
+            ]
+          },
+          "display-p3|rgba-float16": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.46923828125,
+              0.26416015625,
+              0.154052734375,
+              1
+            ]
+          }
+        },
+        "color(display-p3 .1 .5 .8)": {
+          "style": "color(display-p3 0.1 0.5 0.8)",
+          "default": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              25,
+              128,
+              204,
+              255
+            ]
+          },
+          "srgb|rgba-unorm8": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              0,
+              130,
+              210,
+              255
+            ]
+          },
+          "srgb|rgba-float16": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              -0.208740234375,
+              0.50927734375,
+              0.82421875,
+              1
+            ]
+          },
+          "display-p3|rgba-unorm8": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              25,
+              128,
+              204,
+              255
+            ]
+          },
+          "display-p3|rgba-float16": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.0999755859375,
+              0.5,
+              0.7998046875,
+              1
+            ]
+          }
+        },
+        "color(display-p3 .5 .25 .5 / .5)": {
+          "style": "color(display-p3 0.5 0.25 0.5 / 0.5)",
+          "default": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              128,
+              64,
+              128,
+              128
+            ]
+          },
+          "srgb|rgba-unorm8": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              137,
+              59,
+              131,
+              128
+            ]
+          },
+          "srgb|rgba-float16": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.53759765625,
+              0.232177734375,
+              0.513671875,
+              0.5
+            ]
+          },
+          "display-p3|rgba-unorm8": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              128,
+              64,
+              128,
+              128
+            ]
+          },
+          "display-p3|rgba-float16": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.5,
+              0.25,
+              0.5,
+              0.5
+            ]
+          }
+        },
+        "color(display-p3 .5 .5 .5)": {
+          "style": "color(display-p3 0.5 0.5 0.5)",
+          "default": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              128,
+              128,
+              128,
+              255
+            ]
+          },
+          "srgb|rgba-unorm8": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              127,
+              127,
+              128,
+              255
+            ]
+          },
+          "srgb|rgba-float16": {
+            "colorSpace": "srgb",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.5,
+              0.5,
+              0.5,
+              1
+            ]
+          },
+          "display-p3|rgba-unorm8": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-unorm8",
+            "type": "Uint8ClampedArray",
+            "data": [
+              128,
+              128,
+              128,
+              255
+            ]
+          },
+          "display-p3|rgba-float16": {
+            "colorSpace": "display-p3",
+            "pixelFormat": "rgba-float16",
+            "type": "Float16Array",
+            "data": [
+              0.5,
+              0.5,
+              0.5,
+              1
+            ]
+          }
+        }
+      }
+    }
+  },
+  "metadata": {
+    "href": "http://127.0.0.1:52382/plain",
+    "isSecureContext": true,
+    "crossOriginIsolated": false,
+    "innerWidth": 1272,
+    "innerHeight": 653,
+    "outerWidth": 1280,
+    "outerHeight": 800,
+    "devicePixelRatio": 1,
+    "visibility": "visible",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "platform": "Win32"
+  },
+  "passport": {
+    "revision": "4718579f41cfb966c586de5f5ca2439017c9020d",
+    "dirtyState": " M internal/webapi/canvas_path_observations.js\n M internal/webapi/canvas_state.js\n M internal/webapi/surface.go\n?? internal/browser/testdata/canvas_color_space_oracle.js\n?? internal/webapi/canvas_color_spaces.js\n",
+    "sourceSHA256": "b8ef6d769ecd5a9761c934d4073f97a3e375cdc0138763baf89b8f3ea7aa3914",
+    "probeSHA256": "8b6668b820b2a94c0123200867a4c13dfd052b91205e417a51946f621a1f5804",
+    "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+    "mimicSHA256": "d6988c2a13f6d3e8c4a02bdafac5952d68b8178ce35dfad4d34b6ac4240dea7c",
+    "args": [
+      "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "--remote-debugging-port=20581",
+      "--user-data-dir=E:\\GitHub\\mimic\\.build\\residual-canvas\\color-expanded\\chrome-profile-b",
+      "--no-first-run",
+      "--no-default-browser-check",
+      "--window-size=1280,800",
+      "about:blank"
+    ],
+    "profile": "E:\\GitHub\\mimic\\.build\\residual-canvas\\color-expanded\\chrome-profile",
+    "browserMode": "headful",
+    "environmentProfile": "chrome-152-windows-x64-headful-controlled-v1",
+    "featureOverrides": [],
+    "records": [
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      }
+    ],
+    "exitCodes": {
+      "chrome": 1,
+      "mimic": 1
+    },
+    "chromeControl": [],
+    "chromeMimic": [
+      {
+        "mode": "plain",
+        "path": "/display-p3|float16/colors/color(display-p3 .5 .5 .5)/srgb|rgba-unorm8/data/1",
+        "chrome": 127,
+        "mimic": 128
+      },
+      {
+        "mode": "plain",
+        "path": "/display-p3|float16/colors/color(display-p3 1 .25 .5)/srgb|rgba-float16/data/2",
+        "chrome": 0.4970703125,
+        "mimic": 0.497314453125
+      },
+      {
+        "mode": "plain",
+        "path": "/display-p3|unorm8/colors/color(display-p3 .1 .5 .8)/default/data/0",
+        "chrome": 25,
+        "mimic": 26
+      },
+      {
+        "mode": "plain",
+        "path": "/display-p3|unorm8/colors/color(display-p3 .1 .5 .8)/display-p3|rgba-float16/data/0",
+        "chrome": 0.0980224609375,
+        "mimic": 0.10198974609375
+      },
+      {
+        "mode": "plain",
+        "path": "/display-p3|unorm8/colors/color(display-p3 .1 .5 .8)/display-p3|rgba-unorm8/data/0",
+        "chrome": 25,
+        "mimic": 26
+      },
+      {
+        "mode": "plain",
+        "path": "/display-p3|unorm8/colors/color(display-p3 .1 .5 .8)/srgb|rgba-float16/data/0",
+        "chrome": -0.2086181640625,
+        "mimic": -0.2064208984375
+      },
+      {
+        "mode": "plain",
+        "path": "/display-p3|unorm8/colors/color(display-p3 .5 .5 .5)/default/data/0",
+        "chrome": 127,
+        "mimic": 128
+      },
+      {
+        "mode": "plain",
+        "path": "/display-p3|unorm8/colors/color(display-p3 .5 .5 .5)/display-p3|rgba-float16/data/0",
+        "chrome": 0.498046875,
+        "mimic": 0.501953125
+      },
+      {
+        "mode": "plain",
+        "path": "/display-p3|unorm8/colors/color(display-p3 .5 .5 .5)/display-p3|rgba-unorm8/data/0",
+        "chrome": 127,
+        "mimic": 128
+      },
+      {
+        "mode": "plain",
+        "path": "/display-p3|unorm8/colors/color(display-p3 .5 .5 .5)/srgb|rgba-float16/data/0",
+        "chrome": 0.498046875,
+        "mimic": 0.5029296875
+      },
+      {
+        "mode": "plain",
+        "path": "/display-p3|unorm8/colors/color(display-p3 .5 .5 .5)/srgb|rgba-float16/data/1",
+        "chrome": 0.498046875,
+        "mimic": 0.497802734375
+      },
+      {
+        "mode": "plain",
+        "path": "/display-p3|unorm8/colors/color(display-p3 .5 .5 .5)/srgb|rgba-unorm8/data/0",
+        "chrome": 127,
+        "mimic": 128
+      },
+      {
+        "mode": "plain",
+        "path": "/display-p3|unorm8/colors/color(display-p3 1 .25 .5)/srgb|rgba-float16/data/1",
+        "chrome": 0.10845947265625,
+        "mimic": 0.1085205078125
+      },
+      {
+        "mode": "plain",
+        "path": "/display-p3|unorm8/colors/color(display-p3 1 .25 .5)/srgb|rgba-float16/data/2",
+        "chrome": 0.494873046875,
+        "mimic": 0.4951171875
+      },
+      {
+        "mode": "plain",
+        "path": "/srgb|float16/colors/color(display-p3 .5 .25 .5 ~1 .5)/display-p3|rgba-unorm8/data/2",
+        "chrome": 127,
+        "mimic": 128
+      },
+      {
+        "mode": "plain",
+        "path": "/srgb|unorm8/colors/color(display-p3 .5 .25 .5 ~1 .5)/default/data/2",
+        "chrome": 131,
+        "mimic": 129
+      },
+      {
+        "mode": "plain",
+        "path": "/srgb|unorm8/colors/color(display-p3 .5 .25 .5 ~1 .5)/display-p3|rgba-float16/data/2",
+        "chrome": 0.501953125,
+        "mimic": 0.49462890625
+      },
+      {
+        "mode": "plain",
+        "path": "/srgb|unorm8/colors/color(display-p3 .5 .25 .5 ~1 .5)/display-p3|rgba-unorm8/data/2",
+        "chrome": 128,
+        "mimic": 126
+      },
+      {
+        "mode": "plain",
+        "path": "/srgb|unorm8/colors/color(display-p3 .5 .25 .5 ~1 .5)/srgb|rgba-float16/data/2",
+        "chrome": 0.515625,
+        "mimic": 0.5078125
+      },
+      {
+        "mode": "plain",
+        "path": "/srgb|unorm8/colors/color(display-p3 .5 .25 .5 ~1 .5)/srgb|rgba-unorm8/data/2",
+        "chrome": 131,
+        "mimic": 129
+      }
+    ]
+  }
+}
