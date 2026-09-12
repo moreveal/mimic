@@ -794,6 +794,22 @@ func (r *Realm) installBindings() error {
 	host["frameCall"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.callFrameReference(a)
 	})
+	host["frameConsoleKind"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		target, err := r.referenceRealm(strarg(a, 0), strarg(a, 2))
+		if err != nil {
+			return nil, err
+		}
+		value := target.crossValues[int64(numarg(a, 1))]
+		classifier, ok := target.runtime.(engine.ConsoleValueRuntime)
+		if value == nil || !ok {
+			return r.val(""), nil
+		}
+		kind, err := classifier.ConsoleValueKind(value)
+		if err != nil {
+			return nil, err
+		}
+		return r.val(kind), nil
+	})
 	r.installFrameDocumentBridge(host)
 	r.installWorldObservationBridge(host)
 	r.installWindowReflection(host)
@@ -1986,6 +2002,7 @@ func (r *Realm) installBindings() error {
 	})
 	host["xhr"] = r.fn(r.hostXHR)
 	installConsoleKind(host, r.runtime)
+	host["consoleActive"] = r.fn(func(_ engine.Value, _ []engine.Value) (engine.Value, error) { return r.val(!r.inactive), nil })
 	host["console"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		if len(a) > 2 {
 			r.debuggerConsole(strarg(a, 0), a[2])

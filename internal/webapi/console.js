@@ -7,6 +7,10 @@ const consoleObject=(()=>{
   const ErrorClass=Error;
   const nativeKind=host.consoleValueKind,proxy=host.cloneIsProxy||host.historyCloneIsProxy;
   const classify=value=>{
+    // A browser-owned realm wrapper is not an author Proxy. Ask the owner
+    // about the original value while preserving the ordinary reference bridge.
+    const reference=typeof referenceGet==='function'?referenceGet(value):null;
+    if(reference&&host.frameConsoleKind)return host.frameConsoleKind(reference.frame,reference.handle,reference.realm);
     if(nativeKind)return nativeKind(value);
     if(proxy&&proxy(value))return '';
     if(typeof value==='function')return 'function';
@@ -78,7 +82,11 @@ const consoleObject=(()=>{
     assert(...a){if(!a[0])emit('assert',a.length>1?apply(slice,a,[1]):['console.assert'])},
     clear(){emit('clear',['console.clear'],false)},time(...a){timer(a[0],'start',[])},timeLog(...a){timer(a[0],'log',apply(slice,a,[1]))},timeEnd(...a){timer(a[0],'end',[])}
   };
-  for(const [name,value]of Object.entries(methods)){markNative(value,name);Object.defineProperty(object,name,{value,writable:true,enumerable:true,configurable:true})}
+  for(const [name,method]of Object.entries(methods)){
+    const value=(...args)=>{if(host.consoleActive&&!host.consoleActive())return;return apply(method,undefined,args)};
+    Object.defineProperty(value,'name',{value:name,configurable:true});
+    markNative(value,name);Object.defineProperty(object,name,{value,writable:true,enumerable:true,configurable:true});
+  }
   Object.defineProperty(object,Symbol.toStringTag,{value:'console',configurable:true});
   return object;
 })();

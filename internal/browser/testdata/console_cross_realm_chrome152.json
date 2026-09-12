@@ -1,0 +1,189 @@
+{
+  "version": {
+    "Browser": "Chrome/152.0.7977.82",
+    "Protocol-Version": "1.3",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "V8-Version": "15.2.124.21",
+    "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:19841/devtools/browser/0dd7a2a7-7ac7-4106-a743-b42780c0a79b"
+  },
+  "metadata": {
+    "href": "http://127.0.0.1:3933/disabled",
+    "isSecureContext": true,
+    "crossOriginIsolated": false,
+    "innerWidth": 1272,
+    "innerHeight": 653,
+    "outerWidth": 1280,
+    "outerHeight": 800,
+    "devicePixelRatio": 1,
+    "visibility": "visible",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "platform": "Win32"
+  },
+  "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+  "probeSHA256": "ccfba23f53028514b9c3859169d42280d18e159c9c4c9039eab3c9e69674a6ee",
+  "browserMode": "headful",
+  "featureOverrides": [],
+  "observation": {
+    "false:false:function:log": [
+      "text"
+    ],
+    "false:false:function:dir": [
+      "text"
+    ],
+    "false:false:function:dirxml": [
+      "text"
+    ],
+    "false:false:function:table": [
+      "text"
+    ],
+    "false:false:regexp:log": [
+      "text"
+    ],
+    "false:false:regexp:dir": [
+      "text"
+    ],
+    "false:false:regexp:dirxml": [
+      "text"
+    ],
+    "false:false:regexp:table": [
+      "text"
+    ],
+    "false:false:date:log": [
+      "text"
+    ],
+    "false:false:date:dir": [
+      "text"
+    ],
+    "false:false:date:dirxml": [
+      "text"
+    ],
+    "false:false:date:table": [
+      "text"
+    ],
+    "false:false:error:log": [
+      "text"
+    ],
+    "false:false:error:dir": [
+      "text"
+    ],
+    "false:false:error:dirxml": [
+      "text"
+    ],
+    "false:false:error:table": [
+      "text"
+    ],
+    "false:false:proxy:log": [],
+    "false:false:proxy:dir": [],
+    "false:false:proxy:dirxml": [],
+    "false:false:proxy:table": [],
+    "false:false:wrappedProxy:log": [],
+    "false:false:wrappedProxy:dir": [],
+    "false:false:wrappedProxy:dirxml": [],
+    "false:false:wrappedProxy:table": [],
+    "false:true:function:log": [
+      "text"
+    ],
+    "false:true:function:dir": [
+      "text"
+    ],
+    "false:true:function:dirxml": [
+      "text"
+    ],
+    "false:true:function:table": [
+      "text"
+    ],
+    "false:true:regexp:log": [
+      "text"
+    ],
+    "false:true:regexp:dir": [
+      "text"
+    ],
+    "false:true:regexp:dirxml": [
+      "text"
+    ],
+    "false:true:regexp:table": [
+      "text"
+    ],
+    "false:true:date:log": [
+      "text"
+    ],
+    "false:true:date:dir": [
+      "text"
+    ],
+    "false:true:date:dirxml": [
+      "text"
+    ],
+    "false:true:date:table": [
+      "text"
+    ],
+    "false:true:error:log": [
+      "text"
+    ],
+    "false:true:error:dir": [
+      "text"
+    ],
+    "false:true:error:dirxml": [
+      "text"
+    ],
+    "false:true:error:table": [
+      "text"
+    ],
+    "false:true:proxy:log": [],
+    "false:true:proxy:dir": [],
+    "false:true:proxy:dirxml": [],
+    "false:true:proxy:table": [],
+    "false:true:wrappedProxy:log": [],
+    "false:true:wrappedProxy:dir": [],
+    "false:true:wrappedProxy:dirxml": [],
+    "false:true:wrappedProxy:table": [],
+    "true:false:function:log": [],
+    "true:false:function:dir": [],
+    "true:false:function:dirxml": [],
+    "true:false:function:table": [],
+    "true:false:regexp:log": [],
+    "true:false:regexp:dir": [],
+    "true:false:regexp:dirxml": [],
+    "true:false:regexp:table": [],
+    "true:false:date:log": [],
+    "true:false:date:dir": [],
+    "true:false:date:dirxml": [],
+    "true:false:date:table": [],
+    "true:false:error:log": [],
+    "true:false:error:dir": [],
+    "true:false:error:dirxml": [],
+    "true:false:error:table": [],
+    "true:false:proxy:log": [],
+    "true:false:proxy:dir": [],
+    "true:false:proxy:dirxml": [],
+    "true:false:proxy:table": [],
+    "true:false:wrappedProxy:log": [],
+    "true:false:wrappedProxy:dir": [],
+    "true:false:wrappedProxy:dirxml": [],
+    "true:false:wrappedProxy:table": [],
+    "true:true:function:log": [],
+    "true:true:function:dir": [],
+    "true:true:function:dirxml": [],
+    "true:true:function:table": [],
+    "true:true:regexp:log": [],
+    "true:true:regexp:dir": [],
+    "true:true:regexp:dirxml": [],
+    "true:true:regexp:table": [],
+    "true:true:date:log": [],
+    "true:true:date:dir": [],
+    "true:true:date:dirxml": [],
+    "true:true:date:table": [],
+    "true:true:error:log": [],
+    "true:true:error:dir": [],
+    "true:true:error:dirxml": [],
+    "true:true:error:table": [],
+    "true:true:proxy:log": [],
+    "true:true:proxy:dir": [],
+    "true:true:proxy:dirxml": [],
+    "true:true:proxy:table": [],
+    "true:true:wrappedProxy:log": [],
+    "true:true:wrappedProxy:dir": [],
+    "true:true:wrappedProxy:dirxml": [],
+    "true:true:wrappedProxy:table": []
+  }
+}
