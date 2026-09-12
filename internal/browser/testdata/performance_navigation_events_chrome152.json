@@ -1,0 +1,95 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "fixtureOrigin": "http://127.0.0.1:7169",
+  "fixture": "internal/browser/testdata/performance_navigation_events_oracle.js",
+  "fixtureSHA256": "c10a1c3b6c7dd9f2420a95e352c2e22371c02ef94cb4daf9420a49240ae3a7f9",
+  "worker": false,
+  "result": {
+    "result": {
+      "type": "object",
+      "value": {
+        "rows": [
+          {
+            "label": "script",
+            "same": true,
+            "response": false,
+            "interactive": false,
+            "dclStart": false,
+            "dclEnd": false,
+            "complete": false,
+            "loadStart": false,
+            "loadEnd": false,
+            "durationZero": true
+          },
+          {
+            "label": "DOMContentLoaded",
+            "same": true,
+            "response": true,
+            "interactive": true,
+            "dclStart": true,
+            "dclEnd": false,
+            "complete": false,
+            "loadStart": false,
+            "loadEnd": false,
+            "durationZero": true
+          },
+          {
+            "label": "load",
+            "same": true,
+            "response": true,
+            "interactive": true,
+            "dclStart": true,
+            "dclEnd": true,
+            "complete": true,
+            "loadStart": true,
+            "loadEnd": false,
+            "durationZero": true
+          },
+          {
+            "label": "after",
+            "same": true,
+            "response": true,
+            "interactive": true,
+            "dclStart": true,
+            "dclEnd": true,
+            "complete": true,
+            "loadStart": true,
+            "loadEnd": true,
+            "durationZero": false
+          }
+        ],
+        "normal": 1,
+        "buffered": 2,
+        "normalSame": true,
+        "bufferedSame": true
+      }
+    }
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "fixtureOrigin": "http://127.0.0.1:38895",
+  "fixture": "internal/browser/testdata/performance_longtask_oracle.js",
+  "fixtureSHA256": "7c8050038dafe3744c030076b57fb1102a060a9ffc13b6840500601d8ce79c09",
+  "worker": false,
+  "result": {
+    "result": {
+      "type": "object",
+      "value": {
+        "task": {
+          "type": "longtask",
+          "name": "self",
+          "brand": true,
+          "duration": true,
+          "start": true,
+          "own": [],
+          "jsonKeys": [
+            "name",
+            "entryType",
+            "startTime",
+            "duration",
+            "navigationId",
+            "attribution"
+          ],
+          "attribution": [
+            {
+              "type": "taskattribution",
+              "name": "unknown",
+              "start": 0,
+              "duration": 0,
+              "containerType": "window",
+              "containerSrc": "",
+              "containerId": "",
+              "containerName": "",
+              "brand": true
+            }
+          ],
+          "frozen": true,
+          "same": true,
+          "entrySame": true
+        },
+        "timeline": 0,
+        "buffered": true
+      }
+    }
+  }
+}

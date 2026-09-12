@@ -47,6 +47,8 @@ type DedicatedWorker struct {
 	wake                chan struct{}
 	performanceOrigin   time.Time
 	performanceIsolated bool
+	performance         *performanceTimeline
+	performanceCursor   uint64
 	fetchCancels        map[string]context.CancelFunc // worker task/host callbacks only
 	fetchWG             sync.WaitGroup
 }
@@ -144,6 +146,7 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 		w.closed = true
 		w.runtime, w.scheduler, w.messageReceiver = nil, nil, nil
 		w.pending = nil
+		w.performance = nil
 		w.mu.Unlock()
 	}()
 	workerScheduler.SetObserver(func(t scheduler.Transition) {
@@ -329,8 +332,30 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 		return runtime.Value(p.performanceClamper.now(workerScheduler.Now(), w.performanceOrigin, w.performanceIsolated)), nil
 	})
 	host["performanceTimeOrigin"] = runtime.Function(func(engine.Value, []engine.Value) (engine.Value, error) {
-		return runtime.Value(float64(w.performanceOrigin.UnixNano()) / float64(time.Millisecond)), nil
+		return runtime.Value(float64(p.performanceClamper.micros(w.performanceOrigin.UnixMicro(), w.performanceIsolated)) / 1000), nil
 	})
+	w.performance = newPerformanceTimeline(runtime, workerScheduler, func() float64 {
+		return p.performanceClamper.now(workerScheduler.Now(), w.performanceOrigin, w.performanceIsolated)
+	}, func() int { return 0 }, true)
+	w.performance.syncExternal = func() {
+		owner := fmt.Sprintf("%s/worker/%d", w.parent.ID, w.id)
+		for _, event := range p.trace.EventsSince(w.performanceCursor) {
+			w.performanceCursor = event.Sequence
+			if event.Kind != trace.Network || event.Name != "response" || event.Data["performanceOwner"] != owner {
+				continue
+			}
+			status := numberValue(event.Data["status"])
+			if status >= 300 && status < 400 && status != 304 {
+				continue
+			}
+			entry := performanceResourceEntry(event.Data, w.performanceOrigin, originOf(w.securityURL.String()), p.Environment().Time.NetworkScale, p.performanceClamper, w.performanceIsolated)
+			if entry != nil {
+				w.performance.append(w.performance.create(entry, nil))
+			}
+		}
+	}
+	w.performance.install(host)
+	installPerformanceClone(runtime, host)
 	host["catalogJSON"] = runtime.Function(func(engine.Value, []engine.Value) (engine.Value, error) {
 		catalog := ""
 		if bundle := p.Compatibility(); bundle != nil && bundle.Surface() != nil {

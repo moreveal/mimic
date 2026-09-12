@@ -92,7 +92,9 @@ type Request struct {
 	// criticalCHRestarted is loader-owned navigation state. It prevents a
 	// malformed or changing response from causing an unbounded internal retry.
 	criticalCHRestarted bool
-	navigationStarted   time.Time
+	operationStarted    time.Time
+	redirectEnd         float64
+	timingAllowFailed   bool
 	redirectCount       int
 	corsPrepared        bool
 	corsPreflight       bool
@@ -193,8 +195,8 @@ func (l *Loader) Load(ctx context.Context, r Request) (response Response, loadEr
 	if err := ctx.Err(); err != nil {
 		return Response{}, err
 	}
-	if r.Initiator == Navigation && r.navigationStarted.IsZero() {
-		r.navigationStarted = time.Now()
+	if r.operationStarted.IsZero() {
+		r.operationStarted = time.Now()
 	}
 	if r.ID == "" {
 		r.ID = uuid.NewString()
@@ -375,10 +377,7 @@ func (l *Loader) Load(ctx context.Context, r Request) (response Response, loadEr
 	timingSnapshot := timing.snapshot()
 	record := l.session.CompleteConnection(attempt, timingSnapshot, raw.Proto, raw.Close)
 	l.trace.Add(trace.Network, "transport", map[string]any{"id": r.ID, "url": r.URL.String(), "timing": timingSnapshot, "sessionCold": attempt.Cold, "connectionState": record.Status})
-	browserTiming := timingSnapshot
-	if r.Initiator == Navigation && !r.navigationStarted.IsZero() {
-		browserTiming = timingSnapshot.shifted(float64(start.Sub(r.navigationStarted)) / float64(time.Millisecond))
-	}
+	browserTiming := timingSnapshot.shifted(float64(start.Sub(r.operationStarted)) / float64(time.Millisecond))
 	res := Response{Status: raw.StatusCode, Headers: raw.Header.Clone(), Body: body, URL: r.URL, Duration: time.Since(start), EncodedBodySize: encodedBodySize, Protocol: raw.Proto, TransportTiming: timingSnapshot, BrowserVisibleTiming: browserTiming}
 	acceptedBefore := l.session.ClientHints(r.URL)
 	l.session.AcceptClientHints(r.URL, res.Headers.Get("Accept-CH"))
@@ -578,7 +577,10 @@ func (l *Loader) after(ctx context.Context, r Request, res Response) (Response, 
 			performanceInitiatorType = "link"
 		}
 	}
-	l.trace.Add(trace.Network, "response", map[string]any{"id": r.ID, "url": r.URL.String(), "status": res.Status, "headers": headerStrings(res.Headers), "mimeType": strings.Split(res.Headers.Get("Content-Type"), ";")[0], "encodedDataLength": len(res.Body), "encodedBodySize": encodedBodySize, "decodedBodySize": len(res.Body), "transferSize": transferSize, "durationMs": float64(res.Duration) / float64(time.Millisecond), "protocol": res.Protocol, "transportTiming": res.TransportTiming, "browserVisibleTiming": res.BrowserVisibleTiming, "connectionReused": res.TransportTiming.Reused, "connectionId": res.TransportTiming.ConnectionID, "fromCache": res.FromCache, "initiator": r.Initiator, "performanceInitiatorType": performanceInitiatorType, "synthetic": res.Synthetic, "context": r.ContextID, "performanceOwner": r.PerformanceOwner, "performanceStart": r.PerformanceStart})
+	l.trace.Add(trace.Network, "response", map[string]any{"id": r.ID, "url": r.URL.String(), "status": res.Status, "headers": headerStrings(res.Headers), "mimeType": strings.Split(res.Headers.Get("Content-Type"), ";")[0], "encodedDataLength": len(res.Body), "encodedBodySize": encodedBodySize, "decodedBodySize": len(res.Body), "transferSize": transferSize, "durationMs": float64(res.Duration) / float64(time.Millisecond), "protocol": res.Protocol, "transportTiming": res.TransportTiming, "browserVisibleTiming": res.BrowserVisibleTiming, "connectionReused": res.TransportTiming.Reused, "connectionId": res.TransportTiming.ConnectionID, "fromCache": res.FromCache, "initiator": r.Initiator, "performanceInitiatorType": performanceInitiatorType,
+		"performanceURL": r.performanceURL(), "performanceRedirectEnd": r.redirectEnd,
+		"performanceRedirectCount": r.redirectCount, "performanceTimingAllowFailed": r.performanceTimingAllowFailed(res.Headers),
+		"performanceCORSAccessible": r.Initiator == Fetch && r.Mode != "no-cors" && corsResponseAllowed(r, res.Headers), "synthetic": res.Synthetic, "context": r.ContextID, "performanceOwner": r.PerformanceOwner, "performanceStart": r.PerformanceStart})
 	l.remember(r.ID, res)
 	l.trace.Add(trace.Resource, "loadEnd", map[string]any{"id": r.ID, "url": r.URL.String(), "status": res.Status, "type": r.Initiator})
 	if fetchCrossOrigin(r) && !r.corsPreflight && r.Mode != "no-cors" && !corsResponseAllowed(r, res.Headers) {
@@ -628,6 +630,8 @@ func (l *Loader) after(ctx context.Context, r Request, res Response) (Response, 
 				r.Headers.Del(name)
 			}
 			r.redirectChain(u)
+			r.redirectEnd = float64(time.Since(r.operationStarted)) / float64(time.Millisecond)
+			r.timingAllowFailed = r.timingAllowFailed || !requestTimingAllowed(r, res.Headers)
 			r.URL = u
 			r.redirectCount++
 			return l.Load(ctx, r)

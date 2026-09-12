@@ -15,6 +15,16 @@ import (
 //go:embed surface.js
 var handwrittenSurface string
 
+//go:embed performance.js
+var performanceSurface string
+
+//go:embed performance_interfaces.json
+var performanceInterfaces string
+
+func performanceSource() string {
+	return strings.Replace(performanceSurface, "/* performance_interface_schema */", performanceInterfaces, 1)
+}
+
 //go:embed base64.js
 var base64Surface string
 
@@ -286,6 +296,7 @@ func composeSurface(generated, exposureSource string) string {
 		templatesCompatibilitySurface, selectorsVendorSurface, selectorsCompatibilitySurface, cssomCompatibilitySurface, strings.Replace(strings.Replace(strings.Replace(strings.Replace(svgGeometrySurface, "/* shared_svg_boundaries */", svgBoundariesSurface, 1), "/* shared_svg_text */", svgTextSurface, 1), "/* shared_svg_css_transform */", svgCSSTransformSurface, 1), "/* shared_svg_types */", svgTypesSurface+svgCoordinatesSurface+svgReflectionsSurface+svgPathMetricsSurface+svgUseSurface+svgAttributeDefaultsSurface+svgAttributeSemanticsSurface, 1), streamPrelude,
 		streamsVendorSurface, "}", strings.Replace(fetchCompatibilitySurface, "/* cache_storage */", cacheStorageSurface, 1), formControlsSurface, traversalCompatibilitySurface, strings.Replace(documentCompatibilitySurface, "/* shared_document_state */", documentStateSurface, 1), documentAllSurface, attributesCompatibilitySurface, imageResourcesSurface, screenFocusSurface, eventsCompatibilitySurface, windowErrorsSurface, inputSurface, windowObservationsSurface, windowServicesSurface, speechSynthesisSurface, documentPictureInPictureSurface, navigationSurface, indexedDBSurface, documentStreamSurface, shadowSerializationSurface, strings.Replace(canvasStateSurface, "/* shared_canvas_paths */", canvasPathObservationsSurface, 1), webglObservationsSource(), webgpuStateSurface, fontFacesSurface, offlineAudioSurface, "finalizeDocumentGetterBindings();finalizeSingletonGetterBindings();finalizeCallableBindings();finalizeNativeBindings();", marker}
 	base := strings.Replace(handwrittenSurface, "/* shared_fetch_primitives */", fetchPrimitivesSurface, 1)
+	base = strings.Replace(base, "/* shared_performance */", performanceSource(), 1)
 	base = strings.Replace(base, "/* shared_native_functions */", nativeFunctionsSurface, 1)
 	base = strings.Replace(base, "/* shared_base64 */", base64Surface, 1)
 	base = strings.Replace(base, "/* shared_webkit_css */", webkitCSSNamesSurface+webkitCSSSurface+cssShorthandsSurface+cssValueGrammarSurface+cssAnimationGrammarSurface+cssFontMetricsSurface, 1)
@@ -305,5 +316,6 @@ func WorkerSurface(generated string, exposure *compatibility.RealmExposure) stri
 	}
 	shared := fetchPrimitivesSurface + "\ninstallFileReader();Object.assign(globalThis,{TextEncoder,DOMException,URL,URLSearchParams,Blob,File,FormData,FileReader,Headers});\n" + abortEncodingSurface + "\n{let structuredClone;\n" + streamsVendorSurface + "\n}\n" + fetchCompatibilitySurface
 	base := strings.Replace(handwrittenWorkerSurface, "/* shared_worker_fetch */", shared, 1)
+	base = strings.Replace(base, "/* shared_performance */", performanceSource(), 1)
 	return base + "\n" + generated + "\n" + exposureSource + "__finishWorkerSurface();if(typeof __workerExposure!=='undefined')__applyWorkerPrototypeExposure(__workerExposure);delete globalThis.__applyWorkerExposure;delete globalThis.__applyWorkerPrototypeExposure;delete globalThis.__finishWorkerSurface;delete globalThis.__mimic;delete globalThis.__mimicIDLExposure;\n{const host=__workerHost;\n" + nativeFunctionsSurface + base64Surface + cssColorsSurface + "\nfor(const [name,value] of Object.entries({atob,btoa}))Object.defineProperty(WorkerGlobalScope.prototype,name,{value,writable:true,enumerable:true,configurable:true});\n" + domMatrixSurface + "\n" + strings.Replace(canvasStateSurface, "/* shared_canvas_paths */", canvasPathObservationsSurface, 1) + "\n" + webglObservationsSource() + "\n" + webgpuStateSurface + "\n" + fontFacesSurface + "\n}"
 }

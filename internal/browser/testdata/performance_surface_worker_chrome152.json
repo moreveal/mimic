@@ -1,0 +1,837 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "fixtureOrigin": "http://127.0.0.1:35738",
+  "fixture": "internal/browser/testdata/performance_surface_oracle.js",
+  "fixtureSHA256": "614a4b2e50cee208c6ca81a11fa7bf9d942e524dc0de20ffb9c9d0a96a1a8e0d",
+  "worker": true,
+  "result": {
+    "result": {
+      "type": "object",
+      "value": {
+        "Performance": {
+          "length": 0,
+          "parent": "EventTarget",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object Performance]",
+          "members": [
+            {
+              "key": "timeOrigin",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "onresourcetimingbufferfull",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": true,
+              "brand": "TypeError"
+            },
+            {
+              "key": "clearMarks",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "clearMeasures",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "clearResourceTimings",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "getEntries",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "getEntriesByName",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 1
+            },
+            {
+              "key": "getEntriesByType",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 1
+            },
+            {
+              "key": "mark",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 1
+            },
+            {
+              "key": "measure",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 1
+            },
+            {
+              "key": "setResourceTimingBufferSize",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 1
+            },
+            {
+              "key": "toJSON",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "now",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "PerformanceEntry": {
+          "length": 0,
+          "parent": "Object",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object PerformanceEntry]",
+          "members": [
+            {
+              "key": "name",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "entryType",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "startTime",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "duration",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "toJSON",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "navigationId",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "PerformanceMark": {
+          "length": 1,
+          "parent": "PerformanceEntry",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object PerformanceMark]",
+          "members": [
+            {
+              "key": "detail",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 1
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "PerformanceMeasure": {
+          "length": 0,
+          "parent": "PerformanceEntry",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object PerformanceMeasure]",
+          "members": [
+            {
+              "key": "detail",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "PerformanceResourceTiming": {
+          "length": 0,
+          "parent": "PerformanceEntry",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object PerformanceResourceTiming]",
+          "members": [
+            {
+              "key": "initiatorType",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "nextHopProtocol",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "deliveryType",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "workerStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "redirectStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "redirectEnd",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "fetchStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "domainLookupStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "domainLookupEnd",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "connectStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "connectEnd",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "secureConnectionStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "requestStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "responseStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "responseEnd",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "transferSize",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "encodedBodySize",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "decodedBodySize",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "serverTiming",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "renderBlockingStatus",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "responseStatus",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "contentType",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "contentEncoding",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "finalResponseHeadersStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "firstInterimResponseStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "toJSON",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "workerRouterEvaluationStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "workerCacheLookupStart",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "workerMatchedSourceType",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "workerFinalSourceType",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "PerformanceNavigationTiming": "undefined",
+        "PerformanceServerTiming": {
+          "length": 0,
+          "parent": "Object",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object PerformanceServerTiming]",
+          "members": [
+            {
+              "key": "name",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "duration",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "description",
+              "enumerable": true,
+              "configurable": true,
+              "get": true,
+              "set": false,
+              "brand": "TypeError"
+            },
+            {
+              "key": "toJSON",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "PerformanceObserver": {
+          "length": 1,
+          "parent": "Object",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object PerformanceObserver]",
+          "members": [
+            {
+              "key": "disconnect",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "observe",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "takeRecords",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 1
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "PerformanceObserverEntryList": {
+          "length": 0,
+          "parent": "Object",
+          "construct": "TypeError",
+          "call": "TypeError",
+          "tag": "[object PerformanceObserverEntryList]",
+          "members": [
+            {
+              "key": "getEntries",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "getEntriesByName",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 1
+            },
+            {
+              "key": "getEntriesByType",
+              "enumerable": true,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 1
+            },
+            {
+              "key": "constructor",
+              "enumerable": false,
+              "configurable": true,
+              "writable": true,
+              "kind": "function",
+              "length": 0
+            },
+            {
+              "key": "Symbol(Symbol.toStringTag)",
+              "enumerable": false,
+              "configurable": true,
+              "writable": false,
+              "kind": "string"
+            }
+          ]
+        },
+        "PerformanceTiming": "undefined",
+        "PerformanceNavigation": "undefined",
+        "MemoryInfo": "undefined",
+        "PerformanceEventTiming": "undefined",
+        "PerformanceLongTaskTiming": "undefined",
+        "TaskAttributionTiming": "undefined",
+        "PerformancePaintTiming": "undefined",
+        "PerformanceElementTiming": "undefined",
+        "LargestContentfulPaint": "undefined",
+        "LayoutShift": "undefined",
+        "LayoutShiftAttribution": "undefined",
+        "PerformanceLongAnimationFrameTiming": "undefined",
+        "PerformanceScriptTiming": "undefined",
+        "VisibilityStateEntry": "undefined",
+        "NotRestoredReasons": "undefined",
+        "NotRestoredReasonDetails": "undefined",
+        "PerformanceTimingConfidence": "undefined",
+        "PerformanceSoftNavigation": "undefined",
+        "InteractionContentfulPaint": "undefined",
+        "EventCounts": "undefined",
+        "performance": {
+          "same": true,
+          "tag": "[object Performance]",
+          "ownKeys": [],
+          "eventTarget": true,
+          "jsonKeys": [
+            "timeOrigin"
+          ],
+          "jsonOrigin": true,
+          "allSorted": true,
+          "supported": [
+            "mark",
+            "measure",
+            "resource"
+          ],
+          "supportedFrozen": true,
+          "supportedSame": true
+        },
+        "receiver:now": {
+          "forged": "TypeError",
+          "conversions": 0,
+          "proxy": "TypeError",
+          "missing": "ok",
+          "symbol": "ok"
+        },
+        "receiver:toJSON": {
+          "forged": "TypeError",
+          "conversions": 0,
+          "proxy": "TypeError",
+          "missing": "ok",
+          "symbol": "ok"
+        },
+        "receiver:getEntries": {
+          "forged": "TypeError",
+          "conversions": 0,
+          "proxy": "TypeError",
+          "missing": "ok",
+          "symbol": "ok"
+        },
+        "receiver:getEntriesByType": {
+          "forged": "TypeError",
+          "conversions": 0,
+          "proxy": "TypeError",
+          "missing": "TypeError",
+          "symbol": "TypeError"
+        },
+        "receiver:getEntriesByName": {
+          "forged": "TypeError",
+          "conversions": 0,
+          "proxy": "TypeError",
+          "missing": "TypeError",
+          "symbol": "TypeError"
+        },
+        "receiver:mark": {
+          "forged": "TypeError",
+          "conversions": 0,
+          "proxy": "TypeError",
+          "missing": "TypeError",
+          "symbol": "TypeError"
+        },
+        "receiver:measure": {
+          "forged": "TypeError",
+          "conversions": 0,
+          "proxy": "TypeError",
+          "missing": "TypeError",
+          "symbol": "TypeError"
+        },
+        "receiver:clearMarks": {
+          "forged": "TypeError",
+          "conversions": 0,
+          "proxy": "TypeError",
+          "missing": "ok",
+          "symbol": "TypeError"
+        },
+        "receiver:clearMeasures": {
+          "forged": "TypeError",
+          "conversions": 0,
+          "proxy": "TypeError",
+          "missing": "ok",
+          "symbol": "TypeError"
+        },
+        "receiver:clearResourceTimings": {
+          "forged": "TypeError",
+          "conversions": 0,
+          "proxy": "TypeError",
+          "missing": "ok",
+          "symbol": "ok"
+        },
+        "receiver:setResourceTimingBufferSize": {
+          "forged": "TypeError",
+          "conversions": 0,
+          "proxy": "TypeError",
+          "missing": "TypeError",
+          "symbol": "TypeError"
+        }
+      }
+    }
+  }
+}

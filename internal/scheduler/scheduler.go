@@ -89,6 +89,8 @@ type Scheduler struct {
 	paused             bool
 	closed             bool
 	observer           func(Transition)
+	taskObserver       func(time.Time, time.Time)
+	taskStarted        func()
 	runningAt          time.Time
 	runningBase        time.Time
 	runningTaskID      uint64
@@ -105,6 +107,16 @@ func New(start time.Time, checkpoint func(context.Context) error) *Scheduler {
 	return s
 }
 func (s *Scheduler) SetObserver(f func(Transition)) { s.mu.Lock(); s.observer = f; s.mu.Unlock() }
+
+// SetTaskObserver observes complete event-loop turns, including their microtask
+// checkpoints. It runs outside the clock mutex and never creates another loop.
+func (s *Scheduler) SetTaskObserver(f func(time.Time, time.Time)) {
+	s.mu.Lock()
+	s.taskObserver = f
+	s.mu.Unlock()
+}
+
+func (s *Scheduler) SetTaskStarted(f func()) { s.mu.Lock(); s.taskStarted = f; s.mu.Unlock() }
 
 // SetSequenceSource supplies an event-loop-local enqueue order shared by realm
 // queues. Configure it before posting tasks; standalone/worker queues use IDs.
@@ -294,12 +306,18 @@ func (s *Scheduler) beginExecution() {
 	s.mu.Lock()
 	s.runningBase = s.now
 	s.runningAt = monotime.Now()
+	started := s.taskStarted
 	s.mu.Unlock()
+	if started != nil {
+		started()
+	}
 }
 
 func (s *Scheduler) endExecution() {
 	s.mu.Lock()
+	start := s.runningBase
 	s.now = s.nowLocked()
+	end, observer := s.now, s.taskObserver
 	s.runningAt = time.Time{}
 	s.runningBase = time.Time{}
 	s.runningTaskID = 0
@@ -307,6 +325,9 @@ func (s *Scheduler) endExecution() {
 	s.runningPhase = ""
 	s.runningWebPriority, s.runningWebSignal = 1, 0
 	s.mu.Unlock()
+	if observer != nil && !start.IsZero() {
+		observer(start, end)
+	}
 }
 
 // RunReadyStep executes at most one task, including its microtask checkpoint.
@@ -443,7 +464,11 @@ func (s *Scheduler) beginTask(t *task) {
 	s.runningPhase = "callback"
 	s.runningBase = s.now
 	s.runningAt = monotime.Now()
+	started := s.taskStarted
 	s.mu.Unlock()
+	if started != nil {
+		started()
+	}
 }
 
 func (s *Scheduler) ExecutionStatus() ExecutionStatus {

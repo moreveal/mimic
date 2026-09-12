@@ -30,6 +30,7 @@ func TestWorkerFetchSharedSemantics(t *testing.T) {
 	}
 	_, err := runtime.RunString(`const calls=[],canceled=[];
  const __workerHost={token:()=>1,navigator:()=>({}),location:()=>({href:'https://example.test/dir/worker.js'}),isSecureContext:()=>true,
+ performance:operation=>{if(operation==='worker')return true;throw Error('Unexpected Performance operation: '+operation)},performanceInstallBuffer:()=>{},
  urlParts:parseURL,abortFetch:id=>canceled.push(id),fetch:(...args)=>{calls.push(args);return Promise.resolve({status:200,url:args[0],headers:{'content-type':'text/plain'},bodyBytes:[65,66]})}};`)
 	if err != nil {
 		t.Fatal(err)

@@ -1,0 +1,80 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "fixtureOrigin": "http://127.0.0.1:35324",
+  "fixture": "internal/browser/testdata/performance_buffers_oracle.js",
+  "fixtureSHA256": "62aeaf9a81b6419133b896663e203dd481a07b151f313d313e30be2a8aacde87",
+  "worker": false,
+  "result": {
+    "result": {
+      "type": "object",
+      "value": {
+        "grow": {
+          "events": [
+            "first",
+            "replacement",
+            "last"
+          ],
+          "buffer": 1,
+          "batches": [
+            {
+              "count": 1,
+              "dropped": 1
+            }
+          ]
+        },
+        "clear": {
+          "events": [
+            "first",
+            "clear",
+            "last"
+          ],
+          "buffer": 1,
+          "batches": [
+            {
+              "count": 1
+            }
+          ]
+        },
+        "drop": {
+          "events": [
+            "first",
+            "last"
+          ],
+          "buffer": 1,
+          "batches": [
+            {
+              "count": 1
+            }
+          ]
+        }
+      }
+    }
+  }
+}

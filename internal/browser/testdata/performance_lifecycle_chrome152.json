@@ -1,0 +1,194 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "fixtureOrigin": "http://127.0.0.1:47561",
+  "fixture": "internal/browser/testdata/performance_lifecycle_oracle.js",
+  "fixtureSHA256": "cf2edac4e476fd72758c8812e99305630e05861d838d07725f36aeb895528b01",
+  "worker": false,
+  "result": {
+    "result": {
+      "type": "object",
+      "value": {
+        "navigation": {
+          "keys": [
+            "name",
+            "entryType",
+            "startTime",
+            "duration",
+            "navigationId",
+            "initiatorType",
+            "deliveryType",
+            "nextHopProtocol",
+            "renderBlockingStatus",
+            "contentType",
+            "contentEncoding",
+            "workerStart",
+            "workerRouterEvaluationStart",
+            "workerCacheLookupStart",
+            "workerMatchedSourceType",
+            "workerFinalSourceType",
+            "redirectStart",
+            "redirectEnd",
+            "fetchStart",
+            "domainLookupStart",
+            "domainLookupEnd",
+            "connectStart",
+            "secureConnectionStart",
+            "connectEnd",
+            "requestStart",
+            "responseStart",
+            "firstInterimResponseStart",
+            "finalResponseHeadersStart",
+            "responseEnd",
+            "transferSize",
+            "encodedBodySize",
+            "decodedBodySize",
+            "responseStatus",
+            "serverTiming",
+            "unloadEventStart",
+            "unloadEventEnd",
+            "domInteractive",
+            "domContentLoadedEventStart",
+            "domContentLoadedEventEnd",
+            "domComplete",
+            "loadEventStart",
+            "loadEventEnd",
+            "type",
+            "redirectCount",
+            "activationStart",
+            "criticalCHRestart",
+            "notRestoredReasons",
+            "confidence"
+          ],
+          "identity": true,
+          "start": 0,
+          "duration": true,
+          "loadOrder": true,
+          "nowAfter": true,
+          "name": true,
+          "status": 200,
+          "type": "navigate",
+          "confidence": {
+            "brand": true,
+            "keys": [],
+            "rateRange": true,
+            "valueValid": true
+          },
+          "notRestored": null,
+          "activation": 0
+        },
+        "legacy": {
+          "origin": true,
+          "loadOrder": true,
+          "relative": true
+        },
+        "sameDocument": {
+          "entry": true,
+          "name": true,
+          "origin": true
+        },
+        "realm": {
+          "origin": true,
+          "clocks": true,
+          "markForeign": true,
+          "markLocal": false,
+          "identity": true,
+          "parentAbsent": true,
+          "arrayLocal": false,
+          "entryGetter": true
+        },
+        "reload": {
+          "performanceChanged": true,
+          "origin": true,
+          "type": "reload",
+          "marks": 0,
+          "retained": true
+        },
+        "filters": {
+          "longtask": 0,
+          "event": 0,
+          "paint": true,
+          "visibility": [
+            {
+              "name": "visible",
+              "type": "visibility-state",
+              "start": 0,
+              "brand": true
+            }
+          ]
+        },
+        "eventCounts": {
+          "same": true,
+          "tag": "[object EventCounts]",
+          "size": 36,
+          "keys": [
+            "pointerdown",
+            "touchend",
+            "input",
+            "keydown",
+            "mouseleave",
+            "mouseenter",
+            "drop",
+            "beforeinput",
+            "pointerenter",
+            "dragend",
+            "pointercancel",
+            "compositionupdate",
+            "mousedown",
+            "dragleave",
+            "dragover",
+            "mouseup",
+            "pointerover",
+            "lostpointercapture",
+            "mouseover",
+            "gotpointercapture",
+            "dblclick",
+            "keyup",
+            "keypress",
+            "pointerup",
+            "compositionstart",
+            "auxclick",
+            "dragstart",
+            "touchstart",
+            "compositionend",
+            "pointerout",
+            "dragenter",
+            "touchcancel",
+            "click",
+            "contextmenu",
+            "mouseout",
+            "pointerleave"
+          ],
+          "zero": true,
+          "interaction": 0
+        }
+      }
+    }
+  }
+}
