@@ -7,6 +7,24 @@ import (
 )
 
 func (r *Realm) installDocumentCompatibility(host map[string]any) {
+	// Resolved declarations exist only for nodes connected to a live browsing
+	// document. Visibility and display:none do not make that document inactive.
+	host["computedStyleAvailable"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		id := int64(numarg(args, 0))
+		if !r.document.IsConnected(id) {
+			return r.val(false), nil
+		}
+		root := r.document.OwnerDocumentID(id)
+		p := r.agent.Page()
+		p.mu.RLock()
+		defer p.mu.RUnlock()
+		for _, owner := range p.realmOwners {
+			if !owner.inactive && !owner.closed && owner.document.SharesNodeArena(r.document) && owner.document.Root().ID == root {
+				return r.val(true), nil
+			}
+		}
+		return r.val(false), nil
+	})
 	// DOM adoption changes a node's owner document, not the realm of its JS
 	// wrapper. Resolve browsing documents through their canonical realm before
 	// constructing a local inert-document wrapper from shared DOM node data.
