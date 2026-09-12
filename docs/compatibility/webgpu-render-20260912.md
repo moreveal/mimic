@@ -45,3 +45,11 @@ texture expiration require additional observations outside the tested cases.
 These limits are not classified as architectural impossibilities or as harmless
 environment variation. The saved-program continuation is closed; broader
 graphics groups retain their independent dispositions.
+
+The follow-up alpha oracle confirms that `premultiplied` canvas texture bytes
+already have premultiplied meaning; multiplying them again would be wrong. It
+compares both alpha modes, translucent and out-of-alpha-range colors, direct
+canvas and ImageBitmap copies. Unconfiguration retains the last materialized
+canvas snapshot, but does not promote an unread GPU texture to that snapshot.
+Reconfiguration and resizing clear the snapshot. Frozen controls and ordinary/
+restored regression cover both positive and no-prior-read cases.
