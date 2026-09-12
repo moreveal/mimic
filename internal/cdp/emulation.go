@@ -41,6 +41,8 @@ func (s *session) handleEmulation(method string, p map[string]any) (any, bool, e
 	case "Emulation.clearDeviceMetricsOverride":
 		s.page.ClearDeviceMetrics()
 		return empty, true, nil
+	case "Emulation.setFocusEmulationEnabled":
+		return empty, true, nil
 	case "Network.setUserAgentOverride", "Emulation.setUserAgentOverride":
 		o := &state.UserAgentOverride{UserAgent: stringValue(p["userAgent"]), Platform: stringValue(p["platform"])}
 		for _, lang := range strings.Split(stringValue(p["acceptLanguage"]), ",") {
@@ -90,6 +92,7 @@ func (s *session) handleEmulation(method string, p map[string]any) (any, bool, e
 				case "prefers-reduced-motion":
 					v := stringValue(f["value"]) == "reduce"
 					reduced = &v
+				case "forced-colors", "prefers-contrast":
 				default:
 					return nil, true, fmt.Errorf("Media feature %s is not supported", stringValue(f["name"]))
 				}

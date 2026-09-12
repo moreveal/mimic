@@ -250,6 +250,8 @@ func (s *session) handleTarget(m message, p map[string]any) (any, bool, error) {
 	switch m.Method {
 	case "Browser.getVersion":
 		return map[string]any{"protocolVersion": "1.3", "product": s.server.Browser.String(), "revision": s.server.Browser.Compatibility().Version().ChromiumCommit, "userAgent": s.page.Environment().Navigator().UserAgent, "jsVersion": "virtual"}, true, nil
+	case "Browser.setDownloadBehavior":
+		return empty, true, nil
 	case "Browser.close":
 		// Acknowledge before shutting down the transport carrying the reply.
 		s.reply(m.ID, empty, nil)
