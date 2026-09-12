@@ -37,6 +37,7 @@ func run() error {
 	pattern := flag.String("dynamic-segment", "", "optional private route regexp with one captured dynamic ID; explicit response substitution")
 	overrides := flag.String("body-overrides", "", "optional JSON map from fixture index to replacement body path, for separate instrumentation runs")
 	environmentOverlay := flag.String("environment-overlay", "", "optional partial Environment JSON for independently measured environment controls; recorded in replay provenance")
+	rebaseDates := flag.Bool("rebase-http-dates", false, "explicitly translate saved HTTP cache dates to replay wall time; preserve relative ages and record the shift")
 	deadline := flag.Duration("timeout", 60*time.Second, "bounded wall time")
 	steps := flag.Int("steps", 1600, "maximum scheduler advances")
 	sleep := flag.Duration("sleep", 20*time.Millisecond, "wall time between advances")
@@ -98,6 +99,13 @@ func run() error {
 	ctx, cancel := context.WithTimeout(context.Background(), *deadline)
 	defer cancel()
 	t := newReplay(c, cancel, segment, *maxRequests)
+	if *rebaseDates {
+		if c.CapturedAt.IsZero() {
+			return fmt.Errorf("HTTP date rebasing requires a captured timestamp")
+		}
+		shift := time.Now().UTC().Truncate(time.Second).Sub(c.CapturedAt.UTC().Truncate(time.Second))
+		t.httpDateShift = &shift
+	}
 	var bundle compatibility.Bundle = chrome.New()
 	if *environmentOverlay != "" {
 		data, err := os.ReadFile(*environmentOverlay)

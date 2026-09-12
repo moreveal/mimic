@@ -46,6 +46,14 @@ to these files, especially for native failure investigations.
 
 ## Optional diagnostic changes
 
+`-rebase-http-dates` translates Date, Expires and Last-Modified by one offset
+from the capture's first event time to replay wall time. Age, Cache-Control,
+relative expiry intervals, bodies and original files remain unchanged. Every
+served response records the offset. This opt-in environment control prevents
+the age of an archived capture from expiring otherwise fresh cache responses;
+it is not evidence of literal header equivalence. The unmodified run and its
+stopping boundary should be retained alongside a rebased comparison.
+
 Some captured programs embed a newly generated path identifier in a subsequent
 request. Exact matching intentionally fails in that case. A private replay may
 opt in to `-dynamic-segment '<regexp with exactly one captured ID>'`. The matched
