@@ -340,6 +340,7 @@ func (r *Realm) retryBootstrap(err error) error {
 	r.frameNodeDescribe = nil
 	r.inputDispatcher = nil
 	r.permissionNotifier = nil
+	r.trustedTypesEnforcer = nil
 	r.documentStreamReset = nil
 	r.documentStreamEvent = nil
 	r.messageReceiver = nil

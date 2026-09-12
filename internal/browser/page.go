@@ -12,7 +12,6 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/moreveal/mimic/compatibility"
-	"github.com/moreveal/mimic/internal/csp"
 	"github.com/moreveal/mimic/internal/dom"
 	"github.com/moreveal/mimic/internal/engine"
 	"github.com/moreveal/mimic/internal/network"
@@ -56,7 +55,6 @@ type Page struct {
 	historySequence    int
 	initScripts        []InitScript
 	sessionStorage     map[string]map[string]string
-	policy             csp.PolicySet
 	bypassCSP          bool
 	frames             map[string]*Frame
 	// retiredRealms keeps document realms alive until the browser task which
@@ -219,9 +217,11 @@ func (p *Page) runInitScripts(ctx context.Context, realm *Realm) {
 	}
 }
 func (p *Page) SetBypassCSP(bypass bool) { p.mu.Lock(); p.bypassCSP = bypass; p.mu.Unlock() }
-func (p *Page) allowsScript(resource *url.URL, inline, dynamic bool, nonce string) bool {
+func (r *Realm) allowsScript(resource *url.URL, inline, dynamic bool, nonce string) bool {
+	p := r.agent.Page()
+	policy, documentURL := r.contentPolicy(), r.documentURL()
 	p.mu.RLock()
-	bypass, policy, documentURL := p.bypassCSP, p.policy, p.current
+	bypass := p.bypassCSP
 	p.mu.RUnlock()
 	allowed, reason := true, "CSP bypass enabled"
 	if !bypass {
@@ -356,12 +356,7 @@ func (p *Page) navigateRequestWithHistory(ctx context.Context, raw, loaderID str
 		p.clock = responseTime
 	}
 	p.mu.Unlock()
-	doc, err := dom.Parse(string(res.Body))
-	if err != nil {
-		return err
-	}
-	navigationMetaPolicies := doc.MetaHTTPEquiv("content-security-policy")
-	doc, err = dom.Parse("")
+	doc, err := dom.Parse("")
 	if err != nil {
 		return err
 	}
@@ -386,6 +381,7 @@ func (p *Page) navigateRequestWithHistory(ctx context.Context, raw, loaderID str
 	if len(replace) > 1 && replace[1] {
 		realm.navigationType = "reload"
 	}
+	realm.policy = p.responseCSP(res.Headers)
 	realm.documentReferrer = res.Referrer
 	realm.referrerPolicy = res.Headers.Get("Referrer-Policy")
 	realm.lastModified, _ = http.ParseTime(res.Headers.Get("Last-Modified"))
@@ -458,9 +454,6 @@ func (p *Page) navigateRequestWithHistory(ctx context.Context, raw, loaderID str
 		p.history = append(p.history, entry)
 		p.historyIndex++
 	}
-	policies := append([]string(nil), res.Headers.Values("Content-Security-Policy")...)
-	policies = append(policies, navigationMetaPolicies...)
-	p.policy = csp.Parse(policies...)
 	p.mu.Unlock()
 	p.retireRealm(old)
 	p.trace.Add(trace.Lifecycle, "frameNavigated", map[string]any{"url": u.String(), "realm": realm.ID, "frameId": p.Top.ID, "loaderId": loaderID})
@@ -491,7 +484,7 @@ func (p *Page) navigateRequestWithHistory(ctx context.Context, raw, loaderID str
 				p.trace.Add(trace.Error, "scriptURL", map[string]any{"src": src, "error": err.Error()})
 				return nil
 			}
-			if !p.allowsScript(su, false, false, s.Nonce) {
+			if !realm.allowsScript(su, false, false, s.Nonce) {
 				return nil
 			}
 			request := realm.elementRequest(su, s.Attributes, network.Script)
@@ -529,7 +522,7 @@ func (p *Page) navigateRequestWithHistory(ctx context.Context, raw, loaderID str
 			}
 			code = string(rr.Body)
 			name = su.String()
-		} else if !p.allowsScript(nil, true, false, s.Nonce) {
+		} else if !realm.allowsScript(nil, true, false, s.Nonce) {
 			return nil
 		}
 		if kind == "module" {

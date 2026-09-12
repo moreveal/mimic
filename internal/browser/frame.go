@@ -378,6 +378,9 @@ func (r *Realm) commitChildFrameNavigation(ctx context.Context, navigation *chil
 		r.finishChildNavigation(navigation)
 		return err
 	}
+	if documentURL.Scheme != "about" {
+		realm.policy = r.agent.Page().responseCSP(res.Headers)
+	}
 	if navigation.navigationType != "" {
 		realm.navigationType = navigation.navigationType
 	}

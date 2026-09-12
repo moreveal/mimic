@@ -24,6 +24,7 @@ import (
 	"time"
 
 	"github.com/google/uuid"
+	"github.com/moreveal/mimic/internal/csp"
 	"github.com/moreveal/mimic/internal/dom"
 	"github.com/moreveal/mimic/internal/engine"
 	"github.com/moreveal/mimic/internal/network"
@@ -33,6 +34,11 @@ import (
 )
 
 type Realm struct {
+	policyMetaCursor         int64
+	policyMetaCandidates     []int64
+	policy                   csp.PolicySet
+	policyMeta               map[int64]string
+	trustedTypesEnforcer     engine.Value
 	debuggerFactory          engine.Value
 	debuggerBindings         map[string]bool
 	mainWorld                *Realm
@@ -270,6 +276,7 @@ func newRealmStateWithNavigation(p *Page, agent ExecutionAgent, d *dom.Document,
 	// about:blank inherits its creator's origin before installing realm state.
 	if frame, ok := agent.(*Frame); ok && frame.parent != nil && frame.parent.Realm != nil && u.Scheme == "about" && (u.Opaque == "blank" || u.Opaque == "srcdoc") {
 		r.origin = frame.parent.Realm.origin
+		r.policy = append(csp.PolicySet(nil), frame.parent.Realm.contentPolicy()...)
 	}
 	r.initializeClientHints(policyHeader)
 	r.updateSelectorTarget(u.Fragment)
@@ -1645,6 +1652,9 @@ func (r *Realm) installBindings() error {
 			}
 		}
 		r.childFrameAttributeChanged(id, name)
+		if node, ok := r.document.Get(id); ok && node.TagName == "META" {
+			r.refreshContentPolicy()
+		}
 		return nil, nil
 	}, "nss")
 	host["removeAttribute"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
@@ -1710,6 +1720,10 @@ func (r *Realm) installBindings() error {
 			return nil, err
 		}
 		delete(r.detached, child)
+		r.refreshContentPolicy()
+		if err := r.prepareInsertedScripts(int64(numarg(a, 0)), child); err != nil {
+			return nil, err
+		}
 		return r.val(r.document.HasFrameElements()), nil
 	}, "nnn")
 	host["contains"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
@@ -1795,7 +1809,11 @@ func (r *Realm) installBindings() error {
 		return nil, r.document.SetCharacterDataJSON(int64(numarg(a, 0)), strarg(a, 1))
 	}, "ns")
 	host["setTextContent"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		return nil, r.document.SetTextContent(int64(numarg(a, 0)), strarg(a, 1))
+		id := int64(numarg(a, 0))
+		if err := r.document.SetTextContent(id, strarg(a, 1)); err != nil {
+			return nil, err
+		}
+		return nil, r.prepareChangedScript(id)
 	})
 	host["innerHTML"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		value, err := r.document.InnerHTML(int64(numarg(a, 0)))
@@ -1814,7 +1832,11 @@ func (r *Realm) installBindings() error {
 		return r.val(name), err
 	})
 	host["setInnerHTML"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		return nil, r.document.SetInnerHTML(int64(numarg(a, 0)), strarg(a, 1))
+		id := int64(numarg(a, 0))
+		if err := r.document.SetInnerHTML(id, strarg(a, 1)); err != nil {
+			return nil, err
+		}
+		return nil, r.prepareChangedScript(id)
 	})
 	host["elementNonce"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		id := int64(numarg(a, 0))
@@ -2094,6 +2116,7 @@ func (r *Realm) installBindings() error {
 	r.installDocumentCompatibility(host)
 	r.installTextMetrics(host)
 	r.installImageResources(host)
+	r.installTrustedTypes(host)
 	r.installProtocolInput(host)
 	addStorageHosts(r, host)
 	addCapabilityHosts(r, host)
@@ -2497,6 +2520,20 @@ func (r *Realm) hostInsertArgs(a []engine.Value, hasBefore bool) (engine.Value, 
 		return nil, err
 	}
 	delete(r.detached, childID)
+	r.refreshContentPolicy()
+	loadCallback, errorCallback := engine.Value(nil), engine.Value(nil)
+	if len(a) > callbackOffset {
+		loadCallback = a[callbackOffset]
+	}
+	if len(a) > callbackOffset+1 {
+		errorCallback = a[callbackOffset+1]
+	}
+	return r.prepareConnectedResource(childID, loadCallback, errorCallback)
+}
+
+// Preparation consumes canonical node state after a mutation. Source setters,
+// Text-node insertion and nested script insertion must share the same check.
+func (r *Realm) prepareConnectedResource(childID int64, loadCallback, errorCallback engine.Value) (engine.Value, error) {
 	if !r.document.IsConnected(childID) {
 		return nil, nil
 	}
@@ -2522,15 +2559,16 @@ func (r *Realm) hostInsertArgs(a []engine.Value, hasBefore bool) (engine.Value, 
 			return nil, nil
 		}
 		r.document.MarkScriptStarted(childID)
+		if (src == "" || src == "<nil>") && node.ScriptText != code && r.contentPolicy().TrustedTypes().Required {
+			converted, err := r.runtime.Call(context.Background(), r.trustedTypesEnforcer, nil, r.val(code), r.val("TrustedScript"), r.val("HTMLScriptElement text"), r.val(""))
+			if err != nil {
+				r.agent.Page().trace.Add(trace.CSP, "trustedScriptBlocked", map[string]any{"realm": r.ID, "nodeId": childID, "error": err.Error()})
+				return nil, nil
+			}
+			code = converted.String()
+		}
 	}
 	nonce := node.Nonce
-	loadCallback, errorCallback := engine.Value(nil), engine.Value(nil)
-	if len(a) > callbackOffset {
-		loadCallback = a[callbackOffset]
-	}
-	if len(a) > callbackOffset+1 {
-		errorCallback = a[callbackOffset+1]
-	}
 	fire := func(ctx context.Context, callback engine.Value) error {
 		if callback == nil || callback.String() == "undefined" {
 			return nil
@@ -2612,7 +2650,7 @@ func (r *Realm) hostInsertArgs(a []engine.Value, hasBefore bool) (engine.Value, 
 			}
 			code = string(res.Body)
 			name = u.String()
-		} else if tag == "SCRIPT" && !r.agent.Page().allowsScript(nil, true, true, nonce) {
+		} else if tag == "SCRIPT" && !r.allowsScript(nil, true, true, nonce) {
 			return nil
 		}
 		if tag == "SCRIPT" && code != "" {
@@ -2640,6 +2678,9 @@ func (r *Realm) hostInsertArgs(a []engine.Value, hasBefore bool) (engine.Value, 
 		return fire(ctx, loadCallback)
 	}
 	if src == "" || src == "<nil>" {
+		if tag == "SCRIPT" {
+			return nil, resourceTask(context.Background(), nil, nil)
+		}
 		r.scheduler.Post(scheduler.DOM, 0, func(ctx context.Context) error {
 			return resourceTask(ctx, nil, nil)
 		})
@@ -2652,7 +2693,7 @@ func (r *Realm) hostInsertArgs(a []engine.Value, hasBefore bool) (engine.Value, 
 		}
 		return nil, err
 	}
-	if tag == "SCRIPT" && !r.agent.Page().allowsScript(u, false, true, nonce) {
+	if tag == "SCRIPT" && !r.allowsScript(u, false, true, nonce) {
 		if blocksLoad {
 			r.endLoadBlocker(blockerReason)
 		}

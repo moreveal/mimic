@@ -307,13 +307,12 @@ const compatibilityElementState={};
     const adjacentHTML=Element.prototype.insertAdjacentHTML;
     member(Element.prototype,'insertAdjacentHTML',function(position,text){
       if(arguments.length<2)return adjacentHTML.apply(this,arguments);
-      position=String(position).toLowerCase();text=String(text);
+      position=bindingString(position).toLowerCase();
       const parent=position==='beforebegin'||position==='afterend'?this.parentNode:this;
       return markupMutation(parent,null,()=>adjacentHTML.call(this,position,text));
     });
     const outerHTML=Object.getOwnPropertyDescriptor(Element.prototype,'outerHTML');
     Object.defineProperty(Element.prototype,'outerHTML',{...outerHTML,set(value){
-      value=value==null?'':String(value);
       return markupMutation(this.parentNode,this,()=>outerHTML.set.call(this,value));
     }});
     const convertMutationNodes=values=>{
@@ -417,7 +416,7 @@ const compatibilityElementState={};
     Object.defineProperty(Node.prototype,'getRootNode',{value:function(options={}){let node=this;while(node.parentNode)node=node.parentNode;if(options.composed&&node instanceof ShadowRoot)return node.host.getRootNode(options);return node},writable:true,configurable:true,enumerable:true});
     Object.defineProperty(Node.prototype,'cloneNode',{value:function(deep=false){
       let copy;
-      if(this.nodeType===1){copy=this.namespaceURI&&this.namespaceURI!=='http://www.w3.org/1999/xhtml'?document.createElementNS(this.namespaceURI,this.localName):document.createElement(this.localName);for(const name of this.getAttributeNames()){const attr=this.getAttributeNode(name);if(attr.namespaceURI)copy.setAttributeNS(attr.namespaceURI,name,attr.value);else copy.setAttribute(name,attr.value)}if(this.hasAttribute('style'))host.copyInlineStyle(elementSlot(this).nodeId,elementSlot(copy).nodeId)}
+      if(this.nodeType===1){copy=this.namespaceURI&&this.namespaceURI!=='http://www.w3.org/1999/xhtml'?document.createElementNS(this.namespaceURI,this.localName):document.createElement(this.localName);for(const name of this.getAttributeNames()){const attr=this.getAttributeNode(name);if(attr.namespaceURI)copy.setAttributeNS(attr.namespaceURI,name,trustedCloneAttribute(this,name,attr.value,attr.namespaceURI));else copy.setAttribute(name,trustedCloneAttribute(this,name,attr.value,''))}if(this.hasAttribute('style'))host.copyInlineStyle(elementSlot(this).nodeId,elementSlot(copy).nodeId)}
       else if(this.nodeType===3)copy=document.createTextNode(this.textContent);
       else if(this.nodeType===8)copy=document.createComment(this.textContent);
       else if(this.nodeType===11)copy=document.createDocumentFragment();

@@ -51,7 +51,7 @@ const attributeCompatibility=(()=>{
   member(Element.prototype,'removeAttributeNS',function(namespace,local){const name=nsName(this,namespace,local);if(name)this.removeAttribute(name)});
   member(Element.prototype,'setAttributeNS',function(namespace,name,value){
     if(!(this instanceof Element))throw new TypeError('Illegal invocation');if(arguments.length<3)throw new TypeError('Not enough arguments');
-    namespace=namespace==null?'':String(namespace);name=String(name);value=String(value);
+    namespace=namespace==null?'':String(namespace);name=String(name);value=trustedAttributeValue(this,namespace?name.split(':').at(-1):name,value,namespace,"Failed to execute 'setAttributeNS' on 'Element': ");
     if(!/^[A-Za-z_:][A-Za-z0-9_.:\-]*$/.test(name)&&!/^[\p{L}_:][\p{L}\p{N}_.:\-\u00b7\p{M}]*$/u.test(name))throw new DOMException('Invalid XML name','InvalidCharacterError');
     const prefix=name.includes(':')?name.split(':')[0]:null;
     if(prefix&&!namespace||prefix==='xml'&&namespace!=='http://www.w3.org/XML/1998/namespace'||(name==='xmlns'||prefix==='xmlns')&&namespace!=='http://www.w3.org/2000/xmlns/'||namespace==='http://www.w3.org/2000/xmlns/'&&name!=='xmlns'&&prefix!=='xmlns')throw new DOMException('Invalid namespace','NamespaceError');
@@ -87,7 +87,7 @@ const attributeCompatibility=(()=>{
   accessor(globalThis.Attr.prototype,'ownerElement',function(){const value=state(this);if(value.owner&&!value.owner.hasAttribute(value.name)){cache(value.owner).delete(value.name);detach(this)}return value.owner});
   accessor(globalThis.Attr.prototype,'ownerDocument',function(){const value=state(this);return value.owner?value.owner.ownerDocument:value.document});
   const read=function(){const value=state(this);return value.owner?value.owner.getAttribute(value.name)??value.value:value.value};
-  const write=function(input){const value=state(this),text=bindingString(input);if(value.owner)value.owner.setAttribute(value.name,text);else value.value=text};
+  const write=function(input){const value=state(this),text=bindingString(input);if(value.owner){const approved=trustedAttributeValue(value.owner,value.name,text,value.namespace,"Failed to set the 'value' property on 'Attr': "),kind=trustedAttributeInfo(value.owner.localName,value.name,value.owner.namespaceURI,value.namespace)?.[0];value.owner.setAttribute(value.name,kind?trustedValue(trustedConstructors[kind],approved):approved)}else value.value=text};
   accessor(globalThis.Attr.prototype,'value',read,write);
   for(const name of ['nodeValue','textContent'])accessor(globalThis.Attr.prototype,name,read,function(value){write.call(this,value==null?'':value)});
   member(globalThis.Attr.prototype,'cloneNode',function(){const value=state(this);return create(value.name,this.value,this.ownerDocument,null,value.namespace)});
@@ -106,9 +106,12 @@ const attributeCompatibility=(()=>{
     if(!(this instanceof Element))throw new TypeError('Illegal invocation');if(!slots.has(attr))throw new TypeError('Parameter is not an Attr');
     const value=state(attr);if(value.owner&&value.owner!==this)throw new DOMException('Attribute is already in use','InUseAttributeError');
     const previous=get(this,value.name);if(previous===attr)return attr;
+    const approved=trustedAttributeValue(this,value.namespace?value.name.split(':').at(-1):value.name,value.value,value.namespace,"Failed to execute 'setAttributeNode' on 'Element': "),kind=trustedAttributeInfo(this.localName,value.namespace?value.name.split(':').at(-1):value.name,this.namespaceURI,value.namespace)?.[0];
+    value.value=approved;
     if(previous)detach(previous);
-    value.document=this.ownerDocument;value.owner=this;cache(this).set(value.name,attr);if(value.namespace)this.setAttributeNS(value.namespace,value.name,value.value);else this.setAttribute(value.name,value.value);return previous;
+    value.document=this.ownerDocument;value.owner=this;cache(this).set(value.name,attr);if(value.namespace)this.setAttributeNS(value.namespace,value.name,kind?trustedValue(trustedConstructors[kind],approved):approved);else this.setAttribute(value.name,kind?trustedValue(trustedConstructors[kind],approved):approved);return previous;
   });
+  member(Element.prototype,'setAttributeNodeNS',function(attr){return this.setAttributeNode(attr)});
   // Attr inherits these bindings from Node. Select its private state here so
   // borrowing Node accessors and changing public prototypes preserve semantics.
   for(const name of ['nodeName','nodeType','nodeValue','ownerDocument','parentNode','parentElement','textContent']){
