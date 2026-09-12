@@ -1,0 +1,143 @@
+{
+  "head": "71c080c",
+  "binarySha256": "5bca553b8665bfb8883644b79b7e2a009f5428665f9c8611743e278f6164a803",
+  "packetPairsPerRun": 10,
+  "rows": 1499,
+  "differentRowsA": 416,
+  "differentFieldsA": 68,
+  "repeatStableDifferentRows": 73,
+  "targets": [
+    {
+      "pair": 2,
+      "field": "OjmeV1",
+      "chromeEqualA": false,
+      "chromeEqualB": false,
+      "differentIndicesA": [
+        "75"
+      ],
+      "differentIndicesB": [
+        "75"
+      ]
+    },
+    {
+      "pair": 2,
+      "field": "IGBuA2",
+      "chromeEqualA": true,
+      "chromeEqualB": true
+    },
+    {
+      "pair": 2,
+      "field": "oHIQ6",
+      "chromeEqualA": true,
+      "chromeEqualB": true
+    },
+    {
+      "pair": 2,
+      "field": "BMnw0",
+      "chromeEqualA": true,
+      "chromeEqualB": true
+    },
+    {
+      "pair": 2,
+      "field": "UYbIv2",
+      "chromeEqualA": true,
+      "chromeEqualB": true
+    },
+    {
+      "pair": 2,
+      "field": "knVv1",
+      "chromeEqualA": true,
+      "chromeEqualB": true
+    },
+    {
+      "pair": 2,
+      "field": "xWWV8",
+      "chromeEqualA": false,
+      "chromeEqualB": false
+    },
+    {
+      "pair": 2,
+      "field": "SbVZ3",
+      "chromeEqualA": true,
+      "chromeEqualB": true
+    },
+    {
+      "pair": 2,
+      "field": "MlWrD5",
+      "chromeEqualA": true,
+      "chromeEqualB": true
+    },
+    {
+      "pair": 6,
+      "field": "MlWrD5",
+      "chromeEqualA": true,
+      "chromeEqualB": true
+    },
+    {
+      "pair": 6,
+      "field": "SbVZ3",
+      "chromeEqualA": true,
+      "chromeEqualB": true
+    },
+    {
+      "pair": 6,
+      "field": "IGBuA2",
+      "chromeEqualA": true,
+      "chromeEqualB": true
+    },
+    {
+      "pair": 6,
+      "field": "oHIQ6",
+      "chromeEqualA": true,
+      "chromeEqualB": true
+    },
+    {
+      "pair": 6,
+      "field": "BMnw0",
+      "chromeEqualA": true,
+      "chromeEqualB": true
+    },
+    {
+      "pair": 6,
+      "field": "UYbIv2",
+      "chromeEqualA": true,
+      "chromeEqualB": true
+    },
+    {
+      "pair": 6,
+      "field": "knVv1",
+      "chromeEqualA": true,
+      "chromeEqualB": true
+    },
+    {
+      "pair": 6,
+      "field": "xWWV8",
+      "chromeEqualA": false,
+      "chromeEqualB": false
+    },
+    {
+      "pair": 6,
+      "field": "OjmeV1",
+      "chromeEqualA": false,
+      "chromeEqualB": false,
+      "differentIndicesA": [
+        "75"
+      ],
+      "differentIndicesB": [
+        "75"
+      ]
+    }
+  ],
+  "newRepeatStableDifferencesVsPreviousPackage": [
+    {
+      "pair": 2,
+      "block": "13",
+      "field": "OjmeV1"
+    },
+    {
+      "pair": 2,
+      "block": "5",
+      "field": "hCfV6"
+    }
+  ]
+}
