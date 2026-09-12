@@ -88,30 +88,18 @@ func (p *Page) DispatchProtocolInput(ctx context.Context, method string, params 
 	defer func() { p.realmEvaluationDepth--; p.collectRealmOwners() }()
 	return r.scheduler.RunInline(ctx, func(ctx context.Context) error {
 		target := r
-		nodeID := int64(0)
 		if operation == "mouse" {
-			if hinted := int64(numberValue(params["_mimicNodeId"])); hinted != 0 {
-				if frame, ok := p.FrameForDOMNode(hinted); ok && frame.Realm != nil {
-					target, nodeID = frame.Realm, hinted
-					params["x"], params["y"] = params["_mimicLocalX"], params["_mimicLocalY"]
-				}
-			}
-			delete(params, "_mimicNodeId")
-			delete(params, "_mimicLocalX")
-			delete(params, "_mimicLocalY")
-			if nodeID == 0 {
-				var err error
-				target, params, err = p.mouseInputTarget(ctx, target, params)
-				if err != nil {
-					return err
-				}
+			var err error
+			target, params, err = p.mouseInputTarget(ctx, target, params)
+			if err != nil {
+				return err
 			}
 			encoded, err = json.Marshal(params)
 			if err != nil {
 				return err
 			}
 		}
-		_, err := r.invokeInputWorld(ctx, target, nodeID, operation, string(encoded))
+		_, err := r.invokeInputWorld(ctx, target, 0, operation, string(encoded))
 		return err
 	})
 }
@@ -213,6 +201,10 @@ func (r *Realm) invokeInputWorld(ctx context.Context, target *Realm, nodeID int6
 }
 
 func (r *Realm) installProtocolInput(host map[string]any) {
+	host["invalidateStyleObservations"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		r.document.InvalidateObservations()
+		return nil, nil
+	})
 	host["allowContentEventHandler"] = r.transientFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		page := r.agent.Page()
 		allowed := page.cspBypassed() || r.contentPolicy().AllowsEventHandler(strarg(args, 0))

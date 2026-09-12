@@ -25,6 +25,64 @@ func TestCSSBoxStateIsCompleteDuringRecursiveComputedStyle(t *testing.T) {
 	})
 }
 
+func TestCSSAncestorTransformMovesDescendantClientRect(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, page *Page) {
+		navigateCapabilityFixture(t, page)
+		result, err := page.Evaluate(context.Background(), `(()=>{
+document.body.style.margin='0';document.body.innerHTML='<div id="parent" style="position:fixed;left:0;top:0;width:100px;height:100px;transform:translateX(-260px)"><div id="child" style="width:50px;height:40px"></div></div>';
+const parent=document.getElementById('parent').getBoundingClientRect(),child=document.getElementById('child').getBoundingClientRect();
+return JSON.stringify([parent.x,parent.y,child.x,child.y,child.width,child.height,document.elementFromPoint(10,10)?.id||''])
+})()`)
+		const want = `[-260,0,-260,0,50,40,""]`
+		if err != nil || result != want {
+			t.Fatalf("ancestor transform geometry: %#v want %#v, err=%v", result, want, err)
+		}
+	})
+}
+
+func TestCSSRowFlexItemsUseIntrinsicBasisAndShrink(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, page *Page) {
+		navigateCapabilityFixture(t, page)
+		result, err := page.Evaluate(context.Background(), `(()=>{
+document.body.style.margin='0';document.body.innerHTML='<div id="row" style="display:flex;width:300px"><div class="item" style="display:inline-flex"><span style="display:block;width:200px;height:10px"></span></div><div class="item" style="display:inline-flex"><span style="display:block;width:200px;height:10px"></span></div><div class="item" style="display:inline-flex"><span style="display:block;width:200px;height:10px"></span></div></div>';
+return JSON.stringify(Array.from(document.querySelectorAll('.item'),item=>{const r=item.getBoundingClientRect();return [r.x,r.width]}))
+})()`)
+		const want = `[[0,100],[100,100],[200,100]]`
+		if err != nil || result != want {
+			t.Fatalf("row flex sizing: %v want %s, err=%v", result, want, err)
+		}
+	})
+}
+
+func TestCSSRowFlexAutoMarginConsumesRemainingSpace(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, page *Page) {
+		navigateCapabilityFixture(t, page)
+		result, err := page.Evaluate(context.Background(), `(()=>{
+document.body.style.margin='0';document.body.innerHTML='<div style="display:flex;width:300px"><div id="start" style="display:inline-flex"><span style="display:block;width:100px;height:10px"></span></div><div id="end" style="display:inline-flex;margin-left:auto"><span style="display:block;width:40px;height:10px"></span></div></div>';
+const start=document.getElementById('start').getBoundingClientRect(),end=document.getElementById('end').getBoundingClientRect();
+return JSON.stringify([[start.x,start.width],[end.x,end.width]])
+})()`)
+		const want = `[[0,100],[260,40]]`
+		if err != nil || result != want {
+			t.Fatalf("row flex auto margin: %v want %s, err=%v", result, want, err)
+		}
+	})
+}
+
+func TestCSSNestedFlexIntrinsicBorderBox(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, page *Page) {
+		navigateCapabilityFixture(t, page)
+		result, err := page.Evaluate(context.Background(), `(()=>{
+document.body.style.margin='0';document.body.innerHTML='<div style="display:flex;width:300px"><div id="group" style="display:inline-flex;margin-left:auto"><div id="a" style="display:flex;box-sizing:border-box;padding:0 calc(10px)"><span style="width:40px;height:10px;display:block"></span></div><div id="b" style="display:flex;box-sizing:border-box;padding:0 10px"><span style="width:60px;height:10px;display:block"></span></div></div></div>';
+return JSON.stringify(['group','a','b'].map(id=>{const r=document.getElementById(id).getBoundingClientRect();return [r.x,r.width]}));
+})()`)
+		const want = `[[160,140],[160,60],[220,80]]`
+		if err != nil || result != want {
+			t.Fatalf("nested flex border box: %v want %s, err=%v", result, want, err)
+		}
+	})
+}
+
 func TestCSSComputedCatalogMatchesFrozenChrome(t *testing.T) {
 	for _, name := range []string{"css_geometry_integration", "css_geometry_audit", "css_details_query", "css_foreign_owner", "css_shadow_inheritance", "css_line_rounding", "css_wrapper_flow", "css_specified_values", "css_zero_font", "css_computed_initial", "css_computed_catalog", "css_computed_dynamic"} {
 		t.Run(name, func(t *testing.T) {

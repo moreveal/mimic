@@ -51,6 +51,8 @@ type Engine struct {
 	faces            map[string]*loaded
 	bytes            int
 	missingCoverage  map[coverageKey]struct{}
+	shapeScratch     *harfbuzz.Buffer
+	shapePlans       map[shapePlanKey]struct{}
 }
 
 func New() *Engine {
@@ -311,16 +313,32 @@ func (e *Engine) Shape(text, families string, size, weight float64, italic, noKe
 	return e.ShapeWithFonts(text, families, size, weight, italic, noKern, noLigatures, nil)
 }
 func (e *Engine) ShapeWithFonts(text, families string, size, weight float64, italic, noKern, noLigatures bool, choices []FontReference) (Result, error) {
-	return e.shapeWithFonts(text, families, size, weight, italic, noKern, noLigatures, choices, false)
+	return e.shapeWithFonts(text, families, size, weight, italic, noKern, noLigatures, choices, false, nil)
 }
 
 // ShapeCanvasWithFonts also evaluates TrueType vertical hinting for observable
 // ink bounds. DOM line boxes and SVG advances do not need this extra work.
 func (e *Engine) ShapeCanvasWithFonts(text, families string, size, weight float64, italic, noKern, noLigatures bool, choices []FontReference) (Result, error) {
-	return e.shapeWithFonts(text, families, size, weight, italic, noKern, noLigatures, choices, true)
+	return e.shapeWithFonts(text, families, size, weight, italic, noKern, noLigatures, choices, true, nil)
 }
 
-func (e *Engine) shapeWithFonts(text, families string, size, weight float64, italic, noKern, noLigatures bool, choices []FontReference, hintInk bool) (Result, error) {
+// Metrics is the DOM line-box projection. It has no glyph storage or ink bounds.
+type Metrics struct {
+	Advance float64 `json:"advance"`
+	Ascent  float64 `json:"ascent"`
+	Descent float64 `json:"descent"`
+	LineGap float64 `json:"lineGap"`
+}
+
+// MeasureWithFonts uses the same font selection, clusters and HarfBuzz shaping
+// as ShapeWithFonts, but skips unobserved glyph records and ink extents.
+func (e *Engine) MeasureWithFonts(text, families string, size, weight float64, italic, noKern, noLigatures bool, choices []FontReference) (Metrics, error) {
+	var metrics Metrics
+	_, err := e.shapeWithFonts(text, families, size, weight, italic, noKern, noLigatures, choices, false, &metrics)
+	return metrics, err
+}
+
+func (e *Engine) shapeWithFonts(text, families string, size, weight float64, italic, noKern, noLigatures bool, choices []FontReference, hintInk bool, aggregate *Metrics) (Result, error) {
 	if !finite(size) || size <= 0 || size > 4096 || !finite(weight) {
 		return Result{}, fmt.Errorf("unsupported font size or weight")
 	}
@@ -367,7 +385,11 @@ func (e *Engine) shapeWithFonts(text, families string, size, weight float64, ita
 		}
 	}
 	var features []harfbuzz.Feature
-	for name, disabled := range map[string]bool{"kern": noKern, "liga": noLigatures, "clig": noLigatures} {
+	for i, name := range [...]string{"kern", "liga", "clig"} {
+		disabled := noLigatures
+		if i == 0 {
+			disabled = noKern
+		}
 		if disabled {
 			feature, _ := harfbuzz.ParseFeature(name + "=0")
 			features = append(features, feature)
@@ -377,17 +399,24 @@ func (e *Engine) shapeWithFonts(text, families string, size, weight float64, ita
 	result := Result{Glyphs: []Glyph{}, Ascent: math.Round(f.ascent * primaryScale), Descent: math.Round(f.descent * primaryScale), LineGap: math.Round(f.lineGap * primaryScale), XHeight: float64(f.face.LineMetric(font.XHeight)) * primaryScale, Family: r.family}
 	result.EmAscent = f.emAscent * primaryScale
 	result.EmDescent = f.emDescent * primaryScale
+	if aggregate != nil {
+		aggregate.Ascent, aggregate.Descent, aggregate.LineGap = result.Ascent, result.Descent, result.LineGap
+	}
 	for _, run := range runs {
-		buffer := harfbuzz.NewBuffer()
-		buffer.AddRunes(runes, run.start, run.end-run.start)
-		buffer.GuessSegmentProperties()
+		buffer := e.shapingBuffer(runes, run.start, run.end, run.face, noKern, noLigatures)
 		if buffer.Props.Direction != harfbuzz.LeftToRight {
+			buffer.Clear()
 			return Result{}, fmt.Errorf("non-LTR shaping is unsupported")
 		}
 		buffer.Shape(run.face.shaper, features)
 		scale := size / float64(run.face.face.Upem())
 		for i, info := range buffer.Info {
 			p := buffer.Pos[i]
+			if aggregate != nil {
+				// Preserve the full result's left-to-right floating-point sum.
+				aggregate.Advance += float64(p.XAdvance) * scale
+				continue
+			}
 			g := Glyph{Cluster: info.Cluster, Advance: float64(p.XAdvance) * scale, XOffset: float64(p.XOffset) * scale, YOffset: -float64(p.YOffset) * scale}
 			if bounds, ok := run.face.face.GlyphExtents(info.Glyph); ok && bounds.Width != 0 && bounds.Height != 0 {
 				g.Ink = true
@@ -406,6 +435,9 @@ func (e *Engine) shapeWithFonts(text, families string, size, weight float64, ita
 			}
 			result.Glyphs = append(result.Glyphs, g)
 		}
+		// Clear author text immediately, retaining only bounded scratch storage
+		// and immutable shaping plans. Large runs never enter the scratch cache.
+		buffer.Clear()
 	}
 	return result, nil
 }

@@ -5,8 +5,10 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/gorilla/websocket"
 	"github.com/moreveal/mimic/internal/browser"
@@ -17,16 +19,17 @@ import (
 // Page binding and its own domain/Runtime state. Flattened and legacy sessions
 // share the same registry and write lock; command IDs are scoped to a session.
 type connection struct {
-	server   *Server
-	conn     *websocket.Conn
-	ctx      context.Context
-	cancel   context.CancelFunc
-	writeMu  sync.Mutex
-	mu       sync.RWMutex
-	root     *session
-	sessions map[string]*session
-	contexts map[string]bool
-	work     sync.WaitGroup
+	profileCommands bool
+	server          *Server
+	conn            *websocket.Conn
+	ctx             context.Context
+	cancel          context.CancelFunc
+	writeMu         sync.Mutex
+	mu              sync.RWMutex
+	root            *session
+	sessions        map[string]*session
+	contexts        map[string]bool
+	work            sync.WaitGroup
 }
 
 func (s *Server) ws(w http.ResponseWriter, r *http.Request) {
@@ -45,7 +48,7 @@ func (s *Server) ws(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	ctx, cancel := context.WithCancel(context.Background())
-	c := &connection{server: s, conn: conn, ctx: ctx, cancel: cancel, sessions: make(map[string]*session), contexts: make(map[string]bool)}
+	c := &connection{server: s, conn: conn, ctx: ctx, cancel: cancel, sessions: make(map[string]*session), contexts: make(map[string]bool), profileCommands: os.Getenv("MIMIC_PROFILE_CDP") == "1"}
 	s.lifecycleMu.Lock()
 	if s.closed {
 		s.lifecycleMu.Unlock()
@@ -135,11 +138,41 @@ func (c *connection) snapshot() []*session {
 }
 
 func (c *connection) dispatch(s *session, m message) {
+	if c.profileCommands {
+		m.timing = &commandTiming{queued: time.Now()}
+		s.commandTimings.Store(m.ID, m.timing)
+	}
+	// A mutex inside the worker excludes concurrent execution but does not
+	// preserve arrival order. Reserve input order on the reader before starting
+	// workers: Playwright pipelines move/down/up and key sequences. Other commands
+	// (including cancellation/interception) and other sessions remain independent.
+	// Legacy envelopes must enqueue their inner messages in wire order too.
+	var previous <-chan struct{}
+	var finished chan struct{}
+	if strings.HasPrefix(m.Method, "Input.") || m.Method == "Target.sendMessageToTarget" {
+		s.inputOrderMu.Lock()
+		previous = s.inputTail
+		finished = make(chan struct{})
+		s.inputTail = finished
+		s.inputOrderMu.Unlock()
+	}
 	c.work.Add(1)
 	go func() {
 		defer c.work.Done()
+		if finished != nil {
+			defer close(finished)
+			if previous != nil {
+				select {
+				case <-previous:
+				case <-s.ctx.Done():
+				}
+			}
+		}
 		if s.ctx.Err() != nil {
 			s.reply(m.ID, nil, fmt.Errorf("Session closed"))
+			if m.timing != nil {
+				s.commandTimings.Delete(m.ID)
+			}
 			return
 		}
 		s.handle(m)
@@ -147,32 +180,72 @@ func (c *connection) dispatch(s *session, m message) {
 }
 
 func (c *connection) write(v any) {
+	c.writeTimed(v, nil)
+}
+
+func (c *connection) writeTimed(v any, timing *commandTiming) {
+	var started time.Time
+	if timing != nil {
+		started = time.Now()
+	}
 	payload, err := json.Marshal(v)
+	if timing != nil {
+		timing.serialize += time.Since(started)
+	}
 	if err != nil {
 		return
 	}
+	if timing != nil {
+		started = time.Now()
+	}
 	c.writeMu.Lock()
+	if timing != nil {
+		timing.writeWait += time.Since(started)
+		started = time.Now()
+	}
 	defer c.writeMu.Unlock()
 	_ = c.conn.WriteMessage(websocket.TextMessage, payload)
+	if timing != nil {
+		timing.write += time.Since(started)
+	}
 }
 
 func (s *session) send(v map[string]any) {
+	s.sendTimed(v, nil)
+}
+
+func (s *session) sendTimed(v map[string]any, timing *commandTiming) {
 	if s.id != "" {
 		if s.flat {
 			v["sessionId"] = s.id
 		} else {
+			var started time.Time
+			if timing != nil {
+				started = time.Now()
+			}
 			raw, err := json.Marshal(v)
+			if timing != nil {
+				timing.serialize += time.Since(started)
+			}
 			if err != nil {
 				return
 			}
-			s.parent.event("Target.receivedMessageFromTarget", map[string]any{"sessionId": s.id, "message": string(raw), "targetId": s.targetID})
+			if s.parent.ctx.Err() == nil {
+				s.parent.sendTimed(map[string]any{"method": "Target.receivedMessageFromTarget", "params": map[string]any{"sessionId": s.id, "message": string(raw), "targetId": s.targetID}}, timing)
+			}
 			return
 		}
 	}
-	s.transport.write(v)
+	s.transport.writeTimed(v, timing)
 }
 
 func (s *session) reply(id int64, result any, err error) {
+	var timing *commandTiming
+	if s.transport.profileCommands {
+		if value, ok := s.commandTimings.Load(id); ok {
+			timing = value.(*commandTiming)
+		}
+	}
 	if err != nil {
 		code := -32000
 		// Generated validation errors retain Chrome's protocol error class.
@@ -185,13 +258,13 @@ func (s *session) reply(id int64, result any, err error) {
 				payload["data"] = data
 			}
 		}
-		s.send(map[string]any{"id": id, "error": payload})
+		s.sendTimed(map[string]any{"id": id, "error": payload}, timing)
 		return
 	}
 	if result == nil {
 		result = map[string]any{}
 	}
-	s.send(map[string]any{"id": id, "result": result})
+	s.sendTimed(map[string]any{"id": id, "result": result}, timing)
 }
 
 func (s *session) event(method string, params any) {

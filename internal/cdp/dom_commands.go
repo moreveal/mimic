@@ -23,29 +23,6 @@ func coordinateValue(value any) float64 {
 	}
 }
 
-func (s *session) applyInputHitHint(params map[string]any) {
-	if s.hitNode == 0 || len(s.hitQuad) != 8 {
-		return
-	}
-	x, y := coordinateValue(params["x"]), coordinateValue(params["y"])
-	minX, maxX := coordinateValue(s.hitQuad[0]), coordinateValue(s.hitQuad[0])
-	minY, maxY := coordinateValue(s.hitQuad[1]), coordinateValue(s.hitQuad[1])
-	for index, raw := range s.hitQuad[2:] {
-		value := coordinateValue(raw)
-		if index%2 == 0 {
-			minX, maxX = min(minX, value), max(maxX, value)
-		} else {
-			minY, maxY = min(minY, value), max(maxY, value)
-		}
-	}
-	if x < minX || x > maxX || y < minY || y > maxY {
-		return
-	}
-	params["_mimicNodeId"] = s.hitNode
-	params["_mimicLocalX"] = x - s.hitDX
-	params["_mimicLocalY"] = y - s.hitDY
-}
-
 func (s *session) nodeID(ctx context.Context, p map[string]any) (int64, error) {
 	if object := stringValue(p["objectId"]); object != "" {
 		return s.runtimeDebugger().RequestNode(ctx, object)
@@ -219,14 +196,11 @@ func (s *session) handleDOM(ctx context.Context, method string, p map[string]any
 		}
 		model, _ := value.(map[string]any)
 		frame, _ := s.page.FrameForDOMNode(id)
-		dxTotal, dyTotal := 0.0, 0.0
 		for frame != nil && frame.Parent() != nil {
 			dx, dy, offsetErr := s.frameElementOffset(ctx, frame)
 			if offsetErr != nil {
 				return nil, true, offsetErr
 			}
-			dxTotal += dx
-			dyTotal += dy
 			for _, name := range []string{"border", "padding", "content", "margin"} {
 				quad, _ := model[name].([]any)
 				for index := range quad {
@@ -242,7 +216,6 @@ func (s *session) handleDOM(ctx context.Context, method string, p map[string]any
 		}
 		if method == "DOM.getContentQuads" {
 			quad, _ := model["content"].([]any)
-			s.hitNode, s.hitDX, s.hitDY, s.hitQuad = id, dxTotal, dyTotal, append([]any(nil), quad...)
 			return map[string]any{"quads": []any{quad}}, true, nil
 		}
 		return map[string]any{"model": model}, true, nil

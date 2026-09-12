@@ -63,26 +63,28 @@
   };
   }
   compatibilityElementState.controlGeometry=(element,entries)=>{
-    if(!['INPUT','BUTTON','TEXTAREA','SELECT'].includes(element.tagName))return null;
-    const type=element.type,own=key=>entries.find(e=>e.name===key)?.value;
-    if(element.tagName==='INPUT'&&type==='hidden')return {width:0,height:0};
-    if(element.tagName==='INPUT'&&['checkbox','radio'].includes(type))return {width:13,height:13};
+    const data=elementSlot(element),tag=data?.tagName;
+    if(!['INPUT','BUTTON','TEXTAREA','SELECT'].includes(tag))return null;
+    const attribute=name=>host.getAttribute(data.nodeId,name),property=(node,key)=>compatibilityElementState.formOperation(node,'get',key);
+    const type=tag==='INPUT'?String(attribute('type')||'text').toLowerCase():'',own=key=>entries.find(e=>e.name===key)?.value;
+    if(tag==='INPUT'&&type==='hidden')return {width:0,height:0};
+    if(tag==='INPUT'&&['checkbox','radio'].includes(type))return {width:13,height:13};
     const size=own('font-size')?cssComputedFontSize(element):40/3,scale=size/(40/3);
     if(size===null)throw new Error('Control font metrics unavailable');
-    const family=own('font-family')||(element.tagName==='TEXTAREA'?'monospace':'Arial');
+    const family=own('font-family')||(tag==='TEXTAREA'?'monospace':'Arial');
     const measure=text=>{if(size===0)return 0;const shaped=parse(host.shapeText(text,family,size,400,0,0,0));if(shaped.error)throw new Error('Control font metrics unavailable: '+shaped.error);return Math.ceil(shaped.glyphs.reduce((sum,glyph)=>sum+glyph.advance,0)*64)/64};
     // Frozen Windows UA metrics: author dimensions still take precedence in
     // layoutRectFor. Text-bearing buttons use the existing font shaper.
-    if(element.tagName==='BUTTON'||element.tagName==='INPUT'&&['button','submit','reset'].includes(type)){
-      const text=element.tagName==='BUTTON'?element.textContent:element.value||(type==='submit'?'Submit':type==='reset'?'Reset':'');
+    if(tag==='BUTTON'||tag==='INPUT'&&['button','submit','reset'].includes(type)){
+      const text=tag==='BUTTON'?host.textContent(data.nodeId):property(element,'value')||(type==='submit'?'Submit':type==='reset'?'Reset':'');
       return {width:measure(text)+16*scale,height:21*scale};
     }
-    if(element.tagName==='TEXTAREA')return {width:(Math.max(1,Number(element.getAttribute('cols'))||20)*8+8)*scale,height:(Math.max(1,Number(element.getAttribute('rows'))||2)*15+6)*scale};
-    if(element.tagName==='SELECT'){
-      const labels=Array.from(compatibilitySelectors.query(element,'option'),option=>measure(option.label||option.text));
+    if(tag==='TEXTAREA')return {width:(Math.max(1,Number(attribute('cols'))||20)*8+8)*scale,height:(Math.max(1,Number(attribute('rows'))||2)*15+6)*scale};
+    if(tag==='SELECT'){
+      const labels=Array.from(compatibilitySelectors.query(element,'option'),option=>measure(property(option,'label')||property(option,'text')));
       return {width:Math.ceil(Math.max(0,...labels))+22*scale,height:19*scale};
     }
-    return {width:(Math.max(1,Number(element.getAttribute('size'))||20)*7+37)*scale,height:21*scale};
+    return {width:(Math.max(1,Number(attribute('size'))||20)*7+37)*scale,height:21*scale};
   };
   const nodeID=node=>elementSlot(node)?.nodeId||0;
   const eventFor=(kind,type,init)=>new constructors[kind](type,{...init,view:window,relatedTarget:wrap(init.relatedNode||0)||null,submitter:wrap(init.submitterNode||0)||null});
@@ -194,7 +196,7 @@
     for(const element of elements){
       const entries=computedCSSDeclarations(element),get=name=>entries.find(e=>e.name===name)?.value;
       if(get('visibility')==='hidden'||get('pointer-events')==='none')continue;
-      const box=layoutRectFor(element);if(box.width<=0||box.height<=0||x<box.left||x>=box.right||y<box.top||y>=box.bottom)continue;
+      const box=clientRectFor(element);if(box.width<=0||box.height<=0||x<box.x||x>=box.x+box.width||y<box.y||y>=box.y+box.height)continue;
       hits.push(element);
     }
     hits.sort((a,b)=>a===b?0:above(scope(a).rank,scope(b).rank)?-1:1);
@@ -211,7 +213,11 @@
     Object.defineProperty(Document.prototype,name,{value:function(x,y){
       if(this!==document)throw new TypeError('Illegal invocation');
       if(arguments.length<2)throw new TypeError('Not enough arguments');
-      const hits=pointTargets(Number(x),Number(y));return all?hits:hits[0]||null;
+      // Hit testing belongs to the document owner. Borrowing each element's
+      // geometry separately from an isolated world rebuilds the box graph for
+      // every candidate and can disagree with the world's synthetic tree.
+      x=Number(x);y=Number(y);
+      const hits=isolated?main(null,'points',{x,y}).nodes.map(wrap):pointTargets(x,y);return all?hits:hits[0]||null;
     },writable:true,enumerable:true,configurable:true});
   }
   let pointerTarget=null,pointerX=0,pointerY=0,mouseButtons=0;
@@ -223,7 +229,7 @@
     let activator=target;while(activator&&activator.localName!=='button'&&activator.localName!=='a')activator=activator.parentElement;
     if(activator?.localName==='button')activateCommand(activator);
     if(checkable&&previous!==control(target,'get','checked')){emit(target,'Event','input',{bubbles:true,composed:true},true,trusted);emit(target,'Event','change',{bubbles:true},true,trusted)}
-    if(target.localName==='a'&&target.hasAttribute('href'))host.navigate(target.href);
+    if(activator?.localName==='a'&&activator.hasAttribute('href'))host.navigate(activator.href);
   };
   const clicking=new WeakSet();
   const syntheticClick=target=>{
@@ -231,8 +237,8 @@
     try{click(target,{bubbles:true,cancelable:true,composed:true,pointerId:-1,pointerType:'',isPrimary:false,button:0,buttons:0,detail:0},false)}finally{clicking.delete(target)}
   };
   Object.defineProperty(HTMLElement.prototype,'click',{value:function(){if(isolated){main(this,'click');return}syntheticClick(this)},writable:true,enumerable:true,configurable:true});
-  const mouseCommand=params=>{
-    const x=Number(params.x),y=Number(params.y),target=pointTarget(x,y),buttonName=params.button||'none',button=buttons[buttonName]??-1,mask=buttonMasks[buttonName]||0;
+  const mouseCommand=(params,hintedTarget)=>{
+    const x=Number(params.x),y=Number(params.y),target=hintedTarget?.isConnected?hintedTarget:pointTarget(x,y),buttonName=params.button||'none',button=buttons[buttonName]??-1,mask=buttonMasks[buttonName]||0;
     if(params.type==='mousePressed')mouseButtons|=mask;else if(params.type==='mouseReleased')mouseButtons&=~mask;
     if(params.buttons!==undefined)mouseButtons=params.buttons;
     const init={bubbles:true,cancelable:true,composed:true,clientX:x,clientY:y,screenX:x+(window.screenX||0),screenY:y+(window.screenY||0),button,buttons:mouseButtons,detail:params.clickCount||0,movementX:x-pointerX,movementY:y-pointerY,...modifiers(params.modifiers||0),pointerId:1,pointerType:'mouse',isPrimary:true,pressure:mouseButtons ? .5 : 0};
@@ -259,6 +265,7 @@
     if(operation==='form')return stringify({value:control(element,params.operation,params.key,params.args)});
     if(operation==='active')return stringify({nodeID:nodeID(active.call(document))});
     if(operation==='focused')return stringify({nodeID:nodeID(originalFocused())});
+    if(operation==='points')return stringify({nodes:pointTargets(params.x,params.y).map(nodeID)});
     if(operation==='rect'){
       const rect=layoutRectFor(element);
       return stringify({x:rect.x,y:rect.y,width:rect.width,height:rect.height});

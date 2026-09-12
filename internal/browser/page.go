@@ -38,6 +38,7 @@ type Page struct {
 	launches           []string
 	performanceClamper performanceClamper
 	commandMu          sync.Mutex
+	eventLoopWake      chan struct{} // Coalesced readiness hints; never executes Page work.
 	taskSequence       atomic.Uint64
 	mu                 sync.RWMutex
 	ID                 string
@@ -47,6 +48,7 @@ type Page struct {
 	trace              *trace.Recorder
 	Top                *Frame
 	loaderID           string
+	navigationCancel   context.CancelFunc
 	clock              time.Time
 	activeClock        atomic.Pointer[scheduler.Scheduler]
 	performanceOrigin  time.Time
@@ -63,13 +65,14 @@ type Page struct {
 	// initiated a navigation has unwound. Closing the old JS runtime while one
 	// of its callbacks is still on the stack is observably different from
 	// Chrome and also makes the scheduler's microtask checkpoint fail.
-	retiredRealms        []*Realm
-	realmOwners          map[string]*Realm
-	realmEvaluationDepth int
-	documentSecurity     documentSecurity
-	loadEventEnded       bool
-	messagePorts         map[string]*messagePortState
-	textMetrics          *textmetrics.Engine // Page event-loop owned; lazy local font resources.
+	retiredRealms         []*Realm
+	realmOwners           map[string]*Realm
+	realmEvaluationDepth  int
+	directEvaluationDepth int
+	documentSecurity      documentSecurity
+	loadEventEnded        bool
+	messagePorts          map[string]*messagePortState
+	textMetrics           *textmetrics.Engine // Page event-loop owned; lazy local font resources.
 	// Cross-realm calls can enqueue jobs in an isolate other than the caller's.
 	// These fields are owned by the Page event loop, never by network goroutines.
 	pendingCheckpoints  []*Realm
@@ -83,6 +86,20 @@ type Page struct {
 // The boundary belongs to the Page, so all CDP sessions observe the same loop.
 // Library callers must use the same boundary when sharing a Page concurrently.
 func (p *Page) LockCommands() { p.commandMu.Lock() }
+
+// EventLoopWake lets an external pump react to newly posted work without
+// consuming scheduler waits or changing the Page's canonical clock.
+func (p *Page) EventLoopWake() <-chan struct{} { return p.eventLoopWake }
+
+// WakeEventLoop is safe from resource goroutines and after teardown. The channel
+// stays open: a hint cannot extend the Page lifetime or bypass its command lock.
+func (p *Page) WakeEventLoop() {
+	select {
+	case p.eventLoopWake <- struct{}{}:
+	default:
+	}
+}
+
 func (p *Page) UnlockCommands() {
 	if p.previewObservers != nil {
 		p.publishPreview()
@@ -93,6 +110,7 @@ func (p *Page) UnlockCommands() {
 func newPage(c *Context) (*Page, error) {
 	environment := c.env.Clone()
 	p := &Page{performanceClamper: newPerformanceClamper(), ID: uuid.NewString(), ctx: c, env: environment, trace: trace.New(), historyIndex: -1, clock: environment.Time.WallOrigin, performanceOrigin: environment.Time.WallOrigin, sessionStorage: map[string]map[string]string{}, frames: map[string]*Frame{}, messagePorts: map[string]*messagePortState{}}
+	p.eventLoopWake = make(chan struct{}, 1)
 	p.loader = network.NewLoaderWithSession(func() state.Environment { p.mu.RLock(); defer p.mu.RUnlock(); return p.env }, c.cookies, c.network, p.trace)
 	if c.transport != nil {
 		p.loader.SetTransport(c.transport)
@@ -128,6 +146,7 @@ func (p *Page) Loader() *network.Loader               { return p.loader }
 func (p *Page) Cookies() *network.CookieStore         { return p.ctx.cookies }
 func (p *Page) NetworkSession() *network.SessionState { return p.ctx.network }
 func (p *Page) Close() error {
+	p.CancelNavigation()
 	defer p.loader.CloseOwnedTransport()
 	p.mu.Lock()
 	p.Top.Realm = nil
@@ -309,6 +328,21 @@ func (p *Page) Navigate(ctx context.Context, raw string) error {
 	}
 	return nil
 }
+
+// CancelNavigation cancels suspended parser work without entering its realm.
+// The current JavaScript task keeps its own execution cancellation boundary.
+func (p *Page) CancelNavigation() bool {
+	p.mu.Lock()
+	cancel := p.navigationCancel
+	p.navigationCancel = nil
+	p.mu.Unlock()
+	if cancel != nil {
+		cancel()
+		return true
+	}
+	return false
+}
+
 func (p *Page) ReserveNavigation() string {
 	p.mu.Lock()
 	defer p.mu.Unlock()
@@ -325,6 +359,35 @@ func (p *Page) navigateRequest(ctx context.Context, raw, loaderID string, reques
 	return p.navigateRequestWithHistory(ctx, raw, loaderID, request, 0, replace...)
 }
 func (p *Page) navigateRequestWithHistory(ctx context.Context, raw, loaderID string, request network.Request, historyTarget int, replace ...bool) error {
+	return p.beginNavigationRequest(ctx, raw, loaderID, request, historyTarget, false, replace...)
+}
+
+// StartNavigation is the asynchronous external-command entry point. The Go
+// Navigate/NavigateReserved entry points retain their existing initial-response
+// boundary; CDP can continue reading the old document while the response loads.
+func (p *Page) StartNavigation(ctx context.Context, raw, loaderID string, committed ...func(error)) error {
+	var notify func(error)
+	if len(committed) != 0 {
+		notify = func(err error) {
+			for _, callback := range committed {
+				callback(err)
+			}
+		}
+	}
+	if loaderID != p.LoaderID() {
+		if notify != nil {
+			notify(context.Canceled)
+		}
+		return nil // A newer command reserved a replacement before this turn.
+	}
+	return p.beginNavigationRequestWithCommit(ctx, raw, loaderID, network.Request{UserActivation: true}, 0, true, notify)
+}
+
+func (p *Page) beginNavigationRequest(ctx context.Context, raw, loaderID string, request network.Request, historyTarget int, asynchronous bool, replace ...bool) error {
+	return p.beginNavigationRequestWithCommit(ctx, raw, loaderID, request, historyTarget, asynchronous, nil, replace...)
+}
+
+func (p *Page) beginNavigationRequestWithCommit(ctx context.Context, raw, loaderID string, request network.Request, historyTarget int, asynchronous bool, committed func(error), replace ...bool) error {
 	u, err := url.Parse(raw)
 	if err != nil {
 		return err
@@ -332,6 +395,7 @@ func (p *Page) navigateRequestWithHistory(ctx context.Context, raw, loaderID str
 	if u.Scheme != "http" && u.Scheme != "https" {
 		return fmt.Errorf("unsupported navigation scheme %q", u.Scheme)
 	}
+	p.CancelNavigation()
 	performanceOrigin := p.ClockNow()
 	// A controllable CDP process runs against the real wall clock by default.
 	// Network operations may hold the browser state-machine lock while Go's
@@ -353,10 +417,17 @@ func (p *Page) navigateRequestWithHistory(ctx context.Context, raw, loaderID str
 	if request.Method == "" {
 		request.Method = http.MethodGet
 	}
+	if asynchronous && p.directEvaluationDepth == 0 {
+		return p.fetchNavigationResponse(ctx, u, loaderID, performanceOrigin, request, historyTarget, committed, replace...)
+	}
 	res, err := p.loader.Load(ctx, request)
 	if err != nil {
 		return err
 	}
+	return p.commitNavigationResponse(ctx, ctx, u, loaderID, performanceOrigin, res, historyTarget, false, committed, replace...)
+}
+
+func (p *Page) commitNavigationResponse(ctx, taskContext context.Context, u *url.URL, loaderID string, performanceOrigin time.Time, res network.Response, historyTarget int, suspended bool, committed func(error), replace ...bool) error {
 	// The response URL is the committed document URL after redirects. Use it
 	// for the realm origin, history, policy checks and relative resource URLs.
 	if res.URL != nil {
@@ -471,16 +542,55 @@ func (p *Page) navigateRequestWithHistory(ctx context.Context, raw, loaderID str
 	p.mu.Unlock()
 	p.retireRealm(old)
 	p.trace.Add(trace.Lifecycle, "frameNavigated", map[string]any{"url": u.String(), "realm": realm.ID, "frameId": p.Top.ID, "loaderId": loaderID})
-	streamState, err := realm.initializeNavigationStream(ctx)
+	streamState, err := realm.initializeNavigationStream()
 	if err != nil {
 		return err
 	}
-	p.runInitScripts(ctx, realm)
+	// Parser continuations outlive the command that starts navigation, while
+	// retaining its navigation deadline and an explicit stop-loading handle.
+	if deadline, ok := ctx.Deadline(); ok {
+		deadlineContext, deadlineCancel := context.WithDeadline(streamState.ctx, deadline)
+		streamCancel := streamState.cancel
+		streamState.ctx = deadlineContext
+		context.AfterFunc(deadlineContext, func() {
+			if deadlineContext.Err() == context.DeadlineExceeded && p.LoaderID() == loaderID && !p.LoadEventEnded() {
+				p.trace.Add(trace.Error, "navigation", map[string]any{"url": u.String(), "realm": realm.ID, "error": context.DeadlineExceeded.Error()})
+			}
+		})
+		streamState.cancel = func() { deadlineCancel(); streamCancel() }
+	}
+	p.mu.Lock()
+	// CancelNavigation clears the canonical handle before invoking it outside
+	// p.mu. A suspended main response must not overwrite that cleared handle
+	// with a fresh parser lifetime and thereby lose a concurrent stop/close.
+	cancelled := ctx.Err() != nil || suspended && p.navigationCancel == nil
+	if !cancelled {
+		p.navigationCancel = streamState.cancel
+	}
+	p.mu.Unlock()
+	if cancelled {
+		streamState.cancel()
+	}
+	if committed != nil {
+		// Publish the parser cancellation handle before acknowledging commit.
+		// The callback only notifies its waiter; parser and JS have not started.
+		committed(nil)
+	}
+	if streamState.ctx.Err() != nil {
+		return nil
+	}
+	ctx = streamState.ctx
+	restoreTaskContext := streamState.useTaskContext(taskContext)
+	defer restoreTaskContext()
+	p.runInitScripts(streamState.executionContext(), realm)
 	type deferredModule struct {
-		code string
-		name string
+		code    string
+		name    string
+		pending *moduleFetch
+		nodeID  int64
 	}
 	modules := make([]deferredModule, 0)
+	nextModule := 0
 	streamState.onScript = func(s dom.Node) error {
 		realm.preloadModules()
 		realm.preloadResources()
@@ -489,7 +599,9 @@ func (p *Page) navigateRequestWithHistory(ctx context.Context, raw, loaderID str
 		if kind == "" {
 			return nil
 		}
-		doc.MarkScriptStarted(s.ID)
+		if doc.ScriptStarted(s.ID) {
+			return nil
+		}
 		code := doc.TextContent(s.ID)
 		name := u.String()
 		if src := s.Attributes["src"]; src != "" {
@@ -510,12 +622,23 @@ func (p *Page) navigateRequestWithHistory(ctx context.Context, raw, loaderID str
 				request.Headers = make(http.Header)
 				request.Headers.Set("Origin", originOf(u.String()))
 			}
-			var rr network.Response
 			if kind == "module" {
-				rr, err = realm.fetchModule(request).wait(ctx)
-			} else {
-				rr, err = realm.loadResource(ctx, request)
+				doc.MarkScriptStarted(s.ID)
+				modules = append(modules, deferredModule{name: su.String(), pending: realm.fetchModule(request), nodeID: s.ID})
+				return nil
 			}
+			loaded := streamState.scripts[s.ID]
+			if loaded == nil {
+				loaded = &streamScriptResponse{}
+				streamState.scripts[s.ID] = loaded
+				realm.fetchNavigationScript(streamState, loaded, request)
+				return dom.ErrStreamPaused
+			}
+			if !loaded.ready {
+				return dom.ErrStreamPaused
+			}
+			rr := loaded.response
+			err = loaded.err
 			if err == nil {
 				err = scriptResponseError(rr)
 			}
@@ -526,11 +649,11 @@ func (p *Page) navigateRequestWithHistory(ctx context.Context, raw, loaderID str
 					return realm.dispatchResourceEvent(eventContext, scriptID, "error")
 				}
 				if !streamState.insideScript {
-					if eventErr := realm.runTask(ctx, scheduler.DOM, dispatchError); eventErr != nil {
+					if eventErr := realm.runNavigationTask(ctx, streamState, scheduler.DOM, dispatchError); eventErr != nil {
 						p.trace.Add(trace.Error, "scriptErrorEvent", map[string]any{"url": su.String(), "error": eventErr.Error()})
 					}
 				} else {
-					_ = dispatchError(ctx)
+					_ = dispatchError(streamState.executionContext())
 				}
 				return nil
 			}
@@ -540,12 +663,16 @@ func (p *Page) navigateRequestWithHistory(ctx context.Context, raw, loaderID str
 			return nil
 		}
 		if kind == "module" {
+			doc.MarkScriptStarted(s.ID)
 			if code != "" {
-				modules = append(modules, deferredModule{code: code, name: name})
+				modules = append(modules, deferredModule{code: code, name: name, nodeID: s.ID})
 			}
 			return nil
 		}
-		realm.waitParserStylesheets(ctx, stylesheets)
+		if realm.deferNavigationStylesheets(streamState, stylesheets, func() error { return realm.resumeNavigationStream(streamState.executionContext(), streamState) }) {
+			return dom.ErrStreamPaused
+		}
+		doc.MarkScriptStarted(s.ID)
 		if code != "" {
 			// Parser scripts are browser-observable tasks too. Running them directly
 			// from navigation freezes the canonical monotonic clock and lets engine
@@ -569,152 +696,162 @@ func (p *Page) navigateRequestWithHistory(ctx context.Context, raw, loaderID str
 			if streamState.insideScript {
 				// document.write executes inserted classic scripts synchronously
 				// within this parser task; the outer task owns its checkpoint.
-				_ = runScript(ctx)
+				_ = runScript(streamState.executionContext())
 			} else {
-				if err := realm.runTask(ctx, scheduler.DOM, runScript); err != nil {
+				if err := realm.runNavigationTask(ctx, streamState, scheduler.DOM, runScript); err != nil {
 					p.trace.Add(trace.Error, "parserScriptTask", map[string]any{"url": scriptName, "error": err.Error()})
 				}
 			}
 		}
 		return nil
 	}
+	streamState.onFinished = func() error {
+		if streamState.ctx.Err() != nil || realm.documentStream != streamState || p.Top.Realm != realm {
+			return nil
+		}
+		if realm.readyState == "loading" {
+			realm.SetReadyState("interactive")
+		}
+		realm.preloadModules()
+		realm.preloadResources()
+		if realm.deferNavigationStylesheets(streamState, realm.startParserStylesheets(), streamState.onFinished) {
+			return nil
+		}
+		// Module scripts are deferred by default: fetch begins at parser discovery,
+		// while evaluation happens after parsing and before DOMContentLoaded.
+		for nextModule < len(modules) {
+			module := modules[nextModule]
+			if module.pending != nil {
+				if realm.deferNavigationModuleEntry(streamState, module.pending, streamState.onFinished) {
+					return nil
+				}
+				response, loadErr := module.pending.wait(ctx)
+				if loadErr != nil {
+					p.trace.Add(trace.Error, "scriptLoad", map[string]any{"url": module.name, "error": loadErr.Error()})
+					if eventErr := realm.runNavigationTask(ctx, streamState, scheduler.DOM, func(eventContext context.Context) error {
+						return realm.dispatchResourceEvent(eventContext, module.nodeID, "error")
+					}); eventErr != nil {
+						p.trace.Add(trace.Error, "scriptErrorEvent", map[string]any{"url": module.name, "error": eventErr.Error()})
+					}
+					nextModule++
+					continue
+				}
+				module.code = string(response.Body)
+			}
+			waiting, graphErr := realm.deferNavigationModuleGraph(streamState, module.code, module.name, streamState.onFinished)
+			if waiting {
+				return nil
+			}
+			nextModule++
+			if graphErr != nil {
+				p.trace.Add(trace.Exception, "script", map[string]any{"url": module.name, "error": graphErr.Error(), "module": true})
+				continue
+			}
+			if err := realm.runNavigationTask(ctx, streamState, scheduler.DOM, func(taskContext context.Context) error {
+				p.trace.Add(trace.JS, "scriptStart", map[string]any{"url": module.name, "realm": realm.ID, "module": true})
+				_, evalErr := realm.EvaluateModule(taskContext, module.code, module.name, realm.loadedModule)
+				if evalErr != nil {
+					p.trace.Add(trace.Exception, "script", map[string]any{"url": module.name, "error": evalErr.Error(), "module": true})
+					p.trace.Add(trace.JS, "scriptEnd", map[string]any{"url": module.name, "realm": realm.ID, "module": true, "error": evalErr.Error()})
+					return evalErr
+				}
+				p.trace.Add(trace.JS, "scriptEnd", map[string]any{"url": module.name, "realm": realm.ID, "module": true})
+				return nil
+			}); err != nil {
+				p.trace.Add(trace.Error, "moduleScriptTask", map[string]any{"url": module.name, "error": err.Error()})
+			}
+		}
+		// The HTML parser creates browsing contexts for iframe elements without
+		// waiting for script to read contentWindow.  Attach those contexts now, but
+		// queue their network navigations from the DOMContentLoaded turn below. This
+		// preserves parser iframe order relative to frames inserted by that event's
+		// handlers while keeping all child execution on browser scheduler tasks.
+		type parserFrame struct {
+			elementID int64
+			frame     *Frame
+		}
+		parserFrames := make([]parserFrame, 0)
+		for _, iframe := range doc.FindAllByTagName("iframe") {
+			frame, frameErr := realm.ensureChildFrameInternal(iframe.ID, false, false)
+			if frameErr != nil {
+				p.trace.Add(trace.Error, "parserFrameAttach", map[string]any{"elementNodeId": iframe.ID, "error": frameErr.Error(), "realm": realm.ID})
+				continue
+			}
+			if frame != nil {
+				parserFrames = append(parserFrames, parserFrame{elementID: iframe.ID, frame: frame})
+			}
+		}
+		// DOMContentLoaded is a browser task, not merely a CDP notification.  Page
+		// scripts observe it on Document and its Promise jobs checkpoint before the
+		// next lifecycle/resource task is selected.
+		if err := realm.runNavigationTask(ctx, streamState, scheduler.DOM, func(taskContext context.Context) error {
+			for _, parserFrame := range parserFrames {
+				realm.scheduleChildFrameNavigation(parserFrame.frame, parserFrame.elementID)
+			}
+			realm.performanceLifecycle("domContentLoadedEventStart")
+			_, eventErr := realm.Evaluate(taskContext, `document.dispatchEvent(new Event('DOMContentLoaded'))`, "mimic:dom-content-loaded")
+			realm.performanceLifecycle("domContentLoadedEventEnd")
+			if eventErr == nil {
+				p.trace.Add(trace.Lifecycle, "DOMContentLoaded", map[string]any{"url": u.String(), "frameId": p.Top.ID, "realm": realm.ID})
+			}
+			return eventErr
+		}); err != nil {
+			p.trace.Add(trace.Error, "domContentLoaded", map[string]any{"url": u.String(), "error": err.Error(), "realm": realm.ID})
+		}
+		// Chrome's browser-owned favicon discovery begins once the parser has a
+		// complete document. It is not load-blocking, but starting it from the load
+		// event itself is observably too late: Resource Timing can contain its entry
+		// before page challenge/application work performed around load completes.
+		iconURLs := documentIconURLs(doc, u)
+		iconInitiatorType := "link"
+		if len(iconURLs) == 0 {
+			iconURLs = []*url.URL{u.ResolveReference(&url.URL{Path: "/favicon.ico"})}
+			iconInitiatorType = "other"
+		}
+		for _, favicon := range iconURLs {
+			favicon := favicon
+			realm.scheduler.Post(scheduler.ResourceLow, 0, func(taskContext context.Context) error {
+				request := network.Request{ContextID: p.Top.ID, URL: favicon, Referrer: u, SourceURL: u, Initiator: network.Other, PerformanceInitiatorType: iconInitiatorType}
+				realm.applyClientHints(&request)
+				realm.resourceWG.Add(1)
+				go func() {
+					defer realm.resourceWG.Done()
+					_, loadErr := p.loader.Load(realm.resourceContext, realm.withResourceTiming(request))
+					if realm.resourceContext.Err() != nil {
+						return
+					}
+					if loadErr != nil {
+						p.trace.Add(trace.Error, "browserResourceLoad", map[string]any{"url": favicon.String(), "error": loadErr.Error()})
+					}
+					realm.scheduler.Post(scheduler.Network, 0, func(callbackContext context.Context) error {
+						realm.notifyPerformanceObservers(callbackContext)
+						return nil
+					})
+				}()
+				return nil
+			})
+			// The Page event-loop pump begins this non-blocking transport after the
+			// navigation turn releases ownership of the Page.
+		}
+		// Load is scheduled only after parser-time and transitively inserted
+		// load-blocking resources complete. The realm owns that accounting so DOM,
+		// resource loading, readyState and NavigationTiming share one lifecycle.
+		realm.requestLoad(func(taskContext context.Context) {
+			p.trace.Add(trace.Lifecycle, "load", map[string]any{"url": u.String(), "frameId": p.Top.ID, "realm": realm.ID, "loaderId": loaderID})
+			p.mu.Lock()
+			p.loadEventEnded = true
+			p.mu.Unlock()
+			// NavigationTiming is a live entry while the document loads. Chrome
+			// delivers it to observers again when loadEventEnd finalizes duration;
+			// resource-only notifications cannot represent that transition.
+			realm.notifyPerformanceObservers(taskContext)
+		})
+		return nil
+	}
 	if err := realm.writeDocumentStream(realm, string(res.Body)); err != nil {
 		return err
 	}
-	if err := realm.closeDocumentStream(); err != nil {
-		return err
-	}
-	realm.preloadModules()
-	realm.preloadResources()
-	realm.waitParserStylesheets(ctx, realm.startParserStylesheets())
-	// Module scripts are deferred by default: fetch begins at parser discovery,
-	// while evaluation happens after parsing and before DOMContentLoaded.
-	for _, module := range modules {
-		module := module
-		if err := realm.runTask(ctx, scheduler.DOM, func(taskContext context.Context) error {
-			p.trace.Add(trace.JS, "scriptStart", map[string]any{"url": module.name, "realm": realm.ID, "module": true})
-			_, evalErr := realm.EvaluateModule(taskContext, module.code, module.name, func(specifier, referrer string) (string, string, error) {
-				base, parseErr := url.Parse(referrer)
-				if parseErr != nil {
-					return "", "", parseErr
-				}
-				dependency, parseErr := base.Parse(specifier)
-				if parseErr != nil {
-					return "", "", parseErr
-				}
-				request := network.Request{ContextID: p.Top.ID, URL: dependency, Referrer: base, SourceURL: base, Initiator: network.Script, Mode: "cors", Headers: make(http.Header)}
-				realm.applyClientHints(&request)
-				request.Headers.Set("Origin", originOf(u.String()))
-				// Dynamic import callbacks may run in a later browser task, after this
-				// module-evaluation task has completed. Network work belongs to the
-				// document realm and remains live until that realm is discarded.
-				response, loadErr := realm.fetchModule(request).wait(realm.resourceContext)
-				if loadErr == nil {
-					loadErr = scriptResponseError(response)
-				}
-				if loadErr != nil {
-					return "", "", loadErr
-				}
-				return string(response.Body), dependency.String(), nil
-			})
-			if evalErr != nil {
-				p.trace.Add(trace.Exception, "script", map[string]any{"url": module.name, "error": evalErr.Error(), "module": true})
-				p.trace.Add(trace.JS, "scriptEnd", map[string]any{"url": module.name, "realm": realm.ID, "module": true, "error": evalErr.Error()})
-				return evalErr
-			}
-			p.trace.Add(trace.JS, "scriptEnd", map[string]any{"url": module.name, "realm": realm.ID, "module": true})
-			return nil
-		}); err != nil {
-			p.trace.Add(trace.Error, "moduleScriptTask", map[string]any{"url": module.name, "error": err.Error()})
-		}
-	}
-	// The HTML parser creates browsing contexts for iframe elements without
-	// waiting for script to read contentWindow.  Attach those contexts now, but
-	// queue their network navigations from the DOMContentLoaded turn below. This
-	// preserves parser iframe order relative to frames inserted by that event's
-	// handlers while keeping all child execution on browser scheduler tasks.
-	type parserFrame struct {
-		elementID int64
-		frame     *Frame
-	}
-	parserFrames := make([]parserFrame, 0)
-	for _, iframe := range doc.FindAllByTagName("iframe") {
-		frame, frameErr := realm.ensureChildFrameInternal(iframe.ID, false, false)
-		if frameErr != nil {
-			p.trace.Add(trace.Error, "parserFrameAttach", map[string]any{"elementNodeId": iframe.ID, "error": frameErr.Error(), "realm": realm.ID})
-			continue
-		}
-		if frame != nil {
-			parserFrames = append(parserFrames, parserFrame{elementID: iframe.ID, frame: frame})
-		}
-	}
-	realm.SetReadyState("interactive")
-	// DOMContentLoaded is a browser task, not merely a CDP notification.  Page
-	// scripts observe it on Document and its Promise jobs checkpoint before the
-	// next lifecycle/resource task is selected.
-	if err := realm.runTask(ctx, scheduler.DOM, func(taskContext context.Context) error {
-		for _, parserFrame := range parserFrames {
-			realm.scheduleChildFrameNavigation(parserFrame.frame, parserFrame.elementID)
-		}
-		realm.performanceLifecycle("domContentLoadedEventStart")
-		_, eventErr := realm.Evaluate(taskContext, `document.dispatchEvent(new Event('DOMContentLoaded'))`, "mimic:dom-content-loaded")
-		realm.performanceLifecycle("domContentLoadedEventEnd")
-		if eventErr == nil {
-			p.trace.Add(trace.Lifecycle, "DOMContentLoaded", map[string]any{"url": u.String(), "frameId": p.Top.ID, "realm": realm.ID})
-		}
-		return eventErr
-	}); err != nil {
-		p.trace.Add(trace.Error, "domContentLoaded", map[string]any{"url": u.String(), "error": err.Error(), "realm": realm.ID})
-	}
-	// Chrome's browser-owned favicon discovery begins once the parser has a
-	// complete document. It is not load-blocking, but starting it from the load
-	// event itself is observably too late: Resource Timing can contain its entry
-	// before page challenge/application work performed around load completes.
-	iconURLs := documentIconURLs(doc, u)
-	iconInitiatorType := "link"
-	if len(iconURLs) == 0 {
-		iconURLs = []*url.URL{u.ResolveReference(&url.URL{Path: "/favicon.ico"})}
-		iconInitiatorType = "other"
-	}
-	for _, favicon := range iconURLs {
-		favicon := favicon
-		realm.scheduler.Post(scheduler.ResourceLow, 0, func(taskContext context.Context) error {
-			request := network.Request{ContextID: p.Top.ID, URL: favicon, Referrer: u, SourceURL: u, Initiator: network.Other, PerformanceInitiatorType: iconInitiatorType}
-			realm.applyClientHints(&request)
-			realm.resourceWG.Add(1)
-			go func() {
-				defer realm.resourceWG.Done()
-				_, loadErr := p.loader.Load(realm.resourceContext, realm.withResourceTiming(request))
-				if realm.resourceContext.Err() != nil {
-					return
-				}
-				if loadErr != nil {
-					p.trace.Add(trace.Error, "browserResourceLoad", map[string]any{"url": favicon.String(), "error": loadErr.Error()})
-				}
-				realm.scheduler.Post(scheduler.Network, 0, func(callbackContext context.Context) error {
-					realm.notifyPerformanceObservers(callbackContext)
-					return nil
-				})
-			}()
-			return nil
-		})
-		// The Page event-loop pump begins this non-blocking transport after the
-		// navigation turn releases ownership of the Page.
-	}
-	// Load is scheduled only after parser-time and transitively inserted
-	// load-blocking resources complete. The realm owns that accounting so DOM,
-	// resource loading, readyState and NavigationTiming share one lifecycle.
-	realm.requestLoad(func(taskContext context.Context) {
-		p.trace.Add(trace.Lifecycle, "load", map[string]any{"url": u.String(), "frameId": p.Top.ID, "realm": realm.ID, "loaderId": loaderID})
-		p.mu.Lock()
-		p.loadEventEnded = true
-		p.mu.Unlock()
-		// NavigationTiming is a live entry while the document loads. Chrome
-		// delivers it to observers again when loadEventEnd finalizes duration;
-		// resource-only notifications cannot represent that transition.
-		realm.notifyPerformanceObservers(taskContext)
-	})
-	return nil
+	return realm.closeDocumentStream()
 }
 func documentIconURLs(document *dom.Document, base *url.URL) []*url.URL {
 	var result []*url.URL
@@ -802,6 +939,12 @@ func (p *Page) EvaluateCommand(ctx context.Context, frameID, source string) (any
 }
 
 func (p *Page) evaluateRealm(ctx context.Context, r *Realm, source string, drainReady bool) (any, error) {
+	// The embedding API historically drains location/form navigation through
+	// its initial response. CDP owns an independent pump and must not do this.
+	if drainReady {
+		p.directEvaluationDepth++
+		defer func() { p.directEvaluationDepth-- }()
+	}
 	p.realmEvaluationDepth++
 	defer func() { p.realmEvaluationDepth--; p.collectRealmOwners() }()
 	if r == nil {

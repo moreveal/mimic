@@ -48,8 +48,8 @@ const cssComputedValue=(element,name)=>withStyleReadCache(()=>{
   const raw=declaration?.parsedValue??value;
   try{
    const svg=svgComputedTransform?.(element,raw);if(svg!==null&&svg!==undefined)return svg;
-   const box=layoutRectFor(element),em=cssComputedFontSize(element)??16,rem=cssComputedFontSize(document.documentElement)??16;
-   const matrix=compatibilityMatrix.parse(raw,(text,axis)=>cssResolveLength(text,{em,rem,percent:axis===0?box.width:axis===1?box.height:0}));
+   const box=layoutRectFor(element);
+   const matrix=compatibilityMatrix.parse(raw,(text,axis)=>cssResolveLength(text,cssGeometryLengthContext(element,axis===0?box.width:axis===1?box.height:0)));
    const two=[2,3,6,7,8,9,11,14].every(i=>matrix[i]===0)&&matrix[10]===1&&matrix[15]===1;
    return (two?'matrix(':'matrix3d(')+(two?[0,1,4,5,12,13].map(i=>matrix[i]):matrix).map(cssSerializeNumber).join(', ')+')';
   }catch{return value}
@@ -70,11 +70,11 @@ const cssComputedValue=(element,name)=>withStyleReadCache(()=>{
  if(logical[name]&&(specified==null||declaration?.allReset||value==='auto'))return cssComputedValue(element,logical[name]);
  const physical=/^(border|padding|margin)-(block|inline)-(start|end)(.*)$/.exec(name);
  if(physical&&(specified==null||declaration?.allReset))return cssComputedValue(element,physical[1]+'-'+sides[physical[2]][physical[3]]+physical[4]);
- const box=()=>cssBoxModel.size(element),state=cssBoxModel.state(element),length=(v,basis=0)=>cssResolveLength(v,{em:(cssComputedFontSize(element)??16),rem:(cssComputedFontSize(document.documentElement)??16),percent:basis});
+ const box=()=>cssBoxModel.size(element),state=cssBoxModel.state(element),length=(v,basis=0)=>cssResolveLength(v,cssGeometryLengthContext(element,basis));
  if(/^margin-(left|right)$/.test(name)&&value==='auto'&&!['inline','inline-block'].includes(state.display))return cssSerializeNumber(box().edges[name.endsWith('left')?'mleft':'mright'])+'px';
  if(name==='width'||name==='height'){
   for(let p=element;p;p=geometryParent(p))if(cssBoxModel.state(p).display==='none'){const n=value.endsWith('%')?null:length(value);return n===null?value:cssSerializeNumber(n)+'px'}
-  const dimension=box()[name],edges=box().edges;
+  const dimensions=name==='width'?cssBoxModel.widthBox(element):cssBoxModel.heightBox(element),dimension=dimensions[name],edges=dimensions.edges;
   return cssSerializeNumber(Math.max(0,dimension-(state.get('box-sizing')==='border-box'?0:name==='width'?edges.pleft+edges.pright+edges.bleft+edges.bright:edges.ptop+edges.pbottom+edges.btop+edges.bbottom)))+'px';
  }
  if(/^min-(width|height)$/.test(name)&&value==='auto')return '0px';

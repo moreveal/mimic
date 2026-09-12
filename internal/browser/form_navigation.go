@@ -41,7 +41,7 @@ func (r *Realm) installFormNavigation(host map[string]any) {
 			request.Headers = http.Header{"Content-Type": {strarg(args, 3)}}
 		}
 		r.scheduler.Post(scheduler.Navigation, 0, func(ctx context.Context) error {
-			return p.navigateRequest(ctx, target.String(), uuid.NewString(), request)
+			return p.beginNavigationRequest(ctx, target.String(), uuid.NewString(), request, 0, true)
 		})
 		return r.val(""), nil
 	})

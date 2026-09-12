@@ -4,9 +4,12 @@ import (
 	"context"
 	"encoding/json"
 	"math"
+	"net/http"
+	"net/http/httptest"
 	"os"
 	"reflect"
 	"testing"
+	"time"
 )
 
 func TestProtocolKeyboardAndTextMatchChrome152(t *testing.T) {
@@ -205,6 +208,66 @@ func TestProtocolSelectAndContentClickAcrossWorlds(t *testing.T) {
 		value, err = page.Evaluate(ctx, `window.clicks`)
 		if err != nil || numberValue(value) != 2 {
 			t.Fatalf("trusted pointer did not use same content handler: %v %v", value, err)
+		}
+	})
+}
+
+func TestProtocolMouseClickNavigatesThroughAnchorDescendant(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/next" {
+			_, _ = w.Write([]byte(`<!doctype html><title>next</title><body>arrived</body>`))
+			return
+		}
+		_, _ = w.Write([]byte(`<!doctype html><a href="/next" style="display:block;width:120px;height:40px"><span style="display:block;width:120px;height:40px">continue</span></a>`))
+	}))
+	defer server.Close()
+
+	page := testPage(t)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	if err := page.Navigate(ctx, server.URL); err != nil {
+		t.Fatal(err)
+	}
+	for _, kind := range []string{"mouseMoved", "mousePressed", "mouseReleased"} {
+		if err := page.DispatchProtocolInput(ctx, "Input.dispatchMouseEvent", map[string]any{"type": kind, "x": 60, "y": 20, "button": "left", "clickCount": 1}); err != nil {
+			t.Fatal(err)
+		}
+	}
+	for page.URL() != server.URL+"/next" || !page.LoadEventEnded() {
+		realm := page.Top.Realm
+		if err := realm.scheduler.Wait(ctx); err != nil {
+			t.Fatal(err)
+		}
+		if err := realm.RunReady(ctx); err != nil {
+			t.Fatal(err)
+		}
+	}
+	if page.URL() != server.URL+"/next" {
+		t.Fatalf("anchor descendant click did not navigate: %s", page.URL())
+	}
+}
+
+func TestProtocolMouseClickCannotBypassOverlayWithHitHint(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, page *Page) {
+		navigateCapabilityFixture(t, page)
+		ctx := context.Background()
+		before := page.URL()
+		if _, err := page.Evaluate(ctx, `document.body.innerHTML='<a id="target" href="#arrived" style="display:block;width:100px;height:40px">go</a><div style="position:absolute;left:0;top:0;width:200px;height:100px;z-index:2"></div>'`); err != nil {
+			t.Fatal(err)
+		}
+		document, ok := page.Document()
+		target, ok := document.Find("#target")
+		if !ok {
+			t.Fatal("missing target node")
+		}
+		for _, kind := range []string{"mousePressed", "mouseReleased"} {
+			params := map[string]any{"type": kind, "x": 20, "y": 20, "button": "left", "clickCount": 1, "_mimicNodeId": target.ID, "_mimicLocalX": 20, "_mimicLocalY": 20}
+			if err := page.DispatchProtocolInput(ctx, "Input.dispatchMouseEvent", params); err != nil {
+				t.Fatal(err)
+			}
+		}
+		if page.URL() != before {
+			t.Fatalf("non-protocol hint bypassed overlay: %s", page.URL())
 		}
 	})
 }

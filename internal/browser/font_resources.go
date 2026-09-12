@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"slices"
 
 	"github.com/moreveal/mimic/internal/engine"
 	"github.com/moreveal/mimic/internal/textmetrics"
@@ -60,7 +61,18 @@ func (r *Realm) installFontCollection(host map[string]any) {
 		if len(choices) > 1024 {
 			return nil, fmt.Errorf("font collection limit")
 		}
-		r.fontChoices = choices
+		if !slices.Equal(r.fontChoices, choices) {
+			if r.textCacheProfile != nil {
+				r.textCacheProfile.FontInvalidations++
+			}
+			r.fontChoices = choices
+			r.textShapeCache = nil
+			// Geometry may be reused across reads within this task. FontFaceSet
+			// mutations affect those metrics without changing a DOM attribute.
+			// The shared document epoch also invalidates isolated-world views,
+			// while font selection retains its existing realm ownership.
+			r.document.InvalidateObservations()
+		}
 		return nil, nil
 	})
 }
