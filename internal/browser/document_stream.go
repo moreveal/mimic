@@ -74,13 +74,22 @@ func (r *Realm) documentBaseURL() *url.URL {
 			base = frame.auxiliaryBase
 		}
 	}
-	for _, node := range r.document.FindAllByTagName("base") {
-		if raw, exists := node.Attributes["href"]; exists {
-			if ref, err := url.Parse(raw); err == nil {
-				return base.ResolveReference(ref)
+	// Cache the parsed reference, not the resolved URL: history changes and
+	// about:blank's inherited base must take effect without a DOM mutation.
+	// The canonical arena revision includes parser and cross-realm writes.
+	revision := r.document.Revision()
+	if r.baseCacheDocument != r.document || r.baseCacheRevision != revision {
+		r.baseCacheDocument, r.baseCacheRevision = r.document, revision
+		r.baseCacheReference = nil
+		for _, node := range r.document.FindAllByTagName("base") {
+			if raw, exists := node.Attributes["href"]; exists {
+				r.baseCacheReference, _ = url.Parse(raw)
+				break
 			}
-			break
 		}
+	}
+	if r.baseCacheReference != nil {
+		return base.ResolveReference(r.baseCacheReference)
 	}
 	return base
 }

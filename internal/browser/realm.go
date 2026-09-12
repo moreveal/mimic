@@ -140,6 +140,9 @@ type Realm struct {
 	stylesheetLoads          map[preloadKey]*resourcePreload
 	stylesheetFetchSlots     chan struct{}
 	resourceRevision         atomic.Uint64
+	baseCacheDocument        *dom.Document
+	baseCacheRevision        uint64
+	baseCacheReference       *url.URL
 	fetchCancels             map[string]context.CancelFunc
 	nativePollQueued         bool
 	checkpointQueued         bool
@@ -1527,6 +1530,9 @@ func (r *Realm) installBindings() error {
 	host["matches"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(r.document.Matches(int64(numarg(a, 0)), strarg(a, 1))), nil
 	}, "ns")
+	host["attributeNames"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return r.val(r.document.AttributeNameList(int64(numarg(a, 0)))), nil
+	}, "n")
 	host["nodeData"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		n, ok := r.document.Get(int64(numarg(a, 0)))
 		if !ok {

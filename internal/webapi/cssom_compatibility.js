@@ -127,7 +127,7 @@ const constructedStyleSheets = (() => {
     if(!elementSlot(owner))throw new TypeError('Illegal invocation');
     const prior=owners.get(owner),tag=owner.localName,type=(owner.getAttribute('type')||'').trim().toLowerCase();
     if(!owner.isConnected||type&&type!=='text/css'||tag==='link'&&!String(owner.getAttribute('rel')||'').toLowerCase().split(/\s+/).includes('stylesheet')){owners.delete(owner);return null}
-    const resource=tag==='link'?host.stylesheetResource(owner.getAttribute('href')||''):null;if(tag==='link'&&!resource){owners.delete(owner);return null}
+    const resource=tag==='link'?host.stylesheetResource(owner.getAttribute('href')||'',prior?.key||''):null;if(tag==='link'&&!resource){owners.delete(owner);return null}
     const source=tag==='link'?resource.body:owner.textContent||'',key=tag==='link'?resource.url:source;
     let sheet=prior?.key===key?prior.sheet:null;
     if(!sheet){sheet=new CSSStyleSheet();const s=sheets.get(sheet);s.owner=owner;s.href=resource?.url||null;s.crossOrigin=!!resource?.crossOrigin;s.rules.push(...parsedRules(source,sheet));owners.set(owner,{key,sheet})}
@@ -137,7 +137,29 @@ const constructedStyleSheets = (() => {
     Object.defineProperty(globalThis[type].prototype,'sheet',{get(){return ownerSheet(this)},enumerable:true,configurable:true});
     Object.defineProperty(globalThis[type].prototype,'disabled',{get(){const sheet=ownerSheet(this);return sheet?sheets.get(sheet).disabled:false},set(value){const sheet=ownerSheet(this);if(sheet){sheets.get(sheet).disabled=!!value;revision++}},enumerable:true,configurable:true});
   }
-  function ownerCollection(root){let list=ownerLists.get(root);if(!list){const values=()=>compatibilitySelectors.query(root,'style,link',false,false).map(ownerSheet).filter(Boolean);list=new Proxy(Object.create(StyleSheetList.prototype),{get(target,key,receiver){const all=values();if(key==='length')return all.length;if(key==='item')return index=>values()[(+index)>>>0]||null;if(key===Symbol.iterator)return all[Symbol.iterator].bind(all);if(typeof key==='string'&&/^\d+$/.test(key))return all[Number(key)];return Reflect.get(target,key,receiver)}});ownerLists.set(root,list)}return list}
+  function ownerCollection(root) {
+    let list=ownerLists.get(root);
+    if(!list){
+      let domVersion,candidates;
+      const values=()=>{
+        // Membership depends on canonical DOM writes; sheet availability and
+        // CSSOM state are still rechecked even when membership is unchanged.
+        const current=host.domRevision();
+        if(current!==domVersion){candidates=compatibilitySelectors.query(root,'style,link',false,false);domVersion=current}
+        return candidates.map(ownerSheet).filter(Boolean);
+      };
+      list=new Proxy(Object.create(StyleSheetList.prototype),{get(target,key,receiver){
+        const all=values();
+        if(key==='length')return all.length;
+        if(key==='item')return index=>values()[(+index)>>>0]||null;
+        if(key===Symbol.iterator)return all[Symbol.iterator].bind(all);
+        if(typeof key==='string'&&/^\d+$/.test(key))return all[Number(key)];
+        return Reflect.get(target,key,receiver);
+      }});
+      ownerLists.set(root,list);
+    }
+    return list;
+  }
   for(const type of ['Document','ShadowRoot'])if(globalThis[type])Object.defineProperty(globalThis[type].prototype,'styleSheets',{get(){if(!(this instanceof globalThis[type]))throw new TypeError('Illegal invocation');return ownerCollection(this)},enumerable:true,configurable:true});
   // The cache is derived from the canonical CSSOM; rule edits invalidate it.
   // DOM-owned sheets are still revalidated against their current owner text.

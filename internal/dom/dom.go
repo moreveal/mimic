@@ -933,3 +933,14 @@ func (d *Document) MetaHTTPEquiv(name string) []string {
 	}
 	return out
 }
+
+// AttributeNameList snapshots only the ordered names, without copying the
+// node's text, children or attribute values for a NamedNodeMap enumeration.
+func (d *Document) AttributeNameList(id int64) []string {
+	d.mu.RLock()
+	defer d.mu.RUnlock()
+	if node := d.nodes[id]; node != nil {
+		return append([]string{}, node.AttributeNames...)
+	}
+	return []string{}
+}

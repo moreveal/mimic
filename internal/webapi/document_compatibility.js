@@ -5,7 +5,7 @@ let registerDocumentGetterBinding;
 const documentImplementations = new WeakMap();
 const fragmentOwnerDocuments = new WeakMap();
 function wrapDocumentNode(data) {
-  if(data.nodeId===host.documentRootID())return document;
+  if(data.nodeId===realmDocumentRootID)return document;
   let value=documentWrappers.get(data.nodeId);
   if(!value){const reference=host.documentReference(data.nodeId);if(reference){value=unwrapCrossRealm(reference.frame,reference);documentWrappers.set(data.nodeId,value)}}
   if(!value){value=Object.create((data.contentType&&data.contentType!=='text/html'?globalThis.XMLDocument:HTMLDocument).prototype);elementData.set(value,data);Object.defineProperty(value,'location',documentLocationDescriptor);documentWrappers.set(data.nodeId,value);if(registerDocumentGetterBinding)registerDocumentGetterBinding(value)}
