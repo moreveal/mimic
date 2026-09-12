@@ -361,7 +361,7 @@
   const clientRectFor=element=>withStyleReadCache(()=>{
     const box=layoutRectFor(element),entries=computedCSSDeclarations(element),get=k=>entries.find(e=>e.name===k)?.value;
     const raw=get('transform');if(!raw||raw==='none'||get('display')==='none')return box;
-    const len=(v,size)=>{const resolved=cssResolveLength(v,{em:cssComputedFontSize(element)||16,rem:cssComputedFontSize(document.documentElement)||16,percent:size});return resolved===null?null:cssGeometryLength(resolved)};
+    const len=(v,size)=>{const resolved=cssResolveLength(v,{em:(cssComputedFontSize(element)??16),rem:(cssComputedFontSize(document.documentElement)??16),percent:size});return resolved===null?null:cssGeometryLength(resolved)};
     let matrix;
     try{matrix=compatibilityMatrix.parse(raw,(value,axis)=>len(value,axis===0?box.width:axis===1?box.height:0))}
     catch{host.semanticMissingAt('surface.js/clientRectFor','CSS.clientRectTransform',raw);return box}
