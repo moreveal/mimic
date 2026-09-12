@@ -11,6 +11,7 @@ import (
 	"os"
 	"reflect"
 	"strings"
+	"sync"
 	"testing"
 	"time"
 )
@@ -165,6 +166,39 @@ func TestPerformanceIsolatedSurfaceMatchesFrozenChrome(t *testing.T) {
 			})
 		})
 	}
+}
+
+func TestPerformanceIndependentPageTimelines(t *testing.T) {
+	seed := bootstrapSnapshotPage(t)
+	server := performanceOracleServer(t)
+	var pages []*Page
+	for i := 0; i < 4; i++ {
+		p, err := seed.ctx.NewPage()
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err = p.Navigate(context.Background(), server.URL); err != nil {
+			t.Fatal(err)
+		}
+		pages = append(pages, p)
+	}
+	start := make(chan struct{})
+	var workers sync.WaitGroup
+	for index, page := range pages {
+		workers.Add(1)
+		go func(index int, p *Page) {
+			defer workers.Done()
+			<-start
+			ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
+			defer cancel()
+			value, err := p.Evaluate(ctx, fmt.Sprintf(`new Promise(resolve=>{const owner=%d,rows=[];const observer=new PerformanceObserver(list=>{rows.push(...list.getEntries());observer.disconnect();resolve(rows.length===40&&rows.every(e=>e.detail.owner===owner)&&performance.getEntriesByType('mark').length===40)});observer.observe({type:'mark'});for(let i=0;i<40;i++)performance.mark('shared-name',{detail:{owner},startTime:i})})`, index))
+			if err != nil || value != true {
+				t.Errorf("page %d: %v, %v", index, value, err)
+			}
+		}(index, page)
+	}
+	close(start)
+	workers.Wait()
 }
 
 func assertPerformanceOracle(t *testing.T, name, actualJSON string) {
