@@ -1,0 +1,14 @@
+# Computed CSS catalog and value projection
+
+NNZHC4 enumerates and serializes a computed CSSStyleDeclaration. The previous runtime exposed only a small set of resolved entries and WebKit names, so the shape and values diverged before any payload hash. This increment exposes the selected frozen Chrome API catalog (476 indexed entries, 737 enumerable named entries), with canonical alias, inheritance and shorthand relationships from Chromium commit d04cdb24d67b081f6cf80200ffc5233f44b61109 css_properties.json5. Catalog names are generic platform metadata, not saved VM output.
+
+Initial semantics are grouped independently from value resolution. The retained all:initial control varies box dimensions, font size and currentColor; measured element dimensions, insets and origins are not runtime constants. Formal initial values replace the fixture's fixed positioning, dimensions, blockification, UA unicode-bidi and resolved border widths. Used values come from the existing font and canonical CSS box models. The all declaration participates in the cascade at its own priority and order, excluding direction and unicode-bidi. Shorthand observations compose their longhands; currentColor resolves in the element's context. Computed width remains specified/resolved under display:none even though its geometry is zero.
+
+Frozen controls include full named-property snapshots with inherited colors/fonts, live all reset, detached and absent flat-tree states; six writing-mode/direction combinations for logical observations; relative text lengths and hidden percentage dimensions. The original initial/changed matrix remains separate. All retained expectations are unmodified Chrome observations. Raw A/B launches and metadata remain in .build/residual-dom-delegated/{inventory-controls,catalog-controls,catalog-dynamic-controls} and testdata/css_computed_*_chrome152.json.
+
+The UA BODY margin is 8px in the selected desktop profile. The prior graph omitted it, shifting normal/absolute static positions and body width. Two older unfrozen projection tests now explicitly set margin:0 to keep their existing box-only assertions; the frozen inventory's 8px inset independently verifies the default.
+
+This increment does not implement every accepted CSS grammar or full layout. Complex layered shorthand serialization, authored logical-to-physical cascade conflicts, flex/grid placement and advanced font/layout effects need further independent controls before broader compatibility claims. Names alone are not a claim of complete behavior. Existing frozen WebKit alias and lifecycle tests remain authoritative.
+
+Frozen source: https://chromium.googlesource.com/chromium/src/+/d04cdb24d67b081f6cf80200ffc5233f44b61109/third_party/blink/renderer/core/css/css_properties.json5
+Source SHA256: 8273b2d1bf457c8698bfd7689fad39ff59d606cafd1adda7647571b361443784
