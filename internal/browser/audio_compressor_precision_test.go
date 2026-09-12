@@ -9,3 +9,7 @@ import "testing"
 func TestAudioCompressorPrecisionMatchesFrozenChrome(t *testing.T) {
 	documentAllOracle(t, "audio_compressor_precision")
 }
+
+func TestAudioFFTPrecisionMatchesFrozenChrome(t *testing.T) {
+	documentAllOracle(t, "audio_fft_precision")
+}
