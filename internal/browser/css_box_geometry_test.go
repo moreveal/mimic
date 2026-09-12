@@ -11,7 +11,7 @@ import (
 func TestCSSBoxGraphMatchesFrozenChrome(t *testing.T) { testCSSObservation(t, "css_box_geometry") }
 
 func TestCSSComputedCatalogMatchesFrozenChrome(t *testing.T) {
-	for _, name := range []string{"css_wrapper_flow", "css_specified_values", "css_zero_font", "css_computed_initial", "css_computed_catalog", "css_computed_dynamic"} {
+	for _, name := range []string{"css_line_rounding", "css_wrapper_flow", "css_specified_values", "css_zero_font", "css_computed_initial", "css_computed_catalog", "css_computed_dynamic"} {
 		t.Run(name, func(t *testing.T) { testCSSObservation(t, name) })
 	}
 }
@@ -35,11 +35,19 @@ func testCSSObservation(t *testing.T, name string) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		var actual map[string]any
-		if err := json.Unmarshal([]byte(result.(string)), &actual); err != nil {
+		var actualValue any
+		if err := json.Unmarshal([]byte(result.(string)), &actualValue); err != nil {
 			t.Fatal(err)
 		}
-		for name, expected := range oracle.Observation.(map[string]any) {
+		expectedFields, object := oracle.Observation.(map[string]any)
+		if !object {
+			if !reflect.DeepEqual(actualValue, oracle.Observation) {
+				t.Errorf("got %v; want %v", actualValue, oracle.Observation)
+			}
+			return
+		}
+		actual, _ := actualValue.(map[string]any)
+		for name, expected := range expectedFields {
 			if !reflect.DeepEqual(actual[name], expected) {
 				if want, ok := expected.(map[string]any); ok {
 					got, _ := actual[name].(map[string]any)
