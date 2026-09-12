@@ -5,7 +5,6 @@
   const accessor=(prototype,name,get,set)=>{markNative(get,name,'get ');markNative(set,name,'set ');Object.defineProperty(prototype,name,{get,set,enumerable:true,configurable:true})};
   const stateOf=event=>{const state=eventSlots.get(event);if(!state)throw new TypeError('Illegal invocation');return state};
   const optionCapture=options=>typeof options==='boolean'?options:!!options?.capture;
-  const ContentFunction=Function;
   let contentHandlerWorld=host.isIsolatedInputWorld();
   bootstrapRestoreHooks.push(()=>{contentHandlerWorld=host.isIsolatedInputWorld()});
   const ensureContentHandler=(target,type)=>{
@@ -16,7 +15,7 @@
     if(source===null){if(state.attributeOwned){state.attributeOwned=false;setEventHandlerValue(target,type,null)}return}
     state.attributeOwned=true;let callback=null;
     if(host.allowContentEventHandler(source)){
-      try{callback=ContentFunction('return function '+('on'+type).replace(/[^A-Za-z0-9_$]/g,'_')+'(event){with(document){with(this.form||{}){with(this){'+source+'\n}}}}')()}
+      try{callback=host.compileContentHandler('function '+('on'+type).replace(/[^A-Za-z0-9_$]/g,'_')+'(event){with(document){with(this.form||{}){with(this){'+source+'\n}}}}')}
       catch(error){try{console.error(error)}catch{}}
     }
     setEventHandlerValue(target,type,callback);

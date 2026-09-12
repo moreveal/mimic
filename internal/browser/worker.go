@@ -14,6 +14,7 @@ import (
 
 	"github.com/google/uuid"
 	"github.com/moreveal/mimic/compatibility"
+	"github.com/moreveal/mimic/internal/csp"
 	"github.com/moreveal/mimic/internal/engine"
 	"github.com/moreveal/mimic/internal/monotime"
 	"github.com/moreveal/mimic/internal/network"
@@ -27,6 +28,7 @@ import (
 // Cross-agent callbacks are always posted as tasks; neither runtime calls into the
 // other directly while executing observable JavaScript.
 type DedicatedWorker struct {
+	policy              csp.PolicySet
 	mu                  sync.Mutex
 	id                  int64
 	parent              *Realm
@@ -62,6 +64,9 @@ func (r *Realm) hostCreateWorker(_ engine.Value, args []engine.Value) (engine.Va
 		return nil, err
 	}
 	w := &DedicatedWorker{id: id, parent: r, deliverCallback: args[0], errorCallback: args[1], url: workerURL, securityURL: r.documentURL(), topLevelURL: r.requestTopLevelURL(), done: make(chan struct{}), wake: make(chan struct{}, 1), performanceOrigin: r.scheduler.Now()}
+	if workerURL.Scheme == "blob" || workerURL.Scheme == "data" {
+		w.policy = append(csp.PolicySet(nil), r.contentPolicy()...)
+	}
 	w.performanceIsolated = r.securityState().crossOriginIsolated
 	w.cookieContext = r.cookieContext()
 	r.workers[id] = w
@@ -275,6 +280,41 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 		}
 		return runtime.Value(map[string]any{"href": href, "origin": origin, "protocol": w.url.Scheme + ":", "host": w.url.Host, "hostname": w.url.Hostname(), "port": w.url.Port(), "pathname": pathname, "search": prefixed(w.url.RawQuery, "?"), "hash": prefixed(w.url.Fragment, "#")}), nil
 	})
+	host["importScripts"] = runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		for _, raw := range stringSlice(arg(args, 0)) {
+			target, err := w.url.Parse(raw)
+			if err != nil {
+				return runtime.Value(map[string]any{"name": "SyntaxError", "message": "Invalid script URL"}), nil
+			}
+			allowed, _ := w.policy.AllowsScript(w.url, target, false, false, "")
+			if !allowed {
+				return runtime.Value(map[string]any{"name": "NetworkError", "message": "Script blocked by Content Security Policy"}), nil
+			}
+			response, err := p.loader.Load(ctx, w.parent.withResourceTiming(network.Request{ContextID: w.parent.agent.ContextID(), URL: target, Referrer: w.url, SourceURL: w.securityURL, TopLevelURL: w.topLevelURL, HasCrossSiteAncestor: w.cookieContext.HasCrossSiteAncestor, Initiator: network.Worker, OmitClientHints: true}))
+			if err == nil {
+				err = scriptResponseError(response)
+			}
+			if err != nil {
+				return runtime.Value(map[string]any{"name": "NetworkError", "message": err.Error()}), nil
+			}
+			if _, err = runtime.Eval(ctx, string(response.Body), target.String()); err != nil {
+				return nil, err
+			}
+		}
+		return nil, nil
+	})
+	host["runTimerSource"] = runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		if w.policy.TrustedTypes().EvalBlocked != "" {
+			return nil, nil
+		}
+		return runtime.Eval(ctx, strarg(args, 0), "worker-timer")
+	})
+	host["trustedTypesEventAttributes"] = runtime.Function(func(engine.Value, []engine.Value) (engine.Value, error) {
+		return runtime.Value(p.Compatibility().Surface().TrustedTypeEventAttributes), nil
+	})
+	host["trustedTypesPolicy"] = runtime.Function(func(engine.Value, []engine.Value) (engine.Value, error) {
+		return runtime.Value(w.policy.TrustedTypes().Projection()), nil
+	})
 	host["isSecureContext"] = runtime.Function(func(engine.Value, []engine.Value) (engine.Value, error) {
 		return runtime.Value(w.isSecureContext()), nil
 	})
@@ -396,6 +436,9 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 				return loadErr
 			}
 			source = string(res.Body)
+			if w.url.Scheme != "blob" && w.url.Scheme != "data" {
+				w.policy = parseResponseCSP(res.Headers)
+			}
 			if res.URL != nil {
 				w.url = res.URL
 			}

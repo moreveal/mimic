@@ -96,7 +96,7 @@ func (r *Realm) preloadResource(id int64, attributes map[string]string) {
 	default:
 		return // No consumer for this destination in the runtime yet.
 	}
-	if initiator == network.Script && !r.agent.Page().allowsScript(u, false, false, attributes["nonce"]) {
+	if initiator == network.Script && !r.allowsScript(u, false, false, attributes["nonce"]) {
 		return
 	}
 	r.preloadedLinks[id] = true

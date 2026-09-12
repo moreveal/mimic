@@ -30,9 +30,7 @@ func (r *Realm) installFormNavigation(host map[string]any) {
 		}
 		p := r.agent.Page()
 		documentURL := r.documentURL()
-		p.mu.RLock()
-		allowed := p.bypassCSP || p.policy.AllowsFormAction(documentURL, target)
-		p.mu.RUnlock()
+		allowed := p.cspBypassed() || r.contentPolicy().AllowsFormAction(documentURL, target)
 		p.trace.Add(trace.CSP, "formActionDecision", map[string]any{"allowed": allowed, "url": target.String(), "realm": r.ID})
 		if !allowed {
 			return r.val(""), nil

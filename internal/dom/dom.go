@@ -33,6 +33,7 @@ type Node struct {
 	TemplateContent       int64             `json:"templateContent,omitempty"`
 	TemplateHost          int64             `json:"templateHost,omitempty"`
 	Nonce                 string            `json:"-"`
+	ScriptText            string            `json:"-"` // Last source accepted by a script text setter; clones do not inherit it.
 	ScriptAlreadyStarted  bool              `json:"-"`
 	OwnerDocument         int64             `json:"ownerDocumentId,omitempty"`
 }
@@ -934,6 +935,40 @@ func (d *Document) MetaHTTPEquiv(name string) []string {
 	return out
 }
 
+// Only connected HTML meta elements under head deliver a CSP. Callers retain
+// delivered policies when the element is subsequently removed or changed.
+func (d *Document) ContentSecurityPolicyMeta(cursor int64, candidates []int64) (int64, []int64, []Node) {
+	d.mu.RLock()
+	defer d.mu.RUnlock()
+	// Incrementally index node identities. Most documents have no CSP meta:
+	// repeated reads/mutations cost O(new nodes + meta nodes), not O(DOM size).
+	if cursor > d.next {
+		cursor = 0
+		candidates = nil
+	}
+	for id := cursor + 1; id <= d.next; id++ {
+		if node := d.nodes[id]; node != nil && node.TagName == "META" {
+			candidates = append(candidates, id)
+		}
+	}
+	var out []Node
+	for _, id := range candidates {
+		node := d.nodes[id]
+		if node == nil || node.Namespace != "http://www.w3.org/1999/xhtml" || !d.isConnectedLocked(id) || !strings.EqualFold(node.Attributes["http-equiv"], "content-security-policy") {
+			continue
+		}
+		for parent := d.nodes[node.Parent]; parent != nil; parent = d.nodes[parent.Parent] {
+			if parent.TagName == "HEAD" {
+				copy := *node
+				copy.Attributes = map[string]string{"content": node.Attributes["content"]}
+				out = append(out, copy)
+				break
+			}
+		}
+	}
+	return d.next, candidates, out
+}
+
 // AttributeNameList snapshots only the ordered names, without copying the
 // node's text, children or attribute values for a NamedNodeMap enumeration.
 func (d *Document) AttributeNameList(id int64) []string {
@@ -943,4 +978,38 @@ func (d *Document) AttributeNameList(id int64) []string {
 		return append([]string{}, node.AttributeNames...)
 	}
 	return []string{}
+}
+
+func (d *Document) SetScriptText(id int64, text string) {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	if node := d.nodes[id]; node != nil {
+		node.ScriptText = text
+	}
+}
+
+// UnstartedScriptsWithin snapshots candidates in tree order, before any script
+// can mutate that subtree. Template content has no parent edge and stays inert.
+func (d *Document) UnstartedScriptsWithin(id int64) []int64 {
+	d.mu.RLock()
+	defer d.mu.RUnlock()
+	if !d.isConnectedLocked(id) {
+		return nil
+	}
+	var ids []int64
+	var visit func(int64)
+	visit = func(id int64) {
+		node := d.nodes[id]
+		if node == nil {
+			return
+		}
+		if node.TagName == "SCRIPT" && node.Namespace == "http://www.w3.org/1999/xhtml" && !node.ScriptAlreadyStarted {
+			ids = append(ids, id)
+		}
+		for _, child := range node.Children {
+			visit(child)
+		}
+	}
+	visit(id)
+	return ids
 }

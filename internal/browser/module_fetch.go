@@ -59,7 +59,6 @@ func (r *Realm) moduleRequest(target, referrer *url.URL) network.Request {
 }
 
 func (r *Realm) preloadModules() {
-	page := r.agent.Page()
 	base := r.documentURL()
 	if r.preloadedModuleLinks == nil {
 		r.preloadedModuleLinks = map[int64]bool{}
@@ -75,7 +74,7 @@ func (r *Realm) preloadModules() {
 			continue
 		}
 		target, err := base.Parse(link.Attributes["href"])
-		if err != nil || !page.allowsScript(target, false, false, link.Attributes["nonce"]) {
+		if err != nil || !r.allowsScript(target, false, false, link.Attributes["nonce"]) {
 			continue
 		}
 		request := r.moduleRequest(target, base)
