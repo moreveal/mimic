@@ -1300,7 +1300,9 @@
       ],
       "returns": [],
       "support": {
-        "status": "unsupported"
+        "status": "unsupported",
+        "notes": "Acknowledgment only for client initialization. Download policy, filesystem destinations, context-specific behavior and download events are not implemented.",
+        "tests": []
       }
     },
     {
@@ -5287,7 +5289,7 @@
       "returns": [],
       "support": {
         "status": "partial",
-        "notes": "Screen media and canonical prefers-color-scheme/reduced-motion. Other media/features reject; complete dynamic cascade/query-change events are not verified.",
+        "notes": "Screen media and canonical prefers-color-scheme/reduced-motion. forced-colors and prefers-contrast are accepted without applying an override; other media/features reject. Complete dynamic cascade/query-change events are not verified.",
         "tests": [
           "internal/browser/page_test.go#TestMatchMediaDerivesFromCanonicalPreferences"
         ]
@@ -5335,7 +5337,9 @@
       "optionalParameters": [],
       "returns": [],
       "support": {
-        "status": "unsupported"
+        "status": "unsupported",
+        "notes": "Acknowledgment only for client initialization. The enabled flag does not override document focus, active state or focus lifecycle events; focus emulation semantics are not implemented.",
+        "tests": []
       }
     },
     {
