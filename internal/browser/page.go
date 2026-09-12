@@ -48,6 +48,7 @@ type Page struct {
 	Top                *Frame
 	loaderID           string
 	clock              time.Time
+	activeClock        atomic.Pointer[scheduler.Scheduler]
 	performanceOrigin  time.Time
 	proxy              *WindowProxy
 	current            *url.URL
@@ -157,6 +158,11 @@ func (p *Page) ClockNow() time.Time {
 	now := p.clock
 	realm := p.Top.Realm
 	p.mu.RUnlock()
+	if active := p.activeClock.Load(); active != nil {
+		if observed := active.Now(); observed.After(now) {
+			now = observed
+		}
+	}
 	if realm != nil {
 		if realmNow := realm.scheduler.Now(); realmNow.After(now) {
 			return realmNow
@@ -351,7 +357,8 @@ func (p *Page) navigateRequestWithHistory(ctx context.Context, raw, loaderID str
 	}
 	navigationScale := p.Environment().Time.NavigationScale
 	p.mu.Lock()
-	responseTime := performanceOrigin.Add(time.Duration(float64(res.Duration) * navigationScale))
+	completion := max(res.Duration, time.Duration(res.BrowserVisibleTiming.Phases["responseComplete"]*float64(time.Millisecond)))
+	responseTime := performanceOrigin.Add(time.Duration(float64(completion) * navigationScale))
 	if responseTime.After(p.clock) {
 		p.clock = responseTime
 	}
@@ -649,7 +656,9 @@ func (p *Page) navigateRequestWithHistory(ctx context.Context, raw, loaderID str
 		for _, parserFrame := range parserFrames {
 			realm.scheduleChildFrameNavigation(parserFrame.frame, parserFrame.elementID)
 		}
+		realm.performanceLifecycle("domContentLoadedEventStart")
 		_, eventErr := realm.Evaluate(taskContext, `document.dispatchEvent(new Event('DOMContentLoaded'))`, "mimic:dom-content-loaded")
+		realm.performanceLifecycle("domContentLoadedEventEnd")
 		if eventErr == nil {
 			p.trace.Add(trace.Lifecycle, "DOMContentLoaded", map[string]any{"url": u.String(), "frameId": p.Top.ID, "realm": realm.ID})
 		}

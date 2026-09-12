@@ -1,0 +1,197 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "fixtureOrigin": "http://127.0.0.1:46398",
+  "fixture": "internal/browser/testdata/performance_user_timing_oracle.js",
+  "fixtureSHA256": "ab5df15d30c2a63669a860bab4b6bc99cab9895eb6a1e47807c105efd52a2b2b",
+  "worker": true,
+  "result": {
+    "result": {
+      "type": "object",
+      "value": {
+        "mark": {
+          "json": {
+            "name": "late",
+            "entryType": "mark",
+            "startTime": 8,
+            "duration": 0
+          },
+          "clone": true,
+          "map": true,
+          "detailSame": true,
+          "identity": true,
+          "duplicateIdentity": true,
+          "brand": true,
+          "own": [],
+          "mutableDetail": true
+        },
+        "order": [
+          "early",
+          "late",
+          "late"
+        ],
+        "construct": {
+          "name": "constructed",
+          "type": "mark",
+          "start": 4,
+          "duration": 0,
+          "detail": {
+            "x": 1
+          }
+        },
+        "constructNotBuffered": true,
+        "measureNamed": {
+          "name": "named",
+          "type": "measure",
+          "start": 2,
+          "duration": 6,
+          "detail": null
+        },
+        "measureOptions": {
+          "name": "options",
+          "type": "measure",
+          "start": 1,
+          "duration": 3,
+          "detail": {
+            "x": 2
+          }
+        },
+        "measureEndDuration": {
+          "name": "end-duration",
+          "type": "measure",
+          "start": -3,
+          "duration": 5,
+          "detail": null
+        },
+        "measureNegative": {
+          "name": "negative",
+          "type": "measure",
+          "start": 8,
+          "duration": -6,
+          "detail": null
+        },
+        "measure": {
+          "brand": true,
+          "identity": true,
+          "json": {
+            "name": "named",
+            "entryType": "measure",
+            "startTime": 2,
+            "duration": 6
+          },
+          "own": []
+        },
+        "markMissing": {
+          "error": "TypeError"
+        },
+        "markNegative": {
+          "error": "TypeError"
+        },
+        "markNaN": {
+          "error": "TypeError"
+        },
+        "markInfinity": {
+          "error": "TypeError"
+        },
+        "markSymbol": {
+          "error": "TypeError"
+        },
+        "markDetailFunction": {
+          "error": "DataCloneError"
+        },
+        "markReserved": {
+          "type": "mark",
+          "negativeStart": false,
+          "negativeDuration": false
+        },
+        "markOptionsNumber": {
+          "error": "TypeError"
+        },
+        "markNull": {
+          "type": "mark",
+          "negativeStart": false,
+          "negativeDuration": false
+        },
+        "markBigint": {
+          "error": "TypeError"
+        },
+        "measureMissing": {
+          "error": "TypeError"
+        },
+        "measureUnknown": {
+          "error": "SyntaxError"
+        },
+        "measureOptionsEmpty": {
+          "type": "measure",
+          "negativeStart": false,
+          "negativeDuration": false
+        },
+        "measureAllThree": {
+          "error": "TypeError"
+        },
+        "measureDurationOnly": {
+          "error": "TypeError"
+        },
+        "measureOptionsThird": {
+          "error": "TypeError"
+        },
+        "measureNegativeStart": {
+          "error": "TypeError"
+        },
+        "measureNegativeDuration": {
+          "type": "measure",
+          "negativeStart": false,
+          "negativeDuration": true
+        },
+        "measureNaN": {
+          "error": "TypeError"
+        },
+        "measureDetailFunction": {
+          "error": "DataCloneError"
+        },
+        "markConversion": [
+          "name",
+          "detail",
+          "startTime"
+        ],
+        "measureConversion": [
+          "name",
+          "detail",
+          "duration",
+          "end",
+          "start"
+        ],
+        "cycle": true,
+        "clearName": 0,
+        "retained": true,
+        "cleared": 0
+      }
+    }
+  }
+}

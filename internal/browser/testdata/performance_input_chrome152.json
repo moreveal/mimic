@@ -1,0 +1,114 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled",
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 0,
+      "top": 0,
+      "width": 1280,
+      "height": 800,
+      "windowState": "normal"
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "fixtureOrigin": "http://127.0.0.1:47075",
+  "fixture": "internal/browser/testdata/performance_input_oracle.js",
+  "fixtureSHA256": "c44818ca4eddce7d4dd6988bd8c2f2d9a720cf50fb7b73a998078c2400dc42dd",
+  "worker": false,
+  "result": {
+    "result": {
+      "type": "object",
+      "value": {
+        "synthetic": {
+          "keydown": 0,
+          "click": 0,
+          "interaction": 0
+        },
+        "counts": {
+          "same": true,
+          "brand": true,
+          "keydown": 1,
+          "keyup": 1,
+          "interaction": 1
+        },
+        "events": [
+          {
+            "type": "event",
+            "name": "keydown",
+            "brand": true,
+            "target": true,
+            "cancelable": true,
+            "order": true,
+            "durationGrid": true,
+            "durationEnough": true,
+            "interaction": true,
+            "keys": [
+              "name",
+              "entryType",
+              "startTime",
+              "duration",
+              "navigationId",
+              "interactionId",
+              "processingStart",
+              "processingEnd",
+              "cancelable"
+            ]
+          },
+          {
+            "type": "event",
+            "name": "keyup",
+            "brand": true,
+            "target": true,
+            "cancelable": true,
+            "order": true,
+            "durationGrid": true,
+            "durationEnough": true,
+            "interaction": true,
+            "keys": [
+              "name",
+              "entryType",
+              "startTime",
+              "duration",
+              "navigationId",
+              "interactionId",
+              "processingStart",
+              "processingEnd",
+              "cancelable"
+            ]
+          }
+        ],
+        "first": [
+          {
+            "type": "first-input",
+            "name": "keydown",
+            "brand": true,
+            "distinct": true,
+            "target": true,
+            "interaction": true
+          }
+        ],
+        "sharedInteraction": true,
+        "hidden": {
+          "event": 0,
+          "first": 1
+        }
+      }
+    }
+  }
+}

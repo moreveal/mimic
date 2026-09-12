@@ -157,13 +157,19 @@ type Realm struct {
 	indexedEncoder           engine.Value
 	// Navigation timing belongs to the committed document, not the mutable
 	// same-document History URL or another frame's most recent navigation.
-	navigationURL      string
-	navigationLoaderID string
-	navigationType     string
-	performanceOrigin  time.Time
-	navigationLoadEnd  time.Time
-	documentEntry      *Realm
-	ancestorOrigins    []string
+	navigationURL                 string
+	navigationLoaderID            string
+	navigationType                string
+	performanceOrigin             time.Time
+	navigationLoadEnd             time.Time
+	performance                   *performanceTimeline
+	performanceCursor             uint64
+	performanceNavigationResponse map[string]any
+	performanceConfidence         map[string]any
+	performanceLifecycleTimes     map[string]time.Time
+	memoryProjection              memoryProjection
+	documentEntry                 *Realm
+	ancestorOrigins               []string
 }
 
 // documentURL is the URL observed by this realm. For the top-level realm it
@@ -285,6 +291,19 @@ func newRealmStateWithNavigation(p *Page, agent ExecutionAgent, d *dom.Document,
 		return r.checkpoint(ctx)
 	})
 	r.scheduler.SetExecutionScale(p.Environment().Time.ExecutionScale)
+	var previousClock *scheduler.Scheduler
+	r.scheduler.SetTaskStarted(func() { previousClock = p.activeClock.Swap(r.scheduler) })
+	r.scheduler.SetTaskObserver(func(start, end time.Time) {
+		p.mu.Lock()
+		if end.After(p.clock) {
+			p.clock = end
+		}
+		p.mu.Unlock()
+		if r.apiTracking && r.performance != nil {
+			r.recordPerformanceTask(start, end)
+		}
+		p.activeClock.Store(previousClock)
+	})
 	r.scheduler.SetSequenceSource(func() uint64 { return p.taskSequence.Add(1) })
 	r.scheduler.SetObserver(func(t scheduler.Transition) {
 		if t.Name == "end" {
@@ -292,7 +311,7 @@ func newRealmStateWithNavigation(p *Page, agent ExecutionAgent, d *dom.Document,
 		}
 		p.trace.Add(trace.Scheduler, t.Name, map[string]any{"taskId": t.TaskID, "source": t.Source, "due": t.Due, "realm": r.ID})
 	})
-	r.runtime.SetTimeSource(r.scheduler.Now)
+	r.runtime.SetTimeSource(r.performanceClockNow)
 	r.runtime.SetGlobalAccessObserver(func(name string, supported bool) {
 		if r.apiTracking {
 			r.recordAPIAccess("Window."+name, supported)
@@ -447,6 +466,10 @@ func (r *Realm) Close() error {
 	r.cacheHandles = nil
 	r.cookieNotifier = nil
 	r.launchNotifier = nil
+	r.performance = nil
+	r.performanceNavigationResponse = nil
+	r.performanceLifecycleTimes = nil
+	r.performanceConfidence = nil
 	return r.runtime.Close()
 }
 func (r *Realm) Evaluate(ctx context.Context, source, name string) (engine.Value, error) {
@@ -624,6 +647,8 @@ func performanceProtocol(value any) string {
 		return "h2"
 	case strings.Contains(protocol, "1.1"):
 		return "http/1.1"
+	case strings.Contains(protocol, "1.0"):
+		return "http/1.0"
 	default:
 		return ""
 	}
@@ -666,7 +691,11 @@ func (r *Realm) installBindings() error {
 	host := map[string]any{}
 	r.installDocumentStream(host)
 	host["token"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(r.token), nil })
-	host["ready"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) { r.apiTracking = true; return nil, nil })
+	host["ready"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		r.apiTracking = true
+		r.initializeMemoryProjection()
+		return nil, nil
+	})
 	host["selfFrameID"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(r.agent.ContextID()), nil })
 	host["windowRelations"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		frame, ok := r.agent.(*Frame)
@@ -1078,201 +1107,12 @@ func (r *Realm) installBindings() error {
 	})
 	performanceIsolated := r.securityState().crossOriginIsolated
 	host["performanceNow"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
-		return r.val(p.performanceClamper.now(r.scheduler.Now(), r.performanceOrigin, performanceIsolated)), nil
+		return r.val(p.performanceClamper.now(r.performanceClockNow(), r.performanceOrigin, performanceIsolated)), nil
 	})
 	host["performanceTimeOrigin"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
-		return r.val(float64(r.performanceOrigin.UnixNano()) / float64(time.Millisecond)), nil
+		return r.val(float64(p.performanceClamper.micros(r.performanceOrigin.UnixMicro(), performanceIsolated)) / 1000), nil
 	})
-	host["performanceEntries"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		requested := map[string]bool{}
-		if list, ok := arg(a, 0).([]any); ok {
-			for _, item := range list {
-				requested[fmt.Sprint(item)] = true
-			}
-		}
-		entries := []map[string]any{}
-		origin := r.performanceOrigin
-		clockProfile := p.Environment().Time
-		navigationID := r.performanceNavigationID()
-		var navigationResponseTime time.Time
-		var navigationEnd float64
-		if len(requested) == 0 || requested["navigation"] {
-			navigation := map[string]any{"name": r.navigationURL, "entryType": "navigation", "initiatorType": "navigation", "startTime": 0, "duration": 0, "fetchStart": 0, "requestStart": 0, "responseStart": 0, "responseEnd": 0, "transferSize": 0, "encodedBodySize": 0, "decodedBodySize": 0, "nextHopProtocol": "", "serverTiming": []map[string]any{}, "contentType": "", "type": r.navigationType, "redirectCount": 0, "activationStart": 0, "navigationId": navigationID}
-			for _, event := range p.Trace().Events() {
-				if event.Kind != trace.Network || event.Name != "response" || event.Data["id"] != r.navigationLoaderID || event.Data["context"] != r.agent.ContextID() {
-					continue
-				}
-				rawDuration := numberValue(event.Data["durationMs"])
-				phases := transportPhases(event.Data["browserVisibleTiming"])
-				if phases == nil {
-					phases = transportPhases(event.Data["transportTiming"])
-				}
-				duration := transportPhase(phases, "responseComplete", rawDuration) * clockProfile.NavigationScale
-				startTime := 0.0
-				requestStart := transportPhase(phases, "requestHeadersSent", duration/clockProfile.NavigationScale*0.25) * clockProfile.NavigationScale
-				responseStart := transportPhase(phases, "firstResponseByte", duration/clockProfile.NavigationScale*0.80) * clockProfile.NavigationScale
-				responseEnd := max(0, duration)
-				navigationResponseTime = event.Time
-				navigationEnd = responseEnd
-				navigation["fetchStart"] = startTime
-				navigation["requestStart"] = requestStart
-				navigation["responseStart"] = responseStart
-				navigation["responseEnd"] = max(0, responseEnd)
-				// NavigationTiming.duration is loadEventEnd. While a dynamically
-				// loaded script is executing after DOMContentLoaded but before load,
-				// Chrome exposes zero rather than the response duration.
-				if !r.navigationLoadEnd.IsZero() {
-					navigation["duration"] = max(0, float64(r.navigationLoadEnd.Sub(origin))/float64(time.Millisecond))
-				}
-				navigation["transferSize"] = event.Data["transferSize"]
-				navigation["encodedBodySize"] = event.Data["encodedBodySize"]
-				navigation["decodedBodySize"] = event.Data["decodedBodySize"]
-				navigation["nextHopProtocol"] = performanceProtocol(event.Data["protocol"])
-				navigation["serverTiming"] = performanceServerTiming(event.Data["headers"])
-				navigation["contentType"] = fmt.Sprint(event.Data["mimeType"])
-			}
-			entries = append(entries, navigation)
-		}
-		if len(requested) == 0 || requested["visibility-state"] {
-			entries = append(entries, map[string]any{"name": "visible", "entryType": "visibility-state", "startTime": 0, "duration": 0})
-		}
-		if len(requested) == 0 || requested["resource"] {
-			if navigationResponseTime.IsZero() {
-				for _, candidate := range p.Trace().Events() {
-					if candidate.Kind == trace.Network && candidate.Name == "response" && candidate.Data["id"] == r.navigationLoaderID && candidate.Data["context"] == r.agent.ContextID() {
-						navigationResponseTime = candidate.Time
-						navigationEnd = numberValue(candidate.Data["durationMs"]) * clockProfile.NavigationScale
-						break
-					}
-				}
-				if navigationResponseTime.IsZero() {
-					navigationResponseTime = origin
-				}
-			}
-			events := p.Trace().Events()
-			requestStarts := make(map[string]time.Time)
-			requestContexts := make(map[string]string)
-			for _, event := range events {
-				if event.Kind == trace.Network && event.Name == "request" && !event.Time.Before(origin) {
-					// Resource Timing is ordered by fetch start, not by response
-					// completion. Keep the first request boundary for each loader
-					// operation; redirects/restarts retain that browser operation's
-					// original start.
-					id := fmt.Sprint(event.Data["id"])
-					if owner, ok := event.Data["context"].(string); ok {
-						requestContexts[id] = owner
-					}
-					if _, exists := requestStarts[id]; !exists {
-						requestStarts[id] = event.Time
-					}
-				}
-			}
-			resourceEntries := make([]map[string]any, 0)
-			for _, event := range events {
-				resourceURL := fmt.Sprint(event.Data["url"])
-				if event.Kind != trace.Network || event.Name != "response" || event.Data["initiator"] == network.Navigation || strings.HasPrefix(resourceURL, "blob:") {
-					continue
-				}
-				performanceOwner, stamped := event.Data["performanceOwner"]
-				if stamped {
-					// An empty owner is an external load (for example snapshot
-					// export), not a resource observed by every document.
-					if performanceOwner != r.ID {
-						continue
-					}
-				} else if event.Time.Before(origin) {
-					continue
-				}
-				// A parent request may begin before this realm's time origin and
-				// complete afterwards. Its response still has an authoritative
-				// owner; absence from requestStarts must never make it public to
-				// every newer realm on the Page.
-				owner, _ := event.Data["context"].(string)
-				if owner == "" {
-					owner = requestContexts[fmt.Sprint(event.Data["id"])]
-				}
-				// An iframe document fetch is a resource of its embedding
-				// document; other resources belong to their initiating context.
-				if event.Data["initiator"] == network.Iframe && owner != "" {
-					if frame := p.frame(owner); frame != nil && frame.parent != nil {
-						owner = frame.parent.ID
-					}
-				}
-				if !stamped && owner != "" && owner != r.agent.ContextID() {
-					continue
-				}
-				rawDuration := numberValue(event.Data["durationMs"])
-				phases := transportPhases(event.Data["browserVisibleTiming"])
-				if phases == nil {
-					phases = transportPhases(event.Data["transportTiming"])
-				}
-				duration := transportPhase(phases, "responseComplete", rawDuration) * clockProfile.NetworkScale
-				startTime := max(0, navigationEnd)
-				if started, ok := event.Data["performanceStart"].(time.Time); stamped && ok {
-					startTime = max(0, float64(started.Sub(origin))/float64(time.Millisecond))
-				} else if started, ok := requestStarts[fmt.Sprint(event.Data["id"])]; ok {
-					startTime = max(0, float64(started.Sub(origin))/float64(time.Millisecond))
-				} else {
-					// Backward-compatible fallback for synthetic traces which predate
-					// request-boundary recording.
-					between := event.Time.Sub(navigationResponseTime) - time.Duration(rawDuration*float64(time.Millisecond))
-					if between < 0 {
-						between = 0
-					}
-					startTime = max(0, navigationEnd+float64(between)/float64(time.Millisecond))
-				}
-				responseEnd := startTime + duration
-				requestStart := startTime + transportPhase(phases, "requestHeadersSent", rawDuration*0.25)*clockProfile.NetworkScale
-				responseStart := startTime + transportPhase(phases, "firstResponseByte", rawDuration*0.80)*clockProfile.NetworkScale
-				dnsStart := startTime + transportPhase(phases, "dnsStart", 0)*clockProfile.NetworkScale
-				dnsEnd := startTime + transportPhase(phases, "dnsEnd", 0)*clockProfile.NetworkScale
-				connectStart := startTime + transportPhase(phases, "tcpConnectStart", 0)*clockProfile.NetworkScale
-				connectEnd := startTime + transportPhase(phases, "tcpConnectEnd", transportPhase(phases, "requestHeadersSent", 0))*clockProfile.NetworkScale
-				secureStart := 0.0
-				if strings.HasPrefix(resourceURL, "https:") {
-					secureStart = startTime + transportPhase(phases, "tlsHandshakeStart", 0)*clockProfile.NetworkScale
-				}
-				initiatorType := fmt.Sprint(event.Data["performanceInitiatorType"])
-				entry := map[string]any{"name": resourceURL, "entryType": "resource", "startTime": startTime, "duration": duration, "fetchStart": startTime, "domainLookupStart": dnsStart, "domainLookupEnd": dnsEnd, "connectStart": connectStart, "secureConnectionStart": secureStart, "connectEnd": connectEnd, "requestStart": requestStart, "responseStart": responseStart, "responseEnd": responseEnd, "initiatorType": initiatorType, "transferSize": event.Data["transferSize"], "encodedBodySize": event.Data["encodedBodySize"], "decodedBodySize": event.Data["decodedBodySize"], "nextHopProtocol": performanceProtocol(event.Data["protocol"]), "responseStatus": event.Data["status"], "serverTiming": performanceServerTiming(event.Data["headers"]), "contentType": fmt.Sprint(event.Data["mimeType"])}
-				entry["navigationId"] = navigationID
-				if cached, _ := event.Data["fromCache"].(bool); cached {
-					entry["deliveryType"] = "cache"
-					entry["nextHopProtocol"] = ""
-					entry["secureConnectionStart"] = 0
-					for _, field := range []string{"domainLookupStart", "domainLookupEnd", "connectStart", "connectEnd", "requestStart"} {
-						entry[field] = startTime
-					}
-				}
-				if !resourceTimingAllowed(r.origin, resourceURL, event.Data["headers"]) {
-					for _, field := range []string{"domainLookupStart", "domainLookupEnd", "connectStart", "secureConnectionStart", "connectEnd", "requestStart", "responseStart", "transferSize", "encodedBodySize", "decodedBodySize", "responseStatus"} {
-						entry[field] = 0
-					}
-					entry["nextHopProtocol"] = ""
-					entry["serverTiming"] = []map[string]any{}
-					entry["contentType"] = ""
-				}
-				resourceEntries = append(resourceEntries, entry)
-			}
-			sort.SliceStable(resourceEntries, func(i, j int) bool {
-				return numberValue(resourceEntries[i]["startTime"]) < numberValue(resourceEntries[j]["startTime"])
-			})
-			entries = append(entries, resourceEntries...)
-		}
-		names := make([]string, 0, len(entries))
-		for _, entry := range entries {
-			names = append(names, fmt.Sprint(entry["entryType"])+":"+fmt.Sprint(entry["name"]))
-		}
-		traceCall := true
-		if len(a) > 1 {
-			if value, ok := arg(a, 1).(bool); ok {
-				traceCall = value
-			}
-		}
-		if traceCall {
-			p.trace.Add(trace.API, "Performance.getEntries", map[string]any{"types": arg(a, 0), "count": len(entries), "entries": names, "values": entries, "realm": r.ID})
-		}
-		return r.val(entries), nil
-	})
+	r.initPerformance(host)
 	host["queuePerformanceObserver"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		if len(a) == 0 {
 			return nil, nil
@@ -2180,6 +2020,10 @@ func (r *Realm) installBindings() error {
 }
 
 func (r *Realm) notifyPerformanceObservers(ctx context.Context) {
+	if r.performance != nil {
+		r.performance.sync()
+		return
+	}
 	if r.performanceNotifier == nil {
 		return
 	}
@@ -2222,7 +2066,15 @@ func nodesData(nodes []dom.Node) []map[string]any {
 	}
 	return out
 }
-func (r *Realm) SetReadyState(state string) { r.readyState = state }
+func (r *Realm) SetReadyState(state string) {
+	r.readyState = state
+	if state == "interactive" {
+		r.performanceLifecycle("domInteractive")
+	}
+	if state == "complete" {
+		r.performanceLifecycle("domComplete")
+	}
+}
 
 func (r *Realm) beginLoadBlocker(reason string) bool {
 	if r.loadCompleted || r.readyState == "complete" {
@@ -2266,7 +2118,8 @@ func (r *Realm) scheduleLoadIfReady() {
 			r.scheduleLoadIfReady()
 			return nil
 		}
-		r.readyState = "complete"
+		r.SetReadyState("complete")
+		r.performanceLifecycle("loadEventStart")
 		r.agent.Page().trace.Add(trace.Lifecycle, "readyStateComplete", map[string]any{"realm": r.ID})
 		r.loadCompleted = true
 		if _, eventErr := r.Evaluate(taskContext, `dispatchEvent(new Event('load'))`, "mimic:load"); eventErr != nil {
@@ -2821,12 +2674,18 @@ func performanceServerTiming(headers any) []map[string]any {
 			continue
 		}
 		metric := map[string]any{"name": parts[0], "duration": 0.0, "description": ""}
+		seen := map[string]bool{}
 		for _, parameter := range parts[1:] {
 			key, value, found := strings.Cut(parameter, "=")
 			if !found {
 				continue
 			}
-			switch strings.ToLower(strings.TrimSpace(key)) {
+			key = strings.ToLower(strings.TrimSpace(key))
+			if seen[key] {
+				continue
+			}
+			seen[key] = true
+			switch key {
 			case "dur":
 				if duration, err := strconv.ParseFloat(strings.TrimSpace(value), 64); err == nil {
 					metric["duration"] = duration

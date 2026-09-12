@@ -13,9 +13,19 @@ import (
 func (r *Realm) withResourceTiming(request network.Request) network.Request {
 	if request.PerformanceOwner == "" {
 		request.PerformanceOwner = r.ID
-		request.PerformanceStart = r.scheduler.Now()
+		request.PerformanceStart = r.performanceClockNow()
 	}
 	return request
+}
+
+// Document realms share one active Page turn. A borrowed operation must not
+// sample the idle clock of its owning frame while another frame is running.
+func (r *Realm) performanceClockNow() time.Time {
+	now := r.agent.Page().ClockNow()
+	if own := r.scheduler.Now(); own.After(now) {
+		return own
+	}
+	return now
 }
 
 // Every entry produced by a document refers to the same committed navigation.

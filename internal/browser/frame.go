@@ -474,7 +474,9 @@ func (r *Realm) finishChildFrameParsing(ctx context.Context, navigation *childNa
 		eventLoop.Post(scheduler.DOM, 0, func(loadContext context.Context) error {
 			return r.completeChildFrameLoad(loadContext, navigation)
 		})
+		navigation.realm.performanceLifecycle("domContentLoadedEventStart")
 		_, eventErr := navigation.realm.Evaluate(eventContext, `document.dispatchEvent(new Event('DOMContentLoaded'))`, "mimic:frame-dom-content-loaded")
+		navigation.realm.performanceLifecycle("domContentLoadedEventEnd")
 		if eventErr != nil {
 			return eventErr
 		}
@@ -491,6 +493,7 @@ func (r *Realm) completeChildFrameLoad(ctx context.Context, navigation *childNav
 	}
 	p := r.agent.Page()
 	navigation.realm.SetReadyState("complete")
+	navigation.realm.performanceLifecycle("loadEventStart")
 	if _, eventErr := navigation.realm.Evaluate(ctx, `dispatchEvent(new Event('load'))`, "mimic:frame-load"); eventErr != nil {
 		r.finishChildNavigation(navigation)
 		return eventErr

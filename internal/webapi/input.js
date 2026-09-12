@@ -54,8 +54,10 @@
   const nodeID=node=>elementSlot(node)?.nodeId||0;
   const eventFor=(kind,type,init)=>new constructors[kind](type,{...init,view:window,relatedTarget:wrap(init.relatedNode||0)||null,submitter:wrap(init.submitterNode||0)||null});
   const emit=(target,kind,type,init={},trusted=true,native=true)=>{
-    const event=eventFor(kind,type,init),allowed=dispatchEventCore(target,event,trusted,native);
+    const event=eventFor(kind,type,init),stamp=eventSlots.get(event),timing=trusted&&native&&!isolated?host.performanceEventStart(type,nodeID(target),stamp.timeStamp,stamp.cancelable):0;
+    const allowed=dispatchEventCore(target,event,trusted,native);
     const others=host.broadcastInputEvent(nodeID(target),stringify({kind,type,init,canceled:!allowed,trusted,native}));
+    if(timing)host.performanceEventEnd(timing);
     return allowed&&others;
   };
   const originalFocus=HTMLElement.prototype.focus,originalBlur=HTMLElement.prototype.blur;
