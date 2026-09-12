@@ -14,10 +14,10 @@ const cssBoxModel=(()=>{
   const display=get('display')||(invisible.has(tag(element))||host.getAttribute(elementSlot(element).nodeId,'hidden')!==null?'none':tableDisplays[tag(element)]|| (tag(element)==='SUMMARY'?'list-item':blocks.has(tag(element))?'block':'inline')),position=get('position')||'static';
   const result={element,entries,get,display,position};cache.set(element,result);
   result.inherited=name=>{for(let p=element;p;p=geometryParent(p)){const v=computedCSSDeclarations(p).find(e=>e.name===name)?.value;if(v&&!['inherit','unset'].includes(v))return v}return null};
-  result.fontSize=cssComputedFontSize(element)||16;
+  result.fontSize=(cssComputedFontSize(element)??16);
   result.length=(text,basis=0)=>{
    if(text==null||['auto','none','normal','initial','unset'].includes(text))return null;
-   const value=cssResolveLength(text,{em:result.fontSize,rem:cssComputedFontSize(document.documentElement)||16,percent:basis});
+   const value=cssResolveLength(text,{em:result.fontSize,rem:(cssComputedFontSize(document.documentElement)??16),percent:basis});
    if(value!==null)return unit(value);
    const viewport=/^([+-]?[\d.]+)(vw|vh|vmin|vmax)$/.exec(text);if(viewport){const size=host.viewport();return unit(Number(viewport[1])*({vw:size.width,vh:size.height,vmin:Math.min(size.width,size.height),vmax:Math.max(size.width,size.height)}[viewport[2]])/100)}
    return null;
@@ -42,6 +42,7 @@ const cssBoxModel=(()=>{
  };
  const textInfo=(element,text)=>{
   const s=state(element),family=s.inherited('font-family')||'"Times New Roman"',weight=Number(s.inherited('font-weight'))|| (tag(element)==='TH'?700:400),italic=s.inherited('font-style')==='italic';
+  if(s.fontSize===0){const raw=s.inherited('line-height'),height=raw&&raw!=='normal'?(cssNumberRegex.test(raw)?0:s.length(raw,0)):0;return {width:0,height:height??0,ascent:0,descent:0}}
   const metrics=styleReadCache.textMetrics||(styleReadCache.textMetrics=new Map()),key=JSON.stringify([text,family,s.fontSize,weight,italic]);
   let shaped=metrics.get(key);if(!shaped){shaped=JSON.parse(host.shapeText(text,family,s.fontSize,weight,Number(italic),0,0));metrics.set(key,shaped)}
   if(shaped.error){host.semanticMissingAt('css_box_geometry.js/textInfo','CSS.textBoxMetrics');return {width:0,height:0,ascent:0,descent:0}}

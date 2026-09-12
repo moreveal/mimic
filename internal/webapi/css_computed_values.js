@@ -45,7 +45,7 @@ const cssComputedValue=(element,name)=>withStyleReadCache(()=>{
  if(name==='color')return cssResolvedColor(element);
  if(value==='currentcolor'||name==='caret-color'&&value==='auto')return cssResolvedColor(element);
  if(/color$/.test(name)||['fill','stroke'].includes(name)){const rgba=cssColorRGBA(value);if(rgba)return cssSerializeColor(rgba)}
- if(name==='font-size')return cssSerializeNumber(cssComputedFontSize(element)||16)+'px';
+ if(name==='font-size')return cssSerializeNumber((cssComputedFontSize(element)??16))+'px';
  if(/^margin-(top|right|bottom|left)$/.test(name)&&specified==null&&elementSlot(element).tagName==='BODY')return '8px';
  if(name==='font-weight')return value==='normal'?'400':value==='bold'?'700':value;
  if(name==='display'){const display=specified==null?cssBoxModel.state(element).display:value;const position=entries.find(e=>e.name==='position')?.value;return ['absolute','fixed'].includes(position)?blockifiedDisplay(display):display}
@@ -56,7 +56,7 @@ const cssComputedValue=(element,name)=>withStyleReadCache(()=>{
  if(logical[name]&&(specified==null||declaration?.allReset||value==='auto'))return cssComputedValue(element,logical[name]);
  const physical=/^(border|padding|margin)-(block|inline)-(start|end)(.*)$/.exec(name);
  if(physical&&(specified==null||declaration?.allReset))return cssComputedValue(element,physical[1]+'-'+sides[physical[2]][physical[3]]+physical[4]);
- const box=()=>cssBoxModel.size(element),state=cssBoxModel.state(element),length=(v,basis=0)=>cssResolveLength(v,{em:cssComputedFontSize(element)||16,rem:cssComputedFontSize(document.documentElement)||16,percent:basis});
+ const box=()=>cssBoxModel.size(element),state=cssBoxModel.state(element),length=(v,basis=0)=>cssResolveLength(v,{em:(cssComputedFontSize(element)??16),rem:(cssComputedFontSize(document.documentElement)??16),percent:basis});
  if(name==='width'||name==='height'){
   for(let p=element;p;p=geometryParent(p))if(cssBoxModel.state(p).display==='none'){const n=value.endsWith('%')?null:length(value);return n===null?value:cssSerializeNumber(n)+'px'}
   const dimension=box()[name],edges=box().edges;
@@ -78,9 +78,9 @@ const cssComputedValue=(element,name)=>withStyleReadCache(()=>{
  if(value==='medium'&&/width$/.test(name))return '3px';
  if(value==='thin'&&/width$/.test(name))return '1px';
  if(value==='thick'&&/width$/.test(name))return '5px';
- if(name==='line-height'&&cssNumberRegex.test(value))return cssSerializeNumber(Number(value)*(cssComputedFontSize(element)||16))+'px';
+ if(name==='line-height'&&cssNumberRegex.test(value))return cssSerializeNumber(Number(value)*((cssComputedFontSize(element)??16)))+'px';
  if(/^(margin|padding)-/.test(name)||/^(min|max)-(width|height)$/.test(name)||/width$/.test(name)||['line-height','letter-spacing','word-spacing','text-indent','outline-offset'].includes(name)){
-  const n=length(value,name==='line-height'?(cssComputedFontSize(element)||16):geometryParent(element)?cssBoxModel.width(geometryParent(element)):0);if(n!==null)return cssSerializeNumber(n)+'px';
+  const n=length(value,name==='line-height'?((cssComputedFontSize(element)??16)):geometryParent(element)?cssBoxModel.width(geometryParent(element)):0);if(n!==null)return cssSerializeNumber(n)+'px';
  }
  return value;
 });
