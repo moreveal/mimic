@@ -1,0 +1,28 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Mimic · Live preview</title>
+<style>
+*{box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden}
+body{margin:0;height:100dvh;display:grid;grid-template-rows:auto minmax(0,1fr);color:#182234;font:14px system-ui}
+header{position:sticky;top:0;z-index:2;padding:12px 20px;background:#182234;color:white;display:flex;flex-wrap:wrap;gap:10px 14px;align-items:center;min-width:0}
+header strong,header button{flex-shrink:0}
+select{min-width:0;max-width:min(480px,100%);flex:0 1 480px}
+button,select{padding:6px}
+#status{font-size:12px;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1 1 120px}
+main{min-width:0;min-height:0;overflow:hidden}
+iframe{display:block;width:100%;height:100%;background:white;border:0}
+</style>
+<header><strong>Mimic / live preview</strong><select id="targets"></select><button id="refresh">Refresh targets</button><span id="status">Connecting…</span></header>
+<main><iframe id="view" sandbox="" title="Live site preview" referrerpolicy="no-referrer"></iframe></main>
+<script>
+'use strict';
+/* preview_dom */
+const mirror=createPreviewMirror();
+let pendingPreview=null,previewPaint=0;
+function schedulePreview(packet){pendingPreview=packet;if(!previewPaint)previewPaint=requestAnimationFrame(()=>{previewPaint=0;const p=pendingPreview;pendingPreview=null;mirror.update(view,p.html||'')})}
+const targets=document.querySelector('#targets'),status=document.querySelector('#status'),view=document.querySelector('#view');let socket;
+async function list(){try{const data=await(await fetch('/json/list')).json(),old=targets.value||new URLSearchParams(location.search).get('target');targets.replaceChildren();for(const t of data){const o=document.createElement('option');o.value=t.id;o.textContent=(t.title||t.url)+' · '+t.id;targets.append(o)}if(data.some(t=>t.id===old))targets.value=old;connect()}catch(e){status.textContent=String(e)}}
+function connect(){if(socket)socket.close();if(previewPaint)cancelAnimationFrame(previewPaint);previewPaint=0;pendingPreview=null;mirror.update(view,'');if(!targets.value){status.textContent='No targets';return}const current=new WebSocket((location.protocol==='https:'?'wss:':'ws:')+'//'+location.host+'/debug/preview/ws?target='+encodeURIComponent(targets.value));socket=current;status.textContent='Connecting…';current.onclose=()=>{if(socket===current)status.textContent='Disconnected — refresh targets to reconnect'};current.onmessage=event=>{if(socket!==current)return;const p=JSON.parse(event.data);if(p.error){status.textContent='Observation error: '+p.error;return}status.textContent=p.closed?'Target closed':p.url;schedulePreview(p)}}
+ targets.onchange=connect;document.querySelector('#refresh').onclick=list;list();
+</script>

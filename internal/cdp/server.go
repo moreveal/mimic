@@ -63,6 +63,9 @@ func (s *Server) SetNavigationTimeout(timeout time.Duration) {
 func (s *Server) Serve(listener net.Listener) error {
 	s.listener = listener
 	mux := http.NewServeMux()
+	if s.Browser.DevPreviewEnabled() {
+		s.registerPreview(mux)
+	}
 	mux.HandleFunc("/json/version", s.version)
 	mux.HandleFunc("/json", s.list)
 	mux.HandleFunc("/json/list", s.list)

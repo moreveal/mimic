@@ -94,6 +94,9 @@ module dependencies available; Go can download the pinned toolchain automaticall
 V8 is the default. No separate Chromium installation, GPU, or `.env` file is
 required to run Mimic. Stop the server with Ctrl+C.
 
+For a live visual mirror of a CDP target, start with `-dev-preview` and open
+`http://127.0.0.1:9222/debug/preview/`. See [preview behavior and limits](docs/dev-preview.md).
+
 ### 2. Connect over CDP
 
 In another PowerShell window, discover the available targets:

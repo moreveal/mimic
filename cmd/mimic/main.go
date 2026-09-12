@@ -29,6 +29,7 @@ func main() {
 	engineName := flag.String("engine", "v8", "ECMAScript engine adapter: v8, quickjs, or goja")
 	browserMode := flag.String("browser-mode", "headful", "selected environment profile: headful or headless")
 	profilePath := flag.String("profile", "", "JSON environment profile for new contexts")
+	devPreview := flag.Bool("dev-preview", false, "enable the visual debug viewer at /debug/preview/")
 	flag.Parse()
 	bundle, err := chrome.GetForMode(*milestone, state.BrowserMode(*browserMode))
 	if err != nil {
@@ -52,7 +53,7 @@ func main() {
 			log.Fatal(err)
 		}
 	}
-	b, err := browser.NewWithOptions(factory, bundle, browser.Options{ProfileJSON: profileJSON})
+	b, err := browser.NewWithOptions(factory, bundle, browser.Options{ProfileJSON: profileJSON, DevPreview: *devPreview})
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -66,6 +67,9 @@ func main() {
 		log.Fatal(err)
 	}
 	fmt.Printf("Mimic listening on http://%s\n", l.Addr())
+	if *devPreview {
+		fmt.Printf("Debug preview: http://%s/debug/preview/\n", l.Addr())
+	}
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
 	defer stop()
 	shutdownDone := make(chan struct{})

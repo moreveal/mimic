@@ -1,0 +1,48 @@
+<!doctype html><meta charset="utf-8"><title>Preview DOM regression</title>
+<h1 id="result">Running preview regression…</h1>
+<iframe id="preview" sandbox="" style="width:800px;height:400px"></iframe>
+<script src="../dev_preview_dom.js"></script>
+<script>
+(async()=>{
+  const result=document.querySelector('#result'),frame=document.querySelector('#preview'),mirror=createPreviewMirror();
+  const check=(condition,message)=>{if(!condition)throw new Error(message)};
+  const tick=()=>new Promise(resolve=>requestAnimationFrame(()=>requestAnimationFrame(resolve)));
+  const wait=async predicate=>{for(let i=0;i<100;i++){if(predicate())return;await tick()}throw new Error('Timed out waiting for mirror')};
+  const attr=value=>value.replaceAll('&','&amp;').replaceAll('"','&quot;').replaceAll('<','&lt;');
+  const child=n=>`<!doctype html><html data-mimic-preview-node="child:1"><head></head><body><div style="height:1200px" id="child-count">Child ${n}</div></body></html>`;
+  const markup=(n,realm='r')=>`<!doctype html><html data-mimic-preview-node="${realm}:1"><head data-mimic-preview-node="${realm}:2"><style>body{margin:0}.spacer{height:1400px}</style></head><body data-mimic-preview-node="${realm}:3">
+    ${n>0?`<p data-mimic-preview-node="${realm}:9">Inserted before existing nodes</p>`:''}
+    <div id="counter" data-mimic-preview-node="${realm}:4">Count ${n}</div>
+    <input id="input" data-mimic-preview-node="${realm}:5" value="persistent">
+    <img id="image" data-mimic-preview-node="${realm}:6" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='10'/%3E" onload="parent.document.querySelector('#result').textContent='UNSAFE'">
+    <div id="scroller" data-mimic-preview-node="${realm}:7" style="height:100px;overflow:auto"><div class="spacer">Scroll area</div></div>
+    <iframe id="child" data-mimic-preview-node="${realm}:8" srcdoc="${attr(child(n))}"></iframe>
+    <div id="shadow" data-mimic-preview-node="${realm}:10"><template shadowrootmode="closed"><span data-mimic-preview-node="${realm}:11">Shadow ${n}</span></template></div>
+    <div class="spacer">Long page</div></body></html>`;
+  try {
+    let loads=0;frame.addEventListener('load',()=>loads++);
+    mirror.update(frame,markup(0));
+    await wait(()=>frame.contentDocument?.querySelector('#child')?.contentDocument?.querySelector('#child-count'));
+    const doc=frame.contentDocument,image=doc.querySelector('#image'),input=doc.querySelector('#input'),nested=doc.querySelector('#child'),nestedDoc=nested.contentDocument,scroller=doc.querySelector('#scroller'),shadow=doc.querySelector('#shadow').shadowRoot.firstChild;
+    check(!image.hasAttribute('onload'),'Author event handler copied');
+    check(!frame.sandbox.contains('allow-scripts'),'Scripts enabled');
+    const initialLoads=loads;
+    input.focus();input.setSelectionRange(2,5);frame.contentWindow.scrollTo(0,700);scroller.scrollTop=90;nested.contentWindow.scrollTo(0,200);
+    for(let n=1;n<=25;n++){mirror.update(frame,markup(n));await tick()}
+    check(frame.contentDocument===doc,'Main document reloaded');
+    check(loads===initialLoads,'Main iframe fired load again');
+    check(doc.querySelector('#image')===image,'Image replaced');
+    check(doc.querySelector('#input')===input,'Input replaced after insertion');
+    check(doc.activeElement===input&&input.selectionStart===2&&input.selectionEnd===5,'Focus/selection lost');
+    check(frame.contentWindow.scrollY===700&&scroller.scrollTop===90,'Scroll position lost');
+    check(doc.querySelector('#child')===nested&&nested.contentDocument===nestedDoc,'Nested frame reloaded');
+    check(nested.contentWindow.scrollY===200,'Nested scroll lost');
+    check(nestedDoc.querySelector('#child-count').textContent==='Child 25','Nested update missing');
+    check(doc.querySelector('#shadow').shadowRoot.firstChild===shadow&&shadow.textContent==='Shadow 25','Shadow node replaced or stale');
+    let mutations=0;const observer=new MutationObserver(events=>mutations+=events.length);observer.observe(doc,{subtree:true,childList:true,attributes:true,characterData:true});mirror.update(frame,markup(25));await tick();observer.disconnect();check(mutations===0,'Identical snapshot mutated DOM');
+    mirror.update(frame,markup(26,'navigation'));await tick();check(frame.contentWindow.scrollY===0,'Navigation did not reset scroll');
+    check(doc.querySelector('#counter').textContent==='Count 26','Navigation not applied');
+    result.textContent='PASS: 25 live updates; stable document, image, input, iframe, shadow nodes; scroll, focus and selection preserved; identical updates skipped; navigation reset; scripts blocked';
+  }catch(error){result.textContent='FAIL: '+error.stack;throw error}
+})();
+</script>

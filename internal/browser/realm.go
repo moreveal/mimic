@@ -95,6 +95,7 @@ type Realm struct {
 	frameViewportRead        engine.Value
 	frameLayoutRead          engine.Value
 	computedStyleFlatRead    engine.Value
+	previewRead              engine.Value
 	frameReferenceImport     engine.Value
 	frameReferenceDescribe   engine.Value
 	frameGlobalRead          engine.Value
