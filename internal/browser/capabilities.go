@@ -95,6 +95,10 @@ func addCapabilityHosts(r *Realm, h map[string]any) {
 		m := p.Environment().Capabilities.Media.RTP.Media(strarg(a, 0), strarg(a, 1))
 		return r.val(map[string]any{"payloads": m.Payloads, "extensions": m.Extensions, "attributes": m.Attributes}), nil
 	})
+	h["mediaTypeSupport"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		m := p.Environment().Capabilities.Media.Formats.Support(strarg(a, 0))
+		return r.val(map[string]any{"play": m.Play, "mediaSource": m.MediaSource, "precise": m.Precise, "efficient": m.Efficient, "kind": m.Kind}), nil
+	})
 	h["capabilityState"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		e := p.Environment()
 		switch strarg(a, 0) {
@@ -134,7 +138,7 @@ func addCapabilityHosts(r *Realm, h map[string]any) {
 			if kinds == nil {
 				kinds = []string{}
 			}
-			return r.val(map[string]any{"kinds": kinds, "decoding": e.Capabilities.Media.DecodingContentTypes, "constraints": e.Capabilities.Media.SupportedConstraints}), nil
+			return r.val(map[string]any{"kinds": kinds, "constraints": e.Capabilities.Media.SupportedConstraints}), nil
 		case "quota":
 			if r.origin == "null" {
 				return r.val(nil), nil

@@ -337,10 +337,25 @@
     },true);
     method('MediaDevices','getDisplayMedia',()=>{throw error('NotAllowedError','Permission denied')},true);
     for(const [type,role]of [['RTCRtpSender','sender'],['RTCRtpReceiver','receiver']]){const C=globalThis[type];if(!C)continue;const getCapabilities=({getCapabilities(kind){if(arguments.length===0)throw new TypeError(`Failed to execute 'getCapabilities' on '${type}': 1 argument required, but only 0 present.`);if(typeof kind==='symbol')throw new TypeError('Cannot convert a Symbol value to a string');return host.rtpCapabilities(String(kind),role)}}).getCapabilities;native(getCapabilities,'getCapabilities');Object.defineProperty(C,'getCapabilities',{value:getCapabilities,writable:true,configurable:true,enumerable:true})}
-    for(const name of ['decodingInfo','encodingInfo'])method('MediaCapabilities',name,(_s,configuration)=>{
-      if(!configuration||(!configuration.audio&&!configuration.video))throw new TypeError('The provided configuration is not valid.');
-      const supported=name==='decodingInfo'&&[configuration.video,configuration.audio].filter(Boolean).every(track=>(state('media').decoding||[]).includes(track.contentType));
-      const result={supported,smooth:supported,powerEfficient:supported};if(name==='decodingInfo')result.keySystemAccess=null;return result;
+    const mediaString=value=>{if(typeof value==='symbol')throw new TypeError('Cannot convert a Symbol value to a string');return String(value)};
+    const canPlayType=({canPlayType(type){const element=elementSlot(this);if(!element||!['audio','video'].includes(element.localName||element.tagName?.toLowerCase()))throw new TypeError('Illegal invocation');if(!arguments.length)throw new TypeError("Failed to execute 'canPlayType' on 'HTMLMediaElement': 1 argument required, but only 0 present.");return host.mediaTypeSupport(mediaString(type)).play}}).canPlayType;native(canPlayType,'canPlayType');Object.defineProperty(HTMLMediaElement.prototype,'canPlayType',{value:canPlayType,writable:true,configurable:true,enumerable:true});
+    const isTypeSupported=({isTypeSupported(type){if(!arguments.length)throw new TypeError("Failed to execute 'isTypeSupported' on 'MediaSource': 1 argument required, but only 0 present.");return host.mediaTypeSupport(mediaString(type)).mediaSource}}).isTypeSupported;native(isTypeSupported,'isTypeSupported');Object.defineProperty(MediaSource,'isTypeSupported',{value:isTypeSupported,writable:true,configurable:true,enumerable:true});
+    for(const name of ['decodingInfo','encodingInfo'])method('MediaCapabilities',name,(_s,...args)=>{
+      const prefix=`Failed to execute '${name}' on 'MediaCapabilities': `,fail=message=>{throw new TypeError(prefix+message)},decode=name==='decodingInfo';
+      if(!args.length)fail('1 argument required, but only 0 present.');const configuration=args[0]??{};
+      const tracks={};for(const kind of ['audio','video']){const raw=configuration[kind];if(raw===undefined)continue;const value={};const keys=kind==='video'?['bitrate','contentType','framerate','height','width']:['bitrate','channels','contentType','samplerate'];
+       for(const key of keys){const v=raw?.[key];if(v===undefined){if(kind==='video'||key==='contentType')fail(`Failed to read the '${kind}' property from 'MediaConfiguration': Failed to read the '${key}' property from '${kind==='video'?'Video':'Audio'}Configuration': Required member is undefined.`);continue}value[key]=key==='contentType'||key==='channels'?mediaString(v):Number(v)}tracks[kind]=value;
+      }
+      const rawType=configuration.type;if(rawType===undefined)fail(`Failed to read the 'type' property from '${decode?'MediaDecodingConfiguration':'MediaEncodingConfiguration'}': Required member is undefined.`);
+      const type=mediaString(rawType),allowed=decode?['file','media-source','webrtc']:['webrtc'];if(!allowed.includes(type))fail((decode?"Failed to read the 'type' property from 'MediaDecodingConfiguration': ":'')+`The provided value '${type}' is not a valid enum value of type ${decode?'MediaDecodingType':'MediaEncodingType'}.`);
+      if(!tracks.audio&&!tracks.video)fail('The configuration dictionary has neither |video| nor |audio| specified and needs at least one of them.');
+      let supported=true,powerEfficient=true;
+      for(const [kind,track]of Object.entries(tracks)){
+       const parsed=host.mediaTypeSupport(track.contentType);if(!track.contentType.toLowerCase().startsWith(kind+'/')||(kind==='video'&&(!(track.width>0)||!(track.height>0)||!(track.bitrate>=0)||!(track.framerate>0))))fail(`The ${kind} configuration dictionary is not valid.`);
+       if(type==='webrtc'){const caps=host.rtpCapabilities(kind,decode?'receiver':'sender');const mime=track.contentType.split(';')[0].trim().toLowerCase();const has=caps.codecs.some(c=>c.mimeType.toLowerCase()===mime);supported&&=has;powerEfficient&&=has&&kind==='audio'}
+       else{supported&&=parsed.precise&&(type!=='media-source'||parsed.mediaSource);powerEfficient&&=parsed.efficient}
+      }
+      return {powerEfficient:supported&&powerEfficient,smooth:supported,supported,keySystemAccess:null};
     },true);
     attribute('MediaSession','metadata',s=>s.metadata||null,(s,v)=>{if(v!==null&&!(v instanceof MediaMetadata))throw new TypeError('Invalid MediaMetadata');s.metadata=v});
     attribute('MediaSession','playbackState',s=>s.playbackState||'none',(s,v)=>{if(!['none','paused','playing'].includes(String(v)))throw new TypeError('Invalid MediaSessionPlaybackState');s.playbackState=String(v)});
