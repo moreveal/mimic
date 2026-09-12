@@ -1984,6 +1984,7 @@ func (r *Realm) installBindings() error {
 		return nil, nil
 	})
 	host["xhr"] = r.fn(r.hostXHR)
+	installConsoleKind(host, r.runtime)
 	host["console"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		if len(a) > 2 {
 			r.debuggerConsole(strarg(a, 0), a[2])

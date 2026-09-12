@@ -22,6 +22,7 @@ const debuggerFactorySource = `(() => {
   const MapClass=Map,SetClass=Set,ErrorClass=Error,finite=Number.isFinite,setPrototype=Object.setPrototypeOf;
   const setHas=Set.prototype.has,setAdd=Set.prototype.add,indexOf=Array.prototype.indexOf,pop=Array.prototype.pop;
   const regexTest=RegExp.prototype.test;
+  const errorStackGetter=descriptor(new ErrorClass(),'stack').get;
   return (node, prefix) => {
   const objects = new MapClass(); let sequence = 0;
   const get = id => { const entry=apply(mapGet,objects,[id]); if(!entry)throw new ErrorClass('Could not find object with given id'); return entry; };
@@ -141,7 +142,25 @@ const debuggerFactorySource = `(() => {
     if(operation==='resolve')return envelope('result',describe(node(p.nodeId,true),p.objectGroup||'',false));
     if(operation==='hold')return envelope('result',describe(value,p.objectGroup||'',!!p.returnByValue));
     if(operation==='console'){
-      const args=array();for(let i=0;i<value.length;i++)append(args,describe(value[i],'console',false));return envelope('args',args);
+      const args=array();for(let i=0;i<value.length;i++){
+        const item=describe(value[i],'console',false);
+        // Materialize V8's lazy Error stack for the Runtime preview. This can
+        // read Error.name, but author accessors and object values are not coerced.
+        if(item.subtype==='error'){
+          const preview=plain();preview.type='object';preview.subtype='error';preview.description=item.description;preview.overflow=false;preview.properties=array();
+          const stack=plain();stack.name='stack';
+          stack.type='accessor';const d=descriptor(value[i],'stack');
+          if(d)try {
+            if('value' in d||d.get===errorStackGetter){
+              const v='value' in d?d.value:apply(errorStackGetter,value[i],[]);
+              stack.type=v===null?'object':typeof v;
+              stack.value=typeof v==='object'&&v!==null?'Object':typeof v==='function'?'':string(v);
+            }
+          }catch(_){}
+          append(preview.properties,stack);item.preview=preview;
+        }
+        append(args,item);
+      }return envelope('args',args);
     }
     if(operation==='properties'){
       const entry=get(p.objectId), value=entry.value, result=array(), seen=new SetClass();

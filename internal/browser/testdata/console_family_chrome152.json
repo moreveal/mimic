@@ -1,0 +1,611 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "width": 0,
+      "height": 0
+    },
+    "secureContextState": true,
+    "isolationState": false,
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-controlled-profile-per-run",
+    "origin": "http://127.0.0.1:8255/",
+    "visibilityState": "visible",
+    "debugging": "none; result delivered by local HTTP POST"
+  },
+  "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+  "probeSHA256": "3af78accbd6359584c70839630fcd7a3fbf6b0b02601b3a627d048bee40444ee",
+  "chromeControlEqual": true,
+  "result": {
+    "result": {
+      "value": {
+        "shape": {
+          "debug": {
+            "type": "function",
+            "own": true,
+            "enumerable": true,
+            "writable": true,
+            "configurable": true,
+            "name": "debug",
+            "length": 0,
+            "source": "function debug() { [native code] }"
+          },
+          "log": {
+            "type": "function",
+            "own": true,
+            "enumerable": true,
+            "writable": true,
+            "configurable": true,
+            "name": "log",
+            "length": 0,
+            "source": "function log() { [native code] }"
+          },
+          "info": {
+            "type": "function",
+            "own": true,
+            "enumerable": true,
+            "writable": true,
+            "configurable": true,
+            "name": "info",
+            "length": 0,
+            "source": "function info() { [native code] }"
+          },
+          "warn": {
+            "type": "function",
+            "own": true,
+            "enumerable": true,
+            "writable": true,
+            "configurable": true,
+            "name": "warn",
+            "length": 0,
+            "source": "function warn() { [native code] }"
+          },
+          "error": {
+            "type": "function",
+            "own": true,
+            "enumerable": true,
+            "writable": true,
+            "configurable": true,
+            "name": "error",
+            "length": 0,
+            "source": "function error() { [native code] }"
+          },
+          "dir": {
+            "type": "function",
+            "own": true,
+            "enumerable": true,
+            "writable": true,
+            "configurable": true,
+            "name": "dir",
+            "length": 0,
+            "source": "function dir() { [native code] }"
+          },
+          "dirxml": {
+            "type": "function",
+            "own": true,
+            "enumerable": true,
+            "writable": true,
+            "configurable": true,
+            "name": "dirxml",
+            "length": 0,
+            "source": "function dirxml() { [native code] }"
+          },
+          "table": {
+            "type": "function",
+            "own": true,
+            "enumerable": true,
+            "writable": true,
+            "configurable": true,
+            "name": "table",
+            "length": 0,
+            "source": "function table() { [native code] }"
+          },
+          "trace": {
+            "type": "function",
+            "own": true,
+            "enumerable": true,
+            "writable": true,
+            "configurable": true,
+            "name": "trace",
+            "length": 0,
+            "source": "function trace() { [native code] }"
+          },
+          "group": {
+            "type": "function",
+            "own": true,
+            "enumerable": true,
+            "writable": true,
+            "configurable": true,
+            "name": "group",
+            "length": 0,
+            "source": "function group() { [native code] }"
+          },
+          "groupCollapsed": {
+            "type": "function",
+            "own": true,
+            "enumerable": true,
+            "writable": true,
+            "configurable": true,
+            "name": "groupCollapsed",
+            "length": 0,
+            "source": "function groupCollapsed() { [native code] }"
+          },
+          "groupEnd": {
+            "type": "function",
+            "own": true,
+            "enumerable": true,
+            "writable": true,
+            "configurable": true,
+            "name": "groupEnd",
+            "length": 0,
+            "source": "function groupEnd() { [native code] }"
+          },
+          "count": {
+            "type": "function",
+            "own": true,
+            "enumerable": true,
+            "writable": true,
+            "configurable": true,
+            "name": "count",
+            "length": 0,
+            "source": "function count() { [native code] }"
+          },
+          "countReset": {
+            "type": "function",
+            "own": true,
+            "enumerable": true,
+            "writable": true,
+            "configurable": true,
+            "name": "countReset",
+            "length": 0,
+            "source": "function countReset() { [native code] }"
+          },
+          "assert": {
+            "type": "function",
+            "own": true,
+            "enumerable": true,
+            "writable": true,
+            "configurable": true,
+            "name": "assert",
+            "length": 0,
+            "source": "function assert() { [native code] }"
+          },
+          "clear": {
+            "type": "function",
+            "own": true,
+            "enumerable": true,
+            "writable": true,
+            "configurable": true,
+            "name": "clear",
+            "length": 0,
+            "source": "function clear() { [native code] }"
+          },
+          "time": {
+            "type": "function",
+            "own": true,
+            "enumerable": true,
+            "writable": true,
+            "configurable": true,
+            "name": "time",
+            "length": 0,
+            "source": "function time() { [native code] }"
+          },
+          "timeLog": {
+            "type": "function",
+            "own": true,
+            "enumerable": true,
+            "writable": true,
+            "configurable": true,
+            "name": "timeLog",
+            "length": 0,
+            "source": "function timeLog() { [native code] }"
+          },
+          "timeEnd": {
+            "type": "function",
+            "own": true,
+            "enumerable": true,
+            "writable": true,
+            "configurable": true,
+            "name": "timeEnd",
+            "length": 0,
+            "source": "function timeEnd() { [native code] }"
+          },
+          "timeStamp": {
+            "type": "function",
+            "own": true,
+            "enumerable": true,
+            "writable": true,
+            "configurable": true,
+            "name": "timeStamp",
+            "length": 0,
+            "source": "function timeStamp() { [native code] }"
+          },
+          "profile": {
+            "type": "function",
+            "own": true,
+            "enumerable": true,
+            "writable": true,
+            "configurable": true,
+            "name": "profile",
+            "length": 0,
+            "source": "function profile() { [native code] }"
+          },
+          "profileEnd": {
+            "type": "function",
+            "own": true,
+            "enumerable": true,
+            "writable": true,
+            "configurable": true,
+            "name": "profileEnd",
+            "length": 0,
+            "source": "function profileEnd() { [native code] }"
+          }
+        },
+        "effects": {
+          "log.object": {
+            "reads": []
+          },
+          "log.function": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "log.regexp": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "log.date": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "log.error": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "dir.object": {
+            "reads": []
+          },
+          "dir.function": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "dir.regexp": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "dir.date": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "dir.error": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "dirxml.object": {
+            "reads": []
+          },
+          "dirxml.function": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "dirxml.regexp": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "dirxml.date": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "dirxml.error": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "table.object": {
+            "reads": []
+          },
+          "table.function": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "table.regexp": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "table.date": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "table.error": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "trace.object": {
+            "reads": []
+          },
+          "trace.function": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "trace.regexp": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "trace.date": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "trace.error": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "group.object": {
+            "reads": []
+          },
+          "group.function": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "group.regexp": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "group.date": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "group.error": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "groupCollapsed.object": {
+            "reads": []
+          },
+          "groupCollapsed.function": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "groupCollapsed.regexp": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "groupCollapsed.date": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "groupCollapsed.error": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "groupEnd.object": {
+            "reads": []
+          },
+          "groupEnd.function": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "groupEnd.regexp": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "groupEnd.date": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "groupEnd.error": {
+            "reads": [
+              "get-toString",
+              "call-toString"
+            ]
+          },
+          "dir.format": {
+            "reads": []
+          },
+          "dirxml.format": {
+            "reads": []
+          },
+          "table.format": {
+            "reads": []
+          },
+          "trace.format": {
+            "reads": [
+              "str",
+              "str"
+            ]
+          },
+          "groupEnd.format": {
+            "reads": []
+          },
+          "log.format": {
+            "reads": [
+              "str",
+              "str"
+            ]
+          }
+        },
+        "returns": {
+          "debug": true,
+          "log": true,
+          "info": true,
+          "warn": true,
+          "error": true,
+          "dir": true,
+          "dirxml": true,
+          "table": true,
+          "trace": true,
+          "group": true,
+          "groupCollapsed": true,
+          "groupEnd": true,
+          "count": true,
+          "countReset": true,
+          "assert": true,
+          "clear": true,
+          "time": true,
+          "timeLog": true,
+          "timeEnd": true,
+          "timeStamp": true,
+          "profile": true,
+          "profileEnd": true
+        },
+        "proto": {
+          "ownKeys": [],
+          "tag": "[object console]"
+        },
+        "labels": {
+          "count.object": {
+            "reads": [
+              "string"
+            ],
+            "ok": true
+          },
+          "count.throw": {
+            "reads": [
+              "string"
+            ],
+            "error": "same"
+          },
+          "count.symbol": {
+            "reads": [],
+            "error": "TypeError"
+          },
+          "countReset.object": {
+            "reads": [
+              "string"
+            ],
+            "ok": true
+          },
+          "countReset.throw": {
+            "reads": [
+              "string"
+            ],
+            "error": "same"
+          },
+          "countReset.symbol": {
+            "reads": [],
+            "error": "TypeError"
+          },
+          "time.object": {
+            "reads": [
+              "string"
+            ],
+            "ok": true
+          },
+          "time.throw": {
+            "reads": [
+              "string"
+            ],
+            "error": "same"
+          },
+          "time.symbol": {
+            "reads": [],
+            "error": "TypeError"
+          },
+          "timeLog.object": {
+            "reads": [
+              "string"
+            ],
+            "ok": true
+          },
+          "timeLog.throw": {
+            "reads": [
+              "string"
+            ],
+            "error": "same"
+          },
+          "timeLog.symbol": {
+            "reads": [],
+            "error": "TypeError"
+          },
+          "timeEnd.object": {
+            "reads": [
+              "string"
+            ],
+            "ok": true
+          },
+          "timeEnd.throw": {
+            "reads": [
+              "string"
+            ],
+            "error": "same"
+          },
+          "timeEnd.symbol": {
+            "reads": [],
+            "error": "TypeError"
+          }
+        }
+      }
+    }
+  }
+}
