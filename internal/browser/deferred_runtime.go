@@ -182,4 +182,23 @@ func (d *deferredRuntime) EvalModule(c context.Context, s, n string, l engine.Mo
 	}
 	return nil, fmt.Errorf("engine does not support modules")
 }
+
+func (d *deferredRuntime) PrepareModule(c context.Context, s, n string) ([]string, error) {
+	r, err := d.ready()
+	if err != nil {
+		return nil, err
+	}
+	if m, ok := r.(engine.PreparedModuleRuntime); ok {
+		return m.PrepareModule(c, s, n)
+	}
+	return nil, fmt.Errorf("engine does not support modules")
+}
+
+func (d *deferredRuntime) SetDynamicModuleHandler(handler engine.DynamicModuleHandler) {
+	if r, err := d.ready(); err == nil {
+		if m, ok := r.(engine.PreparedModuleRuntime); ok {
+			m.SetDynamicModuleHandler(handler)
+		}
+	}
+}
 func (d *deferredRuntime) Diagnostics() (any, error) { return map[string]any{"deferred": true}, nil }

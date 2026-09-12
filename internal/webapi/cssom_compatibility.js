@@ -5,6 +5,7 @@ const constructedStyleSheets = (() => {
   if(typeof globalThis.StyleSheet!=='function'||typeof globalThis.CSSRuleList!=='function')return {snapshot(){return []}};
   const parse = mimicSelectorLibrary.parseStylesheet, generate = mimicSelectorLibrary.generateCSS;
   let revision = 0;
+  const changed=()=>{revision++;host.invalidateStyleObservations()};
   const sourceCache = new WeakMap();
   const sheets = new WeakMap(), rules = new WeakMap(), adopted = new WeakMap(), owners = new WeakMap(), ownerLists=new WeakMap();
   const requireSheet = sheet => { const state=sheets.get(sheet); if(!state)throw new TypeError('Illegal invocation'); return state; };
@@ -55,7 +56,7 @@ const constructedStyleSheets = (() => {
   }
   function makeStyle(state) {
     const target=Object.create(CSSStyleDeclaration.prototype);
-    const setText=text=>{blockDeclarations.set(state.node.block,parseCSS(String(text)));revision++};
+    const setText=text=>{blockDeclarations.set(state.node.block,parseCSS(String(text)));changed()};
     const names=()=>entriesForBlock(state.node.block);
     Object.defineProperties(target,{
       cssText:{get:()=>declarationText(state.node.block),set:setText,configurable:true},
@@ -70,7 +71,7 @@ const constructedStyleSheets = (() => {
         const entries=names().slice(),components=cssShorthandComponents[name]||[name];
         if(value===''){for(let i=entries.length-1;i>=0;i--)if(components.includes(entries[i].name)||entries[i].name===name)entries.splice(i,1)}
         else for(const entry of expandCSSDeclaration(cssPrecisionDeclaration({name,value,priority},inputValue))){const index=entries.findIndex(e=>e.name===entry.name);if(index<0)entries.push(entry);else entries[index]=entry}
-        blockDeclarations.set(state.node.block,entries);revision++;
+        blockDeclarations.set(state.node.block,entries);changed();
       }},
       removeProperty:{value:name=>{const old=target.getPropertyValue(name);target.setProperty(name,'');return webkitCSSLegacyBreakShorthands.has(String(name).toLowerCase())||cssShorthandComponents[cssName(name)]?'':old;}}
     });
@@ -89,7 +90,7 @@ const constructedStyleSheets = (() => {
       parentRule:{get:()=>state.parent,configurable:true},
       type:{get:()=>node.type==='Rule'?1:({media:4,'font-face':5,keyframes:7,supports:12})[node.name]||0,configurable:true}
     });
-    if(node.type==='Rule')Object.defineProperty(rule,'selectorText',{get:()=>preludeText(node.prelude),set:value=>{try{node.prelude=parse(String(value),{context:'selectorList'});revision++}catch{}},configurable:true});
+    if(node.type==='Rule')Object.defineProperty(rule,'selectorText',{get:()=>preludeText(node.prelude),set:value=>{try{node.prelude=parse(String(value),{context:'selectorList'});changed()}catch{}},configurable:true});
     if(node.block)Object.defineProperty(rule,'style',{value:makeStyle(state),configurable:true});
     if(node.type==='Atrule'&&node.block) {
       Object.defineProperty(rule,'cssRules',{value:list(state.children),configurable:true});
@@ -122,28 +123,42 @@ const constructedStyleSheets = (() => {
     get title(){const s=requireSheet(this);return s.owner?s.owner.getAttribute('title')||null:null}
     get type(){requireSheet(this);return 'text/css'}
     get disabled(){return requireSheet(this).disabled}
-    set disabled(value){requireSheet(this).disabled=!!value;revision++}
-    get media(){const state=requireSheet(this);if(!state.mediaList){const media=Object.create(globalThis.MediaList.prototype);Object.defineProperties(media,{mediaText:{get:()=>state.media,set:value=>{state.media=String(value);revision++}},length:{get:()=>state.media?state.media.split(',').length:0},item:{value:index=>state.media.split(',')[Number(index)]?.trim()||''}});state.mediaList=media}return state.mediaList}
-    replaceSync(text){const state=requireSheet(this);if(state.owner||state.locked)throw new DOMException('Stylesheet cannot be replaced','NotAllowedError');state.rules.splice(0,state.rules.length,...parsedRules(text,this));revision++}
-    replace(text){const state=requireSheet(this);if(state.owner||state.locked)return Promise.reject(new DOMException('Stylesheet cannot be replaced','NotAllowedError'));text=String(text);state.locked=true;return Promise.resolve().then(()=>{try{state.rules.splice(0,state.rules.length,...parsedRules(text,this));revision++;return this}finally{state.locked=false}})}
-    insertRule(text,index=0){const state=requireSheet(this);index=Number(index)>>>0;if(state.locked)throw new DOMException('Stylesheet is being replaced','NotAllowedError');if(index>state.rules.length)throw new DOMException('Index exceeds rule count','IndexSizeError');const ast=parse(String(text),{context:'stylesheet'});if(ast.children.size!==1)throw new DOMException('Expected one rule','SyntaxError');if(ast.children.first.type==='Atrule'&&ast.children.first.name==='import')throw new DOMException('Cannot insert @import into a constructed sheet','SyntaxError');const inserted=parsedRules(text,this);if(inserted.length!==1)throw new DOMException('Invalid rule','SyntaxError');state.rules.splice(index,0,inserted[0]);revision++;return index}
-    deleteRule(index){const state=requireSheet(this);index=Number(index)>>>0;if(state.locked)throw new DOMException('Stylesheet is being replaced','NotAllowedError');if(index>=state.rules.length)throw new DOMException('Index exceeds rule count','IndexSizeError');const old=state.rules.splice(index,1)[0];rules.get(old).sheet=null;revision++}
+    set disabled(value){requireSheet(this).disabled=!!value;changed()}
+    get media(){const state=requireSheet(this);if(!state.mediaList){const media=Object.create(globalThis.MediaList.prototype);Object.defineProperties(media,{mediaText:{get:()=>state.media,set:value=>{state.media=String(value);changed()}},length:{get:()=>state.media?state.media.split(',').length:0},item:{value:index=>state.media.split(',')[Number(index)]?.trim()||''}});state.mediaList=media}return state.mediaList}
+    replaceSync(text){const state=requireSheet(this);if(state.owner||state.locked)throw new DOMException('Stylesheet cannot be replaced','NotAllowedError');state.rules.splice(0,state.rules.length,...parsedRules(text,this));changed()}
+    replace(text){const state=requireSheet(this);if(state.owner||state.locked)return Promise.reject(new DOMException('Stylesheet cannot be replaced','NotAllowedError'));text=String(text);state.locked=true;return Promise.resolve().then(()=>{try{state.rules.splice(0,state.rules.length,...parsedRules(text,this));changed();return this}finally{state.locked=false}})}
+    insertRule(text,index=0){const state=requireSheet(this);index=Number(index)>>>0;if(state.locked)throw new DOMException('Stylesheet is being replaced','NotAllowedError');if(index>state.rules.length)throw new DOMException('Index exceeds rule count','IndexSizeError');const ast=parse(String(text),{context:'stylesheet'});if(ast.children.size!==1)throw new DOMException('Expected one rule','SyntaxError');if(ast.children.first.type==='Atrule'&&ast.children.first.name==='import')throw new DOMException('Cannot insert @import into a constructed sheet','SyntaxError');const inserted=parsedRules(text,this);if(inserted.length!==1)throw new DOMException('Invalid rule','SyntaxError');state.rules.splice(index,0,inserted[0]);changed();return index}
+    deleteRule(index){const state=requireSheet(this);index=Number(index)>>>0;if(state.locked)throw new DOMException('Stylesheet is being replaced','NotAllowedError');if(index>=state.rules.length)throw new DOMException('Index exceeds rule count','IndexSizeError');const old=state.rules.splice(index,1)[0];rules.get(old).sheet=null;changed()}
   }
   Object.defineProperty(CSSStyleSheet.prototype,Symbol.toStringTag,{value:'CSSStyleSheet',configurable:true});
   Object.defineProperty(globalThis,'CSSStyleSheet',{value:CSSStyleSheet,writable:true,configurable:true});
+  const ownerConnected=owner=>{
+    if(!shadowHosts.size)return host.isConnected(elementSlot(owner).nodeId);
+    // Synthetic shadow membership lives in the canonical JS slots, outside
+    // the native arena. Walk both kinds of ancestry without author getters.
+    for(let node=owner;node;){
+      if(node===document)return true;
+      const parent=syntheticParents.get(node)||shadowSlots.get(node)?.host;
+      if(parent){node=parent;continue}
+      const data=elementSlot(node);if(!data)return false;
+      node=wrap(host.parentNode(data.nodeId));
+    }
+    return false;
+  };
   function ownerSheet(owner){
     if(!elementSlot(owner))throw new TypeError('Illegal invocation');
-    const prior=owners.get(owner),tag=owner.localName,type=(owner.getAttribute('type')||'').trim().toLowerCase();
-    if(!owner.isConnected||type&&type!=='text/css'||tag==='link'&&!String(owner.getAttribute('rel')||'').toLowerCase().split(/\s+/).includes('stylesheet')){owners.delete(owner);return null}
-    const resource=tag==='link'?host.stylesheetResource(owner.getAttribute('href')||'',prior?.key||''):null;if(tag==='link'&&!resource){owners.delete(owner);return null}
-    const source=tag==='link'?resource.body:owner.textContent||'',key=tag==='link'?resource.url:source;
+    const data=elementSlot(owner),attribute=name=>host.getAttribute(data.nodeId,name);
+    const prior=owners.get(owner),tag=data.tagName.toLowerCase(),type=(attribute('type')||'').trim().toLowerCase();
+    if(!ownerConnected(owner)||type&&type!=='text/css'||tag==='link'&&!String(attribute('rel')||'').toLowerCase().split(/\s+/).includes('stylesheet')){owners.delete(owner);return null}
+    const resource=tag==='link'?host.stylesheetResource(attribute('href')||'',prior?.key||''):null;if(tag==='link'&&!resource){owners.delete(owner);return null}
+    const source=tag==='link'?resource.body:host.textContent(data.nodeId)||'',key=tag==='link'?resource.url:source;
     let sheet=prior?.key===key?prior.sheet:null;
     if(!sheet){sheet=new CSSStyleSheet();const s=sheets.get(sheet);s.owner=owner;s.href=resource?.url||null;s.crossOrigin=!!resource?.crossOrigin;s.rules.push(...parsedRules(source,sheet));owners.set(owner,{key,sheet})}
-    const state=sheets.get(sheet);state.media=owner.getAttribute('media')||'';return sheet;
+    const state=sheets.get(sheet);state.media=attribute('media')||'';return sheet;
   }
   for(const type of ['HTMLStyleElement','SVGStyleElement','HTMLLinkElement'])if(globalThis[type]){
     Object.defineProperty(globalThis[type].prototype,'sheet',{get(){return ownerSheet(this)},enumerable:true,configurable:true});
-    Object.defineProperty(globalThis[type].prototype,'disabled',{get(){const sheet=ownerSheet(this);return sheet?sheets.get(sheet).disabled:false},set(value){const sheet=ownerSheet(this);if(sheet){sheets.get(sheet).disabled=!!value;revision++}},enumerable:true,configurable:true});
+    Object.defineProperty(globalThis[type].prototype,'disabled',{get(){const sheet=ownerSheet(this);return sheet?sheets.get(sheet).disabled:false},set(value){const sheet=ownerSheet(this);if(sheet){sheets.get(sheet).disabled=!!value;changed()}},enumerable:true,configurable:true});
   }
   function ownerCollection(root) {
     let list=ownerLists.get(root);
@@ -175,7 +190,7 @@ const constructedStyleSheets = (() => {
   function adoption(root) {
     if(!(root instanceof Document)&&!shadowSlots.has(root))throw new TypeError('Illegal invocation');
     let value=adopted.get(root);
-    if(!value){value=new Proxy([],{set(target,key,sheet){if(typeof key==='string'&&/^\d+$/.test(key)&&!sheets.has(sheet))throw new TypeError('Value is not a constructed CSSStyleSheet');revision++;return Reflect.set(target,key,sheet)},deleteProperty(target,key){revision++;return Reflect.deleteProperty(target,key)}});adopted.set(root,value)}
+    if(!value){value=new Proxy([],{set(target,key,sheet){if(typeof key==='string'&&/^\d+$/.test(key)&&!sheets.has(sheet))throw new TypeError('Value is not a constructed CSSStyleSheet');changed();return Reflect.set(target,key,sheet)},deleteProperty(target,key){changed();return Reflect.deleteProperty(target,key)}});adopted.set(root,value)}
     return value;
   }
   for(const proto of [Document.prototype,ShadowRoot.prototype])Object.defineProperty(proto,'adoptedStyleSheets',{

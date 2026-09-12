@@ -70,6 +70,8 @@ type Realm struct {
 	bootstrapCapture         *bootstrapSnapshotEntry
 	bootstrapRestored        bool
 	fontChoices              []textmetrics.FontReference
+	textShapeCache           *textShapeCache
+	textCacheProfile         *textCacheProfile
 	lastModified             time.Time
 	clientHints              *clientHintsDocument
 	documentSecurity         *documentSecurity
@@ -140,8 +142,11 @@ type Realm struct {
 	cancelResources          context.CancelFunc
 	resourceWG               sync.WaitGroup
 	moduleFetches            map[string]*moduleFetch
+	moduleGraphs             map[string]*moduleGraph
+	preparedModules          map[string]bool
 	preloadedModuleLinks     map[int64]bool
 	imageLoads               map[int64]*imageLoad
+	availableImages          *availableImageCache
 	preloads                 map[preloadKey]*resourcePreload
 	preloadsMu               sync.Mutex
 	preloadContext           context.Context
@@ -318,6 +323,9 @@ func newRealmStateWithNavigation(p *Page, agent ExecutionAgent, d *dom.Document,
 	})
 	r.scheduler.SetSequenceSource(func() uint64 { return p.taskSequence.Add(1) })
 	r.scheduler.SetObserver(func(t scheduler.Transition) {
+		if t.Name == "posted" {
+			p.WakeEventLoop()
+		}
 		if t.Name == "end" {
 			r.webTaskAbort = nil
 		}
@@ -466,7 +474,13 @@ func (r *Realm) Close() error {
 	r.cancelResources()
 	r.resourceWG.Wait()
 	r.moduleFetches = nil
+	r.moduleGraphs = nil
+	r.preparedModules = nil
 	r.imageLoads = nil
+	r.availableImages = nil
+	r.fontChoices = nil
+	r.textShapeCache = nil
+	r.textCacheProfile = nil
 	r.preloads = nil
 	r.stylesheetLoads = nil
 	r.parserStylesheetEvents = nil
@@ -695,6 +709,16 @@ func (r *Realm) install() error {
 }
 
 func (r *Realm) installBindings() error {
+	// Bootstrap is one synchronous Page operation. Keep its host installation,
+	// restore hooks and intrinsic reads on the existing runtime owner instead of
+	// dispatching each Get/Call/Eval separately. This neither pumps tasks nor
+	// checkpoints jobs, and a failed snapshot is disposed only after we return.
+	return r.runOnOwner(context.Background(), func(context.Context) error {
+		return r.installBindingsOnOwner()
+	})
+}
+
+func (r *Realm) installBindingsOnOwner() error {
 	defer func() {
 		if r.bootstrapCapture != nil {
 			r.agent.Page().ctx.bootstrapSnapshots.abandon(r.bootstrapCapture)
@@ -1039,7 +1063,7 @@ func (r *Realm) installBindings() error {
 		}
 		return nil, nil
 	})
-	host["viewport"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+	host["viewport"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		w := p.environmentView().Window
 		p.mu.RLock()
 		frame, isFrame := r.agent.(*Frame)
@@ -1074,9 +1098,13 @@ func (r *Realm) installBindings() error {
 		}
 		return r.val(map[string]any{"width": w.ViewportWidth, "height": w.ViewportHeight, "outerWidth": w.OuterWidth, "outerHeight": w.OuterHeight, "screenX": w.X, "screenY": w.Y}), nil
 	})
-	host["observationVersion"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+	host["observationVersion"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		w := p.environmentView().Window
-		return r.val(fmt.Sprintf("%d:%d:%d:%d:%d", r.document.Revision(), r.resourceRevision.Load(), w.ViewportWidth, w.ViewportHeight, r.selectorTargetID)), nil
+		owner := r
+		if r.mainWorld != nil {
+			owner = r.mainWorld
+		}
+		return r.val(fmt.Sprintf("%d:%d:%d:%d:%d", r.document.Revision(), owner.resourceRevision.Load(), w.ViewportWidth, w.ViewportHeight, r.selectorTargetID)), nil
 	})
 	if detacher, ok := r.runtime.(engine.ArrayBufferDetacher); ok {
 		host["detachArrayBuffer"] = r.runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
@@ -1492,6 +1520,11 @@ func (r *Realm) installBindings() error {
 				r.updateImage(id, true)
 			}
 		}
+		if strings.EqualFold(name, "loading") {
+			if node, ok := r.document.Get(id); ok && node.TagName == "IMG" {
+				r.updateImage(id, false)
+			}
+		}
 		r.childFrameAttributeChanged(id, name)
 		if node, ok := r.document.Get(id); ok && node.TagName == "META" {
 			r.refreshContentPolicy()
@@ -1506,6 +1539,11 @@ func (r *Realm) installBindings() error {
 		if err == nil && strings.EqualFold(name, "src") {
 			if node, ok := r.document.Get(id); ok && node.TagName == "IMG" {
 				r.updateImage(id, true)
+			}
+		}
+		if err == nil && strings.EqualFold(name, "loading") {
+			if node, ok := r.document.Get(id); ok && node.TagName == "IMG" {
+				r.updateImage(id, false)
 			}
 		}
 		if err == nil && existed {
@@ -2041,6 +2079,7 @@ func (r *Realm) installBindings() error {
 			return err
 		}
 	}
+	r.enableAsyncModules()
 	if err := installEvalSourceResolver(r.runtime); err != nil {
 		return err
 	}
@@ -2236,7 +2275,7 @@ func (r *Realm) postNavigate(raw string, replaceOption ...bool) error {
 	request := network.Request{SourceURL: current, Referrer: current, UserActivation: r.navigationActivated()}
 	request.ReferrerPolicy = r.referrerPolicy
 	r.scheduler.Post(scheduler.Navigation, 0, func(ctx context.Context) error {
-		return r.agent.Page().navigateRequestWithHistory(ctx, u.String(), uuid.NewString(), request, historyTarget, replace, reload)
+		return r.agent.Page().beginNavigationRequest(ctx, u.String(), uuid.NewString(), request, historyTarget, true, replace, reload)
 	})
 	return nil
 }
@@ -2330,6 +2369,8 @@ func (r *Realm) hostXHR(_ engine.Value, a []engine.Value) (engine.Value, error) 
 					event := "error"
 					if errors.Is(loadErr, context.DeadlineExceeded) {
 						event = "timeout"
+					} else if errors.Is(loadErr, network.ErrDocumentLoadingStopped) {
+						event = "abort"
 					}
 					_, _ = r.runtime.Call(ctx, callback, nil, r.runtime.Value(map[string]any{"error": event}))
 					return nil

@@ -14,10 +14,11 @@ const cssBoxModel=(()=>{
   const hiddenInput=tag(element)==='INPUT'&&String(host.getAttribute(elementSlot(element).nodeId,'type')||'').toLowerCase()==='hidden';
   const display=hiddenInput?'none':get('display')||(invisible.has(tag(element))||host.getAttribute(elementSlot(element).nodeId,'hidden')!==null?'none':tableDisplays[tag(element)]|| (tag(element)==='SUMMARY'?'list-item':blocks.has(tag(element))?'block':'inline')),position=get('position')||'static';
   const result={element,entries,get,display,position};cache.set(element,result);
-  result.inherited=name=>{for(let p=element;p;p=geometryParent(p)){const v=computedCSSDeclarations(p).find(e=>e.name===name)?.value;if(v&&!['inherit','unset'].includes(v))return v}return null};
+  const inherited=new Map();
+  result.inherited=name=>{if(inherited.has(name))return inherited.get(name);let value=null;for(let p=element;p;p=geometryParent(p)){const v=computedCSSDeclarations(p).find(e=>e.name===name)?.value;if(v&&!['inherit','unset'].includes(v)){value=v;break}}inherited.set(name,value);return value};
   result.length=(text,basis=0)=>{
    if(text==null||['auto','none','normal','initial','unset'].includes(text))return null;
-   const value=cssResolveLength(text,{em:result.fontSize??16,rem:(cssComputedFontSize(document.documentElement)??16),percent:basis});
+   const value=cssResolveLength(text,cssGeometryLengthContext(element,basis,result.fontSize??16));
    if(value!==null)return unit(value);
    const viewport=/^([+-]?[\d.]+)(vw|vh|vmin|vmax)$/.exec(text);if(viewport){const size=host.viewport();return unit(Number(viewport[1])*({vw:size.width,vh:size.height,vmin:Math.min(size.width,size.height),vmax:Math.max(size.width,size.height)}[viewport[2]])/100)}
    return null;
@@ -36,19 +37,22 @@ const cssBoxModel=(()=>{
   result.fontSize=(cssComputedFontSize(element)??16);
   return result;
  };
- const children=element=>{const root=elementShadows.get(element)||element,data=elementSlot(root);return data?host.nodeChildren(data.nodeId).map(wrap):Array.from(fragmentState(root).children)};
+ const children=element=>cssObservationChildren(elementShadows.get(element)||element);
  const rendered=element=>{
-  for(let parent=element;parent;parent=geometryParent(parent))if(state(parent).display==='none')return false;
-  return true;
+  const cache=styleReadCache.rendered||(styleReadCache.rendered=new WeakMap()),visited=[];
+  let visible=true;
+  for(let parent=element;parent;parent=geometryParent(parent)){if(cache.has(parent)){visible=cache.get(parent);break}visited.push(parent);if(state(parent).display==='none'){visible=false;break}}
+  for(const node of visited)cache.set(node,visible);
+  return visible;
  };
  const textInfo=(element,text)=>{
   const s=state(element),family=s.inherited('font-family')||'"Times New Roman"',weight=Number(s.inherited('font-weight'))|| (tag(element)==='TH'?700:400),italic=s.inherited('font-style')==='italic';
   if(s.fontSize===0){const raw=s.inherited('line-height'),height=raw&&raw!=='normal'?(cssNumberRegex.test(raw)?0:s.length(raw,0)):0;return {width:0,height:height??0,ascent:0,descent:0}}
   const metrics=styleReadCache.textMetrics||(styleReadCache.textMetrics=new Map()),key=JSON.stringify([text,family,s.fontSize,weight,italic]);
-  let shaped=metrics.get(key);if(!shaped){shaped=JSON.parse(host.shapeText(text,family,s.fontSize,weight,Number(italic),0,0));metrics.set(key,shaped)}
+  let shaped=metrics.get(key);if(!shaped){shaped=JSON.parse(host.shapeTextMetrics(text,family,s.fontSize,weight,Number(italic),0,0));metrics.set(key,shaped)}
   if(shaped.error){host.semanticMissingAt('css_box_geometry.js/textInfo','CSS.textBoxMetrics');return {width:0,height:0,ascent:0,descent:0}}
   const raw=s.inherited('line-height'),height=raw&&raw!=='normal'?(cssNumberRegex.test(raw)?unit(Number(raw)*s.fontSize):s.length(raw,s.fontSize)):shaped.ascent+shaped.descent+(shaped.lineGap||0);
-  return {width:Math.ceil(shaped.glyphs.reduce((a,g)=>a+g.advance,0)*64)/64,height:height??shaped.ascent+shaped.descent+(shaped.lineGap||0),ascent:shaped.ascent,descent:shaped.descent};
+  return {width:Math.ceil(shaped.advance*64)/64,height:height??shaped.ascent+shaped.descent+(shaped.lineGap||0),ascent:shaped.ascent,descent:shaped.descent};
  };
  const textOf=element=>children(element).filter(n=>elementSlot(n)?.type==='text').map(n=>textContent(n)).join('').replace(/[\t\n\r\f ]+/g,' ').trim();
  const controlSize=element=>{
@@ -74,7 +78,8 @@ const cssBoxModel=(()=>{
   // inline margin, each quantized independently to a layout unit.
   const marker=s.display==='list-item'&&inside&&['disclosure-open','disclosure-closed'].includes(listType)?unit(s.fontSize*.66)+unit(s.fontSize*.4):0;
   let width=textInfo(element,textOf(element)).width+marker,line=width;
-  for(const child of children(element)){if(elementSlot(child)?.type!=='element')continue;const c=state(child);if(c.display==='none'||['absolute','fixed'].includes(c.position))continue;const edges=c.edges(0),value=(c.length(c.get('width'))??intrinsic(child))+edges.pleft+edges.pright+edges.bleft+edges.bright+edges.mleft+edges.mright;if(c.display==='inline'||replacedGeometryTags.has(tag(child))){line+=value;width=Math.max(width,line)}else {width=Math.max(width,line,value);line=0}}
+  const rowFlex=/^(?:inline-)?flex$/.test(s.display)&&!(s.get('flex-direction')||'row').startsWith('column');
+  for(const child of children(element)){if(elementSlot(child)?.type!=='element')continue;const c=state(child);if(c.display==='none'||['absolute','fixed'].includes(c.position))continue;const edges=c.edges(0),value=(c.length(c.get('width'))??intrinsic(child))+edges.pleft+edges.pright+edges.bleft+edges.bright+edges.mleft+edges.mright;if(rowFlex||['inline','inline-block','inline-flex'].includes(c.display)||replacedGeometryTags.has(tag(child))){line+=value;width=Math.max(width,line)}else {width=Math.max(width,line,value);line=0}}
   return Math.max(width,line);
  };
  const tableColumns=table=>{
@@ -117,8 +122,14 @@ const cssBoxModel=(()=>{
    const attribute=host.getAttribute(elementSlot(element).nodeId,'width');if(attribute&&/^\d+(?:\.\d+)?$/.test(attribute))content=Number(attribute);
    else if(controlSize(element))return cache.set(element,controlSize(element).width).get(element);
    else if(s.display==='table'){content=tableColumns(element).width-extra}
-   else if(['absolute','fixed'].includes(s.position)||s.display==='inline-block'||s.display==='inline')content=Math.min(Math.max(0,basis-e.mleft-e.mright-extra),intrinsic(element));
-   else content=Math.max(0,basis-e.mleft-e.mright-extra);
+   else {const parent=geometryParent(element),p=parent&&state(parent);
+    if(parent&&/^(?:inline-)?flex$/.test(p.display)&&!(p.get('flex-direction')||'row').startsWith('column')){
+     const items=children(parent).filter(child=>elementSlot(child)?.type==='element'&&rendered(child)&&!['absolute','fixed'].includes(state(child).position));let base=0,totalGrow=0,totalShrink=0,own=0,ownGrow=0,ownShrink=0;
+     for(const item of items){const itemState=state(item),itemEdges=itemState.edges(basis),specified=itemState.length(itemState.get('width'),basis),itemBase=(specified===null?intrinsic(item):specified)+(specified!==null&&itemState.get('box-sizing')==='border-box'?0:itemEdges.pleft+itemEdges.pright+itemEdges.bleft+itemEdges.bright),outer=itemBase+itemEdges.mleft+itemEdges.mright,grow=Number(itemState.get('flex-grow'))||0,shrink=Number(itemState.get('flex-shrink'));base+=outer;totalGrow+=grow;totalShrink+=(Number.isFinite(shrink)?shrink:1)*itemBase;if(item===element){own=itemBase;ownGrow=grow;ownShrink=(Number.isFinite(shrink)?shrink:1)*itemBase}}
+     const free=basis-base,allocated=free>=0?own+free*ownGrow/Math.max(1,totalGrow):own+free*ownShrink/Math.max(1,totalShrink);content=Math.max(0,allocated-(borderBox?0:extra));
+    }
+    if(content===null)content=['absolute','fixed'].includes(s.position)||['inline','inline-block','inline-flex'].includes(s.display)?Math.min(Math.max(0,basis-e.mleft-e.mright-extra),intrinsic(element)):Math.max(0,basis-e.mleft-e.mright-extra);
+   }
   }
   let value=Math.max(0,content+(borderBox?0:extra));
   const minimum=s.length(s.get('min-width'),basis),maximum=s.length(s.get('max-width'),basis);
@@ -130,15 +141,25 @@ const cssBoxModel=(()=>{
   for(let parent=geometryParent(element);parent;parent=geometryParent(parent))if(state(parent).display==='table'){if(!cache.has(parent))size(parent);break}
   if(cache.has(element))return cache.get(element);
   const s=state(element),basis=containingWidth(element),e=s.edges(basis),value={width:layoutWidthFor(element),height:0,edges:e,positions:new Map(),contentHeight:0};cache.set(element,value);
-  if(!['absolute','fixed'].includes(s.position)&&!['inline','inline-block'].includes(s.display)){const left=s.get('margin-left')==='auto',right=s.get('margin-right')==='auto',free=Math.max(0,basis-value.width-e.mleft-e.mright);if(left)e.mleft=free/(right?2:1);if(right)e.mright=free/(left?2:1)}
+  const parent=geometryParent(element),parentDisplay=parent?state(parent).display:'';
+  if(!/^(?:inline-)?flex$/.test(parentDisplay)&&!['absolute','fixed'].includes(s.position)&&!['inline','inline-block'].includes(s.display)){const left=s.get('margin-left')==='auto',right=s.get('margin-right')==='auto',free=Math.max(0,basis-value.width-e.mleft-e.mright);if(left)e.mleft=free/(right?2:1);if(right)e.mright=free/(left?2:1)}
   if(!rendered(element)||!computedStyleDocumentAvailable(element)||!computedStyleAvailable(element)){value.width=0;return value;}
   if(s.display==='table')return tableSize(element,value);
-  const parent=geometryParent(element),rawHeight=s.get('height');let height=rawHeight?.endsWith('%')&&!definiteGeometryHeight(parent)?null:s.length(rawHeight,rawHeight?.endsWith('%')&&parent?size(parent).height:0);
+  const rawHeight=s.get('height');let height=rawHeight?.endsWith('%')&&!definiteGeometryHeight(parent)?null:s.length(rawHeight,rawHeight?.endsWith('%')&&parent?size(parent).height:0);
   // Opposing insets stretch an auto-sized non-replaced absolute box in its
   // containing padding box. Querying it first must also complete parent flow.
   if(height===null&&['absolute','fixed'].includes(s.position)&&!replacedGeometryTags.has(tag(element))){const container=positionedContainer(element),cb=container?size(container):null,basis=cb?cb.height-cb.edges.btop-cb.edges.bbottom:host.viewport().height,top=s.length(s.get('top'),basis),bottom=s.length(s.get('bottom'),basis);if(top!==null&&bottom!==null)height=Math.max(0,basis-top-bottom-e.mtop-e.mbottom-(s.get('box-sizing')==='border-box'?0:e.ptop+e.pbottom+e.btop+e.bbottom))}
   value.height=height===null?0:height+(s.get('box-sizing')==='border-box'?0:e.ptop+e.pbottom+e.btop+e.bbottom);
   const own=controlSize(element);if(own){value.height=height===null?own.height:value.height;return value}
+  if(/^(?:inline-)?flex$/.test(s.display)&&!(s.get('flex-direction')||'row').startsWith('column')){
+   const items=children(element).filter(child=>elementSlot(child)?.type==='element'&&rendered(child)&&!['absolute','fixed'].includes(state(child).position)),contentWidth=Math.max(0,value.width-e.pleft-e.pright-e.bleft-e.bright);
+   const measured=items.map(child=>{const box=size(child),edges=box.edges,childState=state(child);return {child,box,edges,autoLeft:childState.get('margin-left')==='auto',autoRight:childState.get('margin-right')==='auto',outerWidth:box.width+edges.mleft+edges.mright,outerHeight:box.height+edges.mtop+edges.mbottom}}),used=measured.reduce((sum,item)=>sum+item.outerWidth,0),lineHeight=measured.reduce((maximum,item)=>Math.max(maximum,item.outerHeight),0),crossSize=height===null?lineHeight:Math.max(0,value.height-e.ptop-e.pbottom-e.btop-e.bbottom),autoMargins=measured.reduce((count,item)=>count+Number(item.autoLeft)+Number(item.autoRight),0);
+   const justify=s.get('justify-content'),free=Math.max(0,contentWidth-used),autoSpace=autoMargins?free/autoMargins:0,justifyFree=autoMargins?0:free;let cursor=justify==='flex-end'||justify==='end'?justifyFree:justify==='center'?justifyFree/2:0,gap=justify==='space-between'&&measured.length>1?justifyFree/(measured.length-1):justify==='space-around'&&measured.length?justifyFree/measured.length:justify==='space-evenly'&&measured.length?justifyFree/(measured.length+1):0;
+   if(justify==='space-around')cursor=gap/2;else if(justify==='space-evenly')cursor=gap;
+   for(const item of measured){const align=state(item.child).get('align-self')||s.get('align-items'),remaining=Math.max(0,crossSize-item.outerHeight),y=align==='flex-end'||align==='end'?remaining:align==='center'?remaining/2:0;cursor+=item.autoLeft?autoSpace:0;value.positions.set(item.child,{x:cursor+item.edges.mleft,y:y+item.edges.mtop});cursor+=item.outerWidth+(item.autoRight?autoSpace:0)+gap}
+   value.contentHeight=lineHeight;value.height=(height===null?lineHeight:height)+(s.get('box-sizing')==='border-box'&&height!==null?0:e.ptop+e.pbottom+e.btop+e.bbottom);
+   const min=s.length(s.get('min-height')),max=s.length(s.get('max-height'));if(min!==null)value.height=Math.max(value.height,min);if(max!==null)value.height=Math.min(value.height,max);return value;
+  }
   const text=textOf(element),font=textInfo(element,text),contentWidth=Math.max(0,value.width-e.pleft-e.pright-e.bleft-e.bright);
   const generated=pseudo=>{const entries=uncachedCSSDeclarations(element,pseudo),get=name=>entries.find(e=>e.name===name)?.value;if(get('display')==='none'||!['\"\"',"''"].includes(get('content'))||['absolute','fixed'].includes(get('position')))return 0;return (s.length(get('height'))||0)+(s.length(get('padding-top'),value.width)||0)+(s.length(get('padding-bottom'),value.width)||0)};
   let textLines=text?1:0,lastTextWidth=0,lineText='';const wrapping=!['nowrap','pre'].includes(s.inherited('white-space'));if(text)for(const word of text.split(' ')){const candidate=lineText?lineText+' '+word:word,advance=textInfo(element,candidate).width;if(wrapping&&lineText&&advance>contentWidth){textLines++;lineText=word;lastTextWidth=textInfo(element,word).width}else {lineText=candidate;lastTextWidth=advance}}
@@ -186,6 +207,38 @@ const cssBoxModel=(()=>{
   value.clientWidth=Math.max(0,value.width-box.edges.bleft-box.edges.bright);value.clientHeight=Math.max(0,value.height-box.edges.btop-box.edges.bbottom);
   value.offsetLeft=value.x-(origin?origin.x+oe.bleft:0);value.offsetTop=value.y-(origin?origin.y+oe.btop:0);return value;
  };
+ // A width observation does not need ancestor positions or descendant heights.
+ // Table allocation and replaced/shadow boxes retain the complete size path.
+ const widthBox=element=>{
+  if(!rendered(element)||!computedStyleDocumentAvailable(element)||!computedStyleAvailable(element))return {width:0,clientWidth:0,edges:{pleft:0,pright:0,bleft:0,bright:0}};
+  let complete=replacedGeometryTags.has(tag(element));
+  for(let node=element;node&&!complete;node=geometryParent(node))complete=state(node).display.startsWith('table')||elementShadows.has(node)||!!containingShadowRoot(node);
+  const box=complete?size(element):{width:width(element),edges:state(element).edges(containingWidth(element))};
+  return {width:box.width,clientWidth:Math.max(0,box.width-box.edges.bleft-box.edges.bright),edges:box.edges};
+ };
+ // Height needs the element's own content flow, but not its position among
+ // unrelated siblings. Keep coupled table/shadow/control layout on the full
+ // rectangle path; all caches retain their existing observation lifetime.
+ const heightBox=element=>{
+  if(!rendered(element)||!computedStyleDocumentAvailable(element)||!computedStyleAvailable(element))return {height:0,clientHeight:0,edges:{ptop:0,pbottom:0,btop:0,bbottom:0}};
+  let complete=replacedGeometryTags.has(tag(element));
+  for(let node=element;node&&!complete;node=geometryParent(node))complete=state(node).display.startsWith('table')||elementShadows.has(node)||!!containingShadowRoot(node);
+  if(complete)return {...rect(element),edges:size(element).edges};
+  // A definite height observation needs the border/padding projection, not
+  // descendant line breaking or positions. Keep size() authoritative for flow
+  // and rect(child): neither receives an incomplete entry in boxSizes here.
+  // Percentage heights retain their containing-block dependency in size().
+  const s=state(element),raw=s.get('height'),height=raw&&!raw.includes('%')?s.length(raw):null;
+  if(height!==null){
+   const edges=s.edges(containingWidth(element));
+   let value=height+(s.get('box-sizing')==='border-box'?0:edges.ptop+edges.pbottom+edges.btop+edges.bbottom);
+   const min=s.length(s.get('min-height')),max=s.length(s.get('max-height'));
+   if(min!==null)value=Math.max(value,min);if(max!==null)value=Math.min(value,max);
+   return {height:value,clientHeight:Math.max(0,value-edges.btop-edges.bbottom),edges};
+  }
+  const box=size(element);
+  return {height:box.height,clientHeight:Math.max(0,box.height-box.edges.btop-box.edges.bbottom),edges:box.edges};
+ };
  const hasBox=element=>withStyleReadCache(()=>foreignCSSObservation(element,'box')??(computedStyleDocumentAvailable(element)&&computedStyleAvailable(element)&&rendered(element)));
- return {width,rect,state,size,hasBox};
+ return {width,rect,state,size,widthBox,heightBox,hasBox};
 })();

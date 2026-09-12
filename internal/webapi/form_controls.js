@@ -13,6 +13,11 @@
   const sharedControlKeys=new Set(['type','value','checked','indeterminate','selected','selectedIndex','selectionStart','selectionEnd','selectionDirection','setSelectionRange','select','reset']);
   const define=(name,key,descriptor)=>{
     const p=globalThis[name]?.prototype;if(!p)return;
+    // Reflected attributes already advance the canonical DOM revision. Only
+    // dirty JS-owned form state needs an additional invalidation boundary;
+    // read-only methods (notably select.item) must not invalidate observations.
+    if(sharedControlKeys.has(key)&&descriptor.set){const set=descriptor.set;descriptor={...descriptor,set(value){host.invalidateStyleObservations();try{return set.call(this,value)}finally{host.invalidateStyleObservations()}}}}
+    if(sharedControlKeys.has(key)&&descriptor.value){const call=descriptor.value;descriptor={...descriptor,value:function(...args){host.invalidateStyleObservations();try{return call.apply(this,args)}finally{host.invalidateStyleObservations()}}}}
     let entries=controlDescriptors.get(p);if(!entries){entries=new Map();controlDescriptors.set(p,entries)}entries.set(key,descriptor);
     if(sharedControlKeys.has(key)){
       const original=descriptor;
@@ -29,6 +34,17 @@
       return Reflect.apply(method,element,args);
     }
     throw new TypeError('Unsupported form control property '+key);
+  };
+  compatibilityElementState.selectorChecked=element=>{
+    const data=elementSlot(element);if(!data)return false;
+    if(data.tagName==='INPUT'){
+      const type=String(host.getAttribute(data.nodeId,'type')||'text').toLowerCase();
+      if(type!=='checkbox'&&type!=='radio')return false;
+      if(isolatedControls)return !!parseControlJSON(host.mainWorldInput(data.nodeId,'form',stringifyControlJSON({operation:'get',key:'checked',args:[]}))).value;
+      const state=inputState(element);return state.dirtyChecked?state.checked:host.getAttribute(data.nodeId,'checked')!==null;
+    }
+    if(data.tagName==='OPTION')return !!compatibilityElementState.formOperation(element,'get','selected');
+    return false;
   };
   const string=(name,key,attribute=key.toLowerCase())=>define(name,key,{get(){return this.getAttribute(attribute)||''},set(value){this.setAttribute(attribute,String(value))}});
   const boolean=(name,key,attribute=key.toLowerCase())=>define(name,key,{get(){return this.hasAttribute(attribute)},set(value){if(value)this.setAttribute(attribute,'');else this.removeAttribute(attribute)}});

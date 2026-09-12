@@ -6,6 +6,7 @@ import (
 	"compress/gzip"
 	"compress/zlib"
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -145,6 +146,8 @@ type Loader struct {
 	ownsTransport           bool
 	activityMu              sync.Mutex
 	activeLoads             int
+	documentLoadSequence    uint64
+	documentLoads           map[uint64]context.CancelCauseFunc
 	idleSince               [2]time.Time
 	transport               Transport
 	env                     func() state.Environment
@@ -196,6 +199,16 @@ func (l *Loader) Load(ctx context.Context, r Request) (response Response, loadEr
 	if err := ctx.Err(); err != nil {
 		return Response{}, err
 	}
+	if !r.reportingFailure && !r.ClientIsWorker {
+		var release func()
+		ctx, release = l.trackDocumentLoad(ctx)
+		defer release()
+		defer func() {
+			if loadErr != nil && context.Cause(ctx) == ErrDocumentLoadingStopped {
+				loadErr = ErrDocumentLoadingStopped
+			}
+		}()
+	}
 	if r.operationStarted.IsZero() {
 		r.operationStarted = monotime.Now()
 	}
@@ -206,7 +219,7 @@ func (l *Loader) Load(ctx context.Context, r Request) (response Response, loadEr
 		r.reportingFailure = true
 		defer func() {
 			if loadErr != nil {
-				l.trace.Add(trace.Network, "failed", map[string]any{"id": r.ID, "url": r.URL.String(), "error": loadErr.Error(), "initiator": r.Initiator, "context": r.ContextID})
+				l.trace.Add(trace.Network, "failed", map[string]any{"id": r.ID, "url": r.URL.String(), "error": loadErr.Error(), "initiator": r.Initiator, "context": r.ContextID, "canceled": errors.Is(loadErr, context.Canceled) || ctx.Err() == context.Canceled})
 				l.trace.Add(trace.Resource, "loadEnd", map[string]any{"id": r.ID, "url": r.URL.String(), "error": loadErr.Error()})
 			}
 		}()

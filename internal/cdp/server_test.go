@@ -469,12 +469,22 @@ func TestIndependentPageCommandsDuringNavigation(t *testing.T) {
 	entered := make(chan struct{})
 	release := make(chan struct{})
 	fixture := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path != "/" {
+			http.NotFound(w, r)
+			return
+		}
 		close(entered)
 		<-release
 		fmt.Fprint(w, "<html><body>done</body></html>")
 	}))
 	defer fixture.Close()
-	defer close(release)
+	defer func() {
+		select {
+		case <-release:
+		default:
+			close(release)
+		}
+	}()
 	s, addr := runningServer(t)
 	other, err := s.Context.NewPage()
 	if err != nil {
@@ -491,7 +501,8 @@ func TestIndependentPageCommandsDuringNavigation(t *testing.T) {
 	}
 	defer second.Close()
 	first.WriteJSON(map[string]any{"id": 1, "method": "Page.navigate", "params": map[string]any{"url": fixture.URL}})
-	readReply(t, first, 1)
+	// The first navigation acknowledges document commit, so its main-response
+	// barrier must stay held while the independent Page executes its command.
 	select {
 	case <-entered:
 	case <-time.After(5 * time.Second):
@@ -502,5 +513,10 @@ func TestIndependentPageCommandsDuringNavigation(t *testing.T) {
 	reply := readReply(t, second, 2)
 	if reply["result"].(map[string]any)["result"].(map[string]any)["value"] != float64(42) {
 		t.Fatal(reply)
+	}
+	close(release)
+	first.SetReadDeadline(time.Now().Add(2 * time.Second))
+	if reply := readReply(t, first, 1); reply["error"] != nil || reply["result"].(map[string]any)["errorText"] != nil {
+		t.Fatal("first Page did not commit after release", reply)
 	}
 }

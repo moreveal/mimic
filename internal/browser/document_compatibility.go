@@ -18,7 +18,10 @@ func (r *Realm) installDocumentCompatibility(host map[string]any) {
 		r.computedStyleFlatRead = args[0]
 		return nil, nil
 	})
-	host["foreignComputedStyleFlatTree"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+	// These observations consume scalar arguments synchronously. Persisting
+	// their engine values would retain one set of V8 roots on every style read.
+	// Cross-realm work below captures only converted Go values, not borrowed args.
+	host["foreignComputedStyleFlatTree"] = r.packedFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		id := int64(numarg(args, 0))
 		kind, property := strarg(args, 1), strarg(args, 2)
 		root := r.document.OwnerDocumentID(id)
@@ -79,10 +82,10 @@ func (r *Realm) installDocumentCompatibility(host map[string]any) {
 			err = run(context.Background())
 		}
 		return r.val(observation), err
-	})
+	}, "nss")
 	// Resolved declarations exist only for nodes connected to a live browsing
 	// document. Visibility and display:none do not make that document inactive.
-	host["computedStyleAvailable"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+	host["computedStyleAvailable"] = r.packedFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		id := int64(numarg(args, 0))
 		if !r.document.IsConnected(id) {
 			return r.val(false), nil
@@ -97,7 +100,7 @@ func (r *Realm) installDocumentCompatibility(host map[string]any) {
 			}
 		}
 		return r.val(false), nil
-	})
+	}, "n")
 	// DOM adoption changes a node's owner document, not the realm of its JS
 	// wrapper. Resolve browsing documents through their canonical realm before
 	// constructing a local inert-document wrapper from shared DOM node data.
@@ -120,7 +123,7 @@ func (r *Realm) installDocumentCompatibility(host map[string]any) {
 			return owner.runtime.Get("document"), nil
 		})
 	})
-	host["stylesheetResource"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+	host["stylesheetResource"] = r.transientFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		u, err := r.resolveDocument(strarg(args, 0))
 		if err != nil {
 			return nil, nil
@@ -185,9 +188,9 @@ func (r *Realm) installDocumentCompatibility(host map[string]any) {
 		}
 		return r.val(nodeData(r.document.CreateHTMLDocument(title))), nil
 	})
-	host["nodeOwnerDocument"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+	host["nodeOwnerDocument"] = r.packedFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		return r.val(r.document.OwnerDocumentID(int64(numarg(args, 0)))), nil
-	})
+	}, "n")
 	host["adoptNodeDocument"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		r.document.AdoptNode(int64(numarg(args, 0)), int64(numarg(args, 1)))
 		return nil, nil

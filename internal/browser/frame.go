@@ -442,9 +442,11 @@ func (r *Realm) commitChildFrameNavigation(ctx context.Context, navigation *chil
 		return err
 	}
 	streamState.onScript = func(node dom.Node) error {
-		return r.executeChildNavigationScript(streamState.ctx, navigation, streamState, node)
+		return r.executeChildNavigationScript(streamState.executionContext(), navigation, streamState, node)
 	}
 	streamState.onFinished = func() error { return r.finishChildFrameParsing(streamState.ctx, navigation) }
+	restoreTaskContext := streamState.useTaskContext(ctx)
+	defer restoreTaskContext()
 	p.trace.Add(trace.Lifecycle, "frameNavigated", map[string]any{"frameId": navigation.frame.ID, "parentFrameId": navigation.frame.parent.ID, "loaderId": navigation.loaderID, "url": documentURL.String(), "realm": realm.ID})
 	p.runInitScripts(ctx, realm)
 	if err := realm.writeDocumentStream(realm, string(res.Body)); err != nil {
@@ -484,7 +486,9 @@ func (r *Realm) finishChildFrameParsing(ctx context.Context, navigation *childNa
 			return eventErr
 		}
 		p.trace.Add(trace.Lifecycle, "DOMContentLoaded", map[string]any{"frameId": navigation.frame.ID, "loaderId": navigation.loaderID, "url": navigation.realm.documentURL().String(), "realm": navigation.realm.ID})
-		return navigation.realm.checkpoint(ctx)
+		// Promise reactions belong to this DCL task, including its interrupt
+		// boundary, rather than the parser's longer navigation lifetime.
+		return navigation.realm.checkpoint(eventContext)
 	})
 	return nil
 }

@@ -71,8 +71,8 @@ svgComputedTransform=(n,raw)=>{
  // Nonplanar computed matrices retain the generic 4D algebra while using
  // the same SVG percentage reference box. CTM's planar boundary is unchanged.
  if(/(?:matrix3d|translate3d|translatez|scale3d|scalez|rotate3d|rotatex|rotatey|perspective)\s*\(/i.test(raw)){
-  const box=cssReferenceBox(n,bounds(n)),em=cssComputedFontSize(n)??16,rem=cssComputedFontSize(document.documentElement)??16;
-  const matrix=compatibilityMatrix.parse(raw,(text,axis)=>cssResolveLength(text,{em,rem,percent:axis===0?box[2]-box[0]:axis===1?box[3]-box[1]:0}));
+  const box=cssReferenceBox(n,bounds(n));
+  const matrix=compatibilityMatrix.parse(raw,(text,axis)=>cssResolveLength(text,cssGeometryLengthContext(n,axis===0?box[2]-box[0]:axis===1?box[3]-box[1]:0)));
   const two=[2,3,6,7,8,9,11,14].every(i=>matrix[i]===0)&&matrix[10]===1&&matrix[15]===1;
   return (two?'matrix(':'matrix3d(')+(two?[0,1,4,5,12,13].map(i=>matrix[i]):matrix).map(cssSerializeNumber).join(', ')+')';
  }

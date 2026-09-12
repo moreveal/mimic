@@ -1941,3 +1941,133 @@ The complete browser/CDP/webapi/profile package run passed (browser 416.63 s),
 with subsequent focused locale, Temporal, dialog, stylesheet, CSS and viewer
 checks passing on the final sources. General layout, resource/device/graphics
 customization and non-native Intl remain explicit limitations.
+
+
+## Live Lightpanda/Mimic/Chrome comparison (2026-09-12)
+
+An independent [live comparison](live-browser-comparison-20260912.md) retains 80 final trials over 16 URLs, a frozen Mimic executable, Lightpanda nightly 9268 in Ubuntu WSL, and native Windows Chrome 152 headless. Three-run median content observations for Wikipedia/React are 1.38/3.65 seconds in Mimic, 0.51/0.51 in default Lightpanda, 0.86/0.78 with Lightpanda resources and CORS enabled, and 0.55/0.85 in Chrome. The clocks include CDP/extraction overhead and exclude process/Page creation; these small samples do not establish a universal speedup.
+
+Mimic transitioned from a Cloudflare challenge 403 to the explicit ScrapingCourse success page (HTTP 200 at 10.39 seconds; content observed at 13.74). The other tested configurations remained challenged within 35 seconds. LowEndTalk admitted Mimic directly while challenging the others; the old IroShop test route cleared to an application 404 and is not a content success. Browser identities, platform and resource policies differ, so the cause of admission differences is not established. GitHub/Spigot CDP responsiveness, delayed Modrinth observations and an Amiibo title mismatch remain practical limitations. All four configurations completed the local TodoMVC input action.
+
+The exploratory clone-based probe caused repeated image requests and was discarded from the final timing comparison. The final corpus was rerun with one frozen read-only traversal probe. Raw evidence, binary/probe hashes, corrected exploratory findings, CSV and methodology are linked from the report. Production runtime code and frozen performance harnesses were not changed by this comparison; CPU, concurrency throughput and retained-memory claims were not measured here.
+
+## Navigation and automation stall fixes (2026-09-12–13)
+
+The [detailed investigation](stall-investigation-20260912.md) records the
+implementation, profiles, pinned Chrome observations, unprofiled paired runs,
+build/source hashes and remaining limitations. The original desktop login
+script and preceding Lightpanda comparison are preserved.
+
+Confirmed causes included network waits holding Page command ownership, module
+fetching inside V8 callbacks, repeated ancestor/style/geometry work, eager font
+unit resolution, redundant text shaping/glyph serialization, repeated completed
+image loads, and delayed wake-up of ready Page work. Fixes preserve one event
+loop per Page and reject stale navigation continuations. Transient geometry
+memoization and bounded realm/document caches avoid a persistent stale DOM model.
+Final review also added child-DCL microtask interruption and image-cache bounds.
+
+Five alternating clean-context pairs on the measured optimization checkpoint:
+
+| Observation, median | Before | Optimized |
+| --- | ---: | ---: |
+| ChatGPT visible login button | 3.583 s | 1.460 s |
+| Real click to confirmed modal | 1.339 s | 0.778 s |
+| Complete login-dialog path | 4.946 s | 2.234 s |
+| GitHub first content / DCL | 31.050 / 28.574 s | 0.981 / 17.953 s |
+| SpigotMC DCL | 0/5 successful; execution deadline ~40 s | 5/5 successful; 11.074 s |
+| Modrinth first content / DCL | 28.689 / 28.662 s | 1.102 / 5.741 s |
+
+The local full 200-element geometry read dropped from 30.444 to 8.052 seconds
+in a separate single cold stress pair. The bounded 30-repeat control reduced
+read/mutation/click medians from 637.75/808.89/495.09 to 176.72/219.21/156.91 ms.
+Seven held-resource scenarios each completed 30 sequential CDP commands before
+resource release; maximum observed p95 was 1.443 ms. Five retained-context pairs
+without preview reached the ChatGPT modal in 1.888→1.258 seconds; actual preview
+and complete input-event diagnostics are separately recorded.
+
+These are scoped improvements, not universal speed or compatibility claims.
+GitHub still has pre-existing bare-module/import-map failures. Both builds retain
+a ChatGPT shell error although the tested login modal opens. Wikipedia's optimized
+main campaign had 4/5 successful trials and one main-document network timeout
+while CDP stayed responsive. The specific Cloudflare laboratory challenge still
+cleared in both builds; an Iroshop route clearing to HTTP 404 remains a failure.
+At that checkpoint Spigot still had multi-second synchronous tasks; subsequent
+profiles identified repeated shaping, retained invocation handles and redundant
+geometry observations. Those paths received the additional fixes below.
+
+Intermediate frozen fast gates exposed static completion ~38–41→60 ms and lower
+concurrent throughput. The cause was an eagerly acknowledged navigation allowing
+readiness polling to instantiate an otherwise unused empty-document V8 runtime.
+The completed implementation acknowledges document commit outside Page/session
+locks, preserving explicitly concurrent reads and old-realm identity. It also
+closes the cancellation handoff race at commit.
+
+The last measured fast-gate checkpoint (`9aed84f1…`, `.build/stalls-fast-release-final/`),
+before the final shadow-stylesheet and isolated-owner corrections,
+versus a fresh unchanged baseline recorded static/DOM/React completion medians
+of **37.691→38.905 / 218.412→199.611 / 99.440→89.367 ms**. Static throughput
+at 25 Pages was **69.977→69.346 sessions/s**; recovered RSS was
+**423.60→421.71 MiB**. The intermediate 17.46% throughput loss did not persist.
+These small fast-gate samples are controls, not stable tail-latency estimates.
+
+Further fixes use transient V8 invocations, aggregate text metrics with bounded
+HarfBuzz scratch, the existing 1 MiB text-cache budget without premature count
+eviction, shared canonical ancestor reads and a definite-height projection that
+skips unnecessary descendant flow. Revision-based observation retention is
+restricted to the top main realm until the next microtask, with tested DOM,
+CSSOM, shadow, form/focus and font invalidation. Foreign/child/isolated projections
+keep synchronous reuse.
+
+`Page.stopLoading` now cancels current document requests, including stylesheet,
+module dependency, fetch and XHR. Pinned Chrome 152 and deterministic regressions
+confirm that worker requests survive and future fetch/import remain usable;
+stopped parsers do not restart or fabricate DCL/load. All oracle artifacts,
+checkpoint identities and final verification results are in the detailed report.
+
+The broad correctness run recorded 871 passing top-level tests and two shadow
+stylesheet failures; all other 19 tested packages passed, including CDP.
+Both failures were corrected and their related focused suite passed. A final
+isolated-world correction routes Playwright style/geometry observations through
+the canonical main owner. Its focused tests passed, and the reproduced GitHub
+navigation/snapshot timeout became two successful runs of approximately
+11.9 and 11.4 seconds on binary `23774c4a…`.
+
+The user explicitly requested committing without another full run. No final-source
+full-suite, frozen-matrix or five-pair live result is claimed after those last
+corrections. The committed build is `.build/mimic-optimized.exe`; its exact commit
+and binary hash are recorded in `.build/stalls-committed-release.json`.
+
+### 2026-09-13: isolated hit testing and auth-menu geometry
+
+A live blast.hk input click exhausted Playwright's 5-second deadline. Protocol
+timestamps showed approximately 3.6 seconds in hit-target setup before mouse
+dispatch. Isolated `elementsFromPoint` now asks the document owner for the whole
+hit list and wraps node IDs locally, instead of requesting owner geometry for
+every candidate separately. On fresh `.build/mimic-auth.exe` runs, the auth input
+click completed in approximately 2.1–2.6 seconds; filling and clearing it also
+succeeded. These are diagnostic live samples, not a controlled benchmark.
+
+Nested row-flex intrinsic widths, auto-width border-box edges and single-length
+`calc()` resolution were corrected. Preview now retains the target's 1272×653
+viewport in both 1677px and 900px viewer windows. This removes viewer-induced
+reflow, but does not make the limited geometry model pixel-identical to native
+Chrome (the live navigation still differs in control/icon dimensions).
+
+Focused CSS, input, isolated-world and preview regressions pass. The CDP package
+was tested in full; no new full-browser or frozen performance-matrix run is claimed.
+
+Follow-up: removed the CDP content-quad hit hint. Reading an element's quad must
+not force subsequent mouse events onto that element or bypass an overlay.
+The regression test failed before the change (the anchor received the click
+instead of its child) and passes with coordinate-based hit testing. Three live
+blast.hk cycles opened the menu, focused/filled/cleared the input, closed with
+Escape and reopened successfully. Initial clicks took 3.7–3.8 seconds; the AJAX
+form was visible at 4.7–4.9 seconds. These supersede the hinted-click timings above.
+
+A subsequent first-click capture exposed the intermittent lost click: pipelined
+CDP mouse release could execute before mouse press because transport workers
+raced for a mutex. Input commands now reserve FIFO order at dispatch, per
+session; legacy message envelopes preserve inner dispatch order too. Control
+commands and independent sessions are not queued behind input. A 32-click burst
+regression failed with reordered down/up on both page and flattened sessions
+before the fix, and passes repeatedly for page, flattened and legacy sessions.

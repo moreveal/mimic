@@ -65,6 +65,11 @@ func newAdapter(owner *Runtime, profile *diagnosticState) (*adapter, error) {
 		return nil, fmt.Errorf("create V8 promise factory: %w", err)
 	}
 	backend.promiseFactory = factory
+	backend.moduleNamespaceFactory, err = backend.Eval(context.Background(), `((then,apply)=>(promise,namespace)=>apply(then,promise,[()=>namespace]))(Promise.prototype.then,Reflect.apply)`, "mimic-module-namespace.js")
+	if err != nil {
+		_ = backend.Close()
+		return nil, err
+	}
 	return backend, nil
 }
 
@@ -108,6 +113,8 @@ type adapter struct {
 	moduleCache              map[string]*gov8.Module
 	moduleNames              map[*gov8.Module]string
 	importMetaResolveFactory engine.Value
+	moduleNamespaceFactory   engine.Value
+	dynamicModuleHandler     engine.DynamicModuleHandler
 	debuggerUnsafeEval       bool               // owning actor only, scoped to synchronous inspector execution
 	processorSamples         map[uintptr]uint64 // opt-in diagnostic sampling, actor-thread only
 	nativePending            bool               // actor-thread only; foreground/background V8 tasks
@@ -423,19 +430,25 @@ func (a *adapter) EvalModule(ctx context.Context, source, name string, loader en
 		if err != nil {
 			return nil, exceptionError(catcher, scope, realm, name, err)
 		}
-		linked, err := entry.Instantiate(scope, func(request gov8.ModuleResolveRequest) (*gov8.Module, error) {
-			referrer := a.moduleNames[request.Referrer]
-			dependencySource, resourceName, loadErr := loader(request.Specifier, referrer)
-			if loadErr != nil {
-				return nil, loadErr
+		status, err := entry.Status()
+		if err != nil {
+			return nil, err
+		}
+		if status == gov8.ModuleUninstantiated {
+			linked, err := entry.Instantiate(scope, func(request gov8.ModuleResolveRequest) (*gov8.Module, error) {
+				referrer := a.moduleNames[request.Referrer]
+				dependencySource, resourceName, loadErr := loader(request.Specifier, referrer)
+				if loadErr != nil {
+					return nil, loadErr
+				}
+				return compile(dependencySource, resourceName, nil)
+			}, catcher)
+			if err != nil || !linked {
+				if err == nil {
+					err = errors.New("V8 rejected module graph instantiation")
+				}
+				return nil, exceptionError(catcher, scope, realm, name, err)
 			}
-			return compile(dependencySource, resourceName, nil)
-		}, catcher)
-		if err != nil || !linked {
-			if err == nil {
-				err = errors.New("V8 rejected module graph instantiation")
-			}
-			return nil, exceptionError(catcher, scope, realm, name, err)
 		}
 		if err := s.isolate.SetHostImportModuleDynamicallyCallback(func(request gov8.DynamicImportRequest) (gov8.Promise, error) {
 			referrer, err := request.Scope.ToString(request.ResourceName)
@@ -445,6 +458,9 @@ func (a *adapter) EvalModule(ctx context.Context, source, name string, loader en
 			specifier, err := request.Scope.ToString(request.Specifier)
 			if err != nil {
 				return gov8.Promise{}, err
+			}
+			if a.dynamicModuleHandler != nil {
+				return a.importModuleAsync(request, specifier, referrer)
 			}
 			dependencySource, resourceName, err := loader(specifier, referrer)
 			if err != nil {

@@ -71,6 +71,13 @@ func (d *Document) Revision() uint64 {
 	return d.mu.revision
 }
 
+// InvalidateObservations accounts for non-attribute state (form values/focus)
+// that affects CSS selectors over this shared node arena.
+func (d *Document) InvalidateObservations() {
+	d.mu.Lock()
+	d.mu.Unlock()
+}
+
 func Parse(source string) (*Document, error) {
 	root, err := html.Parse(strings.NewReader(source))
 	if err != nil {
@@ -152,7 +159,7 @@ func normalizeTitle(v string) string {
 		return r == ' ' || r == '\t' || r == '\n' || r == '\r' || r == '\f'
 	}), " ")
 }
-func (d *Document) Source() string    { return d.source }
+func (d *Document) Source() string { return d.source }
 
 // HasFrameElements is conservative: detached nodes remain reusable, so once an
 // iframe has existed we keep insertion steps enabled for this document.

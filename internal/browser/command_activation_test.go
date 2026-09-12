@@ -58,3 +58,19 @@ return JSON.stringify(out)
 		}
 	})
 }
+
+func TestControlGeometryResolvesCalcFontSizeProducts(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, p *Page) {
+		navigateCapabilityFixture(t, p)
+		got, err := p.Evaluate(context.Background(), `(()=>{
+document.documentElement.style.cssText='--scale:1;font-size:calc(100%*var(--scale, 1))';
+document.body.innerHTML='<button id="product" style="font-size:1rem">Example</button><button id="explicit" style="font-size:16px">Example</button>';
+const product=document.getElementById('product').getBoundingClientRect(),explicit=document.getElementById('explicit').getBoundingClientRect();
+return [getComputedStyle(document.documentElement).fontSize,product.width,product.height,product.width===explicit.width&&product.height===explicit.height]
+})()`)
+		values, ok := got.([]any)
+		if err != nil || !ok || len(values) != 4 || values[0] != "16px" || values[3] != true {
+			t.Fatalf("calc product control geometry: %#v %v", got, err)
+		}
+	})
+}

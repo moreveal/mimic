@@ -129,10 +129,26 @@ func TestDetachReleasesFetchPauseAndPreservesPageNavigation(t *testing.T) {
 	}
 	wireCall(t, c, 5, "Target.detachFromTarget", map[string]any{"sessionId": sid})
 	next := wireCall(t, c, 6, "Target.attachToTarget", map[string]any{"targetId": s.Page.ID, "flatten": true})["sessionId"].(string)
-	got := flatCall(t, c, next, 7, "Runtime.evaluate", map[string]any{"expression": "document.title", "returnByValue": true})["result"].(map[string]any)["value"]
-	if got != "Detached load" {
-		t.Fatal(got)
+	// Reattaching releases no navigation/load barrier. Chrome 152 continues
+	// the detached Page's request, then commits and loads it independently.
+	// The old synchronous Page lock accidentally made an immediate title read
+	// wait for that work. Observe explicit readiness through the new session.
+	deadline := time.Now().Add(5 * time.Second)
+	_ = c.SetReadDeadline(deadline)
+	var got map[string]any
+	for id := 7; time.Now().Before(deadline); id++ {
+		got = flatCall(t, c, next, id, "Runtime.evaluate", map[string]any{
+			"expression": "({url:location.href,title:document.title,ready:document.readyState,body:document.body?.textContent})", "returnByValue": true,
+		})["result"].(map[string]any)["value"].(map[string]any)
+		if (got["url"] == fixture.URL || got["url"] == fixture.URL+"/") && got["ready"] == "complete" {
+			if got["title"] != "Detached load" || got["body"] != "ready" {
+				t.Fatal(got)
+			}
+			return
+		}
+		time.Sleep(10 * time.Millisecond)
 	}
+	t.Fatalf("detached Page navigation did not complete: %#v", got)
 }
 
 func TestNetworkIdleWaitsForQuietWindowAfterLoad(t *testing.T) {

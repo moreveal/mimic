@@ -7,6 +7,9 @@ import (
 	"github.com/moreveal/mimic/internal/network"
 	"github.com/moreveal/mimic/internal/scheduler"
 	"github.com/moreveal/mimic/internal/trace"
+	"net/url"
+	"sync"
+	"time"
 )
 
 // Navigation owns its existing lifecycle and history commit. It shares the
@@ -74,6 +77,8 @@ func (r *Realm) executeChildNavigationScript(ctx context.Context, navigation *ch
 						return nil
 					}
 					loaded.response, loaded.err, loaded.ready = response, loadErr, true
+					restoreTaskContext := stream.useTaskContext(taskContext)
+					defer restoreTaskContext()
 					stream.depth++
 					resumeErr := stream.parser.Resume(stream.onScript)
 					stream.depth--
@@ -101,11 +106,13 @@ func (r *Realm) executeChildNavigationScript(ctx context.Context, navigation *ch
 		}
 		code, name = string(loaded.response.Body), target.String()
 	}
+	if realm.deferNavigationStylesheets(stream, stylesheets, func() error { return realm.resumeNavigationStream(stream.executionContext(), stream) }) {
+		return dom.ErrStreamPaused
+	}
 	realm.document.MarkScriptStarted(node.ID)
 	if code == "" {
 		return nil
 	}
-	realm.waitParserStylesheets(ctx, stylesheets)
 	previous := stream.insideScript
 	stream.insideScript = true
 	defer func() { stream.insideScript = previous }()
@@ -114,4 +121,208 @@ func (r *Realm) executeChildNavigationScript(ctx context.Context, navigation *ch
 		r.agent.Page().trace.Add(trace.Exception, "frameScript", map[string]any{"frameId": navigation.frame.ID, "url": name, "error": err.Error()})
 	}
 	return nil
+}
+
+// Network workers produce immutable responses. Only a Page-owned continuation
+// mutates parser state or enters JavaScript; no command lock is released with
+// a script stack active.
+func (r *Realm) fetchNavigationScript(s *documentStream, loaded *streamScriptResponse, request network.Request) {
+	eventLoop := r.browserEventLoop()
+	r.resourceWG.Add(1)
+	go func() {
+		defer r.resourceWG.Done()
+		response, err := r.loadResource(s.ctx, request)
+		if s.ctx.Err() != nil {
+			return
+		}
+		eventLoop.Post(scheduler.Network, 0, func(taskContext context.Context) error {
+			if s.ctx.Err() != nil || r.documentStream != s || r.inactive {
+				return nil
+			}
+			loaded.response, loaded.err, loaded.ready = response, err, true
+			return r.resumeNavigationStream(taskContext, s)
+		})
+	}()
+}
+
+func (r *Realm) resumeNavigationStream(taskContext context.Context, s *documentStream) error {
+	restoreTaskContext := s.useTaskContext(taskContext)
+	defer restoreTaskContext()
+	if s.ctx.Err() != nil || r.documentStream != s || r.inactive {
+		return nil
+	}
+	previous := s.inNavigationTask
+	s.inNavigationTask = true
+	defer func() { s.inNavigationTask = previous }()
+	s.depth++
+	err := s.parser.Resume(func(node dom.Node) error { return r.executeStreamScript(s, node) })
+	s.depth--
+	if errors.Is(err, dom.ErrStreamPaused) {
+		return nil
+	}
+	if err != nil {
+		return err
+	}
+	if s.closing {
+		return r.finishDocumentStream(s)
+	}
+	return nil
+}
+
+// A stylesheet barrier suspends the parser rather than its owning Page. It
+// also handles end-of-parser barriers, where there is no script to resume.
+func (r *Realm) deferNavigationStylesheets(s *documentStream, pending []*resourcePreload, resume func() error) bool {
+	if s.waitingStylesheets {
+		return true
+	}
+	waiting := false
+	for _, load := range pending {
+		select {
+		case <-load.done:
+		default:
+			waiting = true
+		}
+	}
+	if !waiting {
+		return false
+	}
+	s.waitingStylesheets = true
+	eventLoop := r.browserEventLoop()
+	r.resourceWG.Add(1)
+	go func() {
+		defer r.resourceWG.Done()
+		r.waitParserStylesheets(s.ctx, pending)
+		if s.ctx.Err() != nil {
+			return
+		}
+		eventLoop.Post(scheduler.Network, 0, func(taskContext context.Context) error {
+			if s.ctx.Err() != nil || r.documentStream != s || r.inactive {
+				return nil
+			}
+			s.waitingStylesheets = false
+			restoreTaskContext := s.useTaskContext(taskContext)
+			defer restoreTaskContext()
+			previous := s.inNavigationTask
+			s.inNavigationTask = true
+			defer func() { s.inNavigationTask = previous }()
+			return resume()
+		})
+	}()
+	return true
+}
+
+// A resumed parser already executes on its scheduler. Never recursively enter
+// that scheduler's run mutex; script cleanup still checkpoints microtasks.
+func (r *Realm) runNavigationTask(ctx context.Context, s *documentStream, source scheduler.Source, callback scheduler.Callback) error {
+	ctx = s.executionContext()
+	if s.inNavigationTask {
+		return errors.Join(callback(ctx), r.checkpoint(ctx))
+	}
+	return r.runTask(ctx, source, callback)
+}
+
+func (p *Page) fetchNavigationResponse(ctx context.Context, u *url.URL, loaderID string, performanceOrigin time.Time, request network.Request, historyTarget int, committed func(error), replace ...bool) error {
+	// The initiating CDP command returns before this request does. Copy its
+	// deadline, but give cancellation to the Page rather than the command.
+	navigationContext, cancel := context.WithCancel(context.Background())
+	if deadline, ok := ctx.Deadline(); ok {
+		cancel()
+		navigationContext, cancel = context.WithDeadline(context.Background(), deadline)
+	}
+	var commitOnce sync.Once
+	finishCommit := func(err error) {
+		if committed != nil {
+			commitOnce.Do(func() { committed(err) })
+		}
+	}
+	if committed != nil {
+		// stopLoading, replacement and teardown must release a pending reply
+		// even when the old document's scheduler can no longer run a callback.
+		context.AfterFunc(navigationContext, func() { finishCommit(navigationContext.Err()) })
+	}
+	p.mu.Lock()
+	owner := p.Top.Realm
+	var targetEntry *sessionHistoryEntry
+	if historyTarget > 0 && historyTarget <= len(p.history) {
+		targetEntry = p.history[historyTarget-1]
+	}
+	p.navigationCancel = cancel
+	p.mu.Unlock()
+	if owner == nil {
+		cancel()
+		return errors.New("page has no realm for navigation")
+	}
+	owner.resourceWG.Add(1)
+	go func() {
+		defer owner.resourceWG.Done()
+		response, err := p.loader.Load(navigationContext, request)
+		owner.scheduler.Post(scheduler.Navigation, 0, func(taskContext context.Context) error {
+			defer cancel()
+			if p.LoaderID() != loaderID || p.Top.Realm != owner {
+				finishCommit(context.Canceled)
+				return nil
+			}
+			if navigationContext.Err() != nil {
+				finishCommit(navigationContext.Err())
+				if navigationContext.Err() == context.DeadlineExceeded {
+					p.trace.Add(trace.Error, "navigation", map[string]any{"url": u.String(), "error": navigationContext.Err().Error()})
+				}
+				return nil
+			}
+			if historyTarget > 0 {
+				found := false
+				for index, entry := range p.history {
+					if entry == targetEntry {
+						historyTarget, found = index+1, true
+						break
+					}
+				}
+				if !found {
+					err = errors.New("navigation history target was replaced while loading")
+				}
+			}
+			if err == nil {
+				err = p.commitNavigationResponse(navigationContext, taskContext, u, loaderID, performanceOrigin, response, historyTarget, true, finishCommit, replace...)
+			}
+			if err != nil {
+				finishCommit(err)
+				p.trace.Add(trace.Error, "navigation", map[string]any{"url": u.String(), "error": err.Error()})
+			}
+			return err
+		})
+	}()
+	return nil
+}
+
+func (r *Realm) deferNavigationModuleEntry(s *documentStream, pending *moduleFetch, resume func() error) bool {
+	select {
+	case <-pending.done:
+		return false
+	default:
+	}
+	if s.waitingModule {
+		return true
+	}
+	s.waitingModule = true
+	r.resourceWG.Add(1)
+	go func() {
+		defer r.resourceWG.Done()
+		_, _ = pending.wait(s.ctx)
+		if s.ctx.Err() != nil {
+			return
+		}
+		r.scheduler.Post(scheduler.Network, 0, func(taskContext context.Context) error {
+			if s.ctx.Err() != nil || r.documentStream != s || r.inactive {
+				return nil
+			}
+			s.waitingModule = false
+			restoreTaskContext := s.useTaskContext(taskContext)
+			defer restoreTaskContext()
+			previous := s.inNavigationTask
+			s.inNavigationTask = true
+			defer func() { s.inNavigationTask = previous }()
+			return resume()
+		})
+	}()
+	return true
 }

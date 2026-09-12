@@ -29,6 +29,31 @@ It runs the unchanged full matrix. Its Runtime subclass verifies the just-built 
 
 ## CDP operation latency diagnostics
 
+`python tools/performance/live_latency.py --before .build/before.exe --after .build/after.exe --output .build/live-latency-UNIQUE`
+records five alternating clean-process trials of ChatGPT login, GitHub,
+SpigotMC, Modrinth, React and Wikipedia. It retains binary/source hashes,
+per-command client timing, resource/lifecycle events and validated DOM results.
+The original desktop login script and frozen comparison runner are not edited.
+Use `--mode both --preview both --sites chatgpt` to separate retained Contexts
+and an actual preview subscriber. Startup discovery uses a bounded connection
+probe; totals include process startup, unlike a script attaching to an already
+running browser.
+
+`--sites geometry` runs one warm-up and 30 local read/mutation/real-click
+iterations on a 200-element DOM; reads sample four separated elements.
+`--sites geometry-stress` reads all 200 once, kept separate because the original
+runtime takes tens of seconds per operation. Do not pool these two workloads.
+
+For diagnostic runs only, `--profile-cdp` enables `MIMIC_PROFILE_CDP=1` and
+saves the Page trace. `commandTiming` records command/session IDs, queue delay,
+session/Page lock wait, remaining handler work, JSON serialization and socket
+write/wait durations, including the enclosing events for legacy nested sessions.
+Parameters and results are not
+retained in those timing events. Normal connections do not collect timings.
+`workMs` is remaining wall time, including awaited execution or debugger pauses,
+not a CPU measurement; use the CPU/block profiles to attribute it further.
+Timeouts terminate a trial instead of leaving repeated evaluations queued.
+
 `python tools/performance/runtime_latency.py --binary .build/mimic.exe --output .build/runtime-new.json`
 uses a local generated DOM, validates each operation, and reports cold/warm Page,
 selector, live-collection, traversal and mutation timings with recovery RSS.
@@ -39,9 +64,30 @@ For an opt-in live native/Go profile, set `MIMIC_LATENCY_PROFILE_URL`,
 `MIMIC_LATENCY_PROFILE_DIR`, `MIMIC_PROFILE_HOSTS=1`, and optionally
 `MIMIC_LATENCY_PROFILE_EXPRESSION`, then run
 `go test ./internal/browser -run '^TestRuntimeLatencyProfile$' -v -count=1`.
+`MIMIC_LATENCY_PROFILE_KIND` selects `native`, `go-cpu`, `go-memory`,
+`go-block`, or `go-mutex` for separate attribution runs; unset or `all` retains
+the combined diagnostic. Only the selected profiler is started/exported
+(`go-memory` writes sampled `allocs` and `heap`). Explicit Go modes suppress an
+inherited navigation-native profiler. Host tracing remains independently
+controlled by `MIMIC_PROFILE_HOSTS`. Every mode retains pump/selector work,
+`hosts.json`, `diagnostics.json`, and records its mode in `profile-metadata.json`.
+Use a fresh output directory per run so stale profiles cannot mix modes.
+Use an absolute `MIMIC_LATENCY_PROFILE_DIR`: `go test` runs the test from the
+package directory. Keep attribution runs separate from unprofiled latency runs.
+
+`MIMIC_PROFILE_TEXT_CACHE=1` independently enables bounded cache-hit/miss,
+eviction and successful-working-set counters. The latency profile test exports
+them to `text-cache.json`. It records seeded key fingerprints rather than author
+text; after the diagnostic key limit the distinct working-set estimate is marked
+as a lower bound. This is disabled by default and is not a timing baseline.
+
 `MIMIC_V8_CPU_PROFILE=1` plus `MIMIC_V8_CPU_PROFILE_FILTER` selects a script-name
 substring for an additional native profile during navigation. Profiling changes
 execution cost; use unprofiled binaries for latency claims.
+The combined `all` mode also writes allocation, heap, mutex, block and goroutine
+profiles without forcing GC. Set `MIMIC_LATENCY_PROFILE_PUMP_SECONDS=20` to
+observe network continuations and subsequent tasks for a wall-clock window;
+otherwise the diagnostic retains its original twenty-turn sample.
 
 
 ### Additional concurrency scaling

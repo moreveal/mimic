@@ -145,9 +145,13 @@ type message struct {
 	Method    string          `json:"method"`
 	Params    json.RawMessage `json:"params"`
 	SessionID string          `json:"sessionId,omitempty"`
+	timing    *commandTiming
 }
 type session struct {
+	commandTimings          sync.Map   // diagnostic only: command id -> *commandTiming
 	commandMu               sync.Mutex // protects binding changes against commands and asynchronous navigation
+	inputOrderMu            sync.Mutex
+	inputTail               <-chan struct{}
 	ctx                     context.Context
 	server                  *Server
 	transport               *connection
@@ -184,10 +188,6 @@ type session struct {
 	frameByContext          map[int64]string
 	realmByFrame            map[string]string
 	worldContexts           map[int64]runtimeWorldContext
-	hitNode                 int64
-	hitDX                   float64
-	hitDY                   float64
-	hitQuad                 []any
 }
 
 func (s *session) bindPage(page *browser.Page) {
@@ -283,10 +283,21 @@ func (s *Server) stopPump(page *browser.Page) {
 func (s *Server) pumpEventLoop(lifetime context.Context, page *browser.Page) {
 	ticker := time.NewTicker(10 * time.Millisecond)
 	defer ticker.Stop()
+	s.pumpEventLoopWithTicks(lifetime, page, ticker.C)
+}
+
+func (s *Server) pumpEventLoopWithTicks(lifetime context.Context, page *browser.Page, ticks <-chan time.Time) {
 	last := time.Now()
 	for {
 		select {
-		case <-ticker.C:
+		case <-ticks:
+		case <-page.EventLoopWake():
+			// A post is only a readiness hint. Future tasks still wait for their
+			// due time; the ticker advances time when no new work arrives.
+		case <-lifetime.Done():
+			return
+		}
+		{
 			delta := time.Since(last)
 			for turn := 0; turn < 32; turn++ {
 				page.LockCommands()
@@ -326,8 +337,6 @@ func (s *Server) pumpEventLoop(lifetime context.Context, page *browser.Page) {
 					break
 				}
 			}
-		case <-lifetime.Done():
-			return
 		}
 	}
 }
@@ -354,6 +363,8 @@ func (s *Server) pausePump(page *browser.Page, interrupt bool) func() {
 			delete(s.pausedPumps, page)
 		}
 		s.lifecycleMu.Unlock()
+		// A paused pump may have consumed the post hint without running it.
+		page.WakeEventLoop()
 	}
 }
 
@@ -361,8 +372,9 @@ func (s *Server) cancelExecution(page *browser.Page) bool {
 	s.lifecycleMu.Lock()
 	cancel := s.executions[page]
 	s.lifecycleMu.Unlock()
+	navigationCancelled := page.CancelNavigation()
 	if cancel == nil {
-		return false
+		return navigationCancelled
 	}
 	cancel()
 	return true
@@ -456,11 +468,28 @@ func (s *session) traceEvent(e trace.Event) {
 			s.event("Network.responseReceived", map[string]any{"requestId": e.Data["id"], "loaderId": loaderID, "timestamp": float64(e.Time.UnixMilli()) / 1000, "type": resourceTypeFromTrace(e.Data["initiator"]), "response": map[string]any{"url": e.Data["url"], "status": e.Data["status"], "statusText": "", "headers": e.Data["headers"], "mimeType": e.Data["mimeType"], "connectionReused": e.Data["connectionReused"], "connectionId": e.Data["connectionId"], "protocol": cdpProtocol(e.Data["protocol"]), "timing": cdpResourceTiming(e.Data["transportTiming"]), "encodedDataLength": e.Data["encodedDataLength"], "securityState": "unknown"}, "frameId": frameID})
 			s.event("Network.loadingFinished", map[string]any{"requestId": e.Data["id"], "timestamp": float64(e.Time.UnixMilli()) / 1000, "encodedDataLength": e.Data["encodedDataLength"]})
 		} else if e.Name == "failed" {
-			s.event("Network.loadingFailed", map[string]any{"requestId": e.Data["id"], "timestamp": float64(e.Time.UnixMilli()) / 1000, "type": resourceTypeFromTrace(e.Data["initiator"]), "errorText": e.Data["error"], "canceled": false})
+			canceled, _ := e.Data["canceled"].(bool)
+			errorText := e.Data["error"]
+			if canceled {
+				errorText = "net::ERR_ABORTED"
+			}
+			s.event("Network.loadingFailed", map[string]any{"requestId": e.Data["id"], "timestamp": float64(e.Time.UnixMilli()) / 1000, "type": resourceTypeFromTrace(e.Data["initiator"]), "errorText": errorText, "canceled": canceled})
 		}
 	}
 }
 func (s *session) handle(m message) {
+	if m.timing != nil {
+		m.timing.started = time.Now()
+		defer s.finishCommandTiming(m)
+	}
+	if afterUnlock := s.handleCommand(m); afterUnlock != nil {
+		afterUnlock()
+	}
+}
+
+// A command may defer its reply until browser work completes. That wait stays
+// in the original transport worker, after the session and Page locks unwind.
+func (s *session) handleCommand(m message) (afterUnlock func()) {
 	if value, handled, err := s.handleProfile(m); handled {
 		s.reply(m.ID, value, err)
 		return
@@ -494,7 +523,14 @@ func (s *session) handle(m message) {
 	}
 	control := m.Method == "Fetch.disable" || m.Method == "Fetch.getResponseBody" || m.Method == "Network.setRequestInterception" || m.Method == "Fetch.continueRequest" || m.Method == "Fetch.continueResponse" || m.Method == "Fetch.failRequest" || m.Method == "Fetch.fulfillRequest" || m.Method == "Network.continueInterceptedRequest" || m.Method == "Mimic.getTrace" || m.Method == "Mimic.getStatus" || m.Method == "Mimic.getDiagnostics" || m.Method == "Mimic.cancelExecution" || m.Method == "Page.stopLoading" || m.Method == "Target.closeTarget"
 	if !control {
+		var waitStarted time.Time
+		if m.timing != nil {
+			waitStarted = time.Now()
+		}
 		s.commandMu.Lock()
+		if m.timing != nil {
+			m.timing.sessionWait = time.Since(waitStarted)
+		}
 		defer s.commandMu.Unlock()
 		// Target commands operate on the registry or explicitly lock their target.
 		// Never hold the control Page while bootstrapping an independent Page.
@@ -505,7 +541,13 @@ func (s *session) handle(m message) {
 				resume := s.server.pausePump(page, interrupt)
 				defer resume()
 			}
+			if m.timing != nil {
+				waitStarted = time.Now()
+			}
 			page.LockCommands()
+			if m.timing != nil {
+				m.timing.pageWait = time.Since(waitStarted)
+			}
 			defer page.UnlockCommands()
 		}
 	}
@@ -533,9 +575,6 @@ func (s *session) handle(m message) {
 	}
 	switch m.Method {
 	case "Input.dispatchKeyEvent", "Input.insertText", "Input.dispatchMouseEvent", "Input.setIgnoreInputEvents":
-		if m.Method == "Input.dispatchMouseEvent" {
-			s.applyInputHitHint(p)
-		}
 		err = s.page.DispatchProtocolInput(s.ctx, m.Method, p)
 	case "Page.enable", "Network.enable", "DOM.enable", "Log.enable", "Performance.enable", "Security.enable", "Inspector.enable":
 		s.setDomain(strings.SplitN(m.Method, ".", 2)[0], true)
@@ -597,9 +636,27 @@ func (s *session) handle(m message) {
 		navigationURL := stringValue(p["url"])
 		loaderID := s.page.ReserveNavigation()
 		result = map[string]any{"frameId": s.page.Top.ID, "loaderId": loaderID}
-		err = s.server.startNavigation(s.page, navigationURL, loaderID, s.navigationTimeout)
+		committed := make(chan error, 1)
+		var once sync.Once
+		err = s.server.startNavigation(s.page, navigationURL, loaderID, s.navigationTimeout, func(commitErr error) {
+			once.Do(func() { committed <- commitErr })
+		})
+		if err == nil {
+			return func() {
+				select {
+				case commitErr := <-committed:
+					if commitErr != nil {
+						result.(map[string]any)["errorText"] = navigationReplyError(commitErr)
+					}
+					s.reply(m.ID, result, nil)
+				case <-s.ctx.Done():
+					s.reply(m.ID, nil, fmt.Errorf("Session closed"))
+				}
+			}
+		}
 	case "Page.stopLoading":
 		s.server.cancelExecution(s.page)
+		s.page.StopLoading()
 	case "Page.addScriptToEvaluateOnNewDocument":
 		id := s.page.AddInitScriptWorld(stringValue(p["source"]), stringValue(p["worldName"]))
 		result = map[string]any{"identifier": id}
@@ -775,6 +832,7 @@ func (s *session) handle(m message) {
 		}
 	}
 	s.reply(m.ID, result, err)
+	return nil
 }
 func targetInfo(page *browser.Page, attached bool) map[string]any {
 	return map[string]any{"targetId": page.ID, "type": "page", "title": page.Title(), "url": page.URL(), "attached": attached}

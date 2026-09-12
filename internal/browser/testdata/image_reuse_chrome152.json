@@ -1,0 +1,155 @@
+{
+  "version": "Chrome/152.0.7977.82",
+  "binary_sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+  "fixture_sha256": "72adabf05aba22a1f58f2b798b858cb0439f5011856e7d4ac5b835cee8cd1b29",
+  "rows": [
+    {
+      "control": "cache",
+      "loading": "eager",
+      "result": {
+        "stages": [
+          [
+            true,
+            2,
+            true
+          ],
+          [
+            true,
+            2,
+            true
+          ],
+          [
+            true,
+            2,
+            true
+          ],
+          [
+            true,
+            2,
+            true
+          ],
+          [
+            true,
+            2,
+            true
+          ]
+        ],
+        "events": [
+          "clone"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "control": "cache",
+      "loading": "lazy",
+      "result": {
+        "stages": [
+          [
+            false,
+            0,
+            false
+          ],
+          [
+            true,
+            2,
+            true
+          ],
+          [
+            true,
+            2,
+            true
+          ],
+          [
+            true,
+            2,
+            true
+          ],
+          [
+            true,
+            2,
+            true
+          ]
+        ],
+        "events": [
+          "clone"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "control": "nostore",
+      "loading": "eager",
+      "result": {
+        "stages": [
+          [
+            true,
+            2,
+            true
+          ],
+          [
+            true,
+            2,
+            true
+          ],
+          [
+            true,
+            2,
+            true
+          ],
+          [
+            true,
+            2,
+            true
+          ],
+          [
+            true,
+            2,
+            true
+          ]
+        ],
+        "events": [
+          "clone"
+        ]
+      },
+      "requests": 1
+    },
+    {
+      "control": "nostore",
+      "loading": "lazy",
+      "result": {
+        "stages": [
+          [
+            false,
+            0,
+            false
+          ],
+          [
+            true,
+            2,
+            true
+          ],
+          [
+            true,
+            2,
+            true
+          ],
+          [
+            true,
+            2,
+            true
+          ],
+          [
+            true,
+            2,
+            true
+          ]
+        ],
+        "events": [
+          "clone"
+        ]
+      },
+      "requests": 1
+    }
+  ]
+}

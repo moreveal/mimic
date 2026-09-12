@@ -86,6 +86,16 @@ type ModuleRuntime interface {
 	EvalModule(context.Context, string, string, ModuleLoader) (Value, error)
 }
 
+// PreparedModuleRuntime separates native parsing from linking, allowing browser
+// network waits between Page tasks. Completion must be invoked on that Page's
+// event loop, after the native dynamic-import callback has returned.
+type DynamicModuleCompletion func(context.Context, string, string, ModuleLoader, error) error
+type DynamicModuleHandler func(string, string, DynamicModuleCompletion)
+type PreparedModuleRuntime interface {
+	PrepareModule(context.Context, string, string) ([]string, error)
+	SetDynamicModuleHandler(DynamicModuleHandler)
+}
+
 // ImportMetaRuntime lets the browser supply its URL resolution semantics without
 // fetching a module. The factory receives the immutable module resource name and
 // returns a realm-owned resolve function; changing import.meta.url cannot rebase it.

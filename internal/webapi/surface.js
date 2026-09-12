@@ -114,15 +114,65 @@
   // Stylesheet selectors are a forgiving input boundary: invalid or unsupported
   // rules do not abort computed style. DOM selector APIs retain their SyntaxError.
   const cssSelectorMatch=(element,selector)=>{try{return compatibilitySelectors.matches(element,selector)}catch(error){if(error&&error.name==='SyntaxError')return false;throw error}};
-  // Derived observations are shared only within one synchronous geometry
-  // read. No cache survives a return to author code, a DOM mutation or a turn.
+  // Top-world observations may share one canonical revision until the next
+  // microtask. Child/isolated/foreign realm dependencies retain only synchronous
+  // reuse until their complete cross-realm input epoch can be represented.
   let styleReadCache=null;
+  // Immutable rule programs survive checkpoints; derived element observations
+  // share only a matching canonical epoch until the next microtask.
+  let checkpointStyleRules=null,checkpointStyleVersion='';
+  let checkpointObservations=null,checkpointObservationVersion='',styleResetQueued=false;
+  let styleObservationIsolated=host.isIsolatedInputWorld();
+  bootstrapRestoreHooks.push(()=>{styleObservationIsolated=host.isIsolatedInputWorld();checkpointObservations=null;checkpointStyleRules=null});
+  const scheduleStyleReset=Promise.prototype.then.bind(Promise.resolve());
   const withStyleReadCache=callback=>{
-    if(styleReadCache)return callback();
-    styleReadCache={rules:new WeakMap(),declarations:new WeakMap(),widths:new WeakMap(),rects:new WeakMap(),resolvingRects:new Set(),provisionalRects:new WeakSet()};
-    try{return callback()}finally{styleReadCache=null}
+    const previous=styleReadCache,canonicalVersion=host.observationVersion();
+    // Environment changes are Page tasks; nested synchronous reads need only
+    // revalidate the canonical mutation/CSSOM epoch, not query media again.
+    const mediaVersion=previous?.mediaVersion??(host.media('(prefers-color-scheme: dark)')+':'+host.media('(prefers-reduced-motion: reduce)'));
+    const version=canonicalVersion+':'+constructedStyleSheets.revision()+':'+mediaVersion;
+    const retain=!styleObservationIsolated&&windowRelations.self===windowRelations.top;
+    if(!checkpointStyleRules||checkpointStyleVersion!==version){checkpointStyleRules=new WeakMap();checkpointStyleVersion=version}
+    const observationVersion=version+':'+compatibilityElementState.observationVersion()+':'+windowScrollX+':'+windowScrollY;
+    let observation=previous?.version===observationVersion?previous:retain&&checkpointObservationVersion===observationVersion?checkpointObservations:null;
+    if(!observation)observation={version:observationVersion,mediaVersion,retainable:retain,rules:retain?checkpointStyleRules:new WeakMap(),declarations:new WeakMap(),widths:new WeakMap(),rects:new WeakMap(),resolvingRects:new Set(),provisionalRects:new WeakSet()};
+    if(retain){checkpointObservations=observation;checkpointObservationVersion=observationVersion}
+    if(!styleResetQueued){styleResetQueued=true;scheduleStyleReset(()=>{checkpointObservations=null;styleResetQueued=false})}
+    styleReadCache=observation;
+    try{return callback()}finally{
+      styleReadCache=previous;
+      // A conversion callback may enter a nested observation then mutate again.
+      // Never publish the old outer result as a cache for the next author read.
+      if(!observation.retainable||!previous&&host.observationVersion()!==canonicalVersion){if(checkpointObservations===observation)checkpointObservations=null}
+    }
   };
-  const containingShadowRoot=element=>{for(let node=element;node;node=node.parentNode)if(typeof ShadowRoot==='function'&&node instanceof ShadowRoot)return node;return null};
+  // All geometry projections consult the same canonical parent/child snapshot.
+  // Keep native membership separate from flat-tree projection (slot/host links)
+  // and invalidate both through the same canonical observation epoch.
+  const cssObservationParent=node=>{
+    const cache=styleReadCache&&(styleReadCache.nodeParents||(styleReadCache.nodeParents=new WeakMap()));
+    if(cache?.has(node))return cache.get(node);
+    const data=elementSlot(node),parent=syntheticParents.get(node)||(data?wrap(host.parentNode(data.nodeId)):null);
+    cache?.set(node,parent);return parent;
+  };
+  const cssObservationChildren=node=>{
+    const cache=styleReadCache&&(styleReadCache.nodeChildren||(styleReadCache.nodeChildren=new WeakMap()));
+    if(cache?.has(node))return cache.get(node);
+    const data=elementSlot(node),children=node===document||data?host.childIDs(node===document?realmDocumentRootID:data.nodeId).map(wrap):(fragmentState(node)?.children.slice()||[]);
+    cache?.set(node,children);return children;
+  };
+  const containingShadowRoot=element=>{
+    const cache=styleReadCache&&(styleReadCache.shadowRoots||(styleReadCache.shadowRoots=new WeakMap()));
+    if(cache?.has(element))return cache.get(element);
+    const visited=[];let root=null;
+    for(let node=element;node;node=cssObservationParent(node)){
+      if(cache?.has(node)){root=cache.get(node);break}
+      if(typeof ShadowRoot==='function'&&node instanceof ShadowRoot){root=node;break}
+      visited.push(node);
+    }
+    if(cache)for(const node of visited)cache.set(node,root);
+    return root;
+  };
   // Cache only parsed immutable source text, never computed element state.
   // A bounded cache cannot retain unbounded revisions of author stylesheets.
   const parsedStyleSources=new Map();let parsedStyleSourceBytes=0;
@@ -171,7 +221,10 @@
     cache?.set(root,rules);return rules;
   };
   const uncachedCSSDeclarations=(element,pseudo='')=>{const winners=new Map();const accept=(entry,specificity,order)=>{if(entry.name==='all'){for(const name of cssComputedNames)if(name!=='direction'&&name!=='unicode-bidi')accept({name,value:entry.value==='initial'?(cssInitialValues.get(name)||'initial'):entry.value,priority:entry.priority,allReset:true},specificity,order);return}const old=winners.get(entry.name),important=entry.priority==='important';if(!old||Number(important)>Number(old.important)||(important===old.important&&(specificity>old.specificity||(specificity===old.specificity&&order>=old.order))))winners.set(entry.name,{entry,specificity,order,important})};if(!pseudo&&elementSlot(element)?.tagName==='DIALOG')accept({name:'display',value:host.getAttribute(elementSlot(element).nodeId,'open')===null?'none':'block',priority:''},-1,-1);for(const rule of compatibilitySelectors.matchingStyles(element,styleSheetRules(element),pseudo))for(const entry of rule.declarations())accept(entry,rule.specificity,rule.order);if(!pseudo)for(const entry of inlineCSSDeclarations(element))accept(entry,1000,Number.MAX_SAFE_INTEGER);return Array.from(winners.values(),value=>({...value.entry}))};
-  const computedCSSDeclarations=element=>{const cache=styleReadCache?.declarations;if(cache?.has(element))return cache.get(element).map(entry=>({...entry}));const entries=uncachedCSSDeclarations(element);cache?.set(element,entries.map(entry=>({...entry})));return entries};
+  // This private declaration array is read-only to all consumers and never
+  // escapes to author code. Recopying every property on each ancestor lookup
+  // made a single geometry observation allocate millions of short-lived entries.
+  const computedCSSDeclarations=element=>{const cache=styleReadCache?.declarations;if(cache?.has(element))return cache.get(element);const entries=uncachedCSSDeclarations(element);cache?.set(element,entries);return entries};
   const blockifiedDisplay=value=>({inline:'block','inline-block':'block','inline-table':'table','inline-flex':'flex','inline-grid':'grid'}[String(value).toLowerCase()]||value);
   // Resolve fallback geometry only when its value is read. Unrelated style reads
   // and property enumeration must not run layout or invoke author-defined getters.
@@ -190,7 +243,7 @@
   const foreignCSSObservation=(element,kind='',name='')=>{
     const owners=styleReadCache?(styleReadCache.foreignCSSOwners||(styleReadCache.foreignCSSOwners=new WeakMap())):null;
     if(owners?.get(element)===false)return null;
-    const value=host.foreignComputedStyleFlatTree(elementSlot(element).nodeId,kind,name);owners?.set(element,value!==null);return value;
+    const value=host.foreignComputedStyleFlatTree(elementSlot(element).nodeId,kind,name);if(value!==null&&styleReadCache)styleReadCache.retainable=false;owners?.set(element,value!==null);return value;
   };
   const computedStyleDocumentAvailable=element=>{
     const foreign=foreignCSSObservation(element,"document");if(foreign!==null)return foreign;
@@ -202,27 +255,33 @@
   };
   const computedStyleAvailable=element=>{
     const foreign=foreignCSSObservation(element);if(foreign!==null)return foreign;
+    const cache=styleReadCache&&(styleReadCache.flatTreeAvailability||(styleReadCache.flatTreeAvailability=new WeakMap())),visited=[];
+    const finish=value=>{if(cache)for(const item of visited)cache.set(item,value);return value};
     let node=element;
     while(node){
-      const slot=elementSlot(node);
+      if(cache?.has(node))return finish(cache.get(node));
+      visited.push(node);
       if(shadowSlots.has(node)){node=shadowSlots.get(node).host;continue}
-      const parent=syntheticParents.get(node)||(slot?wrap(host.parentNode(slot.nodeId)):null);
+      const parent=cssObservationParent(node);
       const root=elementShadows.get(parent);
-      if(root){node=computedStyleSlot(root,node);if(!node)return false;continue}
+      if(root){node=computedStyleSlot(root,node);if(!node)return finish(false);continue}
       // Fallback content is absent when its slot has assigned light children.
       const parentData=elementSlot(parent);
       if(parentData?.tagName==='SLOT'){
         const root=containingShadowRoot(parent),shadow=shadowSlots.get(root);
-        if(shadow&&host.nodeChildren(elementSlot(shadow.host).nodeId).some(data=>['element','text'].includes(data.type)&&computedStyleSlot(root,wrap(data))===parent))return false;
+        if(shadow&&cssObservationChildren(shadow.host).some(child=>['element','text'].includes(elementSlot(child)?.type)&&computedStyleSlot(root,child)===parent))return finish(false);
       }
       node=parent;
     }
-    return true;
+    return finish(true);
   };
   const cssSlots=new WeakMap(),cssState=value=>cssSlots.get(value),cssEntries=value=>{const state=cssState(value);if(!state.computed)return inlineCSSDeclarations(state.element);if(!computedStyleDocumentAvailable(state.element))return [];return cssComputedNames.map(name=>({name,get value(){return cssComputedValue(state.element,name)},priority:''}))},writeCSSEntries=(value,entries)=>{const state=cssState(value);if(state.computed)throw new DOMException('These styles are computed, and therefore the CSSStyleDeclaration is read-only.','NoModificationAllowedError');for(const iframe of elementWrappers.values())if(iframe instanceof HTMLIFrameElement&&frameViewportSizes.has(iframe))readFrameViewport(elementSlot(iframe).nodeId);const text=serializeCSS(entries),old=host.setInlineStyle(elementSlot(state.element).nodeId,text,JSON.stringify(entries));elementSlot(state.element).attributes.style=text;compatibilityElementState.inlineStyleChanged(state.element,old)};
   class CSSStyleDeclaration { constructor(token,element,computed=false){if(token!==hostToken)illegal('CSSStyleDeclaration');cssSlots.set(this,{element,computed})} get length(){return cssEntries(this).length} get cssText(){return cssState(this).computed?'':serializeCSS(cssEntries(this))} set cssText(v){writeCSSEntries(this,parseCSS(String(v)))} item(i){return cssEntries(this)[Number(i)]?.name||''} getPropertyValue(name){name=cssName(name);const state=cssState(this);return state.computed?cssComputedValue(state.element,name):readCSSDeclaration(cssEntries(this),name)} getPropertyPriority(name){if(cssState(this).computed)return '';name=cssName(name);const entries=cssEntries(this),components=cssShorthandComponents[name];if(components){const selected=components.map(n=>entries.find(e=>e.name===n));return selected.every(e=>e?.priority==='important')?'important':''}return entries.find(e=>e.name===name)?.priority||''} setProperty(name,value,priority=''){const inputName=name;name=cssName(name);if(/^webkit/i.test(name))return;const inputValue=String(value),normalized=normalizeCSSValue(name,inputValue,inputName);if(normalized===null)return;value=normalized;priority=String(priority).toLowerCase();if(!name||(priority&&priority!=='important'))return;const components=cssShorthandComponents[name]||[name],entries=cssEntries(this);if(String(value)===''){for(let i=entries.length-1;i>=0;i--)if(components.includes(entries[i].name)||entries[i].name===name)entries.splice(i,1)}else for(const entry of expandCSSDeclaration(cssPrecisionDeclaration({name,value:String(value),priority},inputValue))){const index=entries.findIndex(e=>e.name===entry.name);if(index<0)entries.push(entry);else entries[index]=entry}writeCSSEntries(this,entries)} removeProperty(name){const shorthand=webkitCSSLegacyBreakShorthands.has(String(name).toLowerCase());name=cssName(name);const entries=cssEntries(this),old=readCSSDeclaration(entries,name),components=cssShorthandComponents[name]||[name];writeCSSEntries(this,entries.filter(x=>!components.includes(x.name)&&x.name!==name));return shorthand||cssShorthandComponents[name]?'':old} }
   const cssDeclaration=(element,computed=false)=>{const target=new CSSStyleDeclaration(hostToken,element,computed),proxy=new Proxy(target,{get(t,p,r){if(typeof p==='string'){if(/^(0|[1-9][0-9]*)$/.test(p))return Number(p)<t.length?t.item(Number(p)):undefined;if(!Reflect.has(t,p)){if(!Object.hasOwn(cssNamedProperties,p)&&!webkitJSNames.has(p))return undefined;return t.getPropertyValue(cssJSName(p))}}return Reflect.get(t,p,r)},set(t,p,v,r){if(typeof p==='string'&&!Reflect.has(t,p)){if(/^-?webkit/i.test(p)&&!webkitJSNames.has(p))return Reflect.set(t,p,v,r);t.setProperty(cssJSInputName(p),String(v));return true}return Reflect.set(t,p,v,r)},has(t,p){return typeof p==='string'&&/^(0|[1-9][0-9]*)$/.test(p)&&Number(p)<t.length||Object.hasOwn(cssNamedProperties,p)||webkitJSNames.has(p)||Reflect.has(t,p)},ownKeys(t){return Array.from(new Set([...Array.from({length:t.length},(_,i)=>String(i)),...Reflect.ownKeys(t),...Object.keys(cssNamedProperties)]))},getOwnPropertyDescriptor(t,p){if(typeof p==='string'&&/^(0|[1-9][0-9]*)$/.test(p)&&Number(p)<t.length)return {value:t.item(Number(p)),writable:false,enumerable:true,configurable:true};if(Object.hasOwn(cssNamedProperties,p)||webkitJSNames.has(p))return {value:t.getPropertyValue(cssJSName(p)),writable:true,enumerable:Object.hasOwn(cssNamedProperties,p),configurable:true};return Reflect.getOwnPropertyDescriptor(t,p)}});cssSlots.set(proxy,cssSlots.get(target));return proxy};
   const elementData=new WeakMap(),elementClassLists=new WeakMap(),elementShadows=new WeakMap(),shadowHosts=new Set(),syntheticParents=new WeakMap(),elementSlot=value=>elementData.get(value);
+  const setSyntheticParent=(node,parent)=>{syntheticParents.set(node,parent);host.invalidateStyleObservations()};
+  const deleteSyntheticParent=node=>{const removed=syntheticParents.delete(node);if(removed)host.invalidateStyleObservations();return removed};
+  const setElementShadow=(node,root)=>{elementShadows.set(node,root);host.invalidateStyleObservations()};
   // WebIDL Node branding is independent of the caller realm's instanceof.
   const nonHostNodeBrands=new WeakSet();
   const isDOMNode=value=>elementData.has(value)||fragmentSlots.has(value)||nonHostNodeBrands.has(value)||value===document;
@@ -232,16 +291,16 @@
     constructor(token){super(hostToken);if(new.target===ShadowRoot){fragmentSlots.set(this,{children:[],html:''})}else{const data=host.createDocumentFragment();elementData.set(this,data);elementWrappers.set(String(data.nodeId),this)}}
     get nodeName(){return'#document-fragment'}
     get textContent(){const state=fragmentState(this);return state.children.length?state.children.filter(child=>child.nodeType!==8).map(child=>child.textContent||'').join(''):state.html.replace(/<[^>]*>/g,'')}
-    set textContent(value){const state=fragmentState(this);for(const child of state.children)syntheticParents.delete(child);state.children=[];state.html=value==null?'':String(value)}
+    set textContent(value){const state=fragmentState(this);for(const child of state.children)deleteSyntheticParent(child);state.children=[];state.html=value==null?'':String(value);host.invalidateStyleObservations()}
     get children(){return cachedHTMLCollection(this,'children','',()=>fragmentState(this).children.map(child=>elementSlot(child)).filter(Boolean))}
     get firstElementChild(){return fragmentState(this).children.find(child=>child instanceof Element)||null}
     get lastElementChild(){return fragmentState(this).children.findLast?fragmentState(this).children.findLast(child=>child instanceof Element):fragmentState(this).children.slice().reverse().find(child=>child instanceof Element)||null}
     get childElementCount(){return fragmentState(this).children.filter(child=>child instanceof Element).length}
-    appendChild(node){const state=fragmentState(this);if(!isDOMNode(node))throw new TypeError("Failed to execute 'appendChild' on 'Node': parameter 1 is not of type 'Node'.");const old=syntheticParents.get(node);if(old&&fragmentSlots.has(old))old.removeChild(node);state.children.push(node);state.html='';syntheticParents.set(node,this);return node}
-    removeChild(node){const state=fragmentState(this),index=state.children.indexOf(node);if(index<0)throw new DOMException("The node to be removed is not a child of this node.",'NotFoundError');state.children.splice(index,1);syntheticParents.delete(node);return node}
+    appendChild(node){const state=fragmentState(this);if(!isDOMNode(node))throw new TypeError("Failed to execute 'appendChild' on 'Node': parameter 1 is not of type 'Node'.");const old=syntheticParents.get(node);if(old&&fragmentSlots.has(old))old.removeChild(node);state.children.push(node);state.html='';setSyntheticParent(node,this);return node}
+    removeChild(node){const state=fragmentState(this),index=state.children.indexOf(node);if(index<0)throw new DOMException("The node to be removed is not a child of this node.",'NotFoundError');state.children.splice(index,1);deleteSyntheticParent(node);return node}
     append(...nodes){for(const node of nodes)this.appendChild(isDOMNode(node)?node:document.createElement('span'))}
-    prepend(...nodes){for(let i=nodes.length-1;i>=0;i--){const node=isDOMNode(nodes[i])?nodes[i]:document.createElement('span');fragmentState(this).children.unshift(node);syntheticParents.set(node,this)}}
-    replaceChildren(...nodes){const state=fragmentState(this);for(const child of state.children)syntheticParents.delete(child);state.children=[];state.html='';this.append(...nodes)}
+    prepend(...nodes){for(let i=nodes.length-1;i>=0;i--){const node=isDOMNode(nodes[i])?nodes[i]:document.createElement('span');fragmentState(this).children.unshift(node);setSyntheticParent(node,this)}}
+    replaceChildren(...nodes){const state=fragmentState(this);for(const child of state.children)deleteSyntheticParent(child);state.children=[];state.html='';this.append(...nodes)}
     querySelector(selector){return this.querySelectorAll(selector)[0]||null}
     querySelectorAll(selector){const query=String(selector).trim(),result=[];const matches=node=>node instanceof Element&&(query.startsWith('#')?node.id===query.slice(1):query.startsWith('.')?node.classList.contains(query.slice(1)):node.localName===query.toLowerCase());const visit=node=>{if(matches(node))result.push(node);if(node instanceof Element)for(const child of Array.from(node.children))visit(child)};for(const child of fragmentState(this).children)visit(child);return nodeListView(()=>result.length,index=>result[index])}
     getElementById(id){return this.querySelector('#'+String(id))}
@@ -250,7 +309,7 @@
     constructor(token,hostElement,mode,init){if(token!==hostToken)illegal('ShadowRoot');super(token);shadowSlots.set(this,{host:hostElement,mode,delegatesFocus:!!init.delegatesFocus,slotAssignment:String(init.slotAssignment||'named'),serializable:!!init.serializable,clonable:!!init.clonable,onslotchange:null});shadowHosts.add(hostElement)}
     get mode(){return shadowSlots.get(this).mode} get host(){return shadowSlots.get(this).host} get delegatesFocus(){return shadowSlots.get(this).delegatesFocus} get slotAssignment(){return shadowSlots.get(this).slotAssignment} get serializable(){return shadowSlots.get(this).serializable} get clonable(){return shadowSlots.get(this).clonable}
     get onslotchange(){return shadowSlots.get(this).onslotchange} set onslotchange(value){shadowSlots.get(this).onslotchange=typeof value==='function'?value:null}
-    get innerHTML(){return fragmentState(this).html} set innerHTML(value){const state=fragmentState(this);for(const child of state.children)syntheticParents.delete(child);state.children=[];state.html=value==null?'':String(value)}
+    get innerHTML(){return fragmentState(this).html} set innerHTML(value){const state=fragmentState(this);for(const child of state.children)deleteSyntheticParent(child);state.children=[];state.html=value==null?'':String(value);host.invalidateStyleObservations()}
     getHTML(){return this.innerHTML} setHTMLUnsafe(value){this.innerHTML=value}
   }
   const registerPolyfilledShadowRoot=root=>{
@@ -261,7 +320,7 @@
     if(mode!=='open'&&mode!=='closed')mode='open';
     const read=(name,fallback)=>{try{const value=root[name];return value===undefined?fallback:value}catch{return fallback}};
     shadowSlots.set(root,{host:hostElement,mode,delegatesFocus:!!read('delegatesFocus',false),slotAssignment:String(read('slotAssignment','named')),serializable:!!read('serializable',false),clonable:!!read('clonable',false),onslotchange:null});
-    elementShadows.set(hostElement,root);
+    setElementShadow(hostElement,root);
     shadowHosts.add(hostElement);
   };
   const fireFor=n=>type=>dispatchTrusted(n,new Event(type));
@@ -276,7 +335,7 @@
       rects:()=>makeElementClientRects(receiver())
     });
   };
-  class Element extends Node { constructor(token,data){super(token);elementData.set(this,data);registerElementGeometry(this)} get tagName(){return elementSlot(this).tagName} get nodeName(){return this.tagName} get localName(){return this.tagName.toLowerCase()} get namespaceURI(){return elementSlot(this).namespaceURI||null} get id(){return this.getAttribute('id')||''} set id(v){this.setAttribute('id',String(v))} get className(){return this.getAttribute('class')||''} set className(v){this.setAttribute('class',String(v))} get role(){return this.getAttribute('role')} set role(v){if(v==null)this.removeAttribute('role');else this.setAttribute('role',String(v))} get ariaLabel(){return this.getAttribute('aria-label')} set ariaLabel(v){if(v==null)this.removeAttribute('aria-label');else this.setAttribute('aria-label',String(v))} get classList(){let list=elementClassLists.get(this);if(!list){list=new DOMTokenList(this,'class');elementClassLists.set(this,list)}return list} get shadowRoot(){const root=elementShadows.get(this);return root&&root.mode==='open'?root:null} attachShadow(init){if(!init||!['open','closed'].includes(String(init.mode)))throw new TypeError("Failed to execute 'attachShadow' on 'Element': Failed to read the 'mode' property from 'ShadowRootInit'");if(elementShadows.has(this))throw new DOMException('Shadow root cannot be created on a host which already hosts a shadow tree.','NotSupportedError');const root=new ShadowRoot(hostToken,this,String(init.mode),init);elementShadows.set(this,root);return root} get textContent(){return host.textContent(elementSlot(this).nodeId)} set textContent(v){host.setTextContent(elementSlot(this).nodeId,v==null?'':String(v))} get innerHTML(){return host.innerHTML(elementSlot(this).nodeId)} set innerHTML(v){const slot=elementSlot(this);if(!slot)throw new TypeError('Illegal invocation');host.setInnerHTML(slot.nodeId,trustedConvert(v===null?'':v,'TrustedHTML','Element innerHTML',"Failed to set the 'innerHTML' property on 'Element': ",this))} get outerHTML(){return host.outerHTML(elementSlot(this).nodeId)} set outerHTML(v){const slot=elementSlot(this);if(!slot)throw new TypeError('Illegal invocation');const name=host.setOuterHTML(slot.nodeId,trustedConvert(v===null?'':v,'TrustedHTML','Element outerHTML',"Failed to set the 'outerHTML' property on 'Element': ",this));if(name)throw new DOMException('Cannot replace this element.',name)} insertAdjacentHTML(position,text){const id=elementSlot(this).nodeId;if(arguments.length<2)throw new TypeError('Not enough arguments');position=bindingString(position).toLowerCase();text=trustedConvert(text,'TrustedHTML','Element insertAdjacentHTML',"Failed to execute 'insertAdjacentHTML' on 'Element': ",this);const name=host.insertAdjacentHTML(id,position,text);if(name)throw new DOMException('Cannot insert adjacent HTML.',name)} get parentNode(){return syntheticParents.get(this)||wrap(host.parentNode(elementSlot(this).nodeId))} get parentElement(){const parent=this.parentNode;return parent instanceof Element?parent:null} get firstElementChild(){return wrap(host.firstElementChild(elementSlot(this).nodeId))} get nextSibling(){return wrap(host.sibling(elementSlot(this).nodeId,1))} get previousSibling(){return wrap(host.sibling(elementSlot(this).nodeId,-1))} get children(){return cachedHTMLCollection(this,'children','',()=>host.elementChildren(elementSlot(this).nodeId))} get childElementCount(){return this.children.length} getAttribute(n){return host.getAttribute(elementSlot(this).nodeId,String(n))} hasAttribute(n){return this.getAttribute(String(n))!==null} hasAttributes(){return host.attributeNames(elementSlot(this).nodeId).length!==0} getAttributeNames(){return host.attributeNames(elementSlot(this).nodeId)} setAttribute(n,v){n=this.namespaceURI==='http://www.w3.org/1999/xhtml'?String(n).toLowerCase():String(n);v=trustedAttributeValue(this,n,v,'',"Failed to execute 'setAttribute' on 'Element': ");elementSlot(this).attributes[n]=v;host.setAttribute(elementSlot(this).nodeId,n,v)} removeAttribute(n){n=this.namespaceURI==='http://www.w3.org/1999/xhtml'?String(n).toLowerCase():String(n);delete elementSlot(this).attributes[n];host.removeAttribute(elementSlot(this).nodeId,n)} toggleAttribute(n,force){n=String(n);const present=this.hasAttribute(n);if(force===true||(!present&&force!==false)){this.setAttribute(n,'');return true}if(present)this.removeAttribute(n);return false} querySelector(s){return wrap(host.queryWithin(elementSlot(this).nodeId,String(s)))} querySelectorAll(s){return nodeList(host.queryAllWithin(elementSlot(this).nodeId,String(s)))} appendChild(n){insertHostNode(elementSlot(this).nodeId,elementSlot(n),null,n);return n} insertBefore(n,before){insertHostNode(elementSlot(this).nodeId,elementSlot(n),before?elementSlot(before):null,n);return n} removeChild(n){host.removeNode(elementSlot(this).nodeId,elementSlot(n).nodeId);return n} remove(){const p=this.parentNode;if(p)p.removeChild(this)} }
+  class Element extends Node { constructor(token,data){super(token);elementData.set(this,data);registerElementGeometry(this)} get tagName(){return elementSlot(this).tagName} get nodeName(){return this.tagName} get localName(){return this.tagName.toLowerCase()} get namespaceURI(){return elementSlot(this).namespaceURI||null} get id(){return this.getAttribute('id')||''} set id(v){this.setAttribute('id',String(v))} get className(){return this.getAttribute('class')||''} set className(v){this.setAttribute('class',String(v))} get role(){return this.getAttribute('role')} set role(v){if(v==null)this.removeAttribute('role');else this.setAttribute('role',String(v))} get ariaLabel(){return this.getAttribute('aria-label')} set ariaLabel(v){if(v==null)this.removeAttribute('aria-label');else this.setAttribute('aria-label',String(v))} get classList(){let list=elementClassLists.get(this);if(!list){list=new DOMTokenList(this,'class');elementClassLists.set(this,list)}return list} get shadowRoot(){const root=elementShadows.get(this);return root&&root.mode==='open'?root:null} attachShadow(init){if(!init||!['open','closed'].includes(String(init.mode)))throw new TypeError("Failed to execute 'attachShadow' on 'Element': Failed to read the 'mode' property from 'ShadowRootInit'");if(elementShadows.has(this))throw new DOMException('Shadow root cannot be created on a host which already hosts a shadow tree.','NotSupportedError');const root=new ShadowRoot(hostToken,this,String(init.mode),init);setElementShadow(this,root);return root} get textContent(){return host.textContent(elementSlot(this).nodeId)} set textContent(v){host.setTextContent(elementSlot(this).nodeId,v==null?'':String(v))} get innerHTML(){return host.innerHTML(elementSlot(this).nodeId)} set innerHTML(v){const slot=elementSlot(this);if(!slot)throw new TypeError('Illegal invocation');host.setInnerHTML(slot.nodeId,trustedConvert(v===null?'':v,'TrustedHTML','Element innerHTML',"Failed to set the 'innerHTML' property on 'Element': ",this))} get outerHTML(){return host.outerHTML(elementSlot(this).nodeId)} set outerHTML(v){const slot=elementSlot(this);if(!slot)throw new TypeError('Illegal invocation');const name=host.setOuterHTML(slot.nodeId,trustedConvert(v===null?'':v,'TrustedHTML','Element outerHTML',"Failed to set the 'outerHTML' property on 'Element': ",this));if(name)throw new DOMException('Cannot replace this element.',name)} insertAdjacentHTML(position,text){const id=elementSlot(this).nodeId;if(arguments.length<2)throw new TypeError('Not enough arguments');position=bindingString(position).toLowerCase();text=trustedConvert(text,'TrustedHTML','Element insertAdjacentHTML',"Failed to execute 'insertAdjacentHTML' on 'Element': ",this);const name=host.insertAdjacentHTML(id,position,text);if(name)throw new DOMException('Cannot insert adjacent HTML.',name)} get parentNode(){return syntheticParents.get(this)||wrap(host.parentNode(elementSlot(this).nodeId))} get parentElement(){const parent=this.parentNode;return parent instanceof Element?parent:null} get firstElementChild(){return wrap(host.firstElementChild(elementSlot(this).nodeId))} get nextSibling(){return wrap(host.sibling(elementSlot(this).nodeId,1))} get previousSibling(){return wrap(host.sibling(elementSlot(this).nodeId,-1))} get children(){return cachedHTMLCollection(this,'children','',()=>host.elementChildren(elementSlot(this).nodeId))} get childElementCount(){return this.children.length} getAttribute(n){return host.getAttribute(elementSlot(this).nodeId,String(n))} hasAttribute(n){return this.getAttribute(String(n))!==null} hasAttributes(){return host.attributeNames(elementSlot(this).nodeId).length!==0} getAttributeNames(){return host.attributeNames(elementSlot(this).nodeId)} setAttribute(n,v){n=this.namespaceURI==='http://www.w3.org/1999/xhtml'?String(n).toLowerCase():String(n);v=trustedAttributeValue(this,n,v,'',"Failed to execute 'setAttribute' on 'Element': ");elementSlot(this).attributes[n]=v;host.setAttribute(elementSlot(this).nodeId,n,v)} removeAttribute(n){n=this.namespaceURI==='http://www.w3.org/1999/xhtml'?String(n).toLowerCase():String(n);delete elementSlot(this).attributes[n];host.removeAttribute(elementSlot(this).nodeId,n)} toggleAttribute(n,force){n=String(n);const present=this.hasAttribute(n);if(force===true||(!present&&force!==false)){this.setAttribute(n,'');return true}if(present)this.removeAttribute(n);return false} querySelector(s){return wrap(host.queryWithin(elementSlot(this).nodeId,String(s)))} querySelectorAll(s){return nodeList(host.queryAllWithin(elementSlot(this).nodeId,String(s)))} appendChild(n){insertHostNode(elementSlot(this).nodeId,elementSlot(n),null,n);return n} insertBefore(n,before){insertHostNode(elementSlot(this).nodeId,elementSlot(n),before?elementSlot(before):null,n);return n} removeChild(n){host.removeNode(elementSlot(this).nodeId,elementSlot(n).nodeId);return n} remove(){const p=this.parentNode;if(p)p.removeChild(this)} }
   Object.defineProperty(Element.prototype,'previousElementSibling',{get:function(){for(let node=this.previousSibling;node;node=node.previousSibling)if(node instanceof Element)return node;return null},enumerable:true,configurable:true});
   const namedAttributes=element=>attributeCompatibility.namedMap(element);
   Object.defineProperty(Element.prototype,'attributes',{get:function(){return namedAttributes(this)},enumerable:true,configurable:true});
@@ -285,9 +344,9 @@
   def(Node.prototype,'parentNode',{get(){if(syntheticParents.has(this))return syntheticParents.get(this);const slot=elementSlot(this);return slot?wrap(host.parentNode(slot.nodeId)):null}});
   def(Node.prototype,'parentElement',{get(){const parent=this.parentNode;return parent instanceof Element?parent:null}});
   const runSyntheticInsertionSteps=node=>{if(node instanceof HTMLIFrameElement&&node.isConnected)host.iframeWindow(elementSlot(node).nodeId,true);if(!(node instanceof Element))return;if(!shadowHosts.size){for(const frame of compatibilitySelectors.query(node,'iframe'))if(frame.isConnected)host.iframeWindow(elementSlot(frame).nodeId,true);return;}for(const child of Array.from(node.children))runSyntheticInsertionSteps(child);const shadow=elementShadows.get(node),state=shadow&&fragmentState(shadow);if(state)for(const child of state.children)runSyntheticInsertionSteps(child)};
-  def(Node.prototype,'appendChild',{value:function(node){registerPolyfilledShadowRoot(this);if(fragmentSlots.has(this)){if(!isDOMNode(node))throw new TypeError("Failed to execute 'appendChild' on 'Node': parameter 1 is not of type 'Node'.");const state=fragmentState(this),old=syntheticParents.get(node);if(old&&fragmentSlots.has(old)){const oldState=fragmentState(old),index=oldState.children.indexOf(node);if(index>=0)oldState.children.splice(index,1)}state.children.push(node);state.html='';syntheticParents.set(node,this);if(this instanceof ShadowRoot)runSyntheticInsertionSteps(node);return node}const target=elementSlot(this),child=elementSlot(node);if(!target||!child)throw new DOMException('The operation is not supported for this node.','HierarchyRequestError');if(insertHostNode(target.nodeId,child,null,node))runSyntheticInsertionSteps(node);return node},writable:true});
-  def(Node.prototype,'insertBefore',{value:function(node,before){registerPolyfilledShadowRoot(this);if(fragmentSlots.has(this)){const state=fragmentState(this),index=before==null?state.children.length:state.children.indexOf(before);if(index<0)throw new DOMException("The node before which the new node is to be inserted is not a child of this node.",'NotFoundError');state.children.splice(index,0,node);syntheticParents.set(node,this);if(this instanceof ShadowRoot)runSyntheticInsertionSteps(node);return node}const target=elementSlot(this),child=elementSlot(node);if(!target||!child)throw new DOMException('The operation is not supported for this node.','HierarchyRequestError');if(insertHostNode(target.nodeId,child,before?elementSlot(before):null,node))runSyntheticInsertionSteps(node);return node},writable:true});
-  def(Node.prototype,'removeChild',{value:function(node){if(fragmentSlots.has(this)){const state=fragmentState(this),index=state.children.indexOf(node);if(index<0)throw new DOMException("The node to be removed is not a child of this node.",'NotFoundError');state.children.splice(index,1);syntheticParents.delete(node);return node}const target=elementSlot(this),child=elementSlot(node);if(!target||!child)throw new DOMException('The operation is not supported for this node.','NotFoundError');if(host.prepareNodeRemoval(child.nodeId)){dispatchTrusted(window,new Event('load'));host.completeSynchronousLoad()}host.removeNode(target.nodeId,child.nodeId);return node},writable:true});
+  def(Node.prototype,'appendChild',{value:function(node){registerPolyfilledShadowRoot(this);if(fragmentSlots.has(this)){if(!isDOMNode(node))throw new TypeError("Failed to execute 'appendChild' on 'Node': parameter 1 is not of type 'Node'.");const state=fragmentState(this),old=syntheticParents.get(node);if(old&&fragmentSlots.has(old)){const oldState=fragmentState(old),index=oldState.children.indexOf(node);if(index>=0)oldState.children.splice(index,1)}state.children.push(node);state.html='';setSyntheticParent(node,this);if(this instanceof ShadowRoot)runSyntheticInsertionSteps(node);return node}const target=elementSlot(this),child=elementSlot(node);if(!target||!child)throw new DOMException('The operation is not supported for this node.','HierarchyRequestError');if(insertHostNode(target.nodeId,child,null,node))runSyntheticInsertionSteps(node);return node},writable:true});
+  def(Node.prototype,'insertBefore',{value:function(node,before){registerPolyfilledShadowRoot(this);if(fragmentSlots.has(this)){const state=fragmentState(this),index=before==null?state.children.length:state.children.indexOf(before);if(index<0)throw new DOMException("The node before which the new node is to be inserted is not a child of this node.",'NotFoundError');state.children.splice(index,0,node);setSyntheticParent(node,this);if(this instanceof ShadowRoot)runSyntheticInsertionSteps(node);return node}const target=elementSlot(this),child=elementSlot(node);if(!target||!child)throw new DOMException('The operation is not supported for this node.','HierarchyRequestError');if(insertHostNode(target.nodeId,child,before?elementSlot(before):null,node))runSyntheticInsertionSteps(node);return node},writable:true});
+  def(Node.prototype,'removeChild',{value:function(node){if(fragmentSlots.has(this)){const state=fragmentState(this),index=state.children.indexOf(node);if(index<0)throw new DOMException("The node to be removed is not a child of this node.",'NotFoundError');state.children.splice(index,1);deleteSyntheticParent(node);return node}const target=elementSlot(this),child=elementSlot(node);if(!target||!child)throw new DOMException('The operation is not supported for this node.','NotFoundError');if(host.prepareNodeRemoval(child.nodeId)){dispatchTrusted(window,new Event('load'));host.completeSynchronousLoad()}host.removeNode(target.nodeId,child.nodeId);return node},writable:true});
   def(Element.prototype,'matches',{value:function(selectors){return String(selectors).split(',').some(selector=>cssSelectorMatch(this,selector))},writable:true});
   def(Element.prototype,'webkitMatchesSelector',{value:Element.prototype.matches,writable:true});
   def(Element.prototype,'closest',{value:function(selectors){for(let element=this;element instanceof Element;element=element.parentElement)if(element.matches(selectors))return element;return null},writable:true});
@@ -313,7 +372,7 @@
     const slot=elementSlot(node);if(slot&&slot.type==='fragment'){const children=Array.from(node.childNodes);for(const child of children)removeNode.call(node,child);return children}
     const state=fragmentState(node),children=state.children;
     state.children=[];state.html='';
-    for(const child of children)syntheticParents.delete(child);
+    for(const child of children)deleteSyntheticParent(child);
     return children;
   };
   def(Node.prototype,'appendChild',{value:function(node){
@@ -333,15 +392,16 @@
   class DOMRect extends DOMRectReadOnly { constructor(x=0,y=0,width=0,height=0){super(x,y,width,height)} get x(){return domRectSlots.get(this).x} set x(value){const state=domRectSlots.get(this);state.x=Number(value);state.left=Math.min(state.x,state.x+state.width);state.right=Math.max(state.x,state.x+state.width)} get y(){return domRectSlots.get(this).y} set y(value){const state=domRectSlots.get(this);state.y=Number(value);state.top=Math.min(state.y,state.y+state.height);state.bottom=Math.max(state.y,state.y+state.height)} get width(){return domRectSlots.get(this).width} set width(value){const state=domRectSlots.get(this);state.width=Number(value);state.left=Math.min(state.x,state.x+state.width);state.right=Math.max(state.x,state.x+state.width)} get height(){return domRectSlots.get(this).height} set height(value){const state=domRectSlots.get(this);state.height=Number(value);state.top=Math.min(state.y,state.y+state.height);state.bottom=Math.max(state.y,state.y+state.height)} static fromRect(other={}){return new DOMRect(other.x||0,other.y||0,other.width||0,other.height||0)} }
   /* shared_dom_matrix */
   const layoutPositionFor=element=>String(computedCSSDeclarations(element).find(entry=>entry.name==='position')?.value||'static').toLowerCase(),participatesInFlow=element=>!['absolute','fixed'].includes(layoutPositionFor(element));
-  const geometryParent=element=>{const parent=syntheticParents.get(element)||(elementSlot(element)?wrap(host.parentNode(elementSlot(element).nodeId)):null);return elementSlot(parent)?.type==='element'?parent:shadowSlots.get(parent)?.host||null};
-  // Resolve variable-valued lengths at their defining element, so inherited
-  // variables do not accidentally pick up a descendant's custom properties.
-  // Other CSS math expressions remain outside the approximate size model.
+  const geometryParent=element=>{const cache=styleReadCache&&(styleReadCache.parents||(styleReadCache.parents=new WeakMap()));if(cache?.has(element))return cache.get(element);const parent=cssObservationParent(element),value=elementSlot(parent)?.type==='element'?parent:shadowSlots.get(parent)?.host||null;cache?.set(element,value);return value};
+  // Resolve variables at their defining element, including variables nested
+  // in CSS math, so inherited values do not accidentally use a descendant's
+  // custom properties.
   const geometryValue=(element,text,seen)=>{
-    if(!text?.startsWith('var('))return text;
+    if(!text?.includes('var('))return text;
     seen=seen||new Set();
-    const match=/^var\(\s*(--[\w-]+)\s*(?:,([\s\S]*))?\)$/.exec(text);
+    const match=/^var\(\s*(--[\w-]+)\s*(?:,([\s\S]*))?\)$/.exec(text)||/var\(\s*(--[\w-]+)\s*(?:,([^()]*))?\)/.exec(text);
     if(!match)return null;
+    let replacement=null;
     for(let owner=element;owner;owner=geometryParent(owner)){
       const value=computedCSSDeclarations(owner).find(entry=>entry.name===match[1])?.value;
       if(value===undefined||value==='inherit'||value==='unset')continue;
@@ -349,9 +409,10 @@
       const key=elementSlot(owner).nodeId+':'+match[1];
       if(seen.has(key))return null;
       const next=new Set(seen);next.add(key);
-      return geometryValue(owner,value,next)??geometryValue(element,match[2]?.trim(),seen);
+      replacement=geometryValue(owner,value,next);break;
     }
-    return geometryValue(element,match[2]?.trim(),seen);
+    replacement??=geometryValue(element,match[2]?.trim(),seen);
+    return replacement==null?null:geometryValue(element,text.slice(0,match.index)+replacement+text.slice(match.index+match[0].length),seen);
   };
   const definiteGeometryHeight=(element,seen=new Set())=>{
     if(!element||seen.has(element))return false;
@@ -364,24 +425,29 @@
   const replacedGeometryTags=new Set(['IMG','INPUT','TEXTAREA','SELECT','BUTTON','VIDEO','AUDIO','CANVAS','IFRAME','OBJECT','EMBED']);
   /* shared_css_box_geometry */
   const layoutWidthFor=element=>cssBoxModel.width(element);
+  const layoutWidthBoxFor=element=>withStyleReadCache(()=>foreignCSSObservation(element,"layout")??cssBoxModel.widthBox(element));
+  const layoutHeightBoxFor=element=>withStyleReadCache(()=>foreignCSSObservation(element,"layout")??cssBoxModel.heightBox(element));
   const layoutRectFor=element=>withStyleReadCache(()=>foreignCSSObservation(element,"layout")??cssBoxModel.rect(element));
   const makeDOMRect=(value,element)=>element?callRealmBinding(element,requireRealmBinding(element,'ElementGeometry'),'rect',[]):new DOMRect(value.x,value.y,value.width,value.height);
   const clientRectFor=element=>withStyleReadCache(()=>{
     const foreign=foreignCSSObservation(element,"rect");if(foreign!==null)return foreign;
-    const box=layoutRectFor(element),entries=computedCSSDeclarations(element),get=k=>entries.find(e=>e.name===k)?.value;
-    const raw=entries.find(e=>e.name==='transform')?.parsedValue??get('transform');if(!raw||raw==='none'||get('display')==='none')return box;
-    const len=(v,size)=>{const resolved=cssResolveLength(v,{em:(cssComputedFontSize(element)??16),rem:(cssComputedFontSize(document.documentElement)??16),percent:size});return resolved===null?null:cssGeometryLength(resolved)};
-    let matrix;
-    try{matrix=compatibilityMatrix.parse(raw,(value,axis)=>len(value,axis===0?box.width:axis===1?box.height:0))}
-    catch{host.semanticMissingAt('surface.js/clientRectFor','CSS.clientRectTransform',raw);return box}
-    const origin=String(get('transform-origin')||'50% 50%').split(/\s+/),keywords={left:'0%',top:'0%',center:'50%',right:'100%',bottom:'100%'};
-    const ox=len(keywords[origin[0]]||origin[0],box.width),oy=len(keywords[origin[1]]||origin[1]||'50%',box.height);
-    if(ox===null||oy===null){host.semanticMissingAt('surface.js/clientRectFor','CSS.clientRectTransformOrigin');return box}
-    const oz=origin[2]?len(origin[2],0):0;
-    if(oz===null){host.semanticMissingAt('surface.js/clientRectFor','CSS.clientRectTransformOrigin');return box}
-    const projected=[[0,0],[box.width,0],[0,box.height],[box.width,box.height]].map(([x,y])=>compatibilityMatrix.point(matrix,x-ox,y-oy,-oz));
-    if(projected.some(point=>point[3]<=0)){host.semanticMissingAt('surface.js/clientRectFor','CSS.clientRectPerspectiveClipping');return box}
-    const points=projected.map(point=>[compatibilityMatrix.geometryCoordinate(point[0]/point[3]+ox+box.x),compatibilityMatrix.geometryCoordinate(point[1]/point[3]+oy+box.y)]);
+    const box=layoutRectFor(element),keywords={left:'0%',top:'0%',center:'50%',right:'100%',bottom:'100%'};
+    let points=[[box.x,box.y],[box.x+box.width,box.y],[box.x,box.y+box.height],[box.x+box.width,box.y+box.height]],transformed=false;
+    for(let node=element;node;node=geometryParent(node)){
+      const entries=computedCSSDeclarations(node),get=k=>entries.find(e=>e.name===k)?.value;
+      const raw=entries.find(e=>e.name==='transform')?.parsedValue??get('transform');if(!raw||raw==='none'||get('display')==='none')continue;
+      const bounds=layoutRectFor(node),len=(v,size)=>{const resolved=cssResolveLength(v,cssGeometryLengthContext(node,size));return resolved===null?null:cssGeometryLength(resolved)};
+      let matrix;
+      try{matrix=compatibilityMatrix.parse(raw,(value,axis)=>len(value,axis===0?bounds.width:axis===1?bounds.height:0))}
+      catch{host.semanticMissingAt('surface.js/clientRectFor','CSS.clientRectTransform',raw);continue}
+      const origin=String(get('transform-origin')||'50% 50%').split(/\s+/),ox=len(keywords[origin[0]]||origin[0],bounds.width),oy=len(keywords[origin[1]]||origin[1]||'50%',bounds.height);
+      if(ox===null||oy===null){host.semanticMissingAt('surface.js/clientRectFor','CSS.clientRectTransformOrigin');continue}
+      const oz=origin[2]?len(origin[2],0):0;if(oz===null){host.semanticMissingAt('surface.js/clientRectFor','CSS.clientRectTransformOrigin');continue}
+      const cx=bounds.x+ox,cy=bounds.y+oy,projected=points.map(([x,y])=>compatibilityMatrix.point(matrix,x-cx,y-cy,-oz));
+      if(projected.some(point=>point[3]<=0)){host.semanticMissingAt('surface.js/clientRectFor','CSS.clientRectPerspectiveClipping');continue}
+      points=projected.map(point=>[compatibilityMatrix.geometryCoordinate(point[0]/point[3]+cx),compatibilityMatrix.geometryCoordinate(point[1]/point[3]+cy)]);transformed=true;
+    }
+    if(!transformed)return box;
     const xs=points.map(p=>p[0]),ys=points.map(p=>p[1]),x=Math.min(...xs),y=Math.min(...ys);
     return {x,y,width:Math.fround(Math.max(...xs)-x),height:Math.fround(Math.max(...ys)-y)};
   });
@@ -417,7 +483,7 @@
   let constructCustomElement=null,customElementCloneInert=0;
   let templateTreeIsInert=()=>false;
   const viewportClientElement=element=>element===document.documentElement&&document.compatMode!=='BackCompat'||element===document.body&&document.compatMode==='BackCompat';
-  class HTMLElement extends Element { constructor(token,data){if(token===hostToken){super(token,data);return}if(!constructCustomElement)illegal('HTMLElement');return constructCustomElement(new.target)} get nonce(){return host.elementNonce(elementSlot(this).nodeId)} set nonce(v){host.elementNonce(elementSlot(this).nodeId,bindingString(v))} get title(){return this.getAttribute('title')||''} set title(v){this.setAttribute('title',String(v))} get hidden(){const value=this.getAttribute('hidden');return value?.toLowerCase()==='until-found'?'until-found':value!==null} set hidden(v){if(typeof v==='string'&&v.toLowerCase()==='until-found')this.setAttribute('hidden','until-found');else this.toggleAttribute('hidden',!!v)} get innerText(){return this.textContent} set innerText(v){this.textContent=v==null?'':String(v)} get ariaLive(){return this.getAttribute('aria-live')} set ariaLive(v){if(v==null)this.removeAttribute('aria-live');else this.setAttribute('aria-live',String(v))} get ariaAtomic(){return this.getAttribute('aria-atomic')} set ariaAtomic(v){if(v==null)this.removeAttribute('aria-atomic');else this.setAttribute('aria-atomic',String(v))} get style(){let style=styleCache.get(this);if(!style){style=cssDeclaration(this);styleCache.set(this,style)}return style} set style(value){this.style.cssText=value} get offsetWidth(){return layoutRectFor(this).width} get offsetHeight(){return layoutRectFor(this).height} get clientWidth(){return viewportClientElement(this)?host.viewport().width:Math.round(layoutRectFor(this).clientWidth??0)} get clientHeight(){return viewportClientElement(this)?host.viewport().height:Math.round(layoutRectFor(this).clientHeight??0)} get offsetTop(){return Math.round(layoutRectFor(this).offsetTop??layoutRectFor(this).top)} get offsetLeft(){return Math.round(layoutRectFor(this).offsetLeft??layoutRectFor(this).left)} get scrollHeight(){return Math.max(this.clientHeight,Math.round(layoutRectFor(this).height))} get scrollWidth(){return Math.max(this.clientWidth,Math.round(layoutRectFor(this).width))} getBoundingClientRect(){return makeDOMRect(null,this)} }
+  class HTMLElement extends Element { constructor(token,data){if(token===hostToken){super(token,data);return}if(!constructCustomElement)illegal('HTMLElement');return constructCustomElement(new.target)} get nonce(){return host.elementNonce(elementSlot(this).nodeId)} set nonce(v){host.elementNonce(elementSlot(this).nodeId,bindingString(v))} get title(){return this.getAttribute('title')||''} set title(v){this.setAttribute('title',String(v))} get hidden(){const value=this.getAttribute('hidden');return value?.toLowerCase()==='until-found'?'until-found':value!==null} set hidden(v){if(typeof v==='string'&&v.toLowerCase()==='until-found')this.setAttribute('hidden','until-found');else this.toggleAttribute('hidden',!!v)} get innerText(){return this.textContent} set innerText(v){this.textContent=v==null?'':String(v)} get ariaLive(){return this.getAttribute('aria-live')} set ariaLive(v){if(v==null)this.removeAttribute('aria-live');else this.setAttribute('aria-live',String(v))} get ariaAtomic(){return this.getAttribute('aria-atomic')} set ariaAtomic(v){if(v==null)this.removeAttribute('aria-atomic');else this.setAttribute('aria-atomic',String(v))} get style(){let style=styleCache.get(this);if(!style){style=cssDeclaration(this);styleCache.set(this,style)}return style} set style(value){this.style.cssText=value} get offsetWidth(){return layoutWidthBoxFor(this).width} get offsetHeight(){return layoutHeightBoxFor(this).height} get clientWidth(){return viewportClientElement(this)?host.viewport().width:Math.round(layoutWidthBoxFor(this).clientWidth??0)} get clientHeight(){return viewportClientElement(this)?host.viewport().height:Math.round(layoutHeightBoxFor(this).clientHeight??0)} get offsetTop(){return Math.round(layoutRectFor(this).offsetTop??layoutRectFor(this).top)} get offsetLeft(){return Math.round(layoutRectFor(this).offsetLeft??layoutRectFor(this).left)} get scrollHeight(){return Math.max(this.clientHeight,Math.round(layoutRectFor(this).height))} get scrollWidth(){return Math.max(this.clientWidth,Math.round(layoutRectFor(this).width))} getBoundingClientRect(){return makeDOMRect(null,this)} }
   const datasetCache=new WeakMap(),datasetName=name=>String(name).replace(/[A-Z]/g,c=>'-'+c.toLowerCase()),datasetKey=name=>String(name).slice(5).replace(/-([a-z])/g,(_m,c)=>c.toUpperCase());Object.defineProperty(HTMLElement.prototype,'dataset',{get:function(){let value=datasetCache.get(this);if(!value){value=new Proxy({}, {get:(_target,key)=>typeof key==='string'?this.getAttribute('data-'+datasetName(key))??undefined:undefined,set:(_target,key,next)=>{this.setAttribute('data-'+datasetName(key),String(next));return true},deleteProperty:(_target,key)=>{this.removeAttribute('data-'+datasetName(key));return true},ownKeys:()=>this.getAttributeNames().filter(name=>name.startsWith('data-')).map(datasetKey),getOwnPropertyDescriptor:(_target,key)=>this.hasAttribute('data-'+datasetName(key))?{value:this.getAttribute('data-'+datasetName(key)),writable:true,enumerable:true,configurable:true}:undefined});datasetCache.set(this,value)}return value},enumerable:true,configurable:true});
   class SVGElement extends Element { get style(){let style=styleCache.get(this);if(!style){style=cssDeclaration(this);styleCache.set(this,style)}return style} }
   const svgRectSlots=new WeakMap();

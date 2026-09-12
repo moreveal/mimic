@@ -18,8 +18,17 @@ type imageLoad struct {
 	decoded     *imageresource.Image
 	originClean bool
 	queued      bool
+	waiting     bool
 	cancel      context.CancelFunc
 	blocks      bool
+}
+
+// A document's available images are distinct from the HTTP cache: Chrome 152
+// reuses a successfully decoded image for another element even with no-store.
+// Only successful results are retained, with CORS mode/credentials in the key.
+type availableImage struct {
+	decoded     *imageresource.Image
+	originClean bool
 }
 
 func (r *Realm) startDocumentImages() {
@@ -36,7 +45,7 @@ func (r *Realm) updateImage(id int64, changed bool) {
 		r.imageLoads = map[int64]*imageLoad{}
 	}
 	previous := r.imageLoads[id]
-	if previous != nil && (!changed || previous.queued) {
+	if previous != nil && (!changed && !previous.waiting || previous.queued) {
 		return
 	}
 	if previous != nil && previous.cancel != nil {
@@ -94,6 +103,23 @@ func (r *Realm) updateImage(id int64, changed bool) {
 			return finish(ctx, "error")
 		}
 		request := r.elementRequest(u, node.Attributes, network.Image)
+		key := preloadRequestKey(request)
+		if available, ok := r.availableImages.get(key); ok {
+			current.currentSrc = u.String()
+			current.decoded = available.decoded
+			current.originClean = available.originClean
+			return finish(ctx, "load")
+		}
+		// Detached lazy images cannot intersect a viewport. Already available
+		// images above still complete, including clones of a loaded lazy image.
+		if strings.EqualFold(node.Attributes["loading"], "lazy") && !r.document.IsConnected(id) {
+			current.waiting = true
+			if current.blocks {
+				current.blocks = false
+				r.endLoadBlocker(reason)
+			}
+			return nil
+		}
 		resourceContext, cancel := context.WithCancel(r.resourceContext)
 		current.cancel = cancel
 		r.resourceWG.Add(1)
@@ -128,6 +154,12 @@ func (r *Realm) updateImage(id int64, changed bool) {
 				current.currentSrc = u.String()
 				current.decoded = decoded
 				current.originClean = originClean
+				if decoded != nil {
+					if r.availableImages == nil {
+						r.availableImages = &availableImageCache{}
+					}
+					r.availableImages.put(key, availableImage{decoded, originClean})
+				}
 				r.notifyPerformanceObservers(ctx)
 				return finish(ctx, kind)
 			})

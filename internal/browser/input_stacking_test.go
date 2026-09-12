@@ -7,6 +7,27 @@ import (
 
 const inputStackingSetup = `document.body.style.margin='0';document.body.innerHTML='<section id="context" style="position:absolute;left:0;top:0;width:100px;height:100px;z-index:3"><button id="target" style="position:absolute;left:0;top:0;width:100px;height:100px">button</button></section><div id="cover" style="position:fixed;left:0;top:0;width:100px;height:100px;z-index:2"></div>';globalThis.clicked='';document.addEventListener('click',e=>clicked=e.target.id);`
 
+func TestIsolatedHitTestUsesOwnerAndLocalWrappers(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, p *Page) {
+		d := NewDebugger(p)
+		defer d.Close()
+		debuggerEval(t, d, inputStackingSetup+`Document.prototype.elementsFromPoint=()=>{throw Error('author override')}`, DebuggerOptions{})
+		world, err := p.IsolatedWorld(context.Background(), p.Top.ID, "hit-test")
+		if err != nil {
+			t.Fatal(err)
+		}
+		result, err := d.Evaluate(context.Background(), p.Top.ID, world, `(()=>{
+const target=document.getElementById('target'),cover=document.getElementById('cover');
+const first=document.elementFromPoint(30,30)===target;
+cover.style.zIndex='4';const changed=document.elementsFromPoint(30,30)[0]===cover;
+return first&&changed&&document.elementFromPoint(NaN,30)===null&&document.elementsFromPoint(-1,30).length===0;
+})()`, DebuggerOptions{ReturnByValue: true})
+		if err != nil || result["exceptionDetails"] != nil || result["result"].(map[string]any)["value"] != true {
+			t.Fatalf("isolated hit test: %#v %v", result, err)
+		}
+	})
+}
+
 func TestInputStackingContextHitTargetsMatchChrome152(t *testing.T) {
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)

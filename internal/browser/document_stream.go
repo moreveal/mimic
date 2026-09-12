@@ -23,6 +23,10 @@ type documentStream struct {
 	cancel                          context.CancelFunc
 	scripts                         map[int64]*streamScriptResponse
 	navigation                      bool
+	waitingStylesheets              bool
+	waitingModule                   bool
+	inNavigationTask                bool
+	navigationTaskContext           context.Context
 	onScript                        func(dom.Node) error
 	onFinished                      func() error
 }
@@ -340,4 +344,25 @@ func (r *Realm) finishStreamLoad(ctx context.Context, s *documentStream) {
 		p.mu.Unlock()
 	}
 	r.notifyPerformanceObservers(ctx)
+}
+
+// Task interruption and navigation cancellation have different lifetimes. A
+// continuation listens to both, without retaining a completed pump task's
+// context for a later response or parser continuation.
+func (s *documentStream) useTaskContext(taskContext context.Context) func() {
+	previous := s.navigationTaskContext
+	ctx, cancel := context.WithCancel(taskContext)
+	stop := context.AfterFunc(s.ctx, cancel)
+	if s.ctx.Err() != nil {
+		cancel()
+	}
+	s.navigationTaskContext = ctx
+	return func() { stop(); cancel(); s.navigationTaskContext = previous }
+}
+
+func (s *documentStream) executionContext() context.Context {
+	if s.navigationTaskContext != nil {
+		return s.navigationTaskContext
+	}
+	return s.ctx
 }

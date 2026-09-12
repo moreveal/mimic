@@ -1,0 +1,177 @@
+{
+  "version": "Chrome/152.0.7977.82",
+  "sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+  "fixture_sha256": "b3225674543d82054dc3424d5f8b4bfc85454ef83489e5213a641e560511f665",
+  "observation": {
+    "content": [
+      110,
+      106,
+      "100px",
+      110
+    ],
+    "border": [
+      100,
+      96,
+      "100px",
+      100
+    ],
+    "fractional-content": [
+      103,
+      101,
+      "100.5px",
+      103
+    ],
+    "parent": [
+      200,
+      200,
+      "200px",
+      200
+    ],
+    "percent": [
+      110,
+      106,
+      "100px",
+      110
+    ],
+    "mutation": [
+      60,
+      56,
+      "50px",
+      60
+    ],
+    "parentMutation": [
+      110,
+      106,
+      "100px",
+      110
+    ],
+    "minimum": [
+      40,
+      40,
+      "40px",
+      40
+    ],
+    "maximum": [
+      80,
+      80,
+      "80px",
+      80
+    ],
+    "auto-empty": [
+      10,
+      6,
+      "0px",
+      10
+    ],
+    "autoChild": [
+      24,
+      20,
+      "14px",
+      24
+    ],
+    "autoChildMutation": [
+      34,
+      30,
+      "24px",
+      34
+    ],
+    "absolute": [
+      370,
+      370,
+      "370px",
+      370
+    ],
+    "hidden": [
+      0,
+      0,
+      "100px",
+      0
+    ],
+    "hidden-child": [
+      0,
+      0,
+      "50px",
+      0
+    ],
+    "detached": [
+      0,
+      0,
+      "",
+      0
+    ],
+    "inline-block": [
+      83,
+      81,
+      "75px",
+      83
+    ],
+    "table": [
+      0,
+      0,
+      "0px",
+      0
+    ],
+    "cell": [
+      30,
+      30,
+      "30px",
+      30
+    ],
+    "replaced": [
+      26,
+      24,
+      "20px",
+      26
+    ],
+    "button": [
+      26,
+      24,
+      "20px",
+      26
+    ],
+    "shadow-host": [
+      150,
+      150,
+      "150px",
+      150
+    ],
+    "slotted": [
+      40,
+      40,
+      "40px",
+      40
+    ],
+    "shadow": [
+      80,
+      80,
+      "80px",
+      80
+    ],
+    "unassigned": [
+      0,
+      0,
+      "",
+      0
+    ],
+    "foreign-target": [
+      40,
+      36,
+      "30px",
+      40
+    ],
+    "foreign": 40,
+    "foreignMutation": 50,
+    "adopted": [
+      56,
+      54,
+      "50px",
+      56
+    ],
+    "removedOwner": [
+      0,
+      0,
+      "",
+      0
+    ]
+  }
+}

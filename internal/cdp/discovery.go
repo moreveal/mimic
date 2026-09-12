@@ -76,7 +76,12 @@ func (s *Server) resumeTarget(page *browser.Page) {
 func (s *Server) startTargetNavigation(page *browser.Page, raw string) {
 	_ = s.startNavigation(page, raw, "", s.navigationTimeout)
 }
-func (s *Server) startNavigation(page *browser.Page, raw, loaderID string, timeout time.Duration) error {
+func (s *Server) startNavigation(page *browser.Page, raw, loaderID string, timeout time.Duration, committed ...func(error)) error {
+	notify := func(err error) {
+		for _, callback := range committed {
+			callback(err)
+		}
+	}
 	ctx, cancel := context.WithCancel(context.Background())
 	if timeout > 0 {
 		cancel()
@@ -96,11 +101,13 @@ func (s *Server) startNavigation(page *browser.Page, raw, loaderID string, timeo
 		page.LockCommands()
 		defer page.UnlockCommands()
 		if _, ok := s.page(page.ID); !ok {
+			notify(fmt.Errorf("Target closed"))
 			return
 		}
 		s.lifecycleMu.Lock()
 		if s.closed || s.pumps[page] == nil {
 			s.lifecycleMu.Unlock()
+			notify(fmt.Errorf("Target closed"))
 			return
 		}
 		s.executions[page] = cancel
@@ -109,8 +116,9 @@ func (s *Server) startNavigation(page *browser.Page, raw, loaderID string, timeo
 		if loaderID == "" {
 			loaderID = page.ReserveNavigation()
 		}
-		if err := page.NavigateReserved(ctx, raw, loaderID); err != nil {
+		if err := page.StartNavigation(ctx, raw, loaderID, committed...); err != nil {
 			page.Trace().Add(trace.Error, "navigation", map[string]any{"url": raw, "error": err.Error()})
+			notify(err)
 		}
 	}()
 	return nil

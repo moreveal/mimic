@@ -376,13 +376,14 @@ const compatibilityElementState={};
     compatibilityElementState.focusVisible=node=>compatibilityElementState.focused()===node&&
       (keyboardFocus||node.localName==='textarea'||node.localName==='input'&&!['button','checkbox','color','file','hidden','image','radio','range','reset','submit'].includes(String(node.type)));
     compatibilityElementState.noteTrustedInput=type=>{
+      host.invalidateStyleObservations();
       if(type==='keydown')keyboardFocus=true;
       else if(type==='mousedown'||type==='pointerdown'||type==='touchstart')keyboardFocus=false;
     };
     document.addEventListener('keydown',event=>{if(event.isTrusted&&!event.altKey&&!event.ctrlKey&&!event.metaKey)keyboardFocus=true},true);
     for(const type of ['mousedown','pointerdown','touchstart'])document.addEventListener(type,event=>{if(event.isTrusted)keyboardFocus=false},true);
     Object.defineProperty(Document.prototype,'activeElement',{get(){return focused&&focused.isConnected?focused:this.body||this.documentElement},configurable:true,enumerable:true});
-    const focusEvent=(target,type,related,bubbles=false)=>compatibilityElementState.dispatchFocus?compatibilityElementState.dispatchFocus(target,type,related,bubbles):dispatchTrusted(target,new Event(type,{bubbles,composed:true}));
+    const focusEvent=(target,type,related,bubbles=false)=>{host.invalidateStyleObservations();return compatibilityElementState.dispatchFocus?compatibilityElementState.dispatchFocus(target,type,related,bubbles):dispatchTrusted(target,new Event(type,{bubbles,composed:true}))};
     Object.defineProperty(HTMLElement.prototype,'focus',{value:function(){if(!this.isConnected||focused===this)return;const previous=focused;focused=null;if(previous){focusEvent(previous,'blur',this);focusEvent(previous,'focusout',this,true)}focused=this;focusEvent(this,'focus',previous);focusEvent(this,'focusin',previous,true)},writable:true,configurable:true,enumerable:true});
     Object.defineProperty(HTMLElement.prototype,'blur',{value:function(){if(focused!==this)return;focused=null;focusEvent(this,'blur',null);focusEvent(this,'focusout',null,true)},writable:true,configurable:true,enumerable:true});
     const mediaSlots=new WeakMap(),observedMedia=new Set(),mediaEventSlots=new WeakMap();

@@ -8,6 +8,10 @@ const compatibilitySelectors = (() => {
   const cacheLimit = 128;
   const extensions = new Set(['contains','icontains','matches','parent','header','selected','button','input','text','checkbox','file','password','radio','reset','image','submit']);
   const legacyElements = new Set(['before','after','first-line','first-letter']);
+  // css-select's built-in :checked alias tests attributes before consulting
+  // user pseudos. Rewrite parsed tokens only, keeping this name inaccessible
+  // to author selectors and leaving strings/attribute values untouched.
+  const checkedPseudo='mimic-internal-checked';
   const pseudoElements = new Set([...legacyElements,'selection','marker','placeholder','backdrop','file-selector-button','spelling-error','grammar-error','target-text','part','slotted','cue']);
   const emptySelector = () => [{type:'pseudo',name:'not',data:[[{type:'universal',namespace:null}]]}];
   const syntax = message => new DOMException(message, 'SyntaxError');
@@ -28,6 +32,7 @@ const compatibilitySelectors = (() => {
             return {...emptySelector()[0]};
           }
           if (token.type === 'pseudo') {
+            if(token.name===checkedPseudo)throw syntax('Unknown pseudo-class');
             if (extensions.has(token.name)) throw syntax('Non-standard pseudo-class');
             if (Array.isArray(token.data)) {
               const inner = validate(token.data, true, token.name === 'is' || token.name === 'where', token.name === 'has');
@@ -45,7 +50,7 @@ const compatibilitySelectors = (() => {
     return result;
   }
   function copy(groups) {
-    return groups.map(group=>group.map(token=>({...token,...(Array.isArray(token.data)?{data:copy(token.data)}:{})})));
+    return groups.map(group=>group.map(token=>({...token,...(token.type==='pseudo'&&token.name==='checked'?{name:checkedPseudo}:{}),...(Array.isArray(token.data)?{data:copy(token.data)}:{})})));
   }
   function parsed(selector) {
     selector = String(selector);
@@ -66,11 +71,13 @@ const compatibilitySelectors = (() => {
   }
   let documentID=host.documentRootID();bootstrapRestoreHooks.push(()=>{documentID=host.documentRootID()});
   const children = node => memo(node,'children',()=>{
+    if(styleReadCache&&reads===styleReadCache.selectorReads)return cssObservationChildren(node);
     const slot=elementSlot(node);
     if(node===document||slot)return host.childIDs(node===document?documentID:slot.nodeId).map(wrap);
     return fragmentSlots.get(node)?.children.slice()||[];
   });
   const parent = node => memo(node,'parent',()=>{
+    if(styleReadCache&&reads===styleReadCache.selectorReads)return cssObservationParent(node);
     if(syntheticParents.has(node))return syntheticParents.get(node);
     const slot=elementSlot(node);return slot?wrap(host.parentNode(slot.nodeId)):null;
   });
@@ -87,6 +94,7 @@ const compatibilitySelectors = (() => {
     equals: (a,b) => a===b
   };
   const statePseudos={
+    [checkedPseudo]:node=>compatibilityElementState.selectorChecked(node),
     modal:node=>compatibilityElementState.modal(node),
     target:node=>elementSlot(node).nodeId===host.selectorTargetID(),
     defined:node=>compatibilityElementState.isDefined(node),
@@ -109,9 +117,11 @@ const compatibilitySelectors = (() => {
     cache.set(selector,matcher);
     return matcher;
   }
-  function run(callback) {
+  function run(callback,styleRead=false) {
     const previous=reads;
-    reads=new WeakMap();
+    // Match all elements against the same immutable DOM reads during one
+    // internal geometry observation. Public queries retain independent scopes.
+    reads=styleRead&&styleReadCache?(styleReadCache.selectorReads||(styleReadCache.selectorReads=new WeakMap())):new WeakMap();
     try { return callback(); } finally { reads=previous; }
   }
   const scopeFor = root => root === document ? document.documentElement : root;
@@ -224,6 +234,7 @@ const compatibilitySelectors = (() => {
       if(token.type==='attribute'&&token.namespace===null){
         if(token.name==='id'&&token.action==='equals')return '#'+token.value.toLowerCase();
         if(token.name==='class'&&token.action==='element')key='.'+token.value.toLowerCase();
+        else if(key==='*'||key.startsWith('t:'))key='a:'+token.name.toLowerCase();
       }else if(key==='*'&&token.type==='tag'&&token.namespace===null)key='t:'+token.name.toLowerCase();
     }
     return key;
@@ -232,16 +243,20 @@ const compatibilitySelectors = (() => {
     let index=styleIndexes.get(rules);
     if(!index){
       index=new Map();
-      for(const rule of rules){const key=rule.pseudo+'|'+styleKey(rule);let bucket=index.get(key);if(!bucket)index.set(key,bucket=[]);bucket.push(rule)}
+      for(const rule of rules){const leaf=styleKey(rule),key=rule.pseudo+'|'+leaf;if(leaf.startsWith('a:'))index.hasAttributeKeys=true;let bucket=index.get(key);if(!bucket)index.set(key,bucket=[]);bucket.push(rule)}
       styleIndexes.set(rules,index);
     }
     const keys=new Set(['*','t:'+adapter.getName(node)]),id=attribute(node,'id'),classes=attribute(node,'class');
     if(id!==undefined)keys.add('#'+id.toLowerCase());
     if(classes)for(const name of classes.split(/[\t\n\f\r ]+/))if(name)keys.add('.'+name.toLowerCase());
+    // Attribute selectors require the attribute to exist. Reading canonical
+    // names once avoids testing every data-/aria- rule on unrelated elements.
+    // Full matching still decides values, operators, casing and combinators.
+    if(index.hasAttributeKeys)for(const name of memo(node,'attributeNames',()=>host.attributeNames(elementSlot(node).nodeId)))keys.add('a:'+name.toLowerCase());
     const matched=[];
     for(const key of keys)for(const rule of index.get(pseudo+'|'+key)||[])if(rule.matches(node))matched.push(rule);
     return matched.sort((a,b)=>a.order-b.order);
-  });
+  },true);
   function closest(node,selector) {
     selector=String(selector);
     return run(()=>{
