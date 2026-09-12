@@ -1,0 +1,278 @@
+{
+  "result": {
+    "result": {
+      "value": {
+        "valid": {
+          "pixels": [
+            255,
+            0,
+            0,
+            255,
+            255,
+            0,
+            0,
+            255,
+            255,
+            0,
+            0,
+            255,
+            255,
+            0,
+            0,
+            255,
+            255,
+            0,
+            0,
+            255,
+            255,
+            0,
+            0,
+            255
+          ],
+          "bitmap": [
+            3,
+            2
+          ],
+          "decode": "resolved",
+          "events": [
+            "load"
+          ],
+          "width": 3,
+          "height": 2,
+          "naturalWidth": 3,
+          "naturalHeight": 2,
+          "complete": true
+        },
+        "raw-deflate": {
+          "pixels": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "bitmap": "InvalidStateError",
+          "decode": "resolved",
+          "events": [
+            "load"
+          ],
+          "width": 3,
+          "height": 2,
+          "naturalWidth": 3,
+          "naturalHeight": 2,
+          "complete": true
+        },
+        "bad-zlib-header": {
+          "pixels": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "bitmap": "InvalidStateError",
+          "decode": "resolved",
+          "events": [
+            "load"
+          ],
+          "width": 3,
+          "height": 2,
+          "naturalWidth": 3,
+          "naturalHeight": 2,
+          "complete": true
+        },
+        "bad-checksum": {
+          "pixels": [
+            255,
+            0,
+            0,
+            255,
+            255,
+            0,
+            0,
+            255,
+            255,
+            0,
+            0,
+            255,
+            255,
+            0,
+            0,
+            255,
+            255,
+            0,
+            0,
+            255,
+            255,
+            0,
+            0,
+            255
+          ],
+          "bitmap": [
+            3,
+            2
+          ],
+          "decode": "resolved",
+          "events": [
+            "load"
+          ],
+          "width": 3,
+          "height": 2,
+          "naturalWidth": 3,
+          "naturalHeight": 2,
+          "complete": true
+        },
+        "truncated": {
+          "pixels": [
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "bitmap": "InvalidStateError",
+          "decode": "resolved",
+          "events": [
+            "load"
+          ],
+          "width": 3,
+          "height": 2,
+          "naturalWidth": 3,
+          "naturalHeight": 2,
+          "complete": true
+        }
+      }
+    }
+  },
+  "captureMetadata": {
+    "href": "http://127.0.0.1:45728/plain",
+    "isSecureContext": true,
+    "crossOriginIsolated": false,
+    "innerWidth": 1272,
+    "innerHeight": 653,
+    "outerWidth": 1280,
+    "outerHeight": 800,
+    "devicePixelRatio": 1,
+    "visibility": "visible",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "platform": "Win32"
+  },
+  "passport": {
+    "revision": "65e23bf9c49c64ae5a7c640c5b949fe1a76ade68",
+    "dirtyState": " M internal/browser/image_resources.go\n M internal/imageresource/image.go\n M internal/webapi/canvas_state.js\n M internal/webapi/surface.go\n M internal/webapi/surface.js\n?? internal/browser/testdata/image_partial_decode_oracle.js\n?? internal/browser/testdata/rtc_session_oracle.js\n?? internal/webapi/rtc_session.js\n",
+    "sourceSHA256": "8797adea6c372153464afba3176938367f86ac9e2b172902ee2571fa83e2356c",
+    "probeSHA256": "b10a5f5476992cd089ce994a0b17098e81214d7f516a1488ec6d08da90856534",
+    "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+    "mimicSHA256": "fb46cf2ce6dac9c2c53932e13675f5a273b0eed5ecc3f193ca9cd4e28a2a08b8",
+    "args": [
+      "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "--remote-debugging-port=20481",
+      "--user-data-dir=E:\\GitHub\\mimic\\.build\\residual-images\\pixels-after\\chrome-profile-b",
+      "--no-first-run",
+      "--no-default-browser-check",
+      "--window-size=1280,800",
+      "about:blank"
+    ],
+    "profile": "E:\\GitHub\\mimic\\.build\\residual-images\\pixels-after\\chrome-profile",
+    "browserMode": "headful",
+    "environmentProfile": "chrome-152-windows-x64-headful-controlled-v1",
+    "featureOverrides": [],
+    "records": [
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      }
+    ],
+    "exitCodes": {
+      "chrome": 1,
+      "mimic": 1
+    },
+    "chromeControl": [],
+    "chromeMimic": []
+  },
+  "version": {
+    "Browser": "Chrome/152.0.7977.82",
+    "Protocol-Version": "1.3",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "V8-Version": "15.2.124.21",
+    "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:20481/devtools/browser/4cb1eb9b-d25d-41fa-8d2f-715321f69ae5"
+  }
+}

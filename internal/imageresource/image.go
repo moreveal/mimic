@@ -4,10 +4,14 @@ package imageresource
 
 import (
 	"bytes"
+	"compress/zlib"
+	"encoding/binary"
 	"encoding/xml"
 	"fmt"
 	"github.com/gen2brain/gav1d/avif"
 	_ "golang.org/x/image/webp"
+	"hash/adler32"
+	"hash/crc32"
 	"image"
 	"image/draw"
 	_ "image/gif"
@@ -24,6 +28,9 @@ type Image struct {
 	Width, Height int
 	Pixels        []byte
 	Vector        bool
+	// Valid intrinsic metadata can outlive an unavailable pixel stream. Chrome
+	// accepts that resource for Image loading, but ImageBitmap cannot use it.
+	PixelsUnavailable bool
 }
 
 func Decode(data []byte, contentType string) (*Image, error) {
@@ -113,6 +120,14 @@ func Decode(data []byte, contentType string) (*Image, error) {
 	} else {
 		decoded, _, err = image.Decode(bytes.NewReader(data))
 	}
+	if err != nil && format == "png" {
+		if repaired := repairPNGAdler(data); repaired != nil {
+			decoded, _, err = image.Decode(bytes.NewReader(repaired))
+		}
+		if err != nil {
+			return &Image{Width: config.Width, Height: config.Height, PixelsUnavailable: true}, nil
+		}
+	}
 	if err != nil {
 		return nil, err
 	}
@@ -123,6 +138,58 @@ func Decode(data []byte, contentType string) (*Image, error) {
 	pixels := image.NewRGBA(image.Rect(0, 0, width, height))
 	draw.Draw(pixels, pixels.Bounds(), decoded, decoded.Bounds().Min, draw.Src)
 	return &Image{Width: width, Height: height, Pixels: pixels.Pix}, nil
+}
+
+// Chrome accepts a PNG's complete decompressed stream despite an invalid Adler
+// trailer. Repair only that verified condition; invalid or incomplete deflate
+// data remain unavailable, with their separately parsed intrinsic metadata.
+func repairPNGAdler(data []byte) []byte {
+	var stream []byte
+	for at := 8; at+12 <= len(data); {
+		size := int(binary.BigEndian.Uint32(data[at:]))
+		if size > len(data)-at-12 {
+			return nil
+		}
+		if string(data[at+4:at+8]) == "IDAT" {
+			stream = append(stream, data[at+8:at+8+size]...)
+		}
+		at += size + 12
+	}
+	if len(stream) < 6 {
+		return nil
+	}
+	reader, err := zlib.NewReader(bytes.NewReader(stream))
+	if err != nil {
+		return nil
+	}
+	raw, readErr := io.ReadAll(io.LimitReader(reader, 128<<20))
+	reader.Close()
+	if readErr != zlib.ErrChecksum {
+		return nil
+	}
+	binary.BigEndian.PutUint32(stream[len(stream)-4:], adler32.Checksum(raw))
+	result := append([]byte(nil), data[:8]...)
+	written := false
+	for at := 8; at+12 <= len(data); {
+		size := int(binary.BigEndian.Uint32(data[at:]))
+		if size > len(data)-at-12 {
+			return nil
+		}
+		if string(data[at+4:at+8]) == "IDAT" {
+			if !written {
+				result = binary.BigEndian.AppendUint32(result, uint32(len(stream)))
+				start := len(result)
+				result = append(result, []byte("IDAT")...)
+				result = append(result, stream...)
+				result = binary.BigEndian.AppendUint32(result, crc32.ChecksumIEEE(result[start:]))
+				written = true
+			}
+		} else {
+			result = append(result, data[at:at+size+12]...)
+		}
+		at += size + 12
+	}
+	return result
 }
 
 var intrinsicNumber = regexp.MustCompile(`^([+-]?(?:[0-9]*\.[0-9]+|[0-9]+)(?:[eE][+-]?[0-9]+)?)(px|in|cm|mm|q|pt|pc)?$`)
