@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"sort"
 	"strings"
+	"time"
 
 	"github.com/moreveal/mimic/internal/trace"
 )
@@ -38,6 +39,7 @@ type fixture struct {
 }
 
 type capture struct {
+	CapturedAt              time.Time
 	Fixtures                []*fixture
 	DocumentURL, TopContext string
 	SourceHashes            map[string]string
@@ -62,6 +64,9 @@ func readCapture(dir string) (*capture, error) {
 	retries := map[string]int{}
 	responseIndex := 0
 	for _, event := range envelope.Result.Events {
+		if c.CapturedAt.IsZero() && !event.Time.IsZero() {
+			c.CapturedAt = event.Time
+		}
 		if event.Kind != trace.Network {
 			continue
 		}

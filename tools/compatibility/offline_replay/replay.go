@@ -12,22 +12,24 @@ import (
 	"sort"
 	"strings"
 	"sync"
+	"time"
 
 	"github.com/moreveal/mimic/internal/trace"
 )
 
 type replay struct {
-	mu          sync.Mutex
-	capture     *capture
-	used        map[int]bool
-	contextMap  map[string]string
-	pending     []recordedRequest
-	events      []map[string]any
-	cycle       int
-	cancel      context.CancelFunc
-	segment     *regexp.Regexp
-	maxRequests int
-	requests    int
+	mu            sync.Mutex
+	capture       *capture
+	used          map[int]bool
+	contextMap    map[string]string
+	pending       []recordedRequest
+	events        []map[string]any
+	cycle         int
+	cancel        context.CancelFunc
+	segment       *regexp.Regexp
+	maxRequests   int
+	requests      int
+	httpDateShift *time.Duration
 }
 
 func newReplay(c *capture, cancel context.CancelFunc, segment *regexp.Regexp, max int) *replay {
@@ -203,12 +205,26 @@ func (t *replay) RoundTrip(r *http.Request) (*http.Response, error) {
 	for k, v := range f.Headers {
 		h.Set(k, v)
 	}
+	if t.httpDateShift != nil {
+		rebaseHTTPDates(h, *t.httpDateShift)
+		event["httpDateShiftSeconds"] = t.httpDateShift.Seconds()
+	}
 	h.Del("Content-Encoding")
 	h.Del("Content-Length")
 	event["status"] = f.Status
 	event["responseBodySHA256"] = digest(responseBody)
 	t.events = append(t.events, event)
 	return &http.Response{StatusCode: f.Status, Header: h, Body: io.NopCloser(bytes.NewReader(responseBody)), Request: r, ContentLength: int64(len(responseBody))}, nil
+}
+
+// Translate absolute cache dates together; preserve age/lifetimes and never
+// alter the source capture. This is an explicit replay environment control.
+func rebaseHTTPDates(h http.Header, shift time.Duration) {
+	for _, name := range []string{"Date", "Expires", "Last-Modified"} {
+		if date, err := http.ParseTime(h.Get(name)); err == nil {
+			h.Set(name, date.Add(shift).UTC().Format(http.TimeFormat))
+		}
+	}
 }
 
 func (t *replay) boundary(kind string, r *http.Request) error {
