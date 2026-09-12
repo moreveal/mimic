@@ -44,6 +44,7 @@ method('drawArrays',(s,mode,first,count)=>{
 const materializePrograms=s=>{
  const commands=s.drawCommands;if(!commands?.length)return;s.drawCommands=[];
  if(s.width*s.height>65536)fail('shader sample observation limit');
+ const samples=s.attributes.antialias?[[3/8,1/8],[7/8,3/8],[1/8,5/8],[5/8,7/8]]:[[.5,.5]];if(s.attributes.antialias&&!s.samplePixels)s.samplePixels=samples.map(()=>s.pixels.slice());
  for(const command of commands){
   const [vx,vy,vw,vh]=command.viewport;
   const vertices=command.vertices.map(p=>[(p[0]/p[3]+1)*vw/2+vx,(p[1]/p[3]+1)*vh/2+vy,p[2]/p[3],1/p[3]]),triangles=[];
@@ -56,12 +57,13 @@ const materializePrograms=s=>{
    for(let y=0;y<s.height;y++)for(let x=0;x<s.width;x++){
     if(command.scissor){const [sx,sy,sw,sh]=command.scissor;if(x<sx||y<sy||x>=sx+sw||y>=sy+sh)continue}
     const px=x+.5,py=y+.5,cross=(u,v)=>(v[0]-u[0])*(py-u[1])-(v[1]-u[1])*(px-u[0]);
-    const weights=[cross(b,c)/area,cross(c,a)/area,cross(a,b)/area];if(weights.some(v=>v<0))continue;
+    const weights=[cross(b,c)/area,cross(c,a)/area,cross(a,b)/area];const covered=samples.map(([dx,dy])=>{const edge=(u,v)=>(v[0]-u[0])*(y+dy-u[1])-(v[1]-u[1])*(x+dx-u[0]);return [[b,c],[c,a],[a,b]].every(([u,v])=>{const w=edge(u,v)/area;if(w<0)return false;if(w!==0)return true;if(area<0)[u,v]=[v,u];return v[1]<u[1]||v[1]===u[1]&&v[0]>u[0]})});if(!covered.some(Boolean))continue;
     const depth=(weights[0]*a[2]+weights[1]*b[2]+weights[2]*c[2]+1)/2,reciprocalW=weights[0]*a[3]+weights[1]*b[3]+weights[2]*c[3];
     let color;try{color=glslObservations.execute(command.fragment,{...command.uniforms,gl_FragCoord:[px,py,depth,reciprocalW],gl_FrontFacing:area>0})}catch(e){fail('fragment evaluation: '+e.message)}
     if(color===null)continue;if(!Array.isArray(color)||color.length!==4)fail('fragment output');
-    const i=(y*s.width+x)*4;for(let k=0;k<4;k++)if(command.mask[k]&&(k!==3||s.attributes.alpha))s.pixels[i+k]=Math.max(0,Math.ceil(Math.fround(Math.max(0,Math.min(1,color[k]))*255)-.5));
+    const i=(y*s.width+x)*4;for(let k=0;k<4;k++)if(command.mask[k]&&(k!==3||s.attributes.alpha)){const value=Math.max(0,Math.ceil(Math.fround(Math.max(0,Math.min(1,color[k]))*255)-.5));if(s.samplePixels){for(let sample=0;sample<samples.length;sample++)if(covered[sample])s.samplePixels[sample][i+k]=value}else s.pixels[i+k]=value}
    }
   }
  }
+ if(s.samplePixels)for(let i=0;i<s.pixels.length;i++)s.pixels[i]=Math.ceil(s.samplePixels.reduce((n,p)=>n+p[i],0)/samples.length-.5);
 };
