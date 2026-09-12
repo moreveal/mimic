@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"net/url"
 	"slices"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -183,24 +184,7 @@ func (s *SessionState) PutCached(req Request, res Response, now time.Time) {
 	if req.Method != http.MethodGet || res.Status != http.StatusOK {
 		return
 	}
-	cc := strings.ToLower(res.Headers.Get("Cache-Control"))
-	if strings.Contains(cc, "no-store") {
-		return
-	}
-	maxAge := time.Duration(0)
-	for _, part := range strings.Split(cc, ",") {
-		part = strings.TrimSpace(part)
-		if strings.HasPrefix(part, "max-age=") {
-			if d, err := time.ParseDuration(strings.TrimPrefix(part, "max-age=") + "s"); err == nil {
-				maxAge = d
-			}
-		}
-	}
-	if maxAge <= 0 {
-		if expires, err := http.ParseTime(res.Headers.Get("Expires")); err == nil {
-			maxAge = expires.Sub(now)
-		}
-	}
+	maxAge := cacheFreshnessRemaining(res.Headers, now)
 	if maxAge <= 0 {
 		return
 	}
@@ -243,4 +227,62 @@ func (s *SessionState) PutCached(req Request, res Response, now time.Time) {
 	}
 	clear(entries[len(kept):])
 	s.cache[key] = append(kept, cacheEntry{copy, now.Add(maxAge), vary, req.Headers.Clone()})
+}
+
+// Freshness is measured from the response's origin date, including intermediary
+// Age. Without an explicit lifetime Chrome uses 10% of the time since the last
+// modification. Never turn an explicit zero lifetime into a heuristic hit.
+func cacheFreshnessRemaining(headers http.Header, now time.Time) time.Duration {
+	var lifetime time.Duration
+	explicit := false
+	for _, part := range strings.Split(headers.Get("Cache-Control"), ",") {
+		key, value, _ := strings.Cut(strings.TrimSpace(part), "=")
+		switch strings.ToLower(key) {
+		case "no-store", "no-cache":
+			return 0
+		case "max-age":
+			explicit = true
+			seconds, err := strconv.ParseInt(strings.Trim(value, "\" "), 10, 64)
+			if err != nil || seconds < 0 {
+				return 0
+			}
+			// Avoid duration overflow on untrusted response headers.
+			if seconds > int64((time.Duration(1<<63-1))/time.Second) {
+				seconds = int64((time.Duration(1<<63 - 1)) / time.Second)
+			}
+			lifetime = time.Duration(seconds) * time.Second
+		}
+	}
+	date, err := http.ParseTime(headers.Get("Date"))
+	if err != nil {
+		date = now
+	}
+	if !explicit {
+		if expires := headers.Get("Expires"); expires != "" {
+			explicit = true
+			end, err := http.ParseTime(expires)
+			if err != nil {
+				return 0
+			}
+			lifetime = end.Sub(date)
+		}
+	}
+	if !explicit {
+		modified, err := http.ParseTime(headers.Get("Last-Modified"))
+		if err != nil || !modified.Before(date) {
+			return 0
+		}
+		lifetime = date.Sub(modified) / 10
+	}
+	age := max(time.Duration(0), now.Sub(date))
+	if seconds, err := strconv.ParseInt(headers.Get("Age"), 10, 64); err == nil && seconds > 0 {
+		if seconds > int64((time.Duration(1<<63-1))/time.Second) {
+			return 0
+		}
+		age = max(age, time.Duration(seconds)*time.Second)
+	}
+	if lifetime <= age {
+		return 0
+	}
+	return lifetime - age
 }
