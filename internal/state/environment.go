@@ -43,6 +43,8 @@ type Graphics struct {
 type GPUAdapter struct {
 	Vendor, Architecture, Device, Description string
 	Features                                  []string
+	Limits                                    map[string]uint64
+	WGSLLanguageFeatures                      []string
 	// InitializationDelayMillis is selected by the machine/environment profile.
 	// Adapter discovery is asynchronous in Chrome and depends on the graphics
 	// process, driver and host state; it is not a browser-version constant.

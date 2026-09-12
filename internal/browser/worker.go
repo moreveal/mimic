@@ -266,6 +266,9 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 			return nil, detacher.DetachArrayBuffer(args[0])
 		})
 	}
+	host["gpuCapabilities"] = runtime.Function(func(engine.Value, []engine.Value) (engine.Value, error) {
+		return runtime.Value(p.Environment().Graphics.WebGPUProjection()), nil
+	})
 	host["gpuRequestAdapter"] = runtime.Function(func(engine.Value, []engine.Value) (engine.Value, error) {
 		promise := runtime.NewPromise()
 		delay := time.Duration(p.Environment().Graphics.WebGPU.InitializationDelayMillis * float64(time.Millisecond))

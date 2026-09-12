@@ -81,6 +81,8 @@ func environment(mode state.BrowserMode) state.Environment {
 	environment.Time.NetworkScale = 1
 	environment.Graphics.WebGPU.Vendor = "nvidia"
 	environment.Graphics.WebGPU.Architecture = "blackwell"
+	// Versioned language capability set; iteration order is not a machine fingerprint.
+	environment.Graphics.WebGPU.WGSLLanguageFeatures = strings.Fields("packed_4x8_integer_dot_product subgroup_uniformity immediate_address_space linear_indexing subgroup_id readonly_and_readwrite_storage_textures unrestricted_pointer_parameters pointer_composite_access texture_and_sampler_let uniform_buffer_standard_layout")
 	// Adapter discovery timing is selected by this environment profile rather
 	// than treated as a Chrome-version semantic.
 	environment.Graphics.WebGPU.InitializationDelayMillis = 205

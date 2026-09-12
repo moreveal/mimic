@@ -1,0 +1,452 @@
+{
+  "captureMetadata": {
+    "href": "http://127.0.0.1:58582/plain",
+    "isSecureContext": true,
+    "crossOriginIsolated": false,
+    "innerWidth": 1272,
+    "innerHeight": 653,
+    "outerWidth": 1280,
+    "outerHeight": 800,
+    "devicePixelRatio": 1,
+    "visibility": "visible",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "platform": "Win32"
+  },
+  "version": {
+    "Browser": "Chrome/152.0.7977.82",
+    "Protocol-Version": "1.3",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "V8-Version": "15.2.124.21",
+    "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:20381/devtools/browser/085e0d7a-3c3b-4353-a7e8-a9dd128e7097"
+  },
+  "passport": {
+    "revision": "d745da4f6089816bdd04906792bb2a0691d7f9aa",
+    "dirtyState": " M chrome/152/profile.go\n M internal/browser/realm.go\n M internal/browser/worker.go\n M internal/state/environment.go\n M internal/webapi/surface.go\n M internal/webapi/surface.js\n M internal/webapi/webgpu_state.js\n?? internal/browser/testdata/rtc_session_oracle.js\n?? internal/browser/testdata/webgpu_capability_projection_oracle.js\n?? internal/state/webgpu.go\n?? internal/webapi/rtc_session.js\n",
+    "sourceSHA256": "4d23f6c17b8959e179178276d87b6eee9550a5b4fe66eeb114d0a4f82e1920a4",
+    "probeSHA256": "d6a42e672dc0092ef65bd832bd7f8a669198f28b3e3e1e82bd85bee50c8d5067",
+    "chromeSHA256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+    "mimicSHA256": "7fffec8a3602dd09ef36abe2e6781c2019ce37b5f0df7a49f1abef9ae9942a4a",
+    "args": [
+      "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe",
+      "--remote-debugging-port=20381",
+      "--user-data-dir=E:\\GitHub\\mimic\\.build\\residual-gpu\\set-after\\chrome-profile-b",
+      "--no-first-run",
+      "--no-default-browser-check",
+      "--window-size=1280,800",
+      "about:blank"
+    ],
+    "profile": "E:\\GitHub\\mimic\\.build\\residual-gpu\\set-after\\chrome-profile",
+    "browserMode": "headful",
+    "environmentProfile": "chrome-152-windows-x64-headful-controlled-v1",
+    "featureOverrides": [],
+    "records": [
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      },
+      {
+        "method": "GET",
+        "path": "/plain"
+      },
+      {
+        "method": "GET",
+        "path": "/favicon.ico"
+      }
+    ],
+    "exitCodes": {
+      "chrome": 1,
+      "mimic": 1
+    },
+    "chromeControl": [
+      {
+        "mode": "plain",
+        "path": "/features/14",
+        "chrome": "shader-f16",
+        "mimic": "clip-distances"
+      },
+      {
+        "mode": "plain",
+        "path": "/features/15",
+        "chrome": "clip-distances",
+        "mimic": "texture-formats-tier2"
+      },
+      {
+        "mode": "plain",
+        "path": "/features/16",
+        "chrome": "texture-formats-tier2",
+        "mimic": "shader-f16"
+      }
+    ],
+    "chromeMimic": [
+      {
+        "mode": "plain",
+        "path": "/adapterLimits/maxBufferSize",
+        "chrome": 2147483648,
+        "mimic": 268435456
+      },
+      {
+        "mode": "plain",
+        "path": "/adapterLimits/maxColorAttachmentBytesPerSample",
+        "chrome": 128,
+        "mimic": 32
+      },
+      {
+        "mode": "plain",
+        "path": "/adapterLimits/maxComputeInvocationsPerWorkgroup",
+        "chrome": 1024,
+        "mimic": 256
+      },
+      {
+        "mode": "plain",
+        "path": "/adapterLimits/maxComputeWorkgroupSizeX",
+        "chrome": 1024,
+        "mimic": 256
+      },
+      {
+        "mode": "plain",
+        "path": "/adapterLimits/maxComputeWorkgroupSizeY",
+        "chrome": 1024,
+        "mimic": 256
+      },
+      {
+        "mode": "plain",
+        "path": "/adapterLimits/maxComputeWorkgroupStorageSize",
+        "chrome": 32768,
+        "mimic": 16384
+      },
+      {
+        "mode": "plain",
+        "path": "/adapterLimits/maxDynamicStorageBuffersPerPipelineLayout",
+        "chrome": 8,
+        "mimic": 4
+      },
+      {
+        "mode": "plain",
+        "path": "/adapterLimits/maxDynamicUniformBuffersPerPipelineLayout",
+        "chrome": 10,
+        "mimic": 8
+      },
+      {
+        "mode": "plain",
+        "path": "/adapterLimits/maxInterStageShaderVariables",
+        "chrome": 28,
+        "mimic": 16
+      },
+      {
+        "mode": "plain",
+        "path": "/adapterLimits/maxSampledTexturesPerShaderStage",
+        "chrome": 48,
+        "mimic": 16
+      },
+      {
+        "mode": "plain",
+        "path": "/adapterLimits/maxStorageBufferBindingSize",
+        "chrome": 2147483644,
+        "mimic": 134217728
+      },
+      {
+        "mode": "plain",
+        "path": "/adapterLimits/maxStorageBuffersInFragmentStage",
+        "chrome": 16,
+        "mimic": 8
+      },
+      {
+        "mode": "plain",
+        "path": "/adapterLimits/maxStorageBuffersInVertexStage",
+        "chrome": 16,
+        "mimic": 8
+      },
+      {
+        "mode": "plain",
+        "path": "/adapterLimits/maxStorageBuffersPerShaderStage",
+        "chrome": 16,
+        "mimic": 8
+      },
+      {
+        "mode": "plain",
+        "path": "/adapterLimits/maxStorageTexturesInFragmentStage",
+        "chrome": 8,
+        "mimic": 4
+      },
+      {
+        "mode": "plain",
+        "path": "/adapterLimits/maxStorageTexturesInVertexStage",
+        "chrome": 8,
+        "mimic": 4
+      },
+      {
+        "mode": "plain",
+        "path": "/adapterLimits/maxStorageTexturesPerShaderStage",
+        "chrome": 8,
+        "mimic": 4
+      },
+      {
+        "mode": "plain",
+        "path": "/adapterLimits/maxTextureArrayLayers",
+        "chrome": 2048,
+        "mimic": 256
+      },
+      {
+        "mode": "plain",
+        "path": "/adapterLimits/maxTextureDimension1D",
+        "chrome": 16384,
+        "mimic": 8192
+      },
+      {
+        "mode": "plain",
+        "path": "/adapterLimits/maxVertexAttributes",
+        "chrome": 30,
+        "mimic": 16
+      },
+      {
+        "mode": "plain",
+        "path": "/features/0",
+        "chrome": "depth32float-stencil8",
+        "mimic": "bgra8unorm-storage"
+      },
+      {
+        "mode": "plain",
+        "path": "/features/1",
+        "chrome": "rg11b10ufloat-renderable",
+        "mimic": "clip-distances"
+      },
+      {
+        "mode": "plain",
+        "path": "/features/2",
+        "chrome": "texture-formats-tier1",
+        "mimic": "core-features-and-limits"
+      },
+      {
+        "mode": "plain",
+        "path": "/features/3",
+        "chrome": "bgra8unorm-storage",
+        "mimic": "depth-clip-control"
+      },
+      {
+        "mode": "plain",
+        "path": "/features/4",
+        "chrome": "texture-compression-bc",
+        "mimic": "depth32float-stencil8"
+      },
+      {
+        "mode": "plain",
+        "path": "/features/6",
+        "chrome": "core-features-and-limits",
+        "mimic": "float32-blendable"
+      },
+      {
+        "mode": "plain",
+        "path": "/features/9",
+        "chrome": "float32-blendable",
+        "mimic": "primitive-index"
+      },
+      {
+        "mode": "plain",
+        "path": "/features/10",
+        "chrome": "subgroup-size-control",
+        "mimic": "rg11b10ufloat-renderable"
+      },
+      {
+        "mode": "plain",
+        "path": "/features/11",
+        "chrome": "depth-clip-control",
+        "mimic": "shader-f16"
+      },
+      {
+        "mode": "plain",
+        "path": "/features/12",
+        "chrome": "texture-compression-bc-sliced-3d",
+        "mimic": "subgroup-size-control"
+      },
+      {
+        "mode": "plain",
+        "path": "/features/13",
+        "chrome": "timestamp-query",
+        "mimic": "subgroups"
+      },
+      {
+        "mode": "plain",
+        "path": "/features/14",
+        "chrome": "shader-f16",
+        "mimic": "texture-component-swizzle"
+      },
+      {
+        "mode": "plain",
+        "path": "/features/15",
+        "chrome": "clip-distances",
+        "mimic": "texture-compression-bc"
+      },
+      {
+        "mode": "plain",
+        "path": "/features/16",
+        "chrome": "texture-formats-tier2",
+        "mimic": "texture-compression-bc-sliced-3d"
+      },
+      {
+        "mode": "plain",
+        "path": "/features/17",
+        "chrome": "primitive-index",
+        "mimic": "texture-formats-tier1"
+      },
+      {
+        "mode": "plain",
+        "path": "/features/18",
+        "chrome": "texture-component-swizzle",
+        "mimic": "texture-formats-tier2"
+      },
+      {
+        "mode": "plain",
+        "path": "/features/19",
+        "chrome": "subgroups",
+        "mimic": "timestamp-query"
+      },
+      {
+        "mode": "plain",
+        "path": "/wgsl/7",
+        "chrome": "texture_and_sampler_let",
+        "mimic": "pointer_composite_access"
+      },
+      {
+        "mode": "plain",
+        "path": "/wgsl/8",
+        "chrome": "pointer_composite_access",
+        "mimic": "texture_and_sampler_let"
+      }
+    ]
+  },
+  "observation": {
+    "wgsl": [
+      "packed_4x8_integer_dot_product",
+      "subgroup_uniformity",
+      "immediate_address_space",
+      "linear_indexing",
+      "subgroup_id",
+      "readonly_and_readwrite_storage_textures",
+      "unrestricted_pointer_parameters",
+      "texture_and_sampler_let",
+      "pointer_composite_access",
+      "uniform_buffer_standard_layout"
+    ],
+    "wgslTag": "[object WGSLLanguageFeatures]",
+    "adapterLimits": {
+      "maxTextureDimension1D": 16384,
+      "maxTextureDimension2D": 16384,
+      "maxTextureDimension3D": 2048,
+      "maxTextureArrayLayers": 2048,
+      "maxBindGroups": 4,
+      "maxBindGroupsPlusVertexBuffers": 24,
+      "maxBindingsPerBindGroup": 1000,
+      "maxDynamicUniformBuffersPerPipelineLayout": 10,
+      "maxDynamicStorageBuffersPerPipelineLayout": 8,
+      "maxSampledTexturesPerShaderStage": 48,
+      "maxSamplersPerShaderStage": 16,
+      "maxStorageBuffersPerShaderStage": 16,
+      "maxStorageTexturesPerShaderStage": 8,
+      "maxUniformBuffersPerShaderStage": 12,
+      "maxUniformBufferBindingSize": 65536,
+      "maxStorageBufferBindingSize": 2147483644,
+      "minUniformBufferOffsetAlignment": 256,
+      "minStorageBufferOffsetAlignment": 256,
+      "maxVertexBuffers": 8,
+      "maxBufferSize": 2147483648,
+      "maxVertexAttributes": 30,
+      "maxVertexBufferArrayStride": 2048,
+      "maxInterStageShaderVariables": 28,
+      "maxColorAttachments": 8,
+      "maxColorAttachmentBytesPerSample": 128,
+      "maxComputeWorkgroupStorageSize": 32768,
+      "maxComputeInvocationsPerWorkgroup": 1024,
+      "maxComputeWorkgroupSizeX": 1024,
+      "maxComputeWorkgroupSizeY": 1024,
+      "maxComputeWorkgroupSizeZ": 64,
+      "maxComputeWorkgroupsPerDimension": 65535,
+      "maxImmediateSize": 64,
+      "maxStorageBuffersInFragmentStage": 16,
+      "maxStorageTexturesInFragmentStage": 8,
+      "maxStorageBuffersInVertexStage": 16,
+      "maxStorageTexturesInVertexStage": 8
+    },
+    "deviceLimits": {
+      "maxTextureDimension1D": 8192,
+      "maxTextureDimension2D": 8192,
+      "maxTextureDimension3D": 2048,
+      "maxTextureArrayLayers": 256,
+      "maxBindGroups": 4,
+      "maxBindGroupsPlusVertexBuffers": 24,
+      "maxBindingsPerBindGroup": 1000,
+      "maxDynamicUniformBuffersPerPipelineLayout": 8,
+      "maxDynamicStorageBuffersPerPipelineLayout": 4,
+      "maxSampledTexturesPerShaderStage": 16,
+      "maxSamplersPerShaderStage": 16,
+      "maxStorageBuffersPerShaderStage": 8,
+      "maxStorageTexturesPerShaderStage": 4,
+      "maxUniformBuffersPerShaderStage": 12,
+      "maxUniformBufferBindingSize": 65536,
+      "maxStorageBufferBindingSize": 134217728,
+      "minUniformBufferOffsetAlignment": 256,
+      "minStorageBufferOffsetAlignment": 256,
+      "maxVertexBuffers": 8,
+      "maxBufferSize": 268435456,
+      "maxVertexAttributes": 16,
+      "maxVertexBufferArrayStride": 2048,
+      "maxInterStageShaderVariables": 16,
+      "maxColorAttachments": 8,
+      "maxColorAttachmentBytesPerSample": 32,
+      "maxComputeWorkgroupStorageSize": 16384,
+      "maxComputeInvocationsPerWorkgroup": 256,
+      "maxComputeWorkgroupSizeX": 256,
+      "maxComputeWorkgroupSizeY": 256,
+      "maxComputeWorkgroupSizeZ": 64,
+      "maxComputeWorkgroupsPerDimension": 65535,
+      "maxImmediateSize": 64,
+      "maxStorageBuffersInFragmentStage": 8,
+      "maxStorageTexturesInFragmentStage": 4,
+      "maxStorageBuffersInVertexStage": 8,
+      "maxStorageTexturesInVertexStage": 4
+    },
+    "features": [
+      "depth32float-stencil8",
+      "rg11b10ufloat-renderable",
+      "texture-formats-tier1",
+      "bgra8unorm-storage",
+      "texture-compression-bc",
+      "dual-source-blending",
+      "core-features-and-limits",
+      "float32-filterable",
+      "indirect-first-instance",
+      "float32-blendable",
+      "subgroup-size-control",
+      "depth-clip-control",
+      "texture-compression-bc-sliced-3d",
+      "timestamp-query",
+      "shader-f16",
+      "clip-distances",
+      "texture-formats-tier2",
+      "primitive-index",
+      "texture-component-swizzle",
+      "subgroups"
+    ],
+    "languageSet": {
+      "identity": true,
+      "size": 10,
+      "count": 10,
+      "valid": true,
+      "entries": true,
+      "has": true,
+      "missing": false
+    }
+  }
+}
