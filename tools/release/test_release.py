@@ -4,7 +4,7 @@ import tempfile
 import unittest
 from unittest.mock import patch
 
-from prepare import digest
+from prepare import digest, validate_document_links
 from publish import CHECKS, require_ci, verified_archive
 
 
@@ -61,6 +61,18 @@ class PublicationGateTests(unittest.TestCase):
                 {'status': 'completed', 'conclusion': 'success', 'databaseId': 42}])) as command:
             self.assertEqual(require_ci('exact-source'), 42)
             self.assertIn('exact-source', command.call_args.args)
+
+    def test_bundled_document_link_cannot_be_missing_or_escape(self):
+        doc = self.root / 'README.md'
+        doc.write_text('[Results](benchmarks/results.json)')
+        with self.assertRaisesRegex(RuntimeError, 'Missing bundled document link'):
+            validate_document_links(self.root)
+        (self.root / 'benchmarks').mkdir()
+        (self.root / 'benchmarks/results.json').write_text('{}')
+        validate_document_links(self.root)
+        doc.write_text('[Outside](../)')
+        with self.assertRaisesRegex(RuntimeError, 'Missing bundled document link'):
+            validate_document_links(self.root)
 
 
 if __name__ == '__main__':

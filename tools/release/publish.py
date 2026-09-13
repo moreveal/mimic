@@ -95,6 +95,10 @@ def main():
             '--target', public_revision, '--title', f'Mimic {args.version} — Public Beta',
             '--notes-file', str(notes))
     run('gh', 'release', 'upload', args.version, '--repo', REPO, '--clobber', *map(str, assets))
+    uploaded = json.loads(run('gh', 'release', 'view', args.version, '--repo', REPO,
+                              '--json', 'assets', capture=True))['assets']
+    if {asset['name'] for asset in uploaded} != {path.name for path in assets}:
+        raise RuntimeError('Draft contains unexpected assets; refusing to publish')
     with tempfile.TemporaryDirectory(prefix='mimic-release-download-') as temp:
         run('gh', 'release', 'download', args.version, '--repo', REPO, '--dir', temp)
         for path in assets:

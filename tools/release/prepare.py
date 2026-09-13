@@ -13,6 +13,7 @@ import subprocess
 import tarfile
 import tempfile
 import zipfile
+from urllib.parse import unquote, urlsplit
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -42,6 +43,17 @@ def json_stream(text):
             continue
         value, pos = decoder.raw_decode(text, pos)
         yield value
+
+
+def validate_document_links(stage):
+    for document in stage.rglob('*.md'):
+        for link in re.findall(r'\]\(([^)]+)\)', document.read_text(encoding='utf-8-sig')):
+            target = urlsplit(link)
+            if target.scheme or target.netloc or not target.path:
+                continue
+            path = (document.parent / unquote(target.path)).resolve()
+            if not path.is_relative_to(stage.resolve()) or not path.exists():
+                raise RuntimeError(f'Missing bundled document link: {document.name}: {link}')
 
 
 def notices(target):
@@ -119,6 +131,8 @@ def main():
     for name in ('LICENSE.md', 'NOTICE', 'QUICKSTART.md', 'BETA.md',
                  'FAQ.md', 'BENCHMARKS.md', 'RELEASE_NOTES.md'):
         shutil.copyfile(overview / name, stage / name)
+    (stage / 'benchmarks').mkdir()
+    shutil.copyfile(overview / 'benchmarks/results.json', stage / 'benchmarks/results.json')
     for name in run('git', 'ls-files', '-z', '--', 'examples', cwd=overview, capture=True).split('\0'):
         if not name:
             continue
@@ -141,6 +155,7 @@ def main():
         '# Mimic Public Beta\n\n[Start here](QUICKSTART.md) · [Examples](examples/README.md) · '
         '[Release notes](RELEASE_NOTES.md) · [License](LICENSE.md)\n\n'
         'Product overview: https://github.com/moreveal/mimic-overview\n', encoding='utf-8')
+    validate_document_links(stage)
     stamp = int(run('git', 'show', '-s', '--format=%ct', source_revision, capture=True).strip())
     files = sorted(p for p in stage.rglob('*') if p.is_file())
     if host == 'windows':
