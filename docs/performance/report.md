@@ -2252,3 +2252,85 @@ Receipts: `.build/frame-transaction-child-residual/` and
 was removed. Removing the remaining mass-call overhead needs further work
 on realm execution ownership; sharing an isolate was not introduced into this
 scoped, validated bridge change.
+
+### 2026-09-13: fresh public-beta benchmark checkpoint
+
+The unchanged full matrix ran against a fresh build of clean revision
+`2d3b21469d73936eae280098de5534aa43ebc353` and frozen Chrome 152.0.7977.82.
+The wrapper verified both executable hashes before every launch and preserved
+the original harness fingerprint. No production code or frozen workload changed
+for this checkpoint. The original baseline and earlier milestones remain intact.
+
+| Measurement | Mimic | Chrome |
+| --- | ---: | ---: |
+| Common-probe CDP readiness, median ms (10 fresh processes) | 219.09 | 270.36 |
+| Process-tree RSS at readiness, median MiB | 28.78 | 378.52 |
+| Private bytes at readiness, median MiB | 80.80 | 177.59 |
+| Warm static completion, median ms (20 iterations) | 33.68 | 21.32 |
+| Static N=100 throughput, successful sessions/s | 76.64 | 27.78 |
+| Static N=100 active RSS, median MiB | 3988.31 | 7039.66 |
+| React N=100 throughput, successful sessions/s | 44.47 | 20.07 |
+| React N=100 active RSS, median MiB | 5175.78 | 8503.54 |
+
+All six correctness gates passed in both systems. All 240 warm iterations passed,
+but Chrome was faster on warm completion in every fixture. Of 120 cold attempts,
+119 passed: one Chrome WebAssembly navigation returned `net::ERR_ABORTED`. Its
+cold comparison is withheld from the public summary; the failed observation is
+retained. Mimic CPU at N=100 stopped after one of 100 pages failed initialization
+with `gov8: JSONParse failed (status -5)` in the first measured wave. N=50 is its
+highest completed CPU level, not N=100. Static and React completed every level
+through N=100 in both systems. The cause of the initialization error was not
+investigated or fixed in this documentation/measurement task.
+
+The 92% readiness RSS reduction and 43% active RSS reduction at static N=100
+describe different checkpoints. Readiness includes the initial page and is not
+per-page memory. Higher concurrency throughput does not imply lower CPU cost:
+static N=100 used 135.97 vs. 120.53 ms CPU per successful session; React N=100
+used 335.62 vs. 203.69 ms. At 250 ms after teardown, static N=100 RSS remained
+1519.87 vs. 1248.70 MiB and React N=100 remained 2009.55 vs. 1396.86 MiB.
+Allocator retention and teardown recovery remain important limitations.
+
+The historical comparator accepted matching harness, fixtures, Chrome binary,
+machine, power configuration and iteration policy against milestone 07. Its
+output is retained; these runs were days apart on an interactive workstation,
+not a paired isolated optimization experiment. The new numbers replace the
+historical README cards, without claiming that every difference is a code effect.
+
+[Public-facing summary](../../benchmark/runs/08-public-beta-20260913/public-summary.md),
+[full report](../../benchmark/runs/08-public-beta-20260913/report.md),
+[raw observations](../../benchmark/runs/08-public-beta-20260913/raw.json), and
+[historical comparison](../../benchmark/runs/08-public-beta-20260913/comparison-to-07.json).
+Build/launch receipts and the artifact manifest are in the same run directory.
+`public-results.json` is byte-identical to the numeric export in the new public
+product repository; detailed traces and internal research are not exported.
+
+The public quick-start profile was exercised with Puppeteer 25.10.0 on this
+fresh binary: page content, language, timezone, viewport and dark theme matched.
+Both documented profile JSON examples validated; context creation, dynamic
+viewport update, readback and disposal passed over browser CDP. Existing focused
+native HTTP/HTTPS/SOCKS5 proxy tests, remote DNS/authentication, and no-direct-
+fallback checks passed. No full Go suite was rerun for these documentation-only
+changes. The English report generator now describes the actual checkpoint and
+does not incorrectly label later builds as an unoptimized original baseline.
+
+#### Browser-target compatibility follow-up
+
+The public Puppeteer example initially failed at `browser.target()` because
+browser-target discovery/attachment was incomplete. The runtime was fixed rather
+than requiring a different client pattern. Frozen headful and headless Chrome
+observations, targeted identity/lifecycle regressions, and the complete CDP suite
+passed (33.205 s). The original `browser.target().createCDPSession()` quick start
+then passed on the newly built fast-gate executable.
+
+The follow-up fast gate completed all six correctness fixtures, N=10/N=25 waves,
+and both memory scenarios. Warm completion medians were DOM 198.60 ms, static
+34.63 ms, and React 84.41 ms. These smaller-run values do not replace the full
+checkpoint or establish a performance change. The measured full checkpoint
+predates this fix and retains its own executable identity and two recorded
+failures. The N=100 CPU initialization failure remains unresolved.
+
+Follow-up binary SHA-256:
+`166d2b58ea2e39835fce5b084a818e618da7239eab7f3d22908f974926981b0d`.
+Receipts: `.build/public-beta-browser-target-fast-gate/{build,raw}.json` and
+`.build/public-beta-quickstart-check/result.json`. The frozen harness hash was
+verified; no timing/fixture changes or new full-matrix claims were introduced.

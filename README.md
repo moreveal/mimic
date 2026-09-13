@@ -25,20 +25,16 @@
 
 ## Let the website do the work
 
-Raw HTTP is lean, but complex websites push you into reconstructing private APIs,
-tokens, authentication flows, and client-side state. Full browsers execute that
-logic for you—and bring a rendering engine along with it.
+**The website's JavaScript. Browser state. A lighter runtime.**
 
-**Mimic fills the space between them.** It runs the website’s own JavaScript and
-browser logic without embedding Chromium or producing pixels. The goal is
-browser-level automation with runtime costs closer to direct HTTP.
+Mimic runs website logic without launching Chromium or rendering pixels.
+Extract data, automate flows, and run concurrent pages through familiar CDP tools.
 
-That is the product direction. Today, Mimic implements a subset of Chrome behavior
-and CDP; compatibility and performance depend on the workload.
+**Our ambition: direct HTTP lightness with browser compatibility.**
+One environment profile. Native SOCKS5, HTTP, and HTTPS proxies. Less setup
+between you and the workflow you want to automate.
 
-| Start with HTTP | Reach for Mimic | Use a full browser |
-| :--- | :--- | :--- |
-| The response already contains what you need. | You need JavaScript execution, browser state, or a hydrated DOM within the supported surface. | You need screenshots, full layout, media playback, or complete browser behavior. |
+**Actively developed · Private beta.** DM **`moreveal`** on Discord to get involved.
 
 ## Built for execution
 
@@ -52,27 +48,26 @@ callbacks and microtasks remain ordered within each Page. See
 
 ## Measured, not assumed
 
-Selected results from the **September 9, 2026 historical checkpoint**, comparing
-Mimic V8 with Chrome 152 in `headless=new` mode on Windows 11 x64
-(Intel i7-14700KF, 31.83 GiB RAM). These describe the recorded build, not current HEAD.
+Fresh-build results from **September 13, 2026**, against **Chrome 152.0.7977.82** in headless mode, on Windows 11 x64 (Intel i7-14700KF, 31.83 GiB RAM).
 
-<table>
-  <tr>
-    <td width="33%"><a href="benchmark/runs/07-catalog-milestone/report.md"><img src="docs/assets/metric-startup.svg" alt="CDP readiness median: Mimic 214.90 ms; Chrome 278.03 ms. 10 fresh processes." width="380"></a></td>
-    <td width="33%"><a href="benchmark/runs/07-catalog-milestone/report.md"><img src="docs/assets/metric-memory.svg" alt="Process-tree RSS at CDP ready: Mimic 25.69 MiB; Chrome 392.20 MiB." width="380"></a></td>
-    <td width="33%"><a href="benchmark/runs/07-catalog-milestone/report.md"><img src="docs/assets/metric-latency.svg" alt="Warm static completion median: Mimic 44.18 ms; Chrome 20.65 ms. 20 runs; Mimic is slower." width="380"></a></td>
-  </tr>
-</table>
+<p align="center">
+  <a href="benchmark/runs/08-public-beta-20260913/public-summary.md"><img src="docs/assets/benchmark-startup.svg" alt="Mimic and Chrome: CDP readiness and startup memory" width="1200"></a>
+</p>
 
-The checkpoint shows lower startup memory and earlier CDP readiness, alongside
-slower static workload completion. Memory at readiness is **not per-Page memory**;
-completion includes navigation and execution, and excludes Page creation and
-teardown. All six local correctness workloads passed for both systems. These
-fixtures do not establish general website compatibility or a universal speedup.
+<p align="center">
+  <a href="benchmark/runs/08-public-beta-20260913/public-summary.md"><img src="docs/assets/benchmark-scaling.svg" alt="Static concurrency: active memory and throughput from 1 to 100 pages" width="1200"></a>
+</p>
 
-[Full checkpoint, methodology & raw data](benchmark/runs/07-catalog-milestone/report.md)
-· [Subsequent measurements & remaining bottlenecks](docs/performance/report.md)
-· [Reproduce the benchmark](benchmark/README.md)
+**92% lower ready RSS. 43% less active RAM and 2.76× throughput at 100 static pages.**
+Measured on these fixtures and this machine; startup RSS is not per-page memory.
+
+Mimic is actively evolving toward direct HTTP lightness with browser compatibility.
+These are selected strengths from an early checkpoint; see Known limitations and
+the complete benchmark report for the current tradeoffs.
+
+[Full results, concurrency, CPU, memory, and methodology →](benchmark/runs/08-public-beta-20260913/public-summary.md)
+
+[Full measured report and raw data](benchmark/runs/08-public-beta-20260913/report.md) · [Performance history](docs/performance/report.md) · [Reproduce](benchmark/README.md)
 
 ## Quick start
 
@@ -144,6 +139,12 @@ versions. The current OS and reference version are checkpoints in that work.
 The `-chrome 152` flag selects the current compatibility target. It does not
 install or launch Chrome. See the [target manifest](chrome/152/target.json) and
 [oracle policy](docs/oracle-policy.md) for the exact behavioral reference.
+
+## Known limitations
+
+Warm execution currently trails Chrome in the measured fixtures. CPU concurrency
+at 100 pages also hit an initialization failure. Both are optimization and reliability
+targets as Mimic develops; the full report retains all results and recorded failures.
 
 ## Current boundaries
 

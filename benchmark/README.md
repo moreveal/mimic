@@ -1,5 +1,9 @@
 # Reproducible benchmark: Mimic V8 and Chrome 152
 
+Latest product checkpoint: [September 13, 2026 summary](runs/08-public-beta-20260913/public-summary.md)
+and [full measured report](runs/08-public-beta-20260913/report.md).
+The original `results/` baseline and earlier runs remain historical records.
+
 From the repository root on Windows x64:
 
 ```powershell

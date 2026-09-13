@@ -27,6 +27,25 @@ python tools/performance/full_gate.py --output benchmark/runs/UNIQUE-MILESTONE -
 
 It runs the unchanged full matrix. Its Runtime subclass verifies the just-built Mimic executable before every launch and also verifies the pinned Chrome executable against its initial hash; `launches.jsonl` records each check. Both wrappers reject a harness fingerprint that differs from the original baseline. The original benchmark files remain untouched.
 
+After measurement, the full wrapper automatically generates `presentation/benchmark-startup.svg`
+and `presentation/benchmark-scaling.svg`, plus `presentation/provenance.json` with
+source, generator and chart hashes. The charts use the completed raw run and its
+hash-verified summary, with no hand-entered results. An incomplete/smoke run or
+failed static scaling series is rejected before rendering. Axes and footnotes
+are checked for overlap at full and README-scale sizes.
+
+To regenerate charts from a saved full run without rerunning browsers:
+
+```
+python tools/performance/readme_charts.py benchmark/runs/RUN/raw.json .build/RUN-charts --preview .build/RUN-chart-preview
+```
+
+The published `public-results.json` format is also accepted. Rendering creates
+assets; updating a repository's README, numeric summaries and Git publication
+remains a release step so that dates, claims and images stay on one checkpoint.
+The original frozen `benchmark/run.py` and `run.ps1` remain unchanged; use
+`full_gate.py` for the automatic presentation output.
+
 ## CDP operation latency diagnostics
 
 `python tools/performance/frame_bridge_probe.py --binary .build/mimic.exe --output .build/frame-bridge-UNIQUE`
