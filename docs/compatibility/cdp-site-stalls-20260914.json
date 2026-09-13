@@ -1,0 +1,1945 @@
+{
+  "schema_version": 1,
+  "base_revision": "f07bd2d643eebbadc28d582ef93f01c832a50106",
+  "notes": [
+    "Observed live responses; no claim of complete application functionality or controlled performance.",
+    "The early baseline-preview and Chrome control used unsupported data/about recovery in Mimic; they are not recovery evidence.",
+    "Source revision is recorded from build provenance in the investigation, never inferred from the capture-time workspace HEAD.",
+    "Root and independent-Page health samples cover observation, not the subsequent departure timeout window.",
+    "Raw cookies, headers, HTML, trace payloads and transient challenge query strings are excluded.",
+    "All diagnostic process trees were terminated by the harness; process liveness does not prove graceful teardown."
+  ],
+  "runs": [
+    {
+      "run": "baseline-preview",
+      "stage": "baseline",
+      "binary_source_revision": "f07bd2d643eebbadc28d582ef93f01c832a50106",
+      "binary_sha256": "ae621eb0472cd8a3b788a4bfd81cb93e197b94ecf7e28cb9a5af046664f48b4c",
+      "utc": "2026-09-13T21:23:14.852266+00:00",
+      "observation_budget_seconds": "20.0",
+      "departure_timeout_seconds": 8,
+      "process": {
+        "recorded": false,
+        "reason": "The early harness did not retain process exit/liveness metadata."
+      },
+      "pages": [
+        {
+          "site": "homedepot",
+          "url": "https://www.homedepot.com/",
+          "started_utc": "2026-09-13T21:23:15.483792+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.homedepot.com/",
+              "status": 403
+            }
+          ],
+          "observed_url": "https://www.homedepot.com/",
+          "title": "Access Denied",
+          "ready_state": "complete",
+          "dom_nodes": 7,
+          "text_characters_sampled": 201,
+          "probe_count": 10,
+          "probe_timeouts_or_errors": 0,
+          "browser_health": {
+            "samples": 10,
+            "timeouts_or_errors": 0,
+            "max_ms": 2.0
+          },
+          "independent_page_health": {
+            "samples": 10,
+            "timeouts_or_errors": 0,
+            "max_ms": 81.81
+          },
+          "preview_updates": 2,
+          "preview_errors": 0,
+          "javascript_exceptions": [],
+          "socket_before_departure": null,
+          "navigation": {
+            "ms": 704.82,
+            "reply_received": true
+          },
+          "ordinary_departure": null,
+          "stop_loading_used": true,
+          "stop_loading": {
+            "ms": 0.53,
+            "reply_received": true
+          },
+          "recovery_navigation": {
+            "ms": 0.62,
+            "reply_received": true,
+            "error_text": "unsupported navigation scheme \"data\""
+          },
+          "recovered": null,
+          "recovery_evaluation": {
+            "ms": 1.95,
+            "reply_received": true
+          },
+          "raw_result": ".build/baseline-preview/homedepot/result.json"
+        },
+        {
+          "site": "royalalberthall",
+          "url": "https://www.royalalberthall.com/",
+          "started_utc": "2026-09-13T21:24:03.920423+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.royalalberthall.com/",
+              "status": 200
+            }
+          ],
+          "observed_url": "https://www.royalalberthall.com/",
+          "title": "Pardon Our Interruption",
+          "ready_state": "complete",
+          "dom_nodes": 33,
+          "text_characters_sampled": 1933,
+          "probe_count": 10,
+          "probe_timeouts_or_errors": 0,
+          "browser_health": {
+            "samples": 10,
+            "timeouts_or_errors": 0,
+            "max_ms": 2.81
+          },
+          "independent_page_health": {
+            "samples": 10,
+            "timeouts_or_errors": 0,
+            "max_ms": 3.59
+          },
+          "preview_updates": 20,
+          "preview_errors": 0,
+          "javascript_exceptions": [],
+          "socket_before_departure": null,
+          "navigation": {
+            "ms": 674.26,
+            "reply_received": true
+          },
+          "ordinary_departure": null,
+          "stop_loading_used": true,
+          "stop_loading": {
+            "ms": 0.66,
+            "reply_received": true
+          },
+          "recovery_navigation": {
+            "ms": 0.78,
+            "reply_received": true,
+            "error_text": "unsupported navigation scheme \"data\""
+          },
+          "recovered": null,
+          "recovery_evaluation": {
+            "ms": 1.0,
+            "reply_received": true
+          },
+          "raw_result": ".build/baseline-preview/royalalberthall/result.json"
+        }
+      ]
+    },
+    {
+      "run": "baseline-recovery",
+      "stage": "baseline",
+      "binary_source_revision": "f07bd2d643eebbadc28d582ef93f01c832a50106",
+      "binary_sha256": "ae621eb0472cd8a3b788a4bfd81cb93e197b94ecf7e28cb9a5af046664f48b4c",
+      "utc": "2026-09-13T21:43:52.413358+00:00",
+      "observation_budget_seconds": "18.0",
+      "departure_timeout_seconds": 8,
+      "process": {
+        "exitBeforeCleanup": null,
+        "aliveBeforeCleanup": true,
+        "cleanup": "terminate owned diagnostic process tree"
+      },
+      "pages": [
+        {
+          "site": "flyscoot",
+          "url": "https://www.flyscoot.com/",
+          "started_utc": "2026-09-13T21:44:29.864401+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.flyscoot.com/",
+              "status": 302
+            },
+            {
+              "url": "https://www.flyscoot.com/en",
+              "status": 200
+            }
+          ],
+          "observed_url": "https://www.flyscoot.com/en",
+          "title": "Home",
+          "ready_state": "loading",
+          "dom_nodes": 28,
+          "text_characters_sampled": 0,
+          "probe_count": 3,
+          "probe_timeouts_or_errors": 1,
+          "browser_health": {
+            "samples": 3,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.49
+          },
+          "independent_page_health": {
+            "samples": 3,
+            "timeouts_or_errors": 0,
+            "max_ms": 6.37
+          },
+          "preview_updates": 23,
+          "preview_errors": 0,
+          "javascript_exceptions": [
+            "https://www.flyscoot.com/dist/angular/runtime.87df3b56261d90b1.js: TypeError: Illegal constructor (mimic:webapi-surface:4762:73)",
+            "https://www.flyscoot.com/ruxitagentjs_ICA15789NPRTUVXfghqrux_10343260715123811.js: TypeError: Illegal constructor (https://www.flyscoot.com/ruxitagentjs_ICA15789NPRTUVXfghqrux_10343260715123811.js:341:435)"
+          ],
+          "socket_before_departure": {
+            "closed": false,
+            "closeCode": null,
+            "exception": "None"
+          },
+          "navigation": {
+            "ms": 1006.22,
+            "reply_received": true
+          },
+          "ordinary_departure": {
+            "ms": 8001.33,
+            "error": "TimeoutError()"
+          },
+          "stop_loading_used": true,
+          "stop_loading": {
+            "ms": 3.75,
+            "reply_received": true
+          },
+          "recovery_navigation": {
+            "ms": 8000.6,
+            "error": "TimeoutError()"
+          },
+          "recovered": false,
+          "recovery_evaluation": {
+            "ms": 4000.53,
+            "error": "TimeoutError()"
+          },
+          "raw_result": ".build/baseline-recovery/flyscoot/result.json"
+        },
+        {
+          "site": "lowes",
+          "url": "https://www.lowes.com/",
+          "started_utc": "2026-09-13T21:43:53.050015+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.lowes.com/",
+              "status": 200
+            }
+          ],
+          "observed_url": null,
+          "title": null,
+          "ready_state": null,
+          "dom_nodes": null,
+          "text_characters_sampled": 0,
+          "probe_count": 2,
+          "probe_timeouts_or_errors": 1,
+          "browser_health": {
+            "samples": 2,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.55
+          },
+          "independent_page_health": {
+            "samples": 2,
+            "timeouts_or_errors": 0,
+            "max_ms": 101.5
+          },
+          "preview_updates": 2,
+          "preview_errors": 0,
+          "javascript_exceptions": [],
+          "socket_before_departure": {
+            "closed": false,
+            "closeCode": null,
+            "exception": "None"
+          },
+          "navigation": {
+            "ms": 2358.37,
+            "reply_received": true
+          },
+          "ordinary_departure": {
+            "ms": 8001.14,
+            "error": "TimeoutError()"
+          },
+          "stop_loading_used": true,
+          "stop_loading": {
+            "ms": 0.34,
+            "reply_received": true
+          },
+          "recovery_navigation": {
+            "ms": 177.81,
+            "reply_received": true
+          },
+          "recovered": true,
+          "recovery_evaluation": {
+            "ms": 177.46,
+            "reply_received": true
+          },
+          "raw_result": ".build/baseline-recovery/lowes/result.json"
+        },
+        {
+          "site": "macys",
+          "url": "https://www.macys.com/",
+          "started_utc": "2026-09-13T21:44:09.522380+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.macys.com/",
+              "status": 200
+            }
+          ],
+          "observed_url": null,
+          "title": null,
+          "ready_state": null,
+          "dom_nodes": null,
+          "text_characters_sampled": 0,
+          "probe_count": 2,
+          "probe_timeouts_or_errors": 2,
+          "browser_health": {
+            "samples": 2,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.71
+          },
+          "independent_page_health": {
+            "samples": 2,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.91
+          },
+          "preview_updates": 2,
+          "preview_errors": 0,
+          "javascript_exceptions": [],
+          "socket_before_departure": {
+            "closed": false,
+            "closeCode": null,
+            "exception": "None"
+          },
+          "navigation": {
+            "ms": 1163.6,
+            "reply_received": true
+          },
+          "ordinary_departure": {
+            "ms": 8001.55,
+            "error": "TimeoutError()"
+          },
+          "stop_loading_used": true,
+          "stop_loading": {
+            "ms": 0.32,
+            "reply_received": true
+          },
+          "recovery_navigation": {
+            "ms": 82.84,
+            "reply_received": true
+          },
+          "recovered": true,
+          "recovery_evaluation": {
+            "ms": 249.05,
+            "reply_received": true
+          },
+          "raw_result": ".build/baseline-recovery/macys/result.json"
+        }
+      ]
+    },
+    {
+      "run": "chrome-reference",
+      "stage": "non-authoritative live control",
+      "binary_source_revision": "Chrome 152.0.7977.82 headless",
+      "binary_sha256": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9",
+      "utc": "2026-09-13T21:23:37.328943+00:00",
+      "observation_budget_seconds": "16.0",
+      "departure_timeout_seconds": 8,
+      "process": {
+        "recorded": false,
+        "reason": "The early harness did not retain process exit/liveness metadata."
+      },
+      "pages": [
+        {
+          "site": "flyscoot",
+          "url": "https://www.flyscoot.com/",
+          "started_utc": "2026-09-13T21:24:42.360711+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.flyscoot.com/",
+              "status": 403
+            }
+          ],
+          "observed_url": "https://www.flyscoot.com/",
+          "title": "Access Denied",
+          "ready_state": "complete",
+          "dom_nodes": 7,
+          "text_characters_sampled": 196,
+          "probe_count": 8,
+          "probe_timeouts_or_errors": 0,
+          "browser_health": {
+            "samples": 8,
+            "timeouts_or_errors": 0,
+            "max_ms": 1.93
+          },
+          "independent_page_health": {
+            "samples": 8,
+            "timeouts_or_errors": 0,
+            "max_ms": 2.53
+          },
+          "preview_updates": 0,
+          "preview_errors": 0,
+          "javascript_exceptions": [],
+          "socket_before_departure": null,
+          "navigation": {
+            "ms": 481.91,
+            "reply_received": true
+          },
+          "ordinary_departure": null,
+          "stop_loading_used": true,
+          "stop_loading": {
+            "ms": 1.96,
+            "reply_received": true
+          },
+          "recovery_navigation": {
+            "ms": 10.39,
+            "reply_received": true
+          },
+          "recovered": null,
+          "recovery_evaluation": {
+            "ms": 40.83,
+            "reply_received": true
+          },
+          "raw_result": ".build/chrome-reference/flyscoot/result.json"
+        },
+        {
+          "site": "homedepot",
+          "url": "https://www.homedepot.com/",
+          "started_utc": "2026-09-13T21:23:37.924166+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.homedepot.com/",
+              "status": 403
+            }
+          ],
+          "observed_url": "https://www.homedepot.com/",
+          "title": "Access Denied",
+          "ready_state": "complete",
+          "dom_nodes": 7,
+          "text_characters_sampled": 197,
+          "probe_count": 8,
+          "probe_timeouts_or_errors": 0,
+          "browser_health": {
+            "samples": 8,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.86
+          },
+          "independent_page_health": {
+            "samples": 8,
+            "timeouts_or_errors": 0,
+            "max_ms": 1.06
+          },
+          "preview_updates": 0,
+          "preview_errors": 0,
+          "javascript_exceptions": [],
+          "socket_before_departure": null,
+          "navigation": {
+            "ms": 587.48,
+            "reply_received": true
+          },
+          "ordinary_departure": null,
+          "stop_loading_used": true,
+          "stop_loading": {
+            "ms": 0.27,
+            "reply_received": true
+          },
+          "recovery_navigation": {
+            "ms": 19.11,
+            "reply_received": true
+          },
+          "recovered": null,
+          "recovery_evaluation": {
+            "ms": 44.29,
+            "reply_received": true
+          },
+          "raw_result": ".build/chrome-reference/homedepot/result.json"
+        },
+        {
+          "site": "lowes",
+          "url": "https://www.lowes.com/",
+          "started_utc": "2026-09-13T21:23:54.017845+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.lowes.com/",
+              "status": 200
+            }
+          ],
+          "observed_url": "https://www.lowes.com/",
+          "title": "Access Denied",
+          "ready_state": "complete",
+          "dom_nodes": 13,
+          "text_characters_sampled": 193,
+          "probe_count": 8,
+          "probe_timeouts_or_errors": 0,
+          "browser_health": {
+            "samples": 8,
+            "timeouts_or_errors": 0,
+            "max_ms": 3.02
+          },
+          "independent_page_health": {
+            "samples": 8,
+            "timeouts_or_errors": 0,
+            "max_ms": 3.07
+          },
+          "preview_updates": 0,
+          "preview_errors": 0,
+          "javascript_exceptions": [],
+          "socket_before_departure": null,
+          "navigation": {
+            "ms": 722.96,
+            "reply_received": true
+          },
+          "ordinary_departure": null,
+          "stop_loading_used": true,
+          "stop_loading": {
+            "ms": 1.54,
+            "reply_received": true
+          },
+          "recovery_navigation": {
+            "ms": 11.56,
+            "reply_received": true
+          },
+          "recovered": null,
+          "recovery_evaluation": {
+            "ms": 37.86,
+            "reply_received": true
+          },
+          "raw_result": ".build/chrome-reference/lowes/result.json"
+        },
+        {
+          "site": "macys",
+          "url": "https://www.macys.com/",
+          "started_utc": "2026-09-13T21:24:10.104444+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.macys.com/",
+              "status": 403
+            }
+          ],
+          "observed_url": "https://www.macys.com/",
+          "title": "Access Denied - Macy's",
+          "ready_state": "complete",
+          "dom_nodes": 30,
+          "text_characters_sampled": 229,
+          "probe_count": 8,
+          "probe_timeouts_or_errors": 0,
+          "browser_health": {
+            "samples": 8,
+            "timeouts_or_errors": 0,
+            "max_ms": 3.4
+          },
+          "independent_page_health": {
+            "samples": 8,
+            "timeouts_or_errors": 0,
+            "max_ms": 3.29
+          },
+          "preview_updates": 0,
+          "preview_errors": 0,
+          "javascript_exceptions": [],
+          "socket_before_departure": null,
+          "navigation": {
+            "ms": 410.1,
+            "reply_received": true
+          },
+          "ordinary_departure": null,
+          "stop_loading_used": true,
+          "stop_loading": {
+            "ms": 0.38,
+            "reply_received": true
+          },
+          "recovery_navigation": {
+            "ms": 6.68,
+            "reply_received": true
+          },
+          "recovered": null,
+          "recovery_evaluation": {
+            "ms": 36.36,
+            "reply_received": true
+          },
+          "raw_result": ".build/chrome-reference/macys/result.json"
+        },
+        {
+          "site": "royalalberthall",
+          "url": "https://www.royalalberthall.com/",
+          "started_utc": "2026-09-13T21:24:26.210370+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.royalalberthall.com/",
+              "status": 403
+            }
+          ],
+          "observed_url": "https://www.royalalberthall.com/",
+          "title": "",
+          "ready_state": "complete",
+          "dom_nodes": 10,
+          "text_characters_sampled": 0,
+          "probe_count": 8,
+          "probe_timeouts_or_errors": 0,
+          "browser_health": {
+            "samples": 8,
+            "timeouts_or_errors": 0,
+            "max_ms": 1.84
+          },
+          "independent_page_health": {
+            "samples": 8,
+            "timeouts_or_errors": 0,
+            "max_ms": 4.02
+          },
+          "preview_updates": 0,
+          "preview_errors": 0,
+          "javascript_exceptions": [],
+          "socket_before_departure": null,
+          "navigation": {
+            "ms": 550.96,
+            "reply_received": true
+          },
+          "ordinary_departure": null,
+          "stop_loading_used": true,
+          "stop_loading": {
+            "ms": 2.29,
+            "reply_received": true
+          },
+          "recovery_navigation": {
+            "ms": 42.36,
+            "reply_received": true
+          },
+          "recovered": null,
+          "recovery_evaluation": {
+            "ms": 40.99,
+            "reply_received": true
+          },
+          "raw_result": ".build/chrome-reference/royalalberthall/result.json"
+        }
+      ]
+    },
+    {
+      "run": "final-journey",
+      "stage": "first three fixes",
+      "binary_source_revision": "8c0c6cff453c38d9b3c79eda6c5aed3525abfaf3",
+      "binary_sha256": "c29e607b3ff9be6bddf0574a7bd3f11e3260d8da74470ac0ee912e4b13199b10",
+      "utc": "2026-09-13T21:43:03.623791+00:00",
+      "observation_budget_seconds": "30.0",
+      "departure_timeout_seconds": 8,
+      "process": {
+        "exitBeforeCleanup": null,
+        "aliveBeforeCleanup": true,
+        "cleanup": "terminate owned diagnostic process tree"
+      },
+      "pages": [
+        {
+          "site": "homedepot",
+          "url": "https://www.homedepot.com/",
+          "started_utc": "2026-09-13T21:43:04.257334+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.homedepot.com/",
+              "status": 403
+            }
+          ],
+          "observed_url": "https://www.homedepot.com/",
+          "title": "Access Denied",
+          "ready_state": "complete",
+          "dom_nodes": 7,
+          "text_characters_sampled": 195,
+          "probe_count": 15,
+          "probe_timeouts_or_errors": 0,
+          "browser_health": {
+            "samples": 15,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.6
+          },
+          "independent_page_health": {
+            "samples": 15,
+            "timeouts_or_errors": 0,
+            "max_ms": 85.41
+          },
+          "preview_updates": 2,
+          "preview_errors": 0,
+          "javascript_exceptions": [],
+          "socket_before_departure": {
+            "closed": false,
+            "closeCode": null,
+            "exception": "None"
+          },
+          "navigation": {
+            "ms": 718.84,
+            "reply_received": true
+          },
+          "ordinary_departure": {
+            "ms": 107.65,
+            "reply_received": true
+          },
+          "stop_loading_used": false,
+          "stop_loading": null,
+          "recovery_navigation": {
+            "ms": 107.65,
+            "reply_received": true
+          },
+          "recovered": true,
+          "recovery_evaluation": {
+            "ms": 14.31,
+            "reply_received": true
+          },
+          "raw_result": ".build/final-journey/homedepot/result.json"
+        },
+        {
+          "site": "lowes",
+          "url": "https://www.lowes.com/",
+          "started_utc": "2026-09-13T21:43:34.509656+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.lowes.com/",
+              "status": 200
+            }
+          ],
+          "observed_url": "https://www.lowes.com/",
+          "title": "Lowe’s Home Improvement",
+          "ready_state": "complete",
+          "dom_nodes": 1424,
+          "text_characters_sampled": 3089,
+          "probe_count": 10,
+          "probe_timeouts_or_errors": 0,
+          "browser_health": {
+            "samples": 10,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.69
+          },
+          "independent_page_health": {
+            "samples": 10,
+            "timeouts_or_errors": 0,
+            "max_ms": 5.69
+          },
+          "preview_updates": 61,
+          "preview_errors": 0,
+          "javascript_exceptions": [],
+          "socket_before_departure": {
+            "closed": false,
+            "closeCode": null,
+            "exception": "None"
+          },
+          "navigation": {
+            "ms": 2036.75,
+            "reply_received": true
+          },
+          "ordinary_departure": {
+            "ms": 8000.3,
+            "error": "TimeoutError()"
+          },
+          "stop_loading_used": true,
+          "stop_loading": {
+            "ms": 0.35,
+            "reply_received": true
+          },
+          "recovery_navigation": {
+            "ms": 3486.98,
+            "reply_received": true
+          },
+          "recovered": true,
+          "recovery_evaluation": {
+            "ms": 568.53,
+            "reply_received": true
+          },
+          "raw_result": ".build/final-journey/lowes/result.json"
+        },
+        {
+          "site": "lowes-follow",
+          "url": "https://www.lowes.com/pl/Deals/1611079983848?int_cmp=FW32_26_Top_Deal_GLOBAL",
+          "started_utc": "2026-09-13T21:44:17.904464+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.lowes.com/pl/Deals/1611079983848",
+              "status": 200
+            }
+          ],
+          "observed_url": "https://www.lowes.com/pl/Deals/1611079983848?int_cmp=FW32_26_Top_Deal_GLOBAL",
+          "title": "Deals at Lowes.com",
+          "ready_state": "complete",
+          "dom_nodes": 1770,
+          "text_characters_sampled": 4035,
+          "probe_count": 8,
+          "probe_timeouts_or_errors": 0,
+          "browser_health": {
+            "samples": 8,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.64
+          },
+          "independent_page_health": {
+            "samples": 8,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.84
+          },
+          "preview_updates": 47,
+          "preview_errors": 36,
+          "javascript_exceptions": [
+            "https://www.lowescdn.com/global-header-footer/search/header-v2.9548ebde.js: TypeError: Cannot read properties of null (reading 'type') (https://www.lowescdn.com/mfe/fabrik_nested_components/latest/react-dom@16.14.0.js:50:110)"
+          ],
+          "socket_before_departure": {
+            "closed": false,
+            "closeCode": null,
+            "exception": "None"
+          },
+          "navigation": {
+            "ms": 393.89,
+            "reply_received": true
+          },
+          "ordinary_departure": {
+            "ms": 4496.28,
+            "reply_received": true
+          },
+          "stop_loading_used": false,
+          "stop_loading": null,
+          "recovery_navigation": {
+            "ms": 4496.28,
+            "reply_received": true
+          },
+          "recovered": true,
+          "recovery_evaluation": {
+            "ms": 324.63,
+            "reply_received": true
+          },
+          "raw_result": ".build/final-journey/lowes-follow/result.json"
+        },
+        {
+          "site": "macys",
+          "url": "https://www.macys.com/",
+          "started_utc": "2026-09-13T21:44:54.429449+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.macys.com/",
+              "status": 200
+            }
+          ],
+          "observed_url": "https://www.macys.com/",
+          "title": "Macy's - Shop Fashion Clothing & Accessories - Official Site - Macys.com",
+          "ready_state": "complete",
+          "dom_nodes": 7650,
+          "text_characters_sampled": 5995,
+          "probe_count": 13,
+          "probe_timeouts_or_errors": 0,
+          "browser_health": {
+            "samples": 13,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.65
+          },
+          "independent_page_health": {
+            "samples": 13,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.68
+          },
+          "preview_updates": 43,
+          "preview_errors": 0,
+          "javascript_exceptions": [
+            "Uncaught Error: Control font metrics unavailable",
+            "https://dok.js-cdn.dynatrace.com/jstag/17fd4b29df0/bf56263bee/b8e3ef7f50d4880_complete.js TypeError: Illegal constructor (mimic:webapi-surface:4765:73)"
+          ],
+          "socket_before_departure": {
+            "closed": false,
+            "closeCode": null,
+            "exception": "None"
+          },
+          "navigation": {
+            "ms": 876.59,
+            "reply_received": true
+          },
+          "ordinary_departure": {
+            "ms": 32.45,
+            "reply_received": true
+          },
+          "stop_loading_used": false,
+          "stop_loading": null,
+          "recovery_navigation": {
+            "ms": 32.45,
+            "reply_received": true
+          },
+          "recovered": true,
+          "recovery_evaluation": {
+            "ms": 121.04,
+            "reply_received": true
+          },
+          "raw_result": ".build/final-journey/macys/result.json"
+        },
+        {
+          "site": "macys-follow",
+          "url": "https://www.macys.com/shop/sale?id=3536",
+          "started_utc": "2026-09-13T21:45:24.845796+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.macys.com/shop/sale",
+              "status": 200
+            }
+          ],
+          "observed_url": "https://www.macys.com/shop/sale?id=3536",
+          "title": "Sale on Fashion & Jewelry | Explore Top Discounts & Offers | Macy's",
+          "ready_state": "complete",
+          "dom_nodes": 14235,
+          "text_characters_sampled": 5977,
+          "probe_count": 6,
+          "probe_timeouts_or_errors": 2,
+          "browser_health": {
+            "samples": 6,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.74
+          },
+          "independent_page_health": {
+            "samples": 6,
+            "timeouts_or_errors": 0,
+            "max_ms": 1.05
+          },
+          "preview_updates": 18,
+          "preview_errors": 0,
+          "javascript_exceptions": [],
+          "socket_before_departure": {
+            "closed": false,
+            "closeCode": null,
+            "exception": "None"
+          },
+          "navigation": {
+            "ms": 2680.22,
+            "reply_received": true
+          },
+          "ordinary_departure": {
+            "ms": 8000.38,
+            "error": "TimeoutError()"
+          },
+          "stop_loading_used": true,
+          "stop_loading": {
+            "ms": 0.52,
+            "reply_received": true
+          },
+          "recovery_navigation": {
+            "ms": 8000.24,
+            "error": "TimeoutError()"
+          },
+          "recovered": false,
+          "recovery_evaluation": {
+            "ms": 4001.62,
+            "error": "TimeoutError()"
+          },
+          "raw_result": ".build/final-journey/macys-follow/result.json"
+        }
+      ]
+    },
+    {
+      "run": "final-rah-scoot",
+      "stage": "first three fixes",
+      "binary_source_revision": "8c0c6cff453c38d9b3c79eda6c5aed3525abfaf3",
+      "binary_sha256": "c29e607b3ff9be6bddf0574a7bd3f11e3260d8da74470ac0ee912e4b13199b10",
+      "utc": "2026-09-13T21:49:37.445614+00:00",
+      "observation_budget_seconds": "35.0",
+      "departure_timeout_seconds": 8,
+      "process": {
+        "exitBeforeCleanup": null,
+        "aliveBeforeCleanup": true,
+        "cleanup": "terminate owned diagnostic process tree"
+      },
+      "pages": [
+        {
+          "site": "flyscoot",
+          "url": "https://www.flyscoot.com/",
+          "started_utc": "2026-09-13T21:50:14.632112+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.flyscoot.com/",
+              "status": 302
+            },
+            {
+              "url": "https://www.flyscoot.com/en",
+              "status": 200
+            }
+          ],
+          "observed_url": "https://www.flyscoot.com/en",
+          "title": "Home",
+          "ready_state": "complete",
+          "dom_nodes": 270,
+          "text_characters_sampled": 424,
+          "probe_count": 18,
+          "probe_timeouts_or_errors": 0,
+          "browser_health": {
+            "samples": 18,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.65
+          },
+          "independent_page_health": {
+            "samples": 18,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.81
+          },
+          "preview_updates": 81,
+          "preview_errors": 0,
+          "javascript_exceptions": [
+            "Uncaught ",
+            "https://eitri.api.useinsider.com/static/native-push-sdk.js: TypeError: Cannot read properties of undefined (reading 'then') (https://eitri.api.useinsider.com/static/native-push-sdk.js:2:7662)",
+            "https://www.flyscoot.com/dist/angular/runtime.87df3b56261d90b1.js: TypeError: (intermediate value).observe is not a function (https://www.flyscoot.com/dist/angular/polyfills.53c324ed5cc73449.js:1:10223)",
+            "https://www.flyscoot.com/ruxitagentjs_ICA15789NPRTUVXfghqrux_10343260715123811.js: TypeError: Illegal constructor (https://www.flyscoot.com/ruxitagentjs_ICA15789NPRTUVXfghqrux_10343260715123811.js:341:435)"
+          ],
+          "socket_before_departure": {
+            "closed": false,
+            "closeCode": null,
+            "exception": "None"
+          },
+          "navigation": {
+            "ms": 1059.58,
+            "reply_received": true
+          },
+          "ordinary_departure": {
+            "ms": 29.5,
+            "reply_received": true
+          },
+          "stop_loading_used": false,
+          "stop_loading": null,
+          "recovery_navigation": {
+            "ms": 29.5,
+            "reply_received": true
+          },
+          "recovered": true,
+          "recovery_evaluation": {
+            "ms": 127.77,
+            "reply_received": true
+          },
+          "raw_result": ".build/final-rah-scoot/flyscoot/result.json"
+        },
+        {
+          "site": "flyscoot-follow",
+          "url": "https://www.flyscoot.com/privacy",
+          "started_utc": "2026-09-13T21:50:51.131050+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.flyscoot.com/privacy",
+              "status": 200
+            }
+          ],
+          "observed_url": "https://www.flyscoot.com/privacy",
+          "title": "Privacy Policy | Scoot",
+          "ready_state": "complete",
+          "dom_nodes": 1108,
+          "text_characters_sampled": 5672,
+          "probe_count": 18,
+          "probe_timeouts_or_errors": 0,
+          "browser_health": {
+            "samples": 18,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.61
+          },
+          "independent_page_health": {
+            "samples": 18,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.73
+          },
+          "preview_updates": 46,
+          "preview_errors": 0,
+          "javascript_exceptions": [
+            "Uncaught ",
+            "Uncaught TypeError: Cannot read properties of undefined (reading 'success')",
+            "https://eitri.api.useinsider.com/static/native-push-sdk.js: TypeError: Cannot read properties of undefined (reading 'then') (https://eitri.api.useinsider.com/static/native-push-sdk.js:2:7662)",
+            "https://www.flyscoot.com/dist/angular/runtime.87df3b56261d90b1.js: TypeError: (intermediate value).observe is not a function (https://www.flyscoot.com/dist/angular/polyfills.53c324ed5cc73449.js:1:10223)",
+            "https://www.flyscoot.com/ruxitagentjs_ICA15789NPRTUVXfghqrux_10343260715123811.js: TypeError: Illegal constructor (https://www.flyscoot.com/ruxitagentjs_ICA15789NPRTUVXfghqrux_10343260715123811.js:341:435)"
+          ],
+          "socket_before_departure": {
+            "closed": false,
+            "closeCode": null,
+            "exception": "None"
+          },
+          "navigation": {
+            "ms": 824.21,
+            "reply_received": true
+          },
+          "ordinary_departure": {
+            "ms": 29.05,
+            "reply_received": true
+          },
+          "stop_loading_used": false,
+          "stop_loading": null,
+          "recovery_navigation": {
+            "ms": 29.05,
+            "reply_received": true
+          },
+          "recovered": true,
+          "recovery_evaluation": {
+            "ms": 120.97,
+            "reply_received": true
+          },
+          "raw_result": ".build/final-rah-scoot/flyscoot-follow/result.json"
+        },
+        {
+          "site": "royalalberthall",
+          "url": "https://www.royalalberthall.com/",
+          "started_utc": "2026-09-13T21:49:38.087767+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.royalalberthall.com/",
+              "status": 200
+            }
+          ],
+          "observed_url": "https://www.royalalberthall.com/",
+          "title": "Pardon Our Interruption",
+          "ready_state": "complete",
+          "dom_nodes": 33,
+          "text_characters_sampled": 678,
+          "probe_count": 18,
+          "probe_timeouts_or_errors": 0,
+          "browser_health": {
+            "samples": 18,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.51
+          },
+          "independent_page_health": {
+            "samples": 18,
+            "timeouts_or_errors": 0,
+            "max_ms": 79.78
+          },
+          "preview_updates": 29,
+          "preview_errors": 0,
+          "javascript_exceptions": [],
+          "socket_before_departure": {
+            "closed": false,
+            "closeCode": null,
+            "exception": "None"
+          },
+          "navigation": {
+            "ms": 1044.25,
+            "reply_received": true
+          },
+          "ordinary_departure": {
+            "ms": 26.89,
+            "reply_received": true
+          },
+          "stop_loading_used": false,
+          "stop_loading": null,
+          "recovery_navigation": {
+            "ms": 26.89,
+            "reply_received": true
+          },
+          "recovered": true,
+          "recovery_evaluation": {
+            "ms": 210.01,
+            "reply_received": true
+          },
+          "raw_result": ".build/final-rah-scoot/royalalberthall/result.json"
+        }
+      ]
+    },
+    {
+      "run": "lowes-departure",
+      "stage": "first three fixes plus local pprof listener",
+      "binary_source_revision": "8c0c6cff453c38d9b3c79eda6c5aed3525abfaf3",
+      "binary_sha256": "a212c3dbaacda271dfdbdd5b86b17372ea3083fe508b39706a5361f5060a960f",
+      "utc": "2026-09-13T21:45:59.870676+00:00",
+      "observation_budget_seconds": "30",
+      "departure_timeout_seconds": 45,
+      "process": {
+        "exitBeforeCleanup": null,
+        "aliveBeforeCleanup": true,
+        "cleanup": "terminate owned diagnostic process tree"
+      },
+      "pages": [
+        {
+          "site": "lowes",
+          "url": "https://www.lowes.com/",
+          "started_utc": "2026-09-13T21:46:00.585079+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.lowes.com/",
+              "status": 200
+            }
+          ],
+          "observed_url": "https://www.lowes.com/",
+          "title": "Lowe’s Home Improvement",
+          "ready_state": "complete",
+          "dom_nodes": 1428,
+          "text_characters_sampled": 3089,
+          "probe_count": 9,
+          "probe_timeouts_or_errors": 0,
+          "browser_health": {
+            "samples": 9,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.62
+          },
+          "independent_page_health": {
+            "samples": 9,
+            "timeouts_or_errors": 0,
+            "max_ms": 117.23
+          },
+          "preview_updates": 56,
+          "preview_errors": 0,
+          "javascript_exceptions": [],
+          "socket_before_departure": {
+            "closed": false,
+            "closeCode": null,
+            "exception": "None"
+          },
+          "navigation": {
+            "ms": 1834.5,
+            "reply_received": true
+          },
+          "ordinary_departure": {
+            "ms": 9227.4,
+            "reply_received": true
+          },
+          "stop_loading_used": false,
+          "stop_loading": null,
+          "recovery_navigation": {
+            "ms": 9227.4,
+            "reply_received": true
+          },
+          "recovered": true,
+          "recovery_evaluation": {
+            "ms": 467.67,
+            "reply_received": true
+          },
+          "raw_result": ".build/lowes-departure/lowes/result.json"
+        }
+      ]
+    },
+    {
+      "run": "macys-departure",
+      "stage": "first three fixes plus local pprof listener",
+      "binary_source_revision": "8c0c6cff453c38d9b3c79eda6c5aed3525abfaf3",
+      "binary_sha256": "a212c3dbaacda271dfdbdd5b86b17372ea3083fe508b39706a5361f5060a960f",
+      "utc": "2026-09-13T21:49:47.631141+00:00",
+      "observation_budget_seconds": "30",
+      "departure_timeout_seconds": 45,
+      "process": {
+        "exitBeforeCleanup": null,
+        "aliveBeforeCleanup": true,
+        "cleanup": "terminate owned diagnostic process tree"
+      },
+      "pages": [
+        {
+          "site": "macys",
+          "url": "https://www.macys.com/",
+          "started_utc": "2026-09-13T21:49:48.241998+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.macys.com/",
+              "status": 200
+            }
+          ],
+          "observed_url": "https://www.macys.com/",
+          "title": "Macy's - Shop Fashion Clothing & Accessories - Official Site - Macys.com",
+          "ready_state": "complete",
+          "dom_nodes": 7650,
+          "text_characters_sampled": 5995,
+          "probe_count": 15,
+          "probe_timeouts_or_errors": 0,
+          "browser_health": {
+            "samples": 15,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.49
+          },
+          "independent_page_health": {
+            "samples": 15,
+            "timeouts_or_errors": 0,
+            "max_ms": 88.51
+          },
+          "preview_updates": 42,
+          "preview_errors": 0,
+          "javascript_exceptions": [
+            "Uncaught Error: Control font metrics unavailable",
+            "https://dok.js-cdn.dynatrace.com/jstag/17fd4b29df0/bf56263bee/b8e3ef7f50d4880_complete.js TypeError: Illegal constructor (mimic:webapi-surface:4765:73)"
+          ],
+          "socket_before_departure": {
+            "closed": false,
+            "closeCode": null,
+            "exception": "None"
+          },
+          "navigation": {
+            "ms": 1293.76,
+            "reply_received": true
+          },
+          "ordinary_departure": {
+            "ms": 27.15,
+            "reply_received": true
+          },
+          "stop_loading_used": false,
+          "stop_loading": null,
+          "recovery_navigation": {
+            "ms": 27.15,
+            "reply_received": true
+          },
+          "recovered": true,
+          "recovery_evaluation": {
+            "ms": 112.87,
+            "reply_received": true
+          },
+          "raw_result": ".build/macys-departure/macys/result.json"
+        },
+        {
+          "site": "macys-follow",
+          "url": "https://www.macys.com/shop/sale?id=3536",
+          "started_utc": "2026-09-13T21:50:20.192024+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.macys.com/shop/sale",
+              "status": 200
+            }
+          ],
+          "observed_url": "https://www.macys.com/shop/sale?id=3536",
+          "title": "Sale on Fashion & Jewelry | Explore Top Discounts & Offers | Macy's",
+          "ready_state": "complete",
+          "dom_nodes": 14247,
+          "text_characters_sampled": 5985,
+          "probe_count": 5,
+          "probe_timeouts_or_errors": 2,
+          "browser_health": {
+            "samples": 5,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.56
+          },
+          "independent_page_health": {
+            "samples": 5,
+            "timeouts_or_errors": 0,
+            "max_ms": 5.61
+          },
+          "preview_updates": 15,
+          "preview_errors": 0,
+          "javascript_exceptions": [],
+          "socket_before_departure": {
+            "closed": false,
+            "closeCode": null,
+            "exception": "None"
+          },
+          "navigation": {
+            "ms": 2912.84,
+            "reply_received": true
+          },
+          "ordinary_departure": {
+            "ms": 26692.99,
+            "reply_received": true
+          },
+          "stop_loading_used": false,
+          "stop_loading": null,
+          "recovery_navigation": {
+            "ms": 26692.99,
+            "reply_received": true
+          },
+          "recovered": true,
+          "recovery_evaluation": {
+            "ms": 164.94,
+            "reply_received": true
+          },
+          "raw_result": ".build/macys-departure/macys-follow/result.json"
+        }
+      ]
+    },
+    {
+      "run": "scoot-enumeration",
+      "stage": "four fixes; enumeration patch present when built before its commit",
+      "binary_source_revision": "29da8821483702f3ade99e27fd32c9d240611ad3",
+      "binary_sha256": "b44cab5e87f50f08ea02b1ead32f318dce8166fa56f5e5181e02468016b106d9",
+      "utc": "2026-09-13T21:53:10.248359+00:00",
+      "observation_budget_seconds": "35",
+      "departure_timeout_seconds": 8,
+      "process": {
+        "exitBeforeCleanup": null,
+        "aliveBeforeCleanup": true,
+        "cleanup": "terminate owned diagnostic process tree"
+      },
+      "pages": [
+        {
+          "site": "flyscoot",
+          "url": "https://www.flyscoot.com/",
+          "started_utc": "2026-09-13T21:53:11.436135+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.flyscoot.com/",
+              "status": 302
+            },
+            {
+              "url": "https://www.flyscoot.com/en",
+              "status": 200
+            }
+          ],
+          "observed_url": "https://www.flyscoot.com/en",
+          "title": "Home",
+          "ready_state": "complete",
+          "dom_nodes": 1050,
+          "text_characters_sampled": 2586,
+          "probe_count": 18,
+          "probe_timeouts_or_errors": 0,
+          "browser_health": {
+            "samples": 18,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.72
+          },
+          "independent_page_health": {
+            "samples": 18,
+            "timeouts_or_errors": 0,
+            "max_ms": 87.34
+          },
+          "preview_updates": 93,
+          "preview_errors": 0,
+          "javascript_exceptions": [
+            "Uncaught ",
+            "https://eitri.api.useinsider.com/static/native-push-sdk.js: TypeError: Cannot read properties of undefined (reading 'then') (https://eitri.api.useinsider.com/static/native-push-sdk.js:2:7662)",
+            "https://www.flyscoot.com/ruxitagentjs_ICA15789NPRTUVXfghqrux_10343260715123811.js: TypeError: Illegal constructor (https://www.flyscoot.com/ruxitagentjs_ICA15789NPRTUVXfghqrux_10343260715123811.js:341:435)"
+          ],
+          "socket_before_departure": {
+            "closed": false,
+            "closeCode": null,
+            "exception": "None"
+          },
+          "navigation": {
+            "ms": 1020.8,
+            "reply_received": true
+          },
+          "ordinary_departure": {
+            "ms": 30.33,
+            "reply_received": true
+          },
+          "stop_loading_used": false,
+          "stop_loading": null,
+          "recovery_navigation": {
+            "ms": 30.33,
+            "reply_received": true
+          },
+          "recovered": true,
+          "recovery_evaluation": {
+            "ms": 175.54,
+            "reply_received": true
+          },
+          "raw_result": ".build/scoot-enumeration/flyscoot/result.json"
+        },
+        {
+          "site": "flyscoot-follow",
+          "url": "https://www.flyscoot.com/en/advisory/advisory-on-scoot-flights-to-Jeddah",
+          "started_utc": "2026-09-13T21:53:48.305987+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.flyscoot.com/en/advisory/advisory-on-scoot-flights-to-Jeddah",
+              "status": 200
+            }
+          ],
+          "observed_url": "https://www.flyscoot.com/en/advisory/advisory-on-scoot-flights-to-Jeddah",
+          "title": "Advisory on Scoot flights to Jeddah",
+          "ready_state": "complete",
+          "dom_nodes": 492,
+          "text_characters_sampled": 2039,
+          "probe_count": 18,
+          "probe_timeouts_or_errors": 0,
+          "browser_health": {
+            "samples": 18,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.52
+          },
+          "independent_page_health": {
+            "samples": 18,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.69
+          },
+          "preview_updates": 45,
+          "preview_errors": 0,
+          "javascript_exceptions": [
+            "Uncaught ",
+            "Uncaught TypeError: Cannot read properties of null (reading 'style')",
+            "Uncaught TypeError: Cannot read properties of undefined (reading 'success')",
+            "https://eitri.api.useinsider.com/static/native-push-sdk.js: TypeError: Cannot read properties of undefined (reading 'then') (https://eitri.api.useinsider.com/static/native-push-sdk.js:2:7662)",
+            "https://www.flyscoot.com/ruxitagentjs_ICA15789NPRTUVXfghqrux_10343260715123811.js: TypeError: Illegal constructor (https://www.flyscoot.com/ruxitagentjs_ICA15789NPRTUVXfghqrux_10343260715123811.js:341:435)"
+          ],
+          "socket_before_departure": {
+            "closed": false,
+            "closeCode": null,
+            "exception": "None"
+          },
+          "navigation": {
+            "ms": 677.5,
+            "reply_received": true
+          },
+          "ordinary_departure": {
+            "ms": 33.73,
+            "reply_received": true
+          },
+          "stop_loading_used": false,
+          "stop_loading": null,
+          "recovery_navigation": {
+            "ms": 33.73,
+            "reply_received": true
+          },
+          "recovered": true,
+          "recovery_evaluation": {
+            "ms": 141.71,
+            "reply_received": true
+          },
+          "raw_result": ".build/scoot-enumeration/flyscoot-follow/result.json"
+        }
+      ]
+    },
+    {
+      "run": "final4-journey",
+      "stage": "final four fixes and retained journey harness",
+      "binary_source_revision": "2c78fbbac83bdb021634ead2e3d159aa96cad333",
+      "binary_sha256": "b44cab5e87f50f08ea02b1ead32f318dce8166fa56f5e5181e02468016b106d9",
+      "utc": "2026-09-13T21:55:08.778688+00:00",
+      "observation_budget_seconds": "30.0",
+      "departure_timeout_seconds": "45.0",
+      "process": {
+        "exitBeforeCleanup": null,
+        "aliveBeforeCleanup": true,
+        "cleanup": "terminate owned diagnostic process tree"
+      },
+      "pages": [
+        {
+          "site": "flyscoot",
+          "url": "https://www.flyscoot.com/",
+          "started_utc": "2026-09-13T21:58:44.950612+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.flyscoot.com/",
+              "status": 302
+            },
+            {
+              "url": "https://www.flyscoot.com/en",
+              "status": 200
+            }
+          ],
+          "observed_url": "https://www.flyscoot.com/en",
+          "title": "Home",
+          "ready_state": "complete",
+          "dom_nodes": 1051,
+          "text_characters_sampled": 2586,
+          "probe_count": 15,
+          "probe_timeouts_or_errors": 0,
+          "browser_health": {
+            "samples": 15,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.52
+          },
+          "independent_page_health": {
+            "samples": 15,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.57
+          },
+          "preview_updates": 94,
+          "preview_errors": 0,
+          "javascript_exceptions": [
+            "Uncaught ",
+            "https://eitri.api.useinsider.com/static/native-push-sdk.js: TypeError: Cannot read properties of undefined (reading 'then') (https://eitri.api.useinsider.com/static/native-push-sdk.js:2:7662)",
+            "https://www.flyscoot.com/ruxitagentjs_ICA15789NPRTUVXfghqrux_10343260715123811.js: TypeError: Illegal constructor (https://www.flyscoot.com/ruxitagentjs_ICA15789NPRTUVXfghqrux_10343260715123811.js:341:435)"
+          ],
+          "socket_before_departure": {
+            "closed": false,
+            "closeCode": null,
+            "exception": "None"
+          },
+          "navigation": {
+            "ms": 960.41,
+            "reply_received": true
+          },
+          "ordinary_departure": {
+            "ms": 26.69,
+            "reply_received": true
+          },
+          "stop_loading_used": false,
+          "stop_loading": null,
+          "recovery_navigation": {
+            "ms": 26.69,
+            "reply_received": true
+          },
+          "recovered": true,
+          "recovery_evaluation": {
+            "ms": 184.9,
+            "reply_received": true
+          },
+          "raw_result": ".build/final4-journey/flyscoot/result.json"
+        },
+        {
+          "site": "flyscoot-follow",
+          "url": "https://www.flyscoot.com/en/advisory/advisory-on-scoot-flights-to-Jeddah",
+          "started_utc": "2026-09-13T21:59:16.457297+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.flyscoot.com/en/advisory/advisory-on-scoot-flights-to-Jeddah",
+              "status": 200
+            }
+          ],
+          "observed_url": "https://www.flyscoot.com/en/advisory/advisory-on-scoot-flights-to-Jeddah",
+          "title": "Advisory on Scoot flights to Jeddah",
+          "ready_state": "complete",
+          "dom_nodes": 492,
+          "text_characters_sampled": 2039,
+          "probe_count": 15,
+          "probe_timeouts_or_errors": 0,
+          "browser_health": {
+            "samples": 15,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.57
+          },
+          "independent_page_health": {
+            "samples": 15,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.7
+          },
+          "preview_updates": 41,
+          "preview_errors": 0,
+          "javascript_exceptions": [
+            "Uncaught ",
+            "Uncaught TypeError: Cannot read properties of null (reading 'style')",
+            "Uncaught TypeError: Cannot read properties of undefined (reading 'success')",
+            "https://eitri.api.useinsider.com/static/native-push-sdk.js: TypeError: Cannot read properties of undefined (reading 'then') (https://eitri.api.useinsider.com/static/native-push-sdk.js:2:7662)",
+            "https://www.flyscoot.com/ruxitagentjs_ICA15789NPRTUVXfghqrux_10343260715123811.js: TypeError: Illegal constructor (https://www.flyscoot.com/ruxitagentjs_ICA15789NPRTUVXfghqrux_10343260715123811.js:341:435)"
+          ],
+          "socket_before_departure": {
+            "closed": false,
+            "closeCode": null,
+            "exception": "None"
+          },
+          "navigation": {
+            "ms": 674.71,
+            "reply_received": true
+          },
+          "ordinary_departure": {
+            "ms": 30.93,
+            "reply_received": true
+          },
+          "stop_loading_used": false,
+          "stop_loading": null,
+          "recovery_navigation": {
+            "ms": 30.93,
+            "reply_received": true
+          },
+          "recovered": true,
+          "recovery_evaluation": {
+            "ms": 149.19,
+            "reply_received": true
+          },
+          "raw_result": ".build/final4-journey/flyscoot-follow/result.json"
+        },
+        {
+          "site": "homedepot",
+          "url": "https://www.homedepot.com/",
+          "started_utc": "2026-09-13T21:55:09.657403+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.homedepot.com/",
+              "status": 403
+            }
+          ],
+          "observed_url": "https://www.homedepot.com/",
+          "title": "Access Denied",
+          "ready_state": "complete",
+          "dom_nodes": 7,
+          "text_characters_sampled": 195,
+          "probe_count": 15,
+          "probe_timeouts_or_errors": 0,
+          "browser_health": {
+            "samples": 15,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.51
+          },
+          "independent_page_health": {
+            "samples": 15,
+            "timeouts_or_errors": 0,
+            "max_ms": 82.47
+          },
+          "preview_updates": 2,
+          "preview_errors": 0,
+          "javascript_exceptions": [],
+          "socket_before_departure": {
+            "closed": false,
+            "closeCode": null,
+            "exception": "None"
+          },
+          "navigation": {
+            "ms": 745.97,
+            "reply_received": true
+          },
+          "ordinary_departure": {
+            "ms": 92.0,
+            "reply_received": true
+          },
+          "stop_loading_used": false,
+          "stop_loading": null,
+          "recovery_navigation": {
+            "ms": 92.0,
+            "reply_received": true
+          },
+          "recovered": true,
+          "recovery_evaluation": {
+            "ms": 12.34,
+            "reply_received": true
+          },
+          "raw_result": ".build/final4-journey/homedepot/result.json"
+        },
+        {
+          "site": "lowes",
+          "url": "https://www.lowes.com/",
+          "started_utc": "2026-09-13T21:55:39.891135+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.lowes.com/",
+              "status": 200
+            }
+          ],
+          "observed_url": "https://www.lowes.com/",
+          "title": "Lowe’s Home Improvement",
+          "ready_state": "interactive",
+          "dom_nodes": 1141,
+          "text_characters_sampled": 2984,
+          "probe_count": 11,
+          "probe_timeouts_or_errors": 0,
+          "browser_health": {
+            "samples": 11,
+            "timeouts_or_errors": 0,
+            "max_ms": 2.32
+          },
+          "independent_page_health": {
+            "samples": 11,
+            "timeouts_or_errors": 0,
+            "max_ms": 5.95
+          },
+          "preview_updates": 58,
+          "preview_errors": 0,
+          "javascript_exceptions": [],
+          "socket_before_departure": {
+            "closed": false,
+            "closeCode": null,
+            "exception": "None"
+          },
+          "navigation": {
+            "ms": 1146.86,
+            "reply_received": true
+          },
+          "ordinary_departure": {
+            "ms": 42.77,
+            "reply_received": true
+          },
+          "stop_loading_used": false,
+          "stop_loading": null,
+          "recovery_navigation": {
+            "ms": 42.77,
+            "reply_received": true
+          },
+          "recovered": true,
+          "recovery_evaluation": {
+            "ms": 337.35,
+            "reply_received": true
+          },
+          "raw_result": ".build/final4-journey/lowes/result.json"
+        },
+        {
+          "site": "lowes-follow",
+          "url": "https://www.lowes.com/pl/Deals/1611079983848?int_cmp=FW32_26_Top_Deal_GLOBAL",
+          "started_utc": "2026-09-13T21:56:10.496591+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.lowes.com/pl/Deals/1611079983848",
+              "status": 200
+            }
+          ],
+          "observed_url": "https://www.lowes.com/pl/Deals/1611079983848?int_cmp=FW32_26_Top_Deal_GLOBAL",
+          "title": "Deals at Lowes.com",
+          "ready_state": "complete",
+          "dom_nodes": 1758,
+          "text_characters_sampled": 4129,
+          "probe_count": 8,
+          "probe_timeouts_or_errors": 0,
+          "browser_health": {
+            "samples": 8,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.76
+          },
+          "independent_page_health": {
+            "samples": 8,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.94
+          },
+          "preview_updates": 43,
+          "preview_errors": 32,
+          "javascript_exceptions": [
+            "https://www.lowescdn.com/global-header-footer/search/header-v2.9548ebde.js: TypeError: Cannot read properties of null (reading 'type') (https://www.lowescdn.com/mfe/fabrik_nested_components/latest/react-dom@16.14.0.js:50:110)",
+            "https://www.lowescdn.com/helix-product-list/search/helix/1.238.6/modals.min.js: ReferenceError: jQuery is not defined (https://www.lowescdn.com/helix-product-list/search/helix/1.238.6/modals.min.js:1:6331)"
+          ],
+          "socket_before_departure": {
+            "closed": false,
+            "closeCode": null,
+            "exception": "None"
+          },
+          "navigation": {
+            "ms": 442.21,
+            "reply_received": true
+          },
+          "ordinary_departure": {
+            "ms": 3954.71,
+            "reply_received": true
+          },
+          "stop_loading_used": false,
+          "stop_loading": null,
+          "recovery_navigation": {
+            "ms": 3954.71,
+            "reply_received": true
+          },
+          "recovered": true,
+          "recovery_evaluation": {
+            "ms": 347.27,
+            "reply_received": true
+          },
+          "raw_result": ".build/final4-journey/lowes-follow/result.json"
+        },
+        {
+          "site": "macys",
+          "url": "https://www.macys.com/",
+          "started_utc": "2026-09-13T21:56:46.404897+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.macys.com/",
+              "status": 200
+            }
+          ],
+          "observed_url": "https://www.macys.com/",
+          "title": "Macy's - Shop Fashion Clothing & Accessories - Official Site - Macys.com",
+          "ready_state": "complete",
+          "dom_nodes": 7650,
+          "text_characters_sampled": 5995,
+          "probe_count": 14,
+          "probe_timeouts_or_errors": 0,
+          "browser_health": {
+            "samples": 14,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.57
+          },
+          "independent_page_health": {
+            "samples": 14,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.98
+          },
+          "preview_updates": 42,
+          "preview_errors": 0,
+          "javascript_exceptions": [
+            "Uncaught Error: Control font metrics unavailable",
+            "https://dok.js-cdn.dynatrace.com/jstag/17fd4b29df0/bf56263bee/b8e3ef7f50d4880_complete.js TypeError: Illegal constructor (mimic:webapi-surface:4765:73)"
+          ],
+          "socket_before_departure": {
+            "closed": false,
+            "closeCode": null,
+            "exception": "None"
+          },
+          "navigation": {
+            "ms": 909.51,
+            "reply_received": true
+          },
+          "ordinary_departure": {
+            "ms": 29.6,
+            "reply_received": true
+          },
+          "stop_loading_used": false,
+          "stop_loading": null,
+          "recovery_navigation": {
+            "ms": 29.6,
+            "reply_received": true
+          },
+          "recovered": true,
+          "recovery_evaluation": {
+            "ms": 102.9,
+            "reply_received": true
+          },
+          "raw_result": ".build/final4-journey/macys/result.json"
+        },
+        {
+          "site": "macys-follow",
+          "url": "https://www.macys.com/shop/sale?id=3536",
+          "started_utc": "2026-09-13T21:57:16.924287+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.macys.com/shop/sale",
+              "status": 200
+            }
+          ],
+          "observed_url": "https://www.macys.com/shop/sale?id=3536",
+          "title": "Sale on Fashion & Jewelry | Explore Top Discounts & Offers | Macy's",
+          "ready_state": "complete",
+          "dom_nodes": 14197,
+          "text_characters_sampled": 5985,
+          "probe_count": 5,
+          "probe_timeouts_or_errors": 1,
+          "browser_health": {
+            "samples": 5,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.63
+          },
+          "independent_page_health": {
+            "samples": 5,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.79
+          },
+          "preview_updates": 17,
+          "preview_errors": 0,
+          "javascript_exceptions": [],
+          "socket_before_departure": {
+            "closed": false,
+            "closeCode": null,
+            "exception": "None"
+          },
+          "navigation": {
+            "ms": 1868.86,
+            "reply_received": true
+          },
+          "ordinary_departure": {
+            "ms": 26391.56,
+            "reply_received": true
+          },
+          "stop_loading_used": false,
+          "stop_loading": null,
+          "recovery_navigation": {
+            "ms": 26391.56,
+            "reply_received": true
+          },
+          "recovered": true,
+          "recovery_evaluation": {
+            "ms": 153.08,
+            "reply_received": true
+          },
+          "raw_result": ".build/final4-journey/macys-follow/result.json"
+        },
+        {
+          "site": "royalalberthall",
+          "url": "https://www.royalalberthall.com/",
+          "started_utc": "2026-09-13T21:58:14.408614+00:00",
+          "document_responses": [
+            {
+              "url": "https://www.royalalberthall.com/",
+              "status": 200
+            }
+          ],
+          "observed_url": "https://www.royalalberthall.com/",
+          "title": "Pardon Our Interruption",
+          "ready_state": "complete",
+          "dom_nodes": 34,
+          "text_characters_sampled": 678,
+          "probe_count": 15,
+          "probe_timeouts_or_errors": 0,
+          "browser_health": {
+            "samples": 15,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.81
+          },
+          "independent_page_health": {
+            "samples": 15,
+            "timeouts_or_errors": 0,
+            "max_ms": 0.7
+          },
+          "preview_updates": 26,
+          "preview_errors": 0,
+          "javascript_exceptions": [],
+          "socket_before_departure": {
+            "closed": false,
+            "closeCode": null,
+            "exception": "None"
+          },
+          "navigation": {
+            "ms": 942.58,
+            "reply_received": true
+          },
+          "ordinary_departure": {
+            "ms": 163.17,
+            "reply_received": true
+          },
+          "stop_loading_used": false,
+          "stop_loading": null,
+          "recovery_navigation": {
+            "ms": 163.17,
+            "reply_received": true
+          },
+          "recovered": true,
+          "recovery_evaluation": {
+            "ms": 157.96,
+            "reply_received": true
+          },
+          "raw_result": ".build/final4-journey/royalalberthall/result.json"
+        }
+      ]
+    }
+  ]
+}

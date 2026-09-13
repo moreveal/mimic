@@ -233,6 +233,8 @@ async def run(args):
         recovery.server_close()
 
 if __name__=='__main__':
+    # Live titles/body excerpts may contain characters outside a Windows codepage.
+    sys.stdout.reconfigure(encoding='utf-8')
     p=argparse.ArgumentParser()
     p.add_argument('--binary',type=Path,required=True)
     p.add_argument('--binary-revision',help='Source revision used to build the executable; never inferred from checkout HEAD')
