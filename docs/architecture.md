@@ -190,3 +190,19 @@ model with a platform-independent controlled provider.
 `navigator.webdriver` is an explicit Mimic invariant: it always returns false,
 including CDP/debug configurations. Debug transport configuration must never
 change this value.
+
+## Host portability
+
+Windows and Linux amd64 use the same browser state, V8 adapter and native shim.
+Only native library loading/calling conventions, kernel thread identity, CPU
+counters, scheduling hints, font discovery and OS service providers vary by host.
+The gov8 `internal/native` boundary uses Windows trampolines or Linux System V
+calls; Linux normalizes the legacy floating-point exports and supports wide
+pointer-word calls without changing the browser execution model. Both retain
+one owning OS thread per V8 owner and concurrent independent Page event loops.
+Native library initialization remains process-wide; Page execution is not.
+
+The build host does not select a different Chrome environment profile. Captured
+Windows Chrome observations and benchmark provenance remain labeled Windows.
+Host font files and speech providers are explicit resources, not synthesized
+platform compatibility. See [setup and host requirements](getting-started.md).

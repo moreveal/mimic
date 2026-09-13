@@ -1,10 +1,10 @@
 # Checked-in helper crate for linking the pinned V8 artifact's ECMAScript
-# Temporal support (temporal_capi / temporal_rs) into gov8_shim.dll.
+# Temporal support (temporal_capi / temporal_rs) into the gov8 native library.
 #
 # The dependency is pinned EXACTLY (=#{version}) to the temporal_capi version
 # recorded in rust-oracle/Cargo.lock for the oracle's v8 =152.2.0 build, and
-# Cargo.lock is committed next to this manifest. scripts/setup_windows.ps1
-# builds this crate with `cargo build --locked`, so dependency resolution is
+# Cargo.lock is committed next to this manifest. the Windows and Linux setup scripts
+# build this crate with `cargo build --locked`, so dependency resolution is
 # reproducible and any drift fails closed instead of silently picking up a
 # newer compatible version.
 

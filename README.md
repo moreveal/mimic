@@ -9,6 +9,7 @@
 
 <p align="center">
   <a href="go.mod"><img src="https://img.shields.io/badge/Go-1.26.4%2B-00ADD8?style=flat-square&amp;logo=go&amp;logoColor=white" alt="Go 1.26.4+"></a>
+  <a href="docs/getting-started.md"><img src="https://img.shields.io/badge/platforms-Windows%20%7C%20Linux-5988C7?style=flat-square" alt="Windows and Linux amd64"></a>
   <a href="docs/getting-started.md"><img src="https://img.shields.io/badge/engine-V8-81B5FF?style=flat-square&amp;logo=v8&amp;logoColor=white" alt="V8 engine"></a>
   <a href="docs/architecture.md"><img src="https://img.shields.io/badge/runs-JavaScript-F7DF1E?style=flat-square&amp;logo=javascript&amp;logoColor=black" alt="Runs JavaScript"></a>
   <a href="docs/cdp-compatibility.md"><img src="https://img.shields.io/badge/automation-CDP-AC9FFF?style=flat-square" alt="CDP automation"></a>
@@ -71,11 +72,23 @@ the complete benchmark report for the current tradeoffs.
 
 ## Quick start
 
-**Current supported build:** Windows amd64, Go 1.26.4+, CGO, and a compatible
-C compiler (tested with `gcc`). Other platforms are a development direction;
-see [platforms and browser targets](#platforms-and-browser-targets).
+**Windows amd64 and Linux amd64**, Go 1.26.4+, CGO, and a C compiler.
+The packaged Linux engine requires **glibc 2.39+** (Ubuntu 24.04 or newer);
+Alpine/musl and ARM64 are not supported. V8 is bundled for both platforms.
+See [complete setup](docs/getting-started.md) for requirements and native rebuilds.
 
 ### 1. Build and start
+
+**Linux:**
+
+```sh
+git clone https://github.com/moreveal/mimic.git
+cd mimic
+go build -o .build/mimic ./cmd/mimic
+./.build/mimic -listen 127.0.0.1:9222 -chrome 152
+```
+
+**Windows (PowerShell):**
 
 ```powershell
 git clone https://github.com/moreveal/mimic.git
@@ -94,7 +107,12 @@ For a live visual mirror of a CDP target, start with `-dev-preview` and open
 
 ### 2. Connect over CDP
 
-In another PowerShell window, discover the available targets:
+In another terminal, discover the available targets:
+
+```sh
+# Linux
+curl http://127.0.0.1:9222/json/list
+```
 
 ```powershell
 Invoke-RestMethod http://127.0.0.1:9222/json/list
@@ -112,7 +130,17 @@ readiness marker before consuming the result. Check the
 
 ### 3. Capture a page
 
-With the server running, use a second PowerShell window in the same checkout:
+With the server running, use another terminal in the same checkout.
+
+**Linux:**
+
+```sh
+python3 -m venv .venv
+./.venv/bin/python -m pip install pyppeteer==2.0.0
+./.venv/bin/python tools/mimic_snapshot.py "https://example.com/" snapshots/example --settle-ms 2500
+```
+
+**Windows:**
 
 ```powershell
 python -m venv .venv
@@ -128,13 +156,18 @@ partial captures, engine fallbacks, and troubleshooting details.
 
 ## Platforms and browser targets
 
-Mimic’s direction is a portable execution runtime that can follow new Chrome
-versions. The current OS and reference version are checkpoints in that work.
+Mimic runs on Windows and Linux. The host OS and the browser compatibility
+profile are separate: Linux execution also uses the frozen Chrome 152 profile.
 
 | Area | Available today | Direction |
 | :--- | :--- | :--- |
-| Platforms | Windows amd64 build and validation. | Linux at minimum, with OS-specific code isolated so more of Go’s portability carries through. Native engine and CGO dependencies still need platform support and validation. |
+| Platforms | Windows amd64 and Linux amd64 (glibc 2.39+), with bundled V8. | Additional architectures and libc variants require native engine builds and validation. |
 | Browser behavior | Frozen Chrome **152.0.7977.82** as the measured reference. | Additional Chrome versions through the version-neutral compatibility registry, backed by version-specific observations and tests. |
+
+Fonts and OS services depend on the host. Linux uses installed Liberation,
+DejaVu or Noto fonts when reference families are absent; exact Windows text
+metrics require the reference fonts. Native speech synthesis uses Windows SAPI.
+See [host-dependent behavior](docs/getting-started.md#host-dependent-behavior).
 
 The `-chrome 152` flag selects the current compatibility target. It does not
 install or launch Chrome. See the [target manifest](chrome/152/target.json) and

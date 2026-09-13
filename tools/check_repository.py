@@ -13,7 +13,7 @@ CREDENTIAL = re.compile(r'(?i)(?:bearer\s+[A-Za-z0-9._-]{16,}|(?:sk-|ghp_|github
 LOCAL_PATH = re.compile(r'(?i)(?:[A-Z]:[\\/]+(?:Users|GitHub)[\\/]+|/(?:home|Users)/)')
 TARGET = re.compile(r'(?i)(?:cloudflare|turnstile|browserscan|voxel\.shop|iroshop|cf_clearance|/cdn-cgi/|/fo/)')
 BAD_DIRS = {'.tmp', '.chrome-for-testing', '.source-cache', 'node_modules', 'venv'}
-BAD_SUFFIXES = {'.exe', '.dll', '.pid', '.log', '.prof', '.pprof', '.pyc', '.pfx', '.p12', '.key'}
+BAD_SUFFIXES = {'.exe', '.dll', '.so', '.a', '.pid', '.log', '.prof', '.pprof', '.pyc', '.pfx', '.p12', '.key'}
 issues = []
 count = 0
 for path in sorted(ROOT.rglob('*')):

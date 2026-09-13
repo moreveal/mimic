@@ -1,14 +1,14 @@
-//go:build windows && amd64
+//go:build (windows || linux) && amd64
 
 package gov8
 
 import (
 	"fmt"
+	syscall "github.com/maclof/gov8/internal/native"
 	"os"
 	"path/filepath"
 	"sync"
 	"sync/atomic"
-	"syscall"
 	"unsafe"
 
 	"github.com/maclof/gov8/internal/prebuilt"
@@ -18,14 +18,12 @@ import (
 const shimABIVersion = 44
 
 var (
-	shimOnce       sync.Once
-	shimDLL        *syscall.DLL
-	kernel32       = syscall.NewLazyDLL("kernel32.dll")
-	loadLibraryExW = kernel32.NewProc("LoadLibraryExW")
+	shimOnce sync.Once
+	shimDLL  *syscall.DLL
 	// procTable is an immutable name→proc map published through an atomic
 	// pointer; resolution is copy-on-write under procMu. The hot read path
 	// is one atomic load plus a plain map lookup, and every export resolves
-	// through GetProcAddress exactly once per process. The map stores
+	// through the host loader exactly once per process. The map stores
 	// resolved *syscall.Proc values (not LazyProc) so per-call dispatch is
 	// a direct SyscallN on the cached entry — no lazy-find check on the
 	// hot path.
@@ -34,27 +32,30 @@ var (
 	shimLoadErr error
 )
 
-// shimDLLPath returns the path to gov8_shim.dll. An explicit GOV8_SHIM_DLL
-// override takes precedence; ordinary module consumers use the verified
-// embedded DLL extracted to their cache.
+// shimDLLPath returns the native library path. GOV8_SHIM_LIBRARY (or the legacy
+// GOV8_SHIM_DLL alias) overrides the verified embedded library in the user cache.
 func shimDLLPath() (string, error) {
-	if p := os.Getenv("GOV8_SHIM_DLL"); p != "" {
+	p := os.Getenv("GOV8_SHIM_LIBRARY")
+	if p == "" {
+		p = os.Getenv("GOV8_SHIM_DLL")
+	} // Legacy Windows override.
+	if p != "" {
 		absolute, err := filepath.Abs(p)
 		if err != nil {
-			return "", fmt.Errorf("gov8: resolve GOV8_SHIM_DLL=%s: %w", p, err)
+			return "", fmt.Errorf("gov8: resolve native shim override=%s: %w", p, err)
 		}
 		info, err := os.Stat(absolute)
 		if err != nil {
-			return "", fmt.Errorf("gov8: GOV8_SHIM_DLL=%s: %w", p, err)
+			return "", fmt.Errorf("gov8: native shim override=%s: %w", p, err)
 		}
 		if !info.Mode().IsRegular() {
-			return "", fmt.Errorf("gov8: GOV8_SHIM_DLL=%s is not a regular file", p)
+			return "", fmt.Errorf("gov8: native shim override=%s is not a regular file", p)
 		}
 		return absolute, nil
 	}
 	path, err := prebuilt.Path()
 	if err != nil {
-		return "", fmt.Errorf("gov8: prepare embedded gov8_shim.dll: %w (or set GOV8_SHIM_DLL to a trusted DLL path)", err)
+		return "", fmt.Errorf("gov8: prepare embedded native shim: %w (or set GOV8_SHIM_LIBRARY to a trusted library path)", err)
 	}
 	return path, nil
 }
@@ -78,8 +79,8 @@ func loadShim() error {
 		}
 		abi, _, _ := abiProc.Call()
 		if abi != shimABIVersion {
-			shimLoadErr = fmt.Errorf("gov8: shim ABI mismatch: DLL reports %d, module expects %d; "+
-				"remove GOV8_SHIM_DLL or rebuild that override for this module version", abi, shimABIVersion)
+			shimLoadErr = fmt.Errorf("gov8: shim ABI mismatch: library reports %d, module expects %d; "+
+				"remove GOV8_SHIM_LIBRARY/GOV8_SHIM_DLL or rebuild that override for this module version", abi, shimABIVersion)
 			return
 		}
 		shimDLL = dll
@@ -87,26 +88,6 @@ func loadShim() error {
 		procTable.Store(&m)
 	})
 	return shimLoadErr
-}
-
-func loadShimDLL(path string) (*syscall.DLL, error) {
-	name, err := syscall.UTF16PtrFromString(path)
-	if err != nil {
-		return nil, err
-	}
-	const (
-		loadLibrarySearchDLLLoadDir = 0x00000100
-		loadLibrarySearchSystem32   = 0x00000800
-	)
-	handle, _, callErr := loadLibraryExW.Call(
-		uintptr(unsafe.Pointer(name)),
-		0,
-		loadLibrarySearchDLLLoadDir|loadLibrarySearchSystem32,
-	)
-	if handle == 0 {
-		return nil, fmt.Errorf("LoadLibraryExW: %w", callErr)
-	}
-	return &syscall.DLL{Name: path, Handle: syscall.Handle(handle)}, nil
 }
 
 func proc(name string) *syscall.Proc {
@@ -134,7 +115,7 @@ func resolveProc(name string) *syscall.Proc {
 	}
 	p, err := shimDLL.FindProc(name)
 	if err != nil {
-		panic(fmt.Sprintf("gov8: shim export %s missing: %v; remove GOV8_SHIM_DLL or rebuild that override for this module version", name, err))
+		panic(fmt.Sprintf("gov8: shim export %s missing: %v; remove GOV8_SHIM_LIBRARY/GOV8_SHIM_DLL or rebuild that override for this module version", name, err))
 	}
 	old := *procTable.Load()
 	m := make(map[string]*syscall.Proc, len(old)+1)

@@ -4,6 +4,10 @@
 /dist/
 *.exe
 *.dll
+*.so
+*.so.*
+!third_party/gov8/internal/prebuilt/linux_amd64/libgov8_shim.so.gz
+*.a
 *.pdb
 *.test
 *.out

@@ -1,4 +1,4 @@
-//go:build windows && amd64
+//go:build (windows || linux) && amd64
 
 package gov8
 
@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"runtime"
 	"sync"
-	"syscall"
+	syscall "github.com/maclof/gov8/internal/native"
 	"unicode/utf8"
 	"unsafe"
 )

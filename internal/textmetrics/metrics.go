@@ -7,6 +7,7 @@ import (
 	"bytes"
 	"encoding/binary"
 	"fmt"
+	"io/fs"
 	"math"
 	"os"
 	"path/filepath"
@@ -43,6 +44,7 @@ type loaded struct {
 type Engine struct {
 	fallbackFamilies []string
 	genericFamilies  map[string]string
+	genericFallbacks map[string][]string
 	resources        map[string]resource
 	localNames       map[string]resource
 	dirs             []string
@@ -64,11 +66,33 @@ func New() *Engine {
 		if local := os.Getenv("LOCALAPPDATA"); local != "" {
 			dirs = append(dirs, filepath.Join(local, "Microsoft", "Windows", "Fonts"))
 		}
+	} else if runtime.GOOS == "linux" {
+		dirs = append(dirs, "/usr/local/share/fonts", "/usr/share/fonts")
+		if data := os.Getenv("XDG_DATA_HOME"); filepath.IsAbs(data) {
+			dirs = append(dirs, filepath.Join(data, "fonts"))
+		} else if home, err := os.UserHomeDir(); err == nil {
+			dirs = append(dirs, filepath.Join(home, ".local", "share", "fonts"))
+		}
+		if home, err := os.UserHomeDir(); err == nil {
+			dirs = append(dirs, filepath.Join(home, ".fonts"))
+		}
 	}
-	return NewDirectories(dirs)
+	engine := NewDirectories(dirs)
+	// A generic CSS family must resolve to a real local resource when the
+	// reference family's font files are absent. Explicit resource profiles
+	// (MIMIC_FONT_DIR / NewDirectories) retain their fail-closed boundary.
+	if runtime.GOOS == "linux" && os.Getenv("MIMIC_FONT_DIR") == "" {
+		engine.genericFallbacks = map[string][]string{
+			"serif":      {"liberation serif", "dejavu serif", "noto serif"},
+			"sans-serif": {"liberation sans", "dejavu sans", "noto sans"},
+			"system-ui":  {"liberation sans", "dejavu sans", "noto sans"},
+			"monospace":  {"liberation mono", "dejavu sans mono", "noto sans mono"},
+		}
+	}
+	return engine
 }
 
-// NewDirectories permits explicit font resources on a non-Windows host. The
+// NewDirectories permits explicit font resources on either host. The
 // installed Windows reference fonts themselves are not distributed by Mimic.
 func NewDirectories(dirs []string) *Engine {
 	return &Engine{dirs: append([]string(nil), dirs...), faces: map[string]*loaded{}, resources: map[string]resource{}, localNames: map[string]resource{}}
@@ -110,19 +134,22 @@ func (e *Engine) scan() {
 	e.scanned = true
 	var scratch []byte
 	for _, dir := range e.dirs {
-		entries, _ := os.ReadDir(dir)
-		for _, entry := range entries {
+		// Linux distributions arrange fonts in nested family/format directories.
+		// WalkDir is deterministic and does not follow directory symlinks.
+		_ = filepath.WalkDir(dir, func(path string, entry fs.DirEntry, walkErr error) error {
 			if len(e.catalog) >= 4096 {
-				return
+				return fs.SkipAll
+			}
+			if walkErr != nil || entry.IsDir() {
+				return nil
 			}
 			ext := strings.ToLower(filepath.Ext(entry.Name()))
-			if entry.IsDir() || (ext != ".ttf" && ext != ".otf" && ext != ".ttc") {
-				continue
+			if ext != ".ttf" && ext != ".otf" && ext != ".ttc" {
+				return nil
 			}
-			path := filepath.Join(dir, entry.Name())
 			f, err := os.Open(path)
 			if err != nil {
-				continue
+				return nil
 			}
 			loaders, err := ot.NewLoaders(f)
 			if err == nil {
@@ -130,7 +157,7 @@ func (e *Engine) scan() {
 					var d font.Description
 					d, scratch = font.Describe(loader, scratch)
 					d.Aspect.SetDefaults()
-					if d.Family != "" {
+					if d.Family != "" && len(e.catalog) < 4096 {
 						e.catalog = append(e.catalog, resource{path, index, strings.ToLower(d.Family), d.Aspect})
 						if raw, err := loader.RawTable(ot.MustNewTag("name")); err == nil {
 							if names, _, err := tables.ParseName(raw); err == nil {
@@ -146,6 +173,10 @@ func (e *Engine) scan() {
 				}
 			}
 			f.Close()
+			return nil
+		})
+		if len(e.catalog) >= 4096 {
+			return
 		}
 	}
 }
@@ -183,6 +214,7 @@ func (e *Engine) selectResource(families string, weight float64, italic bool, ch
 			return e.resources[choices[bestChoice].ID], nil
 		}
 
+		generic := name
 		configuredGeneric := false
 		if !quoted {
 			if family, ok := e.genericFamilies[name]; ok {
@@ -201,27 +233,33 @@ func (e *Engine) selectResource(families string, weight float64, italic bool, ch
 				}
 			}
 		}
-		best := -1
-		score := math.Inf(1)
-		for i, r := range e.catalog {
-			if r.family != name {
-				continue
-			}
-			s := math.Abs(float64(r.aspect.Weight)-weight) + 1000*math.Abs(float64(r.aspect.Stretch)-1)
-			if (r.aspect.Style == font.StyleItalic) != italic {
-				s += 10000
-			}
-			if s < score {
-				score = s
-				best = i
-			}
+		candidates := []string{name}
+		if !quoted {
+			candidates = append(candidates, e.genericFallbacks[generic]...)
 		}
-		if best >= 0 {
-			r := e.catalog[best]
-			if (r.aspect.Style == font.StyleItalic) != italic {
-				return resource{}, fmt.Errorf("synthetic font style is unsupported")
+		for _, candidate := range candidates {
+			best := -1
+			score := math.Inf(1)
+			for i, r := range e.catalog {
+				if r.family != candidate {
+					continue
+				}
+				s := math.Abs(float64(r.aspect.Weight)-weight) + 1000*math.Abs(float64(r.aspect.Stretch)-1)
+				if (r.aspect.Style == font.StyleItalic) != italic {
+					s += 10000
+				}
+				if s < score {
+					score = s
+					best = i
+				}
 			}
-			return r, nil
+			if best >= 0 {
+				r := e.catalog[best]
+				if (r.aspect.Style == font.StyleItalic) != italic {
+					return resource{}, fmt.Errorf("synthetic font style is unsupported")
+				}
+				return r, nil
+			}
 		}
 		if configuredGeneric {
 			return resource{}, fmt.Errorf("selected generic font resource is unavailable: %s", name)

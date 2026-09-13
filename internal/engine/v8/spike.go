@@ -1,4 +1,4 @@
-//go:build windows && amd64
+//go:build (windows || linux) && amd64
 
 // Package v8 implements the primary engine on a thread-affine isolate owner.
 // The low-level Realm helpers are also used by the engine differential harness.
@@ -36,7 +36,7 @@ type state struct {
 }
 
 // Runtime owns one V8 isolate on a dedicated, permanently thread-affine
-// goroutine. This is necessary on Windows: V8 isolates cannot follow a Go
+// goroutine. V8 isolates on either host cannot follow a Go
 // goroutine when it migrates between OS threads.
 type Runtime struct {
 	commands   chan actorCommand

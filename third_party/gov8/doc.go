@@ -1,27 +1,23 @@
-//go:build windows && amd64
+//go:build (windows || linux) && amd64
 
 // Package gov8 provides Go bindings for Google's V8 JavaScript and WebAssembly
 // engine.
 //
 // Applications can embed JavaScript in Go using typed APIs for isolates,
 // contexts, handle scopes, scripts, callbacks, promises, modules, WebAssembly,
-// snapshots, and the V8 Inspector. The packaged Windows amd64 runtime works
-// without requiring application developers to install Rust, Visual Studio, or
-// a C/C++ compiler.
+// snapshots, and the V8 Inspector. Packaged Windows and Linux amd64 engines
+// require no compiler or Rust installation for application developers.
 //
-// The binding uses the pinned rusty_v8 release static library for
-// x86_64-pc-windows-msvc (v8 crate =152.2.0, engine 15.2.124.1-rusty), wrapped
-// by a C ABI shim DLL shipped in gzip-compressed form with the module.
+// Both builds wrap rusty_v8 152.2.0 (V8 15.2.124.1-rusty) with the same C ABI
+// shim. Windows uses native system-call trampolines; Linux uses the System V
+// ABI through purego and a pointer-word bridge for unusually wide exports.
 //
-// # Supported platform
+// # Supported platforms
 //
-// Windows amd64 only. Every file in this module carries a
-// `//go:build windows && amd64` constraint, so building for any other target
-// fails with "build constraints exclude all Go files" — the same deliberate
-// single-platform stance as the Rust oracle. Applications need only Go: on
-// first use the packaged DLL is verified and extracted to a content-addressed
-// per-user cache. GOV8_SHIM_DLL can select a trusted ABI-compatible developer
-// build.
+// Windows amd64 and Linux amd64 (glibc 2.39+). The native library is verified
+// and extracted to a content-addressed per-user cache. GOV8_SHIM_LIBRARY can
+// select a trusted ABI-compatible developer build; GOV8_SHIM_DLL remains a
+// legacy alias. The cache must permit executable mappings.
 //
 // # Ownership and lifetime rules
 //

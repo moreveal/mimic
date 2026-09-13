@@ -1,10 +1,10 @@
 # gov8 — Go bindings for V8
 
 [![Go Reference](https://pkg.go.dev/badge/github.com/maclof/gov8.svg)](https://pkg.go.dev/github.com/maclof/gov8)
-[![windows-amd64](https://github.com/maclof/gov8/actions/workflows/windows-amd64.yml/badge.svg?branch=master)](https://github.com/maclof/gov8/actions/workflows/windows-amd64.yml)
 
 Embed Google's V8 JavaScript engine in Go with a typed API and a packaged
-Windows runtime. Applications install with `go get` and run without requiring
+Windows/Linux runtime. This is Mimic’s local fork; see [build provenance](README.mimic.md).
+Applications run without requiring
 Rust, Visual Studio, a C/C++ compiler, or a separate V8 download.
 
 ## Highlights
@@ -12,7 +12,7 @@ Rust, Visual Studio, a C/C++ compiler, or a separate V8 download.
 - **Real V8** — execute JavaScript and WebAssembly using the engine from Chrome.
 - **Go and JavaScript interop** — expose Go callbacks to JavaScript and call
   JavaScript functions from Go.
-- **Zero-build application setup** — the verified Windows amd64 runtime is
+- **Zero-build application setup** — the verified Windows and Linux amd64 runtimes are
   included in the Go module and extracted automatically.
 - **Audited behavior** — a pinned `rusty_v8` oracle runs matching fixtures and
   benchmarks against the Go implementation.
@@ -25,46 +25,30 @@ ownership, lifetime, and thread-affinity rules.
 
 ## Requirements
 
-`gov8` currently supports **Windows amd64 only**. It uses the same pinned MSVC
-V8 artifact as the Rust reference; Windows arm64, MinGW, macOS, and Linux are
-not supported.
-
-Applications using `gov8` need only:
-
-- Go 1.24 or newer
+This fork supports **Windows amd64** and **Linux amd64 (glibc 2.39+)**.
+Applications need Go 1.26.4+. ARM64, macOS and musl builds are not packaged.
 
 The current engine is V8 `15.2.124.1-rusty`, from Rust `v8 = 152.2.0`.
 
 ## Install
 
-Add the module, then run your program normally:
+Mimic's root `go.mod` selects this local fork. Keep it in the checkout;
+`go get` of upstream gov8 does not install Mimic's Linux support or HTMLDDA fixes.
 
-```powershell
-go get github.com/maclof/gov8@latest
-go run .
-```
+The appropriate gzip-compressed native shim is verified and extracted to the
+user's content-addressed OS cache. The Windows and Linux assets are selected at
+build time; a binary does not include both. The cache must allow executable
+mappings. No native rebuild or separate engine download is needed.
 
-No Rust, Visual Studio, C compiler, PowerShell setup script, or runtime download
-is needed by applications. The module contains a gzip-compressed, pinned
-Windows amd64 shim. On first use it verifies and extracts that DLL to a
-content-addressed directory below the user's OS cache; later runs verify and
-reuse the same file. The module adds about 18 MB to a program binary and uses
-about 46 MB in the per-user cache.
-
-`GOV8_SHIM_DLL` remains available as a trusted developer override. The file
-must be a matching Windows amd64 shim with the module's exact ABI:
-
-```powershell
-$env:GOV8_SHIM_DLL = 'C:\path\to\gov8\build\shim\gov8_shim.dll'
-go run .
-```
+`GOV8_SHIM_LIBRARY` selects a trusted developer library with the exact module
+ABI. `GOV8_SHIM_DLL` remains a legacy alias. See [rebuild instructions](README.mimic.md)
+for Linux and Windows; normal users need neither override.
 
 Maintainers who need to rebuild the native shim or run the Rust oracle also
 need Rust 1.98, Visual Studio with the MSVC C++ x64 build tools, and PowerShell:
 
 ```powershell
-git clone https://github.com/maclof/gov8.git
-Set-Location gov8
+Set-Location third_party/gov8
 powershell -NoProfile -ExecutionPolicy Bypass -File scripts\setup_windows.ps1
 $env:GOV8_SHIM_DLL = (Resolve-Path build\shim\gov8_shim.dll)
 go test ./...
