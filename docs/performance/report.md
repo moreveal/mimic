@@ -2071,3 +2071,65 @@ session; legacy message envelopes preserve inner dispatch order too. Control
 commands and independent sessions are not queued behind input. A 32-click burst
 regression failed with reordered down/up on both page and flattened sessions
 before the fix, and passes repeatedly for page, flattened and legacy sessions.
+
+### 2026-09-13: retain unchanged geometry across checkpoints
+
+A fresh GitHub attempt reproduced a 10.31-second click. CDP timing attributes
+0.7–0.9 seconds of Page wait to each action command; native/Go profiles trace
+the recurring task through IntersectionObserver, box sizing and CSS matching.
+Canonical geometry was being discarded at every microtask checkpoint even
+when its DOM/resource/CSSOM/environment/state epoch had not changed.
+
+Top-main-realm observations now survive checkpoints until the epoch changes;
+failed observations discard provisional results. Child, isolated and foreign
+dependencies retain the conservative synchronous path. Shadow membership
+already invalidates the canonical epoch, so an unchanged shadow tree also uses
+the IntersectionObserver no-change check.
+
+Three paired local trials (90 validated click rounds per binary) reduce the
+median-of-trial-medians click latency from 109.97 to 27.29 ms, geometry reads
+from 29.79 to 2.00 ms, and mutation/read sequences from 142.89 to 112.72 ms.
+In separate instrumented GitHub observations, warm hit tests fall from 3653.27
+to 32.20 ms and pointer movements from 780.05 to 7.86 ms; Page wait disappears
+in the measured candidate samples. The first candidate hit test still costs
+639.89 ms. The attempted GitHub menu click hit a different control and must not
+be reported as a successful interaction. The repeated diagnostic checks preserve
+the same observed hit element.
+
+Six validated TodoMVC toggles remain about 48 ms versus pinned Chrome's 12.71 ms;
+three final-build blast.hk menu cycles also pass, with first open improving
+from 2.72 to 1.39 seconds but later opens still taking 2.10–3.11 seconds versus
+Chrome's 32–45 ms. Mutation-driven CSS/geometry rebuilding remains expensive;
+there is no blanket faster-than-Chrome claim. All timing provenance, the
+remaining cold-geometry/coordinate limitations, raw evidence locations and
+final validation are in [the investigation](click-investigation-20260913.md).
+
+### 2026-09-13: mutation-aware style reuse and verified form interactions
+
+The follow-up removes repeated selector matching, cascade construction,
+inheritance/length work and primitive Go↔V8 transfers after unrelated mutations.
+Static results require exact canonical inputs; structural/state selectors are
+rechecked. Geometry positions/flow are not retained across mutation. Parsed text
+metrics use a bounded cache with authoritative font-collection invalidation.
+
+Against the previous tested executable, nine verified blast.hk menu opens fall
+from median 1879.85 to 380.78 ms. Six repeat opens through visible form readiness
+fall from 2144.84 to 436.67 ms; repeat field clicks from 510.81 to 217.50 ms.
+Every cycle clicked the actual field, typed fixed synthetic text, cleared it,
+and closed with Escape without submitting a form. First-form readiness is
+median 904.60 ms and includes network/initialization. Chrome remains faster
+(reopen through form readiness about 15.62 ms in its two warm samples).
+
+Three paired local trials reduce mutation/read latency from 110.11 to 31.34 ms;
+already-warm local reads/clicks and TodoMVC show little change. Three ChatGPT
+click-to-modal trials improve from median 944.44 to 833.62 ms. Fresh fast gates
+pass correctness, N=10/N=25 waves and memory checks, with approximately unchanged
+throughput and 0.3–0.6 MiB higher marginal RSS/page in these samples. Live Blast
+peak RSS median increases approximately 9 MiB. No universal Chrome-beating or
+stable p95 claim is made.
+
+The final-source full Go test suite passed every package, including browser
+and CDP. Focused regressions and the pinned Chrome selector oracle also pass.
+
+Binary hashes, native/Go attribution, exact checks, samples and limitations are
+in [the follow-up report](click-followup-20260913.md).

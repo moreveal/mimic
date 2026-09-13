@@ -29,6 +29,28 @@ It runs the unchanged full matrix. Its Runtime subclass verifies the just-built 
 
 ## CDP operation latency diagnostics
 
+`python tools/performance/click_latency.py --binary .build/mimic.exe --output .build/click-UNIQUE`
+creates a fresh Context, adds one local TodoMVC item, and verifies six real
+checkbox clicks. `--site github` checks a README disclosure; the harness refuses
+to click if the projected point hits a different control. The current geometry
+model can fail that guard. `--site github-probe` measures repeated hit tests and
+safe mouse movement without activating links. `--site blast --clicks 6` runs
+three login-menu open/Escape-close cycles, checking `aria-expanded` after every
+action without filling or submitting a form. Add `--exercise-form` to also wait
+for the visible login field, verify its projected hit, click it, type the fixed
+synthetic text `mimic-latency-check`, and clear it. This never submits the form.
+Form readiness, field-click and typing/clearing latencies are separate metrics.
+`--chrome --binary PATH` runs the
+same observation against pinned Chrome. `--profile-cdp` retains server command
+timings for attribution; keep it separate from unprofiled latency measurements.
+Outputs include executable and harness hashes, source status, per-command and
+per-action timings, validated state, lifecycle events, and 100 ms process-tree
+RSS/private-memory/CPU snapshots. CPU snapshots count only currently live
+processes; they are not a cumulative account of exited Chrome children.
+Each run has an outer timeout and closes its own processes. Use a fresh output
+directory. Live HTML can differ between engines and runs, so these observations
+do not replace the frozen workload comparison.
+
 `python tools/performance/live_latency.py --before .build/before.exe --after .build/after.exe --output .build/live-latency-UNIQUE`
 records five alternating clean-process trials of ChatGPT login, GitHub,
 SpigotMC, Modrinth, React and Wikipedia. It retains binary/source hashes,
@@ -88,6 +110,14 @@ The combined `all` mode also writes allocation, heap, mutex, block and goroutine
 profiles without forcing GC. Set `MIMIC_LATENCY_PROFILE_PUMP_SECONDS=20` to
 observe network continuations and subsequent tasks for a wall-clock window;
 otherwise the diagnostic retains its original twenty-turn sample.
+
+`MIMIC_LATENCY_PROFILE_ACTIONS` optionally names a JSON action array for the
+same profiled Page, after the initial pump and expression probes. An action can
+contain `expression` (state inspection), `method` and `params` (production
+`Input.dispatchMouseEvent` / `Input.dispatchKeyEvent`), and `waitMs` (pump Page
+tasks after the action). Keep coordinate preflight checks and state assertions
+in the expressions. Input replay is diagnostic, not a replacement for a real
+CDP client latency baseline. The enclosing 90-second deadline bounds pumping.
 
 
 ### Additional concurrency scaling
