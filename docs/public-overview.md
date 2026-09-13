@@ -5,9 +5,13 @@ The implementation repository remains private. Beta contact: Discord `moreveal`.
 
 The public repository has its own clean Git history. Its release set consists of
 README, FAQ, beta and quick-start documentation, a dated benchmark summary,
-numerical benchmark results, the original README hero image, and SVG charts. Usage snippets belong
-in documentation; implementation sources, executables, internal research,
+numerical benchmark results, the original README hero image, SVG charts, and
+MIT-licensed runnable client examples. Public Beta executable archives are
+published only as releases in the overview repository, with PolyForm Shield
+1.0.0 and third-party notices. Implementation sources, internal research,
 captures, traces, cookies, local paths, and private Git history are not exported.
+See [the release process](../tools/release/README.md) for native builds, packaged
+example verification, checksums, and publication gates.
 
 ## September 13, 2026 evidence
 
