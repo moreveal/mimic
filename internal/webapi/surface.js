@@ -877,6 +877,7 @@
   const bridgeApply=Reflect.apply;
   const bridgeHasOwn=Object.prototype.hasOwnProperty;
   const bridgeParse=JSON.parse,bridgeStringify=JSON.stringify,bridgeCreate=Object.create,bridgeKeys=Object.keys,bridgeSetPrototype=Object.setPrototypeOf,bridgeIsArray=Array.isArray;
+  const bridgeOwnKeys=Reflect.ownKeys,bridgeDescriptor=Object.getOwnPropertyDescriptor,bridgeDefine=Object.defineProperty,bridgeBind=Function.prototype.bind;
   // Only private encoded records enter this codec. Null prototypes prevent
   // author toJSON hooks from observing or changing transport metadata.
   const bridgeWireRecord=value=>{if(value===null||typeof value!=='object')return value;const out=bridgeIsArray(value)?bridgeSetPrototype([],null):bridgeCreate(null),names=bridgeKeys(value);for(let i=0;i<names.length;i++){const key=names[i];out[key]=bridgeWireRecord(value[key])}return out};
@@ -950,8 +951,10 @@
     const iteratorFields=result.iteratorResult?{valid:true,fields:result.iteratorResult}:null;
     // Bound callables have no nonconfigurable prototype/caller/arguments of
     // their own. Remote descriptors supply those properties when they exist.
-    const target=kind==='function'?(result.constructable?(function(){}).bind(null):()=>{}):result.array?[]:Object.create(null);
-    for(const name of Reflect.ownKeys(target))if(Object.getOwnPropertyDescriptor(target,name).configurable)delete target[name];
+    // Import scaffolding is private. Site instrumentation of reflection or
+    // bind must not observe it or recursively import its own temporary values.
+    const target=kind==='function'?(result.constructable?bridgeApply(bridgeBind,function(){},[null]):()=>{}):result.array?[]:bridgeCreate(null);
+    for(const name of bridgeOwnKeys(target))if(bridgeDescriptor(target,name).configurable)delete target[name];
     const unsupported=operation=>{host.semanticMissingAt('surface.js:513','CrossRealm.'+operation);throw new DOMException('Cross-realm '+operation+' is not implemented','NotSupportedError')};
     const traps={
       get(_target,property){bridgeAccess(id,result.realm);if(iteratorFields?.valid&&(property==='done'||property==='value')&&bridgeApply(bridgeHasOwn,iteratorFields.fields,[property]))return unwrapCrossRealm(id,iteratorFields.fields[property]);return unwrapCrossRealm(id,frameTransaction(id,result.realm,result.handle,'get',encodeCrossRealmKey(property)))},
@@ -1010,7 +1013,7 @@
         else{descriptor.value=unwrapCrossRealm(id,raw.value);descriptor.writable=!!raw.writable}
         // Reporting a remote nonconfigurable property requires the same
         // descriptor on the local proxy target (ECMAScript proxy invariants).
-        if(!descriptor.configurable)Object.defineProperty(target,property,descriptor);
+        if(!descriptor.configurable)bridgeDefine(target,property,descriptor);
         return descriptor;
       }
     };
