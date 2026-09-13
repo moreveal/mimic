@@ -27,7 +27,9 @@ The Page command boundary checks existing DOM/resource, CSSOM, focus and viewpor
 revisions only while a viewer is subscribed. Debug-only form setter tracking
 covers value changes that do not mutate attributes. A changed revision generates
 one immutable HTML update over a separate WebSocket. There is no additional
-polling timer; the existing CDP event loop supplies turn boundaries. A one-item
+polling timer; the existing CDP event loop supplies turn boundaries. A pending
+publication coalesces turns for 50 ms without restarting its delay, so continuous
+page activity cannot starve the initial snapshot or subsequent updates. A one-item
 mailbox replaces stale updates so slow network writes do not block Page execution.
 The wire still carries full immutable HTML snapshots. The viewer coalesces pending
 updates per animation frame and reconciles the existing DOM by realm/node IDs.
