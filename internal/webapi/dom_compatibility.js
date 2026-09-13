@@ -157,6 +157,9 @@ const compatibilityElementState={};
     }
     Object.defineProperty(MutationObserver.prototype,Symbol.toStringTag,{value:'MutationObserver',configurable:true});
     expose('MutationObserver',MutationObserver);
+    // The generated alias predates this semantic constructor replacement.
+    // Both Window names must retain the same constructor and observer state.
+    expose('WebKitMutationObserver',MutationObserver);
     // CharacterData and traversal share the canonical host node; cached wrapper
     // records only describe identity, and must never serve mutable text.
     const member=(proto,name,value)=>Object.defineProperty(proto,name,{value,writable:true,enumerable:true,configurable:true});
