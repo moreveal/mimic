@@ -137,6 +137,7 @@ type Realm struct {
 	formSnapshotCallback     engine.Value
 	selectorTargetID         int64
 	loadBlockers             int
+	orderedScripts           []*orderedScript
 	loadRequested            bool
 	loadScheduled            bool
 	loadCompleted            bool
@@ -477,6 +478,7 @@ func (r *Realm) Close() error {
 	}
 	r.cancelResources()
 	r.resourceWG.Wait()
+	r.orderedScripts = nil
 	r.moduleFetches = nil
 	r.moduleGraphs = nil
 	r.preparedModules = nil
@@ -993,6 +995,7 @@ func (r *Realm) installBindingsOnOwner() error {
 		values["model"] = metadata.Model
 		values["bitness"] = metadata.Bitness
 		values["wow64"] = metadata.WoW64
+		values["formFactors"] = append([]string{}, metadata.FormFactors...)
 		fullBrands := []map[string]any{}
 		for _, b := range metadata.FullVersionList {
 			v := b.FullVersion
@@ -1441,6 +1444,15 @@ func (r *Realm) installBindingsOnOwner() error {
 			return r.val(nil), nil
 		}
 		return r.val(nodeData(n)), nil
+	})
+	host["scriptAsync"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		id := int64(numarg(a, 0))
+		if len(a) > 1 {
+			r.document.ClearScriptForceAsync(id)
+		}
+		n, _ := r.document.Get(id)
+		_, present := n.Attributes["async"]
+		return r.val(n.ScriptForceAsync || present), nil
 	})
 	host["setDOMQueryCallback"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		if len(a) > 0 {
@@ -2351,8 +2363,12 @@ func (r *Realm) hostXHR(_ engine.Value, a []engine.Value) (engine.Value, error) 
 	headers := headerMap(arg(a, 3))
 	authorHeaderOrder := stringSlice(arg(a, 6))
 	body := []byte(strarg(a, 4))
-	if len(body) > 0 && headers.Get("Content-Type") == "" {
-		headers.Set("Content-Type", "text/plain;charset=UTF-8")
+	hasBody, _ := arg(a, 8).(bool)
+	if method := strarg(a, 1); method == "GET" || method == "HEAD" {
+		body, hasBody = nil, false
+	}
+	if hasBody {
+		headers.Set("Content-Type", xhrStringContentType(headers.Get("Content-Type")))
 	}
 	timeout := time.Duration(numarg(a, 5)) * time.Millisecond
 	request := network.Request{ContextID: r.agent.ContextID(), URL: u, Referrer: r.documentURL(), SourceURL: r.documentURL(), Method: strarg(a, 1), Headers: headers, AuthorHeaderOrder: authorHeaderOrder, Body: body, Initiator: network.XHR, Credentials: "same-origin"}
@@ -2618,6 +2634,16 @@ func (r *Realm) prepareConnectedResource(childID int64, loadCallback, errorCallb
 		}
 	}
 	request := r.elementRequest(u, node.Attributes, initiator)
+	var ordered *orderedScript
+	orderOwner := r
+	if r.mainWorld != nil {
+		orderOwner = r.mainWorld
+	}
+	_, asyncAttribute := node.Attributes["async"]
+	if tag == "SCRIPT" && !node.ScriptForceAsync && !asyncAttribute && scriptExecutionKind(node.Attributes["type"], node.Attributes["language"]) == "classic" {
+		ordered = &orderedScript{}
+		orderOwner.orderedScripts = append(orderOwner.orderedScripts, ordered)
+	}
 	r.scheduler.Post(resourceSource, resourceDelay, func(context.Context) error {
 		r.resourceWG.Add(1)
 		go func() {
@@ -2628,12 +2654,32 @@ func (r *Realm) prepareConnectedResource(childID int64, loadCallback, errorCallb
 			}
 			r.scheduler.Post(scheduler.Network, 0, func(ctx context.Context) error {
 				r.notifyPerformanceObservers(ctx)
+				if ordered != nil {
+					ordered.run = func(ctx context.Context) error { return resourceTask(ctx, &res, loadErr) }
+					return orderOwner.runOrderedScripts(ctx)
+				}
 				return resourceTask(ctx, &res, loadErr)
 			})
 		}()
 		return nil
 	})
 	return nil, nil
+}
+
+type orderedScript struct{ run func(context.Context) error }
+
+// Fetches stay concurrent; classic scripts with force-async cleared execute in
+// insertion order, including load failures. Only the Page event loop owns this queue.
+func (r *Realm) runOrderedScripts(ctx context.Context) error {
+	for len(r.orderedScripts) > 0 && r.orderedScripts[0].run != nil {
+		entry := r.orderedScripts[0]
+		r.orderedScripts[0] = nil
+		r.orderedScripts = r.orderedScripts[1:]
+		if err := entry.run(ctx); err != nil {
+			r.agent.Page().trace.Add(trace.Error, "orderedScript", map[string]any{"error": err.Error()})
+		}
+	}
+	return nil
 }
 func int64Number(v any) int64 {
 	switch n := v.(type) {

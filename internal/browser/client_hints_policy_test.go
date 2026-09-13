@@ -12,6 +12,39 @@ import (
 	"time"
 )
 
+func TestFormFactorHintsRespectOptInAndRedirects(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, p *Page) {
+		echo := func(w http.ResponseWriter, r *http.Request) {
+			w.Header().Set("Access-Control-Allow-Origin", "*")
+			json.NewEncoder(w).Encode([]string{r.Header.Get("Sec-CH-UA-Form-Factors"), r.Header.Get("Sec-CH-UA-WoW64")})
+		}
+		other := httptest.NewServer(http.HandlerFunc(echo))
+		defer other.Close()
+		top := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+			switch r.URL.Path {
+			case "/probe":
+				echo(w, r)
+			case "/redirect":
+				http.Redirect(w, r, other.URL, http.StatusFound)
+			default:
+				w.Header().Set("Accept-CH", "Sec-CH-UA-Form-Factors, Sec-CH-UA-WoW64")
+				w.Header().Set("Content-Type", "text/html")
+				fmt.Fprint(w, "<!doctype html><body>")
+			}
+		}))
+		defer top.Close()
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
+		if err := p.Navigate(ctx, top.URL); err != nil {
+			t.Fatal(err)
+		}
+		got, err := p.Evaluate(ctx, `(async()=>{const a=await(await fetch('/probe')).json();const b=await(await fetch('/redirect')).json();const c=await navigator.userAgentData.getHighEntropyValues(['formFactors','wow64']);c.formFactors[0]='changed';const d=await navigator.userAgentData.getHighEntropyValues(['formFactors','wow64']);return JSON.stringify([a,b,d.formFactors,d.wow64])})()`)
+		if err != nil || got != `[["\"Desktop\"","?0"],["",""],["Desktop"],false]` {
+			t.Fatalf("%v, %v", got, err)
+		}
+	})
+}
+
 // Frozen Chrome 152: parent opt-in plus effective delegation is required.
 // A child's Accept-CH alone cannot opt its subrequests in.
 func TestClientHintsFramePolicy(t *testing.T) {

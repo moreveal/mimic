@@ -73,10 +73,15 @@ This is verified handshake and initial control-profile compatibility, **not
 complete byte-for-byte Chrome network equivalence**. Random key material,
 GREASE, permutations, tickets and measured timing intentionally vary.
 
-The inherited HTTP/3 implementation has no dynamic QPACK decoder/table support,
-despite the existing Chrome SETTINGS advertisement. A peer using dynamic QPACK
-can therefore fail; the local end-to-end peer uses static/literal headers. This
-is a real remaining compatibility gap, not proof of full HTTP/3 coverage.
+The inherited dynamic QPACK receive gap was repaired on 2026-09-13. Each client
+connection now owns a bounded dynamic table, consumes encoder instructions,
+unblocks dependent field sections and sends insertion/section acknowledgments
+and blocked-stream cancellations. The request encoder remains static-only.
+RFC 9204 vectors and a real local HTTP/3 peer cover dynamic response headers,
+trailers and table reuse across two POSTs, including instructions arriving after
+the referring header block. Existing Chrome SETTINGS expectations are unchanged.
+The net/http adapter now projects populated trailers after body EOF. See
+[implementation and live results](google-signin-20260913.md).
 
 QUIC CRYPTO fragmentation/coalescing, ACK scheduling, congestion control and
 all packet-level timing have not been matched to Chrome. Zero-RTT application

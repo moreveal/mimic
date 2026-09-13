@@ -342,31 +342,6 @@ func (e Environment) ClientHintHeaders(accepted map[string]bool) map[string]stri
 	if o := e.UserAgentOverride; o != nil && o.UserAgent != "" {
 		return overrideHintHeaders(o.Metadata, accepted)
 	}
-	full := e.Product.FullVersion
-	arch, bitness := "x86", "64"
-	if strings.Contains(e.Platform.Architecture, "arm") {
-		arch = "arm"
-	}
-	if !strings.Contains(e.Platform.Architecture, "64") {
-		bitness = "32"
-	}
-	fullBrands := make([]string, 0, len(e.Product.UserAgentBrands))
-	for _, brand := range e.Product.UserAgentBrands {
-		fullBrands = append(fullBrands, fmt.Sprintf(`%q;v=%q`, brand.Brand, brand.FullVersion))
-	}
-	values := map[string]string{
-		"Sec-CH-UA-Arch":              fmt.Sprintf("%q", arch),
-		"Sec-CH-UA-Bitness":           fmt.Sprintf("%q", bitness),
-		"Sec-CH-UA-Full-Version":      fmt.Sprintf("%q", full),
-		"Sec-CH-UA-Full-Version-List": strings.Join(fullBrands, ", "),
-		"Sec-CH-UA-Model":             `""`,
-		"Sec-CH-UA-Platform-Version":  fmt.Sprintf("%q", e.Platform.OSVersion),
-	}
-	out := map[string]string{}
-	for name, value := range values {
-		if accepted[strings.ToLower(name)] {
-			out[name] = value
-		}
-	}
-	return out
+	metadata := e.UserAgentData()
+	return overrideHintHeaders(&metadata, accepted)
 }

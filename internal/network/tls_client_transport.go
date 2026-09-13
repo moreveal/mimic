@@ -201,7 +201,7 @@ func (t *TLSClientTransport) roundTrip(request *http.Request, client tls_client.
 		}
 		responseHeader[name] = append([]string(nil), values...)
 	}
-	return &http.Response{
+	response := &http.Response{
 		Status:           nativeResponse.Status,
 		StatusCode:       nativeResponse.StatusCode,
 		Proto:            nativeResponse.Proto,
@@ -214,7 +214,28 @@ func (t *TLSClientTransport) roundTrip(request *http.Request, client tls_client.
 		Close:            nativeResponse.Close,
 		Uncompressed:     nativeResponse.Uncompressed,
 		Request:          request,
-	}, nil
+	}
+	response.Trailer = http.Header(nativeResponse.Trailer).Clone()
+	if nativeResponse.Body != nil {
+		response.Body = &tlsResponseBody{ReadCloser: nativeResponse.Body, source: nativeResponse, target: response}
+	}
+	return response, nil
+}
+
+// Trailers are populated by the transport while Body is read. Project them at
+// EOF, rather than freezing the pre-body response (which has no trailer values).
+type tlsResponseBody struct {
+	io.ReadCloser
+	source *fhttp.Response
+	target *http.Response
+}
+
+func (b *tlsResponseBody) Read(p []byte) (int, error) {
+	n, err := b.ReadCloser.Read(p)
+	if err == io.EOF {
+		b.target.Trailer = http.Header(b.source.Trailer).Clone()
+	}
+	return n, err
 }
 
 func requestBytes(request *http.Request) ([]byte, error) {

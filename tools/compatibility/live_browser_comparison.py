@@ -13,7 +13,14 @@ from pathlib import Path
 import re
 import subprocess
 import time
+import sys
 from datetime import datetime, timezone
+
+# Diagnostic output includes page text from arbitrary languages, also when piped
+# on Windows. Do not depend on the process's legacy console code page.
+for stream in (sys.stdout, sys.stderr):
+    if hasattr(stream, 'reconfigure'):
+        stream.reconfigure(encoding='utf-8')
 
 import aiohttp
 import psutil

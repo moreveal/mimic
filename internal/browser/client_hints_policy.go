@@ -7,7 +7,7 @@ import (
 	"github.com/moreveal/mimic/internal/network"
 )
 
-var clientHintFeatures = []string{"ch-ua-arch", "ch-ua-bitness", "ch-ua-full-version", "ch-ua-full-version-list", "ch-ua-model", "ch-ua-platform-version"}
+var clientHintFeatures = []string{"ch-ua-arch", "ch-ua-bitness", "ch-ua-full-version", "ch-ua-full-version-list", "ch-ua-model", "ch-ua-platform-version", "ch-ua-form-factors", "ch-ua-wow64"}
 
 // Only the high-entropy hints implemented by Environment are projected here.
 // Policies are captured when a document commits, so network goroutines never

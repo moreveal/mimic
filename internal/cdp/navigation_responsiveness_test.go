@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"fmt"
 	"github.com/gorilla/websocket"
+	"github.com/moreveal/mimic/internal/trace"
 	"net/http"
 	"net/http/httptest"
 	"sort"
@@ -379,7 +380,7 @@ func TestInterruptAndCloseChildParserContinuation(t *testing.T) {
 		for _, closeTarget := range []bool{false, true} {
 			t.Run(fmt.Sprintf("external=%v/close=%v", external, closeTarget), func(t *testing.T) {
 				fixture := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-					const busy = `document.getElementById('before').textContent='running child parser script';while(true){}`
+					const busy = `document.getElementById('before').textContent='running child parser script';console.log('child parser entered');while(true){}`
 					switch r.URL.Path {
 					case "/":
 						fmt.Fprint(w, `<p>parent</p><iframe src=/child></iframe>`)
@@ -398,6 +399,18 @@ func TestInterruptAndCloseChildParserContinuation(t *testing.T) {
 				}))
 				defer fixture.Close()
 				s, addr := runningServer(t)
+				entered := make(chan struct{}, 1)
+				unsubscribe := s.Page.Trace().Subscribe(func(event trace.Event) {
+					// The fixture's only console call occurs after the DOM update.
+					// scriptStart precedes compilation, so elapsed time is not a barrier.
+					if event.Kind == trace.Console {
+						select {
+						case entered <- struct{}{}:
+						default:
+						}
+					}
+				})
+				defer unsubscribe()
 				c, _, err := websocket.DefaultDialer.Dial("ws://"+addr+"/devtools/page/"+s.Page.ID, nil)
 				if err != nil {
 					t.Fatal(err)
@@ -406,21 +419,10 @@ func TestInterruptAndCloseChildParserContinuation(t *testing.T) {
 				defer s.stopPump(s.Page)
 				c.WriteJSON(map[string]any{"id": 1, "method": "Page.navigate", "params": map[string]any{"url": fixture.URL}})
 				readReply(t, c, 1)
-				deadline := time.Now().Add(3 * time.Second)
-				started := false
-				for time.Now().Before(deadline) {
-					for _, event := range s.Page.Trace().Events() {
-						if event.Name == "scriptStart" && event.Data["frameId"] != nil && event.Data["frameId"] != s.Page.Top.ID {
-							started = true
-						}
-					}
-					if started && s.Page.ExecutionStatus().Elapsed > 20*time.Millisecond {
-						break
-					}
-					time.Sleep(time.Millisecond)
-				}
-				if !started {
-					t.Fatal("child parser script did not start")
+				select {
+				case <-entered:
+				case <-time.After(3 * time.Second):
+					t.Fatal("child parser script did not reach its DOM update")
 				}
 				c.SetReadDeadline(time.Now().Add(3 * time.Second))
 				if closeTarget {

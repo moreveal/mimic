@@ -19,6 +19,7 @@ type UserAgentOverride struct {
 }
 type UserAgentMetadata struct {
 	Brands, FullVersionList                                              []UserAgentBrand
+	FormFactors                                                          []string
 	FullVersion, Platform, PlatformVersion, Architecture, Model, Bitness string
 	Mobile, WoW64                                                        bool
 }
@@ -33,11 +34,22 @@ func (e Environment) AppVersion() string {
 func (e Environment) UserAgentData() UserAgentMetadata {
 	if o := e.UserAgentOverride; o != nil && o.UserAgent != "" {
 		if o.Metadata != nil {
-			return *o.Metadata
+			m := *o.Metadata
+			if m.FormFactors == nil {
+				m.FormFactors = []string{"Desktop"}
+			}
+			return m
 		}
 		return UserAgentMetadata{Brands: []UserAgentBrand{}, FullVersionList: []UserAgentBrand{}}
 	}
-	return UserAgentMetadata{Brands: e.Product.UserAgentBrands, FullVersionList: e.Product.UserAgentBrands, FullVersion: e.Product.FullVersion, Platform: "Windows", PlatformVersion: e.Platform.OSVersion, Architecture: "x86", Bitness: "64"}
+	arch, bitness := "x86", "64"
+	if strings.Contains(e.Platform.Architecture, "arm") {
+		arch = "arm"
+	}
+	if !strings.Contains(e.Platform.Architecture, "64") {
+		bitness = "32"
+	}
+	return UserAgentMetadata{Brands: e.Product.UserAgentBrands, FullVersionList: e.Product.UserAgentBrands, FormFactors: []string{"Desktop"}, FullVersion: e.Product.FullVersion, Platform: "Windows", PlatformVersion: e.Platform.OSVersion, Architecture: arch, Bitness: bitness}
 }
 func overrideHintHeaders(m *UserAgentMetadata, accepted map[string]bool) map[string]string {
 	out := map[string]string{}
@@ -65,6 +77,17 @@ func overrideHintHeaders(m *UserAgentMetadata, accepted map[string]bool) map[str
 		if m.WoW64 {
 			out["Sec-CH-UA-WoW64"] = "?1"
 		}
+	}
+	if accepted["sec-ch-ua-form-factors"] {
+		factors := m.FormFactors
+		if factors == nil {
+			factors = []string{"Desktop"}
+		}
+		parts := make([]string, 0, len(factors))
+		for _, factor := range factors {
+			parts = append(parts, fmt.Sprintf("%q", factor))
+		}
+		out["Sec-CH-UA-Form-Factors"] = strings.Join(parts, ", ")
 	}
 	return out
 }

@@ -110,7 +110,7 @@
   const main=(element,operation,params={})=>parse(host.mainWorldInput(nodeID(element),operation,stringify(params)));
   const control=(element,operation,key,args=[])=>compatibilityElementState.formOperation(element,operation,key,args);
   const valueOf=element=>String(control(element,'get','value'));
-  const editable=element=>element&&!element.disabled&&!element.readOnly&&(element.localName==='textarea'||element.localName==='input'&&['text','search','tel','url','email','password'].includes(element.type));
+  const editable=element=>element&&!element.disabled&&!element.readOnly&&(element.localName==='textarea'||element.localName==='input'&&['text','search','tel','url','email','password','number'].includes(element.type));
   const focus=(element,preventScroll=false)=>{if(element&&element.isConnected&&!element.disabled&&!(element.localName==='input'&&element.type==='hidden')){originalFocus.call(element);if(!preventScroll&&active.call(document)===element)compatibilityScrolling.into(element,{block:'center',inline:'center',behavior:'instant',ifNeeded:true})}};
   const changedValues=new WeakMap();
   compatibilityElementState.dispatchFocus=(target,type,related,bubbles)=>{
@@ -125,7 +125,7 @@
   Object.defineProperty(Document.prototype,'activeElement',{get(){return isolated?(wrap(main(null,'active').nodeID)||document.body||document.documentElement):active.call(document)},enumerable:true,configurable:true});
   compatibilityElementState.focused=()=>isolated?(wrap(main(null,'focused').nodeID)||null):originalFocused();
   const selection=element=>{
-    const value=valueOf(element),start=control(element,'get','selectionStart'),end=control(element,'get','selectionEnd');
+    const value=compatibilityElementState.controlEditValue?.(element)??valueOf(element),start=control(element,'get','selectionStart'),end=control(element,'get','selectionEnd');
     return {value,start:start??value.length,end:end??value.length};
   };
   const select=(element,start,end)=>{if(control(element,'get','selectionStart')!==null)control(element,'call','setSelectionRange',[start,end])};
@@ -138,13 +138,14 @@
     const before=selection(element);let start=before.start,end=before.end;
     if(inputType==='deleteContentBackward'&&start===end&&start>0){start--;if(start>0&&/[\uDC00-\uDFFF]/.test(before.value[start])&&/[\uD800-\uDBFF]/.test(before.value[start-1]))start--}
     if(inputType==='deleteContentForward'&&start===end&&end<before.value.length){end++;if(end<before.value.length&&/[\uD800-\uDBFF]/.test(before.value[end-1])&&/[\uDC00-\uDFFF]/.test(before.value[end]))end++}
-    const inserted=text??'',maximum=Number(element.getAttribute('maxlength'));
+    const inserted=element.localName==='input'&&element.type==='number'?String(text??'').replace(/[^0-9eE.+-]/g,''):text??'',maximum=Number(element.getAttribute('maxlength'));
     let addition=element.hasAttribute('maxlength')&&maximum>=0?inserted.slice(0,Math.max(0,maximum-before.value.length+end-start)):inserted;
     if(addition.length<inserted.length&&/[\uD800-\uDBFF]/.test(addition.at(-1)||'')&&/[\uDC00-\uDFFF]/.test(inserted[addition.length]))addition=addition.slice(0,-1);
     const next=before.value.slice(0,start)+addition+before.value.slice(end);
     if(next===before.value&&start===end&&addition==='')return;
     if(!changedValues.has(element))changedValues.set(element,before.value);
     control(element,'set','value',[next]);
+    compatibilityElementState.controlEdited?.(element,next);
     // Chrome's insertion uses the live range after beforeinput but places the
     // caret relative to the original composition range for Input.insertText.
     const caret=inputType==='insertText'?original.start+addition.length:start+addition.length;

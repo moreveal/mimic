@@ -10,14 +10,14 @@
   const controlDescriptors=new Map(),parseControlJSON=JSON.parse,stringifyControlJSON=JSON.stringify;
   let isolatedControls=host.isIsolatedInputWorld();
   bootstrapRestoreHooks.push(()=>{isolatedControls=host.isIsolatedInputWorld()});
-  const sharedControlKeys=new Set(['type','value','checked','indeterminate','selected','selectedIndex','selectionStart','selectionEnd','selectionDirection','setSelectionRange','select','reset']);
+  const sharedControlKeys=new Set(['type','value','checked','indeterminate','selected','selectedIndex','selectionStart','selectionEnd','selectionDirection','setSelectionRange','select','reset','setCustomValidity','willValidate','validationMessage','checkValidity','reportValidity']);
   const define=(name,key,descriptor)=>{
     const p=globalThis[name]?.prototype;if(!p)return;
     // Reflected attributes already advance the canonical DOM revision. Only
     // dirty JS-owned form state needs an additional invalidation boundary;
     // read-only methods (notably select.item) must not invalidate observations.
     if(sharedControlKeys.has(key)&&descriptor.set){const set=descriptor.set;descriptor={...descriptor,set(value){host.invalidateStyleObservations();try{return set.call(this,value)}finally{host.invalidateStyleObservations()}}}}
-    if(sharedControlKeys.has(key)&&descriptor.value){const call=descriptor.value;descriptor={...descriptor,value:function(...args){host.invalidateStyleObservations();try{return call.apply(this,args)}finally{host.invalidateStyleObservations()}}}}
+    if(sharedControlKeys.has(key)&&descriptor.value&&!['checkValidity','reportValidity'].includes(key)){const call=descriptor.value;descriptor={...descriptor,value:function(...args){host.invalidateStyleObservations();try{return call.apply(this,args)}finally{host.invalidateStyleObservations()}}}}
     let entries=controlDescriptors.get(p);if(!entries){entries=new Map();controlDescriptors.set(p,entries)}entries.set(key,descriptor);
     if(sharedControlKeys.has(key)){
       const original=descriptor;
@@ -27,6 +27,9 @@
     Object.defineProperty(p,key,{...descriptor,enumerable:true,configurable:true});
   };
   compatibilityElementState.formOperation=(element,operation,key,args=[])=>{
+    if(key==='$validity')return validityFlags(element);
+    if(key==='$controlEdited'){compatibilityElementState.controlEdited(element,args[0]);return null}
+    if(key==='$editValue')return compatibilityElementState.controlEditValue(element);
     for(let p=Object.getPrototypeOf(element);p;p=Object.getPrototypeOf(p)){
       const descriptor=controlDescriptors.get(p)?.get(key);if(!descriptor)continue;
       const method=operation==='get'?descriptor.get:operation==='set'?descriptor.set:descriptor.value;
@@ -86,18 +89,18 @@
       if(type==='date')return validDate(value)?value:'';if(type==='time')return validTime(value)?value:'';
       const parts=value.split(/[T ]/);if(parts.length!==2||!validDate(parts[0])||!validTime(parts[1]))return '';let time=parts[1].replace(/(\.\d*?)0+$/,'$1').replace(/\.$/,'').replace(/^(\d{2}:\d{2}):00$/,'$1');return parts[0]+'T'+time;
     }
-    // Month/week and stepping remain a separately measured value domain.
+    if(type==='month'||type==='week')return Number.isFinite(numericValue(type,value))?value:'';
     return value;
   }
   const formOwner=e=>{const id=e.getAttribute('form');if(id!==null){const owner=document.getElementById(id);return owner?.localName==='form'?owner:null}for(let p=e.parentElement;p;p=p.parentElement)if(p.localName==='form')return p;return null};
   const inputValue=e=>{const s=inputState(e),m=mode(e);if(m==='filename')return '';if(m==='default-on')return e.getAttribute('value')??'on';if(m==='default')return e.getAttribute('value')??'';return sanitize(e,s.dirty?s.value:(e.getAttribute('value')??''))};
   define('HTMLInputElement','type',{get(){return typeOf(this)},set(value){const oldMode=mode(this),oldValue=inputValue(this);this.setAttribute('type',String(value));const next=mode(this),s=inputState(this);if(oldMode==='value'&&next!=='value'&&oldValue!=='')this.setAttribute('value',oldValue);if(oldMode!=='value'&&next==='value'){s.dirty=false;s.value=''}if(next==='filename'){s.dirty=false;s.value=''}}});
-  define('HTMLInputElement','value',{get(){return inputValue(this)},set(value){value=value===null?'':String(value);const m=mode(this),s=inputState(this);if(m==='filename'){if(value!=='')throw new DOMException('File input value can only be cleared','InvalidStateError');s.value='';return}if(m!=='value'){this.setAttribute('value',value);return}s.dirty=true;s.value=sanitize(this,value);s.start=s.end=s.value.length;s.direction='none'}});
+  define('HTMLInputElement','value',{get(){return inputValue(this)},set(value){compatibilityElementState.controlValueAssigned?.(this);value=value===null?'':String(value);const m=mode(this),s=inputState(this);if(m==='filename'){if(value!=='')throw new DOMException('File input value can only be cleared','InvalidStateError');s.value='';return}if(m!=='value'){this.setAttribute('value',value);return}s.dirty=true;s.value=sanitize(this,value);s.start=s.end=s.value.length;s.direction='none'}});
   string('HTMLInputElement','defaultValue','value');
   define('HTMLInputElement','checked',{get(){const s=inputState(this);return s.dirtyChecked?s.checked:this.hasAttribute('checked')},set(value){const s=inputState(this);s.dirtyChecked=true;s.checked=Boolean(value);if(s.checked&&typeOf(this)==='radio'&&this.name){const root=this.getRootNode();for(const other of compatibilitySelectors.query(root,'input'))if(other!==this&&typeOf(other)==='radio'&&other.name===this.name&&formOwner(other)===formOwner(this)){const state=inputState(other);state.dirtyChecked=true;state.checked=false}}}});
   boolean('HTMLInputElement','defaultChecked','checked');
   define('HTMLInputElement','indeterminate',{get(){return inputState(this).indeterminate},set(value){inputState(this).indeterminate=Boolean(value)}});
-  define('HTMLTextAreaElement','value',{get(){const s=textareaState(this);return s.dirty?s.value:lf(childText(this))},set(value){const s=textareaState(this);s.dirty=true;s.value=lf(value===null?'':value);s.start=s.end=s.value.length;s.direction='none'}});
+  define('HTMLTextAreaElement','value',{get(){const s=textareaState(this);return s.dirty?s.value:lf(childText(this))},set(value){compatibilityElementState.controlValueAssigned?.(this);const s=textareaState(this);s.dirty=true;s.value=lf(value===null?'':value);s.start=s.end=s.value.length;s.direction='none'}});
   define('HTMLTextAreaElement','defaultValue',{get(){return childText(this)},set(value){this.textContent=String(value)}});
   define('HTMLTextAreaElement','type',{get(){return 'textarea'}});
   for(const name of ['HTMLInputElement','HTMLTextAreaElement']){
@@ -146,9 +149,11 @@
   for(const name of ['HTMLInputElement','HTMLTextAreaElement','HTMLSelectElement','HTMLButtonElement']){
     string(name,'name');boolean(name,'disabled');boolean(name,'required');define(name,'form',{get(){return formOwner(this)}});
   }
+  boolean('HTMLFieldSetElement','disabled');
   for(const name of ['HTMLInputElement','HTMLTextAreaElement']){string(name,'placeholder');boolean(name,'readOnly','readonly')}
   for(const name of ['HTMLInputElement','HTMLSelectElement'])boolean(name,'multiple');
   const associated=form=>Array.from(compatibilitySelectors.query(form.ownerDocument,'input,textarea,select,button')).filter(e=>formOwner(e)===form);
+  /* constraint_validation */
   define('HTMLFormElement','elements',{get(){return collection(()=>associated(this),globalThis.HTMLFormControlsCollection?.prototype||globalThis.HTMLCollection.prototype)}});
   define('HTMLFormElement','length',{get(){return associated(this).length}});
   const formCheck=form=>{if(!elementSlot(form)||form.localName!=='form')throw new TypeError('Illegal invocation');return form};
@@ -195,9 +200,10 @@
     if(!['button','input'].includes(control.localName))return;
     const form=formOwner(control);if(!form||submittingForms.has(form))return;
     submittingForms.add(form);
-    try{if(dispatchSubmit(form,control)&&form.isConnected)submitForm.call(form,control)}finally{submittingForms.delete(form)}
+    try{if(!form.hasAttribute('novalidate')&&!control.hasAttribute('formnovalidate')&&!validateForm(form))return;if(dispatchSubmit(form,control)&&form.isConnected)submitForm.call(form,control)}finally{submittingForms.delete(form)}
   };
   define('HTMLFormElement','reset',{value:function(){if(!this.dispatchEvent(new Event('reset',{bubbles:true,cancelable:true})))return;for(const control of associated(this)){
+    compatibilityElementState.controlValueAssigned?.(control);
     if(control.localName==='input'){const s=inputState(control);s.dirty=false;s.value='';s.dirtyChecked=false;s.checked=false}
     if(control.localName==='textarea'){const s=textareaState(control);s.dirty=false;s.value=''}
     if(control.localName==='select'){for(const option of optionList(control)){const s=optionState(option);s.dirty=false;s.selected=false}selectState(control).noSelection=false}

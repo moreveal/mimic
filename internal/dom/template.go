@@ -83,6 +83,15 @@ func (d *Document) ScriptStarted(id int64) bool {
 	return node != nil && node.ScriptAlreadyStarted
 }
 
+// Script async state is shared by all worlds wrapping the same canonical node.
+func (d *Document) ClearScriptForceAsync(id int64) {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	if node := d.nodes[id]; node != nil && node.TagName == "SCRIPT" {
+		node.ScriptForceAsync = false
+	}
+}
+
 func (d *Document) MarkScriptStarted(id int64) {
 	d.mu.Lock()
 	defer d.mu.Unlock()
