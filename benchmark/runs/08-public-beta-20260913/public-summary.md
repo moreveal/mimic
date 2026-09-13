@@ -147,4 +147,4 @@ These timings identify the measured build by executable hash. A subsequent brows
 
 [Download the numerical results](public-results.json): all single-page summary metrics, numerical completion/startup samples (including excluded warmups), concurrency results, and executable/harness hashes. The runtime, benchmark harness, full diagnostic captures, and research remain private. This public summary is therefore not independently reproducible from this repository alone. The exact full-run data hash is included to identify the retained private record.
 
-[Request private beta access](https://github.com/moreveal/mimic-runtime/blob/main/BETA.md) В· [Back to Mimic](https://github.com/moreveal/mimic-runtime)
+[Request private beta access](https://github.com/moreveal/mimic-overview/blob/main/BETA.md) В· [Back to Mimic](https://github.com/moreveal/mimic-overview)
