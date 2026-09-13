@@ -11,11 +11,18 @@ import (
 	"io"
 	"os"
 	"path/filepath"
+	"runtime"
 )
 
 func main() {
-	input := flag.String("input", filepath.FromSlash("build/shim/gov8_shim.dll"), "source DLL")
-	output := flag.String("output", filepath.FromSlash("internal/prebuilt/windows_amd64/gov8_shim.dll.gz"), "compressed output")
+	name := "gov8_shim.dll"
+	directory := filepath.Join("build", "shim")
+	if runtime.GOOS == "linux" {
+		name = "libgov8_shim.so"
+		directory = filepath.Join("build", "linux-amd64")
+	}
+	input := flag.String("input", filepath.Join(directory, name), "source native library")
+	output := flag.String("output", filepath.Join("internal", "prebuilt", runtime.GOOS+"_"+runtime.GOARCH, name+".gz"), "compressed output")
 	flag.Parse()
 	if err := packageShim(*input, *output); err != nil {
 		fmt.Fprintln(os.Stderr, "package-shim:", err)

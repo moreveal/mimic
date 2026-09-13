@@ -1,12 +1,13 @@
 // shim.cc — gov8 C ABI shim over the pinned prebuilt V8 static library.
 //
-// Build: scripts/setup_windows.ps1 (MSVC cl.exe, links the rusty_v8 release
-// static library for x86_64-pc-windows-msvc, crate v8 =152.2.0).
+// Build: scripts/setup_windows.ps1 (Windows/MSVC) or scripts/setup_linux.py
+// (Linux/Clang), both linking the pinned rusty_v8 152.2.0 release archive.
 //
 // ABI rules (contract with the Go side, see ffi.go in the Go module root):
-//   - Every exported function is extern "C" and uses the Windows x64 calling
-//     convention with pointer-sized words only; the Go side invokes them
-//     through syscall.SyscallN without cgo.
+//   - Exports use extern "C" with the host ABI. Go calls pass pointer-sized
+//     words. Linux wrappers normalize the five legacy floating-point exports;
+//     wide pointer-word calls use gov8_call_words. Windows retains its existing
+//     positional integer/XMM dispatch and packaged ABI.
 //   - No C++ exception may cross the boundary: every function body is wrapped
 //     in try/catch(...) and converts failures to a negative status code plus a
 //     thread-local error string readable via gov8_last_error.
@@ -35,6 +36,11 @@
 //     disposed isolate's own creation level (per-isolate entry stack),
 //     after which conditional scopes transparently re-enter the survivor.
 
+#ifndef _WIN32
+#define __declspec(x) __attribute__((visibility("default")))
+#endif
+
+#include <cstdlib>
 #include <cstdint>
 #include <cstdio>
 #include <cstring>
@@ -46,6 +52,26 @@
 
 #include "v8.h"
 #include "v8-version-string.h"
+
+// Linux's pointer-word trampoline covers exports wider than purego's 15 words.
+// All shim arguments and results use this integer/pointer ABI, never FP registers.
+#ifndef _WIN32
+template <size_t... I>
+uintptr_t Gov8CallWords(uintptr_t address, const uintptr_t* words, std::index_sequence<I...>) {
+  using Fn = uintptr_t (*)(decltype((void)I, uintptr_t{})...);
+  return reinterpret_cast<Fn>(address)(words[I]...);
+}
+template <size_t N>
+uintptr_t Gov8CallWide(uintptr_t address, size_t count, const uintptr_t* words) {
+  if (count == N) return Gov8CallWords(address, words, std::make_index_sequence<N>{});
+  if constexpr (N > 16) return Gov8CallWide<N-1>(address, count, words);
+  std::abort();
+}
+extern "C" __attribute__((visibility("default")))
+uintptr_t gov8_call_words(uintptr_t address, size_t count, const uintptr_t* words) {
+  return Gov8CallWide<42>(address, count, words);
+}
+#endif
 
 // --- C bindings exported by the pinned prebuilt artifact --------------------
 //
@@ -1716,3 +1742,36 @@ __declspec(dllexport) int64_t gov8_last_error(char* buf, int64_t cap) {
 #include "features/handles_residual.inc"
 #include "features/platform.inc"
 #include "features/platform_custom.inc"
+
+#ifndef _WIN32
+// The legacy Windows ABI mirrors positional integer arguments into XMM
+// registers. SysV assigns floating arguments independently. Normalize these
+// five legacy exports to pointer words before entering the common shim.
+static double Gov8WordDouble(uint64_t word) {
+  double value;
+  std::memcpy(&value, &word, sizeof(value));
+  return value;
+}
+extern "C" {
+__attribute__((visibility("default")))
+void* gov8_number_new_words(v8::Isolate* iso, uint64_t value, void* scope) {
+  return gov8_number_new(iso, Gov8WordDouble(value), scope);
+}
+__attribute__((visibility("default")))
+int64_t gov8_rv_set_double_words(uintptr_t rv, uint64_t value) {
+  return gov8_rv_set_double(rv, Gov8WordDouble(value));
+}
+__attribute__((visibility("default")))
+int64_t gov8_rv_date_new_words(v8::Isolate* iso, void* context, uint64_t value, void* scope, void** out) {
+  return gov8_rv_date_new(iso, context, Gov8WordDouble(value), scope, out);
+}
+__attribute__((visibility("default")))
+int64_t gov8_platform_run_idle_tasks_words(v8::Isolate* iso, uint64_t value) {
+  return gov8_platform_run_idle_tasks(iso, Gov8WordDouble(value));
+}
+__attribute__((visibility("default")))
+int64_t gov8_pc_idle_task_run_delete_words(v8::IdleTask* task, uint64_t value) {
+  return gov8_pc_idle_task_run_delete(task, Gov8WordDouble(value));
+}
+}
+#endif

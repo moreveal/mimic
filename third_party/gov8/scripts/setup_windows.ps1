@@ -100,7 +100,7 @@ $script:BuildMutex = $null
 $goos = (& go env GOOS)
 $goarch = (& go env GOARCH)
 if ($goos -ne 'windows' -or $goarch -ne 'amd64') {
-    throw "gov8 supports only GOOS=windows GOARCH=amd64 (found GOOS=$goos GOARCH=$goarch). " +
+    throw "setup_windows.ps1 requires GOOS=windows GOARCH=amd64 (found GOOS=$goos GOARCH=$goarch). " +
         'Set the environment and re-run scripts/setup_windows.ps1.'
 }
 

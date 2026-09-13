@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"syscall"
 	"time"
 
 	"github.com/moreveal/mimic/chrome"
@@ -70,7 +71,7 @@ func main() {
 	if *devPreview {
 		fmt.Printf("Debug preview: http://%s/debug/preview/\n", l.Addr())
 	}
-	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt)
+	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
 	shutdownDone := make(chan struct{})
 	go func() {

@@ -1,0 +1,81 @@
+name: Windows and Linux
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-latest]
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 30
+    env:
+      CGO_ENABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-go@v5
+        with:
+          go-version-file: go.mod
+          cache-dependency-path: |
+            go.sum
+            third_party/gov8/go.sum
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Windows C compiler
+        if: runner.os == 'Windows'
+        uses: msys2/setup-msys2@v2
+        with:
+          msystem: UCRT64
+          install: mingw-w64-ucrt-x86_64-gcc
+      - name: Add compiler to Windows PATH
+        if: runner.os == 'Windows'
+        shell: msys2 {0}
+        run: echo "$(cygpath -w /ucrt64/bin)" >> "$GITHUB_PATH"
+      - name: Build Linux executable
+        if: runner.os == 'Linux'
+        run: go build -o .build/mimic ./cmd/mimic
+      - name: Build Windows executable
+        if: runner.os == 'Windows'
+        run: go build -o .build/mimic.exe ./cmd/mimic
+      - name: Test Windows reference behavior
+        if: runner.os == 'Windows'
+        run: go test ./...
+      - name: Compile all Linux tests
+        if: runner.os == 'Linux'
+        run: go test -run '^$' ./...
+      - name: Test Linux engines and portable components
+        if: runner.os == 'Linux'
+        run: go test ./chrome/... ./cmd/... ./internal/engine/... ./internal/dom ./internal/network ./internal/profile ./internal/scheduler ./internal/state ./internal/textmetrics
+      - name: Install Linux font resources
+        if: runner.os == 'Linux'
+        run: sudo apt-get update && sudo apt-get install -y fonts-dejavu-core fonts-liberation
+      - name: Verify Linux executable over CDP
+        if: runner.os == 'Linux'
+        run: |
+          go run ./tools/runtimecheck -binary .build/mimic
+          go run ./tools/runtimecheck -binary .build/mimic -engine quickjs
+      - name: Verify Windows executable over CDP
+        if: runner.os == 'Windows'
+        run: |
+          go run ./tools/runtimecheck -binary .build/mimic.exe
+          go run ./tools/runtimecheck -binary .build/mimic.exe -engine quickjs
+      - name: Test native binding and packaged library
+        working-directory: third_party/gov8
+        run: go test ./...
+      - name: Race check V8 ownership
+        run: go test -race ./internal/engine/v8
+      - name: Upload executable
+        uses: actions/upload-artifact@v4
+        with:
+          name: mimic-${{ runner.os }}-amd64
+          path: .build/mimic*
+          if-no-files-found: error
+          include-hidden-files: true

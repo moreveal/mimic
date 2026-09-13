@@ -1,4 +1,4 @@
-//go:build windows && amd64
+//go:build (windows || linux) && amd64
 
 package gov8_test
 
@@ -18,7 +18,9 @@ func TestHTMLDDA(t *testing.T) {
 	iso := advNewIso(t)
 	defer iso.Close()
 	scope, ctx := advNewCtx(t, iso)
+	defer scope.Close()
 	defer ctx.Close()
+	checkNativeNumberABI(t, iso, scope, ctx)
 	ot, err := iso.NewObjectTemplate(scope)
 	if err != nil {
 		t.Fatal(err)

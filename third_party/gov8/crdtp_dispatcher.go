@@ -1,4 +1,4 @@
-//go:build windows && amd64
+//go:build (windows || linux) && amd64
 
 package gov8
 
@@ -10,7 +10,7 @@ import (
 	"runtime"
 	"sync"
 	"sync/atomic"
-	"syscall"
+	syscall "github.com/maclof/gov8/internal/native"
 	"unsafe"
 )
 

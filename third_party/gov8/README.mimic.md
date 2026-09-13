@@ -39,3 +39,38 @@ Packaged DLL size: 45,930,496 bytes.
 DLL SHA-256: `919522b4d4ed80671586a1b7a0efc144a533e91e08319715e76ed27962cee0ff`.
 Compressed asset: 17,575,610 bytes. Native engine: V8 15.2.124.1-rusty,
 Rust v8 crate 152.2.0, temporal_capi 0.2.6.
+
+## Linux amd64
+
+The same shim and Go binding also run on Linux using the System V ABI.
+`internal/native` isolates Windows calls from Linux `dlopen`/`dlsym` and purego
+callbacks. Pointer-word exports with more than 15 arguments use a native bridge;
+thread affinity remains checked against the owning kernel thread. No global
+Page execution lock is introduced.
+
+The packaged Linux library requires glibc 2.39+ and libgcc_s (Ubuntu 24.04+).
+It embeds V8, the matching Chromium libc++ and Temporal; no system C++ ABI or
+GPU/display service is needed. Its size and digest live in
+`internal/prebuilt/prebuilt_linux_amd64.go`. Runtime extraction and integrity
+verification are shared with Windows.
+
+From the Mimic root:
+
+```sh
+python3 third_party/gov8/scripts/setup_linux.py
+go test ./internal/engine/v8
+go test ./...
+(cd third_party/gov8 && go test ./...)
+```
+
+The rebuild requires Python 3.11+, Rust/cargo, Go 1.26.4+, binutils, and glibc
+headers. It downloads the hash-pinned v8 152.2.0 crate and Linux static archive,
+uses the crate's pinned Chromium Clang updater and libc++ headers, and builds
+Temporal with `cargo build --locked`. The downloaded compiler is only needed
+for rebuilding the shim. Linux source builds inherit the builder's glibc floor.
+
+Linux archive SHA-256:
+`b6683e9afcb77fbd8cb2c3acf45d34d52029ab216b332522c95179c12f0fed3c`.
+Both engines report V8 `15.2.124.1-rusty` and shim ABI 44.
+`GOV8_SHIM_LIBRARY` is the cross-platform developer override; `GOV8_SHIM_DLL`
+remains supported. Neither is needed for normal builds or deployments.

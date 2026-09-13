@@ -3,13 +3,13 @@
 // v8config.h requires this header (via -DV8_GN_HEADER) when the public V8
 // headers are compiled outside the GN build. The defines below must replicate
 // EXACTLY the external defines V8's GN build would generate for the pinned
-// prebuilt static library (rusty_v8_release_x86_64-pc-windows-msvc.lib,
+// prebuilt static libraries (Windows MSVC and Linux GNU x86_64,
 // v8 crate 152.2.0), because inline helper code in the public headers (e.g.
 // v8-internal.h Internals constants) is compiled into every embedder TU and
 // must agree with the engine binary.
 //
 // Derivation (see rust-oracle/README.md "Build configuration" and the crate's
-// build.rs): the pinned artifact is built on Windows x64 with
+// build.rs): both pinned non-pointer-compressed x86_64 artifacts use
 //
 //   is_debug=false  use_custom_libcxx=true
 //   v8_enable_sandbox=false
@@ -29,7 +29,7 @@
 // main pointer compression is disabled — that asymmetry is upstream default
 // behavior, faithfully reproduced here.
 //
-// AUTOMATICALLY DERIVED. DO NOT EDIT without re-deriving from v8/BUILD.gn +
+// Platform selection is isolated below. DO NOT EDIT without re-deriving from v8/BUILD.gn +
 // tools/gen-v8-gn.py for the pinned build configuration.
 
 #ifndef V8_ARRAY_BUFFER_INTERNAL_FIELD_COUNT
@@ -72,13 +72,27 @@
 #endif
 #endif  // V8_HAVE_TARGET_OS
 
+#if defined(_WIN32)
+#ifdef V8_TARGET_OS_LINUX
+#error "Linux target macro on a Windows shim"
+#endif
 #ifndef V8_TARGET_OS_WIN
 #define V8_TARGET_OS_WIN 1
-#else
-#if V8_TARGET_OS_WIN != 1
-#error "V8_TARGET_OS_WIN defined but not set to 1"
+#elif V8_TARGET_OS_WIN != 1
+#error "V8_TARGET_OS_WIN must be 1"
 #endif
-#endif  // V8_TARGET_OS_WIN
+#elif defined(__linux__)
+#ifdef V8_TARGET_OS_WIN
+#error "Windows target macro on a Linux shim"
+#endif
+#ifndef V8_TARGET_OS_LINUX
+#define V8_TARGET_OS_LINUX 1
+#elif V8_TARGET_OS_LINUX != 1
+#error "V8_TARGET_OS_LINUX must be 1"
+#endif
+#else
+#error "Unsupported gov8 host"
+#endif
 
 #ifndef CPPGC_ENABLE_LARGER_CAGE
 #define CPPGC_ENABLE_LARGER_CAGE 1
@@ -200,9 +214,6 @@
 #error "V8_TARGET_OS_IOS is defined but is disabled by V8's GN build arguments"
 #endif  // V8_TARGET_OS_IOS
 
-#ifdef V8_TARGET_OS_LINUX
-#error "V8_TARGET_OS_LINUX is defined but is disabled by V8's GN build arguments"
-#endif  // V8_TARGET_OS_LINUX
 
 #ifdef V8_TARGET_OS_MACOS
 #error "V8_TARGET_OS_MACOS is defined but is disabled by V8's GN build arguments"
