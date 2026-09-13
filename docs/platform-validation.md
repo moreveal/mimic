@@ -88,6 +88,8 @@ subtests. The first shard also runs all other root-module packages. Per-batch Go
 timeouts retain the default 10-minute budget; individual test deadlines and
 reference expectations are unchanged. Each job retains its coverage plan as a
 CI artifact. Unit checks verify that the partition omits and duplicates no tests.
+Other Windows packages run one at a time so CLI/CDP readiness deadlines do not
+compete with unrelated package initialization on the hosted runner.
 
 One run also exposed a synchronization race in
 `TestSnapshotInterruptsNavigationContinuation`: `scriptStart` is emitted before
@@ -96,6 +98,11 @@ The test now waits for the fixture's console event after that mutation, just as
 the child-parser continuation test already does. It still interrupts the infinite
 script and requires the snapshot to contain the mutated DOM. No runtime behavior
 or frozen oracle was changed for this test fix.
+
+The same barrier replaces a 10 ms elapsed-time assumption in
+`busySnapshotPage`: snapshot/close tests now observe the first timer's DOM
+mutation before interrupting it, and still assert that the next timer has not
+run. The 3-second readiness and command deadlines are retained.
 
 ## Existing publication-audit issues
 
