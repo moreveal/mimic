@@ -80,7 +80,7 @@ func (r *Realm) executeChildNavigationScript(ctx context.Context, navigation *ch
 					restoreTaskContext := stream.useTaskContext(taskContext)
 					defer restoreTaskContext()
 					stream.depth++
-					resumeErr := stream.parser.Resume(stream.onScript)
+					resumeErr := stream.parser.Resume(func(node dom.Node) error { return realm.executeStreamScript(stream, node) })
 					stream.depth--
 					if errors.Is(resumeErr, dom.ErrStreamPaused) {
 						return nil
@@ -294,7 +294,7 @@ func (p *Page) fetchNavigationResponse(ctx context.Context, u *url.URL, loaderID
 	return nil
 }
 
-func (r *Realm) deferNavigationModuleEntry(s *documentStream, pending *moduleFetch, resume func() error) bool {
+func (r *Realm) deferNavigationScriptFetch(s *documentStream, pending *scriptFetch, resume func() error) bool {
 	select {
 	case <-pending.done:
 		return false

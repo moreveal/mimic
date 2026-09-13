@@ -616,14 +616,6 @@ func (p *Page) commitNavigationResponse(ctx, taskContext context.Context, u *url
 	restoreTaskContext := streamState.useTaskContext(taskContext)
 	defer restoreTaskContext()
 	p.runInitScripts(streamState.executionContext(), realm)
-	type deferredModule struct {
-		code    string
-		name    string
-		pending *moduleFetch
-		nodeID  int64
-	}
-	modules := make([]deferredModule, 0)
-	nextModule := 0
 	streamState.onScript = func(s dom.Node) error {
 		realm.preloadModules()
 		realm.preloadResources()
@@ -657,7 +649,7 @@ func (p *Page) commitNavigationResponse(ctx, taskContext context.Context, u *url
 			}
 			if kind == "module" {
 				doc.MarkScriptStarted(s.ID)
-				modules = append(modules, deferredModule{name: su.String(), pending: realm.fetchModule(request), nodeID: s.ID})
+				streamState.deferred = append(streamState.deferred, deferredParserScript{module: true, name: su.String(), pending: realm.fetchModule(request), nodeID: s.ID})
 				return nil
 			}
 			loaded := streamState.scripts[s.ID]
@@ -698,7 +690,7 @@ func (p *Page) commitNavigationResponse(ctx, taskContext context.Context, u *url
 		if kind == "module" {
 			doc.MarkScriptStarted(s.ID)
 			if code != "" {
-				modules = append(modules, deferredModule{code: code, name: name, nodeID: s.ID})
+				streamState.deferred = append(streamState.deferred, deferredParserScript{module: true, code: code, name: name, nodeID: s.ID})
 			}
 			return nil
 		}
@@ -741,58 +733,6 @@ func (p *Page) commitNavigationResponse(ctx, taskContext context.Context, u *url
 	streamState.onFinished = func() error {
 		if streamState.ctx.Err() != nil || realm.documentStream != streamState || p.Top.Realm != realm {
 			return nil
-		}
-		if realm.readyState == "loading" {
-			realm.SetReadyState("interactive")
-		}
-		realm.preloadModules()
-		realm.preloadResources()
-		if realm.deferNavigationStylesheets(streamState, realm.startParserStylesheets(), streamState.onFinished) {
-			return nil
-		}
-		// Module scripts are deferred by default: fetch begins at parser discovery,
-		// while evaluation happens after parsing and before DOMContentLoaded.
-		for nextModule < len(modules) {
-			module := modules[nextModule]
-			if module.pending != nil {
-				if realm.deferNavigationModuleEntry(streamState, module.pending, streamState.onFinished) {
-					return nil
-				}
-				response, loadErr := module.pending.wait(ctx)
-				if loadErr != nil {
-					p.trace.Add(trace.Error, "scriptLoad", map[string]any{"url": module.name, "error": loadErr.Error()})
-					if eventErr := realm.runNavigationTask(ctx, streamState, scheduler.DOM, func(eventContext context.Context) error {
-						return realm.dispatchResourceEvent(eventContext, module.nodeID, "error")
-					}); eventErr != nil {
-						p.trace.Add(trace.Error, "scriptErrorEvent", map[string]any{"url": module.name, "error": eventErr.Error()})
-					}
-					nextModule++
-					continue
-				}
-				module.code = string(response.Body)
-			}
-			waiting, graphErr := realm.deferNavigationModuleGraph(streamState, module.code, module.name, streamState.onFinished)
-			if waiting {
-				return nil
-			}
-			nextModule++
-			if graphErr != nil {
-				p.trace.Add(trace.Exception, "script", map[string]any{"url": module.name, "error": graphErr.Error(), "module": true})
-				continue
-			}
-			if err := realm.runNavigationTask(ctx, streamState, scheduler.DOM, func(taskContext context.Context) error {
-				p.trace.Add(trace.JS, "scriptStart", map[string]any{"url": module.name, "realm": realm.ID, "module": true})
-				_, evalErr := realm.EvaluateModule(taskContext, module.code, module.name, realm.loadedModule)
-				if evalErr != nil {
-					p.trace.Add(trace.Exception, "script", map[string]any{"url": module.name, "error": evalErr.Error(), "module": true})
-					p.trace.Add(trace.JS, "scriptEnd", map[string]any{"url": module.name, "realm": realm.ID, "module": true, "error": evalErr.Error()})
-					return evalErr
-				}
-				p.trace.Add(trace.JS, "scriptEnd", map[string]any{"url": module.name, "realm": realm.ID, "module": true})
-				return nil
-			}); err != nil {
-				p.trace.Add(trace.Error, "moduleScriptTask", map[string]any{"url": module.name, "error": err.Error()})
-			}
 		}
 		// The HTML parser creates browsing contexts for iframe elements without
 		// waiting for script to read contentWindow.  Attach those contexts now, but

@@ -10,7 +10,7 @@ import (
 	"github.com/moreveal/mimic/internal/scheduler"
 )
 
-type moduleFetch struct {
+type scriptFetch struct {
 	done     chan struct{}
 	response network.Response
 	err      error
@@ -19,21 +19,28 @@ type moduleFetch struct {
 // The realm's module map shares fetches (including failures), independently of
 // HTTP caching. Only network work runs concurrently; linking, evaluation and
 // observable events remain on the Page's existing event loop.
-func (r *Realm) fetchModule(request network.Request) *moduleFetch {
+func (r *Realm) fetchModule(request network.Request) *scriptFetch {
 	if r.moduleFetches == nil {
-		r.moduleFetches = make(map[string]*moduleFetch)
+		r.moduleFetches = make(map[string]*scriptFetch)
 	}
 	key := request.URL.String()
 	if pending := r.moduleFetches[key]; pending != nil {
 		return pending
 	}
-	pending := &moduleFetch{done: make(chan struct{})}
+	pending := r.fetchScript(r.resourceContext, request)
 	r.moduleFetches[key] = pending
+	return pending
+}
+
+// A fetch owns only its immutable result. Classic script fetches do not enter
+// the module map: identical URLs can represent separate classic executions.
+func (r *Realm) fetchScript(ctx context.Context, request network.Request) *scriptFetch {
+	pending := &scriptFetch{done: make(chan struct{})}
 	r.resourceWG.Add(1)
 	go func() {
 		defer r.resourceWG.Done()
 		defer close(pending.done)
-		pending.response, pending.err = r.loadResource(r.resourceContext, request)
+		pending.response, pending.err = r.loadResource(ctx, request)
 		if pending.err == nil {
 			pending.err = scriptResponseError(pending.response)
 		}
@@ -41,7 +48,7 @@ func (r *Realm) fetchModule(request network.Request) *moduleFetch {
 	return pending
 }
 
-func (m *moduleFetch) wait(ctx context.Context) (network.Response, error) {
+func (m *scriptFetch) wait(ctx context.Context) (network.Response, error) {
 	select {
 	case <-ctx.Done():
 		return network.Response{}, ctx.Err()

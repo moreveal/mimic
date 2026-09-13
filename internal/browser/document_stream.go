@@ -16,6 +16,9 @@ import (
 // The stream replaces input, not the realm or canonical Document. The parser
 // owns insertion state; this layer owns script execution and load events.
 type documentStream struct {
+	deferred                        []deferredParserScript
+	nextDeferred                    int
+	completionStarted               bool
 	parser                          *dom.Stream
 	depth                           int
 	closing, finished, insideScript bool
@@ -152,6 +155,9 @@ func (r *Realm) openDocumentStream(caller *Realm) error {
 
 func (r *Realm) writeDocumentStream(caller *Realm, source string) error {
 	if r.documentStream == nil || r.documentStream.finished {
+		if r.ignoreDestructiveWrites > 0 {
+			return nil
+		}
 		if err := r.openDocumentStream(caller); err != nil {
 			return err
 		}
@@ -187,6 +193,9 @@ func (r *Realm) closeDocumentStream() error {
 func (r *Realm) executeStreamScript(s *documentStream, node dom.Node) error {
 	r.preloadResources()
 	r.startDocumentImages()
+	if queued, err := r.queueDeferredClassic(s, node); queued || err != nil {
+		return err
+	}
 	if s.onScript != nil {
 		return s.onScript(node)
 	}
@@ -290,13 +299,49 @@ func (r *Realm) finishDocumentStream(s *documentStream) error {
 		return nil
 	}
 	s.finished = true
-	r.preloadResources()
-	r.startDocumentImages()
 	if s.navigation {
 		r.updateSelectorTarget(r.documentURL().Fragment)
 		if err := r.scrollToFragment(r.resourceContext); err != nil {
 			return err
 		}
+	}
+	if !s.navigation && len(s.deferred) > 0 {
+		// document.close may be a cross-realm host call on an active JS stack.
+		// Finish deferred execution in a Page task, after that caller unwinds.
+		r.scheduler.Post(scheduler.DOM, 0, func(ctx context.Context) error {
+			restore := s.useTaskContext(ctx)
+			defer restore()
+			s.inNavigationTask = true
+			defer func() { s.inNavigationTask = false }()
+			return r.finishParsedDocument(s)
+		})
+		return nil
+	}
+	return r.finishParsedDocument(s)
+}
+
+func (r *Realm) finishParsedDocument(s *documentStream) error {
+	if r.documentStream != s || s.ctx.Err() != nil || r.inactive || s.completionStarted {
+		return nil
+	}
+	r.preloadModules()
+	r.preloadResources()
+	r.startDocumentImages()
+	if r.readyState == "loading" {
+		r.SetReadyState("interactive")
+	}
+	resume := func() error { return r.finishParsedDocument(s) }
+	if r.deferNavigationStylesheets(s, r.startParserStylesheets(), resume) {
+		return nil
+	}
+	if waiting, err := r.runDeferredParserScripts(s, resume); waiting || err != nil {
+		return err
+	}
+	if r.documentStream != s || s.ctx.Err() != nil || r.inactive {
+		return nil
+	}
+	s.completionStarted = true
+	if s.navigation {
 		if s.onFinished != nil {
 			return s.onFinished()
 		}
