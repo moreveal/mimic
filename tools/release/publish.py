@@ -15,6 +15,15 @@ CHECKS = {'runtimecheck:v8', 'runtimecheck:quickjs', 'runtimecheck:goja',
           'examples:puppeteer', 'examples:playwright', 'examples:concurrency'}
 
 
+def require_ci(source_revision):
+    runs = json.loads(run('gh', 'run', 'list', '--repo', 'moreveal/mimic',
+                          '--workflow', 'build.yml', '--commit', source_revision,
+                          '--limit', '1', '--json', 'status,conclusion,databaseId', capture=True))
+    if not runs or runs[0]['status'] != 'completed' or runs[0]['conclusion'] != 'success':
+        raise RuntimeError('Windows/Linux CI must pass on the exact source revision before publication')
+    return runs[0]['databaseId']
+
+
 def verified_archive(output, version, host, source_revision, public_revision):
     receipt = json.loads((output / f'{host}-amd64.receipt.json').read_text())
     if (receipt['version'] != version or receipt['platform'] != f'{host}-amd64'
@@ -42,6 +51,7 @@ def main():
     overview = args.overview.resolve()
     source_revision = clean_revision(ROOT)
     public_revision = clean_revision(overview)
+    require_ci(source_revision)
     remote_revision = run('gh', 'api', f'repos/{REPO}/commits/main', '--jq', '.sha', capture=True).strip()
     if public_revision != remote_revision:
         raise RuntimeError('Push the public overview commit before publishing')
@@ -58,7 +68,7 @@ def main():
         'license': 'PolyForm-Shield-1.0.0', 'exampleLicense': 'MIT',
         'requirements': {'windows-amd64': 'Windows x64; validated on Windows 11',
                          'linux-amd64': 'glibc 2.39+, libgcc_s, installed fonts; Ubuntu 24.04 / WSL2'},
-        'clients': {'playwright-core': '1.63.0', 'puppeteer-core': '25.10.0'},
+        'clients': json.loads((overview / 'examples/package.json').read_text())['dependencies'],
         'artifacts': public_assets,
     }, indent=2) + '\n', encoding='utf-8')
     assets.append(manifest)

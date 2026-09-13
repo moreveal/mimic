@@ -2,9 +2,10 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
+from unittest.mock import patch
 
 from prepare import digest
-from publish import CHECKS, verified_archive
+from publish import CHECKS, require_ci, verified_archive
 
 
 class PublicationGateTests(unittest.TestCase):
@@ -47,6 +48,19 @@ class PublicationGateTests(unittest.TestCase):
         self.receipt['archive'] = '../private-source.zip'
         with self.assertRaisesRegex(RuntimeError, 'Unexpected archive name'):
             self.check()
+
+    def test_missing_running_or_failed_ci_rejected(self):
+        for runs in ([], [{'status': 'in_progress', 'conclusion': '', 'databaseId': 1}],
+                     [{'status': 'completed', 'conclusion': 'failure', 'databaseId': 1}]):
+            with self.subTest(runs=runs), patch('publish.run', return_value=json.dumps(runs)):
+                with self.assertRaisesRegex(RuntimeError, 'CI must pass'):
+                    require_ci('source')
+
+    def test_successful_ci_checks_exact_source(self):
+        with patch('publish.run', return_value=json.dumps([
+                {'status': 'completed', 'conclusion': 'success', 'databaseId': 42}])) as command:
+            self.assertEqual(require_ci('exact-source'), 42)
+            self.assertIn('exact-source', command.call_args.args)
 
 
 if __name__ == '__main__':

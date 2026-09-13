@@ -46,7 +46,9 @@ python tools/release/publish.py --version v0.1.0-beta.1 --overview E:/GitHub/mim
 
 Publishing requires both verified platform receipts with matching private/public
 revisions and current archive hashes, clean checkouts, and the public commit
-already pushed. It creates checksums and a public manifest, then creates a draft
+already pushed. The Windows/Linux GitHub Actions workflow must also pass on the
+exact private source revision; running, missing, or failed CI blocks publication.
+It creates checksums and a public manifest, then creates a draft
 **prerelease** in `moreveal/mimic-overview`, uploads all assets, and publishes it.
 The public manifest records the overview revision, versions, platform requirements,
 and hashes, not local build paths or private source revisions. Private receipts

@@ -1,4 +1,4 @@
-# Windows / Linux validation — September 13, 2026
+# Windows / Linux validation вЂ” September 13, 2026
 
 ## Supported build targets
 
@@ -75,6 +75,23 @@ ordinary Linux fonts also fails its exact metric assertions by design. CI does
 not redistribute proprietary fonts: it runs the full suite on Windows, compiles
 all Linux tests, and exercises the portable components, race checks and all
 V8/QuickJS executable scenarios on Linux.
+
+## Hosted Windows CI follow-up
+
+Initial GitHub-hosted Windows runs built the executable but exceeded Go's default
+10-minute aggregate browser-package test budget. The timeout stacks showed
+different recently started tests (0вЂ“2 seconds), including stylesheet and graphics
+oracles, rather than a single test blocked for ten minutes. The workflow now
+allows 20 minutes per package for the full Windows suite; individual test
+deadlines and reference expectations are unchanged.
+
+One run also exposed a synchronization race in
+`TestSnapshotInterruptsNavigationContinuation`: `scriptStart` is emitted before
+compilation, so 20 ms of wall time does not prove the first DOM mutation happened.
+The test now waits for the fixture's console event after that mutation, just as
+the child-parser continuation test already does. It still interrupts the infinite
+script and requires the snapshot to contain the mutated DOM. No runtime behavior
+or frozen oracle was changed for this test fix.
 
 ## Existing publication-audit issues
 
