@@ -548,7 +548,12 @@ func (s *session) handleCommand(m message) (afterUnlock func()) {
 			if m.timing != nil {
 				m.timing.pageWait = time.Since(waitStarted)
 			}
-			defer page.UnlockCommands()
+			intermediateMouse := m.Method == "Input.dispatchMouseEvent" && stringValue(p["type"]) != "mouseReleased"
+			if intermediateMouse {
+				defer page.UnlockCommandsWithoutPreview()
+			} else {
+				defer page.UnlockCommands()
+			}
 		}
 	}
 	var result any = map[string]any{}

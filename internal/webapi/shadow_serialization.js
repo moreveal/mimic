@@ -39,5 +39,21 @@
         styles:constructedStyleSheets.snapshot(root)});
     }
     return JSON.stringify(result);
-  });
+  },encoded => {
+    for(const state of JSON.parse(encoded)||[]) {
+      if(!state.mode)continue;
+      const node=wrap(state.hostID);
+      if(!(node instanceof Element))continue;
+      let root=elementShadows.get(node);
+      if(!root) {
+        root=new ShadowRoot(hostToken,node,state.mode,{delegatesFocus:!!state.delegatesFocus});
+        setElementShadow(node,root);
+      }
+      const fragment=fragmentState(root);
+      for(const child of fragment.children)deleteSyntheticParent(child);
+      fragment.children=Array.from(state.children||[],id=>wrap(id)).filter(Boolean);
+      fragment.html=state.html||'';
+      for(const child of fragment.children)setSyntheticParent(child,root);
+    }
+  },()=>String(shadowSnapshotRevision));
 }

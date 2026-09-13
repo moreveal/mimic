@@ -198,6 +198,9 @@ func (d *Debugger) Evaluate(ctx context.Context, frameID, realmID, source string
 	if err != nil {
 		return nil, err
 	}
+	if err := state.realm.syncShadowSnapshots(ctx); err != nil {
+		return nil, err
+	}
 	var value engine.Value
 	err = state.realm.debuggerInline(ctx, !options.RespectCSP, func(ctx context.Context) error {
 		var err error
@@ -233,6 +236,9 @@ func (d *Debugger) CallFunction(ctx context.Context, frameID, realmID, declarati
 		state, err = d.state(ctx, frameID, realmID)
 	}
 	if err != nil {
+		return nil, err
+	}
+	if err := state.realm.syncShadowSnapshots(ctx); err != nil {
 		return nil, err
 	}
 	if arguments, ok := params["arguments"].([]any); ok {

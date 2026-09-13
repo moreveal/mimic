@@ -1,4 +1,5 @@
 let svgComputedTransform=null;
+let webAnimationComputedValue=()=>undefined;
 // Computed values project the cascade, font resources and canonical box graph.
 // The catalog supplies initial semantics, never measured element coordinates.
 const cssComputedShorthand=(element,name)=>{
@@ -37,8 +38,8 @@ const cssComputedShorthand=(element,name)=>{
 const cssComputedValue=(element,name)=>withStyleReadCache(()=>{
  const foreign=foreignCSSObservation(element,"value",name);if(foreign!==null)return foreign;
  if(!computedStyleDocumentAvailable(element)||!computedStyleAvailable(element))return '';
- const initial=cssInitialValues.get(name),entries=computedCSSDeclarations(element);
- const declaration=entries.find(e=>e.name===name),specified=declaration?.value;
+ const initial=cssInitialValues.get(name),entries=computedCSSDeclarations(element),animated=webAnimationComputedValue(element,name);
+ const declaration=animated===undefined?entries.find(e=>e.name===name):{name,value:animated},specified=declaration?.value;
  let value=specified,inherit=cssInheritedProperties.has(name);
  if(value==='inherit'||(value==null||value==='unset')&&inherit){value=undefined;for(let p=cssFontParent(element);elementSlot(p)?.type==='element';p=cssFontParent(p)){const v=computedCSSDeclarations(p).find(e=>e.name===name)?.value;if(v!=null&&!['inherit','unset'].includes(v)){value=v==='currentcolor'||name==='caret-color'&&v==='auto'||name==='line-height'&&cssNumberRegex.test(v)?v:cssComputedValue(p,name);break}}if(value==null)value=initial}
  if(value==null||['initial','unset','revert','revert-layer'].includes(value))value=initial;

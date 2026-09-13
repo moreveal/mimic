@@ -354,6 +354,9 @@ func (r *Realm) retryBootstrap(err error) error {
 	r.performanceNotifier = nil
 	r.domQueryCallback = nil
 	r.shadowSnapshotCallback = nil
+	r.shadowSnapshotRestore = nil
+	r.shadowSnapshotVersion = nil
+	r.shadowSnapshotRevision = ""
 	r.formSnapshotCallback = nil
 	r.crossValues = map[int64]engine.Value{}
 	r.crossValueSeq = 0
