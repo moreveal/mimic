@@ -197,7 +197,7 @@
     const above=(a,b)=>{if(!b)return true;for(let i=0;i<Math.min(a.length,b.length);i++)for(let j=0;j<4;j++)if(a[i][j]!==b[i][j])return a[i][j]>b[i][j];return a.length>=b.length};
     const hits=[];
     for(const element of elements){
-      const box=clientRectFor(element);if(box.width<=0||box.height<=0||x<box.x||x>=box.x+box.width||y<box.y||y>=box.y+box.height)continue;
+      const box=clientRectInObservation(element);if(box.width<=0||box.height<=0||x<box.x||x>=box.x+box.width||y<box.y||y>=box.y+box.height)continue;
       const entries=computedCSSDeclarations(element),get=name=>entries.find(e=>e.name===name)?.value;
       if(get('visibility')==='hidden'||get('pointer-events')==='none')continue;
       hits.push(element);

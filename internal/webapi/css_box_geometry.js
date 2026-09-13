@@ -1,40 +1,109 @@
-// A transient box graph projects the canonical CSS/DOM state. No state survives
-// an independent style read; geometry never reparses an inline-only DOM copy.
+// A box graph projects a canonical CSS/DOM epoch. Style-derived data can be
+// reused after exact input validation; mutated geometry gets a fresh graph.
 // CSS lengths leave room for float conversion within signed 26.6 LayoutUnit.
 const cssGeometryLength=value=>Math.fround(Math.max(-(2**31)/64+2,Math.min(Math.trunc((2**31-1)/64)-2,value)));
 const cssBoxModel=(()=>{
- const tag=element=>elementSlot(element)?.tagName||'',textContent=element=>host.textContent(elementSlot(element).nodeId);
+ // Compact shaping results contain no element state. Retain a bounded JS
+ // projection across DOM epochs to avoid re-transferring and parsing the same
+ // native metrics. Font selection has its own authoritative realm revision.
+ let textMetrics=new Map(),textMetricBytes=0,textMetricVersion;
+ bootstrapRestoreHooks.push(()=>{textMetrics=new Map();textMetricBytes=0;textMetricVersion=undefined});
+ const measureText=(key,text,family,size,weight,italic)=>{
+  const version=styleReadCache.fontCollectionVersion??(styleReadCache.fontCollectionVersion=host.fontCollectionVersion());
+  if(version!==textMetricVersion){textMetrics.clear();textMetricBytes=0;textMetricVersion=version}
+  const known=textMetrics.get(key);if(known)return known.value;
+  const encoded=host.shapeTextMetrics(text,family,size,weight,Number(italic),0,0),value=JSON.parse(encoded);
+  const bytes=(key.length+encoded.length)*2+256;
+  if(!value.error&&bytes<=1024*1024){
+   while(textMetricBytes+bytes>1024*1024){const oldest=textMetrics.keys().next().value;textMetricBytes-=textMetrics.get(oldest).bytes;textMetrics.delete(oldest)}
+   textMetrics.set(key,{value,bytes});textMetricBytes+=bytes;
+  }
+  return value;
+ };
+ const tag=element=>elementSlot(element)?.tagName||'',textContent=element=>{
+  const cache=styleReadCache.textContents||(styleReadCache.textContents=new WeakMap());
+  if(cache.has(element))return cache.get(element);
+  const value=host.textContent(elementSlot(element).nodeId);cache.set(element,value);return value;
+ };
  const unit=value=>Math.trunc(cssGeometryLength(value)*64)/64,collapse=(a,b)=>Math.max(a,b,0)+Math.min(a,b,0);
  const invisible=new Set(['STYLE','SCRIPT','HEAD','TITLE','META','LINK','TEMPLATE','OPTION','NOSCRIPT']);
  const tableDisplays={TABLE:'table',CAPTION:'table-caption',TBODY:'table-row-group',THEAD:'table-header-group',TFOOT:'table-footer-group',TR:'table-row',TD:'table-cell',TH:'table-cell'};
  const blocks=new Set(['HTML','BODY','DIV','P','SECTION','MAIN','ARTICLE','ASIDE','HEADER','FOOTER','NAV','FORM','FIELDSET','DETAILS','SUMMARY','H1','H2','H3','H4','H5','H6','UL','OL','LI','TABLE','CAPTION','TBODY','THEAD','TFOOT','TR','TD','TH']);
+ let retainedStyles=new WeakMap();bootstrapRestoreHooks.push(()=>{retainedStyles=new WeakMap()});
+ const styleContext=element=>{
+  if(!styleReadCache.retainable)return null;
+  const contexts=styleReadCache.boxStyleContexts||(styleReadCache.boxStyleContexts=new WeakMap()),pending=[];
+  let node=element,context=null;
+  while(node){if(contexts.has(node)){context=contexts.get(node);break}pending.push(node);node=geometryParent(node)}
+  // A detached tree may still resolve rem against this document's root.
+  const rootFont=cssComputedRootFontSize();
+  for(let i=pending.length-1;i>=0;i--){
+   const current=pending[i],entries=computedCSSDeclarations(current),attrs=cssObservationNodeState(current).attributes;
+   const extra=JSON.stringify([attrs.hidden,attrs.type,attrs['font-size']]),environment=styleReadCache.selectorEnvironment;
+   const prior=retainedStyles.get(current);
+   const next=prior&&prior.entries===entries&&prior.parent===context&&prior.extra===extra&&prior.environment===environment&&prior.rootFont===rootFont?prior:{entries,parent:context,extra,environment,rootFont};
+   retainedStyles.set(current,next);contexts.set(current,next);context=next;
+  }
+  return context;
+ };
  const state=element=>{
   const cache=styleReadCache.boxStyles||(styleReadCache.boxStyles=new WeakMap());if(cache.has(element))return cache.get(element);
-  const entries=computedCSSDeclarations(element),get=name=>geometryValue(element,entries.find(e=>e.name===name)?.value??(tag(element)==='BODY'&&/^margin-(top|right|bottom|left)$/.test(name)?'8px':undefined));
+  const context=styleContext(element);if(context?.value){cache.set(element,context.value);return context.value}
+  const entries=computedCSSDeclarations(element),properties=new Map(entries.map(entry=>[entry.name,entry.value])),resolved=new Map();
+  const get=name=>{if(resolved.has(name))return resolved.get(name);const value=geometryValue(element,properties.get(name)??(tag(element)==='BODY'&&/^margin-(top|right|bottom|left)$/.test(name)?'8px':undefined));resolved.set(name,value);return value};
   const hiddenInput=tag(element)==='INPUT'&&String(host.getAttribute(elementSlot(element).nodeId,'type')||'').toLowerCase()==='hidden';
   const display=hiddenInput?'none':get('display')||(invisible.has(tag(element))||host.getAttribute(elementSlot(element).nodeId,'hidden')!==null?'none':tableDisplays[tag(element)]|| (tag(element)==='SUMMARY'?'list-item':blocks.has(tag(element))?'block':'inline')),position=get('position')||'static';
   const result={element,entries,get,display,position};cache.set(element,result);
-  const inherited=new Map();
-  result.inherited=name=>{if(inherited.has(name))return inherited.get(name);let value=null;for(let p=element;p;p=geometryParent(p)){const v=computedCSSDeclarations(p).find(e=>e.name===name)?.value;if(v&&!['inherit','unset'].includes(v)){value=v;break}}inherited.set(name,value);return value};
-  result.length=(text,basis=0)=>{
+  const ownInherited=new Map();
+  result.inherited=name=>{
+   if(ownInherited.has(name))return ownInherited.get(name);
+   const inherited=styleReadCache.inheritedValues||(styleReadCache.inheritedValues=new WeakMap());
+   const visited=[];let value=null;
+   for(let p=element;p;p=geometryParent(p)){
+    const known=inherited.get(p);if(known?.has(name)){value=known.get(name);break}
+    visited.push(p);const v=computedCSSDeclarations(p).find(e=>e.name===name)?.value;
+    if(v&&!['inherit','unset'].includes(v)){value=v;break}
+   }
+   for(const p of visited){let values=inherited.get(p);if(!values)inherited.set(p,values=new Map());values.set(name,value)}
+   ownInherited.set(name,value);return value;
+  };
+  const resolveLength=(text,basis=0)=>{
    if(text==null||['auto','none','normal','initial','unset'].includes(text))return null;
    const value=cssResolveLength(text,cssGeometryLengthContext(element,basis,result.fontSize??16));
    if(value!==null)return unit(value);
    const viewport=/^([+-]?[\d.]+)(vw|vh|vmin|vmax)$/.exec(text);if(viewport){const size=host.viewport();return unit(Number(viewport[1])*({vw:size.width,vh:size.height,vmin:Math.min(size.width,size.height),vmax:Math.max(size.width,size.height)}[viewport[2]])/100)}
    return null;
   };
+  const lengths=new Map();let lengthFont;
+  result.length=(text,basis=0)=>{
+   if(text==null)return null;
+   const font=result.fontSize??16;if(lengthFont!==font){lengths.clear();lengthFont=font}
+   let values=lengths.get(text);if(!values){if(lengths.size>=64)lengths.delete(lengths.keys().next().value);lengths.set(text,values=new Map())}
+   if(values.has(basis))return values.get(basis);
+   const value=resolveLength(text,basis);if(values.size>=4)values.delete(values.keys().next().value);values.set(basis,value);return value;
+  };
+  const edgesByBasis=new Map();let edgesFont;
   result.edges=basis=>{
+   const font=result.fontSize??16;if(edgesFont!==font){edgesByBasis.clear();edgesFont=font}
+   if(edgesByBasis.has(basis))return {...edgesByBasis.get(basis)};
    const out={};for(const side of ['top','right','bottom','left']){
     const borderStyle=get('border-'+side+'-style'),borderWidth=get('border-'+side+'-width');
     out['b'+side]=borderStyle&&['none','hidden'].includes(borderStyle)?0:borderWidth?Math.max(0,Math.floor(result.length(borderWidth)??({thin:1,medium:3,thick:5}[borderWidth]||0))):0;
     out['p'+side]=Math.max(0,result.length(get('padding-'+side),basis)??(['TD','TH'].includes(tag(element))?1:0));
     out['m'+side]=result.length(get('margin-'+side),basis)||0;
-   }return out;
+   }
+   // Layout may adjust auto margins on its own edge record. Never share that
+   // mutable record with another size/width calculation.
+   if(edgesByBasis.size>=4)edgesByBasis.delete(edgesByBasis.keys().next().value);
+   edgesByBasis.set(basis,{...out});return out;
   };
   // Publish a complete recursive state before resolving font inheritance.
   // Complex author selectors can re-enter geometry while font size walks the
   // ancestor cascade; callers must never observe a half-built state object.
   result.fontSize=(cssComputedFontSize(element)??16);
+  // Only style-derived data is retained. Sizes, positions, children, text flow
+  // and availability are rebuilt in the current geometry graph after mutation.
+  if(context&&styleReadCache.retainable)context.value=result;
   return result;
  };
  const children=element=>cssObservationChildren(elementShadows.get(element)||element);
@@ -48,8 +117,7 @@ const cssBoxModel=(()=>{
  const textInfo=(element,text)=>{
   const s=state(element),family=s.inherited('font-family')||'"Times New Roman"',weight=Number(s.inherited('font-weight'))|| (tag(element)==='TH'?700:400),italic=s.inherited('font-style')==='italic';
   if(s.fontSize===0){const raw=s.inherited('line-height'),height=raw&&raw!=='normal'?(cssNumberRegex.test(raw)?0:s.length(raw,0)):0;return {width:0,height:height??0,ascent:0,descent:0}}
-  const metrics=styleReadCache.textMetrics||(styleReadCache.textMetrics=new Map()),key=JSON.stringify([text,family,s.fontSize,weight,italic]);
-  let shaped=metrics.get(key);if(!shaped){shaped=JSON.parse(host.shapeTextMetrics(text,family,s.fontSize,weight,Number(italic),0,0));metrics.set(key,shaped)}
+  const key=JSON.stringify([text,family,s.fontSize,weight,italic]),shaped=measureText(key,text,family,s.fontSize,weight,italic);
   if(shaped.error){host.semanticMissingAt('css_box_geometry.js/textInfo','CSS.textBoxMetrics');return {width:0,height:0,ascent:0,descent:0}}
   const raw=s.inherited('line-height'),height=raw&&raw!=='normal'?(cssNumberRegex.test(raw)?unit(Number(raw)*s.fontSize):s.length(raw,s.fontSize)):shaped.ascent+shaped.descent+(shaped.lineGap||0);
   return {width:Math.ceil(shaped.advance*64)/64,height:height??shaped.ascent+shaped.descent+(shaped.lineGap||0),ascent:shaped.ascent,descent:shaped.descent};
