@@ -155,6 +155,9 @@ const compatibilityElementState={};
       disconnect(){const s=observerState(this);s.targets.clear();s.records.length=0;s.transients=[];const removed=observers.delete(this);pendingObservers.delete(this);if(removed&&!observers.size)host.worldObserverPresence(false)}
       takeRecords(){return observerState(this).records.splice(0)}
     }
+    // Web IDL operations are enumerable; constructor wrappers discover them
+    // by enumerating an instance before forwarding to its branded observer.
+    for(const name of ['observe','disconnect','takeRecords'])Object.defineProperty(MutationObserver.prototype,name,{enumerable:true});
     Object.defineProperty(MutationObserver.prototype,Symbol.toStringTag,{value:'MutationObserver',configurable:true});
     expose('MutationObserver',MutationObserver);
     // The generated alias predates this semantic constructor replacement.
