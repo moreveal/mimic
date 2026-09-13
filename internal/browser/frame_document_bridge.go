@@ -3,12 +3,16 @@ package browser
 import (
 	"context"
 	"fmt"
+	"math"
 	"strconv"
 
 	"github.com/moreveal/mimic/internal/engine"
 )
 
 func (r *Realm) installFrameDocumentBridge(host map[string]any) {
+	host["frameTransaction"] = r.transientFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		return r.transactFrame(args)
+	})
 	host["retainWindowReference"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		r.retainWindowReference(strarg(args, 0))
 		return nil, nil
@@ -24,6 +28,9 @@ func (r *Realm) installFrameDocumentBridge(host map[string]any) {
 		return r.val(err == nil && target != nil), nil
 	})
 	r.installFrameReflection(host)
+	if err := r.prepareFrameTransaction(); err != nil {
+		r.frameReflection.err = err
+	}
 	// Describe references in one invocation on their owner. Otherwise every
 	// type/identity/shape query makes a separate round trip to the V8 actor.
 	// This private function is never exposed to document scripts.
@@ -206,6 +213,18 @@ func (r *Realm) decodeFrameArgument(raw any) (engine.Value, error) {
 		return r.decodeFrameKey(context.Background(), argument["key"])
 	case "bigint":
 		return r.callFrameReflection(context.Background(), "bigint", nil, r.val(argument["value"]), nil)
+	case "special-number":
+		switch argument["value"] {
+		case "NaN":
+			return r.val(math.NaN()), nil
+		case "-0":
+			return r.val(math.Copysign(0, -1)), nil
+		case "Infinity":
+			return r.val(math.Inf(1)), nil
+		case "-Infinity":
+			return r.val(math.Inf(-1)), nil
+		}
+		return nil, fmt.Errorf("invalid cross-realm number")
 	case "undefined":
 		return r.runtime.Get("undefined"), nil
 	case "value":
@@ -479,6 +498,7 @@ func (r *Realm) installFrameValueEncoder() error {
 	if err == nil {
 		r.frameValueEncoder = encoder
 		r.frameValueEncoderJSON = true
+		err = r.installFrameTransaction()
 	}
 	return err
 }
