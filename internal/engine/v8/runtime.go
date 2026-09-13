@@ -160,7 +160,9 @@ func (a *adapter) onCallback() *callbackContext {
 }
 
 func (a *adapter) RunNested(ctx context.Context, operation func(context.Context) error) error {
-	if a.onCallback() == nil {
+	// Owner operations also run Go cleanup after returning from JavaScript.
+	// They still occupy the actor thread, even without an active host callback.
+	if currentThreadID() != a.owner.actorTID {
 		return operation(ctx)
 	}
 	nestedContext, cancel := context.WithCancel(ctx)
