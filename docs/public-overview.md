@@ -36,6 +36,14 @@ The product messaging describes an actively developed runtime aiming for direct
 HTTP lightness and browser compatibility. Slower results are optimization targets,
 not proof of future gains. Original baselines and frozen harnesses are retained.
 
+Lead the public README with renderer-free browser execution and scoped React,
+WebAssembly, Worker, DOM, networking, CDP and concurrent-page checkpoints.
+Keep Cloudflare, BrowserScan and Amazon under real-world compatibility after the
+benchmarks. Profiles describe reproducible browser environments rather than lead
+with fingerprinting. The public history is organized into product, usage and
+benchmark commits; future updates should append ordinary commits rather than
+regularly rewriting published history.
+
 ## Public live-site claims
 
 These are dated development observations, separate from the frozen benchmark:
