@@ -21,7 +21,8 @@ active embeds and form/navigation actions are removed; the viewer additionally
 uses a sandbox without script permission and a script-free document CSP. Only
 `allow-same-origin` is granted so the parent viewer can patch the mirrored DOM;
 `allow-scripts` is never granted. Viewer actions do not drive the Mimic Page or
-execute its JavaScript.
+execute its JavaScript. Inert `noscript` fallbacks are omitted: the viewer's
+script-disabled sandbox must not activate markup hidden in the source Page.
 
 The Page command boundary checks existing DOM/resource, CSSOM, focus and viewport
 revisions only while a viewer is subscribed. Debug-only form setter tracking

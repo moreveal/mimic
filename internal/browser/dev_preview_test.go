@@ -128,8 +128,8 @@ func TestDevPreviewDisabledAndDirtyUpdates(t *testing.T) {
 				t.Fatal(e)
 			}
 		}
-		eval(`document.head.innerHTML='<style>body { background: red }</style>';document.body.innerHTML='<h1>Hello preview</h1><input id="field" value="old"><script>globalThis.shouldNotRun=1<\/script>';`)
-		if html := read(); !strings.Contains(html, "Hello preview") || strings.Contains(html, "<script") {
+		eval(`document.head.innerHTML='<style>body { background: red }</style><noscript><style>body{opacity:0}</style></noscript>';document.body.innerHTML='<h1>Hello preview</h1><input id="field" value="old"><script>globalThis.shouldNotRun=1<\/script><noscript>Enable scripting</noscript>';`)
+		if html := read(); !strings.Contains(html, "Hello preview") || strings.Contains(html, "<script") || strings.Contains(html, "<noscript") || strings.Contains(html, "opacity:0") {
 			t.Fatalf("bad preview: %s", html)
 		}
 		eval(`document.getElementById('field').value='live';document.styleSheets[0].cssRules[0].style.backgroundColor='blue'`)

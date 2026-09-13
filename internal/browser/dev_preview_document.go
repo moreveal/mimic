@@ -88,7 +88,10 @@ func (p *Page) previewDocument(frame *Frame) (string, error) {
 		for c := n.FirstChild; c != nil; {
 			next := c.NextSibling
 			if c.Type == html.ElementNode {
-				remove := (!shadow && c.Data == "style") || c.Data == "script" || c.Data == "base" || c.Data == "object" || c.Data == "embed" || c.Data == "meta" || c.Data == "link"
+				// The source Page has scripting enabled, but the mirror's sandbox
+				// does not. Omit its inert noscript fallback before the viewer
+				// reparses raw text as active markup (including styles/refreshes).
+				remove := (!shadow && c.Data == "style") || c.Data == "noscript" || c.Data == "script" || c.Data == "base" || c.Data == "object" || c.Data == "embed" || c.Data == "meta" || c.Data == "link"
 				if remove {
 					n.RemoveChild(c)
 					c = next

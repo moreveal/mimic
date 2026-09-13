@@ -2,10 +2,41 @@ package cdp
 
 import (
 	"context"
+	"reflect"
 	"testing"
 
 	"github.com/gorilla/websocket"
 )
+
+// Chrome 152.0.7977.82 returns border quads here, even when the
+// DOM.getBoxModel content rectangle has zero area.
+func TestDOMContentQuadsIncludePaddingAndBorder(t *testing.T) {
+	s, addr := runningServer(t)
+	if _, err := s.Page.Evaluate(context.Background(), `document.body.innerHTML='<input id="entry" style="width:0;height:28px;padding:12px 14px;border:2px solid;box-sizing:content-box">'`); err != nil {
+		t.Fatal(err)
+	}
+	d, _ := s.Page.Document()
+	entry, _ := d.Find("#entry")
+	c := browserConnection(t, addr)
+	sid := wireCall(t, c, 1, "Target.attachToTarget", map[string]any{"targetId": s.Page.ID, "flatten": true})["sessionId"].(string)
+	params := map[string]any{"nodeId": entry.ID}
+	model := flatCall(t, c, sid, 2, "DOM.getBoxModel", params)["model"].(map[string]any)
+	quads := flatCall(t, c, sid, 3, "DOM.getContentQuads", params)["quads"].([]any)
+	if len(quads) != 1 || !reflect.DeepEqual(quads[0], model["border"]) {
+		t.Fatalf("quads must include padding and border: %v; model: %v", quads, model)
+	}
+	content := model["content"].([]any)
+	if content[0] != content[2] {
+		t.Fatalf("fixture must have zero content width: %v", content)
+	}
+	quad := quads[0].([]any)
+	x, y := (coordinateValue(quad[0])+coordinateValue(quad[2]))/2, (coordinateValue(quad[1])+coordinateValue(quad[5]))/2
+	flatCall(t, c, sid, 4, "Input.dispatchMouseEvent", map[string]any{"type": "mousePressed", "x": x, "y": y, "button": "left", "clickCount": 1})
+	flatCall(t, c, sid, 5, "Input.dispatchMouseEvent", map[string]any{"type": "mouseReleased", "x": x, "y": y, "button": "left", "clickCount": 1})
+	if got, err := s.Page.Evaluate(context.Background(), `document.activeElement.id`); err != nil || got != "entry" {
+		t.Fatalf("quad center did not focus input: %v %v", got, err)
+	}
+}
 
 func TestDOMQueriesShareRealmSelectorEngine(t *testing.T) {
 	s, addr := runningServer(t)
