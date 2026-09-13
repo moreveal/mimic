@@ -123,6 +123,7 @@ type Realm struct {
 	crossValues              map[int64]engine.Value
 	crossValueSeq            int64
 	origin                   string
+	ignoreDestructiveWrites  int
 	currentScript            int64
 	messageReceiver          engine.Value
 	messagePortReceiver      engine.Value
@@ -146,7 +147,7 @@ type Realm struct {
 	resourceContext          context.Context
 	cancelResources          context.CancelFunc
 	resourceWG               sync.WaitGroup
-	moduleFetches            map[string]*moduleFetch
+	moduleFetches            map[string]*scriptFetch
 	moduleGraphs             map[string]*moduleGraph
 	preparedModules          map[string]bool
 	preloadedModuleLinks     map[int64]bool

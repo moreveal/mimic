@@ -466,7 +466,9 @@ func (r *Realm) finishChildFrameParsing(ctx context.Context, navigation *childNa
 		r.queueFrameMessage(navigation.frame.ID, message)
 	}
 	navigation.frame.pendingMessages = nil
-	navigation.realm.SetReadyState("interactive")
+	if navigation.realm.readyState == "loading" {
+		navigation.realm.SetReadyState("interactive")
+	}
 	eventLoop := r.browserEventLoop()
 	eventLoop.Post(scheduler.DOM, 0, func(eventContext context.Context) error {
 		if !r.childNavigationCurrent(navigation) || navigation.frame.Realm != navigation.realm {
