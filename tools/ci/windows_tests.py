@@ -49,7 +49,9 @@ def main():
         packages = [line for line in run('go', 'list', './...', capture=True).splitlines()
                     if line != BROWSER]
         print(f'Windows remaining packages: {len(packages)}', flush=True)
-        run('go', 'test', *packages)
+        # Behavioral deadlines must not compete with unrelated package builds
+        # and engine initializations on the small hosted runner.
+        run('go', 'test', '-p', '1', *packages)
 
 
 if __name__ == '__main__':

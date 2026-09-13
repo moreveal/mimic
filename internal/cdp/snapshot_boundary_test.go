@@ -12,6 +12,7 @@ import (
 
 	"github.com/gorilla/websocket"
 	"github.com/moreveal/mimic/internal/scheduler"
+	"github.com/moreveal/mimic/internal/trace"
 )
 
 func busySnapshotPage(t *testing.T) (*Server, *websocket.Conn) {
@@ -26,21 +27,34 @@ func busySnapshotPage(t *testing.T) (*Server, *websocket.Conn) {
 		t.Fatal(err)
 	}
 	readReply(t, c, 1)
+	entered := make(chan struct{}, 1)
+	unsubscribe := s.Page.Trace().Subscribe(func(event trace.Event) {
+		// The fixture emits its only console event after the first DOM mutation.
+		// A running timer's wall time also includes scheduling and compilation.
+		if event.Kind == trace.Console {
+			select {
+			case entered <- struct{}{}:
+			default:
+			}
+		}
+	})
+	defer unsubscribe()
 	s.Page.LockCommands()
-	_, err = s.Page.Top.Realm.Evaluate(context.Background(), `setTimeout(()=>{document.body.textContent='committed first turn';while(true){}},0);setTimeout(()=>{document.body.textContent='second turn';while(true){}},0)`, "snapshot-boundary-fixture")
+	_, err = s.Page.Top.Realm.Evaluate(context.Background(), `setTimeout(()=>{document.body.textContent='committed first turn';console.log('first turn entered');while(true){}},0);setTimeout(()=>{document.body.textContent='second turn';while(true){}},0)`, "snapshot-boundary-fixture")
 	s.Page.UnlockCommands()
 	if err != nil {
 		t.Fatal(err)
 	}
-	deadline := time.Now().Add(3 * time.Second)
-	for time.Now().Before(deadline) {
+	select {
+	case <-entered:
 		status := s.Page.ExecutionStatus()
-		if status.Running && status.Source == scheduler.Timer && status.Elapsed > 10*time.Millisecond {
-			return s, c
+		if !status.Running || status.Source != scheduler.Timer {
+			t.Fatalf("first timer is not running: %+v", status)
 		}
-		time.Sleep(time.Millisecond)
+		return s, c
+	case <-time.After(3 * time.Second):
+		t.Fatal("timer did not reach its first DOM mutation")
 	}
-	t.Fatal("timer did not start")
 	return nil, nil
 }
 
