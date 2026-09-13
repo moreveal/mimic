@@ -130,7 +130,7 @@ func (r *Realm) preloadResource(id int64, attributes map[string]string) {
 		if preloadContext.Err() != nil {
 			return
 		}
-		_, corsErr := r.imageResponseOrigin(request, response)
+		_, corsErr := resourceResponseOrigin(request, response)
 		kind := "load"
 		if initiator == network.Image && err == nil {
 			_, err = imageresource.Decode(response.Body, response.Headers.Get("Content-Type"))

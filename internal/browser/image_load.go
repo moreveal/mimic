@@ -2,8 +2,6 @@ package browser
 
 import (
 	"context"
-	"fmt"
-	"net/url"
 	"strings"
 
 	"github.com/moreveal/mimic/internal/imageresource"
@@ -132,7 +130,7 @@ func (r *Realm) updateImage(id int64, changed bool) {
 			}
 			var decoded *imageresource.Image
 			kind := "load"
-			originClean, corsErr := r.imageResponseOrigin(request, response)
+			originClean, corsErr := resourceResponseOrigin(request, response)
 			if err == nil {
 				err = corsErr
 			}
@@ -166,29 +164,4 @@ func (r *Realm) updateImage(id int64, changed bool) {
 		}()
 		return nil
 	})
-}
-
-func (r *Realm) imageResponseOrigin(request network.Request, response network.Response) (bool, error) {
-	finalURL := response.URL
-	if finalURL == nil {
-		finalURL = request.URL
-	}
-	originURL := finalURL
-	if finalURL.Scheme == "blob" {
-		if parsed, err := url.Parse(strings.TrimPrefix(finalURL.String(), "blob:")); err == nil {
-			originURL = parsed
-		}
-	}
-	clean := finalURL.Scheme == "data" || originURL.Scheme == request.SourceURL.Scheme && originURL.Host == request.SourceURL.Host
-	if request.Mode == "cors" && !clean {
-		allow := response.Headers.Get("Access-Control-Allow-Origin")
-		clean = allow == request.Headers.Get("Origin") || allow == "*" && request.Credentials != "include"
-		if request.Credentials == "include" {
-			clean = clean && response.Headers.Get("Access-Control-Allow-Credentials") == "true"
-		}
-		if !clean {
-			return false, fmt.Errorf("image CORS response disallowed")
-		}
-	}
-	return clean, nil
 }

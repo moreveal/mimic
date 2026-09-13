@@ -7,7 +7,7 @@ const compatibilityCSSSupports={};
   if(cssShorthandParsers.has(name)||cssLonghandParsers.has(name)){const normalized=normalizeCSSValue(name,value,property);return normalized!==null&&normalized!==''}
   if(webkitCSSKeywords.has(name)){const normalized=normalizeCSSValue(name,value,property);return normalized!==null&&normalized!==''}
   if(webkitCSSAliases.has(String(property).toLowerCase())&&['initial','inherit','unset','revert','revert-layer'].includes(String(value).trim().toLowerCase()))return true;
-  return typeof prior==='function'?prior.call(CSS,property,value):false;
+  return typeof prior==='function'?!!prior.call(CSS,property,value):false;
  };
  const condition=text=>{
   text=text.trim();
@@ -26,7 +26,7 @@ const compatibilityCSSSupports={};
   const inner=text.slice(1,-1).trim(),match=/^([-\w]+)\s*:\s*([\s\S]*)$/.exec(inner);
   return match?declaration(match[1],match[2].replace(/\s*!important\s*$/i,'')):(condition(inner)??false);
  };
- const supports={supports(property,value){if(arguments.length===0)throw new TypeError('Not enough arguments');return arguments.length>1?declaration(String(property),String(value)):condition(String(property))===true}}.supports;
+ const supports={supports(property,value){if(arguments.length===0)throw new TypeError('Not enough arguments');if(arguments.length>1)return declaration(String(property),String(value));const text=String(property).trim();return condition(/^[-\w]+\s*:/.test(text)?'('+text+')':text)===true}}.supports;
  compatibilityCSSSupports.matches=text=>supports(text);
  Object.defineProperty(supports,'length',{value:1,configurable:true});markNative(supports,'supports');Object.defineProperty(CSS,'supports',{value:supports,writable:true,enumerable:true,configurable:true});
 })();

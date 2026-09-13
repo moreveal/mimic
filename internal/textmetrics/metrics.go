@@ -404,10 +404,12 @@ func (e *Engine) shapeWithFonts(text, families string, size, weight float64, ita
 	}
 	for _, run := range runs {
 		buffer := e.shapingBuffer(runes, run.start, run.end, run.face, noKern, noLigatures)
-		if buffer.Props.Direction != harfbuzz.LeftToRight {
+		if buffer.Props.Direction != harfbuzz.LeftToRight && buffer.Props.Direction != harfbuzz.RightToLeft {
 			buffer.Clear()
-			return Result{}, fmt.Errorf("non-LTR shaping is unsupported")
+			return Result{}, fmt.Errorf("non-horizontal shaping is unsupported")
 		}
+		// HarfBuzz orders horizontal RTL glyphs visually and supplies positive
+		// advances, so the same metrics projection applies to either direction.
 		buffer.Shape(run.face.shaper, features)
 		scale := size / float64(run.face.face.Upem())
 		for i, info := range buffer.Info {
