@@ -11,3 +11,6 @@
 
 # Frozen benchmark fingerprints cover exact bytes, including line endings.
 benchmark/** -text
+
+# Retain third-party legal texts, including upstream whitespace.
+tools/release/licenses/*.txt -whitespace

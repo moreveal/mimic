@@ -13,7 +13,7 @@
   <a href="docs/getting-started.md"><img src="https://img.shields.io/badge/engine-V8-81B5FF?style=flat-square&amp;logo=v8&amp;logoColor=white" alt="V8 engine"></a>
   <a href="docs/architecture.md"><img src="https://img.shields.io/badge/runs-JavaScript-F7DF1E?style=flat-square&amp;logo=javascript&amp;logoColor=black" alt="Runs JavaScript"></a>
   <a href="docs/cdp-compatibility.md"><img src="https://img.shields.io/badge/automation-CDP-AC9FFF?style=flat-square" alt="CDP automation"></a>
-  <a href="docs/compatibility.md"><img src="https://img.shields.io/badge/status-in_development-FFCA91?style=flat-square" alt="In development"></a>
+  <a href="docs/compatibility.md"><img src="https://img.shields.io/badge/status-public_beta-FFCA91?style=flat-square" alt="Public beta"></a>
 </p>
 
 <p align="center">
@@ -35,7 +35,8 @@ Extract data, automate flows, and run concurrent pages through familiar CDP tool
 One environment profile. Native SOCKS5, HTTP, and HTTPS proxies. Less setup
 between you and the workflow you want to automate.
 
-**Actively developed · Private beta.** DM **`moreveal`** on Discord to get involved.
+**Public Beta · Windows & Linux.** [Download builds and run the examples →](https://github.com/moreveal/mimic-overview/releases/tag/v0.1.0-beta.1)
+DM **`moreveal`** on Discord for feedback and workflow help.
 
 ## Built for execution
 

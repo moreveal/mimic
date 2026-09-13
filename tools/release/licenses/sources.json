@@ -1,0 +1,182 @@
+[
+  {
+    "component": "V8 15.2.124.1 / LICENSE",
+    "url": "https://raw.githubusercontent.com/v8/v8/15.2.124.1/LICENSE",
+    "sha256": "6ab33af8774a0f396ee3aeeb761e3229057682d6f9fa7f572e390c2cb3a6e509"
+  },
+  {
+    "component": "V8 15.2.124.1 / LICENSE.fdlibm",
+    "url": "https://raw.githubusercontent.com/v8/v8/15.2.124.1/LICENSE.fdlibm",
+    "sha256": "e7115e18444dae09d17f361ddc365fb1d342640fe500796209c63f7c80dfae10"
+  },
+  {
+    "component": "V8 15.2.124.1 / LICENSE.strongtalk",
+    "url": "https://raw.githubusercontent.com/v8/v8/15.2.124.1/LICENSE.strongtalk",
+    "sha256": "6a585a9f466654abc8fc0829d56b1bc987e3a073d31faa03bba37d33640a23cd"
+  },
+  {
+    "component": "V8 15.2.124.1 / LICENSE.v8",
+    "url": "https://raw.githubusercontent.com/v8/v8/15.2.124.1/LICENSE.v8",
+    "sha256": "4af93c12062c58058378de2397dc1c92bbff9ddfb1d583a01c84127557ce97ca"
+  },
+  {
+    "component": "V8 15.2.124.1 / third_party/colorama/LICENSE",
+    "url": "https://raw.githubusercontent.com/v8/v8/15.2.124.1/third_party/colorama/LICENSE",
+    "sha256": "15137d6c822e3ab097093a33c3a39a9df699f373f6438867ad534ff60762a947"
+  },
+  {
+    "component": "V8 15.2.124.1 / third_party/disarm/LICENSE",
+    "url": "https://raw.githubusercontent.com/v8/v8/15.2.124.1/third_party/disarm/LICENSE",
+    "sha256": "4f576036de0aef8e65f1909c2b08411902cd6de1f3b9d35e0cfe9c223aac2155"
+  },
+  {
+    "component": "V8 15.2.124.1 / third_party/fadec/LICENSE",
+    "url": "https://raw.githubusercontent.com/v8/v8/15.2.124.1/third_party/fadec/LICENSE",
+    "sha256": "859902e8fdb8978c08ddd9b3fd62f9b704f88fc8a696f7bfd451d54bfcd579dc"
+  },
+  {
+    "component": "V8 15.2.124.1 / third_party/fp16/LICENSE",
+    "url": "https://raw.githubusercontent.com/v8/v8/15.2.124.1/third_party/fp16/LICENSE",
+    "sha256": "c91377adafa2f498211a4fe017788e20c38892124673860f068f2919c289193d"
+  },
+  {
+    "component": "V8 15.2.124.1 / third_party/highway/LICENSE",
+    "url": "https://raw.githubusercontent.com/v8/v8/15.2.124.1/third_party/highway/LICENSE",
+    "sha256": "43070e2d4e532684de521b885f385d0841030efa2b1a20bafb76133a5e1379c1"
+  },
+  {
+    "component": "V8 15.2.124.1 / third_party/inspector_protocol/LICENSE",
+    "url": "https://raw.githubusercontent.com/v8/v8/15.2.124.1/third_party/inspector_protocol/LICENSE",
+    "sha256": "450ebb9e9e50c2809d9ca581931fc8946d8d5aa0c8c35aae9ac471342fe4a88e"
+  },
+  {
+    "component": "V8 15.2.124.1 / third_party/jsoncpp/LICENSE",
+    "url": "https://raw.githubusercontent.com/v8/v8/15.2.124.1/third_party/jsoncpp/LICENSE",
+    "sha256": "76c45ece83a26117f86f4e349e7df118708e061e87225328fb478ce1e8b3eb86"
+  },
+  {
+    "component": "V8 15.2.124.1 / third_party/rapidhash-v8/LICENSE",
+    "url": "https://raw.githubusercontent.com/v8/v8/15.2.124.1/third_party/rapidhash-v8/LICENSE",
+    "sha256": "db672df7faf793fbe28b8074fdd10822363e1525816b45c9627754885de842b0"
+  },
+  {
+    "component": "V8 15.2.124.1 / third_party/re2/LICENSE",
+    "url": "https://raw.githubusercontent.com/v8/v8/15.2.124.1/third_party/re2/LICENSE",
+    "sha256": "6040cda75d90b1738292a631d89934c411ef7ffd543c4d6a1b7edfc8edf29449"
+  },
+  {
+    "component": "V8 15.2.124.1 / third_party/siphash/LICENSE",
+    "url": "https://raw.githubusercontent.com/v8/v8/15.2.124.1/third_party/siphash/LICENSE",
+    "sha256": "36ffd9dc085d529a7e60e1276d73ae5a030b020313e6c5408593a6ae2af39673"
+  },
+  {
+    "component": "V8 15.2.124.1 / third_party/utf8-decoder/LICENSE",
+    "url": "https://raw.githubusercontent.com/v8/v8/15.2.124.1/third_party/utf8-decoder/LICENSE",
+    "sha256": "3f712e5fbdfdbd5ee7d9b8c8152580220df55de47f4eba2f26c95c4de19ad096"
+  },
+  {
+    "component": "V8 15.2.124.1 / third_party/v8/builtins/LICENSE",
+    "url": "https://raw.githubusercontent.com/v8/v8/15.2.124.1/third_party/v8/builtins/LICENSE",
+    "sha256": "b9a6d9320b8f2693e8d41e496ce56caadacaddcca9be2a64a61749278f425cf2"
+  },
+  {
+    "component": "V8 15.2.124.1 / third_party/v8/codegen/LICENSE",
+    "url": "https://raw.githubusercontent.com/v8/v8/15.2.124.1/third_party/v8/codegen/LICENSE",
+    "sha256": "17e4f539024be2749ee729d1e2f01d24cef12ece8c9bf18e91a4349be29c80bf"
+  },
+  {
+    "component": "V8 15.2.124.1 / third_party/valgrind/LICENSE",
+    "url": "https://raw.githubusercontent.com/v8/v8/15.2.124.1/third_party/valgrind/LICENSE",
+    "sha256": "ebf25b8ce59c9e8883acd1ca75b6fc121937ca034f666c4077d2be739d2e1622"
+  },
+  {
+    "component": "V8 15.2.124.1 / third_party/vtune/LICENSE",
+    "url": "https://raw.githubusercontent.com/v8/v8/15.2.124.1/third_party/vtune/LICENSE",
+    "sha256": "02aea3ade0c02470335987f7d93ffaed877bcefc8414a416e2e548665bb0bfd0"
+  },
+  {
+    "component": "V8 15.2.124.1 / third_party/wasm-api/LICENSE",
+    "url": "https://raw.githubusercontent.com/v8/v8/15.2.124.1/third_party/wasm-api/LICENSE",
+    "sha256": "c6596eb7be8581c18be736c846fb9173b69eccf6ef94c5135893ec56bd92ba08"
+  },
+  {
+    "component": "abseil-cpp / LICENSE",
+    "url": "https://chromium.googlesource.com/chromium/src/third_party/abseil-cpp.git/+/ff6e8ce3e932c16cebd1611c8fc42c45080a0e55/LICENSE?format=TEXT",
+    "sha256": "c79a7fea0e3cac04cd43f20e7b648e5a0ff8fa5344e644b0ee09ca1162b62747"
+  },
+  {
+    "component": "dragonbox/src / LICENSE-Apache2-LLVM",
+    "url": "https://chromium.googlesource.com/external/github.com/jk-jeon/dragonbox.git/+/beeeef91cf6fef89a4d4ba5e95d47ca64ccb3a44/LICENSE-Apache2-LLVM?format=TEXT",
+    "sha256": "9e45e856bedccee9f67254082ca11851d954de2fed7448c4bed19ad9aab99a91"
+  },
+  {
+    "component": "dragonbox/src / LICENSE-Boost",
+    "url": "https://chromium.googlesource.com/external/github.com/jk-jeon/dragonbox.git/+/beeeef91cf6fef89a4d4ba5e95d47ca64ccb3a44/LICENSE-Boost?format=TEXT",
+    "sha256": "c9bff75738922193e67fa726fa225535870d2aa1059f91452c411736284ad566"
+  },
+  {
+    "component": "fast_float/src / LICENSE-APACHE",
+    "url": "https://chromium.googlesource.com/external/github.com/fastfloat/fast_float.git/+/34164f547b7df3f5d794ff67e9f885c36819ebfc/LICENSE-APACHE?format=TEXT",
+    "sha256": "097a889aa954d04e088b790b10a4014d6189561d0a6013935a73ce3d4ddaaf06"
+  },
+  {
+    "component": "fast_float/src / LICENSE-BOOST",
+    "url": "https://chromium.googlesource.com/external/github.com/fastfloat/fast_float.git/+/34164f547b7df3f5d794ff67e9f885c36819ebfc/LICENSE-BOOST?format=TEXT",
+    "sha256": "8d8291caf1cee26d23acf3eb67c9f9a2d58f1c681b16a4fbe8cbfb9e3c0b5a9b"
+  },
+  {
+    "component": "fast_float/src / LICENSE-MIT",
+    "url": "https://chromium.googlesource.com/external/github.com/fastfloat/fast_float.git/+/34164f547b7df3f5d794ff67e9f885c36819ebfc/LICENSE-MIT?format=TEXT",
+    "sha256": "e562f3f974ced7e69dd1db77b820b36bcf8f30377f1aa105723fba449c53c4e6"
+  },
+  {
+    "component": "fp16/src / LICENSE",
+    "url": "https://chromium.googlesource.com/external/github.com/Maratyszcza/FP16.git/+/782eea126dc5c755827be751a099eb01826175cf/LICENSE?format=TEXT",
+    "sha256": "17e4f539024be2749ee729d1e2f01d24cef12ece8c9bf18e91a4349be29c80bf"
+  },
+  {
+    "component": "highway/src / LICENSE",
+    "url": "https://chromium.googlesource.com/external/github.com/google/highway.git/+/2607d3b5b0113992fe84d3848859eae13b3b52c1/LICENSE?format=TEXT",
+    "sha256": "e340270d4f64384569a91d546acb5b094d69ce47f0c015db77abb74dc6f815af"
+  },
+  {
+    "component": "icu / LICENSE",
+    "url": "https://chromium.googlesource.com/chromium/deps/icu.git/+/d578f2e8b7bd5938e21cfb6bf15c079e0aa5b738/LICENSE?format=TEXT",
+    "sha256": "e55522d81edc687a341a4411e0776e54ca654e90147f354a90458aaced4116af"
+  },
+  {
+    "component": "jsoncpp/source / LICENSE",
+    "url": "https://chromium.googlesource.com/external/github.com/open-source-parsers/jsoncpp.git/+/edc01ab10f52135ec80e3589b6b4e0a9c65b27fd/LICENSE?format=TEXT",
+    "sha256": "cec0db5f6d7ed6b3a72647bd50aed02e13c3377fd44382b96dc2915534c042ad"
+  },
+  {
+    "component": "libc++/src / LICENSE.TXT",
+    "url": "https://chromium.googlesource.com/external/github.com/llvm/llvm-project/libcxx.git/+/b16984ce99c702355a5b2b4c52574e82cec41fb9/LICENSE.TXT?format=TEXT",
+    "sha256": "539dd7aed86e8a4f12cbdd0e6c50c189c7d74847e4fecc64ce2c6ee3a01da38b"
+  },
+  {
+    "component": "libc++abi/src / LICENSE.TXT",
+    "url": "https://chromium.googlesource.com/external/github.com/llvm/llvm-project/libcxxabi.git/+/8f11bb1d4438d0239d0dfc1bd9456a9f31629dda/LICENSE.TXT?format=TEXT",
+    "sha256": "e2b35be49f7284a45b7baca8fc7b3ab7440e7902392b2528a457816b5bb2a15c"
+  },
+  {
+    "component": "libunwind/src / LICENSE.TXT",
+    "url": "https://chromium.googlesource.com/external/github.com/llvm/llvm-project/libunwind.git/+/1fd455816c724182cf8736811182bf0c37b03035/LICENSE.TXT?format=TEXT",
+    "sha256": "b5efebcaca80879234098e52d1725e6d9eb8fb96a19fce625d39184b705f7b6d"
+  },
+  {
+    "component": "llvm-libc/src / LICENSE.TXT",
+    "url": "https://chromium.googlesource.com/external/github.com/llvm/llvm-project/libc.git/+/75ae50cd48c8a9d70f552ccff040029968778da9/LICENSE.TXT?format=TEXT",
+    "sha256": "ebcd9bbf783a73d05c53ba4d586b8d5813dcdf3bbec50265860ccc885e606f47"
+  },
+  {
+    "component": "simdutf / LICENSE",
+    "url": "https://chromium.googlesource.com/chromium/src/third_party/simdutf/+/f7356eed293f8208c40b3c1b344a50bd70971983/LICENSE?format=TEXT",
+    "sha256": "fc8dbc04e03ad4efc08a647ffe7f995b811a95bc04c0e85a56d5277c6593fa5f"
+  },
+  {
+    "component": "zlib / LICENSE",
+    "url": "https://chromium.googlesource.com/chromium/src/third_party/zlib.git/+/42c2f19a14d33b4ed327ab898fe7b652013aa740/LICENSE?format=TEXT",
+    "sha256": "e32ff4e00d9d94930537635291da39e7e612703334bf6fde8c7f1686fe8a45a2"
+  }
+]
