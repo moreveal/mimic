@@ -13,7 +13,13 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [ubuntu-24.04, windows-latest]
+        include:
+          - os: ubuntu-24.04
+            shard: 0
+          - os: windows-latest
+            shard: 0
+          - os: windows-latest
+            shard: 1
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     env:
@@ -47,9 +53,11 @@ jobs:
         run: go build -o .build/mimic.exe ./cmd/mimic
       - name: Test Windows reference behavior
         if: runner.os == 'Windows'
-        # This is the aggregate package budget, not an individual assertion
-        # deadline. The full browser suite exceeds 10m on hosted Windows CPUs.
-        run: go test -timeout 20m ./...
+        run: python tools/ci/windows_tests.py --shard ${{ matrix.shard }} --count 2
+      - name: Test release and CI gates
+        run: |
+          python -m unittest discover -s tools/ci -p test_windows_tests.py
+          python -m unittest discover -s tools/release -p test_release.py
       - name: Compile all Linux tests
         if: runner.os == 'Linux'
         run: go test -run '^$' ./...
@@ -75,9 +83,18 @@ jobs:
       - name: Race check V8 ownership
         run: go test -race ./internal/engine/v8
       - name: Upload executable
+        if: matrix.shard == 0
         uses: actions/upload-artifact@v4
         with:
           name: mimic-${{ runner.os }}-amd64
           path: .build/mimic*
           if-no-files-found: error
+          include-hidden-files: true
+      - name: Upload Windows test coverage plan
+        if: always() && runner.os == 'Windows'
+        uses: actions/upload-artifact@v4
+        with:
+          name: windows-test-plan-${{ matrix.shard }}
+          path: .build/ci/windows-tests-*.json
+          if-no-files-found: warn
           include-hidden-files: true
