@@ -5,6 +5,7 @@ import (
 	"fmt"
 
 	"github.com/moreveal/mimic/internal/engine"
+	"github.com/moreveal/mimic/internal/network"
 )
 
 func (r *Realm) installDocumentCompatibility(host map[string]any) {
@@ -128,11 +129,20 @@ func (r *Realm) installDocumentCompatibility(host map[string]any) {
 		if err != nil {
 			return nil, nil
 		}
-		res, ok := r.retainedStylesheet(u.String())
+		node, exists := r.document.Get(int64(numarg(args, 2)))
+		if !exists {
+			return nil, nil
+		}
+		request := r.elementRequest(u, node.Attributes, network.Stylesheet)
+		res, ok := r.retainedStylesheet(request)
 		if !ok || res.URL == nil || res.Status < 200 || res.Status >= 300 {
 			return nil, nil
 		}
-		result := map[string]any{"url": res.URL.String(), "crossOrigin": res.URL.Scheme != r.documentURL().Scheme || res.URL.Host != r.documentURL().Host}
+		clean, corsErr := resourceResponseOrigin(request, res)
+		if corsErr != nil {
+			return nil, nil
+		}
+		result := map[string]any{"url": res.URL.String(), "crossOrigin": !clean}
 		// The CSSOM owner already keys sheet identity by the resolved URL. On
 		// revalidation it needs availability and identity, not another copy of
 		// the entire response through the Go/V8 bridge.

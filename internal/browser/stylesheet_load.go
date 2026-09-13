@@ -87,13 +87,13 @@ func (r *Realm) waitParserStylesheets(ctx context.Context, pending []*resourcePr
 	}
 }
 
-func (r *Realm) retainedStylesheet(rawURL string) (network.Response, bool) {
+func (r *Realm) retainedStylesheet(request network.Request) (network.Response, bool) {
 	// Isolated worlds share the document's stylesheet loads with its owner.
 	if r.mainWorld != nil {
-		return r.mainWorld.retainedStylesheet(rawURL)
+		return r.mainWorld.retainedStylesheet(request)
 	}
 	for key, pending := range r.stylesheetLoads {
-		if key.url != rawURL {
+		if key != preloadRequestKey(request) {
 			continue
 		}
 		select {
@@ -103,5 +103,5 @@ func (r *Realm) retainedStylesheet(rawURL string) (network.Response, bool) {
 			return network.Response{}, false
 		}
 	}
-	return r.agent.Page().loader.CompletedURL(rawURL)
+	return r.agent.Page().loader.CompletedURL(request.URL.String())
 }

@@ -2,12 +2,39 @@ package textmetrics
 
 import (
 	"fmt"
+	"math"
 	"os"
 	"path/filepath"
 	"reflect"
 	"strings"
 	"testing"
 )
+
+func TestHorizontalRTLAdvancesMatchChrome152(t *testing.T) {
+	if _, err := os.Stat(filepath.Join(os.Getenv("WINDIR"), "Fonts", "arial.ttf")); err != nil {
+		t.Skip("requires Windows reference fonts")
+	}
+	e := New()
+	// Canvas measureText, Arial 12px, frozen Chrome 152.0.7977.82.
+	for _, row := range []struct {
+		text  string
+		width float64
+	}{
+		{"العربية", 25.921875}, {"עברית", 29.63671875}, {"فارسی", 25.259765625},
+	} {
+		shaped, err := e.Shape(row.text, "Arial", 12, 400, false, false, false)
+		if err != nil {
+			t.Fatal(err)
+		}
+		var width float64
+		for _, glyph := range shaped.Glyphs {
+			width += glyph.Advance
+		}
+		if math.Abs(width-row.width) > 1e-9 {
+			t.Fatalf("%q advance: %g, want %g", row.text, width, row.width)
+		}
+	}
+}
 
 func TestAggregateShapingMatchesFullAcrossScratchReuse(t *testing.T) {
 	if _, err := os.Stat(filepath.Join(os.Getenv("WINDIR"), "Fonts", "arial.ttf")); err != nil {

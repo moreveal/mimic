@@ -150,7 +150,7 @@ const constructedStyleSheets = (() => {
     const data=elementSlot(owner),attribute=name=>host.getAttribute(data.nodeId,name);
     const prior=owners.get(owner),tag=data.tagName.toLowerCase(),type=(attribute('type')||'').trim().toLowerCase();
     if(!ownerConnected(owner)||type&&type!=='text/css'||tag==='link'&&!String(attribute('rel')||'').toLowerCase().split(/\s+/).includes('stylesheet')){owners.delete(owner);return null}
-    const resource=tag==='link'?host.stylesheetResource(attribute('href')||'',prior?.key||''):null;if(tag==='link'&&!resource){owners.delete(owner);return null}
+    const resource=tag==='link'?host.stylesheetResource(attribute('href')||'',prior?.key||'',data.nodeId):null;if(tag==='link'&&!resource){owners.delete(owner);return null}
     const source=tag==='link'?resource.body:host.textContent(data.nodeId)||'',key=tag==='link'?resource.url:source;
     let sheet=prior?.key===key?prior.sheet:null;
     if(!sheet){sheet=new CSSStyleSheet();const s=sheets.get(sheet);s.owner=owner;s.href=resource?.url||null;s.crossOrigin=!!resource?.crossOrigin;s.rules.push(...parsedRules(source,sheet));owners.set(owner,{key,sheet})}

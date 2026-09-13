@@ -63,6 +63,7 @@ const cssPrecisionDeclaration=(entry,input)=>{
  return entry;
 };
 cssLonghandParsers.set('transform',parseCSSTransform);
+cssLonghandParsers.set('content-visibility',cssKeywordValue(['visible','auto','hidden']));
 for(const name of ['color','background-color','outline-color','fill','stroke','stop-color','flood-color','lighting-color'])cssLonghandParsers.set(name,value=>['fill','stroke'].includes(name)&&/^(?:none|url\()/i.test(value)?value:cssColorValue(value));
 for(const name of ['opacity','fill-opacity','stroke-opacity','stop-opacity','flood-opacity'])cssLonghandParsers.set(name,value=>cssTransformTerm(value,'number'));
 cssLonghandParsers.set('box-shadow',value=>parseCSSShadow(value));
