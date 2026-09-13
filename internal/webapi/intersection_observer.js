@@ -77,10 +77,10 @@ const scheduleIntersectionUpdate=()=>{
     host.queueIntersectionObserver(()=>{
     if(!intersectionObservers.size)return;
     const version=host.observationVersion()+':'+(constructedStyleSheets.revision?.()||0)+':'+compatibilityElementState.observationVersion();
-    // Reuse only the fact that nothing changed, never stale boxes. Native
-    // shadow trees have JS-owned child lists, so conservatively sample those
-    // every opportunity until their canonical mutation boundary is available.
-    if(!shadowHosts.size&&!intersectionTargetsChanged&&version===lastIntersectionVersion)return;
+    // Synthetic shadow attachment and membership changes now invalidate the
+    // canonical observation epoch too. An unchanged shadow tree does not
+    // require recomputing every observed box at every rendering opportunity.
+    if(!intersectionTargetsChanged&&version===lastIntersectionVersion)return;
     lastIntersectionVersion=version;intersectionTargetsChanged=false;
     withStyleReadCache(()=>{
       const time=host.performanceNow();

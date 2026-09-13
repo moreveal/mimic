@@ -70,6 +70,7 @@ type Realm struct {
 	bootstrapCapture         *bootstrapSnapshotEntry
 	bootstrapRestored        bool
 	fontChoices              []textmetrics.FontReference
+	fontCollectionRevision   uint64
 	textShapeCache           *textShapeCache
 	textCacheProfile         *textCacheProfile
 	lastModified             time.Time
@@ -1430,6 +1431,9 @@ func (r *Realm) installBindingsOnOwner() error {
 	}, "ns")
 	host["attributeNames"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(r.document.AttributeNameList(int64(numarg(a, 0)))), nil
+	}, "n")
+	host["styleObservationState"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return r.val(r.document.StyleObservationState(int64(numarg(a, 0)))), nil
 	}, "n")
 	host["nodeData"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		n, ok := r.document.Get(int64(numarg(a, 0)))

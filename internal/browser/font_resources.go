@@ -53,6 +53,9 @@ func installFontResourceHosts(host map[string]any, runtime engine.Runtime, resou
 }
 
 func (r *Realm) installFontCollection(host map[string]any) {
+	host["fontCollectionVersion"] = r.packedFn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		return r.val(r.fontCollectionRevision), nil
+	}, "")
 	host["fontCollection"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		var choices []textmetrics.FontReference
 		if err := json.Unmarshal([]byte(strarg(args, 0)), &choices); err != nil {
@@ -66,6 +69,7 @@ func (r *Realm) installFontCollection(host map[string]any) {
 				r.textCacheProfile.FontInvalidations++
 			}
 			r.fontChoices = choices
+			r.fontCollectionRevision++
 			r.textShapeCache = nil
 			// Geometry may be reused across reads within this task. FontFaceSet
 			// mutations affect those metrics without changing a DOM attribute.

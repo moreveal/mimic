@@ -114,17 +114,16 @@
   // Stylesheet selectors are a forgiving input boundary: invalid or unsupported
   // rules do not abort computed style. DOM selector APIs retain their SyntaxError.
   const cssSelectorMatch=(element,selector)=>{try{return compatibilitySelectors.matches(element,selector)}catch(error){if(error&&error.name==='SyntaxError')return false;throw error}};
-  // Top-world observations may share one canonical revision until the next
-  // microtask. Child/isolated/foreign realm dependencies retain only synchronous
+  // Top-world observations share one canonical revision. Child/isolated/foreign
+  // realm dependencies retain only synchronous
   // reuse until their complete cross-realm input epoch can be represented.
   let styleReadCache=null;
   // Immutable rule programs survive checkpoints; derived element observations
-  // share only a matching canonical epoch until the next microtask.
+  // share only a matching canonical epoch, including across task checkpoints.
   let checkpointStyleRules=null,checkpointStyleVersion='';
-  let checkpointObservations=null,checkpointObservationVersion='',styleResetQueued=false;
+  let checkpointObservations=null,checkpointObservationVersion='';
   let styleObservationIsolated=host.isIsolatedInputWorld();
   bootstrapRestoreHooks.push(()=>{styleObservationIsolated=host.isIsolatedInputWorld();checkpointObservations=null;checkpointStyleRules=null});
-  const scheduleStyleReset=Promise.prototype.then.bind(Promise.resolve());
   const withStyleReadCache=callback=>{
     const previous=styleReadCache,canonicalVersion=host.observationVersion();
     // Environment changes are Page tasks; nested synchronous reads need only
@@ -137,9 +136,13 @@
     let observation=previous?.version===observationVersion?previous:retain&&checkpointObservationVersion===observationVersion?checkpointObservations:null;
     if(!observation)observation={version:observationVersion,mediaVersion,retainable:retain,rules:retain?checkpointStyleRules:new WeakMap(),declarations:new WeakMap(),widths:new WeakMap(),rects:new WeakMap(),resolvingRects:new Set(),provisionalRects:new WeakSet()};
     if(retain){checkpointObservations=observation;checkpointObservationVersion=observationVersion}
-    if(!styleResetQueued){styleResetQueued=true;scheduleStyleReset(()=>{checkpointObservations=null;styleResetQueued=false})}
     styleReadCache=observation;
-    try{return callback()}finally{
+    try{return callback()}catch(error){
+      // A failed observation may have published provisional recursive boxes.
+      // Do not retain that partial graph for a later command.
+      if(checkpointObservations===observation)checkpointObservations=null;
+      throw error;
+    }finally{
       styleReadCache=previous;
       // A conversion callback may enter a nested observation then mutate again.
       // Never publish the old outer result as a cache for the next author read.
@@ -149,10 +152,20 @@
   // All geometry projections consult the same canonical parent/child snapshot.
   // Keep native membership separate from flat-tree projection (slot/host links)
   // and invalidate both through the same canonical observation epoch.
+  const cssObservationNodeState=node=>{
+    const cache=styleReadCache&&(styleReadCache.nodeStates||(styleReadCache.nodeStates=new WeakMap()));
+    if(cache?.has(node))return cache.get(node);
+    const encoded=host.styleObservationState(elementSlot(node).nodeId),value=JSON.parse(encoded);value.signature=encoded;
+    cache?.set(node,value);return value;
+  };
+  const cssObservationAttribute=(node,name)=>{
+    const data=elementSlot(node);if(data.namespaceURI==='http://www.w3.org/1999/xhtml'||!data.namespaceURI&&!data.qualifiedName)name=name.toLowerCase();
+    const attrs=cssObservationNodeState(node).attributes;return Object.hasOwn(attrs,name)?attrs[name]:null;
+  };
   const cssObservationParent=node=>{
     const cache=styleReadCache&&(styleReadCache.nodeParents||(styleReadCache.nodeParents=new WeakMap()));
     if(cache?.has(node))return cache.get(node);
-    const data=elementSlot(node),parent=syntheticParents.get(node)||(data?wrap(host.parentNode(data.nodeId)):null);
+    const data=elementSlot(node),parent=syntheticParents.get(node)||(data?wrap(styleReadCache?cssObservationNodeState(node).parent:host.parentNode(data.nodeId)):null);
     cache?.set(node,parent);return parent;
   };
   const cssObservationChildren=node=>{
@@ -220,7 +233,26 @@
     }
     cache?.set(root,rules);return rules;
   };
-  const uncachedCSSDeclarations=(element,pseudo='')=>{const winners=new Map();const accept=(entry,specificity,order)=>{if(entry.name==='all'){for(const name of cssComputedNames)if(name!=='direction'&&name!=='unicode-bidi')accept({name,value:entry.value==='initial'?(cssInitialValues.get(name)||'initial'):entry.value,priority:entry.priority,allReset:true},specificity,order);return}const old=winners.get(entry.name),important=entry.priority==='important';if(!old||Number(important)>Number(old.important)||(important===old.important&&(specificity>old.specificity||(specificity===old.specificity&&order>=old.order))))winners.set(entry.name,{entry,specificity,order,important})};if(!pseudo&&elementSlot(element)?.tagName==='DIALOG')accept({name:'display',value:host.getAttribute(elementSlot(element).nodeId,'open')===null?'none':'block',priority:''},-1,-1);for(const rule of compatibilitySelectors.matchingStyles(element,styleSheetRules(element),pseudo))for(const entry of rule.declarations())accept(entry,rule.specificity,rule.order);if(!pseudo)for(const entry of inlineCSSDeclarations(element))accept(entry,1000,Number.MAX_SAFE_INTEGER);return Array.from(winners.values(),value=>({...value.entry}))};
+  let styleCascades=new WeakMap();bootstrapRestoreHooks.push(()=>{styleCascades=new WeakMap()});
+  const uncachedCSSDeclarations=(element,pseudo='')=>{
+    const matched=compatibilitySelectors.matchingStyles(element,styleSheetRules(element),pseudo);
+    const inline=pseudo?'':cssObservationNodeState(element).inline;
+    const dialog=!pseudo&&elementSlot(element)?.tagName==='DIALOG'?(host.getAttribute(elementSlot(element).nodeId,'open')===null?'none':'block'):null;
+    let records=styleReadCache?.retainable?styleCascades.get(element):null;
+    const previous=records?.get(pseudo);
+    // Specified declarations depend on the ordered matching rules and precise
+    // inline state, not on unrelated DOM writes or inherited computed values.
+    // Reuse only after revalidating all inputs; geometry still gets a new graph.
+    if(previous&&previous.inline===inline&&previous.dialog===dialog&&previous.matched.length===matched.length&&matched.every((rule,i)=>rule===previous.matched[i]))return previous.entries;
+    const winners=new Map();
+    const accept=(entry,specificity,order)=>{if(entry.name==='all'){for(const name of cssComputedNames)if(name!=='direction'&&name!=='unicode-bidi')accept({name,value:entry.value==='initial'?(cssInitialValues.get(name)||'initial'):entry.value,priority:entry.priority,allReset:true},specificity,order);return}const old=winners.get(entry.name),important=entry.priority==='important';if(!old||Number(important)>Number(old.important)||(important===old.important&&(specificity>old.specificity||(specificity===old.specificity&&order>=old.order))))winners.set(entry.name,{entry,specificity,order,important})};
+    if(dialog)accept({name:'display',value:dialog,priority:''},-1,-1);
+    for(const rule of matched)for(const entry of rule.declarations())accept(entry,rule.specificity,rule.order);
+    if(!pseudo)for(const entry of inline[0]==='j'?JSON.parse(inline.slice(1)):parseCSS(inline.slice(1)))accept(entry,1000,Number.MAX_SAFE_INTEGER);
+    const entries=Array.from(winners.values(),value=>({...value.entry}));
+    if(styleReadCache?.retainable){if(!records)styleCascades.set(element,records=new Map());records.set(pseudo,{matched,inline,dialog,entries})}
+    return entries;
+  };
   // This private declaration array is read-only to all consumers and never
   // escapes to author code. Recopying every property on each ancestor lookup
   // made a single geometry observation allocate millions of short-lived entries.
@@ -247,10 +279,13 @@
   };
   const computedStyleDocumentAvailable=element=>{
     const foreign=foreignCSSObservation(element,"document");if(foreign!==null)return foreign;
+    const cache=styleReadCache&&(styleReadCache.documentAvailability||(styleReadCache.documentAvailability=new WeakMap()));
+    if(cache?.has(element))return cache.get(element);
     let node=element;
-    while(node){const data=elementSlot(node);if(data&&host.computedStyleAvailable(data.nodeId))return true;
+    while(node){const data=elementSlot(node);if(data&&host.computedStyleAvailable(data.nodeId)){cache?.set(element,true);return true}
       if(shadowSlots.has(node)){node=shadowSlots.get(node).host;continue}
       node=syntheticParents.get(node)||(data?wrap(host.parentNode(data.nodeId)):null)}
+    cache?.set(element,false);
     return false;
   };
   const computedStyleAvailable=element=>{
@@ -427,16 +462,20 @@
   const layoutWidthFor=element=>cssBoxModel.width(element);
   const layoutWidthBoxFor=element=>withStyleReadCache(()=>foreignCSSObservation(element,"layout")??cssBoxModel.widthBox(element));
   const layoutHeightBoxFor=element=>withStyleReadCache(()=>foreignCSSObservation(element,"layout")??cssBoxModel.heightBox(element));
-  const layoutRectFor=element=>withStyleReadCache(()=>foreignCSSObservation(element,"layout")??cssBoxModel.rect(element));
+  const layoutRectInObservation=element=>foreignCSSObservation(element,"layout")??cssBoxModel.rect(element);
+  const layoutRectFor=element=>withStyleReadCache(()=>layoutRectInObservation(element));
   const makeDOMRect=(value,element)=>element?callRealmBinding(element,requireRealmBinding(element,'ElementGeometry'),'rect',[]):new DOMRect(value.x,value.y,value.width,value.height);
-  const clientRectFor=element=>withStyleReadCache(()=>{
+  // Internal batch consumers already own an observation. Re-entering the host
+  // epoch boundary for every candidate is unnecessary: these helpers read
+  // private canonical state and do not invoke author conversion callbacks.
+  const clientRectInObservation=element=>{
     const foreign=foreignCSSObservation(element,"rect");if(foreign!==null)return foreign;
-    const box=layoutRectFor(element),keywords={left:'0%',top:'0%',center:'50%',right:'100%',bottom:'100%'};
+    const box=layoutRectInObservation(element),keywords={left:'0%',top:'0%',center:'50%',right:'100%',bottom:'100%'};
     let points=[[box.x,box.y],[box.x+box.width,box.y],[box.x,box.y+box.height],[box.x+box.width,box.y+box.height]],transformed=false;
     for(let node=element;node;node=geometryParent(node)){
       const entries=computedCSSDeclarations(node),get=k=>entries.find(e=>e.name===k)?.value;
       const raw=entries.find(e=>e.name==='transform')?.parsedValue??get('transform');if(!raw||raw==='none'||get('display')==='none')continue;
-      const bounds=layoutRectFor(node),len=(v,size)=>{const resolved=cssResolveLength(v,cssGeometryLengthContext(node,size));return resolved===null?null:cssGeometryLength(resolved)};
+      const bounds=layoutRectInObservation(node),len=(v,size)=>{const resolved=cssResolveLength(v,cssGeometryLengthContext(node,size));return resolved===null?null:cssGeometryLength(resolved)};
       let matrix;
       try{matrix=compatibilityMatrix.parse(raw,(value,axis)=>len(value,axis===0?bounds.width:axis===1?bounds.height:0))}
       catch{host.semanticMissingAt('surface.js/clientRectFor','CSS.clientRectTransform',raw);continue}
@@ -450,7 +489,8 @@
     if(!transformed)return box;
     const xs=points.map(p=>p[0]),ys=points.map(p=>p[1]),x=Math.min(...xs),y=Math.min(...ys);
     return {x,y,width:Math.fround(Math.max(...xs)-x),height:Math.fround(Math.max(...ys)-y)};
-  });
+  };
+  const clientRectFor=element=>withStyleReadCache(()=>clientRectInObservation(element));
   const frameViewportSizes=new WeakMap();
   const readFrameViewport=nodeID=>withStyleReadCache(()=>{
     const element=wrap(nodeID);

@@ -94,6 +94,28 @@ func TestUnchangedIntersectionSampleAvoidsGeometryWork(t *testing.T) {
 	if count() <= before {
 		t.Fatal("viewport change did not invalidate observation")
 	}
+	// An otherwise idle shadow tree must obey the same epoch. Attachment and
+	// synthetic membership changes still trigger fresh samples.
+	if _, err := p.Evaluate(ctx, `window.owner=document.createElement('div');document.body.append(owner);window.root=owner.attachShadow({mode:'open'});root.innerHTML='<span style="display:block;width:20px;height:20px"></span>';window.target=root.firstChild;window.shadowEntries=[];new IntersectionObserver(e=>shadowEntries.push(...e.map(v=>v.isIntersecting))).observe(target)`); err != nil {
+		t.Fatal(err)
+	}
+	advance()
+	before = count()
+	for i := 0; i < 10; i++ {
+		advance()
+	}
+	if after := count(); after != before {
+		t.Fatalf("unchanged shadow sample repeated geometry: %d -> %d", before, after)
+	}
+	for _, source := range []string{`root.removeChild(target)`, `root.appendChild(target)`, `owner.style.display='none'`, `owner.style.display='block'`} {
+		if _, err := p.Evaluate(ctx, source); err != nil {
+			t.Fatal(err)
+		}
+		advance()
+	}
+	if got, err := p.Evaluate(ctx, `shadowEntries.join(',')`); err != nil || got != "true,false,true,false,true" {
+		t.Fatalf("shadow epoch transitions: %v %v", got, err)
+	}
 }
 
 func TestIntersectionObserverUsesResolvedControlFontGeometry(t *testing.T) {

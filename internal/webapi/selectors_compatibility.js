@@ -81,7 +81,8 @@ const compatibilitySelectors = (() => {
     if(syntheticParents.has(node))return syntheticParents.get(node);
     const slot=elementSlot(node);return slot?wrap(host.parentNode(slot.nodeId)):null;
   });
-  const attribute = (node,name) => memo(node,'attribute:'+name,()=>host.getAttribute(elementSlot(node).nodeId,name)??undefined);
+  const attribute = (node,name) => styleReadCache&&reads===styleReadCache.selectorReads?cssObservationAttribute(node,name)??undefined:memo(node,'attribute:'+name,()=>host.getAttribute(elementSlot(node).nodeId,name)??undefined);
+  const attributeNames=node=>memo(node,'attributeNames',()=>styleReadCache&&reads===styleReadCache.selectorReads?Object.keys(cssObservationNodeState(node).attributes):host.attributeNames(elementSlot(node).nodeId));
   const adapter = {
     isTag: node => elementSlot(node)?.type === 'element',
     getName: node => elementSlot(node).tagName.toLowerCase(),
@@ -200,9 +201,29 @@ const compatibilitySelectors = (() => {
     if(simple)return host.matches(elementSlot(node).nodeId,simple);
     return run(()=>predicate(node,selector)(node));
   }
-  // Stylesheet rules outlive individual style reads. Compile each immutable
-  // selector once, without caching DOM match results or retaining an element
-  // as its scope. Explicit :scope selectors keep their per-element semantics.
+  // Exact primitive/ancestor contexts permit reuse of attribute-only matches.
+  // Weak keys do not retain retired nodes or stylesheet programs. Structural
+  // and stateful selectors are always re-evaluated against the current graph.
+  let styleContexts=new WeakMap();bootstrapRestoreHooks.push(()=>{styleContexts=new WeakMap()});
+  const staticStyleSelector=groups=>groups.every(group=>group.every(token=>
+    ['tag','universal','attribute','descendant','child'].includes(token.type)||
+    token.type==='pseudo'&&['is','where','not'].includes(token.name)&&Array.isArray(token.data)&&staticStyleSelector(token.data)));
+  const styleContext=node=>{
+    const pending=[];let current=node,context;
+    while(current&&adapter.isTag(current)){
+      context=reads.get(current)?.get('styleContext');if(context)break;
+      pending.push(current);current=parent(current);
+    }
+    context=context||current;
+    for(let i=pending.length-1;i>=0;i--){
+      const element=pending[i],signature=cssObservationNodeState(element).signature,prior=styleContexts.get(element);
+      // Exact attribute contents and canonical ancestor identities, not a hash,
+      // determine reuse. The tree is re-read lazily on every observation epoch.
+      const next=prior&&prior.parent===context&&prior.signature===signature?prior:{parent:context,signature,sheets:new WeakMap()};
+      styleContexts.set(element,next);memo(element,'styleContext',()=>next);context=next;
+    }
+    return context;
+  };
   function compileStyle(selector) {
     try {
       // A style read matches many rules against the same element. Keep even
@@ -221,8 +242,59 @@ const compatibilitySelectors = (() => {
   }
   // Index immutable rule programs by a necessary leaf in the rightmost
   // compound. Functional/compound selectors still use the complete matcher;
-  // unsupported shapes go in the fallback bucket. No match result is cached.
+  // unsupported shapes go in the fallback bucket. The index holds programs,
+  // while matchingStyles below owns separately validated derived matches.
   const styleIndexes=new WeakMap();
+  // A necessary-ancestor bloom filter rejects impossible descendant selectors
+  // before the full matcher walks the same ancestry for every rule/element.
+  // Collisions only admit extra work; the upstream matcher still decides every
+  // match. These summaries live in the canonical observation's read memo, so
+  // reparenting, attributes, shadow membership and state changes cannot stale it.
+  const addStyleBits=(bits,key)=>{
+    let hash=2166136261;for(let i=0;i<key.length;i++)hash=Math.imul(hash^key.charCodeAt(i),16777619);
+    for(const bit of [hash&127,(hash>>>7)&127])bits[bit>>>5]|=1<<(bit&31);
+  };
+  const tokenStyleKey=token=>{
+    if(token.namespace!==null)return null;
+    if(token.type==='tag')return 't:'+token.name.toLowerCase();
+    if(token.type==='attribute'&&token.name==='id'&&token.action==='equals')return '#'+token.value.toLowerCase();
+    if(token.type==='attribute'&&token.name==='class'&&token.action==='element')return '.'+token.value.toLowerCase();
+    return null;
+  };
+  const ownStyleBits=node=>memo(node,'styleBits',()=>{
+    const bits=[0,0,0,0];addStyleBits(bits,'t:'+adapter.getName(node));
+    const id=attribute(node,'id'),classes=attribute(node,'class');
+    if(id!==undefined)addStyleBits(bits,'#'+id.toLowerCase());
+    if(classes)for(const name of classes.split(/[\t\n\f\r ]+/))if(name)addStyleBits(bits,'.'+name.toLowerCase());
+    return bits;
+  });
+  const ancestorStyleBits=node=>{
+    const pending=[];let current=node,bits;
+    while(current&&adapter.isTag(current)){
+      bits=reads.get(current)?.get('ancestorStyleBits');if(bits)break;
+      pending.push(current);current=parent(current);
+    }
+    bits=bits||[0,0,0,0];
+    for(let i=pending.length-1;i>=0;i--){
+      const element=pending[i],p=parent(element),own=p&&adapter.isTag(p)?ownStyleBits(p):[0,0,0,0];
+      bits=bits.map((value,j)=>value|own[j]);memo(element,'ancestorStyleBits',()=>bits);
+    }
+    return bits;
+  };
+  const ancestorRequirements=rule=>{
+    const selector=rule.pseudo?rule.selector.replace(/::?(before|after)$/,''):rule.selector;
+    let groups;try{groups=library.parse(selector)}catch{return null}
+    if(groups.length!==1)return null;
+    const bits=[0,0,0,0];let ancestor=false;
+    for(let i=groups[0].length-1;i>=0;i--){
+      const token=groups[0][i];
+      if(token.type==='descendant'||token.type==='child'){ancestor=true;continue}
+      // Do not infer anything about a sibling or relative-selector boundary.
+      if(['adjacent','sibling','parent','column-combinator'].includes(token.type))break;
+      if(ancestor){const key=tokenStyleKey(token);if(key)addStyleBits(bits,key)}
+    }
+    return bits.some(Boolean)?bits:null;
+  };
   function styleKey(rule) {
     const selector=rule.pseudo?rule.selector.replace(/::?(before|after)$/,''):rule.selector;
     let groups;try{groups=library.parse(selector)}catch{return '*'}
@@ -240,10 +312,29 @@ const compatibilitySelectors = (() => {
     return key;
   }
   const matchingStyles=(node,rules,pseudo='')=>run(()=>{
+    let retained;
+    if(styleReadCache?.retainable){
+      const context=styleContext(node);
+      let environment=styleReadCache.selectorEnvironment;
+      if(!environment){const viewport=host.viewport();environment=styleReadCache.selectorEnvironment=styleReadCache.mediaVersion+':'+viewport.width+':'+viewport.height}
+      retained=context.sheets.get(rules);
+      if(!retained||retained.environment!==environment){retained={environment,pseudos:new Map()};context.sheets.set(rules,retained)}
+      const previous=retained.pseudos.get(pseudo);
+      if(previous){
+        const matched=previous.matches.slice();
+        for(const rule of previous.dynamic)if(rule.matches(node))matched.push(rule);
+        return matched.sort((a,b)=>a.order-b.order);
+      }
+    }
     let index=styleIndexes.get(rules);
     if(!index){
       index=new Map();
-      for(const rule of rules){const leaf=styleKey(rule),key=rule.pseudo+'|'+leaf;if(leaf.startsWith('a:'))index.hasAttributeKeys=true;let bucket=index.get(key);if(!bucket)index.set(key,bucket=[]);bucket.push(rule)}
+      for(const rule of rules){
+        const leaf=styleKey(rule),key=rule.pseudo+'|'+leaf;if(leaf.startsWith('a:'))index.hasAttributeKeys=true;
+        let bucket=index.get(key);if(!bucket)index.set(key,bucket=[]);
+        let stable=false;try{stable=staticStyleSelector(library.parse(rule.pseudo?rule.selector.replace(/::?(before|after)$/,''):rule.selector))}catch{}
+        bucket.push({rule,stable,ancestors:ancestorRequirements(rule)});
+      }
       styleIndexes.set(rules,index);
     }
     const keys=new Set(['*','t:'+adapter.getName(node)]),id=attribute(node,'id'),classes=attribute(node,'class');
@@ -252,9 +343,18 @@ const compatibilitySelectors = (() => {
     // Attribute selectors require the attribute to exist. Reading canonical
     // names once avoids testing every data-/aria- rule on unrelated elements.
     // Full matching still decides values, operators, casing and combinators.
-    if(index.hasAttributeKeys)for(const name of memo(node,'attributeNames',()=>host.attributeNames(elementSlot(node).nodeId)))keys.add('a:'+name.toLowerCase());
-    const matched=[];
-    for(const key of keys)for(const rule of index.get(pseudo+'|'+key)||[])if(rule.matches(node))matched.push(rule);
+    if(index.hasAttributeKeys)for(const name of attributeNames(node))keys.add('a:'+name.toLowerCase());
+    const matched=[],staticMatches=[],dynamic=[];
+    let available;
+    for(const key of keys)for(const {rule,ancestors,stable} of index.get(pseudo+'|'+key)||[]){
+      if(ancestors){available=available||ancestorStyleBits(node);if(ancestors.some((required,i)=>(available[i]&required)!==required))continue}
+      if(!stable)dynamic.push(rule);
+      if(rule.matches(node)){matched.push(rule);if(stable)staticMatches.push(rule)}
+    }
+    // Only attribute/ancestor selectors can reuse a result. Dynamic candidates
+    // are retained as a program, never as a truth value, and are always matched
+    // anew. Exact context and environment changes replace the entire record.
+    if(retained)retained.pseudos.set(pseudo,{matches:staticMatches,dynamic});
     return matched.sort((a,b)=>a.order-b.order);
   },true);
   function closest(node,selector) {
