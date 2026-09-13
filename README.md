@@ -205,3 +205,9 @@ configure `-navigation-timeout 30s` when your workflow needs one.
 Contributing? Start with [AGENTS.md](AGENTS.md) and the
 [verification guide](docs/getting-started.md#verification). Compatibility changes
 should be backed by focused regression tests and Chrome observations.
+
+## License
+
+Mimic is licensed under [PolyForm Shield 1.0.0](LICENSE.md). Commercial use is
+permitted; the license restricts competing products. Third-party components
+retain their own licenses. See the full license for its scope and conditions.
