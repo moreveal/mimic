@@ -1,9 +1,24 @@
 # Quick start: one profile, then automate
 
-**Private beta preview.** Get a Windows x64 build by messaging `moreveal` on Discord.
-The examples below describe the current runtime interface; this repository does
-not distribute the executable. Run commands from the directory containing your
-beta build, `mimic.exe`.
+**Public Beta — Windows and Linux.** [Download v0.1.0-beta.1](https://github.com/moreveal/mimic-overview/releases/tag/v0.1.0-beta.1) and
+extract the archive. No Go, Rust, Chromium, or GPU is needed. Commands below run
+from the extracted directory. Read [PolyForm Shield 1.0.0](LICENSE.md) before use.
+
+Windows: extract the `.zip` and run `mimic.exe`. Linux: extract the `.tar.gz`
+and run `./mimic`; Ubuntu 24.04+ with glibc 2.39+ and libgcc_s is required.
+For Linux text and input geometry, install fonts if needed:
+
+```sh
+sudo apt-get update
+sudo apt-get install -y libgcc-s1 fonts-liberation fonts-dejavu-core
+```
+
+Verify the downloaded archive against the release's `SHA256SUMS` using
+`Get-FileHash -Algorithm SHA256 <archive>` on Windows or `sha256sum <archive>`
+on Linux. Node.js 22+ is only needed for the example automation clients.
+
+**Want the shortest path?** The archive already includes `examples/profile.json`
+and [three runnable workflows](examples/README.md), including Playwright.
 
 ## 1. Describe the browser environment
 
@@ -50,6 +65,12 @@ resource allocation. Profiles are validated; unsupported custom settings return 
 
 ```powershell
 .\mimic.exe --profile profile.json --chrome 152 --browser-mode headful --listen 127.0.0.1:9222
+```
+
+On Linux, use:
+
+```sh
+./mimic --profile profile.json --chrome 152 --browser-mode headful --listen 127.0.0.1:9222
 ```
 
 `headful` selects the measured environment profile; Mimic still opens no browser
@@ -103,6 +124,23 @@ The script reads the page's content and the environment you configured. For your
 own workflow, wait for the element or application state that indicates readiness,
 then use supported DOM interactions and evaluation. CDP coverage is evolving;
 this example does not imply support for every Puppeteer feature.
+
+## Playwright: fill, click, and read the result
+
+The included [Playwright example](examples/playwright.mjs) uses
+`chromium.connectOverCDP`, `locator.fill`, and `locator.click` against a local
+demo shop. It waits for a fetch-driven DOM update and returns `126 USD`.
+Follow [the example instructions](examples/README.md) or run the complete check:
+
+```sh
+cd examples
+npm ci
+# Linux; on Windows replace ../mimic with ../mimic.exe.
+npm run verify -- ../mimic
+```
+
+This command starts Mimic and the fixture itself, checks Playwright, Puppeteer
+profiles, and ten concurrent pages, then cleans up. No Chrome download is needed.
 
 ## Native SOCKS5, HTTP, and HTTPS proxies
 
@@ -168,4 +206,4 @@ including hardware, timezone, and proxy settings, requires a new context. Existi
 cookies and documents are not migrated. Contexts are not a security sandbox.
 
 The aim: describe your environment once, connect your automation, and focus on
-the workflow. **[DM `moreveal` on Discord for Private Beta →](BETA.md)**
+the workflow. **[Public Beta downloads and feedback →](BETA.md)**

@@ -8,11 +8,11 @@
 </p>
 
 <p align="center">
-  <a href="QUICKSTART.md"><img src="https://img.shields.io/badge/Go-1.26.4%2B-00ADD8?style=flat-square&amp;logo=go&amp;logoColor=white" alt="Go 1.26.4+"></a>
+  <a href="QUICKSTART.md"><img src="https://img.shields.io/badge/platforms-Windows%20%7C%20Linux-5988C7?style=flat-square" alt="Windows and Linux amd64"></a>
   <a href="QUICKSTART.md"><img src="https://img.shields.io/badge/engine-V8-81B5FF?style=flat-square&amp;logo=v8&amp;logoColor=white" alt="V8 engine"></a>
   <a href="FAQ.md"><img src="https://img.shields.io/badge/runs-JavaScript-F7DF1E?style=flat-square&amp;logo=javascript&amp;logoColor=black" alt="Runs JavaScript"></a>
   <a href="FAQ.md"><img src="https://img.shields.io/badge/automation-CDP-AC9FFF?style=flat-square" alt="CDP automation"></a>
-  <a href="FAQ.md"><img src="https://img.shields.io/badge/status-in_development-FFCA91?style=flat-square" alt="In development"></a>
+  <a href="FAQ.md"><img src="https://img.shields.io/badge/status-public_beta-FFCA91?style=flat-square" alt="Public beta"></a>
 </p>
 
 <p align="center">
@@ -33,7 +33,9 @@ and automate through familiar CDP tools without embedding Chromium.
 
 **Our ambition: direct HTTP lightness with browser compatibility.**
 
-**Actively developed · Private beta.** DM **`moreveal`** on Discord to get involved.
+**Public Beta · Windows & Linux.** [Download the beta →](https://github.com/moreveal/mimic-overview/releases/tag/v0.1.0-beta.1) · [Run the examples →](examples/README.md)
+
+Actively developed. Feedback and workflow help: **`moreveal`** on Discord.
 
 ## Working browser behavior
 
@@ -46,14 +48,14 @@ These development checkpoints exercise execution and observable browser behavior
 | **Workers ✓** | Messaging and worker fetch in supported workflows. |
 | **DOM mutations ✓** | 3,000 elements with validated final structure and text. |
 | **Networking ✓** | Fetch and XHR in deterministic local fixtures. |
-| **Puppeteer / CDP ✓** | Connection, navigation, page interaction, and browser sessions. |
+| **Playwright / Puppeteer ✓** | [Verified examples](examples/README.md): form input, clicks, fetch, profile readback, and ten concurrent pages on Windows and Linux. |
 | **100 concurrent pages ✓** | Completed static and React benchmark series. |
 
 These are scoped, verified workflows; compatibility continues to expand.
 
 ## Measured, not assumed
 
-Fresh-build results from **September 13, 2026**, against **Chrome 152.0.7977.82** in headless mode, on Windows 11 x64 (Intel i7-14700KF, 31.83 GiB RAM).
+Retained Windows checkpoint from **September 13, 2026**, against **Chrome 152.0.7977.82** in headless mode, on Windows 11 x64 (Intel i7-14700KF, 31.83 GiB RAM).
 
 <p align="center">
   <a href="BENCHMARKS.md"><img src="assets/benchmark-startup.svg" alt="Mimic and Chrome: CDP readiness and startup memory" width="1200"></a>
@@ -120,16 +122,16 @@ Use separate profiles per context and native proxies when your workflow needs th
 
 **[Complete quick start: Puppeteer, native proxies, and multiple profiles →](QUICKSTART.md)**
 
-## Private beta
+## Public beta
 
-**DM `moreveal` on Discord for Private Beta.** [What to include →](BETA.md)
+**[Download Windows or Linux builds →](https://github.com/moreveal/mimic-overview/releases/tag/v0.1.0-beta.1)**
 
-Tell us what you want to automate, your current tooling, and where a full browser
-is costing you time or resources. We'll assess whether the current runtime fits
-your workflow and discuss access.
+Extract, start Mimic, and connect your automation. [Quick start](QUICKSTART.md) ·
+[Runnable examples](examples/README.md) · [Release notes](RELEASE_NOTES.md).
 
-This repository is the public product overview. Source code, runtime downloads,
-and internal research are private; access is arranged through the beta.
+DM **`moreveal`** on Discord for workflow help, or [report a reproducible issue](BETA.md).
+This repository is the public product overview, with binary releases and client
+examples. Implementation sources and internal research remain private.
 
 ## Known limitations
 
@@ -137,9 +139,11 @@ Warm execution currently trails Chrome in the measured fixtures. CPU concurrency
 at 100 pages also hit an initialization failure. Both are optimization and reliability
 targets as Mimic develops; the full report retains all results and recorded failures.
 
-Mimic is in active development. The current validated platform is **Windows x64**,
-and the behavioral reference is **Chrome 152**. Linux support and additional Chrome
-targets are planned directions, without a committed release date.
+Mimic is in active development. The beta supports **Windows amd64** and
+**Linux amd64 with glibc 2.39+** (validated on Ubuntu 24.04 under WSL2). The
+browser environment remains **Chrome 152 on Windows** on either host. ARM64 and
+musl are not packaged. Linux needs installed fonts and has no native speech synthesis.
+The benchmark charts predate the platform release; they are not Linux measurements.
 
 It implements a subset of browser APIs and CDP. It does not render screenshots,
 PDFs, Canvas/WebGL output, or video, and does not provide full CSS layout or complete
@@ -150,4 +154,4 @@ Playwright or Puppeteer feature works. See the [FAQ](FAQ.md) for the practical b
 
 Mimic is licensed under [PolyForm Shield 1.0.0](LICENSE.md). Commercial use is
 permitted; the license restricts competing products. Third-party components
-retain their own licenses. See the full license for its scope and conditions.
+retain their own licenses. See the full license for its scope and conditions. [Client examples](examples/) are MIT licensed.

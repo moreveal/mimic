@@ -1,0 +1,60 @@
+# Mimic v0.1.0-beta.1 — Public Beta
+
+**Run website JavaScript. Keep browser state. Skip the rendering pipeline.**
+
+The first public beta ships ready-to-run **Windows amd64** and **Linux amd64**
+builds. Mimic uses V8 and its own browser environment without embedding Chromium.
+No browser installation, Go toolchain, display server, or GPU is needed to run it.
+
+## Try it
+
+1. Download the archive for your platform from this release and extract it.
+2. Read `QUICKSTART.md` and `LICENSE.md` in the archive.
+3. Start Mimic with `--profile examples/profile.json --listen 127.0.0.1:9222`.
+4. Run the included [examples](examples/README.md) with Node.js 22+.
+
+All three examples were executed against the packaged binary on both platforms:
+
+- **Playwright:** fill a form, click, wait for a fetch-driven DOM update, extract the result.
+- **Puppeteer:** read content and check language, timezone, viewport, and theme from a profile.
+- **Concurrency:** run ten pages with separate window state, collect fetch results, close pages.
+
+Public clients are pinned to Playwright Core **1.63.0** and Puppeteer Core
+**25.10.0**. The packaged executables also pass fresh-cache CDP, DOM, Promise,
+text metric, mouse-input, and teardown checks with V8, QuickJS, and goja.
+
+## Platform requirements
+
+| Archive | Requirements |
+| --- | --- |
+| `mimic-v0.1.0-beta.1-windows-amd64.zip` | Windows x64; verified on Windows 11. |
+| `mimic-v0.1.0-beta.1-linux-amd64.tar.gz` | Linux x64, glibc 2.39+, libgcc_s, installed fonts; verified on Ubuntu 24.04 under WSL2. |
+
+On Ubuntu 24.04, install `libgcc-s1 fonts-liberation fonts-dejavu-core` if absent.
+ARM64 and musl/Alpine are not packaged. Both hosts expose the current Chrome 152
+Windows environment profile; Linux host support does not add a Linux fingerprint.
+Native speech synthesis is unavailable on Linux. Builds are not code-signed.
+
+## What is still developing
+
+Browser and CDP coverage are incomplete. Supported workflows do not imply full
+Playwright/Puppeteer compatibility. Mimic does not render screenshots or PDFs,
+and is not a sandbox for untrusted code. Bind CDP to trusted localhost clients.
+
+The [benchmark charts](BENCHMARKS.md) describe the retained September 13 Windows
+checkpoint, **not a new measurement of these release binaries or Linux**.
+Warm latency and the recorded CPU-heavy 100-page initialization failure remain
+known limitations, not claimed fixes in this release.
+
+## License and feedback
+
+Mimic uses **PolyForm Shield 1.0.0**: commercial use is permitted subject to the
+license's noncompete provisions and other terms. Examples are MIT licensed;
+third-party terms accompany the archives. Implementation sources remain private.
+
+Report reproducible issues here or DM **moreveal** on Discord. Include the release,
+platform, client version, and a small example without credentials or private data.
+
+`SHA256SUMS` and `release-manifest.json` accompany the platform archives.
+GitHub's automatic source archives contain this product overview and examples,
+not the Mimic implementation.

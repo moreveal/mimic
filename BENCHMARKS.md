@@ -4,6 +4,9 @@ A fresh-build comparison on one Windows workstation using the unchanged local be
 
 **Active development, early results.** Our goal is direct HTTP lightness with browser compatibility. The memory advantage visible in this run is an encouraging starting point. Slower execution cases remain active optimization targets; these timings describe the current build, not our intended performance ceiling. Future gains must be measured while preserving behavior.
 
+**Release scope:** these are retained Windows checkpoint results, not a rerun
+of the public beta binaries and not Linux performance measurements.
+
 ## Environment
 
 | Item | Value |
@@ -147,4 +150,4 @@ These timings identify the measured build by executable hash. A subsequent brows
 
 [Download the numerical results](benchmarks/results.json): all single-page summary metrics, numerical completion/startup samples (including excluded warmups), concurrency results, and executable/harness hashes. The runtime, benchmark harness, full diagnostic captures, and research remain private. This public summary is therefore not independently reproducible from this repository alone. The exact full-run data hash is included to identify the retained private record.
 
-[Request private beta access](BETA.md) · [Back to Mimic](README.md)
+[Download the public beta](BETA.md) · [Back to Mimic](README.md)

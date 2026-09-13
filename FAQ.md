@@ -15,7 +15,7 @@ It implements the browser behavior needed by its supported workflows.
 Mimic exposes a subset of the Chrome DevTools Protocol. Selected workflows have
 been exercised with Puppeteer, Pyppeteer, and Playwright tooling. Support depends
 on the commands and behavior your workflow uses; it is not a universal drop-in
-replacement. Share your workflow when requesting beta access.
+replacement. Start with the [verified runnable examples](examples/README.md).
 
 ## What can I get out of a page?
 
@@ -49,13 +49,19 @@ from synthetic fixtures.
 
 ## Which platforms are supported?
 
-Current builds and validation target Windows x64. Linux and additional Chrome
-behavioral targets are development directions. There is no announced release date.
+The public beta ships Windows amd64 and Linux amd64 builds. Linux requires
+glibc 2.39+, libgcc_s, and installed fonts; validation used Ubuntu 24.04 under
+WSL2. ARM64 and musl/Alpine are not packaged. Both hosts currently expose the
+Chrome 152 Windows environment profile. Native speech synthesis is unavailable
+on Linux. Performance charts are the retained Windows checkpoint, not Linux results.
 
 ## Is it open source? Where can I download it?
 
-The runtime is private. This repository contains product information and benchmark
-results, with no source distribution or public binaries. [Request private beta access](BETA.md).
+Implementation sources remain private. Ready-to-run binaries are available in
+[GitHub Releases](https://github.com/moreveal/mimic-overview/releases/tag/v0.1.0-beta.1). This repository contains the product overview,
+benchmarks, and MIT-licensed client examples. Mimic itself uses
+[PolyForm Shield 1.0.0](LICENSE.md), which permits commercial use subject to its
+noncompete provisions and other terms; it is not an open-source license.
 
 ## Can I use it to run untrusted code?
 

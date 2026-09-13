@@ -1,26 +1,34 @@
-# Join the private beta
+# Public Beta
 
-**DM `moreveal` on Discord for Private Beta.**
+**[Download Mimic for Windows or Linux →](https://github.com/moreveal/mimic-overview/releases/tag/v0.1.0-beta.1)**
 
-Open Discord and add **moreveal** by username, then send a message about your workflow.
+The beta is publicly downloadable. No Discord invitation is required.
+Start with the [quick start](QUICKSTART.md) or the [runnable examples](examples/README.md).
 
-Mimic is in active development. We're looking for concrete workflows that need
-website JavaScript and browser state without screenshots or a rendering pipeline.
+| Platform | Requirements |
+| --- | --- |
+| Windows amd64 | Verified on Windows 11; extract and run `mimic.exe`. |
+| Linux amd64 | glibc 2.39+, libgcc_s, installed Liberation/DejaVu/Noto fonts; verified on Ubuntu 24.04 under WSL2. |
 
-In your message, include:
+No Chrome, Go, Rust, display server, or GPU is needed for the executable.
+Node.js 22+ is needed for the bundled example clients. ARM64 and musl are not
+packaged. Read [release notes](RELEASE_NOTES.md) for supported workflows and limitations.
 
-- What you want to automate and the result you need.
-- Your current tool or approach: HTTP, Playwright, Puppeteer, or something else.
-- Your operating system and approximate concurrency needs.
-- The bottleneck or missing capability that brought you here.
+## Feedback and workflow help
 
-A short description is enough to start. Please leave credentials, session cookies,
-and private customer data out of your message and public issues.
+**DM `moreveal` on Discord**, or open a public issue with:
 
-We'll discuss compatibility, setup, and access directly. Beta access does not imply
-that every website or automation feature is supported.
+- The Mimic release, operating system, and automation client version.
+- What you expected and what happened.
+- A minimal reproducer using public or local test data.
+- Relevant error output, with secrets removed.
 
-[Back to Mimic](README.md)
+Keep credentials, cookies, tokens, and private customer data out of public issues.
+For sensitive reproduction details, contact `moreveal` first.
 
-Beta builds are supplied under the [PolyForm Shield 1.0.0](LICENSE.md). Read the
-terms before installing or using a build.
+## License
+
+Mimic uses [PolyForm Shield 1.0.0](LICENSE.md). Commercial use is permitted
+subject to the license's noncompete provisions and other conditions. Client
+examples are MIT licensed; bundled dependencies retain their own terms.
+The beta remains in active development and does not promise complete browser compatibility.
