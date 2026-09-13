@@ -82,8 +82,12 @@ Initial GitHub-hosted Windows runs built the executable but exceeded Go's defaul
 10-minute aggregate browser-package test budget. The timeout stacks showed
 different recently started tests (0вЂ“2 seconds), including stylesheet and graphics
 oracles, rather than a single test blocked for ten minutes. The workflow now
-allows 20 minutes per package for the full Windows suite; individual test
-deadlines and reference expectations are unchanged.
+discovers every browser root test and divides them into two disjoint Windows
+shards, in batches of at most 100 root tests. Every selected root runs all of its
+subtests. The first shard also runs all other root-module packages. Per-batch Go
+timeouts retain the default 10-minute budget; individual test deadlines and
+reference expectations are unchanged. Each job retains its coverage plan as a
+CI artifact. Unit checks verify that the partition omits and duplicates no tests.
 
 One run also exposed a synchronization race in
 `TestSnapshotInterruptsNavigationContinuation`: `scriptStart` is emitted before
