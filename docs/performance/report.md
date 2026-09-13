@@ -2145,3 +2145,15 @@ regression fails before the fix and passes 20 repetitions after it; preview
 tests pass three repetitions and the full CDP package passes. An owned live
 viewer in Chrome 152 displays and updates a 10 ms timer-driven Page without
 viewer errors; the existing 25-update DOM mirror smoke test also passes.
+
+### 2026-09-13: implement scrolling for off-viewport automation
+
+Steam's failed link action was missing functionality, not a slow click:
+scrollIntoView returned without moving the viewport. The canonical scrolling
+implementation now updates geometry, clipping, input, intersections and preview.
+Unchanged layout is retained when offsets change. A fresh Playwright trial on
+the Steam link passes, as does a real local below-viewport button click. These
+are diagnostic checks, not reportable latency/throughput comparisons. Chrome
+oracle coverage, focused validation and explicit remaining boundaries are in
+[the scrolling notes](../scrolling.md). The user requested stopping the repeated
+full test run and publishing; no final full-suite or fast-gate pass is claimed.

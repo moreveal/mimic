@@ -45,7 +45,7 @@
   if(typeof VisualViewport==='function'){
   const visual=new EventTarget();Object.setPrototypeOf(visual,VisualViewport.prototype);
   replaceableWindow('visualViewport',()=>visual);
-  const visualMetrics=()=>{const v=host.viewport();return {offsetLeft:0,offsetTop:0,pageLeft:windowScrollX,pageTop:windowScrollY,width:v.width,height:v.height,scale:1}};
+  const visualMetrics=()=>{const v=host.viewport(),scroll=compatibilityScrolling.position(null);return {offsetLeft:0,offsetTop:0,pageLeft:scroll.x,pageTop:scroll.y,width:v.width,height:v.height,scale:1}};
   for(const name of ['offsetLeft','offsetTop','pageLeft','pageTop','width','height','scale'])getter(VisualViewport.prototype,name,function(){if(this!==visual)throw new TypeError('Illegal invocation');return visualMetrics()[name]});
   for(const name of ['onresize','onscroll','onscrollend'])Object.defineProperty(VisualViewport.prototype,name,{get(){if(this!==visual)throw new TypeError('Illegal invocation');return eventHandlerRecord(visual,name.slice(2)).value},set(value){if(this!==visual)throw new TypeError('Illegal invocation');setEventHandlerValue(visual,name.slice(2),value)},enumerable:true,configurable:true});
   let previousVisual=null;

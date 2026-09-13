@@ -183,7 +183,10 @@ func (s *session) handleDOM(ctx context.Context, method string, p map[string]any
 		_, err := s.nodeFunction(ctx, p, `function(){if(!this.isConnected||typeof this.focus!=='function')throw new Error('Element is not focusable');this.focus()}`, nil)
 		return empty, true, err
 	case "DOM.scrollIntoViewIfNeeded":
-		_, err := s.nodeFunction(ctx, p, `function(){if(!this.isConnected)throw new Error('Node is detached from document');this.scrollIntoView({block:'center',inline:'center'})}`, nil)
+		id, err := s.nodeID(ctx, p)
+		if err == nil {
+			err = s.page.ScrollNodeIntoView(ctx, id, p["rect"])
+		}
 		return empty, true, err
 	case "DOM.getContentQuads", "DOM.getBoxModel":
 		id, idErr := s.nodeID(ctx, p)

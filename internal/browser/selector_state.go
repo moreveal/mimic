@@ -1,5 +1,18 @@
 package browser
 
+import "context"
+
+func (r *Realm) scrollToFragment(ctx context.Context) error {
+	if r.documentURL().Fragment == "" {
+		return nil
+	}
+	if r.selectorTargetID == 0 {
+		return nil
+	}
+	_, err := r.invokeInputWorld(ctx, r, r.selectorTargetID, "scroll", `{"action":"fragment"}`)
+	return err
+}
+
 // updateSelectorTarget resolves a navigation fragment to a canonical element.
 // It deliberately runs for fragment navigation, not history state URL changes.
 // The caller supplies net/url's already-decoded Fragment.

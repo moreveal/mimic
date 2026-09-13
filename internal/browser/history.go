@@ -24,14 +24,15 @@ type sessionHistoryEntry struct {
 }
 
 type historyFrameState struct {
-	navigationKey   string
-	navigationID    string
-	navigationState string
-	storageData     string
-	url             *url.URL
-	realmID         string
-	state           engine.Value
-	storageState    engine.Value // private clone, never exposed to application code
+	scrollX, scrollY float64 // Historical viewport offset; live state belongs to the realm.
+	navigationKey    string
+	navigationID     string
+	navigationState  string
+	storageData      string
+	url              *url.URL
+	realmID          string
+	state            engine.Value
+	storageState     engine.Value // private clone, never exposed to application code
 }
 
 // Chrome disables session history for the complete auxiliary PiP tree.
@@ -145,6 +146,11 @@ func (p *Page) commitHistory(frame *Frame, target *url.URL, replace bool, state 
 		}
 	}
 	entry.frames[frame.ID] = &historyFrameState{url: target, realmID: frame.Realm.ID, state: state, navigationKey: key, navigationID: uuid.NewString()}
+	if p.historyIndex >= 0 {
+		if previous := p.history[p.historyIndex].frames[frame.ID]; previous != nil && previous.realmID == frame.Realm.ID {
+			entry.frames[frame.ID].scrollX, entry.frames[frame.ID].scrollY = previous.scrollX, previous.scrollY
+		}
+	}
 	if frame == p.Top {
 		entry.URL = target
 		p.current = target
@@ -275,6 +281,7 @@ func (r *Realm) historyGo(delta int) {
 				continue
 			}
 			state := entry.frames[realm.agent.ContextID()]
+			scrollX, scrollY := state.scrollX, state.scrollY
 			if state.storageState != nil {
 				cloned, err := realm.runtime.Call(ctx, realm.historyCloneFunction, nil, state.storageState)
 				if err != nil {
@@ -290,6 +297,9 @@ func (r *Realm) historyGo(delta int) {
 			// when traversal was requested by its parent or a sibling.
 			if _, err := realm.Evaluate(ctx, `(()=>{const event=new Event('popstate');Object.defineProperty(event,'state',{value:history.state});dispatchEvent(event)})()`, "mimic:history"); err != nil {
 				return fmt.Errorf("history popstate: %w", err)
+			}
+			if _, err := realm.invokeInputWorld(ctx, realm, 0, "scroll", fmt.Sprintf(`{"action":"restore","x":%g,"y":%g}`, scrollX, scrollY)); err != nil {
+				return err
 			}
 			if change.oldURL.Fragment != change.newURL.Fragment {
 				if !realm.activeHistoryDocument() {
@@ -329,6 +339,9 @@ func (r *Realm) navigateFragment(target *url.URL, replace bool) {
 	r.browserEventLoop().Post(scheduler.Navigation, 0, func(ctx context.Context) error {
 		if !r.activeHistoryDocument() {
 			return nil
+		}
+		if err := r.scrollToFragment(ctx); err != nil {
+			return err
 		}
 		return r.dispatchHashChange(ctx, current, target)
 	})

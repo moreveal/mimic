@@ -44,17 +44,17 @@ const intersectionSample=(state,target,time)=>{
     if(display==='none'||!display&&element.hasAttribute('hidden'))valid=false;
   }
   let box=zero;
-  if(valid)box=layoutRectFor(target);
+  if(valid)box=clientRectFor(target);
   let root=zero,intersection=zero,isIntersecting=false;
   if(valid){
-    const viewport=host.viewport(),base=state.root instanceof Element?layoutRectFor(state.root):intersectionRect(0,0,viewport.width,viewport.height);
+    const viewport=host.viewport(),base=state.root instanceof Element?clientRectFor(state.root):intersectionRect(0,0,viewport.width,viewport.height);
     const [top,right,bottom,left]=state.margin.map(part=>part.value*(part.unit==='%'?base.width/100:1));
     root=intersectionRect(base.x-left,base.y-top,Math.max(0,base.width+left+right),Math.max(0,base.height+top+bottom));
     let x=Math.max(root.left,box.left),y=Math.max(root.top,box.top),endX=Math.min(root.right,box.right),endY=Math.min(root.bottom,box.bottom);
     for(let ancestor=intersectionParent(target);ancestor&&ancestor!==state.root;ancestor=intersectionParent(ancestor)){
       const entries=computedCSSDeclarations(ancestor),get=name=>entries.find(e=>e.name===name)?.value||'',overflow=get('overflow');
       const clipX=/^(hidden|clip|scroll|auto)$/.test(get('overflow-x')||overflow),clipY=/^(hidden|clip|scroll|auto)$/.test(get('overflow-y')||overflow);
-      if(clipX||clipY){const bounds=layoutRectFor(ancestor);if(clipX){x=Math.max(x,bounds.left);endX=Math.min(endX,bounds.right)}if(clipY){y=Math.max(y,bounds.top);endY=Math.min(endY,bounds.bottom)}}
+      if(clipX||clipY){const bounds=clientRectFor(ancestor);if(clipX){x=Math.max(x,bounds.left);endX=Math.min(endX,bounds.right)}if(clipY){y=Math.max(y,bounds.top);endY=Math.min(endY,bounds.bottom)}}
     }
     isIntersecting=endX>=x&&endY>=y;
     if(isIntersecting)intersection=intersectionRect(x,y,endX-x,endY-y);
@@ -76,7 +76,7 @@ const scheduleIntersectionUpdate=()=>{
     for(const id of frames)host.queueIntersectionObserver(()=>{const callback=animationFrameCallbacks.get(id);animationFrameCallbacks.delete(id);if(callback)callback(timestamp)});
     host.queueIntersectionObserver(()=>{
     if(!intersectionObservers.size)return;
-    const version=host.observationVersion()+':'+(constructedStyleSheets.revision?.()||0)+':'+compatibilityElementState.observationVersion();
+    const version=host.observationVersion()+':'+(constructedStyleSheets.revision?.()||0)+':'+compatibilityElementState.observationVersion()+':'+compatibilityScrolling.revision();
     // Synthetic shadow attachment and membership changes now invalidate the
     // canonical observation epoch too. An unchanged shadow tree does not
     // require recomputing every observed box at every rendering opportunity.

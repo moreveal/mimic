@@ -132,7 +132,7 @@
     const version=canonicalVersion+':'+constructedStyleSheets.revision()+':'+mediaVersion;
     const retain=!styleObservationIsolated&&windowRelations.self===windowRelations.top;
     if(!checkpointStyleRules||checkpointStyleVersion!==version){checkpointStyleRules=new WeakMap();checkpointStyleVersion=version}
-    const observationVersion=version+':'+compatibilityElementState.observationVersion()+':'+windowScrollX+':'+windowScrollY;
+    const observationVersion=version+':'+compatibilityElementState.observationVersion();
     let observation=previous?.version===observationVersion?previous:retain&&checkpointObservationVersion===observationVersion?checkpointObservations:null;
     if(!observation)observation={version:observationVersion,mediaVersion,retainable:retain,rules:retain?checkpointStyleRules:new WeakMap(),declarations:new WeakMap(),widths:new WeakMap(),rects:new WeakMap(),resolvingRects:new Set(),provisionalRects:new WeakSet()};
     if(retain){checkpointObservations=observation;checkpointObservationVersion=observationVersion}
@@ -367,6 +367,7 @@
     const receiver=()=>elementWrappers.get(String(elementSlot(element).nodeId))||element;
     registerRealmBinding(element,'ElementGeometry',{
       rect:()=>{const value=clientRectFor(receiver());return new DOMRect(value.x,value.y,value.width,value.height)},
+      scroll:params=>compatibilityScrolling.dispatch(receiver(),params),
       rects:()=>makeElementClientRects(receiver())
     });
   };
@@ -468,6 +469,7 @@
   // Internal batch consumers already own an observation. Re-entering the host
   // epoch boundary for every candidate is unnecessary: these helpers read
   // private canonical state and do not invoke author conversion callbacks.
+  let compatibilityScrolling=null;
   const clientRectInObservation=element=>{
     const foreign=foreignCSSObservation(element,"rect");if(foreign!==null)return foreign;
     const box=layoutRectInObservation(element),keywords={left:'0%',top:'0%',center:'50%',right:'100%',bottom:'100%'};
@@ -486,9 +488,12 @@
       if(projected.some(point=>point[3]<=0)){host.semanticMissingAt('surface.js/clientRectFor','CSS.clientRectPerspectiveClipping');continue}
       points=projected.map(point=>[compatibilityMatrix.geometryCoordinate(point[0]/point[3]+cx),compatibilityMatrix.geometryCoordinate(point[1]/point[3]+cy)]);transformed=true;
     }
-    if(!transformed)return box;
+    const offset=compatibilityScrolling?.offset(element)||{x:0,y:0};
+    if(!transformed&&!offset.x&&!offset.y)return box;
+    if(!transformed)return {...box,x:box.x-offset.x,y:box.y-offset.y,left:box.x-offset.x,top:box.y-offset.y,right:box.right-offset.x,bottom:box.bottom-offset.y};
     const xs=points.map(p=>p[0]),ys=points.map(p=>p[1]),x=Math.min(...xs),y=Math.min(...ys);
-    return {x,y,width:Math.fround(Math.max(...xs)-x),height:Math.fround(Math.max(...ys)-y)};
+    const width=Math.fround(Math.max(...xs)-x),height=Math.fround(Math.max(...ys)-y);
+    return {x:x-offset.x,y:y-offset.y,left:x-offset.x,top:y-offset.y,right:x-offset.x+width,bottom:y-offset.y+height,width,height};
   };
   const clientRectFor=element=>withStyleReadCache(()=>clientRectInObservation(element));
   const frameViewportSizes=new WeakMap();
@@ -519,7 +524,7 @@
     return connected;
   });
   registerBootstrapCallback('installFrameViewport',readFrameViewport,frameHasLayout);
-  registerBootstrapCallback('installComputedStyleFlatTree',(nodeID,kind,name)=>{const element=wrap(nodeID);return kind==='visibility'?observeElementVisibility(element,JSON.parse(name)):kind==='box'?cssBoxModel.hasBox(element):kind==='value'?cssComputedValue(element,name):kind==='rect'?clientRectFor(element):kind==='layout'?layoutRectFor(element):kind==='document'?computedStyleDocumentAvailable(element):computedStyleAvailable(element)});
+  registerBootstrapCallback('installComputedStyleFlatTree',(nodeID,kind,name)=>{const element=wrap(nodeID);return kind==='scroll'?compatibilityScrolling.dispatch(element,JSON.parse(name)):kind==='visibility'?observeElementVisibility(element,JSON.parse(name)):kind==='box'?cssBoxModel.hasBox(element):kind==='value'?cssComputedValue(element,name):kind==='rect'?clientRectFor(element):kind==='layout'?layoutRectFor(element):kind==='document'?computedStyleDocumentAvailable(element):computedStyleAvailable(element)});
   let constructCustomElement=null,customElementCloneInert=0;
   let templateTreeIsInert=()=>false;
   const viewportClientElement=element=>element===document.documentElement&&document.compatMode!=='BackCompat'||element===document.body&&document.compatMode==='BackCompat';
@@ -1189,11 +1194,8 @@
   for(const [name,key] of [['screenX','screenX'],['screenLeft','screenX'],['screenY','screenY'],['screenTop','screenY']])replaceableWindow(name,()=>host.viewport()[key]);
   for(const [name,key] of [['innerWidth','width'],['innerHeight','height'],['outerWidth','outerWidth'],['outerHeight','outerHeight']])replaceableWindow(name,()=>host.viewport()[key]);replaceableWindow('devicePixelRatio',()=>host.screen().devicePixelRatio);
   let windowScrollX=0,windowScrollY=0;
-  for(const name of ['scrollX','pageXOffset'])replaceableWindow(name,()=>windowScrollX);
-  for(const name of ['scrollY','pageYOffset'])replaceableWindow(name,()=>windowScrollY);
-  // Scroll commands retain the existing explicit unsupported boundary. These
-  // aliases observe the document's initial scroll position, without inventing
-  // a second layout/scrolling implementation.
+  for(const name of ['scrollX','pageXOffset'])replaceableWindow(name,()=>compatibilityScrolling?.position(null).x??windowScrollX);
+  for(const name of ['scrollY','pageYOffset'])replaceableWindow(name,()=>compatibilityScrolling?.position(null).y??windowScrollY);
   const timerHandler=(handler,args,name)=>{const callback=typeof handler==='function'?()=>handler.apply(window,args):(()=>{const source=trustedConvert(handler,'TrustedScript','Window '+name,"Failed to execute '"+name+"' on 'Window': ");return()=>host.runTimerSource(source)})();return()=>{try{callback()}catch(error){reportWindowException(error)}}};window.setTimeout=function setTimeout(handler,timeout=0,...args){handler=trustedTimerArgument(handler);const delay=Number(timeout);return host.setTimer(timerHandler(handler,args,'setTimeout'),delay,false)};window.setInterval=function setInterval(handler,timeout=0,...args){handler=trustedTimerArgument(handler);const delay=Number(timeout);return host.setTimer(timerHandler(handler,args,'setInterval'),delay,true)};window.clearTimeout=function clearTimeout(id){return host.clearTimer(Number(id))};window.clearInterval=function clearInterval(id){return host.clearTimer(Number(id))};window.requestAnimationFrame=function requestAnimationFrame(callback){return requestRenderingFrame(callback)};window.cancelAnimationFrame=function cancelAnimationFrame(id){cancelRenderingFrame(id)};
   window.postMessage=bridgeOriginalPostMessage={postMessage(message){
     const receiver=this==null?window:this,reference=receiver===window?null:referenceGet(receiver);
