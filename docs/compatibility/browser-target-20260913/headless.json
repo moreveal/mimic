@@ -1,0 +1,428 @@
+{
+  "chrome": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/152.0.7977.82",
+    "revision": "@d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "jsVersion": "15.2.124.21"
+  },
+  "mode": "headless",
+  "observations": [
+    {
+      "request": {
+        "id": 1,
+        "method": "Target.getTargetInfo",
+        "params": {}
+      },
+      "response": {
+        "id": 1,
+        "result": {
+          "targetInfo": {
+            "targetId": "be048c89-d7e1-4f8a-a25a-2cf04a04d2a7",
+            "type": "browser",
+            "title": "",
+            "url": "",
+            "attached": true,
+            "canAccessOpener": false
+          }
+        }
+      },
+      "events": []
+    },
+    {
+      "request": {
+        "id": 2,
+        "method": "Target.getTargets",
+        "params": {}
+      },
+      "response": {
+        "id": 2,
+        "result": {
+          "targetInfos": [
+            {
+              "targetId": "5A802575E4FC96B8D43608F993F38FCD",
+              "type": "page",
+              "title": "about:blank",
+              "url": "about:blank",
+              "attached": false,
+              "canAccessOpener": false,
+              "browserContextId": "554A87EE3054A30D52EF03FFA21045F1"
+            },
+            {
+              "targetId": "9C23FCE0AE4F3243E7B46AFB268F0EB0",
+              "type": "browser_ui",
+              "title": "Omnibox Popup",
+              "url": "chrome://omnibox-popup.top-chrome/",
+              "attached": false,
+              "canAccessOpener": false,
+              "browserContextId": "554A87EE3054A30D52EF03FFA21045F1"
+            },
+            {
+              "targetId": "7F09389F0562AE80F415466841CCF06E",
+              "type": "browser_ui",
+              "title": "Omnibox Popup",
+              "url": "chrome://omnibox-popup.top-chrome/omnibox_popup_aim.html",
+              "attached": false,
+              "canAccessOpener": false,
+              "browserContextId": "554A87EE3054A30D52EF03FFA21045F1"
+            }
+          ]
+        }
+      },
+      "events": []
+    },
+    {
+      "request": {
+        "id": 3,
+        "method": "Target.getTargets",
+        "params": {
+          "filter": []
+        }
+      },
+      "response": {
+        "id": 3,
+        "result": {
+          "targetInfos": []
+        }
+      },
+      "events": []
+    },
+    {
+      "request": {
+        "id": 4,
+        "method": "Target.getTargets",
+        "params": {
+          "filter": [
+            {}
+          ]
+        }
+      },
+      "response": {
+        "id": 4,
+        "result": {
+          "targetInfos": [
+            {
+              "targetId": "5A802575E4FC96B8D43608F993F38FCD",
+              "type": "page",
+              "title": "about:blank",
+              "url": "about:blank",
+              "attached": false,
+              "canAccessOpener": false,
+              "browserContextId": "554A87EE3054A30D52EF03FFA21045F1"
+            },
+            {
+              "targetId": "9C23FCE0AE4F3243E7B46AFB268F0EB0",
+              "type": "browser_ui",
+              "title": "Omnibox Popup",
+              "url": "chrome://omnibox-popup.top-chrome/",
+              "attached": false,
+              "canAccessOpener": false,
+              "browserContextId": "554A87EE3054A30D52EF03FFA21045F1"
+            },
+            {
+              "targetId": "7F09389F0562AE80F415466841CCF06E",
+              "type": "browser_ui",
+              "title": "Omnibox Popup",
+              "url": "chrome://omnibox-popup.top-chrome/omnibox_popup_aim.html",
+              "attached": false,
+              "canAccessOpener": false,
+              "browserContextId": "554A87EE3054A30D52EF03FFA21045F1"
+            },
+            {
+              "targetId": "F1816E95784B3791CC00326321B28F05",
+              "type": "tab",
+              "title": "about:blank",
+              "url": "about:blank",
+              "attached": false,
+              "canAccessOpener": false,
+              "browserContextId": "554A87EE3054A30D52EF03FFA21045F1",
+              "embedderData": {
+                "tabActive": true,
+                "tabPinned": false,
+                "tabStripIndex": 0
+              }
+            }
+          ]
+        }
+      },
+      "events": []
+    },
+    {
+      "request": {
+        "id": 5,
+        "method": "Target.getTargets",
+        "params": {
+          "filter": [
+            {
+              "type": "browser"
+            }
+          ]
+        }
+      },
+      "response": {
+        "id": 5,
+        "result": {
+          "targetInfos": []
+        }
+      },
+      "events": []
+    },
+    {
+      "request": {
+        "id": 6,
+        "method": "Target.getTargetInfo",
+        "params": {
+          "targetId": "be048c89-d7e1-4f8a-a25a-2cf04a04d2a7"
+        }
+      },
+      "response": {
+        "id": 6,
+        "result": {
+          "targetInfo": {
+            "targetId": "be048c89-d7e1-4f8a-a25a-2cf04a04d2a7",
+            "type": "browser",
+            "title": "",
+            "url": "",
+            "attached": true,
+            "canAccessOpener": false
+          }
+        }
+      },
+      "events": []
+    },
+    {
+      "request": {
+        "id": 7,
+        "method": "Target.setDiscoverTargets",
+        "params": {
+          "discover": true,
+          "filter": [
+            {}
+          ]
+        }
+      },
+      "response": {
+        "id": 7,
+        "result": {}
+      },
+      "events": [
+        {
+          "method": "Target.targetCreated",
+          "params": {
+            "targetInfo": {
+              "targetId": "087a7b13-12ea-42fd-b5e4-bd28b652983c",
+              "type": "browser",
+              "title": "",
+              "url": "",
+              "attached": true,
+              "canAccessOpener": false
+            }
+          }
+        },
+        {
+          "method": "Target.targetCreated",
+          "params": {
+            "targetInfo": {
+              "targetId": "5A802575E4FC96B8D43608F993F38FCD",
+              "type": "page",
+              "title": "about:blank",
+              "url": "about:blank",
+              "attached": false,
+              "canAccessOpener": false,
+              "browserContextId": "554A87EE3054A30D52EF03FFA21045F1"
+            }
+          }
+        },
+        {
+          "method": "Target.targetCreated",
+          "params": {
+            "targetInfo": {
+              "targetId": "709346D3834F3DFF4C7171BFAC81C195",
+              "type": "browser_ui",
+              "title": "chrome://webui-toolbar.top-chrome",
+              "url": "chrome://webui-toolbar.top-chrome/",
+              "attached": false,
+              "canAccessOpener": false,
+              "browserContextId": "554A87EE3054A30D52EF03FFA21045F1"
+            }
+          }
+        },
+        {
+          "method": "Target.targetCreated",
+          "params": {
+            "targetInfo": {
+              "targetId": "7F09389F0562AE80F415466841CCF06E",
+              "type": "browser_ui",
+              "title": "Omnibox Popup",
+              "url": "chrome://omnibox-popup.top-chrome/omnibox_popup_aim.html",
+              "attached": false,
+              "canAccessOpener": false,
+              "browserContextId": "554A87EE3054A30D52EF03FFA21045F1"
+            }
+          }
+        },
+        {
+          "method": "Target.targetCreated",
+          "params": {
+            "targetInfo": {
+              "targetId": "9C23FCE0AE4F3243E7B46AFB268F0EB0",
+              "type": "browser_ui",
+              "title": "Omnibox Popup",
+              "url": "chrome://omnibox-popup.top-chrome/",
+              "attached": false,
+              "canAccessOpener": false,
+              "browserContextId": "554A87EE3054A30D52EF03FFA21045F1"
+            }
+          }
+        },
+        {
+          "method": "Target.targetCreated",
+          "params": {
+            "targetInfo": {
+              "targetId": "F1816E95784B3791CC00326321B28F05",
+              "type": "tab",
+              "title": "about:blank",
+              "url": "about:blank",
+              "attached": false,
+              "canAccessOpener": false,
+              "browserContextId": "554A87EE3054A30D52EF03FFA21045F1",
+              "embedderData": {
+                "tabActive": true,
+                "tabPinned": false,
+                "tabStripIndex": 0
+              }
+            }
+          }
+        },
+        {
+          "method": "Target.targetCreated",
+          "params": {
+            "targetInfo": {
+              "targetId": "be048c89-d7e1-4f8a-a25a-2cf04a04d2a7",
+              "type": "browser",
+              "title": "",
+              "url": "",
+              "attached": true,
+              "canAccessOpener": false
+            }
+          }
+        }
+      ]
+    },
+    {
+      "request": {
+        "id": 8,
+        "method": "Target.setDiscoverTargets",
+        "params": {
+          "discover": true,
+          "filter": [
+            {}
+          ]
+        }
+      },
+      "response": {
+        "id": 8,
+        "result": {}
+      },
+      "events": []
+    },
+    {
+      "request": {
+        "id": 9,
+        "method": "Target.attachToTarget",
+        "params": {
+          "targetId": "be048c89-d7e1-4f8a-a25a-2cf04a04d2a7",
+          "flatten": true
+        }
+      },
+      "response": {
+        "id": 9,
+        "result": {
+          "sessionId": "16134C47CAD7F65CBAF7E675AC9B1271"
+        }
+      },
+      "events": [
+        {
+          "method": "Target.attachedToTarget",
+          "params": {
+            "sessionId": "16134C47CAD7F65CBAF7E675AC9B1271",
+            "targetInfo": {
+              "targetId": "be048c89-d7e1-4f8a-a25a-2cf04a04d2a7",
+              "type": "browser",
+              "title": "",
+              "url": "",
+              "attached": true,
+              "canAccessOpener": false
+            },
+            "waitingForDebugger": false
+          }
+        }
+      ]
+    },
+    {
+      "request": {
+        "id": 10,
+        "method": "Target.getTargetInfo",
+        "params": {},
+        "sessionId": "16134C47CAD7F65CBAF7E675AC9B1271"
+      },
+      "response": {
+        "id": 10,
+        "result": {
+          "targetInfo": {
+            "targetId": "be048c89-d7e1-4f8a-a25a-2cf04a04d2a7",
+            "type": "browser",
+            "title": "",
+            "url": "",
+            "attached": true,
+            "canAccessOpener": false
+          }
+        },
+        "sessionId": "16134C47CAD7F65CBAF7E675AC9B1271"
+      },
+      "events": []
+    },
+    {
+      "request": {
+        "id": 11,
+        "method": "Browser.getVersion",
+        "params": {},
+        "sessionId": "16134C47CAD7F65CBAF7E675AC9B1271"
+      },
+      "response": {
+        "id": 11,
+        "result": {
+          "protocolVersion": "1.3",
+          "product": "Chrome/152.0.7977.82",
+          "revision": "@d04cdb24d67b081f6cf80200ffc5233f44b61109",
+          "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+          "jsVersion": "15.2.124.21"
+        },
+        "sessionId": "16134C47CAD7F65CBAF7E675AC9B1271"
+      },
+      "events": []
+    },
+    {
+      "request": {
+        "id": 12,
+        "method": "Target.detachFromTarget",
+        "params": {
+          "sessionId": "16134C47CAD7F65CBAF7E675AC9B1271"
+        }
+      },
+      "response": {
+        "id": 12,
+        "result": {}
+      },
+      "events": [
+        {
+          "method": "Target.detachedFromTarget",
+          "params": {
+            "sessionId": "16134C47CAD7F65CBAF7E675AC9B1271",
+            "targetId": "be048c89-d7e1-4f8a-a25a-2cf04a04d2a7"
+          }
+        }
+      ]
+    }
+  ]
+}

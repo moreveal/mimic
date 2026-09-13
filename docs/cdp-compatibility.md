@@ -22,6 +22,11 @@ checks; the current suite additionally exercises uncaught page errors in both cl
 
 ## Playwright CLI workflow checkpoint
 
+Puppeteer `browser.target().createCDPSession()` is also supported through the
+browser target's discovery and explicit attachment paths. A browser session
+survives closing the initial page. See the [Chrome observations and focused
+checks](compatibility/browser-target-20260913/README.md) for the measured scope.
+
 `compatibility/playwright_cli.cjs` exercises the actual CLI daemon, including
 the snapshot performed after attach. With `@playwright/cli` 0.1.19 and its
 Playwright 1.63.0-alpha-2026-08-31 dependency, the complete workflow succeeds

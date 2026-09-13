@@ -82,7 +82,7 @@ func (s *Server) targetInfo(page *browser.Page, typ string) map[string]any {
 }
 
 func targetMatches(filter []any, typ string) bool {
-	if len(filter) == 0 {
+	if filter == nil {
 		return typ != "browser" && typ != "tab"
 	}
 	for _, raw := range filter {
@@ -187,7 +187,7 @@ func (s *Server) closePage(page *browser.Page) bool {
 	s.stopPump(page)
 	for _, conn := range s.clientSnapshot() {
 		for _, ss := range conn.snapshot() {
-			if ss.page == page && ss.id != "" {
+			if ss.page == page && ss.id != "" && !ss.browserSession {
 				conn.detach(ss, true)
 			}
 		}
@@ -293,6 +293,9 @@ func (s *session) handleTarget(m message, p map[string]any) (any, bool, error) {
 		return map[string]any{"targetInfos": infos}, true, nil
 	case "Target.getTargetInfo":
 		id := stringValue(p["targetId"])
+		if id == s.server.browserID {
+			return map[string]any{"targetInfo": browserTargetInfo(id)}, true, nil
+		}
 		if id == "" {
 			if s.browserSession {
 				return map[string]any{"targetInfo": browserTargetInfo(s.server.browserID)}, true, nil
@@ -313,6 +316,11 @@ func (s *session) handleTarget(m message, p map[string]any) (any, bool, error) {
 		s.targetFilter = filter
 		s.stateMu.Unlock()
 		if discover && !was {
+			// Chrome discovers the attached browser target when the filter
+			// includes it, although Target.getTargets does not enumerate it.
+			if targetMatches(filter, "browser") {
+				s.event("Target.targetCreated", map[string]any{"targetInfo": browserTargetInfo(s.server.browserID)})
+			}
 			for _, page := range s.server.pages() {
 				for _, typ := range []string{"tab", "page"} {
 					if targetMatches(filter, typ) {
@@ -354,6 +362,12 @@ func (s *session) handleTarget(m message, p map[string]any) (any, bool, error) {
 		}
 		return empty, true, nil
 	case "Target.attachToTarget":
+		if stringValue(p["targetId"]) == s.server.browserID {
+			flat, _ := p["flatten"].(bool)
+			child := s.transport.newSession(s.server.Page, uuid.NewString(), s, flat, true)
+			s.event("Target.attachedToTarget", map[string]any{"sessionId": child.id, "targetInfo": browserTargetInfo(s.server.browserID), "waitingForDebugger": false})
+			return map[string]any{"sessionId": child.id}, true, nil
+		}
 		page, typ, ok := s.server.target(stringValue(p["targetId"]))
 		if !ok {
 			return nil, true, fmt.Errorf("No target with given id found")
