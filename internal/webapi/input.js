@@ -1,5 +1,6 @@
 // Trusted browser input shares the canonical form/focus slots. This closure is
 // captured by the host before author scripts run and is removed from Window.
+/* shared_scrolling */
 {
   const parse=JSON.parse,stringify=JSON.stringify;
   const keyboardSlots=new WeakMap(),inputSlots=new WeakMap(),focusSlots=new WeakMap(),submitSlots=new WeakMap();
@@ -30,6 +31,13 @@
     markNative(value,name);Object.defineProperty(globalThis,name,{value,writable:true,configurable:true});Object.defineProperty(value.prototype,Symbol.toStringTag,{value:name,configurable:true});
   }
   const constructors={Event,KeyboardEvent,InputEvent,FocusEvent,SubmitEvent,MouseEvent,PointerEvent};
+  const wheelSlots=new WeakMap();
+  class WheelEvent extends MouseEvent {
+    constructor(type,init={}){super(type,init);wheelSlots.set(this,{deltaX:Number(init.deltaX)||0,deltaY:Number(init.deltaY)||0,deltaZ:Number(init.deltaZ)||0,deltaMode:Number(init.deltaMode)>>>0})}
+  }
+  for(const key of ['deltaX','deltaY','deltaZ','deltaMode'])accessor(WheelEvent.prototype,key,function(){const state=wheelSlots.get(this);if(!state)throw new TypeError('Illegal invocation');return state[key]});
+  for(const [key,value] of [['DOM_DELTA_PIXEL',0],['DOM_DELTA_LINE',1],['DOM_DELTA_PAGE',2]])for(const obj of [WheelEvent,WheelEvent.prototype])Object.defineProperty(obj,key,{value,enumerable:true});
+  markNative(WheelEvent,'WheelEvent');Object.defineProperty(globalThis,'WheelEvent',{value:WheelEvent,writable:true,configurable:true});Object.defineProperty(WheelEvent.prototype,Symbol.toStringTag,{value:'WheelEvent',configurable:true});
   let activateCommand=()=>{};
   if(globalThis.HTMLButtonElement&&globalThis.HTMLDialogElement){
   const commandSlots=new WeakMap(),commandTargets=new WeakMap();
@@ -103,7 +111,7 @@
   const control=(element,operation,key,args=[])=>compatibilityElementState.formOperation(element,operation,key,args);
   const valueOf=element=>String(control(element,'get','value'));
   const editable=element=>element&&!element.disabled&&!element.readOnly&&(element.localName==='textarea'||element.localName==='input'&&['text','search','tel','url','email','password'].includes(element.type));
-  const focus=element=>{if(element&&element.isConnected&&!element.disabled&&!(element.localName==='input'&&element.type==='hidden'))originalFocus.call(element)};
+  const focus=(element,preventScroll=false)=>{if(element&&element.isConnected&&!element.disabled&&!(element.localName==='input'&&element.type==='hidden')){originalFocus.call(element);if(!preventScroll&&active.call(document)===element)compatibilityScrolling.into(element,{block:'center',inline:'center',behavior:'instant',ifNeeded:true})}};
   const changedValues=new WeakMap();
   compatibilityElementState.dispatchFocus=(target,type,related,bubbles)=>{
     if(type==='blur'&&changedValues.has(target)){
@@ -112,7 +120,7 @@
     }
     return emit(target,'FocusEvent',type,{bubbles,composed:true,relatedNode:nodeID(related)});
   };
-  Object.defineProperty(HTMLElement.prototype,'focus',{value:function(){if(isolated){main(this,'focus');return}focus(this)},writable:true,enumerable:true,configurable:true});
+  Object.defineProperty(HTMLElement.prototype,'focus',{value:function(options){const preventScroll=!!options?.preventScroll;if(isolated){main(this,'focus',{preventScroll});return}focus(this,preventScroll)},writable:true,enumerable:true,configurable:true});
   Object.defineProperty(HTMLElement.prototype,'blur',{value:function(){if(isolated){main(this,'blur');return}originalBlur.call(this)},writable:true,enumerable:true,configurable:true});
   Object.defineProperty(Document.prototype,'activeElement',{get(){return isolated?(wrap(main(null,'active').nodeID)||document.body||document.documentElement):active.call(document)},enumerable:true,configurable:true});
   compatibilityElementState.focused=()=>isolated?(wrap(main(null,'focused').nodeID)||null):originalFocused();
@@ -157,6 +165,12 @@
     target=active.call(document)||target;
     if(kind!=='char'){
       if(init.key==='Tab'){tab(target,flags.shiftKey);return}
+      if(!editable(target)&&!flags.altKey&&!flags.metaKey&&!(target.isContentEditable)&&!['select','textarea','input'].includes(target.localName)){
+        const v=host.viewport(),key=init.key;
+        const changes={ArrowDown:[0,40],ArrowUp:[0,-40],ArrowRight:[40,0],ArrowLeft:[-40,0],PageDown:[0,v.height*.875],PageUp:[0,-v.height*.875],End:[0,1e12],Home:[0,-1e12]};
+        if(key===' '&&!['button','a'].includes(target.localName))changes[key]=[0,v.height*.875*(flags.shiftKey?-1:1)];
+        if(changes[key]&&(!flags.ctrlKey||key==='Home'||key==='End')){withStyleReadCache(()=>compatibilityScrolling.wheel(target,...changes[key]));return}
+      }
       if(editable(target)){
         const state=selection(target),key=init.key;
         if((flags.ctrlKey||flags.metaKey)&&key.toLowerCase()==='a'||params.commands?.includes('selectAll')){select(target,0,state.value.length);return}
@@ -175,7 +189,7 @@
     }
   };
   let pointTargetVersion=null;
-  const pointObservationVersion=()=>host.observationVersion()+':'+(constructedStyleSheets.revision?.()||0)+':'+compatibilityElementState.observationVersion();
+  const pointObservationVersion=()=>host.observationVersion()+':'+(constructedStyleSheets.revision?.()||0)+':'+compatibilityElementState.observationVersion()+':'+compatibilityScrolling.revision();
   const pointTargets=(x,y)=>withStyleReadCache(()=>{
     const viewport=host.viewport();
     if(!Number.isFinite(x)||!Number.isFinite(y)||x<0||y<0||x>=viewport.width||y>=viewport.height)return [];
@@ -198,6 +212,7 @@
     const hits=[];
     for(const element of elements){
       const box=clientRectInObservation(element);if(box.width<=0||box.height<=0||x<box.x||x>=box.x+box.width||y<box.y||y>=box.y+box.height)continue;
+      if(compatibilityScrolling.clipped(element,x,y))continue;
       const entries=computedCSSDeclarations(element),get=name=>entries.find(e=>e.name===name)?.value;
       if(get('visibility')==='hidden'||get('pointer-events')==='none')continue;
       hits.push(element);
@@ -246,6 +261,11 @@
     if(params.type==='mousePressed')mouseButtons|=mask;else if(params.type==='mouseReleased')mouseButtons&=~mask;
     if(params.buttons!==undefined)mouseButtons=params.buttons;
     const init={bubbles:true,cancelable:true,composed:true,clientX:x,clientY:y,screenX:x+(window.screenX||0),screenY:y+(window.screenY||0),button,buttons:mouseButtons,detail:params.clickCount||0,movementX:x-pointerX,movementY:y-pointerY,...modifiers(params.modifiers||0),pointerId:1,pointerType:'mouse',isPrimary:true,pressure:mouseButtons ? .5 : 0};
+    if(params.type==='mouseWheel'){
+      const event=new WheelEvent('wheel',{...init,deltaX:Number(params.deltaX)||0,deltaY:Number(params.deltaY)||0});
+      if(dispatchEventCore(target,event,true,true))withStyleReadCache(()=>compatibilityScrolling.wheel(target,event.deltaX,event.deltaY));
+      return;
+    }
     if(target!==pointerTarget){
       if(pointerTarget){emit(pointerTarget,'PointerEvent','pointerout',{...init,relatedNode:nodeID(target)});emit(pointerTarget,'MouseEvent','mouseout',{...init,relatedNode:nodeID(target)})}
       emit(target,'PointerEvent','pointerover',{...init,relatedNode:nodeID(pointerTarget)});emit(target,'MouseEvent','mouseover',{...init,relatedNode:nodeID(pointerTarget)});pointerTarget=target;
@@ -266,15 +286,16 @@
   globalThis.__mimicDispatchInput=(id,operation,raw)=>{
     if(raw===undefined)return legacy(id,operation);
     const params=parse(raw||'{}'),element=wrap(id);
+    if(operation==='scroll')return stringify(compatibilityScrolling.dispatch(element,params)??{});
     if(operation==='form')return stringify({value:control(element,params.operation,params.key,params.args)});
     if(operation==='active')return stringify({nodeID:nodeID(active.call(document))});
     if(operation==='focused')return stringify({nodeID:nodeID(originalFocused())});
     if(operation==='points')return stringify({nodes:pointTargets(params.x,params.y).map(nodeID)});
     if(operation==='rect'){
-      const rect=layoutRectFor(element);
+      const rect=clientRectFor(element);
       return stringify({x:rect.x,y:rect.y,width:rect.width,height:rect.height});
     }
-    if(operation==='focus'){focus(element);return '{}'}
+    if(operation==='focus'){focus(element,params.preventScroll);return '{}'}
     if(operation==='blur'){originalBlur.call(element);return '{}'}
     if(operation==='click'){syntheticClick(element);return '{}'}
     if(operation==='event'){

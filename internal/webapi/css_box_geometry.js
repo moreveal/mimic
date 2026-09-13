@@ -39,7 +39,7 @@ const cssBoxModel=(()=>{
   const rootFont=cssComputedRootFontSize();
   for(let i=pending.length-1;i>=0;i--){
    const current=pending[i],entries=computedCSSDeclarations(current),attrs=cssObservationNodeState(current).attributes;
-   const extra=JSON.stringify([attrs.hidden,attrs.type,attrs['font-size']]),environment=styleReadCache.selectorEnvironment;
+   const extra=JSON.stringify([attrs.hidden,attrs.type,attrs['font-size'],attrs.dir]),environment=styleReadCache.selectorEnvironment;
    const prior=retainedStyles.get(current);
    const next=prior&&prior.entries===entries&&prior.parent===context&&prior.extra===extra&&prior.environment===environment&&prior.rootFont===rootFont?prior:{entries,parent:context,extra,environment,rootFont};
    retainedStyles.set(current,next);contexts.set(current,next);context=next;
@@ -61,7 +61,8 @@ const cssBoxModel=(()=>{
    const visited=[];let value=null;
    for(let p=element;p;p=geometryParent(p)){
     const known=inherited.get(p);if(known?.has(name)){value=known.get(name);break}
-    visited.push(p);const v=computedCSSDeclarations(p).find(e=>e.name===name)?.value;
+    visited.push(p);let v=computedCSSDeclarations(p).find(e=>e.name===name)?.value;
+    if(!v&&name==='direction'){const dir=cssObservationAttribute(p,'dir');if(dir==='rtl'||dir==='ltr')v=dir}
     if(v&&!['inherit','unset'].includes(v)){value=v;break}
    }
    for(const p of visited){let values=inherited.get(p);if(!values)inherited.set(p,values=new Map());values.set(name,value)}
@@ -203,7 +204,8 @@ const cssBoxModel=(()=>{
   const minimum=s.length(s.get('min-width'),basis),maximum=s.length(s.get('max-width'),basis);
   if(minimum!==null)value=Math.max(value,minimum+(borderBox?0:extra));if(maximum!==null)value=Math.min(value,maximum+(borderBox?0:extra));cache.set(element,value);return value;
  };
- const positionedContainer=element=>{if(state(element).position==='fixed')return null;for(let p=geometryParent(element);p;p=geometryParent(p))if(state(p).position!=='static')return p;return null};
+ const fixedContainer=element=>{for(let p=geometryParent(element);p;p=geometryParent(p))if(state(p).get('transform')&&state(p).get('transform')!=='none')return p;return null};
+ const positionedContainer=element=>{if(state(element).position==='fixed')return fixedContainer(element);for(let p=geometryParent(element);p;p=geometryParent(p))if(state(p).position!=='static')return p;return null};
  const size=element=>{
   const cache=styleReadCache.boxSizes||(styleReadCache.boxSizes=new WeakMap());
   for(let parent=geometryParent(element);parent;parent=geometryParent(parent))if(state(parent).display==='table'){if(!cache.has(parent))size(parent);break}
@@ -230,7 +232,7 @@ const cssBoxModel=(()=>{
   }
   const text=textOf(element),font=textInfo(element,text),contentWidth=Math.max(0,value.width-e.pleft-e.pright-e.bleft-e.bright);
   const generated=pseudo=>{const entries=uncachedCSSDeclarations(element,pseudo),get=name=>entries.find(e=>e.name===name)?.value;if(get('display')==='none'||!['\"\"',"''"].includes(get('content'))||['absolute','fixed'].includes(get('position')))return 0;return (s.length(get('height'))||0)+(s.length(get('padding-top'),value.width)||0)+(s.length(get('padding-bottom'),value.width)||0)};
-  let textLines=text?1:0,lastTextWidth=0,lineText='';const wrapping=!['nowrap','pre'].includes(s.inherited('white-space'));if(text)for(const word of text.split(' ')){const candidate=lineText?lineText+' '+word:word,advance=textInfo(element,candidate).width;if(wrapping&&lineText&&advance>contentWidth){textLines++;lineText=word;lastTextWidth=textInfo(element,word).width}else {lineText=candidate;lastTextWidth=advance}}
+  let textLines=text?1:0,lastTextWidth=0,lineText='';const wrapping=!['nowrap','pre'].includes(s.inherited('white-space'));if(text)for(const word of text.split(' ')){const candidate=lineText?lineText+' '+word:word,advance=textInfo(element,candidate).width;if(wrapping&&lineText&&advance>contentWidth){textLines++;lineText=word;lastTextWidth=textInfo(element,word).width}else {lineText=candidate;lastTextWidth=advance}value.overflowWidth=Math.max(value.overflowWidth||0,lastTextWidth)}
   let cursor=generated('before'),margin=0,lineWidth=lastTextWidth,lineHeight=textLines*font.height,line=[],adjoiningMargins=[];
   const collapsedMargin=extra=>{const values=[margin,...adjoiningMargins,...extra];return Math.max(0,...values)+Math.min(0,...values)};
   const flush=()=>{if(!lineHeight)return;for(const child of line){const box=size(child),c=state(child);value.positions.set(child,{x:lineWidth===0?0:value.positions.get(child)?.x||0,y:cursor+(c.display==='inline'||replacedGeometryTags.has(tag(child))?(tag(child)==='BUTTON'&&!textContent(child)?font.ascent-box.height/2:tag(child)==='PROGRESS'?font.ascent+unit(state(child).fontSize*.2)-box.height:Math.max(0,lineHeight-box.height)):0)})}cursor+=lineHeight;line=[];lineWidth=0;lineHeight=0};
@@ -257,6 +259,7 @@ const cssBoxModel=(()=>{
   const parent=geometryParent(element),parentRect=parent?rect(parent):{x:0,y:0,width:host.viewport().width,height:host.viewport().height},parentBox=parent?size(parent):null;
   const local=parentBox?.positions.get(element)||{x:0,y:0};
   value.x=parentRect.x+(parentBox?parentBox.edges.bleft+parentBox.edges.pleft:0)+local.x;value.y=parentRect.y+(parentBox?parentBox.edges.btop+parentBox.edges.ptop:0)+local.y;
+  if(parentBox&&!['absolute','fixed'].includes(s.position)&&state(parent).inherited('direction')==='rtl')value.x=parentRect.x+parentBox.width-parentBox.edges.bright-parentBox.edges.pright-local.x-value.width;
   if(['absolute','fixed'].includes(s.position)){
    const ancestor=positionedContainer(element);
    const r=ancestor?rect(ancestor):{x:0,y:0,...host.viewport()},a=ancestor?size(ancestor).edges:{bleft:0,btop:0};
@@ -308,5 +311,5 @@ const cssBoxModel=(()=>{
   return {height:box.height,clientHeight:Math.max(0,box.height-box.edges.btop-box.edges.bbottom),edges:box.edges};
  };
  const hasBox=element=>withStyleReadCache(()=>foreignCSSObservation(element,'box')??(computedStyleDocumentAvailable(element)&&computedStyleAvailable(element)&&rendered(element)));
- return {width,rect,state,size,widthBox,heightBox,hasBox};
+ return {width,rect,state,size,widthBox,heightBox,hasBox,fixedContainer};
 })();

@@ -187,6 +187,9 @@ var windowErrorsSurface string
 //go:embed input.js
 var inputSurface string
 
+//go:embed scrolling.js
+var scrollingSurface string
+
 //go:embed document_stream.js
 var documentStreamSurface string
 
@@ -388,7 +391,9 @@ func composeSurface(generated, exposureSource string) string {
 	base = strings.Replace(base, "/* shared_css_box_geometry */", cssBoxGeometrySurface+elementVisibilitySurface, 1)
 	base = strings.Replace(base, "/* shared_dom_matrix */", cssColorsSurface+domMatrixSurface, 1)
 	base = strings.Replace(base, "/* shared_intersection_observer */", intersectionObserverSurface, 1)
-	return strings.Replace(strings.Replace(base, marker, strings.Join(parts, "\n"), 1), "finalizeDocumentGetterBindings();finalizeSingletonGetterBindings();finalizeCallableBindings();", "finalizeDocumentGetterBindings();finalizeSingletonGetterBindings();finalizePerformanceBindings();finalizeCallableBindings();", 1)
+	base = strings.Replace(base, marker, strings.Join(parts, "\n"), 1)
+	base = strings.Replace(base, "/* shared_scrolling */", scrollingSurface, 1)
+	return strings.Replace(base, "finalizeDocumentGetterBindings();finalizeSingletonGetterBindings();finalizeCallableBindings();", "finalizeDocumentGetterBindings();finalizeSingletonGetterBindings();finalizePerformanceBindings();finalizeCallableBindings();", 1)
 }
 
 func WorkerSurface(generated string, exposure *compatibility.RealmExposure) string {

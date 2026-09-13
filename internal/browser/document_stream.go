@@ -294,6 +294,9 @@ func (r *Realm) finishDocumentStream(s *documentStream) error {
 	r.startDocumentImages()
 	if s.navigation {
 		r.updateSelectorTarget(r.documentURL().Fragment)
+		if err := r.scrollToFragment(r.resourceContext); err != nil {
+			return err
+		}
 		if s.onFinished != nil {
 			return s.onFinished()
 		}

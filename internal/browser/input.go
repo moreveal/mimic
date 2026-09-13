@@ -17,6 +17,24 @@ type inputFrameRect struct {
 	Height float64 `json:"height"`
 }
 
+// ScrollNodeIntoView is a browser operation, not an invocation of a replaceable
+// author method. The node's document owner shares state with all CDP worlds.
+func (p *Page) ScrollNodeIntoView(ctx context.Context, nodeID int64, rect any) error {
+	frame, ok := p.FrameForDOMNode(nodeID)
+	if !ok || frame.Realm == nil {
+		return fmt.Errorf("Node is detached from document")
+	}
+	r := frame.Realm
+	payload, err := json.Marshal(map[string]any{"action": "protocolInto", "opts": map[string]any{"block": "center", "inline": "center", "behavior": "instant", "rect": rect}})
+	if err != nil {
+		return err
+	}
+	return r.scheduler.RunInline(ctx, func(ctx context.Context) error {
+		_, err := r.invokeInputWorld(ctx, r, nodeID, "scroll", string(payload))
+		return err
+	})
+}
+
 func (e *inputProtocolError) Error() string     { return e.message }
 func (e *inputProtocolError) ProtocolCode() int { return -32602 }
 
@@ -50,9 +68,7 @@ func (p *Page) DispatchProtocolInput(ctx context.Context, method string, params 
 	case "Input.dispatchMouseEvent":
 		kind, _ := params["type"].(string)
 		switch kind {
-		case "mouseMoved", "mousePressed", "mouseReleased":
-		case "mouseWheel":
-			return fmt.Errorf("wheel scrolling is not supported by the current geometry model")
+		case "mouseMoved", "mousePressed", "mouseReleased", "mouseWheel":
 		default:
 			return &inputProtocolError{"Unexpected event type '" + kind + "'"}
 		}
@@ -201,6 +217,25 @@ func (r *Realm) invokeInputWorld(ctx context.Context, target *Realm, nodeID int6
 }
 
 func (r *Realm) installProtocolInput(host map[string]any) {
+	host["recordScrollPosition"] = r.transientFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		p := r.agent.Page()
+		p.mu.Lock()
+		if p.historyIndex >= 0 && p.historyIndex < len(p.history) {
+			if state := p.history[p.historyIndex].frames[r.agent.ContextID()]; state != nil && state.realmID == r.ID {
+				state.scrollX, state.scrollY = numarg(args, 0), numarg(args, 1)
+			}
+		}
+		p.mu.Unlock()
+		return nil, nil
+	})
+	host["scrollParentFrame"] = r.transientFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		frame, ok := r.agent.(*Frame)
+		if !ok || frame.parent == nil || frame.parent.Realm == nil {
+			return nil, nil
+		}
+		_, err := r.invokeInputWorld(context.Background(), frame.parent.Realm, frame.elementID, "scroll", strarg(args, 0))
+		return nil, err
+	})
 	host["invalidateStyleObservations"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		r.document.InvalidateObservations()
 		return nil, nil

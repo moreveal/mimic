@@ -41,8 +41,10 @@ func (p *Page) previewDocument(frame *Frame) (string, error) {
 	}
 	base, _ := url.Parse(frame.URL())
 	var data struct {
-		Styles []struct{ Text, Base string }
-		Modals []int64
+		Styles       []struct{ Text, Base string }
+		Modals       []int64
+		Scroll       map[string][]float64
+		WindowScroll []float64
 	}
 	wire, _ := json.Marshal(observation)
 	if err := json.Unmarshal(wire, &data); err != nil {
@@ -94,7 +96,7 @@ func (p *Page) previewDocument(frame *Frame) (string, error) {
 				}
 				attrs := c.Attr[:0]
 				for _, a := range c.Attr {
-					if a.Key == "data-mimic-preview-modal" {
+					if a.Key == "data-mimic-preview-modal" || a.Key == "data-mimic-preview-scroll" || a.Key == "data-mimic-preview-window-scroll" {
 						continue
 					}
 					if strings.HasPrefix(strings.ToLower(a.Key), "on") || a.Key == "srcdoc" || a.Key == "autofocus" || a.Key == "action" || a.Key == "formaction" || (c.Data == "a" && a.Key == "href") || (c.Data == "iframe" && (a.Key == "src" || a.Key == "sandbox")) {
@@ -103,6 +105,16 @@ func (p *Page) previewDocument(frame *Frame) (string, error) {
 					attrs = append(attrs, a)
 				}
 				c.Attr = attrs
+				for _, a := range attrs {
+					if a.Key == "data-mimic-preview-node" {
+						if value := data.Scroll[strings.TrimPrefix(a.Val, r.ID+":")]; len(value) == 2 {
+							c.Attr = append(c.Attr, html.Attribute{Key: "data-mimic-preview-scroll", Val: fmt.Sprintf("%g,%g", value[0], value[1])})
+						}
+					}
+				}
+				if c.Data == "html" && len(data.WindowScroll) == 2 {
+					c.Attr = append(c.Attr, html.Attribute{Key: "data-mimic-preview-window-scroll", Val: fmt.Sprintf("%g,%g", data.WindowScroll[0], data.WindowScroll[1])})
+				}
 				if c.Data == "dialog" {
 					for _, a := range attrs {
 						if a.Key == "data-mimic-preview-node" && modals[a.Val] > 0 {

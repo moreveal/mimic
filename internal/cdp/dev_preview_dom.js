@@ -35,6 +35,7 @@ const createPreviewMirror = () => {
     const nodes = new Map(), scroll = [];
     nodes.removals = [];
     nodes.dialogs = [];
+    nodes.projectedScroll = [];
     function collect(node) {
       const id = key(node); if (id) nodes.set(id,node);
       if (node.nodeType === 1) {
@@ -69,6 +70,14 @@ const createPreviewMirror = () => {
       for (const [node,left,top] of scroll) if (node.isConnected) { if(node.scrollLeft!==left)node.scrollLeft=left;if(node.scrollTop!==top)node.scrollTop=top; }
       if(frame.contentWindow.scrollX!==x||frame.contentWindow.scrollY!==y)frame.contentWindow.scrollTo({left:x,top:y,behavior:'instant'});
     }
+    // Only a changed canonical offset overrides the viewer's own scrolling.
+    for(const [node,value,windowScroll] of nodes.projectedScroll){
+      const [left,top]=(value||'0,0').split(',').map(Number);
+      if(Number.isFinite(left)&&Number.isFinite(top)){
+        if(windowScroll)node.ownerDocument.defaultView.scrollTo({left,top,behavior:'instant'});
+        else node.scrollTo({left,top,behavior:'instant'});
+      }
+    }
     state.applied = markup;
   }
 
@@ -78,6 +87,7 @@ const createPreviewMirror = () => {
     const valueChanged = textarea ? node.textContent !== next.textContent : node.getAttribute('value') !== next.getAttribute('value');
     const checkedChanged = node.hasAttribute('checked') !== next.hasAttribute('checked');
     const selectedChanged = node.hasAttribute('selected') !== next.hasAttribute('selected');
+    for(const name of ['data-mimic-preview-scroll','data-mimic-preview-window-scroll'])if(node.getAttribute(name)!==next.getAttribute(name))nodes.projectedScroll.push([node,next.getAttribute(name),name.endsWith('window-scroll')]);
     for (const attr of Array.from(node.attributes)) {
       if (frame && (attr.name === 'srcdoc' || attr.name === 'sandbox')) continue;
       if (!next.hasAttributeNS(attr.namespaceURI,attr.localName)) node.removeAttributeNS(attr.namespaceURI,attr.localName);
