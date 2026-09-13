@@ -876,6 +876,11 @@
   let bridgeRealmID=host.selfRealmID();
   const bridgeApply=Reflect.apply;
   const bridgeHasOwn=Object.prototype.hasOwnProperty;
+  const bridgeParse=JSON.parse,bridgeStringify=JSON.stringify,bridgeCreate=Object.create,bridgeKeys=Object.keys,bridgeSetPrototype=Object.setPrototypeOf,bridgeIsArray=Array.isArray;
+  // Only private encoded records enter this codec. Null prototypes prevent
+  // author toJSON hooks from observing or changing transport metadata.
+  const bridgeWireRecord=value=>{if(value===null||typeof value!=='object')return value;const out=bridgeIsArray(value)?bridgeSetPrototype([],null):bridgeCreate(null),names=bridgeKeys(value);for(let i=0;i<names.length;i++){const key=names[i];out[key]=bridgeWireRecord(value[key])}return out};
+  const frameTransaction=(id,realm,handle,operation,data=null)=>bridgeParse(host.frameTransaction(id,realm,handle,operation,bridgeStringify(bridgeWireRecord(data))));
   const bridgeWeakGet=WeakMap.prototype.get,bridgeWeakSet=WeakMap.prototype.set,bridgeWeakHas=WeakMap.prototype.has;
   const referenceGet=value=>bridgeApply(bridgeWeakGet,crossRealmReferences,[value]),referenceSet=(value,record)=>bridgeApply(bridgeWeakSet,crossRealmReferences,[value,record]),referenceHas=value=>bridgeApply(bridgeWeakHas,crossRealmReferences,[value]);
   // Only native ArrayIterator.next creates a result with no preexisting user
@@ -918,6 +923,7 @@
     if(value===undefined)return{kind:'undefined'};
     if(typeof value==='symbol')return{kind:'symbol',key:encodeCrossRealmKey(value)};
     if(typeof value==='bigint')return{kind:'bigint',value:String(value)};
+    if(typeof value==='number'&&(value!==value||value===Infinity||value===-Infinity||value===0&&1/value===-Infinity))return{kind:'special-number',value:value!==value?'NaN':value===0?'-0':value>0?'Infinity':'-Infinity'};
     if((typeof value==='object'&&value!==null)||typeof value==='function'||typeof value==='undefined'){
       const reference=referenceGet(value);if(reference){invalidateIteratorFields(value);return{kind:'reference',...reference}}
       const local=host.frameReference(value);
@@ -925,6 +931,7 @@
     }
     return{kind:'value',value};
   };
+  const bridgeArguments=args=>{const encoded=bridgeSetPrototype([],null);for(let i=0;i<args.length;i++)encoded[i]=encodeCrossRealmArgument(args[i]);return encoded};
   // Documents are canonical realm-owned objects. Only WindowProxy follows the
   // current document after navigation; saved Document references keep their owner.
   const bridgeAccess=(id,realm)=>{if(!host.frameCanAccess(id,realm))throw new DOMException('Blocked cross-origin frame access','SecurityError')};
@@ -947,9 +954,9 @@
     for(const name of Reflect.ownKeys(target))if(Object.getOwnPropertyDescriptor(target,name).configurable)delete target[name];
     const unsupported=operation=>{host.semanticMissingAt('surface.js:513','CrossRealm.'+operation);throw new DOMException('Cross-realm '+operation+' is not implemented','NotSupportedError')};
     const traps={
-      get(_target,property){bridgeAccess(id,result.realm);if(iteratorFields?.valid&&(property==='done'||property==='value')&&bridgeApply(bridgeHasOwn,iteratorFields.fields,[property]))return unwrapCrossRealm(id,iteratorFields.fields[property]);return unwrapCrossRealm(id,host.frameGet(id,result.handle,encodeCrossRealmKey(property),result.realm))},
-      set(_target,property,value){if(iteratorFields)iteratorFields.valid=false;bridgeAccess(id,result.realm);const outcome=host.frameSet(id,result.handle,encodeCrossRealmKey(property),encodeCrossRealmArgument(value),result.realm),answer=unwrapCrossRealm(id,outcome.value);if(outcome.threw)throw answer;return answer},
-      has(_target,property){bridgeAccess(id,result.realm);return host.frameHas(id,result.handle,encodeCrossRealmKey(property),result.realm)},
+      get(_target,property){bridgeAccess(id,result.realm);if(iteratorFields?.valid&&(property==='done'||property==='value')&&bridgeApply(bridgeHasOwn,iteratorFields.fields,[property]))return unwrapCrossRealm(id,iteratorFields.fields[property]);return unwrapCrossRealm(id,frameTransaction(id,result.realm,result.handle,'get',encodeCrossRealmKey(property)))},
+      set(_target,property,value){if(iteratorFields)iteratorFields.valid=false;bridgeAccess(id,result.realm);const outcome=frameTransaction(id,result.realm,result.handle,'set',[encodeCrossRealmKey(property),encodeCrossRealmArgument(value)]),answer=unwrapCrossRealm(id,outcome.value);if(outcome.threw)throw answer;return answer},
+      has(_target,property){bridgeAccess(id,result.realm);return frameTransaction(id,result.realm,result.handle,'has',encodeCrossRealmKey(property))},
       apply(_target,receiver,args){
         bridgeAccess(id,result.realm);
         // A native Window operation keeps the callable's owner identity but
@@ -964,20 +971,20 @@
           if(!host.frameEvalAllowed(id))return undefined;
           if(!nativeEvalSource){const value=args[0],source=typeof value==='string'?value:trustedTypeOf(value)==='TrustedScript'?trustedSource(value,'TrustedScript'):undefined;if(source===undefined){host.frameEval(id,undefined,result.realm);return value}return unwrapCrossRealm(id,host.frameEval(id,source,result.realm))}
         }
-        const outcome=host.frameCall(id,result.handle,args.map(encodeCrossRealmArgument),encodeCrossRealmArgument(receiver),result.realm,!!result.iteratorNext),value=unwrapCrossRealm(id,outcome.value);if(outcome.threw)throw value;return value;
+        const outcome=frameTransaction(id,result.realm,result.handle,'apply',[encodeCrossRealmArgument(receiver),bridgeArguments(args),!!result.iteratorNext]),value=unwrapCrossRealm(id,outcome.value);if(outcome.threw)throw value;return value;
       },
       construct(_target,args,newTarget){
         bridgeAccess(id,result.realm);
         const reference=referenceGet(newTarget);
         if(!reference||reference.frame!==id||reference.realm!==result.realm)return unsupported('constructNewTarget');
-        const encoded=args.map(encodeCrossRealmArgument);
-        const outcome=host.frameConstruct(id,result.handle,encoded,encodeCrossRealmArgument(newTarget),result.realm),value=unwrapCrossRealm(id,outcome.value);
+        const encoded=bridgeArguments(args);
+        const outcome=frameTransaction(id,result.realm,result.handle,'construct',[encodeCrossRealmArgument(newTarget),encoded]),value=unwrapCrossRealm(id,outcome.value);
         if(outcome.threw)throw value;
         return value;
       },
       defineProperty(_target,property,descriptor){
         if(iteratorFields)iteratorFields.valid=false;bridgeAccess(id,result.realm);
-        const outcome=host.frameMutateProperty(id,result.handle,'mutateDefine',encodeCrossRealmKey(property),encodeCrossRealmArgument(descriptor),result.realm),value=unwrapCrossRealm(id,outcome.value);
+        const outcome=frameTransaction(id,result.realm,result.handle,'mutateDefine',[encodeCrossRealmKey(property),encodeCrossRealmArgument(descriptor)]),value=unwrapCrossRealm(id,outcome.value);
         if(outcome.threw)throw value;
         // Materialize only the descriptor required by the local Proxy invariant.
         // The owner remains authoritative for configurable properties.
@@ -986,16 +993,16 @@
       },
       deleteProperty(_target,property){
         if(iteratorFields)iteratorFields.valid=false;bridgeAccess(id,result.realm);
-        const outcome=host.frameMutateProperty(id,result.handle,'mutateDelete',encodeCrossRealmKey(property),encodeCrossRealmArgument(undefined),result.realm),value=unwrapCrossRealm(id,outcome.value);
+        const outcome=frameTransaction(id,result.realm,result.handle,'mutateDelete',[encodeCrossRealmKey(property),encodeCrossRealmArgument(undefined)]),value=unwrapCrossRealm(id,outcome.value);
         if(outcome.threw)throw value;return value;
       },
       preventExtensions(){if(iteratorFields)iteratorFields.valid=false;if(result.binding?.unpreventable){bridgeAccess(id,result.realm);return false}return unsupported('preventExtensions')},
       setPrototypeOf(){if(iteratorFields)iteratorFields.valid=false;return unsupported('setPrototypeOf')},
-      getPrototypeOf(){bridgeAccess(id,result.realm);return unwrapCrossRealm(id,host.framePrototype(id,result.handle,result.realm))},
-      ownKeys(){bridgeAccess(id,result.realm);return host.frameOwnKeys(id,result.handle,result.realm).map(decodeCrossRealmKey)},
+      getPrototypeOf(){bridgeAccess(id,result.realm);return unwrapCrossRealm(id,frameTransaction(id,result.realm,result.handle,'prototype'))},
+      ownKeys(){bridgeAccess(id,result.realm);return frameTransaction(id,result.realm,result.handle,'keys').map(decodeCrossRealmKey)},
       getOwnPropertyDescriptor(_target,property){
         bridgeAccess(id,result.realm);
-        const raw=host.frameDescriptor(id,result.handle,encodeCrossRealmKey(property),result.realm);
+        const raw=frameTransaction(id,result.realm,result.handle,'descriptor',encodeCrossRealmKey(property));
         if(!raw||!raw.exists)return undefined;
         if(raw.accessor&&!raw.configurable&&!crossRealmAccessorDescriptors)return unsupported('nonconfigurableAccessorDescriptor');
         const descriptor={enumerable:!!raw.enumerable,configurable:!!raw.configurable};

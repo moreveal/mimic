@@ -29,6 +29,17 @@ It runs the unchanged full matrix. Its Runtime subclass verifies the just-built 
 
 ## CDP operation latency diagnostics
 
+`python tools/performance/frame_bridge_probe.py --binary .build/mimic.exe --output .build/frame-bridge-UNIQUE`
+measures warmed function calls, reads/writes, `in`, prototype, descriptor and
+own-key reflection across a same-origin iframe. Local calls and a loop entirely
+inside the iframe are controls. Every sample checks its result; outputs retain
+raw durations plus executable/probe hashes. Use the same `--iterations` and
+`--samples` for before/after binaries, and `--chrome --binary PATH` for frozen
+Chrome. Run without concurrent builds/tests. Sub-resolution Chrome durations
+must not be reported as zero execution cost. This is a local diagnostic and
+does not replace the frozen correctness, concurrency or memory gates.
+The probe requires `aiohttp` and `psutil` in the selected Python environment.
+
 `python tools/performance/click_latency.py --binary .build/mimic.exe --output .build/click-UNIQUE`
 creates a fresh Context, adds one local TodoMVC item, and verifies six real
 checkbox clicks. `--site github` checks a README disclosure; the harness refuses

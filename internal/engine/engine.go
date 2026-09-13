@@ -67,6 +67,14 @@ type OwnerRuntime interface {
 	RunOnOwner(context.Context, func(context.Context) error) error
 }
 
+// StringCallRuntime executes a private serialization function with native
+// Values or primitive arguments. The result must already be a string; no
+// author coercion or checkpoint is performed. Temporary arguments/results do
+// not become persistent runtime roots.
+type StringCallRuntime interface {
+	CallString(context.Context, Value, ...any) (string, error)
+}
+
 // BootstrapRuntime may reuse a compiled embedder function body across runtimes.
 // Only immutable code is shared; execution and all objects remain realm-local.
 // The body must install state explicitly on globalThis (no global var bindings).

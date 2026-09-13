@@ -336,6 +336,7 @@ func (r *Realm) retryBootstrap(err error) error {
 	r.frameSourceDescribe = nil
 	r.eventListenerInvoker = nil
 	r.frameReferenceImport = nil
+	r.frameTransaction = nil
 	r.frameReferenceDescribe = nil
 	r.frameGlobalRead = nil
 	r.frameValueEncoder = nil

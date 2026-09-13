@@ -2157,3 +2157,98 @@ are diagnostic checks, not reportable latency/throughput comparisons. Chrome
 oracle coverage, focused validation and explicit remaining boundaries are in
 [the scrolling notes](../scrolling.md). The user requested stopping the repeated
 full test run and publishing; no final full-suite or fast-gate pass is claimed.
+
+### 2026-09-13: account-page cross-realm diagnostic
+
+After the parser-defer correction, account-page traces contained consecutive
+synchronous timer callbacks lasting 5.334 s and 5.214 s, delaying a ready iframe
+response. A separate CPU profile identified substantial crossFrameData,
+reflection and value-encoding work. A warmed loopback diagnostic measured
+1000 foreign-function calls at 115.4 ms and 1000 foreign-property reads at
+61.8 ms; an iframe-local loop with one bridge call took 0.1 ms. Frozen Chrome's
+matching cases were below its timer resolution. Results are single diagnostic
+samples, not a frozen benchmark matrix or a performance improvement claim.
+
+No bridge optimization was made in this investigation. Google accepted and
+rejected different sessions with long connection-check delays, so the measured
+runtime overhead is not a proven rejection criterion. Captures, methodology,
+CPU-profile caveats and correctness requirements for future work are in
+[the rejection investigation](../compatibility/google-signin-rejection-20260913.md).
+
+### 2026-09-13: batch cross-realm bridge transactions
+
+Imported proxy operations now perform argument materialization, reflection and
+result encoding as one owner operation. V8's private string-call boundary uses
+one handle scope without persistent scratch roots. Origin checks, canonical
+references, getters/Proxy traps, incumbent-document tracking and Page task
+ordering remain on the existing ownership paths. The design and remaining
+boundaries are in [the transaction notes](frame-transactions-20260913.md).
+
+The identical `frame_bridge_probe.py` ran sequentially against the preserved
+pre-change binary, the fast gate's freshly built binary and frozen Chrome
+152.0.7977.82. Each row below is the median of five warmed samples of 1000
+operations; every sample passed its result check. These focused diagnostics
+do not replace the frozen benchmark baseline.
+
+| Operation | Before, ms | After, ms |
+| --- | ---: | ---: |
+| Foreign function call | 117.3 | 48.3 |
+| Property read | 66.1 | 42.7 |
+| Property write | 102.6 | 67.6 |
+| Property presence (`in`) | 50.0 | 42.2 |
+| Prototype read | 68.0 | 51.0 |
+| Own descriptor | 102.2 | 49.3 |
+| Own keys (two keys) | 87.1 | 50.0 |
+
+Local arithmetic and the iframe-local loop controls remained below or around
+0.1–0.2 ms. Chrome medians were below timer resolution except ownKeys at 0.1 ms;
+the remaining actor/bridge overhead is not claimed to match native Chrome.
+Receipts are `.build/frame-transaction-{before,after,chrome}-probe/result.json`.
+Before SHA-256 begins `31e4c263bf1d`; after begins `e15939de75fe`; each receipt
+retains the complete binary hash, common probe hash and individual samples.
+
+`go test ./... -count=1 -timeout=15m` passed (browser 484.386 s, CDP 32.381 s,
+V8 1.104 s). Final argument-array hardening was separately checked with the
+transaction, string-call, frame-reference and reflection tests after that full
+run started: browser 4.833 s, V8 0.207 s. New tests verify exception/return/
+receiver identity, symbols and special values, private codec isolation, pending
+jobs, interruption/recovery and stable persistent-root counts for scratch calls.
+
+The unchanged fast gate passed all six semantic workloads, N=10/N=25 static
+waves and both memory cases. Median warm completion: DOM 195.475 ms, static
+35.713 ms, React 83.590 ms; median static throughput 52.87 and 67.35 sessions/s
+at N=10 and N=25. These are this run's absolute results, not a paired general
+workload speedup claim. Ten static pages used 544.86 MiB private memory while
+active and 149.96 MiB after teardown/recovery; ten React pages used 566.07 and
+170.30 MiB respectively. Ready-process private memory was approximately
+80.9 MiB. Warm shared artifacts and allocator retention remain; no leak-absence
+or return-to-cold-footprint claim is made.
+
+Gate receipt: `.build/frame-transaction-fast-gate-20260913/{build,raw}.json`.
+Logs: `.build/frame-transaction-full-tests.log`,
+`.build/frame-transaction-final-focused.log`,
+`.build/frame-transaction-fast-gate.log`. Frozen harness/workload fingerprints
+and each launched executable hash were verified by the gate. The benchmark
+virtual environment was used; the default Python lacked websockets.sync.
+
+Live follow-up: the fresh diagnostic executable completed the identifier step
+with account-not-found, zero JavaScript exceptions and zero network failures.
+Two synchronous timer callbacks still lasted 5.013 and 5.246 seconds. This
+optimization therefore does not establish that those stalls or intermittent
+server rejection are resolved. Capture:
+`compatibility/private-captures/google-signin-20260913-frame-transaction-mimic/`.
+
+Further profiling localizes the residual work to nested cross-realm traffic:
+the child realm recorded 155,100 frame transactions taking 9.497 seconds
+inclusive, with 155,188 access checks taking 0.529 seconds. The parent's
+11.685 seconds in 2,774 transactions includes child execution; these durations
+must not be summed. The Go profile also shows substantial native-call and
+thread-wakeup costs. A separate parent V8 profile attributes 10.421 seconds
+to a native call beneath the imported function proxy, which cannot by itself
+attribute the child work. These instrumented live runs are diagnostic, not
+paired benchmarks or evidence of a specific application timeout rule.
+Receipts: `.build/frame-transaction-child-residual/` and
+`.build/frame-transaction-native-residual/`. Temporary diagnostic test code
+was removed. Removing the remaining mass-call overhead needs further work
+on realm execution ownership; sharing an isolate was not introduced into this
+scoped, validated bridge change.

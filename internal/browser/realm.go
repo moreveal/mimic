@@ -100,6 +100,7 @@ type Realm struct {
 	computedStyleFlatRead    engine.Value
 	previewRead              engine.Value
 	frameReferenceImport     engine.Value
+	frameTransaction         engine.Value
 	frameReferenceDescribe   engine.Value
 	frameGlobalRead          engine.Value
 	frameValueEncoder        engine.Value
