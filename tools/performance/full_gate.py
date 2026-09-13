@@ -48,5 +48,8 @@ def main():
         '--chrome',str(chrome),'--output',str(output)]
     try:frozen.main()
     finally:frozen.Runtime=original
+    subprocess.run([sys.executable,str(ROOT/'tools/performance/readme_charts.py'),
+        str(output/'raw.json'),str(output/'presentation'),
+        '--receipt',str(output/'presentation/provenance.json')],check=True)
 
 if __name__=='__main__':main()

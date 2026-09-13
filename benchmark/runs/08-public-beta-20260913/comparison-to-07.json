@@ -1,0 +1,6202 @@
+{
+  "before_commit": "52a2aa2f8f8e53125d4e6cb5261366d99707df68",
+  "after_commit": "2d3b21469d73936eae280098de5534aa43ebc353",
+  "harness_sha256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7",
+  "comparisons": [
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 1,
+      "metric": "rss_mib",
+      "before": 1202.798828125,
+      "after": 1188.291015625,
+      "change_percent": -1.2061711535432496
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 1,
+      "metric": "private_mib",
+      "before": 594.65234375,
+      "after": 592.59765625,
+      "change_percent": -0.34552752067581505
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 1,
+      "metric": "cpu_per_success_s",
+      "before": 0.16015625,
+      "after": 0.16171875,
+      "change_percent": 0.9756097560975575
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 1,
+      "metric": "p50",
+      "before": 46.07080000278074,
+      "after": 44.49850000037259,
+      "change_percent": -3.4127907531739297
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 1,
+      "metric": "p95",
+      "before": 52.6889749977272,
+      "after": 51.01869000018269,
+      "change_percent": -3.1700844391384786
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 1,
+      "metric": "throughput",
+      "before": 14.66604570636509,
+      "after": 15.28613621579358,
+      "change_percent": 4.228068845846904
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 1,
+      "metric": "rss_mib",
+      "before": 98.533203125,
+      "after": 150.673828125,
+      "change_percent": 52.91680707248905
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 1,
+      "metric": "private_mib",
+      "before": 130.37109375,
+      "after": 180.62109375,
+      "change_percent": 38.5438202247191
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 1,
+      "metric": "cpu_per_success_s",
+      "before": 0.07109375,
+      "after": 0.08203125,
+      "change_percent": 15.384615384615389
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 1,
+      "metric": "p50",
+      "before": 50.79760000080569,
+      "after": 44.035599999915576,
+      "change_percent": -13.311652520557784
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 1,
+      "metric": "p95",
+      "before": 57.722234995526385,
+      "after": 64.07096000029927,
+      "change_percent": 10.99875118360355
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 1,
+      "metric": "throughput",
+      "before": 12.442753225448204,
+      "after": 14.849501049325664,
+      "change_percent": 19.342566554764776
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 5,
+      "metric": "rss_mib",
+      "before": 1369.33203125,
+      "after": 1348.02734375,
+      "change_percent": -1.5558452598638135
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 5,
+      "metric": "private_mib",
+      "before": 675.58203125,
+      "after": 664.48828125,
+      "change_percent": -1.6421025851551612
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 5,
+      "metric": "cpu_per_success_s",
+      "before": 0.13625,
+      "after": 0.14375,
+      "change_percent": 5.5045871559632875
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 5,
+      "metric": "p50",
+      "before": 154.58439999929396,
+      "after": 159.14840000004915,
+      "change_percent": 2.9524324581109296
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 5,
+      "metric": "p95",
+      "before": 158.52707999729319,
+      "after": 165.02035999874352,
+      "change_percent": 4.096006815719561
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 5,
+      "metric": "throughput",
+      "before": 22.425096589397015,
+      "after": 22.518663918973346,
+      "change_percent": 0.4172438196791141
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 5,
+      "metric": "rss_mib",
+      "before": 179.11328125,
+      "after": 338.703125,
+      "change_percent": 89.09994983970513
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 5,
+      "metric": "private_mib",
+      "before": 220.3359375,
+      "after": 378.77734375,
+      "change_percent": 71.90901677126547
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 5,
+      "metric": "cpu_per_success_s",
+      "before": 0.09625,
+      "after": 0.090625,
+      "change_percent": -5.844155844155849
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 5,
+      "metric": "p50",
+      "before": 72.03010000375798,
+      "after": 61.12109999958193,
+      "change_percent": -15.145057418505461
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 5,
+      "metric": "p95",
+      "before": 79.40041999972891,
+      "after": 165.4283999992913,
+      "change_percent": 108.34700874360121
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 5,
+      "metric": "throughput",
+      "before": 43.780789934801525,
+      "after": 36.67983521661416,
+      "change_percent": -16.219338958392775
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 10,
+      "metric": "rss_mib",
+      "before": 1713.6171875,
+      "after": 1683.53125,
+      "change_percent": -1.7556976972139526
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 10,
+      "metric": "private_mib",
+      "before": 830.8203125,
+      "after": 818.55078125,
+      "change_percent": -1.4767972166063286
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 10,
+      "metric": "cpu_per_success_s",
+      "before": 0.1271875,
+      "after": 0.1128125,
+      "change_percent": -11.302211302211312
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 10,
+      "metric": "p50",
+      "before": 271.5719000007084,
+      "after": 276.4246499991714,
+      "change_percent": 1.78691167917237
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 10,
+      "metric": "p95",
+      "before": 298.0928699977085,
+      "after": 283.7970600004155,
+      "change_percent": -4.795757106636888
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 10,
+      "metric": "throughput",
+      "before": 27.162822050019365,
+      "after": 27.356288797733693,
+      "change_percent": 0.7122483347204002
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 10,
+      "metric": "rss_mib",
+      "before": 274.75,
+      "after": 560.85546875,
+      "change_percent": 104.1330186533212
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 10,
+      "metric": "private_mib",
+      "before": 328.46875,
+      "after": 610.32421875,
+      "change_percent": 85.80891447055465
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 10,
+      "metric": "cpu_per_success_s",
+      "before": 0.1334375,
+      "after": 0.120625,
+      "change_percent": -9.60187353629976
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 10,
+      "metric": "p50",
+      "before": 106.60500000085449,
+      "after": 86.56525000060356,
+      "change_percent": -18.798133295896353
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 10,
+      "metric": "p95",
+      "before": 118.48084000121162,
+      "after": 239.19301000050837,
+      "change_percent": 101.88328340520063
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 10,
+      "metric": "throughput",
+      "before": 60.225900124522404,
+      "after": 58.32526014516084,
+      "change_percent": -3.1558515114457766
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 25,
+      "metric": "rss_mib",
+      "before": 2591.28515625,
+      "after": 2542.66796875,
+      "change_percent": -1.8761805269766902
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 25,
+      "metric": "private_mib",
+      "before": 1227.14453125,
+      "after": 1217.58984375,
+      "change_percent": -0.7786114232418375
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 25,
+      "metric": "cpu_per_success_s",
+      "before": 0.11675,
+      "after": 0.110625,
+      "change_percent": -5.246252676659533
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 25,
+      "metric": "p50",
+      "before": 670.758600004774,
+      "after": 665.5554999997548,
+      "change_percent": -0.7757038083421056
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 25,
+      "metric": "p95",
+      "before": 711.1227799992776,
+      "after": 749.1345600006753,
+      "change_percent": 5.34531884936049
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 25,
+      "metric": "throughput",
+      "before": 30.868237840237278,
+      "after": 30.211692848393906,
+      "change_percent": -2.1269273459709916
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 25,
+      "metric": "rss_mib",
+      "before": 552.44140625,
+      "after": 1092.03125,
+      "change_percent": 97.67367862824818
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 25,
+      "metric": "private_mib",
+      "before": 630.58203125,
+      "after": 1184.82421875,
+      "change_percent": 87.8937489546488
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 25,
+      "metric": "cpu_per_success_s",
+      "before": 0.165125,
+      "after": 0.131375,
+      "change_percent": -20.439061317183953
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 25,
+      "metric": "p50",
+      "before": 229.90279999794438,
+      "after": 168.23980000117444,
+      "change_percent": -26.821334928204998
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 25,
+      "metric": "p95",
+      "before": 246.65794000320602,
+      "after": 491.9023599992215,
+      "change_percent": 99.42693107419443
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 25,
+      "metric": "throughput",
+      "before": 76.3897868931937,
+      "after": 70.4770586462005,
+      "change_percent": -7.740207804559302
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 50,
+      "metric": "rss_mib",
+      "before": 4099.40234375,
+      "after": 4051.55859375,
+      "change_percent": -1.1670908583282433
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 50,
+      "metric": "private_mib",
+      "before": 1887.87890625,
+      "after": 1892.6640625,
+      "change_percent": 0.2534673296130537
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 50,
+      "metric": "cpu_per_success_s",
+      "before": 0.1155625,
+      "after": 0.1131875,
+      "change_percent": -2.055164954029207
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 50,
+      "metric": "p50",
+      "before": 1339.272000001074,
+      "after": 1450.128099999347,
+      "change_percent": 8.277340226494987
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 50,
+      "metric": "p95",
+      "before": 1378.1265649995476,
+      "after": 1819.051669998862,
+      "change_percent": 31.994529109121356
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 50,
+      "metric": "throughput",
+      "before": 31.46687481455266,
+      "after": 28.590668621033778,
+      "change_percent": -9.140425321769506
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 50,
+      "metric": "rss_mib",
+      "before": 1024.81640625,
+      "after": 2210.015625,
+      "change_percent": 115.64990680495364
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 50,
+      "metric": "private_mib",
+      "before": 1134.83203125,
+      "after": 2351.91796875,
+      "change_percent": 107.24811284709672
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 50,
+      "metric": "cpu_per_success_s",
+      "before": 0.1715,
+      "after": 0.129125,
+      "change_percent": -24.70845481049564
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 50,
+      "metric": "p50",
+      "before": 389.8764500008838,
+      "after": 348.25980000005075,
+      "change_percent": -10.674317466658655
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 50,
+      "metric": "p95",
+      "before": 457.41961500134494,
+      "after": 921.9750449995445,
+      "change_percent": 101.56001508523713
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 50,
+      "metric": "throughput",
+      "before": 84.21225381931599,
+      "after": 66.94782790586318,
+      "change_percent": -20.50108521082335
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 100,
+      "metric": "rss_mib",
+      "before": 7075.75,
+      "after": 7039.66015625,
+      "change_percent": -0.5100497297106314
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 100,
+      "metric": "private_mib",
+      "before": 3233.56640625,
+      "after": 3235.65234375,
+      "change_percent": 0.06450888084339926
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 100,
+      "metric": "cpu_per_success_s",
+      "before": 0.12159375,
+      "after": 0.12053125,
+      "change_percent": -0.8738113595476691
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 100,
+      "metric": "p50",
+      "before": 3074.285900001996,
+      "after": 3100.205499999902,
+      "change_percent": 0.8431096144274928
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 100,
+      "metric": "p95",
+      "before": 3181.0535099972185,
+      "after": 3335.8062099991002,
+      "change_percent": 4.864825427033356
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "sessions": 100,
+      "metric": "throughput",
+      "before": 28.63230248263967,
+      "after": 27.78365679955955,
+      "change_percent": -2.9639449485233285
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 100,
+      "metric": "rss_mib",
+      "before": 1942.4375,
+      "after": 3988.3125,
+      "change_percent": 105.32513916149169
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 100,
+      "metric": "private_mib",
+      "before": 2130.3515625,
+      "after": 4237.82421875,
+      "change_percent": 98.92605020444836
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 100,
+      "metric": "cpu_per_success_s",
+      "before": 0.171,
+      "after": 0.13596875,
+      "change_percent": -20.486111111111118
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 100,
+      "metric": "p50",
+      "before": 689.1726000030758,
+      "after": 551.3739999987592,
+      "change_percent": -19.994787953511434
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 100,
+      "metric": "p95",
+      "before": 850.8012999969651,
+      "after": 1785.965919999398,
+      "change_percent": 109.9157488365108
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "sessions": 100,
+      "metric": "throughput",
+      "before": 91.53189556136645,
+      "after": 76.63952013113422,
+      "change_percent": -16.270148606556305
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 1,
+      "metric": "rss_mib",
+      "before": 1431.57421875,
+      "after": 1405.10546875,
+      "change_percent": -1.8489261439139058
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 1,
+      "metric": "private_mib",
+      "before": 791.029296875,
+      "after": 781.681640625,
+      "change_percent": -1.1817079704795226
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 1,
+      "metric": "cpu_per_success_s",
+      "before": 0.24375,
+      "after": 0.21875,
+      "change_percent": -10.256410256410255
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 1,
+      "metric": "p50",
+      "before": 70.94520000100601,
+      "after": 71.89199999993434,
+      "change_percent": 1.3345511731800055
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 1,
+      "metric": "p95",
+      "before": 81.50226500438293,
+      "after": 84.31855499893574,
+      "change_percent": 3.4554745127652007
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 1,
+      "metric": "throughput",
+      "before": 8.778271355589109,
+      "after": 8.706104799039545,
+      "change_percent": -0.8221044169888272
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "sessions": 1,
+      "metric": "rss_mib",
+      "before": 112.18359375,
+      "after": 165.958984375,
+      "change_percent": 47.93516487342874
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "sessions": 1,
+      "metric": "private_mib",
+      "before": 143.783203125,
+      "after": 196.072265625,
+      "change_percent": 36.366600105953786
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "sessions": 1,
+      "metric": "cpu_per_success_s",
+      "before": 0.1203125,
+      "after": 0.13125,
+      "change_percent": 9.090909090909092
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "sessions": 1,
+      "metric": "p50",
+      "before": 82.09654999882332,
+      "after": 74.7941500003435,
+      "change_percent": -8.894892658198765
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "sessions": 1,
+      "metric": "p95",
+      "before": 92.56320999884338,
+      "after": 97.60278499907147,
+      "change_percent": 5.444468704457278
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "sessions": 1,
+      "metric": "throughput",
+      "before": 9.379890733685533,
+      "after": 8.96635983184608,
+      "change_percent": -4.408696365239733
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 5,
+      "metric": "rss_mib",
+      "before": 1623.703125,
+      "after": 1627.66796875,
+      "change_percent": 0.24418526323893106
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 5,
+      "metric": "private_mib",
+      "before": 867.5390625,
+      "after": 879.1015625,
+      "change_percent": 1.3327930118420461
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 5,
+      "metric": "cpu_per_success_s",
+      "before": 0.15375,
+      "after": 0.173125,
+      "change_percent": 12.601626016260164
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 5,
+      "metric": "p50",
+      "before": 193.60900000174297,
+      "after": 192.57529999958933,
+      "change_percent": -0.533911131271961
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 5,
+      "metric": "p95",
+      "before": 209.43335999763804,
+      "after": 195.79955999979575,
+      "change_percent": -6.5098511516962
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 5,
+      "metric": "throughput",
+      "before": 20.41917128237718,
+      "after": 21.06951735553906,
+      "change_percent": 3.184977804281216
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "sessions": 5,
+      "metric": "rss_mib",
+      "before": 239.2890625,
+      "after": 380.04296875,
+      "change_percent": 58.82170492017369
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "sessions": 5,
+      "metric": "private_mib",
+      "before": 284.5859375,
+      "after": 419.58984375,
+      "change_percent": 47.4387130425234
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "sessions": 5,
+      "metric": "cpu_per_success_s",
+      "before": 0.14875,
+      "after": 0.15,
+      "change_percent": 0.8403361344537823
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "sessions": 5,
+      "metric": "p50",
+      "before": 112.62609999539563,
+      "after": 97.97799999978452,
+      "change_percent": -13.005955099404098
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "sessions": 5,
+      "metric": "p95",
+      "before": 130.85922000027495,
+      "after": 215.08313999984236,
+      "change_percent": 64.36223599635582
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "sessions": 5,
+      "metric": "throughput",
+      "before": 29.86138226878688,
+      "after": 29.612400915364514,
+      "change_percent": -0.8337904494214179
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 10,
+      "metric": "rss_mib",
+      "before": 1981.953125,
+      "after": 1995.125,
+      "change_percent": 0.6645906421222753
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 10,
+      "metric": "private_mib",
+      "before": 1058.1171875,
+      "after": 1068.08203125,
+      "change_percent": 0.9417523756082075
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 10,
+      "metric": "cpu_per_success_s",
+      "before": 0.1809375,
+      "after": 0.205625,
+      "change_percent": 13.644214162348877
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 10,
+      "metric": "p50",
+      "before": 325.3978000029747,
+      "after": 423.2893000007607,
+      "change_percent": 30.08363916316924
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 10,
+      "metric": "p95",
+      "before": 374.3240149990015,
+      "after": 488.1358850001561,
+      "change_percent": 30.404640215631957
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 10,
+      "metric": "throughput",
+      "before": 23.275497446227217,
+      "after": 19.318493021538227,
+      "change_percent": -17.00072977529591
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "sessions": 10,
+      "metric": "rss_mib",
+      "before": 396.12890625,
+      "after": 680.9453125,
+      "change_percent": 71.89992998649035
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "sessions": 10,
+      "metric": "private_mib",
+      "before": 452.68359375,
+      "after": 738.75390625,
+      "change_percent": 63.19431860346717
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "sessions": 10,
+      "metric": "cpu_per_success_s",
+      "before": 0.23625,
+      "after": 0.2309375,
+      "change_percent": -2.248677248677248
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "sessions": 10,
+      "metric": "p50",
+      "before": 182.0794500017655,
+      "after": 154.58905000014056,
+      "change_percent": -15.098024516966845
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "sessions": 10,
+      "metric": "p95",
+      "before": 198.66007000237005,
+      "after": 354.52049999958035,
+      "change_percent": 78.45584167736922
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "sessions": 10,
+      "metric": "throughput",
+      "before": 42.372658719790685,
+      "after": 36.35998714312377,
+      "change_percent": -14.189979478107716
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 25,
+      "metric": "rss_mib",
+      "before": 3102.96875,
+      "after": 3069.84375,
+      "change_percent": -1.0675260587139332
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 25,
+      "metric": "private_mib",
+      "before": 1636.4609375,
+      "after": 1621.1328125,
+      "change_percent": -0.9366630543235928
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 25,
+      "metric": "cpu_per_success_s",
+      "before": 0.174,
+      "after": 0.17825,
+      "change_percent": 2.442528735632186
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 25,
+      "metric": "p50",
+      "before": 807.8545999960625,
+      "after": 909.8883999995451,
+      "change_percent": 12.630218359093323
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 25,
+      "metric": "p95",
+      "before": 876.0357400038629,
+      "after": 1122.308900000644,
+      "change_percent": 28.11222747552458
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 25,
+      "metric": "throughput",
+      "before": 25.879000435397273,
+      "after": 22.771229065798316,
+      "change_percent": -12.008853963880886
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "sessions": 25,
+      "metric": "rss_mib",
+      "before": 841.77734375,
+      "after": 1513.765625,
+      "change_percent": 79.8296944244646
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "sessions": 25,
+      "metric": "private_mib",
+      "before": 934.98046875,
+      "after": 1620.06640625,
+      "change_percent": 73.27275385933028
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "sessions": 25,
+      "metric": "cpu_per_success_s",
+      "before": 0.304,
+      "after": 0.254625,
+      "change_percent": -16.241776315789476
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "sessions": 25,
+      "metric": "p50",
+      "before": 386.8363000001409,
+      "after": 307.48440000024857,
+      "change_percent": -20.513043889589326
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "sessions": 25,
+      "metric": "p95",
+      "before": 405.99725999782095,
+      "after": 651.2237399998412,
+      "change_percent": 60.40101847074939
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "sessions": 25,
+      "metric": "throughput",
+      "before": 49.09293728984339,
+      "after": 45.492156715443826,
+      "change_percent": -7.334620361256146
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 50,
+      "metric": "rss_mib",
+      "before": 4983.91796875,
+      "after": 4943.03125,
+      "change_percent": -0.8203730279343796
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 50,
+      "metric": "private_mib",
+      "before": 2588.22265625,
+      "after": 2568.8671875,
+      "change_percent": -0.7478285804840135
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 50,
+      "metric": "cpu_per_success_s",
+      "before": 0.175375,
+      "after": 0.1824375,
+      "change_percent": 4.027084818246614
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 50,
+      "metric": "p50",
+      "before": 1651.2928499978443,
+      "after": 1895.4074000002947,
+      "change_percent": 14.783237873449831
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 50,
+      "metric": "p95",
+      "before": 1827.5992099981522,
+      "after": 2344.284114999664,
+      "change_percent": 28.271237051039982
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 50,
+      "metric": "throughput",
+      "before": 25.750112891060763,
+      "after": 22.083680400456675,
+      "change_percent": -14.238510355723147
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "sessions": 50,
+      "metric": "rss_mib",
+      "before": 1607.1640625,
+      "after": 2734.01171875,
+      "change_percent": 70.11404016197008
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "sessions": 50,
+      "metric": "private_mib",
+      "before": 1754.1796875,
+      "after": 2882.05078125,
+      "change_percent": 64.29621217182176
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "sessions": 50,
+      "metric": "cpu_per_success_s",
+      "before": 0.3278125,
+      "after": 0.28125,
+      "change_percent": -14.204003813155389
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "sessions": 50,
+      "metric": "p50",
+      "before": 682.6507000005222,
+      "after": 513.141049999831,
+      "change_percent": -24.83109590315538
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "sessions": 50,
+      "metric": "p95",
+      "before": 780.6730649965175,
+      "after": 1470.1343649995579,
+      "change_percent": 88.31626591422314
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "sessions": 50,
+      "metric": "throughput",
+      "before": 53.01967965386107,
+      "after": 48.19959568248959,
+      "change_percent": -9.091122396135539
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 100,
+      "metric": "rss_mib",
+      "before": 8737.8203125,
+      "after": 8656.859375,
+      "change_percent": -0.9265575922198847
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 100,
+      "metric": "private_mib",
+      "before": 4480.43359375,
+      "after": 4449.34375,
+      "change_percent": -0.6939025676748989
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 100,
+      "metric": "cpu_per_success_s",
+      "before": 0.1819375,
+      "after": 0.19821875,
+      "change_percent": 8.948814840261077
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 100,
+      "metric": "p50",
+      "before": 3562.8039500006707,
+      "after": 4474.831649999032,
+      "change_percent": 25.598593489776217
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 100,
+      "metric": "p95",
+      "before": 3781.703989999005,
+      "after": 4606.455150000056,
+      "change_percent": 21.808982463518202
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "sessions": 100,
+      "metric": "throughput",
+      "before": 24.562463314427863,
+      "after": 19.59504081339376,
+      "change_percent": -20.22363326285872
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 1,
+      "metric": "rss_mib",
+      "before": 1438.3671875,
+      "after": 1437.69140625,
+      "change_percent": -0.04698252684521838
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 1,
+      "metric": "private_mib",
+      "before": 803.376953125,
+      "after": 816.19921875,
+      "change_percent": 1.596045987518507
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 1,
+      "metric": "cpu_per_success_s",
+      "before": 0.25078125,
+      "after": 0.25625,
+      "change_percent": 2.1806853582554386
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 1,
+      "metric": "p50",
+      "before": 66.52464999933727,
+      "after": 74.5558999997229,
+      "change_percent": 12.072592641172308
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 1,
+      "metric": "p95",
+      "before": 73.5977449985512,
+      "after": 86.71700499962753,
+      "change_percent": 17.825627675596017
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 1,
+      "metric": "throughput",
+      "before": 8.793885224627772,
+      "after": 8.565580849362656,
+      "change_percent": -2.5961718789066874
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 1,
+      "metric": "rss_mib",
+      "before": 104.18359375,
+      "after": 169.1484375,
+      "change_percent": 62.35611713096622
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 1,
+      "metric": "private_mib",
+      "before": 136.068359375,
+      "after": 200.255859375,
+      "change_percent": 47.17298003358836
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 1,
+      "metric": "cpu_per_success_s",
+      "before": 0.1265625,
+      "after": 0.1546875,
+      "change_percent": 22.222222222222232
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 1,
+      "metric": "p50",
+      "before": 89.15734999754932,
+      "after": 95.87944999930187,
+      "change_percent": 7.539591522109307
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 1,
+      "metric": "p95",
+      "before": 99.04517000286432,
+      "after": 141.94928000015358,
+      "change_percent": 43.317720587534446
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 1,
+      "metric": "throughput",
+      "before": 9.177978065711612,
+      "after": 7.5022894173799255,
+      "change_percent": -18.257710318484644
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 5,
+      "metric": "rss_mib",
+      "before": 1610.2890625,
+      "after": 1564.6953125,
+      "change_percent": -2.8314015825962926
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 5,
+      "metric": "private_mib",
+      "before": 833.8828125,
+      "after": 812.06640625,
+      "change_percent": -2.61624366433383
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 5,
+      "metric": "cpu_per_success_s",
+      "before": 0.1825,
+      "after": 0.199375,
+      "change_percent": 9.246575342465754
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 5,
+      "metric": "p50",
+      "before": 237.7840000044671,
+      "after": 227.85939999994298,
+      "change_percent": -4.173787977465961
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 5,
+      "metric": "p95",
+      "before": 987.4765599975944,
+      "after": 1131.8255399990448,
+      "change_percent": 14.617965210414924
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 5,
+      "metric": "throughput",
+      "before": 11.570660729146207,
+      "after": 10.65518066605333,
+      "change_percent": -7.912081120716
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 5,
+      "metric": "rss_mib",
+      "before": 205.375,
+      "after": 382.015625,
+      "change_percent": 86.00882531953744
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 5,
+      "metric": "private_mib",
+      "before": 247.41015625,
+      "after": 422.6640625,
+      "change_percent": 70.83537268894958
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 5,
+      "metric": "cpu_per_success_s",
+      "before": 0.151875,
+      "after": 0.205625,
+      "change_percent": 35.39094650205761
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 5,
+      "metric": "p50",
+      "before": 114.75729999801842,
+      "after": 116.45869999847491,
+      "change_percent": 1.4826072071108911
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 5,
+      "metric": "p95",
+      "before": 132.14737999951467,
+      "after": 269.13474000029964,
+      "change_percent": 103.66256220992658
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 5,
+      "metric": "throughput",
+      "before": 30.314207978732075,
+      "after": 24.974293959238427,
+      "change_percent": -17.615218656677552
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 10,
+      "metric": "rss_mib",
+      "before": 1938.6875,
+      "after": 1910.34765625,
+      "change_percent": -1.4618056674941164
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 10,
+      "metric": "private_mib",
+      "before": 988.6484375,
+      "after": 972.640625,
+      "change_percent": -1.61916126024323
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 10,
+      "metric": "cpu_per_success_s",
+      "before": 0.199375,
+      "after": 0.201875,
+      "change_percent": 1.2539184952978069
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 10,
+      "metric": "p50",
+      "before": 1117.3212499961664,
+      "after": 1114.926149999519,
+      "change_percent": -0.2143609097791302
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 10,
+      "metric": "p95",
+      "before": 1146.2506950003444,
+      "after": 1149.1367000002356,
+      "change_percent": 0.25177781897792345
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 10,
+      "metric": "throughput",
+      "before": 8.327940852833464,
+      "after": 8.329105063146818,
+      "change_percent": 0.013979569907217318
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 10,
+      "metric": "rss_mib",
+      "before": 336.44921875,
+      "after": 650.29296875,
+      "change_percent": 93.28116473743484
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 10,
+      "metric": "private_mib",
+      "before": 384.02734375,
+      "after": 708.5859375,
+      "change_percent": 84.51444904435922
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 10,
+      "metric": "cpu_per_success_s",
+      "before": 0.2165625,
+      "after": 0.2371875,
+      "change_percent": 9.523809523809526
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 10,
+      "metric": "p50",
+      "before": 174.71680000016931,
+      "after": 152.4705499996344,
+      "change_percent": -12.732748081760523
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 10,
+      "metric": "p95",
+      "before": 197.13171499497548,
+      "after": 387.2620100005406,
+      "change_percent": 96.44835434542391
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 10,
+      "metric": "throughput",
+      "before": 43.21952623619132,
+      "after": 37.34920445449437,
+      "change_percent": -13.582568558517053
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 25,
+      "metric": "rss_mib",
+      "before": 2971.015625,
+      "after": 2986.125,
+      "change_percent": 0.5085592574088196
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 25,
+      "metric": "private_mib",
+      "before": 1480.3984375,
+      "after": 1509.02734375,
+      "change_percent": 1.933864932899188
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 25,
+      "metric": "cpu_per_success_s",
+      "before": 0.164375,
+      "after": 0.184,
+      "change_percent": 11.939163498098862
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 25,
+      "metric": "p50",
+      "before": 894.1148999947472,
+      "after": 918.6644000001252,
+      "change_percent": 2.745676199504353
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 25,
+      "metric": "p95",
+      "before": 913.5350399999879,
+      "after": 1886.6106600005878,
+      "change_percent": 106.51760221486552
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 25,
+      "metric": "throughput",
+      "before": 24.30422874720738,
+      "after": 15.43235539978903,
+      "change_percent": -36.503414445676455
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 25,
+      "metric": "rss_mib",
+      "before": 720.60546875,
+      "after": 1433.8515625,
+      "change_percent": 98.97872340425532
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 25,
+      "metric": "private_mib",
+      "before": 797.8359375,
+      "after": 1526.265625,
+      "change_percent": 91.30068642715156
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 25,
+      "metric": "cpu_per_success_s",
+      "before": 0.251875,
+      "after": 0.284625,
+      "change_percent": 13.002481389578163
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 25,
+      "metric": "p50",
+      "before": 352.794400001585,
+      "after": 308.9686999992409,
+      "change_percent": -12.422447749212344
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 25,
+      "metric": "p95",
+      "before": 373.39847999537596,
+      "after": 718.1985999999597,
+      "change_percent": 92.341061487142
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 25,
+      "metric": "throughput",
+      "before": 56.78557141325725,
+      "after": 47.52786473160113,
+      "change_percent": -16.302920709000393
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 50,
+      "metric": "rss_mib",
+      "before": 4874.6640625,
+      "after": 4758.9609375,
+      "change_percent": -2.373560998594454
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 50,
+      "metric": "private_mib",
+      "before": 2394.1484375,
+      "after": 2354.68359375,
+      "change_percent": -1.6483875073013303
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 50,
+      "metric": "cpu_per_success_s",
+      "before": 0.203,
+      "after": 0.1970625,
+      "change_percent": -2.9248768472906463
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 50,
+      "metric": "p50",
+      "before": 2387.3844500012638,
+      "after": 2399.777300000096,
+      "change_percent": 0.5190973744855307
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 50,
+      "metric": "p95",
+      "before": 2506.5682549993653,
+      "after": 2529.836430000796,
+      "change_percent": 0.9282881068577437
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 50,
+      "metric": "throughput",
+      "before": 18.684270697551348,
+      "after": 18.67959529774944,
+      "change_percent": -0.025023185959945002
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 50,
+      "metric": "rss_mib",
+      "before": 1281.6328125,
+      "after": 2692.140625,
+      "change_percent": 110.05553218855341
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 50,
+      "metric": "private_mib",
+      "before": 1408.3515625,
+      "after": 2849.1171875,
+      "change_percent": 102.30156044577825
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 50,
+      "metric": "cpu_per_success_s",
+      "before": 0.26775,
+      "after": 0.297375,
+      "change_percent": 11.064425770308128
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 50,
+      "metric": "p50",
+      "before": 636.1152999998012,
+      "after": 518.8312500004031,
+      "change_percent": -18.437545834762155
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 50,
+      "metric": "p95",
+      "before": 694.5594699980575,
+      "after": 1400.3823900006864,
+      "change_percent": 101.62166819273273
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 50,
+      "metric": "throughput",
+      "before": 60.44737342854973,
+      "after": 50.51723893708307,
+      "change_percent": -16.42773528150784
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 100,
+      "metric": "rss_mib",
+      "before": 8339.89453125,
+      "after": 8503.54296875,
+      "change_percent": 1.9622362955167019
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 100,
+      "metric": "private_mib",
+      "before": 4016.05078125,
+      "after": 4130.21484375,
+      "change_percent": 2.8426946948232144
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 100,
+      "metric": "cpu_per_success_s",
+      "before": 0.191375,
+      "after": 0.2036875,
+      "change_percent": 6.4337034617896816
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 100,
+      "metric": "p50",
+      "before": 3545.05490000156,
+      "after": 4301.829400000315,
+      "change_percent": 21.34732807659544
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 100,
+      "metric": "p95",
+      "before": 4182.964629995695,
+      "after": 5071.687929999371,
+      "change_percent": 21.24625423869746
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "sessions": 100,
+      "metric": "throughput",
+      "before": 23.06992433622183,
+      "after": 20.07195732470928,
+      "change_percent": -12.99513153064605
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 100,
+      "metric": "rss_mib",
+      "before": 2440.046875,
+      "after": 5175.78125,
+      "change_percent": 112.11810736217926
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 100,
+      "metric": "private_mib",
+      "before": 2661.7421875,
+      "after": 5466.171875,
+      "change_percent": 105.36068071017866
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 100,
+      "metric": "cpu_per_success_s",
+      "before": 0.28178125,
+      "after": 0.335625,
+      "change_percent": 19.108350892758132
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 100,
+      "metric": "p50",
+      "before": 1157.4925499990059,
+      "after": 1095.6248499996946,
+      "change_percent": -5.344976086400248
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 100,
+      "metric": "p95",
+      "before": 1346.0999050032115,
+      "after": 3000.3214699990167,
+      "change_percent": 122.88995481296455
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "sessions": 100,
+      "metric": "throughput",
+      "before": 61.256348347529816,
+      "after": 44.474448290917586,
+      "change_percent": -27.3961809825854
+    }
+  ],
+  "single_session": [
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "process_start_ms",
+      "before": 6.457449999288656,
+      "after": 4.670349999287282,
+      "change_percent": -27.675011036837116
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "http_ready_ms",
+      "before": 264.1565499980061,
+      "after": 252.03130000045348,
+      "change_percent": -4.59017578691277
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "cdp_ready_ms",
+      "before": 291.533999999956,
+      "after": 269.3546000000424,
+      "change_percent": -7.607826188340616
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "runtime_initialization_ms",
+      "before": 282.2653500006709,
+      "after": 265.0134000004982,
+      "change_percent": -6.11196167015599
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "session_create_ms",
+      "before": 31.30435000275611,
+      "after": 34.14139999949839,
+      "change_percent": 9.062797970545626
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "navigate_ack_ms",
+      "before": 6.95360000099754,
+      "after": 8.070550000411458,
+      "change_percent": 16.062902658388243
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "navigation_ms",
+      "before": 24.264599996968172,
+      "after": 26.939199999105767,
+      "change_percent": 11.022642048382345
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "execution_ms",
+      "before": 2.8008500012219884,
+      "after": 2.980500000376196,
+      "change_percent": 6.414124250703463
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "completion_ms",
+      "before": 26.91114999834099,
+      "after": 30.488799999147886,
+      "change_percent": 13.294303666054596
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "total_cold_ms",
+      "before": 459.06530000138446,
+      "after": 474.22349999942526,
+      "change_percent": 3.301970329274525
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "teardown_ms",
+      "before": 11.425200002122438,
+      "after": 12.352549999377516,
+      "change_percent": 8.116706903010941
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "shutdown_ms",
+      "before": 100.2745000005234,
+      "after": 113.3388999996896,
+      "change_percent": 13.028636392201411
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "cold_cpu_s",
+      "before": 1.625,
+      "after": 1.5859375,
+      "change_percent": -2.403846153846154
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "cold_user_s",
+      "before": 0.7734375,
+      "after": 0.8359375,
+      "change_percent": 8.080808080808081
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "cold_kernel_s",
+      "before": 0.8125,
+      "after": 0.7109375,
+      "change_percent": -12.5
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "session_cpu_s",
+      "before": 0.328125,
+      "after": 0.359375,
+      "change_percent": 9.523809523809524
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "session_user_s",
+      "before": 0.1953125,
+      "after": 0.1953125,
+      "change_percent": 0.0
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "session_kernel_s",
+      "before": 0.140625,
+      "after": 0.1484375,
+      "change_percent": 5.555555555555555
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "workload_cpu_s",
+      "before": 0.125,
+      "after": 0.1484375,
+      "change_percent": 18.75
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "workload_user_s",
+      "before": 0.0625,
+      "after": 0.09375,
+      "change_percent": 50.0
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "workload_kernel_s",
+      "before": 0.046875,
+      "after": 0.0625,
+      "change_percent": 33.33333333333333
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "average_cpu_percent",
+      "before": 377.76522466635294,
+      "after": 405.1479099016327,
+      "change_percent": 7.24859871881127
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "peak_cpu_percent",
+      "before": 548.8971424854035,
+      "after": 455.930792035819,
+      "change_percent": -16.93693467388686
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "peak_rss",
+      "before": 506863616.0,
+      "after": 513212416.0,
+      "change_percent": 1.2525657394986505
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "peak_private",
+      "before": 263227392.0,
+      "after": 269129728.0,
+      "change_percent": 2.24229551307487
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "lifecycle_peak_rss",
+      "before": 468293632.0,
+      "after": 488472576.0,
+      "change_percent": 4.30903660035249
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "process_start_ms",
+      "before": 6.202099997608457,
+      "after": 4.538599999250437,
+      "change_percent": -26.821560423073947
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "http_ready_ms",
+      "before": 215.11649999956717,
+      "after": 212.82679999876564,
+      "change_percent": -1.0643999882882709
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "cdp_ready_ms",
+      "before": 220.30119999908493,
+      "after": 214.25005000037345,
+      "change_percent": -2.746762159596323
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "runtime_initialization_ms",
+      "before": 213.94854999743984,
+      "after": 209.52829999987443,
+      "change_percent": -2.0660340991412656
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "session_create_ms",
+      "before": 2.132950001396239,
+      "after": 12.219249999361637,
+      "change_percent": 472.8802827709445
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "navigate_ack_ms",
+      "before": 0.26360000265412964,
+      "after": 289.89725000064936,
+      "change_percent": 109876.19388533331
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "navigation_ms",
+      "before": 167.179700001725,
+      "after": 298.87125000004744,
+      "change_percent": 78.77245263447873
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "execution_ms",
+      "before": 1.4452499999606516,
+      "after": 3.365999999914493,
+      "change_percent": 132.9008822007359
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "completion_ms",
+      "before": 168.43135000453913,
+      "after": 302.2874000007505,
+      "change_percent": 79.47217070492162
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "total_cold_ms",
+      "before": 461.1360499984585,
+      "after": 590.9393500005535,
+      "change_percent": 28.14859085567675
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "teardown_ms",
+      "before": 6.699149998894427,
+      "after": 4.888450000180455,
+      "change_percent": -27.028802146731966
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "shutdown_ms",
+      "before": 58.17400000159978,
+      "after": 50.45030000110273,
+      "change_percent": -13.27689345804766
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "cold_cpu_s",
+      "before": 0.265625,
+      "after": 0.5078125,
+      "change_percent": 91.17647058823529
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "cold_user_s",
+      "before": 0.1484375,
+      "after": 0.2734375,
+      "change_percent": 84.21052631578947
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "cold_kernel_s",
+      "before": 0.1171875,
+      "after": 0.2265625,
+      "change_percent": 93.33333333333333
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "session_cpu_s",
+      "before": 0.21875,
+      "after": 0.4453125,
+      "change_percent": 103.57142857142858
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "session_user_s",
+      "before": 0.125,
+      "after": 0.25,
+      "change_percent": 100.0
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "session_kernel_s",
+      "before": 0.09375,
+      "after": 0.1796875,
+      "change_percent": 91.66666666666666
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "workload_cpu_s",
+      "before": 0.21875,
+      "after": 0.4296875,
+      "change_percent": 96.42857142857143
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "workload_user_s",
+      "before": 0.125,
+      "after": 0.25,
+      "change_percent": 100.0
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "workload_kernel_s",
+      "before": 0.09375,
+      "after": 0.1796875,
+      "change_percent": 91.66666666666666
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "average_cpu_percent",
+      "before": 128.80900188241003,
+      "after": 143.78384418983234,
+      "change_percent": 11.625617843924346
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "peak_cpu_percent",
+      "before": 229.94744003935222,
+      "after": 272.54028083446366,
+      "change_percent": 18.522859305510114
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "peak_rss",
+      "before": 110370816.0,
+      "after": 147324928.0,
+      "change_percent": 33.48177837155793
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "peak_private",
+      "before": 145006592.0,
+      "after": 180561920.0,
+      "change_percent": 24.519801141178466
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "cold",
+      "metric": "lifecycle_peak_rss",
+      "before": 96923648.0,
+      "after": 141359104.0,
+      "change_percent": 45.84583527025314
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "session_create_ms",
+      "before": 28.590599999006372,
+      "after": 30.687000000398257,
+      "change_percent": 7.332479911106246
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "navigate_ack_ms",
+      "before": 5.890799999178853,
+      "after": 6.480150000243157,
+      "change_percent": 10.004583437673256
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "navigation_ms",
+      "before": 17.113500001869397,
+      "after": 17.76594999955705,
+      "change_percent": 3.812487203765352
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "execution_ms",
+      "before": 3.6175499990349635,
+      "after": 3.6711500006276765,
+      "change_percent": 1.4816658126912292
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "completion_ms",
+      "before": 20.65059999586083,
+      "after": 21.324299999832874,
+      "change_percent": 3.2623749629893535
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "teardown_ms",
+      "before": 10.149749999982305,
+      "after": 9.7395000002507,
+      "change_percent": -4.041971474492669
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "session_cpu_s",
+      "before": 0.1640625,
+      "after": 0.1640625,
+      "change_percent": 0.0
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "session_user_s",
+      "before": 0.0859375,
+      "after": 0.09375,
+      "change_percent": 9.090909090909092
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "session_kernel_s",
+      "before": 0.0546875,
+      "after": 0.078125,
+      "change_percent": 42.857142857142854
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "workload_cpu_s",
+      "before": 0.0625,
+      "after": 0.0703125,
+      "change_percent": 12.5
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "workload_user_s",
+      "before": 0.046875,
+      "after": 0.03125,
+      "change_percent": -33.33333333333333
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "workload_kernel_s",
+      "before": 0.0234375,
+      "after": 0.015625,
+      "change_percent": -33.33333333333333
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "average_cpu_percent",
+      "before": 303.86174788925064,
+      "after": 312.3835418343366,
+      "change_percent": 2.8044971123485816
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "peak_cpu_percent",
+      "before": 26.583075304156214,
+      "after": 117.36856685209543,
+      "change_percent": 341.5161357713382
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "peak_rss",
+      "before": 1251354624.0,
+      "after": 1233084416.0,
+      "change_percent": -1.4600344018867029
+    },
+    {
+      "system": "chrome",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "peak_private",
+      "before": 622546944.0,
+      "after": 617218048.0,
+      "change_percent": -0.8559829987696478
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "session_create_ms",
+      "before": 2.0694000013463665,
+      "after": 2.4997000000439584,
+      "change_percent": 20.79346662886033
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "navigate_ack_ms",
+      "before": 0.2334000018890947,
+      "after": 23.266250000233413,
+      "change_percent": 9868.401804593343
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "navigation_ms",
+      "before": 42.946900000970345,
+      "after": 30.428249999204127,
+      "change_percent": -29.149135331032905
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "execution_ms",
+      "before": 1.2647000003198627,
+      "after": 3.1587999992552795,
+      "change_percent": 149.76674297907556
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "completion_ms",
+      "before": 44.177349998790305,
+      "after": 33.681300000353076,
+      "change_percent": -23.75889454375294
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "teardown_ms",
+      "before": 6.484549998276634,
+      "after": 5.184399999961897,
+      "change_percent": -20.049964895949156
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "session_cpu_s",
+      "before": 0.0859375,
+      "after": 0.046875,
+      "change_percent": -45.45454545454545
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "session_user_s",
+      "before": 0.046875,
+      "after": 0.03125,
+      "change_percent": -33.33333333333333
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "session_kernel_s",
+      "before": 0.03125,
+      "after": 0.015625,
+      "change_percent": -50.0
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "workload_cpu_s",
+      "before": 0.0703125,
+      "after": 0.03125,
+      "change_percent": -55.55555555555556
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "workload_user_s",
+      "before": 0.046875,
+      "after": 0.03125,
+      "change_percent": -33.33333333333333
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "workload_kernel_s",
+      "before": 0.015625,
+      "after": 0.015625,
+      "change_percent": 0.0
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "average_cpu_percent",
+      "before": 157.09070343716883,
+      "after": 94.89676630546968,
+      "change_percent": -39.59109977286129
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "peak_cpu_percent",
+      "before": 156.79276972949725,
+      "after": 75.58742584693938,
+      "change_percent": -51.79151055412525
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "peak_rss",
+      "before": 106883072.0,
+      "after": 155146240.0,
+      "change_percent": 45.1551093142233
+    },
+    {
+      "system": "mimic",
+      "workload": "static",
+      "mode": "warm",
+      "metric": "peak_private",
+      "before": 141135872.0,
+      "after": 187758592.0,
+      "change_percent": 33.033926342978205
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "process_start_ms",
+      "before": 6.379799997375812,
+      "after": 3.9153999996415223,
+      "change_percent": -38.62817014244907
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "http_ready_ms",
+      "before": 214.38169999964884,
+      "after": 211.89384999979666,
+      "change_percent": -1.160476850335762
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "cdp_ready_ms",
+      "before": 215.3607500004,
+      "after": 213.3660500003316,
+      "change_percent": -0.9262133420619592
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "runtime_initialization_ms",
+      "before": 208.4791499983112,
+      "after": 209.08090000011725,
+      "change_percent": 0.288637977376127
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "session_create_ms",
+      "before": 1.7778500005078968,
+      "after": 6.793900000957365,
+      "change_percent": 282.1413504523149
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "navigate_ack_ms",
+      "before": 0.22879999960423447,
+      "after": 281.07360000103654,
+      "change_percent": 122746.85335979985
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "navigation_ms",
+      "before": 166.13200000210782,
+      "after": 291.5325499998289,
+      "change_percent": 75.48247778641687
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "execution_ms",
+      "before": 34.992950000741985,
+      "after": 34.970299999258714,
+      "change_percent": -0.06472732788401844
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "completion_ms",
+      "before": 201.16690000213566,
+      "after": 326.9105000008494,
+      "change_percent": 62.5071023102602
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "total_cold_ms",
+      "before": 483.7212999991607,
+      "after": 607.2654999998122,
+      "change_percent": 25.54036797653232
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "teardown_ms",
+      "before": 4.306449998694006,
+      "after": 4.870449998634285,
+      "change_percent": 13.096634121174521
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "shutdown_ms",
+      "before": 57.64389999967534,
+      "after": 49.97654999988299,
+      "change_percent": -13.301233955085506
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "cold_cpu_s",
+      "before": 0.3125,
+      "after": 0.5,
+      "change_percent": 60.0
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "cold_user_s",
+      "before": 0.15625,
+      "after": 0.2578125,
+      "change_percent": 65.0
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "cold_kernel_s",
+      "before": 0.140625,
+      "after": 0.2265625,
+      "change_percent": 61.111111111111114
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "session_cpu_s",
+      "before": 0.2734375,
+      "after": 0.46875,
+      "change_percent": 71.42857142857143
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "session_user_s",
+      "before": 0.140625,
+      "after": 0.234375,
+      "change_percent": 66.66666666666666
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "session_kernel_s",
+      "before": 0.125,
+      "after": 0.2109375,
+      "change_percent": 68.75
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "workload_cpu_s",
+      "before": 0.25,
+      "after": 0.46875,
+      "change_percent": 87.5
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "workload_user_s",
+      "before": 0.140625,
+      "after": 0.234375,
+      "change_percent": 66.66666666666666
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "workload_kernel_s",
+      "before": 0.125,
+      "after": 0.2109375,
+      "change_percent": 68.75
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "average_cpu_percent",
+      "before": 123.06521919205959,
+      "after": 142.4997227188557,
+      "change_percent": 15.792035844397272
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "peak_cpu_percent",
+      "before": 156.47376757455754,
+      "after": 223.9392871230106,
+      "change_percent": 43.116185284096694
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "peak_rss",
+      "before": 120647680.0,
+      "after": 148975616.0,
+      "change_percent": 23.479884569682564
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "peak_private",
+      "before": 154861568.0,
+      "after": 181432320.0,
+      "change_percent": 17.157744392721117
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "lifecycle_peak_rss",
+      "before": 116801536.0,
+      "after": 148054016.0,
+      "change_percent": 26.75690840230046
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "process_start_ms",
+      "before": 6.244449996302137,
+      "after": 4.610750000210828,
+      "change_percent": -26.162432192727298
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "http_ready_ms",
+      "before": 254.52940000104718,
+      "after": 242.2735999998622,
+      "change_percent": -4.815082265991495
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "cdp_ready_ms",
+      "before": 273.03560000291327,
+      "after": 256.7862000005334,
+      "change_percent": -5.951385094913068
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "runtime_initialization_ms",
+      "before": 266.7114500036405,
+      "after": 252.55680000100256,
+      "change_percent": -5.307102489392462
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "session_create_ms",
+      "before": 29.692600000998937,
+      "after": 33.64119999969262,
+      "change_percent": 13.298262861995378
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "navigate_ack_ms",
+      "before": 5.817350000143051,
+      "after": 7.310650000363239,
+      "change_percent": 25.66976372718621
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "navigation_ms",
+      "before": 23.04329999969923,
+      "after": 25.805050000599294,
+      "change_percent": 11.985045548754355
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "execution_ms",
+      "before": 28.94140000353218,
+      "after": 46.030749999772524,
+      "change_percent": 59.04811099032755
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "completion_ms",
+      "before": 51.50185000456986,
+      "after": 69.9645499998951,
+      "change_percent": 35.84861513457673
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "total_cold_ms",
+      "before": 482.5503500032937,
+      "after": 491.4090499996746,
+      "change_percent": 1.8358084283475136
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "teardown_ms",
+      "before": 10.922500001470326,
+      "after": 11.337300000377581,
+      "change_percent": 3.7976653591340614
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "shutdown_ms",
+      "before": 106.43495000113035,
+      "after": 107.31339999983902,
+      "change_percent": 0.8253397955270759
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "cold_cpu_s",
+      "before": 1.5703125,
+      "after": 1.734375,
+      "change_percent": 10.44776119402985
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "cold_user_s",
+      "before": 0.8515625,
+      "after": 0.8828125,
+      "change_percent": 3.669724770642202
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "cold_kernel_s",
+      "before": 0.765625,
+      "after": 0.890625,
+      "change_percent": 16.3265306122449
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "session_cpu_s",
+      "before": 0.40625,
+      "after": 0.515625,
+      "change_percent": 26.923076923076923
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "session_user_s",
+      "before": 0.234375,
+      "after": 0.265625,
+      "change_percent": 13.333333333333334
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "session_kernel_s",
+      "before": 0.171875,
+      "after": 0.234375,
+      "change_percent": 36.36363636363637
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "workload_cpu_s",
+      "before": 0.1875,
+      "after": 0.2421875,
+      "change_percent": 29.166666666666668
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "workload_user_s",
+      "before": 0.125,
+      "after": 0.140625,
+      "change_percent": 12.5
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "workload_kernel_s",
+      "before": 0.0625,
+      "after": 0.078125,
+      "change_percent": 25.0
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "average_cpu_percent",
+      "before": 351.24958712516246,
+      "after": 353.17694984590156,
+      "change_percent": 0.5487160103201234
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "peak_cpu_percent",
+      "before": 520.028134298061,
+      "after": 534.3209312074873,
+      "change_percent": 2.748466086112607
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "peak_rss",
+      "before": 545976320.0,
+      "after": 555145216.0,
+      "change_percent": 1.6793578153719193
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "peak_private",
+      "before": 288585728.0,
+      "after": 301254656.0,
+      "change_percent": 4.390005038641412
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "cold",
+      "metric": "lifecycle_peak_rss",
+      "before": 528121856.0,
+      "after": 544227328.0,
+      "change_percent": 3.0495749829372714
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "session_create_ms",
+      "before": 2.0719999956781976,
+      "after": 5.3555000004053,
+      "change_percent": 158.47007777875803
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "navigate_ack_ms",
+      "before": 0.24339999799849465,
+      "after": 28.0601000004026,
+      "change_percent": 11428.389577298247
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "navigation_ms",
+      "before": 42.42969999904744,
+      "after": 36.12410000005184,
+      "change_percent": -14.861288199391383
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "execution_ms",
+      "before": 34.713100001681596,
+      "after": 40.84270000021206,
+      "change_percent": 17.657887075004915
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "completion_ms",
+      "before": 77.09310000063851,
+      "after": 77.37005000035424,
+      "change_percent": 0.3592409693129886
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "teardown_ms",
+      "before": 4.157849998591701,
+      "after": 7.415549999677751,
+      "change_percent": 78.35058990077711
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "session_cpu_s",
+      "before": 0.125,
+      "after": 0.09375,
+      "change_percent": -25.0
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "session_user_s",
+      "before": 0.0625,
+      "after": 0.0625,
+      "change_percent": 0.0
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "session_kernel_s",
+      "before": 0.03125,
+      "after": 0.0390625,
+      "change_percent": 25.0
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "workload_cpu_s",
+      "before": 0.109375,
+      "after": 0.0859375,
+      "change_percent": -21.428571428571427
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "workload_user_s",
+      "before": 0.0625,
+      "after": 0.0625,
+      "change_percent": 0.0
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "workload_kernel_s",
+      "before": 0.03125,
+      "after": 0.03125,
+      "change_percent": 0.0
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "average_cpu_percent",
+      "before": 144.78384796642263,
+      "after": 116.49460747157056,
+      "change_percent": -19.538947812336588
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "peak_cpu_percent",
+      "before": 174.45671757020867,
+      "after": 123.97602758839751,
+      "change_percent": -28.935939346385798
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "peak_rss",
+      "before": 116496384.0,
+      "after": 172906496.0,
+      "change_percent": 48.42219995429215
+    },
+    {
+      "system": "mimic",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "peak_private",
+      "before": 148498432.0,
+      "after": 203606016.0,
+      "change_percent": 37.109876015391194
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "session_create_ms",
+      "before": 29.495200000383193,
+      "after": 41.116600000350445,
+      "change_percent": 39.40098727866321
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "navigate_ack_ms",
+      "before": 5.788949998532189,
+      "after": 8.234150000134832,
+      "change_percent": 42.239093483665144
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "navigation_ms",
+      "before": 17.087600001104875,
+      "after": 23.6541499998566,
+      "change_percent": 38.42874364057642
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "execution_ms",
+      "before": 28.232749999006046,
+      "after": 27.86145000027318,
+      "change_percent": -1.315139328425101
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "completion_ms",
+      "before": 45.32554999968852,
+      "after": 52.30649999975867,
+      "change_percent": 15.401798764975
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "teardown_ms",
+      "before": 9.598799999366747,
+      "after": 13.87830000021495,
+      "change_percent": 44.5836979740231
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "session_cpu_s",
+      "before": 0.2109375,
+      "after": 0.2265625,
+      "change_percent": 7.4074074074074066
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "session_user_s",
+      "before": 0.125,
+      "after": 0.125,
+      "change_percent": 0.0
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "session_kernel_s",
+      "before": 0.0703125,
+      "after": 0.1015625,
+      "change_percent": 44.44444444444444
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "workload_cpu_s",
+      "before": 0.1015625,
+      "after": 0.125,
+      "change_percent": 23.076923076923077
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "workload_user_s",
+      "before": 0.0625,
+      "after": 0.0546875,
+      "change_percent": -12.5
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "workload_kernel_s",
+      "before": 0.046875,
+      "after": 0.0625,
+      "change_percent": 33.33333333333333
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "average_cpu_percent",
+      "before": 219.8998074960835,
+      "after": 232.04680670891167,
+      "change_percent": 5.523878966126207
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "peak_cpu_percent",
+      "before": 270.9019603363428,
+      "after": 256.12824402870285,
+      "change_percent": -5.453528756047915
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "peak_rss",
+      "before": 1481084928.0,
+      "after": 1443741696.0,
+      "change_percent": -2.521343056972895
+    },
+    {
+      "system": "chrome",
+      "workload": "cpu",
+      "mode": "warm",
+      "metric": "peak_private",
+      "before": 819056640.0,
+      "after": 816900096.0,
+      "change_percent": -0.26329607681344236
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "process_start_ms",
+      "before": 6.735249997291248,
+      "after": 6.019199999172997,
+      "change_percent": -10.631379657863164
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "http_ready_ms",
+      "before": 261.66244999694754,
+      "after": 249.78309999914927,
+      "change_percent": -4.53995213984156
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "cdp_ready_ms",
+      "before": 281.27649999805726,
+      "after": 266.1161499991067,
+      "change_percent": -5.3898388237393675
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "runtime_initialization_ms",
+      "before": 274.6549000003142,
+      "after": 260.0969499999337,
+      "change_percent": -5.300451585012269
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "session_create_ms",
+      "before": 30.304300002171658,
+      "after": 31.636749999961467,
+      "change_percent": 4.396900762249327
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "navigate_ack_ms",
+      "before": 6.342300002870616,
+      "after": 6.532950000291748,
+      "change_percent": 3.006007242401683
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "navigation_ms",
+      "before": 22.53549999659299,
+      "after": 23.222550000355113,
+      "change_percent": 3.048745330105812
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "execution_ms",
+      "before": 11.59535000260803,
+      "after": 12.589750001097855,
+      "change_percent": 8.57585151173673
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "completion_ms",
+      "before": 34.485249998397194,
+      "after": 36.23090000019147,
+      "change_percent": 5.062019274546099
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "total_cold_ms",
+      "before": 463.79300000262447,
+      "after": 449.8928499997419,
+      "change_percent": -2.9970590334058356
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "teardown_ms",
+      "before": 10.938100000203121,
+      "after": 11.664700000437733,
+      "change_percent": 6.642835595040444
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "shutdown_ms",
+      "before": 107.1984500013059,
+      "after": 101.50044999954844,
+      "change_percent": -5.315375363811744
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "cold_cpu_s",
+      "before": 1.515625,
+      "after": 1.5546875,
+      "change_percent": 2.5773195876288657
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "cold_user_s",
+      "before": 0.8125,
+      "after": 0.8828125,
+      "change_percent": 8.653846153846153
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "cold_kernel_s",
+      "before": 0.734375,
+      "after": 0.6953125,
+      "change_percent": -5.319148936170213
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "session_cpu_s",
+      "before": 0.3125,
+      "after": 0.359375,
+      "change_percent": 15.0
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "session_user_s",
+      "before": 0.1875,
+      "after": 0.2109375,
+      "change_percent": 12.5
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "session_kernel_s",
+      "before": 0.125,
+      "after": 0.15625,
+      "change_percent": 25.0
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "workload_cpu_s",
+      "before": 0.140625,
+      "after": 0.15625,
+      "change_percent": 11.11111111111111
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "workload_user_s",
+      "before": 0.0859375,
+      "after": 0.109375,
+      "change_percent": 27.27272727272727
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "workload_kernel_s",
+      "before": 0.03125,
+      "after": 0.046875,
+      "change_percent": 50.0
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "average_cpu_percent",
+      "before": 395.26953464607857,
+      "after": 381.9046125170081,
+      "change_percent": -3.381217361220949
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "peak_cpu_percent",
+      "before": 479.08527384440873,
+      "after": 422.4936619175214,
+      "change_percent": -11.812429856749556
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "peak_rss",
+      "before": 516902912.0,
+      "after": 525498368.0,
+      "change_percent": 1.6628762965839126
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "peak_private",
+      "before": 270329856.0,
+      "after": 276965376.0,
+      "change_percent": 2.454601240937294
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "lifecycle_peak_rss",
+      "before": 467218432.0,
+      "after": 491589632.0,
+      "change_percent": 5.216232565071405
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "process_start_ms",
+      "before": 6.269049998081755,
+      "after": 5.70514999981242,
+      "change_percent": -8.994983266075094
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "http_ready_ms",
+      "before": 214.4603000015195,
+      "after": 216.22554999976273,
+      "change_percent": 0.8231127151415565
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "cdp_ready_ms",
+      "before": 217.03974999763886,
+      "after": 225.27945000001637,
+      "change_percent": 3.796401351580594
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "runtime_initialization_ms",
+      "before": 209.05725000193343,
+      "after": 219.17449999909877,
+      "change_percent": 4.839463829679085
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "session_create_ms",
+      "before": 1.8402499990770593,
+      "after": 9.96089999898686,
+      "change_percent": 441.27971764611067
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "navigate_ack_ms",
+      "before": 0.2340499995625578,
+      "after": 277.4276000009195,
+      "change_percent": 118433.47597497754
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "navigation_ms",
+      "before": 166.62944999916363,
+      "after": 286.894900000334,
+      "change_percent": 72.17538676492904
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "execution_ms",
+      "before": 70.13359999837121,
+      "after": 168.0889000008392,
+      "change_percent": 139.6695735064832
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "completion_ms",
+      "before": 235.8812000020407,
+      "after": 458.5279000002629,
+      "change_percent": 94.38933666451416
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "total_cold_ms",
+      "before": 525.1510000016424,
+      "after": 757.224650000353,
+      "change_percent": 44.1917943597146
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "teardown_ms",
+      "before": 4.149000000325032,
+      "after": 11.195649999535817,
+      "change_percent": 169.83972038223072
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "shutdown_ms",
+      "before": 57.62039999899571,
+      "after": 51.024349999352125,
+      "change_percent": -11.447421398946464
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "cold_cpu_s",
+      "before": 0.359375,
+      "after": 0.6484375,
+      "change_percent": 80.43478260869566
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "cold_user_s",
+      "before": 0.203125,
+      "after": 0.484375,
+      "change_percent": 138.46153846153845
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "cold_kernel_s",
+      "before": 0.1484375,
+      "after": 0.21875,
+      "change_percent": 47.368421052631575
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "session_cpu_s",
+      "before": 0.3125,
+      "after": 0.6171875,
+      "change_percent": 97.5
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "session_user_s",
+      "before": 0.1875,
+      "after": 0.4609375,
+      "change_percent": 145.83333333333331
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "session_kernel_s",
+      "before": 0.125,
+      "after": 0.203125,
+      "change_percent": 62.5
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "workload_cpu_s",
+      "before": 0.296875,
+      "after": 0.5859375,
+      "change_percent": 97.36842105263158
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "workload_user_s",
+      "before": 0.1875,
+      "after": 0.453125,
+      "change_percent": 141.66666666666669
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "workload_kernel_s",
+      "before": 0.125,
+      "after": 0.203125,
+      "change_percent": 62.5
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "average_cpu_percent",
+      "before": 126.55668220496585,
+      "after": 129.47513625667108,
+      "change_percent": 2.3060450075473855
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "peak_cpu_percent",
+      "before": 187.33181427211133,
+      "after": 230.08106131966207,
+      "change_percent": 22.820067810508014
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "peak_rss",
+      "before": 117921792.0,
+      "after": 172292096.0,
+      "change_percent": 46.10708765348478
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "peak_private",
+      "before": 151144448.0,
+      "after": 204261376.0,
+      "change_percent": 35.14315524179889
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "cold",
+      "metric": "lifecycle_peak_rss",
+      "before": 117430272.0,
+      "after": 172247040.0,
+      "change_percent": 46.68026997331659
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "session_create_ms",
+      "before": 23.554899998998735,
+      "after": 30.00305000023218,
+      "change_percent": 27.37498355547058
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "navigate_ack_ms",
+      "before": 6.139100001746556,
+      "after": 7.175199999437609,
+      "change_percent": 16.877066628598428
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "navigation_ms",
+      "before": 17.27825000125449,
+      "after": 20.52354999977979,
+      "change_percent": 18.78257345674285
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "execution_ms",
+      "before": 30.747249998967163,
+      "after": 32.34264999991865,
+      "change_percent": 5.188756721349314
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "completion_ms",
+      "before": 48.12935000154539,
+      "after": 53.45320000014908,
+      "change_percent": 11.06154560249151
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "teardown_ms",
+      "before": 10.320000001229346,
+      "after": 12.27385000038339,
+      "change_percent": 18.932655028307142
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "session_cpu_s",
+      "before": 0.2109375,
+      "after": 0.25,
+      "change_percent": 18.51851851851852
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "session_user_s",
+      "before": 0.1328125,
+      "after": 0.140625,
+      "change_percent": 5.88235294117647
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "session_kernel_s",
+      "before": 0.09375,
+      "after": 0.109375,
+      "change_percent": 16.666666666666664
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "workload_cpu_s",
+      "before": 0.109375,
+      "after": 0.1328125,
+      "change_percent": 21.428571428571427
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "workload_user_s",
+      "before": 0.0625,
+      "after": 0.0625,
+      "change_percent": 0.0
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "workload_kernel_s",
+      "before": 0.046875,
+      "after": 0.046875,
+      "change_percent": 0.0
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "average_cpu_percent",
+      "before": 226.46606310035685,
+      "after": 227.92522297009538,
+      "change_percent": 0.644317232243275
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "peak_cpu_percent",
+      "before": 221.37493454862602,
+      "after": 299.11964871477926,
+      "change_percent": 35.11902299357937
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "peak_rss",
+      "before": 1458964480.0,
+      "after": 1410463744.0,
+      "change_percent": -3.324326031570008
+    },
+    {
+      "system": "chrome",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "peak_private",
+      "before": 766115840.0,
+      "after": 750147584.0,
+      "change_percent": -2.084313515825492
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "session_create_ms",
+      "before": 11.92290000108187,
+      "after": 6.7281999999977415,
+      "change_percent": -43.569098127240586
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "navigate_ack_ms",
+      "before": 0.25755000024219044,
+      "after": 24.094500000501284,
+      "change_percent": 9255.270812597055
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "navigation_ms",
+      "before": 41.984099996625446,
+      "after": 31.578950000039185,
+      "change_percent": -24.783549004081532
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "execution_ms",
+      "before": 68.92850000076578,
+      "after": 171.21190000034403,
+      "change_percent": 148.39057864082622
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "completion_ms",
+      "before": 111.14884999915375,
+      "after": 202.3017000001346,
+      "change_percent": 82.00971040336886
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "teardown_ms",
+      "before": 3.9969499994185753,
+      "after": 12.533250000160479,
+      "change_percent": 213.570347439514
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "session_cpu_s",
+      "before": 0.15625,
+      "after": 0.28125,
+      "change_percent": 80.0
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "session_user_s",
+      "before": 0.109375,
+      "after": 0.2109375,
+      "change_percent": 92.85714285714286
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "session_kernel_s",
+      "before": 0.046875,
+      "after": 0.09375,
+      "change_percent": 100.0
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "workload_cpu_s",
+      "before": 0.15625,
+      "after": 0.265625,
+      "change_percent": 70.0
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "workload_user_s",
+      "before": 0.109375,
+      "after": 0.1875,
+      "change_percent": 71.42857142857143
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "workload_kernel_s",
+      "before": 0.046875,
+      "after": 0.09375,
+      "change_percent": 100.0
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "average_cpu_percent",
+      "before": 142.25818936675648,
+      "after": 129.57532917849906,
+      "change_percent": -8.91538142353245
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "peak_cpu_percent",
+      "before": 183.4336441130823,
+      "after": 187.13136052139805,
+      "change_percent": 2.0158332601385847
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "peak_rss",
+      "before": 119433216.0,
+      "after": 200353792.0,
+      "change_percent": 67.75382821475728
+    },
+    {
+      "system": "mimic",
+      "workload": "dom",
+      "mode": "warm",
+      "metric": "peak_private",
+      "before": 152727552.0,
+      "after": 232638464.0,
+      "change_percent": 52.32252527690616
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "process_start_ms",
+      "before": 6.107299996074289,
+      "after": 4.650700000638608,
+      "change_percent": -23.850146486532005
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "http_ready_ms",
+      "before": 214.3155999983719,
+      "after": 213.5598499999105,
+      "change_percent": -0.3526341519082783
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "cdp_ready_ms",
+      "before": 218.2518000008713,
+      "after": 217.55064999979368,
+      "change_percent": -0.32125737385662917
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "runtime_initialization_ms",
+      "before": 209.51425000021118,
+      "after": 212.05674999964685,
+      "change_percent": 1.213521275728555
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "session_create_ms",
+      "before": 1.822600002924446,
+      "after": 6.465649999881862,
+      "change_percent": 254.74871005746883
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "navigate_ack_ms",
+      "before": 0.23925000277813524,
+      "after": 274.29639999991196,
+      "change_percent": 114548.4417198843
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "navigation_ms",
+      "before": 166.15879999881145,
+      "after": 283.59385000021575,
+      "change_percent": 70.67639511253351
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "execution_ms",
+      "before": 45.42000000219559,
+      "after": 63.01330000042071,
+      "change_percent": 38.73469836498165
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "completion_ms",
+      "before": 210.9970500023337,
+      "after": 349.0203499995914,
+      "change_percent": 65.41480082102149
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "total_cold_ms",
+      "before": 497.5563999978476,
+      "after": 634.9369500003377,
+      "change_percent": 27.61105072773345
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "teardown_ms",
+      "before": 3.474699999060249,
+      "after": 5.01440000061848,
+      "change_percent": 44.31173919977698
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "shutdown_ms",
+      "before": 57.63775000013993,
+      "after": 47.76009999932285,
+      "change_percent": -17.13746633203604
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "cold_cpu_s",
+      "before": 0.2890625,
+      "after": 0.4765625,
+      "change_percent": 64.86486486486487
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "cold_user_s",
+      "before": 0.1640625,
+      "after": 0.296875,
+      "change_percent": 80.95238095238095
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "cold_kernel_s",
+      "before": 0.1328125,
+      "after": 0.1875,
+      "change_percent": 41.17647058823529
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "session_cpu_s",
+      "before": 0.2421875,
+      "after": 0.4296875,
+      "change_percent": 77.41935483870968
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "session_user_s",
+      "before": 0.140625,
+      "after": 0.28125,
+      "change_percent": 100.0
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "session_kernel_s",
+      "before": 0.1015625,
+      "after": 0.171875,
+      "change_percent": 69.23076923076923
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "workload_cpu_s",
+      "before": 0.2421875,
+      "after": 0.4296875,
+      "change_percent": 77.41935483870968
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "workload_user_s",
+      "before": 0.140625,
+      "after": 0.28125,
+      "change_percent": 100.0
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "workload_kernel_s",
+      "before": 0.1015625,
+      "after": 0.1640625,
+      "change_percent": 61.53846153846154
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "average_cpu_percent",
+      "before": 116.04404104641503,
+      "after": 119.90276914361479,
+      "change_percent": 3.3252272692368177
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "peak_cpu_percent",
+      "before": 171.13903386964762,
+      "after": 184.91485412733812,
+      "change_percent": 8.049490490978933
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "peak_rss",
+      "before": 111507456.0,
+      "after": 154933248.0,
+      "change_percent": 38.94429445148493
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "peak_private",
+      "before": 146071552.0,
+      "after": 189954048.0,
+      "change_percent": 30.04178116762941
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "lifecycle_peak_rss",
+      "before": 111460352.0,
+      "after": 154933248.0,
+      "change_percent": 39.00301337645157
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "process_start_ms",
+      "before": 6.139500001154374,
+      "after": 6.097649998991983,
+      "change_percent": -0.6816516353859843
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "http_ready_ms",
+      "before": 262.42570000249543,
+      "after": 226.52860000016517,
+      "change_percent": -13.678957511398051
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "cdp_ready_ms",
+      "before": 278.7707999959821,
+      "after": 235.06745000031515,
+      "change_percent": -15.677162025684483
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "runtime_initialization_ms",
+      "before": 272.49789999768836,
+      "after": 227.67075000047043,
+      "change_percent": -16.450457048512376
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "session_create_ms",
+      "before": 33.03095000228495,
+      "after": 29.6942000004492,
+      "change_percent": -10.101889293541149
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "navigate_ack_ms",
+      "before": 6.376599998475285,
+      "after": 6.067250000342028,
+      "change_percent": -4.851331402428034
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "navigation_ms",
+      "before": 22.570899996935623,
+      "after": 19.625400000222726,
+      "change_percent": -13.049989132523725
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "execution_ms",
+      "before": 26.794699999300065,
+      "after": 26.706799999374198,
+      "change_percent": -0.328049949908612
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "completion_ms",
+      "before": 48.87649999727728,
+      "after": 45.080000000780274,
+      "change_percent": -7.767536539458622
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "total_cold_ms",
+      "before": 489.19675000433926,
+      "after": 427.96294999970996,
+      "change_percent": -12.517213167112445
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "teardown_ms",
+      "before": 11.632249999820488,
+      "after": 10.862699999961478,
+      "change_percent": -6.615659050234352
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "shutdown_ms",
+      "before": 109.68004999813274,
+      "after": 91.54109999963111,
+      "change_percent": -16.538057740501063
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "cold_cpu_s",
+      "before": 1.6640625,
+      "after": 1.578125,
+      "change_percent": -5.164319248826291
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "cold_user_s",
+      "before": 0.90625,
+      "after": 0.8125,
+      "change_percent": -10.344827586206897
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "cold_kernel_s",
+      "before": 0.7109375,
+      "after": 0.796875,
+      "change_percent": 12.087912087912088
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "session_cpu_s",
+      "before": 0.359375,
+      "after": 0.3359375,
+      "change_percent": -6.521739130434782
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "session_user_s",
+      "before": 0.1875,
+      "after": 0.1875,
+      "change_percent": 0.0
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "session_kernel_s",
+      "before": 0.1484375,
+      "after": 0.171875,
+      "change_percent": 15.789473684210526
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "workload_cpu_s",
+      "before": 0.1484375,
+      "after": 0.15625,
+      "change_percent": 5.263157894736842
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "workload_user_s",
+      "before": 0.09375,
+      "after": 0.0625,
+      "change_percent": -33.33333333333333
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "workload_kernel_s",
+      "before": 0.0390625,
+      "after": 0.0703125,
+      "change_percent": 80.0
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "average_cpu_percent",
+      "before": 293.11933446947944,
+      "after": 279.49607374799206,
+      "change_percent": -4.64768410659239
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "peak_cpu_percent",
+      "before": 388.9280449448819,
+      "after": 385.2506181393642,
+      "change_percent": -0.9455288332418583
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "peak_rss",
+      "before": 534886400.0,
+      "after": 533174272.0,
+      "change_percent": -0.3200918924093041
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "peak_private",
+      "before": 273446912.0,
+      "after": 283912192.0,
+      "change_percent": 3.8271706648491977
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "cold",
+      "metric": "lifecycle_peak_rss",
+      "before": 507885568.0,
+      "after": 509300736.0,
+      "change_percent": 0.27863914416248975
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "session_create_ms",
+      "before": 7.059599996864563,
+      "after": 12.712349999674188,
+      "change_percent": 80.07181717548059
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "navigate_ack_ms",
+      "before": 0.23064999913913198,
+      "after": 26.9686499996169,
+      "change_percent": 11592.45614579385
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "navigation_ms",
+      "before": 42.664100001275074,
+      "after": 35.12464999948861,
+      "change_percent": -17.67164900129415
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "execution_ms",
+      "before": 49.21364999972866,
+      "after": 64.78799999968032,
+      "change_percent": 31.6464029797374
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "completion_ms",
+      "before": 91.77590000035707,
+      "after": 103.96375000073022,
+      "change_percent": 13.28001141947475
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "teardown_ms",
+      "before": 3.2118000017362647,
+      "after": 6.468150000728201,
+      "change_percent": 101.38707258333608
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "session_cpu_s",
+      "before": 0.0859375,
+      "after": 0.109375,
+      "change_percent": 27.27272727272727
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "session_user_s",
+      "before": 0.0625,
+      "after": 0.0546875,
+      "change_percent": -12.5
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "session_kernel_s",
+      "before": 0.03125,
+      "after": 0.0625,
+      "change_percent": 100.0
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "workload_cpu_s",
+      "before": 0.0859375,
+      "after": 0.109375,
+      "change_percent": 27.27272727272727
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "workload_user_s",
+      "before": 0.0625,
+      "after": 0.046875,
+      "change_percent": -25.0
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "workload_kernel_s",
+      "before": 0.03125,
+      "after": 0.0625,
+      "change_percent": 100.0
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "average_cpu_percent",
+      "before": 94.94246049340842,
+      "after": 105.25874760178053,
+      "change_percent": 10.865830793471314
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "peak_cpu_percent",
+      "before": 142.45366068075674,
+      "after": 122.35056638779152,
+      "change_percent": -14.112023655198941
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "peak_rss",
+      "before": 105779200.0,
+      "after": 171010048.0,
+      "change_percent": 61.66698935140368
+    },
+    {
+      "system": "mimic",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "peak_private",
+      "before": 138807296.0,
+      "after": 204558336.0,
+      "change_percent": 47.36857636071233
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "session_create_ms",
+      "before": 28.666700000030687,
+      "after": 34.84744999968825,
+      "change_percent": 21.56073074211872
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "navigate_ack_ms",
+      "before": 5.9843499984708615,
+      "after": 7.282400000804046,
+      "change_percent": 21.6907434001164
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "navigation_ms",
+      "before": 17.085799994674744,
+      "after": 22.30055000018183,
+      "change_percent": 30.520958966699858
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "execution_ms",
+      "before": 27.544099997612648,
+      "after": 28.960149999875284,
+      "change_percent": 5.141028395864708
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "completion_ms",
+      "before": 44.44369999691844,
+      "after": 49.53329999989364,
+      "change_percent": 11.451791825001287
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "teardown_ms",
+      "before": 9.681550003733719,
+      "after": 13.48374999997759,
+      "change_percent": 39.272637075442894
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "session_cpu_s",
+      "before": 0.21875,
+      "after": 0.25,
+      "change_percent": 14.285714285714285
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "session_user_s",
+      "before": 0.1328125,
+      "after": 0.125,
+      "change_percent": -5.88235294117647
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "session_kernel_s",
+      "before": 0.0859375,
+      "after": 0.109375,
+      "change_percent": 27.27272727272727
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "workload_cpu_s",
+      "before": 0.125,
+      "after": 0.09375,
+      "change_percent": -25.0
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "workload_user_s",
+      "before": 0.078125,
+      "after": 0.0546875,
+      "change_percent": -30.0
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "workload_kernel_s",
+      "before": 0.0625,
+      "after": 0.0546875,
+      "change_percent": -12.5
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "average_cpu_percent",
+      "before": 285.64347700522865,
+      "after": 204.4016820607498,
+      "change_percent": -28.441676945065236
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "peak_cpu_percent",
+      "before": 376.55183957716196,
+      "after": 239.6744207297878,
+      "change_percent": -36.350219136115946
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "peak_rss",
+      "before": 1308850176.0,
+      "after": 1287542784.0,
+      "change_percent": -1.6279473686681156
+    },
+    {
+      "system": "chrome",
+      "workload": "async",
+      "mode": "warm",
+      "metric": "peak_private",
+      "before": 656336896.0,
+      "after": 658008064.0,
+      "change_percent": 0.25462045638220526
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "process_start_ms",
+      "before": 6.282300000748364,
+      "after": 5.876149999494373,
+      "change_percent": -6.464988956363263
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "http_ready_ms",
+      "before": 258.55329999831156,
+      "after": 223.75519999968674,
+      "change_percent": -13.458772330058084
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "cdp_ready_ms",
+      "before": 277.26854999855277,
+      "after": 237.2283000004245,
+      "change_percent": -14.440963462440031
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "runtime_initialization_ms",
+      "before": 266.3763500022469,
+      "after": 230.82270000031713,
+      "change_percent": -13.347149625569193
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "session_create_ms",
+      "before": 30.764250001084292,
+      "after": 27.251450000221666,
+      "change_percent": -11.418448363730032
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "navigate_ack_ms",
+      "before": 6.53135000175098,
+      "after": 6.967899999835936,
+      "change_percent": 6.683916770161182
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "navigation_ms",
+      "before": 24.300550001498777,
+      "after": 25.072499999623687,
+      "change_percent": 3.176677063182927
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "execution_ms",
+      "before": 16.03545000034501,
+      "after": 15.22575000035431,
+      "change_percent": -5.049437340226046
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "completion_ms",
+      "before": 40.31735000171466,
+      "after": 39.7250999994867,
+      "change_percent": -1.4689705603239513
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "total_cold_ms",
+      "before": 485.9240499972657,
+      "after": 415.47855000044365,
+      "change_percent": -14.49722441134956
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "teardown_ms",
+      "before": 11.869550002302276,
+      "after": 10.40000000011787,
+      "change_percent": -12.380840064698024
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "shutdown_ms",
+      "before": 108.21184999804245,
+      "after": 88.16409999963071,
+      "change_percent": -18.526390592873522
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "cold_cpu_s",
+      "before": 1.609375,
+      "after": 1.3515625,
+      "change_percent": -16.019417475728158
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "cold_user_s",
+      "before": 0.8203125,
+      "after": 0.6640625,
+      "change_percent": -19.047619047619047
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "cold_kernel_s",
+      "before": 0.8125,
+      "after": 0.6796875,
+      "change_percent": -16.346153846153847
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "session_cpu_s",
+      "before": 0.421875,
+      "after": 0.3125,
+      "change_percent": -25.925925925925924
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "session_user_s",
+      "before": 0.2421875,
+      "after": 0.171875,
+      "change_percent": -29.03225806451613
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "session_kernel_s",
+      "before": 0.1953125,
+      "after": 0.15625,
+      "change_percent": -20.0
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "workload_cpu_s",
+      "before": 0.21875,
+      "after": 0.171875,
+      "change_percent": -21.428571428571427
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "workload_user_s",
+      "before": 0.125,
+      "after": 0.078125,
+      "change_percent": -37.5
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "workload_kernel_s",
+      "before": 0.0703125,
+      "after": 0.078125,
+      "change_percent": 11.11111111111111
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "average_cpu_percent",
+      "before": 467.18280636330866,
+      "after": 407.2550392755701,
+      "change_percent": -12.827477011458175
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "peak_cpu_percent",
+      "before": 574.356410403273,
+      "after": 471.3321229997863,
+      "change_percent": -17.937344397557997
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "peak_rss",
+      "before": 534145024.0,
+      "after": 531406848.0,
+      "change_percent": -0.5126278214659545
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "peak_private",
+      "before": 284047360.0,
+      "after": 286631936.0,
+      "change_percent": 0.9099102346876239
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "lifecycle_peak_rss",
+      "before": 524693504.0,
+      "after": 511891456.0,
+      "change_percent": -2.4399097572970905
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "process_start_ms",
+      "before": 5.9212000014667865,
+      "after": 6.330000000161817,
+      "change_percent": 6.904005920991755
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "http_ready_ms",
+      "before": 214.10895000008168,
+      "after": 217.8923000001305,
+      "change_percent": 1.7670209489362168
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "cdp_ready_ms",
+      "before": 215.29355000166106,
+      "after": 225.27919999993173,
+      "change_percent": 4.638155670800928
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "runtime_initialization_ms",
+      "before": 209.0865499994834,
+      "after": 219.61724999982835,
+      "change_percent": 5.0365267399414115
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "session_create_ms",
+      "before": 1.9401499994273763,
+      "after": 13.030600000092818,
+      "change_percent": 571.6284825368514
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "navigate_ack_ms",
+      "before": 0.24980000307550654,
+      "after": 273.52125000015803,
+      "change_percent": 109396.09552946294
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "navigation_ms",
+      "before": 173.57185000219033,
+      "after": 289.9436499992589,
+      "change_percent": 67.04531869401639
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "execution_ms",
+      "before": 30.297599998448277,
+      "after": 41.02564999993774,
+      "change_percent": 35.408910283451206
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "completion_ms",
+      "before": 203.80350000050385,
+      "after": 331.14014999955543,
+      "change_percent": 62.48010951663577
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "total_cold_ms",
+      "before": 492.82784999741125,
+      "after": 629.0681999998924,
+      "change_percent": 27.644612617407233
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "teardown_ms",
+      "before": 4.1168999996443745,
+      "after": 5.497549999745388,
+      "change_percent": 33.53615585076822
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "shutdown_ms",
+      "before": 57.65859999519307,
+      "after": 48.50975000044855,
+      "change_percent": -15.867277380143207
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "cold_cpu_s",
+      "before": 0.3203125,
+      "after": 0.4921875,
+      "change_percent": 53.65853658536586
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "cold_user_s",
+      "before": 0.171875,
+      "after": 0.2890625,
+      "change_percent": 68.18181818181817
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "cold_kernel_s",
+      "before": 0.1484375,
+      "after": 0.2109375,
+      "change_percent": 42.10526315789473
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "session_cpu_s",
+      "before": 0.2578125,
+      "after": 0.453125,
+      "change_percent": 75.75757575757575
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "session_user_s",
+      "before": 0.1484375,
+      "after": 0.2890625,
+      "change_percent": 94.73684210526315
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "session_kernel_s",
+      "before": 0.125,
+      "after": 0.1796875,
+      "change_percent": 43.75
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "workload_cpu_s",
+      "before": 0.2578125,
+      "after": 0.4296875,
+      "change_percent": 66.66666666666666
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "workload_user_s",
+      "before": 0.140625,
+      "after": 0.2890625,
+      "change_percent": 105.55555555555556
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "workload_kernel_s",
+      "before": 0.125,
+      "after": 0.171875,
+      "change_percent": 37.5
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "average_cpu_percent",
+      "before": 126.82449596972455,
+      "after": 130.32349317137306,
+      "change_percent": 2.7589285294567896
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "peak_cpu_percent",
+      "before": 187.12880280610833,
+      "after": 200.73379900295748,
+      "change_percent": 7.270391298845555
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "peak_rss",
+      "before": 112820224.0,
+      "after": 150583296.0,
+      "change_percent": 33.471899506244554
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "peak_private",
+      "before": 145602560.0,
+      "after": 182128640.0,
+      "change_percent": 25.08615233138758
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "cold",
+      "metric": "lifecycle_peak_rss",
+      "before": 108896256.0,
+      "after": 149809152.0,
+      "change_percent": 37.570525840668026
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "session_create_ms",
+      "before": 30.979449998994824,
+      "after": 33.994800000073155,
+      "change_percent": 9.733387781823659
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "navigate_ack_ms",
+      "before": 5.691149999620393,
+      "after": 7.6679499998135725,
+      "change_percent": 34.734631846376125
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "navigation_ms",
+      "before": 19.056799996178597,
+      "after": 23.207799999909184,
+      "change_percent": 21.782250978983747
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "execution_ms",
+      "before": 22.412149999581743,
+      "after": 22.477549999166513,
+      "change_percent": 0.2918060051623353
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "completion_ms",
+      "before": 41.21884999767644,
+      "after": 46.474750000015774,
+      "change_percent": 12.751204855631858
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "teardown_ms",
+      "before": 9.988450001401361,
+      "after": 13.33379999960016,
+      "change_percent": 33.49218344917833
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "session_cpu_s",
+      "before": 0.203125,
+      "after": 0.234375,
+      "change_percent": 15.384615384615385
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "session_user_s",
+      "before": 0.1328125,
+      "after": 0.125,
+      "change_percent": -5.88235294117647
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "session_kernel_s",
+      "before": 0.078125,
+      "after": 0.1015625,
+      "change_percent": 30.0
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "workload_cpu_s",
+      "before": 0.125,
+      "after": 0.1171875,
+      "change_percent": -6.25
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "workload_user_s",
+      "before": 0.09375,
+      "after": 0.0625,
+      "change_percent": -33.33333333333333
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "workload_kernel_s",
+      "before": 0.046875,
+      "after": 0.046875,
+      "change_percent": 0.0
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "average_cpu_percent",
+      "before": 323.83123314060515,
+      "after": 255.75997104427856,
+      "change_percent": -21.020598117158933
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "peak_cpu_percent",
+      "before": 330.1868117371976,
+      "after": 281.1773980273052,
+      "change_percent": -14.842934959164882
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "peak_rss",
+      "before": 1496580096.0,
+      "after": 1504593920.0,
+      "change_percent": 0.5354757838500613
+    },
+    {
+      "system": "chrome",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "peak_private",
+      "before": 846321664.0,
+      "after": 862572544.0,
+      "change_percent": 1.9201777162589566
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "session_create_ms",
+      "before": 7.191649998276262,
+      "after": 12.374049999380077,
+      "change_percent": 72.06134895811064
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "navigate_ack_ms",
+      "before": 0.24160000248230062,
+      "after": 26.79729999999836,
+      "change_percent": 10991.597568158759
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "navigation_ms",
+      "before": 49.37970000173664,
+      "after": 43.15485000006447,
+      "change_percent": -12.606091169961026
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "execution_ms",
+      "before": 36.30690000136383,
+      "after": 45.31500000030064,
+      "change_percent": 24.810986337578903
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "completion_ms",
+      "before": 85.88125000460423,
+      "after": 90.41854999941279,
+      "change_percent": 5.283225377559493
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "teardown_ms",
+      "before": 3.994449998572236,
+      "after": 7.292849999430473,
+      "change_percent": 82.57457226995474
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "session_cpu_s",
+      "before": 0.125,
+      "after": 0.140625,
+      "change_percent": 12.5
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "session_user_s",
+      "before": 0.09375,
+      "after": 0.0859375,
+      "change_percent": -8.333333333333332
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "session_kernel_s",
+      "before": 0.046875,
+      "after": 0.0546875,
+      "change_percent": 16.666666666666664
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "workload_cpu_s",
+      "before": 0.1171875,
+      "after": 0.125,
+      "change_percent": 6.666666666666667
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "workload_user_s",
+      "before": 0.0859375,
+      "after": 0.0703125,
+      "change_percent": -18.181818181818183
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "workload_kernel_s",
+      "before": 0.046875,
+      "after": 0.046875,
+      "change_percent": 0.0
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "average_cpu_percent",
+      "before": 134.4621211138051,
+      "after": 134.25608622602107,
+      "change_percent": -0.1532289436440215
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "peak_cpu_percent",
+      "before": 183.61624461585768,
+      "after": 154.63813507935953,
+      "change_percent": -15.781887706680346
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "peak_rss",
+      "before": 108505088.0,
+      "after": 175501312.0,
+      "change_percent": 61.74477642928598
+    },
+    {
+      "system": "mimic",
+      "workload": "react",
+      "mode": "warm",
+      "metric": "peak_private",
+      "before": 141701120.0,
+      "after": 208267264.0,
+      "change_percent": 46.97644168232403
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "cold",
+      "metric": "process_start_ms",
+      "before": 5.878550000488758,
+      "after": 4.535099998975056,
+      "change_percent": -22.85342476294331
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "cold",
+      "metric": "http_ready_ms",
+      "before": 214.220199999545,
+      "after": 213.38169999944512,
+      "change_percent": -0.391419670087912
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "cold",
+      "metric": "cdp_ready_ms",
+      "before": 215.26340000127675,
+      "after": 214.51115000036225,
+      "change_percent": -0.34945559761205985
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "cold",
+      "metric": "runtime_initialization_ms",
+      "before": 208.36900000358582,
+      "after": 209.67505000044184,
+      "change_percent": 0.6267966908866205
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "cold",
+      "metric": "session_create_ms",
+      "before": 1.8392999991192482,
+      "after": 3.2175999995160964,
+      "change_percent": 74.93611705849233
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "cold",
+      "metric": "navigate_ack_ms",
+      "before": 0.25595000261091627,
+      "after": 277.23060000062105,
+      "change_percent": 108214.35716844066
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "cold",
+      "metric": "navigation_ms",
+      "before": 165.2342499983206,
+      "after": 287.13669999888225,
+      "change_percent": 73.7755338265527
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "cold",
+      "metric": "execution_ms",
+      "before": 9.30290000178502,
+      "after": 4.135899999710091,
+      "change_percent": -55.54182030424379
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "cold",
+      "metric": "completion_ms",
+      "before": 174.20840000340831,
+      "after": 291.36709999966115,
+      "change_percent": 67.25203835978097
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "cold",
+      "metric": "total_cold_ms",
+      "before": 461.76349999950617,
+      "after": 574.6160500002588,
+      "change_percent": 24.439469555491797
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "cold",
+      "metric": "teardown_ms",
+      "before": 3.6824499948124867,
+      "after": 5.092599999443337,
+      "change_percent": 38.29379914506229
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "cold",
+      "metric": "shutdown_ms",
+      "before": 58.440050001081545,
+      "after": 49.560700000256475,
+      "change_percent": -15.193946618219426
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "cold",
+      "metric": "cold_cpu_s",
+      "before": 0.265625,
+      "after": 0.421875,
+      "change_percent": 58.82352941176471
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "cold",
+      "metric": "cold_user_s",
+      "before": 0.15625,
+      "after": 0.3046875,
+      "change_percent": 95.0
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "cold",
+      "metric": "cold_kernel_s",
+      "before": 0.1328125,
+      "after": 0.15625,
+      "change_percent": 17.647058823529413
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "cold",
+      "metric": "session_cpu_s",
+      "before": 0.2265625,
+      "after": 0.390625,
+      "change_percent": 72.41379310344827
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "cold",
+      "metric": "session_user_s",
+      "before": 0.1328125,
+      "after": 0.28125,
+      "change_percent": 111.76470588235294
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "cold",
+      "metric": "session_kernel_s",
+      "before": 0.109375,
+      "after": 0.1328125,
+      "change_percent": 21.428571428571427
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "cold",
+      "metric": "workload_cpu_s",
+      "before": 0.21875,
+      "after": 0.375,
+      "change_percent": 71.42857142857143
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "cold",
+      "metric": "workload_user_s",
+      "before": 0.125,
+      "after": 0.28125,
+      "change_percent": 125.0
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "cold",
+      "metric": "workload_kernel_s",
+      "before": 0.09375,
+      "after": 0.1328125,
+      "change_percent": 41.66666666666667
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "cold",
+      "metric": "average_cpu_percent",
+      "before": 126.54482669332441,
+      "after": 128.29094967530358,
+      "change_percent": 1.3798454094143402
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "cold",
+      "metric": "peak_cpu_percent",
+      "before": 182.7993092521316,
+      "after": 187.337125108922,
+      "change_percent": 2.482403175020478
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "cold",
+      "metric": "peak_rss",
+      "before": 108636160.0,
+      "after": 147914752.0,
+      "change_percent": 36.15609388255255
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "cold",
+      "metric": "peak_private",
+      "before": 142020608.0,
+      "after": 179896320.0,
+      "change_percent": 26.669166210019323
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "cold",
+      "metric": "lifecycle_peak_rss",
+      "before": 96149504.0,
+      "after": 145049600.0,
+      "change_percent": 50.858396523813575
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "session_create_ms",
+      "before": 11.956700000155251,
+      "after": 2.0830499997828156,
+      "change_percent": -82.5783870151817
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "navigate_ack_ms",
+      "before": 0.24285000108648092,
+      "after": 23.04704999914975,
+      "change_percent": 9390.240846629646
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "navigation_ms",
+      "before": 42.315500002587214,
+      "after": 30.19475000019156,
+      "change_percent": -28.643759382861074
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "execution_ms",
+      "before": 9.06474999646889,
+      "after": 3.8065499993535923,
+      "change_percent": -58.00711546555165
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "completion_ms",
+      "before": 51.44339999969816,
+      "after": 33.92470000017056,
+      "change_percent": -34.054319892601164
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "teardown_ms",
+      "before": 3.3266499995079357,
+      "after": 5.298099999890837,
+      "change_percent": 59.26232097378775
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "session_cpu_s",
+      "before": 0.078125,
+      "after": 0.03125,
+      "change_percent": -60.0
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "session_user_s",
+      "before": 0.03125,
+      "after": 0.0234375,
+      "change_percent": -25.0
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "session_kernel_s",
+      "before": 0.03125,
+      "after": 0.015625,
+      "change_percent": -50.0
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "workload_cpu_s",
+      "before": 0.0703125,
+      "after": 0.03125,
+      "change_percent": -55.55555555555556
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "workload_user_s",
+      "before": 0.03125,
+      "after": 0.015625,
+      "change_percent": -50.0
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "workload_kernel_s",
+      "before": 0.03125,
+      "after": 0.0078125,
+      "change_percent": -75.0
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "average_cpu_percent",
+      "before": 138.09630563140288,
+      "after": 92.70682258977115,
+      "change_percent": -32.86799225663734
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "peak_cpu_percent",
+      "before": 148.56190007503363,
+      "after": 93.35562426333846,
+      "change_percent": -37.160453510497874
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "peak_rss",
+      "before": 106463232.0,
+      "after": 156776448.0,
+      "change_percent": 47.25877192982456
+    },
+    {
+      "system": "mimic",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "peak_private",
+      "before": 139663360.0,
+      "after": 187213824.0,
+      "change_percent": 34.0464843463597
+    },
+    {
+      "system": "chrome",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "session_create_ms",
+      "before": 27.684299999236828,
+      "after": 28.975350000109756,
+      "change_percent": 4.663473524374895
+    },
+    {
+      "system": "chrome",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "navigate_ack_ms",
+      "before": 5.90254999769968,
+      "after": 6.1153000006015645,
+      "change_percent": 3.6043744311322548
+    },
+    {
+      "system": "chrome",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "navigation_ms",
+      "before": 17.220400004589465,
+      "after": 17.07284999974945,
+      "change_percent": -0.856832621778179
+    },
+    {
+      "system": "chrome",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "execution_ms",
+      "before": 5.164799997146474,
+      "after": 5.67124999997759,
+      "change_percent": 9.805800865685544
+    },
+    {
+      "system": "chrome",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "completion_ms",
+      "before": 22.480499999801395,
+      "after": 22.82794999973703,
+      "change_percent": 1.5455617087640556
+    },
+    {
+      "system": "chrome",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "teardown_ms",
+      "before": 10.376700000051642,
+      "after": 9.820850000323844,
+      "change_percent": -5.356712632388248
+    },
+    {
+      "system": "chrome",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "session_cpu_s",
+      "before": 0.15625,
+      "after": 0.1796875,
+      "change_percent": 15.0
+    },
+    {
+      "system": "chrome",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "session_user_s",
+      "before": 0.09375,
+      "after": 0.09375,
+      "change_percent": 0.0
+    },
+    {
+      "system": "chrome",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "session_kernel_s",
+      "before": 0.0546875,
+      "after": 0.0703125,
+      "change_percent": 28.57142857142857
+    },
+    {
+      "system": "chrome",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "workload_cpu_s",
+      "before": 0.078125,
+      "after": 0.0703125,
+      "change_percent": -10.0
+    },
+    {
+      "system": "chrome",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "workload_user_s",
+      "before": 0.0390625,
+      "after": 0.0390625,
+      "change_percent": 0.0
+    },
+    {
+      "system": "chrome",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "workload_kernel_s",
+      "before": 0.015625,
+      "after": 0.03125,
+      "change_percent": 100.0
+    },
+    {
+      "system": "chrome",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "average_cpu_percent",
+      "before": 341.10515883805306,
+      "after": 301.70840762120747,
+      "change_percent": -11.549737726350259
+    },
+    {
+      "system": "chrome",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "peak_cpu_percent",
+      "before": 46.05775125911382,
+      "after": 0.0,
+      "change_percent": -100.0
+    },
+    {
+      "system": "chrome",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "peak_rss",
+      "before": 1365086208.0,
+      "after": 1334231040.0,
+      "change_percent": -2.260309115949987
+    },
+    {
+      "system": "chrome",
+      "workload": "wasm",
+      "mode": "warm",
+      "metric": "peak_private",
+      "before": 667092992.0,
+      "after": 656601088.0,
+      "change_percent": -1.5727798261745192
+    }
+  ],
+  "limitation": "Same harness and recorded environment; background load and OS memory pressure can still vary. Negative throughput change is worse, negative latency/memory/CPU change is better."
+}
