@@ -11,6 +11,62 @@ import (
 	v8engine "github.com/moreveal/mimic/internal/engine/v8"
 )
 
+func TestDevPreviewPublishesDuringContinuousCommands(t *testing.T) {
+	b, err := NewWithOptions(v8engine.Factory{}, chrome152.New(), Options{DevPreview: true})
+	if err != nil {
+		t.Fatal(err)
+	}
+	c := b.NewContext()
+	defer c.Close()
+	p, err := c.NewPage()
+	if err != nil {
+		t.Fatal(err)
+	}
+	p.LockCommands()
+	sub, err := p.SubscribePreview()
+	p.UnlockCommands()
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer func() { p.LockCommands(); p.UnsubscribePreview(sub); p.UnlockCommands() }()
+	// There is deliberately never a 50 ms quiet period, as on an active CDP Page.
+	ticker := time.NewTicker(5 * time.Millisecond)
+	defer ticker.Stop()
+	deadline := time.NewTimer(time.Second)
+	defer deadline.Stop()
+	updates := 0
+	for {
+		select {
+		case <-ticker.C:
+			p.LockCommands()
+			p.UnlockCommands()
+		case wire := <-sub.Updates:
+			var packet map[string]any
+			if err := json.Unmarshal(wire, &packet); err != nil {
+				t.Fatal(err)
+			}
+			if packet["error"] != nil {
+				t.Fatal(packet["error"])
+			}
+			updates++
+			if updates == 2 {
+				if !strings.Contains(packet["html"].(string), "ongoing update") {
+					t.Fatal("missing changed state")
+				}
+				return
+			}
+			p.LockCommands()
+			_, err := p.Evaluate(context.Background(), `document.body.textContent='ongoing update'`)
+			p.UnlockCommands()
+			if err != nil {
+				t.Fatal(err)
+			}
+		case <-deadline.C:
+			t.Fatalf("continuous commands starved preview after %d updates", updates)
+		}
+	}
+}
+
 func TestDevPreviewDisabledAndDirtyUpdates(t *testing.T) {
 	for _, enabled := range []bool{false, true} {
 		b, err := NewWithOptions(v8engine.Factory{}, chrome152.New(), Options{DevPreview: enabled})

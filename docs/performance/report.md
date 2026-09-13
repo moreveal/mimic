@@ -2133,3 +2133,15 @@ and CDP. Focused regressions and the pinned Chrome selector oracle also pass.
 
 Binary hashes, native/Go attribution, exact checks, samples and limitations are
 in [the follow-up report](click-followup-20260913.md).
+
+### 2026-09-13: prevent live-preview starvation
+
+The asynchronous preview publisher restarted its 50 ms delay on every Page
+command. Continuously active pages could therefore remain at Connecting with
+no first snapshot. Keep the coalescing delay fixed instead, then serialize the
+latest canonical state under the Page lock. Disabled/unsubscribed paths and
+the one-item network mailbox are unchanged. The new continuous-command
+regression fails before the fix and passes 20 repetitions after it; preview
+tests pass three repetitions and the full CDP package passes. An owned live
+viewer in Chrome 152 displays and updates a 10 ms timer-driven Page without
+viewer errors; the existing 25-update DOM mirror smoke test also passes.

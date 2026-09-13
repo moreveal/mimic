@@ -40,7 +40,6 @@ type Page struct {
 	commandMu          sync.Mutex
 	previewScheduleMu  sync.Mutex
 	previewScheduled   bool
-	previewGeneration  uint64
 	eventLoopWake      chan struct{} // Coalesced readiness hints; never executes Page work.
 	taskSequence       atomic.Uint64
 	mu                 sync.RWMutex
@@ -119,7 +118,6 @@ func (p *Page) UnlockCommandsWithoutPreview() { p.commandMu.Unlock() }
 
 func (p *Page) schedulePreviewPublish() {
 	p.previewScheduleMu.Lock()
-	p.previewGeneration++
 	if p.previewScheduled {
 		p.previewScheduleMu.Unlock()
 		return
@@ -127,32 +125,18 @@ func (p *Page) schedulePreviewPublish() {
 	p.previewScheduled = true
 	p.previewScheduleMu.Unlock()
 	go func() {
-		for {
-			p.previewScheduleMu.Lock()
-			generation := p.previewGeneration
-			p.previewScheduleMu.Unlock()
-
-			// Playwright actionability checks and pointer gestures arrive as a
-			// command burst. Chrome paints asynchronously, so wait for a short
-			// quiet period and publish only the final observable state.
-			time.Sleep(50 * time.Millisecond)
-			p.commandMu.Lock()
-			p.previewScheduleMu.Lock()
-			changed := generation != p.previewGeneration
-			p.previewScheduleMu.Unlock()
-			if changed {
-				p.commandMu.Unlock()
-				continue
-			}
-			if p.previewObservers != nil {
-				p.publishPreview()
-			}
-			p.previewScheduleMu.Lock()
-			p.previewScheduled = false
-			p.previewScheduleMu.Unlock()
-			p.commandMu.Unlock()
-			return
+		// Coalesce bursts, but never restart this delay: continuous Page turns
+		// would otherwise starve even the first snapshot. Read the latest state
+		// under the command lock; slow viewers still use a one-item mailbox.
+		time.Sleep(50 * time.Millisecond)
+		p.commandMu.Lock()
+		if p.previewObservers != nil {
+			p.publishPreview()
 		}
+		p.previewScheduleMu.Lock()
+		p.previewScheduled = false
+		p.previewScheduleMu.Unlock()
+		p.commandMu.Unlock()
 	}()
 }
 
