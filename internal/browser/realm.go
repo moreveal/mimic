@@ -2585,7 +2585,16 @@ func (r *Realm) prepareConnectedResource(childID int64, loadCallback, errorCallb
 				owner = r.mainWorld
 			}
 			r.agent.Page().trace.Add(trace.JS, "scriptStart", map[string]any{"url": name, "realm": owner.ID, "dynamic": true})
-			err := r.runWorld(owner, func(ctx context.Context) error { return owner.evaluateClassicScript(ctx, code, name, childID) })
+			err := r.runWorld(owner, func(ctx context.Context) error {
+				// External scripts without a parser insertion point must not
+				// implicitly replace the document through document.write. Keep
+				// this on the document owner, including isolated-world insertion.
+				if src != "" && src != "<nil>" {
+					owner.ignoreDestructiveWrites++
+					defer func() { owner.ignoreDestructiveWrites-- }()
+				}
+				return owner.evaluateClassicScript(ctx, code, name, childID)
+			})
 			if err != nil {
 				r.agent.Page().trace.Add(trace.Error, "dynamicScriptExecution", map[string]any{"url": name, "error": err.Error()})
 				r.agent.Page().trace.Add(trace.JS, "scriptEnd", map[string]any{"url": name, "realm": r.ID, "dynamic": true, "error": err.Error()})

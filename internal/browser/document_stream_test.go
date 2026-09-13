@@ -9,6 +9,31 @@ import (
 	"time"
 )
 
+func TestDynamicExternalScriptDoesNotDestructivelyWriteDocument(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/write.js" {
+			w.Header().Set("Content-Type", "text/javascript")
+			fmt.Fprint(w, `document.write('<p id=wrong>replaced</p>');globalThis.executed=true`)
+			return
+		}
+		fmt.Fprint(w, `<!doctype html><body><p id=original>retained</p>`)
+	}))
+	defer server.Close()
+	historyTestPages(t, func(t *testing.T, p *Page) {
+		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+		defer cancel()
+		if err := p.Navigate(ctx, server.URL); err != nil {
+			t.Fatal(err)
+		}
+		// Measured in Chrome 152.0.7977.82: a late external script runs,
+		// but its document.write cannot implicitly open/replace the document.
+		got, err := p.Evaluate(ctx, `new Promise(resolve=>{const s=document.createElement('script');s.src='/write.js';s.onload=()=>resolve(!!globalThis.executed&&!!document.getElementById('original')&&!document.getElementById('wrong')&&document.readyState==='complete');s.onerror=()=>resolve(false);document.head.append(s)})`)
+		if err != nil || got != true {
+			t.Fatalf("late external script replaced document: %v %v", got, err)
+		}
+	})
+}
+
 func TestDocumentStreamIdentityAndSynchronousScripts(t *testing.T) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { fmt.Fprint(w, "<!doctype html><body>parent</body>") }))
 	defer server.Close()
