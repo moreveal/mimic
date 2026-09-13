@@ -218,7 +218,10 @@ func (s *session) handleDOM(ctx context.Context, method string, p map[string]any
 			frame = frame.Parent()
 		}
 		if method == "DOM.getContentQuads" {
-			quad, _ := model["content"].([]any)
+			// Despite its name, Chrome returns the element's border quad,
+			// not DOM.getBoxModel's content box. Padding remains clickable
+			// even when the content width or height is zero.
+			quad, _ := model["border"].([]any)
 			return map[string]any{"quads": []any{quad}}, true, nil
 		}
 		return map[string]any{"model": model}, true, nil
