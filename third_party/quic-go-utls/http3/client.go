@@ -145,6 +145,7 @@ func newClientConn(
 		c.logger,
 		0,
 	)
+	c.setupQPACK()
 	// send the SETTINGs frame, using 0-RTT data, if possible
 	go func() {
 		c.controlErr = c.setupConn()
@@ -161,6 +162,42 @@ func newClientConn(
 	}
 	go c.conn.handleUnidirectionalStreams(uniStreamHijacker)
 	return c
+}
+
+func (c *ClientConn) setupQPACK() {
+	feedback := make(chan []byte, 128)
+	c.conn.dynamicDecoder = newDynamicQPACK(c.additionalSettings[1], c.additionalSettings[7], func(b []byte) error {
+		select {
+		case feedback <- b:
+			return nil
+		case <-c.conn.ctx.Done():
+			return c.conn.ctx.Err()
+		}
+	})
+	go func() {
+		var stream *quic.SendStream
+		for {
+			select {
+			case <-c.conn.ctx.Done():
+				return
+			case b := <-feedback:
+				var err error
+				if stream == nil {
+					stream, err = c.conn.OpenUniStreamSync(c.conn.ctx)
+					if err == nil {
+						_, err = stream.Write([]byte{streamTypeQPACKDecoderStream})
+					}
+				}
+				if err == nil {
+					_, err = stream.Write(b)
+				}
+				if err != nil {
+					c.conn.CloseWithError(quic.ApplicationErrorCode(ErrCodeClosedCriticalStream), "QPACK feedback failure")
+					return
+				}
+			}
+		}
+	}()
 }
 
 // OpenRequestStream opens a new request stream on the HTTP/3 connection.

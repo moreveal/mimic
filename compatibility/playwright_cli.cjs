@@ -4,12 +4,15 @@ const { spawn } = require('node:child_process');
 const [cli, endpoint, session] = process.argv.slice(2);
 if (!session) throw new Error('Expected CLI entry point, CDP URL and unique session name');
 const server = http.createServer((req, res) => {
-  res.setHeader('Content-Type', 'text/html');
+  res.setHeader('Content-Type', 'text/html; charset=UTF-8');
   res.end('<!doctype html><title>Automation fixture</title><h1>Fixture</h1><svg><title>Logo label</title></svg><label>Name<input id="name"></label><button onclick="document.querySelector(\'h1\').textContent=document.querySelector(\'input\').value">Apply</button>');
 });
 async function run(...args) {
   const result = await new Promise((resolve, reject) => {
     const child = spawn(process.execPath, [cli, `-s=${session}`, ...args], { windowsHide: true });
+    // Decode incrementally: a UTF-8 character can straddle pipe chunks.
+    child.stdout.setEncoding('utf8');
+    child.stderr.setEncoding('utf8');
     let output = '';
     child.stdout.on('data', data => output += data);
     child.stderr.on('data', data => output += data);
@@ -41,9 +44,9 @@ async function run(...args) {
       probe.style.display='none';if(probe.checkVisibility())throw new Error('Visibility invalidation');
       probe.remove();style.remove();
     });await cdp.detach(); }`);
-    await run('run-code', 'async page => { await page.getByRole("textbox", {name:"Name"}).fill("Verified"); await page.getByRole("button", {name:"Apply"}).click(); if (await page.locator("h1").textContent() !== "Verified") throw new Error("Input/click mismatch"); }');
+    await run('run-code', 'async page => { await page.getByRole("textbox", {name:"Name"}).fill("Verified — Проверено 😀"); await page.getByRole("button", {name:"Apply"}).click(); if (await page.locator("h1").textContent() !== "Verified — Проверено 😀") throw new Error("Input/click mismatch"); }');
     const snapshot = await run('snapshot', '--raw');
-    if (!snapshot.includes('Verified')) throw new Error('Snapshot mismatch');
+    if (!snapshot.includes('Verified — Проверено 😀')) throw new Error('Unicode snapshot mismatch');
     await run('reload');
     await run('tab-new', url);
     await run('tab-list');

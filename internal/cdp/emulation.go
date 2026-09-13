@@ -55,6 +55,12 @@ func (s *session) handleEmulation(method string, p map[string]any) (any, bool, e
 			m := &state.UserAgentMetadata{FullVersion: stringValue(raw["fullVersion"]), Platform: stringValue(raw["platform"]), PlatformVersion: stringValue(raw["platformVersion"]), Architecture: stringValue(raw["architecture"]), Model: stringValue(raw["model"]), Bitness: stringValue(raw["bitness"])}
 			m.Mobile, _ = raw["mobile"].(bool)
 			m.WoW64, _ = raw["wow64"].(bool)
+			if factors, ok := raw["formFactors"].([]any); ok {
+				m.FormFactors = []string{}
+				for _, factor := range factors {
+					m.FormFactors = append(m.FormFactors, stringValue(factor))
+				}
+			}
 			brands := func(value any) []state.UserAgentBrand {
 				out := []state.UserAgentBrand{}
 				items, _ := value.([]any)

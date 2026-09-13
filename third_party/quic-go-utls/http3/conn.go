@@ -42,7 +42,8 @@ type Conn struct {
 
 	enableDatagrams bool
 
-	decoder *qpack.Decoder
+	decoder        *qpack.Decoder
+	dynamicDecoder *dynamicQPACK
 
 	streamMx     sync.Mutex
 	streams      map[quic.StreamID]*stateTrackingStream
@@ -177,8 +178,9 @@ func (c *Conn) openRequestStream(
 	rsp := &http.Response{}
 	trace := httptrace.ContextClientTrace(ctx)
 	return newRequestStream(
+		ctx,
 		newStream(hstr, c, trace, func(r io.Reader, hf *headersFrame) error {
-			hdr, err := c.decodeTrailers(r, str.StreamID(), hf, maxHeaderBytes)
+			hdr, err := c.decodeTrailers(ctx, r, str.StreamID(), hf, maxHeaderBytes)
 			if err != nil {
 				return err
 			}
@@ -194,9 +196,9 @@ func (c *Conn) openRequestStream(
 	), nil
 }
 
-func (c *Conn) decodeTrailers(r io.Reader, streamID quic.StreamID, hf *headersFrame, maxHeaderBytes int) (http.Header, error) {
+func (c *Conn) decodeTrailers(ctx context.Context, r io.Reader, streamID quic.StreamID, hf *headersFrame, maxHeaderBytes int) (http.Header, error) {
 	// If maxHeaderBytes is negative, don't enforce limit (used when not sending SETTINGS_MAX_FIELD_SECTION_SIZE)
-	if maxHeaderBytes >= 0 && hf.Length > uint64(maxHeaderBytes) {
+	if hf.Length > qpackStringLimit || maxHeaderBytes >= 0 && hf.Length > uint64(maxHeaderBytes) {
 		maybeQlogInvalidHeadersFrame(c.qlogger, streamID, hf.Length)
 		return nil, fmt.Errorf("http3: HEADERS frame too large: %d bytes (max: %d)", hf.Length, maxHeaderBytes)
 	}
@@ -206,6 +208,9 @@ func (c *Conn) decodeTrailers(r io.Reader, streamID quic.StreamID, hf *headersFr
 		return nil, err
 	}
 	decodeFn := c.decoder.Decode(b)
+	if c.dynamicDecoder != nil {
+		decodeFn = c.dynamicDecoder.decode(ctx, c.ctx, uint64(streamID), b, maxHeaderBytes)
+	}
 	var fields []qpack.HeaderField
 	if c.qlogger != nil {
 		fields = make([]qpack.HeaderField, 0, 16)
@@ -281,14 +286,34 @@ func (c *Conn) handleUnidirectionalStreams(hijack func(StreamType, quic.Connecti
 			case streamTypeQPACKEncoderStream:
 				if isFirst := rcvdQPACKEncoderStr.CompareAndSwap(false, true); !isFirst {
 					c.CloseWithError(quic.ApplicationErrorCode(ErrCodeStreamCreationError), "duplicate QPACK encoder stream")
+					return
 				}
-				// Our QPACK implementation doesn't use the dynamic table yet.
+				if c.dynamicDecoder != nil {
+					err := c.dynamicDecoder.readEncoder(str)
+					code := ErrCodeQPACKEncoderStreamError
+					if errors.Is(err, io.EOF) {
+						code = ErrCodeClosedCriticalStream
+					}
+					if c.ctx.Err() == nil {
+						c.CloseWithError(quic.ApplicationErrorCode(code), "QPACK encoder stream failure")
+					}
+				}
 				return
 			case streamTypeQPACKDecoderStream:
 				if isFirst := rcvdQPACKDecoderStr.CompareAndSwap(false, true); !isFirst {
 					c.CloseWithError(quic.ApplicationErrorCode(ErrCodeStreamCreationError), "duplicate QPACK decoder stream")
+					return
 				}
-				// Our QPACK implementation doesn't use the dynamic table yet.
+				if c.dynamicDecoder != nil {
+					err := readStaticEncoderFeedback(str)
+					code := ErrCodeQPACKDecoderStreamError
+					if errors.Is(err, io.EOF) {
+						code = ErrCodeClosedCriticalStream
+					}
+					if c.ctx.Err() == nil {
+						c.CloseWithError(quic.ApplicationErrorCode(code), "QPACK decoder stream failure")
+					}
+				}
 				return
 			case streamTypePushStream:
 				if c.isServer {

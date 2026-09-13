@@ -625,7 +625,7 @@ func (l *Loader) after(ctx context.Context, r Request, res Response) (Response, 
 				u.Fragment, u.RawFragment = r.URL.Fragment, r.URL.RawFragment
 			}
 			r.Headers = r.Headers.Clone()
-			for _, name := range []string{"Sec-CH-UA-Arch", "Sec-CH-UA-Bitness", "Sec-CH-UA-Full-Version", "Sec-CH-UA-Full-Version-List", "Sec-CH-UA-Model", "Sec-CH-UA-Platform-Version"} {
+			for _, name := range []string{"Sec-CH-UA-Arch", "Sec-CH-UA-Bitness", "Sec-CH-UA-Full-Version", "Sec-CH-UA-Full-Version-List", "Sec-CH-UA-Model", "Sec-CH-UA-Platform-Version", "Sec-CH-UA-Form-Factors", "Sec-CH-UA-WoW64"} {
 				r.Headers.Del(name)
 			}
 			if !sameRedirectOrigin(r.URL, u) {

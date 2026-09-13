@@ -1,0 +1,1800 @@
+{
+  "captureMetadata": {
+    "schemaVersion": 1,
+    "chromeVersion": "152.0.7977.82",
+    "chromiumRevision": 1669021,
+    "chromiumCommit": "d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "platform": "windows-x64",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "environmentProfileId": "chrome-152-windows-x64-headful-controlled-v1",
+    "profileFreshness": "fresh-disposable",
+    "viewport": {
+      "width": 1272,
+      "height": 653,
+      "deviceScaleFactor": 1
+    },
+    "window": {
+      "left": 10,
+      "top": 10,
+      "width": 1280,
+      "height": 800
+    },
+    "secureContextState": false,
+    "isolationState": false,
+    "visibilityState": "visible",
+    "hasFocus": true
+  },
+  "probeSHA256": "a3820030a91e6e0e77390de3d55683a9063d4e87cb4b19b07f99ba99d3018676",
+  "result": [
+    {
+      "label": "text empty",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "message": "Заполните это поле."
+    },
+    {
+      "label": "text filled",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "text disabled",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "text disabled custom",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "text readonly",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "email empty",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "message": "Заполните это поле."
+    },
+    {
+      "label": "email filled",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false
+      ],
+      "message": "Адрес электронной почты должен содержать символ \"@\". В адресе \"hello\" отсутствует символ \"@\"."
+    },
+    {
+      "label": "email disabled",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "email disabled custom",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "email readonly",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "url empty",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "message": "Заполните это поле."
+    },
+    {
+      "label": "url filled",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false
+      ],
+      "message": "Введите URL."
+    },
+    {
+      "label": "url disabled",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "url disabled custom",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "url readonly",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "number empty",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "message": "Заполните это поле."
+    },
+    {
+      "label": "number filled",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": "Введите допустимое значение. Ближайшие допустимые значения: 1 и 2."
+    },
+    {
+      "label": "number disabled",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "number disabled custom",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "number readonly",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "checkbox empty",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "message": "Чтобы продолжить, установите этот флажок."
+    },
+    {
+      "label": "checkbox filled",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "message": "Чтобы продолжить, установите этот флажок."
+    },
+    {
+      "label": "checkbox disabled",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "message": ""
+    },
+    {
+      "label": "checkbox disabled custom",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "message": ""
+    },
+    {
+      "label": "checkbox readonly",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "message": ""
+    },
+    {
+      "label": "radio empty",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "radio filled",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "radio disabled",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "radio disabled custom",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "radio readonly",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "hidden empty",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "hidden filled",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "hidden disabled",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "hidden disabled custom",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "hidden readonly",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "button empty",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "button filled",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "button disabled",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "button disabled custom",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "button readonly",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "submit empty",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "submit filled",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "submit disabled",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "submit disabled custom",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "submit readonly",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "reset empty",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "reset filled",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "reset disabled",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "reset disabled custom",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "reset readonly",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "range empty",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "range filled",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "range disabled",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "range disabled custom",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "range readonly",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "color empty",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "color filled",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "color disabled",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "color disabled custom",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "color readonly",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "date empty",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "message": "Заполните это поле."
+    },
+    {
+      "label": "date filled",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "message": "Заполните это поле."
+    },
+    {
+      "label": "date disabled",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "date disabled custom",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "date readonly",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "time empty",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "message": "Заполните это поле."
+    },
+    {
+      "label": "time filled",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "message": "Заполните это поле."
+    },
+    {
+      "label": "time disabled",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "time disabled custom",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "time readonly",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "month empty",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "message": "Заполните это поле."
+    },
+    {
+      "label": "month filled",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "message": "Заполните это поле."
+    },
+    {
+      "label": "month disabled",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "month disabled custom",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "month readonly",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "week empty",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "message": "Заполните это поле."
+    },
+    {
+      "label": "week filled",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "message": "Заполните это поле."
+    },
+    {
+      "label": "week disabled",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "week disabled custom",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "week readonly",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "datetime-local empty",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "message": "Заполните это поле."
+    },
+    {
+      "label": "datetime-local filled",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "message": "Заполните это поле."
+    },
+    {
+      "label": "datetime-local disabled",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "datetime-local disabled custom",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "datetime-local readonly",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "[\"input\",{\"pattern\":\"[a-z]+\",\"minlength\":5,\"maxlength\":2},\"ABC\"]",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": "Введите данные в указанном формате."
+    },
+    {
+      "label": "[\"input\",{\"type\":\"number\",\"min\":2,\"max\":5,\"step\":2},\"3\"]",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "message": "Введите допустимое значение. Ближайшие допустимые значения: 2 и 4."
+    },
+    {
+      "label": "[\"input\",{\"type\":\"email\",\"multiple\":\"\"},\"a@b,c@d\"]",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "[\"textarea\",{\"required\":\"\"},\"\"]",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "message": "Заполните это поле."
+    },
+    {
+      "label": "[\"select\",{\"required\":\"\"},\"\"]",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "message": "Выберите один из пунктов списка."
+    },
+    {
+      "label": "identity",
+      "same": true,
+      "valid": true
+    },
+    {
+      "label": "events",
+      "result": false,
+      "events": [
+        [
+          false,
+          true,
+          true
+        ]
+      ]
+    },
+    {
+      "label": "fieldset",
+      "tag": "[object ValidityState]",
+      "will": true,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "message": "Заполните это поле."
+    },
+    {
+      "label": "fieldset",
+      "tag": "[object ValidityState]",
+      "will": false,
+      "flags": [
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "message": ""
+    },
+    {
+      "label": "illegal",
+      "illegal": "TypeError"
+    }
+  ]
+}

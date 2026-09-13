@@ -165,7 +165,9 @@ func (s *Stream) ReceiveDatagram(ctx context.Context) ([]byte, error) {
 // This is only needed for advanced use case, e.g. WebTransport and the various
 // MASQUE proxying protocols.
 type RequestStream struct {
-	str *Stream
+	str           *Stream
+	decodeContext context.Context
+	cancelDecode  context.CancelFunc
 
 	responseBody io.ReadCloser // set by ReadResponse
 
@@ -182,6 +184,7 @@ type RequestStream struct {
 }
 
 func newRequestStream(
+	ctx context.Context,
 	str *Stream,
 	requestWriter *requestWriter,
 	reqDone chan<- struct{},
@@ -190,7 +193,10 @@ func newRequestStream(
 	maxHeaderBytes int,
 	rsp *http.Response,
 ) *RequestStream {
+	decodeContext, cancelDecode := context.WithCancel(ctx)
 	return &RequestStream{
+		decodeContext:      decodeContext,
+		cancelDecode:       cancelDecode,
 		str:                str,
 		requestWriter:      requestWriter,
 		reqDone:            reqDone,
@@ -236,6 +242,9 @@ func (s *RequestStream) Close() error {
 // CancelRead aborts receiving on this stream.
 // See [quic.Stream.CancelRead] for more details.
 func (s *RequestStream) CancelRead(errorCode quic.StreamErrorCode) {
+	if s.cancelDecode != nil {
+		s.cancelDecode()
+	}
 	s.str.CancelRead(errorCode)
 }
 
@@ -331,7 +340,7 @@ func (s *RequestStream) ReadResponse() (*http.Response, error) {
 		return nil, errors.New("http3: expected first frame to be a HEADERS frame")
 	}
 	// If maxHeaderBytes is negative, don't enforce limit (used when not sending SETTINGS_MAX_FIELD_SECTION_SIZE)
-	if s.maxHeaderBytes >= 0 && hf.Length > uint64(s.maxHeaderBytes) {
+	if hf.Length > qpackStringLimit || s.maxHeaderBytes >= 0 && hf.Length > uint64(s.maxHeaderBytes) {
 		maybeQlogInvalidHeadersFrame(s.str.qlogger, s.str.StreamID(), hf.Length)
 		s.str.CancelRead(quic.StreamErrorCode(ErrCodeFrameError))
 		s.str.CancelWrite(quic.StreamErrorCode(ErrCodeFrameError))
@@ -345,6 +354,9 @@ func (s *RequestStream) ReadResponse() (*http.Response, error) {
 		return nil, fmt.Errorf("http3: failed to read response headers: %w", err)
 	}
 	decodeFn := s.decoder.Decode(headerBlock)
+	if s.str.conn.dynamicDecoder != nil {
+		decodeFn = s.str.conn.dynamicDecoder.decode(s.decodeContext, s.str.conn.ctx, uint64(s.str.StreamID()), headerBlock, s.maxHeaderBytes)
+	}
 	var hfs []qpack.HeaderField
 	if s.str.qlogger != nil {
 		hfs = make([]qpack.HeaderField, 0, 16)
@@ -359,6 +371,9 @@ func (s *RequestStream) ReadResponse() (*http.Response, error) {
 		var qpackErr *qpackError
 		if errors.As(err, &qpackErr) {
 			errCode = ErrCodeQPACKDecompressionFailed
+			if !errors.Is(err, context.Canceled) && !errors.Is(err, context.DeadlineExceeded) {
+				s.str.conn.CloseWithError(quic.ApplicationErrorCode(errCode), "QPACK decompression failed")
+			}
 		}
 		s.str.CancelRead(quic.StreamErrorCode(errCode))
 		s.str.CancelWrite(quic.StreamErrorCode(errCode))

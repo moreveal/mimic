@@ -35,6 +35,7 @@ type Node struct {
 	Nonce                 string            `json:"-"`
 	ScriptText            string            `json:"-"` // Last source accepted by a script text setter; clones do not inherit it.
 	ScriptAlreadyStarted  bool              `json:"-"`
+	ScriptForceAsync      bool              `json:"-"`
 	OwnerDocument         int64             `json:"ownerDocumentId,omitempty"`
 }
 
@@ -483,6 +484,9 @@ func cloneAttributes(in map[string]string) map[string]string {
 // Attribute values are indexed for lookup, while the ordered names preserve
 // parser/insertion order for DOM enumeration and HTML serialization.
 func (n *Node) setAttribute(name, value string) {
+	if n.TagName == "SCRIPT" && name == "async" {
+		n.ScriptForceAsync = false
+	}
 	if name == "nonce" && n.AttributeNamespaces[name] == "" {
 		n.Nonce = value
 	}
@@ -523,6 +527,7 @@ func (d *Document) CreateElementNS(namespace, tag string) Node {
 	defer d.mu.Unlock()
 	d.next++
 	n := &Node{ID: d.next, Type: "element", TagName: strings.ToUpper(tag), Namespace: namespace, OwnerDocument: d.root, Attributes: map[string]string{}}
+	n.ScriptForceAsync = n.TagName == "SCRIPT"
 	if namespace != "http://www.w3.org/1999/xhtml" {
 		n.QualifiedName = tag
 	}
