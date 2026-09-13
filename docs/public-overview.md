@@ -1,6 +1,6 @@
 # Public product repository
 
-The public product overview is https://github.com/moreveal/mimic-runtime.
+The public product overview is https://github.com/moreveal/mimic-overview.
 The implementation repository remains private. Beta contact: Discord `moreveal`.
 
 The public repository has its own clean Git history. Its release set consists of
