@@ -30,7 +30,7 @@ func TestBootstrapRestoreRebindsState(t *testing.T) {
  let nextCrossRealmSymbolID=4,root=7;
  const bootstrapRestoreHooks=[()=>{root=host.documentRootID()}];
  const callback=()=>root;
- const bootstrapCallbacks=[['installFrameReferenceBridge',[callback,callback,callback]],['setDOMQueryCallback',[callback]],['registerFormSnapshot',[callback]],['registerShadowSnapshot',[callback]]];
+ const bootstrapCallbacks=[['installFrameReferenceBridge',[callback,callback,callback]],['setDOMQueryCallback',[callback]],['registerFormSnapshot',[callback]],['registerShadowSnapshot',[callback,callback,callback]]];
  const calls=[];
  class PermissionsPolicy {constructor(token,data){if(token!==2)throw Error('token');permissionsPolicySlots.set(this,{clauses:new Map([['fresh','*']]),origin:data.origin})}}
  const remoteWindow=id=>({id});

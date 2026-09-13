@@ -11,6 +11,23 @@ const attributeCompatibility=(()=>{
   for(const [C,name]of [[Element,'slot'],[globalThis.HTMLSlotElement,'name']])if(C)accessor(C.prototype,name,function(){
     const data=elementSlot(this);if(data?.type!=='element'||name==='name'&&data.tagName!=='SLOT')throw new TypeError('Illegal invocation');return host.getAttribute(data.nodeId,name)||'';
   },function(value){const data=elementSlot(this);if(data?.type!=='element'||name==='name'&&data.tagName!=='SLOT')throw new TypeError('Illegal invocation');if(typeof value==='symbol')throw new TypeError('Cannot convert a Symbol value to a string');Reflect.apply(setSlotAttribute,this,[name,String(value)])});
+  const containingShadowRoot=node=>{for(let current=node?.parentNode;current;current=current.parentNode)if(current instanceof ShadowRoot)return current;return null};
+  const assignedSlot=node=>{
+    const parent=node?.parentNode,root=parent&&elementShadows.get(parent),data=elementSlot(node);
+    if(!root||shadowSlots.get(root)?.slotAssignment==='manual'||!['element','text'].includes(data?.type))return null;
+    const name=data.type==='element'?(host.getAttribute(data.nodeId,'slot')||''):'';
+    return Array.from(root.querySelectorAll('slot')).find(slot=>(host.getAttribute(elementSlot(slot).nodeId,'name')||'')===name)||null;
+  };
+  for(const C of [Element,globalThis.Text])if(C)accessor(C.prototype,'assignedSlot',function(){if(!elementSlot(this))throw new TypeError('Illegal invocation');return assignedSlot(this)});
+  if(globalThis.HTMLSlotElement){
+    const slot=value=>{const data=elementSlot(value);if(!(value instanceof globalThis.HTMLSlotElement)||data?.tagName!=='SLOT')throw new TypeError('Illegal invocation');return value};
+    const direct=value=>{value=slot(value);const root=containingShadowRoot(value),owner=root&&shadowSlots.get(root)?.host;if(!owner)return[];return Array.from(owner.childNodes).filter(node=>assignedSlot(node)===value)};
+    member(globalThis.HTMLSlotElement.prototype,'assignedNodes',function(options={}){
+      let nodes=direct(this);if(!options?.flatten)return nodes;if(!nodes.length)nodes=Array.from(this.childNodes);
+      const result=[];for(const node of nodes)if(node instanceof globalThis.HTMLSlotElement)result.push(...node.assignedNodes({flatten:true}));else result.push(node);return result;
+    });
+    member(globalThis.HTMLSlotElement.prototype,'assignedElements',function(options={}){return this.assignedNodes(options).filter(node=>node instanceof Element)});
+  }
   for(const C of [globalThis.HTMLInputElement,globalThis.HTMLTextAreaElement]){
     if(typeof C!=='function')continue;
     const control=value=>{if(!(value instanceof C)||!elementSlot(value))throw new TypeError('Illegal invocation');return value};

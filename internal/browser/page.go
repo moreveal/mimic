@@ -38,6 +38,9 @@ type Page struct {
 	launches           []string
 	performanceClamper performanceClamper
 	commandMu          sync.Mutex
+	previewScheduleMu  sync.Mutex
+	previewScheduled   bool
+	previewGeneration  uint64
 	eventLoopWake      chan struct{} // Coalesced readiness hints; never executes Page work.
 	taskSequence       atomic.Uint64
 	mu                 sync.RWMutex
@@ -101,10 +104,56 @@ func (p *Page) WakeEventLoop() {
 }
 
 func (p *Page) UnlockCommands() {
-	if p.previewObservers != nil {
-		p.publishPreview()
-	}
+	hasPreview := p.previewObservers != nil
 	p.commandMu.Unlock()
+	if hasPreview {
+		p.schedulePreviewPublish()
+	}
+}
+
+// UnlockCommandsWithoutPreview completes an intermediate protocol input phase.
+// A mouse gesture is delivered as move/down/up commands; serializing the whole
+// preview between those phases blocks the gesture and exposes frames Chrome
+// never paints. The completed release publishes the coalesced state.
+func (p *Page) UnlockCommandsWithoutPreview() { p.commandMu.Unlock() }
+
+func (p *Page) schedulePreviewPublish() {
+	p.previewScheduleMu.Lock()
+	p.previewGeneration++
+	if p.previewScheduled {
+		p.previewScheduleMu.Unlock()
+		return
+	}
+	p.previewScheduled = true
+	p.previewScheduleMu.Unlock()
+	go func() {
+		for {
+			p.previewScheduleMu.Lock()
+			generation := p.previewGeneration
+			p.previewScheduleMu.Unlock()
+
+			// Playwright actionability checks and pointer gestures arrive as a
+			// command burst. Chrome paints asynchronously, so wait for a short
+			// quiet period and publish only the final observable state.
+			time.Sleep(50 * time.Millisecond)
+			p.commandMu.Lock()
+			p.previewScheduleMu.Lock()
+			changed := generation != p.previewGeneration
+			p.previewScheduleMu.Unlock()
+			if changed {
+				p.commandMu.Unlock()
+				continue
+			}
+			if p.previewObservers != nil {
+				p.publishPreview()
+			}
+			p.previewScheduleMu.Lock()
+			p.previewScheduled = false
+			p.previewScheduleMu.Unlock()
+			p.commandMu.Unlock()
+			return
+		}
+	}()
 }
 
 func newPage(c *Context) (*Page, error) {

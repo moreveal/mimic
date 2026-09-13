@@ -130,6 +130,9 @@ type Realm struct {
 	performanceNotifier      engine.Value
 	domQueryCallback         engine.Value
 	shadowSnapshotCallback   engine.Value
+	shadowSnapshotRestore    engine.Value
+	shadowSnapshotVersion    engine.Value
+	shadowSnapshotRevision   string
 	formSnapshotCallback     engine.Value
 	selectorTargetID         int64
 	loadBlockers             int
@@ -1444,6 +1447,12 @@ func (r *Realm) installBindingsOnOwner() error {
 	host["registerShadowSnapshot"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		if len(a) > 0 {
 			r.shadowSnapshotCallback = a[0]
+		}
+		if len(a) > 1 {
+			r.shadowSnapshotRestore = a[1]
+		}
+		if len(a) > 2 {
+			r.shadowSnapshotVersion = a[2]
 		}
 		return nil, nil
 	})

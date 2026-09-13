@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"strings"
 	"testing"
+	"time"
 
 	chrome152 "github.com/moreveal/mimic/chrome/152"
 	v8engine "github.com/moreveal/mimic/internal/engine/v8"
@@ -49,7 +50,7 @@ func TestDevPreviewDisabledAndDirtyUpdates(t *testing.T) {
 					t.Fatal(packet["error"])
 				}
 				return packet["html"].(string)
-			default:
+			case <-time.After(2 * time.Second):
 				t.Fatal("missing update")
 				return ""
 			}

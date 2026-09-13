@@ -35,6 +35,31 @@ func TestDebuggerIsolatedWorldSharesDOMWithoutSharingGlobals(t *testing.T) {
 	})
 }
 
+func TestDebuggerIsolatedWorldSeesMainWorldShadowTreeAttachedLater(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, page *Page) {
+		ctx, cancel := context.WithTimeout(context.Background(), 8*time.Second)
+		defer cancel()
+		d := NewDebugger(page)
+		defer d.Close()
+		world, err := page.IsolatedWorld(ctx, page.Top.ID, "automation")
+		if err != nil {
+			t.Fatal(err)
+		}
+		debuggerEval(t, d, `const host=document.createElement('site-header');host.id='header';document.body.append(host);host.attachShadow({mode:'open'}).innerHTML='<a class="login" aria-label="Sign in">Sign in</a>';const listHost=document.createElement('list-host');listHost.id='list-host';listHost.innerHTML='<i slot="label">named</i>default';document.body.append(listHost);listHost.attachShadow({mode:'open'}).innerHTML='lead<!-- marker --><b>element</b><slot name="label"></slot><slot></slot>'`, DebuggerOptions{})
+		result, err := d.Evaluate(ctx, page.Top.ID, world, `(()=>{const host=document.querySelector('#header'),root=host.shadowRoot,link=root?.querySelector('.login'),listHost=document.querySelector('#list-host'),listRoot=listHost.shadowRoot,slots=listRoot.querySelectorAll('slot'),named=slots[0],fallback=slots[1];if(link)link.setAttribute('data-seen','yes');return [root instanceof ShadowRoot,link?.ariaLabel,link?.parentNode===root,document.elementFromPoint(10,10)===link,listRoot.children.length,listRoot.children[0].localName,listRoot.childNodes.length,named.assignedNodes().length,named.assignedElements()[0]===listHost.firstElementChild,listHost.firstElementChild.assignedSlot===named,fallback.assignedNodes().length]})()`, DebuggerOptions{ReturnByValue: true})
+		if err != nil || result["exceptionDetails"] != nil {
+			t.Fatalf("isolated shadow observation: %#v %v", result, err)
+		}
+		got := result["result"].(map[string]any)["value"].([]any)
+		if got[0] != true || got[1] != "Sign in" || got[2] != true || got[3] != true || got[4] != float64(3) || got[5] != "b" || got[6] != float64(5) || got[7] != float64(1) || got[8] != true || got[9] != true || got[10] != float64(1) {
+			t.Fatalf("isolated shadow observation: %#v", got)
+		}
+		if got := debuggerEval(t, d, `document.querySelector('#header').shadowRoot.querySelector('.login').getAttribute('data-seen')`, DebuggerOptions{}); got["value"] != "yes" {
+			t.Fatalf("shadow child did not retain canonical identity: %#v", got)
+		}
+	})
+}
+
 func TestDebuggerWorldMutationObserversUseCanonicalRecords(t *testing.T) {
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 8*time.Second)

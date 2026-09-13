@@ -179,7 +179,10 @@
   const pointTargets=(x,y)=>withStyleReadCache(()=>{
     const viewport=host.viewport();
     if(!Number.isFinite(x)||!Number.isFinite(y)||x<0||y<0||x>=viewport.width||y>=viewport.height)return [];
-    const elements=compatibilitySelectors.query(document,'*'),orders=new WeakMap(elements.map((e,i)=>[e,i])),scopes=new WeakMap();
+    const elements=[];
+    const collect=tree=>{for(const element of compatibilitySelectors.query(tree,'*')){elements.push(element);const shadow=elementShadows.get(element);if(shadow)collect(shadow)}};
+    collect(document);
+    const orders=new WeakMap(elements.map((e,i)=>[e,i])),scopes=new WeakMap();
     // z-index belongs to a stacking context, not an isolated element. Children
     // paint above their context's background; a high-z descendant cannot escape
     // a lower-z context. Positioned auto-z groups do not create that boundary.
@@ -194,9 +197,9 @@
     const above=(a,b)=>{if(!b)return true;for(let i=0;i<Math.min(a.length,b.length);i++)for(let j=0;j<4;j++)if(a[i][j]!==b[i][j])return a[i][j]>b[i][j];return a.length>=b.length};
     const hits=[];
     for(const element of elements){
+      const box=clientRectFor(element);if(box.width<=0||box.height<=0||x<box.x||x>=box.x+box.width||y<box.y||y>=box.y+box.height)continue;
       const entries=computedCSSDeclarations(element),get=name=>entries.find(e=>e.name===name)?.value;
       if(get('visibility')==='hidden'||get('pointer-events')==='none')continue;
-      const box=clientRectFor(element);if(box.width<=0||box.height<=0||x<box.x||x>=box.x+box.width||y<box.y||y>=box.y+box.height)continue;
       hits.push(element);
     }
     hits.sort((a,b)=>a===b?0:above(scope(a).rank,scope(b).rank)?-1:1);
