@@ -21,3 +21,6 @@ We'll discuss compatibility, setup, and access directly. Beta access does not im
 that every website or automation feature is supported.
 
 [Back to Mimic](README.md)
+
+Beta builds are supplied under the [PolyForm Shield 1.0.0](LICENSE.md). Read the
+terms before installing or using a build.

@@ -145,3 +145,9 @@ It implements a subset of browser APIs and CDP. It does not render screenshots,
 PDFs, Canvas/WebGL output, or video, and does not provide full CSS layout or complete
 Chrome compatibility. Supported automation workflows do not imply that every
 Playwright or Puppeteer feature works. See the [FAQ](FAQ.md) for the practical boundaries.
+
+## License
+
+Mimic is licensed under [PolyForm Shield 1.0.0](LICENSE.md). Commercial use is
+permitted; the license restricts competing products. Third-party components
+retain their own licenses. See the full license for its scope and conditions.
