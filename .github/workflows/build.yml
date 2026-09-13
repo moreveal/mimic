@@ -47,7 +47,9 @@ jobs:
         run: go build -o .build/mimic.exe ./cmd/mimic
       - name: Test Windows reference behavior
         if: runner.os == 'Windows'
-        run: go test ./...
+        # This is the aggregate package budget, not an individual assertion
+        # deadline. The full browser suite exceeds 10m on hosted Windows CPUs.
+        run: go test -timeout 20m ./...
       - name: Compile all Linux tests
         if: runner.os == 'Linux'
         run: go test -run '^$' ./...

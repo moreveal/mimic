@@ -318,7 +318,7 @@ func TestSnapshotInterruptsNavigationContinuation(t *testing.T) {
 	for _, external := range []bool{false, true} {
 		t.Run(fmt.Sprint("external=", external), func(t *testing.T) {
 			fixture := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-				const busy = `document.getElementById('before').textContent='running parser script';while(true){}`
+				const busy = `document.getElementById('before').textContent='running parser script';console.log('parser entered');while(true){}`
 				if r.URL.Path == "/busy.js" {
 					w.Header().Set("Content-Type", "text/javascript")
 					fmt.Fprint(w, busy)
@@ -336,6 +336,18 @@ func TestSnapshotInterruptsNavigationContinuation(t *testing.T) {
 			}))
 			defer fixture.Close()
 			s, addr := runningServer(t)
+			entered := make(chan struct{}, 1)
+			unsubscribe := s.Page.Trace().Subscribe(func(event trace.Event) {
+				// The fixture logs only after committing the DOM update. scriptStart
+				// precedes compilation, and elapsed wall time cannot prove execution.
+				if event.Kind == trace.Console {
+					select {
+					case entered <- struct{}{}:
+					default:
+					}
+				}
+			})
+			defer unsubscribe()
 			c, _, err := websocket.DefaultDialer.Dial("ws://"+addr+"/devtools/page/"+s.Page.ID, nil)
 			if err != nil {
 				t.Fatal(err)
@@ -344,21 +356,10 @@ func TestSnapshotInterruptsNavigationContinuation(t *testing.T) {
 			defer s.stopPump(s.Page)
 			c.WriteJSON(map[string]any{"id": 1, "method": "Page.navigate", "params": map[string]any{"url": fixture.URL}})
 			readReply(t, c, 1)
-			deadline := time.Now().Add(3 * time.Second)
-			started := false
-			for time.Now().Before(deadline) {
-				for _, event := range s.Page.Trace().Events() {
-					if event.Name == "scriptStart" {
-						started = true
-					}
-				}
-				if started && s.Page.ExecutionStatus().Elapsed > 20*time.Millisecond {
-					break
-				}
-				time.Sleep(time.Millisecond)
-			}
-			if !started {
-				t.Fatal("parser script did not start")
+			select {
+			case <-entered:
+			case <-time.After(3 * time.Second):
+				t.Fatal("parser script did not reach its DOM update")
 			}
 			c.SetReadDeadline(time.Now().Add(3 * time.Second))
 			c.WriteJSON(map[string]any{"id": 2, "method": "Mimic.captureSnapshot", "params": map[string]any{"interrupt": true}})
