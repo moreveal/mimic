@@ -103,6 +103,13 @@ the current behavioral reference.
 - Keep changes scoped to the problem being solved. Avoid unrelated refactors
   unless they are necessary for correctness or materially simplify the fix.
 
+- Keep human-maintained JavaScript and inline JavaScript readable and
+  formatter-compatible. Do not minify authored source code or collapse it into
+  dense one-line expressions; run the repository formatter after editing it.
+  Use `npx --yes prettier@3.6.2 --write <files>` for JavaScript and HTML.
+  Do not reformat vendored, generated, frozen-reference, capture, or oracle
+  artifacts unless the task explicitly requires regenerating those artifacts.
+
 - Inspect and understand the existing implementation before replacing it.
   Preserve intentional invariants unless evidence shows they are wrong.
 

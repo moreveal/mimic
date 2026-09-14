@@ -1,51 +1,492 @@
 // Query-time coverage model. No native drawing backend, glyph rasterizer or
 // presentation surface. Curves use bounded geometric approximation; stable
 // operation snapshots preserve local changes, overlapping reads and ordering.
-const pathCopy=p=>p.map(s=>({closed:s.closed,points:s.points.map(p=>p.slice())}));
-const transformPoint=(m,x,y)=>[m[0]*x+m[2]*y+m[4],m[1]*x+m[3]*y+m[5]];
-const currentPath=c=>c.path||(c.path=[]);
-const appendPoint=(c,x,y,move=false)=>{const p=currentPath(c),point=transformPoint(c.draw.transform,x,y);let sub=p[p.length-1];if(move||!sub){sub={points:[],closed:false};p.push(sub)}if(sub.points.length>=4096)fail('NotSupportedError','Path observation complexity limit');sub.points.push(point)};
-const containsPath=(path,x,y,rule)=>{let winding=0;for(const sub of path){const ps=sub.points;for(let i=0;i<ps.length;i++){const a=ps[i],b=ps[(i+1)%ps.length];if(a[1]<=y&&b[1]>y||a[1]>y&&b[1]<=y){const cross=(b[0]-a[0])*(y-a[1])-(x-a[0])*(b[1]-a[1]);if(b[1]>a[1]&&cross>0)winding++;else if(b[1]<a[1]&&cross<0)winding--}}}return rule==='evenodd'?!!(Math.abs(winding)%2):winding!==0};
-const clipContains=(clips,x,y)=>!clips||clips.every(clip=>containsPath(clip.path,x,y,clip.rule));
-const strokeContains=(path,x,y,width)=>{const radius=width/2;for(const sub of path){const ps=sub.points,n=ps.length;for(let i=1;i<n+(sub.closed?1:0);i++){const a=ps[i-1],b=ps[i%n],dx=b[0]-a[0],dy=b[1]-a[1],length=dx*dx+dy*dy;if(!length)continue;const t=((x-a[0])*dx+(y-a[1])*dy)/length;if(t<0||t>1)continue;if((x-a[0]-t*dx)**2+(y-a[1]-t*dy)**2<=radius*radius)return true}}return false};
-const paintSnapshot=(style,space='srgb')=>{const g=gradients.get(style);return g?{...g,args:g.args.slice(),matrix:(g.matrix||[1,0,0,1,0,0]).slice(),stops:g.stops.map(s=>({offset:s.offset,color:canvasPaintColor(s.color,space)})).sort((a,b)=>a.offset-b.offset)}:color(style)?canvasPaintColor(color(style),space):null};
-const paintColor=(paint,x,y)=>{
- if(Array.isArray(paint))return paint;if(!paint||!paint.stops.length)return [0,0,0,0];const m=paint.matrix,det=m[0]*m[3]-m[1]*m[2];if(!det)return [0,0,0,0];const px=(m[3]*(x-m[4])-m[2]*(y-m[5]))/det,py=(-m[1]*(x-m[4])+m[0]*(y-m[5]))/det;let t;
- if(paint.kind==='linear'){const [x0,y0,x1,y1]=paint.args,dx=x1-x0,dy=y1-y0;t=((px-x0)*dx+(py-y0)*dy)/(dx*dx+dy*dy)}else{const [x0,y0,r0,x1,y1,r1]=paint.args,dx=x1-x0,dy=y1-y0,dr=r1-r0,qx=px-x0,qy=py-y0,A=dx*dx+dy*dy-dr*dr,B=-2*(qx*dx+qy*dy+r0*dr),C=qx*qx+qy*qy-r0*r0,D=B*B-4*A*C;const roots=Math.abs(A)<1e-12?[-C/B]:D<0?[]:[(-B-Math.sqrt(D))/(2*A),(-B+Math.sqrt(D))/(2*A)];t=Math.max(...roots.filter(t=>r0+t*dr>=0))}
- if(!Number.isFinite(t))return [0,0,0,0];const stops=paint.stops;if(t<stops[0].offset)return stops[0].color;if(t>=stops[stops.length-1].offset)return stops[stops.length-1].color;let i=1;while(i<stops.length&&stops[i].offset<=t)i++;const a=stops[i-1],b=stops[i],f=(t-a.offset)/(b.offset-a.offset),alpha=a.color[3]*(1-f)+b.color[3]*f;return [0,1,2].map(k=>alpha?(a.color[k]*a.color[3]*(1-f)+b.color[k]*b.color[3]*f)/alpha:0).concat(alpha);
+const pathCopy = (p) =>
+  p.map((s) => ({ closed: s.closed, points: s.points.map((p) => p.slice()) }));
+const transformPoint = (m, x, y) => [m[0] * x + m[2] * y + m[4], m[1] * x + m[3] * y + m[5]];
+const currentPath = (c) => c.path || (c.path = []);
+const appendPoint = (c, x, y, move = false) => {
+  const p = currentPath(c),
+    point = transformPoint(c.draw.transform, x, y);
+  let sub = p[p.length - 1];
+  if (move || !sub) {
+    sub = { points: [], closed: false };
+    p.push(sub);
+  }
+  if (sub.points.length >= 4096) fail('NotSupportedError', 'Path observation complexity limit');
+  sub.points.push(point);
 };
-const compositePixel=(p,i,rgba,opacity,mode,opaque,coverage=1)=>{const sa=rgba[3]/255*opacity,da=p[i+3]/255;let fa=1,fb=1-sa;if(mode==='copy')fb=0;else if(mode==='source-in'){fa=da;fb=0}else if(mode==='source-out'){fa=1-da;fb=0}else if(mode==='source-atop'){fa=da;fb=1-sa}else if(mode==='destination-over'){fa=1-da;fb=1}else if(mode==='destination-in'){fa=0;fb=sa}else if(mode==='destination-out'){fa=0;fb=1-sa}else if(mode==='destination-atop'){fa=1-da;fb=sa}else if(mode==='xor'){fa=1-da;fb=1-sa}else if(mode==='lighter'){fa=1;fb=1}for(let k=0;k<3;k++){let value=rgba[k]*sa*fa+p[i+k]*fb;if(mode==='multiply'||mode==='screen'){const sc=rgba[k]/255,dc=da?p[i+k]/255/da:0,blend=mode==='multiply'?sc*dc:sc+dc-sc*dc;value=(sc*sa*(1-da)+dc*da*(1-sa)+blend*sa*da)*255}canvasStore(p,i+k,value*coverage+p[i+k]*(1-coverage))}canvasStore(p,i+3,opaque?255:(Math.min(1,sa*fa+da*fb)*coverage+da*(1-coverage))*255)};
-const supportedComposite=new Set(['source-over','copy','source-in','source-out','source-atop','destination-over','destination-in','destination-out','destination-atop','xor','lighter','multiply','screen']);
-const queuePath=(c,path,rule,stroke=false,clear=false)=>{const d=c.draw;if(!supportedComposite.has(d.globalCompositeOperation)&&!clear){record(c,'composite',[d.globalCompositeOperation]);return}const paint=clear?[0,0,0,0]:paintSnapshot(stroke?d.strokeStyle:d.fillStyle,c.surface.colorSpace||'srgb');if(!paint)return;const scale=Math.max(Math.hypot(d.transform[0],d.transform[1]),Math.hypot(d.transform[2],d.transform[3]));(c.surface.pendingText||(c.surface.pendingText=[])).push({kind:'path',path:pathCopy(path),rule,stroke,width:d.lineWidth*scale,paint,alpha:clear?1:d.globalAlpha,composite:clear?'copy':d.globalCompositeOperation,clear,clips:d.clipPaths||[]});reportBoundary(c,'approximatePathObservations');c.surface.unmodeled=true};
+const containsPath = (path, x, y, rule) => {
+  let winding = 0;
+  for (const sub of path) {
+    const ps = sub.points;
+    for (let i = 0; i < ps.length; i++) {
+      const a = ps[i],
+        b = ps[(i + 1) % ps.length];
+      if ((a[1] <= y && b[1] > y) || (a[1] > y && b[1] <= y)) {
+        const cross = (b[0] - a[0]) * (y - a[1]) - (x - a[0]) * (b[1] - a[1]);
+        if (b[1] > a[1] && cross > 0) winding++;
+        else if (b[1] < a[1] && cross < 0) winding--;
+      }
+    }
+  }
+  return rule === 'evenodd' ? !!(Math.abs(winding) % 2) : winding !== 0;
+};
+const clipContains = (clips, x, y) =>
+  !clips || clips.every((clip) => containsPath(clip.path, x, y, clip.rule));
+const strokeContains = (path, x, y, width) => {
+  const radius = width / 2;
+  for (const sub of path) {
+    const ps = sub.points,
+      n = ps.length;
+    for (let i = 1; i < n + (sub.closed ? 1 : 0); i++) {
+      const a = ps[i - 1],
+        b = ps[i % n],
+        dx = b[0] - a[0],
+        dy = b[1] - a[1],
+        length = dx * dx + dy * dy;
+      if (!length) continue;
+      const t = ((x - a[0]) * dx + (y - a[1]) * dy) / length;
+      if (t < 0 || t > 1) continue;
+      if ((x - a[0] - t * dx) ** 2 + (y - a[1] - t * dy) ** 2 <= radius * radius) return true;
+    }
+  }
+  return false;
+};
+const paintSnapshot = (style, space = 'srgb') => {
+  const g = gradients.get(style);
+  return g
+    ? {
+        ...g,
+        args: g.args.slice(),
+        matrix: (g.matrix || [1, 0, 0, 1, 0, 0]).slice(),
+        stops: g.stops
+          .map((s) => ({ offset: s.offset, color: canvasPaintColor(s.color, space) }))
+          .sort((a, b) => a.offset - b.offset),
+      }
+    : color(style)
+      ? canvasPaintColor(color(style), space)
+      : null;
+};
+const paintColor = (paint, x, y) => {
+  if (Array.isArray(paint)) return paint;
+  if (!paint || !paint.stops.length) return [0, 0, 0, 0];
+  const m = paint.matrix,
+    det = m[0] * m[3] - m[1] * m[2];
+  if (!det) return [0, 0, 0, 0];
+  const px = (m[3] * (x - m[4]) - m[2] * (y - m[5])) / det,
+    py = (-m[1] * (x - m[4]) + m[0] * (y - m[5])) / det;
+  let t;
+  if (paint.kind === 'linear') {
+    const [x0, y0, x1, y1] = paint.args,
+      dx = x1 - x0,
+      dy = y1 - y0;
+    t = ((px - x0) * dx + (py - y0) * dy) / (dx * dx + dy * dy);
+  } else {
+    const [x0, y0, r0, x1, y1, r1] = paint.args,
+      dx = x1 - x0,
+      dy = y1 - y0,
+      dr = r1 - r0,
+      qx = px - x0,
+      qy = py - y0,
+      A = dx * dx + dy * dy - dr * dr,
+      B = -2 * (qx * dx + qy * dy + r0 * dr),
+      C = qx * qx + qy * qy - r0 * r0,
+      D = B * B - 4 * A * C;
+    const roots =
+      Math.abs(A) < 1e-12
+        ? [-C / B]
+        : D < 0
+          ? []
+          : [(-B - Math.sqrt(D)) / (2 * A), (-B + Math.sqrt(D)) / (2 * A)];
+    t = Math.max(...roots.filter((t) => r0 + t * dr >= 0));
+  }
+  if (!Number.isFinite(t)) return [0, 0, 0, 0];
+  const stops = paint.stops;
+  if (t < stops[0].offset) return stops[0].color;
+  if (t >= stops[stops.length - 1].offset) return stops[stops.length - 1].color;
+  let i = 1;
+  while (i < stops.length && stops[i].offset <= t) i++;
+  const a = stops[i - 1],
+    b = stops[i],
+    f = (t - a.offset) / (b.offset - a.offset),
+    alpha = a.color[3] * (1 - f) + b.color[3] * f;
+  return [0, 1, 2]
+    .map((k) =>
+      alpha ? (a.color[k] * a.color[3] * (1 - f) + b.color[k] * b.color[3] * f) / alpha : 0,
+    )
+    .concat(alpha);
+};
+const compositePixel = (p, i, rgba, opacity, mode, opaque, coverage = 1) => {
+  const sa = (rgba[3] / 255) * opacity,
+    da = p[i + 3] / 255;
+  let fa = 1,
+    fb = 1 - sa;
+  if (mode === 'copy') fb = 0;
+  else if (mode === 'source-in') {
+    fa = da;
+    fb = 0;
+  } else if (mode === 'source-out') {
+    fa = 1 - da;
+    fb = 0;
+  } else if (mode === 'source-atop') {
+    fa = da;
+    fb = 1 - sa;
+  } else if (mode === 'destination-over') {
+    fa = 1 - da;
+    fb = 1;
+  } else if (mode === 'destination-in') {
+    fa = 0;
+    fb = sa;
+  } else if (mode === 'destination-out') {
+    fa = 0;
+    fb = 1 - sa;
+  } else if (mode === 'destination-atop') {
+    fa = 1 - da;
+    fb = sa;
+  } else if (mode === 'xor') {
+    fa = 1 - da;
+    fb = 1 - sa;
+  } else if (mode === 'lighter') {
+    fa = 1;
+    fb = 1;
+  }
+  for (let k = 0; k < 3; k++) {
+    let value = rgba[k] * sa * fa + p[i + k] * fb;
+    if (mode === 'multiply' || mode === 'screen') {
+      const sc = rgba[k] / 255,
+        dc = da ? p[i + k] / 255 / da : 0,
+        blend = mode === 'multiply' ? sc * dc : sc + dc - sc * dc;
+      value = (sc * sa * (1 - da) + dc * da * (1 - sa) + blend * sa * da) * 255;
+    }
+    canvasStore(p, i + k, value * coverage + p[i + k] * (1 - coverage));
+  }
+  canvasStore(
+    p,
+    i + 3,
+    opaque ? 255 : (Math.min(1, sa * fa + da * fb) * coverage + da * (1 - coverage)) * 255,
+  );
+};
+const supportedComposite = new Set([
+  'source-over',
+  'copy',
+  'source-in',
+  'source-out',
+  'source-atop',
+  'destination-over',
+  'destination-in',
+  'destination-out',
+  'destination-atop',
+  'xor',
+  'lighter',
+  'multiply',
+  'screen',
+]);
+const queuePath = (c, path, rule, stroke = false, clear = false) => {
+  const d = c.draw;
+  if (!supportedComposite.has(d.globalCompositeOperation) && !clear) {
+    record(c, 'composite', [d.globalCompositeOperation]);
+    return;
+  }
+  const paint = clear
+    ? [0, 0, 0, 0]
+    : paintSnapshot(stroke ? d.strokeStyle : d.fillStyle, c.surface.colorSpace || 'srgb');
+  if (!paint) return;
+  const scale = Math.max(
+    Math.hypot(d.transform[0], d.transform[1]),
+    Math.hypot(d.transform[2], d.transform[3]),
+  );
+  (c.surface.pendingText || (c.surface.pendingText = [])).push({
+    kind: 'path',
+    path: pathCopy(path),
+    rule,
+    stroke,
+    width: d.lineWidth * scale,
+    paint,
+    alpha: clear ? 1 : d.globalAlpha,
+    composite: clear ? 'copy' : d.globalCompositeOperation,
+    clear,
+    clips: d.clipPaths || [],
+  });
+  reportBoundary(c, 'approximatePathObservations');
+  c.surface.unmodeled = true;
+};
 // Integrate polygon coverage in the pixel square. This keeps fractional edges,
 // overlapping readbacks and copies coherent without a native rasterizer.
-const polygonPixelArea=(points,x,y)=>{
- let p=points;for(const [axis,bound,greater]of [[0,x,true],[0,x+1,false],[1,y,true],[1,y+1,false]]){if(!p.length)return 0;const out=[];let a=p[p.length-1],insideA=greater?a[axis]>=bound:a[axis]<=bound;for(const b of p){const insideB=greater?b[axis]>=bound:b[axis]<=bound;if(insideA!==insideB){const t=(bound-a[axis])/(b[axis]-a[axis]);out.push([a[0]+t*(b[0]-a[0]),a[1]+t*(b[1]-a[1])])}if(insideB)out.push(b);a=b;insideA=insideB}p=out}
- let area=0;for(let i=0;i<p.length;i++){const a=p[i],b=p[(i+1)%p.length];area+=(a[0]-x)*(b[1]-y)-(b[0]-x)*(a[1]-y)}return area/2;
+const polygonPixelArea = (points, x, y) => {
+  let p = points;
+  for (const [axis, bound, greater] of [
+    [0, x, true],
+    [0, x + 1, false],
+    [1, y, true],
+    [1, y + 1, false],
+  ]) {
+    if (!p.length) return 0;
+    const out = [];
+    let a = p[p.length - 1],
+      insideA = greater ? a[axis] >= bound : a[axis] <= bound;
+    for (const b of p) {
+      const insideB = greater ? b[axis] >= bound : b[axis] <= bound;
+      if (insideA !== insideB) {
+        const t = (bound - a[axis]) / (b[axis] - a[axis]);
+        out.push([a[0] + t * (b[0] - a[0]), a[1] + t * (b[1] - a[1])]);
+      }
+      if (insideB) out.push(b);
+      a = b;
+      insideA = insideB;
+    }
+    p = out;
+  }
+  let area = 0;
+  for (let i = 0; i < p.length; i++) {
+    const a = p[i],
+      b = p[(i + 1) % p.length];
+    area += (a[0] - x) * (b[1] - y) - (b[0] - x) * (a[1] - y);
+  }
+  return area / 2;
 };
-const pathPixelCoverage=(op,x,y)=>{
- if(op.coveragePolygon===undefined){const paths=op.path.filter(s=>s.points.length>2);let convex=!op.stroke&&!op.clips.length&&paths.length===1,sign=0;if(convex){const p=paths[0].points;for(let i=0;i<p.length;i++){const a=p[i],b=p[(i+1)%p.length],c=p[(i+2)%p.length],cross=(b[0]-a[0])*(c[1]-b[1])-(b[1]-a[1])*(c[0]-b[0]);if(Math.abs(cross)>1e-12){const next=Math.sign(cross);if(sign&&sign!==next){convex=false;break}sign=next}}}op.coveragePolygon=convex?paths[0].points:null}if(op.coveragePolygon)return Math.min(1,Math.abs(polygonPixelArea(op.coveragePolygon,x,y)));
- // Intersect clips and compound winding/strokes at a bounded common subpixel
- // grid, rather than multiplying independent coverage fractions.
- let count=0;for(let yy=0;yy<8;yy++)for(let xx=0;xx<8;xx++){const px=x+(xx+.5)/8,py=y+(yy+.5)/8;if(clipContains(op.clips,px,py)&&(op.stroke?strokeContains(op.path,px,py,op.width):containsPath(op.path,px,py,op.rule)))count++}return count/64;
+const pathPixelCoverage = (op, x, y) => {
+  if (op.coveragePolygon === undefined) {
+    const paths = op.path.filter((s) => s.points.length > 2);
+    let convex = !op.stroke && !op.clips.length && paths.length === 1,
+      sign = 0;
+    if (convex) {
+      const p = paths[0].points;
+      for (let i = 0; i < p.length; i++) {
+        const a = p[i],
+          b = p[(i + 1) % p.length],
+          c = p[(i + 2) % p.length],
+          cross = (b[0] - a[0]) * (c[1] - b[1]) - (b[1] - a[1]) * (c[0] - b[0]);
+        if (Math.abs(cross) > 1e-12) {
+          const next = Math.sign(cross);
+          if (sign && sign !== next) {
+            convex = false;
+            break;
+          }
+          sign = next;
+        }
+      }
+    }
+    op.coveragePolygon = convex ? paths[0].points : null;
+  }
+  if (op.coveragePolygon) return Math.min(1, Math.abs(polygonPixelArea(op.coveragePolygon, x, y)));
+  // Intersect clips and compound winding/strokes at a bounded common subpixel
+  // grid, rather than multiplying independent coverage fractions.
+  let count = 0;
+  for (let yy = 0; yy < 8; yy++)
+    for (let xx = 0; xx < 8; xx++) {
+      const px = x + (xx + 0.5) / 8,
+        py = y + (yy + 0.5) / 8;
+      if (
+        clipContains(op.clips, px, py) &&
+        (op.stroke
+          ? strokeContains(op.path, px, py, op.width)
+          : containsPath(op.path, px, py, op.rule))
+      )
+        count++;
+    }
+  return count / 64;
 };
-const materializePath=(s,op)=>{const ps=op.path.flatMap(p=>p.points);if(!ps.length)return;const pad=op.stroke?op.width/2:0,unbounded=!op.clear&&['copy','source-in','source-out','destination-in','destination-atop'].includes(op.composite);const left=unbounded?0:Math.max(0,Math.floor(Math.min(...ps.map(p=>p[0]))-pad)),right=unbounded?s.width:Math.min(s.width,Math.ceil(Math.max(...ps.map(p=>p[0]))+pad)),top=unbounded?0:Math.max(0,Math.floor(Math.min(...ps.map(p=>p[1]))-pad)),bottom=unbounded?s.height:Math.min(s.height,Math.ceil(Math.max(...ps.map(p=>p[1]))+pad));for(let y=top;y<bottom;y++)for(let x=left;x<right;x++){const coverage=pathPixelCoverage(op,x,y);if(!coverage&&!unbounded)continue;if(unbounded){if(!clipContains(op.clips,x+.5,y+.5))continue;compositePixel(s.pixels,(y*s.width+x)*4,coverage?paintColor(op.paint,x+.5,y+.5):[0,0,0,0],op.alpha*coverage,op.composite,s.opaque)}else compositePixel(s.pixels,(y*s.width+x)*4,paintColor(op.paint,x+.5,y+.5),op.alpha,op.composite,s.opaque,coverage)}};
-const rectanglePath=(c,x,y,w,h)=>[{closed:true,points:[[x,y],[x+w,y],[x+w,y+h],[x,y+h]].map(p=>transformPoint(c.draw.transform,...p))}];
-const installPathObservations=proto=>{
- const method=(name,fn)=>Object.defineProperty(proto,name,{value:fn,writable:true,enumerable:true,configurable:true});
- method('beginPath',function(){contextState(this).path=[]});
- method('closePath',function(){const p=currentPath(contextState(this)),s=p[p.length-1];if(s?.points.length){s.closed=true;p.push({closed:false,points:[s.points[0].slice()]})}});
- method('moveTo',function(x,y){const c=contextState(this);x=Number(x);y=Number(y);if(Number.isFinite(x)&&Number.isFinite(y))appendPoint(c,x,y,true)});
- method('lineTo',function(x,y){const c=contextState(this);x=Number(x);y=Number(y);if(Number.isFinite(x)&&Number.isFinite(y))appendPoint(c,x,y)});
- method('rect',function(x,y,w,h){const c=contextState(this),a=[x,y,w,h].map(Number);if(!a.every(Number.isFinite))return;currentPath(c).push(...rectanglePath(c,...a));const sub=c.path[c.path.length-1];c.path.push({closed:false,points:[sub.points[0].slice()]})});
- for(const [name,n]of [['quadraticCurveTo',4],['bezierCurveTo',6]])method(name,function(...args){const c=contextState(this);args=args.slice(0,n).map(Number);if(args.length<n||!args.every(Number.isFinite))return;let path=currentPath(c);if(!path.length)appendPoint(c,args[0],args[1],true);const sub=path[path.length-1],start=sub.points[sub.points.length-1],control=[];for(let i=0;i<n;i+=2)control.push(transformPoint(c.draw.transform,args[i],args[i+1]));for(let step=1;step<=32;step++){const t=step/32,u=1-t;sub.points.push([0,1].map(k=>n===4?u*u*start[k]+2*u*t*control[0][k]+t*t*control[1][k]:u*u*u*start[k]+3*u*u*t*control[0][k]+3*u*t*t*control[1][k]+t*t*t*control[2][k]))}});
- method('ellipse',function(x,y,rx,ry,rotation,start,end,ccw=false){const c=contextState(this),a=[x,y,rx,ry,rotation,start,end].map(Number);if(!a.every(Number.isFinite))return;[x,y,rx,ry,rotation,start,end]=a;if(rx<0||ry<0)fail('IndexSizeError','Negative radius');let delta=end-start,tau=Math.PI*2;if(!ccw){delta=delta>=tau?tau:((delta%tau)+tau)%tau}else delta=-delta>=tau?-tau:-(((-delta%tau)+tau)%tau);const steps=Math.max(1,Math.ceil(Math.abs(delta)/tau*128)),co=Math.cos(rotation),si=Math.sin(rotation);for(let i=0;i<=steps;i++){const t=start+delta*i/steps,px=rx*Math.cos(t),py=ry*Math.sin(t);appendPoint(c,x+px*co-py*si,y+px*si+py*co)}});
- method('arc',function(x,y,r,start,end,ccw=false){return this.ellipse(x,y,r,r,0,start,end,ccw)});
- const fillRule=value=>{value=value===undefined?'nonzero':String(value);if(!['nonzero','evenodd'].includes(value))throw new TypeError('Invalid fill rule');return value};
- method('fill',function(rule){const c=contextState(this);if(rule!==undefined&&typeof rule!=='string'){record(c,'fill Path2D',[]);return}queuePath(c,currentPath(c),fillRule(rule))});
- method('stroke',function(path){const c=contextState(this);if(path!==undefined){record(c,'stroke Path2D',[]);return}queuePath(c,currentPath(c),'nonzero',true)});
- method('clip',function(rule){const c=contextState(this);if(rule!==undefined&&typeof rule!=='string'){record(c,'clip Path2D',[]);return}c.draw.clipPaths=[...(c.draw.clipPaths||[]),{path:pathCopy(currentPath(c)),rule:fillRule(rule)}]});
- method('strokeRect',function(x,y,w,h){const c=contextState(this),a=[x,y,w,h].map(Number);if(a.every(Number.isFinite))queuePath(c,rectanglePath(c,...a),'nonzero',true)});
- method('isPointInPath',function(x,y,rule){const c=contextState(this);x=Number(x);y=Number(y);return Number.isFinite(x)&&Number.isFinite(y)&&containsPath(currentPath(c),x,y,fillRule(rule))});
- method('isPointInStroke',function(x,y){const c=contextState(this);x=Number(x);y=Number(y);return Number.isFinite(x)&&Number.isFinite(y)&&strokeContains(currentPath(c),x,y,c.draw.lineWidth)});
+const materializePath = (s, op) => {
+  const ps = op.path.flatMap((p) => p.points);
+  if (!ps.length) return;
+  const pad = op.stroke ? op.width / 2 : 0,
+    unbounded =
+      !op.clear &&
+      ['copy', 'source-in', 'source-out', 'destination-in', 'destination-atop'].includes(
+        op.composite,
+      );
+  const left = unbounded ? 0 : Math.max(0, Math.floor(Math.min(...ps.map((p) => p[0])) - pad)),
+    right = unbounded
+      ? s.width
+      : Math.min(s.width, Math.ceil(Math.max(...ps.map((p) => p[0])) + pad)),
+    top = unbounded ? 0 : Math.max(0, Math.floor(Math.min(...ps.map((p) => p[1])) - pad)),
+    bottom = unbounded
+      ? s.height
+      : Math.min(s.height, Math.ceil(Math.max(...ps.map((p) => p[1])) + pad));
+  for (let y = top; y < bottom; y++)
+    for (let x = left; x < right; x++) {
+      const coverage = pathPixelCoverage(op, x, y);
+      if (!coverage && !unbounded) continue;
+      if (unbounded) {
+        if (!clipContains(op.clips, x + 0.5, y + 0.5)) continue;
+        compositePixel(
+          s.pixels,
+          (y * s.width + x) * 4,
+          coverage ? paintColor(op.paint, x + 0.5, y + 0.5) : [0, 0, 0, 0],
+          op.alpha * coverage,
+          op.composite,
+          s.opaque,
+        );
+      } else
+        compositePixel(
+          s.pixels,
+          (y * s.width + x) * 4,
+          paintColor(op.paint, x + 0.5, y + 0.5),
+          op.alpha,
+          op.composite,
+          s.opaque,
+          coverage,
+        );
+    }
+};
+const rectanglePath = (c, x, y, w, h) => [
+  {
+    closed: true,
+    points: [
+      [x, y],
+      [x + w, y],
+      [x + w, y + h],
+      [x, y + h],
+    ].map((p) => transformPoint(c.draw.transform, ...p)),
+  },
+];
+const installPathObservations = (proto) => {
+  const method = (name, fn) =>
+    Object.defineProperty(proto, name, {
+      value: fn,
+      writable: true,
+      enumerable: true,
+      configurable: true,
+    });
+  method('beginPath', function () {
+    contextState(this).path = [];
+  });
+  method('closePath', function () {
+    const p = currentPath(contextState(this)),
+      s = p[p.length - 1];
+    if (s?.points.length) {
+      s.closed = true;
+      p.push({ closed: false, points: [s.points[0].slice()] });
+    }
+  });
+  method('moveTo', function (x, y) {
+    const c = contextState(this);
+    x = Number(x);
+    y = Number(y);
+    if (Number.isFinite(x) && Number.isFinite(y)) appendPoint(c, x, y, true);
+  });
+  method('lineTo', function (x, y) {
+    const c = contextState(this);
+    x = Number(x);
+    y = Number(y);
+    if (Number.isFinite(x) && Number.isFinite(y)) appendPoint(c, x, y);
+  });
+  method('rect', function (x, y, w, h) {
+    const c = contextState(this),
+      a = [x, y, w, h].map(Number);
+    if (!a.every(Number.isFinite)) return;
+    currentPath(c).push(...rectanglePath(c, ...a));
+    const sub = c.path[c.path.length - 1];
+    c.path.push({ closed: false, points: [sub.points[0].slice()] });
+  });
+  for (const [name, n] of [
+    ['quadraticCurveTo', 4],
+    ['bezierCurveTo', 6],
+  ])
+    method(name, function (...args) {
+      const c = contextState(this);
+      args = args.slice(0, n).map(Number);
+      if (args.length < n || !args.every(Number.isFinite)) return;
+      let path = currentPath(c);
+      if (!path.length) appendPoint(c, args[0], args[1], true);
+      const sub = path[path.length - 1],
+        start = sub.points[sub.points.length - 1],
+        control = [];
+      for (let i = 0; i < n; i += 2)
+        control.push(transformPoint(c.draw.transform, args[i], args[i + 1]));
+      for (let step = 1; step <= 32; step++) {
+        const t = step / 32,
+          u = 1 - t;
+        sub.points.push(
+          [0, 1].map((k) =>
+            n === 4
+              ? u * u * start[k] + 2 * u * t * control[0][k] + t * t * control[1][k]
+              : u * u * u * start[k] +
+                3 * u * u * t * control[0][k] +
+                3 * u * t * t * control[1][k] +
+                t * t * t * control[2][k],
+          ),
+        );
+      }
+    });
+  method('ellipse', function (x, y, rx, ry, rotation, start, end, ccw = false) {
+    const c = contextState(this),
+      a = [x, y, rx, ry, rotation, start, end].map(Number);
+    if (!a.every(Number.isFinite)) return;
+    [x, y, rx, ry, rotation, start, end] = a;
+    if (rx < 0 || ry < 0) fail('IndexSizeError', 'Negative radius');
+    let delta = end - start,
+      tau = Math.PI * 2;
+    if (!ccw) {
+      delta = delta >= tau ? tau : ((delta % tau) + tau) % tau;
+    } else delta = -delta >= tau ? -tau : -(((-delta % tau) + tau) % tau);
+    const steps = Math.max(1, Math.ceil((Math.abs(delta) / tau) * 128)),
+      co = Math.cos(rotation),
+      si = Math.sin(rotation);
+    for (let i = 0; i <= steps; i++) {
+      const t = start + (delta * i) / steps,
+        px = rx * Math.cos(t),
+        py = ry * Math.sin(t);
+      appendPoint(c, x + px * co - py * si, y + px * si + py * co);
+    }
+  });
+  method('arc', function (x, y, r, start, end, ccw = false) {
+    return this.ellipse(x, y, r, r, 0, start, end, ccw);
+  });
+  const fillRule = (value) => {
+    value = value === undefined ? 'nonzero' : String(value);
+    if (!['nonzero', 'evenodd'].includes(value)) throw new TypeError('Invalid fill rule');
+    return value;
+  };
+  method('fill', function (rule) {
+    const c = contextState(this);
+    if (rule !== undefined && typeof rule !== 'string') {
+      record(c, 'fill Path2D', []);
+      return;
+    }
+    queuePath(c, currentPath(c), fillRule(rule));
+  });
+  method('stroke', function (path) {
+    const c = contextState(this);
+    if (path !== undefined) {
+      record(c, 'stroke Path2D', []);
+      return;
+    }
+    queuePath(c, currentPath(c), 'nonzero', true);
+  });
+  method('clip', function (rule) {
+    const c = contextState(this);
+    if (rule !== undefined && typeof rule !== 'string') {
+      record(c, 'clip Path2D', []);
+      return;
+    }
+    c.draw.clipPaths = [
+      ...(c.draw.clipPaths || []),
+      { path: pathCopy(currentPath(c)), rule: fillRule(rule) },
+    ];
+  });
+  method('strokeRect', function (x, y, w, h) {
+    const c = contextState(this),
+      a = [x, y, w, h].map(Number);
+    if (a.every(Number.isFinite)) queuePath(c, rectanglePath(c, ...a), 'nonzero', true);
+  });
+  method('isPointInPath', function (x, y, rule) {
+    const c = contextState(this);
+    x = Number(x);
+    y = Number(y);
+    return (
+      Number.isFinite(x) && Number.isFinite(y) && containsPath(currentPath(c), x, y, fillRule(rule))
+    );
+  });
+  method('isPointInStroke', function (x, y) {
+    const c = contextState(this);
+    x = Number(x);
+    y = Number(y);
+    return (
+      Number.isFinite(x) &&
+      Number.isFinite(y) &&
+      strokeContains(currentPath(c), x, y, c.draw.lineWidth)
+    );
+  });
 };

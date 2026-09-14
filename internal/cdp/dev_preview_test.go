@@ -59,7 +59,7 @@ func TestDevPreviewRoutesAndWebSocket(t *testing.T) {
 			}
 			continue
 		}
-		if !bytes.Contains(body, []byte("Disconnected — reconnecting…")) || !bytes.Contains(body, []byte("Math.min(reconnectDelay*2,5000)")) || !bytes.Contains(body, []byte("list(true)")) {
+		if !bytes.Contains(body, []byte("Disconnected — reconnecting…")) || !bytes.Contains(body, []byte("Math.min(reconnectDelay * 2, 5000)")) || !bytes.Contains(body, []byte("list(true)")) {
 			t.Fatal("preview client does not automatically reconnect after a server restart")
 		}
 		conn, _, err := websocket.DefaultDialer.Dial("ws://"+l.Addr().String()+"/debug/preview/ws?target="+s.Page.ID, nil)
