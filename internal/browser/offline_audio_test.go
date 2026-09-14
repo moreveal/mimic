@@ -71,8 +71,9 @@ func TestOfflineAudioUnsupportedGraphRejects(t *testing.T) {
  if(await c.startRendering().then(()=>'',e=>e.name)!=='NotSupportedError'||complete||c.state!=='closed')return false;
  if(await c.startRendering().then(()=>'',e=>e.name)!=='InvalidStateError')return false;
  const d=new OfflineAudioContext(1,8,8000);
- try{d.createBiquadFilter();return false}catch(e){if(e.name!=='NotSupportedError')return false}
- return await d.decodeAudioData(new ArrayBuffer(8)).then(()=>false,e=>e.name==='NotSupportedError');
+   const filter=d.createBiquadFilter();
+   if(!(filter instanceof BiquadFilterNode)||filter.context!==d||filter.type!=='lowpass')return false;
+ return await d.decodeAudioData(new ArrayBuffer(8)).then(()=>false,e=>e.name==='EncodingError');
 })()`)
 		if err != nil || value != true {
 			t.Fatalf("value=%v error=%v", value, err)
