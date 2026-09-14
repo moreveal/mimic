@@ -81,7 +81,7 @@ const cssLengthValue = (value) => {
   const single = /^calc\(\s*([^\s()]+)\s*\)$/i.exec(value);
   if (single) {
     const term = cssLengthTerm(single[1]);
-    return term ? 'calc(' + cssSerializeNumber(term.number) + term.unit + ')' : null;
+    if (term) return 'calc(' + cssSerializeNumber(term.number) + term.unit + ')';
   }
   const product = /^calc\(\s*(\S+)\s*([*/])\s*(\S+)\s*\)$/i.exec(value);
   if (product) {
@@ -109,8 +109,21 @@ const cssLengthValue = (value) => {
   if (!a || !b) return null;
   if (match[2] === '-') b.number = -b.number;
   if (a.unit === b.unit) return 'calc(' + (a.number + b.number) + a.unit + ')';
-  // Keep the percentage term first in a mixed percentage/length calculation.
-  if (a.unit !== '%' && b.unit !== '%') return null;
+  // Different length units remain a valid computed-value calculation. Keep a
+  // percentage first for Chrome's specified-value serialization; preserve the
+  // authored order for other mixed relative/absolute units.
+  if (a.unit !== '%' && b.unit !== '%')
+    return (
+      'calc(' +
+      cssSerializeNumber(a.number) +
+      a.unit +
+      ' ' +
+      match[2] +
+      ' ' +
+      cssSerializeNumber(Math.abs(b.number)) +
+      b.unit +
+      ')'
+    );
   const first = a.unit === '%' ? a : b,
     second = first === a ? b : a;
   return (
@@ -532,6 +545,56 @@ const parseCSSFont = (value) => {
   return out;
 };
 const cssLonghandParsers = new Map([
+  [
+    'display',
+    (value) => {
+      const tokens = cssValueTokens(value.toLowerCase());
+      if (!tokens?.length || tokens.length > 3 || new Set(tokens).size !== tokens.length)
+        return null;
+      const singles = new Set([
+        'none',
+        'contents',
+        'inline-block',
+        'inline-table',
+        'inline-flex',
+        'inline-grid',
+        '-webkit-box',
+        '-webkit-inline-box',
+        'table-row-group',
+        'table-header-group',
+        'table-footer-group',
+        'table-row',
+        'table-cell',
+        'table-column-group',
+        'table-column',
+        'table-caption',
+        'ruby-text',
+      ]);
+      if (tokens.length === 1 && singles.has(tokens[0])) return tokens[0];
+      const outside = tokens.filter((t) => ['block', 'inline', 'run-in'].includes(t));
+      const inside = tokens.filter((t) =>
+        ['flow', 'flow-root', 'table', 'flex', 'grid', 'ruby', 'math'].includes(t),
+      );
+      const list = tokens.includes('list-item');
+      if (
+        outside.length > 1 ||
+        inside.length > 1 ||
+        outside.length + inside.length + Number(list) !== tokens.length
+      )
+        return null;
+      const outer = outside[0] || (['ruby', 'math'].includes(inside[0]) ? 'inline' : 'block');
+      const inner = inside[0] || 'flow';
+      if (outer === 'run-in' || (list && !['flow', 'flow-root'].includes(inner))) return null;
+      if (list)
+        return [outer === 'inline' ? outer : '', inner === 'flow-root' ? inner : '', 'list-item']
+          .filter(Boolean)
+          .join(' ');
+      if (inner === 'flow') return outer;
+      if (['ruby', 'math'].includes(inner)) return outer === 'inline' ? inner : outer + ' ' + inner;
+      if (outer === 'block') return inner;
+      return inner === 'flow-root' ? 'inline-block' : inner === 'ruby' ? 'ruby' : 'inline-' + inner;
+    },
+  ],
   ['flex-grow', (value) => cssNonnegativeNumber(value)],
   ['flex-shrink', (value) => cssNonnegativeNumber(value)],
   [

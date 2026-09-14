@@ -28,6 +28,81 @@ const attributeCompatibility = (() => {
     return value;
   };
   const setSlotAttribute = Element.prototype.setAttribute;
+  // Enumerated IDL attributes expose canonical keywords but preserve the original
+  // attribute text. All writes go through the existing attribute/reaction path.
+  const asciiLower = (value) => value.replace(/[A-Z]/g, (c) => c.toLowerCase());
+  const reflectEnumeration = (C, property, canonicalize) => {
+    if (!C) return;
+    const attribute = property.toLowerCase();
+    const check = (value) => {
+      if (!(value instanceof C) || !elementSlot(value)) throw new TypeError('Illegal invocation');
+    };
+    accessor(
+      C.prototype,
+      property,
+      function () {
+        check(this);
+        return canonicalize(this.getAttribute(attribute), this);
+      },
+      function (value) {
+        check(this);
+        if (typeof value === 'symbol') throw new TypeError('Cannot convert a Symbol to a string');
+        Reflect.apply(setSlotAttribute, this, [attribute, String(value)]);
+      },
+    );
+  };
+  for (const [name, keywords] of [
+    ['inputMode', 'none text tel url email numeric decimal search'],
+    ['enterKeyHint', 'enter done go next previous search send'],
+  ]) {
+    const allowed = new Set(keywords.split(' '));
+    reflectEnumeration(HTMLElement, name, (raw) => {
+      const value = asciiLower(raw || '');
+      return allowed.has(value) ? value : '';
+    });
+  }
+  const autofillFields = new Set(
+    'name honorific-prefix given-name additional-name family-name honorific-suffix nickname username new-password current-password one-time-code organization-title organization street-address address-line1 address-line2 address-line3 address-level4 address-level3 address-level2 address-level1 country country-name postal-code cc-name cc-given-name cc-additional-name cc-family-name cc-number cc-exp cc-exp-month cc-exp-year cc-csc cc-type transaction-currency transaction-amount language bday bday-day bday-month bday-year sex url photo'.split(
+      ' ',
+    ),
+  );
+  const contactFields = new Set(
+    'tel tel-country-code tel-national tel-area-code tel-local tel-local-prefix tel-local-suffix tel-extension email impp'.split(
+      ' ',
+    ),
+  );
+  const autocomplete = (raw, element) => {
+    const tokens = asciiLower(raw || '').match(/[^\t\n\f\r ]+/g) || [];
+    if (!tokens.length) return '';
+    if (tokens.length === 1 && ['on', 'off'].includes(tokens[0]))
+      return element.localName === 'input' && element.type === 'hidden' ? '' : tokens[0];
+    const result = tokens.join(' ');
+    if (tokens.at(-1) === 'webauthn') tokens.pop();
+    const field = tokens.pop();
+    if (!autofillFields.has(field) && !contactFields.has(field)) return '';
+    if (
+      contactFields.has(field) &&
+      ['home', 'work', 'mobile', 'fax', 'pager'].includes(tokens.at(-1))
+    )
+      tokens.pop();
+    if (['shipping', 'billing'].includes(tokens.at(-1))) tokens.pop();
+    if (tokens.length === 1 && tokens[0].startsWith('section-')) tokens.pop();
+    return tokens.length ? '' : result;
+  };
+  for (const C of [
+    globalThis.HTMLInputElement,
+    globalThis.HTMLTextAreaElement,
+    globalThis.HTMLSelectElement,
+  ])
+    reflectEnumeration(C, 'autocomplete', autocomplete);
+  reflectEnumeration(globalThis.HTMLFormElement, 'autocomplete', (raw) =>
+    asciiLower(raw || '') === 'off' ? 'off' : 'on',
+  );
+  reflectEnumeration(globalThis.HTMLMediaElement, 'preload', (raw) => {
+    if (raw === '') return 'auto';
+    const value = asciiLower(raw || '');
+    return ['none', 'metadata', 'auto'].includes(value) ? value : 'metadata';
+  });
   // Slot assignment derives from canonical attributes, including property writes.
   for (const [C, name] of [
     [Element, 'slot'],

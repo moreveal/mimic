@@ -1,0 +1,211 @@
+{
+  "captureMetadata": {
+    "chromeVersion": "152.0.7977.82",
+    "platform": "windows-x64",
+    "sourceSHA256": "f4e791ab4e96b72958eacad0ad5da2f5bb4095a2c1b0a8b6ccbe0f0df0e7fcb3",
+    "context": "http://127.0.0.1:9387/",
+    "userGesture": true,
+    "chromiumRevision": "@d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "window": {
+      "left": 20,
+      "top": 20,
+      "width": 1265,
+      "height": 1372,
+      "windowState": "normal"
+    },
+    "environmentProfileId": "chrome-152-windows-x64-headful-observation-mechanisms",
+    "profileFreshness": "fresh browser context in dedicated oracle profile",
+    "viewport": {
+      "width": 1257,
+      "height": 1281
+    },
+    "secureContextState": true,
+    "isolationState": false
+  },
+  "result": {
+    "lowpass": {
+      "m": [
+        1,
+        1.17793,
+        1.25893,
+        0.29168,
+        0.00733,
+        0,
+        "NaN",
+        "NaN"
+      ],
+      "p": [
+        0,
+        -0.48627,
+        -1.5708,
+        -2.65754,
+        -3.07335,
+        0,
+        "NaN",
+        "NaN"
+      ]
+    },
+    "highpass": {
+      "m": [
+        0,
+        0.29385,
+        1.25893,
+        1.17679,
+        1.00501,
+        1,
+        "NaN",
+        "NaN"
+      ],
+      "p": [
+        0,
+        2.65532,
+        1.5708,
+        0.48405,
+        0.06824,
+        0,
+        "NaN",
+        "NaN"
+      ]
+    },
+    "bandpass": {
+      "m": [
+        0,
+        0.31572,
+        1,
+        0.3142,
+        0.04298,
+        0,
+        "NaN",
+        "NaN"
+      ],
+      "p": [
+        0,
+        1.24958,
+        0,
+        -1.25119,
+        -1.5278,
+        -1.5708,
+        "NaN",
+        "NaN"
+      ]
+    },
+    "lowshelf": {
+      "m": [
+        1.99526,
+        1.91097,
+        1.41254,
+        1.04357,
+        1.00004,
+        1,
+        "NaN",
+        "NaN"
+      ],
+      "p": [
+        0,
+        -0.28851,
+        -0.48137,
+        -0.28744,
+        -0.04225,
+        0,
+        "NaN",
+        "NaN"
+      ]
+    },
+    "highshelf": {
+      "m": [
+        1,
+        1.04411,
+        1.41254,
+        1.91195,
+        1.99518,
+        1.99526,
+        "NaN",
+        "NaN"
+      ],
+      "p": [
+        0,
+        0.28851,
+        0.48137,
+        0.28744,
+        0.04225,
+        0,
+        "NaN",
+        "NaN"
+      ]
+    },
+    "peaking": {
+      "m": [
+        1,
+        1.07551,
+        1.99526,
+        1.07477,
+        1.00138,
+        1,
+        "NaN",
+        "NaN"
+      ],
+      "p": [
+        0,
+        0.20802,
+        0,
+        -0.20715,
+        -0.03025,
+        0,
+        "NaN",
+        "NaN"
+      ]
+    },
+    "notch": {
+      "m": [
+        1,
+        0.94885,
+        0,
+        0.94936,
+        0.99908,
+        1,
+        "NaN",
+        "NaN"
+      ],
+      "p": [
+        0,
+        -0.32122,
+        1.5708,
+        0.31961,
+        0.043,
+        0,
+        "NaN",
+        "NaN"
+      ]
+    },
+    "allpass": {
+      "m": [
+        1,
+        1,
+        1,
+        1,
+        1,
+        1,
+        "NaN",
+        "NaN"
+      ],
+      "p": [
+        0,
+        -0.64243,
+        3.14159,
+        0.63922,
+        0.08599,
+        0,
+        "NaN",
+        "NaN"
+      ]
+    },
+    "iir": [
+      1,
+      0.70711,
+      0
+    ]
+  }
+}

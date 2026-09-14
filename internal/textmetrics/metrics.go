@@ -39,6 +39,7 @@ type loaded struct {
 	hintFont                 *truetype.Font
 	hintGlyph                truetype.GlyphBuf
 	resourceBytes            int
+	lastUse                  uint64
 }
 
 type Engine struct {
@@ -52,9 +53,21 @@ type Engine struct {
 	scanned          bool
 	faces            map[string]*loaded
 	bytes            int
+	fontUse          uint64
 	missingCoverage  map[coverageKey]struct{}
 	shapeScratch     *harfbuzz.Buffer
 	shapePlans       map[shapePlanKey]struct{}
+	spoolDir         string
+}
+
+// Close releases Page-owned reloadable web-font backing storage.
+func (e *Engine) Close() error {
+	if e == nil || e.spoolDir == "" {
+		return nil
+	}
+	err := os.RemoveAll(e.spoolDir)
+	e.spoolDir = ""
+	return err
 }
 
 func New() *Engine {
@@ -137,9 +150,6 @@ func (e *Engine) scan() {
 		// Linux distributions arrange fonts in nested family/format directories.
 		// WalkDir is deterministic and does not follow directory symlinks.
 		_ = filepath.WalkDir(dir, func(path string, entry fs.DirEntry, walkErr error) error {
-			if len(e.catalog) >= 4096 {
-				return fs.SkipAll
-			}
 			if walkErr != nil || entry.IsDir() {
 				return nil
 			}
@@ -157,7 +167,7 @@ func (e *Engine) scan() {
 					var d font.Description
 					d, scratch = font.Describe(loader, scratch)
 					d.Aspect.SetDefaults()
-					if d.Family != "" && len(e.catalog) < 4096 {
+					if d.Family != "" {
 						e.catalog = append(e.catalog, resource{path, index, strings.ToLower(d.Family), d.Aspect})
 						if raw, err := loader.RawTable(ot.MustNewTag("name")); err == nil {
 							if names, _, err := tables.ParseName(raw); err == nil {
@@ -175,9 +185,6 @@ func (e *Engine) scan() {
 			f.Close()
 			return nil
 		})
-		if len(e.catalog) >= 4096 {
-			return
-		}
 	}
 }
 
@@ -270,11 +277,10 @@ func (e *Engine) selectResource(families string, weight float64, italic bool, ch
 
 func (e *Engine) load(r resource) (*loaded, error) {
 	key := fmt.Sprintf("%s#%d", r.path, r.index)
+	e.fontUse++
 	if f := e.faces[key]; f != nil {
+		f.lastUse = e.fontUse
 		return f, nil
-	}
-	if len(e.faces) >= 64 {
-		return nil, fmt.Errorf("font face limit")
 	}
 	f, err := os.Open(r.path)
 	if err != nil {
@@ -285,8 +291,8 @@ func (e *Engine) load(r resource) (*loaded, error) {
 	if err != nil {
 		return nil, err
 	}
-	if stat.Size() > 32<<20 || int64(e.bytes)+stat.Size() > 64<<20 {
-		return nil, fmt.Errorf("font byte limit")
+	if err := e.makeFontRoom(int(stat.Size())); err != nil {
+		return nil, err
 	}
 	data, err := os.ReadFile(r.path)
 	if err != nil {
@@ -319,6 +325,7 @@ func (e *Engine) load(r resource) (*loaded, error) {
 		value.emDescent = -float64(int16(binary.BigEndian.Uint16(os2[70:72])))
 	}
 	e.faces[key] = value
+	value.lastUse = e.fontUse
 	e.bytes += len(data)
 	return value, nil
 }

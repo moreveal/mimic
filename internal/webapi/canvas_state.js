@@ -198,12 +198,16 @@ const canvasCompatibilityState = (() => {
     if (c.surface.operations.length > 4096) c.surface.operations.shift();
   };
   /* shared_canvas_colors */
-  const color = (value) => {
+  const color = (value, scheme = 'light') => {
     const wide = canvasWideColor(value);
     if (wide) return wide;
-    const rgba = cssColorRGBA(value);
+    const rgba = cssColorRGBA(value, scheme);
     return rgba ? rgba.slice(0, 3).concat(Math.round(rgba[3] * 255)) : null;
   };
+  const canvasColorScheme = (surface) =>
+    typeof HTMLCanvasElement !== 'undefined' && surface.canvas instanceof HTMLCanvasElement
+      ? cssUsedColorScheme(surface.canvas)
+      : 'light';
   const normalizedColor = (rgba) =>
     rgba[4]
       ? 'color(' +
@@ -457,7 +461,11 @@ const canvasCompatibilityState = (() => {
     y = Number(y);
     if (!Number.isFinite(x) || !Number.isFinite(y)) return;
     const d = c.draw,
-      paint = paintSnapshot(stroke ? d.strokeStyle : d.fillStyle, c.surface.colorSpace || 'srgb');
+      paint = paintSnapshot(
+        stroke ? d.strokeStyle : d.fillStyle,
+        c.surface.colorSpace || 'srgb',
+        canvasColorScheme(c.surface),
+      );
     if (!paint) {
       record(c, stroke ? 'strokeText' : 'fillText', [text, x, y, maxWidth]);
       return;

@@ -1308,10 +1308,24 @@ const compatibilityElementState = {};
     );
   Object.defineProperty(Document.prototype, 'activeElement', {
     get() {
+      const child = this === document && host.focusedChildElement();
+      if (child) return wrap(child);
       return focused && focused.isConnected ? focused : this.body || this.documentElement;
     },
     configurable: true,
     enumerable: true,
+  });
+  const hasFocus = function hasFocus() {
+    const data = elementSlot(this);
+    if (this !== document && data?.type !== 'document') throw new TypeError('Illegal invocation');
+    return host.documentHasFocus(this === document ? realmDocumentRootID : data.nodeId);
+  };
+  markNative(hasFocus, 'hasFocus');
+  Object.defineProperty(Document.prototype, 'hasFocus', {
+    value: hasFocus,
+    writable: true,
+    enumerable: true,
+    configurable: true,
   });
   const focusEvent = (target, type, related, bubbles = false) => {
     host.invalidateStyleObservations();
@@ -1322,6 +1336,33 @@ const compatibilityElementState = {};
   Object.defineProperty(HTMLElement.prototype, 'focus', {
     value: function () {
       if (!this.isConnected || focused === this) return;
+      // Focusing across same-origin frame boundaries first unfocuses the
+      // deepest element in the previous branch. Cross-document relatedTarget
+      // is intentionally null, matching Chrome's retargeting boundary.
+      let active = document.activeElement;
+      while (active?.contentDocument) {
+        const nested = active.contentDocument.activeElement;
+        if (
+          !nested ||
+          nested === active.contentDocument.body ||
+          nested === active.contentDocument.documentElement
+        )
+          break;
+        active = nested;
+      }
+      if (
+        active &&
+        active !== this &&
+        active !== document.body &&
+        active !== document.documentElement
+      )
+        active.blur();
+      for (let owner = globalThis; owner.parent && owner.parent !== owner; owner = owner.parent) {
+        const ancestor = owner.parent.document?.activeElement;
+        if (ancestor && ancestor !== owner.frameElement && ancestor !== owner.parent.document.body)
+          ancestor.blur();
+      }
+      host.focusDocument(elementSlot(this).nodeId);
       const previous = focused;
       focused = null;
       if (previous) {
@@ -1347,6 +1388,20 @@ const compatibilityElementState = {};
     configurable: true,
     enumerable: true,
   });
+  for (const name of ['focus', 'blur']) {
+    const operation = function () {
+      if (this !== globalThis && this !== window) throw new TypeError('Illegal invocation');
+      // Script calls on an ordinary top-level browsing context do not move
+      // operating-system focus or dispatch FocusEvents in Chrome.
+    };
+    markNative(operation, name);
+    Object.defineProperty(globalThis, name, {
+      value: operation,
+      writable: true,
+      enumerable: true,
+      configurable: true,
+    });
+  }
   const mediaSlots = new WeakMap(),
     observedMedia = new Set(),
     mediaEventSlots = new WeakMap();

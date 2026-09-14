@@ -53,7 +53,7 @@ const strokeContains = (path, x, y, width) => {
   }
   return false;
 };
-const paintSnapshot = (style, space = 'srgb') => {
+const paintSnapshot = (style, space = 'srgb', scheme = 'light') => {
   const g = gradients.get(style);
   return g
     ? {
@@ -64,8 +64,8 @@ const paintSnapshot = (style, space = 'srgb') => {
           .map((s) => ({ offset: s.offset, color: canvasPaintColor(s.color, space) }))
           .sort((a, b) => a.offset - b.offset),
       }
-    : color(style)
-      ? canvasPaintColor(color(style), space)
+    : color(style, scheme)
+      ? canvasPaintColor(color(style, scheme), space)
       : null;
 };
 const paintColor = (paint, x, y) => {
@@ -117,6 +117,88 @@ const paintColor = (paint, x, y) => {
     )
     .concat(alpha);
 };
+const canvasBlendModes = new Set(
+  'multiply screen overlay darken lighten color-dodge color-burn hard-light soft-light difference exclusion hue saturation color luminosity'.split(
+    ' ',
+  ),
+);
+const blendRGB = (source, destination, mode) => {
+  // The selected Chrome graphics profile uses half precision for the
+  // nonseparable blend shader. Preserve its rounding before unorm storage.
+  const half = (value) => {
+    if (!value) return value;
+    const step = 2 ** (Math.max(-14, Math.floor(Math.log2(Math.abs(value)))) - 10);
+    const scaled = Math.abs(value) / step,
+      lower = Math.floor(scaled),
+      fraction = scaled - lower;
+    return (
+      Math.sign(value) *
+      (lower + (fraction > 0.5 || (fraction === 0.5 && lower % 2) ? 1 : 0)) *
+      step
+    );
+  };
+  const nonseparable = ['hue', 'saturation', 'color', 'luminosity'].includes(mode);
+  if (nonseparable) source = source.map(half);
+  const luminosity = (c) => half(half(0.3) * c[0] + half(0.59) * c[1] + half(0.11) * c[2]);
+  const saturation = (c) => Math.max(...c) - Math.min(...c);
+  const setLuminosity = (c, value) => {
+    const delta = half(value - luminosity(c));
+    let result = c.map((v) => half(v + delta));
+    const l = luminosity(result),
+      low = Math.min(...result),
+      high = Math.max(...result);
+    if (low < 0) result = result.map((v) => l + ((v - l) * l) / (l - low));
+    if (high > 1) result = result.map((v) => l + ((v - l) * (1 - l)) / (high - l));
+    return result;
+  };
+  const setSaturation = (c, value) => {
+    const order = [0, 1, 2].sort((a, b) => c[a] - c[b]),
+      [low, mid, high] = order;
+    const result = [0, 0, 0];
+    if (c[high] > c[low]) {
+      result[mid] = ((c[mid] - c[low]) * value) / (c[high] - c[low]);
+      result[high] = value;
+    }
+    return result;
+  };
+  if (mode === 'hue')
+    return setLuminosity(setSaturation(source, saturation(destination)), luminosity(destination));
+  if (mode === 'saturation')
+    return setLuminosity(setSaturation(destination, saturation(source)), luminosity(destination));
+  if (mode === 'color') return setLuminosity(source, luminosity(destination));
+  if (mode === 'luminosity') return setLuminosity(destination, luminosity(source));
+  return source.map((s, k) => {
+    const d = destination[k];
+    switch (mode) {
+      case 'multiply':
+        return s * d;
+      case 'screen':
+        return s + d - s * d;
+      case 'overlay':
+        return d <= 0.5 ? 2 * s * d : 1 - 2 * (1 - s) * (1 - d);
+      case 'darken':
+        return Math.min(s, d);
+      case 'lighten':
+        return Math.max(s, d);
+      case 'color-dodge':
+        return d === 0 ? 0 : s === 1 ? 1 : Math.min(1, d / (1 - s));
+      case 'color-burn':
+        return d === 1 ? 1 : s === 0 ? 0 : 1 - Math.min(1, (1 - d) / s);
+      case 'hard-light':
+        return s <= 0.5 ? 2 * s * d : 1 - 2 * (1 - s) * (1 - d);
+      case 'soft-light':
+        return s <= 0.5
+          ? d - (1 - 2 * s) * d * (1 - d)
+          : d + (2 * s - 1) * ((d <= 0.25 ? ((16 * d - 12) * d + 4) * d : Math.sqrt(d)) - d);
+      case 'difference':
+        return Math.abs(d - s);
+      case 'exclusion':
+        return d + s - 2 * d * s;
+      default:
+        return s;
+    }
+  });
+};
 const compositePixel = (p, i, rgba, opacity, mode, opaque, coverage = 1) => {
   const sa = (rgba[3] / 255) * opacity,
     da = p[i + 3] / 255;
@@ -151,12 +233,19 @@ const compositePixel = (p, i, rgba, opacity, mode, opaque, coverage = 1) => {
     fa = 1;
     fb = 1;
   }
+  const blended = canvasBlendModes.has(mode)
+    ? blendRGB(
+        rgba.slice(0, 3).map((v) => v / 255),
+        [0, 1, 2].map((k) => (da ? p[i + k] / 255 / da : 0)),
+        mode,
+      )
+    : null;
   for (let k = 0; k < 3; k++) {
     let value = rgba[k] * sa * fa + p[i + k] * fb;
-    if (mode === 'multiply' || mode === 'screen') {
+    if (blended) {
       const sc = rgba[k] / 255,
         dc = da ? p[i + k] / 255 / da : 0,
-        blend = mode === 'multiply' ? sc * dc : sc + dc - sc * dc;
+        blend = blended[k];
       value = (sc * sa * (1 - da) + dc * da * (1 - sa) + blend * sa * da) * 255;
     }
     canvasStore(p, i + k, value * coverage + p[i + k] * (1 - coverage));
@@ -181,6 +270,7 @@ const supportedComposite = new Set([
   'lighter',
   'multiply',
   'screen',
+  ...canvasBlendModes,
 ]);
 const queuePath = (c, path, rule, stroke = false, clear = false) => {
   const d = c.draw;
@@ -190,7 +280,11 @@ const queuePath = (c, path, rule, stroke = false, clear = false) => {
   }
   const paint = clear
     ? [0, 0, 0, 0]
-    : paintSnapshot(stroke ? d.strokeStyle : d.fillStyle, c.surface.colorSpace || 'srgb');
+    : paintSnapshot(
+        stroke ? d.strokeStyle : d.fillStyle,
+        c.surface.colorSpace || 'srgb',
+        canvasColorScheme(c.surface),
+      );
   if (!paint) return;
   const scale = Math.max(
     Math.hypot(d.transform[0], d.transform[1]),

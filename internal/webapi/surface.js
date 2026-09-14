@@ -1437,7 +1437,15 @@
         ? JSON.parse(inline.slice(1))
         : parseCSS(inline.slice(1)))
         accept(entry, 1000, Number.MAX_SAFE_INTEGER);
-    const entries = Array.from(winners.values(), (value) => ({ ...value.entry }));
+    const entries = Array.from(winners.values(), (value) => {
+      const entry = { ...value.entry };
+      if (entry.pending?.systemFont) {
+        const resolved = parseCSSFont(host.systemFonts()[entry.pending.value]);
+        entry.value = resolved?.[cssShorthandComponents.font.indexOf(entry.name)] || 'initial';
+        delete entry.pending;
+      }
+      return entry;
+    });
     if (styleReadCache?.retainable) {
       if (!records) styleCascades.set(element, (records = new Map()));
       records.set(pseudo, { matched, inline, dialog, entries });
@@ -1468,12 +1476,28 @@
     const value = host.inlineStyleState(elementSlot(element).nodeId);
     return value[0] === 'j' ? JSON.parse(value.slice(1)) : parseCSS(value.slice(1));
   };
+  const cssUsedColorScheme = (element) => {
+    let scheme = 'light';
+    for (let n = element; n && elementSlot(n); n = cssFontParent(n)) {
+      const value = computedCSSDeclarations(n).find((e) => e.name === 'color-scheme')?.value;
+      if (!value || ['inherit', 'unset'].includes(value)) continue;
+      const words = value.toLowerCase().split(/\s+/);
+      if (
+        words.includes('dark') &&
+        (!words.includes('light') || host.media('(prefers-color-scheme: dark)'))
+      )
+        scheme = 'dark';
+      break;
+    }
+    return scheme;
+  };
   const cssResolvedColor = (element) => {
+    const scheme = cssUsedColorScheme(element);
     for (let n = element; n && elementSlot(n); n = cssFontParent(n)) {
       const value = computedCSSDeclarations(n).find((e) => e.name === 'color')?.value;
       if (!value || ['inherit', 'unset', 'currentcolor'].includes(value.toLowerCase())) continue;
       if (value === 'initial') break;
-      const rgba = cssColorRGBA(value);
+      const rgba = cssColorRGBA(value, scheme);
       if (rgba) return cssSerializeColor(rgba);
       host.semanticMissingAt(
         'surface.js/cssResolvedColor',
