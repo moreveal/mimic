@@ -370,7 +370,8 @@ func buildSurface(generated string, exposure *compatibility.RealmExposure) strin
 }
 
 func composeSurface(generated, exposureSource string) string {
-	marker := "known=new Set(Reflect.ownKeys(globalThis));host.ready();"
+	// Use a formatter-stable sentinel instead of depending on authored JS whitespace.
+	marker := "/* compose_surface_tail */"
 	// Generated shape alone does not establish transferable structured cloning.
 	// Keep the upstream stream bundle unchanged, and select only a functioning
 	// transfer primitive for its fallback path (engines without one copy bytes).
@@ -379,7 +380,7 @@ func composeSurface(generated, exposureSource string) string {
 	parts := []string{capabilitySurface, generated, "finalizeBindings();", exposureSource,
 		"installNavigatorCapabilities();", cssSupportsSurface, strings.Replace(domCompatibility, "/* shared_abort_encoding */", abortEncodingSurface, 1),
 		templatesCompatibilitySurface, selectorsVendorSurface, selectorsCompatibilitySurface, xpathCompatibilitySurface, cssomCompatibilitySurface, strings.Replace(strings.Replace(strings.Replace(strings.Replace(svgGeometrySurface, "/* shared_svg_boundaries */", svgBoundariesSurface, 1), "/* shared_svg_text */", svgTextSurface, 1), "/* shared_svg_css_transform */", svgCSSTransformSurface, 1), "/* shared_svg_types */", svgTypesSurface+svgCoordinatesSurface+svgReflectionsSurface+svgPathMetricsSurface+svgUseSurface+svgAttributeDefaultsSurface+svgAttributeSemanticsSurface, 1), streamPrelude,
-		streamsVendorSurface, "}", strings.Replace(fetchCompatibilitySurface, "/* cache_storage */", cacheStorageSurface, 1), strings.Replace(formControlsSurface, "/* constraint_validation */", constraintValidationSurface, 1), traversalCompatibilitySurface, strings.Replace(documentCompatibilitySurface, "/* shared_document_state */", documentStateSurface, 1), documentAllSurface, attributesCompatibilitySurface, webAnimationsSurface, imageResourcesSurface, screenFocusSurface, eventsCompatibilitySurface, windowErrorsSurface, inputSurface, windowObservationsSurface, windowServicesSurface, speechSynthesisSurface, documentPictureInPictureSurface, navigationSurface, indexedDBSurface, fileSystemSurface, documentStreamSurface, shadowSerializationSurface, canvasObservationsSource(), webglObservationsSource(), webgpuObservationsSource(), fontFacesSurface, offlineAudioSurface, rtcSessionSurface, trustedTypesSinksSurface, "trustedCaptureEvents();registerBootstrapCallback('installTrustedTypesEnforcer',trustedEnforceString);", "finalizeDocumentGetterBindings();finalizeSingletonGetterBindings();finalizeCallableBindings();finalizeNativeBindings();globalThis.__mimicNativeFunctionSources=nativeFunctionSourceState;", marker}
+		streamsVendorSurface, "}", strings.Replace(fetchCompatibilitySurface, "/* cache_storage */", cacheStorageSurface, 1), strings.Replace(formControlsSurface, "/* constraint_validation */", constraintValidationSurface, 1), traversalCompatibilitySurface, strings.Replace(documentCompatibilitySurface, "/* shared_document_state */", documentStateSurface, 1), documentAllSurface, attributesCompatibilitySurface, webAnimationsSurface, imageResourcesSurface, screenFocusSurface, eventsCompatibilitySurface, windowErrorsSurface, inputSurface, windowObservationsSurface, windowServicesSurface, speechSynthesisSurface, documentPictureInPictureSurface, navigationSurface, indexedDBSurface, fileSystemSurface, documentStreamSurface, shadowSerializationSurface, canvasObservationsSource(), webglObservationsSource(), webgpuObservationsSource(), fontFacesSurface, offlineAudioSurface, rtcSessionSurface, trustedTypesSinksSurface, "trustedCaptureEvents();registerBootstrapCallback('installTrustedTypesEnforcer',trustedEnforceString);", "finalizeDocumentGetterBindings();finalizeSingletonGetterBindings();finalizePerformanceBindings();finalizeCallableBindings();finalizeNativeBindings();globalThis.__mimicNativeFunctionSources=nativeFunctionSourceState;", marker}
 	base := strings.Replace(handwrittenSurface, "/* shared_fetch_primitives */", fetchPrimitivesSurface, 1)
 	base = strings.Replace(base, "/* profile_locale */", localeSurface, 1)
 	base = strings.Replace(base, "/* native_intl */", intlSurface, 1)
@@ -396,7 +397,7 @@ func composeSurface(generated, exposureSource string) string {
 	base = strings.Replace(base, "/* shared_intersection_observer */", intersectionObserverSurface, 1)
 	base = strings.Replace(base, marker, strings.Join(parts, "\n"), 1)
 	base = strings.Replace(base, "/* shared_scrolling */", scrollingSurface, 1)
-	return strings.Replace(base, "finalizeDocumentGetterBindings();finalizeSingletonGetterBindings();finalizeCallableBindings();", "finalizeDocumentGetterBindings();finalizeSingletonGetterBindings();finalizePerformanceBindings();finalizeCallableBindings();", 1)
+	return base
 }
 
 func WorkerSurface(generated string, exposure *compatibility.RealmExposure) string {

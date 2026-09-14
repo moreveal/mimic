@@ -1,0 +1,10 @@
+chrome/152/generated/
+compatibility/captures/
+internal/browser/testdata/
+internal/webapi/vendor/
+internal/webapi/*_vendor.js
+internal/webapi/css_property_catalog.js
+internal/webapi/performance.js
+internal/webapi/performance_interfaces.json
+internal/webapi/svg_attribute_defaults.js
+internal/webapi/webkit_css_names.js
