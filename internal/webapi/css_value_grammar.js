@@ -83,6 +83,25 @@ const cssLengthValue = (value) => {
     const term = cssLengthTerm(single[1]);
     return term ? 'calc(' + cssSerializeNumber(term.number) + term.unit + ')' : null;
   }
+  const product = /^calc\(\s*(\S+)\s*([*/])\s*(\S+)\s*\)$/i.exec(value);
+  if (product) {
+    const left = cssLengthTerm(product[1]),
+      right = cssLengthTerm(product[3]),
+      leftNumber = cssNumberRegex.test(product[1]) ? Number(product[1]) : null,
+      rightNumber = cssNumberRegex.test(product[3]) ? Number(product[3]) : null;
+    if (
+      (product[2] === '*' && ((left && rightNumber !== null) || (leftNumber !== null && right))) ||
+      (product[2] === '/' && left && rightNumber !== null && rightNumber !== 0)
+    )
+      return (
+        'calc(' +
+        (left ? cssSerializeNumber(left.number) + left.unit : cssSerializeNumber(leftNumber)) +
+        product[2] +
+        (right ? cssSerializeNumber(right.number) + right.unit : cssSerializeNumber(rightNumber)) +
+        ')'
+      );
+    return null;
+  }
   const match = /^calc\(\s*(\S+)\s+([+-])\s+(\S+)\s*\)$/i.exec(value);
   if (!match) return null;
   const a = cssLengthTerm(match[1]),

@@ -40,6 +40,23 @@ return JSON.stringify([parent.x,parent.y,child.x,child.y,child.width,child.heigh
 	})
 }
 
+func TestCSSFixedInsetsAcceptTailwindCalcProducts(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, page *Page) {
+		navigateCapabilityFixture(t, page)
+		result, err := page.Evaluate(context.Background(), `(()=>{
+document.documentElement.style.setProperty('--spacing','.25rem');
+document.body.style.margin='0';
+document.body.innerHTML='<button id="target" style="position:fixed;right:calc(var(--spacing) * 6);bottom:calc(var(--spacing)*24);width:calc(50px*2);height:calc(40px/2)"></button>';
+const target=document.getElementById('target'),rect=target.getBoundingClientRect(),style=getComputedStyle(target);
+return JSON.stringify({rect:[rect.x,rect.y,rect.width,rect.height],insets:[style.right,style.bottom],hit:document.elementFromPoint(rect.x+50,rect.y+10)===target});
+})()`)
+		const want = `{"rect":[1148,537,100,20],"insets":["24px","96px"],"hit":true}`
+		if err != nil || result != want {
+			t.Fatalf("fixed Tailwind calc-product insets: %v want %s, err=%v", result, want, err)
+		}
+	})
+}
+
 func TestCSSRowFlexItemsUseIntrinsicBasisAndShrink(t *testing.T) {
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		navigateCapabilityFixture(t, page)

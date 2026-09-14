@@ -639,6 +639,11 @@ func (s *session) handleCommand(m message) (afterUnlock func()) {
 		result = map[string]any{"frameTree": s.frameTree(s.page.Top)}
 	case "Page.navigate":
 		navigationURL := stringValue(p["url"])
+		// A replacement navigation must be able to interrupt application work
+		// from the current document before its worker waits for the Page lock.
+		// Otherwise one long-running parser task can make every later CDP
+		// command, including the replacement Page.navigate, appear deadlocked.
+		s.server.cancelExecution(s.page)
 		loaderID := s.page.ReserveNavigation()
 		result = map[string]any{"frameId": s.page.Top.ID, "loaderId": loaderID}
 		committed := make(chan error, 1)
