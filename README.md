@@ -50,26 +50,26 @@ callbacks and microtasks remain ordered within each Page. See
 
 ## Measured, not assumed
 
-Fresh-build results from **September 13, 2026**, against **Chrome 152.0.7977.82** in headless mode, on Windows 11 x64 (Intel i7-14700KF, 31.83 GiB RAM).
+Fresh-build results from **September 14, 2026**, against **Chrome 152.0.7977.82** in headless mode, on Windows 11 x64 (Intel i7-14700KF, 31.83 GiB RAM).
 
 <p align="center">
-  <a href="benchmark/runs/08-public-beta-20260913/public-summary.md"><img src="docs/assets/benchmark-startup.svg" alt="Mimic and Chrome: CDP readiness and startup memory" width="1200"></a>
+  <a href="benchmark/runs/09-optimized-20260914/public-summary.md"><img src="docs/assets/benchmark-startup.svg" alt="Mimic and Chrome: CDP readiness and startup memory" width="1200"></a>
 </p>
 
 <p align="center">
-  <a href="benchmark/runs/08-public-beta-20260913/public-summary.md"><img src="docs/assets/benchmark-scaling.svg" alt="Static concurrency: active memory and throughput from 1 to 100 pages" width="1200"></a>
+  <a href="benchmark/runs/09-optimized-20260914/public-summary.md"><img src="docs/assets/benchmark-scaling.svg" alt="Static concurrency: active memory and throughput through 50 pages" width="1200"></a>
 </p>
 
-**92% lower ready RSS. 43% less active RAM and 2.76× throughput at 100 static pages.**
+**92% lower ready RSS. 62% less active RAM and 3.32× throughput at 50 static pages.**
 Measured on these fixtures and this machine; startup RSS is not per-page memory.
 
 Mimic is actively evolving toward direct HTTP lightness with browser compatibility.
 These are selected strengths from an early checkpoint; see Known limitations and
 the complete benchmark report for the current tradeoffs.
 
-[Full results, concurrency, CPU, memory, and methodology →](benchmark/runs/08-public-beta-20260913/public-summary.md)
+[Full results, concurrency, CPU, memory, and methodology →](benchmark/runs/09-optimized-20260914/public-summary.md)
 
-[Full measured report and raw data](benchmark/runs/08-public-beta-20260913/report.md) · [Performance history](docs/performance/report.md) · [Reproduce](benchmark/README.md)
+[Full measured report and raw data](benchmark/runs/09-optimized-20260914/report.md) · [Performance history](docs/performance/report.md) · [Reproduce](benchmark/README.md)
 
 ## Quick start
 
@@ -176,9 +176,9 @@ install or launch Chrome. See the [target manifest](chrome/152/target.json) and
 
 ## Known limitations
 
-Warm execution currently trails Chrome in the measured fixtures. CPU concurrency
-at 100 pages also hit an initialization failure. Both are optimization and reliability
-targets as Mimic develops; the full report retains all results and recorded failures.
+Warm execution is faster in two of six fixtures and still trails Chrome most sharply
+for DOM mutations. The Windows host stopped Mimic's 100-page levels at its memory-pressure
+guard; a separate completed Linux 100-page run is reported with its higher marginal Page cost.
 
 ## Current boundaries
 

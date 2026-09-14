@@ -12,7 +12,7 @@ import (
 // DOM.getBoxModel content rectangle has zero area.
 func TestDOMContentQuadsIncludePaddingAndBorder(t *testing.T) {
 	s, addr := runningServer(t)
-	if _, err := s.Page.Evaluate(context.Background(), `document.body.innerHTML='<input id="entry" style="width:0;height:28px;padding:12px 14px;border:2px solid;box-sizing:content-box">'`); err != nil {
+	if _, err := evaluatePageFixture(s.Page, `document.body.innerHTML='<input id="entry" style="width:0;height:28px;padding:12px 14px;border:2px solid;box-sizing:content-box">'`); err != nil {
 		t.Fatal(err)
 	}
 	d, _ := s.Page.Document()
@@ -33,14 +33,14 @@ func TestDOMContentQuadsIncludePaddingAndBorder(t *testing.T) {
 	x, y := (coordinateValue(quad[0])+coordinateValue(quad[2]))/2, (coordinateValue(quad[1])+coordinateValue(quad[5]))/2
 	flatCall(t, c, sid, 4, "Input.dispatchMouseEvent", map[string]any{"type": "mousePressed", "x": x, "y": y, "button": "left", "clickCount": 1})
 	flatCall(t, c, sid, 5, "Input.dispatchMouseEvent", map[string]any{"type": "mouseReleased", "x": x, "y": y, "button": "left", "clickCount": 1})
-	if got, err := s.Page.Evaluate(context.Background(), `document.activeElement.id`); err != nil || got != "entry" {
+	if got, err := evaluatePageFixture(s.Page, `document.activeElement.id`); err != nil || got != "entry" {
 		t.Fatalf("quad center did not focus input: %v %v", got, err)
 	}
 }
 
 func TestDOMQueriesShareRealmSelectorEngine(t *testing.T) {
 	s, addr := runningServer(t)
-	if _, err := s.Page.Evaluate(context.Background(), `document.body.innerHTML='<main id="root"><i class="item"></i><i class="item" id="second"></i></main>';Element.prototype.querySelectorAll=()=>[]`); err != nil {
+	if _, err := evaluatePageFixture(s.Page, `document.body.innerHTML='<main id="root"><i class="item"></i><i class="item" id="second"></i></main>';Element.prototype.querySelectorAll=()=>[]`); err != nil {
 		t.Fatal(err)
 	}
 	d, _ := s.Page.Document()
@@ -90,7 +90,8 @@ func TestDOMQueryInitialDocumentBootstrapsRealm(t *testing.T) {
 
 func TestDOMContentQuadsUseResolvedControlFontGeometry(t *testing.T) {
 	s, addr := runningServer(t)
-	if _, err := s.Page.Evaluate(context.Background(), `document.body.innerHTML='<button id="login" style="font-size:var(--missing)">Log in</button>'`); err != nil {
+	_, err := evaluatePageFixture(s.Page, `document.body.innerHTML='<button id="login" style="font-size:var(--missing)">Log in</button>'`)
+	if err != nil {
 		t.Fatal(err)
 	}
 	d, _ := s.Page.Document()
@@ -115,7 +116,8 @@ func TestDOMContentQuadsUseResolvedControlFontGeometry(t *testing.T) {
 	if width := coordinateValue(quad[2]) - coordinateValue(quad[0]); width <= 16 {
 		t.Fatalf("fabricated control geometry: %#v", quad)
 	}
-	if _, err := s.Page.Evaluate(context.Background(), `document.getElementById('login').style.fontSize='2ex'`); err != nil {
+	_, err = evaluatePageFixture(s.Page, `document.getElementById('login').style.fontSize='2ex'`)
+	if err != nil {
 		t.Fatal(err)
 	}
 	if err := c.WriteJSON(map[string]any{"id": 2, "method": "DOM.getContentQuads", "params": map[string]any{"nodeId": button.ID}}); err != nil {

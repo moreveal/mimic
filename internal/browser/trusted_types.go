@@ -119,8 +119,7 @@ func parseResponseCSP(headers http.Header) csp.PolicySet {
 }
 
 func (r *Realm) prepareChangedScript(id int64) error {
-	node, ok := r.document.Get(id)
-	if !ok || node.TagName != "SCRIPT" || node.Namespace != "http://www.w3.org/1999/xhtml" {
+	if !r.document.IsHTMLScript(id) {
 		return nil
 	}
 	_, err := r.prepareConnectedResource(id, nil, nil)

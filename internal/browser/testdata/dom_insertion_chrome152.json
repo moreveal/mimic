@@ -1,0 +1,58 @@
+{
+  "browser": {
+    "protocolVersion": "1.3",
+    "product": "Chrome/152.0.7977.82",
+    "revision": "@d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "userAgent": "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) HeadlessChrome/152.0.0.0 Safari/537.36",
+    "jsVersion": "15.2.124.21"
+  },
+  "source_sha256": "ac54e5b4299a819042402dbfb450b825978c45e5a14f4992de081a37b36e2cf3",
+  "result": {
+    "result": {
+      "type": "object",
+      "value": {
+        "reference": "NotFoundError",
+        "referenceAtomic": true,
+        "selfReference": "NotFoundError",
+        "cycle": "HierarchyRequestError",
+        "cycleAtomic": true,
+        "sameChild": true,
+        "observedReference": "NotFoundError",
+        "observedReplacement": "NotFoundError",
+        "observedAtomic": true,
+        "creation": [
+          true,
+          true,
+          true
+        ],
+        "fragment": {
+          "empty": true,
+          "identity": true,
+          "owner": true,
+          "sentinel": true,
+          "sourceOwner": true
+        },
+        "records": [
+          {
+            "target": "fragment",
+            "added": 0,
+            "removed": 32,
+            "previous": true,
+            "next": false
+          },
+          {
+            "target": "target",
+            "added": 32,
+            "removed": 0,
+            "previous": true,
+            "next": true
+          }
+        ],
+        "leaves": [
+          true,
+          true
+        ]
+      }
+    }
+  }
+}

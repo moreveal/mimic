@@ -191,7 +191,7 @@ func (p *performanceTimeline) queueDelivery() {
 				dropped = count
 				observer.reportDropped = false
 			}
-			if _, err := p.runtime.Call(ctx, observer.callback, nil, p.runtime.Value(records), p.runtime.Value(dropped)); err != nil {
+			if err := p.invoke(ctx, observer.callback, records, dropped); err != nil {
 				return err
 			}
 		}
@@ -209,7 +209,7 @@ func (p *performanceTimeline) queueBufferFull() {
 		for len(p.secondary) > 0 {
 			previous := len(p.secondary)
 			if p.resourceCount() >= p.resourceLimit && p.bufferCallback != nil {
-				if _, err := p.runtime.Call(ctx, p.bufferCallback, nil); err != nil {
+				if err := p.invoke(ctx, p.bufferCallback); err != nil {
 					return err
 				}
 			}
@@ -226,6 +226,26 @@ func (p *performanceTimeline) queueBufferFull() {
 		}
 		return nil
 	})
+}
+
+// Notification arguments and return values belong only to this delivery. Even
+// an undefined return owns a native handle. Keep creation, call and cleanup on
+// the same owner operation; errors still escape to the scheduler's owner.
+func (p *performanceTimeline) invoke(ctx context.Context, callback engine.Value, args ...any) error {
+	operation := func(ctx context.Context) error {
+		values := make([]engine.Value, len(args))
+		for i, arg := range args {
+			values[i] = p.runtime.Value(arg)
+		}
+		defer releaseRuntimeValues(p.runtime, values...)
+		result, err := p.runtime.Call(ctx, callback, nil, values...)
+		releaseRuntimeValues(p.runtime, result)
+		return err
+	}
+	if owner, ok := p.runtime.(engine.OwnerRuntime); ok {
+		return owner.RunOnOwner(ctx, operation)
+	}
+	return operation(ctx)
 }
 
 func (p *performanceTimeline) clear(typ, name string, hasName bool) {

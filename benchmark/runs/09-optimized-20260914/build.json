@@ -1,0 +1,35 @@
+{
+  "command": [
+    "go",
+    "build",
+    "-o",
+    "E:\\GitHub\\mimic\\.build\\milestone-09-optimized-20260914.exe",
+    "./cmd/mimic"
+  ],
+  "revision": "f07bd2d643eebbadc28d582ef93f01c832a50106",
+  "status": " M internal/browser/browser.go\n M internal/browser/document_compatibility.go\n M internal/browser/document_observation_handles_test.go\n M internal/browser/document_stream.go\n M internal/browser/exception_host.go\n M internal/browser/fetch.go\n M internal/browser/page.go\n M internal/browser/performance.go\n M internal/browser/realm.go\n M internal/browser/structured_clone.go\n M internal/browser/timers.go\n M internal/browser/trusted_types.go\n M internal/browser/url_host.go\n M internal/browser/worker.go\n M internal/browser/worker_fetch.go\n M internal/cdp/dom_query_test.go\n M internal/cdp/dom_serialization_test.go\n M internal/cdp/input_hit_target_test.go\n M internal/cdp/input_order_test.go\n M internal/cdp/server.go\n M internal/cdp/server_test.go\n M internal/dom/dom.go\n M internal/engine/engine.go\n M internal/engine/goja/runtime.go\n M internal/engine/quickjs/runtime.go\n M internal/engine/v8/bootstrap_snapshot.go\n M internal/engine/v8/module_async.go\n M internal/engine/v8/runtime.go\n M internal/engine/v8/structured_clone.go\n M internal/engine/v8/value_release_test.go\n M internal/network/loader.go\n M internal/network/session.go\n M internal/webapi/document_compatibility.js\n M internal/webapi/dom_compatibility.js\n M internal/webapi/fetch_compatibility.js\n M internal/webapi/surface.js\n M internal/webapi/worker.js\n M tools/performance/README.md\n?? benchmark/runs/09-mimic-chrome-linux-100-pages-20260914/\n?? benchmark/runs/09-optimized-linux-20260914/\n?? benchmark/runs/09-optimized-linux-capacity-20260914/\n?? docs/performance/body-retention-20260914.md\n?? docs/performance/body-sharing-20260914.md\n?? docs/performance/cdp-command-boundary-20260914.md\n?? docs/performance/css-source-epoch-20260914.md\n?? docs/performance/data/\n?? docs/performance/fetch-transfer-20260914.md\n?? docs/performance/handle-ownership-20260914.md\n?? docs/performance/hybrid-packed-dispatch-20260914.md\n?? docs/performance/module-error-ownership-20260914.md\n?? docs/performance/nursery-20260914.md\n?? docs/performance/optimization-campaign-20260914.md\n?? docs/performance/snapshot-byte-ownership-20260914.md\n?? docs/performance/v8-environment-20260914.md\n?? docs/performance/worker-handle-ownership-20260914.md\n?? internal/browser/dom_insertion_test.go\n?? internal/browser/evaluation_handles_test.go\n?? internal/browser/fetch_binary_test.go\n?? internal/browser/host_promise.go\n?? internal/browser/module_error_lifetime_test.go\n?? internal/browser/page_lifetime_soak_test.go\n?? internal/browser/performance_notification_handles_test.go\n?? internal/browser/testdata/dom_insertion_chrome152.json\n?? internal/browser/testdata/dom_insertion_oracle.js\n?? internal/browser/value_lifetime.go\n?? internal/browser/worker_timer_handles_test.go\n?? internal/browser/worker_timers.go\n?? internal/dom/insertion_test.go\n?? internal/dom/script_identity_test.go\n?? internal/engine/binary.go\n?? internal/engine/binary_test.go\n?? internal/engine/v8/binary.go\n?? internal/engine/v8/bootstrap_snapshot_sharing_test.go\n?? internal/network/body_store.go\n?? internal/network/body_store_test.go\n?? third_party/gov8/startup_data_sharing.go\n?? tools/performance/linux_capacity.py\n?? tools/performance/linux_compare.py\n?? tools/performance/publish_checkpoint.py\n",
+  "sha256": {
+    "mimic": "eb6b31f79744ae659ad50b26da253fdbbc8a5d2ed6cff4c5a31b3acd71e30c20",
+    "chrome": "ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9"
+  },
+  "executables": {
+    "mimic": "E:\\GitHub\\mimic\\.build\\milestone-09-optimized-20260914.exe",
+    "chrome": "E:\\GitHub\\mimic\\compatibility\\.chrome-for-testing\\152.0.7977.82\\chrome-win64\\chrome.exe"
+  },
+  "harness_sha256": "ce1fce42fa9b9e03f105900601db4d6d7fa9b0d9cda51d5096322357277673e7",
+  "harness_files": {
+    "compare.py": "274b156ee88e67085f5e556ef79629146f5e7287ee54af844476a0c005e65a5b",
+    "report.py": "f12e393341c00e9e03748a06913fa639c1069f66dc7acb71959cffd51647f214",
+    "requirements.txt": "06e6d87d17f39a59fe7b2576545231fe65d5a1940d22e63fc2b32b6cfa12123b",
+    "run.ps1": "6c50b0a55886278de7c1e4d92b77b42bf2cfad59fa451dbaa766b0e0eae84fa6",
+    "run.py": "67718e844bce74b7757f2238716233b9d8683a17294f2b02017667b9c1e44cd3",
+    "test_harness.py": "ddb8dcf74a192d3403971833cf5e011dd8578a9acd9a060b3b265cc6d79aef2a",
+    "v8_version.go": "669a669b0545ba599edb2f7923617f154b976e7377de89d8b2e1f477bdb12f09",
+    "windows_metrics.py": "57ba1e10dfb1f1cb439a52ad5f7f5795c3ba4eef25ae22c9514ecfe115434cd5",
+    "fixtures/workload.js": "484019063e33e131756f67ab6f3076ad2c18e3959072fbae42f540455448c214",
+    "fixtures/vendor/react-dom.production.min.js": "35f4f974f4b2bcd44da73963347f8952e341f83909e4498227d4e26b98f66f0d",
+    "fixtures/vendor/REACT-LICENSE.txt": "52412d7bc7ce4157ea628bbaacb8829e0a9cb3c58f57f99176126bc8cf2bfc85",
+    "fixtures/vendor/react.production.min.js": "d949f1c3687aedadcedac85261865f29b17cd273997e7f6b2bfc53b2f9d4c4dd"
+  },
+  "built_at": "2026-09-14T03:42:47.592035+04:00"
+}

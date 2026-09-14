@@ -5,7 +5,7 @@ import (
 )
 
 func installExceptionDescription(host map[string]any, runtime engine.Runtime) {
-	host["describeException"] = runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+	host["describeException"] = transientRuntimeFunction(runtime, func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		var value engine.Value
 		if len(args) > 0 {
 			value = args[0]

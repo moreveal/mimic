@@ -197,6 +197,7 @@ func (p *Page) Close() error {
 	for _, r := range realms {
 		_ = r.Close()
 	}
+	p.loader.CloseResponseBodies()
 	p.textMetrics = nil
 	p.pendingCheckpoints = nil
 	return nil
@@ -927,6 +928,43 @@ func (p *Page) evaluateRealm(ctx context.Context, r *Realm, source string, drain
 	// reactions queued by its synchronous body run before any timer task, with
 	// the same live canonical clock as a task dequeued by the event loop.
 	var v engine.Value
+	release := func(value engine.Value) {
+		if owner, ok := r.runtime.(engine.ValueReleaser); ok {
+			owner.ReleaseValue(value)
+		}
+	}
+	defer func() { release(v) }()
+	await := func() (result any, done bool, err error) {
+		operation := func(context.Context) error {
+			resolved, settled, awaitErr := r.runtime.Await(v)
+			done = settled
+			if awaitErr != nil || !done {
+				return awaitErr
+			}
+			result = resolved.Export()
+			if _, retained := result.(engine.Value); retained {
+				// Export may return the native value itself for non-JSON objects.
+				// That handle becomes the embedding caller's responsibility.
+				if r.runtime.StrictEqual(v, resolved) {
+					v = nil
+				}
+			} else {
+				release(resolved)
+			}
+			release(v)
+			v = nil
+			return nil
+		}
+		// Await, export and root cleanup are one synchronous owner operation.
+		// Releasing each value in a separate actor turn measurably slows small
+		// evaluations; this does not pump tasks or alter their checkpoints.
+		if owner, ok := r.runtime.(engine.OwnerRuntime); ok {
+			err = owner.RunOnOwner(ctx, operation)
+		} else {
+			err = operation(ctx)
+		}
+		return
+	}
 	if err := r.scheduler.RunInline(ctx, func(ctx context.Context) error {
 		var err error
 		v, err = r.Evaluate(ctx, source, "__pyppeteer_evaluation_script__")
@@ -939,10 +977,10 @@ func (p *Page) evaluateRealm(ctx context.Context, r *Realm, source string, drain
 			p.trace.Add(trace.Error, "scheduler", map[string]any{"error": err.Error(), "during": "Evaluate"})
 		}
 	}
-	if resolved, done, err := r.runtime.Await(v); err != nil {
+	if result, done, err := await(); err != nil {
 		return nil, err
 	} else if done {
-		return resolved.Export(), nil
+		return result, nil
 	}
 	// Some engines expose Promise state by registering a reaction rather than
 	// reading an internal slot. Give that reaction the same microtask checkpoint
@@ -951,10 +989,10 @@ func (p *Page) evaluateRealm(ctx context.Context, r *Realm, source string, drain
 	if err := r.scheduler.RunInline(ctx, nil); err != nil {
 		return nil, err
 	}
-	if resolved, done, err := r.runtime.Await(v); err != nil {
+	if result, done, err := await(); err != nil {
 		return nil, err
 	} else if done {
-		return resolved.Export(), nil
+		return result, nil
 	}
 	for {
 		realms := p.evaluationRealms(r)
@@ -968,10 +1006,10 @@ func (p *Page) evaluateRealm(ctx context.Context, r *Realm, source string, drain
 		if err := p.runEvaluationTasks(ctx, r); err != nil {
 			p.trace.Add(trace.Error, "scheduler", map[string]any{"error": err.Error(), "during": "Runtime.awaitPromise wake"})
 		}
-		if resolved, done, err := r.runtime.Await(v); err != nil {
+		if result, done, err := await(); err != nil {
 			return nil, err
 		} else if done {
-			return resolved.Export(), nil
+			return result, nil
 		}
 	}
 }

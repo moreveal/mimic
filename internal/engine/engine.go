@@ -19,6 +19,20 @@ type ValueReleaser interface {
 	ReleaseValue(Value)
 }
 
+// ValueRetainer creates an independent native root for a value borrowed from a
+// synchronous host callback. The new owner must release it after its last use.
+// Releasing it never invalidates an independently retained handle or JS reference.
+type ValueRetainer interface {
+	RetainValue(Value) Value
+}
+
+// HostValueReturner consumes one owned root and lends its value until the
+// current synchronous host callback returns it to JavaScript. The returned
+// value must not be retained by Go or used after leaving that callback.
+type HostValueReturner interface {
+	ReturnValueAndRelease(Value) Value
+}
+
 // ThrownValue preserves the identity and type of a JavaScript exception.
 // The caller may release this root after handling the exception.
 type ThrownValue interface {
@@ -31,6 +45,14 @@ type Promise struct {
 	Value   Value
 	Resolve func(any) error
 	Reject  func(any) error
+}
+
+// HostPromiseRuntime lends Value to the current synchronous host callback,
+// which must return it to JavaScript before leaving that callback. The native
+// resolvers own pending settlement; they release their roots after the first
+// Resolve/Reject. Code retaining Value in Go must use Runtime.NewPromise.
+type HostPromiseRuntime interface {
+	NewHostPromise() Promise
 }
 
 type Runtime interface {
@@ -97,6 +119,8 @@ type ModuleRuntime interface {
 // PreparedModuleRuntime separates native parsing from linking, allowing browser
 // network waits between Page tasks. Completion must be invoked on that Page's
 // event loop, after the native dynamic-import callback has returned.
+// Its error is borrowed: a handler may retain a cached graph's ThrownValue and
+// pass it to multiple completions. Completion must not release that owner.
 type DynamicModuleCompletion func(context.Context, string, string, ModuleLoader, error) error
 type DynamicModuleHandler func(string, string, DynamicModuleCompletion)
 type PreparedModuleRuntime interface {

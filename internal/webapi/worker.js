@@ -105,7 +105,8 @@
     fn=trustedTimerArgument(fn);delay=Number(delay);
     const name=repeat?'setInterval':'setTimeout';
     const source=typeof fn==='function'?null:trustedConvert(fn,'TrustedScript','WorkerGlobalScope '+name,"Failed to execute '"+name+"' on 'WorkerGlobalScope': ");
-    return host.setTimer(source===null?()=>fn(...args):()=>host.runTimerSource(source),delay,repeat);
+    const callback=source===null?()=>fn(...args):()=>host.runTimerSource(source);
+    return host.setTimer(()=>{try{callback()}catch(error){reportWorkerException(error)}},delay,repeat);
   };
   const operations={
     importScripts(...urls){urls=urls.map(value=>trustedTypeOf(value)==='TrustedScriptURL'?value:trustedString(value));const values=urls.map(value=>trustedConvert(value,'TrustedScriptURL','WorkerGlobalScope importScripts',"Failed to execute 'importScripts' on 'WorkerGlobalScope': "));const error=host.importScripts(values);if(error)throw new DOMException(error.message,error.name)},

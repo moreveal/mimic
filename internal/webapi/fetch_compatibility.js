@@ -51,7 +51,9 @@
       cleanup=()=>signal.removeEventListener('abort',abort);
       if(signal.aborted){abort();return}
       signal.addEventListener('abort',abort,{once:true});
-      if(value.length)controller.enqueue(value.slice());controller.close();
+      // Transport supplies a fresh, engine-owned buffer. The stream owns this
+      // view; cloning a Response still uses the byte stream's independent tee.
+      if(value.length)controller.enqueue(value);controller.close();
     },cancel(){cleanup()}});
     return {stream,type,cleanup};
   }

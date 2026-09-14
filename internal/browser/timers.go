@@ -12,21 +12,25 @@ import (
 // A public timer ID identifies its registration, including every interval
 // tick. Scheduler task IDs change when a repeating registration is requeued.
 type windowTimer struct {
-	taskID uint64
-	active bool
+	taskID   uint64
+	active   bool
+	function engine.Value
 }
 
 func (r *Realm) hostTimer(_ engine.Value, args []engine.Value) (engine.Value, error) {
 	if len(args) == 0 {
 		return nil, fmt.Errorf("timer callback required")
 	}
-	fn := args[0]
 	delay := time.Duration(numarg(args, 1)) * time.Millisecond
 	repeat, _ := arg(args, 2).(bool)
 	if r.timers == nil {
 		r.timers = make(map[uint64]*windowTimer)
 	}
-	registration := &windowTimer{active: true}
+	registration := &windowTimer{active: true, function: retainRuntimeValue(r.runtime, args[0])}
+	release := func() {
+		releaseRuntimeValues(r.runtime, registration.function)
+		registration.function = nil
+	}
 	var id uint64
 	var callback func(context.Context) error
 	callback = func(ctx context.Context) error {
@@ -40,7 +44,28 @@ func (r *Realm) hostTimer(_ engine.Value, args []engine.Value) (engine.Value, er
 		p := r.agent.Page()
 		p.userScriptDepth++
 		defer func() { p.userScriptDepth-- }()
-		_, err := r.runtime.Call(ctx, fn, r.runtime.Get("window"))
+		invoke := func(ctx context.Context) error {
+			receiver := r.runtime.Get("window")
+			result, err := r.runtime.Call(ctx, registration.function, receiver)
+			releaseRuntimeValues(r.runtime, result, receiver)
+			if !repeat || err != nil || !registration.active {
+				release()
+			}
+			return err
+		}
+		var err error
+		if owner, ok := r.runtime.(engine.OwnerRuntime); ok {
+			err = owner.RunOnOwner(ctx, invoke)
+		} else {
+			err = invoke(ctx)
+		}
+		if err != nil {
+			registration.active = false
+			delete(r.timers, id)
+			// Owner dispatch can fail before invoke starts (for example when
+			// the task context expires), so cleanup must cover that path too.
+			release()
+		}
 		if err == nil && repeat && registration.active {
 			registration.taskID = r.scheduler.Post(scheduler.Timer, delay, callback)
 		}
@@ -58,6 +83,8 @@ func (r *Realm) hostClearTimer(_ engine.Value, args []engine.Value) (engine.Valu
 		registration.active = false
 		r.scheduler.Cancel(registration.taskID)
 		delete(r.timers, id)
+		releaseRuntimeValues(r.runtime, registration.function)
+		registration.function = nil
 	}
 	return nil, nil
 }

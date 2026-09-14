@@ -436,6 +436,9 @@ func (r *runtime) unwrapOrUndefined(v engine.Value) (*quickjs.Value, error) {
 }
 
 func (r *runtime) marshal(x any) (*quickjs.Value, error) {
+	if buffer, ok := x.(engine.BinaryBuffer); ok {
+		return r.context.NewArrayBuffer(buffer), nil
+	}
 	if x == nil {
 		return r.context.NewNull(), nil
 	}

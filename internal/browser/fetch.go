@@ -22,10 +22,6 @@ func fetchRequest(contextID string, target, source *url.URL, args []engine.Value
 }
 
 func fetchResponse(response network.Response) map[string]any {
-	body := make([]int, len(response.Body))
-	for index, value := range response.Body {
-		body[index] = int(value)
-	}
 	typeName := response.Type
 	if typeName == "" {
 		typeName = "basic"
@@ -35,5 +31,5 @@ func fetchResponse(response network.Response) map[string]any {
 	for name, values := range response.Headers {
 		headers[name] = strings.Join(values, ", ")
 	}
-	return map[string]any{"status": response.Status, "statusText": http.StatusText(response.Status), "url": urlString(response.URL), "headers": headers, "body": string(response.Body), "bodyBytes": body, "type": typeName, "redirected": response.Redirected}
+	return map[string]any{"status": response.Status, "statusText": http.StatusText(response.Status), "url": urlString(response.URL), "headers": headers, "bodyBytes": engine.BinaryBuffer(response.Body), "type": typeName, "redirected": response.Redirected}
 }

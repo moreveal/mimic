@@ -1,7 +1,6 @@
 package cdp
 
 import (
-	"context"
 	"encoding/json"
 	"strings"
 	"testing"
@@ -13,7 +12,7 @@ func TestPipelinedMouseCommandsPreserveWireOrder(t *testing.T) {
 	for _, mode := range []string{"page", "flattened", "legacy"} {
 		t.Run(mode, func(t *testing.T) {
 			s, addr := runningServer(t)
-			_, err := s.Page.Evaluate(context.Background(), `document.body.innerHTML='<button style="position:absolute;left:0;top:0;width:100px;height:100px">open</button>';globalThis.inputOrder='';for(const [type,letter] of [['mousedown','d'],['mouseup','u'],['click','c']])document.addEventListener(type,()=>inputOrder+=letter);`)
+			_, err := evaluatePageFixture(s.Page, `document.body.innerHTML='<button style="position:absolute;left:0;top:0;width:100px;height:100px">open</button>';globalThis.inputOrder='';for(const [type,letter] of [['mousedown','d'],['mouseup','u'],['click','c']])document.addEventListener(type,()=>inputOrder+=letter);`)
 			if err != nil {
 				t.Fatal(err)
 			}
@@ -77,7 +76,7 @@ func TestPipelinedMouseCommandsPreserveWireOrder(t *testing.T) {
 				}
 				replies++
 			}
-			got, err := s.Page.Evaluate(context.Background(), `inputOrder`)
+			got, err := evaluatePageFixture(s.Page, `inputOrder`)
 			if err != nil || got != strings.Repeat("duc", clicks) {
 				t.Fatalf("pipelined event order: %v err=%v", got, err)
 			}

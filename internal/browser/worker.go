@@ -6,6 +6,7 @@ import (
 	"crypto/sha1"
 	"crypto/sha256"
 	"crypto/sha512"
+	"errors"
 	"fmt"
 	"net/url"
 	"strings"
@@ -53,6 +54,7 @@ type DedicatedWorker struct {
 	performanceCursor   uint64
 	fetchCancels        map[string]context.CancelFunc // worker task/host callbacks only
 	fetchWG             sync.WaitGroup
+	timers              map[uint64]*workerTimer // worker task/host callbacks only
 }
 
 func (r *Realm) hostCreateWorker(_ engine.Value, args []engine.Value) (engine.Value, error) {
@@ -144,6 +146,8 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 	w.mu.Unlock()
 	defer func() {
 		w.stopFetches()
+		workerScheduler.Close()
+		clear(w.timers)
 		_ = runtime.Close()
 		// A terminated Worker object can remain reachable from its creating
 		// document. Do not retain its abandoned task queue or response bodies.
@@ -181,7 +185,7 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 		return nil, nil
 	})
 	installExceptionDescription(host, runtime)
-	host["reportUnhandledException"] = runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+	host["reportUnhandledException"] = transientRuntimeFunction(runtime, func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		return nil, w.reportError(fmt.Errorf("%s", strarg(args, 0)))
 	})
 	var workerFonts *textmetrics.Engine
@@ -210,34 +214,12 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 	host["token"] = runtime.Function(func(engine.Value, []engine.Value) (engine.Value, error) {
 		return runtime.Value(workerToken), nil
 	})
-	host["postMessage"] = w.runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+	host["postMessage"] = transientRuntimeFunction(runtime, func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		w.deliverToParent(arg(args, 0), strarg(args, 1))
 		return nil, nil
 	})
-	host["setTimer"] = runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
-		if len(args) == 0 {
-			return nil, fmt.Errorf("timer callback required")
-		}
-		fn := args[0]
-		delay := time.Duration(numarg(args, 1)) * time.Millisecond
-		var callback scheduler.Callback
-		var taskID uint64
-		repeat, _ := arg(args, 2).(bool)
-		callback = func(ctx context.Context) error {
-			_, callErr := runtime.Call(ctx, fn, runtime.Get("self"))
-			if callErr == nil && repeat && !w.isClosed() {
-				taskID = workerScheduler.Post(scheduler.Timer, delay, callback)
-			}
-			return callErr
-		}
-		taskID = workerScheduler.Post(scheduler.Timer, delay, callback)
-		w.signal()
-		return runtime.Value(taskID), nil
-	})
-	host["clearTimer"] = runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
-		workerScheduler.Cancel(uint64(numarg(args, 0)))
-		return nil, nil
-	})
+	host["setTimer"] = transientRuntimeFunction(runtime, w.hostTimer)
+	host["clearTimer"] = transientRuntimeFunction(runtime, w.hostClearTimer)
 	host["close"] = runtime.Function(func(engine.Value, []engine.Value) (engine.Value, error) {
 		w.markClosed()
 		return nil, nil
@@ -271,7 +253,7 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 		return runtime.Value(p.environmentView().Graphics.WebGPUProjection()), nil
 	})
 	host["gpuRequestAdapter"] = runtime.Function(func(engine.Value, []engine.Value) (engine.Value, error) {
-		promise := runtime.NewPromise()
+		promise := newHostPromise(runtime)
 		delay := time.Duration(p.environmentView().Graphics.WebGPU.InitializationDelayMillis * float64(time.Millisecond))
 		workerScheduler.Post(scheduler.Control, delay, func(context.Context) error {
 			g := p.environmentView().Graphics
@@ -556,7 +538,18 @@ func (w *DedicatedWorker) postMessageReady(data any) {
 		w.mu.Lock()
 		fn := w.messageReceiver
 		w.mu.Unlock()
-		_, err := runtime.Call(ctx, fn, runtime.Get("self"), runtime.Value(data))
+		invoke := func(ctx context.Context) error {
+			receiver, argument := runtime.Get("self"), runtime.Value(data)
+			result, err := runtime.Call(ctx, fn, receiver, argument)
+			releaseRuntimeValues(runtime, result, receiver, argument)
+			return err
+		}
+		var err error
+		if owner, ok := runtime.(engine.OwnerRuntime); ok {
+			err = owner.RunOnOwner(ctx, invoke)
+		} else {
+			err = invoke(ctx)
+		}
 		if err != nil {
 			w.parent.agent.Page().trace.Add(trace.Error, "workerMessageDispatch", map[string]any{"direction": "parent-to-worker", "worker": w.id, "error": err.Error()})
 		}
@@ -581,15 +574,35 @@ func (w *DedicatedWorker) deliverToParent(data any, traceJSON string) {
 }
 
 func (w *DedicatedWorker) reportError(cause error) error {
+	message := cause.Error()
+	var thrown engine.ThrownValue
+	if errors.As(cause, &thrown) {
+		releaseRuntimeValues(w.runtime, thrown.ThrownValue())
+	}
 	if w.isClosed() {
 		return nil
 	}
-	w.parent.agent.Page().trace.Add(trace.Error, "worker", map[string]any{"url": w.url.String(), "worker": w.id, "error": cause.Error()})
+	w.parent.agent.Page().trace.Add(trace.Error, "worker", map[string]any{"url": w.url.String(), "worker": w.id, "error": message})
 	w.parent.scheduler.Post(scheduler.DOM, 0, func(ctx context.Context) error {
 		if w.isClosed() || w.parent.resourceContext.Err() != nil {
 			return nil
 		}
-		_, _ = w.parent.runtime.Call(ctx, w.errorCallback, nil, w.parent.runtime.Value(cause.Error()))
+		runtime := w.parent.runtime
+		invoke := func(ctx context.Context) error {
+			argument := runtime.Value(message)
+			result, err := runtime.Call(ctx, w.errorCallback, nil, argument)
+			releaseRuntimeValues(runtime, result, argument)
+			var thrown engine.ThrownValue
+			if errors.As(err, &thrown) {
+				releaseRuntimeValues(runtime, thrown.ThrownValue())
+			}
+			return nil // Delivery errors were already consumed by this task.
+		}
+		if owner, ok := runtime.(engine.OwnerRuntime); ok {
+			_ = owner.RunOnOwner(ctx, invoke)
+		} else {
+			_ = invoke(ctx)
+		}
 		return nil
 	})
 	return nil

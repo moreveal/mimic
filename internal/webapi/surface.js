@@ -359,7 +359,13 @@
     shadowHosts.add(hostElement);
   };
   const fireFor=n=>type=>dispatchTrusted(n,new Event(type));
-  const insertHostNode=(parent,child,before,node)=>{if(!['SCRIPT','IMG','LINK','IFRAME'].includes(child.tagName)){return host.insertPlain(parent,child.nodeId,before?before.nodeId:0)}const fire=fireFor(node);if(before)host.insert(parent,child,before,()=>fire('load'),()=>fire('error'));else host.append(parent,child,()=>fire('load'),()=>fire('error'));return true};
+  const plainInsertion=child=>!['SCRIPT','IMG','LINK','IFRAME'].includes(child.tagName);
+  const insertHostNode=(parent,child,before,node)=>{if(plainInsertion(child)){
+    const result=host.insertPlain(parent,child.nodeId,before?before.nodeId:0);
+    if(result===-1)throw new DOMException('Reference node is not a child.','NotFoundError');
+    if(result===-2)throw new DOMException('Insertion would create a cycle.','HierarchyRequestError');
+    return result;
+  }const fire=fireFor(node);if(before)host.insert(parent,child,before,()=>fire('load'),()=>fire('error'));else host.append(parent,child,()=>fire('load'),()=>fire('error'));return true};
   // Geometry result objects retain the node creation realm after adoption;
   // the numeric projection follows its current browsing document instead.
   let makeElementClientRects;
@@ -391,12 +397,16 @@
   // Keep canonical host nodes; only detach the synthetic fragment parent link.
   const appendNode=Node.prototype.appendChild,insertNode=Node.prototype.insertBefore,removeNode=Node.prototype.removeChild;
   let validateTemplateInsertion=null;
-  const prepareInsertion=(parent,node,before)=>{
+  const prepareInsertion=(parent,node,before,forceValidation=false)=>{
     if(!isDOMNode(node))throw new TypeError('Expected a Node');
     if(!['element','document'].includes(elementSlot(parent)?.type)&&!isDOMFragment(parent)&&parent!==document)throw new DOMException('Unsupported parent node.','HierarchyRequestError');
-    if(before!=null&&before.parentNode!==parent)throw new DOMException('Reference node is not a child.','NotFoundError');
-    if(node===parent||node.contains(parent))throw new DOMException('Insertion would create a cycle.','HierarchyRequestError');
-    if(validateTemplateInsertion)validateTemplateInsertion(parent,node);
+    // Canonical ordinary insertion validates membership and cycles together
+    // with the mutation in Go. Synthetic parents and callback-bearing resource
+    // paths still require validation before their separate insertion steps.
+    const slot=elementSlot(node),combined=!forceValidation&&!shadowHosts.size&&elementSlot(parent)&&slot&&(before==null||elementSlot(before))&&!isDOMFragment(node)&&plainInsertion(slot);
+    if(before!=null&&(!combined||node===before)&&before.parentNode!==parent)throw new DOMException('Reference node is not a child.','NotFoundError');
+    if(!combined&&(node===parent||node.contains(parent)))throw new DOMException('Insertion would create a cycle.','HierarchyRequestError');
+    if(validateTemplateInsertion&&!combined)validateTemplateInsertion(parent,node);
   };
   const detachForInsertion=(parent,node)=>{
     const old=syntheticParents.get(node)||(fragmentSlots.has(parent)?node.parentNode:null);
@@ -405,21 +415,32 @@
   // Drain fragment membership once. Repeated removal from the front shifts
   // the remaining array for every child, making one insertion quadratic.
   const takeFragmentChildren=node=>{
-    const slot=elementSlot(node);if(slot&&slot.type==='fragment'){const children=Array.from(node.childNodes);for(const child of children)removeNode.call(node,child);return children}
+    const slot=elementSlot(node);if(slot&&slot.type==='fragment'){
+      const ids=host.drainFragment(slot.nodeId);if(ids!==null)return ids.map(wrap);
+      const children=Array.from(node.childNodes);for(const child of children)removeNode.call(node,child);return children;
+    }
     const state=fragmentState(node),children=state.children;
     state.children=[];state.html='';
     for(const child of children)deleteSyntheticParent(child);
     return children;
   };
+  const insertPlainFragment=(parent,node,before)=>{
+    const target=elementSlot(parent),fragment=elementSlot(node);
+    if(!target||fragment?.type!=='fragment'||shadowHosts.size)return false;
+    const result=host.insertPlainFragment(target.nodeId,fragment.nodeId,before?elementSlot(before).nodeId:0);
+    if(result===-1)throw new DOMException('Reference node is not a child.','NotFoundError');
+    if(result===-2)throw new DOMException('Insertion would create a cycle.','HierarchyRequestError');
+    return result;
+  };
   def(Node.prototype,'appendChild',{value:function(node){
     prepareInsertion(this,node,null);
-    if(isDOMFragment(node)){for(const child of takeFragmentChildren(node))this.appendChild(child);return node}
+    if(isDOMFragment(node)){if(!insertPlainFragment(this,node,null))for(const child of takeFragmentChildren(node))this.appendChild(child);return node}
     detachForInsertion(this,node);return appendNode.call(this,node);
   },writable:true});
   def(Node.prototype,'insertBefore',{value:function(node,before){
     prepareInsertion(this,node,before);
     if(node===before)return node;
-    if(isDOMFragment(node)){for(const child of takeFragmentChildren(node))this.insertBefore(child,before);return node}
+    if(isDOMFragment(node)){if(!insertPlainFragment(this,node,before))for(const child of takeFragmentChildren(node))this.insertBefore(child,before);return node}
     detachForInsertion(this,node);return insertNode.call(this,node,before);
   },writable:true});
   const styleCache=new WeakMap();

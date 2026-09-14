@@ -96,7 +96,7 @@ func (d *cloneErrorReporter) ThrowDataCloneError(message string) bool {
 func (a *adapter) SerializeStructuredClone(value engine.Value, rejectHostObject engine.Value) ([]byte, error) {
 	var bytes []byte
 	_, err := a.withCloneScope(func(iso *gov8.Isolate, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
-		input, err := a.local(scope, value)
+		input, err := a.cloneLocal(scope, value)
 		if err != nil {
 			return nil, err
 		}
@@ -107,7 +107,7 @@ func (a *adapter) SerializeStructuredClone(value engine.Value, rejectHostObject 
 		defer tc.Close()
 		reporter := &cloneErrorReporter{scope: scope, realm: realm}
 		if rejectHostObject != nil {
-			predicate, err := a.local(scope, rejectHostObject)
+			predicate, err := a.cloneLocal(scope, rejectHostObject)
 			if err != nil {
 				return nil, err
 			}
@@ -187,7 +187,7 @@ func (a *adapter) DeserializeStructuredClonePlatform(wire []byte, decoder engine
 			if decoder == nil {
 				return nil, &engine.DataCloneError{Message: "Platform clone decoder is unavailable."}
 			}
-			v, e := a.local(scope, decoder)
+			v, e := a.cloneLocal(scope, decoder)
 			if e != nil {
 				return nil, e
 			}
@@ -266,13 +266,20 @@ func (a *adapter) withCloneScope(clone func(*gov8.Isolate, *gov8.Context, *gov8.
 	})
 }
 
+func (a *adapter) cloneLocal(scope *gov8.Scope, value engine.Value) (gov8.Value, error) {
+	if a.onCallback() != nil {
+		return a.localCallback(value)
+	}
+	return a.local(scope, value)
+}
+
 // A storage graph must reject proxies without invoking author traps. This also
 // lets browser-owned serializers support platform values (Blob/File) while
 // retaining the same native exotic-object check as V8's structured clone.
 func (a *adapter) IsStructuredCloneProxy(value engine.Value) bool {
 	var proxy bool
 	check := func(scope *gov8.Scope) (engine.Value, error) {
-		v, err := a.local(scope, value)
+		v, err := a.cloneLocal(scope, value)
 		if err != nil {
 			return nil, err
 		}

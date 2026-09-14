@@ -13,10 +13,10 @@ captures, traces, cookies, local paths, and private Git history are not exported
 See [the release process](../tools/release/README.md) for native builds, packaged
 example verification, checksums, and publication gates.
 
-## September 13, 2026 evidence
+## September 14, 2026 evidence
 
 The full frozen run is in
-[`08-public-beta-20260913`](../benchmark/runs/08-public-beta-20260913/public-summary.md).
+[`09-optimized-20260914`](../benchmark/runs/09-optimized-20260914/public-summary.md).
 `build.json` records the clean source revision and executable hashes;
 `launches.jsonl` records checks before each process launch. `raw.json` is the
 retained detailed measurement record. `public-results.json` is the exact numeric
@@ -25,8 +25,10 @@ paths, process lists, commands, network traces, and private source references.
 
 The README charts highlight common-probe startup calibration and static
 concurrency scaling. Warm execution and other tradeoffs are described in Known
-limitations and retained in the full report. Ready RSS and active RSS at 100 static pages are
-different measurements; neither is advertised as per-page memory. All six warm
+limitations and retained in the full report. Ready RSS and active RSS at 50 static pages are
+different measurements; neither is advertised as per-page memory. The stopped Windows
+100-Page levels remain visible, and the separate completed Linux 100-Page comparison
+is linked from the optimization report with its higher Mimic marginal memory. All six warm
 workloads, cold end-to-end results, CPU/memory metrics, and attempted concurrency
 levels are included in the public benchmark document.
 
