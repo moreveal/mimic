@@ -39,9 +39,23 @@ type Graphics struct {
 	// Immutable serialized query profile; empty selects the measured default.
 	WebGLCapabilitiesJSON string
 	WebGPU                GPUAdapter
+	// WebGPUAdapters optionally selects coherent alternative adapters by
+	// "low-power", "high-performance", or "fallback" request policy.
+	WebGPUAdapters map[string]GPUAdapter
+}
+
+// Audio describes the selected output device's observable configuration. PCM
+// processing remains Page-owned and never opens an operating-system device.
+type Audio struct {
+	SampleRate      float64
+	Channels        int
+	BufferDuration  float64
+	MaxBufferFrames int
 }
 type GPUAdapter struct {
 	Vendor, Architecture, Device, Description string
+	SubgroupMinSize, SubgroupMaxSize          uint32
+	IsFallbackAdapter                         bool
 	Features                                  []string
 	Limits                                    map[string]uint64
 	WGSLLanguageFeatures                      []string
@@ -55,6 +69,7 @@ type GPUAdapter struct {
 // the normal desktop defaults. The selected resources must exist in the font engine.
 type Fonts struct {
 	Serif, SansSerif, Monospace, SystemUI string
+	System                                map[string]string
 	Fallback                              []string
 }
 
@@ -68,6 +83,7 @@ type Locale struct {
 }
 type Preferences struct {
 	ColorScheme   string
+	SystemColors  map[string]map[string]string
 	ReducedMotion bool
 	DoNotTrack    bool
 }
@@ -138,6 +154,7 @@ type Environment struct {
 	Display           Display
 	Window            Window
 	Graphics          Graphics
+	Audio             Audio
 	Fonts             Fonts
 	Locale            Locale
 	Preferences       Preferences

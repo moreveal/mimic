@@ -32,7 +32,10 @@ type documentSecurity struct {
 type Page struct {
 	previewObservers   map[*PreviewSubscription]struct{} // command-owned; nil without viewers
 	debuggers          map[*Debugger]struct{}
-	inputIgnored       bool // Page command owned; survives document navigation.
+	inputIgnored       bool   // Page command owned; survives document navigation.
+	focusedFrameID     string // Page-owned focus chain; empty selects the top document.
+	pageFocused        bool
+	focusEmulated      bool
 	debuggerWaitMu     sync.Mutex
 	debuggerProgress   chan struct{}
 	launches           []string
@@ -142,7 +145,7 @@ func (p *Page) schedulePreviewPublish() {
 
 func newPage(c *Context) (*Page, error) {
 	environment := c.env.Clone()
-	p := &Page{performanceClamper: newPerformanceClamper(), ID: uuid.NewString(), ctx: c, env: environment, trace: trace.New(), historyIndex: -1, clock: environment.Time.WallOrigin, performanceOrigin: environment.Time.WallOrigin, sessionStorage: map[string]map[string]string{}, frames: map[string]*Frame{}, messagePorts: map[string]*messagePortState{}}
+	p := &Page{performanceClamper: newPerformanceClamper(), ID: uuid.NewString(), ctx: c, env: environment, trace: trace.New(), historyIndex: -1, clock: environment.Time.WallOrigin, performanceOrigin: environment.Time.WallOrigin, sessionStorage: map[string]map[string]string{}, frames: map[string]*Frame{}, messagePorts: map[string]*messagePortState{}, pageFocused: true}
 	p.eventLoopWake = make(chan struct{}, 1)
 	p.loader = network.NewLoaderWithSession(func() state.Environment { p.mu.RLock(); defer p.mu.RUnlock(); return p.env }, c.cookies, c.network, p.trace)
 	if c.transport != nil {
@@ -198,7 +201,10 @@ func (p *Page) Close() error {
 		_ = r.Close()
 	}
 	p.loader.CloseResponseBodies()
-	p.textMetrics = nil
+	if p.textMetrics != nil {
+		_ = p.textMetrics.Close()
+		p.textMetrics = nil
+	}
 	p.pendingCheckpoints = nil
 	return nil
 }

@@ -3,7 +3,6 @@ package browser
 import (
 	"encoding/base64"
 	"encoding/json"
-	"fmt"
 	"slices"
 
 	"github.com/moreveal/mimic/internal/engine"
@@ -36,9 +35,6 @@ func installFontResourceHosts(host map[string]any, runtime engine.Runtime, resou
 	})
 	host["fontBinary"] = runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		encoded := strarg(args, 0)
-		if len(encoded) > 44<<20 {
-			return nil, fmt.Errorf("font byte limit")
-		}
 		data, err := base64.StdEncoding.DecodeString(encoded)
 		id := ""
 		if err == nil {
@@ -60,9 +56,6 @@ func (r *Realm) installFontCollection(host map[string]any) {
 		var choices []textmetrics.FontReference
 		if err := json.Unmarshal([]byte(strarg(args, 0)), &choices); err != nil {
 			return nil, err
-		}
-		if len(choices) > 1024 {
-			return nil, fmt.Errorf("font collection limit")
 		}
 		if !slices.Equal(r.fontChoices, choices) {
 			if r.textCacheProfile != nil {

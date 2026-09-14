@@ -144,10 +144,14 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 	w.runtime = runtime
 	w.scheduler = workerScheduler
 	w.mu.Unlock()
+	var workerFonts *textmetrics.Engine
 	defer func() {
 		w.stopFetches()
 		workerScheduler.Close()
 		clear(w.timers)
+		if workerFonts != nil {
+			_ = workerFonts.Close()
+		}
 		_ = runtime.Close()
 		// A terminated Worker object can remain reachable from its creating
 		// document. Do not retain its abandoned task queue or response bodies.
@@ -188,7 +192,6 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 	host["reportUnhandledException"] = transientRuntimeFunction(runtime, func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		return nil, w.reportError(fmt.Errorf("%s", strarg(args, 0)))
 	})
-	var workerFonts *textmetrics.Engine
 	installFontResourceHosts(host, runtime, func() *textmetrics.Engine {
 		if workerFonts == nil {
 			workerFonts = newTextMetricsEngine(p.environmentView().Fonts)
@@ -232,14 +235,18 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 		recordSemanticBoundary(p.trace, "worker", w.id, strarg(args, 0), args[1:])
 		return nil, nil
 	})
+	host["workerStorageState"] = runtime.Function(func(engine.Value, []engine.Value) (engine.Value, error) {
+		origin := w.parent.origin
+		if w.url.Scheme != "blob" {
+			origin = originOf(w.url.String())
+		}
+		p.ctx.mu.Lock()
+		persisted := p.ctx.originCapabilities(origin).permissions["persistent-storage"] == "granted"
+		p.ctx.mu.Unlock()
+		return runtime.Value(map[string]any{"opaque": origin == "null", "persisted": persisted, "estimate": map[string]any{"quota": p.environmentView().Capabilities.StorageQuotaBytes, "usage": 0, "usageDetails": map[string]any{}}}), nil
+	})
 	host["navigator"] = runtime.Function(func(engine.Value, []engine.Value) (engine.Value, error) {
-		environment := p.environmentView()
-		n := environment.Navigator()
-		return runtime.Value(map[string]any{
-			"userAgent": n.UserAgent, "appVersion": environment.AppVersion(), "platform": n.Platform,
-			"languages": n.Languages, "language": n.Languages[0], "hardwareConcurrency": n.HardwareConcurrency,
-			"deviceMemory": n.DeviceMemory, "onLine": n.Online && !p.NetworkPolicy().Offline(),
-		}), nil
+		return runtime.Value(p.environmentView().NavigatorProjection(p.NetworkPolicy().Offline(), false)), nil
 	})
 	if detacher, ok := runtime.(engine.ArrayBufferDetacher); ok {
 		host["detachArrayBuffer"] = runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
@@ -249,15 +256,23 @@ func (w *DedicatedWorker) run(ctx context.Context, source string) {
 			return nil, detacher.DetachArrayBuffer(args[0])
 		})
 	}
+	host["systemColors"] = runtime.Function(func(engine.Value, []engine.Value) (engine.Value, error) {
+		return runtime.Value(p.environmentView().SystemColorPalette()), nil
+	})
 	host["gpuCapabilities"] = runtime.Function(func(engine.Value, []engine.Value) (engine.Value, error) {
 		return runtime.Value(p.environmentView().Graphics.WebGPUProjection()), nil
 	})
-	host["gpuRequestAdapter"] = runtime.Function(func(engine.Value, []engine.Value) (engine.Value, error) {
+	host["gpuRequestAdapter"] = runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		promise := newHostPromise(runtime)
 		delay := time.Duration(p.environmentView().Graphics.WebGPU.InitializationDelayMillis * float64(time.Millisecond))
+		preference, fallback := strarg(args, 0), strarg(args, 1) == "fallback"
 		workerScheduler.Post(scheduler.Control, delay, func(context.Context) error {
 			g := p.environmentView().Graphics
-			return promise.Resolve(map[string]any{"vendor": g.WebGPU.Vendor, "architecture": g.WebGPU.Architecture, "device": g.WebGPU.Device, "description": g.WebGPU.Description, "features": g.WebGPU.Features, "maxTextureSize": g.MaxTextureSize})
+			adapter, ok := g.SelectWebGPUAdapter(preference, fallback)
+			if !ok {
+				return promise.Resolve(nil)
+			}
+			return promise.Resolve(adapter)
 		})
 		return promise.Value, nil
 	})

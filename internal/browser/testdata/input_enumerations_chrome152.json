@@ -1,0 +1,828 @@
+{
+  "captureMetadata": {
+    "chromeVersion": "152.0.7977.82",
+    "platform": "windows-x64",
+    "sourceSHA256": "be2b7fe7e89064ad02e2d7255a3b84c948e25d2d944dde8b40621fee01d25777",
+    "context": "http://127.0.0.1:9387/",
+    "userGesture": true,
+    "chromiumRevision": "@d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "window": {
+      "left": 20,
+      "top": 20,
+      "width": 1265,
+      "height": 1372,
+      "windowState": "normal"
+    },
+    "environmentProfileId": "chrome-152-windows-x64-headful-observation-mechanisms",
+    "profileFreshness": "fresh browser context in dedicated oracle profile",
+    "viewport": {
+      "width": 1257,
+      "height": 1225
+    },
+    "secureContextState": true,
+    "isolationState": false
+  },
+  "result": {
+    "div.inputMode": [
+      [
+        null,
+        ""
+      ],
+      [
+        "",
+        ""
+      ],
+      [
+        "none",
+        "none"
+      ],
+      [
+        "text",
+        "text"
+      ],
+      [
+        "TEL",
+        "tel"
+      ],
+      [
+        " email ",
+        ""
+      ],
+      [
+        "numeric",
+        "numeric"
+      ],
+      [
+        "decimal",
+        "decimal"
+      ],
+      [
+        "search",
+        "search"
+      ],
+      [
+        "enter",
+        ""
+      ],
+      [
+        "done",
+        ""
+      ],
+      [
+        "next",
+        ""
+      ],
+      [
+        "go",
+        ""
+      ],
+      [
+        "previous",
+        ""
+      ],
+      [
+        "send",
+        ""
+      ],
+      [
+        "on",
+        ""
+      ],
+      [
+        "off",
+        ""
+      ],
+      [
+        "EMAIL",
+        "email"
+      ],
+      [
+        "section-A shipping home tel",
+        ""
+      ],
+      [
+        "shipping email",
+        ""
+      ],
+      [
+        "home email",
+        ""
+      ],
+      [
+        "username webauthn",
+        ""
+      ],
+      [
+        "webauthn username",
+        ""
+      ],
+      [
+        "foo",
+        ""
+      ],
+      [
+        "metadata",
+        ""
+      ],
+      [
+        "auto",
+        ""
+      ],
+      [
+        "NONE",
+        "none"
+      ]
+    ],
+    "div.inputMode.set": [
+      "email",
+      "EMAIL"
+    ],
+    "div.enterKeyHint": [
+      [
+        null,
+        ""
+      ],
+      [
+        "",
+        ""
+      ],
+      [
+        "none",
+        ""
+      ],
+      [
+        "text",
+        ""
+      ],
+      [
+        "TEL",
+        ""
+      ],
+      [
+        " email ",
+        ""
+      ],
+      [
+        "numeric",
+        ""
+      ],
+      [
+        "decimal",
+        ""
+      ],
+      [
+        "search",
+        "search"
+      ],
+      [
+        "enter",
+        "enter"
+      ],
+      [
+        "done",
+        "done"
+      ],
+      [
+        "next",
+        "next"
+      ],
+      [
+        "go",
+        "go"
+      ],
+      [
+        "previous",
+        "previous"
+      ],
+      [
+        "send",
+        "send"
+      ],
+      [
+        "on",
+        ""
+      ],
+      [
+        "off",
+        ""
+      ],
+      [
+        "EMAIL",
+        ""
+      ],
+      [
+        "section-A shipping home tel",
+        ""
+      ],
+      [
+        "shipping email",
+        ""
+      ],
+      [
+        "home email",
+        ""
+      ],
+      [
+        "username webauthn",
+        ""
+      ],
+      [
+        "webauthn username",
+        ""
+      ],
+      [
+        "foo",
+        ""
+      ],
+      [
+        "metadata",
+        ""
+      ],
+      [
+        "auto",
+        ""
+      ],
+      [
+        "NONE",
+        ""
+      ]
+    ],
+    "div.enterKeyHint.set": [
+      "",
+      "EMAIL"
+    ],
+    "input.autocomplete": [
+      [
+        null,
+        ""
+      ],
+      [
+        "",
+        ""
+      ],
+      [
+        "none",
+        ""
+      ],
+      [
+        "text",
+        ""
+      ],
+      [
+        "TEL",
+        "tel"
+      ],
+      [
+        " email ",
+        "email"
+      ],
+      [
+        "numeric",
+        ""
+      ],
+      [
+        "decimal",
+        ""
+      ],
+      [
+        "search",
+        ""
+      ],
+      [
+        "enter",
+        ""
+      ],
+      [
+        "done",
+        ""
+      ],
+      [
+        "next",
+        ""
+      ],
+      [
+        "go",
+        ""
+      ],
+      [
+        "previous",
+        ""
+      ],
+      [
+        "send",
+        ""
+      ],
+      [
+        "on",
+        "on"
+      ],
+      [
+        "off",
+        "off"
+      ],
+      [
+        "EMAIL",
+        "email"
+      ],
+      [
+        "section-A shipping home tel",
+        "section-a shipping home tel"
+      ],
+      [
+        "shipping email",
+        "shipping email"
+      ],
+      [
+        "home email",
+        "home email"
+      ],
+      [
+        "username webauthn",
+        "username webauthn"
+      ],
+      [
+        "webauthn username",
+        ""
+      ],
+      [
+        "foo",
+        ""
+      ],
+      [
+        "metadata",
+        ""
+      ],
+      [
+        "auto",
+        ""
+      ],
+      [
+        "NONE",
+        ""
+      ]
+    ],
+    "input.autocomplete.set": [
+      "email",
+      "EMAIL"
+    ],
+    "textarea.autocomplete": [
+      [
+        null,
+        ""
+      ],
+      [
+        "",
+        ""
+      ],
+      [
+        "none",
+        ""
+      ],
+      [
+        "text",
+        ""
+      ],
+      [
+        "TEL",
+        "tel"
+      ],
+      [
+        " email ",
+        "email"
+      ],
+      [
+        "numeric",
+        ""
+      ],
+      [
+        "decimal",
+        ""
+      ],
+      [
+        "search",
+        ""
+      ],
+      [
+        "enter",
+        ""
+      ],
+      [
+        "done",
+        ""
+      ],
+      [
+        "next",
+        ""
+      ],
+      [
+        "go",
+        ""
+      ],
+      [
+        "previous",
+        ""
+      ],
+      [
+        "send",
+        ""
+      ],
+      [
+        "on",
+        "on"
+      ],
+      [
+        "off",
+        "off"
+      ],
+      [
+        "EMAIL",
+        "email"
+      ],
+      [
+        "section-A shipping home tel",
+        "section-a shipping home tel"
+      ],
+      [
+        "shipping email",
+        "shipping email"
+      ],
+      [
+        "home email",
+        "home email"
+      ],
+      [
+        "username webauthn",
+        "username webauthn"
+      ],
+      [
+        "webauthn username",
+        ""
+      ],
+      [
+        "foo",
+        ""
+      ],
+      [
+        "metadata",
+        ""
+      ],
+      [
+        "auto",
+        ""
+      ],
+      [
+        "NONE",
+        ""
+      ]
+    ],
+    "textarea.autocomplete.set": [
+      "email",
+      "EMAIL"
+    ],
+    "select.autocomplete": [
+      [
+        null,
+        ""
+      ],
+      [
+        "",
+        ""
+      ],
+      [
+        "none",
+        ""
+      ],
+      [
+        "text",
+        ""
+      ],
+      [
+        "TEL",
+        "tel"
+      ],
+      [
+        " email ",
+        "email"
+      ],
+      [
+        "numeric",
+        ""
+      ],
+      [
+        "decimal",
+        ""
+      ],
+      [
+        "search",
+        ""
+      ],
+      [
+        "enter",
+        ""
+      ],
+      [
+        "done",
+        ""
+      ],
+      [
+        "next",
+        ""
+      ],
+      [
+        "go",
+        ""
+      ],
+      [
+        "previous",
+        ""
+      ],
+      [
+        "send",
+        ""
+      ],
+      [
+        "on",
+        "on"
+      ],
+      [
+        "off",
+        "off"
+      ],
+      [
+        "EMAIL",
+        "email"
+      ],
+      [
+        "section-A shipping home tel",
+        "section-a shipping home tel"
+      ],
+      [
+        "shipping email",
+        "shipping email"
+      ],
+      [
+        "home email",
+        "home email"
+      ],
+      [
+        "username webauthn",
+        "username webauthn"
+      ],
+      [
+        "webauthn username",
+        ""
+      ],
+      [
+        "foo",
+        ""
+      ],
+      [
+        "metadata",
+        ""
+      ],
+      [
+        "auto",
+        ""
+      ],
+      [
+        "NONE",
+        ""
+      ]
+    ],
+    "select.autocomplete.set": [
+      "email",
+      "EMAIL"
+    ],
+    "form.autocomplete": [
+      [
+        null,
+        "on"
+      ],
+      [
+        "",
+        "on"
+      ],
+      [
+        "none",
+        "on"
+      ],
+      [
+        "text",
+        "on"
+      ],
+      [
+        "TEL",
+        "on"
+      ],
+      [
+        " email ",
+        "on"
+      ],
+      [
+        "numeric",
+        "on"
+      ],
+      [
+        "decimal",
+        "on"
+      ],
+      [
+        "search",
+        "on"
+      ],
+      [
+        "enter",
+        "on"
+      ],
+      [
+        "done",
+        "on"
+      ],
+      [
+        "next",
+        "on"
+      ],
+      [
+        "go",
+        "on"
+      ],
+      [
+        "previous",
+        "on"
+      ],
+      [
+        "send",
+        "on"
+      ],
+      [
+        "on",
+        "on"
+      ],
+      [
+        "off",
+        "off"
+      ],
+      [
+        "EMAIL",
+        "on"
+      ],
+      [
+        "section-A shipping home tel",
+        "on"
+      ],
+      [
+        "shipping email",
+        "on"
+      ],
+      [
+        "home email",
+        "on"
+      ],
+      [
+        "username webauthn",
+        "on"
+      ],
+      [
+        "webauthn username",
+        "on"
+      ],
+      [
+        "foo",
+        "on"
+      ],
+      [
+        "metadata",
+        "on"
+      ],
+      [
+        "auto",
+        "on"
+      ],
+      [
+        "NONE",
+        "on"
+      ]
+    ],
+    "form.autocomplete.set": [
+      "on",
+      "EMAIL"
+    ],
+    "audio.preload": [
+      [
+        null,
+        "metadata"
+      ],
+      [
+        "",
+        "auto"
+      ],
+      [
+        "none",
+        "none"
+      ],
+      [
+        "text",
+        "metadata"
+      ],
+      [
+        "TEL",
+        "metadata"
+      ],
+      [
+        " email ",
+        "metadata"
+      ],
+      [
+        "numeric",
+        "metadata"
+      ],
+      [
+        "decimal",
+        "metadata"
+      ],
+      [
+        "search",
+        "metadata"
+      ],
+      [
+        "enter",
+        "metadata"
+      ],
+      [
+        "done",
+        "metadata"
+      ],
+      [
+        "next",
+        "metadata"
+      ],
+      [
+        "go",
+        "metadata"
+      ],
+      [
+        "previous",
+        "metadata"
+      ],
+      [
+        "send",
+        "metadata"
+      ],
+      [
+        "on",
+        "metadata"
+      ],
+      [
+        "off",
+        "metadata"
+      ],
+      [
+        "EMAIL",
+        "metadata"
+      ],
+      [
+        "section-A shipping home tel",
+        "metadata"
+      ],
+      [
+        "shipping email",
+        "metadata"
+      ],
+      [
+        "home email",
+        "metadata"
+      ],
+      [
+        "username webauthn",
+        "metadata"
+      ],
+      [
+        "webauthn username",
+        "metadata"
+      ],
+      [
+        "foo",
+        "metadata"
+      ],
+      [
+        "metadata",
+        "metadata"
+      ],
+      [
+        "auto",
+        "auto"
+      ],
+      [
+        "NONE",
+        "none"
+      ]
+    ],
+    "audio.preload.set": [
+      "metadata",
+      "EMAIL"
+    ]
+  }
+}

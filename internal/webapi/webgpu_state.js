@@ -130,6 +130,9 @@
     getter('GPUSupportedLimits', name, (s) => s.values[name]);
   for (const name of ['vendor', 'architecture', 'device', 'description'])
     getter('GPUAdapterInfo', name, (s) => s.values[name] || '');
+  for (const name of ['subgroupMinSize', 'subgroupMaxSize'])
+    getter('GPUAdapterInfo', name, (s) => s.values[name]);
+  getter('GPUAdapterInfo', 'isFallbackAdapter', (s) => s.values.isFallbackAdapter);
   const info = (values) => make('GPUAdapterInfo', { values: { ...values } }),
     limits = (values) => make('GPUSupportedLimits', { values: { ...values } });
   const makeFeatures = (values) => {
@@ -138,7 +141,11 @@
     return object;
   };
   for (const name of ['info', 'features', 'limits']) getter('GPUAdapter', name, (s) => s[name]);
-  getter('GPUAdapter', 'isFallbackAdapter', () => false);
+  getter(
+    'GPUAdapter',
+    'isFallbackAdapter',
+    (s) => check(s.info, 'GPUAdapterInfo').values.isFallbackAdapter,
+  );
   // The navigator owns one canonical GPU object; adapters/devices own their views.
   const gpu = make('GPU');
   method('GPU', 'getPreferredCanvasFormat', () => 'bgra8unorm');
@@ -162,16 +169,24 @@
       configurable: true,
     });
   }
-  method('GPU', 'requestAdapter', () =>
-    host.gpuRequestAdapter().then((g) =>
-      make('GPUAdapter', {
-        info: info(g),
-        features: makeFeatures(g.features || []),
-        limits: limits(gpuCapabilities.limits),
-        requested: false,
-      }),
-    ),
-  );
+  method('GPU', 'requestAdapter', (_, options = {}) => {
+    options = options ?? {};
+    const preference = options.powerPreference === undefined ? '' : String(options.powerPreference);
+    if (preference && !['low-power', 'high-performance'].includes(preference))
+      return Promise.reject(new TypeError('Invalid powerPreference'));
+    return host
+      .gpuRequestAdapter(preference, options.forceFallbackAdapter ? 'fallback' : '')
+      .then((g) =>
+        g === null
+          ? null
+          : make('GPUAdapter', {
+              info: info(g),
+              features: makeFeatures(g.features || []),
+              limits: limits(g.limits || gpuCapabilities.limits),
+              requested: false,
+            }),
+      );
+  });
   const navProto =
     typeof WorkerNavigator === 'function' ? WorkerNavigator.prototype : Navigator.prototype;
   const secure =

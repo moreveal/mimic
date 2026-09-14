@@ -1,0 +1,70 @@
+{
+  "captureMetadata": {
+    "chromeVersion": "152.0.7977.82",
+    "platform": "windows-x64",
+    "sourceSHA256": "b1dd361b6aa1bcd3307e455b793967978b4948937bd01ca4d2598c9cb600ad3a",
+    "context": "http://127.0.0.1:9387/",
+    "userGesture": true,
+    "chromiumRevision": "@d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "window": {
+      "left": 20,
+      "top": 20,
+      "width": 1265,
+      "height": 1372,
+      "windowState": "normal"
+    },
+    "environmentProfileId": "chrome-152-windows-x64-headful-observation-mechanisms",
+    "profileFreshness": "fresh browser context in dedicated oracle profile",
+    "viewport": {
+      "width": 1257,
+      "height": 1281
+    },
+    "secureContextState": true,
+    "isolationState": false
+  },
+  "result": {
+    "destination": {
+      "tag": "[object MediaStreamAudioDestinationNode]",
+      "inputs": 1,
+      "outputs": 0,
+      "values": {
+        "stream": "object"
+      }
+    },
+    "stream": [
+      true,
+      "audio",
+      "live"
+    ],
+    "streamSource": {
+      "tag": "[object MediaStreamAudioSourceNode]",
+      "inputs": 0,
+      "outputs": 1,
+      "values": {
+        "mediaStream": "object"
+      }
+    },
+    "elementSource": {
+      "tag": "[object MediaElementAudioSourceNode]",
+      "inputs": 0,
+      "outputs": 1,
+      "values": {
+        "mediaElement": "object"
+      }
+    },
+    "identities": [
+      true,
+      true
+    ],
+    "duplicate": "InvalidStateError",
+    "processor": [
+      1,
+      1,
+      256,
+      null
+    ]
+  }
+}
