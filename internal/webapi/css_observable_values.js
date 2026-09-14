@@ -289,7 +289,7 @@ for (const name of ['width', 'height', 'min-width', 'min-height', 'max-width', '
       !(name.startsWith('min-') && lower === 'none')
     )
       return lower;
-    return cssLengthValue(value);
+    return /\bvar\(/i.test(value) ? cssSignedLength(value) : cssLengthValue(value);
   });
 cssLonghandParsers.set(
   'position',
