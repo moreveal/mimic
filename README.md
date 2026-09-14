@@ -33,7 +33,7 @@ and automate through familiar CDP tools without embedding Chromium.
 
 **Our ambition: direct HTTP lightness with browser compatibility.**
 
-**Public Beta · Windows & Linux.** [Download the beta →](https://github.com/moreveal/mimic-overview/releases/tag/v0.1.0-beta.1) · [Run the examples →](examples/README.md)
+**Public Beta · Windows & Linux.** [Download the beta →](https://github.com/moreveal/mimic-overview/releases/tag/v0.1.0-beta.2) · [Run the examples →](examples/README.md)
 
 Actively developed. Feedback and workflow help: **`moreveal`** on Discord.
 
@@ -124,7 +124,7 @@ Use separate profiles per context and native proxies when your workflow needs th
 
 ## Public beta
 
-**[Download Windows or Linux builds →](https://github.com/moreveal/mimic-overview/releases/tag/v0.1.0-beta.1)**
+**[Download Windows or Linux builds →](https://github.com/moreveal/mimic-overview/releases/tag/v0.1.0-beta.2)**
 
 Extract, start Mimic, and connect your automation. [Quick start](QUICKSTART.md) ·
 [Runnable examples](examples/README.md) · [Release notes](RELEASE_NOTES.md).

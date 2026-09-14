@@ -1,6 +1,6 @@
 # Quick start: one profile, then automate
 
-**Public Beta — Windows and Linux.** [Download v0.1.0-beta.1](https://github.com/moreveal/mimic-overview/releases/tag/v0.1.0-beta.1) and
+**Public Beta — Windows and Linux.** [Download v0.1.0-beta.2](https://github.com/moreveal/mimic-overview/releases/tag/v0.1.0-beta.2) and
 extract the archive. No Go, Rust, Chromium, or GPU is needed. Commands below run
 from the extracted directory. Read [PolyForm Shield 1.0.0](LICENSE.md) before use.
 
