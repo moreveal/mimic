@@ -40,7 +40,7 @@ const cssBoxModel = (() => {
     }
     return value;
   };
-  const tag = (element) => elementSlot(element)?.tagName || '',
+  const tag = (element) => String(elementSlot(element)?.tagName || '').toUpperCase(),
     textContent = (element) => {
       const cache = styleReadCache.textContents || (styleReadCache.textContents = new WeakMap());
       if (cache.has(element)) return cache.get(element);
@@ -1059,10 +1059,21 @@ const cssBoxModel = (() => {
   // Taffy owns flex/grid formatting-context geometry. Mimic supplies the
   // normalized computed style and intrinsic leaf measurements in one snapshot.
   const taffyBox = (element) => {
-    let root = null;
+    // Custom elements retain the legacy intrinsic-width path; their authored
+    // display can be upgraded or stylesheet-mutated after construction.
+    if (tag(element).includes('-')) return null;
+    let root = null,
+      usesTaffy = false;
     for (let node = element; node; node = geometryParent(node)) {
-      if (/^(?:inline-)?(?:flex|grid)$/.test(state(node).display)) root = node;
-      else if (root) break;
+      const display = state(node).display;
+      if (!/^(?:block|(?:inline-)?(?:flex|grid))$/.test(display)) {
+        if (root) break;
+        continue;
+      }
+      if (/^(?:inline-)?(?:flex|grid)$/.test(display)) usesTaffy = true;
+      if (usesTaffy) root = node;
+      const width = state(node).get('width');
+      if (root && node !== element && width && width !== 'auto') break;
     }
     if (!root) return null;
     let cache = styleReadCache.taffyLayouts;
@@ -1235,11 +1246,31 @@ const cssBoxModel = (() => {
       );
       if (response.error) throw new Error(response.error);
       boxes = new Map();
+      const nodeIndexes = new Map(nodes.map((node, index) => [node.ID, index]));
       for (const box of response.boxes) {
         const node = elements.get(box.id),
           edges = state(node).edges(box.width),
-          x = box.x + rootLegacy.x,
-          y = box.y + rootLegacy.y;
+          index = nodeIndexes.get(box.id);
+        let positionedParent = index >= 0 ? nodes[index].Parent : -1;
+        while (positionedParent >= 0 && nodes[positionedParent].Position !== 1)
+          positionedParent = nodes[positionedParent].Parent;
+        const containingBox = positionedParent >= 0 ? boxes.get(nodes[positionedParent].ID) : null;
+        let x =
+            box.x + (containingBox && box.x < containingBox.width ? containingBox.x : rootLegacy.x),
+          y =
+            box.y +
+            (containingBox && box.y < containingBox.height ? containingBox.y : rootLegacy.y);
+        if (state(node).position === 'fixed') {
+          const viewport = host.viewport(),
+            left = state(node).length(state(node).get('left'), viewport.width),
+            right = state(node).length(state(node).get('right'), viewport.width),
+            top = state(node).length(state(node).get('top'), viewport.height),
+            bottom = state(node).length(state(node).get('bottom'), viewport.height);
+          if (left !== null) x = left;
+          else if (right !== null) x = viewport.width - right - box.width;
+          if (top !== null) y = top;
+          else if (bottom !== null) y = viewport.height - bottom - box.height;
+        }
         boxes.set(box.id, {
           ...box,
           x,
