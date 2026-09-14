@@ -279,16 +279,28 @@ func TestProtocolMouseInputRoutesThroughIframeCoordinates(t *testing.T) {
 		value, err := page.Evaluate(ctx, `(()=>{
 			document.body.style.margin='0';
 			const frame=document.createElement('iframe');
-			frame.style.cssText='display:block;margin-left:40px;margin-top:30px;width:200px;height:100px;border:0';
+			frame.style.cssText='display:block;margin-left:40px;margin-top:30px';
 			document.body.append(frame);
 			frame.contentDocument.body.innerHTML='<button style="margin-left:10px;margin-top:5px;width:80px;height:30px" onclick="window.clicks=(window.clicks||0)+1">Go</button>';
 			const outer=frame.getBoundingClientRect(),inner=frame.contentDocument.querySelector('button').getBoundingClientRect();
-			return [outer.x+inner.x+inner.width/2,outer.y+inner.y+inner.height/2];
+			const x=outer.x+2+inner.x+inner.width/2,y=outer.y+2+inner.y+inner.height/2;
+			if(outer.width!==304||outer.height!==154||document.elementFromPoint(x,y)!==frame)throw Error('iframe actionability geometry');
+			return [x,y];
 		})()`)
 		if err != nil {
 			t.Fatal(err)
 		}
 		coordinates := value.([]any)
+		d := NewDebugger(page)
+		defer d.Close()
+		parentWorld, err := page.IsolatedWorld(ctx, page.Top.ID, "iframe-actionability-parent")
+		if err != nil {
+			t.Fatal(err)
+		}
+		parentHit, err := d.Evaluate(ctx, page.Top.ID, parentWorld, `(()=>{const frame=document.querySelector('iframe'),r=frame.getBoundingClientRect();return document.elementFromPoint(r.x+10,r.y+10)===frame&&document.elementsFromPoint(r.x+10,r.y+10)[0]===frame})()`, DebuggerOptions{ReturnByValue: true})
+		if err != nil || parentHit["exceptionDetails"] != nil || parentHit["result"].(map[string]any)["value"] != true {
+			t.Fatalf("isolated parent iframe hit test: %#v %v", parentHit, err)
+		}
 		for _, kind := range []string{"mouseMoved", "mousePressed", "mouseReleased"} {
 			if err := page.DispatchProtocolInput(ctx, "Input.dispatchMouseEvent", map[string]any{"type": kind, "x": coordinates[0], "y": coordinates[1], "button": "left", "clickCount": float64(1)}); err != nil {
 				t.Fatal(err)

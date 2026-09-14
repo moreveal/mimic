@@ -25,6 +25,21 @@ func TestCSSBoxStateIsCompleteDuringRecursiveComputedStyle(t *testing.T) {
 	})
 }
 
+func TestCSSDefaultIframeReplacedGeometryAndHitTesting(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, page *Page) {
+		navigateCapabilityFixture(t, page)
+		result, err := page.Evaluate(context.Background(), `(()=>{
+document.body.innerHTML='<iframe id="frame"></iframe>';
+const frame=document.getElementById('frame'),rect=frame.getBoundingClientRect(),style=getComputedStyle(frame);
+return JSON.stringify({rect:[rect.x,rect.y,rect.width,rect.height],computed:[style.width,style.height,style.borderLeftWidth,style.borderLeftStyle],offset:[frame.offsetWidth,frame.offsetHeight],client:[frame.clientWidth,frame.clientHeight],hit:document.elementFromPoint(rect.x+10,rect.y+10)===frame});
+})()`)
+		const want = `{"rect":[8,8,304,154],"computed":["300px","150px","2px","inset"],"offset":[304,154],"client":[300,150],"hit":true}`
+		if err != nil || result != want {
+			t.Fatalf("default iframe replaced geometry: %v want %s, err=%v", result, want, err)
+		}
+	})
+}
+
 func TestCSSAncestorTransformMovesDescendantClientRect(t *testing.T) {
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		navigateCapabilityFixture(t, page)

@@ -922,8 +922,22 @@
     if (operation === 'points')
       return stringify({ nodes: pointTargets(params.x, params.y).map(nodeID) });
     if (operation === 'rect') {
-      const rect = clientRectFor(element);
-      return stringify({ x: rect.x, y: rect.y, width: rect.width, height: rect.height });
+      const rect = clientRectFor(element),
+        entries = computedCSSDeclarations(element),
+        value = (name) =>
+          geometryPixels(
+            geometryValue(element, entries.find((entry) => entry.name === name)?.value),
+          ) || 0,
+        left = value('border-left-width') + value('padding-left'),
+        top = value('border-top-width') + value('padding-top'),
+        right = value('border-right-width') + value('padding-right'),
+        bottom = value('border-bottom-width') + value('padding-bottom');
+      return stringify({
+        x: rect.x + left,
+        y: rect.y + top,
+        width: Math.max(0, rect.width - left - right),
+        height: Math.max(0, rect.height - top - bottom),
+      });
     }
     if (operation === 'focus') {
       focus(element, params.preventScroll);

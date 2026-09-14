@@ -1429,6 +1429,12 @@
       )
         winners.set(entry.name, { entry, specificity, order, important });
     };
+    if (!pseudo && elementSlot(element)?.tagName === 'IFRAME') {
+      for (const side of ['top', 'right', 'bottom', 'left']) {
+        accept({ name: `border-${side}-style`, value: 'inset', priority: '' }, -1, -1);
+        accept({ name: `border-${side}-width`, value: '2px', priority: '' }, -1, -1);
+      }
+    }
     if (dialog) accept({ name: 'display', value: dialog, priority: '' }, -1, -1);
     for (const rule of matched)
       for (const entry of rule.declarations()) accept(entry, rule.specificity, rule.order);

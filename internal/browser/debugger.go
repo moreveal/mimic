@@ -444,3 +444,14 @@ func (d *Debugger) RequestNode(ctx context.Context, objectID string) (int64, err
 	}
 	return 0, nil
 }
+
+// ObjectFrameID returns the owning frame recorded with a remote object. DOM
+// node identifiers are document-local in Mimic, so an object-backed CDP call
+// must retain this ownership instead of rediscovering it from the numeric id.
+func (d *Debugger) ObjectFrameID(objectID string) (string, error) {
+	state, err := d.objectState(objectID)
+	if err != nil {
+		return "", err
+	}
+	return state.frameID, nil
+}
