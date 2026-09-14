@@ -3263,6 +3263,8 @@
           defaultPlaybackRate: 1,
           readyState: 0,
           networkState: 0,
+          currentSrc: '',
+          pendingPlay: [],
         };
         mediaStates.set(element, state);
       }
@@ -3277,10 +3279,13 @@
     }
     set src(value) {
       this.setAttribute('src', String(value));
-      mediaState(this).networkState = 3;
+      const state = mediaState(this);
+      state.currentSrc = '';
+      state.readyState = 0;
+      state.networkState = 2;
     }
     get currentSrc() {
-      return '';
+      return mediaState(this).currentSrc;
     }
     get paused() {
       return mediaState(this).paused;
@@ -3301,19 +3306,20 @@
       const state = mediaState(this);
       state.paused = true;
       state.readyState = 0;
-      state.networkState = 3;
-      queueMicrotask(() => {
-        if (!this.hasAttribute('src') && !this.querySelector('source')) state.networkState = 0;
-      });
+      state.currentSrc = '';
+      state.networkState = this.hasAttribute('src') || this.querySelector('source') ? 2 : 0;
+      host.mediaLoad(elementSlot(this).nodeId);
     }
     play() {
-      host.semanticMissingAt('surface.js/HTMLMediaElement.play', 'HTMLMediaElement.playback');
-      return Promise.reject(
-        new DOMException(
-          'Media decoding/playback is not supported by this runtime.',
-          'NotSupportedError',
-        ),
-      );
+      const state = mediaState(this);
+      state.paused = false;
+      if (state.readyState > 0) {
+        queueMicrotask(() => dispatchTrusted(this, new Event('play')));
+        queueMicrotask(() => dispatchTrusted(this, new Event('playing')));
+        return Promise.resolve();
+      }
+      host.mediaLoad(elementSlot(this).nodeId);
+      return new Promise((resolve, reject) => state.pendingPlay.push({ resolve, reject }));
     }
     pause() {
       const state = mediaState(this);
@@ -3654,7 +3660,35 @@
   };
   globalThis.__mimicDispatchResourceEvent = (nodeId, type) => {
     const element = wrap(nodeId);
-    if (element) dispatchTrusted(element, new Event(type));
+    if (!element) return;
+    if (element instanceof HTMLMediaElement) {
+      const state = mediaState(element);
+      if (type === 'loadedmetadata') {
+        state.currentSrc = host.mediaCurrentSrc(elementSlot(element).nodeId);
+        state.networkState = 1;
+        state.readyState = 1;
+      } else if (type === 'canplay') {
+        state.networkState = 1;
+        state.readyState = 4;
+        const pending = state.pendingPlay.splice(0);
+        for (const promise of pending) promise.resolve();
+        if (!state.paused) {
+          queueMicrotask(() => dispatchTrusted(element, new Event('play')));
+          queueMicrotask(() => dispatchTrusted(element, new Event('playing')));
+        }
+      } else if (type === 'error') {
+        state.currentSrc = '';
+        state.networkState = 3;
+        state.readyState = 0;
+        state.paused = true;
+        const error = new DOMException(
+          'The element has no supported sources.',
+          'NotSupportedError',
+        );
+        for (const promise of state.pendingPlay.splice(0)) promise.reject(error);
+      }
+    }
+    dispatchTrusted(element, new Event(type));
   };
   globalThis.__mimicNetworkStateEvent = (type) => dispatchNative(window, new Event(type));
   // Cache by owner, query kind and original argument: equivalent selectors can
