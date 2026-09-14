@@ -367,6 +367,7 @@
       pending: new Set(),
       loadedFaces: [],
       failedFaces: [],
+      handlers: Object.create(null),
       status: 'loaded',
       ready:
         typeof document === 'object' && owner === document
@@ -401,6 +402,7 @@
       typeof constructedStyleSheets.fontFaceRules !== 'function'
     )
       return;
+    const previous = state.cssValues;
     state.cssValues = constructedStyleSheets
       .fontFaceRules(document)
       .map((record) => {
@@ -427,6 +429,11 @@
         return cached.face;
       })
       .filter(Boolean);
+    for (const face of previous) {
+      if (!state.cssValues.includes(face) && !state.pending.has(requireFace(face)))
+        requireFace(face).sets.delete(state);
+    }
+    for (const face of state.cssValues) requireFace(face).sets.add(state);
   }
   const allValues = (state) => {
     syncCSSFaces(state);
@@ -560,6 +567,17 @@
       configurable: true,
       enumerable: true,
     });
+  for (const type of ['loading', 'loadingdone', 'loadingerror'])
+    Object.defineProperty(FontFaceSet.prototype, 'on' + type, {
+      get() {
+        return requireSet(this).handlers[type] || null;
+      },
+      set(value) {
+        requireSet(this).handlers[type] = typeof value === 'function' ? value : null;
+      },
+      configurable: true,
+      enumerable: true,
+    });
   Object.defineProperty(FontFaceSet.prototype, Symbol.iterator, {
     value: methods.values,
     writable: true,
@@ -574,6 +592,50 @@
     syncCSSFaces(value);
     return value;
   }
+  let automaticLoadQueued = false;
+  function loadRenderedCSSFonts() {
+    automaticLoadQueued = false;
+    if (typeof document !== 'object' || !document.documentElement) return;
+    const set = requireSet(owned(document));
+    if (!set.cssValues.length) return;
+    const candidates = new Map();
+    for (const element of document.querySelectorAll('*')) {
+      if (/^(SCRIPT|STYLE|TEMPLATE|NOSCRIPT)$/.test(element.tagName)) continue;
+      const text = element.textContent;
+      if (!text || !text.trim()) continue;
+      const style = getComputedStyle(element);
+      if (style.display === 'none' || style.visibility === 'hidden') continue;
+      const families = String(style.fontFamily || '')
+        .split(',')
+        .map((value) =>
+          value
+            .trim()
+            .replace(/^['"]|['"]$/g, '')
+            .toLowerCase(),
+        );
+      for (const face of set.cssValues) {
+        const state = requireFace(face);
+        const family = state.family.replace(/^['"]|['"]$/g, '').toLowerCase();
+        if (state.status === 'unloaded' && families.includes(family)) candidates.set(face, text);
+      }
+    }
+    for (const [face, text] of candidates) {
+      const state = requireFace(face);
+      if (
+        matching(
+          set,
+          { families: [state.family.replace(/^['"]|['"]$/g, '').toLowerCase()] },
+          text,
+        ).includes(face)
+      )
+        loadFace(state);
+    }
+  }
+  function queueAutomaticCSSFontLoad() {
+    if (automaticLoadQueued) return;
+    automaticLoadQueued = true;
+    setTimeout(loadRenderedCSSFonts, 0);
+  }
   if (typeof globalThis.Document === 'function')
     Object.defineProperty(Document.prototype, 'fonts', {
       get() {
@@ -583,7 +645,9 @@
       configurable: true,
       enumerable: true,
     });
-  else
+  if (typeof document === 'object') {
+    document.addEventListener('DOMContentLoaded', queueAutomaticCSSFontLoad);
+  } else
     Object.defineProperty(globalThis, 'fonts', {
       get() {
         return owned(globalThis);
