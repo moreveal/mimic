@@ -611,6 +611,28 @@ const constructedStyleSheets = (() => {
     /* dev_preview_sources */
     revision: () => revision,
     ownerSheet,
+    fontFaceRules(root) {
+      const result = [];
+      const visit = (rule, base) => {
+        const state = rules.get(rule);
+        if (state.node.type === 'Atrule' && state.node.name === 'font-face')
+          result.push({
+            rule,
+            base,
+            declarations: Object.fromEntries(
+              entriesForBlock(state.node.block).map((entry) => [entry.name, entry.value]),
+            ),
+          });
+        for (const child of state.children) visit(child, base);
+      };
+      for (const sheet of Array.from(ownerCollection(root)).concat(adopted.get(root) || [])) {
+        const state = requireSheet(sheet);
+        if (state.disabled || (state.media && !cssMediaMatches(state.media))) continue;
+        const base = state.href || host.location();
+        for (const rule of state.rules) visit(rule, base);
+      }
+      return result;
+    },
     sources(root) {
       return Array.from(ownerCollection(root))
         .concat(adopted.get(root) || [])
