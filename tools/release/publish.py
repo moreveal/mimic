@@ -45,9 +45,12 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--version', required=True)
     parser.add_argument('--overview', type=Path, required=True)
+    parser.add_argument('--replace-existing', action='store_true',
+                        help='replace assets and notes on an existing published release')
     args = parser.parse_args()
-    if not re.fullmatch(r'v\d+\.\d+\.\d+-beta\.\d+', args.version):
-        parser.error('Expected vMAJOR.MINOR.PATCH-beta.NUMBER')
+    if not re.fullmatch(r'v\d+\.\d+\.\d+(?:-beta\.\d+)?', args.version):
+        parser.error('Expected vMAJOR.MINOR.PATCH or vMAJOR.MINOR.PATCH-beta.NUMBER')
+    is_prerelease = '-beta.' in args.version
     overview = args.overview.resolve()
     source_revision = clean_revision(ROOT)
     public_revision = clean_revision(overview)
@@ -86,14 +89,19 @@ def main():
                                '--json', 'isDraft,targetCommitish'], capture_output=True, text=True)
     if existing.returncode == 0:
         current = json.loads(existing.stdout)
-        if not current['isDraft'] or current['targetCommitish'] != public_revision:
-            raise RuntimeError('Refusing to overwrite an existing release or unrelated draft')
+        if current['targetCommitish'] != public_revision:
+            raise RuntimeError('Refusing to overwrite a release from an unrelated public revision')
+        if not current['isDraft'] and not args.replace_existing:
+            raise RuntimeError('Pass --replace-existing to update an existing published release')
     else:
         # Verify repository access independently; do not hide an authentication failure.
         run('gh', 'repo', 'view', REPO, '--json', 'name', capture=True)
-        run('gh', 'release', 'create', args.version, '--repo', REPO, '--draft', '--prerelease',
-            '--target', public_revision, '--title', f'Mimic {args.version} — Public Beta',
-            '--notes-file', str(notes))
+        create_args = ['gh', 'release', 'create', args.version, '--repo', REPO, '--draft',
+                       '--target', public_revision, '--title', f'Mimic {args.version} — Public Beta',
+                       '--notes-file', str(notes)]
+        if is_prerelease:
+            create_args.append('--prerelease')
+        run(*create_args)
     run('gh', 'release', 'upload', args.version, '--repo', REPO, '--clobber', *map(str, assets))
     uploaded = json.loads(run('gh', 'release', 'view', args.version, '--repo', REPO,
                               '--json', 'assets', capture=True))['assets']
@@ -105,7 +113,7 @@ def main():
             if digest(Path(temp) / path.name) != digest(path):
                 raise RuntimeError(f'GitHub download verification failed: {path.name}')
     run('gh', 'release', 'edit', args.version, '--repo', REPO,
-        '--draft=false', '--prerelease', '--notes-file', str(notes))
+        '--draft=false', f'--prerelease={str(is_prerelease).lower()}', '--notes-file', str(notes))
     print(f'Published and download-verified: https://github.com/{REPO}/releases/tag/{args.version}')
 
 

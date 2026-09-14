@@ -44,6 +44,10 @@ performance or as Linux results.
 python tools/release/publish.py --version v0.1.0-beta.1 --overview E:/GitHub/mimic-runtime
 ```
 
+To replace the artifacts and notes of an already published release, pass
+`--replace-existing`. The release tag must still target the exact clean public
+overview revision used by both verified platform builds.
+
 Publishing requires both verified platform receipts with matching private/public
 revisions and current archive hashes, clean checkouts, and the public commit
 already pushed. The Windows/Linux GitHub Actions workflow must also pass on the
