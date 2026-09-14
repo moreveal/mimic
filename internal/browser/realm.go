@@ -1191,26 +1191,32 @@ func (r *Realm) installBindingsOnOwner() error {
 		return r.val(float64(p.performanceClamper.micros(r.performanceOrigin.UnixMicro(), performanceIsolated)) / 1000), nil
 	})
 	r.initPerformance(host)
-	host["queuePerformanceObserver"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["queuePerformanceObserver"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		if len(a) == 0 {
 			return nil, nil
 		}
-		callback := a[0]
+		callback := retainRuntimeValue(r.runtime, a[0])
 		r.scheduler.Post(scheduler.DOM, 0, func(ctx context.Context) error {
-			_, err := r.runtime.Call(ctx, callback, r.runtime.Get("window"))
+			defer releaseRuntimeValues(r.runtime, callback)
+			receiver := r.runtime.Get("window")
+			result, err := r.runtime.Call(ctx, callback, receiver)
+			releaseRuntimeValues(r.runtime, result, receiver)
 			return err
 		})
 		return nil, nil
 	})
 	// Both deliveries are DOM tasks, after the sampled rendering observation.
 	host["queueIntersectionObserver"] = host["queuePerformanceObserver"]
-	host["queuePostedMessage"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["queuePostedMessage"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		if len(a) == 0 {
 			return nil, nil
 		}
-		callback := a[0]
+		callback := retainRuntimeValue(r.runtime, a[0])
 		r.scheduler.Post(scheduler.PostedMessage, 0, func(ctx context.Context) error {
-			_, err := r.runtime.Call(ctx, callback, r.runtime.Get("window"))
+			defer releaseRuntimeValues(r.runtime, callback)
+			receiver := r.runtime.Get("window")
+			result, err := r.runtime.Call(ctx, callback, receiver)
+			releaseRuntimeValues(r.runtime, result, receiver)
 			return err
 		})
 		return nil, nil

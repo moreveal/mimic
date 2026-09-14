@@ -30,9 +30,11 @@ func (p *Page) previewDocument(frame *Frame) (string, error) {
 		if err != nil {
 			return err
 		}
-		v, err := r.runtime.Call(ctx, r.previewRead, nil, r.val("snapshot"))
+		argument := r.val("snapshot")
+		defer releasePreviewValue(r.runtime, argument)
+		v, err := r.runtime.Call(ctx, r.previewRead, nil, argument)
 		if err == nil {
-			observation = v.Export()
+			observation = exportPreviewValue(r.runtime, v)
 		}
 		return err
 	})

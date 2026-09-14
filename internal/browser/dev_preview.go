@@ -6,6 +6,8 @@ import (
 	"fmt"
 	"sort"
 	"strings"
+
+	"github.com/moreveal/mimic/internal/engine"
 )
 
 func (b *Browser) DevPreviewEnabled() bool { return b.devPreview }
@@ -16,6 +18,25 @@ func (b *Browser) DevPreviewEnabled() bool { return b.devPreview }
 type PreviewSubscription struct {
 	Updates chan []byte
 	version string
+}
+
+func exportPreviewValue(owner any, value engine.Value) any {
+	if value == nil {
+		return nil
+	}
+	if releaser, ok := owner.(engine.ValueReleaser); ok {
+		defer releaser.ReleaseValue(value)
+	}
+	return value.Export()
+}
+
+func releasePreviewValue(owner any, value engine.Value) {
+	if value == nil {
+		return
+	}
+	if releaser, ok := owner.(engine.ValueReleaser); ok {
+		releaser.ReleaseValue(value)
+	}
 }
 
 func (p *Page) SubscribePreview() (*PreviewSubscription, error) {
@@ -48,9 +69,11 @@ func (r *Realm) readPreview(kind string) (any, error) {
 	}
 	var result any
 	err := r.runOnOwner(context.Background(), func(ctx context.Context) error {
-		v, err := r.runtime.Call(ctx, r.previewRead, nil, r.val(kind))
+		argument := r.val(kind)
+		defer releasePreviewValue(r.runtime, argument)
+		v, err := r.runtime.Call(ctx, r.previewRead, nil, argument)
 		if err == nil {
-			result = v.Export()
+			result = exportPreviewValue(r.runtime, v)
 		}
 		return err
 	})

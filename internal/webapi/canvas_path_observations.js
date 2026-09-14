@@ -196,7 +196,8 @@ const queuePath = (c, path, rule, stroke = false, clear = false) => {
     Math.hypot(d.transform[0], d.transform[1]),
     Math.hypot(d.transform[2], d.transform[3]),
   );
-  (c.surface.pendingText || (c.surface.pendingText = [])).push({
+  const pending = c.surface.pendingText || (c.surface.pendingText = []);
+  pending.push({
     kind: 'path',
     path: pathCopy(path),
     rule,
@@ -208,6 +209,13 @@ const queuePath = (c, path, rule, stroke = false, clear = false) => {
     clear,
     clips: d.clipPaths || [],
   });
+  // Long-lived animations need bounded deferred state even when they never
+  // clear the full canvas. Folding a batch into the canonical pixel model
+  // preserves subsequent overlapping draws and readbacks.
+  if (pending.length >= 256) {
+    ensurePixels(c.surface);
+    materializeText(c.surface);
+  }
   reportBoundary(c, 'approximatePathObservations');
   c.surface.unmodeled = true;
 };

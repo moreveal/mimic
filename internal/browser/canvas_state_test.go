@@ -48,6 +48,22 @@ func TestHTMLCanvasUsesCanonicalContextState(t *testing.T) {
 	})
 }
 
+func TestCanvasDeferredDrawsStayBoundedAndOrdered(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, p *Page) {
+		value, err := p.Evaluate(context.Background(), `(()=>{
+ const make=()=>{const c=new OffscreenCanvas(4,4),x=c.getContext('2d');x.fillStyle='rgba(20,40,60,.05)';return x},batched=make(),checkpointed=make();
+ for(let i=0;i<600;i++){batched.fillRect(i%4,(i>>2)%4,1,1);checkpointed.fillRect(i%4,(i>>2)%4,1,1);if(i%100===99)checkpointed.getImageData(0,0,1,1)}
+ const read=x=>Array.from(x.getImageData(0,0,4,4).data).join(',');if(read(batched)!==read(checkpointed))return 'batch folding';
+ batched.clearRect(-1,-1,6,6);if(batched.getImageData(0,0,4,4).data.some(v=>v))return 'full clear';
+ batched.fillStyle='red';batched.fillRect(0,0,4,4);batched.save();batched.translate(2,0);batched.clearRect(0,0,4,4);batched.restore();
+ const pixels=batched.getImageData(0,0,4,1).data;return pixels[0]===255&&pixels[3]===255&&pixels[8]===0&&pixels[11]===0;
+})()`)
+		if err != nil || value != true {
+			t.Fatalf("deferred canvas draws: %v %v", value, err)
+		}
+	})
+}
+
 func TestCanvasTextObservationsAreLocalAndOrdered(t *testing.T) {
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		value, err := p.Evaluate(context.Background(), `(async()=>{
