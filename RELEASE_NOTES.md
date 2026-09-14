@@ -1,13 +1,16 @@
-# Mimic v0.1.1
+# Mimic v0.1.2
 
-Changes since v0.1.0-beta.2:
+Changes since v0.1.1:
 
-- Canvas readbacks now serialize the canonical observation state as PNG, so
-  repeated and overlapping reads remain consistent.
-- Animated Canvas state is bounded to prevent unbounded memory growth.
-- CSS-connected `FontFace` objects are now exposed through `document.fonts`.
-- Cross-world shadow DOM mutations no longer fail when nodes cross realm
-  boundaries.
-- The development preview reconnects after the Mimic server restarts.
-- Navigation and CSS geometry remain responsive on pages using Tailwind-style
-  `calc(var(--spacing) * n)` lengths.
+- Playwright can now click actionable controls inside iframes and observe
+  asynchronously opened popup pages through the normal `popup` event.
+- Network request events expose POST bodies in both legacy `postData` and modern
+  `postDataEntries` forms for compatibility across Playwright versions.
+- DOM/CDP integration now resolves iframe owner nodes, rendered `innerText`,
+  customized built-in elements, and `ReportingObserver` lifecycle behavior.
+- Element resource loading, preload cancellation, CSS-connected font loading,
+  and nested-frame focus now share their canonical page state.
+- Observable Canvas, Web Audio, WebGPU, CSS, and HTML attribute behavior has
+  been expanded while preserving realm isolation and coherent readbacks.
+- Child-process shutdown now stops the Mimic server, and the development preview
+  projects child frames by their canonical owner identity.
