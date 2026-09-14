@@ -110,8 +110,8 @@ def main():
     parser.add_argument('--version', required=True)
     parser.add_argument('--overview', type=Path, required=True)
     args = parser.parse_args()
-    if not re.fullmatch(r'v\d+\.\d+\.\d+-beta\.\d+', args.version):
-        parser.error('Expected vMAJOR.MINOR.PATCH-beta.NUMBER')
+    if not re.fullmatch(r'v\d+\.\d+\.\d+(?:-beta\.\d+)?', args.version):
+        parser.error('Expected vMAJOR.MINOR.PATCH or vMAJOR.MINOR.PATCH-beta.NUMBER')
     host = platform.system().lower()
     if host not in ('windows', 'linux') or platform.machine().lower() not in ('amd64', 'x86_64'):
         parser.error('Only native Windows/Linux amd64 builds are packaged')
