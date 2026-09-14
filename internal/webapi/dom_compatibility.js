@@ -63,7 +63,8 @@ const compatibilityElementState = {};
       frame.used = true;
       return frame.node;
     }
-    const node = rawCreate.call(document, definition.name);
+    const node = rawCreate.call(document, definition.extendsTag || definition.name);
+    if (definition.extendsTag) node.setAttribute('is', definition.name);
     Object.setPrototypeOf(node, ctor.prototype);
     upgraded.set(node, definition);
     upgradeRevision++;
@@ -71,7 +72,11 @@ const compatibilityElementState = {};
   };
   const upgrade = (node) => {
     if (!(node instanceof Element) || upgraded.has(node)) return;
-    const definition = definitions.get(node.localName);
+    const customizedName = node.getAttribute?.('is'),
+      definition =
+        (customizedName && definitions.get(customizedName)?.extendsTag === node.localName
+          ? definitions.get(customizedName)
+          : null) || definitions.get(node.localName);
     if (!definition) return;
     upgraded.set(node, null);
     Object.setPrototypeOf(node, definition.prototype);
@@ -104,12 +109,21 @@ const compatibilityElementState = {};
     if (shadow) walk(shadow, callback);
     for (const child of Array.from(node.childNodes || [])) walk(child, callback);
   };
-  const definitionCandidates = (root, name) => {
-    if (!shadowHosts.size) return compatibilitySelectors.query(root, name);
+  const definitionCandidates = (root, definition) => {
+    const selector = definition.extendsTag
+      ? definition.extendsTag + '[is="' + definition.name + '"]'
+      : definition.name;
+    if (!shadowHosts.size) return compatibilitySelectors.query(root, selector);
     const candidates = [];
     const collect = (tree) => {
       for (const node of compatibilitySelectors.query(tree, '*')) {
-        if (node.localName === name) candidates.push(node);
+        if (
+          definition.extendsTag
+            ? node.localName === definition.extendsTag &&
+              node.getAttribute('is') === definition.name
+            : node.localName === definition.name
+        )
+          candidates.push(node);
         const shadow = elementShadows.get(node);
         if (shadow) collect(shadow);
       }
@@ -140,11 +154,10 @@ const compatibilityElementState = {};
       if (!validName(name)) throw new DOMException('Invalid custom element name', 'SyntaxError');
       if (definitions.has(name) || constructors.has(ctor))
         throw new DOMException('Already defined', 'NotSupportedError');
-      if (options.extends)
-        throw new DOMException(
-          'Customized built-in elements are not supported',
-          'NotSupportedError',
-        );
+      const extendsTag =
+        options.extends === undefined ? null : String(options.extends).toLowerCase();
+      if (extendsTag && (validName(extendsTag) || !/^[a-z][0-9a-z-]*$/.test(extendsTag)))
+        throw new DOMException('Invalid built-in element name', 'NotSupportedError');
       if (defining) throw new DOMException('Definition is running', 'NotSupportedError');
       let definition;
       defining = true;
@@ -198,6 +211,7 @@ const compatibilityElementState = {};
           attributes,
           disabledFeatures,
           formAssociated,
+          extendsTag,
         };
       } finally {
         defining = false;
@@ -207,7 +221,7 @@ const compatibilityElementState = {};
       // Collect the shadow-including upgrade candidates before constructors
       // run. Native queries avoid one FFI call for every child of every
       // existing node each time another custom element is defined.
-      for (const node of definitionCandidates(document, name)) upgrade(node);
+      for (const node of definitionCandidates(document, definition)) upgrade(node);
       if (waiting.has(name)) {
         waiting.get(name).resolve(ctor);
         waiting.delete(name);
@@ -245,6 +259,7 @@ const compatibilityElementState = {};
   Object.defineProperty(Document.prototype, 'createElement', {
     value: function (name, options) {
       const node = rawCreate.call(this, name, options);
+      if (options?.is !== undefined) node.setAttribute('is', String(options.is));
       if (definitions.size && !customElementCloneInert) upgrade(node);
       return node;
     },

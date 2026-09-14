@@ -27,7 +27,7 @@
     let ctor=globals[spec.name];
     const generated=typeof ctor!=='function';
     if(generated){
-      ctor={[spec.name]:function(){missing(interfaceName,'constructor');throw new TypeError('Illegal constructor')}}[spec.name];
+      ctor={[spec.name]:function(){if(interfaceName.startsWith('HTML')&&typeof constructCustomElement==='function')return constructCustomElement(new.target);missing(interfaceName,'constructor');throw new TypeError('Illegal constructor')}}[spec.name];
       Object.defineProperty(globals,spec.name,{value:ctor,writable:true,configurable:true});
     }
     if(!Object.hasOwn(ctor.prototype,Symbol.toStringTag))Object.defineProperty(ctor.prototype,Symbol.toStringTag,{value:spec.name,configurable:true});
