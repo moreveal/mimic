@@ -992,38 +992,11 @@ func (r *Realm) installBindingsOnOwner() error {
 	host["framePost"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return nil, r.postToFrame(strarg(a, 0), arg(a, 1), strarg(a, 2), stringSlice(arg(a, 3)))
 	})
+	r.installDocumentFocus(host)
 	host["navigator"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		p.trace.Add(trace.API, "Navigator", map[string]any{"realm": r.ID})
 		environment := p.environmentView()
-		n := environment.Navigator()
-		metadata := environment.UserAgentData()
-		brands := make([]map[string]any, 0, len(environment.Product.UserAgentBrands))
-		for _, brand := range metadata.Brands {
-			brands = append(brands, map[string]any{"brand": brand.Brand, "version": brand.Version, "fullVersion": brand.FullVersion})
-		}
-		values := map[string]any{"userAgent": n.UserAgent, "appVersion": strings.TrimPrefix(n.UserAgent, "Mozilla/"), "platform": n.Platform, "languages": n.Languages, "language": n.Languages[0], "hardwareConcurrency": n.HardwareConcurrency, "deviceMemory": n.DeviceMemory, "onLine": n.Online && !p.NetworkPolicy().Offline(), "cookieEnabled": n.CookieEnabled, "vendor": "Google Inc.", "product": "Gecko", "appName": "Netscape", "maxTouchPoints": 0, "webdriver": navigatorWebDriver, "pdfViewerEnabled": true, "uaBrands": brands, "uaFullVersion": environment.Product.FullVersion, "architecture": "x86", "bitness": "64", "model": "", "platformVersion": environment.Platform.OSVersion}
-		values["appVersion"] = environment.AppVersion()
-		values["uaPlatform"] = metadata.Platform
-		values["uaMobile"] = metadata.Mobile
-		values["uaFullVersion"] = metadata.FullVersion
-		values["platformVersion"] = metadata.PlatformVersion
-		values["architecture"] = metadata.Architecture
-		values["model"] = metadata.Model
-		values["bitness"] = metadata.Bitness
-		values["wow64"] = metadata.WoW64
-		values["formFactors"] = append([]string{}, metadata.FormFactors...)
-		fullBrands := []map[string]any{}
-		for _, b := range metadata.FullVersionList {
-			v := b.FullVersion
-			if v == "" {
-				v = b.Version
-			}
-			fullBrands = append(fullBrands, map[string]any{"brand": b.Brand, "version": v})
-		}
-		values["uaFullVersionList"] = fullBrands
-		if environment.Hardware.CPUPerformanceKnown {
-			values["cpuPerformance"] = environment.Hardware.CPUPerformance
-		}
+		values := environment.NavigatorProjection(p.NetworkPolicy().Offline(), navigatorWebDriver)
 		return r.val(values), nil
 	})
 	host["screen"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
@@ -1171,15 +1144,42 @@ func (r *Realm) installBindingsOnOwner() error {
 	host["hasStorageAccess"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		return r.val(p.environmentView().Network.CookiesEnabled && r.origin != "null"), nil
 	})
+	host["systemFonts"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		return r.val(p.environmentView().SystemFontPalette()), nil
+	})
+	host["audioDevice"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		a := p.environmentView().Audio
+		if a.SampleRate <= 0 {
+			a.SampleRate = 48000
+		}
+		if a.Channels <= 0 {
+			a.Channels = 2
+		}
+		if a.BufferDuration <= 0 {
+			a.BufferDuration = 0.01
+		}
+		if a.MaxBufferFrames <= 0 {
+			a.MaxBufferFrames = 7680
+		}
+		return r.val(map[string]any{"sampleRate": a.SampleRate, "channels": a.Channels, "bufferDuration": a.BufferDuration, "maxBufferFrames": a.MaxBufferFrames}), nil
+	})
+	host["systemColors"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		return r.val(p.environmentView().SystemColorPalette()), nil
+	})
 	host["gpuCapabilities"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		return r.val(p.environmentView().Graphics.WebGPUProjection()), nil
 	})
-	host["gpuRequestAdapter"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
+	host["gpuRequestAdapter"] = r.transientFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		promise := newHostPromise(r.runtime)
 		delay := time.Duration(p.environmentView().Graphics.WebGPU.InitializationDelayMillis * float64(time.Millisecond))
+		preference, fallback := strarg(args, 0), strarg(args, 1) == "fallback"
 		r.scheduler.Post(scheduler.Control, delay, func(context.Context) error {
 			g := p.environmentView().Graphics
-			return promise.Resolve(map[string]any{"vendor": g.WebGPU.Vendor, "architecture": g.WebGPU.Architecture, "device": g.WebGPU.Device, "description": g.WebGPU.Description, "features": g.WebGPU.Features, "maxTextureSize": g.MaxTextureSize})
+			adapter, ok := g.SelectWebGPUAdapter(preference, fallback)
+			if !ok {
+				return promise.Resolve(nil)
+			}
+			return promise.Resolve(adapter)
 		})
 		return promise.Value, nil
 	})
