@@ -93,6 +93,13 @@
       "compatibility/cdp_automation.mjs#dom.selectors_element_evaluation"
     ]
   },
+  "DOM.getFrameOwner": {
+    "status": "partial",
+    "notes": "Returns the canonical iframe owner node for live child frames; detached frames and complete frontend node lifecycle behavior are not modeled.",
+    "tests": [
+      "internal/cdp/dom_query_test.go#TestDOMGetFrameOwnerReturnsEmbeddingNode"
+    ]
+  },
   "DOM.getOuterHTML": {
     "status": "partial",
     "notes": "Serializes live nodeId/backendNodeId; objectId and includeShadowDOM are not implemented.",

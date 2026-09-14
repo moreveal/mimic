@@ -20,7 +20,7 @@ Source: pinned Chrome 152.0.7977.82. The schema contains 58 domains, 665 command
 | Cast | 0 / 0 / 6 | 0 / 0 / 2 |
 | Console | 0 / 0 / 3 | 0 / 0 / 1 |
 | CrashReportContext | 0 / 0 / 1 | 0 / 0 / 0 |
-| DOM | 0 / 20 / 33 | 0 / 1 / 18 |
+| DOM | 0 / 21 / 32 | 0 / 1 / 18 |
 | DOMDebugger | 0 / 0 / 10 | 0 / 0 / 0 |
 | DOMSnapshot | 0 / 0 / 4 | 0 / 0 / 0 |
 | DOMStorage | 0 / 0 / 6 | 0 / 0 / 4 |
@@ -85,6 +85,7 @@ Unlisted entries are unsupported. Some harmless client acknowledgments are expli
 | `DOM.getBoxModel` | partial | Same modeled rectangle/CSS edges as JS and hit testing. No complete layout/transforms/SVG quads or multiple inline fragments. | [TestDefaultControlGeometryMatchesChrome152](../internal/browser/input_test.go); [input.pointer_click](../compatibility/cdp_automation.py); [input.pointer_click](../compatibility/cdp_automation.mjs) |
 | `DOM.getContentQuads` | partial | Same modeled rectangle/CSS edges as JS and hit testing. No complete layout/transforms/SVG quads or multiple inline fragments. | [TestDefaultControlGeometryMatchesChrome152](../internal/browser/input_test.go); [input.pointer_click](../compatibility/cdp_automation.py); [input.pointer_click](../compatibility/cdp_automation.mjs) |
 | `DOM.getDocument` | partial | Canonical node IDs, metadata, attributes, children and depth traversal. Shadow piercing, whitespace modes, distributed nodes and full frontend node lifecycle are incomplete. | [TestDOMQueryInitialDocumentBootstrapsRealm](../internal/cdp/dom_query_test.go); [dom.selectors_element_evaluation](../compatibility/cdp_automation.mjs) |
+| `DOM.getFrameOwner` | partial | Returns the canonical iframe owner node for live child frames; detached frames and complete frontend node lifecycle behavior are not modeled. | [TestDOMGetFrameOwnerReturnsEmbeddingNode](../internal/cdp/dom_query_test.go) |
 | `DOM.getOuterHTML` | partial | Serializes live nodeId/backendNodeId; objectId and includeShadowDOM are not implemented. | [TestDOMOuterHTMLSerializesRequestedLiveNode](../internal/cdp/dom_serialization_test.go) |
 | `DOM.querySelector` | partial | Uses canonical page JavaScript selector engine; selector completeness follows that engine. | [TestDOMQueriesShareRealmSelectorEngine](../internal/cdp/dom_query_test.go) |
 | `DOM.querySelectorAll` | partial | Uses canonical page JavaScript selector engine; selector completeness follows that engine. | [TestDOMQueriesShareRealmSelectorEngine](../internal/cdp/dom_query_test.go) |

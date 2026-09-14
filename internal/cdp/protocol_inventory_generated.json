@@ -17,8 +17,8 @@
     "types": 611,
     "methods": {
       "implemented": 9,
-      "partial": 99,
-      "unsupported": 557
+      "partial": 100,
+      "unsupported": 556
     },
     "events": {
       "partial": 26,
@@ -2944,7 +2944,11 @@
         "nodeId"
       ],
       "support": {
-        "status": "unsupported"
+        "status": "partial",
+        "notes": "Returns the canonical iframe owner node for live child frames; detached frames and complete frontend node lifecycle behavior are not modeled.",
+        "tests": [
+          "internal/cdp/dom_query_test.go#TestDOMGetFrameOwnerReturnsEmbeddingNode"
+        ]
       }
     },
     {
