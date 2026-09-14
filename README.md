@@ -49,23 +49,23 @@ These development checkpoints exercise execution and observable browser behavior
 | **DOM mutations ✓** | 3,000 elements with validated final structure and text. |
 | **Networking ✓** | Fetch and XHR in deterministic local fixtures. |
 | **Playwright / Puppeteer ✓** | [Verified examples](examples/README.md): form input, clicks, fetch, profile readback, and ten concurrent pages on Windows and Linux. |
-| **100 concurrent pages ✓** | Completed static and React benchmark series. |
+| **100 concurrent pages ✓** | Completed Linux static, CPU, and React comparison with Chrome. |
 
 These are scoped, verified workflows; compatibility continues to expand.
 
 ## Measured, not assumed
 
-Retained Windows checkpoint from **September 13, 2026**, against **Chrome 152.0.7977.82** in headless mode, on Windows 11 x64 (Intel i7-14700KF, 31.83 GiB RAM).
+Fresh-build Windows checkpoint from **September 14, 2026**, against **Chrome 152.0.7977.82** in headless mode, on Windows 11 x64 (Intel i7-14700KF, 31.83 GiB RAM).
 
 <p align="center">
   <a href="BENCHMARKS.md"><img src="assets/benchmark-startup.svg" alt="Mimic and Chrome: CDP readiness and startup memory" width="1200"></a>
 </p>
 
 <p align="center">
-  <a href="BENCHMARKS.md"><img src="assets/benchmark-scaling.svg" alt="Static concurrency: active memory and throughput from 1 to 100 pages" width="1200"></a>
+  <a href="BENCHMARKS.md"><img src="assets/benchmark-scaling.svg" alt="Static concurrency: active memory and throughput through 50 pages" width="1200"></a>
 </p>
 
-**92% lower ready RSS. 43% less active RAM and 2.76× throughput at 100 static pages.**
+**92% lower ready RSS. 62% less active RAM and 3.32× throughput at 50 static pages.**
 Measured on these fixtures and this machine; startup RSS is not per-page memory.
 
 Mimic is actively evolving toward direct HTTP lightness with browser compatibility.
@@ -135,15 +135,15 @@ examples. Implementation sources and internal research remain private.
 
 ## Known limitations
 
-Warm execution currently trails Chrome in the measured fixtures. CPU concurrency
-at 100 pages also hit an initialization failure. Both are optimization and reliability
-targets as Mimic develops; the full report retains all results and recorded failures.
+Warm execution is faster in two of six fixtures and still trails Chrome most sharply
+for DOM mutations. The Windows host stopped Mimic's 100-page levels at its memory-pressure
+guard; the completed Linux 100-page comparison shows higher marginal memory per Mimic Page.
 
 Mimic is in active development. The beta supports **Windows amd64** and
 **Linux amd64 with glibc 2.39+** (validated on Ubuntu 24.04 under WSL2). The
 browser environment remains **Chrome 152 on Windows** on either host. ARM64 and
 musl are not packaged. Linux needs installed fonts and has no native speech synthesis.
-The benchmark charts predate the platform release; they are not Linux measurements.
+The benchmark charts are Windows measurements; the separate 100-Page density results are Linux measurements.
 
 It implements a subset of browser APIs and CDP. It does not render screenshots,
 PDFs, Canvas/WebGL output, or video, and does not provide full CSS layout or complete

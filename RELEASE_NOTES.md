@@ -41,10 +41,9 @@ Browser and CDP coverage are incomplete. Supported workflows do not imply full
 Playwright/Puppeteer compatibility. Mimic does not render screenshots or PDFs,
 and is not a sandbox for untrusted code. Bind CDP to trusted localhost clients.
 
-The [benchmark charts](BENCHMARKS.md) describe the retained September 13 Windows
-checkpoint, **not a new measurement of these release binaries or Linux**.
-Warm latency and the recorded CPU-heavy 100-page initialization failure remain
-known limitations, not claimed fixes in this release.
+The [benchmark charts](BENCHMARKS.md) describe the September 14 Windows development
+checkpoint, **not a measurement of the beta release binaries**. The accompanying
+Linux 100-Page comparison is reported separately with its memory limitation.
 
 ## License and feedback
 

@@ -1,11 +1,6 @@
-# Mimic vs. Chrome: September 13, 2026
+# Mimic vs. Chrome: 2026-09-14
 
-A fresh-build comparison on one Windows workstation using the unchanged local benchmark suite. Mimic and Chrome passed all six correctness gates. Of 360 measured single-page attempts, 359 passed; one cold Chrome/WebAssembly navigation failed with net::ERR_ABORTED. Mimic also had one page-initialization failure in its first measured CPU wave at N=100; that series stopped at 99/100 successes. Static and React completed all measured concurrency levels. These are controlled fixtures, not a test of general website compatibility.
-
-**Active development, early results.** Our goal is direct HTTP lightness with browser compatibility. The memory advantage visible in this run is an encouraging starting point. Slower execution cases remain active optimization targets; these timings describe the current build, not our intended performance ceiling. Future gains must be measured while preserving behavior.
-
-**Release scope:** these are retained Windows checkpoint results, not a rerun
-of the public beta binaries and not Linux performance measurements.
+Fresh builds on one Windows workstation, using the unchanged frozen workloads. 12/12 correctness gates and 360/360 measured single-page attempts passed. 3 concurrency series stopped or contained a failure. All observations, including failed attempts and excluded warmups, remain in the data. These are controlled fixtures and do not establish general website compatibility.
 
 ## Environment
 
@@ -15,139 +10,129 @@ of the public beta binaries and not Linux performance measurements.
 | CPU | Intel(R) Core(TM) i7-14700KF |
 | RAM | 31.83 GiB |
 | Chrome | 152.0.7977.82 (headless=new) |
-| Mimic engine | V8 15.2.124.1-rusty |
-| Chrome V8 | 15.2.124.21 |
-| Run started | 2026-09-13T19:57:38.186817+04:00 |
-| Run completed | 2026-09-13T20:10:26.711901+04:00 |
-| Host conditions | Interactive workstation; Balanced power plan; background apps and antivirus enabled |
+| Mimic / Chrome V8 | 15.2.124.1-rusty / 15.2.124.21 |
+| Started / completed | 2026-09-14T03:42:47.674701+04:00 / 2026-09-14T03:56:50.108854+04:00 |
 
-Both executables were hash-checked before every launch. The source tree was clean when Mimic was built. A single run on a shared workstation is subject to scheduler, cache, and background-load variation.
+Executable hashes are checked before every launch. This is an interactive workstation with background applications and antivirus enabled; cache and scheduler variation remain possible.
 
 ## Startup and ready memory
 
-Ten fresh processes per system, with alternating system order and an excluded warmup. Readiness means a WebSocket connection and a successful Target.getTargets response. RSS is the sum of process-tree working sets at that point, including the initial page; it is not per-page memory.
+Ten fresh processes per runtime, alternating order, after an excluded warmup. Both answer the same Target.getTargets readiness probe. Summed process-tree RSS includes the initial page and can count shared pages more than once; it is not marginal Page memory.
 
-| Runtime | CDP ready p50, ms | p95, ms | Ready RSS p50, MiB | Ready private bytes p50, MiB |
+| Runtime | CDP ready p50, ms | p95, ms | Ready RSS, MiB | Ready private bytes, MiB |
 |---|---|---|---|---|
-| Mimic | 219.09 | 231.06 | 28.78 | 80.80 |
-| Chrome | 270.36 | 289.97 | 378.52 | 177.59 |
+| Mimic | 229.57 | 276.30 | 28.84 | 80.90 |
+| Chrome | 236.68 | 269.42 | 376.26 | 175.55 |
 
-## Warm workload completion
+## Warm execution and completion
 
-Twenty measured iterations per system and fixture, after one excluded warmup. The process stays alive; each iteration creates a fresh page and origin. Completion measures navigation through the validated result; page creation and teardown are excluded. Lower is better.
+Twenty retained samples per workload/runtime. Each iteration creates a new Page and origin in the warm process. Execution includes invoking the workload and detecting its validated result. Completion also includes navigation; Page creation and teardown are excluded. Lower is better.
 
-| Workload | Mimic p50, ms | Chrome p50, ms | Mimic p95, ms | Chrome p95, ms |
+| Workload | Mimic execution, ms | Chrome execution, ms | Mimic completion, ms | Chrome completion, ms |
 |---|---|---|---|---|
-| Static DOM | 33.68 | 21.32 | 38.98 | 24.70 |
-| JavaScript / crypto | 77.37 | 52.31 | 94.28 | 57.49 |
-| DOM mutations | 202.30 | 53.45 | 224.78 | 59.31 |
-| Async / networking | 103.96 | 49.53 | 126.09 | 55.25 |
-| React | 90.42 | 46.47 | 120.94 | 49.64 |
-| WebAssembly | 33.92 | 22.83 | 38.54 | 26.00 |
+| Static DOM | 3.61 | 4.79 | 38.63 | 27.29 |
+| JavaScript / crypto | 39.63 | 27.80 | 72.48 | 49.36 |
+| DOM mutations | 96.58 | 29.63 | 131.10 | 52.26 |
+| Async / networking | 67.90 | 28.92 | 101.73 | 54.24 |
+| React | 42.14 | 23.43 | 84.21 | 47.59 |
+| WebAssembly | 4.09 | 4.91 | 38.33 | 27.35 |
 
 ## Cold end-to-end completion
 
-Ten measured fresh-process iterations per fixture, after one excluded warmup. This includes process startup, page creation, navigation, execution, teardown, and process exit. Temporary-profile removal and local-server maintenance are excluded. Cold means a new process; OS caches are not flushed. The cold WebAssembly comparison is withheld because one Chrome navigation failed; all observations remain in the data.
+Ten fresh-process samples per workload/runtime. Includes process startup, Page creation, navigation, execution, teardown and process exit. OS caches are not flushed. Server maintenance and temporary-profile removal are excluded. A failed series is withheld from comparisons.
 
 | Workload | Mimic p50, ms | Chrome p50, ms |
 |---|---|---|
-| Static DOM | 590.94 | 474.22 |
-| JavaScript / crypto | 607.27 | 491.41 |
-| DOM mutations | 757.22 | 449.89 |
-| Async / networking | 634.94 | 427.96 |
-| React | 629.07 | 415.48 |
-| WebAssembly | Not compared | Not compared |
+| Static DOM | 603.77 | 418.52 |
+| JavaScript / crypto | 618.03 | 434.52 |
+| DOM mutations | 665.23 | 420.75 |
+| Async / networking | 650.65 | 457.93 |
+| React | 641.90 | 484.00 |
+| WebAssembly | 591.00 | 450.47 |
 
 ## CPU and memory during warm work
 
-Medians across the same 20 iterations. CPU is process-tree user + kernel time over a page session. Peak RSS/private bytes are sampled session peaks. RSS can double-count shared DLL pages; it is not unique physical RAM.
+Process-tree user plus kernel time per session; sampled peaks may miss short-lived allocations.
 
 | Workload | Runtime | CPU, ms/session | Peak RSS, MiB | Peak private bytes, MiB |
 |---|---|---|---|---|
-| Static DOM | Mimic | 46.88 | 147.96 | 179.06 |
-| Static DOM | Chrome | 164.06 | 1175.96 | 588.62 |
-| JavaScript / crypto | Mimic | 93.75 | 164.90 | 194.17 |
-| JavaScript / crypto | Chrome | 226.56 | 1376.86 | 779.06 |
-| DOM mutations | Mimic | 281.25 | 191.07 | 221.86 |
-| DOM mutations | Chrome | 250.00 | 1345.12 | 715.40 |
-| Async / networking | Mimic | 109.38 | 163.09 | 195.08 |
-| Async / networking | Chrome | 250.00 | 1227.90 | 627.53 |
-| React | Mimic | 140.62 | 167.37 | 198.62 |
-| React | Chrome | 234.38 | 1434.89 | 822.61 |
-| WebAssembly | Mimic | 31.25 | 149.51 | 178.54 |
-| WebAssembly | Chrome | 179.69 | 1272.42 | 626.18 |
+| Static DOM | Mimic | 46.88 | 132.14 | 161.73 |
+| Static DOM | Chrome | 187.50 | 1192.59 | 595.12 |
+| JavaScript / crypto | Mimic | 93.75 | 158.16 | 187.26 |
+| JavaScript / crypto | Chrome | 250.00 | 1408.86 | 789.30 |
+| DOM mutations | Mimic | 234.38 | 161.49 | 190.82 |
+| DOM mutations | Chrome | 226.56 | 1381.75 | 735.54 |
+| Async / networking | Mimic | 156.25 | 156.70 | 189.73 |
+| Async / networking | Chrome | 210.94 | 1223.23 | 626.18 |
+| React | Mimic | 148.44 | 149.13 | 178.77 |
+| React | Chrome | 234.38 | 1401.66 | 797.12 |
+| WebAssembly | Mimic | 46.88 | 142.01 | 172.05 |
+| WebAssembly | Chrome | 187.50 | 1276.15 | 632.98 |
 
-## Concurrent pages
+## Concurrent Pages
 
-Each level uses a fresh process, one excluded warmup wave, and max(5, ceil(20/N)) measured waves. Pages are created concurrently and held until all work completes. Throughput is successful sessions divided by total measured wave time, including page setup and teardown, but excluding the separate recovery wait. It is not directly comparable to the completion-only latency table above.
+Fresh process per level, one excluded warmup, then max(5, ceil(20/N)) measured waves. Throughput includes setup and teardown but excludes the separate 250 ms recovery wait. Every attempted level is shown. A stopped series is not a stable successful result.
 
-Rows show every attempted level. A stopped series is not a stable result. The harness stops on failures, wave timeout, low available system memory, or sustained system-wide paging; higher levels are then not attempted.
-
-| Workload | Runtime | Pages | Waves | Success | Sessions/s | Active RSS, MiB | RSS after recovery, MiB | Status |
+| Workload | Runtime | Pages | Waves | Success | Sessions/s | Active RSS, MiB | Recovered RSS, MiB | Status |
 |---|---|---|---|---|---|---|---|---|
-| Static DOM | Chrome | 1 | 20 | 100.0% | 15.29 | 1188.29 | 1131.31 | Completed |
-| Static DOM | Mimic | 1 | 20 | 100.0% | 14.85 | 150.67 | 124.53 | Completed |
-| Static DOM | Chrome | 5 | 5 | 100.0% | 22.52 | 1348.03 | 1068.62 | Completed |
-| Static DOM | Mimic | 5 | 5 | 100.0% | 36.68 | 338.70 | 206.63 | Completed |
-| Static DOM | Chrome | 10 | 5 | 100.0% | 27.36 | 1683.53 | 1136.02 | Completed |
-| Static DOM | Mimic | 10 | 5 | 100.0% | 58.33 | 560.86 | 301.63 | Completed |
-| Static DOM | Chrome | 25 | 5 | 100.0% | 30.21 | 2542.67 | 1136.20 | Completed |
-| Static DOM | Mimic | 25 | 5 | 100.0% | 70.48 | 1092.03 | 491.23 | Completed |
-| Static DOM | Chrome | 50 | 5 | 100.0% | 28.59 | 4051.56 | 1193.96 | Completed |
-| Static DOM | Mimic | 50 | 5 | 100.0% | 66.95 | 2210.02 | 910.56 | Completed |
-| Static DOM | Chrome | 100 | 5 | 100.0% | 27.78 | 7039.66 | 1248.70 | Completed |
-| Static DOM | Mimic | 100 | 5 | 100.0% | 76.64 | 3988.31 | 1519.87 | Completed |
-| JavaScript / crypto | Chrome | 1 | 20 | 100.0% | 8.71 | 1405.11 | 1328.94 | Completed |
-| JavaScript / crypto | Mimic | 1 | 20 | 100.0% | 8.97 | 165.96 | 126.49 | Completed |
-| JavaScript / crypto | Chrome | 5 | 5 | 100.0% | 21.07 | 1627.67 | 1295.22 | Completed |
-| JavaScript / crypto | Mimic | 5 | 5 | 100.0% | 29.61 | 380.04 | 197.66 | Completed |
-| JavaScript / crypto | Chrome | 10 | 5 | 100.0% | 19.32 | 1995.12 | 1297.75 | Completed |
-| JavaScript / crypto | Mimic | 10 | 5 | 100.0% | 36.36 | 680.95 | 328.06 | Completed |
-| JavaScript / crypto | Chrome | 25 | 5 | 100.0% | 22.77 | 3069.84 | 1283.30 | Completed |
-| JavaScript / crypto | Mimic | 25 | 5 | 100.0% | 45.49 | 1513.77 | 539.42 | Completed |
-| JavaScript / crypto | Chrome | 50 | 5 | 100.0% | 22.08 | 4943.03 | 1330.05 | Completed |
-| JavaScript / crypto | Mimic | 50 | 5 | 100.0% | 48.20 | 2734.01 | 804.45 | Completed |
-| JavaScript / crypto | Chrome | 100 | 5 | 100.0% | 19.60 | 8656.86 | 1375.74 | Completed |
-| JavaScript / crypto | Mimic | 100 | 1 | 99.0% | 24.16 | 4032.66 | 273.40 | non-zero failure rate |
-| React | Chrome | 1 | 20 | 100.0% | 8.57 | 1437.69 | 1358.97 | Completed |
-| React | Mimic | 1 | 20 | 100.0% | 7.50 | 169.15 | 135.65 | Completed |
-| React | Chrome | 5 | 5 | 100.0% | 10.66 | 1564.70 | 1244.96 | Completed |
-| React | Mimic | 5 | 5 | 100.0% | 24.97 | 382.02 | 219.10 | Completed |
-| React | Chrome | 10 | 5 | 100.0% | 8.33 | 1910.35 | 1249.64 | Completed |
-| React | Mimic | 10 | 5 | 100.0% | 37.35 | 650.29 | 327.84 | Completed |
-| React | Chrome | 25 | 5 | 100.0% | 15.43 | 2986.12 | 1278.65 | Completed |
-| React | Mimic | 25 | 5 | 100.0% | 47.53 | 1433.85 | 642.25 | Completed |
-| React | Chrome | 50 | 5 | 100.0% | 18.68 | 4758.96 | 1313.19 | Completed |
-| React | Mimic | 50 | 5 | 100.0% | 50.52 | 2692.14 | 1103.45 | Completed |
-| React | Chrome | 100 | 5 | 100.0% | 20.07 | 8503.54 | 1396.86 | Completed |
-| React | Mimic | 100 | 5 | 100.0% | 44.47 | 5175.78 | 2009.55 | Completed |
+| Static DOM | Chrome | 1 | 20 | 100.0% | 8.70 | 1195.82 | 1138.68 | Completed |
+| Static DOM | Mimic | 1 | 20 | 100.0% | 11.60 | 137.99 | 111.55 | Completed |
+| Static DOM | Chrome | 5 | 5 | 100.0% | 23.03 | 1354.80 | 1100.93 | Completed |
+| Static DOM | Mimic | 5 | 5 | 100.0% | 35.40 | 266.34 | 128.91 | Completed |
+| Static DOM | Chrome | 10 | 5 | 100.0% | 24.05 | 1672.49 | 1129.30 | Completed |
+| Static DOM | Mimic | 10 | 5 | 100.0% | 58.08 | 427.59 | 166.00 | Completed |
+| Static DOM | Chrome | 25 | 5 | 100.0% | 27.19 | 2555.39 | 1135.20 | Completed |
+| Static DOM | Mimic | 25 | 5 | 100.0% | 64.73 | 863.17 | 226.32 | Completed |
+| Static DOM | Chrome | 50 | 5 | 100.0% | 21.00 | 4079.95 | 1204.00 | Completed |
+| Static DOM | Mimic | 50 | 5 | 100.0% | 69.64 | 1568.62 | 327.83 | Completed |
+| Static DOM | Chrome | 100 | 5 | 100.0% | 21.42 | 7032.88 | 1230.30 | Completed |
+| Static DOM | Mimic | 100 | 0 | 100.0% | 28.33 | 4261.57 | 220.37 | memory pressure (<15% or 2 GiB available) |
+| JavaScript / crypto | Chrome | 1 | 20 | 100.0% | 8.36 | 1410.04 | 1333.15 | Completed |
+| JavaScript / crypto | Mimic | 1 | 20 | 100.0% | 8.21 | 155.96 | 116.28 | Completed |
+| JavaScript / crypto | Chrome | 5 | 5 | 100.0% | 17.15 | 1597.24 | 1264.19 | Completed |
+| JavaScript / crypto | Mimic | 5 | 5 | 100.0% | 26.85 | 337.32 | 138.62 | Completed |
+| JavaScript / crypto | Chrome | 10 | 5 | 100.0% | 20.35 | 1977.37 | 1279.54 | Completed |
+| JavaScript / crypto | Mimic | 10 | 5 | 100.0% | 36.18 | 552.32 | 159.82 | Completed |
+| JavaScript / crypto | Chrome | 25 | 5 | 100.0% | 21.40 | 3103.66 | 1321.52 | Completed |
+| JavaScript / crypto | Mimic | 25 | 5 | 100.0% | 45.55 | 1184.45 | 194.19 | Completed |
+| JavaScript / crypto | Chrome | 50 | 5 | 100.0% | 25.91 | 4950.75 | 1340.87 | Completed |
+| JavaScript / crypto | Mimic | 50 | 5 | 100.0% | 50.55 | 2233.92 | 256.05 | Completed |
+| JavaScript / crypto | Chrome | 100 | 5 | 100.0% | 18.66 | 8651.08 | 1377.55 | Completed |
+| JavaScript / crypto | Mimic | 100 | 0 | 100.0% | 19.29 | 4784.39 | 332.48 | memory pressure (<15% or 2 GiB available) |
+| React | Chrome | 1 | 20 | 100.0% | 7.82 | 1420.46 | 1341.79 | Completed |
+| React | Mimic | 1 | 20 | 100.0% | 7.61 | 147.53 | 115.53 | Completed |
+| React | Chrome | 5 | 5 | 100.0% | 6.47 | 1586.57 | 1267.60 | Completed |
+| React | Mimic | 5 | 5 | 100.0% | 26.23 | 305.87 | 145.00 | Completed |
+| React | Chrome | 10 | 5 | 100.0% | 7.98 | 1913.55 | 1251.44 | Completed |
+| React | Mimic | 10 | 5 | 100.0% | 37.20 | 495.99 | 176.36 | Completed |
+| React | Chrome | 25 | 5 | 100.0% | 16.91 | 2984.65 | 1278.16 | Completed |
+| React | Mimic | 25 | 5 | 100.0% | 46.98 | 1041.46 | 251.05 | Completed |
+| React | Chrome | 50 | 5 | 100.0% | 16.40 | 4786.41 | 1328.32 | Completed |
+| React | Mimic | 50 | 5 | 100.0% | 50.29 | 1924.60 | 351.08 | Completed |
+| React | Chrome | 100 | 5 | 100.0% | 18.12 | 8277.64 | 1356.93 | Completed |
+| React | Mimic | 100 | 0 | 100.0% | 19.66 | 4914.61 | 541.29 | memory pressure (<15% or 2 GiB available) |
 
-Recovery memory is sampled 250 ms after page teardown, without forced garbage collection. Retained memory can include shared runtime artifacts and allocator caches; this measurement does not establish leak absence or a return to the initial footprint. Private memory, CPU per successful session, and latency distributions are in the data.
+Recovery uses no forced collection. Allocator pools and shared runtime artifacts can remain resident; this table alone cannot prove leak absence. Private memory, marginal slopes, CPU and latency distributions are included in the numerical data.
 
-## What the fixtures exercise
+## Linux 100-Page density check
 
-| Fixture | Checked behavior |
-|---|---|
-| Static DOM | Baseline text and root count |
-| JavaScript / crypto | Deterministic arithmetic and SHA-256; standard JavaScript operations |
-| DOM mutations | 3,000 elements; final classes, node counts, and text |
-| Async / networking | Promises, timers, messaging, a Worker, fetch, and XHR |
-| React | React 18.3.1; 200 cards, fetch, effects, and three state transitions |
-| WebAssembly | Instantiation and 100,000 integer-add calls |
+A separate paired Linux run completed three measured 100-Page waves for each
+runtime and workload. Mimic delivered 74.40 versus 13.96 sessions/s for static,
+61.11 versus 13.61 for JavaScript/crypto, and 59.78 versus 8.69 for React.
+
+Marginal unique memory per Page was higher in Mimic: 34.90 versus 13.40 MiB for
+static, 45.08 versus 25.72 MiB for JavaScript/crypto, and 45.68 versus 18.64 MiB
+for React. Mimic therefore has a much smaller initial Windows footprint and lower
+total memory through the published 50-Page Windows levels, but it cannot yet claim
+lower marginal Page memory across platforms.
 
 ## Measurement boundaries
 
-- All content is served locally, with identical fixtures and expected results for both systems. No external websites are timed.
-- HTTP cache is disabled and each page uses a unique origin. Warm runs retain the process, transport, and browser context. This is not a tenant-isolation test.
-- An external high-resolution clock measures elapsed time. Result polling is every 5 ms; memory sampling is every 50 ms. Short peaks may be missed.
-- No paint or network-idle wait is included. These are browser workflow measurements, not isolated JavaScript engine timings.
-- Slow samples are retained. p95 at 10–20 samples is unstable; no single-page p99 or aggregate speedup is claimed.
-- Chrome has capabilities Mimic does not implement. These results do not imply feature parity, savings on arbitrary sites, or production cost estimates.
+Identical local fixtures, unique origins, HTTP cache disabled, full supported resource loading. The six fixtures cover static DOM, JavaScript/crypto, 3,000 DOM elements, asynchronous networking and Workers, React 18.3.1 and WebAssembly. Completion requires the exact expected result. No paint or network-idle delay is included. External high-resolution clocks, 5 ms result polling and 50 ms memory sampling are unchanged. Slow samples are retained; p95 from 10–20 samples is unstable. These measurements do not establish feature parity or costs on arbitrary sites.
 
 ## Data and provenance
 
-These timings identify the measured build by executable hash. A subsequent browser-target compatibility fix, enabling Puppeteer browser.target().createCDPSession(), was validated separately; the timings are not a performance measurement of that follow-up change.
-
-[Download the numerical results](benchmarks/results.json): all single-page summary metrics, numerical completion/startup samples (including excluded warmups), concurrency results, and executable/harness hashes. The runtime, benchmark harness, full diagnostic captures, and research remain private. This public summary is therefore not independently reproducible from this repository alone. The exact full-run data hash is included to identify the retained private record.
-
-[Download the public beta](BETA.md) · [Back to Mimic](README.md)
+[Numerical export](benchmarks/results.json) includes all Windows summary metrics,
+numerical single-page and startup samples, concurrency outcomes, and executable and
+harness hashes. Failed and stopped attempts remain represented. Detailed raw traces
+and implementation research stay in the private implementation repository.
