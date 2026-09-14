@@ -19,6 +19,23 @@ tests show stable V8 roots and collected heap, and release the bounded body stor
 Page close. See the campaign report and [published checkpoint](../../benchmark/runs/09-optimized-20260914/public-summary.md)
 for measurement boundaries and raw evidence.
 
+## Live site command stalls, 2026-09-14
+
+The [CDP site investigation](../compatibility/cdp-site-stalls-20260914.md)
+removes private-reflection recursion during frame imports and an owner-thread
+deadlock during foreign microtask checkpoints. Lowe's, Macy's and Flyscoot
+progress after those fixes; two observer compatibility fixes also restore
+Flyscoot's application startup. These are correctness repairs supported by
+local regressions, headful Chrome captures and live journeys.
+
+Runnable tasks still delay same-Page commands: diagnostic departures took
+9.23 s on Lowe's and 26.69 s on Macy's Sale, while browser and independent-Page
+health probes remained responsive during observation. The report preserves
+failed short-timeout recovery, eventual longer-timeout departure, source and
+binary hashes, and external challenge/denial results. Live content and host
+load were uncontrolled; no throughput, memory-retention or benchmark speedup
+claim is made. Further work remains on long-task/navigation responsiveness.
+
 ## Snapshot hydration and task-boundary capture, 2026-09-11
 
 The [snapshot investigation](snapshot-hydration-20260911.md) fixes inert lazy-load
