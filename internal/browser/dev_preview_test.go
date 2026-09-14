@@ -3,14 +3,58 @@ package browser
 import (
 	"context"
 	"encoding/json"
+	"fmt"
+	"net/http"
+	"net/http/httptest"
 	"strings"
 	"testing"
 	"time"
 
 	chrome152 "github.com/moreveal/mimic/chrome/152"
 	"github.com/moreveal/mimic/internal/engine"
+	gojaengine "github.com/moreveal/mimic/internal/engine/goja"
 	v8engine "github.com/moreveal/mimic/internal/engine/v8"
 )
+
+func TestDevPreviewProjectsFramesByOwningElementAcrossShadowTrees(t *testing.T) {
+	child := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "<!doctype html><body>%s child challenge</body>", strings.TrimPrefix(r.URL.Path, "/"))
+	}))
+	defer child.Close()
+	parent := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		fmt.Fprintf(w, `<!doctype html><body><div id="host"></div><iframe id="light" src="%s/light"></iframe><script>
+			document.querySelector('#host').attachShadow({mode:'open'}).innerHTML='<iframe id="shadow-frame" src="%s/shadow"></iframe>';
+		</script></body>`, child.URL, child.URL)
+	}))
+	defer parent.Close()
+
+	for name, factory := range map[string]engine.Factory{"goja": gojaengine.Factory{}, "v8": v8engine.Factory{}} {
+		t.Run(name, func(t *testing.T) {
+			b, err := NewWithOptions(factory, chrome152.New(), Options{DevPreview: true})
+			if err != nil {
+				t.Fatal(err)
+			}
+			c := b.NewContext()
+			defer c.Close()
+			p, err := c.NewPage()
+			if err != nil {
+				t.Fatal(err)
+			}
+			if err := p.Navigate(context.Background(), parent.URL); err != nil {
+				t.Fatal(err)
+			}
+			p.LockCommands()
+			markup, err := p.previewDocument(p.Top)
+			p.UnlockCommands()
+			if err != nil {
+				t.Fatal(err)
+			}
+			if !strings.Contains(markup, "shadow child challenge") || !strings.Contains(markup, "light child challenge") {
+				t.Fatalf("attached frame documents were not projected by owner: %s", markup)
+			}
+		})
+	}
+}
 
 type previewValue struct{ released bool }
 

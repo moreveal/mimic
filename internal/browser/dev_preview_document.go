@@ -76,8 +76,12 @@ func (p *Page) previewDocument(frame *Frame) (string, error) {
 		}
 	}
 	find(root)
-	iframes := r.document.FindAllByTagName("iframe")
-	index := 0
+	frameByOwner := make(map[string]*Frame)
+	for _, child := range frame.Children() {
+		if child.Realm != nil {
+			frameByOwner[fmt.Sprintf("%s:%d", r.ID, child.elementID)] = child
+		}
+	}
 	var clean func(*html.Node, bool) error
 	clean = func(n *html.Node, shadow bool) error {
 		if n.Data == "template" {
@@ -130,19 +134,20 @@ func (p *Page) previewDocument(frame *Frame) (string, error) {
 				}
 				if c.Data == "iframe" {
 					markup := ""
-					if index < len(iframes) {
-						for _, child := range frame.Children() {
-							if child.elementID == iframes[index].ID && child.Realm != nil {
-								var e error
-								markup, e = p.previewDocument(child)
-								if e != nil {
-									return e
-								}
-								break
-							}
+					var owner string
+					for _, a := range attrs {
+						if a.Key == "data-mimic-preview-node" {
+							owner = a.Val
+							break
 						}
 					}
-					index++
+					if child := frameByOwner[owner]; child != nil {
+						var e error
+						markup, e = p.previewDocument(child)
+						if e != nil {
+							return e
+						}
+					}
 					c.Attr = append(c.Attr, html.Attribute{Key: "sandbox", Val: ""}, html.Attribute{Key: "srcdoc", Val: markup})
 				}
 			}
