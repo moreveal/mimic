@@ -1,0 +1,12 @@
+{
+  "captureMetadata": {
+    "product": "Chrome/152.0.7977.82",
+    "mode": "headful",
+    "profile": "chrome-152-windows-x64-headful-controlled-v1"
+  },
+  "result": {
+    "body": "A\nB\n\nC D",
+    "detached": "detached()E",
+    "script": "secret()"
+  }
+}

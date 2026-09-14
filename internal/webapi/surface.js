@@ -2889,6 +2889,52 @@
   const viewportClientElement = (element) =>
     (element === document.documentElement && document.compatMode !== 'BackCompat') ||
     (element === document.body && document.compatMode === 'BackCompat');
+  const innerTextExcludedTags = new Set(['SCRIPT', 'STYLE', 'TEMPLATE', 'NOSCRIPT']);
+  const innerTextBlockDisplays = new Set([
+    'block',
+    'flex',
+    'grid',
+    'list-item',
+    'table',
+    'table-caption',
+    'table-row',
+  ]);
+  function renderedInnerText(element) {
+    // Chrome falls back to textContent for detached/inert subtrees. For rendered
+    // trees innerText observes CSS visibility and generated line boundaries.
+    if (!element.isConnected) return element.textContent;
+    const chunks = [];
+    const newline = () => chunks.push('\n');
+    const visit = (node) => {
+      if (node.nodeType === 3) {
+        chunks.push(node.data);
+        return;
+      }
+      if (node.nodeType !== 1 || innerTextExcludedTags.has(node.tagName)) return;
+      const style = getComputedStyle(node);
+      if (
+        style.display === 'none' ||
+        style.visibility === 'hidden' ||
+        style.visibility === 'collapse'
+      )
+        return;
+      if (node.tagName === 'BR') {
+        newline();
+        return;
+      }
+      const block = innerTextBlockDisplays.has(style.display);
+      if (block) newline();
+      for (const child of node.childNodes) visit(child);
+      if (block) newline();
+    };
+    visit(element);
+    return chunks
+      .join('')
+      .replace(/[\t\f\r ]+/g, ' ')
+      .replace(/ *\n */g, '\n')
+      .replace(/\n{3,}/g, '\n\n')
+      .replace(/^\n+|\n+$/g, '');
+  }
   class HTMLElement extends Element {
     constructor(token, data) {
       if (token === hostToken) {
@@ -2920,7 +2966,7 @@
       else this.toggleAttribute('hidden', !!v);
     }
     get innerText() {
-      return this.textContent;
+      return renderedInnerText(this);
     }
     set innerText(v) {
       this.textContent = v == null ? '' : String(v);
