@@ -84,3 +84,26 @@ func TestFontResourceBoundaryAndDocumentOwnership(t *testing.T) {
 		}
 	})
 }
+
+func TestDocumentFontsIncludesCSSConnectedFaces(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, p *Page) {
+		value, err := p.Evaluate(context.Background(), `JSON.stringify((()=>{
+ const style=document.createElement('style');
+ style.textContent='@font-face{font-family:PixelSans;src:url(https://example.test/pixel.woff2);font-weight:100 900}@font-face{font-family:"Pixel Mono";src:local(Arial)}';
+ document.head.append(style);
+ const first=Array.from(document.fonts),again=Array.from(document.fonts);
+ const before=[document.fonts.size,first.map(face=>face.family).join('|'),first[0]===again[0],[...style.sheet.cssRules].map(rule=>[rule.style.fontFamily,rule.style.src,rule.style.fontWeight])];
+ document.fonts.clear();
+ const afterClear=document.fonts.size;
+ style.remove();
+ return [before,afterClear,document.fonts.size];
+})())`)
+		if err != nil {
+			t.Fatal(err)
+		}
+		want := `[[2,"PixelSans|\"Pixel Mono\"",true,[["PixelSans","url(https://example.test/pixel.woff2)","100 900"],["\"Pixel Mono\"","local(Arial)",""]]],2,0]`
+		if value != want {
+			t.Fatalf("CSS-connected fonts: got %#v want %#v", value, want)
+		}
+	})
+}

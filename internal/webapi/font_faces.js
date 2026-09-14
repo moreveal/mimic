@@ -6,6 +6,7 @@
   const faces = new WeakMap(),
     sets = new WeakMap(),
     owners = new WeakMap(),
+    cssFaces = new WeakMap(),
     nativeFetch = globalThis.fetch,
     encodeBase64 = globalThis.btoa;
   const syntax = () => new DOMException('Invalid font descriptor', 'SyntaxError');
@@ -17,6 +18,7 @@
   const requireSet = (value) => {
     const s = sets.get(value);
     if (!s) throw new TypeError('Illegal invocation');
+    syncCSSFaces(s);
     return s;
   };
   const defaults = {
@@ -93,9 +95,8 @@
       ? value
       : JSON.stringify(value);
   const OriginalFontFace = globalThis.FontFace;
-  function FontFace(family, source, descriptors = {}) {
-    if (!new.target || arguments.length < 2) throw new TypeError('Expected family and source');
-    const object = Object.create(new.target.prototype);
+  function createFontFace(family, source, descriptors = {}, base) {
+    const object = Object.create(FontFace.prototype);
     let reject, resolve;
     const s = {
       family: familyName(String(family)),
@@ -137,13 +138,19 @@
         return object;
       }
       s.source = String(source).trim();
-      s.sources = parseSources(s.source);
+      s.sources = parseSources(s.source, base);
       if (!s.sources.length) throw syntax();
     } catch (e) {
       if (e instanceof TypeError) throw e;
       s.status = 'error';
       reject(e);
     }
+    return object;
+  }
+  function FontFace(family, source, descriptors = {}) {
+    if (!new.target || arguments.length < 2) throw new TypeError('Expected family and source');
+    const object = createFontFace(family, source, descriptors);
+    Object.setPrototypeOf(object, new.target.prototype);
     return object;
   }
   FontFace.prototype = OriginalFontFace.prototype;
@@ -179,7 +186,10 @@
       raw += String.fromCharCode(...bytes.subarray(i, i + 8192));
     return host.fontBinary(encodeBase64(raw));
   }
-  function parseSources(source) {
+  function parseSources(
+    source,
+    base = typeof document === 'object' ? document.baseURI : location.href,
+  ) {
     const items = [],
       re =
         /(local|url)\(\s*(?:"([^"\\]*(?:\\.[^"\\]*)*)"|'([^'\\]*(?:\\.[^'\\]*)*)'|([^()]*?))\s*\)(?:\s*format\([^()]*\))?/gi;
@@ -192,10 +202,7 @@
         value = (match[2] ?? match[3] ?? match[4]).trim();
       items.push({
         kind,
-        value:
-          kind === 'url'
-            ? new URL(value, typeof document === 'object' ? document.baseURI : location.href).href
-            : value,
+        value: kind === 'url' ? new URL(value, base).href : value,
       });
     }
     if (source.slice(at).trim()) throw syntax();
@@ -356,6 +363,7 @@
       object: value,
       owner,
       values: new Set(),
+      cssValues: [],
       pending: new Set(),
       loadedFaces: [],
       failedFaces: [],
@@ -368,8 +376,66 @@
     sets.set(value, state);
     return value;
   }
+  const descriptorNames = {
+    'font-style': 'style',
+    'font-weight': 'weight',
+    'font-stretch': 'stretch',
+    'unicode-range': 'unicodeRange',
+    'font-variant': 'variant',
+    'font-feature-settings': 'featureSettings',
+    'font-variation-settings': 'variationSettings',
+    'font-display': 'display',
+    'ascent-override': 'ascentOverride',
+    'descent-override': 'descentOverride',
+    'line-gap-override': 'lineGapOverride',
+    'size-adjust': 'sizeAdjust',
+  };
+  const cssFamily = (value) => {
+    value = String(value || '').trim();
+    return /^(['"]).*\1$/.test(value) ? value.slice(1, -1) : value;
+  };
+  function syncCSSFaces(state) {
+    if (
+      typeof document !== 'object' ||
+      state.owner !== document ||
+      typeof constructedStyleSheets.fontFaceRules !== 'function'
+    )
+      return;
+    state.cssValues = constructedStyleSheets
+      .fontFaceRules(document)
+      .map((record) => {
+        const family = cssFamily(record.declarations['font-family']),
+          source = record.declarations.src;
+        if (!family || !source) return null;
+        const descriptors = {};
+        for (const [cssName, key] of Object.entries(descriptorNames))
+          if (record.declarations[cssName] !== undefined)
+            descriptors[key] = record.declarations[cssName];
+        const signature = JSON.stringify([family, source, descriptors, record.base]);
+        let cached = cssFaces.get(record.rule);
+        if (!cached || cached.signature !== signature) {
+          try {
+            cached = {
+              signature,
+              face: createFontFace(family, source, descriptors, record.base),
+            };
+          } catch {
+            return null;
+          }
+          cssFaces.set(record.rule, cached);
+        }
+        return cached.face;
+      })
+      .filter(Boolean);
+  }
+  const allValues = (state) => {
+    syncCSSFaces(state);
+    return state.cssValues.concat(
+      Array.from(state.values).filter((face) => !state.cssValues.includes(face)),
+    );
+  };
   for (const [key, get] of Object.entries({
-    size: (s) => s.values.size,
+    size: (s) => allValues(s).length,
     status: (s) => s.status,
     ready: (s) => s.ready,
   }))
@@ -403,7 +469,7 @@
     has(face) {
       const s = requireSet(this);
       requireFace(face);
-      return s.values.has(face);
+      return s.values.has(face) || s.cssValues.includes(face);
     },
     clear() {
       const s = requireSet(this);
@@ -415,18 +481,20 @@
       syncCollection();
     },
     keys() {
-      return requireSet(this).values.keys();
+      return allValues(requireSet(this)).values();
     },
     values() {
-      return requireSet(this).values.values();
+      return allValues(requireSet(this)).values();
     },
     entries() {
-      return requireSet(this).values.entries();
+      return allValues(requireSet(this))
+        .map((value) => [value, value])
+        .values();
     },
     forEach(callback, thisArg) {
       const s = requireSet(this);
       if (typeof callback !== 'function') throw new TypeError('Expected callback');
-      s.values.forEach((v) => callback.call(thisArg, v, v, this));
+      allValues(s).forEach((v) => callback.call(thisArg, v, v, this));
     },
     check(font, text = ' ') {
       const s = requireSet(this);
@@ -467,7 +535,7 @@
     };
   }
   function matching(set, parsed, text) {
-    return Array.from(set.values).filter((face) => {
+    return allValues(set).filter((face) => {
       const s = requireFace(face),
         family = s.family.replace(/^['\"]|['\"]$/g, '').toLowerCase();
       if (!parsed.families.includes(family)) return false;
@@ -503,6 +571,7 @@
       value = makeSet(owner);
       owners.set(owner, value);
     }
+    syncCSSFaces(value);
     return value;
   }
   if (typeof globalThis.Document === 'function')
