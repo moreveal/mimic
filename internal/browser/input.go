@@ -21,6 +21,17 @@ type inputFrameRect struct {
 // author method. The node's document owner shares state with all CDP worlds.
 func (p *Page) ScrollNodeIntoView(ctx context.Context, nodeID int64, rect any) error {
 	frame, ok := p.FrameForDOMNode(nodeID)
+	return p.scrollNodeIntoView(ctx, frame, ok, nodeID, rect)
+}
+
+// ScrollNodeIntoViewInFrame preserves the remote object's frame ownership for
+// CDP calls. Numeric DOM ids alone are not unique across frame documents.
+func (p *Page) ScrollNodeIntoViewInFrame(ctx context.Context, frameID string, nodeID int64, rect any) error {
+	frame, ok := p.Frame(frameID)
+	return p.scrollNodeIntoView(ctx, frame, ok, nodeID, rect)
+}
+
+func (p *Page) scrollNodeIntoView(ctx context.Context, frame *Frame, ok bool, nodeID int64, rect any) error {
 	if !ok || frame.Realm == nil {
 		return fmt.Errorf("Node is detached from document")
 	}

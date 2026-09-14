@@ -44,10 +44,17 @@ func (s *session) nodeFunction(ctx context.Context, p map[string]any, fn string,
 		return nil, err
 	}
 	frame, ok := s.page.FrameForDOMNode(id)
+	objectID := stringValue(p["objectId"])
+	if objectID != "" {
+		frameID, ownerErr := s.runtimeDebugger().ObjectFrameID(objectID)
+		if ownerErr != nil {
+			return nil, ownerErr
+		}
+		frame, ok = s.page.Frame(frameID)
+	}
 	if !ok {
 		return nil, fmt.Errorf("Node does not belong to the document")
 	}
-	objectID := stringValue(p["objectId"])
 	d := s.runtimeDebugger()
 	if objectID == "" {
 		object, err := d.ResolveNode(ctx, frame.ID, "", id, "")
@@ -80,7 +87,7 @@ func (s *session) frameElementOffset(ctx context.Context, frame *browser.Frame) 
 	}
 	objectID := stringValue(object["objectId"])
 	defer d.ReleaseObject(ctx, objectID)
-	result, err := d.CallFunction(ctx, parent.ID, "", `function(){const r=this.getBoundingClientRect();return {x:r.x,y:r.y}}`, map[string]any{"objectId": objectID}, browser.DebuggerOptions{ReturnByValue: true})
+	result, err := d.CallFunction(ctx, parent.ID, "", `function(){const r=this.getBoundingClientRect(),s=getComputedStyle(this),n=k=>parseFloat(s[k])||0;return {x:r.x+n('borderLeftWidth')+n('paddingLeft'),y:r.y+n('borderTopWidth')+n('paddingTop')}}`, map[string]any{"objectId": objectID}, browser.DebuggerOptions{ReturnByValue: true})
 	if err != nil {
 		return 0, 0, err
 	}
@@ -118,6 +125,12 @@ func (s *session) describeNode(id int64, depth int) (map[string]any, error) {
 func (s *session) handleDOM(ctx context.Context, method string, p map[string]any) (any, bool, error) {
 	empty := map[string]any{}
 	switch method {
+	case "DOM.getFrameOwner":
+		frame, ok := s.page.Frame(stringValue(p["frameId"]))
+		if !ok || frame.Parent() == nil || frame.ElementNodeID() == 0 {
+			return nil, true, fmt.Errorf("Frame does not have an owner")
+		}
+		return map[string]any{"backendNodeId": frame.ElementNodeID()}, true, nil
 	case "DOM.resolveNode":
 		id, err := s.nodeID(ctx, p)
 		if err != nil {
@@ -185,7 +198,15 @@ func (s *session) handleDOM(ctx context.Context, method string, p map[string]any
 	case "DOM.scrollIntoViewIfNeeded":
 		id, err := s.nodeID(ctx, p)
 		if err == nil {
-			err = s.page.ScrollNodeIntoView(ctx, id, p["rect"])
+			if objectID := stringValue(p["objectId"]); objectID != "" {
+				var frameID string
+				frameID, err = s.runtimeDebugger().ObjectFrameID(objectID)
+				if err == nil {
+					err = s.page.ScrollNodeIntoViewInFrame(ctx, frameID, id, p["rect"])
+				}
+			} else {
+				err = s.page.ScrollNodeIntoView(ctx, id, p["rect"])
+			}
 		}
 		return empty, true, err
 	case "DOM.getContentQuads", "DOM.getBoxModel":
@@ -199,6 +220,13 @@ func (s *session) handleDOM(ctx context.Context, method string, p map[string]any
 		}
 		model, _ := value.(map[string]any)
 		frame, _ := s.page.FrameForDOMNode(id)
+		if objectID := stringValue(p["objectId"]); objectID != "" {
+			frameID, ownerErr := s.runtimeDebugger().ObjectFrameID(objectID)
+			if ownerErr != nil {
+				return nil, true, ownerErr
+			}
+			frame, _ = s.page.Frame(frameID)
+		}
 		for frame != nil && frame.Parent() != nil {
 			dx, dy, offsetErr := s.frameElementOffset(ctx, frame)
 			if offsetErr != nil {

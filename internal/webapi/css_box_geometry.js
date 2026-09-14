@@ -378,6 +378,13 @@ const cssBoxModel = (() => {
   };
   const uncachedControlSize = (element) => {
     const s = state(element);
+    if (tag(element) === 'IFRAME') {
+      const edges = s.edges(containingWidth(element));
+      return {
+        width: 300 + edges.pleft + edges.pright + edges.bleft + edges.bright,
+        height: 150 + edges.ptop + edges.pbottom + edges.btop + edges.bbottom,
+      };
+    }
     if (tag(element) === 'BUTTON' && !textContent(element)) return { width: 16, height: 6 };
     if (tag(element) === 'PROGRESS') return { width: s.fontSize * 10, height: s.fontSize };
     return compatibilityElementState.controlGeometry?.(element, s.entries) || null;

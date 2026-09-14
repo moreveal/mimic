@@ -38,6 +38,28 @@ func TestDOMContentQuadsIncludePaddingAndBorder(t *testing.T) {
 	}
 }
 
+func TestDOMGetFrameOwnerReturnsEmbeddingNode(t *testing.T) {
+	s, addr := runningServer(t)
+	if _, err := evaluatePageFixture(s.Page, `document.body.innerHTML='<iframe id="frame"></iframe>';document.querySelector('iframe').contentWindow.document.body.textContent='child'`); err != nil {
+		t.Fatal(err)
+	}
+	children := s.Page.Top.Children()
+	if len(children) != 1 {
+		t.Fatalf("child frame count: %d", len(children))
+	}
+	d, _ := s.Page.Document()
+	owner, ok := d.Find("#frame")
+	if !ok {
+		t.Fatal("missing iframe owner")
+	}
+	c := browserConnection(t, addr)
+	sid := wireCall(t, c, 1, "Target.attachToTarget", map[string]any{"targetId": s.Page.ID, "flatten": true})["sessionId"].(string)
+	result := flatCall(t, c, sid, 2, "DOM.getFrameOwner", map[string]any{"frameId": children[0].ID})
+	if result["backendNodeId"] != float64(owner.ID) {
+		t.Fatalf("frame owner: %#v want %d", result, owner.ID)
+	}
+}
+
 func TestDOMQueriesShareRealmSelectorEngine(t *testing.T) {
 	s, addr := runningServer(t)
 	if _, err := evaluatePageFixture(s.Page, `document.body.innerHTML='<main id="root"><i class="item"></i><i class="item" id="second"></i></main>';Element.prototype.querySelectorAll=()=>[]`); err != nil {
