@@ -9,3 +9,5 @@ Changes since v0.1.0-beta.2:
 - Cross-world shadow DOM mutations no longer fail when nodes cross realm
   boundaries.
 - The development preview reconnects after the Mimic server restarts.
+- Navigation and CSS geometry remain responsive on pages using Tailwind-style
+  `calc(var(--spacing) * n)` lengths.
