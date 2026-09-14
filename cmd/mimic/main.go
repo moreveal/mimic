@@ -73,6 +73,15 @@ func main() {
 	}
 	ctx, stop := signal.NotifyContext(context.Background(), os.Interrupt, syscall.SIGTERM)
 	defer stop()
+	if parentExited := parentExitSignal(); parentExited != nil {
+		go func() {
+			select {
+			case <-parentExited:
+				stop()
+			case <-ctx.Done():
+			}
+		}()
+	}
 	shutdownDone := make(chan struct{})
 	go func() {
 		defer close(shutdownDone)
