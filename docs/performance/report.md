@@ -1,5 +1,23 @@
 # Performance architecture pass
 
+## WebAPI realm memory, 2026-09-14
+
+The [realm-memory investigation](webapi-realm-memory-20260914.md) attributes the
+large first-CDP step to materialization of the deferred Page realm, including its
+V8 isolate and Chrome 152 WebAPI graph. Ten-Page diagnostics put marginal private
+memory near 47 MiB for static and 51 MiB for React; explicit V8 collection reclaims
+roughly 9--16 MiB/Page but costs about 6--9 ms/Page. Teardown releases all isolates,
+so the observed issue is active-realm cost rather than an isolate leak.
+
+An incompatible upper bound suggests about 8--9 MiB/realm is available in lazy
+WebAPI publication. A descriptor-compatible JavaScript Proxy prototype recovered
+only about 0.5 MiB/Page on static and 2.5 MiB/Page on React and cannot safely cover
+existing handwritten prototypes without changing identity. It was rejected and no
+production code remains. A future bounded proof may use gov8 native lazy data
+properties and accessors; it must first prove snapshot ownership, exact reflection
+and teardown behavior. The observations are diagnostic rather than a reportable
+matched-revision comparison, as documented in the linked report.
+
 ## DOM, Fetch, and V8 lifetime package, 2026-09-14
 
 The [measured campaign](optimization-campaign-20260914.md) is integrated. It removes
