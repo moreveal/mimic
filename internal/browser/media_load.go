@@ -16,7 +16,7 @@ type mediaLoad struct {
 	currentSrc string
 }
 
-func (r *Realm) updateMedia(id int64) {
+func (r *Realm) updateMedia(id int64, explicit bool) {
 	if r.mediaLoads == nil {
 		r.mediaLoads = map[int64]*mediaLoad{}
 	}
@@ -31,6 +31,11 @@ func (r *Realm) updateMedia(id int64) {
 			return nil
 		}
 		src := strings.TrimSpace(node.Attributes["src"])
+		if !explicit && strings.EqualFold(strings.TrimSpace(node.Attributes["preload"]), "none") {
+			if _, autoplay := node.Attributes["autoplay"]; !autoplay {
+				return nil
+			}
+		}
 		if _, hasSrc := node.Attributes["src"]; !hasSrc {
 			for _, childID := range node.Children {
 				child, exists := r.document.Get(childID)

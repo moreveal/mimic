@@ -1569,10 +1569,10 @@ func (r *Realm) installBindingsOnOwner() error {
 				if node.TagName == "IMG" {
 					r.updateImage(id, true)
 				} else if node.TagName == "AUDIO" || node.TagName == "VIDEO" {
-					r.updateMedia(id)
+					r.updateMedia(id, false)
 				} else if node.TagName == "SOURCE" {
 					if parent, ok := r.document.Get(node.Parent); ok && (parent.TagName == "AUDIO" || parent.TagName == "VIDEO") {
-						r.updateMedia(parent.ID)
+						r.updateMedia(parent.ID, false)
 					}
 				}
 			}
@@ -1598,7 +1598,7 @@ func (r *Realm) installBindingsOnOwner() error {
 				if node.TagName == "IMG" {
 					r.updateImage(id, true)
 				} else if node.TagName == "AUDIO" || node.TagName == "VIDEO" {
-					r.updateMedia(id)
+					r.updateMedia(id, false)
 				}
 			}
 		}
@@ -1787,7 +1787,7 @@ func (r *Realm) installBindingsOnOwner() error {
 		return nil, r.document.SetCharacterDataJSON(int64(numarg(a, 0)), strarg(a, 1))
 	}, "ns")
 	host["mediaLoad"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
-		r.updateMedia(int64(numarg(a, 0)))
+		r.updateMedia(int64(numarg(a, 0)), true)
 		return nil, nil
 	}, "n")
 	host["mediaCurrentSrc"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
@@ -2586,12 +2586,12 @@ func (r *Realm) prepareConnectedResource(childID int64, loadCallback, errorCallb
 		return err
 	}
 	if tag == "AUDIO" || tag == "VIDEO" {
-		r.updateMedia(childID)
+		r.updateMedia(childID, false)
 		return nil, nil
 	}
 	if tag == "SOURCE" {
 		if parent, ok := r.document.Get(node.Parent); ok && (parent.TagName == "AUDIO" || parent.TagName == "VIDEO") {
-			r.updateMedia(parent.ID)
+			r.updateMedia(parent.ID, false)
 		}
 		return nil, nil
 	}
