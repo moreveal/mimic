@@ -7,17 +7,26 @@ import (
 	"github.com/dop251/goja"
 )
 
+// handwrittenSurfaceSection deliberately uses syntax-insensitive markers.
+// Authored JavaScript is formatted independently, so tests must not depend on
+// whitespace around operators when extracting production closures.
+func handwrittenSurfaceSection(t *testing.T, startMarker, endMarker string) string {
+	t.Helper()
+	start := strings.Index(handwrittenSurface, startMarker)
+	if start < 0 {
+		t.Fatalf("start marker %q missing", startMarker)
+	}
+	end := strings.Index(handwrittenSurface[start:], endMarker)
+	if end < 0 {
+		t.Fatalf("end marker %q missing", endMarker)
+	}
+	return handwrittenSurface[start : start+end]
+}
+
 // Exercise the production restore closure independently of the browser host.
 // Full snapshot deserialization and cross-frame behavior belong to browser tests.
 func TestBootstrapRestoreRebindsState(t *testing.T) {
-	start := strings.Index(handwrittenSurface, "  globalThis.__mimicRestoreBootstrap=")
-	if start < 0 {
-		t.Fatal("restore hook missing")
-	}
-	end := strings.Index(handwrittenSurface[start:], "  globalThis.__mimicEvalSourceResolver=")
-	if end < 0 {
-		t.Fatal("restore hook missing")
-	}
+	section := handwrittenSurfaceSection(t, "globalThis.__mimicRestoreBootstrap", "globalThis.__mimicEvalSourceResolver")
 	runtime := goja.New()
 	_, err := runtime.RunString(`
  const window=globalThis,document={},documentPolicy={},permissionsPolicySlots=new WeakMap();
@@ -36,7 +45,7 @@ func TestBootstrapRestoreRebindsState(t *testing.T) {
  const remoteWindow=id=>({id});
  const freshHost={token:()=>2,selfRealmID:()=>"new-realm",intlEnvironment:()=>({locale:'en',timeZone:'UTC'}),documentSecurity:()=>({secureContext:true}),permissionsPolicy:()=>({origin:'https://new.test'}),windowRelations:()=>({self:9,top:10,parent:9}),documentRootID:()=>99,ready:()=>calls.push('ready')};
  for(const [name,args] of bootstrapCallbacks)freshHost[name]=(...actual)=>{if(actual.length!==args.length||actual.some((v,i)=>v!==args[i]))throw Error('callback identity');calls.push(name)};
- ` + handwrittenSurface[start:start+end] + `
+ ` + section + `
  __mimicRestoreBootstrap(freshHost);
  if(host!==freshHost||hostToken!==2||bridgeRealmID!=="new-realm"||intlEnvironment.locale!=='en'||!security.secureContext)throw Error('host state');
  if(permissionsPolicySlots.get(documentPolicy)!==originalPolicy||originalPolicy.origin!=='https://new.test'||originalPolicy.clauses.has('old'))throw Error('canonical policy');
@@ -60,16 +69,9 @@ func TestBootstrapSourceParsesWithRestore(t *testing.T) {
 // Expected descriptor and assignment behavior was measured in frozen Chrome
 // 152.0.7977.83, including parent replacing itself with a data property.
 func TestBootstrapWindowTopologyDescriptors(t *testing.T) {
-	start := strings.Index(handwrittenSurface, "  const getWindowTop=")
-	if start < 0 {
-		t.Fatal("topology accessors missing")
-	}
-	end := strings.Index(handwrittenSurface[start:], "window.__receiveFrameMessage=")
-	if end < 0 {
-		t.Fatal("topology end missing")
-	}
+	section := handwrittenSurfaceSection(t, "const getWindowTop", "window.__receiveFrameMessage")
 	runtime := goja.New()
-	_, err := runtime.RunString(`const window=globalThis;let active=true;const host={documentActive:()=>active};let windowTop=window,windowParent=window;` + nativeFunctionsSurface + handwrittenSurface[start:start+end] + `
+	_, err := runtime.RunString(`const window=globalThis;let active=true;const host={documentActive:()=>active};let windowTop=window,windowParent=window;` + nativeFunctionsSurface + section + `
  Object.defineProperty(window,'top',{configurable:false});
  const parentDescriptor=Object.getOwnPropertyDescriptor(window,'parent'),topDescriptor=Object.getOwnPropertyDescriptor(window,'top');
  if(parentDescriptor.get.name!=='get parent'||parentDescriptor.get.length!==0||parentDescriptor.set.name!=='set parent'||parentDescriptor.set.length!==1||!parentDescriptor.enumerable||!parentDescriptor.configurable)throw Error('parent descriptor');
