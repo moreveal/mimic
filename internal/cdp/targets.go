@@ -78,6 +78,14 @@ func (s *Server) targetInfo(page *browser.Page, typ string) map[string]any {
 	}
 	info["canAccessOpener"] = false
 	info["browserContextId"] = page.ContextID()
+	s.lifecycleMu.Lock()
+	opener := s.popupOpeners[page]
+	s.lifecycleMu.Unlock()
+	if opener != nil {
+		info["openerId"] = opener.ID
+		info["openerFrameId"] = opener.Top.ID
+		info["canAccessOpener"] = true
+	}
 	return info
 }
 
@@ -216,6 +224,7 @@ func (s *Server) closePage(page *browser.Page) bool {
 	}
 	s.lifecycleMu.Lock()
 	delete(s.tabTargets, page)
+	delete(s.popupOpeners, page)
 	s.lifecycleMu.Unlock()
 	return closed
 }

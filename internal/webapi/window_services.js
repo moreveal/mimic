@@ -20,6 +20,9 @@
         `Failed to execute '${name}' on '${type}': ${count} argument${count === 1 ? '' : 's'} required, but only ${args.length} present.`,
       );
   };
+  nativeMethod(window, 'open', function open(url = '', target = '_blank', features = '') {
+    return host.openWindow(String(url), String(target), String(features));
+  });
   if (typeof CrashReportContext === 'function') {
     const report = Object.create(CrashReportContext.prototype);
     replaceableWindow('crashReport', () => report);
