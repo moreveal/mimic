@@ -3,8 +3,9 @@ package textmetrics
 import (
 	"bytes"
 	"crypto/sha256"
-	"encoding/binary"
 	"fmt"
+	"os"
+	"path/filepath"
 	"strconv"
 	"strings"
 
@@ -41,18 +42,15 @@ func (e *Engine) LocalFont(name string) (string, error) {
 }
 
 func (e *Engine) RegisterFont(data []byte) (string, error) {
-	if len(data) < 12 || len(data) > 32<<20 {
+	if len(data) < 12 {
 		return "", fmt.Errorf("invalid font resource size")
 	}
 	id := fmt.Sprintf("data-%x", sha256.Sum256(data))
 	if _, ok := e.resources[id]; ok {
 		return id, nil
 	}
-	if len(e.faces) >= 64 {
-		return "", fmt.Errorf("font face limit")
-	}
 	if string(data[:4]) == "wOF2" || string(data[:4]) == "wOFF" {
-		if len(data) < 48 || binary.BigEndian.Uint32(data[16:20]) > 32<<20 {
+		if len(data) < 48 {
 			return "", fmt.Errorf("font expansion limit")
 		}
 		if err := preflightWebFont(data); err != nil {
@@ -64,34 +62,30 @@ func (e *Engine) RegisterFont(data []byte) (string, error) {
 			return "", err
 		}
 	}
-	if len(data) > 32<<20 || len(data)+e.bytes > 64<<20 {
-		return "", fmt.Errorf("font byte limit")
-	}
 	loaders, err := ot.NewLoaders(bytes.NewReader(data))
 	if err != nil || len(loaders) == 0 {
 		return "", fmt.Errorf("invalid font container")
 	}
 	loader := loaders[0]
-	ft, err := font.NewFont(loader)
-	if err != nil {
-		return "", err
-	}
-	face := font.NewFace(ft)
-	metrics, ok := face.FontHExtents()
-	if !ok {
-		return "", fmt.Errorf("missing horizontal font metrics")
-	}
-	value := &loaded{face: face, shaper: harfbuzz.NewFont(face), ascent: float64(metrics.Ascender), descent: -float64(metrics.Descender)}
-	if os2, err := loader.RawTable(ot.MustNewTag("OS/2")); err == nil && len(os2) >= 78 {
-		value.ascent = float64(binary.BigEndian.Uint16(os2[74:76]))
-		value.descent = float64(binary.BigEndian.Uint16(os2[76:78]))
-	}
 	description, _ := font.Describe(loader, nil)
 	description.Aspect.SetDefaults()
-	r := resource{path: "memory:" + id, index: 0, family: description.Family, aspect: description.Aspect}
+	if e.spoolDir == "" {
+		e.spoolDir, err = os.MkdirTemp("", "mimic-fonts-")
+		if err != nil {
+			return "", err
+		}
+	}
+	path := filepath.Join(e.spoolDir, id+".sfnt")
+	if err := os.WriteFile(path, data, 0o600); err != nil {
+		return "", err
+	}
+	r := resource{path: path, index: 0, family: description.Family, aspect: description.Aspect}
 	e.resources[id] = r
-	e.faces[r.path+"#0"] = value
-	e.bytes += len(data)
+	if _, err := e.load(r); err != nil {
+		delete(e.resources, id)
+		_ = os.Remove(path)
+		return "", err
+	}
 	return id, nil
 }
 
