@@ -33,6 +33,7 @@ type Server struct {
 	targetObservers   map[*browser.Page]func()
 	targetNavigations map[*browser.Page]string
 	tabTargets        map[*browser.Page]string
+	popupOpeners      map[*browser.Page]*browser.Page
 	idlePages         map[*browser.Page]*pageIdle
 	pumps             map[*browser.Page]context.CancelFunc
 	executions        map[*browser.Page]context.CancelFunc
@@ -53,7 +54,7 @@ func New(b *browser.Browser) (*Server, error) {
 	if err != nil {
 		return nil, err
 	}
-	return &Server{Browser: b, Context: c, Page: p, browserID: uuid.NewString(), clients: make(map[*connection]struct{}), connections: make(map[*websocket.Conn]context.CancelFunc), pumps: make(map[*browser.Page]context.CancelFunc), executions: make(map[*browser.Page]context.CancelFunc), targetObservers: make(map[*browser.Page]func()), targetNavigations: make(map[*browser.Page]string)}, nil
+	return &Server{Browser: b, Context: c, Page: p, browserID: uuid.NewString(), clients: make(map[*connection]struct{}), connections: make(map[*websocket.Conn]context.CancelFunc), pumps: make(map[*browser.Page]context.CancelFunc), executions: make(map[*browser.Page]context.CancelFunc), targetObservers: make(map[*browser.Page]func()), targetNavigations: make(map[*browser.Page]string), popupOpeners: make(map[*browser.Page]*browser.Page)}, nil
 }
 func (s *Server) SetNavigationTimeout(timeout time.Duration) {
 	if timeout >= 0 {
@@ -463,7 +464,13 @@ func (s *session) traceEvent(e trace.Event) {
 			loaderID = stringValue(e.Data["id"])
 		}
 		if e.Name == "request" {
-			s.event("Network.requestWillBeSent", map[string]any{"requestId": e.Data["id"], "loaderId": loaderID, "documentURL": e.Data["url"], "request": map[string]any{"url": e.Data["url"], "method": e.Data["method"], "headers": e.Data["headers"], "postData": e.Data["postData"]}, "timestamp": float64(e.Time.UnixMilli()) / 1000, "wallTime": float64(e.Time.Unix()), "initiator": map[string]any{"type": "other"}, "type": resourceTypeFromTrace(e.Data["initiator"]), "frameId": frameID})
+			postData := stringValue(e.Data["postData"])
+			request := map[string]any{"url": e.Data["url"], "method": e.Data["method"], "headers": e.Data["headers"], "postData": postData}
+			if postData != "" {
+				request["hasPostData"] = true
+				request["postDataEntries"] = []any{map[string]any{"bytes": base64.StdEncoding.EncodeToString([]byte(postData))}}
+			}
+			s.event("Network.requestWillBeSent", map[string]any{"requestId": e.Data["id"], "loaderId": loaderID, "documentURL": e.Data["url"], "request": request, "timestamp": float64(e.Time.UnixMilli()) / 1000, "wallTime": float64(e.Time.Unix()), "initiator": map[string]any{"type": "other"}, "type": resourceTypeFromTrace(e.Data["initiator"]), "frameId": frameID})
 		} else if e.Name == "response" {
 			s.event("Network.responseReceived", map[string]any{"requestId": e.Data["id"], "loaderId": loaderID, "timestamp": float64(e.Time.UnixMilli()) / 1000, "type": resourceTypeFromTrace(e.Data["initiator"]), "response": map[string]any{"url": e.Data["url"], "status": e.Data["status"], "statusText": "", "headers": e.Data["headers"], "mimeType": e.Data["mimeType"], "connectionReused": e.Data["connectionReused"], "connectionId": e.Data["connectionId"], "protocol": cdpProtocol(e.Data["protocol"]), "timing": cdpResourceTiming(e.Data["transportTiming"]), "encodedDataLength": e.Data["encodedDataLength"], "securityState": "unknown"}, "frameId": frameID})
 			s.event("Network.loadingFinished", map[string]any{"requestId": e.Data["id"], "timestamp": float64(e.Time.UnixMilli()) / 1000, "encodedDataLength": e.Data["encodedDataLength"]})

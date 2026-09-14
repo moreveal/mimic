@@ -1,6 +1,7 @@
 package cdp
 
 import (
+	"context"
 	"time"
 
 	"github.com/moreveal/mimic/internal/browser"
@@ -37,6 +38,36 @@ func (s *session) replayIdle() {
 }
 
 func (s *Server) observePageLifecycle(page *browser.Page, e trace.Event) {
+	if e.Kind == trace.Lifecycle && e.Name == "windowOpen" {
+		targetID := stringValue(e.Data["targetId"])
+		popup, ok := s.page(targetID)
+		if !ok {
+			return
+		}
+		raw := stringValue(e.Data["url"])
+		s.lifecycleMu.Lock()
+		s.popupOpeners[popup] = page
+		s.lifecycleMu.Unlock()
+		if raw != "" && raw != "about:blank" {
+			ctx, cancel := context.WithTimeout(context.Background(), s.navigationTimeout)
+			if s.navigationTimeout == 0 {
+				cancel()
+				ctx, cancel = context.WithCancel(context.Background())
+			}
+			_ = popup.Navigate(ctx, raw)
+			cancel()
+		}
+		s.ensurePump(popup)
+		for _, c := range s.clientSnapshot() {
+			for _, session := range c.snapshot() {
+				if session.page == page && session.targetType == "page" {
+					session.event("Page.windowOpen", map[string]any{"url": raw, "windowName": stringValue(e.Data["windowName"]), "windowFeatures": []any{}, "userGesture": e.Data["userGesture"]})
+				}
+			}
+		}
+		s.targetCreated(popup)
+		return
+	}
 	if e.Kind != trace.Lifecycle || stringValue(e.Data["frameId"]) != page.Top.ID {
 		return
 	}

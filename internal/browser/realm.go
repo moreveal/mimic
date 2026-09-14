@@ -2001,6 +2001,18 @@ func (r *Realm) installBindingsOnOwner() error {
 		return nil, nil
 	})
 	host["fetch"] = r.transientFn(r.hostFetch)
+	host["openWindow"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		u, err := r.resolveDocument(strarg(a, 0))
+		if err != nil {
+			return r.val(nil), nil
+		}
+		popup, err := p.ctx.NewPage()
+		if err != nil {
+			return r.val(nil), nil
+		}
+		p.trace.Add(trace.Lifecycle, "windowOpen", map[string]any{"targetId": popup.ID, "url": u.String(), "windowName": strarg(a, 1), "userGesture": r.navigationActivated()})
+		return r.val(nil), nil
+	})
 	host["abortFetch"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		if cancel := r.fetchCancels[strarg(a, 0)]; cancel != nil {
 			cancel()

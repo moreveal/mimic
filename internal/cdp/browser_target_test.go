@@ -1,6 +1,10 @@
 package cdp
 
-import "testing"
+import (
+	"encoding/base64"
+	"testing"
+	"time"
+)
 
 // Frozen Chrome 152 exposes its attached browser target through discovery,
 // not getTargets, and permits an explicit session attached to that target.
@@ -70,5 +74,65 @@ func TestTargetFilterAbsentAndEmptyAreDifferent(t *testing.T) {
 	}
 	if targetMatches([]any{map[string]any{"type": "browser", "exclude": true}, map[string]any{}}, "browser") {
 		t.Fatal("first matching exclusion must win")
+	}
+}
+
+func TestWindowOpenCreatesTargetWithOpener(t *testing.T) {
+	s, addr := runningServer(t)
+	c := browserConnection(t, addr)
+	_ = wireCall(t, c, 1, "Target.setDiscoverTargets", map[string]any{"discover": true})
+	sid := wireCall(t, c, 2, "Target.attachToTarget", map[string]any{"targetId": s.Page.ID, "flatten": true})["sessionId"].(string)
+	if err := c.WriteJSON(map[string]any{"id": 3, "sessionId": sid, "method": "Runtime.evaluate", "params": map[string]any{"expression": `window.open('data:text/html,<title>popup</title>', '_blank')`}}); err != nil {
+		t.Fatal(err)
+	}
+	_ = c.SetReadDeadline(time.Now().Add(5 * time.Second))
+	seenReply, seenTarget := false, false
+	for !seenReply || !seenTarget {
+		var msg map[string]any
+		if err := c.ReadJSON(&msg); err != nil {
+			t.Fatal(err)
+		}
+		seenReply = seenReply || msg["id"] == float64(3)
+		if msg["method"] == "Target.targetCreated" {
+			info := msg["params"].(map[string]any)["targetInfo"].(map[string]any)
+			if info["type"] == "page" && info["targetId"] != s.Page.ID {
+				if info["openerId"] != s.Page.ID || info["openerFrameId"] != s.Page.Top.ID || info["canAccessOpener"] != true {
+					t.Fatalf("popup opener metadata: %#v", info)
+				}
+				seenTarget = true
+			}
+		}
+	}
+}
+
+func TestRequestEventIncludesLegacyAndEntryPostData(t *testing.T) {
+	s, addr := runningServer(t)
+	c := browserConnection(t, addr)
+	sid := wireCall(t, c, 1, "Target.attachToTarget", map[string]any{"targetId": s.Page.ID, "flatten": true})["sessionId"].(string)
+	flatCall(t, c, sid, 2, "Network.enable", nil)
+	if err := c.WriteJSON(map[string]any{"id": 3, "sessionId": sid, "method": "Runtime.evaluate", "params": map[string]any{"expression": `fetch('http://127.0.0.1:1/post',{method:'POST',body:'{"value":123}'}).catch(()=>{})`}}); err != nil {
+		t.Fatal(err)
+	}
+	_ = c.SetReadDeadline(time.Now().Add(5 * time.Second))
+	for {
+		var msg map[string]any
+		if err := c.ReadJSON(&msg); err != nil {
+			t.Fatal(err)
+		}
+		if msg["method"] != "Network.requestWillBeSent" {
+			continue
+		}
+		request := msg["params"].(map[string]any)["request"].(map[string]any)
+		if request["url"] != "http://127.0.0.1:1/post" {
+			continue
+		}
+		if request["postData"] != `{"value":123}` || request["hasPostData"] != true {
+			t.Fatalf("legacy post data: %#v", request)
+		}
+		entries := request["postDataEntries"].([]any)
+		if len(entries) != 1 || entries[0].(map[string]any)["bytes"] != base64.StdEncoding.EncodeToString([]byte(`{"value":123}`)) {
+			t.Fatalf("entry post data: %#v", entries)
+		}
+		return
 	}
 }
