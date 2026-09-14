@@ -54,6 +54,48 @@ return JSON.stringify(Array.from(document.querySelectorAll('.item'),item=>{const
 	})
 }
 
+func TestCSSTaffyNestedFlexBasisKeepsSearchControlVisible(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, page *Page) {
+		navigateCapabilityFixture(t, page)
+		result, err := page.Evaluate(context.Background(), `(()=>{
+document.body.style.margin='0';document.body.innerHTML='<div style="display:flex;width:416px"><div style="width:40px"></div><div style="display:flex;flex:1 1 0%;min-width:0"><textarea id="q" name="q" style="display:flex;flex:1 1 100%;min-width:0"></textarea></div><div style="width:40px"></div></div>';
+const q=document.getElementById('q'),r=q.getBoundingClientRect();return JSON.stringify([r.x,r.width,r.height,q.offsetWidth,q.clientWidth]);
+})()`)
+		const want = `[40,336,36,336,336]`
+		if err != nil || result != want {
+			t.Fatalf("nested flex-basis search control: %v want %s, err=%v", result, want, err)
+		}
+	})
+}
+
+func TestCSSTaffyGridTracksGapAndPlacement(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, page *Page) {
+		navigateCapabilityFixture(t, page)
+		result, err := page.Evaluate(context.Background(), `(()=>{
+document.body.style.margin='0';document.body.innerHTML='<div id="grid" style="display:grid;width:300px;height:40px;grid-template-columns:repeat(2,50px) 1fr;column-gap:10px"><div id="a" style="width:50px;grid-column-start:1"></div><div id="b" style="width:240px;grid-column-start:2;grid-column-end:span 2"></div></div>';
+return JSON.stringify(['grid','a','b'].map(id=>{const e=document.getElementById(id),r=e.getBoundingClientRect();return [r.x,r.width,e.offsetWidth,e.clientWidth]}));
+})()`)
+		const want = `[[0,300,300,300],[0,50,50,50],[60,240,240,240]]`
+		if err != nil || result != want {
+			t.Fatalf("grid tracks and placement: %v want %s, err=%v", result, want, err)
+		}
+	})
+}
+
+func TestCSSTaffyGeometryAPIsShareBorderAndOffsetBoxes(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, page *Page) {
+		navigateCapabilityFixture(t, page)
+		result, err := page.Evaluate(context.Background(), `(()=>{
+document.body.style.margin='10px';document.body.innerHTML='<div id="root" style="display:flex;position:relative;box-sizing:border-box;width:200px;height:40px;border:4px solid"><div id="child" style="box-sizing:border-box;width:100px;height:20px;border:3px solid"></div></div>';
+const root=document.getElementById('root'),child=document.getElementById('child'),r=child.getBoundingClientRect();return JSON.stringify({rect:[r.x,r.y,r.width,r.height],root:[root.offsetWidth,root.clientWidth],child:[child.offsetWidth,child.clientWidth,child.offsetLeft,child.offsetTop]});
+})()`)
+		const want = `{"rect":[14,14,100,20],"root":[200,192],"child":[100,94,0,0]}`
+		if err != nil || result != want {
+			t.Fatalf("Taffy geometry APIs: %v want %s, err=%v", result, want, err)
+		}
+	})
+}
+
 func TestCSSRowFlexAutoMarginConsumesRemainingSpace(t *testing.T) {
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		navigateCapabilityFixture(t, page)
@@ -79,6 +121,23 @@ return JSON.stringify(['group','a','b'].map(id=>{const r=document.getElementById
 		const want = `[[160,140],[160,60],[220,80]]`
 		if err != nil || result != want {
 			t.Fatalf("nested flex border box: %v want %s, err=%v", result, want, err)
+		}
+	})
+}
+
+func TestRangeTextGeometryUsesElementLayout(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, page *Page) {
+		navigateCapabilityFixture(t, page)
+		result, err := page.Evaluate(context.Background(), `(()=>{
+document.body.style.margin='0';document.body.innerHTML='<div id="label" style="display:block;width:120px;height:24px">Sign in with Steam</div>';
+const text=document.getElementById('label').firstChild,range=document.createRange();range.selectNode(text);
+const rect=range.getBoundingClientRect(),rects=range.getClientRects(),clone=range.cloneRange();
+range.setStart(text,0);range.setEnd(text,text.textContent.length);
+return JSON.stringify({rect:[rect.x,rect.y,rect.width,rect.height],rectType:rect instanceof DOMRect,rectsType:rects instanceof DOMRectList,rectsLength:rects.length,start:range.startContainer===text,end:range.endContainer===text,offsets:[range.startOffset,range.endOffset],collapsed:range.collapsed,ancestor:range.commonAncestorContainer===text,text:String(clone)});
+})()`)
+		const want = `{"rect":[0,0,120,24],"rectType":true,"rectsType":true,"rectsLength":1,"start":true,"end":true,"offsets":[0,18],"collapsed":false,"ancestor":true,"text":"Sign in with Steam"}`
+		if err != nil || result != want {
+			t.Fatalf("range text geometry: %v want %s, err=%v", result, want, err)
 		}
 	})
 }

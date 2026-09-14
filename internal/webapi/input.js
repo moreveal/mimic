@@ -70,6 +70,11 @@
     else if(command==='request-close'&&target.open&&dispatchTrusted(target,new Event('cancel',{cancelable:true})))compatibilityElementState.closeDialog(target,undefined,button);
   };
   }
+  const renderedControlText=element=>{
+    const fragments=[],ignored=new Set(['STYLE','SCRIPT','TEMPLATE','NOSCRIPT','HEAD','TITLE','META','LINK']);
+    const visit=node=>{for(const child of cssObservationChildren(node)){const slot=elementSlot(child);if(slot?.type==='text')fragments.push(host.textContent(slot.nodeId));else if(slot?.type==='element'&&!ignored.has(slot.tagName)&&host.getAttribute(slot.nodeId,'hidden')===null)visit(child)}};
+    visit(element);return fragments.join('').replace(/[\t\n\r\f ]+/g,' ').trim();
+  };
   compatibilityElementState.controlGeometry=(element,entries)=>{
     const data=elementSlot(element),tag=data?.tagName;
     if(!['INPUT','BUTTON','TEXTAREA','SELECT'].includes(tag))return null;
@@ -84,7 +89,7 @@
     // Frozen Windows UA metrics: author dimensions still take precedence in
     // layoutRectFor. Text-bearing buttons use the existing font shaper.
     if(tag==='BUTTON'||tag==='INPUT'&&['button','submit','reset'].includes(type)){
-      const text=tag==='BUTTON'?host.textContent(data.nodeId):property(element,'value')||(type==='submit'?'Submit':type==='reset'?'Reset':'');
+      const text=tag==='BUTTON'?renderedControlText(element):property(element,'value')||(type==='submit'?'Submit':type==='reset'?'Reset':'');
       return {width:measure(text)+16*scale,height:21*scale};
     }
     if(tag==='TEXTAREA')return {width:(Math.max(1,Number(attribute('cols'))||20)*8+8)*scale,height:(Math.max(1,Number(attribute('rows'))||2)*15+6)*scale};
@@ -317,9 +322,9 @@
   accessor(DOMRectList.prototype,'length',function(){const list=rectLists.get(this);if(!list)throw new TypeError('Illegal invocation');return list.length});
   Object.defineProperty(DOMRectList.prototype,'item',{value:function(index){if(!arguments.length)throw new TypeError('Expected index');const list=rectLists.get(this);if(!list)throw new TypeError('Illegal invocation');return list[Number(index)>>>0]??null},writable:true,enumerable:true,configurable:true});
   Object.defineProperty(DOMRectList.prototype,Symbol.iterator,{value:function(){const list=rectLists.get(this);if(!list)throw new TypeError('Illegal invocation');return list[Symbol.iterator]()},writable:true,configurable:true});
+  makeDOMRectList=values=>{const list=Object.create(DOMRectList.prototype);rectLists.set(list,values);for(let i=0;i<values.length;i++)Object.defineProperty(list,i,{value:values[i],enumerable:true,configurable:true});return list};
   makeElementClientRects=element=>{
-    const values=cssBoxModel.hasBox(element)?[makeDOMRect(null,element)]:[],list=Object.create(DOMRectList.prototype);
-    rectLists.set(list,values);for(let i=0;i<values.length;i++)Object.defineProperty(list,i,{value:values[i],enumerable:true,configurable:true});return list;
+    return makeDOMRectList(cssBoxModel.hasBox(element)?[makeDOMRect(null,element)]:[]);
   };
   Object.defineProperty(Element.prototype,'getClientRects',{value:function(){
     return callRealmBinding(this,requireRealmBinding(this,'ElementGeometry'),'rects',[]);

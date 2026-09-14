@@ -206,3 +206,26 @@ The build host does not select a different Chrome environment profile. Captured
 Windows Chrome observations and benchmark provenance remain labeled Windows.
 Host font files and speech providers are explicit resources, not synthesized
 platform compatibility. See [setup and host requirements](getting-started.md).
+
+## Layout ownership
+
+Mimic remains authoritative for CSS parsing, cascade, computed values, DOM and
+intrinsic text/control measurements. Flex and Grid formatting contexts are
+projected once per observable style/DOM epoch into a normalized numeric tree.
+The native `internal/layouttaffy` library passes that tree through one C ABI call
+to Rust/Taffy and returns a flat array of absolute layout boxes. There are no
+per-node native calls and no CSS strings cross the C boundary.
+
+Taffy owns final Block/Flex/Grid sizing and placement inside those snapshots,
+including nested flex, basis/grow/shrink, min/max constraints, percentages,
+gaps, alignment, fixed-count grid tracks and numeric grid placement. Geometry
+APIs consume the returned boxes first; the previous Mimic layout remains a
+fallback for formatting contexts Taffy does not model here, notably inline text,
+tables, replaced/shadow-specific geometry, transforms and document flow outside
+a Flex/Grid snapshot. Unsupported inline subtrees are measured by Mimic and
+enter Taffy as leaves rather than being interpreted as block layout.
+
+The first production implementation intentionally rebuilds a snapshot after an
+epoch invalidation. All reads in the same epoch reuse its flat boxes. A
+persistent cross-epoch Taffy tree is deferred until profiling demonstrates that
+its extra ownership and invalidation complexity is justified.

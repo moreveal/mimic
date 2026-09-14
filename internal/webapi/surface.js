@@ -368,7 +368,7 @@
   }const fire=fireFor(node);if(before)host.insert(parent,child,before,()=>fire('load'),()=>fire('error'));else host.append(parent,child,()=>fire('load'),()=>fire('error'));return true};
   // Geometry result objects retain the node creation realm after adoption;
   // the numeric projection follows its current browsing document instead.
-  let makeElementClientRects;
+  let makeElementClientRects,makeDOMRectList;
   const registerElementGeometry=element=>{
     const receiver=()=>elementWrappers.get(String(elementSlot(element).nodeId))||element;
     registerRealmBinding(element,'ElementGeometry',{
