@@ -28,7 +28,8 @@ concurrency scaling. Warm execution and other tradeoffs are described in Known
 limitations and retained in the full report. Ready RSS and active RSS at 50 static pages are
 different measurements; neither is advertised as per-page memory. The stopped Windows
 100-Page levels remain visible, and the separate completed Linux 100-Page comparison
-is linked from the optimization report with its higher Mimic marginal memory. All six warm
+is linked from the optimization report. It shows reclaimed idle allocator memory and a
+remaining higher active memory cost per Mimic Page. All six warm
 workloads, cold end-to-end results, CPU/memory metrics, and attempted concurrency
 levels are included in the public benchmark document.
 

@@ -101,13 +101,20 @@ Warm single-Page execution medians were 3.61/4.79 ms (Mimic/Chrome) for static,
 package reduced the frozen DOM execution median from 221.59 to 102.20 ms (2.17x)
 and completion from 252.00 to 131.37 ms (1.92x). React execution improved 1.20x.
 
-The separate [Linux 100-Page run](../../benchmark/runs/09-mimic-chrome-linux-100-pages-20260914/raw.json)
-completed three measured waves per workload and both runtimes. Mimic throughput was
-5.33x static, 4.49x CPU and 6.88x React, but marginal USS per Page was higher:
-34.90 versus 13.40 MiB static, 45.08 versus 25.72 MiB CPU, and 45.68 versus
-18.64 MiB React. Active USS at 100 Pages was likewise higher for Mimic in this Linux
-configuration (3.43/4.42/4.48 GiB versus Chrome 1.40/2.55/1.86 GiB). This is the
-remaining density bottleneck and prevents a general lower-memory-per-Page claim.
+The final [Linux 100-Page run](../../benchmark/runs/10-linux-memory-20260914/raw.json)
+completed six measured waves per workload and runtime. It fixes two Linux-specific
+measurement and retention problems. Live memory is now measured from the state immediately
+before each wave rather than launch readiness, which previously counted allocator high-water
+from earlier waves as live Page memory. Glibc arenas are capped before Go and V8 initialize,
+and empty arenas are coalesced and trimmed after isolate teardown.
+
+Mimic throughput is 5.04x static, 3.87x CPU and 6.28x React. Median active PSS is
+2.89/3.93/3.59 GiB versus Chrome 1.71/2.85/2.17 GiB, corresponding to
+25.91/37.16/31.27 MiB per live Mimic Page versus 11.15/21.74/15.41 MiB for Chrome.
+Active Page density therefore remains the bottleneck. After each wave closes, Mimic recovers
+to 368/374/566 MiB versus Chrome 647/751/696 MiB; the retained increment is only
+0.06–0.15 MiB per closed Page. The old 34.90–45.68 MiB figures mixed live Page memory
+with allocator retention and must not be used as marginal Page cost.
 
 The long-running Page test keeps the native root count at 1,342 through 2,048
 iterations; explicitly collected V8 used memory stays within 0.13 MiB, the bounded
