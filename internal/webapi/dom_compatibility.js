@@ -339,7 +339,10 @@ const compatibilityElementState = {};
   const queueRecord = (type, target, details = {}, remote = false) => {
     if (mutationDepth) return;
     if (otherWorldObservers && !remote) {
-      const id = (node) => (node ? elementSlot(node).nodeId : 0);
+      // Synthetic roots have no canonical DOM node ID. Their mutations remain
+      // observable in the owning world, but cannot yet be projected into a
+      // different realm as an ordinary node record.
+      const id = (node) => elementSlot(node)?.nodeId || 0;
       host.worldMutation({
         kind: 'mutation',
         type,

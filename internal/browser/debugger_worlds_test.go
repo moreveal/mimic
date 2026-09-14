@@ -87,6 +87,27 @@ func TestDebuggerWorldMutationObserversUseCanonicalRecords(t *testing.T) {
 	})
 }
 
+func TestDebuggerWorldObserverDoesNotBreakShadowRootMutation(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, page *Page) {
+		ctx, cancel := context.WithTimeout(context.Background(), 8*time.Second)
+		defer cancel()
+		d := NewDebugger(page)
+		defer d.Close()
+		world, err := page.IsolatedWorld(ctx, page.Top.ID, "observer")
+		if err != nil {
+			t.Fatal(err)
+		}
+		result, err := d.Evaluate(ctx, page.Top.ID, world, `new MutationObserver(()=>{}).observe(document,{subtree:true,childList:true})`, DebuggerOptions{})
+		if err != nil || result["exceptionDetails"] != nil {
+			t.Fatalf("install observer: %#v %v", result, err)
+		}
+		got := debuggerEval(t, d, `const host=document.createElement('div');document.body.append(host);const root=host.attachShadow({mode:'open'});root.append(document.createElement('span'));root.childNodes.length`, DebuggerOptions{})
+		if got["value"] != float64(1) {
+			t.Fatalf("shadow mutation: %#v", got)
+		}
+	})
+}
+
 func TestDebuggerWorldDocumentWriteExecutesInDocumentMainRealm(t *testing.T) {
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 8*time.Second)
