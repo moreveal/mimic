@@ -13,6 +13,11 @@ paint stops, paint transforms, compositing and alpha are captured at the drawing
 operation, so later mutations cannot change previous observations. Text and path
 commands share one ordered queue with clear, pixel writes and bitmap copies.
 Linear/radial gradients and Porter-Duff modes plus multiply/screen affect reads.
+`HTMLCanvasElement.toDataURL()` and `toBlob()` serialize that same canonical
+readback as a deterministic PNG; repeated calls and separate Pages using the
+same profile therefore receive identical bytes for identical state. JPEG and
+WebP encoding remain explicit unsupported boundaries rather than independent
+approximate image models.
 
 Paths approximate curves with bounded line segments and sample pixel centers.
 There is no edge antialiasing. Stroke cap/join/dash fidelity, exact radial-gradient
