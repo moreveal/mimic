@@ -150,10 +150,14 @@ const cssColorNames = {
   yellowgreen: [154.0, 205.0, 50.0, 1],
   transparent: [0.0, 0.0, 0.0, 0.0],
 };
-const cssColorRGBA = (value) => {
+const cssColorRGBA = (value, scheme = 'light') => {
   if (typeof value !== 'string') return null;
   let s = value.trim().toLowerCase();
   if (Object.prototype.hasOwnProperty.call(cssColorNames, s)) return cssColorNames[s].slice();
+  if (/^[a-z]+$/.test(s) && typeof host.systemColors === 'function') {
+    const system = host.systemColors()[scheme]?.[s];
+    if (system && /^rgba?\(/.test(system)) return cssColorRGBA(system, scheme);
+  }
   if (/^#[0-9a-f]{3,4}$/.test(s)) s = '#' + Array.from(s.slice(1), (v) => v + v).join('');
   if (/^#[0-9a-f]{6}(?:[0-9a-f]{2})?$/.test(s))
     return [

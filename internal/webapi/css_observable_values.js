@@ -272,6 +272,66 @@ cssLonghandParsers.set(
       .join(', ') ?? null,
 );
 cssLonghandParsers.set('background', (value) => cssColorValue(value) ?? value);
+const cssOneOrTwoKeywords = (keywords) => (value) => {
+  const words = cssValueTokens(value.toLowerCase());
+  return words &&
+    words.length >= 1 &&
+    words.length <= 2 &&
+    words.every((word) => keywords.has(word))
+    ? words.join(' ')
+    : null;
+};
+for (const name of ['width', 'height', 'min-width', 'min-height', 'max-width', 'max-height'])
+  cssLonghandParsers.set(name, (value) => {
+    const lower = value.toLowerCase();
+    if (
+      ['auto', 'none', 'min-content', 'max-content', 'fit-content', 'stretch'].includes(lower) &&
+      !(name.startsWith('min-') && lower === 'none')
+    )
+      return lower;
+    return cssLengthValue(value);
+  });
+cssLonghandParsers.set(
+  'position',
+  cssKeywordValue(['static', 'relative', 'absolute', 'fixed', 'sticky']),
+);
+const overflowKeywords = new Set(['visible', 'hidden', 'clip', 'scroll', 'auto']);
+cssLonghandParsers.set('overflow', cssOneOrTwoKeywords(overflowKeywords));
+for (const name of ['overflow-x', 'overflow-y'])
+  cssLonghandParsers.set(name, cssKeywordValue([...overflowKeywords]));
+cssLonghandParsers.set('z-index', (value) =>
+  value.toLowerCase() === 'auto' || /^[+-]?\d+$/.test(value) ? value.toLowerCase() : null,
+);
+cssLonghandParsers.set('box-sizing', cssKeywordValue(['content-box', 'border-box']));
+cssLonghandParsers.set('visibility', cssKeywordValue(['visible', 'hidden', 'collapse']));
+cssLonghandParsers.set(
+  'white-space',
+  cssKeywordValue([
+    'normal',
+    'pre',
+    'nowrap',
+    'pre-wrap',
+    'pre-line',
+    'break-spaces',
+    'collapse wrap',
+    'preserve nowrap',
+    'preserve wrap',
+    'preserve-breaks wrap',
+    'break-spaces wrap',
+  ]),
+);
+cssLonghandParsers.set(
+  'object-fit',
+  cssKeywordValue(['fill', 'contain', 'cover', 'none', 'scale-down']),
+);
+cssLonghandParsers.set(
+  'cursor',
+  cssKeywordValue(
+    'auto default none context-menu help pointer progress wait cell crosshair text vertical-text alias copy move no-drop not-allowed grab grabbing e-resize n-resize ne-resize nw-resize s-resize se-resize sw-resize w-resize ew-resize ns-resize nesw-resize nwse-resize col-resize row-resize all-scroll zoom-in zoom-out'.split(
+      ' ',
+    ),
+  ),
+);
 for (const name of ['top', 'right', 'bottom', 'left'])
   cssLonghandParsers.set(name, (value) => (value === 'auto' ? value : cssSignedLength(value)));
 cssShorthandComponents.inset = ['top', 'right', 'bottom', 'left'];

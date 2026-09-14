@@ -107,6 +107,9 @@ const expandCSSDeclaration = (entry) => {
       pending: { name: entry.name, value: entry.value },
     }));
   if (entry.name === 'font') {
+    if (/^(caption|icon|menu|message-box|small-caption|status-bar)$/i.test(entry.value))
+      return components.map((name) => ({ name, value: '', priority: entry.priority,
+        pending: {name: 'font', value: entry.value.toLowerCase(), systemFont: true} }));
     const values = parseCSSFont(entry.value);
     if (!values) {
       host.semanticMissingAt('css_shorthands.js/font', 'CSS.fontShorthandResolution');

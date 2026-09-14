@@ -255,7 +255,7 @@ const cssComputedValue = (element, name) =>
     if (value === 'currentcolor' || (name === 'caret-color' && value === 'auto'))
       return cssResolvedColor(element);
     if (/color$/.test(name) || ['fill', 'stroke'].includes(name)) {
-      const rgba = cssColorRGBA(value);
+      const rgba = cssColorRGBA(value, cssUsedColorScheme(element));
       if (rgba) return cssSerializeColor(rgba);
     }
     if (name === 'font-size') return cssSerializeNumber(cssComputedFontSize(element) ?? 16) + 'px';

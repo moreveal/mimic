@@ -532,6 +532,56 @@ const parseCSSFont = (value) => {
   return out;
 };
 const cssLonghandParsers = new Map([
+  [
+    'display',
+    (value) => {
+      const tokens = cssValueTokens(value.toLowerCase());
+      if (!tokens?.length || tokens.length > 3 || new Set(tokens).size !== tokens.length)
+        return null;
+      const singles = new Set([
+        'none',
+        'contents',
+        'inline-block',
+        'inline-table',
+        'inline-flex',
+        'inline-grid',
+        '-webkit-box',
+        '-webkit-inline-box',
+        'table-row-group',
+        'table-header-group',
+        'table-footer-group',
+        'table-row',
+        'table-cell',
+        'table-column-group',
+        'table-column',
+        'table-caption',
+        'ruby-text',
+      ]);
+      if (tokens.length === 1 && singles.has(tokens[0])) return tokens[0];
+      const outside = tokens.filter((t) => ['block', 'inline', 'run-in'].includes(t));
+      const inside = tokens.filter((t) =>
+        ['flow', 'flow-root', 'table', 'flex', 'grid', 'ruby', 'math'].includes(t),
+      );
+      const list = tokens.includes('list-item');
+      if (
+        outside.length > 1 ||
+        inside.length > 1 ||
+        outside.length + inside.length + Number(list) !== tokens.length
+      )
+        return null;
+      const outer = outside[0] || (['ruby', 'math'].includes(inside[0]) ? 'inline' : 'block');
+      const inner = inside[0] || 'flow';
+      if (outer === 'run-in' || (list && !['flow', 'flow-root'].includes(inner))) return null;
+      if (list)
+        return [outer === 'inline' ? outer : '', inner === 'flow-root' ? inner : '', 'list-item']
+          .filter(Boolean)
+          .join(' ');
+      if (inner === 'flow') return outer;
+      if (['ruby', 'math'].includes(inner)) return outer === 'inline' ? inner : outer + ' ' + inner;
+      if (outer === 'block') return inner;
+      return inner === 'flow-root' ? 'inline-block' : inner === 'ruby' ? 'ruby' : 'inline-' + inner;
+    },
+  ],
   ['flex-grow', (value) => cssNonnegativeNumber(value)],
   ['flex-shrink', (value) => cssNonnegativeNumber(value)],
   [
