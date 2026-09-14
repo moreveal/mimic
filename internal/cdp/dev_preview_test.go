@@ -1,7 +1,9 @@
 package cdp
 
 import (
+	"bytes"
 	"context"
+	"io"
 	"net"
 	"net/http"
 	"testing"
@@ -34,7 +36,11 @@ func TestDevPreviewRoutesAndWebSocket(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
+		body, readErr := io.ReadAll(resp.Body)
 		resp.Body.Close()
+		if readErr != nil {
+			t.Fatal(readErr)
+		}
 		want := 200
 		if !enabled {
 			want = 404
@@ -52,6 +58,9 @@ func TestDevPreviewRoutesAndWebSocket(t *testing.T) {
 				t.Fatal("disabled WS exposed")
 			}
 			continue
+		}
+		if !bytes.Contains(body, []byte("Disconnected — reconnecting…")) || !bytes.Contains(body, []byte("Math.min(reconnectDelay*2,5000)")) || !bytes.Contains(body, []byte("list(true)")) {
+			t.Fatal("preview client does not automatically reconnect after a server restart")
 		}
 		conn, _, err := websocket.DefaultDialer.Dial("ws://"+l.Addr().String()+"/debug/preview/ws?target="+s.Page.ID, nil)
 		if err != nil {
