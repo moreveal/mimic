@@ -388,7 +388,17 @@ func (r *Realm) checkpoint(ctx context.Context) error {
 		p.pendingCheckpoints = p.pendingCheckpoints[1:]
 		target.checkpointQueued = false
 		if !target.checkpointClosed {
-			if err := target.checkpointRuntime(ctx); err != nil {
+			// Script cleanup may own this realm's V8 thread. A foreign job
+			// can synchronously call back into it, so keep that owner receptive
+			// while draining the Page's other microtask queues.
+			checkpoint := target.checkpointRuntime
+			var err error
+			if nested, ok := r.runtime.(engine.ReentrantRuntime); ok && target != r {
+				err = nested.RunNested(ctx, checkpoint)
+			} else {
+				err = checkpoint(ctx)
+			}
+			if err != nil {
 				return err
 			}
 		}
