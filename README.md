@@ -17,6 +17,7 @@
 
 <p align="center">
   <a href="QUICKSTART.md">Quick start</a> ·
+  <a href="#use-it-with-playwright">Playwright</a> ·
   <a href="#measured-not-assumed">Benchmarks</a> ·
   <a href="FAQ.md">CDP support</a> ·
   <a href="#let-the-website-do-the-work">Product vision</a> ·
@@ -37,9 +38,37 @@ and automate through familiar CDP tools without embedding Chromium.
 
 Actively developed. Feedback and workflow help: **`moreveal`** on Discord.
 
+## Use it with Playwright
+
+Start Mimic on `127.0.0.1:9222`, then connect with the standard Playwright API:
+
+```javascript
+import { chromium } from "playwright-core";
+
+const browser = await chromium.connectOverCDP("http://127.0.0.1:9222");
+
+const context = browser.contexts()[0];
+const page = context.pages()[0];
+
+await page.goto("https://www.google.com");
+
+await page.getByRole("link", { name: "Sign in" }).click();
+```
+
+**This is the Playwright client connected over CDP. Chromium is not installed,
+launched, or embedded by Mimic.** The beta archive contains the runtime and
+[runnable Playwright and Puppeteer examples](examples/README.md); no browser
+download or GPU is required.
+
 ## Working browser behavior
 
-These development checkpoints exercise execution and observable browser behavior:
+The current automation regression covers navigation, locators, form input,
+fetch/XHR, frames, Shadow DOM, popups, redirects, cookies, history, multi-page
+state, and network observation: **38/38 checks across two project regression
+suites**. These are Mimic's own compatibility checks, not the official
+Playwright test suite.
+
+Broader development checkpoints exercise execution and observable browser behavior:
 
 | Capability | Verified checkpoint |
 | :--- | :--- |
@@ -48,7 +77,7 @@ These development checkpoints exercise execution and observable browser behavior
 | **Workers ✓** | Messaging and worker fetch in supported workflows. |
 | **DOM mutations ✓** | 3,000 elements with validated final structure and text. |
 | **Networking ✓** | Fetch and XHR in deterministic local fixtures. |
-| **Playwright / Puppeteer ✓** | [Verified examples](examples/README.md): form input, clicks, fetch, profile readback, and ten concurrent pages on Windows and Linux. |
+| **Playwright / Puppeteer ✓** | Stock client libraries over CDP: navigation, locators, forms, fetch, frames, Shadow DOM, popups, redirects, cookies, history, multi-page state, and network events. |
 | **100 concurrent pages ✓** | Completed Linux static, CPU, and React comparison with Chrome. |
 
 These are scoped, verified workflows; compatibility continues to expand.
@@ -65,8 +94,15 @@ Fresh-build Windows checkpoint from **September 14, 2026**, against **Chrome 152
   <a href="BENCHMARKS.md"><img src="assets/benchmark-scaling-20260914.svg" alt="Static concurrency: active memory and throughput through 50 pages" width="1200"></a>
 </p>
 
-**92% lower ready RSS. 62% less active RAM and 3.32× throughput at 50 static pages.**
-Measured on these fixtures and this machine; startup RSS is not per-page memory.
+| Controlled checkpoint | Mimic | Chrome 152 |
+| :--- | ---: | ---: |
+| CDP-ready process-tree RSS | **28.84 MiB** | 376.26 MiB |
+| 50 static pages: active RSS | **1,568.62 MiB** | 4,079.95 MiB |
+| 50 static pages: throughput | **69.64 sessions/s** | 21.00 sessions/s |
+
+**92% lower ready RSS. 62% less active RAM and 3.32× throughput at 50 static
+pages.** These are controlled local fixtures on this machine, not arbitrary
+websites. Ready RSS includes the initial page and is not per-page memory.
 
 Mimic is actively evolving toward direct HTTP lightness with browser compatibility.
 These are selected strengths from an early checkpoint; see Known limitations and
