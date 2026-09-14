@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/http/httptest"
+	"sync/atomic"
 	"testing"
 )
 
@@ -30,6 +31,41 @@ func TestMediaElementLoadAndPlaybackState(t *testing.T) {
 })()
 `); err != nil {
 		t.Fatal(err)
+	}
+}
+
+func TestMediaPreloadNoneDefersTransportUntilExplicitLoad(t *testing.T) {
+	var requests atomic.Int32
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, request *http.Request) {
+		requests.Add(1)
+		w.Header().Set("Content-Type", "audio/wav")
+		_, _ = w.Write([]byte("opaque media bytes"))
+	}))
+	defer server.Close()
+	p := testPage(t)
+	defer p.Close()
+	value, err := p.Evaluate(context.Background(), `new Promise(resolve=>{
+		const audio=document.createElement('audio');
+		audio.preload='none';
+		audio.src=`+fmt.Sprintf("%q", server.URL+"/clip.wav")+`;
+		document.body.append(audio);
+		setTimeout(()=>resolve([audio.networkState,audio.readyState,audio.currentSrc]),10);
+	})`)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if got := requests.Load(); got != 0 {
+		t.Fatalf("preload=none issued %d requests", got)
+	}
+	state := value.([]any)
+	if state[1] != int64(0) || state[2] != "" {
+		t.Fatalf("unexpected deferred state: %#v", state)
+	}
+	if _, err = p.Evaluate(context.Background(), `new Promise(resolve=>{const audio=document.querySelector('audio');audio.oncanplay=resolve;audio.load()})`); err != nil {
+		t.Fatal(err)
+	}
+	if got := requests.Load(); got != 1 {
+		t.Fatalf("explicit load issued %d requests", got)
 	}
 }
 
