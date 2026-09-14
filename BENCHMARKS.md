@@ -116,15 +116,17 @@ Recovery uses no forced collection. Allocator pools and shared runtime artifacts
 
 ## Linux 100-Page density check
 
-A separate paired Linux run completed three measured 100-Page waves for each
-runtime and workload. Mimic delivered 74.40 versus 13.96 sessions/s for static,
-61.11 versus 13.61 for JavaScript/crypto, and 59.78 versus 8.69 for React.
+A final paired Linux run completed six measured 100-Page waves for each runtime
+and workload. Mimic delivered 74.83 versus 14.86 sessions/s for static, 48.46
+versus 12.53 for JavaScript/crypto, and 45.69 versus 7.28 for React: 5.04x,
+3.87x and 6.28x Chrome throughput respectively.
 
-Marginal unique memory per Page was higher in Mimic: 34.90 versus 13.40 MiB for
-static, 45.08 versus 25.72 MiB for JavaScript/crypto, and 45.68 versus 18.64 MiB
-for React. Mimic therefore has a much smaller initial Windows footprint and lower
-total memory through the published 50-Page Windows levels, but it cannot yet claim
-lower marginal Page memory across platforms.
+After each 100-Page wave closed, Mimic recovered to 368/374/566 MiB PSS for
+static/JavaScript/React, below Chrome at 647/751/696 MiB. The retained increment
+was 0.06–0.15 MiB per closed Mimic Page. Active Page density remains worse:
+25.91/37.16/31.27 MiB PSS per live Mimic Page versus Chrome at
+11.15/21.74/15.41 MiB. The Linux allocator retention is fixed, while the
+independent V8 isolate owned by every live Page remains the density bottleneck.
 
 ## Measurement boundaries
 

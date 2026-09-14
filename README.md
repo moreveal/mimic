@@ -137,7 +137,8 @@ examples. Implementation sources and internal research remain private.
 
 Warm execution is faster in two of six fixtures and still trails Chrome most sharply
 for DOM mutations. The Windows host stopped Mimic's 100-page levels at its memory-pressure
-guard; the completed Linux 100-page comparison shows higher marginal memory per Mimic Page.
+guard. On Linux, allocator arenas are reclaimed after Page teardown, but active memory per
+concurrent Page remains higher than Chrome because each Page owns an independent V8 isolate.
 
 Mimic is in active development. The beta supports **Windows amd64** and
 **Linux amd64 with glibc 2.39+** (validated on Ubuntu 24.04 under WSL2). The
