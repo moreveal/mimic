@@ -1,5 +1,41 @@
 package state
 
+// WebGPUInfo is the single adapter identity projection for Window and Worker.
+func (g Graphics) WebGPUInfo() map[string]any {
+	return g.WebGPUAdapterProjection(g.WebGPU)
+}
+
+// WebGPUAdapterProjection returns one coherent adapter view. Adapter-specific
+// limits must travel with the adapter selected by requestAdapter rather than
+// being read later from the environment's default adapter.
+func (g Graphics) WebGPUAdapterProjection(a GPUAdapter) map[string]any {
+	limits := WebGPUDefaultLimits()
+	if g.MaxTextureSize > 0 {
+		limits["maxTextureDimension2D"] = uint64(g.MaxTextureSize)
+	}
+	for name, value := range a.Limits {
+		limits[name] = value
+	}
+	return map[string]any{"vendor": a.Vendor, "architecture": a.Architecture, "device": a.Device, "description": a.Description, "subgroupMinSize": a.SubgroupMinSize, "subgroupMaxSize": a.SubgroupMaxSize, "isFallbackAdapter": a.IsFallbackAdapter, "features": a.Features, "limits": limits, "maxTextureSize": g.MaxTextureSize}
+}
+
+// SelectWebGPUAdapter applies the request policy without mutating the shared
+// environment profile. Every request receives a fresh JS adapter wrapper.
+func (g Graphics) SelectWebGPUAdapter(preference string, forceFallback bool) (map[string]any, bool) {
+	key := preference
+	if forceFallback {
+		key = "fallback"
+	}
+	adapter, ok := g.WebGPUAdapters[key]
+	if !ok {
+		if forceFallback {
+			return nil, false
+		}
+		adapter = g.WebGPU
+	}
+	return g.WebGPUAdapterProjection(adapter), true
+}
+
 // WebGPUDefaultLimits are the browser's baseline device contract, distinct
 // from the adapter limits selected by an Environment. Return fresh state.
 func WebGPUDefaultLimits() map[string]uint64 {
