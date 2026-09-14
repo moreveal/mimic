@@ -8,8 +8,30 @@ import (
 	"time"
 
 	chrome152 "github.com/moreveal/mimic/chrome/152"
+	"github.com/moreveal/mimic/internal/engine"
 	v8engine "github.com/moreveal/mimic/internal/engine/v8"
 )
+
+type previewValue struct{ released bool }
+
+func (*previewValue) Export() any    { return "snapshot" }
+func (*previewValue) String() string { return "snapshot" }
+
+type previewValueOwner struct{ released engine.Value }
+
+func (o *previewValueOwner) ReleaseValue(value engine.Value) { o.released = value }
+
+func TestPreviewExportsAndReleasesTemporaryRuntimeValue(t *testing.T) {
+	value, owner := &previewValue{}, &previewValueOwner{}
+	if got := exportPreviewValue(owner, value); got != "snapshot" || owner.released != value {
+		t.Fatalf("export=%v released=%v", got, owner.released == value)
+	}
+	owner.released = nil
+	releasePreviewValue(owner, value)
+	if owner.released != value {
+		t.Fatal("argument was not released")
+	}
+}
 
 func TestDevPreviewPublishesDuringContinuousCommands(t *testing.T) {
 	b, err := NewWithOptions(v8engine.Factory{}, chrome152.New(), Options{DevPreview: true})

@@ -127,6 +127,27 @@ func TestCompletedAndCanceledTimersReleaseCallbackRoots(t *testing.T) {
 	}
 }
 
+func TestAnimationFramesReleaseQueuedCallbackRoots(t *testing.T) {
+	p := newAsyncModulePage(t)
+	navigateCapabilityFixture(t, p)
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel()
+	runtime := p.Top.Realm.runtime
+	if _, err := p.Evaluate(ctx, `new Promise(resolve=>requestAnimationFrame(resolve))`); err != nil {
+		t.Fatal(err)
+	}
+	baseline := persistentHandleCount(t, runtime)
+	for iteration := 0; iteration < 3; iteration++ {
+		value, err := p.Evaluate(ctx, `new Promise(resolve=>{let remaining=32;const frame=()=>{if(--remaining===0)resolve(remaining);else requestAnimationFrame(frame)};requestAnimationFrame(frame)})`)
+		if err != nil || value != float64(0) {
+			t.Fatalf("animation frames: %v %v", value, err)
+		}
+		if growth := persistentHandleCount(t, runtime) - baseline; growth != 0 {
+			t.Fatalf("iteration %d kept %d queued callback roots", iteration, growth)
+		}
+	}
+}
+
 func TestListenerDispatchDoesNotRetainCheckpointRoots(t *testing.T) {
 	p := newAsyncModulePage(t)
 	navigateCapabilityFixture(t, p)

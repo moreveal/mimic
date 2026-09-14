@@ -121,8 +121,7 @@ const canvasCompatibilityState = (() => {
     if (!s) throw new TypeError('Illegal invocation');
     return s;
   };
-  const buffer = (s) => {
-    if (s.readPixels) return s.readPixels();
+  const ensurePixels = (s) => {
     if (!s.pixels) {
       s.pixels =
         s.colorType === 'float16'
@@ -137,6 +136,11 @@ const canvasCompatibilityState = (() => {
           : storage(s.width, s.height);
       if (s.opaque) for (let i = 3; i < s.pixels.length; i += 4) s.pixels[i] = 255;
     }
+    return s.pixels;
+  };
+  const buffer = (s) => {
+    if (s.readPixels) return s.readPixels();
+    ensurePixels(s);
     materializeText(s);
     return s.pixels;
   };
@@ -469,7 +473,8 @@ const canvasCompatibilityState = (() => {
     x += alignedX(d, width * scale);
     y += shaped.shift;
     reportBoundary(c, 'approximateTextObservations');
-    (c.surface.pendingText || (c.surface.pendingText = [])).push({
+    const pending = c.surface.pendingText || (c.surface.pendingText = []);
+    pending.push({
       glyphs: shaped.glyphs,
       x,
       y,
@@ -480,6 +485,10 @@ const canvasCompatibilityState = (() => {
       composite: d.globalCompositeOperation,
       clips: d.clipPaths || [],
     });
+    if (pending.length >= 256) {
+      ensurePixels(c.surface);
+      materializeText(c.surface);
+    }
     c.surface.unmodeled = true;
   };
   // Lazy, coarse coverage observations, not glyph rasterization. Each shaped glyph
@@ -566,6 +575,33 @@ const canvasCompatibilityState = (() => {
   const fillRectangle = (c, x, y, w, h, clear) => {
     const a = [x, y, w, h].map(Number);
     if (!a.every(Number.isFinite) || !a[2] || !a[3]) return;
+    const d = c.draw,
+      left = Math.min(a[0], a[0] + a[2]),
+      right = Math.max(a[0], a[0] + a[2]),
+      top = Math.min(a[1], a[1] + a[3]),
+      bottom = Math.max(a[1], a[1] + a[3]);
+    // Animation loops conventionally clear the entire backing store before
+    // drawing the next frame. The clear supersedes every deferred path; keeping
+    // those unreachable prior-frame observations grows without bound.
+    if (
+      clear &&
+      d.transform.every((value, index) => value === [1, 0, 0, 1, 0, 0][index]) &&
+      !d.clipPaths?.length &&
+      left <= 0 &&
+      top <= 0 &&
+      right >= c.surface.width &&
+      bottom >= c.surface.height
+    ) {
+      c.surface.pendingText = [];
+      c.surface.operations = [];
+      c.surface.unmodeled = false;
+      if (c.surface.pixels) {
+        c.surface.pixels.fill(0);
+        if (c.surface.opaque)
+          for (let i = 3; i < c.surface.pixels.length; i += 4) c.surface.pixels[i] = 255;
+      }
+      return;
+    }
     queuePath(c, rectanglePath(c, ...a), 'nonzero', false, clear);
   };
   class CanvasRenderingContext2D {
