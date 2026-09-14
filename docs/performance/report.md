@@ -2372,3 +2372,30 @@ Follow-up binary SHA-256:
 Receipts: `.build/public-beta-browser-target-fast-gate/{build,raw}.json` and
 `.build/public-beta-quickstart-check/result.json`. The frozen harness hash was
 verified; no timing/fixture changes or new full-matrix claims were introduced.
+
+### Native Taffy vertical-slice checkpoint (2026-09-14)
+
+The project-specific native C ABI was measured before making its Flex/Grid boxes
+authoritative. Both executables were fresh Windows amd64 processes on the same
+host: the baseline was built from `HEAD`, while the candidate included the
+snapshot adapter and Rust/Taffy static library. Each cold sample invalidated the
+observable DOM/style epoch; the immediately following warm sample read the same
+geometry and therefore exercised epoch reuse. Layout time and process RSS were
+recorded separately. Raw local receipts are
+`.build/layout-head-cold.json` and `.build/layout-taffy-cold.json`.
+
+| Workload | Median cold, HEAD → Taffy | Median warm, HEAD → Taffy | Live RSS delta, HEAD → Taffy |
+| --- | ---: | ---: | ---: |
+| DOM, 600 nested flex items | 117.7 → 58.2 ms | 12.85 → 12.45 ms | 144.3 → 154.3 MiB |
+| Static, 200 grid/flex cards | 18.6 → 31.0 ms | 5.80 → 6.05 ms | 56.2 → 61.7 MiB |
+| Google home | 19.9 → 25.5 ms | 12.8 → 7.65 ms | 237.7 → 147.4 MiB |
+
+DOM cold layout improved substantially. Static cold layout regressed by roughly
+67%, but that baseline did not calculate the same Grid geometry (its checksum
+was 3,121,576 versus 925,079 with explicit Taffy tracks); end-to-end workload
+wall time increased about 19%. Google cold layout increased about 28%, while its
+warm reads and live RSS delta improved. The candidate therefore does not show a
+major general regression, but snapshot construction remains measurable on small
+static Grid pages. The implementation keeps a per-epoch flat-box cache and does
+not add a persistent tree yet; this cold cost is the trigger to profile the
+numeric adapter before considering more complex cross-epoch state.

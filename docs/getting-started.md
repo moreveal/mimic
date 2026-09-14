@@ -22,7 +22,8 @@ for results and limitations, or the [original baseline](../benchmark/results/rep
 ## Build and run
 
 Supported hosts are **Windows amd64** and **Linux amd64 with glibc 2.39+**
-(Ubuntu 24.04+). Both need Go **1.26.4+**, CGO enabled, and a C compiler
+(Ubuntu 24.04+). Both need Go **1.26.4+**, Rust with Cargo, Python 3,
+CGO enabled, and a C compiler
 (`gcc` on Linux; MinGW-w64 `gcc` on Windows). The bundled QuickJS fallback
 uses CGO even when V8 is selected. Linux ARM64, Alpine/musl, and macOS are
 not supported by the packaged engine.
@@ -31,12 +32,13 @@ On Ubuntu, install the build and optional capture prerequisites:
 
 ```sh
 sudo apt-get update
-sudo apt-get install build-essential ca-certificates python3-venv fonts-dejavu-core fonts-liberation
+sudo apt-get install build-essential ca-certificates cargo python3-venv fonts-dejavu-core fonts-liberation
 ```
 
 Install Go 1.26.4+ or allow its automatic toolchain download. From the checkout:
 
 ```sh
+python tools/build_native_layout.py
 go build -o .build/mimic ./cmd/mimic
 ./.build/mimic -listen 127.0.0.1:9222 -chrome 152
 # Explicit fallback, using the same binary:
@@ -50,6 +52,7 @@ The AVIF decoder requires Go 1.26.4; standard Go toolchain auto-selection can
 download that pinned toolchain when the installed patch version is older.
 
 ```powershell
+python tools/build_native_layout.py
 go build -o .build/mimic.exe ./cmd/mimic
 ./.build/mimic.exe -listen 127.0.0.1:9222 -chrome 152
 # Explicit fallback, using the same binary:
@@ -63,7 +66,8 @@ Neither fallback promises V8-equivalent ECMAScript behavior. gov8 extracts its
 packaged DLL or shared library into its user cache; no separate V8/Chrome download is needed.
 The cache must permit executable mappings (`noexec` mounts prevent V8 loading).
 On Linux, a built executable needs glibc, libm and libgcc_s; it needs no compiler,
-Rust installation, GPU, display server or Chromium at runtime.
+Rust installation, GPU, display server or Chromium at runtime. Rust is only a
+build-time dependency for the statically linked Taffy layout archive.
 No `.env` file or secret is required. Stop the foreground server with Ctrl+C; Linux SIGTERM also performs orderly shutdown.
 The AVIF resource decoder is pinned to `gav1d v0.2.5` and needs Go 1.26.4;
 standard Go toolchain selection downloads that patch version when necessary.

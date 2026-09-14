@@ -1,0 +1,16 @@
+[package]
+name = "mimic-taffy-layout"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["staticlib"]
+
+[dependencies]
+taffy = "0.14"
+
+[profile.release]
+lto = true
+opt-level = 3
+panic = "abort"
+strip = true

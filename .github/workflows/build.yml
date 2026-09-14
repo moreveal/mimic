@@ -45,6 +45,8 @@ jobs:
         if: runner.os == 'Windows'
         shell: msys2 {0}
         run: echo "$(cygpath -w /ucrt64/bin)" >> "$GITHUB_PATH"
+      - name: Build native Taffy layout library
+        run: python tools/build_native_layout.py
       - name: Build Linux executable
         if: runner.os == 'Linux'
         run: go build -o .build/mimic ./cmd/mimic

@@ -85,6 +85,7 @@ See [complete setup](docs/getting-started.md) for requirements and native rebuil
 ```sh
 git clone https://github.com/moreveal/mimic.git
 cd mimic
+python tools/build_native_layout.py
 go build -o .build/mimic ./cmd/mimic
 ./.build/mimic -listen 127.0.0.1:9222 -chrome 152
 ```
@@ -94,6 +95,7 @@ go build -o .build/mimic ./cmd/mimic
 ```powershell
 git clone https://github.com/moreveal/mimic.git
 cd mimic
+python tools/build_native_layout.py
 go build -o .build/mimic.exe ./cmd/mimic
 ./.build/mimic.exe -listen 127.0.0.1:9222 -chrome 152
 ```
