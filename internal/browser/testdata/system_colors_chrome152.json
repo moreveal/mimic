@@ -1,0 +1,370 @@
+{
+  "captureMetadata": {
+    "chromeVersion": "152.0.7977.82",
+    "platform": "windows-x64",
+    "sourceSHA256": "59f0b3561167be2ea79d54af2dde034309e9375458b635e58142d68d820bf446",
+    "context": "http://127.0.0.1:9387/",
+    "userGesture": true,
+    "chromiumRevision": "@d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "window": {
+      "left": 20,
+      "top": 20,
+      "width": 1265,
+      "height": 1372,
+      "windowState": "normal"
+    },
+    "environmentProfileId": "chrome-152-windows-x64-headful-observation-mechanisms",
+    "profileFreshness": "fresh browser context in dedicated oracle profile",
+    "viewport": {
+      "width": 1257,
+      "height": 1281
+    },
+    "secureContextState": true,
+    "isolationState": false
+  },
+  "result": {
+    "light": {
+      "activetext": [
+        "activetext",
+        "rgb(0, 102, 204)"
+      ],
+      "buttonborder": [
+        "buttonborder",
+        "rgb(0, 0, 0)"
+      ],
+      "buttonface": [
+        "buttonface",
+        "rgb(240, 240, 240)"
+      ],
+      "buttontext": [
+        "buttontext",
+        "rgb(0, 0, 0)"
+      ],
+      "canvas": [
+        "canvas",
+        "rgb(255, 255, 255)"
+      ],
+      "canvastext": [
+        "canvastext",
+        "rgb(0, 0, 0)"
+      ],
+      "field": [
+        "field",
+        "rgb(255, 255, 255)"
+      ],
+      "fieldtext": [
+        "fieldtext",
+        "rgb(0, 0, 0)"
+      ],
+      "graytext": [
+        "graytext",
+        "rgb(109, 109, 109)"
+      ],
+      "highlight": [
+        "highlight",
+        "rgb(0, 120, 212)"
+      ],
+      "highlighttext": [
+        "highlighttext",
+        "rgb(255, 255, 255)"
+      ],
+      "linktext": [
+        "linktext",
+        "rgb(0, 102, 204)"
+      ],
+      "mark": [
+        "mark",
+        "rgb(255, 255, 0)"
+      ],
+      "marktext": [
+        "marktext",
+        "rgb(0, 0, 0)"
+      ],
+      "selecteditem": [
+        "selecteditem",
+        "rgb(25, 103, 210)"
+      ],
+      "selecteditemtext": [
+        "selecteditemtext",
+        "rgb(255, 255, 255)"
+      ],
+      "visitedtext": [
+        "visitedtext",
+        "rgb(0, 102, 204)"
+      ],
+      "accentcolor": [
+        "accentcolor",
+        "rgb(0, 117, 255)"
+      ],
+      "accentcolortext": [
+        "accentcolortext",
+        "rgb(255, 255, 255)"
+      ],
+      "activeborder": [
+        "activeborder",
+        "rgb(0, 0, 0)"
+      ],
+      "activecaption": [
+        "activecaption",
+        "rgb(255, 255, 255)"
+      ],
+      "appworkspace": [
+        "appworkspace",
+        "rgb(255, 255, 255)"
+      ],
+      "background": [
+        "background",
+        "rgb(255, 255, 255)"
+      ],
+      "buttonhighlight": [
+        "buttonhighlight",
+        "rgb(240, 240, 240)"
+      ],
+      "buttonshadow": [
+        "buttonshadow",
+        "rgb(240, 240, 240)"
+      ],
+      "captiontext": [
+        "captiontext",
+        "rgb(0, 0, 0)"
+      ],
+      "inactiveborder": [
+        "inactiveborder",
+        "rgb(0, 0, 0)"
+      ],
+      "inactivecaption": [
+        "inactivecaption",
+        "rgb(255, 255, 255)"
+      ],
+      "inactivecaptiontext": [
+        "inactivecaptiontext",
+        "rgb(128, 128, 128)"
+      ],
+      "infobackground": [
+        "infobackground",
+        "rgb(255, 255, 255)"
+      ],
+      "infotext": [
+        "infotext",
+        "rgb(0, 0, 0)"
+      ],
+      "menu": [
+        "menu",
+        "rgb(255, 255, 255)"
+      ],
+      "menutext": [
+        "menutext",
+        "rgb(0, 0, 0)"
+      ],
+      "scrollbar": [
+        "scrollbar",
+        "rgb(255, 255, 255)"
+      ],
+      "threeddarkshadow": [
+        "threeddarkshadow",
+        "rgb(0, 0, 0)"
+      ],
+      "threedface": [
+        "threedface",
+        "rgb(240, 240, 240)"
+      ],
+      "threedhighlight": [
+        "threedhighlight",
+        "rgb(0, 0, 0)"
+      ],
+      "threedlightshadow": [
+        "threedlightshadow",
+        "rgb(0, 0, 0)"
+      ],
+      "threedshadow": [
+        "threedshadow",
+        "rgb(0, 0, 0)"
+      ],
+      "window": [
+        "window",
+        "rgb(255, 255, 255)"
+      ],
+      "windowframe": [
+        "windowframe",
+        "rgb(0, 0, 0)"
+      ],
+      "windowtext": [
+        "windowtext",
+        "rgb(0, 0, 0)"
+      ]
+    },
+    "dark": {
+      "activetext": [
+        "activetext",
+        "rgb(255, 0, 0)"
+      ],
+      "buttonborder": [
+        "buttonborder",
+        "rgb(255, 255, 255)"
+      ],
+      "buttonface": [
+        "buttonface",
+        "rgb(107, 107, 107)"
+      ],
+      "buttontext": [
+        "buttontext",
+        "rgb(255, 255, 255)"
+      ],
+      "canvas": [
+        "canvas",
+        "rgb(18, 18, 18)"
+      ],
+      "canvastext": [
+        "canvastext",
+        "rgb(255, 255, 255)"
+      ],
+      "field": [
+        "field",
+        "rgb(59, 59, 59)"
+      ],
+      "fieldtext": [
+        "fieldtext",
+        "rgb(255, 255, 255)"
+      ],
+      "graytext": [
+        "graytext",
+        "rgb(128, 128, 128)"
+      ],
+      "highlight": [
+        "highlight",
+        "rgb(25, 103, 210)"
+      ],
+      "highlighttext": [
+        "highlighttext",
+        "rgb(255, 255, 255)"
+      ],
+      "linktext": [
+        "linktext",
+        "rgb(158, 158, 255)"
+      ],
+      "mark": [
+        "mark",
+        "rgb(255, 255, 0)"
+      ],
+      "marktext": [
+        "marktext",
+        "rgb(0, 0, 0)"
+      ],
+      "selecteditem": [
+        "selecteditem",
+        "rgb(153, 200, 255)"
+      ],
+      "selecteditemtext": [
+        "selecteditemtext",
+        "rgb(59, 59, 59)"
+      ],
+      "visitedtext": [
+        "visitedtext",
+        "rgb(208, 173, 240)"
+      ],
+      "accentcolor": [
+        "accentcolor",
+        "rgb(0, 117, 255)"
+      ],
+      "accentcolortext": [
+        "accentcolortext",
+        "rgb(255, 255, 255)"
+      ],
+      "activeborder": [
+        "activeborder",
+        "rgb(255, 255, 255)"
+      ],
+      "activecaption": [
+        "activecaption",
+        "rgb(18, 18, 18)"
+      ],
+      "appworkspace": [
+        "appworkspace",
+        "rgb(18, 18, 18)"
+      ],
+      "background": [
+        "background",
+        "rgb(18, 18, 18)"
+      ],
+      "buttonhighlight": [
+        "buttonhighlight",
+        "rgb(107, 107, 107)"
+      ],
+      "buttonshadow": [
+        "buttonshadow",
+        "rgb(107, 107, 107)"
+      ],
+      "captiontext": [
+        "captiontext",
+        "rgb(255, 255, 255)"
+      ],
+      "inactiveborder": [
+        "inactiveborder",
+        "rgb(255, 255, 255)"
+      ],
+      "inactivecaption": [
+        "inactivecaption",
+        "rgb(18, 18, 18)"
+      ],
+      "inactivecaptiontext": [
+        "inactivecaptiontext",
+        "rgb(128, 128, 128)"
+      ],
+      "infobackground": [
+        "infobackground",
+        "rgb(18, 18, 18)"
+      ],
+      "infotext": [
+        "infotext",
+        "rgb(255, 255, 255)"
+      ],
+      "menu": [
+        "menu",
+        "rgb(18, 18, 18)"
+      ],
+      "menutext": [
+        "menutext",
+        "rgb(255, 255, 255)"
+      ],
+      "scrollbar": [
+        "scrollbar",
+        "rgb(18, 18, 18)"
+      ],
+      "threeddarkshadow": [
+        "threeddarkshadow",
+        "rgb(255, 255, 255)"
+      ],
+      "threedface": [
+        "threedface",
+        "rgb(107, 107, 107)"
+      ],
+      "threedhighlight": [
+        "threedhighlight",
+        "rgb(255, 255, 255)"
+      ],
+      "threedlightshadow": [
+        "threedlightshadow",
+        "rgb(255, 255, 255)"
+      ],
+      "threedshadow": [
+        "threedshadow",
+        "rgb(255, 255, 255)"
+      ],
+      "window": [
+        "window",
+        "rgb(18, 18, 18)"
+      ],
+      "windowframe": [
+        "windowframe",
+        "rgb(255, 255, 255)"
+      ],
+      "windowtext": [
+        "windowtext",
+        "rgb(255, 255, 255)"
+      ]
+    }
+  }
+}

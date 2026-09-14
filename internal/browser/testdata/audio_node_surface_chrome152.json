@@ -1,0 +1,465 @@
+{
+  "captureMetadata": {
+    "chromeVersion": "152.0.7977.82",
+    "platform": "windows-x64",
+    "sourceSHA256": "220418269e9b7e4d1df5d5b259f9fe62f2b730348a1f431d6fb2f3c3046a2c01",
+    "context": "http://127.0.0.1:9387/",
+    "userGesture": true,
+    "chromiumRevision": "@d04cdb24d67b081f6cf80200ffc5233f44b61109",
+    "v8Version": "15.2.124.21",
+    "browserMode": "headful",
+    "commandLineFeatureOverrides": [],
+    "window": {
+      "left": 20,
+      "top": 20,
+      "width": 1265,
+      "height": 1372,
+      "windowState": "normal"
+    },
+    "environmentProfileId": "chrome-152-windows-x64-headful-observation-mechanisms",
+    "profileFreshness": "fresh browser context in dedicated oracle profile",
+    "viewport": {
+      "width": 1257,
+      "height": 1281
+    },
+    "secureContextState": true,
+    "isolationState": false
+  },
+  "result": {
+    "DelayNode": {
+      "tag": "[object DelayNode]",
+      "inputs": 1,
+      "outputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "own": {
+        "delayTime": [
+          "[object AudioParam]",
+          true,
+          true,
+          true,
+          false,
+          false
+        ]
+      }
+    },
+    "ChannelSplitterNode": {
+      "tag": "[object ChannelSplitterNode]",
+      "inputs": 1,
+      "outputs": 6,
+      "channelCount": 6,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "discrete",
+      "own": {}
+    },
+    "ChannelMergerNode": {
+      "tag": "[object ChannelMergerNode]",
+      "inputs": 6,
+      "outputs": 1,
+      "channelCount": 1,
+      "channelCountMode": "explicit",
+      "channelInterpretation": "speakers",
+      "own": {}
+    },
+    "StereoPannerNode": {
+      "tag": "[object StereoPannerNode]",
+      "inputs": 1,
+      "outputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "clamped-max",
+      "channelInterpretation": "speakers",
+      "own": {
+        "pan": [
+          "[object AudioParam]",
+          true,
+          true,
+          true,
+          false,
+          false
+        ]
+      }
+    },
+    "PannerNode": {
+      "tag": "[object PannerNode]",
+      "inputs": 1,
+      "outputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "clamped-max",
+      "channelInterpretation": "speakers",
+      "own": {
+        "panningModel": [
+          "equalpower",
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "positionX": [
+          "[object AudioParam]",
+          true,
+          true,
+          true,
+          false,
+          false
+        ],
+        "positionY": [
+          "[object AudioParam]",
+          true,
+          true,
+          true,
+          false,
+          false
+        ],
+        "positionZ": [
+          "[object AudioParam]",
+          true,
+          true,
+          true,
+          false,
+          false
+        ],
+        "orientationX": [
+          "[object AudioParam]",
+          true,
+          true,
+          true,
+          false,
+          false
+        ],
+        "orientationY": [
+          "[object AudioParam]",
+          true,
+          true,
+          true,
+          false,
+          false
+        ],
+        "orientationZ": [
+          "[object AudioParam]",
+          true,
+          true,
+          true,
+          false,
+          false
+        ],
+        "distanceModel": [
+          "inverse",
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "refDistance": [
+          1,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "maxDistance": [
+          10000,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "rolloffFactor": [
+          1,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "coneInnerAngle": [
+          360,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "coneOuterAngle": [
+          360,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "coneOuterGain": [
+          0,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "setOrientation": [
+          "function",
+          true,
+          true,
+          false,
+          false,
+          true
+        ],
+        "setPosition": [
+          "function",
+          true,
+          true,
+          false,
+          false,
+          true
+        ]
+      }
+    },
+    "ConvolverNode": {
+      "tag": "[object ConvolverNode]",
+      "inputs": 1,
+      "outputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "clamped-max",
+      "channelInterpretation": "speakers",
+      "own": {
+        "buffer": [
+          "[object Null]",
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "normalize": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          false
+        ]
+      }
+    },
+    "WaveShaperNode": {
+      "tag": "[object WaveShaperNode]",
+      "inputs": 1,
+      "outputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "own": {
+        "curve": [
+          "[object Null]",
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "oversample": [
+          "none",
+          true,
+          true,
+          true,
+          true,
+          false
+        ]
+      }
+    },
+    "BiquadFilterNode": {
+      "tag": "[object BiquadFilterNode]",
+      "inputs": 1,
+      "outputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "own": {
+        "type": [
+          "lowpass",
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "frequency": [
+          "[object AudioParam]",
+          true,
+          true,
+          true,
+          false,
+          false
+        ],
+        "detune": [
+          "[object AudioParam]",
+          true,
+          true,
+          true,
+          false,
+          false
+        ],
+        "Q": [
+          "[object AudioParam]",
+          true,
+          true,
+          true,
+          false,
+          false
+        ],
+        "gain": [
+          "[object AudioParam]",
+          true,
+          true,
+          true,
+          false,
+          false
+        ],
+        "getFrequencyResponse": [
+          "function",
+          true,
+          true,
+          false,
+          false,
+          true
+        ]
+      }
+    },
+    "IIRFilterNode": {
+      "tag": "[object IIRFilterNode]",
+      "inputs": 1,
+      "outputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "own": {
+        "getFrequencyResponse": [
+          "function",
+          true,
+          true,
+          false,
+          false,
+          true
+        ]
+      }
+    },
+    "ConstantSourceNode": {
+      "tag": "[object ConstantSourceNode]",
+      "inputs": 0,
+      "outputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "own": {
+        "offset": [
+          "[object AudioParam]",
+          true,
+          true,
+          true,
+          false,
+          false
+        ]
+      }
+    },
+    "AnalyserNode": {
+      "tag": "[object AnalyserNode]",
+      "inputs": 1,
+      "outputs": 1,
+      "channelCount": 2,
+      "channelCountMode": "max",
+      "channelInterpretation": "speakers",
+      "own": {
+        "fftSize": [
+          2048,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "frequencyBinCount": [
+          1024,
+          true,
+          true,
+          true,
+          false,
+          false
+        ],
+        "minDecibels": [
+          -100,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "maxDecibels": [
+          -30,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "smoothingTimeConstant": [
+          0.8,
+          true,
+          true,
+          true,
+          true,
+          false
+        ],
+        "getByteFrequencyData": [
+          "function",
+          true,
+          true,
+          false,
+          false,
+          true
+        ],
+        "getByteTimeDomainData": [
+          "function",
+          true,
+          true,
+          false,
+          false,
+          true
+        ],
+        "getFloatFrequencyData": [
+          "function",
+          true,
+          true,
+          false,
+          false,
+          true
+        ],
+        "getFloatTimeDomainData": [
+          "function",
+          true,
+          true,
+          false,
+          false,
+          true
+        ]
+      }
+    },
+    "listener": {
+      "same": true,
+      "tag": "[object AudioListener]",
+      "values": {
+        "positionX": 0,
+        "positionY": 0,
+        "positionZ": 0,
+        "forwardX": 0,
+        "forwardY": 0,
+        "forwardZ": -1,
+        "upX": 0,
+        "upY": 1,
+        "upZ": 0
+      }
+    }
+  }
+}
