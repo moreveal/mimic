@@ -42,6 +42,8 @@ func (s *session) handleEmulation(method string, p map[string]any) (any, bool, e
 		s.page.ClearDeviceMetrics()
 		return empty, true, nil
 	case "Emulation.setFocusEmulationEnabled":
+		enabled, _ := p["enabled"].(bool)
+		s.page.SetFocusEmulationEnabled(enabled)
 		return empty, true, nil
 	case "Network.setUserAgentOverride", "Emulation.setUserAgentOverride":
 		o := &state.UserAgentOverride{UserAgent: stringValue(p["userAgent"]), Platform: stringValue(p["platform"])}
