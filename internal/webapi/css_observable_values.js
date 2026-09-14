@@ -1,7 +1,12 @@
 // Typed specified-value serialization shared by inline and stylesheet CSSOM.
 const cssSignedLength = (value) => {
   const term = cssLengthTerm(value);
-  return term ? cssSerializeNumber(term.number) + term.unit : value === '0' ? '0px' : null;
+  if (term) return cssSerializeNumber(term.number) + term.unit;
+  if (value === '0') return '0px';
+  // A declaration containing var() is validated after substitution. Preserve
+  // it here so geometry can resolve Tailwind-style calc(var(--spacing)*n).
+  if (/^(?:calc\()?var\(/i.test(value)) return value;
+  return cssLengthValue(value);
 };
 const cssTransformTerm = (value, type, serialize = cssSerializeNumber) => {
   const primitive = (input) => {
