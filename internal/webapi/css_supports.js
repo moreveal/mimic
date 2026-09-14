@@ -2,8 +2,30 @@ const compatibilityCSSSupports = {};
 (() => {
   if (!globalThis.CSS) return;
   const prior = CSS.supports;
-  const declaration = (property, value) => {
+  const customPropertyValue = (value, allowEmpty) => {
+    if (!allowEmpty && value === '') return false;
+    if (cssTopLevelBang(value) >= 0 || value.includes(';')) return false;
+    const pairs = { '(': ')', '[': ']', '{': '}' },
+      stack = [];
+    let quote = '';
+    for (let i = 0; i < value.length; i++) {
+      const c = value[i];
+      if (quote) {
+        if (c === '\\') i++;
+        else if (c === quote) quote = '';
+        continue;
+      }
+      if (c === '"' || c === "'") quote = c;
+      else if (pairs[c]) stack.push(pairs[c]);
+      else if (c === ')' || c === ']' || c === '}') {
+        if (stack.pop() !== c) return false;
+      }
+    }
+    return stack.length === 0;
+  };
+  const declaration = (property, value, allowEmptyCustom = false) => {
     const name = cssName(property);
+    if (/^--[\w-]+$/.test(name)) return customPropertyValue(String(value), allowEmptyCustom);
     if (cssShorthandParsers.has(name) || cssLonghandParsers.has(name)) {
       const normalized = normalizeCSSValue(name, value, property);
       return normalized !== null && normalized !== '';
@@ -21,13 +43,14 @@ const compatibilityCSSSupports = {};
       return true;
     return typeof prior === 'function' ? !!prior.call(CSS, property, value) : false;
   };
-  const condition = (text) => {
+  const condition = (text, allowNot = true) => {
     text = text.trim();
     const negate = /^not\s+/i.exec(text);
     if (negate) {
+      if (!allowNot) return null;
       const tail = text.slice(negate[0].length).trim();
-      if (!/^\(/.test(tail)) return null;
-      const result = condition(tail);
+      if (!/^(?:\(|selector\()/i.test(tail)) return null;
+      const result = condition(tail, false);
       return result === null ? null : !result;
     }
     let depth = 0,
@@ -65,22 +88,29 @@ const compatibilityCSSSupports = {};
     if (depth || quote) return null;
     if (operator) {
       parts.push(text.slice(start));
-      const values = parts.map(condition);
+      if (!allowNot) return null;
+      const values = parts.map((part) => condition(part, false));
       if (values.includes(null)) return null;
       return operator === 'and' ? values.every(Boolean) : values.some(Boolean);
     }
+    const selector = /^selector\(([\s\S]*)\)$/i.exec(text);
+    if (selector) return compatibilitySelectors.supports(selector[1]);
     if (text[0] !== '(' || text.at(-1) !== ')') return null;
     const inner = text.slice(1, -1).trim(),
       match = /^([-\w]+)\s*:\s*([\s\S]*)$/.exec(inner);
     return match
-      ? declaration(match[1], match[2].replace(/\s*!important\s*$/i, ''))
+      ? declaration(match[1], match[2].replace(/\s*!important\s*$/i, ''), true)
       : (condition(inner) ?? false);
   };
   const supports = {
     supports(property, value) {
       if (arguments.length === 0) throw new TypeError('Not enough arguments');
       if (arguments.length > 1) return declaration(String(property), String(value));
-      const text = String(property).trim();
+      const text = String(property)
+        .replace(/"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|\/\*[\s\S]*?(?:\*\/|$)/g, (token) =>
+          token.startsWith('/*') ? ' ' : token,
+        )
+        .trim();
       return condition(/^[-\w]+\s*:/.test(text) ? '(' + text + ')' : text) === true;
     },
   }.supports;

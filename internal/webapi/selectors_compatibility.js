@@ -49,7 +49,7 @@ const compatibilitySelectors = (() => {
   const syntax = (message) => new DOMException(message, 'SyntaxError');
   // Filtering library extensions belongs at the DOM API boundary. Parsing
   // escapes, combinators, attribute operators and an+b remains upstream code.
-  function validate(groups, nested = false, forgiving = false, relative = false) {
+  function validate(groups, nested = false, forgiving = false, relative = false, strict = false) {
     const result = [];
     for (const group of groups) {
       try {
@@ -72,8 +72,9 @@ const compatibilitySelectors = (() => {
               const inner = validate(
                 token.data,
                 true,
-                token.name === 'is' || token.name === 'where',
+                !strict && (token.name === 'is' || token.name === 'where'),
                 token.name === 'has',
+                strict,
               );
               next.data = inner.length ? inner : [emptySelector()];
             }
@@ -636,7 +637,17 @@ const compatibilitySelectors = (() => {
       ),
     );
   }
-  return { query, matches, closest, getElementById, compileStyle, matchingStyles };
+  function supports(selector) {
+    try {
+      const groups = library.parse(selector);
+      if (groups.length !== 1 || !groups[0].length) return false;
+      validate(groups, false, false, false, true);
+      return true;
+    } catch {
+      return false;
+    }
+  }
+  return { query, matches, closest, getElementById, compileStyle, matchingStyles, supports };
 })();
 // These late semantic replacements are WebIDL operations too. Validate the
 // private brand before arity and conversion, outside selector-parser error
