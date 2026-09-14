@@ -28,7 +28,10 @@ func TestFrameInsertionAfterInnerHTMLAndFragmentMove(t *testing.T) {
 			if err != nil {
 				t.Fatal(err)
 			}
-			ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+			// Windows CI runs this behind large browser-test batches; allow the
+			// iframe navigation enough scheduling headroom without changing the
+			// behavioral assertion or accepting an incomplete lifecycle.
+			ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 			defer cancel()
 			if err := p.Navigate(ctx, server.URL); err != nil {
 				t.Fatal(err)

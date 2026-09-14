@@ -57,6 +57,37 @@ return JSON.stringify({rect:[rect.x,rect.y,rect.width,rect.height],insets:[style
 	})
 }
 
+func TestCSSFixedInsetsUseViewportWhenAncestorTransformComputesToNone(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, page *Page) {
+		navigateCapabilityFixture(t, page)
+		result, err := page.Evaluate(context.Background(), `(()=>{
+document.body.style.cssText='margin:0;height:2000px;transform:none';
+document.body.innerHTML='<div id="target" style="position:fixed;right:24px;bottom:96px;width:100px;height:20px"></div>';
+const rect=document.getElementById('target').getBoundingClientRect();return JSON.stringify([rect.x,rect.y,rect.width,rect.height]);
+})()`)
+		const want = `[1148,537,100,20]`
+		if err != nil || result != want {
+			t.Fatalf("fixed viewport containing block: %v want %s, err=%v", result, want, err)
+		}
+	})
+}
+
+func TestCSSTaffyCoordinatesSpanBlockAncestorsAndFixedOverlays(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, page *Page) {
+		navigateCapabilityFixture(t, page)
+		result, err := page.Evaluate(context.Background(), `(()=>{
+document.body.style.cssText='margin:0;display:flex;flex-direction:column';
+document.body.innerHTML='<header style="height:64px"></header><main style="display:block"><article style="height:100px"></article><div style="display:grid"><button id="share" style="width:86px;height:19px"></button></div></main><aside style="position:fixed;right:24px;bottom:96px;width:280px;height:56px"><button id="chat" style="width:278px;height:22px"></button></aside>';
+const share=document.getElementById('share'),chat=document.getElementById('chat'),sr=share.getBoundingClientRect(),cr=chat.getBoundingClientRect();
+return JSON.stringify({share:[sr.x,sr.y],chat:[cr.x,cr.y],hit:document.elementFromPoint(sr.x+10,sr.y+10)===share});
+})()`)
+		const want = `{"share":[0,164],"chat":[968,532],"hit":true}`
+		if err != nil || result != want {
+			t.Fatalf("Taffy ancestor coordinate projection: %v want %s, err=%v", result, want, err)
+		}
+	})
+}
+
 func TestCSSRowFlexItemsUseIntrinsicBasisAndShrink(t *testing.T) {
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		navigateCapabilityFixture(t, page)
