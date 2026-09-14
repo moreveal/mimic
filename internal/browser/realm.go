@@ -154,6 +154,7 @@ type Realm struct {
 	preparedModules          map[string]bool
 	preloadedModuleLinks     map[int64]bool
 	imageLoads               map[int64]*imageLoad
+	mediaLoads               map[int64]*mediaLoad
 	availableImages          *availableImageCache
 	preloads                 map[preloadKey]*resourcePreload
 	preloadsMu               sync.Mutex
@@ -496,6 +497,7 @@ func (r *Realm) Close() error {
 	r.moduleGraphs = nil
 	r.preparedModules = nil
 	r.imageLoads = nil
+	r.mediaLoads = nil
 	r.availableImages = nil
 	r.fontChoices = nil
 	r.textShapeCache = nil
@@ -1563,8 +1565,16 @@ func (r *Realm) installBindingsOnOwner() error {
 			return nil, err
 		}
 		if strings.EqualFold(name, "src") {
-			if node, ok := r.document.Get(id); ok && node.TagName == "IMG" {
-				r.updateImage(id, true)
+			if node, ok := r.document.Get(id); ok {
+				if node.TagName == "IMG" {
+					r.updateImage(id, true)
+				} else if node.TagName == "AUDIO" || node.TagName == "VIDEO" {
+					r.updateMedia(id)
+				} else if node.TagName == "SOURCE" {
+					if parent, ok := r.document.Get(node.Parent); ok && (parent.TagName == "AUDIO" || parent.TagName == "VIDEO") {
+						r.updateMedia(parent.ID)
+					}
+				}
 			}
 		}
 		if strings.EqualFold(name, "loading") {
@@ -1584,8 +1594,12 @@ func (r *Realm) installBindingsOnOwner() error {
 		_, existed := node.Attributes[strings.ToLower(name)]
 		err := r.document.RemoveAttribute(id, name)
 		if err == nil && strings.EqualFold(name, "src") {
-			if node, ok := r.document.Get(id); ok && node.TagName == "IMG" {
-				r.updateImage(id, true)
+			if node, ok := r.document.Get(id); ok {
+				if node.TagName == "IMG" {
+					r.updateImage(id, true)
+				} else if node.TagName == "AUDIO" || node.TagName == "VIDEO" {
+					r.updateMedia(id)
+				}
 			}
 		}
 		if err == nil && strings.EqualFold(name, "loading") {
@@ -1772,6 +1786,17 @@ func (r *Realm) installBindingsOnOwner() error {
 	host["setCharacterDataJSON"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return nil, r.document.SetCharacterDataJSON(int64(numarg(a, 0)), strarg(a, 1))
 	}, "ns")
+	host["mediaLoad"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		r.updateMedia(int64(numarg(a, 0)))
+		return nil, nil
+	}, "n")
+	host["mediaCurrentSrc"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		load := r.mediaLoads[int64(numarg(a, 0))]
+		if load == nil {
+			return r.val(""), nil
+		}
+		return r.val(load.currentSrc), nil
+	}, "n")
 	host["setTextContent"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		id := int64(numarg(a, 0))
 		if err := r.document.SetTextContent(id, strarg(a, 1)); err != nil {
@@ -2559,6 +2584,16 @@ func (r *Realm) prepareConnectedResource(childID int64, loadCallback, errorCallb
 		}
 		_, err := r.runtime.Call(ctx, callback, r.runtime.Get("window"))
 		return err
+	}
+	if tag == "AUDIO" || tag == "VIDEO" {
+		r.updateMedia(childID)
+		return nil, nil
+	}
+	if tag == "SOURCE" {
+		if parent, ok := r.document.Get(node.Parent); ok && (parent.TagName == "AUDIO" || parent.TagName == "VIDEO") {
+			r.updateMedia(parent.ID)
+		}
+		return nil, nil
 	}
 	if tag != "SCRIPT" && tag != "IMG" && tag != "LINK" {
 		if tag == "IFRAME" {
