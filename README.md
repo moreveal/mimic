@@ -53,11 +53,11 @@ callbacks and microtasks remain ordered within each Page. See
 Fresh-build results from **September 14, 2026**, against **Chrome 152.0.7977.82** in headless mode, on Windows 11 x64 (Intel i7-14700KF, 31.83 GiB RAM).
 
 <p align="center">
-  <a href="benchmark/runs/09-optimized-20260914/public-summary.md"><img src="docs/assets/benchmark-startup.svg" alt="Mimic and Chrome: CDP readiness and startup memory" width="1200"></a>
+  <a href="benchmark/runs/09-optimized-20260914/public-summary.md"><img src="docs/assets/benchmark-startup-20260914.svg" alt="Mimic and Chrome: CDP readiness and startup memory" width="1200"></a>
 </p>
 
 <p align="center">
-  <a href="benchmark/runs/09-optimized-20260914/public-summary.md"><img src="docs/assets/benchmark-scaling.svg" alt="Static concurrency: active memory and throughput through 50 pages" width="1200"></a>
+  <a href="benchmark/runs/09-optimized-20260914/public-summary.md"><img src="docs/assets/benchmark-scaling-20260914.svg" alt="Static concurrency: active memory and throughput through 50 pages" width="1200"></a>
 </p>
 
 **92% lower ready RSS. 62% less active RAM and 3.32× throughput at 50 static pages.**
