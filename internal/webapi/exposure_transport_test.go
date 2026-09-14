@@ -5,19 +5,11 @@ import (
 	"github.com/dop251/goja"
 	"github.com/moreveal/mimic/compatibility"
 	"reflect"
-	"strings"
 	"testing"
 )
 
 func TestExposureTransportPreservesDescriptorFields(t *testing.T) {
-	start := strings.Index(handwrittenSurface, "  const decodeExposure=")
-	if start < 0 {
-		t.Fatal("missing production decoder")
-	}
-	end := strings.Index(handwrittenSurface[start:], "  const applyTargetExposure=")
-	if end < 0 {
-		t.Fatal("missing production decoder")
-	}
+	section := handwrittenSurfaceSection(t, "const decodeExposure", "const applyTargetExposure")
 	var properties []compatibility.SurfaceProperty
 	for flags := 0; flags < 16; flags++ {
 		for writable := 0; writable < 3; writable++ {
@@ -42,7 +34,7 @@ func TestExposureTransportPreservesDescriptorFields(t *testing.T) {
 		if err = vm.Set("transport", string(data)); err != nil {
 			t.Fatal(err)
 		}
-		v, err := vm.RunString(handwrittenSurface[start:start+end] + `;JSON.stringify(decodeExposure(JSON.parse(transport)))`)
+		v, err := vm.RunString(section + `;JSON.stringify(decodeExposure(JSON.parse(transport)))`)
 		if err != nil {
 			t.Fatal(err)
 		}
