@@ -1056,7 +1056,7 @@ func (r *Realm) installBindingsOnOwner() error {
 		r.eventListenerInvoker = a[0]
 		return nil, nil
 	})
-	host["eventCallbackCheckpoint"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["eventCallbackCheckpoint"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		if p.userScriptDepth != 0 {
 			return nil, nil
 		}
@@ -1160,8 +1160,8 @@ func (r *Realm) installBindingsOnOwner() error {
 	host["gpuCapabilities"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		return r.val(p.environmentView().Graphics.WebGPUProjection()), nil
 	})
-	host["gpuRequestAdapter"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
-		promise := r.runtime.NewPromise()
+	host["gpuRequestAdapter"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		promise := newHostPromise(r.runtime)
 		delay := time.Duration(p.environmentView().Graphics.WebGPU.InitializationDelayMillis * float64(time.Millisecond))
 		r.scheduler.Post(scheduler.Control, delay, func(context.Context) error {
 			g := p.environmentView().Graphics
@@ -1170,10 +1170,10 @@ func (r *Realm) installBindingsOnOwner() error {
 		return promise.Value, nil
 	})
 	performanceIsolated := r.securityState().crossOriginIsolated
-	host["performanceNow"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+	host["performanceNow"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		return r.val(p.performanceClamper.now(r.performanceClockNow(), r.performanceOrigin, performanceIsolated)), nil
 	})
-	host["performanceTimeOrigin"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+	host["performanceTimeOrigin"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		return r.val(float64(p.performanceClamper.micros(r.performanceOrigin.UnixMicro(), performanceIsolated)) / 1000), nil
 	})
 	r.initPerformance(host)
@@ -1512,7 +1512,7 @@ func (r *Realm) installBindingsOnOwner() error {
 		r.document.CopyNodeState(int64(numarg(a, 0)), int64(numarg(a, 1)))
 		return nil, nil
 	}, "nn")
-	host["documentRootID"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["documentRootID"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(r.document.Root().ID), nil
 	})
 	host["getAttribute"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
@@ -1623,6 +1623,12 @@ func (r *Realm) installBindingsOnOwner() error {
 	host["insertPlain"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		child := int64(numarg(a, 1))
 		if err := r.document.InsertNode(int64(numarg(a, 0)), child, int64(numarg(a, 2))); err != nil {
+			if errors.Is(err, dom.ErrInsertionReference) {
+				return r.val(-1), nil
+			}
+			if errors.Is(err, dom.ErrInsertionCycle) {
+				return r.val(-2), nil
+			}
 			return nil, err
 		}
 		delete(r.detached, child)
@@ -1687,18 +1693,50 @@ func (r *Realm) installBindingsOnOwner() error {
 	host["childIDs"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(r.document.ChildIDs(int64(numarg(a, 0)), false)), nil
 	}, "n")
-	host["removeNode"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["insertPlainFragment"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		inserted, err := r.document.InsertPlainFragment(int64(numarg(a, 0)), int64(numarg(a, 1)), int64(numarg(a, 2)))
+		if errors.Is(err, dom.ErrInsertionReference) {
+			return r.val(-1), nil
+		}
+		if errors.Is(err, dom.ErrInsertionCycle) {
+			return r.val(-2), nil
+		}
+		if err != nil {
+			return nil, err
+		}
+		if inserted {
+			r.refreshContentPolicy()
+		}
+		return r.val(inserted), nil
+	}, "nnn")
+	host["drainFragment"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		// Frame removal can synchronously complete a pending navigation. Keep
+		// that callback-bearing path until it can be combined without moving
+		// the load event relative to the removal of individual children.
+		if r.document.HasFrameElements() {
+			return r.val(nil), nil
+		}
+		children, err := r.document.DrainFragment(int64(numarg(a, 0)))
+		if err != nil {
+			return nil, err
+		}
+		if children == nil {
+			children = []int64{}
+		}
+		return r.val(children), nil
+	}, "n")
+	host["removeNode"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		childID := int64(numarg(a, 1))
 		if err := r.document.RemoveNode(int64(numarg(a, 0)), childID); err != nil {
 			return nil, err
 		}
 		r.detachChildFrame(childID)
 		return nil, nil
-	})
-	host["prepareNodeRemoval"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	}, "nn")
+	host["prepareNodeRemoval"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(r.prepareChildFrameRemoval(int64(numarg(a, 0)))), nil
-	})
-	host["completeSynchronousLoad"] = r.fn(func(_ engine.Value, _ []engine.Value) (engine.Value, error) {
+	}, "n")
+	host["completeSynchronousLoad"] = r.transientFn(func(_ engine.Value, _ []engine.Value) (engine.Value, error) {
 		if r.loadCallback != nil {
 			r.navigationLoadEnd = r.scheduler.Now()
 			r.loadCallback(context.Background())
@@ -1714,30 +1752,30 @@ func (r *Realm) installBindingsOnOwner() error {
 	host["setCharacterDataJSON"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return nil, r.document.SetCharacterDataJSON(int64(numarg(a, 0)), strarg(a, 1))
 	}, "ns")
-	host["setTextContent"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["setTextContent"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		id := int64(numarg(a, 0))
 		if err := r.document.SetTextContent(id, strarg(a, 1)); err != nil {
 			return nil, err
 		}
 		return nil, r.prepareChangedScript(id)
 	})
-	host["innerHTML"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["innerHTML"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		value, err := r.document.InnerHTML(int64(numarg(a, 0)))
 		return r.val(value), err
 	})
-	host["outerHTML"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["outerHTML"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		value, err := r.document.OuterHTML(int64(numarg(a, 0)))
 		return r.val(value), err
 	})
-	host["setOuterHTML"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["setOuterHTML"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		name, err := r.document.SetOuterHTML(int64(numarg(a, 0)), strarg(a, 1))
 		return r.val(name), err
 	})
-	host["insertAdjacentHTML"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["insertAdjacentHTML"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		name, err := r.document.InsertAdjacentHTML(int64(numarg(a, 0)), strarg(a, 1), strarg(a, 2))
 		return r.val(name), err
 	})
-	host["setInnerHTML"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["setInnerHTML"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		id := int64(numarg(a, 0))
 		if err := r.document.SetInnerHTML(id, strarg(a, 1)); err != nil {
 			return nil, err
@@ -1886,8 +1924,8 @@ func (r *Realm) installBindingsOnOwner() error {
 		}
 		return r.val(p.historyLength()), nil
 	})
-	host["setTimer"] = r.fn(r.hostTimer)
-	host["clearTimer"] = r.fn(r.hostClearTimer)
+	host["setTimer"] = r.transientFn(r.hostTimer)
+	host["clearTimer"] = r.transientFn(r.hostClearTimer)
 	r.installWindowExceptionReporting(host)
 	host["createWorker"] = r.fn(r.hostCreateWorker)
 	host["createObjectURL"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
@@ -1917,8 +1955,8 @@ func (r *Realm) installBindingsOnOwner() error {
 		}
 		return nil, nil
 	})
-	host["fetch"] = r.fn(r.hostFetch)
-	host["abortFetch"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["fetch"] = r.transientFn(r.hostFetch)
+	host["abortFetch"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		if cancel := r.fetchCancels[strarg(a, 0)]; cancel != nil {
 			cancel()
 		}
@@ -2310,7 +2348,7 @@ func (r *Realm) navigationActivated() bool {
 	return !r.activationConsumed && !r.activationAt.IsZero() && r.scheduler.Now().Sub(r.activationAt) < 5*time.Second
 }
 func (r *Realm) hostFetch(_ engine.Value, a []engine.Value) (engine.Value, error) {
-	promise := r.runtime.NewPromise()
+	promise := newHostPromise(r.runtime)
 	raw := strarg(a, 0)
 	requestID := strarg(a, 4)
 	u, err := r.resolveDocument(raw)

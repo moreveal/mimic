@@ -1,5 +1,24 @@
 # Performance architecture pass
 
+## DOM, Fetch, and V8 lifetime package, 2026-09-14
+
+The [measured campaign](optimization-campaign-20260914.md) is integrated. It removes
+quadratic DOM child copying, redundant document/adoption crossings, temporary V8
+roots, Fetch byte-array conversion, independent response-body copies and per-Page
+bootstrap byte duplication. Rejected hybrid, snapshot, nursery, CSS and spill
+prototypes were removed.
+
+The final Windows Mimic/Chrome checkpoint passed 12/12 gates and 360/360 measured
+single-page attempts. At 50 static Pages Mimic used 1.53 GiB RSS versus Chrome
+3.98 GiB and delivered 3.32x throughput. Warm DOM execution is 96.58 ms versus
+Chrome 29.63 ms, so Chrome parity remains open. A matched Linux control attributes
+a 2.17x DOM execution improvement to this package. The independent Linux 100-Page
+test shows higher marginal Mimic USS (34.90–45.68 MiB/Page versus Chrome
+13.40–25.72 MiB/Page), despite 4.49–6.88x higher throughput. Long-running ownership
+tests show stable V8 roots and collected heap, and release the bounded body store on
+Page close. See the campaign report and [published checkpoint](../../benchmark/runs/09-optimized-20260914/public-summary.md)
+for measurement boundaries and raw evidence.
+
 ## Snapshot hydration and task-boundary capture, 2026-09-11
 
 The [snapshot investigation](snapshot-hydration-20260911.md) fixes inert lazy-load

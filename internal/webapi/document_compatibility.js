@@ -14,7 +14,7 @@ function wrapDocumentNode(data) {
 {
   const member=(prototype,name,value)=>{Object.defineProperty(value,'name',{value:name,configurable:true});markNative(value,name);Object.defineProperty(prototype,name,{value,writable:true,enumerable:true,configurable:true})};
   const accessor=(prototype,name,get,set)=>{if(get)Object.defineProperty(get,'name',{value:'get '+name,configurable:true});if(set)Object.defineProperty(set,'name',{value:'set '+name,configurable:true});markNative(get,name,'get ');markNative(set,name,'set ');Object.defineProperty(prototype,name,{get,set,enumerable:true,configurable:true})};
-  const docID=value=>value===document?host.documentRootID():elementSlot(value)?.nodeId;
+  const docID=value=>value===document?realmDocumentRootID:elementSlot(value)?.nodeId;
   const validDocument=value=>{if(value!==document&&elementSlot(value)?.type!=='document')throw new TypeError('Illegal invocation');return docID(value)};
   // Detached documents have no visible browsing context. Prefixes share the
   // canonical accessors, including their receiver checks, rather than state.
@@ -74,7 +74,11 @@ function wrapDocumentNode(data) {
         const local=name==='createElement'?xmlName(String(args[0])):qualifiedName(namespace,String(args[1]));
         return wrap(host.createDocumentElement(docID(this),namespace,local));
       }
-      return adopt(original.apply(this,args),this)});
+      // The host creates nodes in the active canonical document. Its root ID
+      // is rebound on bootstrap restoration, so ordinary creation needs no
+      // second host lookup or adoption pass.
+      const node=original.apply(this,args);
+      return this===document?node:adopt(node,this)});
   }
   accessor(Document.prototype,'documentElement',function(){validDocument(this);return Array.from(this.childNodes).find(node=>node.nodeType===1)||null});
   const firstChild=Object.getOwnPropertyDescriptor(Node.prototype,'firstChild').get;

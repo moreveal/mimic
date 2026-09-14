@@ -147,10 +147,10 @@ func (s *bootstrapSnapshot) NewRuntime() (engine.Runtime, error) {
 		s.mu.Unlock()
 		return nil, errors.New("bootstrap snapshot is closed")
 	}
-	// The stock SDK releases all native consumers of a StartupData together.
-	// A per-runtime clone permits prompt teardown even while other Pages live;
-	// it costs a Go blob copy in addition to V8's isolate-lifetime native copy.
-	consumer, err := s.blob.Clone()
+	// Every runtime owns its native consumer records, so teardown releases its
+	// native blob even while other Pages live. The serialized Go bytes are
+	// immutable and can share their backing storage with the cache and siblings.
+	consumer, err := s.blob.ShareImmutableBytes()
 	s.mu.Unlock()
 	if err != nil {
 		return nil, err

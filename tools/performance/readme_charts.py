@@ -46,12 +46,17 @@ def load_results(path):
         summary = json.loads(summary_path.read_text(encoding="utf-8"))
         data = {"checkpoint": data["metadata"]["date"][:10], "startup": startup,
                 "concurrency": summary["concurrency"]}
+    completed_levels = None
     for system in SYSTEMS:
         if data["startup"][system]["cdp_ready_ms"]["n"] != 10:
             raise ValueError("Insufficient startup samples")
         rows = sorted([r for r in data["concurrency"] if r["system"] == system and r["workload"] == "static"], key=lambda r: r["n"])
-        if [r["n"] for r in rows] != [1, 5, 10, 25, 50, 100] or any(r["stop"] or r["success_rate"] != 1 for r in rows):
-            raise ValueError("Static scaling chart requires successful measured series at all six levels")
+        levels = {r["n"] for r in rows if not r["stop"] and r["success_rate"] == 1 and r.get("waves", 0) > 0}
+        completed_levels = levels if completed_levels is None else completed_levels & levels
+    completed_levels = sorted(completed_levels or ())
+    if not completed_levels or completed_levels[0] != 1 or len(completed_levels) < 2:
+        raise ValueError("Static scaling chart requires at least two common successful measured levels")
+    data["completed_levels"] = completed_levels
     return data
 
 
@@ -138,9 +143,11 @@ def main():
     fig.text(.045, .10, "Process-tree RSS includes the initial page. This is not per-page memory.", size=12, color=MUTED)
     save(fig, "benchmark-startup", "CDP readiness and process-tree RSS: medians of ten fresh processes per runtime, from the published checkpoint.")
 
-    last = {s: next(r for r in data["concurrency"] if r["system"] == s and r["workload"] == "static" and r["n"] == 100) for s in SYSTEMS}
+    levels = data["completed_levels"]
+    last_n = levels[-1]
+    last = {s: next(r for r in data["concurrency"] if r["system"] == s and r["workload"] == "static" and r["n"] == last_n) for s in SYSTEMS}
     advantage = last["mimic"]["throughput"] > last["chrome"]["throughput"] and last["mimic"]["rss_mib"] < last["chrome"]["rss_mib"]
-    fig = frame("More work. Less active memory." if advantage else "Concurrency: memory and throughput", "Static workload · all six concurrency levels completed in both runtimes", 6.25)
+    fig = frame("More work. Less active memory." if advantage else "Concurrency: memory and throughput", f"Static workload · common completed levels through {last_n} concurrent pages", 6.25)
     legend(fig)
     for rect, metric, title, unit in [
         ([.09, .30, .36, .35], "rss_mib", "Active memory", "GiB RSS · lower is better"),
@@ -150,22 +157,22 @@ def main():
         ymax = 0
         for s in SYSTEMS:
             rows = sorted([r for r in data["concurrency"] if r["system"] == s and r["workload"] == "static"], key=lambda r:r["n"])
-            assert [r["n"] for r in rows] == [1,5,10,25,50,100]
-            assert all(r["success_rate"] == 1 and not r["stop"] for r in rows)
+            rows = [r for r in rows if r["n"] in levels and r["success_rate"] == 1 and not r["stop"] and r.get("waves", 0) > 0]
+            assert [r["n"] for r in rows] == levels
             values = [r[metric]/1024 if metric == "rss_mib" else r[metric] for r in rows]
             ax.plot([r["n"] for r in rows], values, color=COLORS[s], lw=2.6, marker="o", ms=5)
-            ax.annotate(f"{values[-1]:.2f}", (100, values[-1]), xytext=(8,0),
+            ax.annotate(f"{values[-1]:.2f}", (last_n, values[-1]), xytext=(8,0),
                         textcoords="offset points", va="center", color=COLORS[s], weight="bold", size=14)
             ymax = max(ymax, max(values))
-        ax.set_xlim(0, 117)
+        ax.set_xlim(0, last_n*1.17)
         ax.set_ylim(0, ymax*1.16)
-        ax.set_xticks([0,25,50,75,100])
+        ax.set_xticks(levels)
         ax.set_xlabel("Concurrent pages", labelpad=9, size=13)
         ax.set_title(title, loc="left", pad=27, size=16)
         ax.text(0,1.015,unit,transform=ax.transAxes,color=MUTED,size=11)
         style(ax)
     fig.text(.045,.105,"Memory: median with pages retained. Throughput includes page setup and teardown.\nThe separate recovery wait is excluded.",size=12,color=MUTED)
-    save(fig,"benchmark-scaling","Static workload: active process-tree RSS and successful sessions per second at 1, 5, 10, 25, 50 and 100 concurrent pages.")
+    save(fig,"benchmark-scaling",f"Static workload: active process-tree RSS and successful sessions per second at common completed levels through {last_n} concurrent pages.")
 
     if args.receipt:
         artifacts = {p.name: hashlib.sha256(p.read_bytes()).hexdigest() for p in args.output.glob("benchmark-*.svg")}

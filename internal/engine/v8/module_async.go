@@ -76,10 +76,16 @@ func (a *adapter) importModuleAsync(request gov8.DynamicImportRequest, specifier
 		var evaluation engine.Value
 		if loadErr == nil {
 			evaluation, loadErr = a.EvalModule(ctx, source, name, loader)
+			var thrown engine.ThrownValue
+			if errors.As(loadErr, &thrown) {
+				defer a.ReleaseValue(thrown.ThrownValue())
+			}
 		}
 		if evaluation != nil {
 			defer a.ReleaseValue(evaluation)
 		}
+		// An incoming loadErr is borrowed from the module graph, which may
+		// reject several concurrent or later imports with the same exception.
 		_, err := a.runContext(ctx, func(_ *state, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
 			local, err := a.local(scope, retained)
 			if err != nil {

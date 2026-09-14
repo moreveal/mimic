@@ -282,6 +282,7 @@ func (c *Context) Close() error {
 	for _, p := range c.Pages() {
 		c.ClosePage(p.ID)
 	}
+	c.network.Close()
 	c.storageMu.Lock()
 	c.files = nil
 	c.storageMu.Unlock()

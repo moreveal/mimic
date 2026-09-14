@@ -238,7 +238,10 @@ const compatibilityElementState={};
       member(Node.prototype,method,function(node,reference){
         if(mutationDepth||!observers.size&&!otherWorldObservers&&!definitions.size&&!compatibilityElementState.hasModal?.())return original.apply(this,arguments);
         if(!isDOMNode(node))return original.apply(this,arguments);
-        if(method==='removeChild'){if(node.parentNode!==this)throw new DOMException('Not a child','NotFoundError')}else prepareInsertion(this,node,method==='appendChild'?null:reference);
+        // Validate before creating transient observer registrations or running
+        // any of replaceChild's removal steps. The ordinary insertion path
+        // can combine these checks with its canonical mutation in Go.
+        if(method==='removeChild'){if(node.parentNode!==this)throw new DOMException('Not a child','NotFoundError')}else prepareInsertion(this,node,method==='appendChild'?null:reference,true);
         const fragment=node instanceof DocumentFragment,children=fragment?Array.from(node.childNodes):[node],entries=children.map(nodeSnapshot);
         const removed=method==='removeChild'?node:method==='replaceChild'?reference:null;
         const removedEntry=isDOMNode(removed)?nodeSnapshot(removed):null;
@@ -326,7 +329,7 @@ const compatibilityElementState={};
       member(prototype,'prepend',function(...values){if(values.length){const node=convertMutationNodes(values);this.insertBefore(node,this.firstChild)}});
       member(prototype,'replaceChildren',function(...values){
         const node=values.length?convertMutationNodes(values):null;
-        if(node)prepareInsertion(this,node,null);
+        if(node)prepareInsertion(this,node,null,true);
         const removed=Array.from(this.childNodes),entries=removed.map(nodeSnapshot),added=node?(node instanceof DocumentFragment?Array.from(node.childNodes):[node]):[];
         const sources=added.map(nodeSnapshot);for(const child of removed)retainRemoved(child);for(const child of added)if(child.parentNode)retainRemoved(child);
         mutationDepth++;reactionDepth++;

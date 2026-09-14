@@ -1,7 +1,6 @@
 package cdp
 
 import (
-	"context"
 	"strings"
 	"testing"
 
@@ -10,7 +9,7 @@ import (
 
 func TestDOMOuterHTMLSerializesRequestedLiveNode(t *testing.T) {
 	s, addr := runningServer(t)
-	_, err := s.Page.Evaluate(context.Background(), `document.body.innerHTML='<article id="live">before<!--marker--></article>';document.querySelector('#live').firstChild.data='after'`)
+	_, err := evaluatePageFixture(s.Page, `document.body.innerHTML='<article id="live">before<!--marker--></article>';document.querySelector('#live').firstChild.data='after'`)
 	if err != nil {
 		t.Fatal(err)
 	}

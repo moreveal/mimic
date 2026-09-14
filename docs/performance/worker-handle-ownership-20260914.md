@@ -1,0 +1,26 @@
+# Worker lifetime follow-up, 2026-09-14
+
+The implementation and focused tests are part of the selected production
+package. [Oracle and validation logs](data/optimization-20260914/handles/) are
+retained; temporary implementation patches and executables are discarded.
+
+Incremental source patch: `handles-v2-to-v3.patch`, SHA256 `de8d6135a312a65410ccecabc9b90e5e0800261fa53d2a9054a4d3ef90039eca`, applied after selected `handles-v2.patch`. The patch was exported against the exact v2 tree `4e51e5e9712024deae9ae4de774217c54120f0a9`. The opt-in `lifetime_profile_test.go` remains excluded from production patches. No frozen workload, benchmark harness, or original baseline has changed.
+
+Worker timer registrations now own only their callback. Completion, cancellation, self-cancellation, terminal error and Worker termination release that ownership. Callback receivers/results and incoming Worker message delivery temporaries are released together on their native owner thread. The public interval ID remains attached to its registration while scheduler IDs change between ticks. Window timer terminal native errors also remove their registration, including an owner-dispatch failure before invocation starts.
+
+Actual Worker roundtrips exposed a separate residual eleven-root increase per message after timer cleanup. Synchronous structured-clone host callbacks now borrow their arguments, and the deserializer explicitly hands an owned native result back to JavaScript while releasing its private root. Ordinary Go codec callers retain their existing owned-result contract. This does not change wire encoding, serialization policy, or the JavaScript graph's ownership. Exception metadata and Worker message/report hosts also borrow their synchronous arguments.
+
+The new `HostValueReturner` is restricted to the synchronous callback which returns the result. It does not release other native owners or JavaScript references; outside a callback V8 conservatively preserves the original caller-owned value. A focused native test checks both cases and independent ownership.
+
+Correctness evidence captured before the final native test addition:
+
+- Windows focused browser tests passed (4.747 s): real Worker fire/cancel payload cycles, Worker interval errors/self-cancel, terminal Window cleanup, existing Window handled-error intervals, existing completed/canceled timers, DedicatedWorker microtasks, and structured-clone regressions.
+- A single long-lived Worker ran three sequences of 256 completed and 256 canceled timers, each callback capturing 4 KiB. Every post-operation sample returned to exactly the same native root count and zero timer registrations after explicit V8 collection. External memory returned to 8 bytes, before Worker.Close. The callback payload alone totals 6 MiB across these six operations; no RSS or wall-time reduction is claimed from this test.
+- Worker.Close also leaves no accessible runtime, scheduler, or timer registrations on the surviving Go Worker owner.
+- Frozen Chrome 152.0.7977.82 was executed through CDP against the same timer scenario. A first interval tick throws the original TypeError; Worker.onerror gets the same object and five arguments, the second tick still fires, clearInterval cancels subsequent ticks, and a separately JS-owned callback remains usable. Result: `{"ticks":2,"errors":[["Uncaught TypeError: worker-timer-probe",5,true,true]],"saved":42}`. Mimic matches. Raw oracle: `worker-timer-chrome152.json`, source: `worker_timer_oracle.js`. Chrome SHA256: `ea36dd818a90176f1a70616f0363d9be527229389a6c073a0b1688b9e73f67e9`; source SHA256: `f1f793f2010577967ffd832e166f68f900dc13b7baa1514b49e944fbdd97109e`.
+
+Review follow-up: parent-side Worker error delivery now also groups argument/result cleanup on the parent owner, including a native exception consumed from the error callback. Its existing policy of swallowing delivery callback errors remains unchanged. A focused two-runtime test exercises 32 repeated Worker exceptions and throwing parent deliveries, requiring both native root counts to return to baseline while JS-owned exception references survive.
+
+Final validation passed, including the added native handoff and parent error-delivery tests: Windows V8 0.250 s, browser 4.306 s; Linux race V8 1.179 s, browser 14.118 s. The Linux race run repeated the actual long-lived Worker samples and returned roots=35, external=8 bytes, registrations=0 after all six operations. Raw logs: `worker-v3-windows-focused.txt`, `worker-v3-linux-race.txt`; repeat command: `run-worker-v3-race.sh`. These suite durations are validation records, not reportable comparative timings. No new v3 speed claim is made; acceptance is based on demonstrated elimination of repeated Worker retention and Chrome-observable timer correctness, followed by the integrated performance gate.
+
+Boundaries: this patch does not globally rewrite Worker bootstrap roots, parent-side Worker callback ownership, debugger objects, arbitrary Web API owners, or cancellation of all pending asynchronous resources. Native errors returned to a caller still give that caller ownership of ThrownValue; only errors consumed by Worker.reportError are released there. Completed timer roots and captured buffers are demonstrated to recover before owner teardown; universal zero retention for all APIs is not claimed.

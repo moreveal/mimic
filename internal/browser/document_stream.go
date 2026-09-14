@@ -67,7 +67,7 @@ func (r *Realm) installDocumentStream(host map[string]any) {
 		})
 		return r.val(nil), err
 	})
-	host["documentBaseURI"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+	host["documentBaseURI"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		return r.val(r.documentBaseURL().String()), nil
 	})
 }

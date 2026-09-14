@@ -2,6 +2,7 @@ package dom
 
 import (
 	"bytes"
+	"errors"
 	"fmt"
 	"sort"
 	"strings"
@@ -182,6 +183,17 @@ func (d *Document) Get(id int64) (Node, bool) {
 	copy.Children = append([]int64(nil), n.Children...)
 	return copy, true
 }
+
+// IsHTMLScript inspects the canonical node without copying child membership.
+// Script preparation runs after every insertion, including into large ordinary
+// elements; projecting their growing child lists would make insertion quadratic.
+func (d *Document) IsHTMLScript(id int64) bool {
+	d.mu.RLock()
+	defer d.mu.RUnlock()
+	n := d.nodes[id]
+	return n != nil && n.Type == "element" && n.TagName == "SCRIPT" && n.Namespace == "http://www.w3.org/1999/xhtml"
+}
+
 func (d *Document) IsConnected(id int64) bool {
 	d.mu.RLock()
 	defer d.mu.RUnlock()
@@ -554,6 +566,10 @@ func (d *Document) CreateText(data string) Node {
 	d.nodes[n.ID] = n
 	return *n
 }
+
+var ErrInsertionCycle = errors.New("insertion would create a host-inclusive cycle")
+var ErrInsertionReference = errors.New("reference is not a child of the insertion parent")
+
 func (d *Document) InsertNode(parent, child, before int64) error {
 	d.mu.Lock()
 	defer d.mu.Unlock()
@@ -561,8 +577,16 @@ func (d *Document) InsertNode(parent, child, before int64) error {
 	if p == nil || c == nil {
 		return fmt.Errorf("insert nodes do not exist: parent=%d child=%d", parent, child)
 	}
+	if before != 0 {
+		if reference := d.nodes[before]; reference == nil || reference.Parent != parent {
+			return ErrInsertionReference
+		}
+	}
 	if d.hostIncludingContainsLocked(child, parent) {
-		return fmt.Errorf("insertion would create a host-inclusive cycle")
+		return ErrInsertionCycle
+	}
+	if child == before {
+		return nil
 	}
 	if c.Parent != 0 {
 		if old := d.nodes[c.Parent]; old != nil {
@@ -717,6 +741,88 @@ func (d *Document) RemoveNode(parent, child int64) error {
 	c.Parent = 0
 	return nil
 }
+
+// DrainFragment transfers its child list to the caller and clears membership in
+// one pass. It is used after pre-insertion validation; observers and insertion
+// steps remain at the browser boundary. No second DOM representation is kept.
+func (d *Document) DrainFragment(id int64) ([]int64, error) {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	n := d.nodes[id]
+	if n == nil || n.Type != "fragment" {
+		return nil, fmt.Errorf("node %d is not a document fragment", id)
+	}
+	children := n.Children
+	n.Children = nil
+	for _, child := range children {
+		d.nodes[child].Parent = 0
+	}
+	return children, nil
+}
+
+// InsertPlainFragment splices ordinary fragment children once. Resource nodes
+// retain the browser's callback-bearing path; nothing is changed on fallback.
+func (d *Document) InsertPlainFragment(parent, fragment, before int64) (bool, error) {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	p, f := d.nodes[parent], d.nodes[fragment]
+	if p == nil || f == nil || f.Type != "fragment" {
+		return false, fmt.Errorf("invalid fragment insertion")
+	}
+	if before != 0 {
+		if reference := d.nodes[before]; reference == nil || reference.Parent != parent {
+			return false, ErrInsertionReference
+		}
+	}
+	if d.hostIncludingContainsLocked(fragment, parent) {
+		return false, ErrInsertionCycle
+	}
+	if p.TagName == "SCRIPT" || d.hasFrameElements {
+		return false, nil
+	}
+	var plain func(int64) bool
+	plain = func(id int64) bool {
+		n := d.nodes[id]
+		switch n.TagName {
+		case "SCRIPT", "IMG", "LINK", "IFRAME":
+			return false
+		}
+		for _, child := range n.Children {
+			if !plain(child) {
+				return false
+			}
+		}
+		return true
+	}
+	if !plain(fragment) {
+		return false, nil
+	}
+	children := f.Children
+	if len(children) == 0 {
+		return true, nil
+	}
+	index := len(p.Children)
+	if before != 0 {
+		for i, id := range p.Children {
+			if id == before {
+				index = i
+				break
+			}
+		}
+	}
+	f.Children = nil
+	owner := d.ownerDocumentLocked(parent)
+	for _, id := range children {
+		d.nodes[id].Parent = parent
+		d.adoptNodeLocked(id, owner)
+	}
+	length := len(p.Children)
+	p.Children = append(p.Children, children...)
+	copy(p.Children[index+len(children):], p.Children[index:length])
+	copy(p.Children[index:], children)
+	return true, nil
+}
+
 func (d *Document) TextContent(id int64) string {
 	d.mu.RLock()
 	defer d.mu.RUnlock()

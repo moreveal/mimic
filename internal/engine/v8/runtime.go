@@ -857,12 +857,47 @@ func (a *adapter) NewPromise() engine.Promise {
 	promise := a.GetProperty(value, "0")
 	resolve := a.GetProperty(value, "1")
 	reject := a.GetProperty(value, "2")
-	settle := func(function engine.Value, value any) error {
-		argument := a.Value(value)
-		_, err := a.Call(context.Background(), function, nil, argument)
-		return err
+	a.ReleaseValue(value)
+	settled := false // accessed on the isolate owner, including reentrant calls
+	settle := func(rejected bool, value any) error {
+		return a.RunOnOwner(context.Background(), func(ctx context.Context) error {
+			if settled {
+				return nil
+			}
+			// Claim before invoking the resolver: a then getter can reenter a host
+			// callback and try to settle again. A mutex/Once held across the call
+			// would deadlock that same-isolate reentry.
+			settled = true
+			defer a.ReleaseValue(resolve)
+			defer a.ReleaseValue(reject)
+			argument, borrowed := value.(engine.Value)
+			if !borrowed {
+				argument = a.Value(value)
+				defer a.ReleaseValue(argument)
+			}
+			function := resolve
+			if rejected {
+				function = reject
+			}
+			result, err := a.Call(ctx, function, nil, argument)
+			a.ReleaseValue(result)
+			return err
+		})
 	}
-	return engine.Promise{Value: promise, Resolve: func(v any) error { return settle(resolve, v) }, Reject: func(v any) error { return settle(reject, v) }}
+	// Value is owned by the caller; resolver cleanup must not invalidate callers
+	// which await the returned Promise through this handle after settlement.
+	return engine.Promise{Value: promise, Resolve: func(v any) error { return settle(false, v) }, Reject: func(v any) error { return settle(true, v) }}
+}
+
+func (a *adapter) NewHostPromise() engine.Promise {
+	promise := a.NewPromise()
+	if a.onCallback() != nil {
+		// The callback's local handle remains valid through return marshalling.
+		// Thereafter JavaScript owns the Promise and the pending resolvers own
+		// only the operation, without an additional realm-lifetime Promise root.
+		a.ReleaseValue(promise.Value)
+	}
+	return promise
 }
 
 func (a *adapter) Await(value engine.Value) (engine.Value, bool, error) {
@@ -1122,17 +1157,53 @@ func (a *adapter) newGlobal(scope *gov8.Scope, local gov8.Value) (*gov8.Global, 
 // JavaScript references to the same object remain valid.
 func (a *adapter) ReleaseValue(value engine.Value) {
 	v, ok := value.(*runtimeValue)
-	if !ok || v == nil || v.runtime != a || v.global == nil {
+	if !ok || v == nil || v.runtime != a {
 		return
 	}
-	_, _ = a.run(func(_ *state, _ *gov8.Context, _ *gov8.Scope) (engine.Value, error) {
+	// Closing a Global needs the owner thread but no context or local scope.
+	// Inspect it there as well, so concurrent release attempts cannot race.
+	_, _ = a.owner.execute(func(_ *state) response {
 		if v.global != nil {
 			delete(a.globals, v.global)
 			_ = v.global.Close()
 			v.global = nil
 		}
-		return nil, nil
+		return response{}
 	})
+}
+
+func (a *adapter) RetainValue(value engine.Value) engine.Value {
+	if callback := a.onCallback(); callback != nil {
+		local, err := a.localCallback(value)
+		if err != nil {
+			return nil
+		}
+		retained, _ := a.persist(callback.scope.Scope(), local)
+		return retained
+	}
+	retained, _ := a.run(func(_ *state, _ *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
+		local, err := a.local(scope, value)
+		if err != nil {
+			return nil, err
+		}
+		return a.persist(scope, local)
+	})
+	return retained
+}
+
+func (a *adapter) ReturnValueAndRelease(value engine.Value) engine.Value {
+	callback := a.onCallback()
+	if callback == nil {
+		return value
+	}
+	local, err := a.localCallback(value)
+	if err != nil {
+		return value
+	}
+	// ToLocal above belongs to the callback scope, which outlives return
+	// marshalling even when the original owned result came from an inner scope.
+	a.ReleaseValue(value)
+	return &runtimeValue{runtime: a, local: local, borrowed: true, callbackID: callback.id}
 }
 
 func (a *adapter) persist(scope *gov8.Scope, local gov8.Value) (engine.Value, error) {
@@ -1191,6 +1262,9 @@ func (a *adapter) localCallbackOrUndefined(scope *gov8.CallbackScope, value engi
 }
 
 func (a *adapter) marshal(scope *gov8.Scope, realm *gov8.Context, value any) (gov8.Value, error) {
+	if buffer, ok := value.(engine.BinaryBuffer); ok {
+		return marshalBinaryBuffer(scope, realm, buffer)
+	}
 	if engineValue, ok := value.(engine.Value); ok {
 		return a.local(scope, engineValue)
 	}
@@ -1362,6 +1436,7 @@ func (a *adapter) makeFunction(scope *gov8.Scope, realm *gov8.Context, function 
 			// when it crosses this host callback instead of constructing a new Error.
 			var thrown *callException
 			if errors.As(e, &thrown) {
+				defer a.ReleaseValue(thrown.value)
 				if exception, valueErr := a.localCallback(thrown.value); valueErr == nil {
 					_ = cs.ThrowException(exception)
 					return
@@ -1574,6 +1649,9 @@ func localResultString(value gov8.Value, realm *gov8.Context) string {
 }
 
 func callbackValue(scope *gov8.CallbackScope, realm *gov8.Context, result gov8.ReturnValue, value any) (gov8.Value, error) {
+	if buffer, ok := value.(engine.BinaryBuffer); ok {
+		return marshalBinaryBuffer(scope.Scope(), realm, buffer)
+	}
 	// DOM result lists are plain by-value records. One native JSON parse replaces
 	// one FFI call per property/array slot; arbitrary host objects keep the
 	// existing recursive conversion (not all Go values have JSON semantics).
@@ -1676,6 +1754,9 @@ func callbackValue(scope *gov8.CallbackScope, realm *gov8.Context, result gov8.R
 // Do not let JSON silently serialize engine values, custom structs or marshalers
 // that the recursive engine conversion does not support.
 func callbackJSONEligible(value any) bool {
+	if _, ok := value.(engine.BinaryBuffer); ok {
+		return false
+	}
 	switch value.(type) {
 	case nil, string, bool, int, int8, int16, int32, int64, uint, uint8, uint16, uint32, uint64, float32, float64:
 		return true

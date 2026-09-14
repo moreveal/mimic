@@ -46,6 +46,37 @@ remains a release step so that dates, claims and images stay on one checkpoint.
 The original frozen `benchmark/run.py` and `run.ps1` remain unchanged; use
 `full_gate.py` for the automatic presentation output.
 
+`python tools/performance/publish_checkpoint.py benchmark/runs/RUN` exports the
+full checkpoint's numerical data and a readable summary. It verifies raw and
+summary hashes, retains failed/excluded samples, and withholds comparative
+latency for incomplete or failed series. It does not modify the raw record,
+frozen generator, original baseline or publish to an external repository.
+
+## Matched Linux comparison
+
+Run all engines, the fixture server and controller inside the same Linux
+environment. `linux_compare.py` imports the unchanged fixture server, expected
+results and harness fingerprint. It uses the same flattened CDP client for
+Mimic, pinned Chrome 152 and Lightpanda. This is an additional adapter; its
+timings and Linux USS/PSS must not be pooled with frozen Windows observations.
+
+```
+python tools/performance/linux_compare.py --output benchmark/runs/LINUX-RUN --engine control=/absolute/control --engine candidate=/absolute/candidate --engine chrome=/absolute/chrome --engine lightpanda=/absolute/lightpanda --rounds 4 --iterations 5
+python tools/performance/linux_capacity.py --output benchmark/runs/LINUX-CAPACITY --engine control=/absolute/control --engine candidate=/absolute/candidate --engine chrome=/absolute/chrome --engine lightpanda=/absolute/lightpanda --rounds 2 --waves 3
+```
+
+Build control and candidate first, then stop other heavy jobs. The adapters
+alternate engine order across rounds, check binary hashes before launch and
+retain excluded warmups, semantic failures, resource requests, source/version
+receipts, CPU and memory observations. Lightpanda loads all supported resource
+types with CORS enabled; a missing or failed workload is never counted as fast
+success. A single-page summary requires every planned sample and warmup to pass.
+No forced collection is used. Capacity measures 1/5/10/25/50/100 retained Pages,
+including creation and teardown in throughput and a separate 250 ms recovery
+sample. Failures, memory pressure or sustained paging stop a series. Linux
+process CPU includes sampled descendants; short-lived exited children can be
+missed. Read the raw policy and failure records before making comparisons.
+
 ## CDP operation latency diagnostics
 
 `python tools/performance/frame_bridge_probe.py --binary .build/mimic.exe --output .build/frame-bridge-UNIQUE`

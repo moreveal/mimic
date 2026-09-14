@@ -57,14 +57,68 @@ func (r *runtime) run(ctx context.Context, execute func() (goja.Value, error)) (
 	return value{v}, nil
 }
 
-func nativeValue(v any) any {
+func (r *runtime) nativeValue(v any) any {
 	if wrapped, ok := v.(value); ok {
 		return wrapped.v
 	}
-	return v
+	out, _ := r.binaryProjection(v, nil)
+	return out
 }
 
-func (r *runtime) Set(name string, v any) error { return r.vm.Set(name, nativeValue(v)) }
+// Retain the existing live Go map/slice projection when no explicit binary
+// value occurs. Only records containing BinaryBuffer need a converted copy.
+func (r *runtime) binaryProjection(v any, path []uintptr) (any, bool) {
+	// Ordinary Go projections may be cyclic. Leave back edges untouched; this
+	// conversion is only needed for acyclic, by-value binary transport records.
+	switch v.(type) {
+	case map[string]any, []any:
+		identity := uintptr(reflect.ValueOf(v).UnsafePointer())
+		for _, parent := range path {
+			if parent == identity {
+				return v, false
+			}
+		}
+		path = append(path, identity)
+	}
+	switch v := v.(type) {
+	case engine.BinaryBuffer:
+		return r.vm.NewArrayBuffer(append([]byte(nil), v...)), true
+	case map[string]any:
+		var out map[string]any
+		for key, member := range v {
+			converted, changed := r.binaryProjection(member, path)
+			if changed {
+				if out == nil {
+					out = make(map[string]any, len(v))
+					for name, original := range v {
+						out[name] = original
+					}
+				}
+				out[key] = converted
+			}
+		}
+		if out != nil {
+			return out, true
+		}
+	case []any:
+		var out []any
+		for index, member := range v {
+			converted, changed := r.binaryProjection(member, path)
+			if changed {
+				if out == nil {
+					out = append([]any(nil), v...)
+				}
+				out[index] = converted
+			}
+		}
+		if out != nil {
+			return out, true
+		}
+	}
+	return v, false
+}
+
+func (r *runtime) Set(name string, v any) error { return r.vm.Set(name, r.nativeValue(v)) }
 func (r *runtime) Get(name string) engine.Value {
 	v := r.vm.Get(name)
 	if v == nil {
@@ -72,7 +126,7 @@ func (r *runtime) Get(name string) engine.Value {
 	}
 	return value{v}
 }
-func (r *runtime) Value(v any) engine.Value { return value{r.vm.ToValue(nativeValue(v))} }
+func (r *runtime) Value(v any) engine.Value { return value{r.vm.ToValue(r.nativeValue(v))} }
 func (r *runtime) GetProperty(v engine.Value, name string) engine.Value {
 	property := unwrap(v).ToObject(r.vm).Get(name)
 	if property == nil {
@@ -81,7 +135,7 @@ func (r *runtime) GetProperty(v engine.Value, name string) engine.Value {
 	return value{property}
 }
 func (r *runtime) SetProperty(v engine.Value, name string, x any) error {
-	return unwrap(v).ToObject(r.vm).Set(name, nativeValue(x))
+	return unwrap(v).ToObject(r.vm).Set(name, r.nativeValue(x))
 }
 func (r *runtime) TypeOf(v engine.Value) string {
 	x := unwrap(v)
@@ -253,8 +307,8 @@ func (r *runtime) NewPromise() engine.Promise {
 	p, resolve, reject := r.vm.NewPromise()
 	return engine.Promise{
 		Value:   value{r.vm.ToValue(p)},
-		Resolve: func(v any) error { return resolve(v) },
-		Reject:  func(v any) error { return reject(v) },
+		Resolve: func(v any) error { return resolve(r.nativeValue(v)) },
+		Reject:  func(v any) error { return reject(r.nativeValue(v)) },
 	}
 }
 func (r *runtime) Await(v engine.Value) (engine.Value, bool, error) {

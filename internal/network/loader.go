@@ -105,6 +105,10 @@ type Request struct {
 	chain               requestChain
 }
 type Response struct {
+	// A weak internal sharing hint, never an extra owner. Public consumers get
+	// independent mutable Body bytes and never carry this hint across calls.
+	sharedBody     *storedBody
+	bodyStorageErr error
 	// Referrer is the committed navigation referrer after request policy/redirects.
 	Referrer        string
 	Redirected      bool
@@ -144,6 +148,7 @@ func (t HTTPTransport) RoundTrip(r *http.Request) (*http.Response, error) { retu
 type Loader struct {
 	ignoreCertificateErrors atomic.Bool
 	ownsTransport           bool
+	ownsSession             bool
 	activityMu              sync.Mutex
 	activeLoads             int
 	documentLoadSequence    uint64
@@ -160,10 +165,13 @@ type Loader struct {
 	completedMu             sync.RWMutex
 	completed               map[string]Response
 	completedOrder          []string
+	completedClosed         bool
 }
 
 func NewLoader(env func() state.Environment, cookies *CookieStore, tr *trace.Recorder) *Loader {
-	return NewLoaderWithSession(env, cookies, NewSessionState(), tr)
+	loader := NewLoaderWithSession(env, cookies, NewSessionState(), tr)
+	loader.ownsSession = true
+	return loader
 }
 func NewLoaderWithSession(env func() state.Environment, cookies *CookieStore, session *SessionState, tr *trace.Recorder) *Loader {
 	transport := http.DefaultTransport.(*http.Transport).Clone()
@@ -194,6 +202,7 @@ func (l *Loader) Use(i Interceptor) func() {
 	}
 }
 func (l *Loader) Load(ctx context.Context, r Request) (response Response, loadErr error) {
+	defer func() { response.sharedBody = nil }()
 	l.beginActivity()
 	defer l.endActivity()
 	if err := ctx.Err(); err != nil {
@@ -334,7 +343,9 @@ func (l *Loader) Load(ctx context.Context, r Request) (response Response, loadEr
 		}
 		return l.after(ctx, r, Response{Status: http.StatusOK, Headers: headers, Body: body, URL: r.URL, Synthetic: true})
 	}
-	if cached, ok := l.cachedResponse(r, snapshot); ok {
+	if cached, ok, err := l.cachedResponse(r, snapshot); err != nil {
+		l.trace.Add(trace.Error, "responseBodyRead", map[string]any{"id": r.ID, "error": err.Error(), "owner": "cache"})
+	} else if ok {
 		l.trace.Add(trace.Network, "cacheHit", map[string]any{"id": r.ID, "url": r.URL.String()})
 		cached.FromCache = true
 		// The bytes/headers describe the stored representation; elapsed time and
@@ -403,17 +414,22 @@ func (l *Loader) Load(ctx context.Context, r Request) (response Response, loadEr
 		r.criticalCHRestarted = true
 		return l.Load(ctx, r)
 	}
-	l.session.PutCached(r, res, time.Now())
+	res, err = l.session.putCached(r, res, time.Now())
+	if err != nil {
+		// Retaining an inspector/cache copy is independent of successful
+		// resource delivery. Preserve the storage failure as a diagnostic.
+		l.trace.Add(trace.Error, "responseBodyStorage", map[string]any{"id": r.ID, "error": err.Error(), "owner": "cache"})
+	}
 	return l.after(ctx, r, res)
 }
 
-func (l *Loader) cachedResponse(request Request, policy PolicySnapshot) (Response, bool) {
+func (l *Loader) cachedResponse(request Request, policy PolicySnapshot) (Response, bool, error) {
 	// Chrome's cacheDisabled bypasses reads, while the successful network
 	// response still refreshes the shared HTTP cache for other Pages.
 	if policy.CacheDisabled {
-		return Response{}, false
+		return Response{}, false, nil
 	}
-	return l.session.GetCached(request, time.Now())
+	return l.session.getCached(request, time.Now())
 }
 
 func criticalClientHintsForRestart(environment state.Environment, request Request, response Response, acceptedBefore map[string]bool) []string {
@@ -564,11 +580,21 @@ func applyBrowserRequestHeaders(r *Request) {
 func (l *Loader) after(ctx context.Context, r Request, res Response) (Response, error) {
 	res.Referrer = r.Headers.Get("Referer")
 	interceptors := l.interceptorSnapshot()
+	originalBody := res.sharedBody
 	for n := len(interceptors) - 1; n >= 0; n-- {
+		// After owns a mutable response and can change bytes in place. The HTTP
+		// cache retains the original representation; inspector history retains
+		// the final response. Do not reuse a pre-interception body hint.
+		res.sharedBody = nil
 		var err error
 		res, err = interceptors[n].After(ctx, r, res)
 		if err != nil {
 			return Response{}, err
+		}
+	}
+	if len(interceptors) != 0 && originalBody != nil {
+		if originalBody.matches(res.Body) {
+			res.sharedBody = originalBody
 		}
 	}
 	encodedBodySize := res.EncodedBodySize
@@ -595,7 +621,9 @@ func (l *Loader) after(ctx context.Context, r Request, res Response) (Response, 
 		"performanceURL": r.performanceURL(), "performanceRedirectEnd": r.redirectEnd,
 		"performanceRedirectCount": r.redirectCount, "performanceTimingAllowFailed": r.performanceTimingAllowFailed(res.Headers),
 		"performanceCORSAccessible": r.Initiator == Fetch && r.Mode != "no-cors" && corsResponseAllowed(r, res.Headers), "synthetic": res.Synthetic, "context": r.ContextID, "performanceOwner": r.PerformanceOwner, "performanceStart": r.PerformanceStart})
-	l.remember(r.ID, res)
+	if err := l.remember(r.ID, res); err != nil {
+		l.trace.Add(trace.Error, "responseBodyStorage", map[string]any{"id": r.ID, "error": err.Error(), "owner": "history"})
+	}
 	l.trace.Add(trace.Resource, "loadEnd", map[string]any{"id": r.ID, "url": r.URL.String(), "status": res.Status, "type": r.Initiator})
 	if fetchCrossOrigin(r) && !r.corsPreflight && r.Mode != "no-cors" && !corsResponseAllowed(r, res.Headers) {
 		return Response{}, fmt.Errorf("CORS response denied")
@@ -683,44 +711,120 @@ func (l *Loader) interceptorSnapshot() []Interceptor {
 	defer l.interceptorsMu.RUnlock()
 	return append([]Interceptor(nil), l.interceptors...)
 }
-func (l *Loader) remember(id string, res Response) {
+func (l *Loader) remember(id string, res Response) error {
+	body, err := l.session.responseBodies.retainResponse(res)
 	l.completedMu.Lock()
-	defer l.completedMu.Unlock()
+	if l.completedClosed {
+		l.completedMu.Unlock()
+		body.release()
+		return nil
+	}
 	copy := res
-	copy.Body = append([]byte(nil), res.Body...)
+	copy.Body, copy.sharedBody = nil, body
+	copy.bodyStorageErr = err
 	copy.Headers = res.Headers.Clone()
+	var dropped []*storedBody
+	if old, ok := l.completed[id]; ok {
+		dropped = append(dropped, old.sharedBody)
+		l.completedOrder = slices.DeleteFunc(l.completedOrder, func(previous string) bool { return previous == id })
+	}
 	l.completed[id] = copy
 	l.completedOrder = append(l.completedOrder, id)
 	if len(l.completedOrder) > 128 {
 		old := l.completedOrder[0]
 		l.completedOrder = l.completedOrder[1:]
+		dropped = append(dropped, l.completed[old].sharedBody)
 		delete(l.completed, old)
 	}
+	l.completedMu.Unlock()
+	for _, body := range dropped {
+		body.release()
+	}
+	return err
 }
 func (l *Loader) Completed(id string) (Response, bool) {
 	l.completedMu.RLock()
-	defer l.completedMu.RUnlock()
 	r, ok := l.completed[id]
-	if ok {
-		r.Body = append([]byte(nil), r.Body...)
-		r.Headers = r.Headers.Clone()
+	retained := ok && r.bodyStorageErr == nil && r.sharedBody.retain()
+	l.completedMu.RUnlock()
+	if !retained {
+		return Response{}, false
 	}
-	return r, ok
+	defer r.sharedBody.release()
+	var err error
+	r.Body, err = r.sharedBody.copyBytes()
+	if err != nil {
+		l.trace.Add(trace.Error, "responseBodyRead", map[string]any{"id": id, "error": err.Error()})
+		return Response{}, false
+	}
+	r.Headers = r.Headers.Clone()
+	r.sharedBody = nil
+	return r, true
 }
 
 // CompletedURL returns the latest retained response for an absolute URL.
 func (l *Loader) CompletedURL(rawURL string) (Response, bool) {
 	l.completedMu.RLock()
-	defer l.completedMu.RUnlock()
+	var response Response
+	found := false
 	for i := len(l.completedOrder) - 1; i >= 0; i-- {
 		r, ok := l.completed[l.completedOrder[i]]
 		if ok && r.URL != nil && r.URL.String() == rawURL {
-			r.Body = append([]byte(nil), r.Body...)
-			r.Headers = r.Headers.Clone()
-			return r, true
+			response = r
+			found = r.bodyStorageErr == nil && r.sharedBody.retain()
+			break
 		}
 	}
-	return Response{}, false
+	l.completedMu.RUnlock()
+	if !found {
+		return Response{}, false
+	}
+	defer response.sharedBody.release()
+	var err error
+	response.Body, err = response.sharedBody.copyBytes()
+	if err != nil {
+		l.trace.Add(trace.Error, "responseBodyRead", map[string]any{"url": rawURL, "error": err.Error()})
+		return Response{}, false
+	}
+	response.Headers = response.Headers.Clone()
+	response.sharedBody = nil
+	return response, true
+}
+
+// CompletedBody projects directly from retained immutable storage to CDP's
+// string result without allocating an independent raw-body copy.
+func (l *Loader) CompletedBody(id string) (string, bool, bool, error) {
+	l.completedMu.RLock()
+	response, found := l.completed[id]
+	if found && response.bodyStorageErr != nil {
+		l.completedMu.RUnlock()
+		return "", false, true, response.bodyStorageErr
+	}
+	retained := found && response.sharedBody.retain()
+	l.completedMu.RUnlock()
+	if !retained {
+		return "", false, false, nil
+	}
+	defer response.sharedBody.release()
+	body, encoded, err := response.sharedBody.protocolBody()
+	return body, encoded, true, err
+}
+
+// CloseResponseBodies releases Page-owned history even when the closed Page
+// object remains reachable through its Context. Cache owners are independent.
+func (l *Loader) CloseResponseBodies() {
+	l.completedMu.Lock()
+	l.completedClosed = true
+	completed := l.completed
+	l.completed = make(map[string]Response)
+	l.completedOrder = nil
+	l.completedMu.Unlock()
+	for _, response := range completed {
+		response.sharedBody.release()
+	}
+	if l.ownsSession {
+		l.session.Close()
+	}
 }
 
 // ReferrerValue is shared by the wire request and inline document navigation.

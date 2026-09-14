@@ -11,8 +11,12 @@ import (
 
 func (w *DedicatedWorker) installFetch(host map[string]any, lifetime context.Context) {
 	w.fetchCancels = make(map[string]context.CancelFunc)
-	host["fetch"] = w.runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
-		promise := w.runtime.NewPromise()
+	function := w.runtime.Function
+	if runtime, ok := w.runtime.(interface{ TransientFunction(engine.Function) any }); ok {
+		function = runtime.TransientFunction
+	}
+	host["fetch"] = function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		promise := newHostPromise(w.runtime)
 		target, err := resolveURL(w.url, strarg(args, 0))
 		if err != nil {
 			_ = promise.Reject(err.Error())
@@ -66,7 +70,7 @@ func (w *DedicatedWorker) installFetch(host map[string]any, lifetime context.Con
 		w.signal()
 		return promise.Value, nil
 	})
-	host["abortFetch"] = w.runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+	host["abortFetch"] = function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		if cancel := w.fetchCancels[strarg(args, 0)]; cancel != nil {
 			cancel()
 		}

@@ -746,12 +746,9 @@ func (s *session) handleCommand(m message) (afterUnlock func()) {
 			err = s.interceptor.Resolve(stringValue(p["interceptionId"]), a)
 		}
 	case "Network.getResponseBody":
-		if response, ok := s.page.Loader().Completed(stringValue(p["requestId"])); ok {
-			body := string(response.Body)
-			encoded := !utf8.Valid(response.Body)
-			if encoded {
-				body = base64.StdEncoding.EncodeToString(response.Body)
-			}
+		if body, encoded, ok, bodyErr := s.page.Loader().CompletedBody(stringValue(p["requestId"])); bodyErr != nil {
+			err = bodyErr
+		} else if ok {
 			result = map[string]any{"body": body, "base64Encoded": encoded}
 		} else {
 			err = fmt.Errorf("unknown request id")

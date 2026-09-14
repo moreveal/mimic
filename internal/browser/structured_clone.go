@@ -11,7 +11,7 @@ import (
 // In particular, no JS object graph is exported through Go for message delivery.
 func installStructuredCloneHost(host map[string]any, runtime engine.Runtime) {
 	if detector, ok := runtime.(engine.StructuredCloneProxyRuntime); ok {
-		host["cloneIsProxy"] = runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		host["cloneIsProxy"] = transientRuntimeFunction(runtime, func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 			return runtime.Value(detector.IsStructuredCloneProxy(args[0])), nil
 		})
 	}
@@ -19,7 +19,7 @@ func installStructuredCloneHost(host map[string]any, runtime engine.Runtime) {
 	if !ok {
 		return
 	}
-	host["serializeClone"] = runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+	host["serializeClone"] = transientRuntimeFunction(runtime, func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		bytes, err := codec.SerializeStructuredClone(args[0], args[1])
 		var cloneError *engine.DataCloneError
 		if errors.As(err, &cloneError) {
@@ -30,14 +30,22 @@ func installStructuredCloneHost(host map[string]any, runtime engine.Runtime) {
 		}
 		return runtime.Value([]any{true, base64.StdEncoding.EncodeToString(bytes)}), nil
 	})
-	host["deserializeClone"] = runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+	host["deserializeClone"] = transientRuntimeFunction(runtime, func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		bytes, err := base64.StdEncoding.DecodeString(args[0].String())
 		if err != nil {
 			return nil, err
 		}
+		var result engine.Value
 		if decoder, ok := runtime.(engine.StructuredClonePlatformDecoder); ok && len(args) > 1 {
-			return decoder.DeserializeStructuredClonePlatform(bytes, args[1])
+			result, err = decoder.DeserializeStructuredClonePlatform(bytes, args[1])
+		} else {
+			result, err = codec.DeserializeStructuredClone(bytes)
 		}
-		return codec.DeserializeStructuredClone(bytes)
+		if err == nil {
+			if owner, ok := runtime.(engine.HostValueReturner); ok {
+				result = owner.ReturnValueAndRelease(result)
+			}
+		}
+		return result, err
 	})
 }

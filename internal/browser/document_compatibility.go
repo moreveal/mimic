@@ -165,10 +165,10 @@ func (r *Realm) installDocumentCompatibility(host map[string]any) {
 		}
 		return r.val(r.lastModified.UnixMilli()), nil
 	})
-	host["createDocumentFragment"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+	host["createDocumentFragment"] = r.transientFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		return r.val(nodeData(r.document.CreateDocumentFragment())), nil
 	})
-	host["parseInertDocument"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+	host["parseInertDocument"] = r.transientFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		node, err := r.document.ParseInertDocument(strarg(args, 0), strarg(args, 1), r.documentURL().String())
 		if err != nil {
 			return nil, err
@@ -184,13 +184,13 @@ func (r *Realm) installDocumentCompatibility(host map[string]any) {
 	host["elementByID"] = r.packedFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		return r.val(r.document.ElementByID(int64(numarg(args, 0)), strarg(args, 1))), nil
 	}, "ns")
-	host["createXMLDocument"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+	host["createXMLDocument"] = r.transientFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		return r.val(nodeData(r.document.CreateXMLDocument(strarg(args, 0), strarg(args, 1)))), nil
 	})
-	host["createDocumentElement"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+	host["createDocumentElement"] = r.transientFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		return r.val(nodeData(r.document.CreateDocumentElement(int64(numarg(args, 0)), strarg(args, 1), strarg(args, 2)))), nil
 	})
-	host["createHTMLDocument"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+	host["createHTMLDocument"] = r.transientFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		var title *string
 		if len(args) > 0 {
 			value := strarg(args, 0)
@@ -201,8 +201,8 @@ func (r *Realm) installDocumentCompatibility(host map[string]any) {
 	host["nodeOwnerDocument"] = r.packedFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		return r.val(r.document.OwnerDocumentID(int64(numarg(args, 0)))), nil
 	}, "n")
-	host["adoptNodeDocument"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+	host["adoptNodeDocument"] = r.packedFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		r.document.AdoptNode(int64(numarg(args, 0)), int64(numarg(args, 1)))
 		return nil, nil
-	})
+	}, "nn")
 }

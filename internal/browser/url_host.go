@@ -20,7 +20,11 @@ func resolveURL(base *url.URL, raw string) (*url.URL, error) {
 }
 
 func installURLHost(host map[string]any, runtime engine.Runtime, baseURL func() *url.URL) {
-	host["urlParts"] = runtime.Function(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	function := runtime.Function
+	if borrowed, ok := runtime.(interface{ TransientFunction(engine.Function) any }); ok {
+		function = borrowed.TransientFunction
+	}
+	host["urlParts"] = function(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		base := baseURL()
 		if len(a) > 1 && strarg(a, 1) == "" {
 			reference, err := url.Parse(strarg(a, 0))
@@ -61,7 +65,7 @@ func installURLHost(host map[string]any, runtime engine.Runtime, baseURL func() 
 		}
 		return runtime.Value(map[string]any{"href": u.String(), "origin": origin, "protocol": u.Scheme + ":", "username": usernameOf(u), "password": passwordOf(u), "host": u.Host, "hostname": u.Hostname(), "port": u.Port(), "pathname": u.EscapedPath(), "search": search, "hash": hash}), nil
 	})
-	host["setURLPart"] = runtime.Function(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["setURLPart"] = function(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		u, err := url.Parse(strarg(a, 0))
 		if err != nil {
 			return nil, err

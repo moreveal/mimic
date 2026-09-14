@@ -1,6 +1,7 @@
 package network
 
 import (
+	"errors"
 	"net/http"
 	"net/url"
 	"slices"
@@ -13,11 +14,13 @@ import (
 // SessionState owns network resources shared by one browser context. Request
 // overrides belong to each Page's Loader, not to this shared resource store.
 type SessionState struct {
-	mu          sync.RWMutex
-	cache       map[string][]cacheEntry
-	clientHints map[string]map[string]bool
-	blobs       map[string]blobEntry
-	connections map[string]ConnectionRecord
+	mu             sync.RWMutex
+	responseBodies *bodyStore
+	closed         bool
+	cache          map[string][]cacheEntry
+	clientHints    map[string]map[string]bool
+	blobs          map[string]blobEntry
+	connections    map[string]ConnectionRecord
 }
 type blobEntry struct {
 	body        []byte
@@ -55,7 +58,7 @@ type ConnectionAttempt struct {
 }
 
 func NewSessionState() *SessionState {
-	return &SessionState{cache: map[string][]cacheEntry{}, clientHints: map[string]map[string]bool{}, blobs: map[string]blobEntry{}, connections: map[string]ConnectionRecord{}}
+	return &SessionState{responseBodies: newBodyStore(), cache: map[string][]cacheEntry{}, clientHints: map[string]map[string]bool{}, blobs: map[string]blobEntry{}, connections: map[string]ConnectionRecord{}}
 }
 
 func connectionKey(u *url.URL) (string, string) {
@@ -127,7 +130,29 @@ func (s *SessionState) Blob(raw string) ([]byte, string, bool) {
 	s.mu.RUnlock()
 	return append([]byte(nil), entry.body...), entry.contentType, ok
 }
-func (s *SessionState) ClearCache() { s.mu.Lock(); s.cache = map[string][]cacheEntry{}; s.mu.Unlock() }
+func (s *SessionState) ClearCache() {
+	s.mu.Lock()
+	cache := s.cache
+	s.cache = map[string][]cacheEntry{}
+	s.mu.Unlock()
+	for _, variants := range cache {
+		for _, entry := range variants {
+			entry.response.sharedBody.release()
+		}
+	}
+}
+
+// Close follows Page teardown and drops the Context's remaining storage owners.
+func (s *SessionState) Close() {
+	s.mu.Lock()
+	s.closed = true
+	s.mu.Unlock()
+	s.ClearCache()
+	s.responseBodies.close()
+	s.mu.Lock()
+	s.blobs = map[string]blobEntry{}
+	s.mu.Unlock()
+}
 func (s *SessionState) AcceptClientHints(u *url.URL, header string) {
 	if u == nil || header == "" {
 		return
@@ -155,11 +180,18 @@ func (s *SessionState) ClientHints(u *url.URL) map[string]bool {
 	return out
 }
 func (s *SessionState) GetCached(req Request, now time.Time) (Response, bool) {
+	res, found, err := s.getCached(req, now)
+	res.sharedBody = nil
+	return res, found && err == nil
+}
+
+func (s *SessionState) getCached(req Request, now time.Time) (Response, bool, error) {
 	if req.Method != http.MethodGet {
-		return Response{}, false
+		return Response{}, false, nil
 	}
 	s.mu.RLock()
-	defer s.mu.RUnlock()
+	var response Response
+	found := false
 	for _, e := range s.cache[req.URL.String()] {
 		if now.After(e.expires) {
 			continue
@@ -172,27 +204,44 @@ func (s *SessionState) GetCached(req Request, now time.Time) (Response, bool) {
 			}
 		}
 		if match {
-			r := e.response
-			r.Body = append([]byte(nil), r.Body...)
-			r.Headers = r.Headers.Clone()
-			return r, true
+			response = e.response
+			found = response.sharedBody.retain()
+			break
 		}
 	}
-	return Response{}, false
+	s.mu.RUnlock()
+	if !found {
+		return Response{}, false, nil
+	}
+	defer response.sharedBody.release()
+	var err error
+	response.Body, err = response.sharedBody.copyBytes()
+	if err != nil {
+		return Response{}, false, err
+	}
+	response.Headers = response.Headers.Clone()
+	return response, true, nil
 }
-func (s *SessionState) PutCached(req Request, res Response, now time.Time) {
+func (s *SessionState) PutCached(req Request, res Response, now time.Time) error {
+	// Callers may have mutated their public response since it was returned.
+	res.sharedBody = nil
+	_, err := s.putCached(req, res, now)
+	return err
+}
+
+func (s *SessionState) putCached(req Request, res Response, now time.Time) (Response, error) {
 	if req.Method != http.MethodGet || res.Status != http.StatusOK {
-		return
+		return res, nil
 	}
 	maxAge := cacheFreshnessRemaining(res.Headers, now)
 	if maxAge <= 0 {
-		return
+		return res, nil
 	}
 	vary := []string{}
 	for _, v := range strings.Split(res.Headers.Get("Vary"), ",") {
 		v = strings.TrimSpace(v)
 		if v == "*" {
-			return
+			return res, nil
 		}
 		if v != "" {
 			vary = append(vary, http.CanonicalHeaderKey(v))
@@ -200,11 +249,20 @@ func (s *SessionState) PutCached(req Request, res Response, now time.Time) {
 	}
 	slices.Sort(vary)
 	vary = slices.Compact(vary)
+	body, err := s.responseBodies.retainResponse(res)
+	if err != nil {
+		return res, err
+	}
 	copy := res
-	copy.Body = append([]byte(nil), res.Body...)
+	copy.Body, copy.sharedBody = nil, body
 	copy.Headers = res.Headers.Clone()
+	var dropped []*storedBody
 	s.mu.Lock()
-	defer s.mu.Unlock()
+	if s.closed {
+		s.mu.Unlock()
+		body.release()
+		return res, errors.New("network session is closed")
+	}
 	// A fresh representation replaces the same Vary variant. Keep different
 	// variants, but never return an older matching response ahead of its update.
 	key := req.URL.String()
@@ -212,6 +270,7 @@ func (s *SessionState) PutCached(req Request, res Response, now time.Time) {
 	kept := entries[:0]
 	for _, entry := range entries {
 		if now.After(entry.expires) || !slices.Equal(entry.vary, vary) {
+			dropped = append(dropped, entry.response.sharedBody)
 			continue
 		}
 		match := true
@@ -223,10 +282,18 @@ func (s *SessionState) PutCached(req Request, res Response, now time.Time) {
 		}
 		if !match {
 			kept = append(kept, entry)
+		} else {
+			dropped = append(dropped, entry.response.sharedBody)
 		}
 	}
 	clear(entries[len(kept):])
 	s.cache[key] = append(kept, cacheEntry{copy, now.Add(maxAge), vary, req.Headers.Clone()})
+	res.sharedBody = body
+	s.mu.Unlock()
+	for _, body := range dropped {
+		body.release()
+	}
+	return res, nil
 }
 
 // Freshness is measured from the response's origin date, including intermediary

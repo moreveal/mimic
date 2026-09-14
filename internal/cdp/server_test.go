@@ -38,6 +38,15 @@ func runningServer(t *testing.T) (*Server, string) {
 	t.Cleanup(func() { _ = s.Close(context.Background()) })
 	return s, l.Addr().String()
 }
+
+// evaluatePageFixture serializes direct embedding evaluations with the CDP
+// pump. Callers must not already hold the Page command boundary.
+func evaluatePageFixture(page *browser.Page, source string) (any, error) {
+	page.LockCommands()
+	defer page.UnlockCommands()
+	return page.Evaluate(context.Background(), source)
+}
+
 func readReply(t *testing.T, c *websocket.Conn, id float64) map[string]any {
 	t.Helper()
 	for {
