@@ -13,10 +13,12 @@ single-page attempts. At 50 static Pages Mimic used 1.53 GiB RSS versus Chrome
 3.98 GiB and delivered 3.32x throughput. Warm DOM execution is 96.58 ms versus
 Chrome 29.63 ms, so Chrome parity remains open. A matched Linux control attributes
 a 2.17x DOM execution improvement to this package. The independent Linux 100-Page
-test shows higher marginal Mimic USS (34.90–45.68 MiB/Page versus Chrome
-13.40–25.72 MiB/Page), despite 4.49–6.88x higher throughput. Long-running ownership
-tests show stable V8 roots and collected heap, and release the bounded body store on
-Page close. See the campaign report and [published checkpoint](../../benchmark/runs/09-optimized-20260914/public-summary.md)
+test now reclaims allocator high-water after teardown: recovered Mimic PSS is
+368/374/566 MiB versus Chrome 647/751/696 MiB for static/CPU/React. Active Mimic
+memory remains higher at 25.91/37.16/31.27 MiB per live Page versus Chrome
+11.15/21.74/15.41 MiB, while throughput is 5.04x/3.87x/6.28x higher. Long-running
+ownership tests show stable V8 roots and collected heap, and release the bounded body
+store on Page close. See the campaign report and [published checkpoint](../../benchmark/runs/09-optimized-20260914/public-summary.md)
 for measurement boundaries and raw evidence.
 
 ## Live site command stalls, 2026-09-14

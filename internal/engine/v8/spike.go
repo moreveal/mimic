@@ -339,6 +339,7 @@ func (r *Runtime) Dispose() error {
 			disposeErr = dispatchErr
 		}
 		<-r.done
+		requestNativeHeapTrim()
 	})
 	return disposeErr
 }

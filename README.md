@@ -178,7 +178,8 @@ install or launch Chrome. See the [target manifest](chrome/152/target.json) and
 
 Warm execution is faster in two of six fixtures and still trails Chrome most sharply
 for DOM mutations. The Windows host stopped Mimic's 100-page levels at its memory-pressure
-guard; a separate completed Linux 100-page run is reported with its higher marginal Page cost.
+guard. On Linux, allocator arenas are reclaimed after Page teardown, but active memory per
+concurrent Page remains higher than Chrome because each Page owns an independent V8 isolate.
 
 ## Current boundaries
 

@@ -85,8 +85,15 @@ def wave(runtime, work, count, index):
                     after_teardown=after, after_recovery=recovered, samples=samples,
                     elapsed_s=elapsed, completion_window_s=completed-started,
                     throughput=valid/elapsed, cpu_s=after['cpu_s']-before['cpu_s'],
-                    marginal_uss_mib=(active['uss']-runtime.receipt['ready_memory']['uss'])/count/2**20,
-                    marginal_pss_mib=(active['pss']-runtime.receipt['ready_memory']['pss'])/count/2**20,
+                    # The live increment belongs to this wave. Subtracting
+                    # process-ready memory double-counts allocator high-water
+                    # retained by an excluded warmup or earlier measured wave.
+                    marginal_uss_mib=(active['uss']-before['uss'])/count/2**20,
+                    marginal_pss_mib=(active['pss']-before['pss'])/count/2**20,
+                    active_over_ready_uss_mib=(active['uss']-runtime.receipt['ready_memory']['uss'])/count/2**20,
+                    active_over_ready_pss_mib=(active['pss']-runtime.receipt['ready_memory']['pss'])/count/2**20,
+                    retained_uss_mib=(recovered['uss']-before['uss'])/count/2**20,
+                    retained_pss_mib=(recovered['pss']-before['pss'])/count/2**20,
                     swap_in_bytes=psutil.swap_memory().sin-initial_swap)
     finally:
         release.set()
@@ -170,7 +177,10 @@ def main():
                 valid = len(rows) == args.rounds*args.waves and all(r['status'] == 'VALID' for r in rows)
                 item = dict(status='VALID' if valid else 'UNSUPPORTED_OR_FAILED', samples=len(rows))
                 if valid:
-                    for key in ('throughput', 'elapsed_s', 'completion_window_s', 'cpu_s', 'marginal_uss_mib', 'marginal_pss_mib'):
+                    for key in ('throughput', 'elapsed_s', 'completion_window_s', 'cpu_s',
+                                'marginal_uss_mib', 'marginal_pss_mib',
+                                'active_over_ready_uss_mib', 'active_over_ready_pss_mib',
+                                'retained_uss_mib', 'retained_pss_mib'):
                         item[key] = statistics.median(r[key] for r in rows)
                 data['summary'][name][work][count] = item
     if harness.frozen.harness_fingerprint()[0] != fingerprint:
