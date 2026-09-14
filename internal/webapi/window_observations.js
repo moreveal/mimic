@@ -1,6 +1,50 @@
 // Small Window objects whose behavior is independent of a renderer. Other
 // unimplemented capability services deliberately retain their explicit boundary.
 {
+  if (typeof ReportingObserver === 'function') {
+    const reportingObservers = new WeakMap();
+    class CompatibleReportingObserver {
+      constructor(callback, options = {}) {
+        if (typeof callback !== 'function') throw new TypeError('Callback must be callable');
+        reportingObservers.set(this, {
+          callback,
+          types: options.types === undefined ? null : Array.from(options.types, String),
+          buffered: Boolean(options.buffered),
+          observing: false,
+          records: [],
+        });
+      }
+      observe() {
+        const state = reportingObservers.get(this);
+        if (!state) throw new TypeError('Illegal invocation');
+        state.observing = true;
+      }
+      disconnect() {
+        const state = reportingObservers.get(this);
+        if (!state) throw new TypeError('Illegal invocation');
+        state.observing = false;
+        state.records.length = 0;
+      }
+      takeRecords() {
+        const state = reportingObservers.get(this);
+        if (!state) throw new TypeError('Illegal invocation');
+        return state.records.splice(0);
+      }
+    }
+    Object.defineProperty(CompatibleReportingObserver, 'name', { value: 'ReportingObserver' });
+    Object.defineProperty(CompatibleReportingObserver.prototype, Symbol.toStringTag, {
+      value: 'ReportingObserver',
+      configurable: true,
+    });
+    for (const name of ['observe', 'disconnect', 'takeRecords'])
+      markNative(CompatibleReportingObserver.prototype[name], name);
+    markNative(CompatibleReportingObserver, 'ReportingObserver');
+    Object.defineProperty(globalThis, 'ReportingObserver', {
+      value: CompatibleReportingObserver,
+      writable: true,
+      configurable: true,
+    });
+  }
   const bars = new WeakSet(),
     externals = new WeakSet(),
     media = new WeakSet();
