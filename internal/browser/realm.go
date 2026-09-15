@@ -166,6 +166,7 @@ type Realm struct {
 	parserStylesheetEvents   map[int64]preloadKey
 	stylesheetFetchSlots     chan struct{}
 	resourceRevision         atomic.Uint64
+	styleResourceRevision    atomic.Uint64
 	baseCacheDocument        *dom.Document
 	baseCacheRevision        uint64
 	baseCacheReference       *url.URL
@@ -1107,7 +1108,10 @@ func (r *Realm) installBindingsOnOwner() error {
 		preferences := p.environmentView().Preferences
 		// The suffix is the environment-only epoch used by retained selector
 		// matches; unrelated DOM mutations must not discard their rule programs.
-		return r.val(fmt.Sprintf("%d:%d:%d|%d:%d:%s:%t", r.document.Revision(), owner.resourceRevision.Load(), r.selectorTargetID, w.ViewportWidth, w.ViewportHeight, preferences.ColorScheme, preferences.ReducedMotion)), nil
+		// Style inputs and geometry resources have different lifetimes. Return
+		// both in one crossing so JS can retain selector/cascade work across
+		// image-only completions while invalidating boxes and used values.
+		return r.val(fmt.Sprintf("%d:%d:%d|%d:%d:%s:%t:%t|%d", r.document.Revision(), owner.styleResourceRevision.Load(), r.selectorTargetID, w.ViewportWidth, w.ViewportHeight, preferences.ColorScheme, preferences.ReducedMotion, owner.styleProjections.isDynamic(), owner.resourceRevision.Load())), nil
 	})
 	if detacher, ok := r.runtime.(engine.ArrayBufferDetacher); ok {
 		host["detachArrayBuffer"] = r.runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {

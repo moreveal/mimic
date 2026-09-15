@@ -40,10 +40,6 @@ type Node struct {
 	OwnerDocument         int64             `json:"ownerDocumentId,omitempty"`
 }
 
-// arenaMutex conservatively invalidates derived observations on every write
-// transaction, including parser and detached-node writes. Readers never advance
-// the revision. Keeping this at the canonical write boundary avoids a second
-// mutation notification path that individual DOM operations can forget to update.
 type arenaMutex struct {
 	sync.RWMutex
 	revision uint64

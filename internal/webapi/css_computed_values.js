@@ -172,11 +172,22 @@ const cssComputedShorthand = (element, name) => {
   return ordinary || values.join(' ');
 };
 const cssComputedValue = (element, name) => {
-  // Borrowed nodes resolve in their owner. Do not build a caller-side style
-  // observation that cannot be retained and never participates in resolution.
   if (styleObservationIsolated) {
-    const foreign = foreignCSSObservation(element, 'value', name);
-    if (foreign !== null) return foreign;
+    return withStyleReadCache(() => {
+      const batches =
+          styleReadCache.foreignComputedValues ||
+          (styleReadCache.foreignComputedValues = new WeakMap()),
+        cached = batches.get(element);
+      if (cached?.has(name)) return cached.get(name);
+      const properties = Array.from(new Set([name, 'display', 'visibility'])),
+        foreign = foreignCSSObservation(element, 'values', JSON.stringify(properties));
+      if (foreign !== null) {
+        const values = new Map(Object.entries(JSON.parse(foreign)));
+        batches.set(element, values);
+        return values.get(name) ?? '';
+      }
+      return resolveCSSComputedValue(element, name);
+    });
   }
   return withStyleReadCache(() => {
     const cache = styleReadCache.computedValues || (styleReadCache.computedValues = new WeakMap());

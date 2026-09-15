@@ -15,20 +15,35 @@ func TestStyleObservationStateTracksCanonicalWrites(t *testing.T) {
 		t.Fatal("missing fixture")
 	}
 	read := func() struct {
-		Parent     int64
-		Attributes map[string]string
-		Inline     string
-	} { t.Helper(); var state struct {
-		Parent     int64
-		Attributes map[string]string
-		Inline     string
-	}; if err := json.Unmarshal([]byte(d.StyleObservationState(n.ID)), &state); err != nil {
-		t.Fatal(err)
-	}; return state }
+		Parent        int64
+		Children      []int64
+		OwnerDocument int64
+		Connected     bool
+		Attributes    map[string]string
+		Inline        string
+	} {
+		t.Helper()
+		var state struct {
+			Parent        int64
+			Children      []int64
+			OwnerDocument int64
+			Connected     bool
+			Attributes    map[string]string
+			Inline        string
+		}
+		if err := json.Unmarshal([]byte(d.StyleObservationState(n.ID)), &state); err != nil {
+			t.Fatal(err)
+		}
+		return state
+	}
 	before := d.Revision()
 	first := read()
-	if first.Parent != n.Parent || first.Attributes["data-value"] != "one" || first.Inline != "swidth:10px" || d.Revision() != before {
+	if first.Parent != n.Parent || first.OwnerDocument != d.Root().ID || !first.Connected || first.Attributes["data-value"] != "one" || first.Inline != "swidth:10px" || d.Revision() != before {
 		t.Fatalf("initial state: %+v", first)
+	}
+	child := d.CreateText("child")
+	if err := d.InsertNode(n.ID, child.ID, 0); err != nil {
+		t.Fatal(err)
 	}
 	if err := d.SetAttribute(n.ID, "data-value", "two"); err != nil {
 		t.Fatal(err)
@@ -37,7 +52,7 @@ func TestStyleObservationStateTracksCanonicalWrites(t *testing.T) {
 		t.Fatal(err)
 	}
 	next := read()
-	if next.Attributes["data-value"] != "two" || next.Inline != `j[{"name":"width","value":"20px","priority":""}]` || first.Attributes["data-value"] != "one" {
+	if len(next.Children) != 1 || next.Children[0] != child.ID || next.Attributes["data-value"] != "two" || next.Inline != `j[{"name":"width","value":"20px","priority":""}]` || first.Attributes["data-value"] != "one" {
 		t.Fatalf("updated state: %+v", next)
 	}
 }

@@ -41,6 +41,36 @@ func testPage(t *testing.T) *Page {
 	}
 	return p
 }
+
+func TestExternalCommandWaiterSignal(t *testing.T) {
+	p := testPage(t)
+	p.LockCommands()
+	acquired := make(chan struct{})
+	go func() {
+		p.LockExternalCommand()
+		close(acquired)
+		p.UnlockCommands()
+	}()
+
+	deadline := time.Now().Add(time.Second)
+	for !p.ExternalCommandWaiting() && time.Now().Before(deadline) {
+		time.Sleep(time.Millisecond)
+	}
+	if !p.ExternalCommandWaiting() {
+		p.UnlockCommands()
+		t.Fatal("external command did not advertise its queued state")
+	}
+	p.UnlockCommands()
+	select {
+	case <-acquired:
+	case <-time.After(time.Second):
+		t.Fatal("external command did not acquire the released Page boundary")
+	}
+	if p.ExternalCommandWaiting() {
+		t.Fatal("external waiter signal remained set after acquisition")
+	}
+}
+
 func TestRealmUsesSelectedCompatibilityBundleSurface(t *testing.T) {
 	bundle := surfaceTestBundle{Bundle: chrome152.New(), surface: compatibility.WebAPISurface{GeneratedJavaScript: `globalThis.__selectedBundle = "custom"`}}
 	b, err := New(gojaengine.Factory{}, bundle)

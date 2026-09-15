@@ -50,7 +50,12 @@ func (r *Realm) updateImage(id int64, changed bool) {
 		previous.cancel()
 	}
 	reason := "image"
-	current := &imageLoad{originClean: true, queued: true, blocks: r.beginLoadBlocker(reason)}
+	node, exists := r.document.Get(id)
+	lazy := exists && strings.EqualFold(node.Attributes["loading"], "lazy")
+	// Chrome excludes lazy images from the Window load delay, including lazy
+	// images currently near the viewport. Their request and element load/error
+	// lifecycle continue independently.
+	current := &imageLoad{originClean: true, queued: true, blocks: !lazy && r.beginLoadBlocker(reason)}
 	if previous != nil {
 		current.decoded = previous.decoded
 		current.currentSrc = previous.currentSrc

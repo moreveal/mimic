@@ -33,6 +33,8 @@ type Page struct {
 	previewObservers   map[*PreviewSubscription]struct{} // command-owned; nil without viewers
 	debuggers          map[*Debugger]struct{}
 	inputIgnored       bool   // Page command owned; survives document navigation.
+	inputHintRealm     *Realm // Last protocol-scrolled target; Page command owned.
+	inputHintNodeID    int64
 	focusedFrameID     string // Page-owned focus chain; empty selects the top document.
 	pageFocused        bool
 	focusEmulated      bool
@@ -41,6 +43,7 @@ type Page struct {
 	launches           []string
 	performanceClamper performanceClamper
 	commandMu          sync.Mutex
+	commandWaiters     atomic.Int32
 	previewScheduleMu  sync.Mutex
 	previewScheduled   bool
 	eventLoopWake      chan struct{} // Coalesced readiness hints; never executes Page work.
@@ -91,6 +94,21 @@ type Page struct {
 // The boundary belongs to the Page, so all CDP sessions observe the same loop.
 // Library callers must use the same boundary when sharing a Page concurrently.
 func (p *Page) LockCommands() { p.commandMu.Lock() }
+
+// LockExternalCommand records protocol/library commands while they wait for
+// the Page turn boundary. The background event-loop pump uses this signal to
+// yield between tasks instead of repeatedly reacquiring the mutex ahead of an
+// already queued user command.
+func (p *Page) LockExternalCommand() {
+	p.commandWaiters.Add(1)
+	p.commandMu.Lock()
+	p.commandWaiters.Add(-1)
+}
+
+// ExternalCommandWaiting reports whether an external command is queued at the
+// Page turn boundary. It is only a scheduling hint; commandMu remains the sole
+// ownership boundary for Page state.
+func (p *Page) ExternalCommandWaiting() bool { return p.commandWaiters.Load() != 0 }
 
 // EventLoopWake lets an external pump react to newly posted work without
 // consuming scheduler waits or changing the Page's canonical clock.

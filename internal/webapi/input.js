@@ -665,17 +665,32 @@
       else edit(target, text);
     }
   };
-  let pointTargetVersion = null;
-  const pointObservationVersion = () =>
-    host.observationVersion() +
-    ':' +
-    (constructedStyleSheets.revision?.() || 0) +
-    ':' +
-    compatibilityElementState.observationVersion() +
-    ':' +
-    compatibilityScrolling.revision();
-  const pointTargets = (x, y) =>
-    withStyleReadCache(() => {
+  let pointTargetVersion = null,
+    pointHitsVersion = null,
+    pointHitsX = 0,
+    pointHitsY = 0,
+    pointHits = [];
+  bootstrapRestoreHooks.push(() => {
+    pointTargetVersion = null;
+    pointHitsVersion = null;
+    pointHits = [];
+  });
+  const pointObservationVersion = () => {
+    return (
+      host.observationVersion() +
+      ':' +
+      (constructedStyleSheets.revision?.() || 0) +
+      ':' +
+      compatibilityElementState.observationVersion() +
+      ':' +
+      compatibilityScrolling.revision()
+    );
+  };
+  const pointTargets = (x, y) => {
+    const version = pointObservationVersion();
+    if (version === pointHitsVersion && x === pointHitsX && y === pointHitsY)
+      return pointHits.slice();
+    const hits = withStyleReadCache(() => {
       const viewport = host.viewport();
       if (
         !Number.isFinite(x) ||
@@ -757,6 +772,12 @@
       if (root && !hits.includes(root)) hits.push(root);
       return hits;
     });
+    pointHitsVersion = version;
+    pointHitsX = x;
+    pointHitsY = y;
+    pointHits = hits;
+    return hits.slice();
+  };
   const pointTarget = (x, y) => {
     const version = pointObservationVersion();
     if (
@@ -866,7 +887,15 @@
   const mouseCommand = (params, hintedTarget) => {
     const x = Number(params.x),
       y = Number(params.y),
-      target = hintedTarget?.isConnected ? hintedTarget : pointTarget(x, y),
+      hintRect = hintedTarget?.isConnected ? clientRectFor(hintedTarget) : null,
+      target =
+        hintRect &&
+        x >= hintRect.x &&
+        x < hintRect.x + hintRect.width &&
+        y >= hintRect.y &&
+        y < hintRect.y + hintRect.height
+          ? hintedTarget
+          : pointTarget(x, y),
       buttonName = params.button || 'none',
       button = buttons[buttonName] ?? -1,
       mask = buttonMasks[buttonName] || 0;
@@ -925,7 +954,10 @@
     if (params.type === 'mousePressed') {
       pressed.set(button, target);
       const accepted = emit(target, 'PointerEvent', 'pointerdown', init);
-      if (accepted && !disabled && emit(target, 'MouseEvent', 'mousedown', init)) focus(target);
+      // Chrome's trusted pointer focusing steps do not scroll the newly
+      // focused control, even when a mousedown handler moves it off-screen.
+      if (accepted && !disabled && emit(target, 'MouseEvent', 'mousedown', init))
+        focus(target, true);
       return;
     }
     emit(target, 'PointerEvent', 'pointerup', init);

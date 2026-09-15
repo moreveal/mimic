@@ -84,3 +84,21 @@ func TestStyleProjectionCacheBounds(t *testing.T) {
 		t.Fatal("disabled cache retained scalars")
 	}
 }
+
+func TestStyleProjectionEpochIgnoresImageOnlyCompletion(t *testing.T) {
+	p := testPage(t)
+	r := p.Top.Realm
+	styleBefore := r.styleProjectionEpoch("value")
+	boxBefore := r.styleProjectionEpoch("box")
+	r.resourceRevision.Add(1)
+	if got := r.styleProjectionEpoch("value"); got != styleBefore {
+		t.Fatal("image-only completion invalidated scalar style projections")
+	}
+	if got := r.styleProjectionEpoch("box"); got == boxBefore {
+		t.Fatal("image-only completion did not invalidate intrinsic geometry")
+	}
+	r.styleResourceRevision.Add(1)
+	if got := r.styleProjectionEpoch("value"); got == styleBefore {
+		t.Fatal("stylesheet completion did not invalidate scalar style projections")
+	}
+}

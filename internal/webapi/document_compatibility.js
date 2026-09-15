@@ -145,8 +145,10 @@ function wrapDocumentNode(data) {
   const adopt = (node, doc) => {
     const id = validDocument(doc),
       slot = elementSlot(node);
-    if (slot) host.adoptNodeDocument(slot.nodeId, id);
-    else if (isDOMFragment(node)) {
+    if (slot) {
+      host.adoptNodeDocument(slot.nodeId, id);
+      invalidateDOMCollections();
+    } else if (isDOMFragment(node)) {
       fragmentOwnerDocuments.set(node, doc);
       for (const child of node.childNodes) adopt(child, doc);
     }

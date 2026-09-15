@@ -43,7 +43,10 @@ func TestGeometryEpochSurvivesCheckpointAndInvalidatesMutations(t *testing.T) {
 		if err := json.Unmarshal(data, &result); err != nil {
 			t.Fatal(err)
 		}
-		return result.Costs["host:computedStyleAvailable"].Count
+		// Geometry now consumes the canonical bundled style observation. Count
+		// that boundary so this continues to assert epoch reuse, rather than a
+		// retired per-property availability query.
+		return result.Costs["host:styleObservationState"].Count
 	}
 	eval(`document.head.innerHTML='<style>.box{width:40px;height:20px}.wide{width:80px}</style>';document.body.innerHTML='<div class="box"></div>';window.box=document.body.firstChild;box.getBoundingClientRect().width`)
 	before := count()

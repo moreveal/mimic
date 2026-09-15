@@ -39,6 +39,7 @@ func (r *Realm) startParserStylesheets() []*resourcePreload {
 				defer func() {
 					close(load.done)
 					r.resourceRevision.Add(1)
+					r.styleResourceRevision.Add(1)
 				}()
 				select {
 				case r.stylesheetFetchSlots <- struct{}{}:

@@ -26,9 +26,17 @@ type styleProjectionCache struct {
 	dynamic bool
 }
 
-func (r *Realm) styleProjectionEpoch() styleProjectionEpoch {
+func (r *Realm) styleProjectionEpoch(kind string) styleProjectionEpoch {
 	e := r.agent.Page().environmentView()
-	return styleProjectionEpoch{r.document.Revision(), r.resourceRevision.Load(), r.selectorTargetID,
+	resources := r.resourceRevision.Load()
+	// Image completion changes intrinsic geometry, not computed declarations,
+	// flat-tree availability, or ordinary CSS visibility. Keep scalar style
+	// projections hot while images load; box projections retain the complete
+	// resource epoch because their dimensions can genuinely change.
+	if kind == "value" || kind == "values" || kind == "document" || kind == "" || kind == "visibility" {
+		resources = r.styleResourceRevision.Load()
+	}
+	return styleProjectionEpoch{r.document.Revision(), resources, r.selectorTargetID,
 		e.Window.ViewportWidth, e.Window.ViewportHeight, e.Preferences.ColorScheme, e.Preferences.ReducedMotion}
 }
 
@@ -83,4 +91,10 @@ func (c *styleProjectionCache) disable() {
 	c.dynamic = true
 	c.values = nil
 	c.bytes = 0
+}
+
+func (c *styleProjectionCache) isDynamic() bool {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	return c.dynamic
 }

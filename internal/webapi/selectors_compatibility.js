@@ -359,8 +359,12 @@ const compatibilitySelectors = (() => {
   // Weak keys do not retain retired nodes or stylesheet programs. Structural
   // and stateful selectors are always re-evaluated against the current graph.
   let styleContexts = new WeakMap();
+  let styleContextGroups = new WeakMap(),
+    detachedStyleContextGroups = new Map();
   bootstrapRestoreHooks.push(() => {
     styleContexts = new WeakMap();
+    styleContextGroups = new WeakMap();
+    detachedStyleContextGroups = new Map();
   });
   const staticStyleSelector = (groups) =>
     groups.every((group) =>
@@ -386,14 +390,23 @@ const compatibilitySelectors = (() => {
     context = context || current;
     for (let i = pending.length - 1; i >= 0; i--) {
       const element = pending[i],
-        signature = cssObservationNodeState(element).signature,
+        signature = cssObservationNodeState(element).selectorSignature,
         prior = styleContexts.get(element);
       // Exact attribute contents and canonical ancestor identities, not a hash,
       // determine reuse. The tree is re-read lazily on every observation epoch.
-      const next =
-        prior && prior.parent === context && prior.signature === signature
-          ? prior
-          : { parent: context, signature, sheets: new WeakMap() };
+      let next = prior && prior.parent === context && prior.signature === signature ? prior : null;
+      if (!next) {
+        let group;
+        if (context && (typeof context === 'object' || typeof context === 'function')) {
+          group = styleContextGroups.get(context);
+          if (!group) styleContextGroups.set(context, (group = new Map()));
+        } else group = detachedStyleContextGroups;
+        next = group.get(signature);
+        if (!next) {
+          next = { parent: context, signature, sheets: new WeakMap() };
+          group.set(signature, next);
+        }
+      }
       styleContexts.set(element, next);
       memo(element, 'styleContext', () => next);
       context = next;

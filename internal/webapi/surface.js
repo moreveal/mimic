@@ -873,7 +873,10 @@
     }
     set textContent(value) {
       const slot = elementSlot(this);
-      if (slot) host.setTextContent(slot.nodeId, value == null ? '' : String(value));
+      if (slot) {
+        host.setTextContent(slot.nodeId, value == null ? '' : String(value));
+        invalidateDOMCollections();
+      }
     }
     get parentNode() {
       const slot = elementSlot(this);
@@ -1131,12 +1134,21 @@
     checkpointStyleRules = null;
   });
   const withStyleReadCache = (callback) => {
+    // A nested observation already belongs to the outer command's canonical
+    // snapshot. Re-reading the host epoch for every computed-style/property
+    // helper turns one selector walk into tens of thousands of Go↔V8 calls;
+    // the outer finally block still rejects the snapshot if script mutates it.
+    if (styleReadCache) return callback();
     const previous = styleReadCache,
-      canonicalVersion = host.observationVersion();
+      canonicalBundle = host.observationVersion(),
+      resourceSeparator = canonicalBundle.lastIndexOf('|'),
+      canonicalVersion = canonicalBundle.slice(0, resourceSeparator);
     // The canonical epoch includes viewport and media preferences, so checking
     // it does not require separate host calls for each environment input.
     const version = canonicalVersion + ':' + constructedStyleSheets.revision();
-    const retain = !styleObservationIsolated && windowRelations.self === windowRelations.top;
+    const retain =
+      windowRelations.self === windowRelations.top &&
+      !(styleObservationIsolated && canonicalVersion.endsWith(':true'));
     if (!checkpointStyleRules || checkpointStyleVersion !== version) {
       checkpointStyleRules = new WeakMap();
       checkpointStyleVersion = version;
@@ -1160,6 +1172,14 @@
         resolvingRects: new Set(),
         provisionalRects: new WeakSet(),
       };
+    if (observation.geometryVersion !== canonicalBundle) {
+      observation.geometryVersion = canonicalBundle;
+      observation.computedValues = new WeakMap();
+      observation.widths = new WeakMap();
+      observation.rects = new WeakMap();
+      observation.resolvingRects = new Set();
+      observation.provisionalRects = new WeakSet();
+    }
     if (retain) {
       checkpointObservations = observation;
       checkpointObservationVersion = observationVersion;
@@ -1174,14 +1194,11 @@
       throw error;
     } finally {
       styleReadCache = previous;
-      // A conversion callback may enter a nested observation then mutate again.
-      // Never publish the old outer result as a cache for the next author read.
-      if (
-        !observation.retainable ||
-        (!previous && host.observationVersion() !== canonicalVersion)
-      ) {
-        if (checkpointObservations === observation) checkpointObservations = null;
-      }
+      // Style/layout evaluation itself cannot run author code. Page mutations
+      // are serialized on the realm actor and the next outer observation
+      // validates the canonical host epoch before reusing this snapshot.
+      if (!observation.retainable && checkpointObservations === observation)
+        checkpointObservations = null;
     }
   };
   // All geometry projections consult the same canonical parent/child snapshot.
@@ -1191,9 +1208,20 @@
     const cache =
       styleReadCache && (styleReadCache.nodeStates || (styleReadCache.nodeStates = new WeakMap()));
     if (cache?.has(node)) return cache.get(node);
-    const encoded = host.styleObservationState(elementSlot(node).nodeId),
+    const encoded = host.styleObservationState(
+        node === document ? realmDocumentRootID : elementSlot(node).nodeId,
+      ),
       value = JSON.parse(encoded);
     value.signature = encoded;
+    const data = elementSlot(node);
+    value.selectorSignature =
+      (data?.type || 'document') +
+      ':' +
+      (data?.namespaceURI || '') +
+      ':' +
+      (data?.tagName || '') +
+      ':' +
+      JSON.stringify(value.attributes);
     cache?.set(node, value);
     return value;
   };
@@ -1231,7 +1259,7 @@
     const data = elementSlot(node),
       children =
         node === document || data
-          ? host.childIDs(node === document ? realmDocumentRootID : data.nodeId).map(wrap)
+          ? cssObservationNodeState(node).children.map(wrap)
           : fragmentState(node)?.children.slice() || [];
     cache?.set(node, children);
     return children;
@@ -1345,7 +1373,7 @@
   const styleSheetRules = (element) => {
     const root =
         containingShadowRoot(element) ||
-        wrap(host.nodeOwnerDocument(elementSlot(element).nodeId)) ||
+        wrap(cssObservationNodeState(element).ownerDocument) ||
         document,
       cache = styleReadCache?.rules;
     if (cache?.has(root)) return cache.get(root);
@@ -1527,12 +1555,17 @@
   // Foreign projections execute in the canonical owner realm: synthetic shadow
   // connectivity and viewport state are not duplicated into borrowed wrappers.
   const foreignCSSObservation = (element, kind = '', name = '') => {
+    if (
+      !styleObservationIsolated &&
+      cssObservationNodeState(element).ownerDocument === realmDocumentRootID
+    )
+      return null;
     const owners = styleReadCache
       ? styleReadCache.foreignCSSOwners || (styleReadCache.foreignCSSOwners = new WeakMap())
       : null;
     if (owners?.get(element) === false) return null;
     const value = host.foreignComputedStyleFlatTree(elementSlot(element).nodeId, kind, name);
-    if (value !== null && styleReadCache) styleReadCache.retainable = false;
+    if (value !== null && styleReadCache && kind !== 'values') styleReadCache.retainable = false;
     owners?.set(element, value !== null);
     return value;
   };
@@ -1544,10 +1577,18 @@
       (styleReadCache.documentAvailability ||
         (styleReadCache.documentAvailability = new WeakMap()));
     if (cache?.has(element)) return cache.get(element);
+    const active = styleReadCache
+      ? (styleReadCache.documentActive ??= host.documentActive())
+      : host.documentActive();
+    if (!active) {
+      cache?.set(element, false);
+      return false;
+    }
     let node = element;
     while (node) {
       const data = elementSlot(node);
-      if (data && host.computedStyleAvailable(data.nodeId)) {
+      const state = data && cssObservationNodeState(node);
+      if (state?.connected && state.ownerDocument === realmDocumentRootID) {
         cache?.set(element, true);
         return true;
       }
@@ -2024,6 +2065,7 @@
       if (result === -1) throw new DOMException('Reference node is not a child.', 'NotFoundError');
       if (result === -2)
         throw new DOMException('Insertion would create a cycle.', 'HierarchyRequestError');
+      if (result >= 0) invalidateDOMCollections();
       return result;
     }
     const fire = fireFor(node);
@@ -2042,6 +2084,7 @@
         () => fire('load'),
         () => fire('error'),
       );
+    invalidateDOMCollections();
     return true;
   };
   // Geometry result objects retain the node creation realm after adoption;
@@ -2133,6 +2176,7 @@
     }
     set textContent(v) {
       host.setTextContent(elementSlot(this).nodeId, v == null ? '' : String(v));
+      invalidateDOMCollections();
     }
     get innerHTML() {
       return host.innerHTML(elementSlot(this).nodeId);
@@ -2150,6 +2194,7 @@
           this,
         ),
       );
+      invalidateDOMCollections();
     }
     get outerHTML() {
       return host.outerHTML(elementSlot(this).nodeId);
@@ -2168,6 +2213,7 @@
         ),
       );
       if (name) throw new DOMException('Cannot replace this element.', name);
+      invalidateDOMCollections();
     }
     insertAdjacentHTML(position, text) {
       const id = elementSlot(this).nodeId;
@@ -2182,6 +2228,7 @@
       );
       const name = host.insertAdjacentHTML(id, position, text);
       if (name) throw new DOMException('Cannot insert adjacent HTML.', name);
+      invalidateDOMCollections();
     }
     get parentNode() {
       return syntheticParents.get(this) || wrap(host.parentNode(elementSlot(this).nodeId));
@@ -2200,9 +2247,20 @@
       return wrap(host.sibling(elementSlot(this).nodeId, -1));
     }
     get children() {
-      return cachedHTMLCollection(this, 'children', '', () =>
-        host.elementChildren(elementSlot(this).nodeId),
-      );
+      let revision = -1,
+        values = [];
+      return cachedHTMLCollection(this, 'children', '', () => {
+        const current =
+          styleReadCache?.version ||
+          (document.readyState === 'loading'
+            ? 'host:' + host.domRevision()
+            : domCollectionRevision);
+        if (revision !== current) {
+          values = host.elementChildren(elementSlot(this).nodeId);
+          revision = current;
+        }
+        return values;
+      });
     }
     get childElementCount() {
       return this.children.length;
@@ -2335,6 +2393,7 @@
         state.children.push(node);
         state.html = '';
         setSyntheticParent(node, this);
+        invalidateDOMCollections();
         if (this instanceof ShadowRoot) runSyntheticInsertionSteps(node);
         return node;
       }
@@ -2363,6 +2422,7 @@
           );
         state.children.splice(index, 0, node);
         setSyntheticParent(node, this);
+        invalidateDOMCollections();
         if (this instanceof ShadowRoot) runSyntheticInsertionSteps(node);
         return node;
       }
@@ -2391,6 +2451,7 @@
           );
         state.children.splice(index, 1);
         deleteSyntheticParent(node);
+        invalidateDOMCollections();
         return node;
       }
       const target = elementSlot(this),
@@ -2402,6 +2463,7 @@
         host.completeSynchronousLoad();
       }
       host.removeNode(target.nodeId, child.nodeId);
+      invalidateDOMCollections();
       return node;
     },
     writable: true,
@@ -2498,6 +2560,7 @@
     if (result === -1) throw new DOMException('Reference node is not a child.', 'NotFoundError');
     if (result === -2)
       throw new DOMException('Insertion would create a cycle.', 'HierarchyRequestError');
+    if (result >= 0) invalidateDOMCollections();
     return result;
   };
   def(Node.prototype, 'appendChild', {
@@ -2869,23 +2932,30 @@
   registerBootstrapCallback('installFrameViewport', readFrameViewport, frameHasLayout);
   registerBootstrapCallback('installComputedStyleFlatTree', (nodeID, kind, name) => {
     const element = wrap(nodeID);
-    return kind === 'innerText'
-      ? renderedInnerText(element)
-      : kind === 'scroll'
-        ? compatibilityScrolling.dispatch(element, JSON.parse(name))
-        : kind === 'visibility'
-          ? observeElementVisibility(element, JSON.parse(name))
-          : kind === 'box'
-            ? cssBoxModel.hasBox(element)
-            : kind === 'value'
-              ? cssComputedValue(element, name)
-              : kind === 'rect'
-                ? clientRectFor(element)
-                : kind === 'layout'
-                  ? layoutRectFor(element)
-                  : kind === 'document'
-                    ? computedStyleDocumentAvailable(element)
-                    : computedStyleAvailable(element);
+    return kind === 'values'
+      ? withStyleReadCache(() => {
+          const values = {};
+          for (const property of JSON.parse(name))
+            values[property] = cssComputedValue(element, property);
+          return JSON.stringify(values);
+        })
+      : kind === 'innerText'
+        ? renderedInnerText(element)
+        : kind === 'scroll'
+          ? compatibilityScrolling.dispatch(element, JSON.parse(name))
+          : kind === 'visibility'
+            ? observeElementVisibility(element, JSON.parse(name))
+            : kind === 'box'
+              ? cssBoxModel.hasBox(element)
+              : kind === 'value'
+                ? cssComputedValue(element, name)
+                : kind === 'rect'
+                  ? clientRectFor(element)
+                  : kind === 'layout'
+                    ? layoutRectFor(element)
+                    : kind === 'document'
+                      ? computedStyleDocumentAvailable(element)
+                      : computedStyleAvailable(element);
   });
   let constructCustomElement = null,
     customElementCloneInert = 0;
@@ -3775,6 +3845,9 @@
   // Cache by owner, query kind and original argument: equivalent selectors can
   // still identify distinct collections in Chrome. Weak owners release on teardown.
   const liveCollectionCache = new WeakMap();
+  let domCollectionRevision = 0;
+  const invalidateDOMCollections = () => domCollectionRevision++;
+  bootstrapRestoreHooks.push(invalidateDOMCollections);
   const cachedHTMLCollection = (owner, kind, key, read) => {
     let kinds = liveCollectionCache.get(owner);
     if (!kinds) {

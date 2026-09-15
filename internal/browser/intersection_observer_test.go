@@ -72,9 +72,10 @@ func TestUnchangedIntersectionSampleAvoidsGeometryWork(t *testing.T) {
 		if err := json.Unmarshal(data, &result); err != nil {
 			t.Fatal(err)
 		}
-		// Canonical JS geometry replaced host:rect. Eligibility is queried only
-		// when sampling boxes, so retain the same no-work/invalidation invariant.
-		return result.Costs["host:computedStyleAvailable"].Count
+		// Canonical geometry consumes one bundled style observation. Count that
+		// boundary so this retains the same no-work/invalidation invariant after
+		// the retired per-property availability query was removed.
+		return result.Costs["host:styleObservationState"].Count
 	}
 	advance()
 	before := count()

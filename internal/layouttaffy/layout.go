@@ -117,6 +117,7 @@ func LayoutJSON(input string) string {
 	raw, _ := json.Marshal(Response{Boxes: boxes})
 	return string(raw)
 }
+
 func encodeError(err error) string {
 	raw, _ := json.Marshal(Response{Error: err.Error()})
 	return string(raw)
