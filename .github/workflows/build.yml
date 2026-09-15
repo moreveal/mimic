@@ -20,6 +20,10 @@ jobs:
             shard: 0
           - os: windows-latest
             shard: 1
+          - os: windows-latest
+            shard: 2
+          - os: windows-latest
+            shard: 3
     runs-on: ${{ matrix.os }}
     timeout-minutes: 30
     env:
@@ -55,7 +59,7 @@ jobs:
         run: go build -o .build/mimic.exe ./cmd/mimic
       - name: Test Windows reference behavior
         if: runner.os == 'Windows'
-        run: python tools/ci/windows_tests.py --shard ${{ matrix.shard }} --count 2
+        run: python tools/ci/windows_tests.py --shard ${{ matrix.shard }} --count 4
       - name: Test release and CI gates
         run: |
           python -m unittest discover -s tools/ci -p test_windows_tests.py

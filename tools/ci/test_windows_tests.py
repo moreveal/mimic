@@ -6,10 +6,14 @@ from windows_tests import partition
 class ShardCoverageTests(unittest.TestCase):
     def test_every_root_test_appears_in_exactly_one_shard(self):
         names = ['Test' + str(index) for index in range(661)] + ['ExamplePage', 'FuzzParser']
-        shards = [partition(names, index, 2) for index in range(2)]
-        self.assertFalse(set(shards[0]) & set(shards[1]))
-        self.assertCountEqual(shards[0] + shards[1], names)
-        self.assertEqual(partition(list(reversed(names)), 0, 2), shards[0])
+        for count in (2, 4):
+            with self.subTest(count=count):
+                shards = [partition(names, index, count) for index in range(count)]
+                for left in range(count):
+                    for right in range(left + 1, count):
+                        self.assertFalse(set(shards[left]) & set(shards[right]))
+                self.assertCountEqual(sum(shards, []), names)
+                self.assertEqual(partition(list(reversed(names)), 0, count), shards[0])
 
     def test_bad_shard_and_duplicate_discovery_fail(self):
         for names, shard, count in [(['TestA'], 2, 2), (['TestA'], 0, 0),

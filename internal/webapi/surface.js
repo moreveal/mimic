@@ -537,16 +537,16 @@
       return errorEventSlots.get(this).error;
     }
   }
-  const eventListeners = new WeakMap(),
-    listenersFor = (value) => {
-      let listeners = eventListeners.get(value);
-      if (!listeners) {
-        listeners = new Map();
-        eventListeners.set(value, listeners);
-      }
-      return listeners;
-    };
-  const eventHandlerListeners = new WeakMap(),
+  let eventListeners = new WeakMap();
+  const listenersFor = (value) => {
+    let listeners = eventListeners.get(value);
+    if (!listeners) {
+      listeners = new Map();
+      eventListeners.set(value, listeners);
+    }
+    return listeners;
+  };
+  let eventHandlerListeners = new WeakMap(),
     eventHandlerWrappers = new WeakMap();
   const eventHandlerRecord = (target, type) => {
     let map = eventHandlerListeners.get(target);
