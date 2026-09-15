@@ -904,7 +904,7 @@ const cssBoxModel = (() => {
         s.inherited('font-weight'),
         s.inherited('font-style'),
         s.inherited('white-space'),
-        styleReadCache.fontCollectionVersion,
+        String(styleReadCache.fontCollectionVersion),
       ]),
       priorLines = nodeTextLines.get(element);
     let textLines = text ? 1 : 0,
@@ -1129,13 +1129,6 @@ const cssBoxModel = (() => {
   // Taffy owns flex/grid formatting-context geometry. Mimic supplies the
   // normalized computed style and intrinsic leaf measurements in one snapshot.
   const taffyBox = (element) => {
-    const cache = styleReadCache.taffyBoxes || (styleReadCache.taffyBoxes = new WeakMap());
-    if (cache.has(element)) return cache.get(element);
-    const box = uncachedTaffyBox(element);
-    cache.set(element, box);
-    return box;
-  };
-  const uncachedTaffyBox = (element) => {
     // Custom elements retain the legacy intrinsic-width path; their authored
     // display can be upgraded or stylesheet-mutated after construction.
     if (tag(element).includes('-')) return null;
