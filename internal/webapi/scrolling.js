@@ -2,12 +2,18 @@
 // viewport observations subtract scroll offsets without rebuilding box sizes.
 compatibilityScrolling = (() => {
   let positions = new WeakMap(),
+    positionRanges = new WeakMap(),
     revision = 0,
     hasOffsets = false;
   const pending = new Set(),
     ending = new Set();
   let eventTimer = null,
     animations = new WeakMap();
+  bootstrapRestoreHooks.push(() => {
+    positions = new WeakMap();
+    positionRanges = new WeakMap();
+  });
+  const geometryVersion = () => host.observationVersion() + ':' + constructedStyleSheets.revision();
   const documentRoot = () =>
     cssObservationChildren(document).find((node) => elementSlot(node)?.type === 'element') || null;
   const root = () => {
@@ -175,6 +181,16 @@ compatibilityScrolling = (() => {
       ? positions.get(element) || { x: 0, y: 0 }
       : { x: windowScrollX, y: windowScrollY };
     if (!saved.x && !saved.y) return saved;
+    const known = positionRanges.get(element || document);
+    if (
+      known &&
+      known.version === geometryVersion() &&
+      saved.x >= known.minX &&
+      saved.x <= known.maxX &&
+      saved.y >= 0 &&
+      saved.y <= known.maxY
+    )
+      return saved;
     const m = styleReadCache?.scrollMetrics?.get(element || document) || metrics(element),
       x = Math.max(m.minX, Math.min(m.maxX, saved.x)),
       y = Math.max(0, Math.min(m.maxY, saved.y));
@@ -194,7 +210,7 @@ compatibilityScrolling = (() => {
     const n = +value;
     return Number.isFinite(n) ? n : 0;
   };
-  const set = (element, x, y, animated = false) => {
+  const set = (element, x, y, animated = false, knownRange = null) => {
     if (isolated()) return remote(element, 'set', { x, y });
     element = owner(element);
     const old = localPosition(element);
@@ -205,7 +221,9 @@ compatibilityScrolling = (() => {
     // is a common navigation path: sites reset an already-unscrolled window
     // to (0, 0) during DOMContentLoaded.
     if (x === old.x && y === old.y) return;
-    const m = metrics(element);
+    const withinKnownRange =
+      knownRange && x >= knownRange.minX && x <= knownRange.maxX && y >= 0 && y <= knownRange.maxY;
+    const m = withinKnownRange ? knownRange : metrics(element);
     x = Math.max(m.minX, Math.min(m.maxX, x));
     y = Math.max(0, Math.min(m.maxY, y));
     if (x === old.x && y === old.y) return;
@@ -215,6 +233,8 @@ compatibilityScrolling = (() => {
       windowScrollY = y;
     }
     if (!element) host.recordScrollPosition(x, y);
+    if (withinKnownRange)
+      positionRanges.set(element || document, { ...knownRange, version: geometryVersion() });
     if (x || y) hasOffsets = true;
     revision++;
     enqueue(element);
@@ -237,7 +257,7 @@ compatibilityScrolling = (() => {
       relative,
     };
   };
-  const scroll = (element, opts) => {
+  const scroll = (element, opts, knownRange = null) => {
     if (isolated()) return remote(element, 'scroll', { opts });
     const old = position(element),
       x = opts.x === null ? old.x : opts.x + (opts.relative ? old.x : 0),
@@ -289,7 +309,7 @@ compatibilityScrolling = (() => {
       requestRenderingFrame(tick);
       return;
     }
-    set(element, x, y);
+    set(element, x, y, false, knownRange);
   };
   const baseOffset = (element) => {
     if (!hasOffsets) return { x: 0, y: 0 };
@@ -375,6 +395,34 @@ compatibilityScrolling = (() => {
               : end - start > far - near
                 ? start - near
                 : end - far;
+  const extendRootRange = (element, range, requiredBottom, oldY) => {
+    // A later non-fixed border box is direct evidence that the document can
+    // scroll far enough to expose that box. Prefer nearby following siblings
+    // over constructing the complete scroll-overflow projection merely to
+    // validate one scrollIntoView offset.
+    let cursor = element,
+      inspected = 0;
+    while (cursor && inspected < 64) {
+      const parent = geometryParent(cursor);
+      if (!parent) break;
+      const siblings = children(parent).filter((node) => elementSlot(node)?.type === 'element'),
+        index = siblings.indexOf(cursor);
+      if (index >= 0)
+        for (let i = index + 1; i < siblings.length && inspected < 64; i++) {
+          const candidate = siblings[i];
+          inspected++;
+          if (!cssBoxModel.hasBox(candidate) || cssBoxModel.state(candidate).position === 'fixed')
+            continue;
+          const box = clientRectInObservation(candidate),
+            bottom = box.bottom + oldY;
+          if (Number.isFinite(bottom))
+            range.maxY = Math.max(range.maxY, bottom - range.clientHeight);
+          if (range.maxY >= requiredBottom - range.clientHeight) return range;
+        }
+      cursor = parent;
+    }
+    return range;
+  };
   const into = (element, opts) => {
     if (isolated()) return remote(element, 'into', { opts });
     if (!element?.isConnected || !cssBoxModel.hasBox(element)) return;
@@ -419,9 +467,27 @@ compatibilityScrolling = (() => {
           )
             return;
         }
-        const m = metrics(ancestor);
-        if (!m.maxX && !m.minX && !m.maxY) return;
-        scrollable = true;
+        let knownRange = null;
+        if (!ancestor) {
+          const viewport = host.viewport(),
+            rootBox = layoutRectInObservation(documentRoot());
+          // A rendered root proves that at least this much content exists. It
+          // can undercount positioned overflow, but any offset inside the lower
+          // bound is valid without enumerating every descendant.
+          knownRange = {
+            width: Math.max(viewport.width, rootBox.width),
+            height: Math.max(viewport.height, rootBox.height),
+            clientWidth: viewport.width,
+            clientHeight: viewport.height,
+            minX: 0,
+            // Keep horizontal scrolling on the regular metrics path. The
+            // root's width alone does not prove the signed scroll range in
+            // RTL documents.
+            maxX: 0,
+            maxY: Math.max(0, rootBox.height - viewport.height),
+          };
+        }
+        let m = knownRange || metrics(ancestor);
         const r = targetRect(),
           a = ancestor ? clientRectInObservation(ancestor) : { x: 0, y: 0 },
           edges = ancestor ? cssBoxModel.size(ancestor).edges : { bleft: 0, btop: 0 },
@@ -452,7 +518,27 @@ compatibilityScrolling = (() => {
           a.y + edges.btop + m.clientHeight - px(node, 'scroll-padding-bottom'),
           opts.block,
         );
-        scroll(ancestor, { x: old.x + dx, y: old.y + dy, behavior: opts.behavior || 'auto' });
+        if (knownRange) {
+          const requestedX = old.x + dx,
+            requestedY = old.y + dy;
+          if (requestedY > knownRange.maxY)
+            extendRootRange(element, knownRange, requestedY + knownRange.clientHeight, old.y);
+          if (
+            requestedX < knownRange.minX ||
+            requestedX > knownRange.maxX ||
+            requestedY > knownRange.maxY
+          ) {
+            knownRange = null;
+            m = metrics(ancestor);
+          }
+        }
+        if (!m.maxX && !m.minX && !m.maxY) return;
+        scrollable = true;
+        scroll(
+          ancestor,
+          { x: old.x + dx, y: old.y + dy, behavior: opts.behavior || 'auto' },
+          knownRange,
+        );
       });
       if (opts.container === 'nearest' && scrollable) break;
     }

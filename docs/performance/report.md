@@ -2430,3 +2430,33 @@ major general regression, but snapshot construction remains measurable on small
 static Grid pages. The implementation keeps a per-epoch flat-box cache and does
 not add a persistent tree yet; this cold cost is the trigger to profile the
 numeric adapter before considering more complex cross-epoch state.
+
+### Playwright Wikipedia journey follow-up (2026-09-16)
+
+A black-box Playwright journey used the unchanged Chromium-oriented script in
+`tools/runtimecheck/playwright_wikipedia.js`: open Wikipedia, fill and submit
+search, inspect article DOM, locate and click the exact accessible ECMAScript
+link, verify the destination, then navigate back. The control Chrome 152 run
+completed in 2,711 ms. The initial Mimic measurements were 14.5–15.3 s; the
+best fresh final-candidate process completed in 12,118 ms; the post-regression
+gate run completed in 12,987 ms. This is a real improvement but remains
+4.47–4.79x the control and does not meet the requested 7 s target.
+
+The measured command profile attributes 4,552 ms inclusive to 49
+`Runtime.callFunctionOn` commands (3,870 ms direct work), 1,313 ms inclusive to
+three mouse dispatches, 851 ms to the initial `Page.navigate`, 696 ms to ten
+`Runtime.evaluate` commands, and 476 ms to two scroll-into-view commands. These
+overlap: mouse dispatch included 599 ms waiting for Page turns and 509 ms queued
+behind ordered input. The remaining largest JS CPU path is accessibility and
+visibility work in the isolated world, including repeated canonical-owner style
+observations and layout. A bounded foreign-style read-ahead experiment made the
+one-shot query slower even though hot repeats fell below 200 ms, so it was not
+retained.
+
+Retained changes remove repeated collection/state projections, preserve style
+and geometry observations across matching mutation epochs, avoid unnecessary
+resource invalidation, yield the event-loop pump to queued CDP commands, reuse
+scroll ranges, and preserve a verified scroll target through the following
+pointer sequence. The original footer Docs click reproducer now resolves the
+link as its own hit target and completes navigation in 2,986 ms on a fresh
+process. No website-specific behavior or benchmark-specific shortcut was added.

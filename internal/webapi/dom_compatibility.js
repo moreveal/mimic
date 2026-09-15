@@ -354,6 +354,7 @@ const compatibilityElementState = {};
     }
   };
   const queueRecord = (type, target, details = {}, remote = false) => {
+    invalidateDOMCollections();
     if (mutationDepth) return;
     if (otherWorldObservers && !remote) {
       // Synthetic roots have no canonical DOM node ID. Their mutations remain
@@ -555,21 +556,31 @@ const compatibilityElementState = {};
     for (const target of [Node, Node.prototype])
       Object.defineProperty(target, name, { value, enumerable: true });
   let documentRootID = host.documentRootID();
+  const canonicalChildLists = new WeakMap();
   const childLists = new WeakMap();
   bootstrapRestoreHooks.push(() => {
     documentRootID = host.documentRootID();
   });
   const childCount = (node) => {
-    if (node === document) return host.nodeChildCount(documentRootID);
     const slot = elementSlot(node);
-    if (slot) return host.nodeChildCount(slot.nodeId);
+    if (node === document || slot) return canonicalChildren(node).length;
     return fragmentSlots.get(node)?.children.length || 0;
   };
   const childAt = (node, index) => {
-    if (node === document) return wrap(host.nodeChildAt(documentRootID, index));
     const slot = elementSlot(node);
-    if (slot) return wrap(host.nodeChildAt(slot.nodeId, index));
+    if (node === document || slot) return canonicalChildren(node)[index] || null;
     return fragmentSlots.get(node)?.children[index] || null;
+  };
+  const canonicalChildren = (node) => {
+    const revision =
+        styleReadCache?.version ||
+        (document.readyState === 'loading' ? 'host:' + host.domRevision() : domCollectionRevision),
+      previous = canonicalChildLists.get(node);
+    if (previous?.revision === revision) return previous.values;
+    const slot = elementSlot(node),
+      values = host.nodeChildren(node === document ? documentRootID : slot.nodeId).map(wrap);
+    canonicalChildLists.set(node, { revision, values });
+    return values;
   };
   accessor(Node.prototype, 'childNodes', function () {
     let list = childLists.get(this);

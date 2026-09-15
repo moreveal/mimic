@@ -331,6 +331,13 @@ func (s *Server) pumpEventLoopWithTicks(lifetime context.Context, page *browser.
 				page.UnlockCommands()
 				// Exclude time spent executing or waiting for other Page turns.
 				last = time.Now()
+				if more && page.ExternalCommandWaiting() {
+					// A ready background task must not win another burst ahead of
+					// an already queued protocol command. Its wake hint remains
+					// coalesced so the pump resumes after the command completes.
+					page.WakeEventLoop()
+					break
+				}
 				if err != nil && lifetime.Err() == nil {
 					page.Trace().Add(trace.Error, "scheduler", map[string]any{"error": err.Error(), "during": "CDP event-loop pump"})
 				}
@@ -551,7 +558,7 @@ func (s *session) handleCommand(m message) (afterUnlock func()) {
 			if m.timing != nil {
 				waitStarted = time.Now()
 			}
-			page.LockCommands()
+			page.LockExternalCommand()
 			if m.timing != nil {
 				m.timing.pageWait = time.Since(waitStarted)
 			}

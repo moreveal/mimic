@@ -79,6 +79,45 @@ func TestDetachedImageLoadCoalescesAndBlocksDocumentLoad(t *testing.T) {
 	}
 }
 
+func TestLazyImageDoesNotBlockWindowLoad(t *testing.T) {
+	started := make(chan struct{})
+	release := make(chan struct{})
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if r.URL.Path == "/slow.svg" {
+			close(started)
+			<-release
+			w.Header().Set("Content-Type", "image/svg+xml")
+			fmt.Fprint(w, `<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1"/>`)
+			return
+		}
+		fmt.Fprint(w, `<img loading="lazy" src="/slow.svg"><script>addEventListener('load',()=>globalThis.loaded=true)</script>`)
+	}))
+	defer server.Close()
+	p := testPage(t)
+	done := make(chan error, 1)
+	go func() { done <- p.Navigate(context.Background(), server.URL) }()
+	select {
+	case err := <-done:
+		if err != nil {
+			close(release)
+			t.Fatal(err)
+		}
+	case <-time.After(2 * time.Second):
+		close(release)
+		t.Fatal("lazy image delayed the Window load event")
+	}
+	close(release)
+	value, err := p.Evaluate(context.Background(), `document.readyState+':'+globalThis.loaded`)
+	if err != nil || value != "complete:true" {
+		t.Fatalf("load state: %v %v", value, err)
+	}
+	select {
+	case <-started:
+	case <-time.After(2 * time.Second):
+		t.Fatal("lazy image request was not scheduled independently")
+	}
+}
+
 func TestImageReplacementCancelsObsoleteRequest(t *testing.T) {
 	started, canceled := make(chan struct{}), make(chan struct{})
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

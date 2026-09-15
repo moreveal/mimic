@@ -13,7 +13,7 @@ func (s *session) runtimeDebugger() *browser.Debugger {
 		s.debugger = browser.NewDebugger(s.page)
 		s.debugger.ConsoleEnabled = func() bool { return s.domainEnabled("Runtime") }
 		s.debugger.BeforeWait = func() { s.page.UnlockCommands(); s.commandMu.Unlock() }
-		s.debugger.AfterWait = func() { s.commandMu.Lock(); s.page.LockCommands() }
+		s.debugger.AfterWait = func() { s.commandMu.Lock(); s.page.LockExternalCommand() }
 		s.debugger.Console = func(realmID, name string, args []any) {
 			contextID, ok := s.contextForRealm(realmID)
 			if ok {

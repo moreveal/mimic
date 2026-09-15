@@ -40,10 +40,14 @@ func (p *Page) scrollNodeIntoView(ctx context.Context, frame *Frame, ok bool, no
 	if err != nil {
 		return err
 	}
-	return r.scheduler.RunInline(ctx, func(ctx context.Context) error {
+	err = r.scheduler.RunInline(ctx, func(ctx context.Context) error {
 		_, err := r.invokeInputWorld(ctx, r, nodeID, "scroll", string(payload))
 		return err
 	})
+	if err == nil {
+		p.inputHintRealm, p.inputHintNodeID = r, nodeID
+	}
+	return err
 }
 
 func (e *inputProtocolError) Error() string     { return e.message }
@@ -126,7 +130,14 @@ func (p *Page) DispatchProtocolInput(ctx context.Context, method string, params 
 				return err
 			}
 		}
-		_, err := r.invokeInputWorld(ctx, target, 0, operation, string(encoded))
+		hint := int64(0)
+		if operation == "mouse" && p.inputHintRealm == target {
+			hint = p.inputHintNodeID
+		}
+		_, err := r.invokeInputWorld(ctx, target, hint, operation, string(encoded))
+		if operation == "mouse" && params["type"] == "mouseReleased" {
+			p.inputHintRealm, p.inputHintNodeID = nil, 0
+		}
 		return err
 	})
 }

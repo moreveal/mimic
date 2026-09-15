@@ -247,6 +247,29 @@ func TestProtocolMouseClickNavigatesThroughAnchorDescendant(t *testing.T) {
 	}
 }
 
+func TestProtocolPointerFocusDoesNotScrollMovedTarget(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, page *Page) {
+		navigateCapabilityFixture(t, page)
+		ctx := context.Background()
+		if _, err := page.Evaluate(ctx, `
+document.body.style.margin='0';
+document.body.innerHTML='<button id="target" style="position:absolute;top:10px">target</button><div style="height:3000px"></div>';
+document.getElementById('target').addEventListener('mousedown',event=>event.currentTarget.style.top='1500px');
+`); err != nil {
+			t.Fatal(err)
+		}
+		for _, kind := range []string{"mouseMoved", "mousePressed"} {
+			if err := page.DispatchProtocolInput(ctx, "Input.dispatchMouseEvent", map[string]any{"type": kind, "x": 5, "y": 15, "button": "left", "buttons": 1, "clickCount": 1}); err != nil {
+				t.Fatal(err)
+			}
+		}
+		got, err := page.Evaluate(ctx, `JSON.stringify({scrollY,active:document.activeElement.id,top:document.getElementById('target').getBoundingClientRect().top})`)
+		if err != nil || got != `{"scrollY":0,"active":"target","top":1500}` {
+			t.Fatalf("trusted pointer focus scrolled moved target: %v err=%v", got, err)
+		}
+	})
+}
+
 func TestProtocolMouseClickCannotBypassOverlayWithHitHint(t *testing.T) {
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		navigateCapabilityFixture(t, page)

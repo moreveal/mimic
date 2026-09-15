@@ -14,6 +14,7 @@ func (r *Realm) installDocumentCompatibility(host map[string]any) {
 		// Animation time changes without a DOM mutation. Keep those observations
 		// in the canonical owner rather than freezing an intermediate sample.
 		r.styleProjections.disable()
+		r.document.InvalidateObservations()
 		return nil, nil
 	})
 	if r.agent.Page().ctx.browser.devPreview {
@@ -53,6 +54,8 @@ func (r *Realm) installDocumentCompatibility(host map[string]any) {
 				return r.val(nil), nil
 			case "value":
 				return r.val(""), nil
+			case "values":
+				return r.val("{}"), nil
 			case "rect", "layout":
 				return r.val(map[string]any{"x": 0, "y": 0, "width": 0, "height": 0, "left": 0, "top": 0, "right": 0, "bottom": 0, "offsetLeft": 0, "offsetTop": 0}), nil
 			default:
@@ -63,9 +66,9 @@ func (r *Realm) installDocumentCompatibility(host map[string]any) {
 		key := styleProjectionKey{id, kind, property}
 		// Child viewport geometry can depend on the parent realm's style state.
 		// Until that dependency is represented, retain only top-document scalars.
-		cacheable := (kind == "value" || kind == "document" || kind == "" || kind == "box" ||
-			(kind == "visibility" && !strings.Contains(property, `"contentVisibilityAuto":true`))) && len(property) <= 128 && owner == p.Top.Realm
-		epoch := owner.styleProjectionEpoch()
+		cacheable := (kind == "value" || kind == "values" || kind == "document" || kind == "" || kind == "box" ||
+			(kind == "visibility" && !strings.Contains(property, `"contentVisibilityAuto":true`))) && len(property) <= 512 && owner == p.Top.Realm
+		epoch := owner.styleProjectionEpoch(kind)
 		if cacheable {
 			if value, ok := owner.styleProjections.get(epoch, key); ok {
 				return r.val(value), nil
@@ -103,7 +106,7 @@ func (r *Realm) installDocumentCompatibility(host map[string]any) {
 		} else {
 			err = run(context.Background())
 		}
-		if err == nil && cacheable && epoch == owner.styleProjectionEpoch() {
+		if err == nil && cacheable && epoch == owner.styleProjectionEpoch(kind) {
 			owner.styleProjections.put(epoch, key, observation)
 		}
 		return r.val(observation), err

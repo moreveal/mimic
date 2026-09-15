@@ -9,12 +9,19 @@ func (d *Document) StyleObservationState(id int64) string {
 	d.mu.RLock()
 	defer d.mu.RUnlock()
 	state := struct {
-		Parent     int64             `json:"parent"`
-		Attributes map[string]string `json:"attributes"`
-		Inline     string            `json:"inline"`
-	}{Attributes: map[string]string{}, Inline: "s"}
+		Parent        int64             `json:"parent"`
+		Children      []int64           `json:"children"`
+		OwnerDocument int64             `json:"ownerDocument"`
+		Connected     bool              `json:"connected"`
+		Attributes    map[string]string `json:"attributes"`
+		Inline        string            `json:"inline"`
+	}{Children: []int64{}, Attributes: map[string]string{}, Inline: "s"}
 	if n := d.nodes[id]; n != nil {
-		state.Parent, state.Attributes = n.Parent, n.Attributes
+		state.Parent = n.Parent
+		state.Children = append(state.Children, n.Children...)
+		state.OwnerDocument = d.ownerDocumentLocked(id)
+		state.Connected = d.isConnectedLocked(id)
+		state.Attributes = n.Attributes
 		if n.StyleDeclarationsJSON != "" {
 			state.Inline = "j" + n.StyleDeclarationsJSON
 		} else {

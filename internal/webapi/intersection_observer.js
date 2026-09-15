@@ -102,16 +102,26 @@ const intersectionRect = (x = 0, y = 0, width = 0, height = 0) => ({
   right: x + width,
   bottom: y + height,
 });
-const intersectionSample = (state, target, time) => {
+const intersectionSample = (state, target, time, eligibility) => {
   const zero = intersectionRect();
-  let valid = target.isConnected && target.ownerDocument === document;
+  const eligible = (element) => {
+    if (!element) return true;
+    if (eligibility.has(element)) return eligibility.get(element);
+    const parent = intersectionParent(element),
+      display = computedCSSDeclarations(element).find((e) => e.name === 'display')?.value,
+      valid =
+        element.isConnected &&
+        element.ownerDocument === document &&
+        display !== 'none' &&
+        (display || !element.hasAttribute('hidden')) &&
+        eligible(parent);
+    eligibility.set(element, valid);
+    return valid;
+  };
+  let valid = eligible(target);
   if (state.root)
     valid =
       valid && (state.root === document || (state.root.isConnected && state.root.contains(target)));
-  for (let element = target; valid && element; element = intersectionParent(element)) {
-    const display = computedCSSDeclarations(element).find((e) => e.name === 'display')?.value;
-    if (display === 'none' || (!display && element.hasAttribute('hidden'))) valid = false;
-  }
   let box = zero;
   if (valid) box = clientRectFor(target);
   let root = zero,
@@ -211,11 +221,12 @@ const scheduleIntersectionUpdate = () => {
         lastIntersectionVersion = version;
         intersectionTargetsChanged = false;
         withStyleReadCache(() => {
-          const time = host.performanceNow();
+          const time = host.performanceNow(),
+            eligibility = new WeakMap();
           for (const observer of intersectionObservers) {
             const state = intersectionState(observer);
             for (const [target, previous] of state.targets) {
-              const entry = intersectionSample(state, target, time);
+              const entry = intersectionSample(state, target, time, eligibility);
               const threshold = state.thresholds.findIndex(
                 (value) => value > entry.intersectionRatio,
               );
