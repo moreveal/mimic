@@ -1132,14 +1132,9 @@
   const withStyleReadCache = (callback) => {
     const previous = styleReadCache,
       canonicalVersion = host.observationVersion();
-    // Environment changes are Page tasks; nested synchronous reads need only
-    // revalidate the canonical mutation/CSSOM epoch, not query media again.
-    const mediaVersion =
-      previous?.mediaVersion ??
-      host.media('(prefers-color-scheme: dark)') +
-        ':' +
-        host.media('(prefers-reduced-motion: reduce)');
-    const version = canonicalVersion + ':' + constructedStyleSheets.revision() + ':' + mediaVersion;
+    // The canonical epoch includes viewport and media preferences, so checking
+    // it does not require separate host calls for each environment input.
+    const version = canonicalVersion + ':' + constructedStyleSheets.revision();
     const retain = !styleObservationIsolated && windowRelations.self === windowRelations.top;
     if (!checkpointStyleRules || checkpointStyleVersion !== version) {
       checkpointStyleRules = new WeakMap();
@@ -1155,7 +1150,7 @@
     if (!observation)
       observation = {
         version: observationVersion,
-        mediaVersion,
+        environmentVersion: canonicalVersion.slice(canonicalVersion.indexOf('|') + 1),
         retainable: retain,
         rules: retain ? checkpointStyleRules : new WeakMap(),
         declarations: new WeakMap(),
@@ -2873,21 +2868,23 @@
   registerBootstrapCallback('installFrameViewport', readFrameViewport, frameHasLayout);
   registerBootstrapCallback('installComputedStyleFlatTree', (nodeID, kind, name) => {
     const element = wrap(nodeID);
-    return kind === 'scroll'
-      ? compatibilityScrolling.dispatch(element, JSON.parse(name))
-      : kind === 'visibility'
-        ? observeElementVisibility(element, JSON.parse(name))
-        : kind === 'box'
-          ? cssBoxModel.hasBox(element)
-          : kind === 'value'
-            ? cssComputedValue(element, name)
-            : kind === 'rect'
-              ? clientRectFor(element)
-              : kind === 'layout'
-                ? layoutRectFor(element)
-                : kind === 'document'
-                  ? computedStyleDocumentAvailable(element)
-                  : computedStyleAvailable(element);
+    return kind === 'innerText'
+      ? renderedInnerText(element)
+      : kind === 'scroll'
+        ? compatibilityScrolling.dispatch(element, JSON.parse(name))
+        : kind === 'visibility'
+          ? observeElementVisibility(element, JSON.parse(name))
+          : kind === 'box'
+            ? cssBoxModel.hasBox(element)
+            : kind === 'value'
+              ? cssComputedValue(element, name)
+              : kind === 'rect'
+                ? clientRectFor(element)
+                : kind === 'layout'
+                  ? layoutRectFor(element)
+                  : kind === 'document'
+                    ? computedStyleDocumentAvailable(element)
+                    : computedStyleAvailable(element);
   });
   let constructCustomElement = null,
     customElementCloneInert = 0;
@@ -2906,6 +2903,13 @@
     'table-row',
   ]);
   function renderedInnerText(element) {
+    return withStyleReadCache(() => {
+      const foreign = foreignCSSObservation(element, 'innerText');
+      if (foreign !== null) return foreign;
+      return renderedInnerTextInObservation(element);
+    });
+  }
+  function renderedInnerTextInObservation(element) {
     // Chrome falls back to textContent for detached/inert subtrees. For rendered
     // trees innerText observes CSS visibility and generated line boundaries.
     if (!element.isConnected) return element.textContent;

@@ -82,7 +82,7 @@ func TestCoverageMissCacheIsBoundedAndPageLocal(t *testing.T) {
 		t.Fatal(err)
 	}
 	count := len(e.missingCoverage)
-	if count == 0 || count > 8192 {
+	if (count == 0 && len(e.coverage) == 0) || count > 8192 {
 		t.Fatalf("coverage cache size %d", count)
 	}
 	faces, bytes := len(e.faces), e.bytes
@@ -100,7 +100,7 @@ func TestCoverageMissCacheIsBoundedAndPageLocal(t *testing.T) {
 	}
 }
 
-func TestFallbackSelectionReusesVerifiedUnicodeCoverage(t *testing.T) {
+func TestFallbackSelectionPreservesIndependentClusterSelection(t *testing.T) {
 	if _, err := os.Stat(filepath.Join(os.Getenv("WINDIR"), "Fonts", "malgun.ttf")); err != nil {
 		t.Skip("requires Windows Chrome reference fonts")
 	}
@@ -117,8 +117,33 @@ func TestFallbackSelectionReusesVerifiedUnicodeCoverage(t *testing.T) {
 	if err != nil || len(second.Glyphs) == 0 {
 		t.Fatalf("neighboring Hangul fallback: %v %v", second, err)
 	}
-	if len(e.fallbackSelections) != count {
-		t.Fatalf("same Unicode coverage rebuilt fallback selection: %d -> %d", count, len(e.fallbackSelections))
+	independent, err := New().Shape("\uac01", "Arial", 16, 400, false, false, false)
+	if err != nil || !reflect.DeepEqual(second, independent) {
+		t.Fatalf("previous cluster changed fallback selection: %v", err)
+	}
+	repeated, err := e.Shape("\uac00", "Arial", 16, 400, false, false, false)
+	if err != nil || !reflect.DeepEqual(first, repeated) {
+		t.Fatalf("repeated cluster changed fallback selection: %v", err)
+	}
+}
+
+func TestCatalogCoverageFilterPreservesShaping(t *testing.T) {
+	if _, err := os.Stat(filepath.Join(os.Getenv("WINDIR"), "Fonts", "arial.ttf")); err != nil {
+		t.Skip("requires reference fonts")
+	}
+	filtered, decoded := New(), New()
+	filtered.scan()
+	decoded.scan()
+	if len(filtered.coverage) == 0 {
+		t.Fatal("catalog has no nominal coverage")
+	}
+	decoded.coverage = nil // Compare against the full face-decoding path.
+	for _, text := range []string{"က", "가각", "漢", "e\u0301", "👩‍💻", "☺\ufe0e", "☺\ufe0f", "\u0378"} {
+		got, err := filtered.Shape(text, "Arial", 16, 400, false, false, false)
+		want, referenceErr := decoded.Shape(text, "Arial", 16, 400, false, false, false)
+		if err != nil || referenceErr != nil || !reflect.DeepEqual(got, want) {
+			t.Fatalf("coverage filter changed %q: %v / %v; %v / %v", text, got, want, err, referenceErr)
+		}
 	}
 }
 

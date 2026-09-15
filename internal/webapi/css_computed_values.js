@@ -171,8 +171,14 @@ const cssComputedShorthand = (element, name) => {
   const ordinary = serializeOrdinaryCSSShorthand(name, values);
   return ordinary || values.join(' ');
 };
-const cssComputedValue = (element, name) =>
-  withStyleReadCache(() => {
+const cssComputedValue = (element, name) => {
+  // Borrowed nodes resolve in their owner. Do not build a caller-side style
+  // observation that cannot be retained and never participates in resolution.
+  if (styleObservationIsolated) {
+    const foreign = foreignCSSObservation(element, 'value', name);
+    if (foreign !== null) return foreign;
+  }
+  return withStyleReadCache(() => {
     const foreign = foreignCSSObservation(element, 'value', name);
     if (foreign !== null) return foreign;
     if (!computedStyleDocumentAvailable(element) || !computedStyleAvailable(element)) return '';
@@ -424,3 +430,4 @@ const cssComputedValue = (element, name) =>
     }
     return value;
   });
+};

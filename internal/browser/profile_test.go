@@ -107,6 +107,19 @@ func TestProfileMediaChangeUsesPageTasks(t *testing.T) {
 	historyEval(t, p, `new Promise(r=>setTimeout(()=>r(profileChanges.length===1),0))`, true)
 }
 
+func TestStyleObservationEpochTracksMediaPreferences(t *testing.T) {
+	p := bootstrapSnapshotPage(t)
+	historyEval(t, p, `document.head.innerHTML='<style>div{width:10px;height:10px}@media(prefers-color-scheme:dark){div{width:20px}}@media(prefers-reduced-motion:reduce){div{height:30px}}</style>';document.body.innerHTML='<div></div>';globalThis.mediaStyle=getComputedStyle(document.querySelector('div'));true`, true)
+	if _, err := p.UpdateProfile([]byte(`{"preferences":{"colorScheme":"light","reducedMotion":false}}`)); err != nil {
+		t.Fatal(err)
+	}
+	historyEval(t, p, `mediaStyle.width==='10px'&&mediaStyle.height==='10px'`, true)
+	if _, err := p.UpdateProfile([]byte(`{"preferences":{"colorScheme":"dark","reducedMotion":true}}`)); err != nil {
+		t.Fatal(err)
+	}
+	historyEval(t, p, `mediaStyle.width==='20px'&&mediaStyle.height==='30px'`, true)
+}
+
 func TestProfileCreationObservations(t *testing.T) {
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
