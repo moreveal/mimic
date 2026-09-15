@@ -38,6 +38,7 @@ func (e *Engine) LocalFont(name string) (string, error) {
 	key := fmt.Sprintf("%s#%d", r.path, r.index)
 	id := fmt.Sprintf("local-%x", sha256.Sum256([]byte(key)))
 	e.resources[id] = r
+	e.clearResourceSelections()
 	return id, nil
 }
 
@@ -81,8 +82,10 @@ func (e *Engine) RegisterFont(data []byte) (string, error) {
 	}
 	r := resource{path: path, index: 0, family: description.Family, aspect: description.Aspect}
 	e.resources[id] = r
+	e.clearResourceSelections()
 	if _, err := e.load(r); err != nil {
 		delete(e.resources, id)
+		e.clearResourceSelections()
 		_ = os.Remove(path)
 		return "", err
 	}

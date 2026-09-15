@@ -14,6 +14,7 @@ import (
 	"github.com/moreveal/mimic/internal/profile"
 	"github.com/moreveal/mimic/internal/speech"
 	"github.com/moreveal/mimic/internal/state"
+	"github.com/moreveal/mimic/internal/textmetrics"
 )
 
 type Browser struct {
@@ -51,6 +52,9 @@ func NewWithOptions(factory engine.Factory, bundle compatibility.Bundle, options
 	if provider == nil {
 		provider = speech.Open
 	}
+	// Installed font metadata is browser-wide immutable input. Resolve it once
+	// during browser construction, never in a synchronous DOM/layout read.
+	textmetrics.WarmSystemCatalog()
 	b := &Browser{devPreview: options.DevPreview, speechProvider: provider, factory: factory, env: env.Clone(), compat: bundle, contexts: map[string]*Context{}}
 	if len(options.ProfileJSON) > 0 {
 		d, err := b.ValidateProfile(options.ProfileJSON)

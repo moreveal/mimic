@@ -100,6 +100,28 @@ func TestCoverageMissCacheIsBoundedAndPageLocal(t *testing.T) {
 	}
 }
 
+func TestFallbackSelectionReusesVerifiedUnicodeCoverage(t *testing.T) {
+	if _, err := os.Stat(filepath.Join(os.Getenv("WINDIR"), "Fonts", "malgun.ttf")); err != nil {
+		t.Skip("requires Windows Chrome reference fonts")
+	}
+	e := New()
+	first, err := e.Shape("\uac00", "Arial", 16, 400, false, false, false)
+	if err != nil || len(first.Glyphs) == 0 {
+		t.Fatalf("first Hangul fallback: %v %v", first, err)
+	}
+	count := len(e.fallbackSelections)
+	if count == 0 {
+		t.Fatal("verified fallback selection was not retained")
+	}
+	second, err := e.Shape("\uac01", "Arial", 16, 400, false, false, false)
+	if err != nil || len(second.Glyphs) == 0 {
+		t.Fatalf("neighboring Hangul fallback: %v %v", second, err)
+	}
+	if len(e.fallbackSelections) != count {
+		t.Fatalf("same Unicode coverage rebuilt fallback selection: %d -> %d", count, len(e.fallbackSelections))
+	}
+}
+
 func BenchmarkMissingGlyphFallback(b *testing.B) {
 	for _, cold := range []bool{false, true} {
 		name := "cached"

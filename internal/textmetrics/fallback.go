@@ -2,6 +2,7 @@ package textmetrics
 
 import (
 	"fmt"
+	"math"
 	"strings"
 	"unicode"
 
@@ -73,6 +74,44 @@ func (e *Engine) fallbackFace(primary *loaded, cluster []rune, families string, 
 	if coversCluster(primary, cluster) {
 		return primary, nil
 	}
+	selectionKey := fallbackSelectionKey{
+		primary:  fmt.Sprintf("%s#%d", primary.resource.path, primary.resource.index),
+		coverage: fallbackCoverageClass(cluster),
+		families: families,
+		choices:  resourceSelectionChoices(choices),
+		weight:   math.Float64bits(weight),
+		italic:   italic,
+	}
+	if selected, ok := e.fallbackSelections[selectionKey]; ok {
+		face, err := e.load(selected)
+		if err != nil {
+			return nil, err
+		}
+		if coversCluster(face, cluster) {
+			return face, nil
+		}
+		delete(e.fallbackSelections, selectionKey)
+		for i, key := range e.fallbackSelectionOrder {
+			if key == selectionKey {
+				e.fallbackSelectionOrder = append(e.fallbackSelectionOrder[:i], e.fallbackSelectionOrder[i+1:]...)
+				break
+			}
+		}
+	}
+	remember := func(face *loaded) *loaded {
+		if e.fallbackSelections == nil {
+			e.fallbackSelections = make(map[fallbackSelectionKey]resource)
+		}
+		if len(e.fallbackSelections) >= 8192 {
+			oldest := e.fallbackSelectionOrder[0]
+			delete(e.fallbackSelections, oldest)
+			copy(e.fallbackSelectionOrder, e.fallbackSelectionOrder[1:])
+			e.fallbackSelectionOrder = e.fallbackSelectionOrder[:len(e.fallbackSelectionOrder)-1]
+		}
+		e.fallbackSelections[selectionKey] = face.resource
+		e.fallbackSelectionOrder = append(e.fallbackSelectionOrder, selectionKey)
+		return face
+	}
 	// Control characters use this font's real missing-glyph observation. They
 	// must not force a search through every installed graphical font.
 	if len(cluster) == 1 && unicode.IsControl(cluster[0]) && cluster[0] != 0x7f {
@@ -90,7 +129,22 @@ func (e *Engine) fallbackFace(primary *loaded, cluster []rune, families string, 
 	if len(e.fallbackFamilies) > 0 {
 		names = append(names, e.fallbackFamilies...)
 	} else {
-		names = append(names, "Segoe UI Emoji", "Segoe UI Symbol", "Segoe UI", "Arial")
+		// Chrome's Windows fallback resolves common Unicode scripts through the
+		// platform UI families before considering the remaining installed catalog.
+		// Keeping that ordered browser-level chain avoids reopening unrelated font
+		// files for every previously unseen grapheme.
+		names = append(
+			names,
+			"Segoe UI Emoji",
+			"Segoe UI Symbol",
+			"Segoe UI",
+			"Microsoft YaHei",
+			"Yu Gothic UI",
+			"Malgun Gothic",
+			"Myanmar Text",
+			"Nirmala UI",
+			"Arial",
+		)
 	}
 	seen := map[string]bool{}
 	clusterText := string(cluster)
@@ -142,7 +196,7 @@ func (e *Engine) fallbackFace(primary *loaded, cluster []rune, families string, 
 			return nil, fmt.Errorf("fallback resource %s: %w", r.family, err)
 		}
 		if face != nil {
-			return face, nil
+			return remember(face), nil
 		}
 	}
 	// Coverage search remains bounded by the Page's face/byte limits. No
@@ -156,10 +210,19 @@ func (e *Engine) fallbackFace(primary *loaded, cluster []rune, families string, 
 			return nil, fmt.Errorf("fallback resource %s: %w", r.family, err)
 		}
 		if face != nil {
-			return face, nil
+			return remember(face), nil
 		}
 	}
 	// A valid font can still lack a character. Shape its actual .notdef glyph;
 	// inventing a width or failing the entire browser operation is incorrect.
 	return primary, nil
+}
+
+func fallbackCoverageClass(cluster []rune) string {
+	for _, ch := range cluster {
+		if !harfbuzz.IsDefaultIgnorable(ch) && !unicode.IsMark(ch) {
+			return fmt.Sprintf("%x", uint32(ch)>>8)
+		}
+	}
+	return "ignorable"
 }
