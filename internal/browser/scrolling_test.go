@@ -2,9 +2,12 @@ package browser
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
 	chrome152 "github.com/moreveal/mimic/chrome/152"
 	v8engine "github.com/moreveal/mimic/internal/engine/v8"
+	"net/http"
+	"net/http/httptest"
 	"testing"
 	"time"
 )
@@ -150,6 +153,53 @@ func TestScrollingWheelInput(t *testing.T) {
 	if fmt.Sprint(result) != "120" {
 		t.Fatal(result)
 	}
+}
+
+func TestPropagatedBodyOverflowScrollsViewport(t *testing.T) {
+	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
+		_, _ = fmt.Fprint(w, `<!doctype html><body></body>`)
+	}))
+	defer server.Close()
+	historyTestPages(t, func(t *testing.T, p *Page) {
+		ctx := context.Background()
+		if err := p.Navigate(ctx, server.URL); err != nil {
+			t.Fatal(err)
+		}
+		value, err := p.Evaluate(ctx, `(() => {
+  document.documentElement.style.overflow = 'visible';
+  document.body.style.cssText = 'margin:0;overflow-x:hidden';
+  document.body.innerHTML = '<div style="height:1800px"></div><a id="target" style="display:block;width:80px;height:30px">target</a>';
+  return JSON.stringify([document.compatMode, document.scrollingElement.tagName, getComputedStyle(document.body).overflowX]);
+})()`)
+		if err != nil || value != `["CSS1Compat","HTML","hidden"]` {
+			t.Fatalf("fixture: %v %v", value, err)
+		}
+		id := p.Top.Realm.document.ElementByID(p.Top.Realm.document.Root().ID, "target")
+		if id == 0 {
+			t.Fatal("target missing")
+		}
+		if err := p.ScrollNodeIntoView(ctx, id, nil); err != nil {
+			t.Fatal(err)
+		}
+		value, err = p.Evaluate(ctx, `(() => {
+  const target=document.getElementById('target'),r=target.getBoundingClientRect();
+  return JSON.stringify({window:scrollY,body:document.body.scrollTop,html:document.documentElement.scrollTop,
+    top:r.top,bottom:r.bottom,height:innerHeight,hit:document.elementFromPoint(r.x+r.width/2,r.y+r.height/2)===target});
+})()`)
+		if err != nil {
+			t.Fatal(err)
+		}
+		var result struct {
+			Window, Body, HTML, Top, Bottom, Height float64
+			Hit                                     bool
+		}
+		if err := json.Unmarshal([]byte(value.(string)), &result); err != nil {
+			t.Fatal(err)
+		}
+		if result.Window <= 0 || result.Body != 0 || result.HTML != result.Window || result.Top < 0 || result.Bottom > result.Height || !result.Hit {
+			t.Fatalf("propagated BODY overflow: %+v", result)
+		}
+	})
 }
 
 func TestScrollingGeometry(t *testing.T) {

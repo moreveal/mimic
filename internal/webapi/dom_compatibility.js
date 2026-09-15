@@ -68,6 +68,7 @@ const compatibilityElementState = {};
     Object.setPrototypeOf(node, ctor.prototype);
     upgraded.set(node, definition);
     upgradeRevision++;
+    host.invalidateStyleObservations();
     return node;
   };
   const upgrade = (node) => {
@@ -93,6 +94,7 @@ const compatibilityElementState = {};
         throw new TypeError('Custom element returned a different object');
       upgraded.set(node, definition);
       upgradeRevision++;
+      host.invalidateStyleObservations();
       for (const args of attributes) reaction(node, 'attributeChangedCallback', args);
       if (connected) reaction(node, 'connectedCallback');
     } catch (error) {
@@ -1285,16 +1287,17 @@ const compatibilityElementState = {};
           'submit',
         ].includes(String(node.type))));
   compatibilityElementState.noteTrustedInput = (type) => {
-    host.invalidateStyleObservations();
-    if (type === 'keydown') keyboardFocus = true;
-    else if (type === 'mousedown' || type === 'pointerdown' || type === 'touchstart')
-      keyboardFocus = false;
+    const next = type === 'keydown';
+    if (next !== keyboardFocus) {
+      keyboardFocus = next;
+      host.invalidateStyleObservations();
+    }
   };
   document.addEventListener(
     'keydown',
     (event) => {
       if (event.isTrusted && !event.altKey && !event.ctrlKey && !event.metaKey)
-        keyboardFocus = true;
+        compatibilityElementState.noteTrustedInput('keydown');
     },
     true,
   );
@@ -1302,7 +1305,7 @@ const compatibilityElementState = {};
     document.addEventListener(
       type,
       (event) => {
-        if (event.isTrusted) keyboardFocus = false;
+        if (event.isTrusted) compatibilityElementState.noteTrustedInput(type);
       },
       true,
     );

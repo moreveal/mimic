@@ -94,3 +94,28 @@ func TestDOMMutationsDoNotRetainInvocationValues(t *testing.T) {
 		}
 	}
 }
+
+func TestDocumentAndEnvironmentReadsDoNotRetainInvocationValues(t *testing.T) {
+	p := newAsyncModulePage(t)
+	navigateCapabilityFixture(t, p)
+	const source = `(() => {
+  for (let i = 0; i < 1000; i++) {
+    if (document.defaultView !== window) throw Error('owner window changed');
+    void document.title; void document.readyState; void document.currentScript;
+    void document.referrer; void document.domain; void document.cookie;
+    void location.href; void location.origin; void screen.width;
+    void navigator.language; void history.length; void window.origin;
+  }
+  return true;
+})()`
+	for iteration := 0; iteration < 3; iteration++ {
+		before := persistentHandleCount(t, p.Top.Realm.runtime)
+		value, err := p.Evaluate(context.Background(), source)
+		if err != nil || value != true {
+			t.Fatalf("document reads: %v %v", value, err)
+		}
+		if growth := persistentHandleCount(t, p.Top.Realm.runtime) - before; iteration > 0 && growth != 0 {
+			t.Fatalf("read-only getters retained %d invocation handles", growth)
+		}
+	}
+}

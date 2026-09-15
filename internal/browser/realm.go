@@ -99,6 +99,7 @@ type Realm struct {
 	frameViewportRead        engine.Value
 	frameLayoutRead          engine.Value
 	computedStyleFlatRead    engine.Value
+	styleProjections         styleProjectionCache
 	previewRead              engine.Value
 	frameReferenceImport     engine.Value
 	frameTransaction         engine.Value
@@ -790,8 +791,8 @@ func (r *Realm) installBindingsOnOwner() error {
 		visit(r.document.Root().ID)
 		return r.val(frameIDs), nil
 	})
-	host["documentActive"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(!r.inactive), nil })
-	host["documentHasLayout"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+	host["documentActive"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(!r.inactive), nil })
+	host["documentHasLayout"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		if r.inactive {
 			return r.val(false), nil
 		}
@@ -825,7 +826,7 @@ func (r *Realm) installBindingsOnOwner() error {
 		}
 		return r.val(true), nil
 	})
-	host["frameElement"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+	host["frameElement"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		frame, ok := r.agent.(*Frame)
 		if !ok || r.inactive || frame.parent == nil || !r.canAccess(frame.parent) {
 			return r.val(nil), nil
@@ -996,13 +997,13 @@ func (r *Realm) installBindingsOnOwner() error {
 		return nil, r.postToFrame(strarg(a, 0), arg(a, 1), strarg(a, 2), stringSlice(arg(a, 3)))
 	})
 	r.installDocumentFocus(host)
-	host["navigator"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+	host["navigator"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		p.trace.Add(trace.API, "Navigator", map[string]any{"realm": r.ID})
 		environment := p.environmentView()
 		values := environment.NavigatorProjection(p.NetworkPolicy().Offline(), navigatorWebDriver)
 		return r.val(values), nil
 	})
-	host["screen"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+	host["screen"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		p.trace.Add(trace.API, "Screen", map[string]any{"realm": r.ID})
 		environment := p.environmentView()
 		s := environment.Screen()
@@ -1117,11 +1118,11 @@ func (r *Realm) installBindingsOnOwner() error {
 		})
 	}
 	installTextureDecoder(host, r.runtime)
-	host["graphics"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+	host["graphics"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		g := p.environmentView().Graphics
 		return r.val(map[string]any{"vendor": g.Vendor, "renderer": g.Renderer, "maxTextureSize": g.MaxTextureSize, "capabilitiesJSON": g.WebGLCapabilities()}), nil
 	})
-	host["rtcEnvironment"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+	host["rtcEnvironment"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		ice := p.environmentView().Network.ICE
 		count := ice.HostCandidateCount
 		if count < 0 {
@@ -1147,13 +1148,13 @@ func (r *Realm) installBindingsOnOwner() error {
 		}
 		return r.val(map[string]any{"hostCandidateCount": count, "reflexiveCandidateCount": reflexiveCount, "portOffsets": offsets, "reflexivePortOffsets": reflexiveOffsets, "publicAddress": ice.PublicAddress, "networkCost": ice.NetworkCost, "hostDelayMillis": ice.HostDelayMillis, "reflexiveDelayMillis": ice.ReflexiveDelayMillis, "endDelayMillis": ice.EndDelayMillis}), nil
 	})
-	host["hasStorageAccess"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+	host["hasStorageAccess"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		return r.val(p.environmentView().Network.CookiesEnabled && r.origin != "null"), nil
 	})
-	host["systemFonts"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+	host["systemFonts"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		return r.val(p.environmentView().SystemFontPalette()), nil
 	})
-	host["audioDevice"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+	host["audioDevice"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		a := p.environmentView().Audio
 		if a.SampleRate <= 0 {
 			a.SampleRate = 48000
@@ -1169,10 +1170,10 @@ func (r *Realm) installBindingsOnOwner() error {
 		}
 		return r.val(map[string]any{"sampleRate": a.SampleRate, "channels": a.Channels, "bufferDuration": a.BufferDuration, "maxBufferFrames": a.MaxBufferFrames}), nil
 	})
-	host["systemColors"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+	host["systemColors"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		return r.val(p.environmentView().SystemColorPalette()), nil
 	})
-	host["gpuCapabilities"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+	host["gpuCapabilities"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		return r.val(p.environmentView().Graphics.WebGPUProjection()), nil
 	})
 	host["gpuRequestAdapter"] = r.transientFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
@@ -1393,8 +1394,8 @@ func (r *Realm) installBindingsOnOwner() error {
 		}
 		return r.val(out), nil
 	})
-	host["title"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(r.document.Title()), nil })
-	host["readyState"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+	host["title"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(r.document.Title()), nil })
+	host["readyState"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		state := r.readyState
 		if r.mainWorld != nil {
 			state = r.mainWorld.readyState
@@ -1410,7 +1411,7 @@ func (r *Realm) installBindingsOnOwner() error {
 			return native.NewUndetectableObject(args[0])
 		})
 	}
-	host["currentScript"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+	host["currentScript"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		if r.currentScript == 0 {
 			return r.val(nil), nil
 		}
@@ -1519,7 +1520,7 @@ func (r *Realm) installBindingsOnOwner() error {
 		markup, err := r.document.SerializeNodeList(ids)
 		return r.val(markup), err
 	})
-	host["selectorTargetID"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) { return r.val(r.selectorTargetID), nil })
+	host["selectorTargetID"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) { return r.val(r.selectorTargetID), nil })
 	host["templateContent"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		n, ok := r.document.TemplateContent(int64(numarg(a, 0)))
 		if !ok {
@@ -1679,20 +1680,20 @@ func (r *Realm) installBindingsOnOwner() error {
 	host["contains"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(r.document.Contains(int64(numarg(a, 0)), int64(numarg(a, 1)))), nil
 	}, "nn")
-	host["firstElementChild"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["firstElementChild"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		n, ok := r.document.FirstElementChild(int64(numarg(a, 0)))
 		if !ok {
 			return r.val(nil), nil
 		}
-		return r.val(nodeData(n)), nil
-	})
-	host["firstChild"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		return r.val(n.ID), nil
+	}, "n")
+	host["firstChild"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		n, ok := r.document.FirstChild(int64(numarg(a, 0)))
 		if !ok {
 			return r.val(nil), nil
 		}
-		return r.val(nodeData(n)), nil
-	})
+		return r.val(n.ID), nil
+	}, "n")
 	host["nodeChildren"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(nodesData(r.document.Children(int64(numarg(a, 0))))), nil
 	})
@@ -1718,13 +1719,13 @@ func (r *Realm) installBindingsOnOwner() error {
 	host["isConnected"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(r.document.IsConnected(int64(numarg(a, 0)))), nil
 	})
-	host["sibling"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["sibling"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		n, ok := r.document.Sibling(int64(numarg(a, 0)), int(numarg(a, 1)))
 		if !ok {
 			return r.val(nil), nil
 		}
-		return r.val(nodeData(n)), nil
-	})
+		return r.val(n.ID), nil
+	}, "nn")
 	host["elementChildren"] = r.packedFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		return r.val(r.document.ChildIDs(int64(numarg(a, 0)), true)), nil
 	}, "n")
@@ -1831,7 +1832,7 @@ func (r *Realm) installBindingsOnOwner() error {
 		}
 		return nil, r.prepareChangedScript(id)
 	})
-	host["elementNonce"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["elementNonce"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		id := int64(numarg(a, 0))
 		if len(a) > 1 {
 			return nil, r.document.SetNonce(id, strarg(a, 1))
@@ -1842,16 +1843,16 @@ func (r *Realm) installBindingsOnOwner() error {
 		}
 		return r.val(node.Nonce), nil
 	})
-	host["documentReferrer"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(r.documentReferrer), nil })
-	host["documentDomain"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+	host["documentReferrer"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(r.documentReferrer), nil })
+	host["documentDomain"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		u, _ := url.Parse(r.origin)
 		if u == nil {
 			return r.val(""), nil
 		}
 		return r.val(u.Hostname()), nil
 	})
-	host["location"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(r.documentURL().String()), nil })
-	host["locationPart"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+	host["location"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(r.documentURL().String()), nil })
+	host["locationPart"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		u := r.documentURL()
 		part := strarg(a, 0)
 		switch part {
@@ -1880,11 +1881,11 @@ func (r *Realm) installBindingsOnOwner() error {
 		}
 		return r.val(""), nil
 	})
-	host["locationAncestorOrigins"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+	host["locationAncestorOrigins"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		origins := append([]string{}, r.ancestorOrigins...)
 		return r.val(origins), nil
 	})
-	host["windowOrigin"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+	host["windowOrigin"] = r.transientFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		if id := strarg(args, 0); id != "" {
 			frame := p.frame(id)
 			if !r.canAccess(frame) {
@@ -1961,13 +1962,13 @@ func (r *Realm) installBindingsOnOwner() error {
 		message, err := r.historyPush(strarg(a, 0), true, a[1])
 		return r.val(message), err
 	})
-	host["historyState"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.historyState(), nil })
-	host["historyIsActive"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(r.activeHistoryDocument()), nil })
+	host["historyState"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.historyState(), nil })
+	host["historyIsActive"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(r.activeHistoryDocument()), nil })
 	host["historyGo"] = r.fn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		r.historyGo(int(numarg(a, 0)))
 		return nil, nil
 	})
-	host["historyLength"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+	host["historyLength"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		if f, ok := r.agent.(*Frame); ok && disabledSessionHistory(f) {
 			return r.val(0), nil
 		}
@@ -2032,7 +2033,7 @@ func (r *Realm) installBindingsOnOwner() error {
 	})
 	host["xhr"] = r.fn(r.hostXHR)
 	installConsoleKind(host, r.runtime)
-	host["executionContextActive"] = r.fn(func(_ engine.Value, _ []engine.Value) (engine.Value, error) { return r.val(!r.inactive), nil })
+	host["executionContextActive"] = r.transientFn(func(_ engine.Value, _ []engine.Value) (engine.Value, error) { return r.val(!r.inactive), nil })
 	host["console"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
 		if len(a) > 2 {
 			r.debuggerConsole(strarg(a, 0), a[2])
@@ -2079,7 +2080,7 @@ func (r *Realm) installBindingsOnOwner() error {
 		}
 		return r.val(match), nil
 	})
-	host["documentSecurity"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+	host["documentSecurity"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		security := r.securityState()
 		return r.val(map[string]any{
 			"secureContext":       security.secureContext,
@@ -2088,7 +2089,7 @@ func (r *Realm) installBindingsOnOwner() error {
 			"originAgentCluster":  security.originAgentCluster,
 		}), nil
 	})
-	host["permissionsPolicy"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+	host["permissionsPolicy"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		policy := r.securityState().permissionsPolicy
 		origin := r.origin
 		request := network.Request{}
@@ -2101,7 +2102,7 @@ func (r *Realm) installBindingsOnOwner() error {
 		}
 		return r.val(map[string]any{"header": policy, "origin": origin, "clientHints": hints}), nil
 	})
-	host["documentCookie"] = r.fn(func(engine.Value, []engine.Value) (engine.Value, error) {
+	host["documentCookie"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		if !p.environmentView().Network.CookiesEnabled {
 			return r.val(""), nil
 		}

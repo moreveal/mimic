@@ -1116,7 +1116,8 @@
   // Top-world observations share one canonical revision. Child/isolated/foreign
   // realm dependencies retain only synchronous
   // reuse until their complete cross-realm input epoch can be represented.
-  let styleReadCache = null;
+  let styleReadCache = null,
+    styleObservationDynamic = false;
   // Immutable rule programs survive checkpoints; derived element observations
   // share only a matching canonical epoch, including across task checkpoints.
   let checkpointStyleRules = null,
