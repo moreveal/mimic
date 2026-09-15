@@ -130,3 +130,22 @@ func TestValidityStateBorrowedAcrossRealms(t *testing.T) {
 		t.Fatalf("cross-realm validity: %v %v", value, err)
 	}
 }
+
+func TestConstraintValidationPatternAndNeighboringFlags(t *testing.T) {
+	p := validationPage(t)
+	defer p.Close()
+	value, err := p.Evaluate(context.Background(), `(()=>{
+ const pattern=document.createElement('input');pattern.pattern='[a-z]{3}';pattern.value='ABC';
+ const email=document.createElement('input');email.type='email';email.value='missing-at';
+ const number=document.createElement('input');number.type='number';number.min='2';number.max='8';number.step='2';number.value='5';
+ const custom=document.createElement('textarea');custom.setCustomValidity('problem');
+ const disabled=document.createElement('input');disabled.required=true;disabled.disabled=true;
+ return pattern.validity.patternMismatch&&!pattern.validity.valid&&email.validity.typeMismatch&&
+   number.validity.stepMismatch&&!number.validity.rangeUnderflow&&!number.validity.rangeOverflow&&
+   custom.validity.customError&&custom.validationMessage==='problem'&&!custom.checkValidity()&&
+   !disabled.willValidate&&disabled.validity.valid;
+ })()`)
+	if err != nil || value != true {
+		t.Fatalf("neighboring validity flags: %v %v", value, err)
+	}
+}

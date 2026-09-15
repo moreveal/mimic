@@ -2,6 +2,7 @@ package network
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"io"
 	"net/http"
@@ -10,6 +11,7 @@ import (
 	"strconv"
 	"strings"
 	"testing"
+	"time"
 
 	"github.com/moreveal/mimic/internal/trace"
 )
@@ -133,5 +135,45 @@ func TestRedirectRecomputesCredentialsAndPreservesFragment(t *testing.T) {
 	}
 	if res.Headers.Get("X-Authorization") != "" || res.Headers.Get("X-Cookie") != "" || res.Headers.Get("X-Site") != "cross-site" || res.URL.Fragment != "kept" {
 		t.Fatalf("stale redirect state: %+v", res)
+	}
+}
+
+type redirectCancelTransport struct {
+	targetStarted chan struct{}
+}
+
+func (t redirectCancelTransport) RoundTrip(request *http.Request) (*http.Response, error) {
+	if request.URL.Path == "/start" {
+		return &http.Response{StatusCode: http.StatusTemporaryRedirect, Header: http.Header{"Location": {"/target"}}, Body: io.NopCloser(strings.NewReader("")), Request: request}, nil
+	}
+	close(t.targetStarted)
+	<-request.Context().Done()
+	return nil, request.Context().Err()
+}
+
+func TestRedirectChainUsesOneCancelableOperation(t *testing.T) {
+	targetStarted := make(chan struct{}, 1)
+	u, _ := url.Parse("https://example.test/start")
+	ctx, cancel := context.WithCancel(context.Background())
+	loader := NewLoader(testEnvironment, NewCookieStore(), trace.New())
+	loader.SetTransport(redirectCancelTransport{targetStarted: targetStarted})
+	result := make(chan error, 1)
+	go func() {
+		_, err := loader.Load(ctx, Request{URL: u, Method: http.MethodPost, Body: []byte("payload"), Redirect: "follow", Initiator: Fetch})
+		result <- err
+	}()
+	select {
+	case <-targetStarted:
+	case <-time.After(5 * time.Second):
+		t.Fatal("redirect target was not requested")
+	}
+	cancel()
+	select {
+	case err := <-result:
+		if !errors.Is(err, context.Canceled) {
+			t.Fatalf("redirect cancellation error = %v, want context.Canceled", err)
+		}
+	case <-time.After(5 * time.Second):
+		t.Fatal("redirect target transport was not canceled")
 	}
 }

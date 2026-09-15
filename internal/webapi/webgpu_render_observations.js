@@ -110,19 +110,22 @@ method('GPUTexture', 'createView', (t, d = {}) => {
 });
 method('GPUDevice', 'createShaderModule', (d, descriptor) => {
   const source = String(descriptor.code);
-  let functions, error;
+  let functions, error, opaqueReason;
   try {
     functions = wgslObservations.compile(source);
   } catch (e) {
-    if (e.unsupported) unsupported('WGSL: ' + e.message);
-    error = e.message;
-    validation(d, error);
+    if (e.unsupported) opaqueReason = e.message;
+    else {
+      error = e.message;
+      validation(d, error);
+    }
   }
   return make('GPUShaderModule', {
     device: d,
     label: String(descriptor.label || ''),
     functions,
     error,
+    opaqueReason,
   });
 });
 method('GPUShaderModule', 'getCompilationInfo', (s) =>
@@ -130,25 +133,39 @@ method('GPUShaderModule', 'getCompilationInfo', (s) =>
     make('GPUCompilationInfo', {
       messages: s.error
         ? [
-            make('GPUCompilationMessage', {
+            {
               message: s.error,
               type: 'error',
               lineNum: 1,
               linePos: 1,
               offset: 0,
               length: 0,
-            }),
+            },
           ]
         : [],
     }),
   ),
 );
-getter('GPUCompilationInfo', 'messages', (s) => s.messages.slice());
+const compilationMessage = (data) => {
+  const message = make('GPUCompilationMessage', data);
+  // Promise delivery can project nested platform objects through an engine
+  // wrapper which is not a stable WeakMap key. Keep the immutable compilation
+  // record on that wrapper as WebIDL readonly data as well.
+  for (const name of ['message', 'type', 'lineNum', 'linePos', 'offset', 'length'])
+    Object.defineProperty(message, name, {
+      value: data[name],
+      enumerable: true,
+      configurable: true,
+    });
+  return message;
+};
+getter('GPUCompilationInfo', 'messages', (s) => s.messages.map(compilationMessage));
 for (const name of ['message', 'type', 'lineNum', 'linePos', 'offset', 'length'])
   getter('GPUCompilationMessage', name, (s) => s[name]);
 const stage = (device, descriptor, kind) => {
   const module = check(descriptor.module, 'GPUShaderModule');
   if (module.device !== device || module.error) return null;
+  if (module.opaqueReason) unsupported('WGSL: ' + module.opaqueReason);
   const fn = descriptor.entryPoint
     ? module.functions.get(String(descriptor.entryPoint))
     : [...module.functions.values()].find((f) => f.attrs[kind]);

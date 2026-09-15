@@ -472,7 +472,13 @@ class File extends Blob {
     return '';
   }
 }
-const formDataSlots = new WeakMap(),
+let formDataConstruction = null,
+  formDataEventDispatch = null;
+const installFormDataConstruction = (construct, dispatch) => {
+    formDataConstruction = construct;
+    formDataEventDispatch = dispatch;
+  },
+  formDataSlots = new WeakMap(),
   formDataState = (value) => {
     const state = formDataSlots.get(value);
     if (!state) throw new TypeError('Illegal invocation');
@@ -490,11 +496,17 @@ const formDataSlots = new WeakMap(),
   };
 class FormData {
   constructor(form = undefined, submitter = undefined) {
-    if (form !== undefined)
-      throw new TypeError(
-        "Failed to construct 'FormData': parameter 1 is not of type 'HTMLFormElement'.",
-      );
     formDataSlots.set(this, []);
+    if (form !== undefined) {
+      const construct = formDataConstruction;
+      if (typeof construct !== 'function')
+        throw new TypeError(
+          "Failed to construct 'FormData': parameter 1 is not of type 'HTMLFormElement'.",
+        );
+      const entries = construct(form, submitter, this);
+      for (const [name, value] of entries) formDataState(this).push([name, value]);
+      formDataEventDispatch?.(form, this);
+    }
   }
   append(name, value, filename = undefined) {
     formDataState(this).push([String(name), formDataValue(value, filename)]);
