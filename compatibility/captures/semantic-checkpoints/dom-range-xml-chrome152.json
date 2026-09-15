@@ -1,0 +1,38 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": true,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": false,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/dom_range_xml_oracle.js",
+    "fixtureSHA256": "f99d43dc5bd5f9557673a5877dc5acba44b79e966db3383e9e93ee5ea35a647e",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": {
+    "iterator": [
+      "div",
+      "#text:a",
+      "i",
+      "#text:b",
+      "#comment:c"
+    ],
+    "walker": [
+      "#text:a",
+      "#comment:c"
+    ],
+    "range": [
+      "ello wo",
+      "b",
+      "ello wo"
+    ],
+    "xml": [
+      "<r xmlns=\"urn:r\" xmlns:p=\"urn:p\"><p:c p:a=\"&quot;&amp;\">x&lt;y</p:c></r>",
+      "urn:p",
+      "\"&",
+      "x<y"
+    ]
+  }
+}

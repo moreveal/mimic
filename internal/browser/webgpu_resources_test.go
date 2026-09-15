@@ -57,10 +57,10 @@ func webGPUOracle(t *testing.T, name string) {
 	})
 }
 
-func TestWebGPUUnsupportedExecutionIsExplicit(t *testing.T) {
+func TestWebGPUShaderCompilationIsSeparateFromExecution(t *testing.T) {
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
-		v, err := p.Evaluate(context.Background(), `(async()=>{const a=await navigator.gpu.requestAdapter(),d=await a.requestDevice();let failures=0;for(const call of [()=>d.createShaderModule({code:'@compute @workgroup_size(1) fn main() {}'}),()=>d.createTexture({size:[2,2],format:'rgba8unorm',sampleCount:4,usage:GPUTextureUsage.RENDER_ATTACHMENT})])try{call()}catch(e){if(e.name==='NotSupportedError')failures++}d.destroy();return failures===2})()`)
+		v, err := p.Evaluate(context.Background(), `(async()=>{const a=await navigator.gpu.requestAdapter(),d=await a.requestDevice();const valid=d.createShaderModule({code:'@compute @workgroup_size(1) fn main() {}'}),invalid=d.createShaderModule({code:'fn broken('}),validInfo=await valid.getCompilationInfo(),invalidInfo=await invalid.getCompilationInfo();let unsupported=false;try{d.createTexture({size:[2,2],format:'rgba8unorm',sampleCount:4,usage:GPUTextureUsage.RENDER_ATTACHMENT})}catch(e){unsupported=e.name==='NotSupportedError'}d.destroy();return validInfo.messages.length===0&&invalidInfo.messages.length===1&&invalidInfo.messages[0].type==='error'&&unsupported})()`)
 		if err != nil || v != true {
 			t.Fatalf("%v %v", v, err)
 		}

@@ -583,6 +583,117 @@ function wrapDocumentNode(data) {
     writable: true,
     configurable: true,
   });
+  const serializerSlots = new WeakSet(),
+    xmlText = (value) =>
+      String(value).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'),
+    xmlAttribute = (value) =>
+      xmlText(value)
+        .replace(/"/g, '&quot;')
+        .replace(/\t/g, '&#9;')
+        .replace(/\n/g, '&#10;')
+        .replace(/\r/g, '&#13;');
+  const serializeXML = (node, inherited = new Map()) => {
+    switch (node.nodeType) {
+      case 1: {
+        const namespaces = new Map(inherited),
+          declarations = [],
+          attributes = [];
+        for (const name of node.getAttributeNames()) {
+          const attr = node.getAttributeNode(name),
+            value = attr.value;
+          if (name === 'xmlns') namespaces.set('', value);
+          else if (name.startsWith('xmlns:')) namespaces.set(name.slice(6), value);
+          attributes.push([name, value]);
+        }
+        const prefix = node.prefix || '',
+          namespace = node.namespaceURI;
+        if (namespace && namespaces.get(prefix) !== namespace) {
+          const name = prefix ? 'xmlns:' + prefix : 'xmlns';
+          if (!attributes.some(([candidate]) => candidate === name))
+            declarations.push([name, namespace]);
+          namespaces.set(prefix, namespace);
+        } else if (!namespace && !prefix && namespaces.get('')) {
+          if (!attributes.some(([candidate]) => candidate === 'xmlns'))
+            declarations.push(['xmlns', '']);
+          namespaces.set('', '');
+        }
+        let generated = 0;
+        for (const pair of attributes) {
+          if (pair[0] === 'xmlns' || pair[0].startsWith('xmlns:')) continue;
+          const attr = node.getAttributeNode(pair[0]);
+          if (
+            !attr.namespaceURI ||
+            attr.prefix ||
+            attr.namespaceURI === 'http://www.w3.org/XML/1998/namespace'
+          )
+            continue;
+          let attrPrefix = [...namespaces].find(([, value]) => value === attr.namespaceURI)?.[0];
+          if (!attrPrefix) {
+            do attrPrefix = 'ns' + ++generated;
+            while (namespaces.has(attrPrefix));
+            namespaces.set(attrPrefix, attr.namespaceURI);
+            declarations.push(['xmlns:' + attrPrefix, attr.namespaceURI]);
+          }
+          pair[0] = attrPrefix + ':' + (attr.localName || attr.name);
+        }
+        const name = node.nodeName,
+          serializedAttributes = [...declarations, ...attributes]
+            .map(([key, value]) => ' ' + key + '="' + xmlAttribute(value) + '"')
+            .join(''),
+          children = Array.from(node.childNodes, (child) => serializeXML(child, namespaces)).join(
+            '',
+          );
+        return '<' + name + serializedAttributes + '>' + children + '</' + name + '>';
+      }
+      case 3:
+        return xmlText(node.data);
+      case 4:
+        return '<![CDATA[' + node.data.replace(/]]>/g, ']]]]><![CDATA[>') + ']]>';
+      case 7:
+        return '<?' + node.target + (node.data ? ' ' + node.data : '') + '?>';
+      case 8:
+        return '<!--' + node.data + '-->';
+      case 9:
+      case 11:
+        return Array.from(node.childNodes, (child) => serializeXML(child, inherited)).join('');
+      case 10:
+        return (
+          '<!DOCTYPE ' +
+          node.name +
+          (node.publicId ? ' PUBLIC "' + node.publicId + '"' : node.systemId ? ' SYSTEM' : '') +
+          (node.systemId ? ' "' + node.systemId + '"' : '') +
+          '>'
+        );
+      default:
+        return '';
+    }
+  };
+  class XMLSerializer {
+    constructor() {
+      serializerSlots.add(this);
+    }
+    serializeToString(root) {
+      if (!serializerSlots.has(this)) throw new TypeError('Illegal invocation');
+      if (!arguments.length) throw new TypeError('Not enough arguments');
+      if (!isDOMNode(root))
+        throw new TypeError(
+          "Failed to execute 'serializeToString' on 'XMLSerializer': parameter 1 is not of type 'Node'.",
+        );
+      return serializeXML(root);
+    }
+  }
+  Object.defineProperty(XMLSerializer.prototype, Symbol.toStringTag, {
+    value: 'XMLSerializer',
+    configurable: true,
+  });
+  markNative(XMLSerializer, 'XMLSerializer');
+  markNative(XMLSerializer.prototype.serializeToString, 'serializeToString');
+  Object.defineProperty(XMLSerializer.prototype, 'serializeToString', { enumerable: true });
+  Object.defineProperty(globalThis, 'XMLSerializer', {
+    value: XMLSerializer,
+    writable: true,
+    configurable: true,
+  });
 }
 
 for (const name of ['hasStorageAccess', 'hasUnpartitionedCookieAccess'])

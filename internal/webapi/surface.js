@@ -6767,6 +6767,7 @@
     remoteWindowCache.set(id, proxy);
     return proxy;
   };
+  let nextXHRID = 0;
   const xhrSlots = new WeakMap(),
     xhrState = (xhr) => xhrSlots.get(xhr);
   const fireXHREvent = (xhr, type) => dispatchTrusted(xhr, new Event(type)),
@@ -6791,6 +6792,7 @@
         status: 0,
         statusText: '',
         responseText: '',
+        response: null,
         responseURL: '',
         responseType: '',
         timeout: 0,
@@ -6798,6 +6800,7 @@
         onreadystatechange: null,
         onload: null,
         onerror: null,
+        onabort: null,
         ontimeout: null,
         onloadend: null,
         requestHeaders: {},
@@ -6807,6 +6810,8 @@
         method: 'GET',
         url: '',
         async: true,
+        requestID: '',
+        generation: 0,
       });
     }
     open(method, url, async = true, user, password) {
@@ -6814,6 +6819,8 @@
       if (!method || /[^A-Z-]/.test(method))
         throw new DOMException('Invalid HTTP method', 'SyntaxError');
       const state = xhrState(this);
+      if (state.sent && typeof host.abortXHR === 'function') host.abortXHR(state.requestID);
+      state.generation++;
       state.method = method;
       state.url = String(url);
       state.async = Boolean(async);
@@ -6821,8 +6828,11 @@
       state.requestHeaders = {};
       state.requestHeaderOrder = [];
       state.status = 0;
+      state.statusText = '';
       state.responseText = '';
+      state.response = null;
       state.responseURL = '';
+      state.responseHeaders = {};
       setXHRState(this, 1);
     }
     setRequestHeader(name, value) {
@@ -6857,9 +6867,13 @@
       if (state.readyState !== 1 || state.sent)
         throw new DOMException("The object's state must be OPENED.", 'InvalidStateError');
       state.sent = true;
+      const generation = ++state.generation,
+        requestID = (state.requestID = 'xhr-' + ++nextXHRID);
       host.xhr(
         (result) => {
+          if (state.generation !== generation || !state.sent) return;
           if (result.error) {
+            state.sent = false;
             state.status = 0;
             setXHRState(this, 4);
             fireXHREvent(this, result.error);
@@ -6871,8 +6885,34 @@
           state.responseURL = result.responseURL;
           state.responseHeaders = result.responseHeaders || {};
           setXHRState(this, 2);
+          if (state.generation !== generation) return;
+          const bytes = new Uint8Array(result.responseBytes || []);
+          state.responseText =
+            result.responseText === undefined
+              ? new TextDecoder().decode(bytes)
+              : result.responseText;
+          switch (state.responseType) {
+            case 'json':
+              try {
+                state.response = JSON.parse(state.responseText);
+              } catch (_) {
+                state.response = null;
+              }
+              break;
+            case 'arraybuffer':
+              state.response = bytes.slice().buffer;
+              break;
+            case 'blob':
+              state.response = new Blob([bytes], {
+                type: state.responseHeaders['content-type'] || '',
+              });
+              break;
+            default:
+              state.response = state.responseText;
+          }
           setXHRState(this, 3);
-          state.responseText = result.responseText || '';
+          if (state.generation !== generation) return;
+          state.sent = false;
           setXHRState(this, 4);
           fireXHREvent(this, 'load');
           fireXHREvent(this, 'loadend');
@@ -6885,28 +6925,41 @@
         state.requestHeaderOrder,
         Boolean(state.withCredentials),
         body != null,
+        requestID,
       );
     }
     abort() {
       const state = xhrState(this);
+      const active =
+        (state.readyState === 1 && state.sent) || state.readyState === 2 || state.readyState === 3;
+      if (state.sent && typeof host.abortXHR === 'function') host.abortXHR(state.requestID);
+      state.generation++;
       state.sent = false;
       state.status = 0;
+      state.statusText = '';
       state.responseText = '';
-      setXHRState(this, 0);
+      state.response = null;
+      state.responseURL = '';
+      state.responseHeaders = {};
+      if (active) {
+        setXHRState(this, 4);
+        state.readyState = 0;
+        fireXHREvent(this, 'abort');
+        fireXHREvent(this, 'loadend');
+      } else state.readyState = 0;
     }
   }
   for (const key of [
     'readyState',
     'status',
     'statusText',
-    'responseText',
     'responseURL',
-    'responseType',
     'timeout',
     'withCredentials',
     'onreadystatechange',
     'onload',
     'onerror',
+    'onabort',
     'ontimeout',
     'onloadend',
   ])
@@ -6918,6 +6971,39 @@
         xhrState(this)[key] = value;
       },
     });
+  def(XMLHttpRequest.prototype, 'responseType', {
+    get() {
+      return xhrState(this).responseType;
+    },
+    set(value) {
+      const state = xhrState(this),
+        type = String(value);
+      if (!['', 'text', 'json', 'arraybuffer', 'blob'].includes(type))
+        throw new TypeError('Invalid XMLHttpRequest responseType');
+      if (state.readyState === 3 || state.readyState === 4)
+        throw new DOMException("The object's state must be OPENED.", 'InvalidStateError');
+      state.responseType = type;
+    },
+  });
+  def(XMLHttpRequest.prototype, 'responseText', {
+    get() {
+      const state = xhrState(this);
+      if (state.responseType !== '' && state.responseType !== 'text')
+        throw new DOMException(
+          "The value is only accessible if the object's 'responseType' is '' or 'text'.",
+          'InvalidStateError',
+        );
+      return state.readyState === 3 || state.readyState === 4 ? state.responseText : '';
+    },
+  });
+  def(XMLHttpRequest.prototype, 'response', {
+    get() {
+      const state = xhrState(this);
+      if (state.responseType === '' || state.responseType === 'text')
+        return state.readyState === 3 || state.readyState === 4 ? state.responseText : '';
+      return state.readyState === 4 ? state.response : null;
+    },
+  });
   const requestSlots = new WeakMap(),
     responseSlots = new WeakMap();
   class Request {

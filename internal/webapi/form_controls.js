@@ -313,6 +313,12 @@
       },
     });
   }
+  for (const name of ['HTMLFieldSetElement', 'HTMLOutputElement', 'HTMLObjectElement'])
+    define(name, 'form', {
+      get() {
+        return formOwner(this);
+      },
+    });
   const mode = (e) => {
     const type = typeOf(e);
     return valueTypes.has(type)
@@ -385,7 +391,7 @@
   const formOwner = (e) => {
     const id = e.getAttribute('form');
     if (id !== null) {
-      const owner = document.getElementById(id);
+      const owner = e.ownerDocument.getElementById(id);
       return owner?.localName === 'form' ? owner : null;
     }
     for (let p = e.parentElement; p; p = p.parentElement) if (p.localName === 'form') return p;
@@ -611,16 +617,62 @@
     }
     selectState(select).noSelection = chosen.length === 0;
   }
-  const collection = (get, prototype) => {
-    const namedItem = (name) =>
-      get().find((e) => name !== '' && (e.id === name || e.getAttribute('name') === name)) ?? null;
+  const radioNodeList = (get) => {
+    const proxy = nodeListView(
+      () => get().length,
+      (index) => get()[index],
+    );
+    if (globalThis.RadioNodeList?.prototype)
+      Object.setPrototypeOf(proxy, globalThis.RadioNodeList.prototype);
+    Object.defineProperty(proxy, 'value', {
+      get() {
+        const checked = get().find(
+          (e) => e.localName === 'input' && ['radio', 'checkbox'].includes(typeOf(e)) && e.checked,
+        );
+        return checked?.value ?? '';
+      },
+      set(value) {
+        value = String(value);
+        const match = get().find(
+          (e) =>
+            e.localName === 'input' &&
+            ['radio', 'checkbox'].includes(typeOf(e)) &&
+            e.value === value,
+        );
+        if (match) match.checked = true;
+      },
+      enumerable: true,
+      configurable: true,
+    });
+    return proxy;
+  };
+  const collection = (get, prototype, formControls = false) => {
+    const matches = (name) =>
+      name === '' ? [] : get().filter((e) => e.id === name || e.getAttribute('name') === name);
+    const namedItem = (name) => {
+      const found = matches(name);
+      return formControls && found.length > 1
+        ? radioNodeList(() => matches(name))
+        : (found[0] ?? null);
+    };
     const proxy = new Proxy(Object.create(prototype), {
       get(target, key, receiver) {
         if (key === 'length') return get().length;
         if (key === 'item') return HTMLCollection.prototype.item;
         if (key === 'namedItem') return (name) => namedItem(bindingString(name));
         if (collectionIndex(key)) return get()[Number(key)];
+        if (typeof key === 'string') {
+          const named = namedItem(key);
+          if (named !== null) return named;
+        }
         return Reflect.get(target, key, receiver);
+      },
+      has(target, key) {
+        return (
+          (collectionIndex(key) && Number(key) < get().length) ||
+          (typeof key === 'string' && namedItem(key) !== null) ||
+          Reflect.has(target, key)
+        );
       },
     });
     // Derived form collections also implement the HTMLCollection interface.
@@ -811,19 +863,64 @@
   for (const name of ['HTMLInputElement', 'HTMLTextAreaElement']) {
     string(name, 'placeholder');
     boolean(name, 'readOnly', 'readonly');
+    for (const property of ['minLength', 'maxLength'])
+      define(name, property, {
+        get() {
+          const raw = this.getAttribute(property.toLowerCase());
+          return raw !== null && /^\d+$/.test(raw) ? Number(raw) : -1;
+        },
+        set(value) {
+          value = Number(value);
+          if (!Number.isInteger(value) || value < 0)
+            throw new DOMException('The value must be non-negative.', 'IndexSizeError');
+          this.setAttribute(property.toLowerCase(), String(value));
+        },
+      });
   }
+  for (const property of ['min', 'max', 'step', 'pattern']) string('HTMLInputElement', property);
   for (const name of ['HTMLInputElement', 'HTMLSelectElement']) boolean(name, 'multiple');
-  const associated = (form) =>
+  const formCandidates = (form, selector) =>
     Array.from(
-      compatibilitySelectors.query(form.ownerDocument, 'input,textarea,select,button'),
-    ).filter((e) => formOwner(e) === form);
+      compatibilitySelectors.query(form.isConnected ? form.ownerDocument : form, selector),
+    );
+  const associated = (form) =>
+    formCandidates(form, 'button,fieldset,input,object,output,select,textarea').filter(
+      (e) => formOwner(e) === form && !(e.localName === 'input' && typeOf(e) === 'image'),
+    );
+  const submittable = (form) =>
+    formCandidates(form, 'button,input,select,textarea').filter((e) => formOwner(e) === form);
+  const isSubmitButton = (control) =>
+    control?.localName === 'button'
+      ? !['reset', 'button'].includes(
+          String(control.getAttribute('type') || 'submit').toLowerCase(),
+        )
+      : control?.localName === 'input' && ['submit', 'image'].includes(typeOf(control));
+  const disabledForForm = (control) => {
+    if (control.hasAttribute('disabled')) return true;
+    for (let ancestor = control.parentElement; ancestor; ancestor = ancestor.parentElement) {
+      if (ancestor.localName === 'datalist') return true;
+      if (ancestor.localName === 'fieldset' && ancestor.hasAttribute('disabled')) {
+        const legend = Array.from(ancestor.children).find((e) => e.localName === 'legend');
+        if (!legend || !legend.contains(control)) return true;
+      }
+    }
+    return false;
+  };
   /* constraint_validation */
+  const formCollections = new WeakMap();
   define('HTMLFormElement', 'elements', {
     get() {
-      return collection(
-        () => associated(this),
-        globalThis.HTMLFormControlsCollection?.prototype || globalThis.HTMLCollection.prototype,
-      );
+      formCheck(this);
+      if (!formCollections.has(this))
+        formCollections.set(
+          this,
+          collection(
+            () => associated(this),
+            globalThis.HTMLFormControlsCollection?.prototype || globalThis.HTMLCollection.prototype,
+            true,
+          ),
+        );
+      return formCollections.get(this);
     },
   });
   define('HTMLFormElement', 'length', {
@@ -881,6 +978,94 @@
   string('HTMLFormElement', 'target');
   string('HTMLFormElement', 'acceptCharset', 'accept-charset');
   string('HTMLButtonElement', 'value');
+  const formEntries = (form, submitter = null) => {
+    formCheck(form);
+    const entries = [],
+      crlf = (value) => String(value).replace(/\r\n|\r|\n/g, '\r\n');
+    for (const control of submittable(form)) {
+      const name = control.name;
+      if (
+        !name ||
+        disabledForForm(control) ||
+        (control.localName === 'button' && control !== submitter)
+      )
+        continue;
+      if (control.localName === 'input') {
+        const type = typeOf(control);
+        if (
+          (['submit', 'image', 'reset', 'button'].includes(type) && control !== submitter) ||
+          (['checkbox', 'radio'].includes(type) && !control.checked)
+        )
+          continue;
+        if (type === 'file') {
+          const files = control.files;
+          if (files?.length) for (const file of files) entries.push([name, file]);
+          else entries.push([name, new File([], '', { type: 'application/octet-stream' })]);
+          continue;
+        }
+      }
+      if (control.localName === 'select') {
+        for (const option of optionList(control))
+          if (option.selected && !optionDisabled(option))
+            entries.push([crlf(name), crlf(option.value)]);
+      } else
+        entries.push([
+          crlf(name),
+          crlf(
+            control.localName === 'input' && typeOf(control) === 'hidden' && name === '_charset_'
+              ? 'UTF-8'
+              : control.value,
+          ),
+        ]);
+    }
+    return entries;
+  };
+  const formDataEventSlots = new WeakMap();
+  class MimicFormDataEvent extends Event {
+    constructor(type, init) {
+      super(type, init || {});
+      if (!init || !('formData' in init)) throw new TypeError("FormDataEvent requires 'formData'");
+      if (!(init.formData instanceof FormData)) throw new TypeError('formData is not a FormData');
+      formDataEventSlots.set(this, init.formData);
+    }
+  }
+  Object.defineProperty(MimicFormDataEvent, 'name', { value: 'FormDataEvent' });
+  Object.defineProperty(MimicFormDataEvent.prototype, 'formData', {
+    get() {
+      if (!formDataEventSlots.has(this)) throw new TypeError('Illegal invocation');
+      return formDataEventSlots.get(this);
+    },
+    enumerable: true,
+    configurable: true,
+  });
+  Object.defineProperty(MimicFormDataEvent.prototype, Symbol.toStringTag, {
+    value: 'FormDataEvent',
+    configurable: true,
+  });
+  Object.defineProperty(globalThis, 'FormDataEvent', {
+    value: MimicFormDataEvent,
+    writable: true,
+    configurable: true,
+  });
+  markNative(MimicFormDataEvent, 'FormDataEvent');
+  installFormDataConstruction(
+    (form, submitter) => {
+      formCheck(form);
+      if (submitter !== undefined) {
+        if (!isSubmitButton(submitter))
+          throw new TypeError('The specified element is not a submit button.');
+        if (formOwner(submitter) !== form)
+          throw new DOMException(
+            'The specified element is not owned by this form element.',
+            'NotFoundError',
+          );
+      } else submitter = null;
+      return formEntries(form, submitter);
+    },
+    (form, data) => {
+      form.dispatchEvent(new MimicFormDataEvent('formdata', { formData: data }));
+    },
+  );
   const submitForm = function (submitter = null) {
     formCheck(this);
     if (!this.isConnected) return;
@@ -896,55 +1081,8 @@
     let method = override('formmethod', this.method).toLowerCase();
     if (!['get', 'post', 'dialog'].includes(method)) method = 'get';
     if (method === 'dialog') return missing('Dialog form submission is not implemented');
-    if ((listenersFor(this).get('formdata') || []).length)
-      return missing('FormData mutation during submission is not implemented');
-    const entries = [],
-      crlf = (value) => String(value).replace(/\r\n|\r|\n/g, '\r\n');
-    const disabled = (control) => {
-      if (control.hasAttribute('disabled')) return true;
-      for (let ancestor = control.parentElement; ancestor; ancestor = ancestor.parentElement) {
-        if (ancestor.localName === 'datalist') return true;
-        if (ancestor.localName === 'fieldset' && ancestor.hasAttribute('disabled')) {
-          const legend = Array.from(ancestor.children).find((e) => e.localName === 'legend');
-          if (!legend || !legend.contains(control)) return true;
-        }
-      }
-      return false;
-    };
-    for (const control of associated(this)) {
-      const name = control.name;
-      if (!name || disabled(control) || (control.localName === 'button' && control !== submitter))
-        continue;
-      if (control.localName === 'input') {
-        const type = typeOf(control);
-        if (
-          (['submit', 'image', 'reset', 'button'].includes(type) && control !== submitter) ||
-          (['checkbox', 'radio'].includes(type) && !control.checked)
-        )
-          continue;
-        if (type === 'file') return missing('File controls in form submission are not implemented');
-      }
-      if (control.localName === 'select') {
-        for (const option of optionList(control))
-          if (
-            option.selected &&
-            !option.hasAttribute('disabled') &&
-            !(
-              option.parentElement?.localName === 'optgroup' &&
-              option.parentElement.hasAttribute('disabled')
-            )
-          )
-            entries.push([crlf(name), crlf(option.value)]);
-      } else
-        entries.push([
-          crlf(name),
-          crlf(
-            control.localName === 'input' && typeOf(control) === 'hidden' && name === '_charset_'
-              ? 'UTF-8'
-              : control.value,
-          ),
-        ]);
-    }
+    const data = new FormData(this, submitter || undefined),
+      entries = Array.from(data.entries());
     let action;
     try {
       action = new URL(override('formaction', this.action) || document.URL, document.baseURI);
@@ -996,6 +1134,39 @@
     },
     writable: true,
   });
+  define('HTMLFormElement', 'requestSubmit', {
+    value: function requestSubmit(submitter = undefined) {
+      formCheck(this);
+      if (submitter !== undefined) {
+        if (!isSubmitButton(submitter))
+          throw new TypeError('The specified element is not a submit button.');
+        if (formOwner(submitter) !== this)
+          throw new DOMException(
+            'The specified element is not owned by this form element.',
+            'NotFoundError',
+          );
+      } else submitter = null;
+      if (submittingForms.has(this)) return;
+      submittingForms.add(this);
+      try {
+        if (
+          !this.hasAttribute('novalidate') &&
+          !submitter?.hasAttribute('formnovalidate') &&
+          !validateForm(this)
+        )
+          return;
+        const event = new SubmitEvent('submit', {
+          bubbles: true,
+          cancelable: true,
+          submitter,
+        });
+        if (this.dispatchEvent(event) && this.isConnected) submitForm.call(this, submitter);
+      } finally {
+        submittingForms.delete(this);
+      }
+    },
+    writable: true,
+  });
   const submittingForms = new WeakSet();
   compatibilityElementState.activateFormControl = (control, dispatchSubmit) => {
     if (!control?.isConnected || control.disabled) return;
@@ -1003,11 +1174,11 @@
       control.localName === 'button'
         ? String(control.getAttribute('type') || 'submit').toLowerCase()
         : typeOf(control);
-    if (
-      (control.localName === 'button' && ['button', 'reset'].includes(type)) ||
-      (control.localName === 'input' && type !== 'submit')
-    )
+    if (type === 'reset') {
+      formOwner(control)?.reset();
       return;
+    }
+    if ((control.localName === 'button' && type === 'button') || !isSubmitButton(control)) return;
     if (!['button', 'input'].includes(control.localName)) return;
     const form = formOwner(control);
     if (!form || submittingForms.has(form)) return;
@@ -1026,6 +1197,7 @@
   };
   define('HTMLFormElement', 'reset', {
     value: function () {
+      formCheck(this);
       if (!this.dispatchEvent(new Event('reset', { bubbles: true, cancelable: true }))) return;
       for (const control of associated(this)) {
         compatibilityElementState.controlValueAssigned?.(control);

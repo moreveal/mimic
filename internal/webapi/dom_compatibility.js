@@ -1492,6 +1492,53 @@ const compatibilityElementState = {};
   });
   expose('cancelIdleCallback', (id) => clearTimeout(id));
   const resizeSlots = new WeakMap();
+  const resizeBox = (node) => {
+    const rect = node.getBoundingClientRect(),
+      style = getComputedStyle(node),
+      number = (name) => Number.parseFloat(style.getPropertyValue(name)) || 0,
+      horizontalPadding = number('padding-left') + number('padding-right'),
+      verticalPadding = number('padding-top') + number('padding-bottom'),
+      horizontalBorder = number('border-left-width') + number('border-right-width'),
+      verticalBorder = number('border-top-width') + number('border-bottom-width'),
+      contentWidth = Math.max(0, rect.width - horizontalPadding - horizontalBorder),
+      contentHeight = Math.max(0, rect.height - verticalPadding - verticalBorder);
+    return {
+      contentWidth,
+      contentHeight,
+      borderWidth: rect.width,
+      borderHeight: rect.height,
+    };
+  };
+  const scheduleResizeDelivery = (observer) => {
+    const s = resizeSlots.get(observer);
+    if (!s || s.timer !== null || !s.targets.size) return;
+    s.timer = requestAnimationFrame(() => {
+      s.timer = null;
+      const entries = [];
+      for (const [node, observation] of s.targets) {
+        const box = resizeBox(node),
+          width = observation.box === 'border-box' ? box.borderWidth : box.contentWidth,
+          height = observation.box === 'border-box' ? box.borderHeight : box.contentHeight;
+        if (width === observation.width && height === observation.height) continue;
+        observation.width = width;
+        observation.height = height;
+        entries.push({
+          target: node,
+          contentRect: new DOMRect(0, 0, box.contentWidth, box.contentHeight),
+          contentBoxSize: [{ inlineSize: box.contentWidth, blockSize: box.contentHeight }],
+          borderBoxSize: [{ inlineSize: box.borderWidth, blockSize: box.borderHeight }],
+          devicePixelContentBoxSize: [
+            {
+              inlineSize: box.contentWidth * devicePixelRatio,
+              blockSize: box.contentHeight * devicePixelRatio,
+            },
+          ],
+        });
+      }
+      if (entries.length) s.callback.call(undefined, entries, observer);
+      scheduleResizeDelivery(observer);
+    });
+  };
   class ResizeObserver {
     constructor(callback) {
       if (typeof callback !== 'function') throw new TypeError('Expected callback');
@@ -1501,30 +1548,7 @@ const compatibilityElementState = {};
       if (!(target instanceof Element)) throw new TypeError('Expected Element');
       const s = resizeSlots.get(this);
       s.targets.set(target, { box: options.box || 'content-box', width: null, height: null });
-      if (s.timer !== null) return;
-      s.timer = requestAnimationFrame(() => {
-        s.timer = null;
-        const entries = [];
-        for (const [node, previous] of s.targets) {
-          const rect = node.getBoundingClientRect();
-          if (rect.width === previous.width && rect.height === previous.height) continue;
-          previous.width = rect.width;
-          previous.height = rect.height;
-          entries.push({
-            target: node,
-            contentRect: new DOMRect(0, 0, rect.width, rect.height),
-            contentBoxSize: [{ inlineSize: rect.width, blockSize: rect.height }],
-            borderBoxSize: [{ inlineSize: rect.width, blockSize: rect.height }],
-            devicePixelContentBoxSize: [
-              {
-                inlineSize: rect.width * devicePixelRatio,
-                blockSize: rect.height * devicePixelRatio,
-              },
-            ],
-          });
-        }
-        if (entries.length) s.callback.call(this, entries, this);
-      });
+      scheduleResizeDelivery(this);
     }
     unobserve(target) {
       resizeSlots.get(this).targets.delete(target);

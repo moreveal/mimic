@@ -169,6 +169,7 @@ type Realm struct {
 	baseCacheRevision        uint64
 	baseCacheReference       *url.URL
 	fetchCancels             map[string]context.CancelFunc
+	xhrCancels               map[string]context.CancelFunc
 	nativePollQueued         bool
 	checkpointQueued         bool
 	checkpointClosed         bool
@@ -2019,6 +2020,13 @@ func (r *Realm) installBindingsOnOwner() error {
 		}
 		return nil, nil
 	})
+	host["abortXHR"] = r.transientFn(func(_ engine.Value, a []engine.Value) (engine.Value, error) {
+		if cancel := r.xhrCancels[strarg(a, 0)]; cancel != nil {
+			cancel()
+			delete(r.xhrCancels, strarg(a, 0))
+		}
+		return nil, nil
+	})
 	host["xhr"] = r.fn(r.hostXHR)
 	installConsoleKind(host, r.runtime)
 	host["executionContextActive"] = r.fn(func(_ engine.Value, _ []engine.Value) (engine.Value, error) { return r.val(!r.inactive), nil })
@@ -2449,10 +2457,11 @@ func (r *Realm) hostFetch(_ engine.Value, a []engine.Value) (engine.Value, error
 	return promise.Value, nil
 }
 func (r *Realm) hostXHR(_ engine.Value, a []engine.Value) (engine.Value, error) {
-	if len(a) < 4 {
+	if len(a) < 5 {
 		return nil, fmt.Errorf("invalid XHR")
 	}
 	callback := a[0]
+	requestID := strarg(a, 9)
 	u, err := r.resolveDocument(strarg(a, 2))
 	if err != nil {
 		return nil, err
@@ -2473,24 +2482,34 @@ func (r *Realm) hostXHR(_ engine.Value, a []engine.Value) (engine.Value, error) 
 		request.Credentials = "include"
 	}
 	r.applyClientHints(&request)
+	loadContext, cancelLoad := context.WithCancel(r.resourceContext)
+	if requestID != "" {
+		if r.xhrCancels == nil {
+			r.xhrCancels = make(map[string]context.CancelFunc)
+		}
+		r.xhrCancels[requestID] = cancelLoad
+	}
 	r.scheduler.Post(scheduler.Network, 0, func(context.Context) error {
 		if r.resourceContext.Err() != nil {
+			cancelLoad()
 			return nil
 		}
 		r.resourceWG.Add(1)
 		go func() {
 			defer r.resourceWG.Done()
-			loadContext := r.resourceContext
-			cancel := func() {}
+			requestContext := loadContext
+			cancelTimeout := func() {}
 			if timeout > 0 {
-				loadContext, cancel = context.WithTimeout(loadContext, timeout)
+				requestContext, cancelTimeout = context.WithTimeout(loadContext, timeout)
 			}
-			defer cancel()
-			res, loadErr := r.loadResource(loadContext, request)
+			defer cancelLoad()
+			defer cancelTimeout()
+			res, loadErr := r.loadResource(requestContext, request)
 			if r.resourceContext.Err() != nil {
 				return
 			}
 			r.scheduler.Post(scheduler.Network, 0, func(ctx context.Context) error {
+				delete(r.xhrCancels, requestID)
 				if loadErr != nil {
 					event := "error"
 					if errors.Is(loadErr, context.DeadlineExceeded) {
@@ -2506,7 +2525,9 @@ func (r *Realm) hostXHR(_ engine.Value, a []engine.Value) (engine.Value, error) 
 				for name, values := range res.Headers {
 					responseHeaders[strings.ToLower(name)] = strings.Join(values, ", ")
 				}
-				_, _ = r.runtime.Call(ctx, callback, nil, r.runtime.Value(map[string]any{"status": res.Status, "statusText": http.StatusText(res.Status), "responseURL": res.URL.String(), "responseHeaders": responseHeaders, "responseText": string(res.Body)}))
+				responseURL := *res.URL
+				responseURL.Fragment, responseURL.RawFragment = "", ""
+				_, _ = r.runtime.Call(ctx, callback, nil, r.runtime.Value(map[string]any{"status": res.Status, "statusText": http.StatusText(res.Status), "responseURL": responseURL.String(), "responseHeaders": responseHeaders, "responseText": string(res.Body), "responseBytes": engine.BinaryBuffer(res.Body)}))
 				return nil
 			})
 		}()
