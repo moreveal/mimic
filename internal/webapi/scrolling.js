@@ -182,11 +182,17 @@ compatibilityScrolling = (() => {
   const set = (element, x, y, animated = false) => {
     if (isolated()) return remote(element, 'set', { x, y });
     element = owner(element);
-    const m = metrics(element),
-      old = localPosition(element);
+    const old = localPosition(element);
     if (!animated) animations.delete(element || document);
-    x = Math.max(m.minX, Math.min(m.maxX, Math.round(x)));
-    y = Math.max(0, Math.min(m.maxY, Math.round(y)));
+    x = Math.round(x);
+    y = Math.round(y);
+    // Avoid an O(document size) extent calculation for an exact no-op. This
+    // is a common navigation path: sites reset an already-unscrolled window
+    // to (0, 0) during DOMContentLoaded.
+    if (x === old.x && y === old.y) return;
+    const m = metrics(element);
+    x = Math.max(m.minX, Math.min(m.maxX, x));
+    y = Math.max(0, Math.min(m.maxY, y));
     if (x === old.x && y === old.y) return;
     if (element) positions.set(element, { x, y });
     else {
@@ -381,6 +387,23 @@ compatibilityScrolling = (() => {
     for (const ancestor of ancestors) {
       let scrollable = false;
       withStyleReadCache(() => {
+        // The root scroll extent requires walking every laid-out descendant. For
+        // scroll-if-needed (notably the implicit scroll performed by focus()),
+        // first use the viewport we already know. A visible target cannot cause
+        // a root scroll, regardless of the document's total extent.
+        if (opts.ifNeeded && !ancestor) {
+          const r = targetRect(),
+            viewport = host.viewport(),
+            node = document.documentElement,
+            px = (key) => parseFloat(style(node, key)) || 0;
+          if (
+            r.left >= px('scroll-padding-left') &&
+            r.right <= viewport.width - px('scroll-padding-right') &&
+            r.top >= px('scroll-padding-top') &&
+            r.bottom <= viewport.height - px('scroll-padding-bottom')
+          )
+            return;
+        }
         const m = metrics(ancestor);
         if (!m.maxX && !m.minX && !m.maxY) return;
         scrollable = true;

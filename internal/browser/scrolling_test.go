@@ -172,6 +172,31 @@ func TestScrollingGeometry(t *testing.T) {
 	}
 }
 
+func TestVisibleFocusAndNoOpScrollSkipDocumentExtentWalk(t *testing.T) {
+	b, err := New(v8engine.Factory{}, chrome152.New())
+	if err != nil {
+		t.Fatal(err)
+	}
+	c := b.NewContext()
+	defer c.Close()
+	p, err := c.NewPage()
+	if err != nil {
+		t.Fatal(err)
+	}
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	value, err := p.Evaluate(ctx, `(()=>{
+ const input=document.createElement('input');document.body.append(input);
+ const fragment=document.createDocumentFragment();
+ for(let i=0;i<12000;i++){const node=document.createElement('span');node.textContent='content '+i;fragment.append(node)}
+ document.body.append(fragment);input.focus();scroll(0,0);
+ return document.activeElement===input&&scrollY===0;
+})()`)
+	if err != nil || value != true {
+		t.Fatalf("visible focus: %v %v", value, err)
+	}
+}
+
 func TestScrollingEvents(t *testing.T) {
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
