@@ -13,6 +13,7 @@ import (
 	"path/filepath"
 	"runtime"
 	"strings"
+	"sync"
 
 	"github.com/go-text/typesetting/font"
 	ot "github.com/go-text/typesetting/font/opentype"
@@ -31,7 +32,21 @@ type resource struct {
 	aspect font.Aspect
 }
 
+type resourceSelectionKey struct {
+	families string
+	choices  string
+	weight   uint64
+	italic   bool
+}
+
+type fallbackSelectionKey struct {
+	primary, coverage, families, choices string
+	weight                               uint64
+	italic                               bool
+}
+
 type loaded struct {
+	resource                 resource
 	face                     *font.Face
 	shaper                   *harfbuzz.Font
 	ascent, descent, lineGap float64
@@ -43,22 +58,34 @@ type loaded struct {
 }
 
 type Engine struct {
-	fallbackFamilies []string
-	genericFamilies  map[string]string
-	genericFallbacks map[string][]string
-	resources        map[string]resource
-	localNames       map[string]resource
-	dirs             []string
-	catalog          []resource
-	scanned          bool
-	faces            map[string]*loaded
-	bytes            int
-	fontUse          uint64
-	missingCoverage  map[coverageKey]struct{}
-	shapeScratch     *harfbuzz.Buffer
-	shapePlans       map[shapePlanKey]struct{}
-	spoolDir         string
+	fallbackFamilies       []string
+	genericFamilies        map[string]string
+	genericFallbacks       map[string][]string
+	resources              map[string]resource
+	localNames             map[string]resource
+	dirs                   []string
+	catalog                []resource
+	scanned                bool
+	faces                  map[string]*loaded
+	bytes                  int
+	fontUse                uint64
+	missingCoverage        map[coverageKey]struct{}
+	shapeScratch           *harfbuzz.Buffer
+	shapePlans             map[shapePlanKey]struct{}
+	resourceSelections     map[resourceSelectionKey]resource
+	resourceSelectionOrder []resourceSelectionKey
+	fallbackSelections     map[fallbackSelectionKey]resource
+	fallbackSelectionOrder []fallbackSelectionKey
+	spoolDir               string
 }
+
+type systemCatalog struct {
+	once       sync.Once
+	catalog    []resource
+	localNames map[string]resource
+}
+
+var systemCatalogs sync.Map
 
 // Close releases Page-owned reloadable web-font backing storage.
 func (e *Engine) Close() error {
@@ -111,6 +138,13 @@ func NewDirectories(dirs []string) *Engine {
 	return &Engine{dirs: append([]string(nil), dirs...), faces: map[string]*loaded{}, resources: map[string]resource{}, localNames: map[string]resource{}}
 }
 
+// WarmSystemCatalog resolves immutable installed-font metadata before a Page
+// can make a synchronous layout observation pay for a complete directory scan.
+// Decoded faces and author fonts remain Page-owned.
+func WarmSystemCatalog() {
+	New().scan()
+}
+
 // SetGenericFamily selects a resource family for this isolated engine. It does
 // not alter named-family lookup or synthesize unavailable metrics.
 func (e *Engine) SetGenericFamily(generic, family string) {
@@ -121,11 +155,31 @@ func (e *Engine) SetGenericFamily(generic, family string) {
 		e.genericFamilies = map[string]string{}
 	}
 	e.genericFamilies[strings.ToLower(generic)] = strings.ToLower(family)
+	e.clearResourceSelections()
 }
 
 // SetFallbackFamilies selects an ordered resource policy for this engine.
 func (e *Engine) SetFallbackFamilies(families []string) {
 	e.fallbackFamilies = append([]string(nil), families...)
+	e.clearResourceSelections()
+}
+
+func (e *Engine) clearResourceSelections() {
+	e.resourceSelections = nil
+	e.resourceSelectionOrder = nil
+	e.fallbackSelections = nil
+	e.fallbackSelectionOrder = nil
+}
+
+func resourceSelectionChoices(choices []FontReference) string {
+	if len(choices) == 0 {
+		return ""
+	}
+	var value strings.Builder
+	for _, choice := range choices {
+		fmt.Fprintf(&value, "%s\x00%s\x00%s\x00%s\x00%x\x00%s\x00", choice.ID, choice.Family, choice.Style, choice.Unsupported, math.Float64bits(choice.Weight), choice.UnicodeRange)
+	}
+	return value.String()
 }
 
 // Invalid or unsupported TrueType hint programs must not unwind a host callback.
@@ -145,8 +199,23 @@ func (e *Engine) scan() {
 		return
 	}
 	e.scanned = true
+	key := strings.Join(e.dirs, "\x00")
+	cached, _ := systemCatalogs.LoadOrStore(key, &systemCatalog{})
+	shared := cached.(*systemCatalog)
+	shared.once.Do(func() {
+		shared.catalog, shared.localNames = scanFontDirectories(e.dirs)
+	})
+	e.catalog = append(e.catalog, shared.catalog...)
+	for name, resource := range shared.localNames {
+		e.localNames[name] = resource
+	}
+}
+
+func scanFontDirectories(dirs []string) ([]resource, map[string]resource) {
+	catalog := []resource{}
+	localNames := map[string]resource{}
 	var scratch []byte
-	for _, dir := range e.dirs {
+	for _, dir := range dirs {
 		// Linux distributions arrange fonts in nested family/format directories.
 		// WalkDir is deterministic and does not follow directory symlinks.
 		_ = filepath.WalkDir(dir, func(path string, entry fs.DirEntry, walkErr error) error {
@@ -168,12 +237,12 @@ func (e *Engine) scan() {
 					d, scratch = font.Describe(loader, scratch)
 					d.Aspect.SetDefaults()
 					if d.Family != "" {
-						e.catalog = append(e.catalog, resource{path, index, strings.ToLower(d.Family), d.Aspect})
+						catalog = append(catalog, resource{path, index, strings.ToLower(d.Family), d.Aspect})
 						if raw, err := loader.RawTable(ot.MustNewTag("name")); err == nil {
 							if names, _, err := tables.ParseName(raw); err == nil {
 								for _, id := range []tables.NameID{4, 6} {
 									if name := names.Name(id); name != "" {
-										e.localNames[strings.ToLower(name)] = e.catalog[len(e.catalog)-1]
+										localNames[strings.ToLower(name)] = catalog[len(catalog)-1]
 									}
 								}
 							}
@@ -186,10 +255,29 @@ func (e *Engine) scan() {
 			return nil
 		})
 	}
+	return catalog, localNames
 }
 
 func (e *Engine) selectResource(families string, weight float64, italic bool, choices []FontReference) (resource, error) {
 	e.scan()
+	key := resourceSelectionKey{families: families, choices: resourceSelectionChoices(choices), weight: math.Float64bits(weight), italic: italic}
+	if selected, ok := e.resourceSelections[key]; ok {
+		return selected, nil
+	}
+	remember := func(selected resource) (resource, error) {
+		if e.resourceSelections == nil {
+			e.resourceSelections = make(map[resourceSelectionKey]resource)
+		}
+		if len(e.resourceSelections) >= 1024 {
+			oldest := e.resourceSelectionOrder[0]
+			delete(e.resourceSelections, oldest)
+			copy(e.resourceSelectionOrder, e.resourceSelectionOrder[1:])
+			e.resourceSelectionOrder = e.resourceSelectionOrder[:len(e.resourceSelectionOrder)-1]
+		}
+		e.resourceSelections[key] = selected
+		e.resourceSelectionOrder = append(e.resourceSelectionOrder, key)
+		return selected, nil
+	}
 	names := strings.Split(families, ",")
 	names = append(names, "serif")
 	for _, name := range names {
@@ -218,7 +306,7 @@ func (e *Engine) selectResource(families string, weight float64, italic bool, ch
 			if reason := choices[bestChoice].Unsupported; reason != "" {
 				return resource{}, fmt.Errorf("font descriptor semantics unsupported: %s", reason)
 			}
-			return e.resources[choices[bestChoice].ID], nil
+			return remember(e.resources[choices[bestChoice].ID])
 		}
 
 		generic := name
@@ -265,7 +353,7 @@ func (e *Engine) selectResource(families string, weight float64, italic bool, ch
 				if (r.aspect.Style == font.StyleItalic) != italic {
 					return resource{}, fmt.Errorf("synthetic font style is unsupported")
 				}
-				return r, nil
+				return remember(r)
 			}
 		}
 		if configuredGeneric {
@@ -312,7 +400,7 @@ func (e *Engine) load(r resource) (*loaded, error) {
 	if !ok {
 		return nil, fmt.Errorf("missing horizontal font metrics")
 	}
-	value := &loaded{face: face, shaper: harfbuzz.NewFont(face), ascent: float64(metrics.Ascender), descent: -float64(metrics.Descender), lineGap: float64(metrics.LineGap), emAscent: float64(metrics.Ascender), emDescent: -float64(metrics.Descender), resourceBytes: len(data)}
+	value := &loaded{resource: r, face: face, shaper: harfbuzz.NewFont(face), ascent: float64(metrics.Ascender), descent: -float64(metrics.Descender), lineGap: float64(metrics.LineGap), emAscent: float64(metrics.Ascender), emDescent: -float64(metrics.Descender), resourceBytes: len(data)}
 	if r.index == 0 {
 		value.hintFont, _ = truetype.Parse(data)
 	}
