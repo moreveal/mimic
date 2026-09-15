@@ -37,3 +37,27 @@ func TestCanonicalAttributeRemovalChrome152(t *testing.T) {
 		t.Fatalf("attribute semantics: %v %v", value, err)
 	}
 }
+
+func TestHTMLElementAutofocusReflectsBooleanAttribute(t *testing.T) {
+	b, err := New(v8engine.Factory{}, chrome152.New())
+	if err != nil {
+		t.Fatal(err)
+	}
+	c := b.NewContext()
+	defer c.Close()
+	p, err := c.NewPage()
+	if err != nil {
+		t.Fatal(err)
+	}
+	value, err := p.Evaluate(context.Background(), `(()=>{
+ const input=document.createElement('input'),div=document.createElement('div');
+ const initial=input.autofocus===false&&div.autofocus===false;
+ input.autofocus=true;const set=input.hasAttribute('autofocus')&&input.autofocus===true;
+ input.autofocus=0;const cleared=!input.hasAttribute('autofocus')&&input.autofocus===false;
+ const descriptor=Object.getOwnPropertyDescriptor(HTMLElement.prototype,'autofocus');
+ return initial&&set&&cleared&&descriptor.enumerable&&descriptor.configurable;
+})()`)
+	if err != nil || value != true {
+		t.Fatalf("autofocus reflection: %v %v", value, err)
+	}
+}

@@ -6,10 +6,12 @@ import (
 	"fmt"
 	"math"
 	"os"
+	"runtime/debug"
 	"sync"
 	"sync/atomic"
-	syscall "github.com/maclof/gov8/internal/native"
 	"unsafe"
+
+	syscall "github.com/maclof/gov8/internal/native"
 )
 
 // Native callbacks.
@@ -466,6 +468,7 @@ func hostCallbackDispatch(frame *hostCallbackFrame) uintptr {
 	defer func() {
 		if r := recover(); r != nil {
 			fmt.Fprintf(os.Stderr, "gov8: panic in native callback: %v\n", r)
+			debug.PrintStack()
 			proc("gov8_host_panic_abort").Call()
 			// abort() does not return; unreachable.
 			panic(r)
