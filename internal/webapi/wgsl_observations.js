@@ -197,7 +197,6 @@ const wgslObservations = (() => {
     const functions = new Map();
     while (at < tokens.length) {
       const attrs = attributes();
-      if (attrs.compute) fail('WGSL compute execution');
       expect('fn');
       const name = identifier();
       expect('(');
@@ -211,10 +210,14 @@ const wgslObservations = (() => {
         take();
       }
       expect(')');
-      expect('->');
-      const outputAttributes = attributes(),
-        outputType = type(),
-        main = statement();
+      let outputAttributes = {},
+        outputType = null;
+      if (peek() === '->') {
+        take();
+        outputAttributes = attributes();
+        outputType = type();
+      }
+      const main = statement();
       if (functions.has(name)) throw new SyntaxError('Duplicate WGSL function');
       functions.set(name, {
         name,
