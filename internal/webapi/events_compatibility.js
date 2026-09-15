@@ -25,6 +25,12 @@
   let contentHandlerWorld = host.isIsolatedInputWorld();
   bootstrapRestoreHooks.push(() => {
     contentHandlerWorld = host.isIsolatedInputWorld();
+    // Weak collections are part of the serialized bootstrap graph, but their
+    // entries describe the creator context's Window. A restored realm starts
+    // with a fresh Window listener state just like an ordinary new document.
+    eventListeners = new WeakMap();
+    eventHandlerListeners = new WeakMap();
+    eventHandlerWrappers = new WeakMap();
   });
   const ensureContentHandler = (target, type) => {
     if (contentHandlerWorld || !(target instanceof HTMLElement)) return;
