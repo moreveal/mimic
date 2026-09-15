@@ -7,6 +7,20 @@ import (
 	"testing"
 )
 
+func TestTableRowsIsLiveAndExcludesNestedTables(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, page *Page) {
+		value, err := page.Evaluate(context.Background(), `(()=>{
+document.body.innerHTML='<table id="outer"><tbody><tr id="first"><th>x</th></tr><tr id="second"><td><table><tbody><tr id="nested"><td>y</td></tr></tbody></table></td></tr></tbody></table>';
+const table=document.getElementById('outer'),rows=table.rows,third=document.createElement('tr');
+table.querySelector('tbody').appendChild(third);
+return rows===table.rows&&rows instanceof HTMLCollection&&rows.length===3&&rows[0].id==='first'&&rows.item(1).id==='second'&&rows[2]===third&&!Array.from(rows).includes(document.getElementById('nested'));
+})()`)
+		if err != nil || value != true {
+			t.Fatalf("table rows collection: %v %v", value, err)
+		}
+	})
+}
+
 func TestFormControlDirtyValuesAndReset(t *testing.T) {
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {

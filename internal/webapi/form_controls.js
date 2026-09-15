@@ -883,6 +883,25 @@
     Array.from(
       compatibilitySelectors.query(form.isConnected ? form.ownerDocument : form, selector),
     );
+  const tableRows = new WeakMap();
+  define('HTMLTableElement', 'rows', {
+    get() {
+      if (!tableRows.has(this))
+        tableRows.set(
+          this,
+          collection(
+            () =>
+              Array.from(compatibilitySelectors.query(this, 'tr')).filter((row) => {
+                for (let parent = row.parentElement; parent; parent = parent.parentElement)
+                  if (parent.localName === 'table') return parent === this;
+                return false;
+              }),
+            globalThis.HTMLCollection.prototype,
+          ),
+        );
+      return tableRows.get(this);
+    },
+  });
   const associated = (form) =>
     formCandidates(form, 'button,fieldset,input,object,output,select,textarea').filter(
       (e) => formOwner(e) === form && !(e.localName === 'input' && typeOf(e) === 'image'),
@@ -1168,6 +1187,44 @@
     writable: true,
   });
   const submittingForms = new WeakSet();
+  compatibilityElementState.implicitlySubmitForm = (control, activateSubmitter, dispatchSubmit) => {
+    if (control?.localName !== 'input' || !control.isConnected || control.disabled) return;
+    const form = formOwner(control);
+    if (!form || submittingForms.has(form)) return;
+    const submitter = associated(form).find(isSubmitButton);
+    if (submitter) {
+      if (!disabledForForm(submitter)) activateSubmitter(submitter);
+      return;
+    }
+    const blockingTypes = new Set([
+      'text',
+      'search',
+      'tel',
+      'url',
+      'email',
+      'password',
+      'date',
+      'month',
+      'week',
+      'time',
+      'datetime-local',
+      'number',
+    ]);
+    if (
+      !blockingTypes.has(typeOf(control)) ||
+      associated(form).filter(
+        (candidate) => candidate.localName === 'input' && blockingTypes.has(typeOf(candidate)),
+      ).length > 1
+    )
+      return;
+    submittingForms.add(form);
+    try {
+      if (!form.hasAttribute('novalidate') && !validateForm(form)) return;
+      if (dispatchSubmit(form) && form.isConnected) submitForm.call(form);
+    } finally {
+      submittingForms.delete(form);
+    }
+  };
   compatibilityElementState.activateFormControl = (control, dispatchSubmit) => {
     if (!control?.isConnected || control.disabled) return;
     const type =

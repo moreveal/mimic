@@ -1164,22 +1164,44 @@ const cssBoxModel = (() => {
       const append = (node, parent) => {
         const s = state(node),
           index = nodes.length,
-          canLayoutChildren = /^(?:block|(?:inline-)?flex|(?:inline-)?grid)$/.test(s.display),
-          list = canLayoutChildren
-            ? children(node).filter(
-                (child) => elementSlot(child)?.type === 'element' && rendered(child),
-              )
-            : [],
-          own = controlSize(node),
           text = textOf(node),
+          elementChildren = children(node).filter(
+            (child) => elementSlot(child)?.type === 'element' && rendered(child),
+          ),
+          inlineFormatting =
+            elementChildren.length > 0 &&
+            elementChildren.every((child) => {
+              const display = state(child).display;
+              return (
+                display === 'inline' ||
+                display === 'inline-block' ||
+                replacedGeometryTags.has(tag(child))
+              );
+            }),
+          canLayoutChildren = /^(?:block|(?:inline-)?flex|(?:inline-)?grid)$/.test(s.display),
+          list = canLayoutChildren ? elementChildren : [],
+          own = controlSize(node),
           font = textInfo(node, text),
           measure = own
             ? [own.width, own.height]
             : list.length
               ? [-1, -1]
-              : [text ? font.width : 0, text ? font.height : 0],
+              : text || elementChildren.length
+                ? [
+                    intrinsic(node),
+                    styleReadCache.boxSizes?.get(node)?.height || (text ? font.height : 0),
+                  ]
+                : [0, 0],
           parentNode = geometryParent(node),
           parentIsFlex = parentNode && /^(?:inline-)?flex$/.test(state(parentNode).display),
+          authoredMinHeight = length(s, s.get('min-height')),
+          inlineContentHeight =
+            inlineFormatting && text ? styleReadCache.boxSizes?.get(node)?.height || 0 : 0,
+          minimumHeight =
+            inlineContentHeight &&
+            (authoredMinHeight.kind !== 1 || inlineContentHeight > authoredMinHeight.value)
+              ? { kind: 1, value: inlineContentHeight }
+              : authoredMinHeight,
           minWidth =
             parentIsFlex && (!s.get('min-width') || s.get('min-width') === 'auto')
               ? { kind: 1, value: 0 }
@@ -1211,7 +1233,7 @@ const cssBoxModel = (() => {
           Width: node === root ? { kind: 1, value: rootWidth } : length(s, s.get('width')),
           Height: length(s, s.get('height')),
           MinWidth: minWidth,
-          MinHeight: length(s, s.get('min-height')),
+          MinHeight: minimumHeight,
           MaxWidth: length(s, s.get('max-width')),
           MaxHeight: length(s, s.get('max-height')),
           FlexBasis: length(s, s.get('flex-basis')),
@@ -1315,7 +1337,30 @@ const cssBoxModel = (() => {
     }
     return boxes.get(elementSlot(element).nodeId) || null;
   };
-  const observedRect = (element) => taffyBox(element) || rect(element);
+  const observedRect = (element) => {
+    const projected = taffyBox(element);
+    if (projected) return projected;
+    const legacy = rect(element);
+    for (let ancestor = geometryParent(element); ancestor; ancestor = geometryParent(ancestor)) {
+      if (state(ancestor).position === 'fixed') break;
+      const anchor = taffyBox(ancestor);
+      if (!anchor) continue;
+      const prior = rect(ancestor),
+        dx = anchor.x - prior.x,
+        dy = anchor.y - prior.y;
+      if (!dx && !dy) return legacy;
+      return {
+        ...legacy,
+        x: legacy.x + dx,
+        y: legacy.y + dy,
+        left: legacy.left + dx,
+        top: legacy.top + dy,
+        right: legacy.right + dx,
+        bottom: legacy.bottom + dy,
+      };
+    }
+    return legacy;
+  };
   // A width observation does not need ancestor positions or descendant heights.
   // Table allocation and replaced/shadow boxes retain the complete size path.
   const widthBox = (element) => {

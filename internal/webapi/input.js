@@ -637,7 +637,32 @@
         press = { ...init, keyCode: code, charCode: code };
       if (!emit(target, 'KeyboardEvent', 'keypress', press)) return;
       if (text === '\r' && target.localName === 'textarea') edit(target, '\n', 'insertLineBreak');
-      else if (text !== '\r') edit(target, text);
+      else if (text === '\r')
+        compatibilityElementState.implicitlySubmitForm?.(
+          target,
+          (submitter) =>
+            click(submitter, {
+              bubbles: true,
+              cancelable: true,
+              composed: true,
+              pointerId: -1,
+              pointerType: '',
+              isPrimary: false,
+              button: 0,
+              buttons: 0,
+              detail: 0,
+            }),
+          (form) =>
+            emit(
+              form,
+              'SubmitEvent',
+              'submit',
+              { bubbles: true, cancelable: true, submitterNode: 0 },
+              true,
+              true,
+            ),
+        );
+      else edit(target, text);
     }
   };
   let pointTargetVersion = null;

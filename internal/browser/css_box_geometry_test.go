@@ -10,6 +10,75 @@ import (
 
 func TestCSSBoxGraphMatchesFrozenChrome(t *testing.T) { testCSSObservation(t, "css_box_geometry") }
 
+func TestCSSFlowRootFlexItemMeasuresNestedInlineContent(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, page *Page) {
+		navigateCapabilityFixture(t, page)
+		result, err := page.Evaluate(context.Background(), `(()=>{
+document.body.style.margin='0';
+document.body.innerHTML='<header style="display:flex;width:300px"><h1 id="heading" style="display:flow-root;margin:0;font-size:20px;line-height:40px"><span><span>Title</span></span></h1></header>';
+const heading=document.getElementById('heading'),child=heading.firstElementChild,rect=heading.getBoundingClientRect(),childRect=child.getBoundingClientRect();
+return JSON.stringify({height:rect.height,offsetHeight:heading.offsetHeight,childHeight:childRect.height,visible:rect.width>0&&rect.height>0});
+})()`)
+		const want = `{"height":40,"offsetHeight":40,"childHeight":40,"visible":true}`
+		if err != nil || result != want {
+			t.Fatalf("flow-root nested inline measurement: %v want %s, err=%v", result, want, err)
+		}
+	})
+}
+
+func TestCSSGridFlowPreservesMixedInlineContentHeight(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, page *Page) {
+		navigateCapabilityFixture(t, page)
+		result, err := page.Evaluate(context.Background(), `(()=>{
+document.body.style.margin='0';
+document.body.innerHTML='<main style="display:grid;width:180px"><section><p id="mixed" style="margin:0;font-size:16px;line-height:20px">alpha beta gamma <a href="#">linked words</a> delta epsilon zeta eta theta</p></section><section><h3 id="later" style="margin:0;line-height:30px">Later heading</h3></section></main>';
+const mixed=document.getElementById('mixed').getBoundingClientRect(),later=document.getElementById('later').getBoundingClientRect();
+return JSON.stringify({mixedHeight:mixed.height,laterTop:later.top,noOverlap:later.top>=mixed.bottom});
+})()`)
+		var got struct {
+			MixedHeight float64 `json:"mixedHeight"`
+			LaterTop    float64 `json:"laterTop"`
+			NoOverlap   bool    `json:"noOverlap"`
+		}
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err := json.Unmarshal([]byte(result.(string)), &got); err != nil {
+			t.Fatal(err)
+		}
+		if got.MixedHeight < 40 || !got.NoOverlap {
+			t.Fatalf("mixed inline flow collapsed: %+v", got)
+		}
+	})
+}
+
+func TestCSSTaffyLeafDescendantUsesProjectedAncestorOffset(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, page *Page) {
+		navigateCapabilityFixture(t, page)
+		result, err := page.Evaluate(context.Background(), `(()=>{
+document.body.style.margin='0';
+document.body.innerHTML='<main style="display:grid;width:300px"><div style="height:100px"></div><table id="table"><tbody><tr><td id="cell" style="height:30px">target</td></tr></tbody></table></main>';
+const table=document.getElementById('table').getBoundingClientRect(),cell=document.getElementById('cell').getBoundingClientRect();
+return JSON.stringify({tableTop:table.top,cellTop:cell.top,inside:cell.top>=table.top&&cell.bottom<=table.bottom,hit:document.elementFromPoint(cell.x+2,cell.y+2)?.id});
+})()`)
+		var got struct {
+			TableTop float64 `json:"tableTop"`
+			CellTop  float64 `json:"cellTop"`
+			Inside   bool    `json:"inside"`
+			Hit      string  `json:"hit"`
+		}
+		if err != nil {
+			t.Fatal(err)
+		}
+		if err := json.Unmarshal([]byte(result.(string)), &got); err != nil {
+			t.Fatal(err)
+		}
+		if got.TableTop < 100 || got.CellTop < 100 || !got.Inside || got.Hit != "cell" {
+			t.Fatalf("projected leaf descendant offset: %+v", got)
+		}
+	})
+}
+
 func TestCSSBoxStateIsCompleteDuringRecursiveComputedStyle(t *testing.T) {
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		navigateCapabilityFixture(t, page)
