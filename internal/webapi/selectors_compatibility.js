@@ -539,12 +539,7 @@ const compatibilitySelectors = (() => {
       let retained;
       if (styleReadCache?.retainable) {
         const context = styleContext(node);
-        let environment = styleReadCache.selectorEnvironment;
-        if (!environment) {
-          const viewport = host.viewport();
-          environment = styleReadCache.selectorEnvironment =
-            styleReadCache.mediaVersion + ':' + viewport.width + ':' + viewport.height;
-        }
+        const environment = styleReadCache.environmentVersion;
         retained = context.sheets.get(rules);
         if (!retained || retained.environment !== environment) {
           retained = { environment, pseudos: new Map() };

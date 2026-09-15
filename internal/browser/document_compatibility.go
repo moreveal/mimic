@@ -41,6 +41,9 @@ func (r *Realm) installDocumentCompatibility(host map[string]any) {
 		p.mu.RUnlock()
 		if owner == nil {
 			switch kind {
+			case "innerText":
+				// Inert/detached trees retain the local textContent fallback.
+				return r.val(nil), nil
 			case "value":
 				return r.val(""), nil
 			case "rect", "layout":

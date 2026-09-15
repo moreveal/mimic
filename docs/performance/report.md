@@ -1,5 +1,18 @@
 # Performance architecture pass
 
+## Playwright Wikipedia latency, 2026-09-15
+
+The [unchanged-script report](playwright-wikipedia-20260915.md) records Chrome
+PASS at 2.711 s and a fresh Mimic PASS at 21.270 s. The earlier approximately
+10-second input was traced to repeated fallback-font decoding, not a CDP timeout.
+Nominal coverage filtering reduces input to 0.642 s without changing font order;
+exact-cluster cache keys replace unsafe Unicode-block reuse. Owner-realm text
+observations and unified environment epochs remove redundant style work.
+All 122 recorded CDP commands completed below 2.467 s. The complete fast gate
+passed, including concurrency and teardown. The report records earlier failed
+attempts, text-observation differences and remaining hit-testing/style overhead;
+this is not a claim of Chrome latency parity or universal incremental layout.
+
 ## WebAPI realm memory, 2026-09-14
 
 The [realm-memory investigation](webapi-realm-memory-20260914.md) attributes the

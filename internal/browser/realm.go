@@ -1103,7 +1103,10 @@ func (r *Realm) installBindingsOnOwner() error {
 		if r.mainWorld != nil {
 			owner = r.mainWorld
 		}
-		return r.val(fmt.Sprintf("%d:%d:%d:%d:%d", r.document.Revision(), owner.resourceRevision.Load(), w.ViewportWidth, w.ViewportHeight, r.selectorTargetID)), nil
+		preferences := p.environmentView().Preferences
+		// The suffix is the environment-only epoch used by retained selector
+		// matches; unrelated DOM mutations must not discard their rule programs.
+		return r.val(fmt.Sprintf("%d:%d:%d|%d:%d:%s:%t", r.document.Revision(), owner.resourceRevision.Load(), r.selectorTargetID, w.ViewportWidth, w.ViewportHeight, preferences.ColorScheme, preferences.ReducedMotion)), nil
 	})
 	if detacher, ok := r.runtime.(engine.ArrayBufferDetacher); ok {
 		host["detachArrayBuffer"] = r.runtime.Function(func(_ engine.Value, args []engine.Value) (engine.Value, error) {

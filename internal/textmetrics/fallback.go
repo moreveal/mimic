@@ -76,7 +76,7 @@ func (e *Engine) fallbackFace(primary *loaded, cluster []rune, families string, 
 	}
 	selectionKey := fallbackSelectionKey{
 		primary:  fmt.Sprintf("%s#%d", primary.resource.path, primary.resource.index),
-		coverage: fallbackCoverageClass(cluster),
+		coverage: string(cluster),
 		families: families,
 		choices:  resourceSelectionChoices(choices),
 		weight:   math.Float64bits(weight),
@@ -129,22 +129,7 @@ func (e *Engine) fallbackFace(primary *loaded, cluster []rune, families string, 
 	if len(e.fallbackFamilies) > 0 {
 		names = append(names, e.fallbackFamilies...)
 	} else {
-		// Chrome's Windows fallback resolves common Unicode scripts through the
-		// platform UI families before considering the remaining installed catalog.
-		// Keeping that ordered browser-level chain avoids reopening unrelated font
-		// files for every previously unseen grapheme.
-		names = append(
-			names,
-			"Segoe UI Emoji",
-			"Segoe UI Symbol",
-			"Segoe UI",
-			"Microsoft YaHei",
-			"Yu Gothic UI",
-			"Malgun Gothic",
-			"Myanmar Text",
-			"Nirmala UI",
-			"Arial",
-		)
+		names = append(names, "Segoe UI Emoji", "Segoe UI Symbol", "Segoe UI", "Arial")
 	}
 	seen := map[string]bool{}
 	clusterText := string(cluster)
@@ -154,6 +139,12 @@ func (e *Engine) fallbackFace(primary *loaded, cluster []rune, families string, 
 			return nil, nil
 		}
 		seen[key] = true
+		// Reject using immutable nominal coverage before decoding outlines and
+		// shaping tables. This must not change candidate order or replace the
+		// final variation-selector / color-glyph check on the selected face.
+		if cmap := e.coverage[key]; cmap != nil && !nominalCoverage(cmap, cluster) && !nominalCoverage(cmap, []rune(norm.NFC.String(clusterText))) {
+			return nil, nil
+		}
 		coverage := coverageKey{key, clusterText}
 		if _, missing := e.missingCoverage[coverage]; missing {
 			return nil, nil
@@ -218,11 +209,16 @@ func (e *Engine) fallbackFace(primary *loaded, cluster []rune, families string, 
 	return primary, nil
 }
 
-func fallbackCoverageClass(cluster []rune) string {
+// This is a rejection filter only. Variation presentation, color glyphs and
+// final selection still use the fully loaded face in coversCluster.
+func nominalCoverage(cmap font.Cmap, cluster []rune) bool {
 	for _, ch := range cluster {
-		if !harfbuzz.IsDefaultIgnorable(ch) && !unicode.IsMark(ch) {
-			return fmt.Sprintf("%x", uint32(ch)>>8)
+		if harfbuzz.IsDefaultIgnorable(ch) {
+			continue
+		}
+		if _, ok := cmap.Lookup(ch); !ok {
+			return false
 		}
 	}
-	return "ignorable"
+	return true
 }
