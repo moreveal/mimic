@@ -1,0 +1,18 @@
+{
+  "browser": "Chrome/152.0.7977.82",
+  "metadata": {
+    "existingBrowser": false,
+    "isolatedBrowserContext": true,
+    "syntheticSecureContext": false,
+    "localHeaderEcho": false,
+    "cookieEcho": false,
+    "fixture": "internal/browser/testdata/resize_observer_oracle.js",
+    "fixtureSHA256": "edfd9fa64840c9484bdfe4ab5f9dedc01ad80955f50901559ffdebc80fa90489",
+    "fixtureHashNormalization": "LF",
+    "worker": false
+  },
+  "result": [
+    [40, 20, 40, 50],
+    [75, 20, 75, 85]
+  ]
+}

@@ -200,15 +200,132 @@ const trustedDocumentWrite = (receiver, args, name) => {
         ? new DOMRect(left, top, Math.max(0, right - left), Math.max(0, bottom - top))
         : new DOMRect(0, 0, 0, 0);
     };
-    const rangeNodesBetween = (start, end) => {
-      if (start === end) return start ? [start] : [];
-      if (start?.parentNode && start.parentNode === end?.parentNode) {
-        const children = Array.from(start.parentNode.childNodes),
-          a = children.indexOf(start),
-          b = children.indexOf(end);
-        if (a >= 0 && b >= 0) return children.slice(Math.min(a, b), Math.max(a, b) + 1);
+    const childUnder = (ancestor, node) => {
+      while (node?.parentNode && node.parentNode !== ancestor) node = node.parentNode;
+      return node;
+    };
+    const comparePoints = (aNode, aOffset, bNode, bOffset) => {
+      if (aNode === bNode) return Math.sign(aOffset - bOffset);
+      if (aNode.contains?.(bNode)) {
+        const child = childUnder(aNode, bNode),
+          index = Array.from(aNode.childNodes).indexOf(child);
+        return aOffset <= index ? -1 : 1;
       }
-      return [start, end].filter(Boolean);
+      if (bNode.contains?.(aNode)) {
+        const child = childUnder(bNode, aNode),
+          index = Array.from(bNode.childNodes).indexOf(child);
+        return index < bOffset ? -1 : 1;
+      }
+      const ancestor = commonAncestor(aNode, bNode),
+        a = childUnder(ancestor, aNode),
+        b = childUnder(ancestor, bNode),
+        children = Array.from(ancestor.childNodes);
+      return children.indexOf(a) < children.indexOf(b) ? -1 : 1;
+    };
+    const textNodes = (root) => {
+      const result = [];
+      if (root?.nodeType === 3) return [root];
+      for (const child of Array.from(root?.childNodes || [])) result.push(...textNodes(child));
+      return result;
+    };
+    const selectedText = (s) => {
+      if (s.collapsed) return '';
+      if (s.startContainer === s.endContainer && s.startContainer.nodeType === 3)
+        return s.startContainer.data.slice(s.startOffset, s.endOffset);
+      const root = commonAncestor(s.startContainer, s.endContainer);
+      let result = '';
+      for (const node of textNodes(root)) {
+        const length = node.data.length;
+        if (
+          comparePoints(node, length, s.startContainer, s.startOffset) <= 0 ||
+          comparePoints(node, 0, s.endContainer, s.endOffset) >= 0
+        )
+          continue;
+        const from = node === s.startContainer ? s.startOffset : 0,
+          to = node === s.endContainer ? s.endOffset : length;
+        result += node.data.slice(from, to);
+      }
+      return result;
+    };
+    const nodeSelected = (s, node) => {
+      const parent = node.parentNode;
+      if (!parent) return false;
+      const index = Array.from(parent.childNodes).indexOf(node);
+      return (
+        comparePoints(s.startContainer, s.startOffset, parent, index) <= 0 &&
+        comparePoints(parent, index + 1, s.endContainer, s.endOffset) <= 0
+      );
+    };
+    const overlaps = (s, node) => {
+      const parent = node.parentNode;
+      if (!parent) return node === s.startContainer || node === s.endContainer;
+      const index = Array.from(parent.childNodes).indexOf(node);
+      return (
+        comparePoints(parent, index + 1, s.startContainer, s.startOffset) > 0 &&
+        comparePoints(parent, index, s.endContainer, s.endOffset) < 0
+      );
+    };
+    const cloneSelected = (s, source, target) => {
+      for (const child of Array.from(source.childNodes || [])) {
+        if (!overlaps(s, child)) continue;
+        if (nodeSelected(s, child)) target.appendChild(child.cloneNode(true));
+        else if (child.nodeType === 3) {
+          const from = child === s.startContainer ? s.startOffset : 0,
+            to = child === s.endContainer ? s.endOffset : child.data.length;
+          if (to > from) target.appendChild(s.owner.createTextNode(child.data.slice(from, to)));
+        } else {
+          const copy = child.cloneNode(false);
+          cloneSelected(s, child, copy);
+          if (copy.childNodes.length) target.appendChild(copy);
+        }
+      }
+    };
+    const contents = (s) => {
+      const fragment = s.owner.createDocumentFragment();
+      if (s.collapsed) return fragment;
+      if (s.startContainer === s.endContainer && s.startContainer.nodeType === 3) {
+        fragment.appendChild(
+          s.owner.createTextNode(s.startContainer.data.slice(s.startOffset, s.endOffset)),
+        );
+        return fragment;
+      }
+      const root = commonAncestor(s.startContainer, s.endContainer);
+      cloneSelected(s, root, fragment);
+      return fragment;
+    };
+    const refresh = (s) => {
+      s.collapsed = s.startContainer === s.endContainer && s.startOffset === s.endOffset;
+      const root = commonAncestor(s.startContainer, s.endContainer);
+      s.nodes = s.collapsed ? [] : textNodes(root).filter((node) => overlaps(s, node));
+    };
+    const deleteSelected = (s) => {
+      if (s.collapsed) return;
+      if (s.startContainer === s.endContainer && s.startContainer.nodeType === 3) {
+        s.startContainer.deleteData(s.startOffset, s.endOffset - s.startOffset);
+        s.endOffset = s.startOffset;
+        refresh(s);
+        return;
+      }
+      const root = commonAncestor(s.startContainer, s.endContainer),
+        removals = [],
+        edits = [];
+      const visit = (node) => {
+        for (const child of Array.from(node.childNodes || [])) {
+          if (!overlaps(s, child)) continue;
+          if (nodeSelected(s, child)) removals.push(child);
+          else if (child.nodeType === 3) {
+            const from = child === s.startContainer ? s.startOffset : 0,
+              to = child === s.endContainer ? s.endOffset : child.data.length;
+            if (to > from) edits.push([child, from, to - from]);
+          } else visit(child);
+        }
+      };
+      visit(root);
+      for (const [node, offset, count] of edits) node.deleteData(offset, count);
+      for (const node of removals) if (node.parentNode) node.parentNode.removeChild(node);
+      s.endContainer = s.startContainer;
+      s.endOffset = s.startOffset;
+      refresh(s);
     };
     method(Document.prototype, 'createRange', function () {
       if (!(this instanceof Document)) throw new TypeError('Illegal invocation');
@@ -237,7 +354,7 @@ const trustedDocumentWrite = (receiver, args, name) => {
       state.startOffset = Math.max(0, index);
       state.endContainer = parent;
       state.endOffset = Math.max(0, index) + 1;
-      state.collapsed = false;
+      refresh(state);
     });
     method(Range.prototype, 'selectNodeContents', function (node) {
       const state = rangeState(this);
@@ -253,23 +370,31 @@ const trustedDocumentWrite = (receiver, args, name) => {
       state.startOffset = 0;
       state.endContainer = node;
       state.endOffset = boundaryLength(node);
-      state.collapsed = state.endOffset === 0;
+      refresh(state);
     });
     method(Range.prototype, 'setStart', function (node, offset) {
       const state = rangeState(this);
       if (arguments.length < 2) throw new TypeError('Not enough arguments');
+      offset = checkedBoundary(state, node, offset);
+      if (comparePoints(node, offset, state.endContainer, state.endOffset) > 0) {
+        state.endContainer = node;
+        state.endOffset = offset;
+      }
       state.startContainer = node;
-      state.startOffset = checkedBoundary(state, node, offset);
-      state.nodes = rangeNodesBetween(node, state.endContainer);
-      state.collapsed = node === state.endContainer && state.startOffset === state.endOffset;
+      state.startOffset = offset;
+      refresh(state);
     });
     method(Range.prototype, 'setEnd', function (node, offset) {
       const state = rangeState(this);
       if (arguments.length < 2) throw new TypeError('Not enough arguments');
+      offset = checkedBoundary(state, node, offset);
+      if (comparePoints(node, offset, state.startContainer, state.startOffset) < 0) {
+        state.startContainer = node;
+        state.startOffset = offset;
+      }
       state.endContainer = node;
-      state.endOffset = checkedBoundary(state, node, offset);
-      state.nodes = rangeNodesBetween(state.startContainer, node);
-      state.collapsed = node === state.startContainer && state.endOffset === state.startOffset;
+      state.endOffset = offset;
+      refresh(state);
     });
     const setAround = (receiver, node, start, after) => {
       const state = rangeState(receiver);
@@ -284,9 +409,7 @@ const trustedDocumentWrite = (receiver, args, name) => {
         state.endContainer = parent;
         state.endOffset = index;
       }
-      state.nodes = rangeNodesBetween(state.startContainer, state.endContainer);
-      state.collapsed =
-        state.startContainer === state.endContainer && state.startOffset === state.endOffset;
+      refresh(state);
     };
     method(Range.prototype, 'setStartBefore', function (node) {
       if (!arguments.length) throw new TypeError('Not enough arguments');
@@ -330,10 +453,34 @@ const trustedDocumentWrite = (receiver, args, name) => {
       rangeOwners.set(range, { ...state, nodes: [...state.nodes] });
       return range;
     });
+    method(Range.prototype, 'cloneContents', function () {
+      return contents(rangeState(this));
+    });
+    method(Range.prototype, 'extractContents', function () {
+      const state = rangeState(this),
+        fragment = contents(state);
+      deleteSelected(state);
+      return fragment;
+    });
+    method(Range.prototype, 'deleteContents', function () {
+      deleteSelected(rangeState(this));
+    });
+    method(Range.prototype, 'insertNode', function (node) {
+      const state = rangeState(this);
+      if (!arguments.length) throw new TypeError('Not enough arguments');
+      if (!(node instanceof Node)) throw new TypeError('Parameter is not a Node');
+      let parent = state.startContainer,
+        before;
+      if (parent.nodeType === 3) {
+        before = parent.splitText(state.startOffset);
+        parent = parent.parentNode;
+      } else before = parent.childNodes[state.startOffset] || null;
+      if (!parent) throw new DOMException('The boundary has no parent.', 'HierarchyRequestError');
+      parent.insertBefore(node, before);
+      refresh(state);
+    });
     method(Range.prototype, 'toString', function () {
-      return rangeState(this)
-        .nodes.map((node) => node.textContent || '')
-        .join('');
+      return selectedText(rangeState(this));
     });
     rangeAccessor(globalThis.AbstractRange?.prototype, 'startOffset', function () {
       return rangeState(this).startOffset;

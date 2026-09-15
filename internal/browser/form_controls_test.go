@@ -52,3 +52,55 @@ func TestFormControlInitialValueAndDirectChildText(t *testing.T) {
 		t.Fatalf("initial/child-text controls: %v %v", value, err)
 	}
 }
+
+func TestFormAssociationCollectionsAndFormData(t *testing.T) {
+	p := validationPage(t)
+	defer p.Close()
+	value, err := p.Evaluate(context.Background(), `(()=>{
+ document.body.innerHTML='<input id="before" form="target" name="same" value="external"><form id="target"><fieldset id="group"><input id="inside" name="same" value="inside"><input name="off" disabled value="disabled"><input type="checkbox" name="checks" value="yes" checked><input type="checkbox" name="checks" value="no"><select name="choice" multiple><option selected>A</option><optgroup disabled><option selected>B</option></optgroup><option selected>C</option></select><button id="send" name="commit" value="save">Save</button></fieldset></form>';
+ const form=document.getElementById('target'),before=document.getElementById('before'),group=document.getElementById('group'),inside=document.getElementById('inside'),send=document.getElementById('send'),events=[];
+ form.addEventListener('formdata',event=>{events.push([event.formData.get('same'),event.isTrusted]);event.formData.append('added','listener')});
+ const data=new FormData(form,send),same=form.elements.same;
+ return form instanceof HTMLFormElement&&before.form===form&&group.form===form&&
+   form.elements===form.elements&&form.elements.length===8&&form.elements[0]===before&&form.elements.namedItem('inside')===inside&&
+   same.length===2&&same[0]===before&&same[1]===inside&&
+   JSON.stringify(Array.from(data.entries()))===JSON.stringify([['same','external'],['same','inside'],['checks','yes'],['choice','A'],['choice','C'],['commit','save'],['added','listener']])&&
+   JSON.stringify(events)==='[["external",false]]';
+ })()`)
+	if err != nil || value != true {
+		t.Fatalf("form association/FormData: %v %v", value, err)
+	}
+}
+
+func TestRequestSubmitValidationAndSubmitter(t *testing.T) {
+	p := validationPage(t)
+	defer p.Close()
+	value, err := p.Evaluate(context.Background(), `(()=>{
+ const form=document.createElement('form');form.innerHTML='<input id="entry" required><button id="send" name="go" value="yes">Send</button>';document.body.appendChild(form);
+ const entry=form.elements.entry,send=form.elements.send,events=[];
+ entry.addEventListener('invalid',event=>events.push(['invalid',event.bubbles,event.cancelable]));
+ form.addEventListener('submit',event=>{events.push(['submit',event.submitter===send,event.isTrusted]);event.preventDefault()});
+ form.requestSubmit(send);entry.value='ok';form.requestSubmit(send);form.requestSubmit();
+ let wrongType='',wrongOwner='';try{form.requestSubmit(entry)}catch(error){wrongType=error.name}
+ const other=document.createElement('button');try{form.requestSubmit(other)}catch(error){wrongOwner=error.name}
+ return JSON.stringify(events)===JSON.stringify([['invalid',false,true],['submit',true,false],['submit',false,false]])&&wrongType==='TypeError'&&wrongOwner==='NotFoundError';
+ })()`)
+	if err != nil || value != true {
+		t.Fatalf("requestSubmit lifecycle: %v %v", value, err)
+	}
+}
+
+func TestDetachedFormAssociationCollectionAndData(t *testing.T) {
+	p := validationPage(t)
+	defer p.Close()
+	value, err := p.Evaluate(context.Background(), `(()=>{
+ const form=document.createElement('form');
+ form.innerHTML='<input name="x" value="original"><input type="checkbox" name="enabled" checked><input name="ignored" disabled>';
+ const input=form.elements.x,data=new FormData(form);
+ input.value='changed';form.reset();
+ return input.value==='original'&&data.get('x')==='original'&&data.get('enabled')==='on'&&data.get('ignored')===null;
+})()`)
+	if err != nil || value != true {
+		t.Fatalf("detached form association/data/reset: %v %v", value, err)
+	}
+}

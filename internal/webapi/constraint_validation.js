@@ -203,7 +203,14 @@ const validityFlags = (e) => {
     }
   if (value && tag === 'input' && textValidationTypes.has(type) && e.hasAttribute('pattern'))
     try {
-      f.patternMismatch = !new RegExp('^(?:' + e.getAttribute('pattern') + ')$', 'v').test(value);
+      const source = '^(?:' + e.getAttribute('pattern') + ')$';
+      let expression;
+      try {
+        expression = new RegExp(source, 'v');
+      } catch {
+        expression = new RegExp(source, 'u');
+      }
+      f.patternMismatch = !expression.test(value);
     } catch {}
   if (value && s.userEdited && (tag === 'textarea' || textValidationTypes.has(type))) {
     const max = e.getAttribute('maxlength'),
