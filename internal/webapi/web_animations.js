@@ -87,6 +87,9 @@ const webAnimations = (() => {
     }
   };
   const track = (animation) => {
+    // Time-driven observations cannot use a mutation-only scalar projection.
+    host.disableStyleProjectionCache();
+    styleObservationDynamic = true;
     const state = stateFor(animation),
       effect = state.effect && effectState.get(state.effect),
       target = effect?.target;

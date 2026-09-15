@@ -8,10 +8,14 @@ const cssBoxModel = (() => {
   // projection across DOM epochs to avoid re-transferring and parsing the same
   // native metrics. Font selection has its own authoritative realm revision.
   let textMetrics = new Map(),
+    nodeTextMetrics = new WeakMap(),
+    nodeTextLines = new WeakMap(),
     textMetricBytes = 0,
     textMetricVersion;
   bootstrapRestoreHooks.push(() => {
     textMetrics = new Map();
+    nodeTextMetrics = new WeakMap();
+    nodeTextLines = new WeakMap();
     textMetricBytes = 0;
     textMetricVersion = undefined;
   });
@@ -131,7 +135,7 @@ const cssBoxModel = (() => {
         entries = computedCSSDeclarations(current),
         attrs = cssObservationNodeState(current).attributes;
       const extra = JSON.stringify([attrs.hidden, attrs.type, attrs['font-size'], attrs.dir]),
-        environment = styleReadCache.selectorEnvironment;
+        environment = styleReadCache.environmentVersion;
       const prior = retainedStyles.get(current);
       const next =
         prior &&
@@ -342,8 +346,40 @@ const cssBoxModel = (() => {
         height = raw && raw !== 'normal' ? (cssNumberRegex.test(raw) ? 0 : s.length(raw, 0)) : 0;
       return { width: 0, height: height ?? 0, ascent: 0, descent: 0 };
     }
-    const key = JSON.stringify([text, family, s.fontSize, weight, italic]),
+    // A layout epoch may change because a sibling moved or acquired a class.
+    // That does not change this node's text shaping inputs. Keep its last
+    // compact result with a weak owner instead of cycling the entire document
+    // through the bounded cross-node string cache on each such mutation.
+    const version =
+        styleReadCache.fontCollectionVersion ??
+        (styleReadCache.fontCollectionVersion = host.fontCollectionVersion()),
+      prior = nodeTextMetrics.get(element);
+    let shaped;
+    if (
+      prior &&
+      prior.version === version &&
+      prior.text === text &&
+      prior.family === family &&
+      prior.size === s.fontSize &&
+      prior.weight === weight &&
+      prior.italic === italic
+    )
+      shaped = prior.shaped;
+    else {
+      const key = JSON.stringify([text, family, s.fontSize, weight, italic]);
       shaped = measureText(key, text, family, s.fontSize, weight, italic);
+      if (!shaped.error && text.length <= 8192)
+        nodeTextMetrics.set(element, {
+          version,
+          text,
+          family,
+          size: s.fontSize,
+          weight,
+          italic,
+          shaped,
+        });
+      else nodeTextMetrics.delete(element);
+    }
     if (shaped.error) {
       host.semanticMissingAt('css_box_geometry.js/textInfo', 'CSS.textBoxMetrics');
       return { width: 0, height: 0, ascent: 0, descent: 0 };
@@ -858,11 +894,29 @@ const cssBoxModel = (() => {
         (s.length(get('padding-bottom'), value.width) || 0)
       );
     };
+    // Line breaking depends on its actual text/font/width inputs, not sibling
+    // mutations. Retain only the last numeric result with the live node owner.
+    const lineKey = JSON.stringify([
+        text,
+        contentWidth,
+        s.fontSize,
+        s.inherited('font-family'),
+        s.inherited('font-weight'),
+        s.inherited('font-style'),
+        s.inherited('white-space'),
+        styleReadCache.fontCollectionVersion,
+      ]),
+      priorLines = nodeTextLines.get(element);
     let textLines = text ? 1 : 0,
       lastTextWidth = 0,
-      lineText = '';
+      lineText = '',
+      textOverflowWidth = 0;
     const wrapping = !['nowrap', 'pre'].includes(s.inherited('white-space'));
-    if (text)
+    if (priorLines?.key === lineKey) {
+      textLines = priorLines.lines;
+      lastTextWidth = priorLines.lastWidth;
+      textOverflowWidth = priorLines.overflowWidth;
+    } else if (text)
       for (const word of text.split(' ')) {
         const candidate = lineText ? lineText + ' ' + word : word,
           advance = textInfo(element, candidate).width;
@@ -874,8 +928,17 @@ const cssBoxModel = (() => {
           lineText = candidate;
           lastTextWidth = advance;
         }
-        value.overflowWidth = Math.max(value.overflowWidth || 0, lastTextWidth);
+        textOverflowWidth = Math.max(textOverflowWidth, lastTextWidth);
       }
+    if (text) value.overflowWidth = Math.max(value.overflowWidth || 0, textOverflowWidth);
+    if (lineKey.length <= 16384)
+      nodeTextLines.set(element, {
+        key: lineKey,
+        lines: textLines,
+        lastWidth: lastTextWidth,
+        overflowWidth: textOverflowWidth,
+      });
+    else nodeTextLines.delete(element);
     let cursor = generated('before'),
       margin = 0,
       lineWidth = lastTextWidth,
@@ -1066,6 +1129,13 @@ const cssBoxModel = (() => {
   // Taffy owns flex/grid formatting-context geometry. Mimic supplies the
   // normalized computed style and intrinsic leaf measurements in one snapshot.
   const taffyBox = (element) => {
+    const cache = styleReadCache.taffyBoxes || (styleReadCache.taffyBoxes = new WeakMap());
+    if (cache.has(element)) return cache.get(element);
+    const box = uncachedTaffyBox(element);
+    cache.set(element, box);
+    return box;
+  };
+  const uncachedTaffyBox = (element) => {
     // Custom elements retain the legacy intrinsic-width path; their authored
     // display can be upgraded or stylesheet-mutated after construction.
     if (tag(element).includes('-')) return null;
@@ -1181,7 +1251,6 @@ const cssBoxModel = (() => {
           canLayoutChildren = /^(?:block|(?:inline-)?flex|(?:inline-)?grid)$/.test(s.display),
           list = canLayoutChildren ? elementChildren : [],
           own = controlSize(node),
-          font = textInfo(node, text),
           measure = own
             ? [own.width, own.height]
             : list.length
@@ -1189,7 +1258,8 @@ const cssBoxModel = (() => {
               : text || elementChildren.length
                 ? [
                     intrinsic(node),
-                    styleReadCache.boxSizes?.get(node)?.height || (text ? font.height : 0),
+                    styleReadCache.boxSizes?.get(node)?.height ||
+                      (text ? textInfo(node, text).height : 0),
                   ]
                 : [0, 0],
           parentNode = geometryParent(node),

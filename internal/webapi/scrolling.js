@@ -51,6 +51,17 @@ compatibilityScrolling = (() => {
           : value
       : value;
   };
+  // In standards mode, when the root has visible overflow, BODY overflow is
+  // propagated to the viewport. BODY is not a second scroll container and must
+  // not clip, scroll, or offset its descendants independently.
+  const bodyOverflowPropagates = (element) =>
+    element === document.body &&
+    document.compatMode !== 'BackCompat' &&
+    root() === document.documentElement &&
+    overflow(document.documentElement, 'x') === 'visible' &&
+    overflow(document.documentElement, 'y') === 'visible';
+  const scrollingOverflow = (element, axis) =>
+    bodyOverflowPropagates(element) ? 'visible' : overflow(element, axis);
   const children = (element) =>
     cssObservationChildren(elementShadows.get(element) || element).filter(
       (node) => elementSlot(node)?.type === 'element',
@@ -93,10 +104,14 @@ compatibilityScrolling = (() => {
         bottom = Math.max(bottom, Math.min(r.bottom, clipBottom));
         west = Math.min(west, Math.max(r.left, clipLeft));
         // Descendant overflow does not escape a clipping/scrolling box.
-        if (!first && overflow(current, 'x') !== 'visible' && overflow(current, 'y') !== 'visible')
+        if (
+          !first &&
+          scrollingOverflow(current, 'x') !== 'visible' &&
+          scrollingOverflow(current, 'y') !== 'visible'
+        )
           return;
-        const clipX = !first && overflow(current, 'x') !== 'visible',
-          clipY = !first && overflow(current, 'y') !== 'visible';
+        const clipX = !first && scrollingOverflow(current, 'x') !== 'visible',
+          clipY = !first && scrollingOverflow(current, 'y') !== 'visible';
         for (const child of children(current))
           visit(
             child,
@@ -118,8 +133,8 @@ compatibilityScrolling = (() => {
       const rtl = cssBoxModel.state(node).inherited('direction') === 'rtl',
         width = Math.round(Math.max(cw, rtl ? left + cw - west : right - left)),
         height = Math.round(Math.max(ch, bottom - top));
-      const allowX = !element || !['visible', 'clip'].includes(overflow(element, 'x')),
-        allowY = !element || !['visible', 'clip'].includes(overflow(element, 'y'));
+      const allowX = !element || !['visible', 'clip'].includes(scrollingOverflow(element, 'x')),
+        allowY = !element || !['visible', 'clip'].includes(scrollingOverflow(element, 'y'));
       const result = {
         width,
         height,
@@ -311,8 +326,8 @@ compatibilityScrolling = (() => {
       while (
         container &&
         container !== root() &&
-        overflow(container, 'x') === 'visible' &&
-        overflow(container, 'y') === 'visible'
+        scrollingOverflow(container, 'x') === 'visible' &&
+        scrollingOverflow(container, 'y') === 'visible'
       )
         container = geometryParent(container);
       const viewport = host.viewport(),
@@ -365,7 +380,7 @@ compatibilityScrolling = (() => {
     if (!element?.isConnected || !cssBoxModel.hasBox(element)) return;
     const ancestors = [];
     for (let p = geometryParent(element); p; p = geometryParent(p))
-      if (p !== root()) ancestors.push(p);
+      if (p !== root() && !withStyleReadCache(() => bodyOverflowPropagates(p))) ancestors.push(p);
     ancestors.push(null);
     const targetRect = () => {
       const r = clientRectInObservation(element);
@@ -461,8 +476,8 @@ compatibilityScrolling = (() => {
         break;
       const r = clientRectInObservation(p);
       if (
-        (overflow(p, 'x') !== 'visible' && (x < r.left || x >= r.right)) ||
-        (overflow(p, 'y') !== 'visible' && (y < r.top || y >= r.bottom))
+        (scrollingOverflow(p, 'x') !== 'visible' && (x < r.left || x >= r.right)) ||
+        (scrollingOverflow(p, 'y') !== 'visible' && (y < r.top || y >= r.bottom))
       )
         return true;
     }
@@ -470,11 +485,12 @@ compatibilityScrolling = (() => {
   };
   const wheel = (element, dx, dy) => {
     for (let p = element; ; p = geometryParent(p)) {
+      if (p && bodyOverflowPropagates(p)) continue;
       const target = p === root() ? null : p,
         old = position(target),
         m = metrics(target);
-      const canX = !p || overflow(p, 'x') !== 'hidden',
-        canY = !p || overflow(p, 'y') !== 'hidden';
+      const canX = !p || scrollingOverflow(p, 'x') !== 'hidden',
+        canY = !p || scrollingOverflow(p, 'y') !== 'hidden';
       set(target, old.x + (canX ? dx : 0), old.y + (canY ? dy : 0));
       const next = position(target);
       if (next.x !== old.x || next.y !== old.y) return true;

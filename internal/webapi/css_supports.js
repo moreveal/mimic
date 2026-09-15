@@ -114,7 +114,19 @@ const compatibilityCSSSupports = {};
       return condition(/^[-\w]+\s*:/.test(text) ? '(' + text + ')' : text) === true;
     },
   }.supports;
-  compatibilityCSSSupports.matches = (text) => supports(text);
+  // Stylesheet conditions are immutable grammar queries, not element state.
+  // Keep author-facing conversions and API calls on the ordinary path, but do
+  // not parse the same @supports condition for every element and observation.
+  const conditions = new Map();
+  compatibilityCSSSupports.matches = (text) => {
+    if (conditions.has(text)) return conditions.get(text);
+    const result = supports(text);
+    if (text.length <= 8192) {
+      if (conditions.size >= 128) conditions.delete(conditions.keys().next().value);
+      conditions.set(text, result);
+    }
+    return result;
+  };
   Object.defineProperty(supports, 'length', { value: 1, configurable: true });
   markNative(supports, 'supports');
   Object.defineProperty(CSS, 'supports', {

@@ -1,0 +1,86 @@
+package browser
+
+import "sync"
+
+// A projection contains only immutable scalar readbacks, never JS wrappers or
+// another DOM/style model. Each owner realm has its own bounded cache. All
+// observable inputs must match before a foreign caller can avoid actor entry.
+type styleProjectionEpoch struct {
+	document, resources uint64
+	target              int64
+	width, height       int
+	colorScheme         string
+	reducedMotion       bool
+}
+
+type styleProjectionKey struct {
+	node           int64
+	kind, property string
+}
+
+type styleProjectionCache struct {
+	mu      sync.Mutex
+	epoch   styleProjectionEpoch
+	values  map[styleProjectionKey]any
+	bytes   int
+	dynamic bool
+}
+
+func (r *Realm) styleProjectionEpoch() styleProjectionEpoch {
+	e := r.agent.Page().environmentView()
+	return styleProjectionEpoch{r.document.Revision(), r.resourceRevision.Load(), r.selectorTargetID,
+		e.Window.ViewportWidth, e.Window.ViewportHeight, e.Preferences.ColorScheme, e.Preferences.ReducedMotion}
+}
+
+func (c *styleProjectionCache) get(epoch styleProjectionEpoch, key styleProjectionKey) (any, bool) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	if c.dynamic || c.epoch != epoch {
+		return nil, false
+	}
+	value, ok := c.values[key]
+	return value, ok
+}
+
+func (c *styleProjectionCache) put(epoch styleProjectionEpoch, key styleProjectionKey, value any) {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	if c.dynamic {
+		return
+	}
+	if c.epoch != epoch {
+		c.values = nil
+		c.bytes = 0
+		c.epoch = epoch
+	}
+	if c.values == nil {
+		c.values = make(map[styleProjectionKey]any)
+	}
+	// Stop admission rather than flushing a hot cache when an enormous document
+	// exceeds the budget. A genuine input mutation starts a new observation.
+	scalarBytes := 0
+	switch scalar := value.(type) {
+	case string:
+		scalarBytes = len(scalar)
+	case bool:
+		scalarBytes = 1
+	default:
+		return
+	}
+	size := scalarBytes + len(key.property) + len(key.kind) + 32
+	if _, exists := c.values[key]; exists {
+		return
+	}
+	if len(c.values) < 32768 && c.bytes+size <= 8*1024*1024 {
+		c.values[key] = value
+		c.bytes += size
+	}
+}
+
+func (c *styleProjectionCache) disable() {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	c.dynamic = true
+	c.values = nil
+	c.bytes = 0
+}

@@ -3,12 +3,19 @@ package browser
 import (
 	"context"
 	"fmt"
+	"strings"
 
 	"github.com/moreveal/mimic/internal/engine"
 	"github.com/moreveal/mimic/internal/network"
 )
 
 func (r *Realm) installDocumentCompatibility(host map[string]any) {
+	host["disableStyleProjectionCache"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
+		// Animation time changes without a DOM mutation. Keep those observations
+		// in the canonical owner rather than freezing an intermediate sample.
+		r.styleProjections.disable()
+		return nil, nil
+	})
 	if r.agent.Page().ctx.browser.devPreview {
 		host["installDevPreview"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 			r.previewRead = args[0]
@@ -53,6 +60,17 @@ func (r *Realm) installDocumentCompatibility(host map[string]any) {
 			}
 		}
 		var observation any
+		key := styleProjectionKey{id, kind, property}
+		// Child viewport geometry can depend on the parent realm's style state.
+		// Until that dependency is represented, retain only top-document scalars.
+		cacheable := (kind == "value" || kind == "document" || kind == "" || kind == "box" ||
+			(kind == "visibility" && !strings.Contains(property, `"contentVisibilityAuto":true`))) && len(property) <= 128 && owner == p.Top.Realm
+		epoch := owner.styleProjectionEpoch()
+		if cacheable {
+			if value, ok := owner.styleProjections.get(epoch, key); ok {
+				return r.val(value), nil
+			}
+		}
 		run := func(ctx context.Context) error {
 			if deferred, ok := owner.runtime.(*deferredRuntime); ok {
 				if _, err := deferred.ready(); err != nil {
@@ -84,6 +102,9 @@ func (r *Realm) installDocumentCompatibility(host map[string]any) {
 			err = nested.RunNested(context.Background(), run)
 		} else {
 			err = run(context.Background())
+		}
+		if err == nil && cacheable && epoch == owner.styleProjectionEpoch() {
+			owner.styleProjections.put(epoch, key, observation)
 		}
 		return r.val(observation), err
 	}, "nss")
