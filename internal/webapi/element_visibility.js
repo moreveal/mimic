@@ -12,6 +12,10 @@ function checkElementVisibility(options = {}) {
       opacityProperty: !!(options.opacityProperty || options.checkOpacity),
       contentVisibilityAuto: !!options.contentVisibilityAuto,
     };
+    if (!flags.visibilityProperty && !flags.opacityProperty && !flags.contentVisibilityAuto) {
+      const batched = cssBatchedForeignVisibility(this);
+      if (batched !== undefined) return batched;
+    }
     const foreign = foreignCSSObservation(this, 'visibility', JSON.stringify(flags));
     if (foreign !== null) return foreign;
     if (!cssBoxModel.hasBox(this) || cssBoxModel.state(this).display === 'contents') return false;
