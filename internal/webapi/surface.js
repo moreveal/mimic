@@ -2987,7 +2987,11 @@
               const values = {};
               for (const property of properties)
                 values[property] = cssComputedValue(candidate, property);
-              rows.push([elementSlot(candidate).nodeId, values]);
+              rows.push([
+                elementSlot(candidate).nodeId,
+                values,
+                observeElementVisibility(candidate),
+              ]);
             }
             return JSON.stringify(rows);
           })

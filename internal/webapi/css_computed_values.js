@@ -175,16 +175,7 @@ const cssComputedValue = (element, name) => {
   if (styleObservationIsolated) {
     return withStyleReadCache(() => {
       const nodeID = String(elementSlot(element).nodeId),
-        canonicalPrefix = styleReadCache.version.slice(0, styleReadCache.version.indexOf('|')),
-        selectorTarget = Number(canonicalPrefix.slice(canonicalPrefix.lastIndexOf(':') + 1)),
-        stableEpoch =
-          canonicalPrefix +
-          '|' +
-          styleReadCache.environmentVersion +
-          ':' +
-          constructedStyleSheets.revision() +
-          ':' +
-          compatibilityElementState.observationVersion();
+        { selectorTarget, stableEpoch } = cssForeignComputedStyleEpoch();
       if (checkpointForeignComputedValueVersion !== stableEpoch) {
         checkpointForeignComputedValues = new Map();
         checkpointForeignComputedValueVersion = stableEpoch;
@@ -206,10 +197,11 @@ const cssComputedValue = (element, name) => {
         );
       if (foreign !== null) {
         if (documentBatch) {
-          for (const [nodeID, record] of JSON.parse(foreign))
+          for (const [nodeID, record, visibility] of JSON.parse(foreign))
             activeBatches.set(String(nodeID), {
               version: styleReadCache.version,
               values: new Map(Object.entries(record)),
+              visibility,
             });
           return activeBatches.get(nodeID)?.values.get(name) ?? '';
         }
@@ -231,6 +223,28 @@ const cssComputedValue = (element, name) => {
     }
     return value;
   });
+};
+const cssForeignComputedStyleEpoch = () => {
+  const canonicalPrefix = styleReadCache.version.slice(0, styleReadCache.version.indexOf('|'));
+  return {
+    selectorTarget: Number(canonicalPrefix.slice(canonicalPrefix.lastIndexOf(':') + 1)),
+    stableEpoch:
+      canonicalPrefix +
+      '|' +
+      styleReadCache.environmentVersion +
+      ':' +
+      constructedStyleSheets.revision() +
+      ':' +
+      compatibilityElementState.observationVersion(),
+  };
+};
+const cssBatchedForeignVisibility = (element) => {
+  if (!styleObservationIsolated || !styleReadCache) return undefined;
+  const { selectorTarget, stableEpoch } = cssForeignComputedStyleEpoch();
+  if (selectorTarget !== 0 || checkpointForeignComputedValueVersion !== stableEpoch)
+    return undefined;
+  const cached = checkpointForeignComputedValues.get(String(elementSlot(element).nodeId));
+  return cached?.version === styleReadCache.version ? cached.visibility : undefined;
 };
 // Immutable scalar projections share the canonical observation epoch. Animation
 // time is not a DOM mutation, so animated realms always resolve a fresh value.

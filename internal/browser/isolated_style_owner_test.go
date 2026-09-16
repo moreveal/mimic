@@ -103,6 +103,14 @@ func TestIsolatedStyleBatchesLargeStableDocument(t *testing.T) {
 		if calls := after - before; calls > 2 {
 			t.Fatalf("large stable style read used %d owner crossings", calls)
 		}
+		result, err = d.Evaluate(context.Background(), p.Top.ID, world, `Array.from(document.querySelectorAll('.item'),e=>e.checkVisibility()).filter(Boolean).length`, DebuggerOptions{ReturnByValue: true})
+		if err != nil || result["exceptionDetails"] != nil || result["result"].(map[string]any)["value"] != float64(80) {
+			t.Fatalf("batched visibility: %#v %v", result, err)
+		}
+		visibilityAfter := liveDiagnosticCost(t, p, "host:foreignComputedStyleFlatTree")
+		if calls := visibilityAfter - after; calls != 0 {
+			t.Fatalf("large stable visibility read used %d owner crossings", calls)
+		}
 		debuggerEval(t, d, `document.styleSheets[0].insertRule('.item{display:inline}',2)`, DebuggerOptions{})
 		result, err = d.Evaluate(context.Background(), p.Top.ID, world, `getComputedStyle(document.querySelector('.item')).display`, DebuggerOptions{ReturnByValue: true})
 		if err != nil || result["exceptionDetails"] != nil || result["result"].(map[string]any)["value"] != "inline" {
