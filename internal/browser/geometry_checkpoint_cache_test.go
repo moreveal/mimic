@@ -48,6 +48,19 @@ func TestGeometryEpochSurvivesCheckpointAndInvalidatesMutations(t *testing.T) {
 		// retired per-property availability query.
 		return result.Costs["host:styleObservationState"].Count
 	}
+	shapeCount := func() uint64 {
+		data, err := json.Marshal(p.LiveDiagnostics())
+		if err != nil {
+			t.Fatal(err)
+		}
+		var result struct {
+			Costs map[string]struct{ Count uint64 }
+		}
+		if err := json.Unmarshal(data, &result); err != nil {
+			t.Fatal(err)
+		}
+		return result.Costs["host:shapeTextMetrics"].Count
+	}
 	eval(`document.head.innerHTML='<style>.box{width:40px;height:20px}.wide{width:80px}</style>';document.body.innerHTML='<div class="box"></div>';window.box=document.body.firstChild;box.getBoundingClientRect().width`)
 	before := count()
 	if before == 0 {
@@ -63,6 +76,11 @@ func TestGeometryEpochSurvivesCheckpointAndInvalidatesMutations(t *testing.T) {
 	}
 	if after := count(); after != before {
 		t.Fatalf("checkpoint discarded unchanged geometry: %d -> %d", before, after)
+	}
+	shapesBeforeDetached := shapeCount()
+	eval(`document.createElement('div').append(document.createTextNode('detached'));box.getBoundingClientRect().width`)
+	if after := shapeCount(); after != shapesBeforeDetached {
+		t.Fatalf("detached allocation discarded connected layout graph: %d -> %d", shapesBeforeDetached, after)
 	}
 	for _, step := range []struct {
 		source string

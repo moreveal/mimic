@@ -169,6 +169,34 @@ func TestDebuggerCallFunctionInvalidatesDOMReadSnapshotAfterMutation(t *testing.
 	})
 }
 
+func TestDebuggerCallFunctionInvalidatesDOMReadSnapshotAfterScroll(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, page *Page) {
+		ctx := context.Background()
+		if _, err := page.Evaluate(ctx, `document.body.innerHTML='<div id="target" style="position:absolute;top:1200px;width:10px;height:10px"></div><div style="height:3000px"></div>'`); err != nil {
+			t.Fatal(err)
+		}
+		world, err := page.isolatedWorld(ctx, page.Top.Realm, "scroll-cache-test")
+		if err != nil {
+			t.Fatal(err)
+		}
+		d := NewDebugger(page)
+		defer d.Close()
+		result, err := d.CallFunction(ctx, "", world.ID, `function(){
+			const target=document.getElementById('target');
+			const before=target.getBoundingClientRect().top;
+			window.scrollTo(0,1000);
+			return [before,target.getBoundingClientRect().top,scrollY];
+		}`, map[string]any{}, DebuggerOptions{ReturnByValue: true})
+		if err != nil {
+			t.Fatal(err)
+		}
+		got := result["result"].(map[string]any)["value"]
+		if !reflect.DeepEqual(got, []any{float64(1200), float64(200), float64(1000)}) {
+			t.Fatalf("post-scroll reads = %#v", got)
+		}
+	})
+}
+
 func TestDebuggerReturnByValueAndAwait(t *testing.T) {
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		d := NewDebugger(page)

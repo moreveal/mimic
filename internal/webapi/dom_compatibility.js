@@ -354,7 +354,7 @@ const compatibilityElementState = {};
     }
   };
   const queueRecord = (type, target, details = {}, remote = false) => {
-    invalidateDOMCollections();
+    invalidateDOMCollections(target);
     if (mutationDepth) return;
     if (otherWorldObservers && !remote) {
       // Synthetic roots have no canonical DOM node ID. Their mutations remain
