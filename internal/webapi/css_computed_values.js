@@ -174,16 +174,47 @@ const cssComputedShorthand = (element, name) => {
 const cssComputedValue = (element, name) => {
   if (styleObservationIsolated) {
     return withStyleReadCache(() => {
-      const batches =
-          styleReadCache.foreignComputedValues ||
-          (styleReadCache.foreignComputedValues = new WeakMap()),
-        cached = batches.get(element);
-      if (cached?.has(name)) return cached.get(name);
+      const nodeID = String(elementSlot(element).nodeId),
+        canonicalPrefix = styleReadCache.version.slice(0, styleReadCache.version.indexOf('|')),
+        selectorTarget = Number(canonicalPrefix.slice(canonicalPrefix.lastIndexOf(':') + 1)),
+        stableEpoch =
+          canonicalPrefix +
+          '|' +
+          styleReadCache.environmentVersion +
+          ':' +
+          constructedStyleSheets.revision() +
+          ':' +
+          compatibilityElementState.observationVersion();
+      if (checkpointForeignComputedValueVersion !== stableEpoch) {
+        checkpointForeignComputedValues = new Map();
+        checkpointForeignComputedValueVersion = stableEpoch;
+      }
+      const activeBatches = checkpointForeignComputedValues,
+        cached = activeBatches.get(nodeID);
+      if (
+        cached?.values.has(name) &&
+        (selectorTarget === 0 || cached.version === styleReadCache.version)
+      )
+        return cached.values.get(name);
       const properties = Array.from(new Set([name, 'display', 'visibility'])),
-        foreign = foreignCSSObservation(element, 'values', JSON.stringify(properties));
+        documentBatch =
+          selectorTarget === 0 && compatibilitySelectors.query(document, '*').length > 128,
+        foreign = foreignCSSObservation(
+          element,
+          documentBatch ? 'documentValues' : 'values',
+          JSON.stringify(properties),
+        );
       if (foreign !== null) {
+        if (documentBatch) {
+          for (const [nodeID, record] of JSON.parse(foreign))
+            activeBatches.set(String(nodeID), {
+              version: styleReadCache.version,
+              values: new Map(Object.entries(record)),
+            });
+          return activeBatches.get(nodeID)?.values.get(name) ?? '';
+        }
         const values = new Map(Object.entries(JSON.parse(foreign)));
-        batches.set(element, values);
+        activeBatches.set(nodeID, { version: styleReadCache.version, values });
         return values.get(name) ?? '';
       }
       return resolveCSSComputedValue(element, name);

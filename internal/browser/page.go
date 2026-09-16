@@ -1193,7 +1193,20 @@ func (p *Page) LiveDiagnostics() any {
 	p.mu.RUnlock()
 	if realm != nil {
 		if diagnostic, ok := realm.runtime.(interface{ LiveDiagnostics() any }); ok {
-			return diagnostic.LiveDiagnostics()
+			primary := diagnostic.LiveDiagnostics()
+			if result, ok := primary.(map[string]any); ok {
+				realms := make([]any, 0)
+				for _, candidate := range p.evaluationRealms(nil) {
+					if candidate == nil || candidate == realm {
+						continue
+					}
+					if other, ok := candidate.runtime.(interface{ LiveDiagnostics() any }); ok {
+						realms = append(realms, map[string]any{"realm": candidate.ID, "diagnostics": other.LiveDiagnostics()})
+					}
+				}
+				result["realms"] = realms
+			}
+			return primary
 		}
 	}
 	return map[string]any{"enabled": false}
