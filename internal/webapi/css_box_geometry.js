@@ -483,6 +483,8 @@ const cssBoxModel = (() => {
     return Math.max(width, line);
   };
   const tableColumns = (table) => {
+    const cache = styleReadCache.tableColumns || (styleReadCache.tableColumns = new WeakMap());
+    if (cache.has(table)) return cache.get(table);
     const rows = compatibilitySelectors.query(table, 'tr').filter((row) => {
         for (let p = geometryParent(row); p; p = geometryParent(p)) {
           if (tag(p) === 'TABLE') return p === table;
@@ -508,7 +510,9 @@ const cssBoxModel = (() => {
     const e = s.edges(0),
       width =
         columns.reduce((a, b) => a + b, 0) + spacing * (columns.length + 1) + e.bleft + e.bright;
-    return { rows, cells, columns, spacing, width };
+    const result = { rows, cells, columns, spacing, width };
+    cache.set(table, result);
+    return result;
   };
   const tableSize = (element, value) => {
     const info = tableColumns(element),

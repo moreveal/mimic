@@ -111,5 +111,6 @@
     };
     visit(document);
     clear(window);
+    resetCollectionReadyState();
   };
 }

@@ -69,13 +69,25 @@ compatibilityScrolling = (() => {
   // propagated to the viewport. BODY is not a second scroll container and must
   // not clip, scroll, or offset its descendants independently.
   const bodyOverflowPropagates = (element) =>
+    elementSlot(element)?.tagName === 'BODY' &&
     element === document.body &&
     document.compatMode !== 'BackCompat' &&
     root() === document.documentElement &&
     overflow(document.documentElement, 'x') === 'visible' &&
     overflow(document.documentElement, 'y') === 'visible';
-  const scrollingOverflow = (element, axis) =>
-    bodyOverflowPropagates(element) ? 'visible' : overflow(element, axis);
+  const scrollingOverflow = (element, axis) => {
+    const cache =
+      styleReadCache?.scrollingOverflow ||
+      (styleReadCache && (styleReadCache.scrollingOverflow = new WeakMap()));
+    let values = cache?.get(element);
+    if (!values) {
+      values = bodyOverflowPropagates(element)
+        ? { x: 'visible', y: 'visible' }
+        : { x: overflow(element, 'x'), y: overflow(element, 'y') };
+      cache?.set(element, values);
+    }
+    return values[axis];
+  };
   const children = (element) =>
     cssObservationChildren(elementShadows.get(element) || element).filter(
       (node) => elementSlot(node)?.type === 'element',
@@ -118,14 +130,9 @@ compatibilityScrolling = (() => {
         bottom = Math.max(bottom, Math.min(r.bottom, clipBottom));
         west = Math.min(west, Math.max(r.left, clipLeft));
         // Descendant overflow does not escape a clipping/scrolling box.
-        if (
-          !first &&
-          scrollingOverflow(current, 'x') !== 'visible' &&
-          scrollingOverflow(current, 'y') !== 'visible'
-        )
-          return;
         const clipX = !first && scrollingOverflow(current, 'x') !== 'visible',
           clipY = !first && scrollingOverflow(current, 'y') !== 'visible';
+        if (clipX && clipY) return;
         for (const child of children(current))
           visit(
             child,
