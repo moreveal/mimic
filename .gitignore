@@ -46,6 +46,8 @@ node_modules/
 /secrets/
 # Native browsing captures contain live cookies, tokens and private response data.
 /compatibility/private-captures/
+# Local runtimecheck Wikipedia capture (generated fixture data).
+/tools/runtimecheck/wikipedia-fixture/
 # Editor and OS metadata
 .vscode/
 .idea/
