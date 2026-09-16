@@ -687,6 +687,13 @@ func (s *session) handleCommand(m message) (afterUnlock func()) {
 	case "Page.setBypassCSP":
 		bypass, _ := p["enabled"].(bool)
 		s.page.SetBypassCSP(bypass)
+	case "Page.setFontFamilies":
+		families, _ := p["fontFamilies"].(map[string]any)
+		serif := stringValue(families["serif"])
+		if serif == "" {
+			serif = stringValue(families["standard"])
+		}
+		s.page.SetGenericFontFamilies(serif, stringValue(families["sansSerif"]), stringValue(families["fixed"]))
 	case "DOM.getDocument":
 		s.setDomain("DOM", true)
 		var d *dom.Document

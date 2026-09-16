@@ -880,7 +880,7 @@
     }
     get parentNode() {
       const slot = elementSlot(this);
-      return slot ? wrap(host.parentNode(slot.nodeId)) : null;
+      return slot ? cachedDOMParent(this) : null;
     }
     get firstChild() {
       const slot = elementSlot(this);
@@ -890,7 +890,7 @@
     }
     get childNodes() {
       const slot = elementSlot(this);
-      if (slot) return nodeList(host.nodeChildren(slot.nodeId));
+      if (slot) return nodeList(cachedDOMChildren(this).map((child) => elementSlot(child)));
       const state = fragmentSlots.get(this);
       return state ? nodeList(state.children.map((child) => elementSlot(child))) : nodeList([]);
     }
@@ -1200,6 +1200,41 @@
       if (!observation.retainable && checkpointObservations === observation)
         checkpointObservations = null;
     }
+  };
+  const inspectorApply = Reflect.apply;
+  Object.defineProperty(globalThis, '__mimicWithStyleReadCache', {
+    value(callback, receiver, args) {
+      return withStyleReadCache(() => inspectorApply(callback, receiver, args));
+    },
+  });
+  const cachedDOMParent = (node) => {
+    const slot = elementSlot(node);
+    if (!styleReadCache) return wrap(host.parentNode(slot.nodeId));
+    const cache = styleReadCache.domParents || (styleReadCache.domParents = new WeakMap());
+    if (!cache.has(node)) cache.set(node, wrap(host.parentNode(slot.nodeId)));
+    return cache.get(node);
+  };
+  const cachedDOMChildren = (node) => {
+    const slot = elementSlot(node);
+    if (!styleReadCache) return host.nodeChildren(slot.nodeId).map(wrap);
+    const cache = styleReadCache.domChildren || (styleReadCache.domChildren = new WeakMap());
+    if (!cache.has(node)) cache.set(node, host.nodeChildren(slot.nodeId).map(wrap));
+    return cache.get(node);
+  };
+  const cachedDOMAttribute = (node, name) => {
+    if (!styleReadCache) return host.getAttribute(elementSlot(node).nodeId, name);
+    const nodes = styleReadCache.domAttributes || (styleReadCache.domAttributes = new WeakMap());
+    let cache = nodes.get(node);
+    if (!cache) nodes.set(node, (cache = new Map()));
+    if (!cache.has(name)) cache.set(name, host.getAttribute(elementSlot(node).nodeId, name));
+    return cache.get(name);
+  };
+  const cachedDOMAttributeNames = (node) => {
+    if (!styleReadCache) return host.attributeNames(elementSlot(node).nodeId);
+    const cache =
+      styleReadCache.domAttributeNames || (styleReadCache.domAttributeNames = new WeakMap());
+    if (!cache.has(node)) cache.set(node, host.attributeNames(elementSlot(node).nodeId));
+    return cache.get(node);
   };
   // All geometry projections consult the same canonical parent/child snapshot.
   // Keep native membership separate from flat-tree projection (slot/host links)
@@ -2231,7 +2266,7 @@
       invalidateDOMCollections();
     }
     get parentNode() {
-      return syntheticParents.get(this) || wrap(host.parentNode(elementSlot(this).nodeId));
+      return syntheticParents.get(this) || cachedDOMParent(this);
     }
     get parentElement() {
       const parent = this.parentNode;
@@ -2266,16 +2301,16 @@
       return this.children.length;
     }
     getAttribute(n) {
-      return host.getAttribute(elementSlot(this).nodeId, String(n));
+      return cachedDOMAttribute(this, String(n));
     }
     hasAttribute(n) {
       return this.getAttribute(String(n)) !== null;
     }
     hasAttributes() {
-      return host.attributeNames(elementSlot(this).nodeId).length !== 0;
+      return cachedDOMAttributeNames(this).length !== 0;
     }
     getAttributeNames() {
-      return host.attributeNames(elementSlot(this).nodeId);
+      return cachedDOMAttributeNames(this);
     }
     setAttribute(n, v) {
       n =
@@ -2352,7 +2387,7 @@
     get() {
       if (syntheticParents.has(this)) return syntheticParents.get(this);
       const slot = elementSlot(this);
-      return slot ? wrap(host.parentNode(slot.nodeId)) : null;
+      return slot ? cachedDOMParent(this) : null;
     },
   });
   def(Node.prototype, 'parentElement', {
@@ -3846,7 +3881,13 @@
   // still identify distinct collections in Chrome. Weak owners release on teardown.
   const liveCollectionCache = new WeakMap();
   let domCollectionRevision = 0;
-  const invalidateDOMCollections = () => domCollectionRevision++;
+  const invalidateDOMCollections = () => {
+    domCollectionRevision++;
+    // A CDP call can hold one read snapshot across a large injected-script
+    // traversal. Once that call mutates DOM, later reads must re-enter through
+    // the canonical host epoch rather than observe the pre-mutation snapshot.
+    styleReadCache = null;
+  };
   bootstrapRestoreHooks.push(invalidateDOMCollections);
   const cachedHTMLCollection = (owner, kind, key, read) => {
     let kinds = liveCollectionCache.get(owner);
