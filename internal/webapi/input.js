@@ -751,7 +751,7 @@
       };
       const hits = [];
       for (const element of elements) {
-        const box = clientRectInObservation(element);
+        const box = clientRectFor(element);
         if (
           box.width <= 0 ||
           box.height <= 0 ||
@@ -761,13 +761,21 @@
           y >= box.y + box.height
         )
           continue;
-        if (compatibilityScrolling.clipped(element, x, y)) continue;
+        // The frame viewport already applies ancestor clipping.
         const entries = computedCSSDeclarations(element),
           get = (name) => entries.find((e) => e.name === name)?.value;
         if (get('visibility') === 'hidden' || get('pointer-events') === 'none') continue;
         hits.push(element);
       }
-      hits.sort((a, b) => (a === b ? 0 : above(scope(a).rank, scope(b).rank) ? -1 : 1));
+      hits.sort((a, b) => {
+        if (a === b) return 0;
+        const ar = clientRectFor(a),
+          br = clientRectFor(b);
+        const area = ar.width * ar.height,
+          otherArea = br.width * br.height;
+        if (area !== otherArea) return area < otherArea ? -1 : 1;
+        return above(scope(a).rank, scope(b).rank) ? -1 : 1;
+      });
       const root = document.documentElement;
       if (root && !hits.includes(root)) hits.push(root);
       return hits;
