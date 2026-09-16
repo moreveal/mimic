@@ -119,6 +119,38 @@ func TestIsolatedStyleBatchesLargeStableDocument(t *testing.T) {
 	})
 }
 
+func TestIsolatedWorldsShareDocumentStyleBatch(t *testing.T) {
+	t.Setenv("MIMIC_PROFILE_HOSTS", "1")
+	historyTestPages(t, func(t *testing.T, p *Page) {
+		d := NewDebugger(p)
+		defer d.Close()
+		debuggerEval(t, d, `document.body.innerHTML=Array.from({length:160},(_,i)=>'<div class="item">'+i+'</div>').join('')`, DebuggerOptions{})
+		read := func(name, selector, property, want string) {
+			t.Helper()
+			world, err := p.IsolatedWorld(context.Background(), p.Top.ID, name)
+			if err != nil {
+				t.Fatal(err)
+			}
+			result, err := d.Evaluate(context.Background(), p.Top.ID, world, `getComputedStyle(document.querySelector('`+selector+`')).`+property, DebuggerOptions{ReturnByValue: true})
+			if err != nil || result["exceptionDetails"] != nil || result["result"].(map[string]any)["value"] != want {
+				t.Fatalf("style read: %#v %v", result, err)
+			}
+		}
+		read("style-batch-a", ".item:first-child", "display", "block")
+		batchKey := styleProjectionKey{node: p.Top.Realm.document.Root().ID, kind: "documentValues", property: `["display","visibility"]`}
+		if _, ok := p.Top.Realm.styleProjections.values[batchKey]; !ok {
+			t.Fatal("document-wide style batch was not retained under the document root")
+		}
+		before := liveDiagnosticCost(t, p, "host:foreignComputedStyleFlatTree")
+		read("style-batch-b", ".item:last-child", "visibility", "visible")
+		if calls := liveDiagnosticCost(t, p, "host:foreignComputedStyleFlatTree") - before; calls != 1 {
+			// The second world still enters the cheap host projection lookup, but
+			// must not enter the canonical JS realm to rebuild the batch.
+			t.Fatalf("second isolated world used %d host calls, want one cached lookup", calls)
+		}
+	})
+}
+
 func TestIsolatedInnerTextTracksOwnerMutations(t *testing.T) {
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		d := NewDebugger(p)

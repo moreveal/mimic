@@ -2460,3 +2460,17 @@ scroll ranges, and preserve a verified scroll target through the following
 pointer sequence. The original footer Docs click reproducer now resolves the
 link as its own hit target and completes navigation in 2,986 ms on a fresh
 process. No website-specific behavior or benchmark-specific shortcut was added.
+# Wikipedia isolated-world document style projection cache (2026-09-16)
+
+Document-wide computed-style projections requested from isolated worlds are now
+owned and keyed by the canonical document, rather than by the first element that
+happened to request them. Property-set keys are order-independent. This avoids
+rebuilding the same full-document projection when Playwright creates another
+isolated world or asks for `display` and `visibility` in the opposite order.
+
+The unchanged `tools/runtimecheck/playwright_wikipedia.js` remained PASS and
+improved from the current approximately 14.1 s baseline to 13.086 s in the final
+development run. The next measured large cost is repeated IntersectionObserver
+sampling during active DOM/resource mutation (about 2.3 s inclusive in the
+captured JavaScript profile); it requires rendering-scheduler coalescing rather
+than another geometry leaf optimization.

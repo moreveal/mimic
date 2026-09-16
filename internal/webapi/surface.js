@@ -1180,6 +1180,13 @@
       retainedGeometryRevision = -1;
       return;
     }
+    if (target?.isConnected) {
+      // A connected mutation can move following siblings and descendants that
+      // are not on the mutated node's ancestor chain. Retain the graph only
+      // across observation-only revisions and detached construction.
+      retainedGeometryRevision = -1;
+      return;
+    }
     retainedGeometryRevision = revision;
     retainedGeometryGeneration++;
     let element = elementSlot(target)?.type === 'element' ? target : target.parentElement;

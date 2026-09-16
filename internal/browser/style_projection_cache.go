@@ -33,7 +33,7 @@ func (r *Realm) styleProjectionEpoch(kind string) styleProjectionEpoch {
 	// flat-tree availability, or ordinary CSS visibility. Keep scalar style
 	// projections hot while images load; box projections retain the complete
 	// resource epoch because their dimensions can genuinely change.
-	if kind == "value" || kind == "values" || kind == "document" || kind == "" || kind == "visibility" {
+	if kind == "value" || kind == "values" || kind == "documentValues" || kind == "document" || kind == "" || kind == "visibility" {
 		resources = r.styleResourceRevision.Load()
 	}
 	return styleProjectionEpoch{r.document.Revision(), resources, r.selectorTargetID,

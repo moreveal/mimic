@@ -2,7 +2,9 @@ package browser
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"sort"
 	"strings"
 
 	"github.com/moreveal/mimic/internal/engine"
@@ -63,10 +65,17 @@ func (r *Realm) installDocumentCompatibility(host map[string]any) {
 			}
 		}
 		var observation any
-		key := styleProjectionKey{id, kind, property}
+		keyNode := id
+		// A documentValues projection contains every element in the owner
+		// document. Keying it by the element that happened to request the batch
+		// makes each isolated world rebuild the same document-wide projection.
+		if kind == "documentValues" {
+			keyNode = root
+		}
+		key := styleProjectionKey{keyNode, kind, canonicalStyleProjectionProperty(kind, property)}
 		// Child viewport geometry can depend on the parent realm's style state.
 		// Until that dependency is represented, retain only top-document scalars.
-		cacheable := (kind == "value" || kind == "values" || kind == "document" || kind == "" || kind == "box" ||
+		cacheable := (kind == "value" || kind == "values" || kind == "documentValues" || kind == "document" || kind == "" || kind == "box" ||
 			(kind == "visibility" && !strings.Contains(property, `"contentVisibilityAuto":true`))) && len(property) <= 512 && owner == p.Top.Realm
 		epoch := owner.styleProjectionEpoch(kind)
 		if cacheable {
@@ -232,4 +241,20 @@ func (r *Realm) installDocumentCompatibility(host map[string]any) {
 		r.document.AdoptNode(int64(numarg(args, 0)), int64(numarg(args, 1)))
 		return nil, nil
 	}, "nn")
+}
+
+func canonicalStyleProjectionProperty(kind, property string) string {
+	if kind != "values" && kind != "documentValues" {
+		return property
+	}
+	var properties []string
+	if json.Unmarshal([]byte(property), &properties) != nil {
+		return property
+	}
+	sort.Strings(properties)
+	encoded, err := json.Marshal(properties)
+	if err != nil {
+		return property
+	}
+	return string(encoded)
 }
