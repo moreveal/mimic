@@ -180,7 +180,10 @@ const cssComputedValue = (element, name) => {
         checkpointForeignComputedValues = new Map();
         checkpointForeignComputedValueVersion = stableEpoch;
       }
-      const activeBatches = checkpointForeignComputedValues,
+      // Animated owner realms deliberately disable retained projections. Do
+      // not let the isolated-world JS cache freeze an earlier animation sample
+      // after the Go-side cache has been disabled.
+      const activeBatches = styleReadCache.retainable ? checkpointForeignComputedValues : new Map(),
         cached = activeBatches.get(nodeID);
       if (
         cached?.values.has(name) &&
