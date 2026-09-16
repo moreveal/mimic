@@ -362,11 +362,11 @@
         trusted && native && !isolated
           ? host.performanceEventStart(type, nodeID(target), stamp.timeStamp, stamp.cancelable)
           : 0;
-    const allowed = dispatchEventCore(target, event, trusted, native);
-    const others = host.broadcastInputEvent(
-      nodeID(target),
-      stringify({ kind, type, init, canceled: !allowed, trusted, native }),
-    );
+    const allowed = dispatchEventCore(target, event, trusted, native),
+      others = host.broadcastInputEvent(
+        nodeID(target),
+        stringify({ kind, type, init, canceled: !allowed, trusted, native }),
+      );
     if (timing) host.performanceEventEnd(timing);
     return allowed && others;
   };
@@ -956,8 +956,17 @@
       const accepted = emit(target, 'PointerEvent', 'pointerdown', init);
       // Chrome's trusted pointer focusing steps do not scroll the newly
       // focused control, even when a mousedown handler moves it off-screen.
-      if (accepted && !disabled && emit(target, 'MouseEvent', 'mousedown', init))
-        focus(target, true);
+      if (accepted && !disabled && emit(target, 'MouseEvent', 'mousedown', init)) {
+        try {
+          focus(target, true);
+        } catch (error) {
+          // Focusing a control inside a cross-origin iframe may observe the
+          // protected parent boundary. Chrome keeps the trusted mouse
+          // operation alive in that case; the target event and its default
+          // action must not be discarded because focus projection failed.
+          if (error?.name !== 'SecurityError') throw error;
+        }
+      }
       return;
     }
     emit(target, 'PointerEvent', 'pointerup', init);
@@ -1027,8 +1036,9 @@
       host.activateProtocolInput();
     if (operation === 'key') keyCommand(params);
     else if (operation === 'text') edit(active.call(document), params.text);
-    else if (operation === 'mouse') mouseCommand(params, element);
-    else throw new Error('Unsupported trusted input operation ' + operation);
+    else if (operation === 'mouse') {
+      mouseCommand(params, element);
+    } else throw new Error('Unsupported trusted input operation ' + operation);
     return '{}';
   };
   // One box per element in the current geometry model; callers need the same
