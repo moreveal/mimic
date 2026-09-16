@@ -47,6 +47,8 @@ def main():
     parser.add_argument('--overview', type=Path, required=True)
     parser.add_argument('--replace-existing', action='store_true',
                         help='replace assets and notes on an existing published release')
+    parser.add_argument('--skip-ci', action='store_true',
+                        help='publish after local archive verification without waiting for CI')
     args = parser.parse_args()
     if not re.fullmatch(r'v\d+\.\d+\.\d+(?:-beta\.\d+)?', args.version):
         parser.error('Expected vMAJOR.MINOR.PATCH or vMAJOR.MINOR.PATCH-beta.NUMBER')
@@ -54,7 +56,8 @@ def main():
     overview = args.overview.resolve()
     source_revision = clean_revision(ROOT)
     public_revision = clean_revision(overview)
-    require_ci(source_revision)
+    if not args.skip_ci:
+        require_ci(source_revision)
     remote_revision = run('gh', 'api', f'repos/{REPO}/commits/main', '--jq', '.sha', capture=True).strip()
     if public_revision != remote_revision:
         raise RuntimeError('Push the public overview commit before publishing')
