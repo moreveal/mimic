@@ -1129,6 +1129,63 @@
     checkpointObservationVersion = '';
   let checkpointForeignComputedValues = new Map(),
     checkpointForeignComputedValueVersion = '';
+  let retainedGeometryVersion = '',
+    retainedGeometryRevision = -1,
+    retainedGeometryGeneration = 0,
+    retainedGeometryDirty = new WeakMap(),
+    retainedGeometryWidths,
+    retainedGeometrySizes,
+    retainedGeometryRects;
+  const retainedGeometryDirtyGeneration = (element) => {
+    const cached = styleReadCache.retainedGeometryDirtyVersions;
+    if (cached.has(element)) return cached.get(element);
+    let generation = 0;
+    for (let node = element; node; node = geometryParent(node))
+      generation = Math.max(generation, retainedGeometryDirty.get(node) || 0);
+    cached.set(element, generation);
+    return generation;
+  };
+  const retainedGeometryCache = () => {
+    const values = new WeakMap(),
+      cache = {
+        has(element) {
+          return cache.get(element) !== undefined;
+        },
+        get(element) {
+          const record = values.get(element);
+          return record && record.generation >= retainedGeometryDirtyGeneration(element)
+            ? record.value
+            : undefined;
+        },
+        set(element, value) {
+          values.set(element, { generation: retainedGeometryGeneration, value });
+          return cache;
+        },
+      };
+    return cache;
+  };
+  const resetRetainedGeometry = (version, revision) => {
+    retainedGeometryVersion = version;
+    retainedGeometryRevision = revision;
+    retainedGeometryGeneration = 0;
+    retainedGeometryDirty = new WeakMap();
+    retainedGeometryWidths = retainedGeometryCache();
+    retainedGeometrySizes = retainedGeometryCache();
+    retainedGeometryRects = retainedGeometryCache();
+  };
+  resetRetainedGeometry('', -1);
+  const invalidateRetainedGeometry = (target) => {
+    const revision = host.domRevision();
+    if (!target) {
+      retainedGeometryRevision = -1;
+      return;
+    }
+    retainedGeometryRevision = revision;
+    retainedGeometryGeneration++;
+    let element = elementSlot(target)?.type === 'element' ? target : target.parentElement;
+    for (; element; element = geometryParent(element))
+      retainedGeometryDirty.set(element, retainedGeometryGeneration);
+  };
   let styleObservationIsolated = host.isIsolatedInputWorld();
   bootstrapRestoreHooks.push(() => {
     styleObservationIsolated = host.isIsolatedInputWorld();
@@ -1136,6 +1193,7 @@
     checkpointStyleRules = null;
     checkpointForeignComputedValues = new Map();
     checkpointForeignComputedValueVersion = '';
+    resetRetainedGeometry('', -1);
   });
   const withStyleReadCache = (callback) => {
     // A nested observation already belongs to the outer command's canonical
@@ -1157,7 +1215,8 @@
       checkpointStyleRules = new WeakMap();
       checkpointStyleVersion = version;
     }
-    const observationVersion = version + ':' + compatibilityElementState.observationVersion();
+    const elementStateVersion = compatibilityElementState.observationVersion(),
+      observationVersion = version + ':' + elementStateVersion;
     let observation =
       previous?.version === observationVersion
         ? previous
@@ -1176,11 +1235,38 @@
         resolvingRects: new Set(),
         provisionalRects: new WeakSet(),
       };
+    const canonicalParts = canonicalBundle.split('|'),
+      canonicalHead = canonicalParts[0].split(':'),
+      geometryVersion =
+        canonicalHead[1] +
+        '|' +
+        canonicalParts.slice(1).join('|') +
+        ':' +
+        constructedStyleSheets.revision() +
+        ':' +
+        elementStateVersion,
+      documentRevision = Number(canonicalHead[0]);
+    if (
+      !retain ||
+      retainedGeometryVersion !== geometryVersion ||
+      (retainedGeometryRevision !== -1 && retainedGeometryRevision !== documentRevision)
+    )
+      resetRetainedGeometry(geometryVersion, documentRevision);
+    else if (retainedGeometryRevision === -1)
+      resetRetainedGeometry(geometryVersion, documentRevision);
+    if (retain) {
+      observation.retainedGeometryDirtyVersions = new WeakMap();
+      observation.widths = retainedGeometryWidths;
+      observation.boxSizes = retainedGeometrySizes;
+      observation.rects = retainedGeometryRects;
+    }
     if (observation.geometryVersion !== canonicalBundle) {
       observation.geometryVersion = canonicalBundle;
       observation.computedValues = new WeakMap();
-      observation.widths = new WeakMap();
-      observation.rects = new WeakMap();
+      if (!retain) {
+        observation.widths = new WeakMap();
+        observation.rects = new WeakMap();
+      }
       observation.resolvingRects = new Set();
       observation.provisionalRects = new WeakSet();
     }
@@ -1205,12 +1291,6 @@
         checkpointObservations = null;
     }
   };
-  const inspectorApply = Reflect.apply;
-  Object.defineProperty(globalThis, '__mimicWithStyleReadCache', {
-    value(callback, receiver, args) {
-      return withStyleReadCache(() => inspectorApply(callback, receiver, args));
-    },
-  });
   const cachedDOMParent = (node) => {
     const slot = elementSlot(node);
     if (!styleReadCache) return wrap(host.parentNode(slot.nodeId));
@@ -3902,8 +3982,9 @@
   // still identify distinct collections in Chrome. Weak owners release on teardown.
   const liveCollectionCache = new WeakMap();
   let domCollectionRevision = 0;
-  const invalidateDOMCollections = () => {
+  const invalidateDOMCollections = (geometryTarget) => {
     domCollectionRevision++;
+    invalidateRetainedGeometry(geometryTarget);
     // A CDP call can hold one read snapshot across a large injected-script
     // traversal. Once that call mutates DOM, later reads must re-enter through
     // the canonical host epoch rather than observe the pre-mutation snapshot.
@@ -4190,22 +4271,32 @@
     createElement(tag) {
       tag = String(tag);
       const value = host.create(tag);
-      return wrap(
+      const element = wrap(
         typeof value === 'number'
           ? freshNodeData(value, 'element', tag.toUpperCase(), 'http://www.w3.org/1999/xhtml', '')
           : value,
       );
+      invalidateRetainedGeometry(element);
+      return element;
     }
     createElementNS(namespace, qualifiedName) {
-      return wrap(host.createNS(namespace == null ? '' : String(namespace), String(qualifiedName)));
+      const element = wrap(
+        host.createNS(namespace == null ? '' : String(namespace), String(qualifiedName)),
+      );
+      invalidateRetainedGeometry(element);
+      return element;
     }
     createTextNode(data) {
       data = String(data);
-      return freshCharacterData(host.createText(data), 'text', data);
+      const node = freshCharacterData(host.createText(data), 'text', data);
+      invalidateRetainedGeometry(node);
+      return node;
     }
     createComment(data) {
       data = String(data);
-      return freshCharacterData(host.createComment(data), 'comment', data);
+      const node = freshCharacterData(host.createComment(data), 'comment', data);
+      invalidateRetainedGeometry(node);
+      return node;
     }
     createDocumentFragment() {
       return new DocumentFragment(hostToken);

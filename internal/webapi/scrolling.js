@@ -41,6 +41,14 @@ compatibilityScrolling = (() => {
         JSON.stringify({ action, ...args }),
       ),
     );
+  const remoteMutation = (element, action, args = {}) => {
+    const result = remote(element, action, args);
+    // The main world owns canonical scroll state, but the observation being
+    // consumed belongs to this isolated world. Invalidate both sides of that
+    // boundary before the inspector callback performs another geometry read.
+    styleReadCache = null;
+    return result;
+  };
   const isolated = () => host.isIsolatedInputWorld();
   const style = (element, name) => cssBoxModel.state(element).get(name) || '';
   const overflow = (element, axis) => {
@@ -201,6 +209,9 @@ compatibilityScrolling = (() => {
         windowScrollY = y;
       }
       revision++;
+      // Scrolling changes viewport geometry without a DOM mutation, so a
+      // surrounding platform observation must not retain its earlier rects.
+      styleReadCache = null;
       enqueue(element);
     }
     return { x, y };
@@ -211,7 +222,7 @@ compatibilityScrolling = (() => {
     return Number.isFinite(n) ? n : 0;
   };
   const set = (element, x, y, animated = false, knownRange = null) => {
-    if (isolated()) return remote(element, 'set', { x, y });
+    if (isolated()) return remoteMutation(element, 'set', { x, y });
     element = owner(element);
     const old = localPosition(element);
     if (!animated) animations.delete(element || document);
@@ -237,6 +248,9 @@ compatibilityScrolling = (() => {
       positionRanges.set(element || document, { ...knownRange, version: geometryVersion() });
     if (x || y) hasOffsets = true;
     revision++;
+    // A scroll is an observation boundary even though the DOM epoch is
+    // unchanged: getBoundingClientRect() and hit testing use viewport space.
+    styleReadCache = null;
     enqueue(element);
   };
   const options = (args, relative = false) => {
@@ -258,7 +272,7 @@ compatibilityScrolling = (() => {
     };
   };
   const scroll = (element, opts, knownRange = null) => {
-    if (isolated()) return remote(element, 'scroll', { opts });
+    if (isolated()) return remoteMutation(element, 'scroll', { opts });
     const old = position(element),
       x = opts.x === null ? old.x : opts.x + (opts.relative ? old.x : 0),
       y = opts.y === null ? old.y : opts.y + (opts.relative ? old.y : 0);
@@ -424,7 +438,7 @@ compatibilityScrolling = (() => {
     return range;
   };
   const into = (element, opts) => {
-    if (isolated()) return remote(element, 'into', { opts });
+    if (isolated()) return remoteMutation(element, 'into', { opts });
     if (!element?.isConnected || !cssBoxModel.hasBox(element)) return;
     const ancestors = [];
     for (let p = geometryParent(element); p; p = geometryParent(p))
@@ -712,7 +726,7 @@ compatibilityScrolling = (() => {
       const foreign = foreignCSSObservation(element, 'scroll', JSON.stringify(p));
       if (foreign !== null) return foreign;
     }
-    if (isolated()) return remote(element, p.action, p);
+    if (isolated()) return remoteMutation(element, p.action, p);
     if (p.action === 'protocolInto') {
       if (!element?.isConnected) throw Error('Node is detached from document');
       if (!cssBoxModel.hasBox(element)) throw Error('Node does not have a layout object');

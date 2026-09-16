@@ -258,8 +258,7 @@ func (d *Debugger) CallFunction(ctx context.Context, frameID, realmID, declarati
 	}
 	var value engine.Value
 	err = state.realm.debuggerInline(ctx, true, func(ctx context.Context) error {
-		wrapped := "(function(fn){return function(){return __mimicWithStyleReadCache(fn,this,arguments)}})(\n" + declaration + "\n)"
-		function, err := state.realm.Evaluate(ctx, wrapped, "__pyppeteer_evaluation_script__")
+		function, err := state.realm.Evaluate(ctx, "(\n"+declaration+"\n)", "__pyppeteer_evaluation_script__")
 		if err != nil {
 			return err
 		}
