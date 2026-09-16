@@ -148,6 +148,27 @@ func TestDebuggerPreservesHandlesAndDescriptorSemantics(t *testing.T) {
 	})
 }
 
+func TestDebuggerCallFunctionInvalidatesDOMReadSnapshotAfterMutation(t *testing.T) {
+	historyTestPages(t, func(t *testing.T, page *Page) {
+		d := NewDebugger(page)
+		defer d.Close()
+		result, err := d.CallFunction(context.Background(), "", "", `function(){
+			const first=document.createElement('div'),second=document.createElement('section'),child=document.createElement('span');
+			first.appendChild(child);document.body.append(first,second);child.setAttribute('data-state','before');
+			const before=child.parentNode===first&&child.getAttribute('data-state')==='before';
+			second.appendChild(child);child.setAttribute('data-state','after');
+			return [before,child.parentNode===second,child.getAttribute('data-state')];
+		}`, map[string]any{}, DebuggerOptions{ReturnByValue: true})
+		if err != nil {
+			t.Fatal(err)
+		}
+		got := result["result"].(map[string]any)["value"]
+		if !reflect.DeepEqual(got, []any{true, true, "after"}) {
+			t.Fatalf("post-mutation reads = %#v", got)
+		}
+	})
+}
+
 func TestDebuggerReturnByValueAndAwait(t *testing.T) {
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		d := NewDebugger(page)
