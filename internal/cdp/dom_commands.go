@@ -214,12 +214,19 @@ func (s *session) handleDOM(ctx context.Context, method string, p map[string]any
 		if idErr != nil {
 			return nil, true, idErr
 		}
-		value, err := s.nodeFunction(ctx, p, `function(){if(!this.isConnected||this.nodeType!==1)throw new Error('Could not compute box model');const r=this.getBoundingClientRect(),s=getComputedStyle(this),n=k=>parseFloat(s[k])||0,q=(l,t,r,b)=>[l,t,r,t,r,b,l,b];if(s.display==='none'||!r.width||!r.height)throw new Error('Could not compute box model');const padding=q(r.left+n('borderLeftWidth'),r.top+n('borderTopWidth'),r.right-n('borderRightWidth'),r.bottom-n('borderBottomWidth'));return {border:q(r.left,r.top,r.right,r.bottom),padding,content:q(padding[0]+n('paddingLeft'),padding[1]+n('paddingTop'),padding[2]-n('paddingRight'),padding[5]-n('paddingBottom')),margin:q(r.left-n('marginLeft'),r.top-n('marginTop'),r.right+n('marginRight'),r.bottom+n('marginBottom')),width:r.width,height:r.height}}`, nil)
+		frame, _ := s.page.FrameForDOMNode(id)
+		if objectID := stringValue(p["objectId"]); objectID != "" {
+			frameID, ownerErr := s.runtimeDebugger().ObjectFrameID(objectID)
+			if ownerErr != nil {
+				return nil, true, ownerErr
+			}
+			frame, _ = s.page.Frame(frameID)
+		}
+		model, err := s.page.ProtocolBoxModel(ctx, frame, id)
 		if err != nil {
 			return nil, true, err
 		}
-		model, _ := value.(map[string]any)
-		frame, _ := s.page.FrameForDOMNode(id)
+		frame, _ = s.page.FrameForDOMNode(id)
 		if objectID := stringValue(p["objectId"]); objectID != "" {
 			frameID, ownerErr := s.runtimeDebugger().ObjectFrameID(objectID)
 			if ownerErr != nil {

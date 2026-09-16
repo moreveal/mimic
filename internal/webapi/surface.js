@@ -3100,6 +3100,44 @@
                         ? computedStyleDocumentAvailable(element)
                         : computedStyleAvailable(element);
   });
+  registerBootstrapCallback('installProtocolBoxModel', (nodeID) =>
+    withStyleReadCache(() => {
+      const element = wrap(nodeID),
+        r = clientRectFor(element),
+        n = (name) => Number.parseFloat(cssComputedValue(element, name)) || 0,
+        q = (left, top, right, bottom) => [left, top, right, top, right, bottom, left, bottom];
+      if (!host.isConnected(nodeID) || cssComputedValue(element, 'display') === 'none')
+        throw new Error('Could not compute box model');
+      if (!r.width || !r.height) throw new Error('Could not compute box model');
+      const padding = q(
+        r.left + n('border-left-width'),
+        r.top + n('border-top-width'),
+        r.right - n('border-right-width'),
+        r.bottom - n('border-bottom-width'),
+      );
+      return {
+        border: q(r.left, r.top, r.right, r.bottom),
+        padding,
+        content: q(
+          padding[0] + n('padding-left'),
+          padding[1] + n('padding-top'),
+          padding[2] - n('padding-right'),
+          padding[5] - n('padding-bottom'),
+        ),
+        margin: q(
+          r.left - n('margin-left'),
+          r.top - n('margin-top'),
+          r.right + n('margin-right'),
+          r.bottom + n('margin-bottom'),
+        ),
+        width: r.width,
+        height: r.height,
+      };
+    }),
+  );
+  registerBootstrapCallback('installProtocolScroll', (nodeID, payload) =>
+    compatibilityScrolling.dispatch(wrap(nodeID), JSON.parse(payload)),
+  );
   let constructCustomElement = null,
     customElementCloneInert = 0;
   let templateTreeIsInert = () => false;
