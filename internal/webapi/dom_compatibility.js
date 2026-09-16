@@ -572,9 +572,7 @@ const compatibilityElementState = {};
     return fragmentSlots.get(node)?.children[index] || null;
   };
   const canonicalChildren = (node) => {
-    const revision =
-        styleReadCache?.version ||
-        (document.readyState === 'loading' ? 'host:' + host.domRevision() : domCollectionRevision),
+    const revision = styleReadCache?.version || domCollectionVersion(),
       previous = canonicalChildLists.get(node);
     if (previous?.revision === revision) return previous.values;
     const slot = elementSlot(node),

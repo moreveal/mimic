@@ -1270,6 +1270,7 @@
     if (observation.geometryVersion !== canonicalBundle) {
       observation.geometryVersion = canonicalBundle;
       observation.computedValues = new WeakMap();
+      observation.tableColumns = new WeakMap();
       if (!retain) {
         observation.widths = new WeakMap();
         observation.rects = new WeakMap();
@@ -2377,11 +2378,7 @@
       let revision = -1,
         values = [];
       return cachedHTMLCollection(this, 'children', '', () => {
-        const current =
-          styleReadCache?.version ||
-          (document.readyState === 'loading'
-            ? 'host:' + host.domRevision()
-            : domCollectionRevision);
+        const current = styleReadCache?.version || domCollectionVersion();
         if (revision !== current) {
           values = host.elementChildren(elementSlot(this).nodeId);
           revision = current;
@@ -3172,21 +3169,26 @@
         chunks.push(node.data);
         return;
       }
+
       if (node.nodeType !== 1 || innerTextExcludedTags.has(node.tagName)) return;
-      const style = getComputedStyle(node);
-      if (
-        style.display === 'none' ||
-        style.visibility === 'hidden' ||
-        style.visibility === 'collapse'
-      )
-        return;
+
+      const display = cssComputedValue(node, 'display');
+      if (display === 'none') return;
+
+      const visibility = cssComputedValue(node, 'visibility');
+      if (visibility === 'hidden' || visibility === 'collapse') return;
+
       if (node.tagName === 'BR') {
         newline();
         return;
       }
-      const block = innerTextBlockDisplays.has(style.display);
+
+      const block = innerTextBlockDisplays.has(display);
+
       if (block) newline();
+
       for (const child of node.childNodes) visit(child);
+
       if (block) newline();
     };
     visit(element);
@@ -3290,6 +3292,31 @@
       return makeDOMRect(null, this);
     }
   }
+  Object.defineProperty(HTMLElement.prototype, 'offsetParent', {
+    get() {
+      requireRealmBinding(this, 'ElementGeometry');
+      return withStyleReadCache(() => {
+        if (
+          !cssBoxModel.hasBox(this) ||
+          ['HTML', 'BODY'].includes(elementSlot(this).tagName) ||
+          cssBoxModel.state(this).position === 'fixed'
+        )
+          return null;
+        for (let parent = geometryParent(this); parent; parent = geometryParent(parent)) {
+          if (!cssBoxModel.hasBox(parent)) continue;
+          const tag = elementSlot(parent).tagName;
+          if (
+            cssBoxModel.state(parent).position !== 'static' ||
+            ['BODY', 'TABLE', 'TD', 'TH'].includes(tag)
+          )
+            return parent;
+        }
+        return null;
+      });
+    },
+    enumerable: true,
+    configurable: true,
+  });
   const datasetCache = new WeakMap(),
     datasetName = (name) => String(name).replace(/[A-Z]/g, (c) => '-' + c.toLowerCase()),
     datasetKey = (name) =>
@@ -4027,6 +4054,16 @@
   // still identify distinct collections in Chrome. Weak owners release on teardown.
   const liveCollectionCache = new WeakMap();
   let domCollectionRevision = 0;
+  // Loading parsers mutate the DOM outside JS. After loading, the collection
+  // revision is local until document.open() resets this hint.
+  let collectionLoadingFinished = false;
+  const resetCollectionReadyState = () => {
+    collectionLoadingFinished = false;
+  };
+  const domCollectionVersion = () => {
+    if (!collectionLoadingFinished) collectionLoadingFinished = host.readyState() !== 'loading';
+    return collectionLoadingFinished ? domCollectionRevision : 'host:' + host.domRevision();
+  };
   const invalidateDOMCollections = (geometryTarget) => {
     domCollectionRevision++;
     invalidateRetainedGeometry(geometryTarget);

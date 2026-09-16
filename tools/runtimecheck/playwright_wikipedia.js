@@ -119,6 +119,16 @@ function log(message, details) {
       heading: (await page.locator('#firstHeading').innerText()).trim(),
     });
 
+    const cdp = await context.newCDPSession(page);
+    const diagnostics = await cdp.send("Mimic.getDiagnostics");
+
+    require("node:fs").writeFileSync(
+      "mimic-hosts.json",
+      JSON.stringify(diagnostics, null, 2)
+    );
+
+    console.log("Diagnostics written to mimic-hosts.json");
+
     currentStage = 'close page';
     await page.close();
     log('Page closed normally');
