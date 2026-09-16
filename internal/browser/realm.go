@@ -84,6 +84,7 @@ type Realm struct {
 	documentReferrer         string
 	referrerPolicy           string
 	inputDispatcher          engine.Value
+	protocolScroll           engine.Value
 	permissionNotifier       engine.Value
 	networkStateEvent        engine.Value
 	agent                    ExecutionAgent
@@ -99,6 +100,7 @@ type Realm struct {
 	frameViewportRead        engine.Value
 	frameLayoutRead          engine.Value
 	computedStyleFlatRead    engine.Value
+	protocolBoxModelRead     engine.Value
 	styleProjections         styleProjectionCache
 	previewRead              engine.Value
 	frameReferenceImport     engine.Value

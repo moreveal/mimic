@@ -29,6 +29,14 @@ func (r *Realm) installDocumentCompatibility(host map[string]any) {
 		r.computedStyleFlatRead = args[0]
 		return nil, nil
 	})
+	host["installProtocolBoxModel"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		r.protocolBoxModelRead = args[0]
+		return nil, nil
+	})
+	host["installProtocolScroll"] = r.fn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
+		r.protocolScroll = args[0]
+		return nil, nil
+	})
 	// These observations consume scalar arguments synchronously. Persisting
 	// their engine values would retain one set of V8 roots on every style read.
 	// Cross-realm work below captures only converted Go values, not borrowed args.

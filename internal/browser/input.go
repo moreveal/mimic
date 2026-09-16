@@ -17,6 +17,33 @@ type inputFrameRect struct {
 	Height float64 `json:"height"`
 }
 
+// ProtocolBoxModel reads layout from the document's canonical owner realm.
+// CDP object wrappers may belong to an isolated world, but protocol geometry
+// is a browser operation and must not rebuild layout through that wrapper.
+func (p *Page) ProtocolBoxModel(ctx context.Context, frame *Frame, nodeID int64) (map[string]any, error) {
+	if frame == nil || frame.Realm == nil || frame.Realm.closed || frame.Realm.inactive {
+		return nil, fmt.Errorf("Could not compute box model")
+	}
+	r := frame.Realm
+	var model map[string]any
+	err := r.scheduler.RunInline(ctx, func(ctx context.Context) error {
+		if r.protocolBoxModelRead == nil {
+			return fmt.Errorf("protocol box model is unavailable")
+		}
+		value, err := r.runtime.Call(ctx, r.protocolBoxModelRead, nil, r.val(nodeID))
+		if err != nil {
+			return err
+		}
+		defer releaseDebuggerValue(r, value)
+		model, _ = value.Export().(map[string]any)
+		if model == nil {
+			return fmt.Errorf("Could not compute box model")
+		}
+		return nil
+	})
+	return model, err
+}
+
 // ScrollNodeIntoView is a browser operation, not an invocation of a replaceable
 // author method. The node's document owner shares state with all CDP worlds.
 func (p *Page) ScrollNodeIntoView(ctx context.Context, nodeID int64, rect any) error {
@@ -41,7 +68,13 @@ func (p *Page) scrollNodeIntoView(ctx context.Context, frame *Frame, ok bool, no
 		return err
 	}
 	err = r.scheduler.RunInline(ctx, func(ctx context.Context) error {
-		_, err := r.invokeInputWorld(ctx, r, nodeID, "scroll", string(payload))
+		if r.protocolScroll == nil {
+			return fmt.Errorf("protocol scroll is unavailable")
+		}
+		value, err := r.runtime.Call(ctx, r.protocolScroll, nil, r.val(nodeID), r.val(string(payload)))
+		if value != nil {
+			releaseDebuggerValue(r, value)
+		}
 		return err
 	})
 	if err == nil {

@@ -108,8 +108,12 @@ const expandCSSDeclaration = (entry) => {
     }));
   if (entry.name === 'font') {
     if (/^(caption|icon|menu|message-box|small-caption|status-bar)$/i.test(entry.value))
-      return components.map((name) => ({ name, value: '', priority: entry.priority,
-        pending: {name: 'font', value: entry.value.toLowerCase(), systemFont: true} }));
+      return components.map((name) => ({
+        name,
+        value: '',
+        priority: entry.priority,
+        pending: { name: 'font', value: entry.value.toLowerCase(), systemFont: true },
+      }));
     const values = parseCSSFont(entry.value);
     if (!values) {
       host.semanticMissingAt('css_shorthands.js/font', 'CSS.fontShorthandResolution');
@@ -130,12 +134,14 @@ const expandCSSDeclaration = (entry) => {
   }
   return [entry];
 };
-const readCSSDeclaration = (entries, name) => {
-  const direct = entries.find((e) => e.name === name);
+const readCSSDeclaration = (entries, name, index) => {
+  const direct = index ? index.get(name) : entries.find((e) => e.name === name);
   if (direct) return direct.value;
   const components = cssShorthandComponents[name];
   if (!components) return '';
-  const selected = components.map((n) => entries.find((e) => e.name === n));
+  const selected = components.map((n) =>
+    index ? index.get(n) : entries.find((e) => e.name === n),
+  );
   if (selected.some((e) => !e) || selected.some((e) => e.priority !== selected[0].priority))
     return '';
   if (
@@ -150,16 +156,24 @@ const readCSSDeclaration = (entries, name) => {
     selected.map((e) => e.value),
   );
 };
+const cssShorthandsByComponent = new Map();
+for (const [shorthand, components] of Object.entries(cssShorthandComponents))
+  for (const component of components) {
+    let shorthands = cssShorthandsByComponent.get(component);
+    if (!shorthands) cssShorthandsByComponent.set(component, (shorthands = []));
+    shorthands.push([shorthand, components]);
+  }
 const serializeCSSDeclarations = (entries) => {
   const emitted = new Set(),
+    index = new Map(entries.map((entry) => [entry.name, entry])),
     out = [];
   for (const entry of entries) {
     if (emitted.has(entry.name)) continue;
     let name = entry.name,
       value = entry.value;
-    for (const [candidate, components] of Object.entries(cssShorthandComponents)) {
-      if (!components.includes(entry.name) || components.some((n) => emitted.has(n))) continue;
-      const combined = readCSSDeclaration(entries, candidate);
+    for (const [candidate, components] of cssShorthandsByComponent.get(entry.name) || []) {
+      if (components.some((n) => emitted.has(n))) continue;
+      const combined = readCSSDeclaration(entries, candidate, index);
       if (!combined) continue;
       name = candidate;
       value = combined;

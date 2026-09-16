@@ -2474,3 +2474,85 @@ development run. The next measured large cost is repeated IntersectionObserver
 sampling during active DOM/resource mutation (about 2.3 s inclusive in the
 captured JavaScript profile); it requires rendering-scheduler coalescing rather
 than another geometry leaf optimization.
+
+### Wikipedia full differential and protocol geometry checkpoint (2026-09-16)
+
+Work continued from clean revision `84cfe72` with the frozen
+`tools/runtimecheck/playwright_wikipedia.js`. The previous 13.086 s Mimic run
+and 2.711 s frozen Chrome 152 run left a 10.375 s absolute differential. A
+fresh paired stage run later in the session measured 13.045 s for Mimic and
+2.961 s for the locally installed Chrome control. The latter included 788 ms
+of Chrome launch and page creation, while Mimic connected to an existing
+process in 24 ms, so the stage differences below are more useful than the raw
+totals:
+
+| Stage | Mimic | Chrome | Recoverable gap |
+| --- | ---: | ---: | ---: |
+| Initial main-page navigation | 1,914 ms | 762 ms | 1,152 ms |
+| Fill and verify search input | 645 ms | 12 ms | 633 ms |
+| Search navigation to JavaScript | 4,200 ms | 715 ms | 3,485 ms |
+| Article text/DOM inspection | 1,267 ms | 15 ms | 1,252 ms |
+| Resolve and scroll the ECMAScript link | 1,305 ms | 90 ms | 1,215 ms |
+| Click navigation to ECMAScript | 2,483 ms | 338 ms | 2,145 ms |
+| Back navigation | 1,191 ms | 236 ms | 955 ms |
+
+The stage rows account for essentially the complete post-connection gap. They
+also show why optimizing only the two navigation windows cannot close the full
+differential.
+
+Fresh wall attribution found synchronous Playwright geometry, visibility and
+input work on the critical path. `DOM.getContentQuads` previously spent about
+878 ms rebuilding box geometry through an isolated-world wrapper. Protocol box
+model reads now execute once in the canonical document owner realm and return
+the complete border, padding, content and margin model. Protocol scrolling uses
+the same owner-realm boundary instead of invoking the isolated wrapper path.
+Focused DOM quad, control-font geometry and input hit-target tests passed. The
+unchanged Wikipedia workload remained PASS.
+
+A fresh task-scoped V8 profile of the long navigation tasks identified repeated
+CSS declaration serialization as another exclusive path. Shorthand lookup used
+to scan the complete shorthand catalog for every emitted declaration and then
+linearly search declarations for every component. A reverse component index and
+per-serialization declaration map remove those repeated scans. Focused CSSOM,
+stylesheet, computed-style and shorthand tests passed. The first version of
+this change completed the unchanged journey in 11.389 s PASS; individual live
+Wikipedia runs varied materially with network and page callbacks, so this is a
+best observed checkpoint rather than a stable median.
+
+After removing all temporary instrumentation and unproven experiments, the
+exact checkpoint candidate rebuilt from the commit contents completed the same
+unchanged workload in 11.456 s PASS.
+
+The current retained changes do not close the Chrome gap. Fresh command timing
+still contained an 855 ms mouse command chain, a 585–668 ms visibility call,
+and a 453 ms scroll command. Mutually exclusive scheduler attribution found
+several long DOM tasks (823, 522, 357, 355, 354, 297 and 245 ms). Their common
+work repeatedly rebuilt table and ancestor geometry after connected DOM
+mutations. A retained table-layout experiment reached 11.479 s PASS but did not
+beat the 11.389 s best checkpoint reliably, so it was removed rather than
+committed as an unproven cache.
+
+Several structural experiments were also rejected after one focused test and
+one unchanged E2E run: a shared V8 isolate (15.643 s), per-element full-style
+snapshots (21.750 s), compact document-style projection (12.949 s), direct
+CSSOM-AST-to-matcher projection (12.254 s), JSON transport for large selector
+results (12.508 s), and always-on trace compaction (11.927 s without a clear
+gain over the best checkpoint). Earlier document-wide property batching stayed
+near 13 s, while per-element style projection was about 20.6 s. None is retained.
+
+The largest remaining architectural cost is the absence of a persistent,
+incrementally invalidated style/layout tree. Mimic caches boxes only for an
+exact canonical epoch; any connected mutation conservatively invalidates the
+whole retained graph because selector, ancestor, sibling and percentage-size
+dependencies are not represented. Consequently visibility, hit testing,
+`innerText`, role resolution and input dispatch repeatedly rebuild overlapping
+style and geometry. For example, `body.innerText` walks the rendered subtree
+and asks for computed style on each element, while Chrome reads its maintained
+layout tree. Closing the remaining multi-second differential requires explicit
+dependency-aware style/layout invalidation and separate lifetimes for intrinsic
+sizes, positions and text extraction, rather than another Playwright-specific
+property or selector shortcut.
+
+This is an intermediate checkpoint. No full suite, CI, reportable benchmark
+matrix or push was performed. Temporary CPU/wall profiling instrumentation and
+the modified diagnostic workload were removed before the checkpoint commit.
