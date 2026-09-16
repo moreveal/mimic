@@ -1127,11 +1127,15 @@
     checkpointStyleVersion = '';
   let checkpointObservations = null,
     checkpointObservationVersion = '';
+  let checkpointForeignComputedValues = new Map(),
+    checkpointForeignComputedValueVersion = '';
   let styleObservationIsolated = host.isIsolatedInputWorld();
   bootstrapRestoreHooks.push(() => {
     styleObservationIsolated = host.isIsolatedInputWorld();
     checkpointObservations = null;
     checkpointStyleRules = null;
+    checkpointForeignComputedValues = new Map();
+    checkpointForeignComputedValueVersion = '';
   });
   const withStyleReadCache = (callback) => {
     // A nested observation already belongs to the outer command's canonical
@@ -1600,7 +1604,8 @@
       : null;
     if (owners?.get(element) === false) return null;
     const value = host.foreignComputedStyleFlatTree(elementSlot(element).nodeId, kind, name);
-    if (value !== null && styleReadCache && kind !== 'values') styleReadCache.retainable = false;
+    if (value !== null && styleReadCache && kind !== 'values' && kind !== 'documentValues')
+      styleReadCache.retainable = false;
     owners?.set(element, value !== null);
     return value;
   };
@@ -2974,23 +2979,35 @@
             values[property] = cssComputedValue(element, property);
           return JSON.stringify(values);
         })
-      : kind === 'innerText'
-        ? renderedInnerText(element)
-        : kind === 'scroll'
-          ? compatibilityScrolling.dispatch(element, JSON.parse(name))
-          : kind === 'visibility'
-            ? observeElementVisibility(element, JSON.parse(name))
-            : kind === 'box'
-              ? cssBoxModel.hasBox(element)
-              : kind === 'value'
-                ? cssComputedValue(element, name)
-                : kind === 'rect'
-                  ? clientRectFor(element)
-                  : kind === 'layout'
-                    ? layoutRectFor(element)
-                    : kind === 'document'
-                      ? computedStyleDocumentAvailable(element)
-                      : computedStyleAvailable(element);
+      : kind === 'documentValues'
+        ? withStyleReadCache(() => {
+            const properties = JSON.parse(name),
+              rows = [];
+            for (const candidate of compatibilitySelectors.query(document, '*')) {
+              const values = {};
+              for (const property of properties)
+                values[property] = cssComputedValue(candidate, property);
+              rows.push([elementSlot(candidate).nodeId, values]);
+            }
+            return JSON.stringify(rows);
+          })
+        : kind === 'innerText'
+          ? renderedInnerText(element)
+          : kind === 'scroll'
+            ? compatibilityScrolling.dispatch(element, JSON.parse(name))
+            : kind === 'visibility'
+              ? observeElementVisibility(element, JSON.parse(name))
+              : kind === 'box'
+                ? cssBoxModel.hasBox(element)
+                : kind === 'value'
+                  ? cssComputedValue(element, name)
+                  : kind === 'rect'
+                    ? clientRectFor(element)
+                    : kind === 'layout'
+                      ? layoutRectFor(element)
+                      : kind === 'document'
+                        ? computedStyleDocumentAvailable(element)
+                        : computedStyleAvailable(element);
   });
   let constructCustomElement = null,
     customElementCloneInert = 0;

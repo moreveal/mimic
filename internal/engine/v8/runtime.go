@@ -273,10 +273,13 @@ func (a *adapter) evalScopedCode(isolate *gov8.Isolate, realm *gov8.Context, sco
 		defer func() {
 			data, err := finish()
 			if err == nil {
+				a.profile.mu.Lock()
+				defer a.profile.mu.Unlock()
 				if a.profile.CPUProfiles == nil {
 					a.profile.CPUProfiles = map[string]json.RawMessage{}
 				}
-				a.profile.CPUProfiles[name] = data
+				a.profile.cpuSequence++
+				a.profile.CPUProfiles[fmt.Sprintf("%s#%d", name, a.profile.cpuSequence)] = data
 			}
 		}()
 	}

@@ -21,6 +21,7 @@ type diagnosticState struct {
 	Costs       map[string]diagnosticCost  `json:"costs"`
 	Heaps       map[string]any             `json:"heaps"`
 	CPUProfiles map[string]json.RawMessage `json:"cpu_profiles,omitempty"`
+	cpuSequence uint64
 }
 
 func newDiagnostics() *diagnosticState {
@@ -90,7 +91,11 @@ func (a *adapter) LiveDiagnostics() any {
 	}
 	hostOnly := a.profile.HostOnly
 	a.profile.mu.Unlock()
-	return map[string]any{"enabled": true, "hostOnly": hostOnly, "costs": costs}
+	profiles := make(map[string]json.RawMessage, len(a.profile.CPUProfiles))
+	for name, profile := range a.profile.CPUProfiles {
+		profiles[name] = append(json.RawMessage(nil), profile...)
+	}
+	return map[string]any{"enabled": true, "hostOnly": hostOnly, "costs": costs, "cpu_profiles": profiles}
 }
 
 // Diagnostics samples the isolate on its owner thread. It is deliberately not
