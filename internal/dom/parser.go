@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io"
 	"strings"
+
+	"github.com/moreveal/mimic/internal/layoutflat"
 )
 
 // ParseInertDocument imports a newly parsed tree into the existing node arena.
@@ -59,7 +61,7 @@ func (d *Document) ParseInertDocument(source, mime, documentURL string) (Node, e
 // resolve external entities or perform network I/O. DTD entity expansion and
 // Chrome's exact localized parser diagnostics remain outside this parser.
 func parseXMLDocument(source string) *Document {
-	d := &Document{nodeArena: &nodeArena{nodes: map[int64]*Node{}, next: 1}, root: 1}
+	d := &Document{nodeArena: &nodeArena{nodes: map[int64]*Node{}, next: 1, flatLayout: new(layoutflat.State)}, root: 1}
 	d.nodes[1] = &Node{ID: 1, Type: "document", Attributes: map[string]string{}}
 	add := func(n *Node, parent int64) {
 		d.next++
