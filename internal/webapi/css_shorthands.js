@@ -83,6 +83,8 @@ const cssShorthandComponents = {
     '-webkit-mask-box-image-repeat',
   ],
   'mask-position': ['-webkit-mask-position-x', '-webkit-mask-position-y'],
+  inset: ['top', 'right', 'bottom', 'left'],
+  outline: ['outline-width', 'outline-style', 'outline-color'],
   'text-emphasis': ['text-emphasis-style', 'text-emphasis-color'],
   '-webkit-text-stroke': ['-webkit-text-stroke-width', '-webkit-text-stroke-color'],
   transition: [
