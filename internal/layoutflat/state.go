@@ -7,6 +7,8 @@
 package layoutflat
 
 import (
+	"encoding/json"
+	"fmt"
 	"sync"
 
 	"github.com/moreveal/mimic/internal/layouttaffy"
@@ -54,6 +56,28 @@ func (s *State) Publish(revision uint64, request layouttaffy.Request) (*Snapshot
 	s.snapshot = result
 	s.mu.Unlock()
 	return cloneSnapshot(result), nil
+}
+
+func (s *State) PublishJSON(revision uint64, input string) (string, error) {
+	var request layouttaffy.Request
+	if err := json.Unmarshal([]byte(input), &request); err != nil {
+		return "", err
+	}
+	snapshot, err := s.Publish(revision, request)
+	if err != nil {
+		return "", err
+	}
+	boxes := make([]Box, 0, len(snapshot.Boxes))
+	for _, box := range snapshot.Boxes {
+		boxes = append(boxes, box)
+	}
+	encoded, err := json.Marshal(struct {
+		Boxes []Box `json:"boxes,omitempty"`
+	}{Boxes: boxes})
+	if err != nil {
+		return "", fmt.Errorf("encode flat layout: %w", err)
+	}
+	return string(encoded), nil
 }
 
 func (s *State) Invalidate() {
