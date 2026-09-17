@@ -61,6 +61,14 @@ type Document struct {
 	*nodeArena
 	root          int64
 	title, source string
+	selectorCache map[selectorCacheKey][]int64
+	selectorMu    sync.Mutex
+}
+
+type selectorCacheKey struct {
+	revision uint64
+	parent   int64
+	selector string
 }
 
 func (d *Document) Revision() uint64 {
@@ -420,6 +428,14 @@ func (d *Document) findAllWithin(parent int64, selector string) []Node {
 func (d *Document) FindAllIDs(parent int64, selector string) []int64 {
 	d.mu.RLock()
 	defer d.mu.RUnlock()
+	key := selectorCacheKey{revision: d.mu.revision, parent: parent, selector: selector}
+	d.selectorMu.Lock()
+	if cached := d.selectorCache[key]; cached != nil {
+		result := append([]int64(nil), cached...)
+		d.selectorMu.Unlock()
+		return result
+	}
+	d.selectorMu.Unlock()
 	var roots []int64
 	if parent == 0 {
 		roots = []int64{d.root}
@@ -442,6 +458,18 @@ func (d *Document) FindAllIDs(parent int64, selector string) []int64 {
 	}
 	for _, root := range roots {
 		visit(root)
+	}
+	d.selectorMu.Lock()
+	defer d.selectorMu.Unlock()
+	if d.selectorCache == nil {
+		d.selectorCache = make(map[selectorCacheKey][]int64)
+	}
+	d.selectorCache[key] = append([]int64(nil), out...)
+	if len(d.selectorCache) > 1024 {
+		for stale := range d.selectorCache {
+			delete(d.selectorCache, stale)
+			break
+		}
 	}
 	return out
 }

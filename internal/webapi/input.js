@@ -771,9 +771,6 @@
         if (a === b) return 0;
         const ar = clientRectFor(a),
           br = clientRectFor(b);
-        const area = ar.width * ar.height,
-          otherArea = br.width * br.height;
-        if (area !== otherArea) return area < otherArea ? -1 : 1;
         return above(scope(a).rank, scope(b).rank) ? -1 : 1;
       });
       const root = document.documentElement;
