@@ -35,7 +35,7 @@ Extract data, automate flows, and run concurrent pages through familiar CDP tool
 One environment profile. Native SOCKS5, HTTP, and HTTPS proxies. Less setup
 between you and the workflow you want to automate.
 
-**Public Beta · Windows & Linux.** [Download builds and run the examples →](https://github.com/moreveal/mimic-overview/releases/tag/v0.1.0-beta.1)
+**Public Beta · Windows & Linux.** [Visit the Mimic website →](https://moreveal.github.io/mimic-overview/) · [Download v0.1.3 →](https://github.com/moreveal/mimic/releases/tag/v0.1.3)
 DM **`moreveal`** on Discord for feedback and workflow help.
 
 ## Built for execution
@@ -212,6 +212,10 @@ should be backed by focused regression tests and Chrome observations.
 
 ## License
 
-Mimic is licensed under [PolyForm Shield 1.0.0](LICENSE.md). Commercial use is
-permitted; the license restricts competing products. Third-party components
-retain their own licenses. See the full license for its scope and conditions.
+Mimic is source-available under the [Prosperity Public License 3.0.0](LICENSE).
+Noncommercial use is free; commercial use has a 30-day trial, after which a
+separate commercial license is required. `LICENSE` is the authoritative text.
+Third-party components retain their own licenses.
+
+Contributions require acceptance of the [Mimic CLA](CLA.md); see
+[CONTRIBUTING.md](CONTRIBUTING.md).

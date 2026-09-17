@@ -2,10 +2,8 @@ import json
 from pathlib import Path
 import tempfile
 import unittest
-from unittest.mock import patch
-
 from prepare import digest, validate_document_links
-from publish import CHECKS, require_ci, verified_archive
+from publish import CHECKS, verified_archive
 
 
 class PublicationGateTests(unittest.TestCase):
@@ -17,14 +15,14 @@ class PublicationGateTests(unittest.TestCase):
         self.archive.write_bytes(b'checked archive bytes')
         self.receipt = {
             'version': 'v0.1.0-beta.1', 'platform': 'windows-amd64',
-            'sourceRevision': 'source', 'overviewRevision': 'overview',
+            'sourceRevision': 'source',
             'verified': True, 'checks': list(CHECKS), 'archive': self.archive.name,
             'sha256': digest(self.archive), 'size': self.archive.stat().st_size,
         }
 
     def check(self):
         (self.root / 'windows-amd64.receipt.json').write_text(json.dumps(self.receipt))
-        return verified_archive(self.root, 'v0.1.0-beta.1', 'windows', 'source', 'overview')
+        return verified_archive(self.root, 'v0.1.0-beta.1', 'windows', 'source')
 
     def test_verified_matching_archive(self):
         self.assertEqual(self.check()[0], self.archive)
@@ -35,8 +33,8 @@ class PublicationGateTests(unittest.TestCase):
             self.check()
 
     def test_stale_source_or_examples_and_missing_checks_rejected(self):
-        for key, value in [('sourceRevision', 'old'), ('overviewRevision', 'old'),
-                           ('verified', False), ('checks', ['runtimecheck:v8'])]:
+        for key, value in [('sourceRevision', 'old'), ('verified', False),
+                           ('checks', ['runtimecheck:v8'])]:
             with self.subTest(key=key):
                 original = self.receipt[key]
                 self.receipt[key] = value
@@ -48,19 +46,6 @@ class PublicationGateTests(unittest.TestCase):
         self.receipt['archive'] = '../private-source.zip'
         with self.assertRaisesRegex(RuntimeError, 'Unexpected archive name'):
             self.check()
-
-    def test_missing_running_or_failed_ci_rejected(self):
-        for runs in ([], [{'status': 'in_progress', 'conclusion': '', 'databaseId': 1}],
-                     [{'status': 'completed', 'conclusion': 'failure', 'databaseId': 1}]):
-            with self.subTest(runs=runs), patch('publish.run', return_value=json.dumps(runs)):
-                with self.assertRaisesRegex(RuntimeError, 'CI must pass'):
-                    require_ci('source')
-
-    def test_successful_ci_checks_exact_source(self):
-        with patch('publish.run', return_value=json.dumps([
-                {'status': 'completed', 'conclusion': 'success', 'databaseId': 42}])) as command:
-            self.assertEqual(require_ci('exact-source'), 42)
-            self.assertIn('exact-source', command.call_args.args)
 
     def test_bundled_document_link_cannot_be_missing_or_escape(self):
         doc = self.root / 'README.md'
