@@ -143,10 +143,10 @@ func TestIsolatedWorldsShareDocumentStyleBatch(t *testing.T) {
 		}
 		before := liveDiagnosticCost(t, p, "host:foreignComputedStyleFlatTree")
 		read("style-batch-b", ".item:last-child", "visibility", "visible")
-		if calls := liveDiagnosticCost(t, p, "host:foreignComputedStyleFlatTree") - before; calls != 1 {
-			// The second world still enters the cheap host projection lookup, but
-			// must not enter the canonical JS realm to rebuild the batch.
-			t.Fatalf("second isolated world used %d host calls, want one cached lookup", calls)
+		if calls := liveDiagnosticCost(t, p, "host:foreignComputedStyleFlatTree") - before; calls > 1 {
+			// A separate JS context may reuse its local document batch directly or
+			// make one cheap owner-cache lookup, but it must not rebuild the batch.
+			t.Fatalf("second isolated world used %d host calls, want at most one cached lookup", calls)
 		}
 	})
 }
