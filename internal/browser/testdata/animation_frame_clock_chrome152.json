@@ -1,0 +1,111 @@
+{
+  "browser": {
+    "Browser": "Chrome/152.0.7977.82",
+    "Protocol-Version": "1.3",
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/152.0.0.0 Safari/537.36",
+    "V8-Version": "15.2.124.21",
+    "WebKit-Version": "537.36 (@d04cdb24d67b081f6cf80200ffc5233f44b61109)",
+    "webSocketDebuggerUrl": "ws://127.0.0.1:41862/devtools/browser/ad1b2fef-a1f3-41ca-a893-eb0a626adb3a"
+  },
+  "mode": "headful",
+  "source": "new Promise(resolve=>{const order=[];requestAnimationFrame(timestamp=>{order.push('frame');const entry=performance.now();while(performance.now()-entry<2){}const end=performance.now();resolve({order,timestamp,entry,end})});Promise.resolve().then(()=>order.push('microtask'))})",
+  "samples": [
+    {
+      "order": [
+        "microtask",
+        "frame"
+      ],
+      "timestamp": 26.5,
+      "entry": 26.799999997019768,
+      "end": 28.799999997019768
+    },
+    {
+      "order": [
+        "microtask",
+        "frame"
+      ],
+      "timestamp": 18.8,
+      "entry": 19,
+      "end": 21
+    },
+    {
+      "order": [
+        "microtask",
+        "frame"
+      ],
+      "timestamp": 22,
+      "entry": 22.19999999552965,
+      "end": 24.19999999552965
+    },
+    {
+      "order": [
+        "microtask",
+        "frame"
+      ],
+      "timestamp": 21.4,
+      "entry": 21.700000002980232,
+      "end": 23.700000002980232
+    },
+    {
+      "order": [
+        "microtask",
+        "frame"
+      ],
+      "timestamp": 23.4,
+      "entry": 23.599999994039536,
+      "end": 25.599999994039536
+    },
+    {
+      "order": [
+        "microtask",
+        "frame"
+      ],
+      "timestamp": 22.3,
+      "entry": 22.5,
+      "end": 24.5
+    },
+    {
+      "order": [
+        "microtask",
+        "frame"
+      ],
+      "timestamp": 20.3,
+      "entry": 20.5,
+      "end": 22.5
+    },
+    {
+      "order": [
+        "microtask",
+        "frame"
+      ],
+      "timestamp": 28.4,
+      "entry": 28.700000002980232,
+      "end": 30.799999997019768
+    },
+    {
+      "order": [
+        "microtask",
+        "frame"
+      ],
+      "timestamp": 21.4,
+      "entry": 21.700000002980232,
+      "end": 23.700000002980232
+    },
+    {
+      "order": [
+        "microtask",
+        "frame"
+      ],
+      "timestamp": 21.9,
+      "entry": 22.900000005960464,
+      "end": 24.900000005960464
+    }
+  ],
+  "assertions": [
+    "microtask precedes frame callback",
+    "timestamp >= 0",
+    "entry >= timestamp",
+    "end - entry >= 2"
+  ],
+  "note": "Ten fresh-page observations. Callback performs synchronous work until performance.now advances by at least 2 ms. Equality between the frame timestamp and performance.now is not required."
+}

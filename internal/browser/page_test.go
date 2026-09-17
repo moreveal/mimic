@@ -1475,13 +1475,19 @@ func TestParserStylesheetUsesSharedLoaderAndCSSOMProjection(t *testing.T) {
 
 func TestAnimationFrameUsesBrowserScheduler(t *testing.T) {
 	p := testPage(t)
-	v, err := p.Evaluate(context.Background(), `new Promise(resolve=>{const order=[];requestAnimationFrame(timestamp=>{order.push('frame');resolve({order,timestamp,now:performance.now()})});Promise.resolve().then(()=>order.push('microtask'))})`)
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	// Chrome's frame timestamp precedes callback execution; performance.now()
+	// remains live inside the callback. The frozen Chrome 152 observations are
+	// recorded in testdata/animation_frame_clock_chrome152.json.
+	v, err := p.Evaluate(ctx, `new Promise(resolve=>{const order=[];requestAnimationFrame(timestamp=>{order.push('frame');const entry=performance.now();while(performance.now()-entry<2){}const end=performance.now();resolve({order,timestamp,entry,end})});Promise.resolve().then(()=>order.push('microtask'))})`)
 	if err != nil {
 		t.Fatal(err)
 	}
 	result := v.(map[string]any)
 	order := result["order"].([]any)
-	if len(order) != 2 || order[0] != "microtask" || order[1] != "frame" || result["timestamp"] != result["now"] {
+	timestamp, entry, end := numberValue(result["timestamp"]), numberValue(result["entry"]), numberValue(result["end"])
+	if len(order) != 2 || order[0] != "microtask" || order[1] != "frame" || !(timestamp >= 0 && entry >= timestamp && end-entry >= 2) {
 		t.Fatalf("animation frame scheduling mismatch: %#v", result)
 	}
 }

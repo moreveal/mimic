@@ -32,3 +32,9 @@ Cross-document restoration and full PopStateEvent semantics remain separate gaps
 
 Tests: TestHistoryStructuredState (Goja/V8), existing History/FrameHistory tests,
 and TestHistoryCloneRestoredBootstrap (ordinary and explicitly warmed snapshot).
+
+Retained History access after its iframe navigates is checked by the local
+`history_retained_realm` Chrome 152.0.7977.82 oracle (headless-new, fresh profile).
+State, length, valid scrollRestoration access, and traversal methods throw
+SecurityError once the owning document is inactive. An invalid scrollRestoration
+enum value is ignored before that check, matching the recorded reference.
