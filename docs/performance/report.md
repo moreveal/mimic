@@ -2367,7 +2367,7 @@ historical README cards, without claiming that every difference is a code effect
 
 [Public-facing summary](../../benchmark/runs/08-public-beta-20260913/public-summary.md),
 [full report](../../benchmark/runs/08-public-beta-20260913/report.md),
-[raw observations](../../benchmark/runs/08-public-beta-20260913/raw.json), and
+[public numeric results](../../benchmark/runs/08-public-beta-20260913/public-results.json), and
 [historical comparison](../../benchmark/runs/08-public-beta-20260913/comparison-to-07.json).
 Build/launch receipts and the artifact manifest are in the same run directory.
 `public-results.json` is byte-identical to the numeric export in the new public

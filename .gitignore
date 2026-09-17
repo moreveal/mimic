@@ -24,6 +24,18 @@
 /coverage/
 /snapshots/
 /runtime-state/
+/.playwright-cli/
+/local-profile-trace.json
+# Local history-audit output
+/reports/git-history-security-audit-*.md
+/reports/git-history-all-paths-*.txt
+# Generated performance evidence; keep authored Markdown summaries visible
+/docs/performance/data/
+/docs/performance/dom-current/**
+!/docs/performance/dom-current/**/
+!/docs/performance/dom-current/**/*.md
+/benchmark/runs/**/raw.json
+/benchmark/runs/**/*.jsonl
 # Reproducible downloads and local environments
 /compatibility/.source-cache/
 /compatibility/.chrome-for-testing/

@@ -101,7 +101,8 @@ Warm single-Page execution medians were 3.61/4.79 ms (Mimic/Chrome) for static,
 package reduced the frozen DOM execution median from 221.59 to 102.20 ms (2.17x)
 and completion from 252.00 to 131.37 ms (1.92x). React execution improved 1.20x.
 
-The final [Linux 100-Page run](../../benchmark/runs/10-linux-memory-20260914/raw.json)
+The final Linux 100-Page run (summarized here; its bulky raw output is intentionally
+not retained in Git)
 completed six measured waves per workload and runtime. It fixes two Linux-specific
 measurement and retention problems. Live memory is now measured from the state immediately
 before each wave rather than launch readiness, which previously counted allocator high-water
