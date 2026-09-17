@@ -31,6 +31,8 @@ type Snapshot struct {
 type State struct {
 	mu       sync.RWMutex
 	snapshot *Snapshot
+	request  string
+	response string
 }
 
 func (s *State) Snapshot(revision uint64) *Snapshot {
@@ -58,6 +60,13 @@ func (s *State) Publish(revision uint64, request layouttaffy.Request) (*Snapshot
 }
 
 func (s *State) PublishJSON(revision uint64, input string) (string, error) {
+	s.mu.RLock()
+	if s.snapshot != nil && s.snapshot.Revision == revision && s.request == input {
+		response := s.response
+		s.mu.RUnlock()
+		return response, nil
+	}
+	s.mu.RUnlock()
 	var request layouttaffy.Request
 	if err := json.Unmarshal([]byte(input), &request); err != nil {
 		return "", err
@@ -70,21 +79,25 @@ func (s *State) PublishJSON(revision uint64, input string) (string, error) {
 	for _, box := range boxes {
 		result.Boxes[box.ID] = Box{ID: box.ID, X: box.X, Y: box.Y, Width: box.Width, Height: box.Height, ContentWidth: box.ContentWidth, ContentHeight: box.ContentHeight}
 	}
-	s.mu.Lock()
-	s.snapshot = result
-	s.mu.Unlock()
 	encoded, err := json.Marshal(struct {
 		Boxes []layouttaffy.Box `json:"boxes,omitempty"`
 	}{Boxes: boxes})
 	if err != nil {
 		return "", err
 	}
+	s.mu.Lock()
+	s.snapshot = result
+	s.request = input
+	s.response = string(encoded)
+	s.mu.Unlock()
 	return string(encoded), nil
 }
 
 func (s *State) Invalidate() {
 	s.mu.Lock()
 	s.snapshot = nil
+	s.request = ""
+	s.response = ""
 	s.mu.Unlock()
 }
 
