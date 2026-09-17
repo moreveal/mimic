@@ -35,7 +35,7 @@ Extract data, automate flows, and run concurrent pages through familiar CDP tool
 One environment profile. Native SOCKS5, HTTP, and HTTPS proxies. Less setup
 between you and the workflow you want to automate.
 
-**Public Beta · Windows & Linux.** [Visit the Mimic website →](https://moreveal.github.io/mimic-overview/) · [Download v0.1.3 →](https://github.com/moreveal/mimic/releases/tag/v0.1.3)
+**Public Beta · Windows & Linux.** [Visit the Mimic website →](https://moreveal.github.io/mimic-overview/) · [Download the latest release →](https://github.com/moreveal/mimic/releases/latest)
 DM **`moreveal`** on Discord for feedback and workflow help.
 
 ## Built for execution
