@@ -8,7 +8,6 @@ import (
 	"strings"
 	"sync"
 
-	"github.com/moreveal/mimic/internal/layoutflat"
 	"golang.org/x/net/html"
 	"golang.org/x/net/html/atom"
 )
@@ -64,7 +63,6 @@ type Document struct {
 	title, source string
 	selectorCache map[selectorCacheKey][]int64
 	selectorMu    sync.Mutex
-	flatLayout    layoutflat.State
 }
 
 type selectorCacheKey struct {
@@ -84,13 +82,7 @@ func (d *Document) Revision() uint64 {
 func (d *Document) InvalidateObservations() {
 	d.mu.Lock()
 	d.mu.Unlock()
-	d.flatLayout.Invalidate()
 }
-
-// FlatLayoutState returns the document-owned retained layout state. Callers
-// publish complete snapshots and consumers read copies; no DOM wrapper or JS
-// value is retained by the document.
-func (d *Document) FlatLayoutState() *layoutflat.State { return &d.flatLayout }
 
 func Parse(source string) (*Document, error) {
 	root, err := html.Parse(strings.NewReader(source))
