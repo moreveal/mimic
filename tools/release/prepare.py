@@ -1,4 +1,4 @@
-"""Build and verify one native release archive; never publish private source."""
+"""Build and verify one native Mimic release archive from this checkout."""
 from __future__ import annotations
 
 import argparse
@@ -62,7 +62,7 @@ def notices(target):
     modules = {d['Module']['Path']: d['Module'] for d in deps if 'Module' in d}
     modules.pop('github.com/moreveal/mimic')
     chunks = ['# Third-party notices\n\nThird-party components retain the licenses below. '
-              'PolyForm Shield applies to Mimic-owned material, not these components.\n']
+              'The root Prosperity license applies to Mimic-owned material, not these components.\n']
     inventory = []
     def include(label, path):
         data = path.read_text(encoding='utf-8-sig')
@@ -108,18 +108,13 @@ def notices(target):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--version', required=True)
-    parser.add_argument('--overview', type=Path, required=True)
     args = parser.parse_args()
     if not re.fullmatch(r'v\d+\.\d+\.\d+(?:-beta\.\d+)?', args.version):
         parser.error('Expected vMAJOR.MINOR.PATCH or vMAJOR.MINOR.PATCH-beta.NUMBER')
     host = platform.system().lower()
     if host not in ('windows', 'linux') or platform.machine().lower() not in ('amd64', 'x86_64'):
         parser.error('Only native Windows/Linux amd64 builds are packaged')
-    overview = args.overview.resolve()
     source_revision = clean_revision(ROOT)
-    overview_revision = clean_revision(overview)
-    if (ROOT / 'LICENSE.md').read_bytes() != (overview / 'LICENSE.md').read_bytes():
-        raise RuntimeError('Private/public licenses differ')
     output = ROOT / '.build/releases' / args.version
     stage = output / f'mimic-{args.version}-{host}-amd64'
     stage.mkdir(parents=True, exist_ok=False)
@@ -128,15 +123,12 @@ def main():
     env['CGO_ENABLED'] = '1'
     subprocess.run(['go', 'build', '-trimpath', '-ldflags=-s -w', '-o', str(binary), './cmd/mimic'],
                    cwd=ROOT, env=env, check=True)
-    for name in ('LICENSE.md', 'NOTICE', 'QUICKSTART.md', 'BETA.md',
-                 'FAQ.md', 'BENCHMARKS.md', 'RELEASE_NOTES.md'):
-        shutil.copyfile(overview / name, stage / name)
-    (stage / 'benchmarks').mkdir()
-    shutil.copyfile(overview / 'benchmarks/results.json', stage / 'benchmarks/results.json')
-    for name in run('git', 'ls-files', '-z', '--', 'examples', cwd=overview, capture=True).split('\0'):
+    for name in ('LICENSE', 'RELEASE_NOTES.md'):
+        shutil.copyfile(ROOT / name, stage / name)
+    for name in run('git', 'ls-files', '-z', '--', 'examples', cwd=ROOT, capture=True).split('\0'):
         if not name:
             continue
-        source = overview / name
+        source = ROOT / name
         if source.is_symlink() or (source.suffix not in ('.md', '.mjs', '.json') and source.name != 'LICENSE'):
             raise RuntimeError(f'Unexpected public example asset: {name}')
         dest = stage / name
@@ -145,16 +137,17 @@ def main():
     inventory = notices(stage / 'THIRD_PARTY_NOTICES.txt')
     (stage / 'README.txt').write_text(
         f'Mimic {args.version} Public Beta\n\n'
-        'Start here: QUICKSTART.md. Runnable examples: examples/README.md.\n'
-        'License: LICENSE.md (PolyForm Shield 1.0.0). Third-party terms: THIRD_PARTY_NOTICES.txt.\n'
-        'Downloads and documentation: https://github.com/moreveal/mimic-overview\n'
+        'Start here: https://github.com/moreveal/mimic/blob/main/docs/getting-started.md\n'
+        'Runnable examples: examples/README.md.\n'
+        'License: LICENSE (Prosperity Public License 3.0.0). Third-party terms: THIRD_PARTY_NOTICES.txt.\n'
+        'Source, documentation, and downloads: https://github.com/moreveal/mimic\n'
         'Windows amd64 or Linux amd64 (glibc 2.39+, libgcc_s, installed fonts).\n'
         'No Go, Rust, Chromium, display server, or GPU is needed to run Mimic.\n'
         'Node.js 22+ is only needed for the example clients.\n', encoding='utf-8')
     (stage / 'README.md').write_text(
-        '# Mimic Public Beta\n\n[Start here](QUICKSTART.md) · [Examples](examples/README.md) · '
-        '[Release notes](RELEASE_NOTES.md) · [License](LICENSE.md)\n\n'
-        'Product overview: https://github.com/moreveal/mimic-overview\n', encoding='utf-8')
+        '# Mimic Public Beta\n\n[Documentation](https://github.com/moreveal/mimic) · '
+        '[Examples](examples/README.md) · [Release notes](RELEASE_NOTES.md) · [License](LICENSE)\n\n'
+        'Website: https://moreveal.github.io/mimic-overview/\n', encoding='utf-8')
     validate_document_links(stage)
     stamp = int(run('git', 'show', '-s', '--format=%ct', source_revision, capture=True).strip())
     files = sorted(p for p in stage.rglob('*') if p.is_file())
@@ -195,11 +188,11 @@ def main():
         npm = shutil.which('npm.cmd' if host == 'windows' else 'npm')
         run(npm, 'ci', '--ignore-scripts', cwd=examples)
         run('node', 'verify.mjs', str(ready), cwd=examples)
-    if clean_revision(ROOT) != source_revision or clean_revision(overview) != overview_revision:
+    if clean_revision(ROOT) != source_revision:
         raise RuntimeError('Checkout changed during preparation')
     receipt = {
         'version': args.version, 'platform': f'{host}-amd64',
-        'sourceRevision': source_revision, 'overviewRevision': overview_revision,
+        'sourceRevision': source_revision,
         'goVersion': run('go', 'version', capture=True).strip(),
         'archive': archive.name, 'sha256': digest(archive), 'size': archive.stat().st_size,
         'binarySha256': digest(binary), 'dependencies': inventory,
