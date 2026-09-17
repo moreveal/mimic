@@ -694,6 +694,13 @@
       "compatibility/cdp_automation.py#page.set_content"
     ]
   },
+  "Page.setFontFamilies": {
+    "status": "partial",
+    "notes": "Updates the Page generic font defaults used by the modeled environment; per-script family overrides and complete font selection behavior are not implemented.",
+    "tests": [
+      "internal/cdp/page_font_families_test.go#TestPageSetFontFamiliesUpdatesGenericDefaults"
+    ]
+  },
   "Page.setLifecycleEventsEnabled": {
     "status": "partial",
     "notes": "Per-session opt-in with current commit/load replay and shared-loader 500ms idle windows; not every Chrome lifecycle phase/timestamp is modeled.",
