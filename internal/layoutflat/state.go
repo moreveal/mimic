@@ -8,7 +8,6 @@ package layoutflat
 
 import (
 	"encoding/json"
-	"fmt"
 	"sync"
 
 	"github.com/moreveal/mimic/internal/layouttaffy"
@@ -63,19 +62,22 @@ func (s *State) PublishJSON(revision uint64, input string) (string, error) {
 	if err := json.Unmarshal([]byte(input), &request); err != nil {
 		return "", err
 	}
-	snapshot, err := s.Publish(revision, request)
+	boxes, err := layouttaffy.Layout(request)
 	if err != nil {
 		return "", err
 	}
-	boxes := make([]Box, 0, len(snapshot.Boxes))
-	for _, box := range snapshot.Boxes {
-		boxes = append(boxes, box)
+	result := &Snapshot{Revision: revision, Boxes: make(map[uint64]Box, len(boxes))}
+	for _, box := range boxes {
+		result.Boxes[box.ID] = Box{ID: box.ID, X: box.X, Y: box.Y, Width: box.Width, Height: box.Height, ContentWidth: box.ContentWidth, ContentHeight: box.ContentHeight}
 	}
+	s.mu.Lock()
+	s.snapshot = result
+	s.mu.Unlock()
 	encoded, err := json.Marshal(struct {
-		Boxes []Box `json:"boxes,omitempty"`
+		Boxes []layouttaffy.Box `json:"boxes,omitempty"`
 	}{Boxes: boxes})
 	if err != nil {
-		return "", fmt.Errorf("encode flat layout: %w", err)
+		return "", err
 	}
 	return string(encoded), nil
 }

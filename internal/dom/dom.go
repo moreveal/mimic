@@ -8,6 +8,7 @@ import (
 	"strings"
 	"sync"
 
+	"github.com/moreveal/mimic/internal/layoutflat"
 	"golang.org/x/net/html"
 	"golang.org/x/net/html/atom"
 )
@@ -55,6 +56,7 @@ type nodeArena struct {
 	next             int64
 	nodes            map[int64]*Node
 	hasFrameElements bool
+	flatLayout       *layoutflat.State
 }
 
 type Document struct {
@@ -84,12 +86,16 @@ func (d *Document) InvalidateObservations() {
 	d.mu.Unlock()
 }
 
+func (d *Document) FlatLayoutState() *layoutflat.State {
+	return d.flatLayout
+}
+
 func Parse(source string) (*Document, error) {
 	root, err := html.Parse(strings.NewReader(source))
 	if err != nil {
 		return nil, err
 	}
-	d := &Document{nodeArena: &nodeArena{nodes: map[int64]*Node{}}, source: source}
+	d := &Document{nodeArena: &nodeArena{nodes: map[int64]*Node{}, flatLayout: new(layoutflat.State)}, source: source}
 	titleFound := false
 	var walk func(*html.Node, int64)
 	walk = func(n *html.Node, parent int64) {

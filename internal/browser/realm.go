@@ -27,7 +27,6 @@ import (
 	"github.com/moreveal/mimic/internal/csp"
 	"github.com/moreveal/mimic/internal/dom"
 	"github.com/moreveal/mimic/internal/engine"
-	"github.com/moreveal/mimic/internal/layouttaffy"
 	"github.com/moreveal/mimic/internal/network"
 	"github.com/moreveal/mimic/internal/scheduler"
 	"github.com/moreveal/mimic/internal/textmetrics"
@@ -755,7 +754,11 @@ func (r *Realm) installBindingsOnOwner() error {
 	p := r.agent.Page()
 	host := map[string]any{}
 	host["layoutTaffy"] = r.transientFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
-		return r.val(layouttaffy.LayoutJSON(strarg(args, 0))), nil
+		output, err := r.document.FlatLayoutState().PublishJSON(r.document.Revision(), strarg(args, 0))
+		if err != nil {
+			return nil, err
+		}
+		return r.val(output), nil
 	})
 	installLocaleHost(host, r.runtime, p.environmentView().Locale)
 	installStructuredCloneHost(host, r.runtime)
