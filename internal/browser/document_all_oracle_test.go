@@ -17,13 +17,7 @@ func TestDocumentAllMatchesFrozenChrome(t *testing.T) {
 	documentAllOracle(t, "document_all")
 }
 
-// Retaining the old Document currently requires keeping its entire realm alive;
-// this diagnostic records that existing lifetime boundary without changing the
-// Chrome expectation into an expected failure.
-func TestDocumentAllRetainedRealmDiagnostic(t *testing.T) {
-	if os.Getenv("MIMIC_TEST_RETAINED_REALMS") != "1" {
-		t.Skip("navigation destroys the old realm, so retained Document objects become unavailable; set MIMIC_TEST_RETAINED_REALMS=1 to run the unchanged Chrome lifetime oracle")
-	}
+func TestDocumentAllRetainedRealmMatchesFrozenChrome(t *testing.T) {
 	documentAllOracle(t, "document_all_navigation")
 }
 

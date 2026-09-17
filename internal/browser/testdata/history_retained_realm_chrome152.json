@@ -1,0 +1,51 @@
+{
+  "browserVersion": "Chrome/152.0.7977.82",
+  "mode": "headless-new",
+  "result": {
+    "result": {
+      "type": "object",
+      "value": {
+        "state": {
+          "ok": false,
+          "name": "SecurityError"
+        },
+        "length": {
+          "ok": false,
+          "name": "SecurityError"
+        },
+        "scrollGet": {
+          "ok": false,
+          "name": "SecurityError"
+        },
+        "scrollSet": {
+          "ok": false,
+          "name": "SecurityError"
+        },
+        "scrollInvalid": {
+          "ok": true,
+          "value": "undefined"
+        },
+        "push": {
+          "ok": false,
+          "name": "SecurityError"
+        },
+        "replace": {
+          "ok": false,
+          "name": "SecurityError"
+        },
+        "go": {
+          "ok": false,
+          "name": "SecurityError"
+        },
+        "back": {
+          "ok": false,
+          "name": "SecurityError"
+        },
+        "forward": {
+          "ok": false,
+          "name": "SecurityError"
+        }
+      }
+    }
+  }
+}

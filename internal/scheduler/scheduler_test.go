@@ -201,6 +201,26 @@ func TestWaitAnyCancellation(t *testing.T) {
 	}
 }
 
+func TestWaitAnyWakeDoesNotAdvanceToDeadline(t *testing.T) {
+	start := time.Unix(0, 0)
+	s := New(start, nil)
+	called := false
+	s.Post(Timer, time.Hour, func(context.Context) error { called = true; return nil })
+	// Leave the enqueue notification pending: this wake must not be mistaken
+	// for expiration of the timer that WaitAny also registers.
+	ctx, cancel := context.WithTimeout(context.Background(), time.Second)
+	defer cancel()
+	if err := WaitAny(ctx, []*Scheduler{s}); err != nil {
+		t.Fatal(err)
+	}
+	if s.Now().Sub(start) >= time.Hour {
+		t.Fatal("enqueue wake advanced the clock to the future timer")
+	}
+	if err := s.RunReady(ctx, 10); err != nil || called {
+		t.Fatalf("future timer ran after enqueue wake: called=%v err=%v", called, err)
+	}
+}
+
 func TestRunReadyDoesNotFastForwardTimers(t *testing.T) {
 	s := New(time.Unix(0, 0), nil)
 	called := false

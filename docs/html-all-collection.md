@@ -23,15 +23,16 @@ native undetectable objects. Calls and property access still use the existing
 frame bridge and origin checks. Assigning a reference to another frame's global
 now writes the actual destination global instead of a local WindowProxy copy.
 
+Saved Documents and their collections retain their immutable owner across
+iframe navigation. Page lifetime tracking separates imported object owners
+from WindowProxy references and collects unreachable inactive realm graphs.
+The unchanged Chrome navigation oracle now runs by default in both ordinary
+and restored bootstrap modes. Bridge-cache and DOM-arena retention boundaries
+are described in
+`compatibility/compat-fuzz-fixes/navigation-ownership.md`.
+
 ## Existing boundaries
 
-- Navigating an iframe currently closes its previous realm, and remote Document
-  wrappers are keyed by frame rather than document generation. Saved old
-  Documents and their collections consequently do not remain usable as they
-  do in Chrome. The unchanged Chrome navigation corpus is retained as the
-  opt-in `TestDocumentAllRetainedRealmDiagnostic`; a skipped diagnostic is not
-  a passing navigation compatibility test. Fixing this requires reference-aware
-  realm lifetime and document routing, not unbounded deferred teardown.
 - The imported native object uses the original remote prototype at import.
   Subsequent remote `Object.setPrototypeOf` is not reflected in its local
   `Object.getPrototypeOf`. Native V8 interceptors cannot trap that internal
@@ -48,12 +49,8 @@ The ordinary corpus and its reference provenance live under
 `internal/browser/testdata/document_all*`. Validation commands:
 
 ```powershell
-go test ./internal/browser -run 'TestDocumentAllMatchesFrozenChrome|TestFrame|TestBootstrapSnapshot' -count=1
+go test ./internal/browser -run 'TestDocumentAll.*FrozenChrome|TestFrame|TestBootstrapSnapshot' -count=1
 go test -race ./internal/engine/v8 -count=1
-$env:MIMIC_TEST_RETAINED_REALMS = '1'
-go test ./internal/browser -run TestDocumentAllRetainedRealmDiagnostic -count=1
-Remove-Item Env:MIMIC_TEST_RETAINED_REALMS
 ```
 
-The last diagnostic currently fails at the documented old-realm lifetime
-boundary. No protected-site challenge result is inferred from these tests.
+No protected-site challenge result is inferred from these tests.

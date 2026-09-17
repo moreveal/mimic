@@ -5,6 +5,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"math"
 	"reflect"
 	"sync"
 	"time"
@@ -221,7 +222,7 @@ func WaitAny(ctx context.Context, queues []*Scheduler) error {
 				s.mu.Unlock()
 				return ctx.Err()
 			}
-			remaining = time.Duration(float64(remaining) / s.executionScale)
+			remaining = time.Duration(math.Ceil(float64(remaining) / s.executionScale))
 			if !hasDeadline || remaining < delay {
 				delay, hasDeadline = remaining, true
 			}
@@ -238,6 +239,13 @@ func WaitAny(ctx context.Context, queues []*Scheduler) error {
 	// Every realm observes the same elapsed wait. Advancing only the queue
 	// owning the earliest timer would leave another realm's clock frozen.
 	elapsed := monotime.Since(start)
+	// The platform timer and the canonical monotonic clock can have different
+	// resolution (notably Go's Windows timer versus QPC). If the due timer won,
+	// observe at least its requested interval so its task is actually ready.
+	// An enqueue notification or cancellation must never fast-forward time.
+	if hasDeadline && selected == len(cases)-1 && elapsed < delay {
+		elapsed = delay
+	}
 	for _, s := range queues {
 		s.mu.Lock()
 		s.now = s.now.Add(time.Duration(float64(elapsed) * s.executionScale))
