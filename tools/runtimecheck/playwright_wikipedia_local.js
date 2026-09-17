@@ -291,25 +291,34 @@ async function measure (name, fn) {
       Promise.all([page.waitForURL(/\/wiki\/JavaScript(?:$|[#?])/), searchInput.press('Enter')]),
     )
 
-    const traceBeforeVisible = await cdp.send('Mimic.getTrace')
+    const isMimicNeedTrace = Boolean(process.env.MIMIC_TRACE);
+    const isMimic = !Boolean(process.env.PW_CHROME_EXECUTABLE);
+
+    let traceBeforeVisible
+    let traceAfterVisible
+    if (isMimic && isMimicNeedTrace) {
+      traceBeforeVisible = await cdp.send('Mimic.getTrace')
+    }
 
     await measure('JavaScript heading visible', () =>
       page.locator('#firstHeading').waitFor({ state: 'visible' }),
     )
 
-    const traceAfterVisible = await cdp.send('Mimic.getTrace')
+    if (isMimic && isMimicNeedTrace) {
+      traceAfterVisible = await cdp.send('Mimic.getTrace')
 
-    require('node:fs').writeFileSync(
-      'heading-visible-trace.json',
-      JSON.stringify(
-        {
-          beforeCount: traceBeforeVisible.events.length,
-          events: traceAfterVisible.events.slice(traceBeforeVisible.events.length),
-        },
-        null,
-        2,
-      ),
-    )
+      require('node:fs').writeFileSync(
+        'heading-visible-trace.json',
+        JSON.stringify(
+          {
+            beforeCount: traceBeforeVisible.events.length,
+            events: traceAfterVisible.events.slice(traceBeforeVisible.events.length),
+          },
+          null,
+          2,
+        ),
+      );
+    }
 
     /*
      * ARTICLE INSPECTION
