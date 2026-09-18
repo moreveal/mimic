@@ -873,7 +873,9 @@ func (a *adapter) Call(ctx context.Context, function, this engine.Value, args ..
 		var cpuStart map[string]any
 		if deepProfile {
 			cpuStart = diagnosticThreadCPU(currentThreadID())
-			finishDeepProfile, _ = startNativeProfile(s.isolate, realm)
+			if os.Getenv("MIMIC_PROFILE_CF_NATIVE") == "1" {
+				finishDeepProfile, _ = startNativeProfile(s.isolate, realm)
+			}
 		}
 		result, ok, err := fn.Call(scope, receiver, argv...)
 		cpuEnd := map[string]any(nil)
