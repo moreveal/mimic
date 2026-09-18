@@ -5,7 +5,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"os"
 	"strings"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/moreveal/mimic/internal/engine"
@@ -161,17 +163,24 @@ func (d *Debugger) objectState(id string) (*debuggerRealm, error) {
 }
 
 func (state *debuggerRealm) invoke(ctx context.Context, operation string, params any, value engine.Value) (engine.Value, error) {
+	started := time.Now()
 	encoded, err := json.Marshal(params)
+	state.realm.agent.Page().profileDebuggerSubphase("invoke.marshal", started)
 	if err != nil {
 		return nil, err
 	}
 	operationValue, paramsValue := state.realm.val(operation), state.realm.val(string(encoded))
 	defer releaseDebuggerValue(state.realm, operationValue)
 	defer releaseDebuggerValue(state.realm, paramsValue)
+	started = time.Now()
 	if value == nil {
-		return state.realm.runtime.Call(ctx, state.bridge, nil, operationValue, paramsValue)
+		result, err := state.realm.runtime.Call(ctx, state.bridge, nil, operationValue, paramsValue)
+		state.realm.agent.Page().profileDebuggerSubphase("invoke.runtimeCall", started)
+		return result, err
 	}
-	return state.realm.runtime.Call(ctx, state.bridge, nil, operationValue, paramsValue, value)
+	result, err := state.realm.runtime.Call(ctx, state.bridge, nil, operationValue, paramsValue, value)
+	state.realm.agent.Page().profileDebuggerSubphase("invoke.runtimeCall", started)
+	return result, err
 }
 
 func (state *debuggerRealm) json(ctx context.Context, operation string, params any, value engine.Value) (map[string]any, error) {
@@ -180,10 +189,12 @@ func (state *debuggerRealm) json(ctx context.Context, operation string, params a
 		return nil, err
 	}
 	defer releaseDebuggerValue(state.realm, result)
+	started := time.Now()
 	var decoded map[string]any
 	if err := json.Unmarshal([]byte(result.String()), &decoded); err != nil {
 		return nil, fmt.Errorf("debugger serialization: %w", err)
 	}
+	state.realm.agent.Page().profileDebuggerSubphase("json.unmarshal", started)
 	return decoded, nil
 }
 
@@ -215,7 +226,12 @@ func (d *Debugger) Evaluate(ctx context.Context, frameID, realmID, source string
 }
 
 func (d *Debugger) CallFunction(ctx context.Context, frameID, realmID, declaration string, params map[string]any, options DebuggerOptions) (map[string]any, error) {
+	callStarted := time.Now()
+	defer func() {
+		d.profileCallFunctionPhase("total", callStarted)
+	}()
 	defer d.enter()()
+	phaseStarted := time.Now()
 	var state *debuggerRealm
 	var err error
 	if objectID, _ := params["objectId"].(string); objectID != "" {
@@ -238,9 +254,13 @@ func (d *Debugger) CallFunction(ctx context.Context, frameID, realmID, declarati
 	if err != nil {
 		return nil, err
 	}
+	d.profileCallFunctionPhase("state", phaseStarted)
+	phaseStarted = time.Now()
 	if err := state.realm.syncShadowSnapshots(ctx); err != nil {
 		return nil, err
 	}
+	d.profileCallFunctionPhase("shadowSnapshots", phaseStarted)
+	phaseStarted = time.Now()
 	if arguments, ok := params["arguments"].([]any); ok {
 		for _, argument := range arguments {
 			if arg, ok := argument.(map[string]any); ok {
@@ -256,8 +276,11 @@ func (d *Debugger) CallFunction(ctx context.Context, frameID, realmID, declarati
 			}
 		}
 	}
+	d.profileCallFunctionPhase("arguments", phaseStarted)
 	var value engine.Value
+	phaseStarted = time.Now()
 	err = state.realm.debuggerInline(ctx, true, func(ctx context.Context) error {
+		declarationStarted := time.Now()
 		function, err := state.realm.Evaluate(ctx, "(\n"+declaration+"\n)", "__pyppeteer_evaluation_script__")
 		if err != nil {
 			return err
@@ -266,14 +289,41 @@ func (d *Debugger) CallFunction(ctx context.Context, frameID, realmID, declarati
 		if state.realm.runtime.TypeOf(function) != "function" {
 			return fmt.Errorf("Given expression does not evaluate to a function")
 		}
+		d.profileCallFunctionPhase("declaration", declarationStarted)
+		invokeStarted := time.Now()
 		value, err = state.invoke(ctx, "call", params, function)
+		d.profileCallFunctionPhase("invoke", invokeStarted)
 		return err
 	})
+	d.profileCallFunctionPhase("inline", phaseStarted)
 	if err != nil {
 		return d.exception(ctx, state, err, options, false)
 	}
+	phaseStarted = time.Now()
 	defer releaseDebuggerValue(state.realm, value)
-	return d.finish(ctx, state, value, options)
+	result, err := d.finish(ctx, state, value, options)
+	d.profileCallFunctionPhase("finish", phaseStarted)
+	return result, err
+}
+
+func (d *Debugger) profileCallFunctionPhase(phase string, started time.Time) {
+	if os.Getenv("MIMIC_PROFILE_CDP") != "1" || d.page == nil {
+		return
+	}
+	d.page.Trace().Add(trace.CDP, "callFunctionPhase", map[string]any{
+		"phase": phase,
+		"ms":    float64(time.Since(started)) / float64(time.Millisecond),
+	})
+}
+
+func (p *Page) profileDebuggerSubphase(phase string, started time.Time) {
+	if os.Getenv("MIMIC_PROFILE_CDP") != "1" || p == nil {
+		return
+	}
+	p.Trace().Add(trace.CDP, "callFunctionSubphase", map[string]any{
+		"phase": phase,
+		"ms":    float64(time.Since(started)) / float64(time.Millisecond),
+	})
 }
 
 func (d *Debugger) finish(ctx context.Context, state *debuggerRealm, value engine.Value, options DebuggerOptions) (map[string]any, error) {

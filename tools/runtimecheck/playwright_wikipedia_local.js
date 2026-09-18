@@ -88,6 +88,30 @@ async function measure (name, fn) {
   }
 }
 
+function subtractDiagnostics (before, after) {
+  const beforeCosts = before?.costs || {}
+  const afterCosts = after?.costs || {}
+  const names = new Set([...Object.keys(beforeCosts), ...Object.keys(afterCosts)])
+  const costs = {}
+
+  for (const name of names) {
+    const previous = beforeCosts[name] || { count: 0, ns: 0 }
+    const current = afterCosts[name] || { count: 0, ns: 0 }
+    costs[name] = {
+      count: current.count - previous.count,
+      ns: current.ns - previous.ns,
+    }
+  }
+
+  return {
+    ...after,
+    detail: {
+      ...after?.detail,
+      costs,
+    },
+  }
+}
+
 ;(async () => {
   let browser
   let server
@@ -233,6 +257,10 @@ async function measure (name, fn) {
 
     const page = await context.newPage()
     const cdp = await context.newCDPSession(page)
+    const profileOutput = process.env.MIMIC_PROFILE_OUTPUT
+    const diagnosticsBefore = profileOutput
+      ? await cdp.send('Mimic.getDiagnostics').catch(() => null)
+      : null
 
     page.setDefaultTimeout(15_000)
     page.setDefaultNavigationTimeout(30_000)
@@ -373,7 +401,10 @@ async function measure (name, fn) {
     })
 
     await measure('ECMAScript click + navigation', () =>
-      Promise.all([page.waitForURL(/\/wiki\/ECMAScript(?:$|[#?])/), ecmaScriptLink.click()]),
+      Promise.all([
+        page.waitForURL(/\/wiki\/ECMAScript(?:$|[#?])/, { waitUntil: 'domcontentloaded' }),
+        ecmaScriptLink.click(),
+      ]),
     )
 
     await measure('ECMAScript heading visible', () =>
@@ -415,7 +446,24 @@ async function measure (name, fn) {
 
     currentStage = 'close page'
 
+    let profileSnapshot
+    if (profileOutput) {
+      const diagnosticsAfter = await cdp.send('Mimic.getDiagnostics').catch(() => null)
+      const trace = await cdp.send('Mimic.getTrace').catch(() => null)
+      profileSnapshot = {
+        startedAt: new Date(startedAt).toISOString(),
+        elapsedMs: Date.now() - startedAt,
+        diagnostics: subtractDiagnostics(diagnosticsBefore, diagnosticsAfter),
+        trace,
+      }
+    }
+
     await page.close()
+
+    if (profileSnapshot) {
+      fs.writeFileSync(profileOutput, JSON.stringify(profileSnapshot, null, 2))
+      log('Profile written', { path: profileOutput })
+    }
 
     log('Page closed normally')
 

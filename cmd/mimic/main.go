@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"runtime/pprof"
 	"syscall"
 	"time"
 
@@ -32,6 +33,22 @@ func main() {
 	profilePath := flag.String("profile", "", "JSON environment profile for new contexts")
 	devPreview := flag.Bool("dev-preview", false, "enable the visual debug viewer at /debug/preview/")
 	flag.Parse()
+	var cpuProfile *os.File
+	if path := os.Getenv("MIMIC_GO_CPU_PROFILE"); path != "" {
+		var err error
+		cpuProfile, err = os.Create(path)
+		if err != nil {
+			log.Fatal(err)
+		}
+		if err := pprof.StartCPUProfile(cpuProfile); err != nil {
+			cpuProfile.Close()
+			log.Fatal(err)
+		}
+		defer func() {
+			pprof.StopCPUProfile()
+			_ = cpuProfile.Close()
+		}()
+	}
 	bundle, err := chrome.GetForMode(*milestone, state.BrowserMode(*browserMode))
 	if err != nil {
 		log.Fatal(err)

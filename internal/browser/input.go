@@ -4,8 +4,11 @@ import (
 	"context"
 	"encoding/json"
 	"fmt"
+	"os"
+	"time"
 
 	"github.com/moreveal/mimic/internal/engine"
+	"github.com/moreveal/mimic/internal/trace"
 )
 
 type inputProtocolError struct{ message string }
@@ -90,6 +93,8 @@ func (e *inputProtocolError) ProtocolCode() int { return -32602 }
 // path. The document owns focus, pressed buttons and editing state, so sessions
 // and isolated worlds observe the same input operation and default action.
 func (p *Page) DispatchProtocolInput(ctx context.Context, method string, params map[string]any) error {
+	started := time.Now()
+	defer func() { p.profileInputPhase(method, "total", started) }()
 	r := p.Top.Realm
 	if r == nil || r.closed || r.inactive {
 		return fmt.Errorf("input document is unavailable")
@@ -144,13 +149,16 @@ func (p *Page) DispatchProtocolInput(ctx context.Context, method string, params 
 			return err
 		}
 	}
+	phaseStarted := time.Now()
 	encoded, err := json.Marshal(params)
 	if err != nil {
 		return err
 	}
+	p.profileInputPhase(method, "validate+marshal", phaseStarted)
 	p.realmEvaluationDepth++
 	defer func() { p.realmEvaluationDepth--; p.collectRealmOwners() }()
 	return r.scheduler.RunInline(ctx, func(ctx context.Context) error {
+		phaseStarted := time.Now()
 		target := r
 		if operation == "mouse" {
 			var err error
@@ -163,15 +171,29 @@ func (p *Page) DispatchProtocolInput(ctx context.Context, method string, params 
 				return err
 			}
 		}
+		p.profileInputPhase(method, "mouseTarget", phaseStarted)
+		phaseStarted = time.Now()
 		hint := int64(0)
 		if operation == "mouse" && p.inputHintRealm == target {
 			hint = p.inputHintNodeID
 		}
 		_, err := r.invokeInputWorld(ctx, target, hint, operation, string(encoded))
+		p.profileInputPhase(method, "invokeInputWorld", phaseStarted)
 		if operation == "mouse" && params["type"] == "mouseReleased" {
 			p.inputHintRealm, p.inputHintNodeID = nil, 0
 		}
 		return err
+	})
+}
+
+func (p *Page) profileInputPhase(method, phase string, started time.Time) {
+	if os.Getenv("MIMIC_PROFILE_CDP") != "1" {
+		return
+	}
+	p.Trace().Add(trace.CDP, "inputPhase", map[string]any{
+		"method": method,
+		"phase":  phase,
+		"ms":     float64(time.Since(started)) / float64(time.Millisecond),
 	})
 }
 
@@ -240,7 +262,8 @@ func (r *Realm) invokeInputWorld(ctx context.Context, target *Realm, nodeID int6
 				return err
 			}
 		}
-		return target.runOnOwner(ctx, func(ctx context.Context) error {
+		started := time.Now()
+		err := target.runOnOwner(ctx, func(ctx context.Context) error {
 			if target.inputDispatcher == nil {
 				return fmt.Errorf("input dispatcher is unavailable")
 			}
@@ -248,7 +271,9 @@ func (r *Realm) invokeInputWorld(ctx context.Context, target *Realm, nodeID int6
 			for _, value := range values {
 				defer releaseDebuggerValue(target, value)
 			}
+			callStarted := time.Now()
 			value, err := target.runtime.Call(ctx, target.inputDispatcher, nil, values...)
+			r.agent.Page().profileInputPhase("Input.dispatch", "runtime.Call", callStarted)
 			if err != nil {
 				return err
 			}
@@ -258,6 +283,8 @@ func (r *Realm) invokeInputWorld(ctx context.Context, target *Realm, nodeID int6
 			}
 			return nil
 		})
+		r.agent.Page().profileInputPhase("Input.dispatch", "runOnOwner", started)
+		return err
 	}
 	var err error
 	if nested, ok := r.runtime.(engine.ReentrantRuntime); ok && r != target {

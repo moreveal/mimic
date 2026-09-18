@@ -759,19 +759,26 @@ func (a *adapter) callError(catcher *gov8.TryCatch, scope *gov8.Scope, realm *go
 
 func (a *adapter) Call(ctx context.Context, function, this engine.Value, args ...engine.Value) (engine.Value, error) {
 	if callback := a.onCallback(); callback != nil {
+		started := time.Now()
 		catcher, err := callback.scope.Isolate().NewTryCatch()
 		if err != nil {
 			return nil, err
 		}
 		defer catcher.Close()
+		a.recordCost("v8:callback.tryCatch", started)
+		started = time.Now()
 		fn, err := a.localCallback(function)
 		if err != nil {
 			return nil, err
 		}
+		a.recordCost("v8:callback.localFunction", started)
+		started = time.Now()
 		receiver, err := a.localCallbackOrUndefined(callback.scope, this)
 		if err != nil {
 			return nil, err
 		}
+		a.recordCost("v8:callback.localReceiver", started)
+		started = time.Now()
 		argv := make([]gov8.Value, len(args))
 		for i := range args {
 			argv[i], err = a.localCallback(args[i])
@@ -779,7 +786,11 @@ func (a *adapter) Call(ctx context.Context, function, this engine.Value, args ..
 				return nil, err
 			}
 		}
+		a.recordCost("v8:callback.localArguments", started)
+		started = time.Now()
 		result, ok, err := callback.scope.CallFunction(fn, receiver, argv)
+		a.recordCost("v8:callback.callFunction", started)
+		started = time.Now()
 		if caught, _ := catcher.HasCaught(); caught {
 			return nil, a.callError(catcher, callback.scope.Scope(), callback.ctx)
 		}
@@ -789,30 +800,44 @@ func (a *adapter) Call(ctx context.Context, function, this engine.Value, args ..
 			}
 			return nil, err
 		}
+		a.recordCost("v8:callback.exceptionCheck", started)
+		started = time.Now()
 		global, persistErr := a.newGlobal(callback.scope.Scope(), result)
 		if persistErr != nil {
 			return nil, persistErr
 		}
+		a.recordCost("v8:callback.persistResult", started)
 		return &runtimeValue{runtime: a, global: global, local: result, borrowed: true, callbackID: callback.id}, nil
 	}
-	return a.runContext(ctx, func(s *state, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
+	callStarted := time.Now()
+	returnValue, callErr := a.runContext(ctx, func(s *state, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
+		a.recordCost("v8:call.runContextWait", callStarted)
+		started := time.Now()
 		catcher, err := s.isolate.NewTryCatch()
 		if err != nil {
 			return nil, err
 		}
 		defer catcher.Close()
+		a.recordCost("v8:call.tryCatch", started)
+		started = time.Now()
 		fnValue, err := a.local(scope, function)
 		if err != nil {
 			return nil, err
 		}
+		a.recordCost("v8:call.localFunction", started)
+		started = time.Now()
 		fn, ok, err := gov8.AsFunction(fnValue, realm)
 		if err != nil || !ok {
 			return nil, fmt.Errorf("value is not callable")
 		}
+		a.recordCost("v8:call.asFunction", started)
+		started = time.Now()
 		receiver, err := a.localOrUndefined(scope, this)
 		if err != nil {
 			return nil, err
 		}
+		a.recordCost("v8:call.localReceiver", started)
+		started = time.Now()
 		argv := make([]gov8.Value, len(args))
 		for i := range args {
 			argv[i], err = a.local(scope, args[i])
@@ -820,7 +845,11 @@ func (a *adapter) Call(ctx context.Context, function, this engine.Value, args ..
 				return nil, err
 			}
 		}
+		a.recordCost("v8:call.localArguments", started)
+		started = time.Now()
 		result, ok, err := fn.Call(scope, receiver, argv...)
+		a.recordCost("v8:call.fnCall", started)
+		started = time.Now()
 		if caught, _ := catcher.HasCaught(); caught {
 			return nil, a.callError(catcher, scope, realm)
 		}
@@ -830,8 +859,14 @@ func (a *adapter) Call(ctx context.Context, function, this engine.Value, args ..
 			}
 			return nil, err
 		}
-		return a.persist(scope, result)
+		a.recordCost("v8:call.exceptionCheck", started)
+		started = time.Now()
+		persisted, err := a.persist(scope, result)
+		a.recordCost("v8:call.persistResult", started)
+		return persisted, err
 	})
+	a.recordCost("v8:call.runContextTotal", callStarted)
+	return returnValue, callErr
 }
 
 func (a *adapter) Function(function engine.Function) any { return hostFunction{function: function} }
@@ -1161,12 +1196,15 @@ func (a *adapter) newGlobal(scope *gov8.Scope, local gov8.Value) (*gov8.Global, 
 // ReleaseValue removes only this persistent root. Other handles and ordinary
 // JavaScript references to the same object remain valid.
 func (a *adapter) ReleaseValue(value engine.Value) {
+	started := time.Now()
+	defer func() { a.recordCost("v8:releaseValue.total", started) }()
 	v, ok := value.(*runtimeValue)
 	if !ok || v == nil || v.runtime != a {
 		return
 	}
 	// Closing a Global needs the owner thread but no context or local scope.
 	// Inspect it there as well, so concurrent release attempts cannot race.
+	started = time.Now()
 	_, _ = a.owner.execute(func(_ *state) response {
 		if v.global != nil {
 			delete(a.globals, v.global)
@@ -1175,6 +1213,7 @@ func (a *adapter) ReleaseValue(value engine.Value) {
 		}
 		return response{}
 	})
+	a.recordCost("v8:releaseValue.ownerExecute", started)
 }
 
 func (a *adapter) RetainValue(value engine.Value) engine.Value {
