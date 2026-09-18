@@ -3,10 +3,13 @@
 package v8
 
 import (
+	"context"
 	"encoding/json"
 	"os"
 	"sync"
 	"time"
+
+	"github.com/moreveal/mimic/internal/trace"
 )
 
 type diagnosticCost struct {
@@ -26,10 +29,19 @@ type diagnosticState struct {
 
 func newDiagnostics() *diagnosticState {
 	hostOnly := os.Getenv("MIMIC_PROFILE_HOSTS") == "1"
-	if os.Getenv("MIMIC_DIAGNOSTICS") != "1" && !hostOnly {
+	deepCall := os.Getenv("MIMIC_PROFILE_CF_DEEP") == "1"
+	if os.Getenv("MIMIC_DIAGNOSTICS") != "1" && !hostOnly && !deepCall {
 		return nil
 	}
 	return &diagnosticState{HostOnly: hostOnly, Detailed: !hostOnly && os.Getenv("MIMIC_PROFILE_CONVERSIONS") == "1", Costs: map[string]diagnosticCost{}, Heaps: map[string]any{}}
+}
+
+func (a *adapter) deepCallProfileEnabled(ctx context.Context) bool {
+	if a.profile == nil || os.Getenv("MIMIC_PROFILE_CF_DEEP") != "1" {
+		return false
+	}
+	target := os.Getenv("MIMIC_PROFILE_CF_DEEP_ID")
+	return target == "" || target == trace.CorrelationID(ctx)
 }
 
 func (a *adapter) ProfileEnabled() bool { return a.profile != nil && !a.profile.HostOnly }

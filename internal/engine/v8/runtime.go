@@ -868,8 +868,35 @@ func (a *adapter) Call(ctx context.Context, function, this engine.Value, args ..
 		a.recordCost("v8:call.localArguments", started)
 		started = time.Now()
 		recordCorrelatedCall(ctx, "gov8.begin", map[string]any{"runtimeCall": runtimeCall, "path": "owner"})
+		deepProfile := a.deepCallProfileEnabled(ctx)
+		var finishDeepProfile func() (json.RawMessage, error)
+		var cpuStart map[string]any
+		if deepProfile {
+			cpuStart = diagnosticThreadCPU(currentThreadID())
+			finishDeepProfile, _ = startNativeProfile(s.isolate, realm)
+		}
 		result, ok, err := fn.Call(scope, receiver, argv...)
-		recordCorrelatedCall(ctx, "gov8.end", map[string]any{"runtimeCall": runtimeCall, "path": "owner", "durationNs": time.Since(started).Nanoseconds()})
+		cpuEnd := map[string]any(nil)
+		if deepProfile {
+			cpuEnd = diagnosticThreadCPU(currentThreadID())
+		}
+		data := map[string]any{"runtimeCall": runtimeCall, "path": "owner", "durationNs": time.Since(started).Nanoseconds()}
+		if deepProfile {
+			data["threadCPUStart"] = cpuStart
+			data["threadCPUEnd"] = cpuEnd
+		}
+		recordCorrelatedCall(ctx, "gov8.end", data)
+		if finishDeepProfile != nil {
+			if profileData, profileErr := finishDeepProfile(); profileErr == nil {
+				a.profile.mu.Lock()
+				if a.profile.CPUProfiles == nil {
+					a.profile.CPUProfiles = map[string]json.RawMessage{}
+				}
+				a.profile.cpuSequence++
+				a.profile.CPUProfiles[fmt.Sprintf("callFunctionOn:%s:runtimeCall:%d#%d", trace.CorrelationID(ctx), runtimeCall, a.profile.cpuSequence)] = profileData
+				a.profile.mu.Unlock()
+			}
+		}
 		a.recordCost("v8:call.fnCall", started)
 		started = time.Now()
 		if caught, _ := catcher.HasCaught(); caught {
@@ -1433,6 +1460,21 @@ func (a *adapter) makeFunction(scope *gov8.Scope, realm *gov8.Context, function 
 		callbackID := a.callbackSeq
 		a.callback = &callbackContext{scope: cs, ctx: realm, result: rv, id: callbackID}
 		defer func() { a.callback = previous }()
+		deepHost := a.deepCallProfileEnabled(a.activeContext)
+		if deepHost {
+			hostStarted := time.Now()
+			trace.Record(a.activeContext, trace.JS, "hostCall.begin", map[string]any{
+				"api":        name,
+				"callbackID": callbackID,
+			})
+			defer func() {
+				trace.Record(a.activeContext, trace.JS, "hostCall.end", map[string]any{
+					"api":        name,
+					"callbackID": callbackID,
+					"durationNs": time.Since(hostStarted).Nanoseconds(),
+				})
+			}()
+		}
 		var scratch *transientFrame
 		var wrapped []engine.Value
 		if transient && args.Length() <= 8 {
