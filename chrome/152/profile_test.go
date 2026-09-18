@@ -36,4 +36,13 @@ func TestHeadlessOracleEnvironmentRequiresExplicitSelection(t *testing.T) {
 	if bundle.Expectations().Sources[state.BrowserModeHeadless].Authoritative {
 		t.Fatal("headless observations must not become generic Chrome expectations")
 	}
+
+	headful := New().Environment().State
+	headless := profile.State
+	if headless.Display != headful.Display {
+		t.Fatalf("headless display geometry differs from headful: headless=%+v headful=%+v", headless.Display, headful.Display)
+	}
+	if headless.Window != headful.Window {
+		t.Fatalf("headless window geometry differs from headful: headless=%+v headful=%+v", headless.Window, headful.Window)
+	}
 }

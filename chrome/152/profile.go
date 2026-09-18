@@ -110,16 +110,9 @@ func environment(mode state.BrowserMode) state.Environment {
 	if mode == state.BrowserModeHeadless {
 		// This is retained only as an explicit regression environment. It is not
 		// the default Chrome 152 oracle and cannot supply generic expectations.
+		// Headless and headful intentionally share the same display/window geometry.
 		environment.ProfileID = "chrome-152-windows-x64-headless-controlled-v1"
 		environment.Product.UserAgentProduct = "HeadlessChrome"
-		environment.Display.PhysicalWidth = 800
-		environment.Display.PhysicalHeight = 600
-		environment.Display.AvailableWidth = 800
-		environment.Display.AvailableHeight = 600
-		environment.Window.OuterWidth = 780
-		environment.Window.OuterHeight = 580
-		environment.Window.ViewportWidth = 772
-		environment.Window.ViewportHeight = 433
 		environment.Graphics.WebGPU.InitializationDelayMillis = 250
 		environment.Permissions["geolocation"] = "denied"
 		environment.Permissions["camera"] = "denied"
