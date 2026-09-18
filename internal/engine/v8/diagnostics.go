@@ -6,6 +6,7 @@ import (
 	"context"
 	"encoding/json"
 	"os"
+	"strings"
 	"sync"
 	"time"
 
@@ -41,7 +42,15 @@ func (a *adapter) deepCallProfileEnabled(ctx context.Context) bool {
 		return false
 	}
 	target := os.Getenv("MIMIC_PROFILE_CF_DEEP_ID")
-	return target == "" || target == trace.CorrelationID(ctx)
+	if target == "" {
+		return false
+	}
+	for _, candidate := range strings.Split(target, ",") {
+		if strings.TrimSpace(candidate) == trace.CorrelationID(ctx) {
+			return true
+		}
+	}
+	return false
 }
 
 func (a *adapter) ProfileEnabled() bool { return a.profile != nil && !a.profile.HostOnly }
