@@ -227,8 +227,10 @@ func (d *Debugger) Evaluate(ctx context.Context, frameID, realmID, source string
 
 func (d *Debugger) CallFunction(ctx context.Context, frameID, realmID, declaration string, params map[string]any, options DebuggerOptions) (map[string]any, error) {
 	callStarted := time.Now()
+	trace.Record(ctx, trace.CDP, "invoke.begin", map[string]any{"frameID": frameID, "realmID": realmID})
 	defer func() {
 		d.profileCallFunctionPhase("total", callStarted)
+		trace.Record(ctx, trace.CDP, "invoke.end", map[string]any{"frameID": frameID, "realmID": realmID, "durationNs": time.Since(callStarted).Nanoseconds()})
 	}()
 	defer d.enter()()
 	phaseStarted := time.Now()

@@ -1,8 +1,13 @@
 package trace
 
 import (
+	"context"
+	"runtime"
 	"sort"
+	"strconv"
+	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 )
 
@@ -39,6 +44,72 @@ type Recorder struct {
 	events      []Event
 	subscribers map[uint64]func(Event)
 	subID       uint64
+}
+
+type correlation struct {
+	id       string
+	started  time.Time
+	recorder *Recorder
+	spanSeq  atomic.Uint64
+}
+
+type correlationKey struct{}
+
+// WithCorrelation attaches one request-level monotonic timeline to a context.
+// The recorder is optional so engine-neutral callers can still propagate the ID.
+func WithCorrelation(ctx context.Context, id string, started time.Time, recorder *Recorder) context.Context {
+	return context.WithValue(ctx, correlationKey{}, &correlation{id: id, started: started, recorder: recorder})
+}
+
+func CorrelationID(ctx context.Context) string {
+	if value, ok := ctx.Value(correlationKey{}).(*correlation); ok && value != nil {
+		return value.id
+	}
+	return ""
+}
+
+func NextCorrelationSpan(ctx context.Context) uint64 {
+	if value, ok := ctx.Value(correlationKey{}).(*correlation); ok && value != nil {
+		return value.spanSeq.Add(1)
+	}
+	return 0
+}
+
+func CorrelatedData(ctx context.Context, data map[string]any) map[string]any {
+	out := make(map[string]any, len(data)+4)
+	for key, value := range data {
+		out[key] = value
+	}
+	value, ok := ctx.Value(correlationKey{}).(*correlation)
+	if !ok || value == nil {
+		return out
+	}
+	out["callID"] = value.id
+	out["elapsedNs"] = time.Since(value.started).Nanoseconds()
+	out["goroutineID"] = goroutineID()
+	return out
+}
+
+// Record emits an invocation-correlated event when the context carries a
+// recorder. All elapsed values use time.Since on the original call start and
+// therefore remain monotonic even though Event.Time is wall-clock metadata.
+func Record(ctx context.Context, kind Kind, name string, data map[string]any) {
+	value, ok := ctx.Value(correlationKey{}).(*correlation)
+	if !ok || value == nil || value.recorder == nil {
+		return
+	}
+	value.recorder.Add(kind, name, CorrelatedData(ctx, data))
+}
+
+func goroutineID() uint64 {
+	var buffer [64]byte
+	n := runtime.Stack(buffer[:], false)
+	fields := strings.Fields(string(buffer[:n]))
+	if len(fields) < 2 {
+		return 0
+	}
+	id, _ := strconv.ParseUint(fields[1], 10, 64)
+	return id
 }
 
 func New() *Recorder { return &Recorder{subscribers: map[uint64]func(Event){}} }

@@ -11,8 +11,10 @@ import (
 	"net"
 	"net/http"
 	"net/url"
+	"os"
 	"strings"
 	"sync"
+	"sync/atomic"
 	"time"
 	"unicode/utf8"
 
@@ -140,6 +142,8 @@ func writeJSON(w http.ResponseWriter, v any) {
 }
 
 var upgrader = websocket.Upgrader{CheckOrigin: func(*http.Request) bool { return true }}
+
+var callFunctionSequence atomic.Uint64
 
 type message struct {
 	ID        int64           `json:"id"`
@@ -576,7 +580,17 @@ func (s *session) handleCommand(m message) (afterUnlock func()) {
 		s.reply(m.ID, nil, fmt.Errorf("Session closed"))
 		return
 	}
-	if value, handled, runtimeErr := s.handleRuntime(s.ctx, m.Method, p); handled {
+	runtimeCtx := s.ctx
+	if m.Method == "Runtime.callFunctionOn" && os.Getenv("MIMIC_PROFILE_CDP") == "1" {
+		callID := fmt.Sprintf("CF#%d", callFunctionSequence.Add(1))
+		callStarted := time.Now()
+		runtimeCtx = trace.WithCorrelation(s.ctx, callID, callStarted, s.page.Trace())
+		trace.Record(runtimeCtx, trace.CDP, "callFunctionOn.begin", map[string]any{"commandId": m.ID, "method": m.Method, "functionDeclaration": stringValue(p["functionDeclaration"])})
+		defer func() {
+			trace.Record(runtimeCtx, trace.CDP, "callFunctionOn.end", map[string]any{"commandId": m.ID, "method": m.Method, "durationNs": time.Since(callStarted).Nanoseconds()})
+		}()
+	}
+	if value, handled, runtimeErr := s.handleRuntime(runtimeCtx, m.Method, p); handled {
 		s.reply(m.ID, value, runtimeErr)
 		return
 	}

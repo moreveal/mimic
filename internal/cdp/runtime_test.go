@@ -96,3 +96,61 @@ func TestCDPConsoleArgumentsHaveObjectHandles(t *testing.T) {
 		t.Fatal(reply)
 	}
 }
+
+func TestRuntimeCallFunctionOnTraceCarriesOneCorrelationID(t *testing.T) {
+	t.Setenv("MIMIC_PROFILE_CDP", "1")
+	s, addr := runningServer(t)
+	c, _, err := websocket.DefaultDialer.Dial("ws://"+addr+"/devtools/page/"+s.Page.ID, nil)
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer c.Close()
+	_ = c.WriteJSON(map[string]any{"id": 1, "method": "Runtime.callFunctionOn", "params": map[string]any{"functionDeclaration": `function(){return 42}`}})
+	if reply := readReply(t, c, 1); reply["error"] != nil {
+		t.Fatal(reply)
+	}
+
+	expected := map[string]bool{
+		"callFunctionOn.begin":         false,
+		"invoke.begin":                 false,
+		"runtime.Call.outer.begin":     false,
+		"runtime.Call.ownerWait.begin": false,
+		"runtime.Call.ownerWait.end":   false,
+		"runtime.Call.inner.begin":     false,
+		"gov8.begin":                   false,
+		"gov8.end":                     false,
+		"runtime.Call.inner.end":       false,
+		"runtime.Call.outer.end":       false,
+		"invoke.end":                   false,
+		"callFunctionOn.end":           false,
+	}
+	var callID string
+	for _, event := range s.Page.Trace().Events() {
+		if event.Data["commandId"] != int64(1) && event.Data["callID"] == nil {
+			continue
+		}
+		id, _ := event.Data["callID"].(string)
+		if id == "" {
+			continue
+		}
+		if callID == "" {
+			callID = id
+		} else if callID != id {
+			t.Fatalf("multiple correlation IDs: %q and %q", callID, id)
+		}
+		if _, ok := expected[event.Name]; ok {
+			expected[event.Name] = true
+		}
+		if _, ok := event.Data["elapsedNs"].(int64); !ok {
+			t.Fatalf("missing monotonic elapsedNs in %s: %#v", event.Name, event.Data)
+		}
+	}
+	if callID == "" {
+		t.Fatal("no correlated call trace")
+	}
+	for name, seen := range expected {
+		if !seen {
+			t.Fatalf("missing correlated event %q", name)
+		}
+	}
+}

@@ -16,6 +16,7 @@ import (
 
 	gov8 "github.com/maclof/gov8"
 	"github.com/moreveal/mimic/internal/engine"
+	"github.com/moreveal/mimic/internal/trace"
 )
 
 // Factory exposes V8 through the same engine-neutral contract as QuickJS.
@@ -758,15 +759,25 @@ func (a *adapter) callError(catcher *gov8.TryCatch, scope *gov8.Scope, realm *go
 }
 
 func (a *adapter) Call(ctx context.Context, function, this engine.Value, args ...engine.Value) (engine.Value, error) {
+	runtimeCall := trace.NextCorrelationSpan(ctx)
+	outerStarted := time.Now()
+	recordCorrelatedCall(ctx, "runtime.Call.outer.begin", map[string]any{"runtimeCall": runtimeCall})
+	defer func() {
+		recordCorrelatedCall(ctx, "runtime.Call.outer.end", map[string]any{"runtimeCall": runtimeCall, "durationNs": time.Since(outerStarted).Nanoseconds()})
+	}()
 	if callback := a.onCallback(); callback != nil {
-		started := time.Now()
+		recordCorrelatedCall(ctx, "runtime.Call.inner.begin", map[string]any{"runtimeCall": runtimeCall, "path": "callback"})
+		innerStarted := time.Now()
+		defer func() {
+			recordCorrelatedCall(ctx, "runtime.Call.inner.end", map[string]any{"runtimeCall": runtimeCall, "path": "callback", "durationNs": time.Since(innerStarted).Nanoseconds()})
+		}()
 		catcher, err := callback.scope.Isolate().NewTryCatch()
 		if err != nil {
 			return nil, err
 		}
 		defer catcher.Close()
-		a.recordCost("v8:callback.tryCatch", started)
-		started = time.Now()
+		a.recordCost("v8:callback.tryCatch", innerStarted)
+		started := time.Now()
 		fn, err := a.localCallback(function)
 		if err != nil {
 			return nil, err
@@ -788,7 +799,9 @@ func (a *adapter) Call(ctx context.Context, function, this engine.Value, args ..
 		}
 		a.recordCost("v8:callback.localArguments", started)
 		started = time.Now()
+		recordCorrelatedCall(ctx, "gov8.begin", map[string]any{"runtimeCall": runtimeCall, "path": "callback"})
 		result, ok, err := callback.scope.CallFunction(fn, receiver, argv)
+		recordCorrelatedCall(ctx, "gov8.end", map[string]any{"runtimeCall": runtimeCall, "path": "callback", "durationNs": time.Since(started).Nanoseconds()})
 		a.recordCost("v8:callback.callFunction", started)
 		started = time.Now()
 		if caught, _ := catcher.HasCaught(); caught {
@@ -807,11 +820,18 @@ func (a *adapter) Call(ctx context.Context, function, this engine.Value, args ..
 			return nil, persistErr
 		}
 		a.recordCost("v8:callback.persistResult", started)
+
 		return &runtimeValue{runtime: a, global: global, local: result, borrowed: true, callbackID: callback.id}, nil
 	}
 	callStarted := time.Now()
+	recordCorrelatedCall(ctx, "runtime.Call.ownerWait.begin", map[string]any{"runtimeCall": runtimeCall})
 	returnValue, callErr := a.runContext(ctx, func(s *state, realm *gov8.Context, scope *gov8.Scope) (engine.Value, error) {
-		a.recordCost("v8:call.runContextWait", callStarted)
+		recordCorrelatedCall(ctx, "runtime.Call.ownerWait.end", map[string]any{"runtimeCall": runtimeCall, "durationNs": time.Since(callStarted).Nanoseconds()})
+		innerStarted := time.Now()
+		recordCorrelatedCall(ctx, "runtime.Call.inner.begin", map[string]any{"runtimeCall": runtimeCall, "path": "owner"})
+		defer func() {
+			recordCorrelatedCall(ctx, "runtime.Call.inner.end", map[string]any{"runtimeCall": runtimeCall, "path": "owner", "durationNs": time.Since(innerStarted).Nanoseconds()})
+		}()
 		started := time.Now()
 		catcher, err := s.isolate.NewTryCatch()
 		if err != nil {
@@ -847,7 +867,9 @@ func (a *adapter) Call(ctx context.Context, function, this engine.Value, args ..
 		}
 		a.recordCost("v8:call.localArguments", started)
 		started = time.Now()
+		recordCorrelatedCall(ctx, "gov8.begin", map[string]any{"runtimeCall": runtimeCall, "path": "owner"})
 		result, ok, err := fn.Call(scope, receiver, argv...)
+		recordCorrelatedCall(ctx, "gov8.end", map[string]any{"runtimeCall": runtimeCall, "path": "owner", "durationNs": time.Since(started).Nanoseconds()})
 		a.recordCost("v8:call.fnCall", started)
 		started = time.Now()
 		if caught, _ := catcher.HasCaught(); caught {
@@ -869,6 +891,13 @@ func (a *adapter) Call(ctx context.Context, function, this engine.Value, args ..
 	return returnValue, callErr
 }
 
+func recordCorrelatedCall(ctx context.Context, name string, data map[string]any) {
+	if trace.CorrelationID(ctx) == "" {
+		return
+	}
+	data["threadID"] = currentThreadID()
+	trace.Record(ctx, trace.JS, name, data)
+}
 func (a *adapter) Function(function engine.Function) any { return hostFunction{function: function} }
 
 // TransientFunction borrows callback arguments for synchronous host operations.
