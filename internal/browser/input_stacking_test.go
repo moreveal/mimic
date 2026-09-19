@@ -18,6 +18,7 @@ func TestIsolatedHitTestUsesOwnerAndLocalWrappers(t *testing.T) {
 		}
 		result, err := d.Evaluate(context.Background(), p.Top.ID, world, `(()=>{
 const target=document.getElementById('target'),cover=document.getElementById('cover');
+target.getBoundingClientRect();
 const first=document.elementFromPoint(30,30)===target;
 cover.style.zIndex='4';const changed=document.elementsFromPoint(30,30)[0]===cover;
 return first&&changed&&document.elementFromPoint(NaN,30)===null&&document.elementsFromPoint(-1,30).length===0;

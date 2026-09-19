@@ -66,7 +66,7 @@ func (p *Page) scrollNodeIntoView(ctx context.Context, frame *Frame, ok bool, no
 		return fmt.Errorf("Node is detached from document")
 	}
 	r := frame.Realm
-	payload, err := json.Marshal(map[string]any{"action": "protocolInto", "opts": map[string]any{"block": "center", "inline": "center", "behavior": "instant", "rect": rect}})
+	payload, err := json.Marshal(map[string]any{"action": "protocolInto", "opts": map[string]any{"block": "center", "inline": "center", "behavior": "instant", "ifNeeded": true, "rect": rect}})
 	if err != nil {
 		return err
 	}

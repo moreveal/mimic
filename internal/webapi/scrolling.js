@@ -446,7 +446,35 @@ compatibilityScrolling = (() => {
   };
   const into = (element, opts) => {
     if (isolated()) return remoteMutation(element, 'into', { opts });
-    if (!element?.isConnected || !cssBoxModel.hasBox(element)) return;
+    if (!element?.isConnected) return;
+    // The common actionability case asks to scroll an already visible element.
+    // If no intermediate ancestor establishes a scrolling/clipping context, the
+    // viewport containment test is sufficient and avoids materializing document
+    // scroll extents or ancestor layout.
+    if (
+      opts.ifNeeded &&
+      withStyleReadCache(() => {
+        for (let p = geometryParent(element); p && p !== root(); p = geometryParent(p)) {
+          if (bodyOverflowPropagates(p)) continue;
+          if (scrollingOverflow(p, 'x') !== 'visible' || scrollingOverflow(p, 'y') !== 'visible')
+            return false;
+        }
+        const r = clientRectInObservation(element),
+          viewport = host.viewport(),
+          node = document.documentElement,
+          px = (key) => parseFloat(style(node, key)) || 0;
+        return (
+          r.width > 0 &&
+          r.height > 0 &&
+          r.left >= px('scroll-padding-left') &&
+          r.right <= viewport.width - px('scroll-padding-right') &&
+          r.top >= px('scroll-padding-top') &&
+          r.bottom <= viewport.height - px('scroll-padding-bottom')
+        );
+      })
+    )
+      return;
+    if (!cssBoxModel.hasBox(element)) return;
     const ancestors = [];
     for (let p = geometryParent(element); p; p = geometryParent(p))
       if (p !== root() && !withStyleReadCache(() => bodyOverflowPropagates(p))) ancestors.push(p);
@@ -736,7 +764,6 @@ compatibilityScrolling = (() => {
     if (isolated()) return remoteMutation(element, p.action, p);
     if (p.action === 'protocolInto') {
       if (!element?.isConnected) throw Error('Node is detached from document');
-      if (!cssBoxModel.hasBox(element)) throw Error('Node does not have a layout object');
       into(element, p.opts);
       return {};
     }

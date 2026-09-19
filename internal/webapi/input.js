@@ -686,7 +686,7 @@
       compatibilityScrolling.revision()
     );
   };
-  const pointTargets = (x, y) => {
+  const pointTargets = (x, y, externalHints = []) => {
     const version = pointObservationVersion();
     if (version === pointHitsVersion && x === pointHitsX && y === pointHitsY)
       return pointHits.slice();
@@ -749,24 +749,45 @@
           for (let j = 0; j < 4; j++) if (a[i][j] !== b[i][j]) return a[i][j] > b[i][j];
         return a.length >= b.length;
       };
-      const hits = [];
-      for (const element of elements) {
-        const box = clientRectFor(element);
-        if (
-          box.width <= 0 ||
-          box.height <= 0 ||
-          x < box.x ||
-          x >= box.x + box.width ||
-          y < box.y ||
-          y >= box.y + box.height
-        )
-          continue;
-        // The frame viewport already applies ancestor clipping.
+      const containsPoint = (box) =>
+        box.width > 0 &&
+        box.height > 0 &&
+        x >= box.x &&
+        x < box.x + box.width &&
+        y >= box.y &&
+        y < box.y + box.height;
+      const acceptsPointer = (element) => {
         const entries = computedCSSDeclarations(element),
           get = (name) => entries.find((e) => e.name === name)?.value;
-        if (get('visibility') === 'hidden' || get('pointer-events') === 'none') continue;
+        return get('visibility') !== 'hidden' && get('pointer-events') !== 'none';
+      };
+      const hits = [];
+      // Recent geometry reads provide a lower paint-order bound. They never
+      // bypass occlusion: every element that can paint above the best hint still
+      // receives the complete transformed-rect and pointer-style checks below.
+      let hint = null,
+        hintRank = null;
+      const hintCandidates = externalHints.length ? externalHints : geometryReadHints;
+      for (let i = hintCandidates.length - 1; i >= 0; i--) {
+        const candidate = hintCandidates[i];
+        if (!candidate?.isConnected || !elements.includes(candidate)) continue;
+        const box = clientRectFor(candidate);
+        if (!containsPoint(box) || !acceptsPointer(candidate)) continue;
+        const rank = scope(candidate).rank;
+        if (!hint || above(rank, hintRank)) {
+          hint = candidate;
+          hintRank = rank;
+        }
+      }
+      const hintAccepted = !!hint;
+      for (const element of elements) {
+        if (element === hint) continue;
+        if (hintAccepted && !above(scope(element).rank, hintRank)) continue;
+        const box = clientRectFor(element);
+        if (!containsPoint(box) || !acceptsPointer(element)) continue;
         hits.push(element);
       }
+      if (hintAccepted) hits.push(hint);
       hits.sort((a, b) => {
         if (a === b) return 0;
         const ar = clientRectFor(a),
@@ -809,7 +830,13 @@
         // every candidate and can disagree with the world's synthetic tree.
         x = Number(x);
         y = Number(y);
-        const hits = isolated ? main(null, 'points', { x, y }).nodes.map(wrap) : pointTargets(x, y);
+        const hits = isolated
+          ? main(null, 'points', {
+              x,
+              y,
+              hints: geometryReadHints.slice(-16).map(nodeID),
+            }).nodes.map(wrap)
+          : pointTargets(x, y);
         return all ? hits : hits[0] || null;
       },
       writable: true,
@@ -991,7 +1018,13 @@
     if (operation === 'active') return stringify({ nodeID: nodeID(active.call(document)) });
     if (operation === 'focused') return stringify({ nodeID: nodeID(originalFocused()) });
     if (operation === 'points')
-      return stringify({ nodes: pointTargets(params.x, params.y).map(nodeID) });
+      return stringify({
+        nodes: pointTargets(
+          params.x,
+          params.y,
+          Array.isArray(params.hints) ? params.hints.map(wrap).filter(Boolean) : [],
+        ).map(nodeID),
+      });
     if (operation === 'rect') {
       const rect = clientRectFor(element),
         entries = computedCSSDeclarations(element),

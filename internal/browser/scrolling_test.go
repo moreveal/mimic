@@ -236,7 +236,7 @@ func TestVisibleFocusAndNoOpScrollSkipDocumentExtentWalk(t *testing.T) {
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
 	value, err := p.Evaluate(ctx, `(()=>{
- const input=document.createElement('input');document.body.append(input);
+ const input=document.createElement('input');input.id='target';document.body.append(input);
  const fragment=document.createDocumentFragment();
  for(let i=0;i<12000;i++){const node=document.createElement('span');node.textContent='content '+i;fragment.append(node)}
  document.body.append(fragment);input.focus();scroll(0,0);
@@ -244,6 +244,17 @@ func TestVisibleFocusAndNoOpScrollSkipDocumentExtentWalk(t *testing.T) {
 })()`)
 	if err != nil || value != true {
 		t.Fatalf("visible focus: %v %v", value, err)
+	}
+	id := p.Top.Realm.document.ElementByID(p.Top.Realm.document.Root().ID, "target")
+	if id == 0 {
+		t.Fatal("target missing")
+	}
+	if err := p.ScrollNodeIntoView(ctx, id, nil); err != nil {
+		t.Fatal(err)
+	}
+	value, err = p.Evaluate(ctx, `scrollY`)
+	if err != nil || fmt.Sprint(value) != "0" {
+		t.Fatalf("visible protocol scroll changed viewport: %v %v", value, err)
 	}
 }
 

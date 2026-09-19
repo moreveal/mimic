@@ -1063,10 +1063,17 @@ const cssBoxModel = (() => {
     value.width = box.width;
     value.height = box.height;
     const parent = geometryParent(element),
-      parentRect = parent
-        ? rect(parent)
-        : { x: 0, y: 0, width: host.viewport().width, height: host.viewport().height },
-      parentBox = parent ? size(parent) : null;
+      positioned = ['absolute', 'fixed'].includes(s.position),
+      hasInset = (value) => value != null && value !== '' && value !== 'auto',
+      hasHorizontalInset = hasInset(s.get('left')) || hasInset(s.get('right')),
+      hasVerticalInset = hasInset(s.get('top')) || hasInset(s.get('bottom')),
+      independentPosition = positioned && hasHorizontalInset && hasVerticalInset,
+      parentRect = independentPosition
+        ? { x: 0, y: 0, width: host.viewport().width, height: host.viewport().height }
+        : parent
+          ? rect(parent)
+          : { x: 0, y: 0, width: host.viewport().width, height: host.viewport().height },
+      parentBox = independentPosition ? null : parent ? size(parent) : null;
     const local = parentBox?.positions.get(element) || { x: 0, y: 0 };
     value.x =
       parentRect.x + (parentBox ? parentBox.edges.bleft + parentBox.edges.pleft : 0) + local.x;

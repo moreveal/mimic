@@ -2218,11 +2218,20 @@
   // Geometry result objects retain the node creation realm after adoption;
   // the numeric projection follows its current browsing document instead.
   let makeElementClientRects, makeDOMRectList;
+  const geometryReadHints = [];
+  bootstrapRestoreHooks.push(() => {
+    geometryReadHints.length = 0;
+  });
   const registerElementGeometry = (element) => {
     const receiver = () => elementWrappers.get(String(elementSlot(element).nodeId)) || element;
     registerRealmBinding(element, 'ElementGeometry', {
       rect: () => {
-        const value = clientRectFor(receiver());
+        const target = receiver();
+        const prior = geometryReadHints.indexOf(target);
+        if (prior >= 0) geometryReadHints.splice(prior, 1);
+        geometryReadHints.push(target);
+        if (geometryReadHints.length > 16) geometryReadHints.shift();
+        const value = clientRectFor(target);
         return new DOMRect(value.x, value.y, value.width, value.height);
       },
       scroll: (params) => compatibilityScrolling.dispatch(receiver(), params),
@@ -3100,7 +3109,11 @@
   registerBootstrapCallback('installProtocolBoxModel', (nodeID) =>
     withStyleReadCache(() => {
       const element = wrap(nodeID),
-        r = clientRectFor(element),
+        prior = geometryReadHints.indexOf(element);
+      if (prior >= 0) geometryReadHints.splice(prior, 1);
+      geometryReadHints.push(element);
+      if (geometryReadHints.length > 16) geometryReadHints.shift();
+      const r = clientRectFor(element),
         n = (name) => Number.parseFloat(cssComputedValue(element, name)) || 0,
         q = (left, top, right, bottom) => [left, top, right, top, right, bottom, left, bottom];
       if (!host.isConnected(nodeID) || cssComputedValue(element, 'display') === 'none')
