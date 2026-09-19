@@ -1,17 +1,15 @@
 # Performance architecture pass
 
-## Playwright Wikipedia latency, 2026-09-15
+## Playwright Wikipedia latency, current
 
-The [unchanged-script report](playwright-wikipedia-20260915.md) records Chrome
-PASS at 2.711 s and a fresh Mimic PASS at 21.270 s. The earlier approximately
-10-second input was traced to repeated fallback-font decoding, not a CDP timeout.
-Nominal coverage filtering reduces input to 0.642 s without changing font order;
-exact-cluster cache keys replace unsafe Unicode-block reuse. Owner-realm text
-observations and unified environment epochs remove redundant style work.
-All 122 recorded CDP commands completed below 2.467 s. The complete fast gate
-passed, including concurrency and teardown. The report records earlier failed
-attempts, text-observation differences and remaining hit-testing/style overhead;
-this is not a claim of Chrome latency parity or universal incremental layout.
+The canonical handoff is [wikipedia-e2e-current.md](wikipedia-e2e-current.md).
+It consolidates the September 15–19 investigation, including the ~10/6 s
+cold/warm production target, correlated Runtime/gov8/host profiling, rejected
+derived-state architecture, 13k-node actionability experiments, commit `58ca5f6`,
+and the latest matched E2E result. Local actionability improved substantially,
+but the complete Wikipedia workflow did not; future work must use the unchanged
+Wikipedia E2E as an early go/no-go gate rather than treating microbenchmark wins
+as completion.
 
 ## WebAPI realm memory, 2026-09-14
 

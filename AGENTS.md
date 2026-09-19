@@ -80,6 +80,11 @@ the current behavioral reference.
 - Optimize measured architectural overhead rather than benchmark-specific
   behavior. Profile before undertaking substantial performance work.
 
+- Before changing performance-sensitive runtime/DOM/style/geometry/CDP code for
+  the Playwright Wikipedia workload, read
+  `docs/performance/wikipedia-e2e-current.md`. It is the canonical record of
+  disproved hypotheses, destructive experiments, and the current E2E gate.
+
 - Use `tools/performance/fast_gate.py` for iterative performance validation
   when appropriate. Reserve the full benchmark matrix for substantial
   optimization batches, regression investigation, and reportable checkpoints.
