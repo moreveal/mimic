@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"os"
 	"os/signal"
+	"path/filepath"
 	"runtime/pprof"
 	"syscall"
 	"time"
@@ -73,6 +74,15 @@ func Run() {
 	if err != nil {
 		log.Fatal(err)
 	}
+	if cacheDir := bootstrapCacheDir(); cacheDir != "" {
+		prepare, cancel := context.WithTimeout(context.Background(), 2*time.Minute)
+		err = b.PrepareBootstrap(prepare, cacheDir)
+		cancel()
+		if err != nil {
+			_ = b.Close()
+			log.Fatal(err)
+		}
+	}
 	s, err := cdp.New(b)
 	if err != nil {
 		log.Fatal(err)
@@ -118,4 +128,15 @@ func Run() {
 	}
 	stop()
 	<-shutdownDone
+}
+
+func bootstrapCacheDir() string {
+	if value, ok := os.LookupEnv("MIMIC_BOOTSTRAP_CACHE_DIR"); ok {
+		return value
+	}
+	dir, err := os.UserCacheDir()
+	if err != nil {
+		return ""
+	}
+	return filepath.Join(dir, "Mimic", "bootstrap")
 }

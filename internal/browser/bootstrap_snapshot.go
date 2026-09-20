@@ -47,6 +47,7 @@ type bootstrapSnapshotCache struct {
 	builds    sync.WaitGroup
 	closeDone chan struct{}
 	closeErr  error
+	disk      *bootstrapDiskStore
 }
 
 func (r *Realm) bootstrapSource() *bootstrapSource {
@@ -85,17 +86,14 @@ func (r *Realm) bootstrapSource() *bootstrapSource {
 	if r.agent.Page().ctx.browser.devPreview {
 		plan.source = webapi.WithDevPreview(plan.source)
 	}
-	env := r.agent.Page().environmentView()
-	// Browser-owned snapshots cross Context boundaries, so the key must cover
-	// every immutable environment observation replayed during bootstrap. JSON
-	// provides deterministic map ordering and avoids a hand-maintained subset
-	// silently leaking locale, media, hardware, permission or network profile
-	// values into a sibling Context.
+	// Context profile values select an artifact because they can affect the
+	// bootstrap graph. Later Page-local changes are rebound through callbacks
+	// and therefore must not fragment the cache.
 	profile, _ := json.Marshal(struct {
 		Environment                                          state.Environment
 		Secure, Isolated, Credentialless, OriginAgentCluster bool
 		DevPreview                                           bool
-	}{env, security.secureContext, security.crossOriginIsolated, security.credentialless, security.originAgentCluster, r.agent.Page().ctx.browser.devPreview})
+	}{r.agent.Page().ctx.env, security.secureContext, security.crossOriginIsolated, security.credentialless, security.originAgentCluster, r.agent.Page().ctx.browser.devPreview})
 	hash := sha256.New()
 	for _, part := range []string{plan.source, plan.exposureJSON, plan.catalogJSON, string(profile)} {
 		hash.Write([]byte(part))
@@ -148,6 +146,7 @@ func (c *bootstrapSnapshotCache) selectEntry(ctx context.Context, factory engine
 	if c.entries == nil {
 		c.entries = make(map[[32]byte]*bootstrapSnapshotEntry)
 	}
+	disk := c.disk
 	c.sequence++
 	entry := c.entries[key]
 	if entry != nil {
@@ -158,6 +157,31 @@ func (c *bootstrapSnapshotCache) selectEntry(ctx context.Context, factory engine
 		}
 		c.mu.Unlock()
 		return snapshot, nil, issue
+	}
+	if disk != nil {
+		c.mu.Unlock()
+		snapshot, err := disk.load(key)
+		c.mu.Lock()
+		if c.closed {
+			c.mu.Unlock()
+			if snapshot != nil {
+				_ = snapshot.Close()
+			}
+			return nil, nil, ctx.Err()
+		}
+		if existing := c.entries[key]; existing != nil {
+			c.mu.Unlock()
+			if snapshot != nil {
+				_ = snapshot.Close()
+			}
+			return existing.snapshot, nil, existing.err
+		}
+		if err == nil && snapshot != nil {
+			entry = &bootstrapSnapshotEntry{key: key, snapshot: snapshot, touched: c.sequence}
+			c.entries[key] = entry
+			c.mu.Unlock()
+			return snapshot, nil, nil
+		}
 	}
 	var evicted engine.BootstrapSnapshot
 	if len(c.entries) >= bootstrapSnapshotEntries {
@@ -210,6 +234,9 @@ func (c *bootstrapSnapshotCache) startBuildLocked(ctx context.Context, factory e
 		entry.err = err
 		entry.buildDuration = duration
 		c.mu.Unlock()
+		if !discard && c.disk != nil {
+			_ = c.disk.save(entry.key, snapshot)
+		}
 		for _, old := range evicted {
 			_ = old.Close()
 		}

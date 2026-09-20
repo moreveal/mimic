@@ -23,3 +23,18 @@ type BootstrapSnapshot interface {
 	// SizeBytes reports the immutable serialized size, including after Close.
 	SizeBytes() int
 }
+
+// PersistentBootstrapSnapshotFactory imports and identifies portable snapshot
+// bytes. The identity must change whenever the engine can no longer consume a
+// previously serialized blob.
+type PersistentBootstrapSnapshotFactory interface {
+	BootstrapSnapshotFactory
+	BootstrapSnapshotIdentity() (string, error)
+	LoadBootstrapSnapshot([]byte) (BootstrapSnapshot, error)
+}
+
+// PersistentBootstrapSnapshot exposes the immutable serialized artifact.
+type PersistentBootstrapSnapshot interface {
+	BootstrapSnapshot
+	BootstrapSnapshotBytes() []byte
+}

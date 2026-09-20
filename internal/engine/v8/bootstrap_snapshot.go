@@ -17,6 +17,53 @@ func (Factory) BootstrapSnapshotsEnabled() bool {
 	return os.Getenv("MIMIC_DIAGNOSTICS") != "1" || os.Getenv("MIMIC_PROFILE_HOSTS") == "1"
 }
 
+func (Factory) BootstrapSnapshotIdentity() (string, error) {
+	build, err := gov8.VersionString()
+	if err != nil {
+		return "", err
+	}
+	runtimeVersion, err := gov8.RuntimeVersionString()
+	if err != nil {
+		return "", err
+	}
+	return build + "\x00" + runtimeVersion, nil
+}
+
+func (Factory) LoadBootstrapSnapshot(data []byte) (engine.BootstrapSnapshot, error) {
+	if len(data) == 0 {
+		return nil, errors.New("empty bootstrap snapshot")
+	}
+	if _, err := initialize(); err != nil {
+		return nil, err
+	}
+	blob := gov8.StartupDataFromBytes(data)
+	// Validate through an actual consumer creation here, before the artifact is
+	// admitted to the Browser cache. This turns corrupt cache files into a
+	// recoverable rebuild instead of exposing them to a Page.
+	consumer, err := blob.ShareImmutableBytes()
+	if err != nil {
+		_ = blob.Release()
+		return nil, err
+	}
+	owner, err := newRuntime(consumer)
+	if err != nil {
+		_ = consumer.Release()
+		_ = blob.Release()
+		return nil, err
+	}
+	adapter, err := newAdapter(owner, nil)
+	if err != nil {
+		_ = owner.Dispose()
+		_ = blob.Release()
+		return nil, err
+	}
+	if err := adapter.Close(); err != nil {
+		_ = blob.Release()
+		return nil, err
+	}
+	return &bootstrapSnapshot{blob: blob, size: len(data)}, nil
+}
+
 type bootstrapSnapshot struct {
 	mu   sync.Mutex
 	blob *gov8.StartupData
@@ -169,6 +216,15 @@ func (s *bootstrapSnapshot) NewRuntime() (engine.Runtime, error) {
 }
 
 func (s *bootstrapSnapshot) SizeBytes() int { return s.size }
+func (s *bootstrapSnapshot) BootstrapSnapshotBytes() []byte {
+	s.mu.Lock()
+	defer s.mu.Unlock()
+	if s.blob == nil {
+		return nil
+	}
+	data := s.blob.Bytes()
+	return append([]byte(nil), data...)
+}
 func (s *bootstrapSnapshot) Close() error {
 	s.mu.Lock()
 	defer s.mu.Unlock()
@@ -183,4 +239,6 @@ func (s *bootstrapSnapshot) Close() error {
 }
 
 var _ engine.BootstrapSnapshotFactory = Factory{}
+var _ engine.PersistentBootstrapSnapshotFactory = Factory{}
 var _ engine.BootstrapSnapshot = (*bootstrapSnapshot)(nil)
+var _ engine.PersistentBootstrapSnapshot = (*bootstrapSnapshot)(nil)
