@@ -2844,3 +2844,19 @@ cold and 5517/6494 ms warm. Six first builds plus ten complete rebuilds produced
 but it must be paired with mutation-derived incremental/subtree production;
 rebuilding the complete arena cannot realize the Part B replay upper bound. See
 [the full vertical record](wikipedia-compact-canonical-vertical-2026-09-20.md).
+
+## Native browser-semantics synthetic vertical — 2026-09-20
+
+A separate feature-gated experiment moved the controlled ordinary-block style
+and geometry path behind one compact native owner and let both main and isolated
+worlds consume packed results. The public chain retained author CSS, visibility,
+role traversal, IntersectionObserver, scroll, hit testing and input. Three
+alternating 10k-row pairs passed all assertions and improved median complete
+chain wall from 3024.8 to 2048.3 ms (-32.3%). All post-build phase totals also
+improved, although locator click regressed and initial IO was slightly slower.
+
+This is positive evidence for native ownership, not a production or Wikipedia
+result: the diagnostic layout covers only ordinary block flow and is
+single-threaded. Implementation is isolated on
+`experiment/native-semantics-synthetic` at `9aa40cf`. See
+[the experiment record](native-semantics-synthetic-2026-09-20.md).

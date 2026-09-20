@@ -776,6 +776,13 @@ not improve.
   still cost 1.565 s. See
   [the compact canonical vertical](wikipedia-compact-canonical-vertical-2026-09-20.md).
 
+The later native-semantics synthetic changed the ownership boundary more
+radically: compact native style and block geometry served main/isolated worlds
+and the real visibility/role/IO/scroll/input chain. Three alternating 10k-row
+pairs improved the complete controlled chain 3024.8 -> 2048.3 ms (-32.3%). The
+subset is intentionally incomplete and is not a Wikipedia acceptance result;
+see [the native-semantics vertical](native-semantics-synthetic-2026-09-20.md).
+
 ## Rules for the next E2E investigation
 
 1. Build a fresh control binary and a fresh candidate binary from explicit
