@@ -1,0 +1,77 @@
+[+     4ms] [01] Fixture server started {"origin":"http://127.0.0.1:33963"}
+[+     5ms] [02] Connecting Playwright to Mimic {"endpoint":"http://127.0.0.1:9487"}
+[+    24ms] [03] CDP connection established
+[+   118ms] [04] New page created
+[+   118ms] [05] Navigating to Wikipedia fixture {"url":"https://en.wikipedia.org/wiki/Main_Page"}
+[+   314ms] [06] Request failed {"url":"https://en.wikipedia.org/w/load.php?lang=en&modules=ext.parsermigration.reportbug.init%7Cjquery&skin=vector-2022&version=ciish","error":"request blocked by controller"}
+[+   343ms] [07] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/c/cc/015_Wild_Golden_Eagle_in_flight_at_Pfyn-Finges_%28Switzerland%29_Photo_by_Giles_Laurent.jpg/330px-015_Wild_Golden_Eagle_in_flight_at_Pfyn-Finges_%28Switzerland%29_Photo_by_Giles_Laurent.jpg?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+   345ms] [08] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/7/75/Wikimedia_Community_Logo.svg/40px-Wikimedia_Community_Logo.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+   345ms] [09] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/en/thumb/4/4a/Commons-logo.svg/40px-Commons-logo.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+   345ms] [10] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a6/MediaWiki-2020-icon.svg/40px-MediaWiki-2020-icon.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+   345ms] [11] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/d/df/Wikispecies-logo.svg/40px-Wikispecies-logo.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+   345ms] [12] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/f/ff/Wikidata-logo.svg/60px-Wikidata-logo.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+   345ms] [13] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0c/Wikifunctions-logo.svg/40px-Wikifunctions-logo.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+   345ms] [14] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fa/Wikibooks-logo.svg/40px-Wikibooks-logo.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+   345ms] [15] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/4/4c/Wikisource-logo.svg/40px-Wikisource-logo.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+   345ms] [16] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fa/Wikiquote-logo.svg/40px-Wikiquote-logo.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+   349ms] [17] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0b/Wikiversity_logo_2017.svg/60px-Wikiversity_logo_2017.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+   349ms] [18] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/d/dd/Wikivoyage-Logo-v3-icon.svg/40px-Wikivoyage-Logo-v3-icon.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+   349ms] [19] Request failed {"url":"https://en.wikipedia.org/static/images/footer/wikimedia.svg","error":"request blocked by controller"}
+[+   349ms] [20] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/9/99/Wiktionary-logo-en-v2.svg/40px-Wiktionary-logo-en-v2.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+   349ms] [21] Request failed {"url":"https://en.wikipedia.org/w/resources/assets/mediawiki_compact.svg","error":"request blocked by controller"}
+[+   807ms] [22] Wikipedia main page loaded {"status":200,"title":"Wikipedia, the free encyclopedia","heading":""}
+[MEASURE] Search fill: 303.27 ms
+[MEASURE] Search inputValue: 5.80 ms
+[+  1406ms] [23] Request failed {"url":"https://en.wikipedia.org/w/load.php?lang=en&modules=jquery&skin=vector-2022&version=tkra7","error":"request blocked by controller"}
+[+  1429ms] [24] Request failed {"url":"https://en.wikipedia.org/w/resources/assets/mediawiki_compact.svg","error":"request blocked by controller"}
+[+  1429ms] [25] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/en/thumb/d/db/Symbol_list_class.svg/20px-Symbol_list_class.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+  1430ms] [26] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/en/thumb/d/db/Symbol_list_class.svg/20px-Symbol_list_class.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+  1430ms] [27] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/en/thumb/d/db/Symbol_list_class.svg/20px-Symbol_list_class.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+  1430ms] [28] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/9/99/Wiktionary-logo-en-v2.svg/40px-Wiktionary-logo-en-v2.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+  1430ms] [29] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/en/thumb/4/4a/Commons-logo.svg/20px-Commons-logo.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+  1431ms] [30] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a6/MediaWiki-2020-icon.svg/40px-MediaWiki-2020-icon.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+  1431ms] [31] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/Octicons-terminal.svg/20px-Octicons-terminal.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+  1431ms] [32] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d9/Node.js_logo.svg/120px-Node.js_logo.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+  1431ms] [33] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fa/Wikibooks-logo.svg/40px-Wikibooks-logo.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+  1431ms] [34] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0b/Wikiversity_logo_2017.svg/40px-Wikiversity_logo_2017.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+  1432ms] [35] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/8/87/Gnome-mime-sound-openclipart.svg/60px-Gnome-mime-sound-openclipart.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+  1432ms] [36] Request failed {"url":"https://en.wikipedia.org/static/images/footer/wikimedia.svg","error":"request blocked by controller"}
+[+  1432ms] [37] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/en/thumb/9/96/Symbol_category_class.svg/20px-Symbol_category_class.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[MEASURE] Search press + navigation: 364.34 ms
+[MEASURE] JavaScript heading visible: 1320.51 ms
+[+  3001ms] [38] Article DOM inspected {"paragraphPreview":"JavaScript (JS)[a] is a programming language and core technology of the Web, alongside HTML and CSS. Created by Brendan Eich in 1995,[6] it is maintained by Ecma International's TC","bodyTextLength":63249}
+[MEASURE] ECMAScript scrollIntoViewIfNeeded: 417.39 ms
+[MEASURE] ECMAScript innerText: 193.00 ms
+[MEASURE] ECMAScript getAttribute href: 172.54 ms
+[+  3784ms] [39] Internal article link located {"text":"ECMAScript","href":"https://en.wikipedia.org/wiki/ECMAScript"}
+[+  4776ms] [40] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/en/thumb/d/db/Symbol_list_class.svg/20px-Symbol_list_class.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+  4776ms] [41] Request failed {"url":"https://en.wikipedia.org/static/images/footer/wikimedia.svg","error":"request blocked by controller"}
+[+  4776ms] [42] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/en/thumb/d/db/Symbol_list_class.svg/20px-Symbol_list_class.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+  4776ms] [43] Request failed {"url":"https://en.wikipedia.org/w/resources/assets/mediawiki_compact.svg","error":"request blocked by controller"}
+[+  4776ms] [44] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/en/thumb/9/96/Symbol_category_class.svg/20px-Symbol_category_class.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+  4776ms] [45] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/0/04/Ecma_International_Logo.svg/120px-Ecma_International_Logo.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+  4776ms] [46] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/1/1c/Wiki_letter_w_cropped.svg/20px-Wiki_letter_w_cropped.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[MEASURE] ECMAScript click + navigation: 991.55 ms
+[MEASURE] ECMAScript heading visible: 800.16 ms
+[MEASURE] ECMAScript heading innerText: 10.75 ms
+[MEASURE] ECMAScript page.title: 47.83 ms
+[+  5635ms] [47] Internal link navigation completed {"url":"https://en.wikipedia.org/wiki/ECMAScript","title":"ECMAScript - Wikipedia","heading":"ECMAScript"}
+[+  5639ms] [48] Request failed {"url":"https://en.wikipedia.org/wiki/Special:CentralAutoLogin/start?useformat=desktop&type=script&usesul3=1","error":"request blocked by controller"}
+[+  6145ms] [49] Request failed {"url":"https://en.wikipedia.org/w/load.php?lang=en&modules=jquery&skin=vector-2022&version=tkra7","error":"request blocked by controller"}
+[+  6181ms] [50] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/f/fa/Wikibooks-logo.svg/40px-Wikibooks-logo.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+  6181ms] [51] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/en/thumb/d/db/Symbol_list_class.svg/20px-Symbol_list_class.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+  6182ms] [52] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/8/87/Gnome-mime-sound-openclipart.svg/60px-Gnome-mime-sound-openclipart.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+  6182ms] [53] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/0/0b/Wikiversity_logo_2017.svg/40px-Wikiversity_logo_2017.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+  6182ms] [54] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/d/d9/Node.js_logo.svg/120px-Node.js_logo.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+  6182ms] [55] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/9/99/Wiktionary-logo-en-v2.svg/40px-Wiktionary-logo-en-v2.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+  6182ms] [56] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/en/thumb/4/4a/Commons-logo.svg/20px-Commons-logo.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+  6182ms] [57] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/a/a6/MediaWiki-2020-icon.svg/40px-MediaWiki-2020-icon.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+  6182ms] [58] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/commons/thumb/6/6f/Octicons-terminal.svg/20px-Octicons-terminal.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+  6182ms] [59] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/en/thumb/d/db/Symbol_list_class.svg/20px-Symbol_list_class.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+  6182ms] [60] Request failed {"url":"https://en.wikipedia.org/static/images/footer/wikimedia.svg","error":"request blocked by controller"}
+[+  6182ms] [61] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/en/thumb/d/db/Symbol_list_class.svg/20px-Symbol_list_class.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+  6182ms] [62] Request failed {"url":"https://en.wikipedia.org/w/resources/assets/mediawiki_compact.svg","error":"request blocked by controller"}
+[+  6182ms] [63] Request failed {"url":"https://thumb.wikimedia.org/wikipedia/en/thumb/9/96/Symbol_category_class.svg/20px-Symbol_category_class.svg.png?utm_source=en.wikipedia.org&utm_campaign=parser&utm_content=thumbnail","error":"request blocked by controller"}
+[+  6547ms] [64] Back navigation restored JavaScript article {"url":"https://en.wikipedia.org/wiki/JavaScript","heading":"JavaScript"}
+[+  6563ms] [65] Page closed normally
+RESULT: PASS (6563 ms)

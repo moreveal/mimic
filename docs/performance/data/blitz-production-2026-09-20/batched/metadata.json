@@ -1,0 +1,14 @@
+{
+  "binaries": {
+    "baseline": {
+      "file": "C:\\Users\\moreveal\\.codex\\worktrees\\60f7\\mimic\\.build\\blitz-baseline\\.build\\mimic-baseline.exe",
+      "sha256": "fe635e939935dbe0406eb0fb31938c3607cb2bc174e87756183ff4d9d026322d"
+    },
+    "blitz": {
+      "file": "C:\\Users\\moreveal\\.codex\\worktrees\\60f7\\mimic\\.build\\blitz-production\\.build\\mimic-blitz.exe",
+      "sha256": "a1fbe32c4034096b0b9fd32a99384d0ae9644f1c630ac4712120583cc230db96"
+    }
+  },
+  "workloadSHA256": "5b340d5c51d1ce7f291c1fb9f635df7e5a7d29cd12255ee2e09e59918325e444",
+  "pairs": 5
+}
