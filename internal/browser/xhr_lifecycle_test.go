@@ -68,7 +68,6 @@ return JSON.stringify({json,invalid,bytes:Array.from(new Uint8Array(buffer)),blo
 }
 
 func TestXMLHttpRequestAbortCancelsTransportAndAllowsReuse(t *testing.T) {
-	parallelBrowserTest(t)
 	started := make(chan struct{}, 1)
 	canceled := make(chan struct{}, 1)
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
