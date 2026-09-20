@@ -38,6 +38,23 @@ On Linux, use `.build/mimic` as the output path. This binary is the same command
 the release packager builds; `go run ./tools/runmimic` is only the convenient
 clean-checkout development path.
 
+## Version shown by the binary
+
+The startup banner derives its version from Go build information through
+`runtime/debug.ReadBuildInfo`. Do not add a second version constant, edit source
+files for a release, or inject a display version with `-ldflags -X`.
+
+- A semantic module version is displayed unchanged, for example `v0.1.4`.
+- A repository build displays `dev+<short-revision>` from the embedded
+  `vcs.revision` and adds `-dirty` when Go records modified sources.
+- A Go pseudo-version such as `v0.0.0-20260920165425-17f508b820af` describes a
+  development build and is normalized to `dev+17f508b8`; it must never be shown
+  as the Mimic release version.
+
+The `--version` passed to `prepare.py` names and validates release artifacts; it
+does not create another runtime version source. Before publishing, build from
+the intended clean commit and verify the banner provenance against that commit.
+
 Outputs are written to `.build/releases/VERSION/`. Reusing an existing
 version/platform output directory is rejected so stale artifacts cannot be
 mistaken for a fresh build.

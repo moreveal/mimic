@@ -39,7 +39,11 @@ func BuildVersion() string {
 	if !ok {
 		return "dev"
 	}
-	if info.Main.Version != "" && info.Main.Version != "(devel)" {
+	return buildVersionFromInfo(info)
+}
+
+func buildVersionFromInfo(info *debug.BuildInfo) string {
+	if info.Main.Version != "" && info.Main.Version != "(devel)" && pseudoRevision(info.Main.Version) == "" {
 		return info.Main.Version
 	}
 	settings := make(map[string]string, len(info.Settings))
@@ -51,6 +55,12 @@ func BuildVersion() string {
 		revision = revision[:8]
 	}
 	if revision == "" {
+		revision = pseudoRevision(info.Main.Version)
+		if len(revision) > 8 {
+			revision = revision[:8]
+		}
+	}
+	if revision == "" {
 		return "dev"
 	}
 	version := "dev+" + revision
@@ -58,6 +68,29 @@ func BuildVersion() string {
 		version += "-dirty"
 	}
 	return version
+}
+
+func pseudoRevision(version string) string {
+	version = strings.TrimSuffix(version, "+incompatible")
+	parts := strings.Split(version, "-")
+	if len(parts) < 3 {
+		return ""
+	}
+	timestamp, revision := parts[len(parts)-2], parts[len(parts)-1]
+	if len(timestamp) != 14 || len(revision) < 12 {
+		return ""
+	}
+	for _, char := range timestamp {
+		if char < '0' || char > '9' {
+			return ""
+		}
+	}
+	for _, char := range revision {
+		if (char < '0' || char > '9') && (char < 'a' || char > 'f') {
+			return ""
+		}
+	}
+	return revision
 }
 
 // WriteStartup renders the human-facing startup banner. When styled is false,

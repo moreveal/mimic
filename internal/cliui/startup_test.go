@@ -2,18 +2,19 @@ package cliui
 
 import (
 	"bytes"
+	"runtime/debug"
 	"strings"
 	"testing"
 )
 
 func TestWriteStartupPlain(t *testing.T) {
 	var output bytes.Buffer
-	info := StartupInfo{Version: "v0.1.3", Chrome: 152, Engine: "v8", Address: "127.0.0.1:9222"}
+	info := StartupInfo{Version: "v0.1.4", Chrome: 152, Engine: "v8", Address: "127.0.0.1:9222"}
 	if err := WriteStartup(&output, info, false); err != nil {
 		t.Fatal(err)
 	}
 	text := output.String()
-	for _, want := range []string{"U|' \\/ '|u", "<<,-,,-..-,_|___|_,-.", "Mimic v0.1.3  ·  Chrome 152  ·  V8", "browser runtime · without Chromium", "◆ READY  CDP · 127.0.0.1:9222"} {
+	for _, want := range []string{"U|' \\/ '|u", "<<,-,,-..-,_|___|_,-.", "Mimic v0.1.4  ·  Chrome 152  ·  V8", "browser runtime · without Chromium", "◆ READY  CDP · 127.0.0.1:9222"} {
 		if !strings.Contains(text, want) {
 			t.Fatalf("startup banner is missing %q:\n%s", want, text)
 		}
@@ -41,5 +42,25 @@ func TestWriteStartupStyled(t *testing.T) {
 func TestBuildVersion(t *testing.T) {
 	if version := BuildVersion(); version == "" {
 		t.Fatal("empty build version")
+	}
+}
+
+func TestBuildVersionFromGoBuildInfo(t *testing.T) {
+	tests := []struct {
+		name string
+		info debug.BuildInfo
+		want string
+	}{
+		{name: "release", info: debug.BuildInfo{Main: debug.Module{Version: "v0.1.4"}}, want: "v0.1.4"},
+		{name: "pseudo", info: debug.BuildInfo{Main: debug.Module{Version: "v0.0.0-20260920165425-17f508b820af"}}, want: "dev+17f508b8"},
+		{name: "local", info: debug.BuildInfo{Main: debug.Module{Version: "(devel)"}, Settings: []debug.BuildSetting{{Key: "vcs.revision", Value: "17f508b820af1234"}}}, want: "dev+17f508b8"},
+		{name: "dirty", info: debug.BuildInfo{Main: debug.Module{Version: "(devel)"}, Settings: []debug.BuildSetting{{Key: "vcs.revision", Value: "17f508b820af1234"}, {Key: "vcs.modified", Value: "true"}}}, want: "dev+17f508b8-dirty"},
+	}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			if got := buildVersionFromInfo(&test.info); got != test.want {
+				t.Fatalf("buildVersionFromInfo() = %q, want %q", got, test.want)
+			}
+		})
 	}
 }
