@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Build Mimic's project-specific native Taffy layout archive."""
+"""Build the shared Blitz and legacy Taffy migration archive."""
 
 from __future__ import annotations
 
@@ -10,7 +10,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-MANIFEST = ROOT / "internal" / "layouttaffy" / "native" / "Cargo.toml"
+MANIFEST = ROOT / "internal" / "layoutblitz" / "native" / "Cargo.toml"
 
 
 def main() -> None:

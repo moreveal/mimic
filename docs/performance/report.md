@@ -1,5 +1,19 @@
 # Performance architecture pass
 
+## Blitz production migration — 2026-09-20
+
+The authorized direction is now production migration to `blitz-dom`. The old
+JavaScript producer is frozen for performance work and remains only a
+comparison oracle and migration fallback. See
+[migration status and remaining gates](blitz-production-migration.md).
+
+The initial implementation provides a persistent native owner, canonical ID
+mapping, direct Go DOM snapshot projection, C ABI, deterministic disposal,
+dirty-read rejection and transaction poisoning on native failure. Blitz and
+the legacy Taffy fallback link through one Rust archive to avoid duplicate
+runtime symbols. Native tests and Go `-race` tests for `layoutblitz` and `dom`
+pass. Browser consumers are not yet migrated; no Wikipedia speedup is claimed.
+
 ## Playwright Wikipedia latency, current
 
 Latest user scope: **stop diagnosis and plan real fixes**, warm first,

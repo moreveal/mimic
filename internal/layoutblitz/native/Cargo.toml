@@ -1,0 +1,13 @@
+[package]
+name = "mimic-layout-blitz"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+crate-type = ["rlib", "staticlib", "cdylib"]
+
+[dependencies]
+mimic-taffy-layout = { path = "../../layouttaffy/native" }
+blitz-dom = { git = "https://github.com/DioxusLabs/blitz.git", rev = "e7bf7bca452bc9194ac5c9bcf2ac3c0ebcf02e09", default-features = false }
+blitz-traits = { git = "https://github.com/DioxusLabs/blitz.git", rev = "e7bf7bca452bc9194ac5c9bcf2ac3c0ebcf02e09" }
+markup5ever = "0.39"
