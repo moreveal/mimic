@@ -50,12 +50,9 @@ func TestPerformanceCloneBrandsMatchFrozenChrome(t *testing.T) {
 	documentAllOracle(t, "performance_clone")
 }
 func TestPerformanceLongTasksMatchFrozenChrome(t *testing.T) {
-	parallelBrowserTest(t)
 	documentAllOracle(t, "performance_longtask")
 }
 func TestPerformanceLongTaskFramesMatchFrozenChrome(t *testing.T) {
-	parallelBrowserTest(t)
-
 	documentAllOracle(t, "performance_longtask_frames")
 }
 
