@@ -979,6 +979,14 @@ fn create_text_editor(doc: &mut BaseDocument, input_element_id: NodeId, is_multi
     let styles = editor.edit_styles();
     styles.retain(|_| false);
     styles.insert(StyleProperty::FontSize(parley_style.font_size));
+    styles.insert(StyleProperty::FontFamily(parley_style.font_family));
+    styles.insert(StyleProperty::FontWeight(parley_style.font_weight));
+    styles.insert(StyleProperty::FontStyle(parley_style.font_style));
+    styles.insert(StyleProperty::FontWidth(parley_style.font_width));
+    styles.insert(StyleProperty::FontFeatures(parley_style.font_features));
+    styles.insert(StyleProperty::FontVariations(parley_style.font_variations));
+    styles.insert(StyleProperty::LetterSpacing(parley_style.letter_spacing));
+    styles.insert(StyleProperty::WordSpacing(parley_style.word_spacing));
     styles.insert(StyleProperty::LineHeight(parley_style.line_height));
     styles.insert(StyleProperty::Brush(parley_style.brush));
 
@@ -1173,6 +1181,23 @@ pub(crate) fn build_inline_layout_into(
         .and_then(|el| el.list_item_data.as_deref())
     {
         match marker {
+            Marker::Char('▾' | '▸') => {
+                // Chrome's disclosure marker is a geometric symbol, not a font
+                // glyph: 0.66em symbol plus 0.4em end margin, each LayoutUnit
+                // truncated. Produce the inline contribution before line layout.
+                // Chromium list/list_marker.cc: DisclosureSymbolSize and
+                // InlineMarginsForInside (Chrome 152).
+                let em = root_node_style.as_ref().unwrap().clone_font_size().used_size().px();
+                let symbol = (em * 0.66 * 64.0).trunc() / 64.0;
+                let margin = (em * 0.4 * 64.0).trunc() / 64.0;
+                builder.push_inline_box(InlineBox {
+                    id: super::list::DISCLOSURE_MARKER_ID,
+                    kind: InlineBoxKind::InFlow,
+                    index: 0,
+                    width: (symbol + margin) * scale,
+                    height: symbol * scale,
+                });
+            }
             // Bullet glyphs live in the bundled bullet font. The position-outside
             // path already asks for it; without the same span here a marker like
             // disclosure-closed (U+25B8) falls back to the element's own font and

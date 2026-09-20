@@ -67,3 +67,5 @@ node_modules/
 *~
 .DS_Store
 Thumbs.db
+# Native archive fingerprint consumed by the cgo package build cache.
+/internal/layoutblitz/native_build_stamp.h

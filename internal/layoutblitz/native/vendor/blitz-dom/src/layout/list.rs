@@ -13,6 +13,8 @@ use crate::{
 };
 
 pub(super) const BULLET_FONT_FAMILY: &str = "Bullet, monospace, sans-serif";
+// Parley-only generated marker item, never a canonical DOM node or hit target.
+pub(crate) const DISCLOSURE_MARKER_ID: u64 = u64::MAX;
 
 pub(super) fn collect_list_item_children(
     doc: &mut BaseDocument,

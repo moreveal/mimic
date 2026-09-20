@@ -21,6 +21,8 @@ type blitzDocument struct {
 	fallback         string
 	sheets           map[uint64]blitzStylesheetInput
 	states           map[uint64]blitzElementState
+	controls         map[uint64]blitzControlValue
+	controlRevision  uint64
 	sheetOrder       []uint64
 	fontRevision     uint64
 	fontsInitialized bool
@@ -54,10 +56,11 @@ func (r *Realm) reportBlitzCalls() {
 }
 
 func (r *Realm) installBlitzProducer(host map[string]any) {
-	enabled := os.Getenv("MIMIC_STYLE_ENGINE") == "blitz"
-	profile := enabled && os.Getenv("MIMIC_PROFILE_BLITZ") == "1"
+	// Native production is unconditional. Legacy production is reachable only
+	// through explicit semantic admission, never through an engine env switch.
+	profile := os.Getenv("MIMIC_PROFILE_BLITZ") == "1"
 	host["blitzTracing"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
-		return r.val(enabled && os.Getenv("MIMIC_PROFILE_BLITZ") == "1"), nil
+		return r.val(os.Getenv("MIMIC_PROFILE_BLITZ") == "1"), nil
 	})
 	host["blitzLegacyTrace"] = r.transientFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		fmt.Fprintf(os.Stderr, "BLITZ legacy world=%s %s\n", r.worldName, strarg(args, 0))
@@ -70,7 +73,7 @@ func (r *Realm) installBlitzProducer(host map[string]any) {
 		}
 		return r.val(owner.blitzKey()), nil
 	})
-	host["blitzEnabled"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(enabled), nil })
+	host["blitzEnabled"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) { return r.val(true), nil })
 	host["blitzInlineStyles"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
 		return r.val(r.document.InlineStyleSources()), nil
 	})
@@ -79,9 +82,6 @@ func (r *Realm) installBlitzProducer(host map[string]any) {
 		return nil, nil
 	})
 	host["blitzObserve"] = r.transientFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
-		if !enabled {
-			return r.val(nil), nil
-		}
 		owner := r
 		if r.mainWorld != nil {
 			owner = r.mainWorld
@@ -158,6 +158,9 @@ func (owner *Realm) observeBlitz(id int64, kind, property string) (any, error) {
 		return engine.BinaryBuffer(owner.blitz.snapshot), nil
 	}
 	native := owner.blitz.document.Owner
+	if kind == "transform" {
+		return native.GeometryTransform(uint64(id))
+	}
 	if kind == "style" {
 		// These initial/serialization semantics differ in the pinned Stylo
 		// version. They have no geometry dependency and can use the migration
@@ -187,7 +190,7 @@ func (owner *Realm) observeBlitz(id int64, kind, property string) (any, error) {
 func (r *Realm) blitzKey() string {
 	environment := r.agent.Page().environmentView()
 	w := environment.Window
-	return fmt.Sprintf("%s:%d:%d:%d:%d:%d:%d:%d:%s:%t:%s", r.ID, r.document.Revision(), r.styleDocumentRevision(), r.styleResourceRevision.Load(), r.resourceRevision.Load(), w.ViewportWidth, w.ViewportHeight, r.selectorTargetID, environment.Preferences.ColorScheme, environment.Preferences.ReducedMotion, r.documentBaseURL())
+	return fmt.Sprintf("%s:%d:%d:%d:%d:%d:%d:%d:%s:%t:%g:%s", r.ID, r.document.Revision(), r.styleDocumentRevision(), r.styleResourceRevision.Load(), r.resourceRevision.Load(), w.ViewportWidth, w.ViewportHeight, r.selectorTargetID, environment.Preferences.ColorScheme, environment.Preferences.ReducedMotion, environment.Display.DeviceScaleFactor, r.documentBaseURL())
 }
 
 func (r *Realm) prepareBlitz() (resultErr error) {
@@ -209,6 +212,7 @@ func (r *Realm) prepareBlitz() (resultErr error) {
 		Unsupported string                 `json:"unsupported"`
 		States      []blitzElementState    `json:"states"`
 		Sheets      []blitzStylesheetInput `json:"sheets"`
+		Controls    []blitzControlValue    `json:"controls"`
 	}
 	if r.blitzInputs == nil {
 		return fmt.Errorf("blitz: owner input adapter not initialized")
@@ -226,8 +230,14 @@ func (r *Realm) prepareBlitz() (resultErr error) {
 	}
 	accounting.mark("inputs")
 	state.fallback = inputs.Unsupported
+	if state.fallback == "" {
+		state.fallback = layoutblitz.AdmissionReason(r.document)
+	}
 	if r.agent.Page().environmentView().Preferences.ReducedMotion {
 		state.fallback = "native reduced-motion device adapter pending"
+	}
+	if r.agent.Page().environmentView().Display.DeviceScaleFactor != 1 {
+		state.fallback = "native device-scale adapter pending"
 	}
 	if frame, ok := r.agent.(*Frame); ok && frame.parent != nil {
 		state.fallback = "frame viewport adapter pending"
@@ -253,6 +263,7 @@ func (r *Realm) prepareBlitz() (resultErr error) {
 		state.snapshot = nil
 		state.sheets = make(map[uint64]blitzStylesheetInput)
 		state.states = nil
+		state.controls = nil
 		state.sheetOrder = nil
 		state.fontsInitialized = false
 	}
@@ -339,6 +350,10 @@ func (r *Realm) prepareBlitz() (resultErr error) {
 	}
 	state.states = currentStates
 	accounting.mark("states")
+	if err := state.syncControlValues(inputs.Controls, r.document.Revision()); err != nil {
+		return err
+	}
+	accounting.mark("controls")
 	generation, err := state.document.Owner.Resolve(0)
 	if err != nil {
 		return err

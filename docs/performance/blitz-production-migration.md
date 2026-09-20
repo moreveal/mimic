@@ -1,13 +1,23 @@
 # Production migration to blitz-dom
 
-Status, 2026-09-20: implemented opt-in integration under
-`MIMIC_STYLE_ENGINE=blitz`; **not the default producer and not an unconditional
-production-compatibility claim**. Consult the dated checkpoint report for actual
-correctness/performance receipts. The standalone Blitz PoC is not an E2E result.
+Status, 2026-09-20: native production is unconditional for admitted Documents.
+There is no environment switch to select the legacy engine. Legacy is only an
+internal semantic fallback and test oracle, to be eliminated as migration
+coverage grows. This is **not an
+unconditional native feature-coverage claim**: unsupported Documents use the
+explicit compatibility fallback below. Consult dated reports for the exact
+source/binary and correctness/performance receipts; older checkpoint results
+predate the default switch. The standalone Blitz PoC is not an E2E result.
 
 The old JavaScript producer is frozen for performance work. Its roles are
 correctness comparison and explicit migration fallback. Frozen Chrome 152
 remains the reference when old Mimic and native behavior disagree.
+
+Build native changes with `python tools/build_native_layout.py` before Go.
+The helper records the archive hash in a generated cgo-package header, making
+Rust-only changes invalidate Go's build cache. Raw `cargo build` alone does not
+do this: a following cached `go build`/`go test` can otherwise use an old linked
+archive. Diagnostic direct-Cargo builds must force a fresh link explicitly.
 
 ## Ownership and execution
 
@@ -64,6 +74,10 @@ Further inputs come from existing owners:
 - Canonical image resources supply intrinsic dimensions/completion, without
   native pixels or re-fetch. Viewport, color scheme and base URL reach native
   device/style input before resolve.
+- Existing canonical parsed inline declarations retain precision separately
+  from serialized attributes. The native declaration block consumes parsed
+  values without changing the attribute seen by selectors. Geometry consumes
+  numeric transform matrices/origins, not rounded CSSOM matrix strings.
 
 The native generation advances only when native work was required. Its packed
 snapshot survives outer-key changes that leave the generation unchanged. When
@@ -102,6 +116,13 @@ Current whole-document fallback reasons include shadow/slots, adopted sheets,
 quirks mode, dynamic animation lifecycle, child-frame viewport integration,
 reduced-motion integration, and unsupported active-font descriptors/indexes or
 collection bounds. Keep these reasons explicit in `blitzFallback` traces.
+Connected code-unit `TextJSON` representation also requires fallback, before
+any native mutation; removal/replacement returns to native production.
+Nonempty textarea content, private input value divergence from its default
+attribute, and select listbox modes need the live-control content adapter and
+also fall back. Empty textarea geometry remains native. Admission reads private
+form slots, not author getters. Search typing can therefore incur fallback
+before navigation; its cost must remain in the full workload result.
 
 Servo Stylo does not implement authored `content-visibility`. Eligibility reads
 the existing parsed stylesheet declarations and parses distinct canonical inline
@@ -113,7 +134,9 @@ mistaken for declarations.
 
 Unsupported scalar property serialization uses the old CSSOM oracle rather than
 invented defaults. `alignment-baseline` and `place-items` have explicit property
-fallbacks for pinned-engine initial/serialization differences. Do not interpret
+fallbacks for pinned-engine initial/serialization differences. Chrome's used
+`user-select` inheritance and SVG `transform`/`font-size` use selective existing
+semantic projections. Other common SVG style columns remain native. Do not interpret
 fallback success as native feature coverage or exclude its cost from results.
 
 ## Lifetime and bounds
@@ -121,7 +144,9 @@ fallback success as native feature coverage or exclude its cost from results.
 - Native owner is released on owner execution during realm/document teardown;
   close is idempotent. Publication/input handles and Page resources are released
   along with their owners. Navigation must not retain a prior Document's packet.
-- Retired-node count above live-node count plus 1024 causes reconstruction.
+- Retired-node count above live-node count plus 1024, or estimated retained input
+  bytes above 16 MiB, causes reconstruction in the same detaching transaction.
+  The byte estimate includes canonical parsed declarations, not total native heap.
 - Packed records/string pool are bounded at 256 MiB; oversized publication is an
   explicit error, not truncated state.
 - Font collection transfer is bounded at 4096 faces and 64 MiB. Replacement
@@ -129,6 +154,8 @@ fallback success as native feature coverage or exclude its cost from results.
   remain part of memory accounting.
 - Hidden style packet/string decoding is scoped to existing observation cache
   generations, not an unbounded cache keyed by arbitrary authored strings.
+  Decoded hidden/scalar strings share a 64 MiB budget; scalar keys and numeric
+  transform caches have a 4096-entry cap per generation.
 
 These are implementation bounds, not measured zero-retention claims. Keep native
 RSS, Go heap, per-world byte copies, retained nodes, and teardown together in the

@@ -165,7 +165,8 @@ document.body.innerHTML='<header style="height:64px"></header><main style="displ
 const share=document.getElementById('share'),chat=document.getElementById('chat'),sr=share.getBoundingClientRect(),cr=chat.getBoundingClientRect();
 return JSON.stringify({share:[sr.x,sr.y],chat:[cr.x,cr.y],hit:document.elementFromPoint(sr.x+10,sr.y+10)===share});
 })()`)
-		const want = `{"share":[0,164],"chat":[968,532],"hit":true}`
+		// Frozen Chrome receipt: blitz-chrome152-handwritten-audit-2026-09-20.json.
+		const want = `{"share":[0,164],"chat":[968,501],"hit":true}`
 		if err != nil || result != want {
 			t.Fatalf("Taffy ancestor coordinate projection: %v want %s, err=%v", result, want, err)
 		}
@@ -179,7 +180,8 @@ func TestCSSRowFlexItemsUseIntrinsicBasisAndShrink(t *testing.T) {
 document.body.style.margin='0';document.body.innerHTML='<div id="row" style="display:flex;width:300px"><div class="item" style="display:inline-flex"><span style="display:block;width:200px;height:10px"></span></div><div class="item" style="display:inline-flex"><span style="display:block;width:200px;height:10px"></span></div><div class="item" style="display:inline-flex"><span style="display:block;width:200px;height:10px"></span></div></div>';
 return JSON.stringify(Array.from(document.querySelectorAll('.item'),item=>{const r=item.getBoundingClientRect();return [r.x,r.width]}))
 })()`)
-		const want = `[[0,100],[100,100],[200,100]]`
+		// Chrome's automatic minimum preserves each item's 200px content width.
+		const want = `[[0,200],[200,200],[400,200]]`
 		if err != nil || result != want {
 			t.Fatalf("row flex sizing: %v want %s, err=%v", result, want, err)
 		}
@@ -193,7 +195,8 @@ func TestCSSTaffyNestedFlexBasisKeepsSearchControlVisible(t *testing.T) {
 document.body.style.margin='0';document.body.innerHTML='<div style="display:flex;width:416px"><div style="width:40px"></div><div style="display:flex;flex:1 1 0%;min-width:0"><textarea id="q" name="q" style="display:flex;flex:1 1 100%;min-width:0"></textarea></div><div style="width:40px"></div></div>';
 const q=document.getElementById('q'),r=q.getBoundingClientRect();return JSON.stringify([r.x,r.width,r.height,q.offsetWidth,q.clientWidth]);
 })()`)
-		const want = `[40,336,36,336,336]`
+		// clientWidth excludes the two border pixels (verified in Chrome 152).
+		const want = `[40,336,36,336,334]`
 		if err != nil || result != want {
 			t.Fatalf("nested flex-basis search control: %v want %s, err=%v", result, want, err)
 		}

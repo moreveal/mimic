@@ -297,6 +297,10 @@ impl BaseDocument {
         // Update inline boxes
         let mut baseline_offsets = Vec::new();
         for ibox in inline_layout.layout.inline_boxes_mut() {
+            if ibox.id == super::list::DISCLOSURE_MARKER_ID {
+                baseline_offsets.push(0.0);
+                continue;
+            }
             let style = self.nodes[NodeId::from_u64(ibox.id)].layout_style();
             let margin = style
                 .margin()
@@ -388,6 +392,7 @@ impl BaseDocument {
                     AvailableSpace::MinContent => {
                         let mut width: f32 = 0.0;
                         for ibox in inline_layout.layout.inline_boxes_mut() {
+                            if ibox.id == super::list::DISCLOSURE_MARKER_ID { continue; }
                             let (is_floated, margin) = {
                                 let style = self.nodes[NodeId::from_u64(ibox.id)].layout_style();
                                 (
@@ -422,6 +427,7 @@ impl BaseDocument {
                         let mut right_band: f32 = 0.0;
                         let mut width: f32 = 0.0;
                         for ibox in inline_layout.layout.inline_boxes_mut() {
+                            if ibox.id == super::list::DISCLOSURE_MARKER_ID { continue; }
                             let (float, clear, margin) = {
                                 let style = self.nodes[NodeId::from_u64(ibox.id)].layout_style();
                                 (
@@ -738,6 +744,7 @@ impl BaseDocument {
         for line in inline_layout.layout.lines() {
             for item in line.items() {
                 if let parley::layout::PositionedLayoutItem::InlineBox(ibox) = item {
+                    if ibox.id == super::list::DISCLOSURE_MARKER_ID { continue; }
                     let node = &self.nodes[NodeId::from_u64(ibox.id)];
                     let style = node.layout_style();
                     let padding = style

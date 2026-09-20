@@ -1127,18 +1127,19 @@ func (r *Realm) installBindingsOnOwner() error {
 		return r.val(map[string]any{"width": w.ViewportWidth, "height": w.ViewportHeight, "outerWidth": w.OuterWidth, "outerHeight": w.OuterHeight, "screenX": w.X, "screenY": w.Y}), nil
 	})
 	host["observationVersion"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
-		w := p.environmentView().Window
+		environment := p.environmentView()
+		w := environment.Window
 		owner := r
 		if r.mainWorld != nil {
 			owner = r.mainWorld
 		}
-		preferences := p.environmentView().Preferences
+		preferences := environment.Preferences
 		// The suffix is the environment-only epoch used by retained selector
 		// matches; unrelated DOM mutations must not discard their rule programs.
 		// Style inputs and geometry resources have different lifetimes. Return
 		// both in one crossing so JS can retain selector/cascade work across
 		// image-only completions while invalidating boxes and used values.
-		return r.val(fmt.Sprintf("%d:%d:%d|%d:%d:%s:%t:%t|%d", r.styleDocumentRevision(), owner.styleResourceRevision.Load(), r.selectorTargetID, w.ViewportWidth, w.ViewportHeight, preferences.ColorScheme, preferences.ReducedMotion, owner.styleProjections.isDynamic(), owner.resourceRevision.Load())), nil
+		return r.val(fmt.Sprintf("%d:%d:%d|%d:%d:%s:%t:%g:%t|%d", r.styleDocumentRevision(), owner.styleResourceRevision.Load(), r.selectorTargetID, w.ViewportWidth, w.ViewportHeight, preferences.ColorScheme, preferences.ReducedMotion, environment.Display.DeviceScaleFactor, owner.styleProjections.isDynamic(), owner.resourceRevision.Load())), nil
 	})
 	host["observationRevision"] = r.packedFn(func(_ engine.Value, _ []engine.Value) (engine.Value, error) {
 		return r.val(r.styleDocumentRevision()), nil

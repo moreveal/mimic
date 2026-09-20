@@ -1620,7 +1620,13 @@ const cssBoxModel = (() => {
     );
   const nativeBox = (element) => {
     const box = blitzLayoutRect(element);
-    return box === null ? null : { ...box, edges: state(element).edges(box.width) };
+    if (box === null) return null;
+    const edges = state(element).edges(box.width);
+    // Native control scroll extents include their padding; the common scroll
+    // aggregator expects content-only overflow and adds padding itself.
+    if (tag(element) === 'INPUT')
+      box.overflowWidth = Math.max(0, box.contentWidth - edges.pleft - edges.pright);
+    return { ...box, edges };
   };
   const observedWidth = (element) =>
     blitzLayoutRect(element)?.width ?? taffyBox(element)?.width ?? width(element);

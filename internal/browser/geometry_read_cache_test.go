@@ -48,7 +48,9 @@ func TestGeometryComputationPlanDoesNotPublishCycleFallback(t *testing.T) {
  root.style.width='320px';const changed=read(),again=read();
  return JSON.stringify({first,same,changed,again,finite:[...first,...changed].every(Number.isFinite)});
  })()`)
-		want := `{"first":[120,12,0,120,120,240],"same":[120,12,0,120,120,240],"changed":[160,12,0,160,160,320],"again":[160,12,0,160,160,320],"finite":true}`
+		// The unmodified fixture has Chrome's 8px body margin. See the exact
+		// source/result receipt in blitz-cycle-chrome152-2026-09-20.json.
+		want := `{"first":[120,12,8,120,120,240],"same":[120,12,8,120,120,240],"changed":[160,12,8,160,160,320],"again":[160,12,8,160,160,320],"finite":true}`
 		if err != nil || value != want {
 			t.Fatalf("geometry computation cycle: %v %v", value, err)
 		}

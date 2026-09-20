@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"github.com/moreveal/mimic/internal/dom"
 	"slices"
-	"strings"
 )
 
 // Document retains one native projection between observable requests. The Go
@@ -44,7 +43,7 @@ func retiredInputBytes(node dom.Node) int64 {
 	bytes := int64(512 + len(node.Children)*8)
 	// Count string payload twice to cover canonical snapshots plus the native
 	// projection. Fixed node/map metadata is deliberately conservative.
-	bytes += 2 * int64(len(node.Text)+len(node.TextJSON)+len(node.TagName)+len(node.Namespace))
+	bytes += 2 * int64(len(node.Text)+len(node.TextJSON)+len(node.StyleDeclarationsJSON)+len(node.TagName)+len(node.Namespace))
 	for key, value := range node.Attributes {
 		bytes += 128 + 2*int64(len(key)+len(value)+len(node.AttributeNamespaces[key]))
 	}
@@ -158,10 +157,7 @@ func (d *Document) reconcile(snapshot dom.DerivedSnapshot) error {
 			var err error
 			switch node.Type {
 			case "element":
-				name := node.TagName
-				if node.Namespace == "http://www.w3.org/1999/xhtml" {
-					name = strings.ToLower(name)
-				}
+				name := canonicalLocalName(node)
 				err = d.Owner.Element(uint64(node.ID), node.Namespace, name)
 			case "text":
 				err = d.Owner.Text(uint64(node.ID), node.Text, true)
@@ -195,6 +191,11 @@ func (d *Document) reconcile(snapshot dom.DerivedSnapshot) error {
 				if err := d.Owner.Attribute(uint64(node.ID), node.AttributeNamespaces[name], name, node.Attributes[name]); err != nil {
 					return err
 				}
+			}
+		}
+		if node.Type == "element" && node.StyleDeclarationsJSON != previous.StyleDeclarationsJSON {
+			if err := d.Owner.inlineDeclarations(node); err != nil {
+				return err
 			}
 		}
 	}

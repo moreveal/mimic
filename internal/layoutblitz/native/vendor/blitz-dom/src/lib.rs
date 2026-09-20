@@ -158,4 +158,5 @@ mod fonts;
 mod intrinsic_images;
 mod table_geometry;
 mod skipped_content;
+mod live_controls;
 pub use fonts::CanonicalFont;

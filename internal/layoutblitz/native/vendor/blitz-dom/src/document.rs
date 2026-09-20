@@ -2372,6 +2372,9 @@ impl BaseDocument {
                         add(x0, y0, x1, y1);
                     }
                     PositionedLayoutItem::InlineBox(inline_box) => {
+                        if inline_box.id == crate::layout::list::DISCLOSURE_MARKER_ID {
+                            continue;
+                        }
                         if !is_in_target(NodeId::from_u64(inline_box.id)) {
                             continue;
                         }

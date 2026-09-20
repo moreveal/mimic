@@ -176,7 +176,16 @@ pub fn compute_replaced_layout(
         },
         (None, None) => match intrinsic_ratio {
             Some(ratio) => {
-                if let AvailableSpace::Definite(available_width) = available_space.width {
+                // Flex basis is requested with MaxContent available space even
+                // when the containing block has a definite width. Ratio-only
+                // replaced content still derives its natural preferred size
+                // from that containing block before flex shrink distributes it.
+                let containing_width = match available_space.width {
+                    AvailableSpace::Definite(width) => Some(width),
+                    AvailableSpace::MaxContent => parent_size.width,
+                    AvailableSpace::MinContent => None,
+                };
+                if let Some(available_width) = containing_width {
                     Size {
                         width: available_width,
                         height: available_width / ratio,

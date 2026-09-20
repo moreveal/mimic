@@ -137,6 +137,9 @@ pub struct LayoutData {
     /// Anonymous closed-details content is laid out for CSSOM readback but
     /// contributes zero block extent to its parent's normal flow.
     pub skipped_details_content: bool,
+    /// Definite content width only while this node's producer call is active.
+    /// Restored on return; never an independently validated geometry result.
+    pub active_layout_width: Option<f32>,
 }
 
 impl LayoutData {
@@ -151,6 +154,7 @@ impl LayoutData {
             viewport_positioned: false,
             hoisted_children: Vec::new(),
             skipped_details_content: false,
+            active_layout_width: None,
         }
     }
 }

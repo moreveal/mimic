@@ -1846,6 +1846,7 @@
       decoder,
       nodeStyles: new Map(),
       scalarValues: new Map(),
+      transforms: new Map(),
       retainedBytes: 0,
     };
   };
@@ -1885,6 +1886,16 @@
     return null;
   };
   const blitzStyleValue = (element, name) => {
+    // Pinned Stylo treats user-select as non-inherited; the Chrome profile's
+    // used inheritance is still owned by the migration correctness oracle.
+    if (name === 'user-select' || name === '-webkit-user-select') return null;
+    // SVG reference boxes/presentation attributes belong to the existing SVG
+    // observation engine until that domain is natively represented.
+    if (
+      elementSlot(element)?.namespaceURI === 'http://www.w3.org/2000/svg' &&
+      (name === 'transform' || name === 'font-size')
+    )
+      return null;
     const record = blitzPackedRecord(element);
     if (!record) return null;
     const column = blitzProperties.indexOf(name);
@@ -3230,6 +3241,17 @@
         get = (k) => entries.find((e) => e.name === k)?.value;
       const raw = entries.find((e) => e.name === 'transform')?.parsedValue ?? get('transform');
       if (!raw || raw === 'none' || get('display') === 'none') continue;
+      let nativeProduct = null;
+      if (nativeTransform !== null) {
+        const record = blitzPackedRecord(node),
+          key = record.at;
+        if (record.packed.transforms.has(key)) nativeProduct = record.packed.transforms.get(key);
+        else {
+          nativeProduct = host.blitzObserve(elementSlot(node).nodeId, 'transform', '');
+          if (record.packed.transforms.size < 4096)
+            record.packed.transforms.set(key, nativeProduct);
+        }
+      }
       const bounds = layoutRectInObservation(node),
         len = (v, size) => {
           const resolved = cssResolveLength(v, cssGeometryLengthContext(node, size));
@@ -3237,21 +3259,27 @@
         };
       let matrix;
       try {
-        matrix = compatibilityMatrix.parse(raw, (value, axis) =>
-          len(value, axis === 0 ? bounds.width : axis === 1 ? bounds.height : 0),
-        );
+        matrix = nativeProduct
+          ? nativeProduct.slice(0, 16)
+          : compatibilityMatrix.parse(raw, (value, axis) =>
+              len(value, axis === 0 ? bounds.width : axis === 1 ? bounds.height : 0),
+            );
       } catch {
         host.semanticMissingAt('surface.js/clientRectFor', 'CSS.clientRectTransform', raw);
         continue;
       }
       const origin = String(get('transform-origin') || '50% 50%').split(/\s+/),
-        ox = len(keywords[origin[0]] || origin[0], bounds.width),
-        oy = len(keywords[origin[1]] || origin[1] || '50%', bounds.height);
+        ox = nativeProduct
+          ? nativeProduct[16]
+          : len(keywords[origin[0]] || origin[0], bounds.width),
+        oy = nativeProduct
+          ? nativeProduct[17]
+          : len(keywords[origin[1]] || origin[1] || '50%', bounds.height);
       if (ox === null || oy === null) {
         host.semanticMissingAt('surface.js/clientRectFor', 'CSS.clientRectTransformOrigin');
         continue;
       }
-      const oz = origin[2] ? len(origin[2], 0) : 0;
+      const oz = nativeProduct ? nativeProduct[18] : origin[2] ? len(origin[2], 0) : 0;
       if (oz === null) {
         host.semanticMissingAt('surface.js/clientRectFor', 'CSS.clientRectTransformOrigin');
         continue;

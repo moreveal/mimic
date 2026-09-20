@@ -2,8 +2,25 @@ package browser
 
 import (
 	"context"
+	"strings"
 	"testing"
 )
+
+func TestBlitzDeviceScaleAdmissionInvalidatesAndRepairs(t *testing.T) {
+	p := blitzStandardsPage(t)
+	for _, scale := range []float64{1, 2, 1} {
+		p.env.Display.DeviceScaleFactor = scale
+		_, err := p.Evaluate(context.Background(), `document.body.getBoundingClientRect().width`)
+		if err != nil {
+			t.Fatal(err)
+		}
+		if scale == 1 {
+			assertBlitzOwnerActive(t, p)
+		} else if p.Top.Realm.blitz.document.Owner != nil || !strings.Contains(p.Top.Realm.blitz.fallback, "device-scale") {
+			t.Fatal("device scale change did not invalidate native admission")
+		}
+	}
+}
 
 func TestBlitzCanonicalColorSchemeInvalidatesNativeStyles(t *testing.T) {
 	p := blitzStandardsPage(t)

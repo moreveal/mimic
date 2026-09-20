@@ -720,6 +720,12 @@ const blitzUnsupportedDeclaration = (node) => {
   }
   return name.toLowerCase() === 'content-visibility';
 };
+let blitzControlMembershipRevision,
+  blitzControlMembership = [];
+bootstrapRestoreHooks.push(() => {
+  blitzControlMembershipRevision = undefined;
+  blitzControlMembership = [];
+});
 const readBlitzInputs = () => {
   if (shadowHosts.size) return JSON.stringify({ unsupported: 'shadow/slot adapter pending' });
   if (document.compatMode === 'BackCompat')
@@ -727,6 +733,37 @@ const readBlitzInputs = () => {
   if (styleObservationDynamic)
     return JSON.stringify({ unsupported: 'animation lifecycle adapter pending' });
   const inputs = constructedStyleSheets.nativeSources(document);
+  const membershipRevision = host.domRevision();
+  if (blitzControlMembershipRevision !== membershipRevision) {
+    blitzControlMembership = compatibilitySelectors.query(
+      document,
+      'input,textarea,select,video',
+      false,
+      false,
+    );
+    blitzControlMembershipRevision = membershipRevision;
+  }
+  inputs.controls = [];
+  for (const control of blitzControlMembership) {
+    const slot = elementSlot(control);
+    if (slot.tagName === 'VIDEO') {
+      inputs.unsupported = 'native video intrinsic metadata adapter pending';
+      break;
+    }
+    if (slot.tagName === 'SELECT') {
+      const size = /^\s*\+?(\d+)/.exec(host.getAttribute(slot.nodeId, 'size') || '');
+      if (host.getAttribute(slot.nodeId, 'multiple') !== null || (size && Number(size[1]) > 1)) {
+        inputs.unsupported = 'native select listbox adapter pending';
+        break;
+      }
+    }
+    if (compatibilityElementState.nativeControlContentUnsupported?.(control)) {
+      inputs.unsupported = 'native live control content adapter pending';
+      break;
+    }
+    const value = compatibilityElementState.nativeControlValue?.(control);
+    if (value) inputs.controls.push(value);
+  }
   if (!inputs.unsupported) {
     for (const inline of host.blitzInlineStyles()) {
       let block;

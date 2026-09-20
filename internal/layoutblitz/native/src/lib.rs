@@ -10,6 +10,8 @@ mod ffi;
 mod fonts;
 mod images;
 mod style_batch;
+mod transforms;
+mod live_controls;
 
 // Export the legacy fallback through the same archive so the executable has
 // one Rust runtime during migration.

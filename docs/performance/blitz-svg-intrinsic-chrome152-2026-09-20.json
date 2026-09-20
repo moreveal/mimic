@@ -1,0 +1,29 @@
+{
+ "chromeVersion":"152.0.7977.82",
+ "headless":true,
+ "viewport":{"width":1272,"height":653},
+ "initialHTML":"<!doctype html><body></body>",
+ "bodyStyle":"margin:0;font:16px Times New Roman",
+ "fixtureTemplate":"<div id=p style=\"width:400px;display:DISPLAY\"><svg id=s ATTRIBUTES></svg><span id=t style=\"display:inline-block;width:10px;height:10px\"></span></div>",
+ "rectangleFormat":["x","y","width","height"],
+ "cases":[
+  {"display":"block","attributes":"","parent":[0,0,400,154],"svg":[0,0,300,150],"following":[300,140,10,10]},
+  {"display":"block","attributes":"viewBox=\"0 0 100 50\"","parent":[0,0,400,222],"svg":[0,0,400,200],"following":[0,208,10,10]},
+  {"display":"block","attributes":"width=\"40\"","parent":[0,0,400,154],"svg":[0,0,40,150],"following":[40,140,10,10]},
+  {"display":"block","attributes":"height=\"20\"","parent":[0,0,400,24],"svg":[0,0,300,20],"following":[300,10,10,10]},
+  {"display":"block","attributes":"width=\"40\" height=\"30\"","parent":[0,0,400,34],"svg":[0,0,40,30],"following":[40,20,10,10]},
+  {"display":"block","attributes":"width=\"50%\" viewBox=\"0 0 100 50\"","parent":[0,0,400,104],"svg":[0,0,200,100],"following":[200,90,10,10]},
+  {"display":"block","attributes":"width=\"40\" style=\"width:auto\" viewBox=\"0 0 100 50\"","parent":[0,0,400,24],"svg":[0,0,40,20],"following":[40,10,10,10]},
+  {"display":"block","attributes":"style=\"width:40px\"","parent":[0,0,400,154],"svg":[0,0,40,150],"following":[40,140,10,10]},
+  {"display":"block","attributes":"viewBox=\"0 0 100 50\" preserveAspectRatio=\"none\"","parent":[0,0,400,222],"svg":[0,0,400,200],"following":[0,208,10,10]},
+  {"display":"inline-flex","attributes":"","parent":[0,0,400,150],"svg":[0,0,300,150],"following":[300,0,10,10]},
+  {"display":"inline-flex","attributes":"viewBox=\"0 0 100 50\"","parent":[0,0,400,195.125],"svg":[0,0,390.25,195.125],"following":[390.25,0,9.75,10]},
+  {"display":"inline-flex","attributes":"width=\"40\"","parent":[0,0,400,150],"svg":[0,0,40,150],"following":[40,0,10,10]},
+  {"display":"inline-flex","attributes":"height=\"20\"","parent":[0,0,400,20],"svg":[0,0,300,20],"following":[300,0,10,10]},
+  {"display":"inline-flex","attributes":"width=\"40\" height=\"30\"","parent":[0,0,400,30],"svg":[0,0,40,30],"following":[40,0,10,10]},
+  {"display":"inline-flex","attributes":"width=\"50%\" viewBox=\"0 0 100 50\"","parent":[0,0,400,100],"svg":[0,0,200,100],"following":[200,0,10,10]},
+  {"display":"inline-flex","attributes":"width=\"40\" style=\"width:auto\" viewBox=\"0 0 100 50\"","parent":[0,0,400,20],"svg":[0,0,40,20],"following":[40,0,10,10]},
+  {"display":"inline-flex","attributes":"style=\"width:40px\"","parent":[0,0,400,150],"svg":[0,0,40,150],"following":[40,0,10,10]},
+  {"display":"inline-flex","attributes":"viewBox=\"0 0 100 50\" preserveAspectRatio=\"none\"","parent":[0,0,400,195.125],"svg":[0,0,390.25,195.125],"following":[390.25,0,9.75,10]}
+ ]
+}

@@ -916,6 +916,7 @@ impl<'a, B: Brush> BreakLines<'a, B> {
         }
         // Compute metrics for the line, but ignore trailing whitespace.
         let mut have_metrics = false;
+        let mut has_atomic_box = false;
         let mut needs_reorder = false;
         for line_item in self.lines.line_items[line.item_range.clone()]
             .iter_mut()
@@ -927,6 +928,7 @@ impl<'a, B: Brush> BreakLines<'a, B> {
 
                     // Advance is already computed in "commit line" for items
                     if item.kind == InlineBoxKind::InFlow {
+                        has_atomic_box = true;
                         // Default vertical alignment is to align the bottom of boxes with the text baseline.
                         // This is equivalent to the entire height of the box being "ascent"
                         let below = self.layout.data.inline_box_baseline_offsets.get(line_item.index).copied().unwrap_or(0.0);
@@ -966,8 +968,15 @@ impl<'a, B: Brush> BreakLines<'a, B> {
 
                     // Compute the run's vertical metrics
                     let run = &self.layout.data.runs[line_item.index];
-                    line.metrics.ascent = line.metrics.ascent.max(run.metrics.ascent);
-                    line.metrics.descent = line.metrics.descent.max(run.metrics.descent);
+                    // Font ascent/descent are device-pixel quantized, but an
+                    // atomic inline's CSS layout extent is not. Quantize each
+                    // text input before union so a fractional box baseline is
+                    // not rounded and then subtracted from its unrounded size.
+                    let (ascent, descent) = if self.layout.data.quantize {
+                        (run.metrics.ascent.round(), run.metrics.descent.round())
+                    } else { (run.metrics.ascent, run.metrics.descent) };
+                    line.metrics.ascent = line.metrics.ascent.max(ascent);
+                    line.metrics.descent = line.metrics.descent.max(descent);
 
                     // Mark us as having seen non-whitespace content on this line
                     have_metrics = true;
@@ -1055,13 +1064,21 @@ impl<'a, B: Brush> BreakLines<'a, B> {
         if have_metrics {
             if let Some([ascent, descent, strut_height]) = self.layout.data.line_strut {
                 let leading = strut_height - ascent - descent;
-                let (old_ascent, old_descent) = if self.layout.data.quantize {
+                let (old_ascent, old_descent) = if self.layout.data.quantize && !has_atomic_box {
                     (line.metrics.ascent.round(), line.metrics.descent.round())
                 } else { (line.metrics.ascent, line.metrics.descent) };
-                let old_above = old_ascent + (line.metrics.line_height - old_ascent - old_descent) * 0.5;
+                // Use the same leading split as final baseline positioning
+                // below; mixing half-pixel struts with integral text baselines
+                // manufactures extra line height around atomic inline boxes.
+                let split_above = |value: f32| {
+                    if self.layout.data.quantize { (value * 0.5).floor() }
+                    else { value * 0.5 }
+                };
+                let old_above = old_ascent + split_above(line.metrics.line_height - old_ascent - old_descent);
                 let old_below = line.metrics.line_height - old_above;
-                let above = old_above.max(ascent + leading * 0.5);
-                let below = old_below.max(descent + leading * 0.5);
+                let strut_above = ascent + split_above(leading);
+                let above = old_above.max(strut_above);
+                let below = old_below.max(strut_height - strut_above);
                 line.metrics.ascent = old_ascent.max(ascent);
                 line.metrics.descent = old_descent.max(descent);
                 line.metrics.line_height = above + below;
@@ -1074,7 +1091,7 @@ impl<'a, B: Brush> BreakLines<'a, B> {
         // Whether metrics should be quantized to pixel boundaries
         let quantize = self.layout.data.quantize;
 
-        let (ascent, descent) = if quantize {
+        let (ascent, descent) = if quantize && !has_atomic_box {
             // We mimic Chrome in rounding ascent and descent separately,
             // before calculating the rest.
             // See lines_integral_line_height_ascent_descent_rounding() for more details.

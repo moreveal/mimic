@@ -1,0 +1,27 @@
+{
+  "chromeVersion": "152.0.7977.82",
+  "executable": "E:/GitHub/mimic/compatibility/.chrome-for-testing/152.0.7977.82/chrome-win64/chrome.exe",
+  "headless": true,
+  "viewport": {"width":1272,"height":653},
+  "initialHTML":"<!doctype html><body>capability fixture</body>",
+  "cases":[
+    {
+      "test":"TestCSSTaffyCoordinatesSpanBlockAncestorsAndFixedOverlays",
+      "source":"(()=>{\ndocument.body.style.cssText='margin:0;display:flex;flex-direction:column';\ndocument.body.innerHTML='<header style=\"height:64px\"></header><main style=\"display:block\"><article style=\"height:100px\"></article><div style=\"display:grid\"><button id=\"share\" style=\"width:86px;height:19px\"></button></div></main><aside style=\"position:fixed;right:24px;bottom:96px;width:280px;height:56px\"><button id=\"chat\" style=\"width:278px;height:22px\"></button></aside>';\nconst share=document.getElementById('share'),chat=document.getElementById('chat'),sr=share.getBoundingClientRect(),cr=chat.getBoundingClientRect();\nreturn JSON.stringify({share:[sr.x,sr.y],chat:[cr.x,cr.y],hit:document.elementFromPoint(sr.x+10,sr.y+10)===share});\n})()",
+      "result":"{\"share\":[0,164],\"chat\":[968,501],\"hit\":true}",
+      "oldExpectation":"{\"share\":[0,164],\"chat\":[968,532],\"hit\":true}"
+    },
+    {
+      "test":"TestCSSRowFlexItemsUseIntrinsicBasisAndShrink",
+      "source":"(()=>{\ndocument.body.style.margin='0';document.body.innerHTML='<div id=\"row\" style=\"display:flex;width:300px\"><div class=\"item\" style=\"display:inline-flex\"><span style=\"display:block;width:200px;height:10px\"></span></div><div class=\"item\" style=\"display:inline-flex\"><span style=\"display:block;width:200px;height:10px\"></span></div><div class=\"item\" style=\"display:inline-flex\"><span style=\"display:block;width:200px;height:10px\"></span></div></div>';\nreturn JSON.stringify(Array.from(document.querySelectorAll('.item'),item=>{const r=item.getBoundingClientRect();return [r.x,r.width]}))\n})()",
+      "result":"[[0,200],[200,200],[400,200]]",
+      "oldExpectation":"[[0,100],[100,100],[200,100]]"
+    },
+    {
+      "test":"TestCSSTaffyNestedFlexBasisKeepsSearchControlVisible",
+      "source":"(()=>{\ndocument.body.style.margin='0';document.body.innerHTML='<div style=\"display:flex;width:416px\"><div style=\"width:40px\"></div><div style=\"display:flex;flex:1 1 0%;min-width:0\"><textarea id=\"q\" name=\"q\" style=\"display:flex;flex:1 1 100%;min-width:0\"></textarea></div><div style=\"width:40px\"></div></div>';\nconst q=document.getElementById('q'),r=q.getBoundingClientRect();return JSON.stringify([r.x,r.width,r.height,q.offsetWidth,q.clientWidth]);\n})()",
+      "result":"[40,336,36,336,334]",
+      "oldExpectation":"[40,336,36,336,336]"
+    }
+  ]
+}

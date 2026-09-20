@@ -11,6 +11,7 @@ type styleProjectionEpoch struct {
 	width, height       int
 	colorScheme         string
 	reducedMotion       bool
+	deviceScale         float64
 }
 
 type styleProjectionKey struct {
@@ -41,7 +42,7 @@ func (r *Realm) styleProjectionEpoch(kind string) styleProjectionEpoch {
 		resources = r.styleResourceRevision.Load()
 	}
 	return styleProjectionEpoch{r.styleDocumentRevision(), resources, r.selectorTargetID,
-		e.Window.ViewportWidth, e.Window.ViewportHeight, e.Preferences.ColorScheme, e.Preferences.ReducedMotion}
+		e.Window.ViewportWidth, e.Window.ViewportHeight, e.Preferences.ColorScheme, e.Preferences.ReducedMotion, e.Display.DeviceScaleFactor}
 }
 
 func (c *styleProjectionCache) get(epoch styleProjectionEpoch, key styleProjectionKey) (any, bool) {

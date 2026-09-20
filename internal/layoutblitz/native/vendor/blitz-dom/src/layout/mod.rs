@@ -14,6 +14,7 @@ use style::values::computed::CSSPixelLength;
 use style::values::computed::length_percentage::CalcLengthPercentage;
 use stylo_taffy::TaffyStyloStyle;
 use taffy::{
+    MaybeResolve,
     BlockContext, CoreStyle as _, FlexDirection, LayoutContainingBlock, LayoutPartialTree, NodeId,
     ResolveOrZero, RoundTree, RunMode, TraversePartialTree, TraverseTree, compute_block_layout,
     compute_cached_layout, compute_flexbox_layout, compute_grid_layout, compute_leaf_layout,
@@ -73,10 +74,49 @@ pub(crate) fn resolve_calc_value(calc_ptr: *const (), parent_size: f32) -> f32 {
 }
 
 impl BaseDocument {
+    fn svg_intrinsic_sizes(&self, id: blitz_traits::node_id::NodeId) -> Option<(IntrinsicSizes, Size<f32>)> {
+        let node = &self.nodes[id];
+        let element = node.element_data()?;
+        if element.name.local != local_name!("svg") || element.name.ns != markup5ever::ns!(svg) {
+            return None;
+        }
+        // Root attributes define intrinsic content dimensions independently of
+        // the CSS preferred size: width="40" survives authored width:auto.
+        // The existing Stylo cascade separately supplies the preferred box size.
+        let dimension = |name| {
+            use style::values::specified::NoCalcLength;
+            use style_traits::ParsingMode;
+            let value = element.attr(name)?.trim();
+            let end = value.trim_end_matches(|c: char| c.is_ascii_alphabetic()).len();
+            let (number, unit) = value.split_at(end);
+            let number = number.parse::<f32>().ok().filter(|v| v.is_finite() && *v >= 0.0)?;
+            if unit.is_empty() { return Some(number); }
+            let length = NoCalcLength::parse_dimension_with_flags(ParsingMode::DEFAULT, false, number, unit).ok()?;
+            length.to_px_if_absolute().or_else(|| match unit {
+                "em" => node.primary_styles().map(|style| number * style.clone_font_size().used_size().px()),
+                "rem" => self.root_element().primary_styles().map(|style| number * style.clone_font_size().used_size().px()),
+                _ => None,
+            })
+        };
+        let width = dimension(local_name!("width"));
+        let height = dimension(local_name!("height"));
+        let view_box = element.attr(local_name!("viewBox")).and_then(|value| {
+            let values: Vec<f32> = value.split(|c: char| c.is_ascii_whitespace() || c == ',')
+                .filter(|part| !part.is_empty()).map(str::parse).collect::<Result<_, _>>().ok()?;
+            (values.len() == 4 && values.iter().all(|v| v.is_finite()) && values[2] > 0.0 && values[3] > 0.0)
+                .then(|| values[2] / values[3])
+        });
+        let ratio = match (width, height) {
+            (Some(w), Some(h)) if w > 0.0 && h > 0.0 => Some(w / h),
+            _ => view_box,
+        };
+        Some((IntrinsicSizes { width, height, ratio }, DEFAULT_OBJECT_SIZE))
+    }
+
     fn menu_list_intrinsic_size(
         &mut self,
         id: blitz_traits::node_id::NodeId,
-    ) -> Option<taffy::Size<f32>> {
+    ) -> Option<(taffy::Size<f32>, f32)> {
         let node = &self.nodes[id];
         let element = node.element_data()?;
         if element.name.local != local_name!("select")
@@ -92,12 +132,13 @@ impl BaseDocument {
         let scale = self.viewport.scale();
         let font_size = style.clone_font_size().used_size().px();
         let mut fonts = self.font_ctx.lock().unwrap();
-        let line_height = crate::font_metrics::normal_line_height(
+        let (ascent, descent, leading) = crate::font_metrics::font_line_metrics(
             &mut fonts,
             style.get_font(),
             font_size,
             scale,
         )?;
+        let line_height = ascent + descent + leading;
         let native_theme =
             style.clone_appearance() != style::values::specified::box_::Appearance::None;
         let mut pending = node.children.to_vec();
@@ -133,10 +174,10 @@ impl BaseDocument {
         }
         // Windows Chrome's menu-list theme reserves start=4, end=1+15
         // (scrollbar arrow), top/bottom=1. Author border/padding are separate.
-        Some(taffy::Size {
+        Some((taffy::Size {
             width: maximum.ceil() + if native_theme { 20.0 } else { 0.0 },
             height: line_height + if native_theme { 2.0 } else { 0.0 },
-        })
+        }, descent + leading / 2.0 + if native_theme { 1.0 } else { 0.0 }))
     }
 
     fn node_from_id(&self, node_id: taffy::prelude::NodeId) -> &Node {
@@ -165,7 +206,17 @@ impl BaseDocument {
         if self.node_from_id(node_id).layout_data().skipped_details_content {
             inputs.known_dimensions.height = Some(0.0);
         }
+        let previous_width = self.node_from_id(node_id).layout_data().active_layout_width;
+        let style = self.node_from_id(node_id).layout_style();
+        let padding = style.padding().resolve_or_zero(inputs.parent_size.width, resolve_calc_value);
+        let border = style.border().resolve_or_zero(inputs.parent_size.width, resolve_calc_value);
+        let inset = padding.left + padding.right + border.left + border.right;
+        let content_width = inputs.known_dimensions.width.map(|width| (width - inset).max(0.0))
+            .or_else(|| style.size().width.maybe_resolve(inputs.parent_size.width, resolve_calc_value)
+                .map(|width| (width - if style.box_sizing() == taffy::BoxSizing::BorderBox { inset } else { 0.0 }).max(0.0)));
+        self.node_from_id_mut(node_id).layout_data_mut().active_layout_width = content_width;
         let mut output = self.dispatch_child_layout(node_id, inputs, block_ctx);
+        self.node_from_id_mut(node_id).layout_data_mut().active_layout_width = previous_width;
         if inputs.run_mode == RunMode::PerformLayout {
             compute_oof_layout(self, node_id, &mut output);
             if dom_node_id(node_id) == self.root_element().id && !output.oof_candidates.is_empty() {
@@ -190,13 +241,19 @@ impl BaseDocument {
         inputs: taffy::tree::LayoutInput,
         block_ctx: Option<&mut BlockContext<'_>>,
     ) -> taffy::tree::LayoutOutput {
-        if let Some(size) = self.menu_list_intrinsic_size(dom_node_id(node_id)) {
-            return compute_leaf_layout(
+        let svg_intrinsic = self.svg_intrinsic_sizes(dom_node_id(node_id));
+        if let Some((size, baseline_descent)) = self.menu_list_intrinsic_size(dom_node_id(node_id)) {
+            let style = self.nodes[dom_node_id(node_id)].layout_style();
+            let padding = style.padding().resolve_or_zero(inputs.parent_size.width, resolve_calc_value);
+            let border = style.border().resolve_or_zero(inputs.parent_size.width, resolve_calc_value);
+            let mut output = compute_leaf_layout(
                 inputs,
                 &self.nodes[dom_node_id(node_id)].layout_style(),
                 resolve_calc_value,
                 |_, _| size,
             );
+            output.baselines = taffy::Baselines::from_first(Some(output.size.height - border.bottom - padding.bottom - baseline_descent));
+            return output;
         }
         let node = &mut self.nodes[dom_node_id(node_id)];
         if node.element_data().is_some_and(|element| element.name.local == local_name!("progress")) {
@@ -384,7 +441,7 @@ impl BaseDocument {
                     };
 
                     // Get the element's intrinsic dimensions and default object size
-                    let (intrinsic_sizes, default_object_size) = match &element_data.special_data {
+                    let (intrinsic_sizes, default_object_size) = if let Some(intrinsic) = svg_intrinsic { intrinsic } else { match &element_data.special_data {
                         SpecialElementData::Image(image_data) => match &**image_data {
                             ImageData::Intrinsic { width, height, .. } => {
                                 let (width, height) = (*width as f32, *height as f32);
@@ -477,7 +534,7 @@ impl BaseDocument {
                             )
                         }
                         _ => unreachable!(),
-                    };
+                    }};
 
                     let replaced_context = ReplacedContext {
                         intrinsic_sizes,
@@ -593,8 +650,22 @@ impl LayoutPartialTree for BaseDocument {
     fn compute_child_layout(
         &mut self,
         node_id: NodeId,
-        inputs: taffy::LayoutInput,
+        mut inputs: taffy::LayoutInput,
     ) -> taffy::LayoutOutput {
+        // Taffy's flex intrinsic query omits the known containing width. A
+        // ratio-only SVG needs that width for its natural preferred size before
+        // flex shrink. Supply the live producer input, not a previous rectangle,
+        // and include it in available_space BEFORE the layout cache lookup.
+        if inputs.available_space.width == AvailableSpace::MaxContent
+            && inputs.parent_size.width.is_none()
+            && self.svg_intrinsic_sizes(dom_node_id(node_id)).is_some_and(|(size, _)|
+                size.width.is_none() && size.height.is_none() && size.ratio.is_some()) {
+            if let Some(width) = self.node_from_id(node_id).layout_parent.get()
+                .and_then(|parent| self.nodes[parent].layout_data().active_layout_width) {
+                inputs.available_space.width = AvailableSpace::Definite(width);
+                inputs.parent_size.width = Some(width);
+            }
+        }
         compute_cached_layout(self, node_id, inputs, |tree, node_id, inputs| {
             tree.compute_child_layout_internal(node_id, inputs, None)
         })

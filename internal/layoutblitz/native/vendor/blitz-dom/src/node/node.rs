@@ -1629,8 +1629,15 @@ impl Node {
     /// CSSOM View's `scrollWidth`: the width of the node's content, including
     /// content not visible due to overflow
     pub fn scroll_width(&self) -> f32 {
-        self.client_width()
-            .max(self.final_layout().scrollable_overflow_rect.right)
+        let layout = self.final_layout();
+        let text_width = self.element_data().and_then(|element| element.text_input_data())
+            .filter(|data| !data.is_multiline)
+            .and_then(|data| data.editor.try_layout())
+            .map(|text| text.full_width() / text.scale() + layout.padding.left + layout.padding.right);
+        // The input's intrinsic preferred width is not overflowing content.
+        // Only its live editor can overflow the anonymous editing viewport.
+        if let Some(width) = text_width { return self.client_width().max(width); }
+        self.client_width().max(layout.scrollable_overflow_rect.right)
     }
 
     /// CSSOM View's `scrollHeight`: the height of the node's content, including

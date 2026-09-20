@@ -69,13 +69,18 @@ fn resolve_inset<P>(val: &GenericInset<P, LengthPercentage>, basis: f32) -> Opti
     }
 }
 
-/// Serialize a transform matrix component rounded to 6 decimal places (as
-/// browsers do when serializing resolved transform matrices)
+/// Chrome CSSOM numbers use six significant digits, not six decimal places.
 fn format_matrix_component(v: f64) -> String {
-    let rounded = (v * 1e6).round() / 1e6;
-    // Avoid "-0"
-    let rounded = if rounded == 0.0 { 0.0 } else { rounded };
-    format!("{rounded}")
+    let v = v.clamp(-(f32::MAX as f64), f32::MAX as f64);
+    let rounded: f64 = format!("{v:.5e}").parse().unwrap_or(v);
+    if rounded == 0.0 { return "0".into(); }
+    if rounded.abs() < 0.0001 || rounded.abs() >= 1_000_000.0 {
+        let scientific = format!("{rounded:e}");
+        let (mantissa, exponent) = scientific.split_once('e').unwrap();
+        let exponent: i32 = exponent.parse().unwrap();
+        return format!("{mantissa}e{}{exponent:02}", if exponent < 0 { "-" } else { "+" }, exponent = exponent.abs());
+    }
+    rounded.to_string()
 }
 
 /// Serialize a used transform matrix the way `getComputedStyle()` does
@@ -180,6 +185,51 @@ pub fn resolved_style_property_names() -> &'static [&'static str] {
 }
 
 impl BaseDocument {
+    /// The canonical CSSOM owns parsed precision separately from cssText.
+    /// Replace only its declaration block: attribute selectors keep cssText.
+    pub fn set_canonical_inline_declarations(&mut self, node_id: NodeId, css: &str) {
+        let block = parse_style_attribute(css, &self.url.url_extra_data(), None,
+            QuirksMode::NoQuirks, CssRuleType::Style);
+        let node = &mut self.nodes[node_id];
+        node.element_data_mut().unwrap().style_attribute =
+            Some(ServoArc::new(self.guard.wrap(block)));
+        node.set_restyle_hint(style::invalidation::element::restyle_hints::RestyleHint::RESTYLE_STYLE_ATTRIBUTE);
+    }
+    /// Geometry consumes the unrounded transform product, never the CSSOM
+    /// six-significant-digit string. The trailing values are local origins.
+    pub fn geometry_transform(&self, node_id: NodeId) -> Option<[f64; 19]> {
+        self.with_resolved_styles(node_id, |node, styles, _| {
+            let transform = &styles.get_box().transform;
+            if transform.0.is_empty() { return None; }
+            let layout = node.unrounded_layout();
+            let reference = euclid::Rect::new(
+                euclid::Point2D::new(CSSPixelLength::new(0.0), CSSPixelLength::new(0.0)),
+                euclid::Size2D::new(CSSPixelLength::new(layout.size.width), CSSPixelLength::new(layout.size.height)),
+            );
+            // Length-valued geometry inputs pass through Chrome's signed
+            // 26.6 LayoutUnit range before matrix composition. Numeric matrix
+            // components and scale factors must not receive this clamp.
+            use style::values::computed::transform::TransformOperation as Op;
+            let length = |v: CSSPixelLength| CSSPixelLength::new(v.px().clamp(-33554430.0, 33554429.0));
+            let lp = |v: &LengthPercentage, basis| LengthPercentage::new_length(length(v.resolve(basis)));
+            let operations: Vec<_> = transform.0.iter().map(|op| match op {
+                Op::Translate(x,y) => Op::Translate(lp(x,reference.width()),lp(y,reference.height())),
+                Op::TranslateX(x) => Op::TranslateX(lp(x,reference.width())),
+                Op::TranslateY(y) => Op::TranslateY(lp(y,reference.height())),
+                Op::TranslateZ(z) => Op::TranslateZ(length(*z)),
+                Op::Translate3D(x,y,z) => Op::Translate3D(lp(x,reference.width()),lp(y,reference.height()),length(*z)),
+                _ => op.clone(),
+            }).collect();
+            let transform = style::values::generics::transform::GenericTransform(operations.into());
+            let (m, _) = transform.to_transform_3d_matrix_f64(Some(&reference)).ok()?;
+            let origin = &styles.get_box().transform_origin;
+            Some([m.m11,m.m12,m.m13,m.m14,m.m21,m.m22,m.m23,m.m24,m.m31,m.m32,m.m33,m.m34,m.m41,m.m42,m.m43,m.m44,
+                origin.horizontal.resolve(reference.width()).px() as f64,
+                origin.vertical.resolve(reference.height()).px() as f64,
+                origin.depth.px() as f64])
+        }).flatten()
+    }
+
     /// Check whether `value` is a valid value for the CSS property `property`.
     /// Used by CSSOM APIs (`element.style.setProperty` and friends), which must
     /// ignore invalid declarations.
@@ -480,7 +530,7 @@ impl BaseDocument {
             }
             "transform-origin" => {
                 let origin = &styles.get_box().transform_origin;
-                let size = if has_layout_box { node.final_layout().size } else { taffy::Size::ZERO };
+                let size = if has_layout_box { node.unrounded_layout().size } else { taffy::Size::ZERO };
                 let x = format_px(origin.horizontal.resolve(CSSPixelLength::new(size.width)).px());
                 let y = format_px(origin.vertical.resolve(CSSPixelLength::new(size.height)).px());
                 let depth = origin.depth.to_css_string();
@@ -488,7 +538,7 @@ impl BaseDocument {
             }
             "perspective-origin" => {
                 let origin = &styles.get_box().perspective_origin;
-                let size = if has_layout_box { node.final_layout().size } else { taffy::Size::ZERO };
+                let size = if has_layout_box { node.unrounded_layout().size } else { taffy::Size::ZERO };
                 return format!("{} {}", format_px(origin.horizontal.resolve(CSSPixelLength::new(size.width)).px()), format_px(origin.vertical.resolve(CSSPixelLength::new(size.height)).px()));
             }
             _ => {}
@@ -550,7 +600,10 @@ impl BaseDocument {
             "width" | "height" if has_layout_box => {
                 // Used value: the layout size interpreted according to `box-sizing`
                 // (border-box size for `border-box`, content-box size for `content-box`)
-                let layout = node.final_layout();
+                // Device-pixel rounding belongs to painting/offset metrics,
+                // not CSSOM used lengths. Preserve the producer's fractional
+                // content box rather than round-tripping through final layout.
+                let layout = node.unrounded_layout();
                 let border_box = styles.get_position().box_sizing == BoxSizing::BorderBox;
                 let size = if property_name == "width" {
                     if border_box {
@@ -576,7 +629,7 @@ impl BaseDocument {
             "margin-top" | "margin-right" | "margin-bottom" | "margin-left" if has_layout_box => {
                 // Used value: the margin resolved by layout (percentages and
                 // `auto` margins resolved to lengths)
-                let layout = node.final_layout();
+                let layout = node.unrounded_layout();
                 let margin = match property_name {
                     "margin-top" => layout.margin.top,
                     "margin-right" => layout.margin.right,
@@ -592,7 +645,7 @@ impl BaseDocument {
                     .layout_parent
                     .get()
                     .and_then(|id| self.get_node(id))
-                    .map(|parent| *parent.final_layout());
+                    .map(|parent| *parent.unrounded_layout());
 
                 match position {
                     // Used value: the relative offset. An `auto` side resolves
@@ -675,7 +728,7 @@ impl BaseDocument {
                             node.layout_data().geometry_parent
                                 .or(node.layout_parent.get())
                                 .and_then(|id| self.get_node(id))
-                                .map(|parent| *parent.final_layout())
+                                .map(|parent| *parent.unrounded_layout())
                         };
                         if let Some(pl) = containing_layout {
                             let cb_width = pl.size.width - pl.border.left - pl.border.right;
@@ -693,7 +746,7 @@ impl BaseDocument {
                                 return format_px(value);
                             }
 
-                            let layout = node.final_layout();
+                            let layout = node.unrounded_layout();
                             let margin_box_top =
                                 layout.location.y - layout.margin.top - pl.border.top;
                             let margin_box_left =
@@ -739,7 +792,7 @@ impl BaseDocument {
                 if !transform.0.is_empty() {
                     // Used value: the transform list resolved to a matrix, with
                     // percentages resolved against the border box
-                    let layout = node.final_layout();
+                    let layout = node.unrounded_layout();
                     let reference_box = euclid::Rect::new(
                         euclid::Point2D::new(CSSPixelLength::new(0.0), CSSPixelLength::new(0.0)),
                         euclid::Size2D::new(

@@ -535,6 +535,12 @@ fn collect_table_cells(
                 .map(|v| v.clamp(1, 65534))
                 .unwrap_or(1);
             let mut style = stylo_taffy::to_taffy_style(stylo_style);
+            // A table cell's specified height is a row minimum, not a fixed
+            // grid-item height. Once the row is sized, every cell fills it.
+            if style.size.height.tag() == taffy::CompactLength::LENGTH_TAG {
+                style.min_size.height = style_helpers::length(style.size.height.value());
+                style.size.height = style_helpers::auto();
+            }
             let col = cursor.next_free();
 
             if first_cell_border.is_none() {

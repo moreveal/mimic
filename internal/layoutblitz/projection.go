@@ -6,6 +6,15 @@ import (
 	"strings"
 )
 
+// AdmissionReason identifies known representation boundaries before mutation.
+// Native failures are not admission decisions and must remain visible errors.
+func AdmissionReason(source *dom.Document) string {
+	if source.HasCodeUnitConnectedText() {
+		return "canonical UTF-16 code-unit text adapter pending"
+	}
+	return ""
+}
+
 // FromSnapshot initializes a persistent native projection with canonical IDs.
 // An incomplete projection is destroyed and never published to observers.
 // Shadow roots and external resources require additional input adapters before
@@ -33,15 +42,17 @@ func FromSnapshotAtURL(snapshot dom.DerivedSnapshot, width, height uint32, baseU
 		}
 		switch node.Type {
 		case "element":
-			name := node.TagName
-			if node.Namespace == "http://www.w3.org/1999/xhtml" {
-				name = strings.ToLower(name)
-			}
+			name := canonicalLocalName(node)
 			if err := owner.Element(uint64(node.ID), node.Namespace, name); err != nil {
 				return nil, err
 			}
 			for _, name := range node.AttributeNames {
 				if err := owner.Attribute(uint64(node.ID), node.AttributeNamespaces[name], name, node.Attributes[name]); err != nil {
+					return nil, err
+				}
+			}
+			if node.StyleDeclarationsJSON != "" {
+				if err := owner.inlineDeclarations(node); err != nil {
 					return nil, err
 				}
 			}
@@ -67,4 +78,21 @@ func FromSnapshotAtURL(snapshot dom.DerivedSnapshot, width, height uint32, baseU
 	}
 	failed = false
 	return owner, nil
+}
+
+// Canonical TagName is an HTML-facing uppercase projection, including for
+// foreign elements. QualifiedName retains their case-sensitive local spelling.
+// Native QualName receives the namespace separately, so omit its lexical prefix.
+func canonicalLocalName(node dom.Node) string {
+	if node.Namespace == "http://www.w3.org/1999/xhtml" {
+		return strings.ToLower(node.TagName)
+	}
+	name := node.QualifiedName
+	if name == "" {
+		name = node.TagName
+	}
+	if _, local, found := strings.Cut(name, ":"); found {
+		return local
+	}
+	return name
 }
