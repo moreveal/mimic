@@ -168,7 +168,7 @@ func bootstrapSnapshotPageLifecycle(t *testing.T, factory engine.Factory, expect
 		}
 		c.ClosePage(p.ID)
 	}
-	if err := c.bootstrapSnapshots.wait(ctx); err != nil {
+	if err := b.bootstrapSnapshots.wait(ctx); err != nil {
 		t.Fatal(err)
 	}
 	if expectSnapshot {

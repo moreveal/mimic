@@ -44,10 +44,10 @@ func TestBootstrapSnapshotColdChildRelations(t *testing.T) {
 Object.defineProperty(globalThis,'toJSON',{get(){parentJSONReads++;throw Error('parent must not be serialized')}});true`)
 			// Force the first capture to belong to the child without relying on
 			// a particular secure/isolation profile or parent warmup sequence.
-			if err := p.ctx.bootstrapSnapshots.close(); err != nil {
+			if err := p.ctx.browser.bootstrapSnapshots.close(); err != nil {
 				t.Fatal(err)
 			}
-			p.ctx.bootstrapSnapshots = bootstrapSnapshotCache{}
+			p.ctx.browser.bootstrapSnapshots = bootstrapSnapshotCache{}
 			makeChild := func() *Realm {
 				t.Helper()
 				before := make(map[*Realm]bool)
@@ -79,16 +79,16 @@ return parent===owner && top===owner && owner!==globalThis && window===globalThi
 			}
 			first := makeChild()
 			check(first)
-			p.ctx.bootstrapSnapshots.mu.Lock()
-			entry := p.ctx.bootstrapSnapshots.entries[first.bootstrapSource().key]
+			p.ctx.browser.bootstrapSnapshots.mu.Lock()
+			entry := p.ctx.browser.bootstrapSnapshots.entries[first.bootstrapSource().key]
 			captured := entry != nil && entry.err == nil && len(entry.seed) > 0
-			p.ctx.bootstrapSnapshots.mu.Unlock()
+			p.ctx.browser.bootstrapSnapshots.mu.Unlock()
 			if !captured {
 				t.Fatal("first child did not produce a reusable seed")
 			}
 			// A second use admits the build; the next child must restore it.
 			check(makeChild())
-			if err := p.ctx.bootstrapSnapshots.wait(ctx); err != nil {
+			if err := p.ctx.browser.bootstrapSnapshots.wait(ctx); err != nil {
 				t.Fatal(err)
 			}
 			third := makeChild()

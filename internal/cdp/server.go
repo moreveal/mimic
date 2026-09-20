@@ -6,6 +6,7 @@ import (
 	"context"
 	"encoding/base64"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io"
 	"net"
@@ -117,10 +118,7 @@ func (s *Server) Close(ctx context.Context) error {
 		c.Cancel()
 	}
 	s.workers.Wait()
-	for _, c := range s.Browser.Contexts() {
-		_ = s.Browser.CloseContext(c.ID)
-	}
-	return err
+	return errors.Join(err, s.Browser.Close())
 }
 
 func (s *Server) base(r *http.Request) string {

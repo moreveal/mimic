@@ -767,7 +767,7 @@ func (r *Realm) installBindings() error {
 func (r *Realm) installBindingsOnOwner() error {
 	defer func() {
 		if r.bootstrapCapture != nil {
-			r.agent.Page().ctx.bootstrapSnapshots.abandon(r.bootstrapCapture)
+			r.agent.Page().ctx.browser.bootstrapSnapshots.abandon(r.bootstrapCapture)
 			r.bootstrapCapture = nil
 		}
 	}()
@@ -2238,7 +2238,7 @@ func (r *Realm) installBindingsOnOwner() error {
 		// Instrumented profile sources contain diagnostic callbacks and must not
 		// become reusable profile seeds.
 		if profiling {
-			r.agent.Page().ctx.bootstrapSnapshots.captured(r.bootstrapCapture, nil, fmt.Errorf("instrumented bootstrap is not snapshot eligible"))
+			r.agent.Page().ctx.browser.bootstrapSnapshots.captured(r.bootstrapCapture, nil, fmt.Errorf("instrumented bootstrap is not snapshot eligible"))
 			r.bootstrapCapture = nil
 		}
 		finish, err = r.beginBootstrapCapture()

@@ -199,7 +199,7 @@ func TestBootstrapSnapshotBindingFailureFallsBackBeforeScripts(t *testing.T) {
 	if !(v8engine.Factory{}).BootstrapSnapshotsEnabled() {
 		t.Skip("source diagnostics bypass snapshots")
 	}
-	cache := &p.ctx.bootstrapSnapshots
+	cache := &p.ctx.browser.bootstrapSnapshots
 	cache.mu.Lock()
 	var old engine.BootstrapSnapshot
 	broken := &failedBindingSnapshot{}

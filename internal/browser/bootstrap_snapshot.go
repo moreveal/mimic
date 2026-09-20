@@ -86,11 +86,16 @@ func (r *Realm) bootstrapSource() *bootstrapSource {
 		plan.source = webapi.WithDevPreview(plan.source)
 	}
 	env := r.agent.Page().environmentView()
+	// Browser-owned snapshots cross Context boundaries, so the key must cover
+	// every immutable environment observation replayed during bootstrap. JSON
+	// provides deterministic map ordering and avoids a hand-maintained subset
+	// silently leaking locale, media, hardware, permission or network profile
+	// values into a sibling Context.
 	profile, _ := json.Marshal(struct {
-		Features                                             map[string]bool
-		Graphics                                             state.Graphics
+		Environment                                          state.Environment
 		Secure, Isolated, Credentialless, OriginAgentCluster bool
-	}{env.Features, env.Graphics, security.secureContext, security.crossOriginIsolated, security.credentialless, security.originAgentCluster})
+		DevPreview                                           bool
+	}{env, security.secureContext, security.crossOriginIsolated, security.credentialless, security.originAgentCluster, r.agent.Page().ctx.browser.devPreview})
 	hash := sha256.New()
 	for _, part := range []string{plan.source, plan.exposureJSON, plan.catalogJSON, string(profile)} {
 		hash.Write([]byte(part))
@@ -112,7 +117,7 @@ func (r *Realm) newRuntime() (engine.Runtime, error) {
 		return c.browser.factory.New(), nil
 	}
 	plan := r.bootstrapSource()
-	snapshot, capture, issue := c.bootstrapSnapshots.selectEntry(c.lifetime, factory, plan.key)
+	snapshot, capture, issue := c.browser.bootstrapSnapshots.selectEntry(c.browser.lifetime, factory, plan.key)
 	r.bootstrapCapture = capture
 	if issue != nil {
 		p.trace.Add(trace.Error, "bootstrapSnapshotUnavailable", map[string]any{"error": issue.Error()})
@@ -308,7 +313,7 @@ func (c *bootstrapSnapshotCache) invalidate(key [32]byte, reason error) {
 // its native values before retrying ordinary initialization on the same DOM.
 func (r *Realm) retryBootstrap(err error) error {
 	r.agent.Page().trace.Add(trace.Error, "bootstrapSnapshotBindingFailed", map[string]any{"error": err.Error()})
-	r.agent.Page().ctx.bootstrapSnapshots.invalidate(r.bootstrapSource().key, err)
+	r.agent.Page().ctx.browser.bootstrapSnapshots.invalidate(r.bootstrapSource().key, err)
 	if r.cookieUnsubscribe != nil {
 		r.cookieUnsubscribe()
 		r.cookieUnsubscribe = nil
@@ -464,7 +469,7 @@ func (r *Realm) finishBootstrapCapture(finish engine.Value, source string, boots
 		return
 	}
 	if finish == nil {
-		r.agent.Page().ctx.bootstrapSnapshots.captured(entry, nil, bootstrapErr)
+		r.agent.Page().ctx.browser.bootstrapSnapshots.captured(entry, nil, bootstrapErr)
 		return
 	}
 	value, err := r.runtime.Call(context.Background(), finish, nil)
@@ -480,7 +485,7 @@ func (r *Realm) finishBootstrapCapture(finish engine.Value, source string, boots
 			seed = bootstrapSeedSources(source, raw)
 		}
 	}
-	r.agent.Page().ctx.bootstrapSnapshots.captured(entry, seed, err)
+	r.agent.Page().ctx.browser.bootstrapSnapshots.captured(entry, seed, err)
 }
 
 // The forwarding proxy is also captured by generated bindings. Switching its

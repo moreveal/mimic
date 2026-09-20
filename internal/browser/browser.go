@@ -18,14 +18,20 @@ import (
 )
 
 type Browser struct {
-	devPreview     bool
-	defaultProfile *profile.Document
-	speechProvider speech.Provider
-	mu             sync.RWMutex
-	factory        engine.Factory
-	env            state.Environment
-	compat         compatibility.Bundle
-	contexts       map[string]*Context
+	devPreview         bool
+	defaultProfile     *profile.Document
+	speechProvider     speech.Provider
+	mu                 sync.RWMutex
+	lifetime           context.Context
+	cancel             context.CancelFunc
+	closed             bool
+	closeDone          chan struct{}
+	closeErr           error
+	factory            engine.Factory
+	env                state.Environment
+	compat             compatibility.Bundle
+	contexts           map[string]*Context
+	bootstrapSnapshots bootstrapSnapshotCache
 }
 
 type Options struct {
@@ -55,7 +61,8 @@ func NewWithOptions(factory engine.Factory, bundle compatibility.Bundle, options
 	// Installed font metadata is browser-wide immutable input. Resolve it once
 	// during browser construction, never in a synchronous DOM/layout read.
 	textmetrics.WarmSystemCatalog()
-	b := &Browser{devPreview: options.DevPreview, speechProvider: provider, factory: factory, env: env.Clone(), compat: bundle, contexts: map[string]*Context{}}
+	lifetime, cancel := context.WithCancel(context.Background())
+	b := &Browser{devPreview: options.DevPreview, speechProvider: provider, factory: factory, env: env.Clone(), compat: bundle, contexts: map[string]*Context{}, lifetime: lifetime, cancel: cancel}
 	if len(options.ProfileJSON) > 0 {
 		d, err := b.ValidateProfile(options.ProfileJSON)
 		if err != nil {
@@ -73,6 +80,10 @@ func (b *Browser) newContext(d *profile.Document) *Context {
 	defer b.mu.Unlock()
 	lifetime, cancel := context.WithCancel(context.Background())
 	c := &Context{lifetime: lifetime, cancel: cancel, ID: uuid.NewString(), browser: b, cookies: network.NewCookieStore(), network: network.NewSessionState(), storage: map[string]map[string]string{}, pages: map[string]*Page{}}
+	if b.closed {
+		cancel()
+		return c
+	}
 	c.env = b.env.Clone()
 	if d != nil {
 		c.env = d.Apply(b.env)
@@ -89,27 +100,26 @@ func (b *Browser) Environment() state.Environment {
 func (b *Browser) Compatibility() compatibility.Bundle { return b.compat }
 
 type Context struct {
-	env                state.Environment
-	proxy              profile.Proxy
-	files              map[string]*opfsStore
-	indexedDatabases   map[string]map[string]*indexedDatabase
-	indexedSequence    uint64
-	cacheNames         map[string]map[string]*cacheBucket
-	cacheSequence      uint64
-	bootstrapSnapshots bootstrapSnapshotCache
-	storageMu          sync.Mutex
-	permissionRealms   map[*Realm]struct{}
-	lifetime           context.Context
-	cancel             context.CancelFunc
-	mu                 sync.RWMutex
-	ID                 string
-	browser            *Browser
-	cookies            *network.CookieStore
-	network            *network.SessionState
-	transport          network.Transport
-	storage            map[string]map[string]string
-	capabilities       map[string]*originCapabilities
-	pages              map[string]*Page
+	env              state.Environment
+	proxy            profile.Proxy
+	files            map[string]*opfsStore
+	indexedDatabases map[string]map[string]*indexedDatabase
+	indexedSequence  uint64
+	cacheNames       map[string]map[string]*cacheBucket
+	cacheSequence    uint64
+	storageMu        sync.Mutex
+	permissionRealms map[*Realm]struct{}
+	lifetime         context.Context
+	cancel           context.CancelFunc
+	mu               sync.RWMutex
+	ID               string
+	browser          *Browser
+	cookies          *network.CookieStore
+	network          *network.SessionState
+	transport        network.Transport
+	storage          map[string]map[string]string
+	capabilities     map[string]*originCapabilities
+	pages            map[string]*Page
 }
 
 func (c *Context) NewPage() (*Page, error) {
@@ -290,13 +300,15 @@ func (c *Context) Close() error {
 	c.storageMu.Lock()
 	c.files = nil
 	c.storageMu.Unlock()
-	snapshotErr := c.bootstrapSnapshots.close()
 	c.mu.Lock()
-	defer c.mu.Unlock()
 	if closer, ok := c.transport.(interface{ CloseIdleConnections() }); ok {
 		closer.CloseIdleConnections()
 	}
-	return snapshotErr
+	c.mu.Unlock()
+	c.browser.mu.Lock()
+	delete(c.browser.contexts, c.ID)
+	c.browser.mu.Unlock()
+	return nil
 }
 
 // Cancel stops external work without touching realm-owned JavaScript state.

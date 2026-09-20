@@ -162,7 +162,7 @@ func TestBootstrapInitializationStages(t *testing.T) {
 			start := time.Now()
 			plan := r.bootstrapSource()
 			sourceTime := time.Since(start)
-			cache := &p.ctx.bootstrapSnapshots
+			cache := &p.ctx.browser.bootstrapSnapshots
 			cache.mu.Lock()
 			cached, snapshotBytes := false, 0
 			if entry := cache.entries[plan.key]; entry != nil && entry.snapshot != nil {
@@ -212,7 +212,7 @@ func TestBootstrapInitializationStages(t *testing.T) {
 			}
 			t.Logf("wave=%d secure=%v key=%x cached=%v snapshot_bytes=%d source_bytes=%d source=%s runtime=%s install=%s observe=%s workload=%s first_use=%s close=%s", wave, secure, plan.key[:8], cached, snapshotBytes, len(plan.source), sourceTime, runtimeTime, installTime, observeTime, workload, workloadTime, closeTime)
 		}
-		if err := seed.ctx.bootstrapSnapshots.wait(context.Background()); err != nil {
+		if err := seed.ctx.browser.bootstrapSnapshots.wait(context.Background()); err != nil {
 			t.Fatal(err)
 		}
 	}
@@ -240,7 +240,7 @@ func BenchmarkBootstrapBindingsOwner(b *testing.B) {
 				}
 				p.Close()
 			}
-			if err := c.bootstrapSnapshots.wait(context.Background()); err != nil {
+			if err := c.browser.bootstrapSnapshots.wait(context.Background()); err != nil {
 				b.Fatal(err)
 			}
 			b.ResetTimer()

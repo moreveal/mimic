@@ -55,7 +55,7 @@ func TestBootstrapSnapshotObservationalEquivalence(t *testing.T) {
 			baselineChild := bootstrapSnapshotEvaluate(t, ordinary, childSource).(string)
 			ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 			defer cancel()
-			if err := ordinary.ctx.bootstrapSnapshots.wait(ctx); err != nil {
+			if err := ordinary.ctx.browser.bootstrapSnapshots.wait(ctx); err != nil {
 				t.Fatal(err)
 			}
 			restored, err := ordinary.ctx.NewPage()

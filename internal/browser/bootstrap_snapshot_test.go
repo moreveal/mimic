@@ -54,7 +54,7 @@ func bootstrapSnapshotWarm(t *testing.T, p *Page) {
 	bootstrapSnapshotEvaluate(t, p, `(()=>{const f=document.createElement('iframe');document.body.appendChild(f);f.contentWindow.eval('true');f.remove();return true})()`)
 	ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 	defer cancel()
-	if err := p.ctx.bootstrapSnapshots.wait(ctx); err != nil {
+	if err := p.ctx.browser.bootstrapSnapshots.wait(ctx); err != nil {
 		t.Fatal(err)
 	}
 }
@@ -268,7 +268,7 @@ func TestBootstrapSnapshotConcurrentColdAdmission(t *testing.T) {
 		// Join any build only after every Page in this wave has already closed.
 		// The next wave must safely reuse an artifact built from retired Pages.
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
-		err := seed.ctx.bootstrapSnapshots.wait(ctx)
+		err := seed.ctx.browser.bootstrapSnapshots.wait(ctx)
 		cancel()
 		if err != nil {
 			t.Fatal(err)
