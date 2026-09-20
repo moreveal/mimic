@@ -1,0 +1,79 @@
+package cliui
+
+import (
+	"fmt"
+	"io"
+	"os"
+	"runtime/debug"
+	"strings"
+)
+
+const logoBlue = `  __  __               __  __               ____
+U|' \/ '|u   ___     U|' \/ '|u   ___    U /"___|
+\| |\/| |/  |_"_|    \| |\/| |/  |_"_|   \| | u`
+
+const logoGreen = ` | |  | |    | |      | |  | |    | |     | |/__
+ |_|  |_|  U/| |\u    |_|  |_|  U/| |\u    \____|
+<<,-,,-..-,_|___|_,-.<<,-,,-..-,_|___|_,-._// \\
+ (./  \.)\_)-' '-(_/  (./  \.)\_)-' '-(_/(__)(__)`
+
+const (
+	reset = "\x1b[0m"
+	blue  = "\x1b[1;94m"
+	dim   = "\x1b[2;37m"
+	green = "\x1b[1;32m"
+	white = "\x1b[1;37m"
+)
+
+type StartupInfo struct {
+	Version string
+	Chrome  int
+	Engine  string
+	Address string
+}
+
+// BuildVersion returns the module version for releases and a short VCS
+// revision for development builds.
+func BuildVersion() string {
+	info, ok := debug.ReadBuildInfo()
+	if !ok {
+		return "dev"
+	}
+	if info.Main.Version != "" && info.Main.Version != "(devel)" {
+		return info.Main.Version
+	}
+	settings := make(map[string]string, len(info.Settings))
+	for _, setting := range info.Settings {
+		settings[setting.Key] = setting.Value
+	}
+	revision := settings["vcs.revision"]
+	if len(revision) > 8 {
+		revision = revision[:8]
+	}
+	if revision == "" {
+		return "dev"
+	}
+	version := "dev+" + revision
+	if settings["vcs.modified"] == "true" {
+		version += "-dirty"
+	}
+	return version
+}
+
+// WriteStartup renders the human-facing startup banner. When styled is false,
+// it emits no terminal control sequences.
+func WriteStartup(w io.Writer, info StartupInfo, styled bool) error {
+	metadata := fmt.Sprintf("Mimic %s  ·  Chrome %d  ·  %s", info.Version, info.Chrome, strings.ToUpper(info.Engine))
+	if styled {
+		_, err := fmt.Fprintf(w, "\n%s%s\n%s%s\n\n  %s%s%s\n%s  browser runtime · without Chromium%s\n\n  %s◆ READY%s  %sCDP · %s%s\n\n", blue, logoBlue, logoGreen, reset, white, metadata, reset, dim, reset, green, reset, white, info.Address, reset)
+		return err
+	}
+	_, err := fmt.Fprintf(w, "\n%s\n%s\n\n  %s\n  browser runtime · without Chromium\n\n  ◆ READY  CDP · %s\n\n", logoBlue, logoGreen, metadata, info.Address)
+	return err
+}
+
+// IsInteractive reports whether output is attached directly to a terminal.
+func IsInteractive(output *os.File) bool {
+	info, err := output.Stat()
+	return err == nil && info.Mode()&os.ModeCharDevice != 0
+}

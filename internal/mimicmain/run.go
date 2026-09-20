@@ -17,6 +17,7 @@ import (
 	"github.com/moreveal/mimic/chrome"
 	"github.com/moreveal/mimic/internal/browser"
 	"github.com/moreveal/mimic/internal/cdp"
+	"github.com/moreveal/mimic/internal/cliui"
 	"github.com/moreveal/mimic/internal/engine"
 	gojaengine "github.com/moreveal/mimic/internal/engine/goja"
 	quickjsengine "github.com/moreveal/mimic/internal/engine/quickjs"
@@ -81,7 +82,15 @@ func Run() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("Mimic listening on http://%s\n", l.Addr())
+	if cliui.IsInteractive(os.Stdout) {
+		info := cliui.StartupInfo{Version: cliui.BuildVersion(), Chrome: *milestone, Engine: *engineName, Address: l.Addr().String()}
+		if err := cliui.WriteStartup(os.Stdout, info, os.Getenv("NO_COLOR") == ""); err != nil {
+			log.Print(err)
+		}
+	} else {
+		// Keep redirected output stable for launchers that parse readiness.
+		fmt.Printf("Mimic listening on http://%s\n", l.Addr())
+	}
 	if *devPreview {
 		fmt.Printf("Debug preview: http://%s/debug/preview/\n", l.Addr())
 	}
