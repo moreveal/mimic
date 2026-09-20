@@ -7,6 +7,7 @@ function checkElementVisibility(options = {}) {
   if (!this.isConnected) return false;
   options = options ?? {};
   return withStyleReadCache(() => {
+    if (blitzSkippedContent(this)) return false;
     const flags = {
       visibilityProperty: !!(options.visibilityProperty || options.checkVisibilityCSS),
       opacityProperty: !!(options.opacityProperty || options.checkOpacity),

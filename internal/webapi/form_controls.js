@@ -5,6 +5,8 @@
     textareas = new WeakMap(),
     options = new WeakMap(),
     selects = new WeakMap();
+  const nativeStateControls = new Set();
+  compatibilityElementState.nativeStateControls = () => nativeStateControls;
   const inputState = (e) => {
     let s = inputs.get(e);
     if (!s) {
@@ -19,6 +21,7 @@
         direction: 'none',
       };
       inputs.set(e, s);
+      nativeStateControls.add(e);
     }
     return s;
   };
@@ -36,6 +39,7 @@
     if (!s) {
       s = { dirty: false, selected: false, id: ++nextOptionID };
       options.set(e, s);
+      nativeStateControls.add(e);
     }
     return s;
   };

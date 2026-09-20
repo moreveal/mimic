@@ -34,6 +34,9 @@ import (
 )
 
 type Realm struct {
+	blitz                    *blitzDocument
+	blitzInputs              engine.Value
+	blitzCalls               map[string]blitzCallStat
 	files                    *opfsOwner
 	policyMetaCursor         int64
 	policyMetaCandidates     []int64
@@ -460,6 +463,16 @@ func (r *Realm) Close() error {
 		return nil
 	}
 	r.closed = true
+	r.reportBlitzCalls()
+	var nativeCloseErr error
+	if r.blitz != nil {
+		nativeCloseErr = r.runOnOwner(context.Background(), func(context.Context) error {
+			r.blitz.document.Close()
+			r.blitz = nil
+			return nil
+		})
+	}
+	r.blitzInputs = nil
 	r.closeSpeechProvider()
 	r.speech = nil
 	r.speechNotifier = nil
@@ -524,7 +537,15 @@ func (r *Realm) Close() error {
 	r.performanceNavigationResponse = nil
 	r.performanceLifecycleTimes = nil
 	r.performanceConfidence = nil
-	return r.runtime.Close()
+	runtimeCloseErr := r.runtime.Close()
+	// A failed owner dispatch must not skip the rest of Page teardown. After
+	// closing the runtime no observer can touch the native handle, so release
+	// a handle left behind by an already-closed owner as well.
+	if r.blitz != nil && runtimeCloseErr == nil {
+		r.blitz.document.Close()
+		r.blitz = nil
+	}
+	return errors.Join(nativeCloseErr, runtimeCloseErr)
 }
 func (r *Realm) Evaluate(ctx context.Context, source, name string) (engine.Value, error) {
 	p := r.agent.Page()
@@ -753,6 +774,7 @@ func (r *Realm) installBindingsOnOwner() error {
 
 	p := r.agent.Page()
 	host := map[string]any{}
+	r.installBlitzProducer(host)
 	host["layoutTaffy"] = r.transientFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		output, err := r.document.FlatLayoutState().PublishJSON(r.document.Revision(), strarg(args, 0))
 		if err != nil {
