@@ -50,6 +50,17 @@ type bootstrapSnapshotCache struct {
 	disk      *bootstrapDiskStore
 }
 
+func (c *bootstrapSnapshotCache) hasSnapshot() bool {
+	c.mu.Lock()
+	defer c.mu.Unlock()
+	for _, entry := range c.entries {
+		if entry.snapshot != nil {
+			return true
+		}
+	}
+	return false
+}
+
 func (r *Realm) bootstrapSource() *bootstrapSource {
 	if r.bootstrapPlan != nil {
 		return r.bootstrapPlan

@@ -188,6 +188,11 @@ func (b *Browser) PrepareBootstrap(ctx context.Context, dir string) error {
 		if !c.ClosePage(p.ID) {
 			return errors.New("close bootstrap preparation page")
 		}
+		// A disk hit is admitted while constructing the first realm. Only a cold
+		// cache needs the second realm which turns the captured seed into a blob.
+		if b.bootstrapSnapshots.hasSnapshot() {
+			return nil
+		}
 	}
 	return b.bootstrapSnapshots.wait(ctx)
 }
