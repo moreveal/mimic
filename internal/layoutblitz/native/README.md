@@ -17,5 +17,10 @@ and semantic conflicts are handled in the fork. To update:
 4. Run Mimic's native binding, browser correctness, Wikipedia E2E and memory
    gates before committing the new pin.
 
+For a clean source checkout, `go run ./tools/runmimic <flags>` performs the
+content-addressed native build and then runs Mimic. `go build ./cmd/mimic`
+always produces the real standalone executable and therefore expects the native
+archive to have been prepared first with `go run ./tools/buildnative`.
+
 Mimic's modified Parley remains in `vendor/parley` and is applied through
 Cargo's `[patch.crates-io]`, because it belongs to a separate upstream project.

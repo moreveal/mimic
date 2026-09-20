@@ -61,9 +61,26 @@ func Ensure() (string, error) {
 }
 
 func sourceDigest(root string) (string, error) {
-	roots := []string{filepath.Join(root, "internal", "layoutblitz", "native"), filepath.Join(root, "internal", "layouttaffy", "native")}
+	blitz := filepath.Join(root, "internal", "layoutblitz", "native")
+	taffy := filepath.Join(root, "internal", "layouttaffy", "native")
+	roots := []string{
+		filepath.Join(blitz, "Cargo.toml"),
+		filepath.Join(blitz, "Cargo.lock"),
+		filepath.Join(blitz, "src"),
+		filepath.Join(blitz, "vendor"),
+		filepath.Join(taffy, "Cargo.toml"),
+		filepath.Join(taffy, "src"),
+	}
 	var files []string
 	for _, tree := range roots {
+		info, statErr := os.Stat(tree)
+		if statErr != nil {
+			return "", statErr
+		}
+		if !info.IsDir() {
+			files = append(files, tree)
+			continue
+		}
 		err := filepath.WalkDir(tree, func(path string, entry fs.DirEntry, walkErr error) error {
 			if walkErr != nil {
 				return walkErr
