@@ -1,0 +1,3 @@
+ok  	github.com/moreveal/mimic/internal/browser	63.600s
+ok  	github.com/moreveal/mimic/internal/layoutblitz	0.192s [no tests to run]
+ok  	github.com/moreveal/mimic/internal/dom	0.267s [no tests to run]

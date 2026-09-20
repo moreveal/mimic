@@ -1,0 +1,482 @@
+[
+  {
+    "iteration": 0,
+    "mode": "baseline",
+    "phase": "cold",
+    "wallMS": 10054,
+    "stages": {
+      "Search fill": 494.2,
+      "Search inputValue": 8.53,
+      "Search press + navigation": 1055.2,
+      "JavaScript heading visible": 1913.66,
+      "ECMAScript scrollIntoViewIfNeeded": 496.86,
+      "ECMAScript innerText": 581.48,
+      "ECMAScript getAttribute href": 413.58,
+      "ECMAScript click + navigation": 1241.83,
+      "ECMAScript heading visible": 790.37,
+      "ECMAScript heading innerText": 11,
+      "ECMAScript page.title": 4.24
+    },
+    "afterPageClose": {
+      "WorkingSet64": 560676864,
+      "PrivateMemorySize64": 595853312,
+      "PeakWorkingSet64": 974454784
+    }
+  },
+  {
+    "iteration": 0,
+    "mode": "baseline",
+    "phase": "warm",
+    "wallMS": 6038,
+    "stages": {
+      "Search fill": 297.51,
+      "Search inputValue": 5.87,
+      "Search press + navigation": 318.52,
+      "JavaScript heading visible": 1453.31,
+      "ECMAScript scrollIntoViewIfNeeded": 414.84,
+      "ECMAScript innerText": 206.15,
+      "ECMAScript getAttribute href": 188.4,
+      "ECMAScript click + navigation": 842.36,
+      "ECMAScript heading visible": 841.45,
+      "ECMAScript heading innerText": 5.83,
+      "ECMAScript page.title": 2.69
+    },
+    "afterPageClose": {
+      "WorkingSet64": 601350144,
+      "PrivateMemorySize64": 636600320,
+      "PeakWorkingSet64": 974454784
+    }
+  },
+  {
+    "iteration": 0,
+    "mode": "blitz",
+    "phase": "cold",
+    "wallMS": 6144,
+    "stages": {
+      "Search fill": 115.92,
+      "Search inputValue": 85.87,
+      "Search press + navigation": 726.58,
+      "JavaScript heading visible": 814.78,
+      "ECMAScript scrollIntoViewIfNeeded": 670.98,
+      "ECMAScript innerText": 189.33,
+      "ECMAScript getAttribute href": 199.99,
+      "ECMAScript click + navigation": 967.45,
+      "ECMAScript heading visible": 365.08,
+      "ECMAScript heading innerText": 6.84,
+      "ECMAScript page.title": 4.86
+    },
+    "afterPageClose": {
+      "WorkingSet64": 300699648,
+      "PrivateMemorySize64": 328101888,
+      "PeakWorkingSet64": 635097088
+    }
+  },
+  {
+    "iteration": 0,
+    "mode": "blitz",
+    "phase": "warm",
+    "wallMS": 3977,
+    "stages": {
+      "Search fill": 70.13,
+      "Search inputValue": 5,
+      "Search press + navigation": 261.79,
+      "JavaScript heading visible": 322.01,
+      "ECMAScript scrollIntoViewIfNeeded": 653.05,
+      "ECMAScript innerText": 195.51,
+      "ECMAScript getAttribute href": 205.65,
+      "ECMAScript click + navigation": 594.67,
+      "ECMAScript heading visible": 360.34,
+      "ECMAScript heading innerText": 7.87,
+      "ECMAScript page.title": 3.92
+    },
+    "afterPageClose": {
+      "WorkingSet64": 331919360,
+      "PrivateMemorySize64": 361119744,
+      "PeakWorkingSet64": 635097088
+    }
+  },
+  {
+    "iteration": 1,
+    "mode": "blitz",
+    "phase": "cold",
+    "wallMS": 6159,
+    "stages": {
+      "Search fill": 114.84,
+      "Search inputValue": 82.63,
+      "Search press + navigation": 759.46,
+      "JavaScript heading visible": 771.53,
+      "ECMAScript scrollIntoViewIfNeeded": 662.11,
+      "ECMAScript innerText": 190.35,
+      "ECMAScript getAttribute href": 204.73,
+      "ECMAScript click + navigation": 1033.48,
+      "ECMAScript heading visible": 349.81,
+      "ECMAScript heading innerText": 38.03,
+      "ECMAScript page.title": 4.74
+    },
+    "afterPageClose": {
+      "WorkingSet64": 300982272,
+      "PrivateMemorySize64": 328548352,
+      "PeakWorkingSet64": 651739136
+    }
+  },
+  {
+    "iteration": 1,
+    "mode": "blitz",
+    "phase": "warm",
+    "wallMS": 3968,
+    "stages": {
+      "Search fill": 59.03,
+      "Search inputValue": 5.05,
+      "Search press + navigation": 267.09,
+      "JavaScript heading visible": 321.47,
+      "ECMAScript scrollIntoViewIfNeeded": 660.27,
+      "ECMAScript innerText": 185.55,
+      "ECMAScript getAttribute href": 206.97,
+      "ECMAScript click + navigation": 611.58,
+      "ECMAScript heading visible": 373.85,
+      "ECMAScript heading innerText": 40.65,
+      "ECMAScript page.title": 3.39
+    },
+    "afterPageClose": {
+      "WorkingSet64": 328433664,
+      "PrivateMemorySize64": 357179392,
+      "PeakWorkingSet64": 651739136
+    }
+  },
+  {
+    "iteration": 1,
+    "mode": "baseline",
+    "phase": "cold",
+    "wallMS": 9648,
+    "stages": {
+      "Search fill": 331.58,
+      "Search inputValue": 49.65,
+      "Search press + navigation": 850.82,
+      "JavaScript heading visible": 1867.61,
+      "ECMAScript scrollIntoViewIfNeeded": 520.44,
+      "ECMAScript innerText": 582.44,
+      "ECMAScript getAttribute href": 417.7,
+      "ECMAScript click + navigation": 1265.52,
+      "ECMAScript heading visible": 774.07,
+      "ECMAScript heading innerText": 11.62,
+      "ECMAScript page.title": 4.87
+    },
+    "afterPageClose": {
+      "WorkingSet64": 560099328,
+      "PrivateMemorySize64": 597151744,
+      "PeakWorkingSet64": 970362880
+    }
+  },
+  {
+    "iteration": 1,
+    "mode": "baseline",
+    "phase": "warm",
+    "wallMS": 5777,
+    "stages": {
+      "Search fill": 320.15,
+      "Search inputValue": 5.2,
+      "Search press + navigation": 309.84,
+      "JavaScript heading visible": 1355.85,
+      "ECMAScript scrollIntoViewIfNeeded": 398.89,
+      "ECMAScript innerText": 187.3,
+      "ECMAScript getAttribute href": 182.8,
+      "ECMAScript click + navigation": 815.81,
+      "ECMAScript heading visible": 790,
+      "ECMAScript heading innerText": 6.14,
+      "ECMAScript page.title": 2.22
+    },
+    "afterPageClose": {
+      "WorkingSet64": 591384576,
+      "PrivateMemorySize64": 632680448,
+      "PeakWorkingSet64": 970362880
+    }
+  },
+  {
+    "iteration": 2,
+    "mode": "baseline",
+    "phase": "cold",
+    "wallMS": 9532,
+    "stages": {
+      "Search fill": 334.63,
+      "Search inputValue": 14.67,
+      "Search press + navigation": 834.87,
+      "JavaScript heading visible": 1861.68,
+      "ECMAScript scrollIntoViewIfNeeded": 510.03,
+      "ECMAScript innerText": 577.83,
+      "ECMAScript getAttribute href": 417.97,
+      "ECMAScript click + navigation": 1231.02,
+      "ECMAScript heading visible": 782.3,
+      "ECMAScript heading innerText": 10.08,
+      "ECMAScript page.title": 3.38
+    },
+    "afterPageClose": {
+      "WorkingSet64": 561455104,
+      "PrivateMemorySize64": 601374720,
+      "PeakWorkingSet64": 982781952
+    }
+  },
+  {
+    "iteration": 2,
+    "mode": "baseline",
+    "phase": "warm",
+    "wallMS": 5879,
+    "stages": {
+      "Search fill": 299.85,
+      "Search inputValue": 4.88,
+      "Search press + navigation": 303.64,
+      "JavaScript heading visible": 1358.67,
+      "ECMAScript scrollIntoViewIfNeeded": 402.76,
+      "ECMAScript innerText": 196.27,
+      "ECMAScript getAttribute href": 183.58,
+      "ECMAScript click + navigation": 815.76,
+      "ECMAScript heading visible": 820.95,
+      "ECMAScript heading innerText": 7.56,
+      "ECMAScript page.title": 3.69
+    },
+    "afterPageClose": {
+      "WorkingSet64": 573861888,
+      "PrivateMemorySize64": 612790272,
+      "PeakWorkingSet64": 982781952
+    }
+  },
+  {
+    "iteration": 2,
+    "mode": "blitz",
+    "phase": "cold",
+    "wallMS": 6423,
+    "stages": {
+      "Search fill": 114.97,
+      "Search inputValue": 85.37,
+      "Search press + navigation": 748.87,
+      "JavaScript heading visible": 785.99,
+      "ECMAScript scrollIntoViewIfNeeded": 655.04,
+      "ECMAScript innerText": 192.88,
+      "ECMAScript getAttribute href": 204.49,
+      "ECMAScript click + navigation": 1053.08,
+      "ECMAScript heading visible": 421.63,
+      "ECMAScript heading innerText": 8.66,
+      "ECMAScript page.title": 4.87
+    },
+    "afterPageClose": {
+      "WorkingSet64": 294801408,
+      "PrivateMemorySize64": 321941504,
+      "PeakWorkingSet64": 641458176
+    }
+  },
+  {
+    "iteration": 2,
+    "mode": "blitz",
+    "phase": "warm",
+    "wallMS": 3841,
+    "stages": {
+      "Search fill": 56.17,
+      "Search inputValue": 4.96,
+      "Search press + navigation": 260.99,
+      "JavaScript heading visible": 328.35,
+      "ECMAScript scrollIntoViewIfNeeded": 635.77,
+      "ECMAScript innerText": 190.89,
+      "ECMAScript getAttribute href": 198.96,
+      "ECMAScript click + navigation": 585.27,
+      "ECMAScript heading visible": 342.25,
+      "ECMAScript heading innerText": 38.28,
+      "ECMAScript page.title": 2.61
+    },
+    "afterPageClose": {
+      "WorkingSet64": 314417152,
+      "PrivateMemorySize64": 341909504,
+      "PeakWorkingSet64": 641458176
+    }
+  },
+  {
+    "iteration": 3,
+    "mode": "blitz",
+    "phase": "cold",
+    "wallMS": 6046,
+    "stages": {
+      "Search fill": 100.65,
+      "Search inputValue": 14.92,
+      "Search press + navigation": 734.92,
+      "JavaScript heading visible": 769.05,
+      "ECMAScript scrollIntoViewIfNeeded": 663.92,
+      "ECMAScript innerText": 191.04,
+      "ECMAScript getAttribute href": 203.83,
+      "ECMAScript click + navigation": 992.35,
+      "ECMAScript heading visible": 356.39,
+      "ECMAScript heading innerText": 9.02,
+      "ECMAScript page.title": 6.22
+    },
+    "afterPageClose": {
+      "WorkingSet64": 291586048,
+      "PrivateMemorySize64": 319070208,
+      "PeakWorkingSet64": 634486784
+    }
+  },
+  {
+    "iteration": 3,
+    "mode": "blitz",
+    "phase": "warm",
+    "wallMS": 4187,
+    "stages": {
+      "Search fill": 73.25,
+      "Search inputValue": 5.38,
+      "Search press + navigation": 239.06,
+      "JavaScript heading visible": 344.55,
+      "ECMAScript scrollIntoViewIfNeeded": 668.73,
+      "ECMAScript innerText": 194.47,
+      "ECMAScript getAttribute href": 206.85,
+      "ECMAScript click + navigation": 620.73,
+      "ECMAScript heading visible": 358.06,
+      "ECMAScript heading innerText": 39.67,
+      "ECMAScript page.title": 5.61
+    },
+    "afterPageClose": {
+      "WorkingSet64": 327434240,
+      "PrivateMemorySize64": 357310464,
+      "PeakWorkingSet64": 634486784
+    }
+  },
+  {
+    "iteration": 3,
+    "mode": "baseline",
+    "phase": "cold",
+    "wallMS": 9697,
+    "stages": {
+      "Search fill": 488.57,
+      "Search inputValue": 6.55,
+      "Search press + navigation": 967.32,
+      "JavaScript heading visible": 1918.63,
+      "ECMAScript scrollIntoViewIfNeeded": 415.03,
+      "ECMAScript innerText": 606.3,
+      "ECMAScript getAttribute href": 406.04,
+      "ECMAScript click + navigation": 1317.23,
+      "ECMAScript heading visible": 793.76,
+      "ECMAScript heading innerText": 11.53,
+      "ECMAScript page.title": 2.42
+    },
+    "afterPageClose": {
+      "WorkingSet64": 556896256,
+      "PrivateMemorySize64": 597544960,
+      "PeakWorkingSet64": 961814528
+    }
+  },
+  {
+    "iteration": 3,
+    "mode": "baseline",
+    "phase": "warm",
+    "wallMS": 5941,
+    "stages": {
+      "Search fill": 296.2,
+      "Search inputValue": 5.31,
+      "Search press + navigation": 339.73,
+      "JavaScript heading visible": 1381.1,
+      "ECMAScript scrollIntoViewIfNeeded": 414.92,
+      "ECMAScript innerText": 194.71,
+      "ECMAScript getAttribute href": 179.52,
+      "ECMAScript click + navigation": 828.12,
+      "ECMAScript heading visible": 786.17,
+      "ECMAScript heading innerText": 6.7,
+      "ECMAScript page.title": 2.95
+    },
+    "afterPageClose": {
+      "WorkingSet64": 598159360,
+      "PrivateMemorySize64": 636809216,
+      "PeakWorkingSet64": 961814528
+    }
+  },
+  {
+    "iteration": 4,
+    "mode": "baseline",
+    "phase": "cold",
+    "wallMS": 9275,
+    "stages": {
+      "Search fill": 331.37,
+      "Search inputValue": 50.77,
+      "Search press + navigation": 980.57,
+      "JavaScript heading visible": 1874.68,
+      "ECMAScript scrollIntoViewIfNeeded": 407.04,
+      "ECMAScript innerText": 596.94,
+      "ECMAScript getAttribute href": 385.23,
+      "ECMAScript click + navigation": 1255.27,
+      "ECMAScript heading visible": 758.27,
+      "ECMAScript heading innerText": 9.15,
+      "ECMAScript page.title": 4.2
+    },
+    "afterPageClose": {
+      "WorkingSet64": 561762304,
+      "PrivateMemorySize64": 600047616,
+      "PeakWorkingSet64": 967426048
+    }
+  },
+  {
+    "iteration": 4,
+    "mode": "baseline",
+    "phase": "warm",
+    "wallMS": 5846,
+    "stages": {
+      "Search fill": 292.11,
+      "Search inputValue": 5.51,
+      "Search press + navigation": 304.86,
+      "JavaScript heading visible": 1326.08,
+      "ECMAScript scrollIntoViewIfNeeded": 397.96,
+      "ECMAScript innerText": 193.09,
+      "ECMAScript getAttribute href": 177.99,
+      "ECMAScript click + navigation": 876.22,
+      "ECMAScript heading visible": 805.69,
+      "ECMAScript heading innerText": 5.52,
+      "ECMAScript page.title": 4.66
+    },
+    "afterPageClose": {
+      "WorkingSet64": 585785344,
+      "PrivateMemorySize64": 624164864,
+      "PeakWorkingSet64": 967426048
+    }
+  },
+  {
+    "iteration": 4,
+    "mode": "blitz",
+    "phase": "cold",
+    "wallMS": 6132,
+    "stages": {
+      "Search fill": 198.45,
+      "Search inputValue": 6.54,
+      "Search press + navigation": 773.31,
+      "JavaScript heading visible": 793.13,
+      "ECMAScript scrollIntoViewIfNeeded": 661.71,
+      "ECMAScript innerText": 189.53,
+      "ECMAScript getAttribute href": 205.52,
+      "ECMAScript click + navigation": 1002.33,
+      "ECMAScript heading visible": 343.41,
+      "ECMAScript heading innerText": 38.11,
+      "ECMAScript page.title": 3.15
+    },
+    "afterPageClose": {
+      "WorkingSet64": 298233856,
+      "PrivateMemorySize64": 326598656,
+      "PeakWorkingSet64": 647872512
+    }
+  },
+  {
+    "iteration": 4,
+    "mode": "blitz",
+    "phase": "warm",
+    "wallMS": 3992,
+    "stages": {
+      "Search fill": 58.68,
+      "Search inputValue": 5.01,
+      "Search press + navigation": 263.17,
+      "JavaScript heading visible": 324.2,
+      "ECMAScript scrollIntoViewIfNeeded": 639.65,
+      "ECMAScript innerText": 189.26,
+      "ECMAScript getAttribute href": 201.42,
+      "ECMAScript click + navigation": 604.95,
+      "ECMAScript heading visible": 359.26,
+      "ECMAScript heading innerText": 7.29,
+      "ECMAScript page.title": 4.47
+    },
+    "afterPageClose": {
+      "WorkingSet64": 327766016,
+      "PrivateMemorySize64": 356827136,
+      "PeakWorkingSet64": 647872512
+    }
+  }
+]

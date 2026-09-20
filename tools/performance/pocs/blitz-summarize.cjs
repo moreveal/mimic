@@ -117,6 +117,10 @@ function summarizeProfile(text) {
     const match = line.match(/BLITZ (accounting|native-phases|calls|legacy) (.*)/);
     if (match) {
       const at = match[2].indexOf('{');
+      if (at < 0 && match[1] === 'legacy') {
+        legacy.push(match[2]);
+        continue;
+      }
       if (at < 0) throw new Error(`Missing profile JSON at line ${lineIndex + 1}`);
       let data;
       try {

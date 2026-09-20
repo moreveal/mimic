@@ -114,15 +114,16 @@ track intervals, not unions that incorrectly include entire rowspan cells.
 
 Current whole-document fallback reasons include shadow/slots, adopted sheets,
 quirks mode, dynamic animation lifecycle, child-frame viewport integration,
-reduced-motion integration, and unsupported active-font descriptors/indexes or
-collection bounds. Keep these reasons explicit in `blitzFallback` traces.
+reduced-motion or non-1 device-scale integration, select listbox modes, video
+intrinsic metadata, and unsupported active-font descriptors/indexes or collection
+bounds. Keep these reasons explicit in `blitzFallback` traces.
 Connected code-unit `TextJSON` representation also requires fallback, before
 any native mutation; removal/replacement returns to native production.
-Nonempty textarea content, private input value divergence from its default
-attribute, and select listbox modes need the live-control content adapter and
-also fall back. Empty textarea geometry remains native. Admission reads private
-form slots, not author getters. Search typing can therefore incur fallback
-before navigation; its cost must remain in the full workload result.
+Nonempty default/live textarea content also falls back. Text-like input live
+values are separate authoritative native state: they do not rewrite the default
+attribute observed by selectors, and reset/clear plus Parley scroll extent are
+covered. Admission reads private form slots, not author getters. Wikipedia
+search typing remains native; the final profile records no document fallback.
 
 Servo Stylo does not implement authored `content-visibility`. Eligibility reads
 the existing parsed stylesheet declarations and parses distinct canonical inline
