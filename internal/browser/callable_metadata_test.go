@@ -5,5 +5,6 @@ package browser
 import "testing"
 
 func TestCallableMetadataMatchesFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
 	documentAllOracle(t, "callable_metadata")
 }

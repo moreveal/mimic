@@ -15,6 +15,7 @@ import (
 // A neutral application must leave its loading state after either an empty
 // or a populated JSON response. This tests delivery, promises and DOM updates.
 func TestV8FetchJSONCompletesRenderedState(t *testing.T) {
+	serialBrowserTest(t)
 	for _, tc := range []struct{ name, body, want string }{
 		{"empty", `[]`, "Empty"},
 		{"populated", `[{"label":"Ready"}]`, "Ready"},

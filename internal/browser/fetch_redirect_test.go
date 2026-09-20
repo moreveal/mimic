@@ -14,6 +14,7 @@ import (
 )
 
 func TestFetchRedirectResponseSemantics(t *testing.T) {
+	serialBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case "/redirect":

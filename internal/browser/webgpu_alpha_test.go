@@ -11,6 +11,7 @@ import (
 )
 
 func TestWebGPUCanvasAlphaFrozenChrome(t *testing.T) {
+	serialBrowserTest(t)
 	source, err := os.ReadFile("testdata/webgpu_alpha_oracle.js")
 	if err != nil {
 		t.Fatal(err)

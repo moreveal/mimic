@@ -13,6 +13,7 @@ import (
 )
 
 func TestSelectedBundleOptionalInstallers(t *testing.T) {
+	parallelBrowserTest(t)
 	for backend, factory := range map[string]engine.Factory{"goja": gojaengine.Factory{}, "v8": v8engine.Factory{}} {
 		for mask := 0; mask < 8; mask++ {
 			t.Run(fmt.Sprintf("%s/%d", backend, mask), func(t *testing.T) {

@@ -11,6 +11,7 @@ import (
 // the first attribute repeatedly. A shape-only removeAttributeNode never
 // shrinks this live collection and leaves those ordinary loops running forever.
 func TestCanonicalAttributeRemovalChrome152(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -39,6 +40,7 @@ func TestCanonicalAttributeRemovalChrome152(t *testing.T) {
 }
 
 func TestHTMLElementAutofocusReflectsBooleanAttribute(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)

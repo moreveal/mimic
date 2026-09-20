@@ -15,6 +15,7 @@ import (
 // Chrome 152 retains currentScript through the script cleanup checkpoint,
 // including after a throw, but clears it before timers and script load events.
 func TestClassicScriptCleanupCurrentScript(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		w.Header().Set("Content-Type", "text/html")
 		if req.URL.Path == "/dynamic.js" {
@@ -64,6 +65,7 @@ setTimeout(()=>record('timer'),0);
 }
 
 func TestDynamicInlineScriptHasNoResourceLoadEvent(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	value, err := p.Evaluate(context.Background(), `new Promise(resolve=>{const events=[];const script=document.createElement('script');script.text='globalThis.inlineProbeRan=true';script.onload=()=>events.push('load');script.onerror=()=>events.push('error');document.body.append(script);setTimeout(()=>resolve({ran:globalThis.inlineProbeRan,events:events.join(',')}),30)})`)
 	if err != nil {

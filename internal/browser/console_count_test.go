@@ -10,6 +10,7 @@ import (
 )
 
 func TestConsoleCountLabelsErrorsAndRealmIsolation(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		result, err := p.Evaluate(context.Background(), `(()=>{
  if(console.count.length!==0||console.countReset.length!==0)return 'length';

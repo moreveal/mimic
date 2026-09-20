@@ -12,6 +12,7 @@ import (
 )
 
 func TestRetainedHistoryMatchesFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
 	source, err := os.ReadFile("testdata/history_retained_realm_oracle.js")
 	if err != nil {
 		t.Fatal(err)

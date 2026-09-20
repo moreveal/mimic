@@ -10,6 +10,7 @@ import (
 )
 
 func TestMediaElementLoadAndPlaybackState(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	defer p.Close()
 	if _, err := p.Evaluate(context.Background(), `
@@ -35,6 +36,7 @@ func TestMediaElementLoadAndPlaybackState(t *testing.T) {
 }
 
 func TestMediaPreloadNoneDefersTransportUntilExplicitLoad(t *testing.T) {
+	parallelBrowserTest(t)
 	var requests atomic.Int32
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, request *http.Request) {
 		requests.Add(1)
@@ -70,6 +72,7 @@ func TestMediaPreloadNoneDefersTransportUntilExplicitLoad(t *testing.T) {
 }
 
 func TestMediaElementLoadsResourceWithoutDecoder(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, request *http.Request) {
 		w.Header().Set("Content-Type", "video/mp4")
 		_, _ = w.Write([]byte("opaque media bytes"))

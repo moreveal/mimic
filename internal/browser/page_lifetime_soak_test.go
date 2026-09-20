@@ -22,6 +22,7 @@ import (
 // is changed. The fixed DOM is reused so retained canonical nodes are not
 // confused with temporary callback/value ownership.
 func TestPageLifetimeSoak(t *testing.T) {
+	serialBrowserTest(t)
 	dir := os.Getenv("MIMIC_LIFETIME_SOAK_DIR")
 	if dir == "" {
 		t.Skip("set MIMIC_LIFETIME_SOAK_DIR for the long-lived Page ownership soak")

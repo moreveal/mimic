@@ -7,6 +7,7 @@ import (
 )
 
 func TestBlitzCanonicalImageInputLifecycle(t *testing.T) {
+	parallelBrowserTest(t)
 	document, err := dom.Parse(`<html><body><img></body></html>`)
 	if err != nil {
 		t.Fatal(err)

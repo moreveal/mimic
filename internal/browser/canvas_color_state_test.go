@@ -13,6 +13,7 @@ import (
 )
 
 func TestCanvasColorAndCoverageFrozenChrome(t *testing.T) {
+	serialBrowserTest(t)
 	for _, name := range []string{"canvas_color_state", "canvas_path_coverage", "canvas_color_space"} {
 		t.Run(name, func(t *testing.T) {
 			source, err := os.ReadFile("testdata/" + name + "_oracle.js")

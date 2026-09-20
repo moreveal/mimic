@@ -10,6 +10,7 @@ import (
 // retains its 100x30 rect but checkVisibility, hit testing and IO exclude it.
 // Opening the host changes eligibility, not the descendant's authored style.
 func TestBlitzSkippedContentsPreserveRectsButExcludeInputAndObservers(t *testing.T) {
+	serialBrowserTest(t)
 	p := blitzStandardsPage(t)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()

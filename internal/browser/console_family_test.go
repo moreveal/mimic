@@ -13,6 +13,7 @@ import (
 )
 
 func TestConsoleFamilyFrozenChromeAndRestoredRealms(t *testing.T) {
+	serialBrowserTest(t)
 	source, err := os.ReadFile("testdata/console_family_oracle.js")
 	if err != nil {
 		t.Fatal(err)
@@ -85,11 +86,13 @@ func TestConsoleFamilyFrozenChromeAndRestoredRealms(t *testing.T) {
 }
 
 func TestConsoleDescriptionNativeBrandsAndFailures(t *testing.T) {
+	parallelBrowserTest(t)
 	p := bootstrapSnapshotPage(t)
 	historyEval(t, p, `(()=>{for(const make of [()=>function(){},()=>/x/,()=>new Date(0),()=>new Error('x')]){let n=0;const v=make();v.toString=()=>{n++;throw Error('description failure')};console.log(v);if(n!==1)return 'native description';const proxy=new Proxy(v,{get(){throw Error('proxy get')},getPrototypeOf(){throw Error('proxy prototype')}});console.log(proxy);if(n!==1)return 'proxy description'}let reads=0;const plain={get toString(){reads++;throw Error('ordinary object')}};console.dir(plain);console.table(plain);return reads===0})()`, true)
 }
 
 func TestConsoleForeignArgumentsFrozenChrome(t *testing.T) {
+	serialBrowserTest(t)
 	source, err := os.ReadFile("testdata/console_cross_realm_oracle.js")
 	if err != nil {
 		t.Fatal(err)
@@ -130,6 +133,7 @@ func TestConsoleForeignArgumentsFrozenChrome(t *testing.T) {
 }
 
 func TestConsoleTimerFailedLabelStillUsesDefault(t *testing.T) {
+	parallelBrowserTest(t)
 	p := bootstrapSnapshotPage(t)
 	historyEval(t, p, `(()=>{const failure={};for(const method of ['time','timeLog','timeEnd']){let caught=false;try{console[method]({toString(){throw failure}})}catch(e){caught=e===failure}if(!caught)return false}console.timeEnd();return true})()`, true)
 	var kinds []string

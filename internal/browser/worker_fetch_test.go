@@ -15,6 +15,7 @@ import (
 const startFetchWorker = `new Promise((resolve,reject)=>{globalThis.fetchWorker=new Worker('/start.js');fetchWorker.onmessage=e=>resolve(e.data);fetchWorker.onerror=e=>reject(new Error(e.message));fetchWorker.postMessage('start')})`
 
 func TestBlobWorkerFetchHasOpaqueBaseAndInheritedSourceOrigin(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			if r.URL.Path == "/echo" {
@@ -37,6 +38,7 @@ func TestBlobWorkerFetchHasOpaqueBaseAndInheritedSourceOrigin(t *testing.T) {
 }
 
 func TestWorkerFetchUsesFinalScriptBaseAndSharedTransport(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			switch r.URL.Path {
@@ -85,6 +87,7 @@ func TestWorkerFetchUsesFinalScriptBaseAndSharedTransport(t *testing.T) {
 }
 
 func TestWorkerFetchAbortIsolatedAndPreservesReason(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		started, canceled := make(chan struct{}), make(chan struct{})
 		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -125,6 +128,7 @@ func TestWorkerFetchAbortIsolatedAndPreservesReason(t *testing.T) {
 }
 
 func TestWorkerFetchTeardownCancelsTransport(t *testing.T) {
+	parallelBrowserTest(t)
 	for _, mode := range []string{"terminate", "page-close", "self-close"} {
 		t.Run(mode, func(t *testing.T) {
 			historyTestPages(t, func(t *testing.T, p *Page) {

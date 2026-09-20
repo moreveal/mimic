@@ -4,4 +4,7 @@ package browser
 
 import "testing"
 
-func TestOPFSMatchesFrozenChrome(t *testing.T) { documentAllOracle(t, "opfs") }
+func TestOPFSMatchesFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
+	documentAllOracle(t, "opfs")
+}

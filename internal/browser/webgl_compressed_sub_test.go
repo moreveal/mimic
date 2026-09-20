@@ -11,6 +11,7 @@ import (
 )
 
 func TestWebGLCompressedSubFrozenChrome(t *testing.T) {
+	serialBrowserTest(t)
 	source, err := os.ReadFile("testdata/webgl_compressed_sub_oracle.js")
 	if err != nil {
 		t.Fatal(err)

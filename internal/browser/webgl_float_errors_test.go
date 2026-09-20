@@ -11,6 +11,7 @@ import (
 )
 
 func TestWebGLFloatErrorsFrozenChrome(t *testing.T) {
+	serialBrowserTest(t)
 	source, err := os.ReadFile("testdata/webgl_float_errors_oracle.js")
 	if err != nil {
 		t.Fatal(err)

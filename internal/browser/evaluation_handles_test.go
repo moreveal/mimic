@@ -23,6 +23,7 @@ func persistentHandleCount(t *testing.T, runtime engine.Runtime) int {
 }
 
 func TestPageEvaluationReleasesExportedValuesBeforeClose(t *testing.T) {
+	serialBrowserTest(t)
 	for cycle := 0; cycle < 3; cycle++ {
 		p := newAsyncModulePage(t)
 		navigateCapabilityFixture(t, p)
@@ -57,6 +58,7 @@ func TestPageEvaluationReleasesExportedValuesBeforeClose(t *testing.T) {
 }
 
 func TestPageEvaluationTransfersNonJSONValueOwnership(t *testing.T) {
+	serialBrowserTest(t)
 	p := newAsyncModulePage(t)
 	navigateCapabilityFixture(t, p)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -96,6 +98,7 @@ func TestPageEvaluationTransfersNonJSONValueOwnership(t *testing.T) {
 }
 
 func TestCompletedAndCanceledTimersReleaseCallbackRoots(t *testing.T) {
+	serialBrowserTest(t)
 	p := newAsyncModulePage(t)
 	navigateCapabilityFixture(t, p)
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
@@ -128,6 +131,7 @@ func TestCompletedAndCanceledTimersReleaseCallbackRoots(t *testing.T) {
 }
 
 func TestAnimationFramesReleaseQueuedCallbackRoots(t *testing.T) {
+	serialBrowserTest(t)
 	p := newAsyncModulePage(t)
 	navigateCapabilityFixture(t, p)
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
@@ -149,6 +153,7 @@ func TestAnimationFramesReleaseQueuedCallbackRoots(t *testing.T) {
 }
 
 func TestListenerDispatchDoesNotRetainCheckpointRoots(t *testing.T) {
+	serialBrowserTest(t)
 	p := newAsyncModulePage(t)
 	navigateCapabilityFixture(t, p)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)

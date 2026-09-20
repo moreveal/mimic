@@ -9,6 +9,7 @@ import (
 )
 
 func TestParserStylesheetCompletionKeepsDialogOpen(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case "/style.css":

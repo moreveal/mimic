@@ -11,6 +11,7 @@ import (
 )
 
 func TestWebGLInstancedFrozenChrome(t *testing.T) {
+	serialBrowserTest(t)
 	source, err := os.ReadFile("testdata/webgl_instanced_oracle.js")
 	if err != nil {
 		t.Fatal(err)

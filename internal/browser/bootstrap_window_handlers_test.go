@@ -12,6 +12,7 @@ import (
 )
 
 func TestBootstrapSnapshotWindowHandlersRetainDispatchState(t *testing.T) {
+	parallelBrowserTest(t)
 	p := bootstrapSnapshotPage(t)
 	bootstrapSnapshotWarm(t, p)
 	restored, err := p.ctx.NewPage()
@@ -33,6 +34,7 @@ return log.join(',');
 }
 
 func TestBootstrapSnapshotNestedWindowMessageHandler(t *testing.T) {
+	serialBrowserTest(t)
 	var childURL string
 	fixture := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html")

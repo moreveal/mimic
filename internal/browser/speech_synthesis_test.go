@@ -18,6 +18,7 @@ import (
 )
 
 func TestSpeechSynthesisChromeOracle(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
@@ -76,6 +77,7 @@ func (b *controlledSpeech) Resume() {
 func (b *controlledSpeech) Close() { b.mu.Lock(); b.closed = true; b.mu.Unlock() }
 
 func TestSpeechPortableProviderQueueAndCancellation(t *testing.T) {
+	serialBrowserTest(t)
 	for name, factory := range map[string]engine.Factory{"goja": gojaengine.Factory{}, "v8": v8engine.Factory{}} {
 		t.Run(name, func(t *testing.T) {
 			ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)

@@ -6,6 +6,7 @@ import (
 )
 
 func TestTextLayoutReuseTracksExactInputs(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		value, err := p.Evaluate(context.Background(), `(() => {
   const node = document.createElement('div');

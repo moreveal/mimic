@@ -8,6 +8,7 @@ import (
 // Frozen Chrome 152 returns non-string eval inputs unchanged, including boxed
 // strings. TrustedScript uses its internal source without invoking toString.
 func TestFrameEvalArgumentsPreserveIdentityAndTrustedSource(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		value, err := page.Evaluate(context.Background(), `(()=>{
  const frame=document.createElement('iframe');document.body.appendChild(frame);const child=frame.contentWindow;
@@ -29,6 +30,7 @@ func TestFrameEvalArgumentsPreserveIdentityAndTrustedSource(t *testing.T) {
 }
 
 func TestFrameEvalNonStringStillChecksOrigin(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		_, err := page.Evaluate(context.Background(), `const frame=document.createElement('iframe');document.body.appendChild(frame);globalThis.savedEval=frame.contentWindow.eval`)
 		if err != nil {

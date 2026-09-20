@@ -9,6 +9,7 @@ import (
 )
 
 func TestOPFSOriginOwnershipAndLifecycle(t *testing.T) {
+	parallelBrowserTest(t)
 	c := &Context{}
 	s := c.opfs("https://one.test")
 	if s != c.opfs("https://one.test") || s == c.opfs("https://two.test") || s == (&Context{}).opfs("https://one.test") {
@@ -54,6 +55,7 @@ func TestOPFSOriginOwnershipAndLifecycle(t *testing.T) {
 }
 
 func TestOPFSConcurrentAccessLockAndWrites(t *testing.T) {
+	parallelBrowserTest(t)
 	s := newOPFSStore()
 	rootOwner := &opfsOwner{}
 	id := s.call(rootOwner, "child", 1, map[string]any{"name": "concurrent", "kind": "file", "create": true}).(map[string]any)["id"].(int)
@@ -103,6 +105,7 @@ func TestOPFSConcurrentAccessLockAndWrites(t *testing.T) {
 }
 
 func TestOPFSPagesShareOnlyTheirOriginContext(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { w.Write([]byte("<!doctype html>")) }))
 	defer server.Close()
 	historyTestPages(t, func(t *testing.T, p *Page) {
@@ -132,6 +135,7 @@ func TestOPFSPagesShareOnlyTheirOriginContext(t *testing.T) {
 	})
 }
 func TestOPFSOwnerTeardownRejectsRacingCallbacks(t *testing.T) {
+	parallelBrowserTest(t)
 	s := newOPFSStore()
 	o := &opfsOwner{}
 	id := o.dispatch(s, "child", 1, map[string]any{"name": "close-race", "kind": "file", "create": true}).(map[string]any)["id"].(int)

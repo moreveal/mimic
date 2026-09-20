@@ -10,6 +10,7 @@ import (
 )
 
 func TestWebkitCSSOracle(t *testing.T) {
+	parallelBrowserTest(t)
 	for _, name := range []string{"values", "aliases", "computed", "rules", "supports", "longhands", "shorthand-wide", "shorthand-mutation", "shorthand-rule-mutation", "state", "reflection", "flex", "flex-edges", "numbers", "border-text", "colors", "columns-emphasis", "radius", "ordinary-relations", "column-count", "supports-reflection", "animation-transition", "animation-longhands"} {
 		t.Run(name, func(t *testing.T) {
 			parallelOracle(t)

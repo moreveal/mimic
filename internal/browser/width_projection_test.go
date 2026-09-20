@@ -6,11 +6,13 @@ import (
 )
 
 func TestWidthDimensionProjectionMatchesFrozenChrome152(t *testing.T) {
+	parallelBrowserTest(t)
 	testCSSObservation(t, "css_width_projection")
 }
 
 // A fixed-width box remains observable correctly with unrelated sibling flow.
 func TestWidthObservationKeepsUnrelatedDocumentFlowCorrect(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
 		value, err := p.Evaluate(context.Background(), `(()=>{

@@ -17,6 +17,7 @@ import (
 // Most snapshot tests capture a parent first. A profile can also be encountered
 // first in a child, whose parent/top must not become native objects in the seed.
 func TestBootstrapSnapshotColdChildRelations(t *testing.T) {
+	serialBrowserTest(t)
 	if os.Getenv("MIMIC_DISABLE_BOOTSTRAP_SNAPSHOT") == "1" || !(v8engine.Factory{}).BootstrapSnapshotsEnabled() {
 		t.Skip("requires snapshot capture and restoration")
 	}

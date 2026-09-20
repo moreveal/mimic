@@ -11,13 +11,23 @@ import (
 	"os"
 	"reflect"
 	"testing"
+
+	chrome152 "github.com/moreveal/mimic/chrome/152"
+	v8engine "github.com/moreveal/mimic/internal/engine/v8"
 )
 
+type ordinaryOracleFactory struct{ v8engine.Factory }
+
+func (ordinaryOracleFactory) BootstrapSnapshotsEnabled() bool { return false }
+
 func TestDocumentAllMatchesFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
+
 	documentAllOracle(t, "document_all")
 }
 
 func TestDocumentAllRetainedRealmMatchesFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
 	documentAllOracle(t, "document_all_navigation")
 }
 
@@ -25,12 +35,21 @@ func documentAllOracle(t *testing.T, name string, headers ...map[string]string) 
 	t.Helper()
 	for _, mode := range []string{"ordinary", "snapshot"} {
 		t.Run(mode, func(t *testing.T) {
-			if mode == "ordinary" {
-				t.Setenv("MIMIC_DISABLE_BOOTSTRAP_SNAPSHOT", "1")
+			var seed *Page
+			if mode == "snapshot" {
+				seed = bootstrapSnapshotPage(t)
 			} else {
-				t.Setenv("MIMIC_DISABLE_BOOTSTRAP_SNAPSHOT", "0")
+				browser, err := New(ordinaryOracleFactory{}, chrome152.New())
+				if err != nil {
+					t.Fatal(err)
+				}
+				context := browser.NewContext()
+				t.Cleanup(func() { _ = context.Close() })
+				seed, err = context.NewPage()
+				if err != nil {
+					t.Fatal(err)
+				}
 			}
-			seed := bootstrapSnapshotPage(t)
 			if mode == "snapshot" {
 				navigateCapabilityFixture(t, seed)
 				bootstrapSnapshotWarm(t, seed)

@@ -9,6 +9,7 @@ import (
 )
 
 func TestCSSMatrixProjectionMatchesFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
 	source, err := os.ReadFile("testdata/css_matrix_projection_oracle.js")
 	if err != nil {
 		t.Fatal(err)

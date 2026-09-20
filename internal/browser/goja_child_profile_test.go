@@ -19,6 +19,7 @@ import (
 // Opt-in bootstrap attribution. Ordinary teardown and diagnostic Go collection
 // are recorded separately; neither changes the production recovery policy.
 func TestGojaBootstrapChildProfile(t *testing.T) {
+	serialBrowserTest(t)
 	output := os.Getenv("MIMIC_GOJA_CHILD_PROFILE")
 	if output == "" {
 		t.Skip("set MIMIC_GOJA_CHILD_PROFILE for startup attribution")

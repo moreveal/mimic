@@ -11,6 +11,7 @@ import (
 )
 
 func TestFontCollectionsOracle(t *testing.T) {
+	parallelBrowserTest(t)
 	for _, name := range []string{"loading", "collections", "descriptors", "constructor", "documents"} {
 		t.Run(name, func(t *testing.T) {
 			parallelOracle(t)
@@ -66,6 +67,7 @@ func fontOracle(t *testing.T, name string) {
 }
 
 func TestFontResourceBoundaryAndDocumentOwnership(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		value, err := p.Evaluate(context.Background(), `(async()=>{
  const a=document.implementation.createHTMLDocument('a'),b=document.implementation.createHTMLDocument('b');
@@ -86,6 +88,7 @@ func TestFontResourceBoundaryAndDocumentOwnership(t *testing.T) {
 }
 
 func TestDocumentFontsIncludesCSSConnectedFaces(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		value, err := p.Evaluate(context.Background(), `JSON.stringify((()=>{
  const style=document.createElement('style');

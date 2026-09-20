@@ -11,6 +11,7 @@ import (
 )
 
 func TestWebGLLossFrozenChrome(t *testing.T) {
+	serialBrowserTest(t)
 	source, err := os.ReadFile("testdata/webgl_loss_oracle.js")
 	if err != nil {
 		t.Fatal(err)

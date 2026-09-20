@@ -12,6 +12,7 @@ import (
 // Combining an initial getEntries snapshot with future observations therefore
 // legitimately yields two navigation observations in the early case.
 func TestPerformanceNavigationSnapshotAndObserverRegistration(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", "text/html")

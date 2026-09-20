@@ -73,6 +73,7 @@ func sampleWorkerTimerState(t *testing.T, worker *DedicatedWorker) workerTimerSa
 }
 
 func TestWorkerTimersReleaseRootsAndCapturedPayloads(t *testing.T) {
+	serialBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, request *http.Request) {
 		if request.URL.Path == "/worker.js" {
 			w.Header().Set("Content-Type", "text/javascript")
@@ -136,6 +137,7 @@ func TestWorkerTimersReleaseRootsAndCapturedPayloads(t *testing.T) {
 // Frozen Chrome 152.0.7977.82: a timer exception reaches Worker.onerror with
 // the original object, and the next interval tick still uses a cancelable ID.
 func TestWorkerIntervalErrorAndSelfCancelChrome152(t *testing.T) {
+	serialBrowserTest(t)
 	p := newAsyncModulePage(t)
 	navigateCapabilityFixture(t, p)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -153,6 +155,7 @@ func TestWorkerIntervalErrorAndSelfCancelChrome152(t *testing.T) {
 }
 
 func TestWindowTimerTerminalFailureRemovesRegistration(t *testing.T) {
+	serialBrowserTest(t)
 	p := newAsyncModulePage(t)
 	navigateCapabilityFixture(t, p)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -183,6 +186,7 @@ func TestWindowTimerTerminalFailureRemovesRegistration(t *testing.T) {
 }
 
 func TestWorkerErrorDeliveryReleasesConsumedValues(t *testing.T) {
+	serialBrowserTest(t)
 	p := newAsyncModulePage(t)
 	navigateCapabilityFixture(t, p)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)

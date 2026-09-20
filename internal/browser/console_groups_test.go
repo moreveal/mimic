@@ -9,6 +9,7 @@ import (
 )
 
 func TestConsoleGroupsEmitOrderedEvents(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	value, err := p.Evaluate(context.Background(), `(()=>{
  const methods=[console.group,console.groupCollapsed,console.groupEnd];

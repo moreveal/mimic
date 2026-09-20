@@ -50,6 +50,7 @@ func (f *cacheTestFactory) BuildBootstrapSnapshot(ctx context.Context, _ ...stri
 }
 
 func TestBootstrapSnapshotCacheAdmissionAndClose(t *testing.T) {
+	serialBrowserTest(t)
 	var cache bootstrapSnapshotCache
 	ctx, cancel := context.WithCancel(context.Background())
 	defer cancel()
@@ -84,6 +85,7 @@ func TestBootstrapSnapshotCacheAdmissionAndClose(t *testing.T) {
 }
 
 func TestBootstrapSnapshotCacheCancellationJoinsBuilder(t *testing.T) {
+	serialBrowserTest(t)
 	var cache bootstrapSnapshotCache
 	ctx, cancel := context.WithCancel(context.Background())
 	factory := &cacheTestFactory{started: make(chan struct{}), release: make(chan struct{})}
@@ -108,6 +110,7 @@ func TestBootstrapSnapshotCacheCancellationJoinsBuilder(t *testing.T) {
 }
 
 func TestBootstrapSnapshotCacheBoundsRetainedSeedsAndArtifacts(t *testing.T) {
+	serialBrowserTest(t)
 	var cache bootstrapSnapshotCache
 	factory := &cacheTestFactory{}
 	first := &cacheTestSnapshot{size: 20 << 20}
@@ -127,6 +130,7 @@ func TestBootstrapSnapshotCacheBoundsRetainedSeedsAndArtifacts(t *testing.T) {
 }
 
 func TestBootstrapSnapshotHostProxyKeepsPrivateIntrinsics(t *testing.T) {
+	serialBrowserTest(t)
 	factory := v8engine.Factory{}
 	plain := factory.New()
 	defer plain.Close()
@@ -186,6 +190,7 @@ func (s *failedBindingSnapshot) NewRuntime() (engine.Runtime, error) {
 }
 
 func TestBootstrapSnapshotBindingFailureFallsBackBeforeScripts(t *testing.T) {
+	serialBrowserTest(t)
 	if os.Getenv("MIMIC_DISABLE_BOOTSTRAP_SNAPSHOT") == "1" {
 		t.Skip("snapshots disabled")
 	}
@@ -236,6 +241,7 @@ func TestBootstrapSnapshotBindingFailureFallsBackBeforeScripts(t *testing.T) {
 
 // Capture failure must invalidate the optional seed, never the live host call.
 func TestBootstrapCaptureSerializationFailurePreservesHostResult(t *testing.T) {
+	serialBrowserTest(t)
 	runtime := (v8engine.Factory{}).New()
 	defer runtime.Close()
 	ctx := context.Background()

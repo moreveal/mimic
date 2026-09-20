@@ -9,6 +9,7 @@ import (
 )
 
 func TestSelectorMatchCacheUsesCanonicalMutationJournal(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		d := NewDebugger(p)
 		defer d.Close()
@@ -43,6 +44,7 @@ func TestSelectorMatchCacheUsesCanonicalMutationJournal(t *testing.T) {
 }
 
 func TestSelectorMatchCacheFallsBackAfterJournalOverflow(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		d := NewDebugger(p)
 		defer d.Close()
@@ -63,6 +65,7 @@ func TestSelectorMatchCacheFallsBackAfterJournalOverflow(t *testing.T) {
 }
 
 func TestSelectorMatchCacheDoesNotSurviveNavigation(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		width := "20px"
 		if r.URL.Path == "/second" {

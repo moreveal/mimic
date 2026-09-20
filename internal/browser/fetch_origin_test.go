@@ -14,6 +14,7 @@ import (
 // Metadata and cookies, but no Referer. Changing <base> changes resolution,
 // without changing the client's security origin or granting CORS access.
 func TestBlankFrameFetchUsesInheritedSecurityOrigin(t *testing.T) {
+	parallelBrowserTest(t)
 	echo := func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Cache-Control", "no-store")
 		w.Header().Set("Content-Type", "application/json")

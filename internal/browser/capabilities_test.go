@@ -35,6 +35,7 @@ func navigateCapabilityFixtureMode(t *testing.T, p *Page, isolated bool) {
 }
 
 func TestNavigatorCapturedShape(t *testing.T) {
+	parallelBrowserTest(t)
 	fixture, err := os.ReadFile("../../compatibility/captures/navigator-chrome152.json")
 	if err != nil {
 		t.Fatal(err)
@@ -103,6 +104,7 @@ func TestNavigatorCapturedShape(t *testing.T) {
 }
 
 func TestNavigatorCapturedOperationsV8(t *testing.T) {
+	parallelBrowserTest(t)
 	fixture, err := os.ReadFile("../../compatibility/captures/navigator-chrome152.json")
 	if err != nil {
 		t.Fatal(err)
@@ -165,6 +167,7 @@ func TestNavigatorCapturedOperationsV8(t *testing.T) {
 }
 
 func TestNavigatorStorageLifecycle(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	navigateCapabilityFixture(t, p)
 	value, err := p.Evaluate(context.Background(), `(async()=>{
@@ -185,6 +188,7 @@ func TestNavigatorStorageLifecycle(t *testing.T) {
 }
 
 func TestNavigatorCapabilityDomains(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	navigateCapabilityFixture(t, p)
 	value, err := p.Evaluate(context.Background(), `(async()=>{
@@ -210,6 +214,7 @@ func TestNavigatorCapabilityDomains(t *testing.T) {
 }
 
 func TestNavigatorPermissionAndNetworkState(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	navigateCapabilityFixture(t, p)
 	if err := p.ctx.SetPermission(originOf(p.URL()), "geolocation", "granted"); err != nil {
@@ -228,6 +233,7 @@ func TestNavigatorPermissionAndNetworkState(t *testing.T) {
 }
 
 func TestNavigatorSecureExposure(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	value, err := p.Evaluate(context.Background(), `!isSecureContext&&!('clipboard' in navigator)&&!('hid' in navigator)&&!('storage' in navigator)&&!('xr' in navigator)&&('geolocation' in navigator)&&('connection' in navigator)`)
 	if err != nil || value != true {
@@ -236,6 +242,7 @@ func TestNavigatorSecureExposure(t *testing.T) {
 }
 
 func TestNavigatorActivationRequiresTrustedInput(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	navigateCapabilityFixture(t, p)
 	value, err := p.Evaluate(context.Background(), `document.body.dispatchEvent(new Event('mousedown'));navigator.userActivation.isActive||navigator.userActivation.hasBeenActive`)
@@ -256,6 +263,7 @@ func TestNavigatorActivationRequiresTrustedInput(t *testing.T) {
 }
 
 func TestNavigatorFeatureGating(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	p.env.Features = map[string]bool{"WebBluetooth": false, "WebHID": false, "WebUSB": false, "WebXR": false}
 	navigateCapabilityFixture(t, p)
@@ -266,6 +274,7 @@ func TestNavigatorFeatureGating(t *testing.T) {
 }
 
 func TestNavigatorSharedPermissionAndClipboard(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	navigateCapabilityFixture(t, p)
 	p2, err := p.ctx.NewPage()

@@ -11,6 +11,7 @@ import (
 // Measured against Chrome 152: an attribute change during one connected
 // callback must not recursively invoke the connected callbacks of siblings.
 func TestCustomElementNestedReactionsDoNotDrainSiblingQueue(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)

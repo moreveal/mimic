@@ -10,6 +10,7 @@ import (
 // its Promise jobs. Polling the clock itself makes a frozen clock fail by the
 // context deadline instead of relying on a machine-specific loop duration.
 func TestEvaluationClockRunsThroughBodyAndMicrotasks(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 		defer cancel()

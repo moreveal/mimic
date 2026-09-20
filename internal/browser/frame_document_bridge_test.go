@@ -16,6 +16,7 @@ import (
 )
 
 func TestFrameDocumentBridgePreservesReceiversAndIdentity(t *testing.T) {
+	parallelBrowserTest(t)
 	for _, engineCase := range []struct {
 		name    string
 		factory engine.Factory
@@ -58,6 +59,7 @@ func TestFrameDocumentBridgePreservesReceiversAndIdentity(t *testing.T) {
 }
 
 func TestFrameDocumentBridgeRejectsCrossOriginRead(t *testing.T) {
+	serialBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		_, _ = fmt.Fprint(w, `<!doctype html><title>Cross-origin child</title>`)
 	}))
@@ -76,6 +78,7 @@ func TestFrameDocumentBridgeRejectsCrossOriginRead(t *testing.T) {
 }
 
 func TestFrameCrossOriginPostMessageRemainsAvailable(t *testing.T) {
+	serialBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		_, _ = fmt.Fprint(w, `<!doctype html><script>addEventListener('message',e=>{if(e.data==='ping')e.source.postMessage('pong',e.origin)})</script>`)
 	}))
@@ -99,6 +102,7 @@ func TestFrameCrossOriginPostMessageRemainsAvailable(t *testing.T) {
 }
 
 func TestFrameDocumentEntryFollowsSynchronousCalls(t *testing.T) {
+	serialBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.Header().Set("Content-Type", "text/html")
 		_, _ = fmt.Fprint(w, `<!doctype html><title>Entry document</title>`)

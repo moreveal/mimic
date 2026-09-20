@@ -8,6 +8,7 @@ import (
 )
 
 func TestDocumentObservationsDoNotRetainInvocationValues(t *testing.T) {
+	serialBrowserTest(t)
 	p := newAsyncModulePage(t)
 	navigateCapabilityFixture(t, p)
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
@@ -58,6 +59,7 @@ func TestDocumentObservationsDoNotRetainInvocationValues(t *testing.T) {
 }
 
 func TestDOMMutationsDoNotRetainInvocationValues(t *testing.T) {
+	serialBrowserTest(t)
 	p := newAsyncModulePage(t)
 	navigateCapabilityFixture(t, p)
 	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
@@ -96,6 +98,7 @@ func TestDOMMutationsDoNotRetainInvocationValues(t *testing.T) {
 }
 
 func TestDocumentAndEnvironmentReadsDoNotRetainInvocationValues(t *testing.T) {
+	parallelBrowserTest(t)
 	p := newAsyncModulePage(t)
 	navigateCapabilityFixture(t, p)
 	const source = `(() => {

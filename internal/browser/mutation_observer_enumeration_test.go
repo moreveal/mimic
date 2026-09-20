@@ -8,6 +8,7 @@ import (
 )
 
 func TestMutationObserverOperationsCanBeInstrumentedByEnumeration(t *testing.T) {
+	serialBrowserTest(t)
 	source, err := os.ReadFile("testdata/mutation_observer_enumeration_oracle.js")
 	if err != nil {
 		t.Fatal(err)

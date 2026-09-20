@@ -11,6 +11,7 @@ import (
 )
 
 func TestWebGLDebugShadersFrozenChrome(t *testing.T) {
+	serialBrowserTest(t)
 	source, err := os.ReadFile("testdata/webgl_debug_shaders_oracle.js")
 	if err != nil {
 		t.Fatal(err)

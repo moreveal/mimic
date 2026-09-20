@@ -11,6 +11,7 @@ import (
 )
 
 func TestRenderedCSSFontStartsResourceLoad(t *testing.T) {
+	parallelBrowserTest(t)
 	var fontRequests atomic.Int32
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, request *http.Request) {
 		switch request.URL.Path {
@@ -46,6 +47,7 @@ func TestRenderedCSSFontStartsResourceLoad(t *testing.T) {
 }
 
 func TestFontFaceSetEventHandlerProperties(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	defer p.Close()
 	value, err := p.Evaluate(context.Background(), `(async()=>{

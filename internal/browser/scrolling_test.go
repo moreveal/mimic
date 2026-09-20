@@ -71,6 +71,7 @@ const scrollingContainersFixture = `(()=>{
 })()`
 
 func TestScrollingContainers(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -91,6 +92,7 @@ func TestScrollingContainers(t *testing.T) {
 }
 
 func TestScrollingAsync(t *testing.T) {
+	serialBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -113,6 +115,7 @@ func TestScrollingAsync(t *testing.T) {
 }
 
 func TestScrollingWheelInput(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -156,6 +159,7 @@ func TestScrollingWheelInput(t *testing.T) {
 }
 
 func TestPropagatedBodyOverflowScrollsViewport(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		_, _ = fmt.Fprint(w, `<!doctype html><body></body>`)
 	}))
@@ -203,6 +207,7 @@ func TestPropagatedBodyOverflowScrollsViewport(t *testing.T) {
 }
 
 func TestScrollingGeometry(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -223,6 +228,7 @@ func TestScrollingGeometry(t *testing.T) {
 }
 
 func TestVisibleFocusAndNoOpScrollSkipDocumentExtentWalk(t *testing.T) {
+	serialBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -259,6 +265,7 @@ func TestVisibleFocusAndNoOpScrollSkipDocumentExtentWalk(t *testing.T) {
 }
 
 func TestScrollingEvents(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)

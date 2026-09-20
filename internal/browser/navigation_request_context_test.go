@@ -13,6 +13,7 @@ import (
 )
 
 func TestNavigationRequestContextMatchesChrome(t *testing.T) {
+	parallelBrowserTest(t)
 	type observation struct {
 		Path    string            `json:"path"`
 		Headers map[string]string `json:"headers"`

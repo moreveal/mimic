@@ -6,6 +6,7 @@ import (
 )
 
 func TestHTMLElementHiddenAndAriaLabelReflectAttributes(t *testing.T) {
+	parallelBrowserTest(t)
 	page := testPage(t)
 	value, err := page.Evaluate(context.Background(), `(()=>{
 		const element=document.createElement('div');

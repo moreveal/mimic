@@ -29,6 +29,7 @@ func assertAvailableImageAccounting(t *testing.T, cache *availableImageCache) {
 }
 
 func TestAvailableImageCacheBoundsAndReplacement(t *testing.T) {
+	parallelBrowserTest(t)
 	cache := &availableImageCache{}
 	key := preloadKey{url: "image", destination: "image", mode: "cors", credentials: "include"}
 	first := availableImage{decoded: &imageresource.Image{Pixels: make([]byte, 1, 1024)}, originClean: false}
@@ -59,6 +60,7 @@ func TestAvailableImageCacheBoundsAndReplacement(t *testing.T) {
 }
 
 func TestAvailableImageCachePixelBudgetAndOversizedAdmission(t *testing.T) {
+	parallelBrowserTest(t)
 	cache := &availableImageCache{}
 	keyA, keyB := preloadKey{url: "a"}, preloadKey{url: "b"}
 	// Sharing the backing pixels must not undercount retained entries. Capacity
@@ -86,6 +88,7 @@ func TestAvailableImageCachePixelBudgetAndOversizedAdmission(t *testing.T) {
 }
 
 func TestAvailableImageEvictionPreservesActiveImageAndLazyReload(t *testing.T) {
+	serialBrowserTest(t)
 	var requests atomic.Int32
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		if req.URL.Path != "/image" {

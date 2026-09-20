@@ -16,6 +16,7 @@ import (
 )
 
 func TestImageReadbackOriginPropagatesAndResets(t *testing.T) {
+	serialBrowserTest(t)
 	pixels, _ := base64.StdEncoding.DecodeString("iVBORw0KGgoAAAANSUhEUgAAAAIAAAABCAYAAAD0In+KAAAADklEQVR4nGP4z8DwHwQBEPgD/U6VwW8AAAAASUVORK5CYII=")
 	images := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "image/png")
@@ -38,6 +39,7 @@ func TestImageReadbackOriginPropagatesAndResets(t *testing.T) {
 }
 
 func TestDetachedImageLoadCoalescesAndBlocksDocumentLoad(t *testing.T) {
+	serialBrowserTest(t)
 	var obsolete, images atomic.Int32
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
@@ -80,6 +82,7 @@ func TestDetachedImageLoadCoalescesAndBlocksDocumentLoad(t *testing.T) {
 }
 
 func TestLazyImageDoesNotBlockWindowLoad(t *testing.T) {
+	parallelBrowserTest(t)
 	started := make(chan struct{})
 	release := make(chan struct{})
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -119,6 +122,7 @@ func TestLazyImageDoesNotBlockWindowLoad(t *testing.T) {
 }
 
 func TestImageReplacementCancelsObsoleteRequest(t *testing.T) {
+	serialBrowserTest(t)
 	started, canceled := make(chan struct{}), make(chan struct{})
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {

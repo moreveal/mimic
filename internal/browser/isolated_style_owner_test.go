@@ -42,6 +42,7 @@ func liveDiagnosticCost(t *testing.T, page *Page, name string) uint64 {
 }
 
 func TestIsolatedStyleObservationsUseCanonicalOwner(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		d := NewDebugger(p)
 		defer d.Close()
@@ -70,6 +71,7 @@ func TestIsolatedStyleObservationsUseCanonicalOwner(t *testing.T) {
 }
 
 func TestIsolatedStyleObservationInitializesDeferredOwner(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		d := NewDebugger(p)
 		defer d.Close()
@@ -85,6 +87,7 @@ func TestIsolatedStyleObservationInitializesDeferredOwner(t *testing.T) {
 }
 
 func TestIsolatedStyleBatchesLargeStableDocument(t *testing.T) {
+	serialBrowserTest(t)
 	t.Setenv("MIMIC_PROFILE_HOSTS", "1")
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		d := NewDebugger(p)
@@ -120,6 +123,7 @@ func TestIsolatedStyleBatchesLargeStableDocument(t *testing.T) {
 }
 
 func TestIsolatedWorldsShareDocumentStyleBatch(t *testing.T) {
+	serialBrowserTest(t)
 	t.Setenv("MIMIC_PROFILE_HOSTS", "1")
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		d := NewDebugger(p)
@@ -152,6 +156,7 @@ func TestIsolatedWorldsShareDocumentStyleBatch(t *testing.T) {
 }
 
 func TestIsolatedStyleDocumentBatchAccumulatesProperties(t *testing.T) {
+	serialBrowserTest(t)
 	t.Setenv("MIMIC_PROFILE_HOSTS", "1")
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		d := NewDebugger(p)
@@ -187,6 +192,7 @@ func TestIsolatedStyleDocumentBatchAccumulatesProperties(t *testing.T) {
 }
 
 func TestIsolatedInnerTextTracksOwnerMutations(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		d := NewDebugger(p)
 		defer d.Close()

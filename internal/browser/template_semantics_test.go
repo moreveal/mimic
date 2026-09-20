@@ -17,6 +17,7 @@ import (
 
 // Independent current-document fixtures compared against pinned Chrome 152.
 func TestTemplateChrome152(t *testing.T) {
+	serialBrowserTest(t)
 	read := func(name string) map[string]json.RawMessage {
 		t.Helper()
 		data, err := os.ReadFile(filepath.Join("..", "..", "compatibility", name))

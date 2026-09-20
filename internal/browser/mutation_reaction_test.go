@@ -16,6 +16,7 @@ import (
 // single-realm cases isolate reaction semantics from unsupported iframe/XML APIs
 // exercised by the unmodified WPT suite.
 func TestMutationReactionChrome152(t *testing.T) {
+	serialBrowserTest(t)
 	read := func(name string) map[string]json.RawMessage {
 		t.Helper()
 		data, err := os.ReadFile(filepath.Join("..", "..", "compatibility", name))

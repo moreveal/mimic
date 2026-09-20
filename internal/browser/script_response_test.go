@@ -12,6 +12,7 @@ import (
 )
 
 func TestUnsuccessfulScriptResponsesAreNotExecuted(t *testing.T) {
+	serialBrowserTest(t)
 	const rejectedCode = "globalThis.rejectedScriptRan=true;"
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/rejected.js" {

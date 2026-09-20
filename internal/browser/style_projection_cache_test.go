@@ -6,6 +6,7 @@ import (
 )
 
 func TestForeignStyleProjectionInvalidatesCanonicalInputs(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		ctx := context.Background()
 		d := NewDebugger(p)
@@ -65,6 +66,7 @@ effect.currentTime = 0;
 }
 
 func TestStyleProjectionCacheBounds(t *testing.T) {
+	parallelBrowserTest(t)
 	var cache styleProjectionCache
 	epoch := styleProjectionEpoch{document: 1}
 	for i := 0; i < 40000; i++ {
@@ -86,6 +88,7 @@ func TestStyleProjectionCacheBounds(t *testing.T) {
 }
 
 func TestStyleProjectionEpochIgnoresImageOnlyCompletion(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	r := p.Top.Realm
 	styleBefore := r.styleProjectionEpoch("value")
@@ -104,6 +107,7 @@ func TestStyleProjectionEpochIgnoresImageOnlyCompletion(t *testing.T) {
 }
 
 func TestStyleProjectionEpochTracksOnlyConnectedDOMAcrossRealms(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		d := NewDebugger(p)
 		defer d.Close()
@@ -133,6 +137,7 @@ func TestStyleProjectionEpochTracksOnlyConnectedDOMAcrossRealms(t *testing.T) {
 }
 
 func TestDetachedStyleReadsRevalidateWithoutConnectedEpoch(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		historyEval(t, p, `(()=>{
 const element=document.createElement('div');

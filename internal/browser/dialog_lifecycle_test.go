@@ -7,6 +7,7 @@ import (
 )
 
 func TestDialogLifecycleChrome152(t *testing.T) {
+	parallelBrowserTest(t)
 	source, err := os.ReadFile("testdata/dialog_lifecycle_oracle.js")
 	if err != nil {
 		t.Fatal(err)

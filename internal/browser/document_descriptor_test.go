@@ -5,5 +5,6 @@ package browser
 import "testing"
 
 func TestDocumentDescriptorsMatchFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
 	documentAllOracle(t, "document_descriptor")
 }

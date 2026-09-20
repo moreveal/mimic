@@ -5,5 +5,6 @@ package browser
 import "testing"
 
 func TestDocumentBodySetterMatchesFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
 	documentAllOracle(t, "document_body")
 }

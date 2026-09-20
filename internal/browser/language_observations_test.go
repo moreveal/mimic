@@ -14,16 +14,19 @@ import (
 )
 
 func TestLanguageObservationsMatchChrome(t *testing.T) {
+	parallelBrowserTest(t)
 	for _, name := range []string{"realms", "network"} {
 		t.Run(name, func(t *testing.T) { requestObservationOracle(t, "language", name) })
 	}
 }
 func TestStorageAccessObservationsMatchChrome(t *testing.T) {
+	parallelBrowserTest(t)
 	for _, name := range []string{"access", "fetch"} {
 		t.Run(name, func(t *testing.T) { requestObservationOracle(t, "storage", name) })
 	}
 }
 func TestFetchCredentialObservationsMatchChrome(t *testing.T) {
+	parallelBrowserTest(t)
 	for _, worker := range []bool{false, true} {
 		t.Run(strconv.FormatBool(worker), func(t *testing.T) { requestObservationOracle(t, "fetch", "credentials", worker) })
 	}

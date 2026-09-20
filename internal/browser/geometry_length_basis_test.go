@@ -6,6 +6,7 @@ import (
 )
 
 func TestGeometryLengthsUseCanonicalLazyRootFontBasis(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
 		value, err := p.Evaluate(context.Background(), `(()=>{

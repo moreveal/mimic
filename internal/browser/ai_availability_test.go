@@ -13,12 +13,14 @@ import (
 )
 
 func TestAIAvailabilityMatchesFrozenChromePolicyDenied(t *testing.T) {
+	parallelBrowserTest(t)
 	documentAllOracle(t, "ai_availability", map[string]string{
 		"Permissions-Policy": "summarizer=(), language-model=(), translator=(), language-detector=()",
 	})
 }
 
 func TestAIUnavailableBackendAndFramePolicy(t *testing.T) {
+	parallelBrowserTest(t)
 	p := bootstrapSnapshotPage(t)
 	const child = `(async()=>{const out=[];for(const type of ['Summarizer','LanguageModel','Translator','LanguageDetector']){const options=type==='Translator'?{sourceLanguage:'en',targetLanguage:'fr'}:{};out.push(await globalThis[type].availability(options));try{await globalThis[type].create(options);out.push('created')}catch(e){out.push(e.name)}}parent.postMessage({aiResult:out},'*')})()`
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

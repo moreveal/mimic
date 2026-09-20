@@ -9,6 +9,7 @@ import (
 )
 
 func TestBlitzExternalStylesheetKeepsOwnURLContext(t *testing.T) {
+	parallelBrowserTest(t)
 	p := blitzStandardsPage(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/styles/theme.css" {

@@ -10,6 +10,7 @@ import (
 )
 
 func TestChildDocumentInheritsDomainAndNavigationReferrer(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { fmt.Fprint(w, "<!doctype html><body></body>") }))
 		defer server.Close()
@@ -42,6 +43,7 @@ return document.referrer==='';
 }
 
 func TestCrossOriginIsolationHonorsDelegation(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		child := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Cross-Origin-Embedder-Policy", "require-corp")

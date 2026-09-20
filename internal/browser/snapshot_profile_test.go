@@ -16,6 +16,7 @@ import (
 // It profiles complete hydration turns after the parser returns and retains
 // the interrupted document for inspection if a turn exceeds the sample window.
 func TestSnapshotWorkloadProfile(t *testing.T) {
+	serialBrowserTest(t)
 	url, dir := os.Getenv("MIMIC_SNAPSHOT_PROFILE_URL"), os.Getenv("MIMIC_SNAPSHOT_PROFILE_DIR")
 	if url == "" || dir == "" {
 		t.Skip("set MIMIC_SNAPSHOT_PROFILE_URL and MIMIC_SNAPSHOT_PROFILE_DIR")

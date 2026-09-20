@@ -10,6 +10,7 @@ import (
 )
 
 func TestPerformanceClamperStableMonotonicBuckets(t *testing.T) {
+	parallelBrowserTest(t)
 	c := performanceClamper{seed: 123456789}
 	for _, isolated := range []bool{false, true} {
 		step := int64(100)
@@ -35,6 +36,7 @@ func TestPerformanceClamperStableMonotonicBuckets(t *testing.T) {
 // isolated timestamps on a 5us grid; both are nondecreasing. Sampling the
 // minimum positive delta alone also measures host-call overhead, not resolution.
 func TestPerformanceNowChrome152Grids(t *testing.T) {
+	serialBrowserTest(t)
 	for _, isolated := range []bool{false, true} {
 		t.Run(fmt.Sprint(isolated), func(t *testing.T) {
 			historyTestPages(t, func(t *testing.T, p *Page) {

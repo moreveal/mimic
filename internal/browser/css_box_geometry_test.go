@@ -8,9 +8,13 @@ import (
 	"testing"
 )
 
-func TestCSSBoxGraphMatchesFrozenChrome(t *testing.T) { testCSSObservation(t, "css_box_geometry") }
+func TestCSSBoxGraphMatchesFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
+	testCSSObservation(t, "css_box_geometry")
+}
 
 func TestCSSFlowRootFlexItemMeasuresNestedInlineContent(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		navigateCapabilityFixture(t, page)
 		result, err := page.Evaluate(context.Background(), `(()=>{
@@ -27,6 +31,7 @@ return JSON.stringify({height:rect.height,offsetHeight:heading.offsetHeight,chil
 }
 
 func TestCSSGridFlowPreservesMixedInlineContentHeight(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		navigateCapabilityFixture(t, page)
 		result, err := page.Evaluate(context.Background(), `(()=>{
@@ -53,6 +58,7 @@ return JSON.stringify({mixedHeight:mixed.height,laterTop:later.top,noOverlap:lat
 }
 
 func TestCSSTaffyLeafDescendantUsesProjectedAncestorOffset(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		navigateCapabilityFixture(t, page)
 		result, err := page.Evaluate(context.Background(), `(()=>{
@@ -80,6 +86,7 @@ return JSON.stringify({tableTop:table.top,cellTop:cell.top,inside:cell.top>=tabl
 }
 
 func TestCSSBoxStateIsCompleteDuringRecursiveComputedStyle(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		navigateCapabilityFixture(t, page)
 		result, err := page.Evaluate(context.Background(), `(()=>{
@@ -95,6 +102,7 @@ func TestCSSBoxStateIsCompleteDuringRecursiveComputedStyle(t *testing.T) {
 }
 
 func TestCSSDefaultIframeReplacedGeometryAndHitTesting(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		navigateCapabilityFixture(t, page)
 		result, err := page.Evaluate(context.Background(), `(()=>{
@@ -110,6 +118,7 @@ return JSON.stringify({rect:[rect.x,rect.y,rect.width,rect.height],computed:[sty
 }
 
 func TestCSSAncestorTransformMovesDescendantClientRect(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		navigateCapabilityFixture(t, page)
 		result, err := page.Evaluate(context.Background(), `(()=>{
@@ -125,6 +134,7 @@ return JSON.stringify([parent.x,parent.y,child.x,child.y,child.width,child.heigh
 }
 
 func TestCSSFixedInsetsAcceptTailwindCalcProducts(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		navigateCapabilityFixture(t, page)
 		result, err := page.Evaluate(context.Background(), `(()=>{
@@ -142,6 +152,7 @@ return JSON.stringify({rect:[rect.x,rect.y,rect.width,rect.height],insets:[style
 }
 
 func TestCSSFixedInsetsUseViewportWhenAncestorTransformComputesToNone(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		navigateCapabilityFixture(t, page)
 		result, err := page.Evaluate(context.Background(), `(()=>{
@@ -157,6 +168,7 @@ const rect=document.getElementById('target').getBoundingClientRect();return JSON
 }
 
 func TestCSSTaffyCoordinatesSpanBlockAncestorsAndFixedOverlays(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		navigateCapabilityFixture(t, page)
 		result, err := page.Evaluate(context.Background(), `(()=>{
@@ -174,6 +186,7 @@ return JSON.stringify({share:[sr.x,sr.y],chat:[cr.x,cr.y],hit:document.elementFr
 }
 
 func TestCSSRowFlexItemsUseIntrinsicBasisAndShrink(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		navigateCapabilityFixture(t, page)
 		result, err := page.Evaluate(context.Background(), `(()=>{
@@ -189,6 +202,7 @@ return JSON.stringify(Array.from(document.querySelectorAll('.item'),item=>{const
 }
 
 func TestCSSTaffyNestedFlexBasisKeepsSearchControlVisible(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		navigateCapabilityFixture(t, page)
 		result, err := page.Evaluate(context.Background(), `(()=>{
@@ -204,6 +218,7 @@ const q=document.getElementById('q'),r=q.getBoundingClientRect();return JSON.str
 }
 
 func TestCSSTaffyGridTracksGapAndPlacement(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		navigateCapabilityFixture(t, page)
 		result, err := page.Evaluate(context.Background(), `(()=>{
@@ -218,6 +233,7 @@ return JSON.stringify(['grid','a','b'].map(id=>{const e=document.getElementById(
 }
 
 func TestCSSTaffyGeometryAPIsShareBorderAndOffsetBoxes(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		navigateCapabilityFixture(t, page)
 		result, err := page.Evaluate(context.Background(), `(()=>{
@@ -232,6 +248,7 @@ const root=document.getElementById('root'),child=document.getElementById('child'
 }
 
 func TestCSSRowFlexAutoMarginConsumesRemainingSpace(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		navigateCapabilityFixture(t, page)
 		result, err := page.Evaluate(context.Background(), `(()=>{
@@ -247,6 +264,7 @@ return JSON.stringify([[start.x,start.width],[end.x,end.width]])
 }
 
 func TestCSSNestedFlexIntrinsicBorderBox(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		navigateCapabilityFixture(t, page)
 		result, err := page.Evaluate(context.Background(), `(()=>{
@@ -261,6 +279,7 @@ return JSON.stringify(['group','a','b'].map(id=>{const r=document.getElementById
 }
 
 func TestRangeTextGeometryUsesElementLayout(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		navigateCapabilityFixture(t, page)
 		result, err := page.Evaluate(context.Background(), `(()=>{
@@ -278,6 +297,7 @@ return JSON.stringify({rect:[rect.x,rect.y,rect.width,rect.height],rectType:rect
 }
 
 func TestCSSComputedCatalogMatchesFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
 	for _, name := range []string{"css_geometry_integration", "css_geometry_audit", "css_details_query", "css_foreign_owner", "css_shadow_inheritance", "css_line_rounding", "css_wrapper_flow", "css_specified_values", "css_zero_font", "css_computed_initial", "css_computed_catalog", "css_computed_dynamic"} {
 		t.Run(name, func(t *testing.T) {
 			parallelOracle(t)
@@ -335,6 +355,7 @@ func testCSSObservation(t *testing.T, name string) {
 }
 
 func TestCSSForeignOwnerRestoredRealm(t *testing.T) {
+	parallelBrowserTest(t)
 	p := bootstrapSnapshotPage(t)
 	bootstrapSnapshotWarm(t, p)
 	source, err := os.ReadFile("testdata/css_foreign_owner_oracle.js")
@@ -360,6 +381,7 @@ func TestCSSForeignOwnerRestoredRealm(t *testing.T) {
 }
 
 func TestCSSGeometryAuditRestoredRealms(t *testing.T) {
+	parallelBrowserTest(t)
 	for _, name := range []string{"css_geometry_integration", "css_geometry_audit", "css_details_query"} {
 		t.Run(name, func(t *testing.T) {
 			p := bootstrapSnapshotPage(t)

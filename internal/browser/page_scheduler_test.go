@@ -12,6 +12,7 @@ import (
 )
 
 func TestAwaitParentPromiseFromDelayedChildFetch(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			if r.URL.Path == "/data" {
@@ -41,6 +42,7 @@ func TestAwaitParentPromiseFromDelayedChildFetch(t *testing.T) {
 }
 
 func TestAwaitChildWorkCancellationAndPageTeardown(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		started, canceled := make(chan struct{}), make(chan struct{})
 		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

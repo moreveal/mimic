@@ -8,6 +8,7 @@ import (
 )
 
 func TestFrameImportDoesNotInvokePublicReflection(t *testing.T) {
+	serialBrowserTest(t)
 	source, err := os.ReadFile("testdata/frame_import_reflection_oracle.js")
 	if err != nil {
 		t.Fatal(err)

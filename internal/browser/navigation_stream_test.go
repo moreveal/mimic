@@ -15,6 +15,7 @@ import (
 )
 
 func TestNavigationHeadScriptCannotSeeUnparsedBody(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, `<script>window.headBodyNull=document.body===null&&document.querySelector('body')===null</script><body><p id=tail>tail</p>`)
 	}))
@@ -30,6 +31,7 @@ func TestNavigationHeadScriptCannotSeeUnparsedBody(t *testing.T) {
 }
 
 func TestNavigateReservedDoesNotDrainApplicationTimerQueue(t *testing.T) {
+	serialBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		fmt.Fprint(w, `<script>window.timerRuns=0;setInterval(()=>timerRuns++,0)</script><main>ready</main>`)
 	}))
@@ -48,6 +50,7 @@ func TestNavigateReservedDoesNotDrainApplicationTimerQueue(t *testing.T) {
 }
 
 func TestNavigationDocumentWritesPreserveParserInsertion(t *testing.T) {
+	serialBrowserTest(t)
 	const html = `<!doctype html><p id=before>before</p><script>
 	window.navEvents=[];window.oldD=document;window.sameOpen=document.open()===oldD;
 	document.write('<p id=written>written</p><script>navEvents.push("nested");document.write("<i id=inner>inner</i>")<\/script>');
@@ -105,6 +108,7 @@ func TestNavigationDocumentWritesPreserveParserInsertion(t *testing.T) {
 }
 
 func TestNavigationExternalScriptWritesPrecedeTail(t *testing.T) {
+	serialBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		if req.URL.Path == "/external.js" {
 			time.Sleep(20 * time.Millisecond)

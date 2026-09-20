@@ -14,6 +14,7 @@ import (
 // This diagnostic isolates the page operations visible in the captured
 // Wikipedia trace. Run with -v to inspect timings and host crossing counts.
 func TestWikipediaHotPathProfile(t *testing.T) {
+	serialBrowserTest(t)
 	t.Setenv("MIMIC_PROFILE_HOSTS", "1")
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {

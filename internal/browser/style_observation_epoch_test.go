@@ -6,6 +6,7 @@ import (
 )
 
 func TestCheckedSelectorsUseDirtyStateWithinSameJob(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
 		got, err := p.Evaluate(context.Background(), `(()=>{
@@ -29,6 +30,7 @@ func TestCheckedSelectorsUseDirtyStateWithinSameJob(t *testing.T) {
 }
 
 func TestStyleObservationEpochCoversCSSOMShadowAndReentrantConversion(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
 		got, err := p.Evaluate(context.Background(), `(()=>{

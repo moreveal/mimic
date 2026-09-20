@@ -41,6 +41,7 @@ func processMemory(t *testing.T) map[string]any {
 // Separates live Page ownership from allocator high-water marks. Forced Go GC
 // and scavenging are diagnostic observations, never benchmark recovery policy.
 func TestPerformanceDensityProfile(t *testing.T) {
+	serialBrowserTest(t)
 	dir := os.Getenv("MIMIC_PROFILE_DIR")
 	if dir == "" {
 		t.Skip("set MIMIC_PROFILE_DIR for memory attribution")

@@ -9,6 +9,7 @@ import (
 )
 
 func TestCSSVisibilityFeatureDetectionAndMultilingualFocus(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		historyEval(t, p, `(()=>{
  document.body.innerHTML='<main style="content-visibility:hidden"><input id="entry"><select style="font:12px Arial"><option>العربية</option><option>עברית</option><option>فارسی</option></select></main>';
@@ -24,6 +25,7 @@ func TestCSSVisibilityFeatureDetectionAndMultilingualFocus(t *testing.T) {
 }
 
 func TestStylesheetCSSOMHonorsCORSMode(t *testing.T) {
+	parallelBrowserTest(t)
 	assets := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/css")
 		if r.URL.Path != "/denied.css" {

@@ -5,5 +5,6 @@ package browser
 import "testing"
 
 func TestSVGPrecisionMatchesFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
 	documentAllOracle(t, "svg_precision")
 }

@@ -7,6 +7,7 @@ import (
 )
 
 func TestDebuggerIsolatedWorldSharesDOMWithoutSharingGlobals(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 8*time.Second)
 		defer cancel()
@@ -36,6 +37,7 @@ func TestDebuggerIsolatedWorldSharesDOMWithoutSharingGlobals(t *testing.T) {
 }
 
 func TestDebuggerIsolatedWorldSeesMainWorldShadowTreeAttachedLater(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 8*time.Second)
 		defer cancel()
@@ -61,6 +63,7 @@ func TestDebuggerIsolatedWorldSeesMainWorldShadowTreeAttachedLater(t *testing.T)
 }
 
 func TestDebuggerWorldMutationObserversUseCanonicalRecords(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 8*time.Second)
 		defer cancel()
@@ -88,6 +91,7 @@ func TestDebuggerWorldMutationObserversUseCanonicalRecords(t *testing.T) {
 }
 
 func TestDebuggerWorldObserverDoesNotBreakShadowRootMutation(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 8*time.Second)
 		defer cancel()
@@ -109,6 +113,7 @@ func TestDebuggerWorldObserverDoesNotBreakShadowRootMutation(t *testing.T) {
 }
 
 func TestDebuggerWorldDocumentWriteExecutesInDocumentMainRealm(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 8*time.Second)
 		defer cancel()
@@ -132,6 +137,7 @@ func TestDebuggerWorldDocumentWriteExecutesInDocumentMainRealm(t *testing.T) {
 }
 
 func TestIframeNameReflectsCanonicalAttributeAndBrowsingContext(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		d := NewDebugger(page)
 		defer d.Close()
@@ -143,6 +149,7 @@ func TestIframeNameReflectsCanonicalAttributeAndBrowsingContext(t *testing.T) {
 }
 
 func TestDebuggerIsolatedWorldChildWindowPreservesWorldBoundary(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 8*time.Second)
 		defer cancel()

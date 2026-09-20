@@ -6,6 +6,7 @@ import (
 )
 
 func TestDialogCommandActivationMatchesChrome152(t *testing.T) {
+	parallelBrowserTest(t)
 	// Captured from Chrome 152.0.7977.83: even synthetic click activation
 	// dispatches a trusted, composed, cancelable, non-bubbling command event.
 	historyTestPages(t, func(t *testing.T, p *Page) {
@@ -27,6 +28,7 @@ const e=new CommandEvent('command',{command:'--x',source:b});out.push([e.command
 }
 
 func TestClosedDialogGeometryDoesNotMeasureDescendants(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
 		got, err := p.Evaluate(context.Background(), `(()=>{
@@ -43,6 +45,7 @@ return JSON.stringify(out)
 }
 
 func TestControlFontVariablesUseResolvedMetrics(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
 		got, err := p.Evaluate(context.Background(), `(()=>{
@@ -60,6 +63,7 @@ return JSON.stringify(out)
 }
 
 func TestControlGeometryResolvesCalcFontSizeProducts(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
 		got, err := p.Evaluate(context.Background(), `(()=>{

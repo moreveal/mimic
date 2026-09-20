@@ -4,4 +4,7 @@ package browser
 
 import "testing"
 
-func TestRTCSessionMatchesFrozenChrome152(t *testing.T) { documentAllOracle(t, "rtc_session") }
+func TestRTCSessionMatchesFrozenChrome152(t *testing.T) {
+	parallelBrowserTest(t)
+	documentAllOracle(t, "rtc_session")
+}

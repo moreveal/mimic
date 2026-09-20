@@ -43,6 +43,7 @@ func testPage(t *testing.T) *Page {
 }
 
 func TestExternalCommandWaiterSignal(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	p.LockCommands()
 	acquired := make(chan struct{})
@@ -72,6 +73,7 @@ func TestExternalCommandWaiterSignal(t *testing.T) {
 }
 
 func TestRealmUsesSelectedCompatibilityBundleSurface(t *testing.T) {
+	parallelBrowserTest(t)
 	bundle := surfaceTestBundle{Bundle: chrome152.New(), surface: compatibility.WebAPISurface{GeneratedJavaScript: `globalThis.__selectedBundle = "custom"`}}
 	b, err := New(gojaengine.Factory{}, bundle)
 	if err != nil {
@@ -87,6 +89,7 @@ func TestRealmUsesSelectedCompatibilityBundleSurface(t *testing.T) {
 	}
 }
 func TestNavigateScriptsAndCanonicalViews(t *testing.T) {
+	parallelBrowserTest(t)
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/external.js" {
 			fmt.Fprint(w, `window.externalRan=true`)
@@ -111,6 +114,7 @@ func TestNavigateScriptsAndCanonicalViews(t *testing.T) {
 }
 
 func TestScriptTypesAndStaticModuleGraph(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		switch req.URL.Path {
 		case "/":
@@ -155,6 +159,7 @@ func TestScriptTypesAndStaticModuleGraph(t *testing.T) {
 }
 
 func TestTextEncoderUTF8AndBoundedDestination(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	defer p.Close()
 	value, err := p.Evaluate(context.Background(), `(()=>{const encoder=new TextEncoder(),destination=new Uint8Array(4),progress=encoder.encodeInto('\u00e9\u{1f642}',destination);return{tag:Object.prototype.toString.call(encoder),encoding:encoder.encoding,bytes:Array.from(encoder.encode('A\u00e9\u{1f642}')),progress,partial:Array.from(destination)}})()`)
@@ -168,6 +173,7 @@ func TestTextEncoderUTF8AndBoundedDestination(t *testing.T) {
 }
 
 func TestDocumentCreateTextNode(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	defer p.Close()
 	value, err := p.Evaluate(context.Background(), `(()=>{const value=document.createTextNode('hello');return[Object.prototype.toString.call(value),value.nodeType,value.nodeName,value.data,value.textContent,value.length,value.hasChildNodes(),value.parentNode]})()`)
@@ -180,6 +186,7 @@ func TestDocumentCreateTextNode(t *testing.T) {
 }
 
 func TestWebCryptoRSAOAEPSPKIImportAndEncrypt(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -200,6 +207,7 @@ func TestWebCryptoRSAOAEPSPKIImportAndEncrypt(t *testing.T) {
 }
 
 func TestWebCryptoAESGCMRawImportEncryptAndDecrypt(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -220,6 +228,7 @@ func TestWebCryptoAESGCMRawImportEncryptAndDecrypt(t *testing.T) {
 }
 
 func TestFetchValueConstructors(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	defer p.Close()
 	value, err := p.Evaluate(context.Background(), `(()=>{const headers=new Headers({X_Test:'one'});headers.append('x-test','two');const request=new Request('http://www.example.com/path',{headers,method:'POST'}),response=new Response();return{headers:[Object.prototype.toString.call(headers),headers.get('x-test'),JSON.stringify(Array.from(headers))],request:[Object.prototype.toString.call(request),request.url,request.method,request.mode,request.credentials,request.cache,request.redirect,request.referrer],response:[Object.prototype.toString.call(response),response.status,response.statusText,response.ok,response.type,response.url,response.redirected]}})()`)
@@ -233,6 +242,7 @@ func TestFetchValueConstructors(t *testing.T) {
 }
 
 func TestDOMMatrixIdentity(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	defer p.Close()
 	value, err := p.Evaluate(context.Background(), `(()=>{const value=new DOMMatrix();return[Object.prototype.toString.call(value),value.is2D,value.a,value.d,value.m11,value.m22,value.m41,value.m42,value.toString(),JSON.stringify(Array.from(value.toFloat64Array()))]})()`)
@@ -246,6 +256,7 @@ func TestDOMMatrixIdentity(t *testing.T) {
 }
 
 func TestV8NavigationDispatchesDOMContentLoadedAndLoadInOrder(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		fmt.Fprint(w, `<script>
 			window.lifecycleOrder=['script'];
@@ -280,6 +291,7 @@ func TestV8NavigationDispatchesDOMContentLoadedAndLoadInOrder(t *testing.T) {
 }
 
 func TestV8ParserIframeCreatesAndNavigatesBrowsingContextWithoutContentWindowAccess(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, request *http.Request) {
 		if request.URL.Path == "/child" {
 			fmt.Fprint(w, `<script>parent.postMessage({phase:'child-script',url:location.href},'*')</script>`)
@@ -312,6 +324,7 @@ func TestV8ParserIframeCreatesAndNavigatesBrowsingContextWithoutContentWindowAcc
 }
 
 func TestV8InitScriptRunsInChildRealmBeforeDocumentScripts(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, request *http.Request) {
 		if request.URL.Path == "/child" {
 			fmt.Fprint(w, `<script>parent.postMessage({realm:__frameInit.realm,readyState:__frameInit.readyState,arrayLocal:__frameInit.array===Array},'*')</script>`)
@@ -344,6 +357,7 @@ func TestV8InitScriptRunsInChildRealmBeforeDocumentScripts(t *testing.T) {
 }
 
 func TestHistoryStateUpdatesDynamicResourceReferrer(t *testing.T) {
+	parallelBrowserTest(t)
 	var scriptReferrer string
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/dynamic.js" {
@@ -364,6 +378,7 @@ func TestHistoryStateUpdatesDynamicResourceReferrer(t *testing.T) {
 }
 
 func TestImageTransportDoesNotBlockDynamicScriptScheduling(t *testing.T) {
+	serialBrowserTest(t)
 	scriptRequested := make(chan struct{})
 	imageObservedScript := make(chan bool, 1)
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -401,6 +416,7 @@ func TestImageTransportDoesNotBlockDynamicScriptScheduling(t *testing.T) {
 	}
 }
 func TestRealmIsolation(t *testing.T) {
+	parallelBrowserTest(t)
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, `<script>globalThis.secret=(globalThis.secret||0)+1</script>`)
 	}))
@@ -421,6 +437,7 @@ func TestRealmIsolation(t *testing.T) {
 	}
 }
 func TestTimerAndFetchUseScheduler(t *testing.T) {
+	parallelBrowserTest(t)
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/data" {
 			fmt.Fprint(w, "ok")
@@ -443,6 +460,7 @@ func TestTimerAndFetchUseScheduler(t *testing.T) {
 }
 
 func TestCanonicalClockAndStorage(t *testing.T) {
+	parallelBrowserTest(t)
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) { fmt.Fprint(w, "<title>x</title>") }))
 	defer ts.Close()
 	p := testPage(t)
@@ -466,6 +484,7 @@ func TestCanonicalClockAndStorage(t *testing.T) {
 }
 
 func TestPerformanceUsesChromeObjectModel(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	value, err := p.Evaluate(context.Background(), `({instance:performance instanceof Performance,own:Object.getOwnPropertyNames(performance),methodOwn:Object.prototype.hasOwnProperty.call(performance,'getEntries'),prototype:Object.getPrototypeOf(performance)===Performance.prototype})`)
 	if err != nil {
@@ -478,6 +497,7 @@ func TestPerformanceUsesChromeObjectModel(t *testing.T) {
 }
 
 func TestResourceTimingProjectsServerTimingFromResponseHeaders(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, request *http.Request) {
 		if request.URL.Path == "/metric" {
 			w.Header().Set("Content-Type", "application/json; charset=utf-8")
@@ -507,6 +527,7 @@ func TestResourceTimingProjectsServerTimingFromResponseHeaders(t *testing.T) {
 }
 
 func TestTimerStringHandlerAndArguments(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	if _, err := p.Evaluate(context.Background(), `globalThis.timerResult='';setTimeout("timerResult+='s'",0);setTimeout((a,b)=>timerResult+=a+b,0,'a','b')`); err != nil {
 		t.Fatal(err)
@@ -518,6 +539,7 @@ func TestTimerStringHandlerAndArguments(t *testing.T) {
 }
 
 func TestXMLHttpRequestHeadersAndLifecycle(t *testing.T) {
+	parallelBrowserTest(t)
 	var requestHeader, requestBody string
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		requestHeader = req.Header.Get("X-Test")
@@ -539,6 +561,7 @@ func TestXMLHttpRequestHeadersAndLifecycle(t *testing.T) {
 }
 
 func TestRTCDataChannelInitialState(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{const peer=new RTCPeerConnection(),channel=peer.createDataChannel('probe',{ordered:false,maxRetransmits:2,protocol:'x'});const result={tag:Object.prototype.toString.call(channel),label:channel.label,ordered:channel.ordered,maxRetransmits:channel.maxRetransmits,maxPacketLifeTime:channel.maxPacketLifeTime,protocol:channel.protocol,negotiated:channel.negotiated,id:channel.id,readyState:channel.readyState,binaryType:channel.binaryType,reliable:channel.reliable};channel.close();peer.close();result.closed=channel.readyState;return result})()`)
 	if err != nil {
@@ -551,6 +574,7 @@ func TestRTCDataChannelInitialState(t *testing.T) {
 }
 
 func TestRTCSessionDescriptionUsesWebIDLAccessorsAndInternalSlots(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{
 		const value=new RTCSessionDescription({type:'offer',sdp:'v=0\r\n'}),prototype=RTCSessionDescription.prototype;
@@ -578,6 +602,7 @@ func TestRTCSessionDescriptionUsesWebIDLAccessorsAndInternalSlots(t *testing.T) 
 }
 
 func TestRTCInternalStateTransitionsBypassPublicAccessors(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `new Promise(async resolve=>{
 		let peerSets=0,channelSets=0;
@@ -597,6 +622,7 @@ func TestRTCInternalStateTransitionsBypassPublicAccessors(t *testing.T) {
 }
 
 func TestEventDispatchUsesInternalEventSlots(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{const target=new EventTarget(),event=new Event('probe',{cancelable:true});let typeReads=0,defaultReads=0,called=0;Object.defineProperty(Event.prototype,'type',{get(){typeReads++;return'wrong'},configurable:true});Object.defineProperty(Event.prototype,'defaultPrevented',{get(){defaultReads++;return true},configurable:true});target.addEventListener('probe',()=>called++);const result=target.dispatchEvent(event);return{typeReads,defaultReads,called,result}})()`)
 	if err != nil {
@@ -609,6 +635,7 @@ func TestEventDispatchUsesInternalEventSlots(t *testing.T) {
 }
 
 func TestRTCIceCandidatesDeriveFromCanonicalNetworkProfile(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `new Promise(async resolve=>{const peer=new RTCPeerConnection({iceServers:[{urls:'stun:stun.example.test'}]}),seen=[];peer.createDataChannel('probe');peer.onicecandidate=e=>{if(e.candidate)seen.push(e.candidate.candidate);else resolve({seen,state:peer.iceGatheringState,sdp:peer.localDescription.sdp})};const offer=await peer.createOffer();await peer.setLocalDescription(offer)})`)
 	if err != nil {
@@ -656,6 +683,7 @@ func TestRTCIceCandidatesDeriveFromCanonicalNetworkProfile(t *testing.T) {
 }
 
 func TestGeneratedLegacyWindowAliasPreservesConstructorIdentity(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `({same:webkitRTCPeerConnection===RTCPeerConnection,prototype:webkitRTCPeerConnection.prototype===RTCPeerConnection.prototype,name:webkitRTCPeerConnection.name,text:Function.prototype.toString.call(webkitRTCPeerConnection),urlText:Function.prototype.toString.call(URL)})`)
 	if err != nil {
@@ -668,6 +696,7 @@ func TestGeneratedLegacyWindowAliasPreservesConstructorIdentity(t *testing.T) {
 }
 
 func TestRTCInternalEntropyDoesNotCallPublicCryptoMethods(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `new Promise(async resolve=>{crypto.getRandomValues=()=>{throw new Error('public entropy leaked')};crypto.randomUUID=()=>{throw new Error('public UUID leaked')};const peer=new RTCPeerConnection();peer.createDataChannel('probe');peer.onicecandidate=e=>{if(!e.candidate)resolve(peer.localDescription.sdp.includes('a=ice-ufrag:'))};const offer=await peer.createOffer();await peer.setLocalDescription(offer)})`)
 	if err != nil || v != true {
@@ -676,6 +705,7 @@ func TestRTCInternalEntropyDoesNotCallPublicCryptoMethods(t *testing.T) {
 }
 
 func TestWebGPUAdapterPromise(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	navigateCapabilityFixture(t, p)
 	v, err := p.Evaluate(context.Background(), `new Promise(resolve=>navigator.gpu.requestAdapter().then(a=>resolve({gpu:Object.prototype.toString.call(navigator.gpu),adapter:Object.prototype.toString.call(a),format:navigator.gpu.getPreferredCanvasFormat(),hasInfo:!!a.info})))`)
@@ -689,6 +719,7 @@ func TestWebGPUAdapterPromise(t *testing.T) {
 }
 
 func TestWebGPUAdapterInitializationUsesEnvironmentProfile(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	navigateCapabilityFixture(t, p)
 	v, err := p.Evaluate(context.Background(), `new Promise(resolve=>{let done=false;const finish=value=>{if(!done){done=true;resolve(value)}};navigator.gpu.requestAdapter().then(()=>finish('adapter'));setTimeout(()=>finish('timeout'),100)})`)
@@ -701,6 +732,7 @@ func TestWebGPUAdapterInitializationUsesEnvironmentProfile(t *testing.T) {
 }
 
 func TestQuickJSEvaluateSettlesNestedPromiseReactions(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(quickjsengine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -717,6 +749,7 @@ func TestQuickJSEvaluateSettlesNestedPromiseReactions(t *testing.T) {
 }
 
 func TestQuickJSMicrotasksPrecedeTimerTasks(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(quickjsengine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -736,6 +769,7 @@ func TestQuickJSMicrotasksPrecedeTimerTasks(t *testing.T) {
 }
 
 func TestDynamicScriptInsertion(t *testing.T) {
+	parallelBrowserTest(t)
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/d.js" {
 			fmt.Fprint(w, "window.dynamicResult=7")
@@ -758,6 +792,7 @@ func TestDynamicScriptInsertion(t *testing.T) {
 }
 
 func TestGetElementsByTagNameCollection(t *testing.T) {
+	parallelBrowserTest(t)
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		fmt.Fprint(w, `<html><body><script></script><script></script></body></html>`)
 	}))
@@ -777,6 +812,7 @@ func TestGetElementsByTagNameCollection(t *testing.T) {
 }
 
 func TestCryptoRandomSurface(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	navigateCapabilityFixture(t, p)
 	v, err := p.Evaluate(context.Background(), `(() => { const a=new Uint8Array(32); const same=crypto.getRandomValues(a)===a; return {same, nonzero:a.some(x=>x!==0), uuid:/^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/.test(crypto.randomUUID())} })()`)
@@ -790,6 +826,7 @@ func TestCryptoRandomSurface(t *testing.T) {
 }
 
 func TestAsyncExceptionDoesNotPoisonLaterEvaluation(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	if _, err := p.Evaluate(context.Background(), `setTimeout(()=>{throw new Error('background')},0); 1`); err != nil {
 		t.Fatalf("background exception leaked into initiating evaluation: %v", err)
@@ -801,6 +838,7 @@ func TestAsyncExceptionDoesNotPoisonLaterEvaluation(t *testing.T) {
 }
 
 func TestWindowEventsAndAnchorURLProjection(t *testing.T) {
+	parallelBrowserTest(t)
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) { fmt.Fprint(w, "<body></body>") }))
 	defer srv.Close()
 	p := testPage(t)
@@ -818,6 +856,7 @@ func TestWindowEventsAndAnchorURLProjection(t *testing.T) {
 }
 
 func TestInitScriptExceptionDoesNotAbortNavigation(t *testing.T) {
+	parallelBrowserTest(t)
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		fmt.Fprint(w, `<body><script>globalThis.__pageScriptRan = true</script></body>`)
 	}))
@@ -837,6 +876,7 @@ func TestInitScriptExceptionDoesNotAbortNavigation(t *testing.T) {
 }
 
 func TestCanonicalInlineStyleAndAnchorReflections(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{const e=document.createElement('div');document.body.appendChild(e);e.style.backgroundColor='red';e.style.setProperty('width','12px','important');const same=e.style;const removed=e.style.removeProperty('background-color');const computed=getComputedStyle(e);const a=document.createElement('a');a.target='_blank';a.rel='noopener noreferrer';return {stable:same===e.style,attr:e.getAttribute('style'),length:e.style.length,first:e.style[0],width:e.style.width,priority:e.style.getPropertyPriority('width'),removed,computedWidth:computed.getPropertyValue('width'),display:computed.display,target:a.getAttribute('target'),rel:a.relList.contains('noopener')}})()`)
 	if err != nil {
@@ -849,6 +889,7 @@ func TestCanonicalInlineStyleAndAnchorReflections(t *testing.T) {
 }
 
 func TestURLSearchParamsAndNamespacedElements(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{const u=new URL('/p?a=1','https://example.test/base');u.searchParams.append('b','hello world');u.hash='x';const svg=document.createElementNS('http://www.w3.org/2000/svg','svg');return {href:u.href,a:u.searchParams.get('a'),params:String(u.searchParams),valid:URL.canParse('/x',u),invalid:URL.parse('http://[')===null,svg:svg instanceof SVGElement,namespace:svg.namespaceURI,local:svg.localName}})()`)
 	if err != nil {
@@ -861,6 +902,7 @@ func TestURLSearchParamsAndNamespacedElements(t *testing.T) {
 }
 
 func TestShadowDOMTrustedTypesAndPermissionsPolicy(t *testing.T) {
+	parallelBrowserTest(t)
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.Header().Set("Permissions-Policy", "camera=(), xr-spatial-tracking=*")
 		_, _ = w.Write([]byte(`<!doctype html><html><body></body></html>`))
@@ -886,6 +928,7 @@ func TestShadowDOMTrustedTypesAndPermissionsPolicy(t *testing.T) {
 }
 
 func TestBlobFileAndObjectURL(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `new Promise(async resolve=>{const b=new Blob(['h\u00e9',new Uint8Array([33])],{type:'TEXT/PLAIN'}),url=URL.createObjectURL(b),slice=b.slice(1);const f=new File([b],'a/b.txt',{lastModified:42});const result={size:b.size,type:b.type,text:await b.text(),slice:await slice.text(),file:f.name,last:f.lastModified,blobURL:url.startsWith('blob:'+location.origin+'/')};URL.revokeObjectURL(url);resolve(result)})`)
 	if err != nil {
@@ -898,6 +941,7 @@ func TestBlobFileAndObjectURL(t *testing.T) {
 }
 
 func TestFileReaderReadsBlobAndDispatchesLifecycleEvents(t *testing.T) {
+	serialBrowserTest(t)
 	p := testPage(t)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -912,6 +956,7 @@ func TestFileReaderReadsBlobAndDispatchesLifecycleEvents(t *testing.T) {
 }
 
 func TestFormDataSerializesMultipartRequestBody(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(async()=>{const data=new FormData();data.append('field','value');data.append('upload',new Blob(['payload'],{type:'application/octet-stream'}),'probe.bin');const request=new Request('https://example.test/upload',{method:'POST',body:data}),body=await request.text();return{tag:Object.prototype.toString.call(data),field:data.get('field'),file:data.get('upload').name,type:request.headers.get('content-type'),body}})()`)
 	if err != nil {
@@ -930,6 +975,7 @@ func TestFormDataSerializesMultipartRequestBody(t *testing.T) {
 }
 
 func TestDedicatedWorkerHasIndependentRealmAndScheduledMessages(t *testing.T) {
+	serialBrowserTest(t)
 	p := testPage(t)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -953,6 +999,7 @@ func TestDedicatedWorkerHasIndependentRealmAndScheduledMessages(t *testing.T) {
 }
 
 func TestDedicatedWorkerTrustedTypesAreRealmLocal(t *testing.T) {
+	serialBrowserTest(t)
 	p := testPage(t)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -967,6 +1014,7 @@ func TestDedicatedWorkerTrustedTypesAreRealmLocal(t *testing.T) {
 }
 
 func TestImmediateWorkerTerminateCancelsStartupBeforeResourceLoad(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	value, err := p.Evaluate(context.Background(), `(()=>{const url=URL.createObjectURL(new Blob(['postMessage("unexpected")'],{type:'text/javascript'})),worker=new Worker(url);worker.terminate();URL.revokeObjectURL(url);return true})()`)
 	if err != nil || value != true {
@@ -980,6 +1028,7 @@ func TestImmediateWorkerTerminateCancelsStartupBeforeResourceLoad(t *testing.T) 
 }
 
 func TestDedicatedWorkerMicrotasksRunBeforeTimers(t *testing.T) {
+	serialBrowserTest(t)
 	p := testPage(t)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -997,6 +1046,7 @@ func TestDedicatedWorkerMicrotasksRunBeforeTimers(t *testing.T) {
 }
 
 func TestV8DedicatedWorkerRealmAndScheduling(t *testing.T) {
+	serialBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -1021,6 +1071,7 @@ func TestV8DedicatedWorkerRealmAndScheduling(t *testing.T) {
 }
 
 func TestV8SameOriginIframeEvalAndRealmGlobals(t *testing.T) {
+	serialBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -1043,6 +1094,7 @@ func TestV8SameOriginIframeEvalAndRealmGlobals(t *testing.T) {
 }
 
 func TestV8EvaluationTimeoutAfterIframeHostCallbacks(t *testing.T) {
+	serialBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -1065,6 +1117,7 @@ func TestV8EvaluationTimeoutAfterIframeHostCallbacks(t *testing.T) {
 }
 
 func TestIFrameOwnsChildFrameRealmAndWindowProxy(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `new Promise(resolve=>{globalThis.parentMarker=1;const iframe=document.createElement('iframe');document.body.appendChild(iframe);const child=iframe.contentWindow;addEventListener('message',e=>resolve({data:e.data,source:e.source===child,stable:child===iframe.contentWindow,url:iframe.contentDocument.URL}));child.eval("onmessage=e=>parent.postMessage({independent:typeof parentMarker==='undefined',ownGlobal:self===globalThis,parentIsProxy:parent!==self})");child.postMessage('go')})`)
 	if err != nil {
@@ -1078,6 +1131,7 @@ func TestIFrameOwnsChildFrameRealmAndWindowProxy(t *testing.T) {
 }
 
 func TestChildDocumentForwardsPrimitiveProperties(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{const f=document.createElement('iframe');document.body.appendChild(f);f.contentDocument.title='child';return {title:f.contentDocument.title,ready:f.contentDocument.readyState}})()`)
 	if err != nil {
@@ -1090,6 +1144,7 @@ func TestChildDocumentForwardsPrimitiveProperties(t *testing.T) {
 }
 
 func TestChildMessageTaskCheckpointsReceivingRealm(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `new Promise(resolve=>{const f=document.createElement('iframe');document.body.appendChild(f);f.contentWindow.eval("var seen=[];onmessage=e=>{seen.push(e.data);Promise.resolve().then(()=>{seen.push('microtask');if(e.data===2)parent.postMessage(seen,'*')})}");addEventListener('message',e=>resolve(JSON.stringify(e.data)));f.contentWindow.postMessage(1,'*');f.contentWindow.postMessage(2,'*')})`)
 	if err != nil {
@@ -1101,6 +1156,7 @@ func TestChildMessageTaskCheckpointsReceivingRealm(t *testing.T) {
 }
 
 func TestFramePostMessageTransfersRealmLocalMessagePort(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -1121,6 +1177,7 @@ func TestFramePostMessageTransfersRealmLocalMessagePort(t *testing.T) {
 }
 
 func TestV8NavigatedFrameTransferredMessagePortRemainsEntangled(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, request *http.Request) {
 		if request.URL.Path == "/child" {
 			fmt.Fprint(w, `<script>const channel=new MessageChannel();channel.port1.onmessage=event=>channel.port1.postMessage('pong:'+event.data);parent.postMessage('port','*',[channel.port2])</script>`)
@@ -1151,6 +1208,7 @@ func TestV8NavigatedFrameTransferredMessagePortRemainsEntangled(t *testing.T) {
 }
 
 func TestConnectedShadowTreeIframeOwnsBrowsingContext(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{const host=document.createElement('div');document.body.appendChild(host);const root=host.attachShadow({mode:'closed'});const iframe=document.createElement('iframe');root.appendChild(iframe);return{connected:iframe.isConnected,window:iframe.contentWindow!==null,document:iframe.contentDocument!==null,stable:iframe.contentWindow===iframe.contentWindow}})()`)
 	if err != nil {
@@ -1163,6 +1221,7 @@ func TestConnectedShadowTreeIframeOwnsBrowsingContext(t *testing.T) {
 }
 
 func TestConnectedShadowTreeIframeLoadsItsDocument(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		if req.URL.Path == "/child" {
 			_, _ = w.Write([]byte(`<script>document.addEventListener('DOMContentLoaded',()=>parent.postMessage({url:location.href,frame:frameElement.tagName,ready:document.readyState}))</script>`))
@@ -1186,6 +1245,7 @@ func TestConnectedShadowTreeIframeLoadsItsDocument(t *testing.T) {
 }
 
 func TestDynamicIframeFiresOwnerLoadAfterChildCompletes(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		if req.URL.Path == "/child" {
 			_, _ = w.Write([]byte(`<body><script>globalThis.childRan='yes'</script></body>`))
@@ -1216,6 +1276,7 @@ func TestDynamicIframeFiresOwnerLoadAfterChildCompletes(t *testing.T) {
 }
 
 func TestShadowTreeIframeFiresOwnerLoadAfterChildCompletes(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		_, _ = w.Write([]byte(`<!doctype html><body></body>`))
 	}))
@@ -1234,6 +1295,7 @@ func TestShadowTreeIframeFiresOwnerLoadAfterChildCompletes(t *testing.T) {
 }
 
 func TestConnectingShadowHostStartsExistingIframeNavigation(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		_, _ = w.Write([]byte(`<!doctype html><body></body>`))
 	}))
@@ -1253,6 +1315,7 @@ func TestConnectingShadowHostStartsExistingIframeNavigation(t *testing.T) {
 }
 
 func TestIframeRenavigationPreservesProxyAndRemovalClearsElementAccess(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		fmt.Fprintf(w, "<!doctype html><title>%s</title><body></body>", req.URL.Path)
 	}))
@@ -1272,6 +1335,7 @@ func TestIframeRenavigationPreservesProxyAndRemovalClearsElementAccess(t *testin
 }
 
 func TestV8IframeRemovalUnblocksParentLoadBeforeDisconnect(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, request *http.Request) {
 		if request.URL.Path == "/child" {
 			fmt.Fprint(w, `<!doctype html><title>child</title>`)
@@ -1317,6 +1381,7 @@ func TestV8IframeRemovalUnblocksParentLoadBeforeDisconnect(t *testing.T) {
 }
 
 func TestDynamicScriptMicrotasksPrecedeLoad(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		if req.URL.Path == "/dynamic.js" {
 			_, _ = w.Write([]byte(`seen.push('script');Promise.resolve().then(()=>seen.push('microtask'))`))
@@ -1339,6 +1404,7 @@ func TestDynamicScriptMicrotasksPrecedeLoad(t *testing.T) {
 }
 
 func TestChildResourceTimingBelongsToInitiatingContext(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		switch req.URL.Path {
 		case "/child":
@@ -1365,6 +1431,7 @@ func TestChildResourceTimingBelongsToInitiatingContext(t *testing.T) {
 }
 
 func TestFramePostMessageQueuedBeforeNavigationTargetsCommittedRealm(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		if req.URL.Path == "/child" {
 			_, _ = w.Write([]byte(`<script>onmessage=e=>parent.postMessage({data:e.data,url:location.href})</script>`))
@@ -1388,6 +1455,7 @@ func TestFramePostMessageQueuedBeforeNavigationTargetsCommittedRealm(t *testing.
 }
 
 func TestElementAttributesProjectsCanonicalDOM(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{const element=document.createElement('div');element.setAttribute('data-one','1');element.setAttribute('title','two');const attributes=element.attributes;return{tag:Object.prototype.toString.call(attributes),length:attributes.length,first:attributes[0].name+':'+attributes[0].value,named:attributes.getNamedItem('title').value,missing:attributes.item(9)}})()`)
 	if err != nil {
@@ -1401,6 +1469,7 @@ func TestElementAttributesProjectsCanonicalDOM(t *testing.T) {
 }
 
 func TestDocumentCreateNodeIteratorTraversesElements(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{const root=document.createElement('div'),a=document.createElement('span'),b=document.createElement('p');root.appendChild(a);root.appendChild(b);const iterator=document.createNodeIterator(root,NodeFilter.SHOW_ELEMENT,{acceptNode:n=>n.tagName==='SPAN'?NodeFilter.FILTER_REJECT:NodeFilter.FILTER_ACCEPT}),names=[];for(let node;(node=iterator.nextNode());)names.push(node.tagName);return{tag:Object.prototype.toString.call(iterator),names}})()`)
 	if err != nil {
@@ -1414,6 +1483,7 @@ func TestDocumentCreateNodeIteratorTraversesElements(t *testing.T) {
 }
 
 func TestDocumentCollectionsAreLiveDOMProjections(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{const script=document.createElement('script'),style=document.createElement('style');document.head.appendChild(script);document.head.appendChild(style);return{scripts:document.scripts.length,script:document.scripts[0]===script,sheets:document.styleSheets.length,owner:document.styleSheets[0].ownerNode===style,referrer:document.referrer}})()`)
 	if err != nil {
@@ -1426,6 +1496,7 @@ func TestDocumentCollectionsAreLiveDOMProjections(t *testing.T) {
 }
 
 func TestParserStylesheetUsesSharedLoaderAndCSSOMProjection(t *testing.T) {
+	parallelBrowserTest(t)
 	requested := make(chan http.Header, 1)
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/site.css" {
@@ -1474,6 +1545,7 @@ func TestParserStylesheetUsesSharedLoaderAndCSSOMProjection(t *testing.T) {
 }
 
 func TestAnimationFrameUsesBrowserScheduler(t *testing.T) {
+	serialBrowserTest(t)
 	p := testPage(t)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -1493,6 +1565,7 @@ func TestAnimationFrameUsesBrowserScheduler(t *testing.T) {
 }
 
 func TestMessageChannelUsesPostedMessageTaskSource(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `new Promise(resolve=>{const order=['sync'],channel=new MessageChannel();channel.port1.onmessage=event=>{order.push('message:'+event.data.value);resolve({order,ports:channel.port1 instanceof MessagePort&&channel.port2 instanceof MessagePort})};channel.port2.postMessage({value:7});queueMicrotask(()=>order.push('microtask'))})`)
 	if err != nil {
@@ -1506,6 +1579,7 @@ func TestMessageChannelUsesPostedMessageTaskSource(t *testing.T) {
 }
 
 func TestDocumentVisibilityDatasetAndNavigationState(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{const node=document.createElement('div');node.dataset.longName='value';document.body.appendChild(node);const navigation=performance.getEntriesByType('navigation')[0];return{visibility:document.visibilityState,hidden:document.hidden,prerendering:document.prerendering,discarded:document.wasDiscarded,dataset:node.getAttribute('data-long-name'),keys:Object.keys(node.dataset),activation:navigation.activationStart,navigationId:navigation.navigationId}})()`)
 	if err != nil {
@@ -1518,6 +1592,7 @@ func TestDocumentVisibilityDatasetAndNavigationState(t *testing.T) {
 }
 
 func TestDocumentElementParentUsesDocumentSingleton(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{const parent=document.documentElement.parentNode;return{same:parent===document,document:parent instanceof Document,element:parent instanceof Element,parentElement:document.documentElement.parentElement}})()`)
 	if err != nil {
@@ -1530,6 +1605,7 @@ func TestDocumentElementParentUsesDocumentSingleton(t *testing.T) {
 }
 
 func TestExplicitElementDimensionsProjectAsDOMRect(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{document.body.style.margin='0';const a=document.createElement('span'),b=document.createElement('iframe');b.style.width='300px';b.style.height='65px';b.style.border='0';document.body.appendChild(a);document.body.appendChild(b);const rect=b.getBoundingClientRect(),descriptor=Object.getOwnPropertyDescriptor(DOMRect.prototype,'width');return{width:b.offsetWidth,height:b.offsetHeight,rectWidth:rect.width,right:rect.right,brand:rect instanceof DOMRect&&rect instanceof DOMRectReadOnly,writable:typeof descriptor.get==='function'&&typeof descriptor.set==='function',contains:document.body.contains(b),previous:b.previousElementSibling===a}})()`)
 	if err != nil {
@@ -1542,6 +1618,7 @@ func TestExplicitElementDimensionsProjectAsDOMRect(t *testing.T) {
 }
 
 func TestAutoBlockLayoutDerivesFromChildrenAndViewport(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{const box=document.createElement('div'),child=document.createElement('iframe');document.body.style.margin='0';child.style.cssText='display:block;border:0;width:300px;height:65px';box.appendChild(child);document.body.appendChild(box);const rect=box.getBoundingClientRect();return{width:rect.width,height:rect.height,bodyWidth:document.body.getBoundingClientRect().width,bodyHeight:document.body.getBoundingClientRect().height}})()`)
 	if err != nil {
@@ -1554,6 +1631,7 @@ func TestAutoBlockLayoutDerivesFromChildrenAndViewport(t *testing.T) {
 }
 
 func TestOutOfFlowChildrenDoNotContributeToParentHeight(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{const measure=position=>{const container=document.createElement('div'),child=document.createElement('iframe');container.style.width='100px';child.style.cssText='border:none;width:1px;height:1px;position:'+position+';left:0;top:0';container.appendChild(child);document.body.appendChild(container);const style=getComputedStyle(child),result={height:container.getBoundingClientRect().height,offsetHeight:container.offsetHeight,childHeight:child.getBoundingClientRect().height,childDisplay:style.display,childPosition:style.position};container.remove();return result};return{fixed:measure('fixed'),absolute:measure('absolute'),static:measure('static')}})()`)
 	if err != nil {
@@ -1574,6 +1652,7 @@ func TestOutOfFlowChildrenDoNotContributeToParentHeight(t *testing.T) {
 }
 
 func TestShadowHostLayoutDerivesFromShadowChildren(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{document.body.style.margin='0';const outer=document.createElement('div'),host=document.createElement('div'),root=host.attachShadow({mode:'closed'}),frame=document.createElement('iframe');frame.style.width='300px';frame.style.height='65px';frame.style.border='0';root.appendChild(frame);outer.appendChild(host);document.body.appendChild(outer);return{height:host.getBoundingClientRect().height,outerHeight:outer.getBoundingClientRect().height,offsetHeight:host.offsetHeight,width:host.getBoundingClientRect().width}})()`)
 	if err != nil {
@@ -1586,6 +1665,7 @@ func TestShadowHostLayoutDerivesFromShadowChildren(t *testing.T) {
 }
 
 func TestComputedStyleIncludesInheritedUAVisibility(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{const node=document.createElement('div'),frame=document.createElement('iframe');document.body.appendChild(node);document.body.appendChild(frame);const style=getComputedStyle(node);return{visibility:style.visibility,property:style.getPropertyValue('visibility'),contentVisibility:style.contentVisibility,opacity:style.opacity,transform:style.transform,frameDisplay:getComputedStyle(frame).display}})()`)
 	if err != nil {
@@ -1598,6 +1678,7 @@ func TestComputedStyleIncludesInheritedUAVisibility(t *testing.T) {
 }
 
 func TestComputedStyleAppliesGenericAuthorCascade(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{const sheet=document.createElement('style');sheet.textContent='*{box-sizing:border-box}.outer .box{display:flex;transform:translateX(2px)}.box{display:grid;opacity:.4}.box:hover{visibility:hidden}';document.head.appendChild(sheet);const outer=document.createElement('div'),node=document.createElement('div');outer.className='outer';node.className='box';outer.appendChild(node);document.body.appendChild(outer);node.style.opacity='.8';const style=getComputedStyle(node);return{display:style.display,transform:style.transform,opacity:style.opacity,visibility:style.visibility,boxSizing:style.boxSizing}})()`)
 	if err != nil {
@@ -1611,6 +1692,7 @@ func TestComputedStyleAppliesGenericAuthorCascade(t *testing.T) {
 }
 
 func TestComputedStyleUsesContainingShadowRootStyleSheets(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{const documentSheet=document.createElement('style');documentSheet.textContent='iframe{display:grid}';document.head.appendChild(documentSheet);const outside=document.createElement('iframe'),host=document.createElement('div'),root=host.attachShadow({mode:'closed'}),shadowSheet=document.createElement('style'),inside=document.createElement('iframe');shadowSheet.textContent='iframe{display:block;opacity:.4}';root.appendChild(shadowSheet);root.appendChild(inside);document.body.appendChild(outside);document.body.appendChild(host);return{outsideDisplay:getComputedStyle(outside).display,insideDisplay:getComputedStyle(inside).display,insideOpacity:getComputedStyle(inside).opacity}})()`)
 	if err != nil {
@@ -1623,6 +1705,7 @@ func TestComputedStyleUsesContainingShadowRootStyleSheets(t *testing.T) {
 }
 
 func TestElementMatchesAndClosestUseGenericSelectorSemantics(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{const outer=document.createElement('section'),middle=document.createElement('div'),node=document.createElement('span');outer.id='root';middle.className='middle';node.className='leaf';node.setAttribute('data-kind','target');middle.appendChild(node);outer.appendChild(middle);document.body.appendChild(outer);return{self:node.matches('span.leaf[data-kind="target"]'),list:node.matches('p, .leaf'),ancestor:node.closest('#root')===outer,middle:node.closest('div.middle')===middle,missing:node.closest('article')}})()`)
 	if err != nil {
@@ -1635,6 +1718,7 @@ func TestElementMatchesAndClosestUseGenericSelectorSemantics(t *testing.T) {
 }
 
 func TestMatchMediaDerivesFromCanonicalPreferences(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	p.env.Preferences.ColorScheme = "dark"
 	p.env.Preferences.ReducedMotion = false
@@ -1649,6 +1733,7 @@ func TestMatchMediaDerivesFromCanonicalPreferences(t *testing.T) {
 }
 
 func TestCrossOriginResourceTimingRequiresTimingAllowOrigin(t *testing.T) {
+	parallelBrowserTest(t)
 	resource := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		if req.URL.Query().Get("tao") == "1" {
 			w.Header().Set("Timing-Allow-Origin", "*")
@@ -1682,6 +1767,7 @@ func TestCrossOriginResourceTimingRequiresTimingAllowOrigin(t *testing.T) {
 }
 
 func TestExplicitFaviconUsesDeclaredURL(t *testing.T) {
+	parallelBrowserTest(t)
 	requested := make(chan string, 1)
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/declared.ico" {
@@ -1716,6 +1802,7 @@ func TestExplicitFaviconUsesDeclaredURL(t *testing.T) {
 }
 
 func TestFrameElementDerivesFromBrowsingContext(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{const iframe=document.createElement('iframe');iframe.id='child';document.body.appendChild(iframe);const childResult=iframe.contentWindow.eval("({tag:frameElement.tagName,id:frameElement.getAttribute('id'),ownsWindow:frameElement.contentWindow===window})");return{top:frameElement,child:{tag:childResult.tag,id:childResult.id,ownsWindow:childResult.ownsWindow}}})()`)
 	if err != nil {
@@ -1732,6 +1819,7 @@ func TestFrameElementDerivesFromBrowsingContext(t *testing.T) {
 }
 
 func TestWindowFramesReflectsDirectChildBrowsingContexts(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{
 		const first=document.createElement('iframe'),second=document.createElement('iframe');
@@ -1761,6 +1849,7 @@ func TestWindowFramesReflectsDirectChildBrowsingContexts(t *testing.T) {
 }
 
 func TestDocumentCreateEventInitializesLegacyCustomEvent(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{const event=document.createEvent('CustomEvent');event.initCustomEvent('ready',true,true,{value:7});return{ctor:event.constructor===CustomEvent,type:event.type,bubbles:event.bubbles,cancelable:event.cancelable,detail:event.detail.value}})()`)
 	if err != nil {
@@ -1773,6 +1862,7 @@ func TestDocumentCreateEventInitializesLegacyCustomEvent(t *testing.T) {
 }
 
 func TestFragmentInsertionDoesNotInvokeOverriddenRemoveChild(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	got, err := p.Evaluate(context.Background(), `(()=>{const target=document.createElement('div'),fragment=document.createDocumentFragment(),child=document.createElement('span');fragment.appendChild(child);fragment.removeChild=()=>{throw new Error('observable override')};target.appendChild(fragment);return target.firstChild===child&&fragment.childNodes.length===0})()`)
 	if err != nil || got != true {
@@ -1781,6 +1871,7 @@ func TestFragmentInsertionDoesNotInvokeOverriddenRemoveChild(t *testing.T) {
 }
 
 func TestIFrameSandboxAssignmentForwardsToDOMTokenListValue(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{const iframe=document.createElement('iframe');iframe.sandbox='allow-scripts allow-same-origin';return{attribute:iframe.getAttribute('sandbox'),value:iframe.sandbox.value,contains:iframe.sandbox.contains('allow-scripts')}})()`)
 	if err != nil {
@@ -1793,6 +1884,7 @@ func TestIFrameSandboxAssignmentForwardsToDOMTokenListValue(t *testing.T) {
 }
 
 func TestRemovingIframeDetachesChildBrowsingContext(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	if _, err := p.Evaluate(context.Background(), `(()=>{const iframe=document.createElement('iframe');document.body.appendChild(iframe);iframe.remove()})()`); err != nil {
 		t.Fatal(err)
@@ -1803,6 +1895,7 @@ func TestRemovingIframeDetachesChildBrowsingContext(t *testing.T) {
 }
 
 func TestSameOriginWindowProxyForwardsRealmGlobalsAfterDetach(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{const iframe=document.createElement('iframe');document.body.appendChild(iframe);const child=iframe.contentWindow,ChildDocument=child.Document,ChildElement=child.Element;iframe.remove();return{documentType:typeof ChildDocument,elementType:typeof ChildElement,distinctDocument:ChildDocument!==Document,distinctElement:ChildElement!==Element,stable:ChildDocument===child.Document}})()`)
 	if err != nil {
@@ -1815,6 +1908,7 @@ func TestSameOriginWindowProxyForwardsRealmGlobalsAfterDetach(t *testing.T) {
 }
 
 func TestReadableWritableAndTransformStreams(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(async()=>{const blob=new Blob(['abc']),reader=blob.stream().getReader(),first=await reader.read(),last=await reader.read(),written=[];const writable=new WritableStream({write(v){written.push(v)}}),transform=new TransformStream({transform(v,c){c.enqueue(v*2)}}),transformedReader=transform.readable.getReader(),writer=transform.writable.getWriter();const transformedRead=transformedReader.read();await writer.write(3);await writer.close();const transformed=await transformedRead;const source=new ReadableStream({start(c){c.enqueue('x');c.close()}});await source.pipeTo(writable);return {instance:blob.stream() instanceof ReadableStream,text:String.fromCharCode(...first.value),done:last.done,written:written.join(''),transformed:transformed.value}})()`)
 	if err != nil {
@@ -1827,6 +1921,7 @@ func TestReadableWritableAndTransformStreams(t *testing.T) {
 }
 
 func TestBase64WindowFunctions(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `({encoded:btoa('\x00\xffabc'),decoded:Array.from(atob('AP9hYmM=')).map(x=>x.charCodeAt(0))})`)
 	if err != nil {
@@ -1843,6 +1938,7 @@ func TestBase64WindowFunctions(t *testing.T) {
 }
 
 func TestCSPUsesOnePolicyForInlineAndExternalScripts(t *testing.T) {
+	parallelBrowserTest(t)
 	var externalLoads int
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/blocked.js" {
@@ -1873,6 +1969,7 @@ func TestCSPUsesOnePolicyForInlineAndExternalScripts(t *testing.T) {
 }
 
 func TestCSPNonceReflectionAllowsDynamicScript(t *testing.T) {
+	parallelBrowserTest(t)
 	var externalLoads int
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/dynamic.js" {
@@ -1895,6 +1992,7 @@ func TestCSPNonceReflectionAllowsDynamicScript(t *testing.T) {
 }
 
 func TestMicrotaskInsertedResourceDelaysCompleteState(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case "/outer.js":
@@ -1917,6 +2015,7 @@ func TestMicrotaskInsertedResourceDelaysCompleteState(t *testing.T) {
 }
 
 func TestFeatureDetectionTracesMissingObjectProperty(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	if _, err := p.Evaluate(context.Background(), `navigator.notYetImplemented`); err != nil {
 		t.Fatal(err)
@@ -1933,6 +2032,7 @@ func TestFeatureDetectionTracesMissingObjectProperty(t *testing.T) {
 }
 
 func TestDocumentStructureReadyStateAndScopedQuery(t *testing.T) {
+	parallelBrowserTest(t)
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		fmt.Fprint(w, `<head></head><body><section><span id="inside"></span></section></body><script>window.stateDuringScript=document.readyState</script>`)
 	}))
@@ -1952,6 +2052,7 @@ func TestDocumentStructureReadyStateAndScopedQuery(t *testing.T) {
 }
 
 func TestElementFeatureDetectionIsTraced(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	if _, err := p.Evaluate(context.Background(), `document.body.missingElementAPI`); err != nil {
 		t.Fatal(err)
@@ -1968,6 +2069,7 @@ func TestElementFeatureDetectionIsTraced(t *testing.T) {
 }
 
 func TestGlobalAccessTracingPreservesWindowSemantics(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `({identity:window===globalThis&&self===window,dynamicIdentity:Function('return this===globalThis')(),tag:Object.prototype.toString.call(window),missing:window.missingGlobalAPI,reference:(()=>{try{missingGlobalAPI;return false}catch(e){return e instanceof ReferenceError}})()})`)
 	if err != nil {
@@ -1980,6 +2082,7 @@ func TestGlobalAccessTracingPreservesWindowSemantics(t *testing.T) {
 }
 
 func TestPerformanceObserverBufferedDelivery(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `new Promise(resolve=>{const observer=new PerformanceObserver((list,self)=>resolve({same:self===observer,count:list.getEntriesByType('navigation').length,supported:PerformanceObserver.supportedEntryTypes.includes('resource')}));observer.observe({type:'navigation',buffered:true})})`)
 	if err != nil {
@@ -1992,6 +2095,7 @@ func TestPerformanceObserverBufferedDelivery(t *testing.T) {
 }
 
 func TestPerformanceObserverReceivesResourceWithoutPollingTimers(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Cache-Control", "no-store")
@@ -2010,6 +2114,7 @@ func TestPerformanceObserverReceivesResourceWithoutPollingTimers(t *testing.T) {
 }
 
 func TestPerformanceResourceEntriesAreOrderedByFetchStart(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, request *http.Request) {
 		w.Header().Set("Access-Control-Allow-Origin", "*")
 		w.Header().Set("Cache-Control", "no-store")
@@ -2039,6 +2144,7 @@ func TestPerformanceResourceEntriesAreOrderedByFetchStart(t *testing.T) {
 }
 
 func TestPerformanceObserverReceivesFinalizedNavigationEntry(t *testing.T) {
+	serialBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		_, _ = fmt.Fprint(w, `<script>window.navigationDone=new Promise(resolve=>{new PerformanceObserver(list=>{const entries=list.getEntriesByType('navigation');if(entries.length)resolve({count:entries.length,duration:entries[0].duration,complete:document.readyState})}).observe({entryTypes:['navigation']})})</script>`)
 	}))
@@ -2060,6 +2166,7 @@ func TestPerformanceObserverReceivesFinalizedNavigationEntry(t *testing.T) {
 }
 
 func TestBrowserOwnedFallbackFaviconHasResourceTimingEntry(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, request *http.Request) {
 		if request.URL.Path == "/favicon.ico" {
 			w.Header().Set("Content-Type", "image/x-icon")
@@ -2104,6 +2211,7 @@ func TestBrowserOwnedFallbackFaviconHasResourceTimingEntry(t *testing.T) {
 }
 
 func TestClassSelectorAndCanonicalClassList(t *testing.T) {
+	parallelBrowserTest(t)
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		fmt.Fprint(w, `<main class="main-content old"></main>`)
 	}))
@@ -2123,6 +2231,7 @@ func TestClassSelectorAndCanonicalClassList(t *testing.T) {
 }
 
 func TestInnerHTMLAndStaticQuerySelectorAll(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{const box=document.createElement('div');document.body.appendChild(box);box.innerHTML='<span class="x">one</span><span class="x">two</span>';const list=box.querySelectorAll('.x');box.innerHTML='<b>changed</b>';return {serialized:list[0].textContent+list[1].textContent,length:list.length,first:box.firstElementChild.tagName,html:box.innerHTML}})()`)
 	if err != nil {
@@ -2135,6 +2244,7 @@ func TestInnerHTMLAndStaticQuerySelectorAll(t *testing.T) {
 }
 
 func TestChromeDOMPrimitivesExercisedByModuleHydration(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{const box=document.createElement('div');box.innerHTML='<span>child</span>tail';const script=document.createElement('script');script.textContent='const answer=42';const comment=document.createComment('hello');const svg=document.createElementNS('http://www.w3.org/2000/svg','svg'),rect=svg.createSVGRect();const observer=new IntersectionObserver(()=>{});const fragment=document.createDocumentFragment(),fragmentChild=document.createElement('i');fragment.appendChild(fragmentChild);const result={children:box.childNodes.length,firstType:box.firstChild.nodeType,firstName:box.firstChild.nodeName,has:box.hasChildNodes(),scriptText:script.text,scriptContent:script.textContent,scriptOwn:Object.prototype.hasOwnProperty.call(HTMLScriptElement.prototype,'textContent'),commentTag:Object.prototype.toString.call(comment),commentType:comment.nodeType,commentName:comment.nodeName,commentData:comment.data,commentContent:comment.textContent,commentHas:comment.hasChildNodes(),svgTag:Object.prototype.toString.call(rect),rect:[rect.x,rect.y,rect.width,rect.height],observerTag:Object.prototype.toString.call(observer),root:observer.root,rootMargin:observer.rootMargin,scrollMargin:observer.scrollMargin,thresholds:observer.thresholds,records:observer.takeRecords(),fragmentTag:Object.prototype.toString.call(fragment),fragmentType:fragment.nodeType,fragmentName:fragment.nodeName,fragmentHas:fragment.hasChildNodes(),fragmentFirst:fragment.firstChild===fragmentChild,fragmentCount:fragment.childNodes.length,namespacesPresent:'namespaces' in document,namespacesUndefined:document.namespaces===undefined};observer.disconnect();return result})()`)
 	if err != nil {
@@ -2147,6 +2257,7 @@ func TestChromeDOMPrimitivesExercisedByModuleHydration(t *testing.T) {
 }
 
 func TestHistoryStateScrollRestorationAndLinkReflection(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{const link=document.createElement('link'),initial={href:link.href,rel:link.rel,as:link.as,crossOrigin:link.crossOrigin};link.href='/asset.js';link.rel='modulepreload';link.as='script';link.crossOrigin='anonymous';history.replaceState({answer:42},'');const automatic=history.scrollRestoration;history.scrollRestoration='manual';history.scrollRestoration='invalid';return{initial,tag:Object.prototype.toString.call(link),href:link.href,rel:link.rel,as:link.as,crossOrigin:link.crossOrigin,hrefAttr:link.getAttribute('href'),state:history.state.answer,automatic,scrollRestoration:history.scrollRestoration}})()`)
 	if err != nil {
@@ -2160,6 +2271,7 @@ func TestHistoryStateScrollRestorationAndLinkReflection(t *testing.T) {
 }
 
 func TestDynamicLinkLoadEvents(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case "/module.js":
@@ -2188,6 +2300,7 @@ func TestDynamicLinkLoadEvents(t *testing.T) {
 }
 
 func TestParentSiblingAndNodeReordering(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{const p=document.createElement('div'),a=document.createElement('i'),b=document.createElement('b');document.body.appendChild(p);p.appendChild(a);p.appendChild(b);p.insertBefore(b,a);const before={parent:b.parentNode===p,first:p.firstElementChild===null?null:p.firstElementChild.tagName,next:b.nextSibling.tagName,count:p.childElementCount};p.removeChild(b);return {...before,after:p.children.length,detached:b.parentNode===null}})()`)
 	if err != nil {
@@ -2200,6 +2313,7 @@ func TestParentSiblingAndNodeReordering(t *testing.T) {
 }
 
 func TestDOMWrappersPreserveRealmLocalIdentity(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{const body=document.body,div=document.createElement('div');div.id='identity';body.appendChild(div);return{body:body===document.body,query:div===document.querySelector('#identity'),parent:div.parentNode===body,collection:div===body.children[0]}})()`)
 	if err != nil {
@@ -2212,6 +2326,7 @@ func TestDOMWrappersPreserveRealmLocalIdentity(t *testing.T) {
 }
 
 func TestDynamicScriptLoadEvents(t *testing.T) {
+	parallelBrowserTest(t)
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/event.js" {
 			fmt.Fprint(w, `window.loadedCode=true`)
@@ -2235,6 +2350,7 @@ func TestDynamicScriptLoadEvents(t *testing.T) {
 }
 
 func TestScriptReflectionAndCurrentScript(t *testing.T) {
+	parallelBrowserTest(t)
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		fmt.Fprint(w, `<script id="running">window.seenCurrent=document.currentScript.id</script>`)
 	}))

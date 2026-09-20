@@ -5,6 +5,7 @@ package browser
 import "testing"
 
 func TestHistoryCloneRestoredBootstrap(t *testing.T) {
+	serialBrowserTest(t)
 	for _, mode := range []string{"ordinary", "snapshot"} {
 		t.Run(mode, func(t *testing.T) {
 			if mode == "ordinary" {

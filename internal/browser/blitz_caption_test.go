@@ -20,6 +20,7 @@ return JSON.stringify(result);
 })()`
 
 func TestBlitzCaptionLayoutLifecycle(t *testing.T) {
+	parallelBrowserTest(t)
 	p := blitzStandardsPage(t)
 	v, err := p.Evaluate(context.Background(), blitzCaptionLifecycle)
 	// Captured against frozen Chrome 152.0.7977.82, profile 1272px viewport.

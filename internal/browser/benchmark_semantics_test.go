@@ -12,6 +12,7 @@ import (
 )
 
 func TestFragmentInsertionOwnerDocumentAndCommentText(t *testing.T) {
+	parallelBrowserTest(t)
 	for name, factory := range map[string]engine.Factory{"goja": gojaengine.Factory{}, "v8": v8engine.Factory{}} {
 		t.Run(name, func(t *testing.T) {
 			b, err := New(factory, chrome152.New())
@@ -43,6 +44,7 @@ func TestFragmentInsertionOwnerDocumentAndCommentText(t *testing.T) {
 }
 
 func TestV8SameWindowPostedMessageAndNativeWasm(t *testing.T) {
+	serialBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)

@@ -8,6 +8,7 @@ import (
 )
 
 func TestFrameReferenceArgumentsPreserveIdentity(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 		defer cancel()
@@ -36,6 +37,7 @@ func TestFrameReferenceArgumentsPreserveIdentity(t *testing.T) {
 }
 
 func TestFrameReferenceArgumentsValidateSource(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		if _, err := page.Evaluate(context.Background(), `document.body.appendChild(document.createElement('iframe'))`); err != nil {
 			t.Fatal(err)

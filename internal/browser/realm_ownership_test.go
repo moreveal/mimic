@@ -15,6 +15,7 @@ import (
 )
 
 func TestNavigationRealmRetentionAndTeardown(t *testing.T) {
+	serialBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) { fmt.Fprint(w, "<!doctype html><body>") }))
 	defer server.Close()
 	b, err := New(v8engine.Factory{}, chrome152.New())
@@ -74,6 +75,7 @@ func TestNavigationRealmRetentionAndTeardown(t *testing.T) {
 }
 
 func TestUnreachableRealmReferenceCyclesAreCollected(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	ctx := context.Background()
 	if _, err := p.Evaluate(ctx, `document.body.appendChild(document.createElement('iframe'));document.body.appendChild(document.createElement('iframe'));true`); err != nil {

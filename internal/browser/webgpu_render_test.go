@@ -11,6 +11,7 @@ import (
 )
 
 func TestWebGPURenderFrozenChrome(t *testing.T) {
+	serialBrowserTest(t)
 	source, err := os.ReadFile("testdata/webgpu_render_oracle.js")
 	if err != nil {
 		t.Fatal(err)

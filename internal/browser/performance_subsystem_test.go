@@ -17,33 +17,50 @@ import (
 )
 
 func TestPerformanceSurfaceMatchesFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
+
 	documentAllOracle(t, "performance_surface")
 }
 func TestPerformanceUserTimingMatchesFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
 	documentAllOracle(t, "performance_user_timing")
 }
 func TestPerformanceObserverMatchesFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
+
 	documentAllOracle(t, "performance_observer")
 }
 
-func TestPerformanceEdgesMatchFrozenChrome(t *testing.T) { documentAllOracle(t, "performance_edges") }
+func TestPerformanceEdgesMatchFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
+	documentAllOracle(t, "performance_edges")
+}
 func TestPerformanceConversionMatchesFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
+
 	documentAllOracle(t, "performance_conversion")
 }
 func TestPerformanceMemoryMatchesFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
 	documentAllOracle(t, "performance_memory")
 }
 func TestPerformanceCloneBrandsMatchFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
+
 	documentAllOracle(t, "performance_clone")
 }
 func TestPerformanceLongTasksMatchFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
 	documentAllOracle(t, "performance_longtask")
 }
 func TestPerformanceLongTaskFramesMatchFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
+
 	documentAllOracle(t, "performance_longtask_frames")
 }
 
 func TestPerformanceWorkerMatchesFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
 	for _, name := range []string{"performance_surface", "performance_user_timing", "performance_observer"} {
 		t.Run(name, func(t *testing.T) {
 			p := bootstrapSnapshotPage(t)
@@ -86,6 +103,7 @@ func TestPerformanceWorkerMatchesFrozenChrome(t *testing.T) {
 }
 
 func TestPerformanceTrustedInputMatchesFrozenChrome(t *testing.T) {
+	serialBrowserTest(t)
 	p := bootstrapSnapshotPage(t)
 	navigateCapabilityFixture(t, p)
 	source, err := os.ReadFile("testdata/performance_input_oracle.js")
@@ -113,6 +131,7 @@ func TestPerformanceTrustedInputMatchesFrozenChrome(t *testing.T) {
 }
 
 func TestPerformanceClearedEntriesReleaseRuntimeRoots(t *testing.T) {
+	parallelBrowserTest(t)
 	p := bootstrapSnapshotPage(t)
 	navigateCapabilityFixture(t, p)
 	result := bootstrapSnapshotEvaluate(t, p, `(()=>{
@@ -138,6 +157,7 @@ func TestPerformanceClearedEntriesReleaseRuntimeRoots(t *testing.T) {
 }
 
 func TestPerformanceIsolatedSurfaceMatchesFrozenChrome(t *testing.T) {
+	serialBrowserTest(t)
 	for _, mode := range []string{"ordinary", "snapshot"} {
 		t.Run(mode, func(t *testing.T) {
 			if mode == "ordinary" {
@@ -172,6 +192,7 @@ func TestPerformanceIsolatedSurfaceMatchesFrozenChrome(t *testing.T) {
 }
 
 func TestPerformanceIndependentPageTimelines(t *testing.T) {
+	serialBrowserTest(t)
 	seed := bootstrapSnapshotPage(t)
 	server := performanceOracleServer(t)
 	var pages []*Page
@@ -281,6 +302,7 @@ func performanceOracleServer(t *testing.T) *httptest.Server {
 }
 
 func TestPerformanceNetworkAndLifecycleMatchFrozenChrome(t *testing.T) {
+	serialBrowserTest(t)
 	for _, mode := range []string{"ordinary", "snapshot"} {
 		t.Run(mode, func(t *testing.T) {
 			if mode == "ordinary" {

@@ -10,6 +10,7 @@ import (
 )
 
 func TestFetchResponseBodyAbortUsesIndependentDOMException(t *testing.T) {
+	serialBrowserTest(t)
 	const probe = `async function probe(){for(const reason of [undefined,{custom:true},'custom']){
  const controller=new AbortController();const response=await fetch('/body',{signal:controller.signal});controller.abort(reason);
  try{await response.text();return 'body resolved'}catch(error){

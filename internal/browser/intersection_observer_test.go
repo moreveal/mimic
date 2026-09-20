@@ -19,6 +19,7 @@ import (
 var intersectionObserverRegressions string
 
 func TestIntersectionObserverInitialAndChangedObservations(t *testing.T) {
+	serialBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -38,6 +39,7 @@ func TestIntersectionObserverInitialAndChangedObservations(t *testing.T) {
 }
 
 func TestUnchangedIntersectionSampleAvoidsGeometryWork(t *testing.T) {
+	serialBrowserTest(t)
 	t.Setenv("MIMIC_PROFILE_HOSTS", "1")
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
@@ -120,6 +122,7 @@ func TestUnchangedIntersectionSampleAvoidsGeometryWork(t *testing.T) {
 }
 
 func TestIntersectionObserverUsesResolvedControlFontGeometry(t *testing.T) {
+	serialBrowserTest(t)
 	p := testPage(t)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -141,6 +144,7 @@ func TestIntersectionObserverUsesResolvedControlFontGeometry(t *testing.T) {
 }
 
 func TestIntersectionObserverResolvesAncestorFontVariable(t *testing.T) {
+	serialBrowserTest(t)
 	p := testPage(t)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()

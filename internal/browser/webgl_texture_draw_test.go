@@ -11,6 +11,7 @@ import (
 )
 
 func TestWebGLTextureDrawFrozenChrome(t *testing.T) {
+	serialBrowserTest(t)
 	source, err := os.ReadFile("testdata/webgl_texture_draw_oracle.js")
 	if err != nil {
 		t.Fatal(err)

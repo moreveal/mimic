@@ -9,6 +9,7 @@ import (
 )
 
 func TestConsoleFormattingPreservesObjectArguments(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		value, err := p.Evaluate(context.Background(), `(()=>{
  let effects=[];const value={toString(){effects.push('string');return '12.75'},valueOf(){effects.push('value');return 99}},proxy=new Proxy({},{get(){throw Error('proxy read')}});

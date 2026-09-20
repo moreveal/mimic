@@ -12,6 +12,7 @@ import (
 // These are causal clock/ownership relations, not exact wall-clock durations.
 // They hold in frozen Chrome for both fresh and cached resource retrievals.
 func TestResourceTimingUsesInitiatingRealmClock(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			if r.URL.Path == "/resource" {

@@ -12,10 +12,13 @@ import (
 )
 
 func TestFrameTasksDoNotStarveParentMessages(t *testing.T) {
+	parallelBrowserTest(t)
+
 	testFrameTaskInterleaving(t, false)
 }
 
 func TestFrameTasksInterleaveDuringPageAdvanceTime(t *testing.T) {
+	parallelBrowserTest(t)
 	testFrameTaskInterleaving(t, true)
 }
 

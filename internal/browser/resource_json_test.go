@@ -12,6 +12,7 @@ import (
 )
 
 func TestResourceTimingJSONUsesInternalValues(t *testing.T) {
+	serialBrowserTest(t)
 	source, err := os.ReadFile("../../compatibility/corpus/resource-json.js")
 	if err != nil {
 		t.Fatal(err)

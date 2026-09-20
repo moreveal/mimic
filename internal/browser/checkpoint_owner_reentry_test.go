@@ -9,6 +9,7 @@ import (
 // Dynamic inline script cleanup can start a Page checkpoint on a child owner
 // thread. A pending parent job is allowed to synchronously read that child.
 func TestCheckpointOwnerCanReenterFromForeignMicrotask(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 		defer cancel()

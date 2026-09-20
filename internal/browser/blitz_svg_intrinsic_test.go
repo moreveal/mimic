@@ -10,6 +10,7 @@ import (
 )
 
 func TestBlitzSVGIntrinsicChrome152(t *testing.T) {
+	serialBrowserTest(t)
 	t.Setenv("MIMIC_STYLE_ENGINE", "blitz")
 	raw, err := os.ReadFile("../../docs/performance/blitz-svg-intrinsic-chrome152-2026-09-20.json")
 	if err != nil {

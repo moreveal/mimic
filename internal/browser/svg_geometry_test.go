@@ -9,6 +9,7 @@ import (
 // Unsupported geometry must retain a useful failure rather than silently
 // contribute a fabricated empty rectangle to an otherwise supported group.
 func TestSVGBoundingBoxUnsupportedGeometry(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
 		value, err := p.Evaluate(context.Background(), `(()=>{
@@ -26,6 +27,7 @@ func TestSVGBoundingBoxUnsupportedGeometry(t *testing.T) {
 }
 
 func TestSVGTextObservations(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
 		value, err := p.Evaluate(context.Background(), `(()=>{
@@ -49,6 +51,7 @@ func TestSVGTextObservations(t *testing.T) {
 }
 
 func TestCSSFontSizeFailureTrace(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
 		_, err := p.Evaluate(context.Background(), `(()=>{const ns='http://www.w3.org/2000/svg',s=document.createElementNS(ns,'svg'),n=document.createElementNS(ns,'text');s.appendChild(n);document.body.appendChild(s);n.textContent='A';n.setAttribute('font-size','2ex');try{n.getBBox()}catch(e){if(e.name!=='NotSupportedError')throw e}})()`)
@@ -77,6 +80,7 @@ func TestCSSFontSizeFailureTrace(t *testing.T) {
 }
 
 func TestTextShapingFailureTrace(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
 		_, err := p.Evaluate(context.Background(), `(()=>{const ns='http://www.w3.org/2000/svg',s=document.createElementNS(ns,'svg'),n=document.createElementNS(ns,'text');document.body.appendChild(s);s.appendChild(n);n.textContent='diagnostic';n.setAttribute('font-size','5000px');try{n.getBBox()}catch(e){if(e.name!=='NotSupportedError')throw e}})()`)
@@ -96,6 +100,7 @@ func TestTextShapingFailureTrace(t *testing.T) {
 }
 
 func TestSVGCSSTransformBoundaryContext(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
 		v, err := p.Evaluate(context.Background(), `(()=>{const ns='http://www.w3.org/2000/svg',s=document.createElementNS(ns,'svg'),g=document.createElementNS(ns,'g'),r=document.createElementNS(ns,'rect');document.body.append(s);s.append(g);g.append(r);r.setAttribute('width','10');r.setAttribute('height','20');r.style.transform='rotateX(30deg)';try{g.getBBox();return 'missing error'}catch(e){return e.name}})()`)

@@ -7,6 +7,7 @@ import (
 )
 
 func TestXPathAutomationResultsUseCanonicalNodes(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	value, err := p.Evaluate(context.Background(), `(()=>{
  document.body.innerHTML='<main><button id="login"> Log   in </button><button data-action="login">Other</button></main>';
@@ -23,6 +24,7 @@ func TestXPathAutomationResultsUseCanonicalNodes(t *testing.T) {
 }
 
 func TestXPathMissingNodeReturnsResultInsteadOfUndefined(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	value, err := p.Evaluate(context.Background(), `(()=>{const r=document.evaluate('//button[@id="missing"]',document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null);return r.singleNodeValue===null})()`)
 	if err != nil || value != true {

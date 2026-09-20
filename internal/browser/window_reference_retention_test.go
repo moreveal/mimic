@@ -12,6 +12,7 @@ import (
 // Chrome keeps a saved nested WindowProxy usable after its ancestor navigates.
 // Separate evaluations force owner collection between navigation and observation.
 func TestWindowReferenceRetainsDescendantContextAcrossNavigation(t *testing.T) {
+	serialBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		if req.URL.Path == "/ancestor" {
 			fmt.Fprint(w, `<!doctype html><body><script>const nested=document.createElement("iframe");document.body.appendChild(nested);globalThis.nestedWindow=nested.contentWindow;</script>`)
@@ -52,6 +53,7 @@ func TestWindowReferenceRetainsDescendantContextAcrossNavigation(t *testing.T) {
 // Chrome's cross-origin WindowProxy omits the Window toStringTag while retaining
 // the same proxy identity; the target descriptor must allow this dynamic result.
 func TestWindowProxyTagFollowsOriginAccess(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		ctx := context.Background()
 		if _, err := p.Evaluate(ctx, `const tagFrame=document.createElement('iframe');document.body.appendChild(tagFrame);globalThis.tagWindow=tagFrame.contentWindow`); err != nil {

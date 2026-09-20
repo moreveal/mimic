@@ -12,8 +12,12 @@ import (
 	"testing"
 )
 
-func TestRTPCapabilitiesMatchesFrozenChrome(t *testing.T) { documentAllOracle(t, "rtp") }
+func TestRTPCapabilitiesMatchesFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
+	documentAllOracle(t, "rtp")
+}
 func TestRTPCatalogSDPMatchesFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
 	raw, err := os.ReadFile("testdata/rtp_sdp_chrome152.json")
 	if err != nil {
 		t.Fatal(err)
@@ -44,6 +48,7 @@ func TestRTPCatalogSDPMatchesFrozenChrome(t *testing.T) {
 }
 
 func TestRTPDirectionSDPMatchesFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
 	raw, err := os.ReadFile("testdata/rtp_direction_chrome152.json")
 	if err != nil {
 		t.Fatal(err)
@@ -73,6 +78,12 @@ func TestRTPDirectionSDPMatchesFrozenChrome(t *testing.T) {
 	}
 }
 
-func TestMediaSupportMatchesFrozenChrome(t *testing.T) { documentAllOracle(t, "media_support") }
+func TestMediaSupportMatchesFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
+	documentAllOracle(t, "media_support")
+}
 
-func TestMediaCompletionMatchesFrozenChrome(t *testing.T) { documentAllOracle(t, "media_completion") }
+func TestMediaCompletionMatchesFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
+	documentAllOracle(t, "media_completion")
+}

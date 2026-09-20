@@ -6,6 +6,7 @@ import (
 )
 
 func TestTraversalIncludesCharacterDataAndRemainsLive(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	value, err := p.Evaluate(context.Background(), `(()=>{
 const root=document.createElement('div');root.innerHTML='a<span>b<!--c--></span>';
@@ -28,6 +29,7 @@ return [seen.join(','),live,names.join(',')];
 }
 
 func TestRangeUsesBoundaryPointsForTextAndContents(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	value, err := p.Evaluate(context.Background(), `(()=>{
 const root=document.createElement('div');root.innerHTML='<b>hello</b><i> world</i>';document.body.append(root);
@@ -50,6 +52,7 @@ return [before,after,root.textContent,root.querySelector('u')===mark];
 }
 
 func TestXMLSerializerRoundTripNamespacesAndEscaping(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	value, err := p.Evaluate(context.Background(), `(()=>{
 const parser=new DOMParser(),doc=parser.parseFromString('<r xmlns="urn:r" xmlns:p="urn:p"><p:c p:a="&quot;&amp;">x&lt;y</p:c></r>','application/xml');

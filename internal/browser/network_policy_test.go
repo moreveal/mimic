@@ -12,6 +12,7 @@ import (
 // workers, without changing another Page in the same browser context. Windows
 // receive trusted connectivity events; workers observe the live navigator flag.
 func TestPageNetworkPolicyIncludesFramesWorldsAndWorkers(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Cache-Control", "no-store")
 		switch r.URL.Path {

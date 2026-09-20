@@ -15,6 +15,7 @@ import (
 // API state/error values are compared exactly; existing exact PCM fixtures are
 // unchanged. Every captured output sample participates in this comparison.
 func TestOfflineAudioSynthesisOracles(t *testing.T) {
+	serialBrowserTest(t)
 	for _, name := range []string{"audio_oscillator", "audio_compressor", "audio_synthesis_graph", "audio_oscillator_schedule", "audio_synthesis_relations", "audio_oscillator_extremes"} {
 		t.Run(name, func(t *testing.T) {
 			parallelOracle(t)

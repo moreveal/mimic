@@ -14,6 +14,7 @@ import (
 )
 
 func TestFrameInsertionAfterInnerHTMLAndFragmentMove(t *testing.T) {
+	serialBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { w.Write([]byte("<!doctype html><body></body>")) }))
 	defer server.Close()
 	for name, factory := range map[string]engine.Factory{"goja": gojaengine.Factory{}, "v8": v8engine.Factory{}} {

@@ -6,6 +6,7 @@ import (
 )
 
 func TestSelectorsUseLibraryGrammarAndCanonicalState(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	value, err := p.Evaluate(context.Background(), `(()=>{
  const root=document.createElement('section');root.id='selector-root';
@@ -46,6 +47,7 @@ func TestSelectorsUseLibraryGrammarAndCanonicalState(t *testing.T) {
 }
 
 func TestSelectorsFragmentAndClosestScope(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	value, err := p.Evaluate(context.Background(), `(()=>{
  const fragment=document.createDocumentFragment(),parent=document.createElement('div'),child=document.createElement('i');
@@ -61,6 +63,7 @@ func TestSelectorsFragmentAndClosestScope(t *testing.T) {
 }
 
 func TestSelectorNativeLeafPreservesAttributeCasePolicy(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	value, err := p.Evaluate(context.Background(), `(()=>{
  const root=document.createElement('div');root.innerHTML='<input type="TEXT" data-value="Mixed"><span data-value="a:b"></span>';document.body.appendChild(root);
@@ -72,6 +75,7 @@ func TestSelectorNativeLeafPreservesAttributeCasePolicy(t *testing.T) {
 }
 
 func TestSelectorCandidatesPreserveOrderScopeAndFallback(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{
  const root=document.createElement('section');root.className='outside';

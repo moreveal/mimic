@@ -9,6 +9,7 @@ import (
 )
 
 func TestPermissionDescriptorsMatchFrozenChrome152(t *testing.T) {
+	parallelBrowserTest(t)
 	probe, err := os.ReadFile("testdata/permission_descriptor_oracle.js")
 	if err != nil {
 		t.Fatal(err)
@@ -44,6 +45,7 @@ func TestPermissionDescriptorsMatchFrozenChrome152(t *testing.T) {
 }
 
 func TestPermissionStatusAliasesShareEnvironmentChanges(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	navigateCapabilityFixture(t, p)
 	ctx := context.Background()

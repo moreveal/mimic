@@ -10,6 +10,7 @@ import (
 )
 
 func TestFetchBinaryTransportCloneAndIndependentReads(t *testing.T) {
+	serialBrowserTest(t)
 	const probe = `async function probe(){
  const response=await fetch('/binary'),copy=response.clone();
  const reader=response.body.getReader(),first=await reader.read();

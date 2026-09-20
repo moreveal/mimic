@@ -6,6 +6,7 @@ import (
 )
 
 func TestReportingObserverEmptyBackendLifecycle(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	defer p.Close()
 	value, err := p.Evaluate(context.Background(), `(()=>{const observer=new ReportingObserver(()=>{}, {types:['deprecation'],buffered:true});observer.observe();const first=observer.takeRecords();observer.disconnect();return observer instanceof ReportingObserver&&first.length===0&&observer.takeRecords().length===0})()`)

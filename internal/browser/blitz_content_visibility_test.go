@@ -6,6 +6,7 @@ import (
 )
 
 func TestBlitzContentVisibilityAdmission(t *testing.T) {
+	serialBrowserTest(t)
 	t.Setenv("MIMIC_STYLE_ENGINE", "blitz")
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)

@@ -5,6 +5,7 @@ import (
 )
 
 func TestWindowHandlerAttributesUseListenerState(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		historyEval(t, p, `(()=>{
 const handlers=Object.getOwnPropertyNames(window).filter(n=>/^on/.test(n)&&Object.getOwnPropertyDescriptor(window,n)?.set);
@@ -22,6 +23,7 @@ return d.get.call(null)===null;
 }
 
 func TestInitialEmptyDocumentHasNoDoctype(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		historyEval(t, p, `(()=>{
 const f=document.createElement('iframe');document.body.append(f);
@@ -32,6 +34,7 @@ return document.compatMode==='BackCompat'&&document.doctype===null&&d.compatMode
 }
 
 func TestWindowProxyWritesPreserveAccessorAndReceiver(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		historyEval(t, p, `(()=>{
 const f=document.createElement('iframe');document.body.append(f);const w=f.contentWindow,callback=()=>{};
@@ -49,6 +52,7 @@ return !Reflect.set(w,'window',null)&&!Reflect.set(w,'custom',1,null)&&!Reflect.
 }
 
 func TestPostMessageUsesOwningFunctionAndCallingDocument(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		historyEval(t, p, `(async()=>{
 const f=document.createElement('iframe');document.body.append(f);const w=f.contentWindow,post=w.postMessage;
@@ -63,6 +67,7 @@ w.postMessage('ping','*');return await result;
 }
 
 func TestNodeFilterIsNonConstructibleInterface(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		historyEval(t, p, `(()=>{if(typeof NodeFilter!=='function'||NodeFilter.length!==0||Object.hasOwn(NodeFilter,'prototype')||!Object.isExtensible(NodeFilter))return false;
 const d=Object.getOwnPropertyDescriptor(NodeFilter,'SHOW_ELEMENT');if(d.value!==1||d.writable||d.configurable||!d.enumerable)return false;

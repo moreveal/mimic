@@ -25,6 +25,7 @@ var trustedTypesPolicies = map[string]string{
 }
 
 func TestTrustedTypesSnapshotIsolation(t *testing.T) {
+	serialBrowserTest(t)
 	if os.Getenv("MIMIC_DISABLE_BOOTSTRAP_SNAPSHOT") == "1" {
 		t.Skip("requires bootstrap restore")
 	}
@@ -49,6 +50,7 @@ func TestTrustedTypesSnapshotIsolation(t *testing.T) {
 }
 
 func TestTrustedTypesConcurrentPages(t *testing.T) {
+	parallelBrowserTest(t)
 	server := trustedTypesServer(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
@@ -100,6 +102,7 @@ func trustedTypesServer(t *testing.T) *httptest.Server {
 // exception names, returned values, and every policy argument in order. Existing
 // DOM parser diagnostics have separate tests; TT diagnostics are checked below.
 func TestTrustedTypesChrome152(t *testing.T) {
+	parallelBrowserTest(t)
 	var oracle struct {
 		Cases map[string]map[string]any `json:"cases"`
 	}

@@ -34,6 +34,7 @@ func newXHRTestPage(t *testing.T, serverURL string) (*Page, context.Context) {
 }
 
 func TestXMLHttpRequestResponseTypesAndReuse(t *testing.T) {
+	parallelBrowserTest(t)
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case "/json":
@@ -67,6 +68,7 @@ return JSON.stringify({json,invalid,bytes:Array.from(new Uint8Array(buffer)),blo
 }
 
 func TestXMLHttpRequestAbortCancelsTransportAndAllowsReuse(t *testing.T) {
+	parallelBrowserTest(t)
 	started := make(chan struct{}, 1)
 	canceled := make(chan struct{}, 1)
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -121,6 +123,7 @@ xhr.open('GET','/slow');xhr.send();setTimeout(()=>xhr.abort(),10)
 }
 
 func TestXMLHttpRequestAbortDuringHeadersStopsCompletionEvents(t *testing.T) {
+	parallelBrowserTest(t)
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, "body")
 	}))
@@ -143,6 +146,7 @@ xhr.open('GET','/body');xhr.send()
 }
 
 func TestXMLHttpRequestTimeoutHasSingleTerminalLifecycle(t *testing.T) {
+	parallelBrowserTest(t)
 	canceled := make(chan struct{}, 1)
 	srv := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/timeout" {

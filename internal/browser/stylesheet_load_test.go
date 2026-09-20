@@ -17,6 +17,7 @@ import (
 )
 
 func TestParserStylesheetsBlockScriptAndSurviveResponseEviction(t *testing.T) {
+	serialBrowserTest(t)
 	var active, peak atomic.Int32
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if strings.HasSuffix(r.URL.Path, ".css") {

@@ -13,6 +13,7 @@ import (
 )
 
 func TestModuleThrowIsTracedWithoutStoppingOtherScripts(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/bad.js" {
 			w.Header().Set("Content-Type", "text/javascript")
@@ -51,6 +52,7 @@ func TestModuleThrowIsTracedWithoutStoppingOtherScripts(t *testing.T) {
 }
 
 func TestImportMetaResolveUsesImmutableModuleBaseWithoutFetching(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -90,6 +92,7 @@ globalThis.retainedResolve=resolve;
 }
 
 func TestModulePendingEvaluationDoesNotPumpMicrotasks(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)

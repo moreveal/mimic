@@ -13,6 +13,7 @@ import (
 )
 
 func TestProtocolKeyboardAndTextMatchChrome152(t *testing.T) {
+	parallelBrowserTest(t)
 	raw, err := os.ReadFile("testdata/cdp_input_chrome152.json")
 	if err != nil {
 		t.Fatal(err)
@@ -69,6 +70,7 @@ func TestProtocolKeyboardAndTextMatchChrome152(t *testing.T) {
 }
 
 func TestDefaultControlGeometryMatchesChrome152(t *testing.T) {
+	parallelBrowserTest(t)
 	raw, err := os.ReadFile("testdata/cdp_input_chrome152.json")
 	if err != nil {
 		t.Fatal(err)
@@ -113,6 +115,7 @@ func TestDefaultControlGeometryMatchesChrome152(t *testing.T) {
 }
 
 func TestInputInternalsDoNotReenterAuthorSelectors(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		navigateCapabilityFixture(t, page)
 		ctx := context.Background()
@@ -144,6 +147,7 @@ func TestInputInternalsDoNotReenterAuthorSelectors(t *testing.T) {
 }
 
 func TestProtocolInputSharesFocusAndFormStateAcrossWorlds(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		navigateCapabilityFixture(t, page)
 		ctx := context.Background()
@@ -175,6 +179,7 @@ func TestProtocolInputSharesFocusAndFormStateAcrossWorlds(t *testing.T) {
 }
 
 func TestProtocolSelectAndContentClickAcrossWorlds(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		navigateCapabilityFixture(t, page)
 		ctx := context.Background()
@@ -213,6 +218,7 @@ func TestProtocolSelectAndContentClickAcrossWorlds(t *testing.T) {
 }
 
 func TestProtocolMouseClickNavigatesThroughAnchorDescendant(t *testing.T) {
+	serialBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/next" {
 			_, _ = w.Write([]byte(`<!doctype html><title>next</title><body>arrived</body>`))
@@ -248,6 +254,7 @@ func TestProtocolMouseClickNavigatesThroughAnchorDescendant(t *testing.T) {
 }
 
 func TestProtocolPointerFocusDoesNotScrollMovedTarget(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		navigateCapabilityFixture(t, page)
 		ctx := context.Background()
@@ -271,6 +278,7 @@ document.getElementById('target').addEventListener('mousedown',event=>event.curr
 }
 
 func TestProtocolMouseClickCannotBypassOverlayWithHitHint(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		navigateCapabilityFixture(t, page)
 		ctx := context.Background()
@@ -296,6 +304,7 @@ func TestProtocolMouseClickCannotBypassOverlayWithHitHint(t *testing.T) {
 }
 
 func TestProtocolMouseInputRoutesThroughIframeCoordinates(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		navigateCapabilityFixture(t, page)
 		ctx := context.Background()
@@ -337,6 +346,7 @@ func TestProtocolMouseInputRoutesThroughIframeCoordinates(t *testing.T) {
 }
 
 func TestProtocolInputSuppressionSurvivesNavigation(t *testing.T) {
+	parallelBrowserTest(t)
 	page := testPage(t)
 	ctx := context.Background()
 	navigateCapabilityFixture(t, page)

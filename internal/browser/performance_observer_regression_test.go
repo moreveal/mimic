@@ -7,6 +7,7 @@ import (
 )
 
 func TestPerformanceObserverDistinguishesZeroDurationFinalization(t *testing.T) {
+	serialBrowserTest(t)
 	p := testPage(t)
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()

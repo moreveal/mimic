@@ -17,6 +17,7 @@ import (
 // Chrome 152.0.7977.82 (headful, fresh profile): navigation names and time
 // origins survive replaceState; each frame reports its own response bytes.
 func TestFrameNavigationTimingIsDocumentScoped(t *testing.T) {
+	parallelBrowserTest(t)
 	for _, engineCase := range []struct {
 		name    string
 		factory engine.Factory
@@ -95,6 +96,7 @@ func testFrameNavigationTimingIsDocumentScoped(t *testing.T, factory engine.Fact
 }
 
 func TestChildNavigationObserverWaitsForChildLoad(t *testing.T) {
+	serialBrowserTest(t)
 	for _, engineCase := range []struct {
 		name    string
 		factory engine.Factory

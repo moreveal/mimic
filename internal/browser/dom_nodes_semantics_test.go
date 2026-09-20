@@ -9,6 +9,7 @@ import (
 )
 
 func TestCharacterDataUsesCanonicalMutableText(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -45,6 +46,7 @@ func TestCharacterDataUsesCanonicalMutableText(t *testing.T) {
 }
 
 func TestNodeTraversalAndLiveChildList(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	value, err := p.Evaluate(context.Background(), `(()=>{
  const root=document.createElement('div');root.innerHTML='a<!--marker--><span>b</span>c';
@@ -61,6 +63,7 @@ func TestNodeTraversalAndLiveChildList(t *testing.T) {
 }
 
 func TestCharacterDataErrorsUseDOMExceptionCodes(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	value, err := p.Evaluate(context.Background(), `(()=>{const n=document.createTextNode('one');try{n.deleteData(4,1)}catch(e){return e instanceof DOMException&&e.name==='IndexSizeError'&&e.code===1&&n.data==='one'}return false})()`)
 	if err != nil || value != true {

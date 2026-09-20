@@ -13,6 +13,7 @@ import (
 )
 
 func TestResourceTimingDoesNotLeakParentInflightFetch(t *testing.T) {
+	serialBrowserTest(t)
 	source, err := os.ReadFile("../../compatibility/corpus/resource-realm-isolation.js")
 	if err != nil {
 		t.Fatal(err)

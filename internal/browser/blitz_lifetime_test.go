@@ -12,6 +12,7 @@ import (
 )
 
 func TestBlitzDetachedFocusedAncestorClearsNativeState(t *testing.T) {
+	serialBrowserTest(t)
 	t.Setenv("MIMIC_STYLE_ENGINE", "blitz")
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
@@ -38,6 +39,7 @@ func TestBlitzDetachedFocusedAncestorClearsNativeState(t *testing.T) {
 }
 
 func TestBlitzHistoryChangeUpdatesNewInlineURLBase(t *testing.T) {
+	serialBrowserTest(t)
 	t.Setenv("MIMIC_STYLE_ENGINE", "blitz")
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {

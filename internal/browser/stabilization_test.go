@@ -13,6 +13,7 @@ import (
 )
 
 func TestV8EvaluateDeadlineCoversPromiseCheckpoint(t *testing.T) {
+	serialBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -32,6 +33,7 @@ func TestV8EvaluateDeadlineCoversPromiseCheckpoint(t *testing.T) {
 }
 
 func TestRemovingFrameCancelsPendingDocumentTransport(t *testing.T) {
+	serialBrowserTest(t)
 	started, cancelled := make(chan struct{}), make(chan struct{})
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		if req.URL.Path == "/child" {

@@ -12,6 +12,7 @@ import (
 )
 
 func TestCanvasFontMetricsFrozenChrome(t *testing.T) {
+	serialBrowserTest(t)
 	source, err := os.ReadFile("testdata/canvas_font_metrics_oracle.js")
 	if err != nil {
 		t.Fatal(err)

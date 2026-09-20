@@ -6,6 +6,7 @@ import (
 )
 
 func TestFrameReflectionUsesCapturedIntrinsics(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		value, err := page.Evaluate(context.Background(), `(()=>{
  const frame=document.createElement('iframe');document.body.appendChild(frame);const child=frame.contentWindow;

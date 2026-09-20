@@ -7,6 +7,7 @@ import (
 )
 
 func TestGeometryTextMetricsTrackFontCollection(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)

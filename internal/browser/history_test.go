@@ -52,6 +52,7 @@ const loadHistoryChild = "new Promise(resolve=>{const f=document.createElement('
 // mutations belong to the calling document. Parent traversal can restore a
 // child entry without changing either the parent's URL or state.
 func TestFrameHistoryIsJointAndDocumentScoped(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) { fmt.Fprint(w, "<!doctype html><body>fixture</body>") }))
 	defer server.Close()
 	historyTestPages(t, func(t *testing.T, p *Page) {
@@ -75,6 +76,7 @@ func TestFrameHistoryIsJointAndDocumentScoped(t *testing.T) {
 }
 
 func TestHistoryRejectsCrossOriginWithoutMutation(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) { fmt.Fprint(w, "<!doctype html><body></body>") }))
 	defer server.Close()
 	historyTestPages(t, func(t *testing.T, p *Page) {
@@ -88,6 +90,7 @@ func TestHistoryRejectsCrossOriginWithoutMutation(t *testing.T) {
 // The audit's Chrome 152 relations oracle records copied input/nested identity,
 // a stable repeated history.state identity, and DataCloneError for functions.
 func TestHistoryStructuredState(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) { fmt.Fprint(w, "<!doctype html><body></body>") }))
 	defer server.Close()
 	historyTestPages(t, func(t *testing.T, p *Page) {
@@ -118,6 +121,7 @@ func TestHistoryStructuredState(t *testing.T) {
 // Blob/File are cloneable in Chrome, but need platform serialization hooks.
 // Until those exist, reject explicitly rather than silently storing an empty object.
 func TestHistoryUnsupportedPlatformStorage(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) { fmt.Fprint(w, "<!doctype html><body></body>") }))
 	defer server.Close()
 	historyTestPages(t, func(t *testing.T, p *Page) {
@@ -133,6 +137,7 @@ func TestHistoryUnsupportedPlatformStorage(t *testing.T) {
 }
 
 func TestChildLocationNavigatesOnlyChildAndResolvesFromHistoryURL(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		fmt.Fprint(w, "<!doctype html><body><script>globalThis.loadedPath=location.pathname+location.search</script></body>")
 	}))

@@ -13,6 +13,7 @@ import (
 )
 
 func TestWorkerMessageTraceSnapshot(t *testing.T) {
+	parallelBrowserTest(t)
 	data := map[string]any{"nested": map[string]any{"value": "original"}}
 	event := workerMessageTrace(1, "parent-to-worker", data)
 	data["nested"].(map[string]any)["value"] = "changed"
@@ -30,6 +31,7 @@ func TestWorkerMessageTraceSnapshot(t *testing.T) {
 }
 
 func TestCaptureWorkerMessagesAndQueryResults(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprint(w, `<!doctype html><body><div id="capture-node" data-state="before"><span></span></div></body>`)

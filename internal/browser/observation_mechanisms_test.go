@@ -15,6 +15,7 @@ import (
 )
 
 func TestObservationMechanismOracles(t *testing.T) {
+	serialBrowserTest(t)
 	for _, name := range []string{"input_enumerations", "system_colors", "system_fonts", "css_supports", "css_contract", "css_display", "document_focus", "focus_frames", "window_focus", "navigator_realms", "gpu_info", "gpu_contract", "gpu_realms", "realtime_audio", "offline_audio_lifecycle", "audio_analyser", "audio_latency", "audio_decode", "audio_worklet", "audio_automation", "audio_node_surface", "audio_media_nodes", "audio_graph_topology", "audio_filters", "audio_filter_pcm", "canvas_blends", "canvas_system_colors"} {
 		t.Run(name, func(t *testing.T) {
 			source, err := os.ReadFile("testdata/" + name + "_oracle.js")

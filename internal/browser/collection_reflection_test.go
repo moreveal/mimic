@@ -7,6 +7,7 @@ import (
 
 // Expected observations measured against frozen Chrome 152.0.7977.82.
 func TestHTMLCollectionReflectionAndCanonicalQueries(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	value, err := p.Evaluate(context.Background(), `(()=>{
  const root=document.createElement('div');root.innerHTML='<span id="entry" name="alias" class="a b"></span><span id="length" class="a"></span>';

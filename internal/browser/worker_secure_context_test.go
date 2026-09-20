@@ -9,6 +9,7 @@ import (
 )
 
 func TestWorkerTrustworthyScriptOrigins(t *testing.T) {
+	parallelBrowserTest(t)
 	for _, test := range []struct {
 		url    string
 		secure bool
@@ -39,6 +40,7 @@ func TestWorkerTrustworthyScriptOrigins(t *testing.T) {
 }
 
 func TestLoopbackWorkerAndDocumentSelectSecureExposure(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { w.Write([]byte("<!doctype html><body>")) }))
 		defer server.Close()

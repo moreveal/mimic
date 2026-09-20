@@ -14,6 +14,7 @@ import (
 )
 
 func TestFunctionSourcePreservesSourceWithoutPropertyReads(t *testing.T) {
+	serialBrowserTest(t)
 	source, err := os.ReadFile("testdata/function_source_oracle.js")
 	if err != nil {
 		t.Fatal(err)

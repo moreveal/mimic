@@ -24,6 +24,7 @@ var profileProcessMemory func(*testing.T) map[string]any
 // A diagnostic replay, never a replacement for the immutable timed harness.
 // Opt in because full allocation sampling substantially changes execution cost.
 func TestPerformanceProfile(t *testing.T) {
+	serialBrowserTest(t)
 	dir := os.Getenv("MIMIC_PROFILE_DIR")
 	if dir == "" {
 		t.Skip("set MIMIC_PROFILE_DIR for diagnostic replay")

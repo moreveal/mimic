@@ -13,6 +13,7 @@ import (
 )
 
 func TestPartitionCookiesFrameAndWorkerTransport(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		var own string
 		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

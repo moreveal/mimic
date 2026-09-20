@@ -20,6 +20,7 @@ import (
 // Opt-in bootstrap attribution. Ordinary teardown and diagnostic Go collection
 // are recorded separately; neither changes the production recovery policy.
 func TestGojaBootstrapProfile(t *testing.T) {
+	serialBrowserTest(t)
 	output := os.Getenv("MIMIC_GOJA_BOOTSTRAP_PROFILE")
 	if output == "" {
 		t.Skip("set MIMIC_GOJA_BOOTSTRAP_PROFILE for startup attribution")
@@ -99,6 +100,7 @@ func (r *gojaPhaseRuntime) EvalBootstrap(ctx context.Context, source, name strin
 }
 
 func TestGojaBootstrapPhases(t *testing.T) {
+	serialBrowserTest(t)
 	output := os.Getenv("MIMIC_GOJA_BOOTSTRAP_PHASES")
 	if output == "" {
 		t.Skip("set MIMIC_GOJA_BOOTSTRAP_PHASES for phase attribution")

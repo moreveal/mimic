@@ -6,6 +6,7 @@ import (
 )
 
 func TestBlitzCannotBeDisabledByLegacyEnvironment(t *testing.T) {
+	serialBrowserTest(t)
 	for _, mode := range []string{"", "blitz", "legacy"} {
 		t.Run("mode="+mode, func(t *testing.T) {
 			t.Setenv("MIMIC_STYLE_ENGINE", mode)

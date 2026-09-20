@@ -6,6 +6,7 @@ import (
 )
 
 func TestCustomizedBuiltInElementUpgrade(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	defer p.Close()
 	value, err := p.Evaluate(context.Background(), `(()=>{let connected=0;class FancyButton extends HTMLButtonElement{connectedCallback(){connected++}}customElements.define('fancy-button',FancyButton,{extends:'button'});const button=document.createElement('button',{is:'fancy-button'});document.body.appendChild(button);return {instance:button instanceof FancyButton,name:button.localName,is:button.getAttribute('is'),connected}})()`)

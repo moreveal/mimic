@@ -8,6 +8,7 @@ import (
 )
 
 func TestResizeObserverInitialChangeAndBoxSizes(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -50,6 +51,7 @@ func TestResizeObserverInitialChangeAndBoxSizes(t *testing.T) {
 }
 
 func TestResizeObserverMultipleTargetsUnobserveAndDisconnect(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)

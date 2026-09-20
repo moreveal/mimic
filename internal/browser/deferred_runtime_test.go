@@ -18,6 +18,7 @@ func (f *countingFactory) New() engine.Runtime {
 }
 
 func TestInitialBlankRealmIsDeferredAndIndependent(t *testing.T) {
+	parallelBrowserTest(t)
 	factory := &countingFactory{}
 	b, err := New(factory, chrome152.New())
 	if err != nil {
@@ -56,6 +57,7 @@ func TestInitialBlankRealmIsDeferredAndIndependent(t *testing.T) {
 }
 
 func TestInitialBlankChildRealmsInitializeOnlyWhenObserved(t *testing.T) {
+	parallelBrowserTest(t)
 	factory := &countingFactory{}
 	b, err := New(factory, chrome152.New())
 	if err != nil {

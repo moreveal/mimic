@@ -10,6 +10,7 @@ import (
 )
 
 func TestDynamicClassicScriptsRespectAsyncFalse(t *testing.T) {
+	serialBrowserTest(t)
 	second := make(chan struct{})
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/javascript")
@@ -56,6 +57,7 @@ func TestDynamicClassicScriptsRespectAsyncFalse(t *testing.T) {
 }
 
 func TestDynamicDefaultAsyncDoesNotWaitForEarlierScript(t *testing.T) {
+	serialBrowserTest(t)
 	release := make(chan struct{})
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/slow.js" {
@@ -93,6 +95,7 @@ func TestDynamicDefaultAsyncDoesNotWaitForEarlierScript(t *testing.T) {
 }
 
 func TestScriptAsyncCanonicalState(t *testing.T) {
+	parallelBrowserTest(t)
 	p := validationPage(t)
 	defer p.Close()
 	ctx := context.Background()
@@ -113,6 +116,7 @@ func TestScriptAsyncCanonicalState(t *testing.T) {
 }
 
 func TestOrderedScriptsShareDocumentQueueAcrossWorlds(t *testing.T) {
+	serialBrowserTest(t)
 	ready := make(chan struct{})
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/javascript")

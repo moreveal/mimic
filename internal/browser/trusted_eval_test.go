@@ -11,6 +11,7 @@ import (
 )
 
 func TestTrustedScriptEvalPreservesNativeScopeAndBrand(t *testing.T) {
+	parallelBrowserTest(t)
 	source, err := os.ReadFile("testdata/trusted_eval.js")
 	if err != nil {
 		t.Fatal(err)
@@ -56,6 +57,7 @@ func TestTrustedScriptEvalPreservesNativeScopeAndBrand(t *testing.T) {
 }
 
 func TestWorkerTrustedScriptEval(t *testing.T) {
+	serialBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)

@@ -7,6 +7,7 @@ import (
 )
 
 func TestFrameTransactionSpecialValuesAndNestedCalls(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()
@@ -30,6 +31,7 @@ func TestFrameTransactionSpecialValuesAndNestedCalls(t *testing.T) {
 }
 
 func TestFrameTransactionPrivateCodecAndLiveTraps(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 		defer cancel()

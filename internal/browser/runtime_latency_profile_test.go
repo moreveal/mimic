@@ -16,6 +16,7 @@ import (
 )
 
 func TestRuntimeLatencyProfile(t *testing.T) {
+	serialBrowserTest(t)
 	dir := os.Getenv("MIMIC_LATENCY_PROFILE_DIR")
 	url := os.Getenv("MIMIC_LATENCY_PROFILE_URL")
 	if dir == "" || url == "" {

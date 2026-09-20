@@ -10,8 +10,14 @@ import (
 	"testing"
 )
 
-func TestNavigationBasicOracle(t *testing.T)     { navigationOracle(t, "basic") }
-func TestNavigationInterceptOracle(t *testing.T) { navigationOracle(t, "intercept") }
+func TestNavigationBasicOracle(t *testing.T) {
+	parallelBrowserTest(t)
+	navigationOracle(t, "basic")
+}
+func TestNavigationInterceptOracle(t *testing.T) {
+	parallelBrowserTest(t)
+	navigationOracle(t, "intercept")
+}
 func navigationOracle(t *testing.T, name string) {
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { w.Write([]byte("<!doctype html><body>fixture")) }))
 	defer server.Close()
@@ -35,6 +41,7 @@ func navigationOracle(t *testing.T, name string) {
 	})
 }
 func TestNavigationChildCrossDocument(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { w.Write([]byte("<!doctype html><body>fixture")) }))
 	defer server.Close()
 	historyTestPages(t, func(t *testing.T, p *Page) {
@@ -51,6 +58,7 @@ func TestNavigationChildCrossDocument(t *testing.T) {
 	})
 }
 func TestNavigationGraphStateAndRealm(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { w.Write([]byte("<!doctype html><body>fixture")) }))
 	defer server.Close()
 	historyTestPages(t, func(t *testing.T, p *Page) {
@@ -67,6 +75,7 @@ func TestNavigationGraphStateAndRealm(t *testing.T) {
 }
 
 func TestNavigationHashChange(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Write([]byte("<!doctype html><body><div id='target'>target</div>"))
 	}))
@@ -79,6 +88,7 @@ func TestNavigationHashChange(t *testing.T) {
 	})
 }
 func TestPictureInPictureFragmentAndDescendantHistoryIsolation(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { w.Write([]byte("<!doctype html><body>fixture")) }))
 	defer server.Close()
 	historyTestPages(t, func(t *testing.T, p *Page) {

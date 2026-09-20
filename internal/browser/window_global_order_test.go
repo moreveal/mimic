@@ -11,6 +11,7 @@ import (
 )
 
 func TestWindowGlobalPublicationOrder(t *testing.T) {
+	parallelBrowserTest(t)
 	for _, profile := range []string{"secure", "insecure", "secure-isolated"} {
 		t.Run(profile, func(t *testing.T) {
 			raw, err := os.ReadFile("../../chrome/152/generated/window-" + profile + "-order.json")

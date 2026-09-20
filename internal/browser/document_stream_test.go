@@ -10,6 +10,7 @@ import (
 )
 
 func TestDynamicExternalScriptDoesNotDestructivelyWriteDocument(t *testing.T) {
+	serialBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/write.js" {
 			w.Header().Set("Content-Type", "text/javascript")
@@ -35,6 +36,7 @@ func TestDynamicExternalScriptDoesNotDestructivelyWriteDocument(t *testing.T) {
 }
 
 func TestDocumentStreamIdentityAndSynchronousScripts(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { fmt.Fprint(w, "<!doctype html><body>parent</body>") }))
 	defer server.Close()
 	historyTestPages(t, func(t *testing.T, p *Page) {
@@ -60,6 +62,7 @@ func TestDocumentStreamIdentityAndSynchronousScripts(t *testing.T) {
 }
 
 func TestDocumentStreamListenersAndNestedClose(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { fmt.Fprint(w, "<!doctype html><body>fixture</body>") }))
 	defer server.Close()
 	historyTestPages(t, func(t *testing.T, p *Page) {
@@ -85,6 +88,7 @@ func TestDocumentStreamListenersAndNestedClose(t *testing.T) {
 }
 
 func TestDocumentStreamResetsHandlerAttributesAndRegistration(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		historyEval(t, p, `(()=>{
 const log=[],button=document.createElement('button'),script=document.createElement('script'),image=document.createElement('img'),detached=document.createElement('button');
@@ -110,6 +114,7 @@ return log.join(',')===Array(5).fill('before,new,after').join(',')+',detached';
 }
 
 func TestDocumentStreamExternalScriptSuspendsParser(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		release := make(chan struct{})
 		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
@@ -143,6 +148,7 @@ func TestDocumentStreamExternalScriptSuspendsParser(t *testing.T) {
 }
 
 func TestDocumentStreamOpenCancelsPausedScript(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		started, canceled := make(chan struct{}), make(chan struct{})
 		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {

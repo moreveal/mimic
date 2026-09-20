@@ -9,6 +9,7 @@ import (
 )
 
 func TestBaseResolutionRevalidatesHistoryDOMAndInheritedBase(t *testing.T) {
+	parallelBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { fmt.Fprint(w, "<!doctype html><body></body>") }))
 	defer server.Close()
 	historyTestPages(t, func(t *testing.T, p *Page) {

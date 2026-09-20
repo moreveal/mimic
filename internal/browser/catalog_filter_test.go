@@ -12,6 +12,7 @@ import (
 )
 
 func TestSelectedCatalogPreservesExposedDescriptors(t *testing.T) {
+	parallelBrowserTest(t)
 	bundle := chrome152.New()
 	full := *bundle.Surface()
 	quoted, _ := json.Marshal(full.GeneratedCatalogJSON)

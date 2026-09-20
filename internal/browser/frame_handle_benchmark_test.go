@@ -49,6 +49,7 @@ func BenchmarkFrameReferenceHandleLookup(b *testing.B) {
 }
 
 func TestFrameHandleIdentityUsesCapturedWeakMap(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		if _, err := page.Evaluate(context.Background(), `WeakMap.prototype.get=WeakMap.prototype.set=function(){throw Error('replaced WeakMap')};globalThis.a={};globalThis.b={};`); err != nil {
 			t.Fatal(err)

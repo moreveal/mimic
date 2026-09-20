@@ -13,6 +13,7 @@ import (
 // Expected headers were received from frozen headful Chrome 152.0.7977.82
 // by a local server (request-edges2-20260913-chrome diagnostic capture).
 func TestXHRStringEncodingChrome152(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			if r.URL.Path != "/echo" {

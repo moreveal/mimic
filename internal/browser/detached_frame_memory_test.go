@@ -12,6 +12,7 @@ import (
 // This opt-in diagnostic records ordinary reclamation, without forced GC,
 // retries, or a change to the frozen gate's memory recovery policy.
 func TestDetachedFrameMemoryProfile(t *testing.T) {
+	serialBrowserTest(t)
 	output := os.Getenv("MIMIC_DETACHED_MEMORY_OUTPUT")
 	if output == "" {
 		t.Skip("set MIMIC_DETACHED_MEMORY_OUTPUT for lifetime memory attribution")

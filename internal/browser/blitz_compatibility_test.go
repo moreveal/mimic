@@ -13,7 +13,6 @@ import (
 
 func blitzStandardsPage(t *testing.T) *Page {
 	t.Helper()
-	t.Setenv("MIMIC_STYLE_ENGINE", "blitz")
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -43,6 +42,7 @@ func assertBlitzOwnerActive(t *testing.T, p *Page) {
 }
 
 func TestBlitzCompatibilityIsolatedMutationAndInheritance(t *testing.T) {
+	parallelBrowserTest(t)
 	p := blitzStandardsPage(t)
 	d := NewDebugger(p)
 	defer d.Close()
@@ -67,6 +67,7 @@ func TestBlitzCompatibilityIsolatedMutationAndInheritance(t *testing.T) {
 }
 
 func TestBlitzCompatibilityFlexGridAndScrollGeometry(t *testing.T) {
+	parallelBrowserTest(t)
 	p := blitzStandardsPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{
 document.body.style.margin='0';document.body.innerHTML='<div style="display:flex;width:300px;height:40px"><div id="a" style="flex:1"></div><div id="b" style="flex:2"></div></div><div style="display:grid;width:300px;grid-template-columns:100px 200px"><div id="c" style="height:20px"></div><div id="d"></div></div><div id="scroller" style="width:100px;height:50px;overflow:auto"><div id="inside" style="height:200px;width:100px"></div></div>';
@@ -79,6 +80,7 @@ return JSON.stringify([rect('a').width,rect('b').width,rect('c').width,rect('d')
 }
 
 func TestBlitzCompatibilityIntersectionObserver(t *testing.T) {
+	serialBrowserTest(t)
 	p := blitzStandardsPage(t)
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
@@ -90,6 +92,7 @@ func TestBlitzCompatibilityIntersectionObserver(t *testing.T) {
 }
 
 func TestBlitzCompatibilityIsolatedHitTesting(t *testing.T) {
+	parallelBrowserTest(t)
 	p := blitzStandardsPage(t)
 	d := NewDebugger(p)
 	defer d.Close()
@@ -112,6 +115,7 @@ return first&&changed&&uncovered&&document.elementFromPoint(NaN,30)===null&&docu
 }
 
 func TestBlitzCompatibilityContainingBlocks(t *testing.T) {
+	parallelBrowserTest(t)
 	p := blitzStandardsPage(t)
 	v, err := p.Evaluate(context.Background(), `(()=>{
 document.body.style.cssText='margin:8px;height:3000px';

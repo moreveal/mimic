@@ -11,6 +11,7 @@ import (
 // A snapshot can be seeded by either world kind. Its closures must acquire the
 // destination world's ownership when rebound, before any author code runs.
 func TestProtocolInputRestoredWorldOwnership(t *testing.T) {
+	serialBrowserTest(t)
 	p := bootstrapSnapshotPage(t)
 	navigateCapabilityFixture(t, p)
 	bootstrapSnapshotWarm(t, p)

@@ -17,6 +17,7 @@ import (
 )
 
 func TestDevPreviewProjectsFramesByOwningElementAcrossShadowTrees(t *testing.T) {
+	parallelBrowserTest(t)
 	child := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "<!doctype html><body>%s child challenge</body>", strings.TrimPrefix(r.URL.Path, "/"))
 	}))
@@ -66,6 +67,7 @@ type previewValueOwner struct{ released engine.Value }
 func (o *previewValueOwner) ReleaseValue(value engine.Value) { o.released = value }
 
 func TestPreviewExportsAndReleasesTemporaryRuntimeValue(t *testing.T) {
+	parallelBrowserTest(t)
 	value, owner := &previewValue{}, &previewValueOwner{}
 	if got := exportPreviewValue(owner, value); got != "snapshot" || owner.released != value {
 		t.Fatalf("export=%v released=%v", got, owner.released == value)
@@ -78,6 +80,7 @@ func TestPreviewExportsAndReleasesTemporaryRuntimeValue(t *testing.T) {
 }
 
 func TestDevPreviewPublishesDuringContinuousCommands(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := NewWithOptions(v8engine.Factory{}, chrome152.New(), Options{DevPreview: true})
 	if err != nil {
 		t.Fatal(err)
@@ -134,6 +137,7 @@ func TestDevPreviewPublishesDuringContinuousCommands(t *testing.T) {
 }
 
 func TestDevPreviewDisabledAndDirtyUpdates(t *testing.T) {
+	parallelBrowserTest(t)
 	for _, enabled := range []bool{false, true} {
 		b, err := NewWithOptions(v8engine.Factory{}, chrome152.New(), Options{DevPreview: enabled})
 		if err != nil {

@@ -21,6 +21,7 @@ import (
 )
 
 func TestCanceledAndNonGETRequestsDoNotConsumePreload(t *testing.T) {
+	parallelBrowserTest(t)
 	target, _ := url.Parse("https://example.test/resource")
 	request := network.Request{URL: target, Initiator: network.Fetch, Mode: "cors", Credentials: "same-origin"}
 	pending := &resourcePreload{done: make(chan struct{})}
@@ -41,6 +42,7 @@ func TestCanceledAndNonGETRequestsDoNotConsumePreload(t *testing.T) {
 }
 
 func TestDocumentPreloadConsumersChrome152(t *testing.T) {
+	serialBrowserTest(t)
 	fixture, err := os.ReadFile("testdata/image_preload.js")
 	if err != nil {
 		t.Fatal(err)
@@ -174,6 +176,7 @@ func TestDocumentPreloadConsumersChrome152(t *testing.T) {
 }
 
 func TestParserPreloadConsumers(t *testing.T) {
+	serialBrowserTest(t)
 	var mu sync.Mutex
 	counts := map[string]int{}
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
@@ -228,6 +231,7 @@ func TestParserPreloadConsumers(t *testing.T) {
 }
 
 func TestPreloadCancellationBelongsToDocument(t *testing.T) {
+	serialBrowserTest(t)
 	for _, action := range []string{"replace-image", "close-page", "document-open"} {
 		t.Run(action, func(t *testing.T) {
 			started, canceled, release := make(chan struct{}), make(chan struct{}), make(chan struct{})

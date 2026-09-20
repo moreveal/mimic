@@ -9,6 +9,7 @@ import (
 )
 
 func TestNavigationCommitsRedirectTarget(t *testing.T) {
+	parallelBrowserTest(t)
 	for _, status := range []int{301, 302, 303, 307, 308} {
 		t.Run(fmt.Sprint(status), func(t *testing.T) {
 			scriptReferrers := make(chan string, 1)

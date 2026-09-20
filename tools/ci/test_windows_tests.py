@@ -1,6 +1,6 @@
 import unittest
 
-from windows_tests import partition
+from windows_tests import load_timings, partition
 
 
 class ShardCoverageTests(unittest.TestCase):
@@ -14,6 +14,21 @@ class ShardCoverageTests(unittest.TestCase):
                         self.assertFalse(set(shards[left]) & set(shards[right]))
                 self.assertCountEqual(sum(shards, []), names)
                 self.assertEqual(partition(list(reversed(names)), 0, count), shards[0])
+
+    def test_weighted_partition_balances_long_tests(self):
+        names = ['TestSlowA', 'TestSlowB', 'TestFastA', 'TestFastB']
+        timings = {'TestSlowA': 10, 'TestSlowB': 9, 'TestFastA': 1, 'TestFastB': 1}
+        shards = [partition(names, index, 2, timings) for index in range(2)]
+        self.assertNotEqual(
+            next(index for index, shard in enumerate(shards) if 'TestSlowA' in shard),
+            next(index for index, shard in enumerate(shards) if 'TestSlowB' in shard),
+        )
+        self.assertCountEqual(sum(shards, []), names)
+
+    def test_unknown_tests_receive_heaviest_known_weight(self):
+        names = ['TestKnown', 'TestUnknownA', 'TestUnknownB']
+        shards = [partition(names, index, 2, {'TestKnown': 8}) for index in range(2)]
+        self.assertCountEqual(sum(shards, []), names)
 
     def test_bad_shard_and_duplicate_discovery_fail(self):
         for names, shard, count in [(['TestA'], 2, 2), (['TestA'], 0, 0),

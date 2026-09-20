@@ -11,6 +11,7 @@ import (
 )
 
 func TestConstraintValidationMatchesChrome152(t *testing.T) {
+	parallelBrowserTest(t)
 	p := validationPage(t)
 	defer p.Close()
 	probe, err := os.ReadFile("testdata/constraint_validation_probe.js")
@@ -43,6 +44,7 @@ func TestConstraintValidationMatchesChrome152(t *testing.T) {
 }
 
 func TestConstraintValidationEventsAndSubmission(t *testing.T) {
+	parallelBrowserTest(t)
 	p := validationPage(t)
 	defer p.Close()
 	result, err := p.Evaluate(context.Background(), `(()=>{
@@ -74,6 +76,7 @@ func validationPage(t *testing.T) *Page {
 }
 
 func TestConstraintValidationIsolatedWorldSharesOwnerState(t *testing.T) {
+	parallelBrowserTest(t)
 	p := validationPage(t)
 	defer p.Close()
 	ctx := context.Background()
@@ -97,6 +100,7 @@ func TestConstraintValidationIsolatedWorldSharesOwnerState(t *testing.T) {
 }
 
 func TestConstraintValidationUserNumberInput(t *testing.T) {
+	parallelBrowserTest(t)
 	p := validationPage(t)
 	defer p.Close()
 	ctx := context.Background()
@@ -122,6 +126,7 @@ func TestConstraintValidationUserNumberInput(t *testing.T) {
 }
 
 func TestValidityStateBorrowedAcrossRealms(t *testing.T) {
+	parallelBrowserTest(t)
 	p := validationPage(t)
 	defer p.Close()
 	ctx := context.Background()
@@ -132,6 +137,7 @@ func TestValidityStateBorrowedAcrossRealms(t *testing.T) {
 }
 
 func TestConstraintValidationPatternAndNeighboringFlags(t *testing.T) {
+	parallelBrowserTest(t)
 	p := validationPage(t)
 	defer p.Close()
 	value, err := p.Evaluate(context.Background(), `(()=>{

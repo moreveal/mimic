@@ -14,6 +14,7 @@ import (
 )
 
 func TestIndexedDBChromeOracles(t *testing.T) {
+	serialBrowserTest(t)
 	for _, name := range []string{"indexeddb_storage", "indexeddb_lifecycle", "indexeddb_realms"} {
 		t.Run(name, func(t *testing.T) {
 			historyTestPages(t, func(t *testing.T, p *Page) {
@@ -70,6 +71,7 @@ func TestIndexedDBChromeOracles(t *testing.T) {
 }
 
 func TestIndexedDBContextOwnershipAndRealmTeardown(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
@@ -126,6 +128,7 @@ func TestIndexedDBContextOwnershipAndRealmTeardown(t *testing.T) {
 }
 
 func TestIndexedDBConcurrentPageTransactions(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 45*time.Second)
 		defer cancel()

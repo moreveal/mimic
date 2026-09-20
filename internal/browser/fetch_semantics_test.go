@@ -14,6 +14,7 @@ import (
 )
 
 func TestFetchCanonicalBytesCloneAndCancellation(t *testing.T) {
+	serialBrowserTest(t)
 	canceled := make(chan struct{}, 1)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
@@ -69,6 +70,7 @@ func TestFetchCanonicalBytesCloneAndCancellation(t *testing.T) {
 }
 
 func TestFetchBodyDisturbanceAndRequestTransfer(t *testing.T) {
+	parallelBrowserTest(t)
 	browser, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -94,6 +96,7 @@ func TestFetchBodyDisturbanceAndRequestTransfer(t *testing.T) {
 }
 
 func TestFetchNetworkFailureIsTypeErrorAndBodyErrorIdentity(t *testing.T) {
+	serialBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(http.ResponseWriter, *http.Request) {}))
 	server.Close()
 	b, err := New(v8engine.Factory{}, chrome152.New())

@@ -3,6 +3,7 @@ package browser
 import "testing"
 
 func TestBorrowedCallsPreserveThrownValuesAndRealm(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		historyEval(t, p, `(()=>{
 const f=document.createElement('iframe');document.body.append(f);const w=f.contentWindow;

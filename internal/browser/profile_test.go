@@ -14,6 +14,7 @@ import (
 )
 
 func TestProfileInheritanceWorkersAndSnapshots(t *testing.T) {
+	serialBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -64,6 +65,7 @@ func TestProfileInheritanceWorkersAndSnapshots(t *testing.T) {
 }
 
 func TestDefaultProfileAndConcurrentContextOwnership(t *testing.T) {
+	serialBrowserTest(t)
 	raw := []byte(`{"schemaVersion":1,"baseProfile":"chrome-152-windows-x64-headful-controlled-v1","hardware":{"logicalProcessors":3}}`)
 	b, err := NewWithOptions(v8engine.Factory{}, chrome152.New(), Options{ProfileJSON: raw})
 	if err != nil {
@@ -95,6 +97,7 @@ func TestDefaultProfileAndConcurrentContextOwnership(t *testing.T) {
 }
 
 func TestProfileMediaChangeUsesPageTasks(t *testing.T) {
+	parallelBrowserTest(t)
 	p := bootstrapSnapshotPage(t)
 	historyEval(t, p, `globalThis.profileMedia=matchMedia('(prefers-reduced-motion: reduce)');globalThis.profileChanges=[];profileMedia.addEventListener('change',e=>profileChanges.push(e instanceof MediaQueryListEvent&&e.isTrusted&&e.matches&&e.media===profileMedia.media));true`, true)
 	if _, err := p.UpdateProfile([]byte(`{"preferences":{"reducedMotion":true}}`)); err != nil {
@@ -108,6 +111,7 @@ func TestProfileMediaChangeUsesPageTasks(t *testing.T) {
 }
 
 func TestStyleObservationEpochTracksMediaPreferences(t *testing.T) {
+	parallelBrowserTest(t)
 	p := bootstrapSnapshotPage(t)
 	historyEval(t, p, `document.head.innerHTML='<style>div{width:10px;height:10px}@media(prefers-color-scheme:dark){div{width:20px}}@media(prefers-reduced-motion:reduce){div{height:30px}}</style>';document.body.innerHTML='<div></div>';globalThis.mediaStyle=getComputedStyle(document.querySelector('div'));true`, true)
 	if _, err := p.UpdateProfile([]byte(`{"preferences":{"colorScheme":"light","reducedMotion":false}}`)); err != nil {
@@ -121,6 +125,7 @@ func TestStyleObservationEpochTracksMediaPreferences(t *testing.T) {
 }
 
 func TestProfileCreationObservations(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)

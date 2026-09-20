@@ -8,6 +8,7 @@ import (
 )
 
 func TestTableRowsIsLiveAndExcludesNestedTables(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		value, err := page.Evaluate(context.Background(), `(()=>{
 document.body.innerHTML='<table id="outer"><tbody><tr id="first"><th>x</th></tr><tr id="second"><td><table><tbody><tr id="nested"><td>y</td></tr></tbody></table></td></tr></tbody></table>';
@@ -22,6 +23,7 @@ return rows===table.rows&&rows instanceof HTMLCollection&&rows.length===3&&rows[
 }
 
 func TestFormControlDirtyValuesAndReset(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -45,6 +47,7 @@ func TestFormControlDirtyValuesAndReset(t *testing.T) {
 }
 
 func TestFormControlInitialValueAndDirectChildText(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -68,6 +71,7 @@ func TestFormControlInitialValueAndDirectChildText(t *testing.T) {
 }
 
 func TestFormAssociationCollectionsAndFormData(t *testing.T) {
+	parallelBrowserTest(t)
 	p := validationPage(t)
 	defer p.Close()
 	value, err := p.Evaluate(context.Background(), `(()=>{
@@ -87,6 +91,7 @@ func TestFormAssociationCollectionsAndFormData(t *testing.T) {
 }
 
 func TestRequestSubmitValidationAndSubmitter(t *testing.T) {
+	parallelBrowserTest(t)
 	p := validationPage(t)
 	defer p.Close()
 	value, err := p.Evaluate(context.Background(), `(()=>{
@@ -105,6 +110,7 @@ func TestRequestSubmitValidationAndSubmitter(t *testing.T) {
 }
 
 func TestDetachedFormAssociationCollectionAndData(t *testing.T) {
+	parallelBrowserTest(t)
 	p := validationPage(t)
 	defer p.Close()
 	value, err := p.Evaluate(context.Background(), `(()=>{

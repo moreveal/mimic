@@ -12,6 +12,7 @@ import (
 )
 
 func TestCatalogDataCreatesIndependentRealmObjects(t *testing.T) {
+	parallelBrowserTest(t)
 	for name, factory := range map[string]engine.Factory{"goja": gojaengine.Factory{}, "v8": v8engine.Factory{}} {
 		t.Run(name, func(t *testing.T) {
 			bundle := surfaceTestBundle{Bundle: chrome152.New(), surface: compatibility.WebAPISurface{

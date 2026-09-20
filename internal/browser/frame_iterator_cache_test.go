@@ -7,6 +7,7 @@ import "testing"
 // Exercise the alias boundary of fresh native iterator result caching. Custom
 // next functions and results exposed back to their owner must remain live.
 func TestCrossFrameIteratorResultCache(t *testing.T) {
+	serialBrowserTest(t)
 	for _, snapshot := range []bool{false, true} {
 		name := "ordinary"
 		if snapshot {

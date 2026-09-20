@@ -10,6 +10,7 @@ import (
 )
 
 func TestNestedFrameOwnerLoadDrainsMicrotasks(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		child := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			fmt.Fprint(w, `<!doctype html><body><script>

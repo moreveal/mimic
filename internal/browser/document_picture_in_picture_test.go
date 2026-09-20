@@ -12,6 +12,7 @@ import (
 )
 
 func TestDocumentPictureInPictureLifecycle(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
@@ -51,6 +52,7 @@ func TestDocumentPictureInPictureLifecycle(t *testing.T) {
 }
 
 func TestDocumentPictureInPictureOwnerLifecycle(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
@@ -81,6 +83,7 @@ func TestDocumentPictureInPictureOwnerLifecycle(t *testing.T) {
 }
 
 func TestDocumentPictureInPictureChromeOracle(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
@@ -119,6 +122,7 @@ func TestDocumentPictureInPictureChromeOracle(t *testing.T) {
 }
 
 func TestDocumentPictureInPictureContextIsolationAndClose(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()

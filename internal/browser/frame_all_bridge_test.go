@@ -10,6 +10,7 @@ import (
 )
 
 func TestFrameHTMLAllCollectionPreservesUndetectabilityAndIdentity(t *testing.T) {
+	serialBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -59,6 +60,7 @@ func TestFrameHTMLAllCollectionPreservesUndetectabilityAndIdentity(t *testing.T)
 }
 
 func TestFrameGlobalAssignmentReadsAuthoritativeState(t *testing.T) {
+	serialBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)

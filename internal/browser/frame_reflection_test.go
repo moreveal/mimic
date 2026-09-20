@@ -8,6 +8,7 @@ import (
 )
 
 func TestFrameReflectionPreservesDescriptorsAndKeys(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
@@ -55,6 +56,7 @@ func TestFrameReflectionPreservesDescriptorsAndKeys(t *testing.T) {
 }
 
 func TestFrameNonconfigurableAccessorDescriptorBoundary(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()

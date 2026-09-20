@@ -13,6 +13,7 @@ import (
 )
 
 func TestWorkerMicrotaskChromeRelations(t *testing.T) {
+	serialBrowserTest(t)
 	source, err := os.ReadFile("../../compatibility/corpus/worker-microtasks.js")
 	if err != nil {
 		t.Fatal(err)

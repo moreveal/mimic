@@ -6,6 +6,7 @@ import (
 )
 
 func TestFocusEmulationProjectsIntoDocument(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		page.mu.Lock()
 		page.pageFocused = false

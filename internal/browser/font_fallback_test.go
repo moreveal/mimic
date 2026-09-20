@@ -9,6 +9,7 @@ import (
 )
 
 func TestFontFallbackChrome152(t *testing.T) {
+	parallelBrowserTest(t)
 	fixture, err := os.ReadFile("testdata/font_fallback_oracle.js")
 	if err != nil {
 		t.Fatal(err)

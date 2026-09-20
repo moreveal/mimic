@@ -11,6 +11,7 @@ import (
 )
 
 func TestWindows1252DecoderMatchesChromeInWindowAndWorker(t *testing.T) {
+	serialBrowserTest(t)
 	source, err := os.ReadFile("testdata/windows1252_decoder_oracle.js")
 	if err != nil {
 		t.Fatal(err)

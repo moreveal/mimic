@@ -11,6 +11,7 @@ import (
 )
 
 func TestConsumedWindowStateAndFrameViewport(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)
 		defer cancel()
@@ -36,6 +37,7 @@ func TestConsumedWindowStateAndFrameViewport(t *testing.T) {
 }
 
 func TestConsumedWindowEventChromeOracle(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		if strings.HasSuffix(t.Name(), "/goja") {
 			t.Skip("Goja cannot checkpoint its job queue inside the private native dispatch stack")
@@ -68,6 +70,7 @@ func TestConsumedWindowEventChromeOracle(t *testing.T) {
 }
 
 func TestConsumedWindowObjectsAndPrivateViewportQuery(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)
 		defer cancel()
@@ -88,6 +91,7 @@ func TestConsumedWindowObjectsAndPrivateViewportQuery(t *testing.T) {
 }
 
 func TestConsumedWindowStateNavigationAndViewportResize(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 90*time.Second)
 		defer cancel()
@@ -112,6 +116,7 @@ func TestConsumedWindowStateNavigationAndViewportResize(t *testing.T) {
 }
 
 func TestConsumedCPUPerformanceUsesEnvironment(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		p.mu.Lock()
 		p.env.Hardware.CPUPerformance = 3
@@ -128,6 +133,7 @@ func TestConsumedCPUPerformanceUsesEnvironment(t *testing.T) {
 }
 
 func TestConsumedNativeListenerCheckpoint(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		if strings.HasSuffix(t.Name(), "/goja") {
 			t.Skip("Goja has no nested native callback checkpoint")

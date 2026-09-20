@@ -30,6 +30,7 @@ func newAsyncModulePage(t *testing.T) *Page {
 }
 
 func TestStaticModuleGraphNetworkWaitLeavesPageResponsive(t *testing.T) {
+	serialBrowserTest(t)
 	started, release := make(chan struct{}), make(chan struct{})
 	var once sync.Once
 	defer once.Do(func() { close(release) })
@@ -87,6 +88,7 @@ func TestStaticModuleGraphNetworkWaitLeavesPageResponsive(t *testing.T) {
 }
 
 func TestDynamicModuleGraphWaitsForTopLevelAwaitAndEvaluatesOnce(t *testing.T) {
+	serialBrowserTest(t)
 	started, release := make(chan struct{}), make(chan struct{})
 	var once sync.Once
 	defer once.Do(func() { close(release) })
@@ -160,6 +162,7 @@ dependencyStarted:
 }
 
 func TestDynamicModuleFailuresAreSharedAndPreserveRejections(t *testing.T) {
+	serialBrowserTest(t)
 	var failedRequests, thrownRequests atomic.Int32
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		w.Header().Set("Content-Type", "text/javascript")
@@ -194,6 +197,7 @@ func TestDynamicModuleFailuresAreSharedAndPreserveRejections(t *testing.T) {
 }
 
 func TestDynamicModuleGraphCanceledWithDocument(t *testing.T) {
+	serialBrowserTest(t)
 	started, canceled := make(chan struct{}), make(chan struct{})
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		if req.URL.Path == "/slow.js" {
@@ -249,6 +253,7 @@ dependencyStarted:
 }
 
 func TestDynamicImportRemainsInItsParentOrChildRealm(t *testing.T) {
+	serialBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		if req.URL.Path == "/shared.js" {
 			w.Header().Set("Content-Type", "text/javascript")
@@ -282,6 +287,7 @@ func TestDynamicImportRemainsInItsParentOrChildRealm(t *testing.T) {
 }
 
 func TestDynamicModuleEvaluationUsesCurrentTaskCancellation(t *testing.T) {
+	serialBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {
 		w.Header().Set("Content-Type", "text/javascript")
 		switch req.URL.Path {

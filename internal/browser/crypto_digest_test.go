@@ -9,6 +9,7 @@ import (
 // oracle. Keeping the literal here prevents an incorrect external expectation
 // from becoming an implementation change.
 func TestSubtleCryptoDigestKnownVectors(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
 		value, err := p.Evaluate(context.Background(), `(async()=>{

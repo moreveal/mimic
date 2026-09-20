@@ -16,13 +16,17 @@ import (
 )
 
 func TestCSSTransformPrecisionMatchesFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
 	documentAllOracle(t, "css_transform_precision")
 }
 
 func TestCSSTransformPrecisionGojaMatchesFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
+
 	testTransformGojaOracle(t, "css_transform_precision")
 }
 func TestSVGPercentTransformGojaMatchesFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
 	testTransformGojaOracle(t, "svg_percent_transform")
 }
 func testTransformGojaOracle(t *testing.T, name string) {
@@ -96,5 +100,6 @@ func testTransformGojaOracle(t *testing.T, name string) {
 }
 
 func TestSVGPercentTransformMatchesFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
 	documentAllOracle(t, "svg_percent_transform")
 }

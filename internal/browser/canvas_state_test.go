@@ -22,6 +22,7 @@ const canvasStateFixture = `(async()=>{
 })()`
 
 func TestCanvasStateWindowAndWorker(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		for _, worker := range []bool{false, true} {
 			script := canvasStateFixture
@@ -40,6 +41,7 @@ func TestCanvasStateWindowAndWorker(t *testing.T) {
 }
 
 func TestHTMLCanvasUsesCanonicalContextState(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		value, err := p.Evaluate(context.Background(), `(()=>{const c=document.createElement('canvas');if(c.width!==300||c.height!==150)return 'dimensions';const ctx=c.getContext('2d');c.width=2;c.height=2;ctx.fillStyle='red';ctx.fillRect(0,0,1,1);if(ctx.getImageData(0,0,1,1).data[0]!==255)return 'pixels';c.width=2;return ctx===c.getContext('2d')&&ctx.fillStyle==='#000000'&&ctx.getImageData(0,0,1,1).data[3]===0})()`)
 		if err != nil || value != true {
@@ -49,6 +51,7 @@ func TestHTMLCanvasUsesCanonicalContextState(t *testing.T) {
 }
 
 func TestCanvasDeferredDrawsStayBoundedAndOrdered(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		value, err := p.Evaluate(context.Background(), `(()=>{
  const make=()=>{const c=new OffscreenCanvas(4,4),x=c.getContext('2d');x.fillStyle='rgba(20,40,60,.05)';return x},batched=make(),checkpointed=make();
@@ -65,6 +68,7 @@ func TestCanvasDeferredDrawsStayBoundedAndOrdered(t *testing.T) {
 }
 
 func TestCanvasTextObservationsAreLocalAndOrdered(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		value, err := p.Evaluate(context.Background(), `(async()=>{
  const c=new OffscreenCanvas(80,24),x=c.getContext('2d');x.font='10px sans-serif';

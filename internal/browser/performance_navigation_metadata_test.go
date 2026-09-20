@@ -12,6 +12,7 @@ import (
 // Frozen Chrome 152 local probes: Location.reload/history.go(0) create a
 // reload entry; resources identify the navigation of their initiating document.
 func TestPerformanceNavigationReasonAndResourceIdentity(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Cache-Control", "no-store")

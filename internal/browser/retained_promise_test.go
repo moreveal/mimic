@@ -11,6 +11,7 @@ import (
 )
 
 func TestRetainedPromiseLifecycleFrozenChrome(t *testing.T) {
+	serialBrowserTest(t)
 	source, err := os.ReadFile("testdata/retained_promise_oracle.js")
 	if err != nil {
 		t.Fatal(err)

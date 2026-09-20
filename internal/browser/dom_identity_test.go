@@ -6,6 +6,7 @@ import (
 )
 
 func TestQueryMembershipPreservesIdentityAndCanonicalAttributes(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	ctx := context.Background()
 	value, err := p.Evaluate(ctx, `(()=>{

@@ -9,6 +9,7 @@ import (
 )
 
 func TestStyleAncestorFilterMatchesCanonicalSelectors(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)

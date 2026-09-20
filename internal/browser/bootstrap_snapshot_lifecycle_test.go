@@ -18,10 +18,13 @@ import (
 )
 
 func TestBootstrapSnapshotPageLifecycle(t *testing.T) {
+	serialBrowserTest(t)
+
 	bootstrapSnapshotPageLifecycle(t, v8engine.Factory{}, true)
 }
 
 func TestBootstrapSnapshotConcurrentPageLifecycles(t *testing.T) {
+	serialBrowserTest(t)
 	if os.Getenv("MIMIC_SNAPSHOT_LIFECYCLE_STRESS") != "1" {
 		t.Skip("opt-in native crash reproducer; see docs/compatibility/snapshot-lifecycle-audit-2026-09-11.md")
 	}
@@ -80,10 +83,13 @@ func (f sequentialSnapshotLifecycleFactory) BuildBootstrapSnapshot(ctx context.C
 }
 
 func TestBootstrapSnapshotBarrierConcurrentBuilders(t *testing.T) {
+	serialBrowserTest(t)
+
 	bootstrapSnapshotBarrierLifecycles(t, false)
 }
 
 func TestBootstrapSnapshotBarrierSequentialBuilders(t *testing.T) {
+	serialBrowserTest(t)
 	bootstrapSnapshotBarrierLifecycles(t, true)
 }
 
@@ -105,6 +111,7 @@ func bootstrapSnapshotBarrierLifecycles(t *testing.T, sequential bool) {
 }
 
 func TestBootstrapSnapshotConcurrentPagesSequentialBuilders(t *testing.T) {
+	serialBrowserTest(t)
 	if os.Getenv("MIMIC_SNAPSHOT_LIFECYCLE_STRESS") != "1" {
 		t.Skip("test-only serialization-overlap diagnostic")
 	}
@@ -118,6 +125,7 @@ func TestBootstrapSnapshotConcurrentPagesSequentialBuilders(t *testing.T) {
 }
 
 func TestOrdinaryConcurrentPageLifecycles(t *testing.T) {
+	serialBrowserTest(t)
 	if os.Getenv("MIMIC_SNAPSHOT_LIFECYCLE_STRESS") != "1" {
 		t.Skip("ordinary-bootstrap control for the opt-in snapshot lifecycle reproducer")
 	}

@@ -8,6 +8,7 @@ import (
 )
 
 func TestTextCacheProfileCountsAndBoundedTracking(t *testing.T) {
+	parallelBrowserTest(t)
 	profile, cache := newTextCacheProfile(), &textShapeCache{}
 	observe := func(key textShapeKey, value string) {
 		_, hit := cache.get(key)
@@ -51,6 +52,7 @@ func TestTextCacheProfileCountsAndBoundedTracking(t *testing.T) {
 }
 
 func TestTextCacheProfileIsOptInAndReleased(t *testing.T) {
+	serialBrowserTest(t)
 	t.Setenv("MIMIC_PROFILE_TEXT_CACHE", "")
 	p := newAsyncModulePage(t)
 	navigateCapabilityFixture(t, p)

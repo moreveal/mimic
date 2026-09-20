@@ -9,6 +9,7 @@ import (
 )
 
 func TestComputedStyleDoesNotInvokeAuthorGeometryGetters(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -35,6 +36,7 @@ func TestComputedStyleDoesNotInvokeAuthorGeometryGetters(t *testing.T) {
 }
 
 func TestScalarComputedValuesPreserveInheritanceAndMutation(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -64,6 +66,7 @@ func TestScalarComputedValuesPreserveInheritanceAndMutation(t *testing.T) {
 }
 
 func TestTaffyRootMemoPreservesNegativeCustomAndWidthBoundaries(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)

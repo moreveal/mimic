@@ -10,6 +10,7 @@ import (
 )
 
 func TestTextShapeCachePreservesAllShapeInputs(t *testing.T) {
+	parallelBrowserTest(t)
 	p := newAsyncModulePage(t)
 	navigateCapabilityFixture(t, p)
 	r := p.Top.Realm
@@ -66,6 +67,7 @@ func TestTextShapeCachePreservesAllShapeInputs(t *testing.T) {
 }
 
 func TestTextShapeCacheInvalidatesForFontLoadAndCollectionChanges(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
 		ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
@@ -98,6 +100,7 @@ func TestTextShapeCacheInvalidatesForFontLoadAndCollectionChanges(t *testing.T) 
 }
 
 func TestTextShapeCacheBoundsRetainedInputsAndResults(t *testing.T) {
+	parallelBrowserTest(t)
 	cache := &textShapeCache{}
 	for i := 0; i < textShapeCacheEntries+128; i++ {
 		key := textShapeKey{text: fmt.Sprint(i), families: "Arial"}
@@ -120,6 +123,7 @@ func TestTextShapeCacheBoundsRetainedInputsAndResults(t *testing.T) {
 }
 
 func TestTextShapeCacheRetainsCompactWorkingSetWithinByteBudget(t *testing.T) {
+	parallelBrowserTest(t)
 	cache := &textShapeCache{}
 	const entries = 2048
 	const result = `{"advance":53.375,"ascent":15,"descent":4,"lineGap":0}`

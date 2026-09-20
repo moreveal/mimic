@@ -7,6 +7,7 @@ import (
 )
 
 func TestBlitzDeviceScaleAdmissionInvalidatesAndRepairs(t *testing.T) {
+	parallelBrowserTest(t)
 	p := blitzStandardsPage(t)
 	for _, scale := range []float64{1, 2, 1} {
 		p.env.Display.DeviceScaleFactor = scale
@@ -23,6 +24,7 @@ func TestBlitzDeviceScaleAdmissionInvalidatesAndRepairs(t *testing.T) {
 }
 
 func TestBlitzCanonicalColorSchemeInvalidatesNativeStyles(t *testing.T) {
+	parallelBrowserTest(t)
 	p := blitzStandardsPage(t)
 	_, err := p.Evaluate(context.Background(), `document.head.innerHTML='<style>div{width:10px;height:5px}@media(prefers-color-scheme:dark){div{width:30px}}</style>';document.body.innerHTML='<div></div>'`)
 	if err != nil {

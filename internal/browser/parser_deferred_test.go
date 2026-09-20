@@ -47,6 +47,7 @@ func deferredParserFixture(t *testing.T, module bool) *httptest.Server {
 }
 
 func TestDeferredClassicParserLifecycle(t *testing.T) {
+	serialBrowserTest(t)
 	for _, mode := range []string{"navigation", "iframe", "document-write"} {
 		t.Run(mode, func(t *testing.T) {
 			historyTestPages(t, func(t *testing.T, p *Page) {
@@ -89,6 +90,7 @@ func TestDeferredClassicParserLifecycle(t *testing.T) {
 // Order and microtask/load placement were measured against frozen Chrome 152
 // with a local receiver, independently of Google's application.
 func TestDeferredClassicAndModuleShareParserOrder(t *testing.T) {
+	serialBrowserTest(t)
 	p := newAsyncModulePage(t)
 	server := deferredParserFixture(t, true)
 	defer server.Close()
@@ -105,6 +107,7 @@ func TestDeferredClassicAndModuleShareParserOrder(t *testing.T) {
 }
 
 func TestDeferredScriptDoesNotDestructivelyWriteDocument(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			if r.URL.Path == "/write.js" {

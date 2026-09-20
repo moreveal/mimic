@@ -7,6 +7,7 @@ import (
 )
 
 func TestNavigatedDocumentPreservesNodeOwnershipIdentity(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 20*time.Second)
 		defer cancel()

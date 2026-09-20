@@ -10,6 +10,7 @@ import (
 )
 
 func TestFreshNodeRecordsPreserveCanonicalUnicode(t *testing.T) {
+	parallelBrowserTest(t)
 	for name, factory := range map[string]engine.Factory{"goja": gojaengine.Factory{}, "v8": v8engine.Factory{}} {
 		t.Run(name, func(t *testing.T) {
 			b, err := New(factory, chrome152.New())

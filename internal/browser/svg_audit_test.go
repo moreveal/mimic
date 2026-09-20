@@ -13,6 +13,7 @@ import (
 )
 
 func TestSVGAuditDifferential(t *testing.T) {
+	parallelBrowserTest(t)
 	for _, name := range []string{"svg-surface", "svg-values", "svg-reflections", "svg-coordinates", "svg-text-positions", "svg-use", "svg-path-metrics", "svg-attributes", "svg-edge-cases", "svg-states", "svg-mutations", "svg-dom-matrix", "svg-zoom", "svg-stroke"} {
 		t.Run(name, func(t *testing.T) {
 			parallelOracle(t)
@@ -130,6 +131,7 @@ func TestSVGAuditDifferential(t *testing.T) {
 }
 
 func TestSVGAuditExplicitBoundaries(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
 		value, err := p.Evaluate(context.Background(), `(()=>{const ns='http://www.w3.org/2000/svg',out=[];for(const [tag,invoke]of [['animate',n=>n.getStartTime()],['svg',n=>n.getIntersectionList(n.createSVGRect(),null)]]){const n=document.createElementNS(ns,tag);try{invoke(n);out.push('silent success')}catch(e){out.push(e.name)}}return JSON.stringify(out)})()`)

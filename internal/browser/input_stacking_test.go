@@ -8,6 +8,7 @@ import (
 const inputStackingSetup = `document.body.style.margin='0';document.body.innerHTML='<section id="context" style="position:absolute;left:0;top:0;width:100px;height:100px;z-index:3"><button id="target" style="position:absolute;left:0;top:0;width:100px;height:100px">button</button></section><div id="cover" style="position:fixed;left:0;top:0;width:100px;height:100px;z-index:2"></div>';globalThis.clicked='';document.addEventListener('click',e=>clicked=e.target.id);`
 
 func TestIsolatedHitTestUsesOwnerAndLocalWrappers(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		d := NewDebugger(p)
 		defer d.Close()
@@ -30,6 +31,7 @@ return first&&changed&&document.elementFromPoint(NaN,30)===null&&document.elemen
 }
 
 func TestInputStackingContextHitTargetsMatchChrome152(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
 		ctx := context.Background()

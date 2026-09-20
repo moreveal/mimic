@@ -4,4 +4,7 @@ package browser
 
 import "testing"
 
-func TestFormNameReflectionMatchesFrozenChrome(t *testing.T) { documentAllOracle(t, "form_name") }
+func TestFormNameReflectionMatchesFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
+	documentAllOracle(t, "form_name")
+}

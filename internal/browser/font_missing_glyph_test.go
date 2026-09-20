@@ -4,4 +4,7 @@ package browser
 
 import "testing"
 
-func TestMissingGlyphsFrozenChrome(t *testing.T) { documentAllOracle(t, "font_missing_glyph") }
+func TestMissingGlyphsFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
+	documentAllOracle(t, "font_missing_glyph")
+}

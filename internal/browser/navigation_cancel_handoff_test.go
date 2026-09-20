@@ -14,6 +14,7 @@ import (
 )
 
 func TestNavigationCancellationSurvivesCommitHandoff(t *testing.T) {
+	serialBrowserTest(t)
 	for _, boundary := range []string{"before-handoff", "after-ack"} {
 		t.Run(boundary, func(t *testing.T) {
 			p := bootstrapSnapshotPage(t)

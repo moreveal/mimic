@@ -21,6 +21,7 @@ import (
 // fresh Chrome 152 headful profile. Keep retained values and current WindowProxy
 // accesses distinct: origin checks and ownership have different lifetimes.
 func TestNavigationRealmMatchesFrozenChrome(t *testing.T) {
+	serialBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		w.Header().Set("Content-Type", "text/html")
 		fmt.Fprint(w, `<!doctype html><title>Navigation realm oracle</title><body><p id="newDocument"></p></body>`)

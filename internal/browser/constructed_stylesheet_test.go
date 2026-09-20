@@ -11,6 +11,7 @@ import (
 
 // These observable results were checked against frozen Chrome 152.0.7977.82.
 func TestConstructedStylesheetRulesAndAdoption(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -55,6 +56,7 @@ return sheet instanceof CSSStyleSheet&&sheet instanceof StyleSheet&&root.querySe
 }
 
 func TestTreeWalkerCanonicalTemplatesAndFiltering(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -84,6 +86,7 @@ return error==='InvalidStateError'&&template.childNodes.length===0;
 }
 
 func TestAttributeOrderSurvivesTemplateParsingAndClone(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -106,6 +109,7 @@ const clone=node.cloneNode(true),container=document.createElement('div');contain
 }
 
 func TestComputedStyleIgnoresUnsupportedStylesheetSelectors(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)

@@ -16,6 +16,7 @@ import (
 )
 
 func TestSnapshotEmptyAssetEncodesAsBase64String(t *testing.T) {
+	parallelBrowserTest(t)
 	base, _ := url.Parse("https://example.test/")
 	for _, status := range []int{http.StatusOK, http.StatusNoContent} {
 		b := &snapshotBuilder{
@@ -43,6 +44,7 @@ func TestSnapshotEmptyAssetEncodesAsBase64String(t *testing.T) {
 }
 
 func TestSnapshotPreservesCaseInsensitiveDataURL(t *testing.T) {
+	parallelBrowserTest(t)
 	b := &snapshotBuilder{}
 	base, _ := url.Parse("https://example.test/")
 	data := "DATA:image/png;base64,iVBORw0KGgo="
@@ -52,6 +54,7 @@ func TestSnapshotPreservesCaseInsensitiveDataURL(t *testing.T) {
 }
 
 func TestSnapshotPrefetchesAssetsConcurrently(t *testing.T) {
+	parallelBrowserTest(t)
 	var active atomic.Int32
 	var peak atomic.Int32
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
@@ -88,6 +91,7 @@ func TestSnapshotPrefetchesAssetsConcurrently(t *testing.T) {
 }
 
 func TestSnapshotPreservesSelfContainedCSSURLQuoting(t *testing.T) {
+	parallelBrowserTest(t)
 	base, _ := url.Parse("https://example.test/styles/main.css")
 	b := &snapshotBuilder{}
 	for _, source := range []string{
@@ -104,6 +108,7 @@ func TestSnapshotPreservesSelfContainedCSSURLQuoting(t *testing.T) {
 }
 
 func TestSnapshotUsesResponseMediaTypeForDynamicImages(t *testing.T) {
+	parallelBrowserTest(t)
 	const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><path d="M0 0h20v20H0z"/></svg>`
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/image.php" {
@@ -132,6 +137,7 @@ func TestSnapshotUsesResponseMediaTypeForDynamicImages(t *testing.T) {
 }
 
 func TestSnapshotPortableAssetsAndCurrentDOM(t *testing.T) {
+	parallelBrowserTest(t)
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case "/css/main.css":
@@ -180,6 +186,7 @@ func TestSnapshotPortableAssetsAndCurrentDOM(t *testing.T) {
 }
 
 func TestSnapshotCapturesNestedFramesAsPortableDocuments(t *testing.T) {
+	parallelBrowserTest(t)
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case "/child":
@@ -223,6 +230,7 @@ func TestSnapshotCapturesNestedFramesAsPortableDocuments(t *testing.T) {
 }
 
 func TestSnapshotMissingResourceAndCSSCycle(t *testing.T) {
+	parallelBrowserTest(t)
 	ts := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		switch r.URL.Path {
 		case "/loop.css":

@@ -12,6 +12,7 @@ import (
 
 // Verify bytes received by an independent server, not the request projection.
 func TestFormSubmitNavigation(t *testing.T) {
+	serialBrowserTest(t)
 	for _, method := range []string{"get", "post"} {
 		t.Run(method, func(t *testing.T) {
 			historyTestPages(t, func(t *testing.T, p *Page) {
@@ -58,6 +59,7 @@ func TestFormSubmitNavigation(t *testing.T) {
 }
 
 func TestSubmitButtonActivationHonorsCancellationAndSubmitter(t *testing.T) {
+	serialBrowserTest(t)
 	for _, button := range []string{`<button id="send" name="send" value="yes"><span>go</span></button>`, `<input id="send" type="submit" name="send" value="yes">`} {
 		historyTestPages(t, func(t *testing.T, p *Page) {
 			requests := make(chan string, 4)
@@ -105,6 +107,7 @@ f.submit=()=>{throw Error('author override must not be called')};target.click();
 }
 
 func TestEnterKeyImplicitlySubmitsForm(t *testing.T) {
+	serialBrowserTest(t)
 	for _, tc := range []struct {
 		name          string
 		controls      string

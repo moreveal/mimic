@@ -3,6 +3,7 @@ package browser
 import "testing"
 
 func TestCSSPercentageAdjacentTokens(t *testing.T) {
+	parallelBrowserTest(t)
 	p := bootstrapSnapshotPage(t)
 	historyEval(t, p, `(()=>{
  const sheet=new CSSStyleSheet();sheet.replaceSync('.center{inset:50% auto auto 50%;margin:10%auto;padding:10%20%}');

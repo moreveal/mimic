@@ -11,6 +11,7 @@ import (
 )
 
 func TestBase64WorkerChrome(t *testing.T) {
+	parallelBrowserTest(t)
 	fixture, err := os.ReadFile("testdata/base64_oracle.js")
 	if err != nil {
 		t.Fatal(err)
@@ -44,6 +45,7 @@ func TestBase64WorkerChrome(t *testing.T) {
 }
 
 func TestDocumentCompatibilityOracle(t *testing.T) {
+	parallelBrowserTest(t)
 	for _, name := range []string{"image-intrinsic", "screen-focus", "font-events", "data-resources", "image-resources", "font-metrics-loading", "css-named-colors", "owned-stylesheets", "platform-state", "document-state-mutations", "document-visibility", "html-enumerated", "form-reflection", "webgl-color-space", "document-handlers", "element-handlers", "base64", "navigator-power", "cross-realm-nodes", "svg-bbox", "css-font-size", "css-priority", "svg-css-transform", "inner-text"} {
 		t.Run(name, func(t *testing.T) {
 			parallelOracle(t)

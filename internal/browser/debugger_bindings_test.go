@@ -8,6 +8,7 @@ import (
 )
 
 func TestDebuggerBindingsPersistAcrossDocumentsAndRemoveOnlySubscription(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		ctx := context.Background()
 		d := NewDebugger(page)
@@ -39,6 +40,7 @@ func TestDebuggerBindingsPersistAcrossDocumentsAndRemoveOnlySubscription(t *test
 }
 
 func TestDebuggerBindingExecutionContextNameMatchesFutureWorld(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		ctx := context.Background()
 		d := NewDebugger(page)

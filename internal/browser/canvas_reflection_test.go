@@ -11,6 +11,7 @@ import (
 )
 
 func TestCanvasImplementedReflectionMatchesChrome(t *testing.T) {
+	parallelBrowserTest(t)
 	source, err := os.ReadFile("testdata/canvas_reflection_oracle.js")
 	if err != nil {
 		t.Fatal(err)

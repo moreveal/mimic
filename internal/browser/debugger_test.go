@@ -13,6 +13,7 @@ import (
 )
 
 func TestDebuggerUnsafeEvalScopeMatchesChrome152(t *testing.T) {
+	serialBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html")
 		w.Header().Set("Content-Security-Policy", "script-src 'nonce-test'; require-trusted-types-for 'script'")
@@ -73,6 +74,7 @@ func debuggerEval(t *testing.T, d *Debugger, source string, options DebuggerOpti
 }
 
 func TestDebuggerRemoteValuesMatchChrome152(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		d := NewDebugger(page)
 		defer d.Close()
@@ -105,6 +107,7 @@ func TestDebuggerRemoteValuesMatchChrome152(t *testing.T) {
 }
 
 func TestDebuggerPreservesHandlesAndDescriptorSemantics(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		d := NewDebugger(page)
 		defer d.Close()
@@ -149,6 +152,7 @@ func TestDebuggerPreservesHandlesAndDescriptorSemantics(t *testing.T) {
 }
 
 func TestDebuggerCallFunctionInvalidatesDOMReadSnapshotAfterMutation(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		d := NewDebugger(page)
 		defer d.Close()
@@ -170,6 +174,7 @@ func TestDebuggerCallFunctionInvalidatesDOMReadSnapshotAfterMutation(t *testing.
 }
 
 func TestDebuggerCallFunctionInvalidatesDOMReadSnapshotAfterScroll(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		ctx := context.Background()
 		if _, err := page.Evaluate(ctx, `document.body.innerHTML='<div id="target" style="position:absolute;top:1200px;width:10px;height:10px"></div><div style="height:3000px"></div>'`); err != nil {
@@ -198,6 +203,7 @@ func TestDebuggerCallFunctionInvalidatesDOMReadSnapshotAfterScroll(t *testing.T)
 }
 
 func TestDebuggerReturnByValueAndAwait(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		d := NewDebugger(page)
 		defer d.Close()
@@ -229,6 +235,7 @@ func TestDebuggerReturnByValueAndAwait(t *testing.T) {
 }
 
 func TestDebuggerCanonicalNodeAndSessionIsolation(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		d := NewDebugger(page)
 		defer d.Close()
@@ -263,6 +270,7 @@ func TestDebuggerCanonicalNodeAndSessionIsolation(t *testing.T) {
 }
 
 func TestDebuggerIntrinsicsArePrivateAndCapturedBeforePageScripts(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		d := NewDebugger(page)
 		defer d.Close()

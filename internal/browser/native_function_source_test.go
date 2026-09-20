@@ -5,5 +5,6 @@ package browser
 import "testing"
 
 func TestNativeFunctionSourcesMatchFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
 	documentAllOracle(t, "native_function")
 }

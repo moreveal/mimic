@@ -8,6 +8,7 @@ import (
 )
 
 func TestSelectorStateUsesNavigationAndElementState(t *testing.T) {
+	parallelBrowserTest(t)
 	fixture := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		_, _ = w.Write([]byte(`<!doctype html><div id="a"></div><div id="b"></div><a name="legacy"></a><input id="field"><x-state id="custom"></x-state>`))
 	}))

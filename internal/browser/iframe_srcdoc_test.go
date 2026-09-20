@@ -13,12 +13,14 @@ import (
 )
 
 func TestIframeSrcdocMatchesFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
 	documentAllOracle(t, "iframe_srcdoc")
 }
 
 // Keep the two evaluations from the saved Chrome repro: collecting retired
 // owners between them must not lose the exported descendant WindowProxy.
 func TestIframeSrcdocRetainsExportedDescendant(t *testing.T) {
+	serialBrowserTest(t)
 	setup, err := os.ReadFile("testdata/navigation_nested_window_setup.js")
 	if err != nil {
 		t.Fatal(err)

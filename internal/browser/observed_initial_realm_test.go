@@ -20,6 +20,7 @@ import (
 // code. Bootstrap batching must preserve that document until commit, and must
 // never reuse its modified JS graph for the replacement document.
 func TestNavigationBootstrapPreservesObservedInitialRealm(t *testing.T) {
+	serialBrowserTest(t)
 	seed := bootstrapSnapshotPage(t)
 	bootstrapSnapshotWarm(t, seed)
 	entered, release := make(chan struct{}), make(chan struct{})
@@ -84,6 +85,7 @@ func TestNavigationBootstrapPreservesObservedInitialRealm(t *testing.T) {
 }
 
 func TestNavigationCommitKeepsUnobservedInitialRuntimeDeferred(t *testing.T) {
+	serialBrowserTest(t)
 	p := bootstrapSnapshotPage(t)
 	initial := p.Top.Realm
 	deferred := initial.runtime.(*deferredRuntime)
@@ -126,6 +128,7 @@ func TestNavigationCommitKeepsUnobservedInitialRuntimeDeferred(t *testing.T) {
 // Opt-in attribution of normal bootstrap stages: no host/CPU profiler, no
 // altered snapshot policy, and timing covers teardown as well as construction.
 func TestBootstrapInitializationStages(t *testing.T) {
+	serialBrowserTest(t)
 	if os.Getenv("MIMIC_BOOTSTRAP_STAGE_DIAGNOSTIC") != "1" {
 		t.Skip("set MIMIC_BOOTSTRAP_STAGE_DIAGNOSTIC=1 for bootstrap attribution")
 	}

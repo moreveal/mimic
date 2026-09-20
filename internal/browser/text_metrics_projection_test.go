@@ -21,6 +21,7 @@ func exposeTextProjectionHosts(t *testing.T, p *Page) {
 }
 
 func TestCompactTextMetricsMatchFullGlyphProjection(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
 		exposeTextProjectionHosts(t, p)
@@ -52,6 +53,7 @@ func TestCompactTextMetricsMatchFullGlyphProjection(t *testing.T) {
 }
 
 func TestCompactTextMetricsObserveFontCollectionChanges(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
 		exposeTextProjectionHosts(t, p)
@@ -82,6 +84,7 @@ func TestCompactTextMetricsObserveFontCollectionChanges(t *testing.T) {
 }
 
 func TestTextShapeHostsDoNotRetainArguments(t *testing.T) {
+	parallelBrowserTest(t)
 	p := newAsyncModulePage(t)
 	navigateCapabilityFixture(t, p)
 	exposeTextProjectionHosts(t, p)
@@ -115,6 +118,7 @@ func TestTextShapeHostsDoNotRetainArguments(t *testing.T) {
 // Full and compact calls are alternated, use identical inputs, and each parse
 // and observe exactly the CSS-required metrics. No profiler is active.
 func TestTextMetricsProjectionMeasurements(t *testing.T) {
+	serialBrowserTest(t)
 	if os.Getenv("MIMIC_MEASURE_TEXT_PROJECTION") != "1" {
 		t.Skip("explicit local performance diagnostic")
 	}

@@ -13,6 +13,7 @@ import (
 // Browser exposure shaping must not add brands, lock prototype properties,
 // or change descriptors on ECMAScript objects supplied by the engine.
 func TestBrowserPreservesIntrinsicPrototypeDescriptors(t *testing.T) {
+	parallelBrowserTest(t)
 	const snapshot = `JSON.stringify(['Object','Function','Array','RegExp','String','Number','Boolean','Promise','Map','Set','WeakMap','WeakSet','ArrayBuffer','DataView','Uint8Array','Float64Array'].map(name=>{
  const ctor=globalThis[name],p=ctor.prototype;
  const describe=d=>({enumerable:d.enumerable,configurable:d.configurable,writable:d.writable,type:'value'in d?typeof d.value:'accessor',name:typeof d.value==='function'?d.value.name:undefined,length:typeof d.value==='function'?d.value.length:undefined,tag:typeof d.value==='string'?d.value:undefined,get:d.get&&[d.get.name,d.get.length],set:d.set&&[d.set.name,d.set.length]});

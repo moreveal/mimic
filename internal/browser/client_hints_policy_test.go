@@ -13,6 +13,7 @@ import (
 )
 
 func TestFormFactorHintsRespectOptInAndRedirects(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		echo := func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Access-Control-Allow-Origin", "*")
@@ -48,6 +49,7 @@ func TestFormFactorHintsRespectOptInAndRedirects(t *testing.T) {
 // Frozen Chrome 152: parent opt-in plus effective delegation is required.
 // A child's Accept-CH alone cannot opt its subrequests in.
 func TestClientHintsFramePolicy(t *testing.T) {
+	serialBrowserTest(t)
 	for _, mode := range []string{"default", "delegate", "allow", "delegate-allow", "deny-allow", "noaccept-allow", "child-noaccept-allow"} {
 		t.Run(mode, func(t *testing.T) {
 			parallelOracle(t)
@@ -105,6 +107,7 @@ func TestClientHintsFramePolicy(t *testing.T) {
 }
 
 func TestClientHintsWorkerRequests(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Accept-CH", "Sec-CH-UA-Platform-Version")

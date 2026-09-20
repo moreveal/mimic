@@ -19,6 +19,7 @@ import (
 )
 
 func TestDocumentAvailableImagesChrome152(t *testing.T) {
+	serialBrowserTest(t)
 	fixture, err := os.ReadFile("testdata/image_reuse_oracle.js")
 	if err != nil {
 		t.Fatal(err)
@@ -112,6 +113,7 @@ func TestDocumentAvailableImagesChrome152(t *testing.T) {
 }
 
 func TestAvailableImageKeysAndLazyUpdates(t *testing.T) {
+	serialBrowserTest(t)
 	var mu sync.Mutex
 	counts := map[string]int{}
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, req *http.Request) {

@@ -8,6 +8,7 @@ import (
 // Each observation may share derived reads internally, but author mutations in
 // the same JavaScript task must be visible to the very next observation.
 func TestGeometryReadCachesObserveSameTaskMutations(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
 		value, err := p.Evaluate(context.Background(), `(()=>{
@@ -35,6 +36,7 @@ func TestGeometryReadCachesObserveSameTaskMutations(t *testing.T) {
 // request one another. A cycle fallback must not escape as ready geometry or be
 // reused after a synchronous style mutation.
 func TestGeometryComputationPlanDoesNotPublishCycleFallback(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
 		value, err := p.Evaluate(context.Background(), `(()=>{
@@ -58,6 +60,7 @@ func TestGeometryComputationPlanDoesNotPublishCycleFallback(t *testing.T) {
 }
 
 func TestStylesheetAttributeIndexPreservesFullMatching(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
 		value, err := p.Evaluate(context.Background(), `(()=>{
@@ -75,6 +78,7 @@ func TestStylesheetAttributeIndexPreservesFullMatching(t *testing.T) {
 }
 
 func TestGeometryAncestorSnapshotsObserveFontAndFlatTreeChanges(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
 		value, err := p.Evaluate(context.Background(), `(()=>{
@@ -101,6 +105,7 @@ func TestGeometryAncestorSnapshotsObserveFontAndFlatTreeChanges(t *testing.T) {
 }
 
 func TestStylesheetSelectorReusePreservesConditionsAndPseudoState(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
 		value, err := p.Evaluate(context.Background(), `(()=>{

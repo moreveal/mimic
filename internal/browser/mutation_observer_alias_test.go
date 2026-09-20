@@ -8,6 +8,7 @@ import (
 )
 
 func TestMutationObserverLegacyAliasUsesCanonicalConstructor(t *testing.T) {
+	serialBrowserTest(t)
 	source, err := os.ReadFile("testdata/mutation_observer_alias_oracle.js")
 	if err != nil {
 		t.Fatal(err)

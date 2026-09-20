@@ -10,6 +10,7 @@ import (
 )
 
 func TestResourceTimingBufferNotificationsReleaseValues(t *testing.T) {
+	serialBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Cache-Control", "no-store")
 		if r.URL.Path == "/data" {

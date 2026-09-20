@@ -9,6 +9,7 @@ import (
 )
 
 func TestSnapshotPreservesCanonicalShadowComposition(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -53,6 +54,7 @@ func TestSnapshotPreservesCanonicalShadowComposition(t *testing.T) {
 }
 
 func TestShadowInnerHTMLUsesHostParserContext(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -74,6 +76,7 @@ root.innerHTML='<tr><td>x</td></tr>';return root.innerHTML==='x'&&constructions=
 }
 
 func TestSnapshotDoesNotPromotePolyfilledShadowRoot(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)

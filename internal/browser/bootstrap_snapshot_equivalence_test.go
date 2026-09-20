@@ -15,6 +15,7 @@ import (
 )
 
 func TestBootstrapSnapshotObservationalEquivalence(t *testing.T) {
+	serialBrowserTest(t)
 	if os.Getenv("MIMIC_DISABLE_BOOTSTRAP_SNAPSHOT") == "1" {
 		t.Skip("requires snapshot restoration")
 	}
@@ -139,6 +140,7 @@ func bootstrapSnapshotDifference(path string, a, b any) string {
 // Locale and display observations deliberately do not select a different
 // source profile: a consumer must read its own host state after restoration.
 func TestBootstrapSnapshotRebindsChangedEnvironment(t *testing.T) {
+	serialBrowserTest(t)
 	if os.Getenv("MIMIC_DISABLE_BOOTSTRAP_SNAPSHOT") == "1" {
 		t.Skip("requires snapshot restoration")
 	}

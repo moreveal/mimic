@@ -14,6 +14,7 @@ import (
 )
 
 func TestFetchCORSWindowAndWorker(t *testing.T) {
+	serialBrowserTest(t)
 	remote := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/allow" {
 			w.Header().Set("Access-Control-Allow-Origin", r.Header.Get("Origin"))

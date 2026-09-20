@@ -8,6 +8,7 @@ import (
 )
 
 func TestAdjacentHTMLMatchesFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
 	source, err := os.ReadFile("testdata/adjacent_html_oracle.js")
 	if err != nil {
 		t.Fatal(err)
@@ -31,6 +32,7 @@ func TestAdjacentHTMLMatchesFrozenChrome(t *testing.T) {
 	})
 }
 func TestAdjacentHTMLLifecycleMatchesFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
 	source, err := os.ReadFile("testdata/adjacent_html_lifecycle_oracle.js")
 	if err != nil {
 		t.Fatal(err)

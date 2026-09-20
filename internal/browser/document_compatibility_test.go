@@ -12,6 +12,7 @@ import (
 // particular, inert document descendants are connected despite no Window,
 // and removal preserves ownership while insertion adopts without cloning.
 func TestInertHTMLDocumentOwnershipChrome152(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -47,6 +48,7 @@ func TestInertHTMLDocumentOwnershipChrome152(t *testing.T) {
 // Keep this as a single callback so a retained public snapshot cannot pass by
 // relying on the next protocol command to invalidate it.
 func TestDOMReadMutationReparentAndAdoption(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -74,6 +76,7 @@ func TestDOMReadMutationReparentAndAdoption(t *testing.T) {
 }
 
 func TestXMLDocumentFactoryChrome152(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -99,6 +102,7 @@ func TestXMLDocumentFactoryChrome152(t *testing.T) {
 }
 
 func TestDialogModalSelectorStateChrome152(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)
@@ -121,6 +125,7 @@ func TestDialogModalSelectorStateChrome152(t *testing.T) {
 }
 
 func TestGetElementByIDLiteralOrderAndRootBoundaries(t *testing.T) {
+	parallelBrowserTest(t)
 	b, err := New(v8engine.Factory{}, chrome152.New())
 	if err != nil {
 		t.Fatal(err)

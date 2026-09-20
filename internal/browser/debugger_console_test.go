@@ -6,6 +6,7 @@ import (
 )
 
 func TestDebuggerConsoleArgumentsRemainLiveObjects(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		d := NewDebugger(page)
 		defer d.Close()

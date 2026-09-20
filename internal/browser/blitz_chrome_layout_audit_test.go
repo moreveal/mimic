@@ -11,6 +11,7 @@ import (
 // Exact Chrome152 receipts audit old hand-authored expectations. Original tests
 // remain unchanged: this is independent evidence, not a blanket green waiver.
 func TestBlitzHandwrittenLayoutMatchesChrome152Receipts(t *testing.T) {
+	serialBrowserTest(t)
 	t.Setenv("MIMIC_STYLE_ENGINE", "blitz")
 	raw, err := os.ReadFile("../../docs/performance/blitz-chrome152-handwritten-audit-2026-09-20.json")
 	if err != nil {

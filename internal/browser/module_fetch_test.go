@@ -14,6 +14,7 @@ import (
 )
 
 func TestModulePreloadsShareParallelFetchesAndPreserveEvaluationOrder(t *testing.T) {
+	serialBrowserTest(t)
 	var mu sync.Mutex
 	counts := map[string]int{}
 	started := make(chan struct{}, 2)

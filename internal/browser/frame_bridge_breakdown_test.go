@@ -16,6 +16,7 @@ import (
 )
 
 func TestFrameBridgeBreakdown(t *testing.T) {
+	serialBrowserTest(t)
 	clockDLL := windows.NewLazySystemDLL("kernel32.dll")
 	counter := clockDLL.NewProc("QueryPerformanceCounter")
 	frequency := clockDLL.NewProc("QueryPerformanceFrequency")

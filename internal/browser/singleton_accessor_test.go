@@ -5,5 +5,6 @@ package browser
 import "testing"
 
 func TestSingletonAccessorOwnershipMatchesFrozenChrome(t *testing.T) {
+	parallelBrowserTest(t)
 	documentAllOracle(t, "singleton_accessor")
 }

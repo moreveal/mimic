@@ -6,6 +6,7 @@ import (
 )
 
 func TestTextDecoderStreamChunkBoundariesAndErrors(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	value, err := p.Evaluate(context.Background(), `(async()=>{
 async function decode(chunks,options){const stream=new TextDecoderStream('utf-8',options),out=[];let error='';try{const reader=new ReadableStream({start(c){for(const chunk of chunks)c.enqueue(chunk);c.close()}}).pipeThrough(stream).getReader();while(true){const result=await reader.read();if(result.done)break;out.push(result.value)}}catch(e){error=e.name}return {out:out.join(''),error}}

@@ -7,12 +7,14 @@ import (
 )
 
 func TestHeightDimensionProjectionMatchesFrozenChrome152(t *testing.T) {
+	parallelBrowserTest(t)
 	testCSSObservation(t, "css_height_projection")
 }
 
 // Dimensions require the target's own flow, not the positions of its siblings.
 // This checks the architectural boundary without a machine-dependent deadline.
 func TestHeightObservationKeepsUnrelatedDocumentFlowCorrect(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
 		value, err := p.Evaluate(context.Background(), `(()=>{
@@ -31,6 +33,7 @@ func TestHeightObservationKeepsUnrelatedDocumentFlowCorrect(t *testing.T) {
 }
 
 func TestDefiniteHeightSkipsDescendantFlowWithoutCachingIncompleteBoxes(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		navigateCapabilityFixture(t, p)
 		value, err := p.Evaluate(context.Background(), `(()=>{

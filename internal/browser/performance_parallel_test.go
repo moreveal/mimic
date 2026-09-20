@@ -19,6 +19,7 @@ import (
 // Its profiles attribute residual cross-isolate contention; it does not replace
 // the CDP harness or its throughput denominator.
 func TestPerformanceParallelPages(t *testing.T) {
+	serialBrowserTest(t)
 	dir := os.Getenv("MIMIC_PROFILE_DIR")
 	if dir == "" {
 		t.Skip("diagnostic replay")

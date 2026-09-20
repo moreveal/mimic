@@ -16,6 +16,7 @@ import (
 // Measured with headful Chrome 152.0.7977.82. Window's error handler receives
 // five arguments; true (or preventDefault) suppresses the uncaught exception.
 func TestWindowTimerErrorReportingAndCancellation(t *testing.T) {
+	serialBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		fmt.Fprint(w, "<!doctype html><body>timer errors</body>")
 	}))
@@ -80,6 +81,7 @@ func TestWindowTimerErrorReportingAndCancellation(t *testing.T) {
 }
 
 func TestWindowIntervalContinuesAfterErrorAndKeepsCancelableID(t *testing.T) {
+	serialBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, _ *http.Request) {
 		fmt.Fprint(w, "<!doctype html><body>interval errors</body>")
 	}))

@@ -10,6 +10,7 @@ import (
 )
 
 func TestNavigationRemovesRetiredDescendantTasks(t *testing.T) {
+	serialBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		w.Header().Set("Content-Type", "text/html")
 		_, _ = w.Write([]byte("<!doctype html><body>" + r.URL.Path))
@@ -40,6 +41,7 @@ func TestNavigationRemovesRetiredDescendantTasks(t *testing.T) {
 }
 
 func TestChildNavigationRemovesRetiredGrandchildTasks(t *testing.T) {
+	serialBrowserTest(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		_, _ = w.Write([]byte("<!doctype html><body>replacement"))
 	}))

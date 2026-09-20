@@ -13,6 +13,7 @@ import (
 )
 
 func TestConsumedServicesChromeOracle(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
@@ -42,6 +43,7 @@ func TestConsumedServicesChromeOracle(t *testing.T) {
 }
 
 func TestNavigatorWebDriverInvariant(t *testing.T) {
+	serialBrowserTest(t)
 	if navigatorWebDriver {
 		t.Fatal("WebDriver must never be enabled by host configuration")
 	}
@@ -56,6 +58,7 @@ func TestNavigatorWebDriverInvariant(t *testing.T) {
 }
 
 func TestCrashReportDiagnosticsOwnBuffer(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
@@ -77,6 +80,7 @@ func TestCrashReportDiagnosticsOwnBuffer(t *testing.T) {
 // Runtime snapshots must restore wrappers only. The host's requested bit,
 // capacity, initialization and annotations belong to each document Realm.
 func TestCrashReportHostStateAndSnapshotIsolation(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
@@ -108,6 +112,7 @@ func TestCrashReportHostStateAndSnapshotIsolation(t *testing.T) {
 }
 
 func TestTaskSignalHostPriorityAndReentrancy(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
@@ -126,6 +131,7 @@ func TestTaskSignalHostPriorityAndReentrancy(t *testing.T) {
 }
 
 func TestLaunchQueueRetainsAndDeliversURLLaunches(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
@@ -144,6 +150,7 @@ func TestLaunchQueueRetainsAndDeliversURLLaunches(t *testing.T) {
 }
 
 func TestConsumedCacheChromeOracle(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()
@@ -179,6 +186,7 @@ func TestConsumedCacheChromeOracle(t *testing.T) {
 }
 
 func TestConsumedCookieChromeOracle(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 30*time.Second)
 		defer cancel()

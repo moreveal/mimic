@@ -8,6 +8,7 @@ import (
 )
 
 func TestSnapshotProjectsCurrentFormStateWithoutMutatingDOM(t *testing.T) {
+	parallelBrowserTest(t)
 	p := testPage(t)
 	defer p.Close()
 	ctx := context.Background()

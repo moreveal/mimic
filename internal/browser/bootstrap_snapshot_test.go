@@ -83,6 +83,7 @@ func bootstrapSnapshotAssertRestored(t *testing.T, p *Page, minimum int) {
 // Mutate the first restored realm before constructing the next. Stale seed
 // wrappers, tokens, or API slots fail through ordinary DOM and Symbol access.
 func TestBootstrapSnapshotFramesHaveIndependentState(t *testing.T) {
+	serialBrowserTest(t)
 	p := bootstrapSnapshotPage(t)
 	bootstrapSnapshotWarm(t, p)
 	source, err := os.ReadFile("testdata/bootstrap_snapshot_oracle.js")
@@ -106,6 +107,7 @@ func TestBootstrapSnapshotFramesHaveIndependentState(t *testing.T) {
 }
 
 func TestBootstrapSnapshotCallbacksAndJobsUseRestoredRealm(t *testing.T) {
+	serialBrowserTest(t)
 	p := bootstrapSnapshotPage(t)
 	bootstrapSnapshotWarm(t, p)
 	value := bootstrapSnapshotEvaluate(t, p, `(async()=>{
@@ -127,6 +129,7 @@ func TestBootstrapSnapshotCallbacksAndJobsUseRestoredRealm(t *testing.T) {
 }
 
 func TestBootstrapSnapshotNavigationRebindsDocumentAndOrigin(t *testing.T) {
+	serialBrowserTest(t)
 	p := bootstrapSnapshotPage(t)
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { fmt.Fprint(w, "<!doctype html><body>"+r.URL.Path) }))
 	defer server.Close()
@@ -156,6 +159,7 @@ func TestBootstrapSnapshotNavigationRebindsDocumentAndOrigin(t *testing.T) {
 // All Pages share the immutable seed, but callbacks, wrappers and pending jobs
 // must remain owned by the restored Page throughout concurrent teardown.
 func TestBootstrapSnapshotConcurrentPageTeardown(t *testing.T) {
+	serialBrowserTest(t)
 	p := bootstrapSnapshotPage(t)
 	bootstrapSnapshotWarm(t, p)
 	const count = 10
@@ -207,6 +211,7 @@ func TestBootstrapSnapshotConcurrentPageTeardown(t *testing.T) {
 // Unlike the warmed teardown test, the first wave races ordinary bootstrap,
 // seed capture and asynchronous admission while unrelated origins are active.
 func TestBootstrapSnapshotConcurrentColdAdmission(t *testing.T) {
+	serialBrowserTest(t)
 	seed := bootstrapSnapshotPage(t)
 	serve := func(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprintf(w, "<!doctype html><body><p id='path'>%s</p>", r.URL.Path)
@@ -275,6 +280,7 @@ func TestBootstrapSnapshotConcurrentColdAdmission(t *testing.T) {
 }
 
 func TestBootstrapSnapshotExceptionStacksMatchOrdinary(t *testing.T) {
+	serialBrowserTest(t)
 	p := bootstrapSnapshotPage(t)
 	const source = `JSON.stringify([()=>new Document(),()=>Document.prototype.createElement.call({},'div')].map(fn=>{try{fn();return null}catch(e){return e.stack}}))`
 	normal := bootstrapSnapshotEvaluate(t, p, source)

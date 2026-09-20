@@ -11,6 +11,7 @@ import (
 )
 
 func TestOfflineAudioOracles(t *testing.T) {
+	serialBrowserTest(t)
 	for _, name := range []string{"audio_buffers", "offline_audio", "audio_graph", "audio_relations", "audio_lifecycle", "audio_validation", "audio_channels", "audio_fractional", "audio_interpolation", "audio_rates", "audio_reverse", "audio_phase", "audio_source_events", "audio_ramps", "audio_automation_validation", "audio_scheduled_rate", "audio_automation_cancel", "audio_scheduled_duration", "audio_automation_edges"} {
 		t.Run(name, func(t *testing.T) {
 			parallelOracle(t)
@@ -61,6 +62,7 @@ func TestOfflineAudioOracles(t *testing.T) {
 }
 
 func TestOfflineAudioUnsupportedGraphRejects(t *testing.T) {
+	serialBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
 		defer cancel()

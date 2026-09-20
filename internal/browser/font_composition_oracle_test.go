@@ -4,4 +4,7 @@ package browser
 
 import "testing"
 
-func TestFontCompositionFrozenChrome152(t *testing.T) { documentAllOracle(t, "font_composition") }
+func TestFontCompositionFrozenChrome152(t *testing.T) {
+	parallelBrowserTest(t)
+	documentAllOracle(t, "font_composition")
+}

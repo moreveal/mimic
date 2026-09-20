@@ -10,6 +10,7 @@ import (
 )
 
 func TestGraphicsObservationOracles(t *testing.T) {
+	parallelBrowserTest(t)
 	for _, fixture := range []struct{ name, capture string }{{"canvas_paths", "canvas-paths"}, {"canvas_relations", "canvas-relations"}, {"webgl_programs", "webgl-programs"}, {"webgl_framebuffers", "webgl-framebuffers"}, {"webgl_validation", "webgl-validation"}, {"webgl_geometry", "webgl-geometry"}, {"webgl_framebuffer_lifecycle", "webgl-framebuffer-lifecycle"}} {
 		t.Run(fixture.name, func(t *testing.T) {
 			parallelOracle(t)
@@ -57,6 +58,7 @@ func TestGraphicsObservationOracles(t *testing.T) {
 // serialization is a projection of its canonical readback bytes, not a fresh
 // random fingerprint per call or Page.
 func TestCanvasSerializationIsStableAcrossPages(t *testing.T) {
+	parallelBrowserTest(t)
 	const expression = `(()=>{const canvas=document.createElement('canvas');canvas.width=12;canvas.height=5;const context=canvas.getContext('2d');context.fillStyle='#143250';context.fillRect(0,0,12,5);context.fillStyle='rgba(240,80,20,.75)';context.fillRect(2,1,5,3);const first=canvas.toDataURL(),second=canvas.toDataURL(),raw=atob(first.slice(first.indexOf(',')+1)),unaffected=Array.from(context.getImageData(1,1,1,1).data).join(',');context.fillStyle='#51a629';context.fillRect(11,4,1,1);const changed=canvas.toDataURL();return JSON.stringify({first,repeat:first===second,changed:first!==changed,unaffected:unaffected===Array.from(context.getImageData(1,1,1,1).data).join(','),png:Array.from(raw.slice(0,8),c=>c.charCodeAt(0)).join(','),read:Array.from(context.getImageData(1,1,3,2).data).join(',')})})()`
 	historyTestPages(t, func(t *testing.T, page *Page) {
 		first, err := page.Evaluate(context.Background(), expression)

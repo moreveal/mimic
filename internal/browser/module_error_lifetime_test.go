@@ -12,6 +12,7 @@ import (
 )
 
 func TestDynamicModuleCachedSyntaxErrorKeepsOwner(t *testing.T) {
+	serialBrowserTest(t)
 	var requests atomic.Int32
 	server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, request *http.Request) {
 		if request.URL.Path == "/invalid.js" {

@@ -10,6 +10,7 @@ import (
 )
 
 func TestWebGLStateMatchesFrozenOracle(t *testing.T) {
+	parallelBrowserTest(t)
 	source, err := os.ReadFile("testdata/webgl_state_oracle.js")
 	if err != nil {
 		t.Fatal(err)
@@ -35,6 +36,7 @@ func TestWebGLStateMatchesFrozenOracle(t *testing.T) {
 }
 
 func TestWebGLResourceStorageAndClear(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { w.Write([]byte("<!doctype html><body>")) }))
 		defer server.Close()
@@ -46,6 +48,7 @@ func TestWebGLResourceStorageAndClear(t *testing.T) {
 }
 
 func TestWebGLResourceOwnershipAndUnsupportedExecution(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { w.Write([]byte("<!doctype html><body>")) }))
 		defer server.Close()
@@ -57,6 +60,7 @@ func TestWebGLResourceOwnershipAndUnsupportedExecution(t *testing.T) {
 }
 
 func TestWebGLWorkerProfileAndClearParity(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { w.Write([]byte("<!doctype html><body>")) }))
 		defer server.Close()
@@ -68,6 +72,7 @@ func TestWebGLWorkerProfileAndClearParity(t *testing.T) {
 }
 
 func TestWebGLCanvasSnapshotUsesDrawingBuffer(t *testing.T) {
+	parallelBrowserTest(t)
 	historyTestPages(t, func(t *testing.T, p *Page) {
 		server := httptest.NewServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) { w.Write([]byte("<!doctype html><body>")) }))
 		defer server.Close()
