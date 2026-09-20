@@ -1766,6 +1766,10 @@ func localResultString(value gov8.Value, realm *gov8.Context) string {
 }
 
 func callbackValue(scope *gov8.CallbackScope, realm *gov8.Context, result gov8.ReturnValue, value any) (gov8.Value, error) {
+	return callbackValueWithJSON(scope, realm, result, value, true)
+}
+
+func callbackValueWithJSON(scope *gov8.CallbackScope, realm *gov8.Context, result gov8.ReturnValue, value any, allowJSON bool) (gov8.Value, error) {
 	if buffer, ok := value.(engine.BinaryBuffer); ok {
 		return marshalBinaryBuffer(scope.Scope(), realm, buffer)
 	}
@@ -1773,15 +1777,17 @@ func callbackValue(scope *gov8.CallbackScope, realm *gov8.Context, result gov8.R
 	// one FFI call per property/array slot; arbitrary host objects keep the
 	// existing recursive conversion (not all Go values have JSON semantics).
 	var projection any
-	switch value := value.(type) {
-	case []int64:
-		if value == nil {
-			value = []int64{}
-		}
-		projection = value
-	case []map[string]any, map[string]any:
-		if callbackJSONEligible(value) {
-			projection = callbackJSONProjection(value)
+	if allowJSON {
+		switch value := value.(type) {
+		case []int64:
+			if value == nil {
+				value = []int64{}
+			}
+			projection = value
+		case []map[string]any, map[string]any:
+			if callbackJSONEligible(value) {
+				projection = callbackJSONProjection(value)
+			}
 		}
 	}
 	if projection != nil {
@@ -1791,7 +1797,14 @@ func callbackValue(scope *gov8.CallbackScope, realm *gov8.Context, result gov8.R
 			if err != nil {
 				return gov8.Value{}, err
 			}
-			return gov8.JSONParse(realm, scope.Scope(), text, nil)
+			parsed, parseErr := gov8.JSONParse(realm, scope.Scope(), text, nil)
+			if parseErr == nil {
+				return parsed, nil
+			}
+			// The input was produced by encoding/json, so a parse exception is a
+			// transient native failure rather than malformed input. Preserve the
+			// callback result by using the equivalent recursive conversion.
+			return callbackValueWithJSON(scope, realm, result, value, false)
 		}
 		// Non-finite numbers and unsupported values retain the recursive path.
 	}
@@ -1831,7 +1844,7 @@ func callbackValue(scope *gov8.CallbackScope, realm *gov8.Context, result gov8.R
 			}
 			iter := rv.MapRange()
 			for iter.Next() {
-				member, err := callbackValue(scope, realm, result, iter.Value().Interface())
+				member, err := callbackValueWithJSON(scope, realm, result, iter.Value().Interface(), allowJSON)
 				if err != nil {
 					return gov8.Value{}, err
 				}
@@ -1854,7 +1867,7 @@ func callbackValue(scope *gov8.CallbackScope, realm *gov8.Context, result gov8.R
 			elements := make([]gov8.Value, rv.Len())
 			for i := range elements {
 				var err error
-				elements[i], err = callbackValue(scope, realm, result, rv.Index(i).Interface())
+				elements[i], err = callbackValueWithJSON(scope, realm, result, rv.Index(i).Interface(), allowJSON)
 				if err != nil {
 					return gov8.Value{}, err
 				}
