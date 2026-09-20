@@ -121,6 +121,10 @@ def main():
     binary = stage / ('mimic.exe' if host == 'windows' else 'mimic')
     env = os.environ.copy()
     env['CGO_ENABLED'] = '1'
+    # Prepare the pinned Rust producer before Go reaches its cgo link step.
+    # This command is content-addressed and skips Cargo when the archive already
+    # matches Cargo.lock and the native source inputs.
+    subprocess.run(['go', 'run', './tools/buildnative'], cwd=ROOT, env=env, check=True)
     subprocess.run(['go', 'build', '-trimpath', '-ldflags=-s -w', '-o', str(binary), './cmd/mimic'],
                    cwd=ROOT, env=env, check=True)
     for name in ('LICENSE', 'RELEASE_NOTES.md'):
