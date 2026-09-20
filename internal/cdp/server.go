@@ -581,16 +581,24 @@ func (s *session) handleCommand(m message) (afterUnlock func()) {
 		return
 	}
 	runtimeCtx := s.ctx
+	finishRuntimeCall := func() {}
 	if m.Method == "Runtime.callFunctionOn" && os.Getenv("MIMIC_PROFILE_CDP") == "1" {
 		callID := fmt.Sprintf("CF#%d", callFunctionSequence.Add(1))
 		callStarted := time.Now()
 		runtimeCtx = trace.WithCorrelation(s.ctx, callID, callStarted, s.page.Trace())
 		trace.Record(runtimeCtx, trace.CDP, "callFunctionOn.begin", map[string]any{"commandId": m.ID, "method": m.Method, "functionDeclaration": stringValue(p["functionDeclaration"])})
-		defer func() {
+		finished := false
+		finishRuntimeCall = func() {
+			if finished {
+				return
+			}
+			finished = true
 			trace.Record(runtimeCtx, trace.CDP, "callFunctionOn.end", map[string]any{"commandId": m.ID, "method": m.Method, "durationNs": time.Since(callStarted).Nanoseconds()})
-		}()
+		}
+		defer finishRuntimeCall()
 	}
 	if value, handled, runtimeErr := s.handleRuntime(runtimeCtx, m.Method, p); handled {
+		finishRuntimeCall()
 		s.reply(m.ID, value, runtimeErr)
 		return
 	}
