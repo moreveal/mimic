@@ -1338,6 +1338,12 @@
       checkpointObservations = observation;
       checkpointObservationVersion = observationVersion;
     }
+    const blitzEpochKey =
+      canonicalBundle + ':' + elementStateVersion + ':' + constructedStyleSheets.revision();
+    if (observation.blitzEpochKey !== blitzEpochKey) {
+      observation.blitzPacked = undefined;
+      observation.blitzEpochKey = blitzEpochKey;
+    }
     styleReadCache = observation;
     try {
       return callback();
@@ -1623,7 +1629,9 @@
   bootstrapRestoreHooks.push(() => {
     styleCascades = new WeakMap();
   });
+  let blitzLegacyTraces = 0;
   const uncachedCSSDeclarations = (element, pseudo = '') => {
+    if (blitzTraceEnabled && blitzLegacyTraces++ < 4) host.blitzLegacyTrace(new Error().stack);
     const matched = compatibilitySelectors.matchingStyles(
       element,
       styleSheetRules(element),
@@ -1795,7 +1803,178 @@
     owners?.set(element, value !== null);
     return value;
   };
+  let blitzProducerEnabled = host.blitzEnabled();
+  let blitzTraceEnabled = host.blitzTracing();
+  let checkpointBlitzPacked = null,
+    checkpointBlitzEpoch = '';
+  bootstrapRestoreHooks.push(() => {
+    blitzProducerEnabled = host.blitzEnabled();
+    blitzTraceEnabled = host.blitzTracing();
+    blitzLegacyTraces = 0;
+    checkpointBlitzPacked = null;
+    checkpointBlitzEpoch = '';
+  });
+  const blitzProperties = [
+    'display',
+    'visibility',
+    'cursor',
+    'content-visibility',
+    'opacity',
+    'pointer-events',
+    'position',
+    'z-index',
+    'overflow-x',
+    'overflow-y',
+    'direction',
+    'font-size',
+    'transform',
+    'transform-origin',
+    'isolation',
+    'perspective',
+    'content',
+  ];
+  const decodeBlitzPacket = (buffer, decoder = new TextDecoder()) => {
+    const view = new DataView(buffer);
+    if (view.getUint32(0, true) !== 2 || view.getUint32(12, true) !== blitzProperties.length)
+      throw new Error('Blitz snapshot schema mismatch');
+    return {
+      view,
+      buffer,
+      count: view.getUint32(4, true),
+      stride: view.getUint32(8, true),
+      strings: new Map(),
+      decoder,
+      nodeStyles: new Map(),
+      scalarValues: new Map(),
+      transforms: new Map(),
+      retainedBytes: 0,
+    };
+  };
+  const blitzPackedRecord = (element) => {
+    if (!blitzProducerEnabled) return null;
+    if (!styleReadCache) return withStyleReadCache(() => blitzPackedRecord(element));
+    // Foreign membranes can refer to another arena with colliding numeric IDs.
+    // Local wrappers (including isolated-world wrappers) share the canonical
+    // arena; membership in the native snapshot already proves document owner.
+    // Do not reconstruct attributes/inline style just to repeat that check.
+    if (referenceGet(element)) return null;
+    if (styleReadCache.blitzPacked === undefined) {
+      const epoch = styleReadCache.blitzEpochKey;
+      if (checkpointBlitzEpoch === epoch) styleReadCache.blitzPacked = checkpointBlitzPacked;
+      else {
+        const buffer = host.blitzObserve(0, 'snapshot', '');
+        if (buffer === null) styleReadCache.blitzPacked = null;
+        else styleReadCache.blitzPacked = decodeBlitzPacket(buffer);
+        checkpointBlitzPacked = styleReadCache.blitzPacked;
+        checkpointBlitzEpoch = epoch;
+      }
+    }
+    const packed = styleReadCache.blitzPacked;
+    if (!packed) return null;
+    const id = Number(elementSlot(element).nodeId);
+    let low = 0,
+      high = packed.count - 1;
+    while (low <= high) {
+      const mid = (low + high) >>> 1,
+        at = 16 + mid * packed.stride;
+      const current =
+        packed.view.getUint32(at, true) + packed.view.getUint32(at + 4, true) * 4294967296;
+      if (current === id) return { packed, at };
+      if (current < id) low = mid + 1;
+      else high = mid - 1;
+    }
+    return null;
+  };
+  const blitzStyleValue = (element, name) => {
+    // Pinned Stylo treats user-select as non-inherited; the Chrome profile's
+    // used inheritance is still owned by the migration correctness oracle.
+    if (name === 'user-select' || name === '-webkit-user-select') return null;
+    // SVG reference boxes/presentation attributes belong to the existing SVG
+    // observation engine until that domain is natively represented.
+    if (
+      elementSlot(element)?.namespaceURI === 'http://www.w3.org/2000/svg' &&
+      (name === 'transform' || name === 'font-size')
+    )
+      return null;
+    const record = blitzPackedRecord(element);
+    if (!record) return null;
+    const column = blitzProperties.indexOf(name);
+    if (column < 0) {
+      const { packed, at } = record,
+        key = at + ':' + name;
+      if (packed.scalarValues.has(key)) return packed.scalarValues.get(key);
+      const value = host.blitzObserve(elementSlot(element).nodeId, 'style', name);
+      const bytes = typeof value === 'string' ? value.length * 2 : 0;
+      if (
+        name.length <= 128 &&
+        packed.scalarValues.size < 4096 &&
+        packed.retainedBytes + bytes < 64 * 1024 * 1024
+      ) {
+        packed.scalarValues.set(key, value);
+        packed.retainedBytes += bytes;
+      }
+      return value;
+    }
+    let { packed, at } = record;
+    if (packed.view.getUint32(at + 80 + column * 8, true) === 4294967295) {
+      let hidden = packed.nodeStyles.get(at);
+      if (!hidden) {
+        const buffer = host.blitzObserve(elementSlot(element).nodeId, 'node', '');
+        if (buffer === null) return null;
+        hidden = decodeBlitzPacket(buffer, packed.decoder);
+        if (packed.retainedBytes + buffer.byteLength < 64 * 1024 * 1024) {
+          packed.nodeStyles.set(at, hidden);
+          packed.retainedBytes += buffer.byteLength;
+        }
+      }
+      packed = hidden;
+      at = 16;
+    }
+    const offset = packed.view.getUint32(at + 80 + column * 8, true),
+      length = packed.view.getUint32(at + 84 + column * 8, true);
+    if (!packed.strings.has(offset))
+      packed.strings.set(
+        offset,
+        packed.decoder.decode(new Uint8Array(packed.buffer, offset, length)),
+      );
+    return packed.strings.get(offset);
+  };
+  // Box existence and observation eligibility differ for skipped contents:
+  // Chrome exposes real descendant rects without allowing hit testing or IO.
+  const blitzSkippedContent = (element) => {
+    const record = blitzPackedRecord(element);
+    return record ? !!(record.packed.view.getUint32(record.at + 72, true) & 1) : null;
+  };
+  const blitzLayoutRect = (element) => {
+    const record = blitzPackedRecord(element);
+    if (!record) return null;
+    const { packed, at } = record,
+      read = (i) => packed.view.getFloat64(at + 8 + i * 8, true),
+      x = read(0),
+      y = read(1),
+      width = read(2),
+      height = read(3);
+    return {
+      x,
+      y,
+      left: x,
+      top: y,
+      width,
+      height,
+      right: x + width,
+      bottom: y + height,
+      clientWidth: read(4),
+      clientHeight: read(5),
+      contentWidth: read(6),
+      contentHeight: read(7),
+      overflowWidth: read(6),
+    };
+  };
   const computedStyleDocumentAvailable = (element) => {
+    if (blitzPackedRecord(element))
+      return styleReadCache
+        ? (styleReadCache.documentActive ??= host.documentActive())
+        : host.documentActive();
     const foreign = foreignCSSObservation(element, 'document');
     if (foreign !== null) return foreign;
     const cache =
@@ -1828,6 +2007,9 @@
     return false;
   };
   const computedStyleAvailable = (element) => {
+    // A native record exists only for connected nodes in a supported flat
+    // tree. Unsupported shadow/slot documents use the original owner path.
+    if (blitzPackedRecord(element)) return true;
     const foreign = foreignCSSObservation(element);
     if (foreign !== null) return foreign;
     const cache =
@@ -3010,14 +3192,22 @@
   const layoutWidthFor = (element) => cssBoxModel.width(element);
   const layoutWidthBoxFor = (element) =>
     withStyleReadCache(
-      () => foreignCSSObservation(element, 'layout') ?? cssBoxModel.widthBox(element),
+      () =>
+        blitzLayoutRect(element) ??
+        foreignCSSObservation(element, 'layout') ??
+        cssBoxModel.widthBox(element),
     );
   const layoutHeightBoxFor = (element) =>
     withStyleReadCache(
-      () => foreignCSSObservation(element, 'layout') ?? cssBoxModel.heightBox(element),
+      () =>
+        blitzLayoutRect(element) ??
+        foreignCSSObservation(element, 'layout') ??
+        cssBoxModel.heightBox(element),
     );
   const layoutRectInObservation = (element) =>
-    foreignCSSObservation(element, 'layout') ?? cssBoxModel.rect(element);
+    blitzLayoutRect(element) ??
+    foreignCSSObservation(element, 'layout') ??
+    cssBoxModel.rect(element);
   const layoutRectFor = (element) => withStyleReadCache(() => layoutRectInObservation(element));
   const makeDOMRect = (value, element) =>
     element
@@ -3028,7 +3218,7 @@
   // private canonical state and do not invoke author conversion callbacks.
   let compatibilityScrolling = null;
   const uncachedClientRectInObservation = (element) => {
-    const foreign = foreignCSSObservation(element, 'rect');
+    const foreign = blitzPackedRecord(element) ? null : foreignCSSObservation(element, 'rect');
     if (foreign !== null) return foreign;
     const box = layoutRectInObservation(element),
       keywords = { left: '0%', top: '0%', center: '50%', right: '100%', bottom: '100%' };
@@ -3040,10 +3230,28 @@
       ],
       transformed = false;
     for (let node = element; node; node = geometryParent(node)) {
-      const entries = computedCSSDeclarations(node),
+      const nativeTransform = blitzStyleValue(node, 'transform');
+      const entries =
+          nativeTransform === null
+            ? computedCSSDeclarations(node)
+            : ['transform', 'transform-origin', 'display', 'perspective'].map((name) => ({
+                name,
+                value: blitzStyleValue(node, name),
+              })),
         get = (k) => entries.find((e) => e.name === k)?.value;
       const raw = entries.find((e) => e.name === 'transform')?.parsedValue ?? get('transform');
       if (!raw || raw === 'none' || get('display') === 'none') continue;
+      let nativeProduct = null;
+      if (nativeTransform !== null) {
+        const record = blitzPackedRecord(node),
+          key = record.at;
+        if (record.packed.transforms.has(key)) nativeProduct = record.packed.transforms.get(key);
+        else {
+          nativeProduct = host.blitzObserve(elementSlot(node).nodeId, 'transform', '');
+          if (record.packed.transforms.size < 4096)
+            record.packed.transforms.set(key, nativeProduct);
+        }
+      }
       const bounds = layoutRectInObservation(node),
         len = (v, size) => {
           const resolved = cssResolveLength(v, cssGeometryLengthContext(node, size));
@@ -3051,21 +3259,27 @@
         };
       let matrix;
       try {
-        matrix = compatibilityMatrix.parse(raw, (value, axis) =>
-          len(value, axis === 0 ? bounds.width : axis === 1 ? bounds.height : 0),
-        );
+        matrix = nativeProduct
+          ? nativeProduct.slice(0, 16)
+          : compatibilityMatrix.parse(raw, (value, axis) =>
+              len(value, axis === 0 ? bounds.width : axis === 1 ? bounds.height : 0),
+            );
       } catch {
         host.semanticMissingAt('surface.js/clientRectFor', 'CSS.clientRectTransform', raw);
         continue;
       }
       const origin = String(get('transform-origin') || '50% 50%').split(/\s+/),
-        ox = len(keywords[origin[0]] || origin[0], bounds.width),
-        oy = len(keywords[origin[1]] || origin[1] || '50%', bounds.height);
+        ox = nativeProduct
+          ? nativeProduct[16]
+          : len(keywords[origin[0]] || origin[0], bounds.width),
+        oy = nativeProduct
+          ? nativeProduct[17]
+          : len(keywords[origin[1]] || origin[1] || '50%', bounds.height);
       if (ox === null || oy === null) {
         host.semanticMissingAt('surface.js/clientRectFor', 'CSS.clientRectTransformOrigin');
         continue;
       }
-      const oz = origin[2] ? len(origin[2], 0) : 0;
+      const oz = nativeProduct ? nativeProduct[18] : origin[2] ? len(origin[2], 0) : 0;
       if (oz === null) {
         host.semanticMissingAt('surface.js/clientRectFor', 'CSS.clientRectTransformOrigin');
         continue;
@@ -3413,10 +3627,16 @@
         : Math.round(layoutHeightBoxFor(this).clientHeight ?? 0);
     }
     get offsetTop() {
-      return Math.round(layoutRectFor(this).offsetTop ?? layoutRectFor(this).top);
+      return withStyleReadCache(() => {
+        const box = cssBoxModel.nativeOffsets(this) ?? layoutRectFor(this);
+        return Math.round(box.offsetTop ?? box.top);
+      });
     }
     get offsetLeft() {
-      return Math.round(layoutRectFor(this).offsetLeft ?? layoutRectFor(this).left);
+      return withStyleReadCache(() => {
+        const box = cssBoxModel.nativeOffsets(this) ?? layoutRectFor(this);
+        return Math.round(box.offsetLeft ?? box.left);
+      });
     }
     get scrollHeight() {
       return Math.max(this.clientHeight, Math.round(layoutRectFor(this).height));

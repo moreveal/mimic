@@ -16,6 +16,7 @@ const constructedStyleSheets = (() => {
     host.invalidateStyleObservations();
   };
   const sourceCache = new WeakMap();
+  const nativeEligibilityCache = new WeakMap();
   const sheets = new WeakMap(),
     rules = new WeakMap(),
     adopted = new WeakMap(),
@@ -45,6 +46,7 @@ const constructedStyleSheets = (() => {
     return values;
   }
   const blockDeclarations = new WeakMap();
+  const editedDeclarationBlocks = new WeakSet();
   const entriesForBlock = (block) => {
     if (!block) return [];
     let entries = blockDeclarations.get(block);
@@ -158,6 +160,7 @@ const constructedStyleSheets = (() => {
     const target = Object.create(CSSStyleDeclaration.prototype);
     const setText = (text) => {
       blockDeclarations.set(state.node.block, parseCSS(String(text)));
+      editedDeclarationBlocks.add(state.node.block);
       changed();
     };
     const names = () => entriesForBlock(state.node.block);
@@ -203,6 +206,7 @@ const constructedStyleSheets = (() => {
               else entries[index] = entry;
             }
           blockDeclarations.set(state.node.block, entries);
+          editedDeclarationBlocks.add(state.node.block);
           changed();
         },
       },
@@ -488,6 +492,9 @@ const constructedStyleSheets = (() => {
       const s = sheets.get(sheet);
       s.owner = owner;
       s.href = resource?.url || null;
+      // A sheet's URL context is captured when the sheet is created, not
+      // recomputed from the current history entry for later CSSOM edits.
+      s.baseURL = resource?.url || host.documentBaseURI();
       s.crossOrigin = !!resource?.crossOrigin;
       s.rules.push(...parsedRules(source, sheet));
       owners.set(owner, { key, sheet });
@@ -610,6 +617,42 @@ const constructedStyleSheets = (() => {
   return {
     /* dev_preview_sources */
     revision: () => revision,
+    nativeSources(root) {
+      if ((adopted.get(root) || []).length)
+        return { unsupported: 'adopted stylesheet adapter pending', sheets: [] };
+      const collection = Array.from(ownerCollection(root));
+      for (const sheet of collection) {
+        let cached = nativeEligibilityCache.get(sheet);
+        if (!cached || cached.revision !== revision) {
+          const visit = (rule) => {
+            const state = rules.get(rule);
+            return (
+              (!editedDeclarationBlocks.has(state.node.block) &&
+                declarations(state.node.block).some(blitzUnsupportedDeclaration)) ||
+              entriesForBlock(state.node.block).some(
+                (entry) => entry.name === 'content-visibility',
+              ) ||
+              state.children.some(visit)
+            );
+          };
+          cached = { revision, unsupported: requireSheet(sheet).rules.some(visit) };
+          nativeEligibilityCache.set(sheet, cached);
+        }
+        if (cached.unsupported)
+          return {
+            unsupported: 'authored content-visibility requires canonical fallback',
+            sheets: [],
+          };
+      }
+      return {
+        unsupported: '',
+        sheets: collection.map((sheet) => ({
+          id: elementSlot(requireSheet(sheet).owner).nodeId,
+          text: sourceText(sheet),
+          baseURL: requireSheet(sheet).baseURL,
+        })),
+      };
+    },
     ownerSheet,
     fontFaceRules(root) {
       const result = [];
@@ -649,3 +692,123 @@ const constructedStyleSheets = (() => {
     },
   };
 })();
+// Work from parsed Declaration nodes, then decode their CSS identifier escapes.
+// Text searches would mistake strings/custom-property payloads for declarations
+// and miss valid escaped property names.
+const blitzUnsupportedDeclaration = (node) => {
+  if (node.type !== 'Declaration') return false;
+  const input = node.property;
+  let name = '';
+  for (let i = 0; i < input.length; i++) {
+    if (input[i] !== '\\') {
+      name += input[i];
+      continue;
+    }
+    let hex = '';
+    while (i + 1 < input.length && hex.length < 6 && /[0-9a-f]/i.test(input[i + 1]))
+      hex += input[++i];
+    if (hex) {
+      const code = parseInt(hex, 16);
+      name += String.fromCodePoint(
+        code === 0 || code > 0x10ffff || (code >= 0xd800 && code <= 0xdfff) ? 0xfffd : code,
+      );
+      if (i + 1 < input.length && /[\t\n\r\f ]/.test(input[i + 1])) {
+        i++;
+        if (input[i] === '\r' && input[i + 1] === '\n') i++;
+      }
+    } else if (i + 1 < input.length) name += input[++i];
+  }
+  return name.toLowerCase() === 'content-visibility';
+};
+let blitzControlMembershipRevision,
+  blitzControlMembership = [];
+bootstrapRestoreHooks.push(() => {
+  blitzControlMembershipRevision = undefined;
+  blitzControlMembership = [];
+});
+const readBlitzInputs = () => {
+  if (shadowHosts.size) return JSON.stringify({ unsupported: 'shadow/slot adapter pending' });
+  if (document.compatMode === 'BackCompat')
+    return JSON.stringify({ unsupported: 'quirks mode adapter pending' });
+  if (styleObservationDynamic)
+    return JSON.stringify({ unsupported: 'animation lifecycle adapter pending' });
+  const inputs = constructedStyleSheets.nativeSources(document);
+  const membershipRevision = host.domRevision();
+  if (blitzControlMembershipRevision !== membershipRevision) {
+    blitzControlMembership = compatibilitySelectors.query(
+      document,
+      'input,textarea,select,video',
+      false,
+      false,
+    );
+    blitzControlMembershipRevision = membershipRevision;
+  }
+  inputs.controls = [];
+  for (const control of blitzControlMembership) {
+    const slot = elementSlot(control);
+    if (slot.tagName === 'VIDEO') {
+      inputs.unsupported = 'native video intrinsic metadata adapter pending';
+      break;
+    }
+    if (slot.tagName === 'SELECT') {
+      const size = /^\s*\+?(\d+)/.exec(host.getAttribute(slot.nodeId, 'size') || '');
+      if (host.getAttribute(slot.nodeId, 'multiple') !== null || (size && Number(size[1]) > 1)) {
+        inputs.unsupported = 'native select listbox adapter pending';
+        break;
+      }
+    }
+    if (compatibilityElementState.nativeControlContentUnsupported?.(control)) {
+      inputs.unsupported = 'native live control content adapter pending';
+      break;
+    }
+    const value = compatibilityElementState.nativeControlValue?.(control);
+    if (value) inputs.controls.push(value);
+  }
+  if (!inputs.unsupported) {
+    for (const inline of host.blitzInlineStyles()) {
+      let block;
+      try {
+        block = mimicSelectorLibrary.parseStylesheet(inline, { context: 'declarationList' });
+      } catch {
+        inputs.unsupported = 'native inline declaration admission failed';
+        break;
+      }
+      let unsupported = false;
+      block.children.forEach((node) => {
+        unsupported ||= blitzUnsupportedDeclaration(node);
+      });
+      if (unsupported) {
+        inputs.unsupported = 'authored content-visibility requires canonical fallback';
+        break;
+      }
+    }
+  }
+  inputs.states = [];
+  const focused = compatibilityElementState.focused?.();
+  const focusAncestors = new Set();
+  for (let node = focused; node; node = cssObservationParent(node)) focusAncestors.add(node);
+  // Default attribute state is already native. Only private form slots and
+  // the focused ancestor chain supply non-attribute overrides.
+  const stateNodes = new Set(compatibilityElementState.nativeStateControls?.() || []);
+  for (const node of focusAncestors) stateNodes.add(node);
+  for (const node of stateNodes) {
+    const slot = elementSlot(node);
+    if (!slot || !cssObservationNodeState(node).connected) continue;
+    let mask = 14,
+      flags = focusAncestors.has(node) ? 8 : 0;
+    if (node === focused) {
+      flags |= 2;
+      if (compatibilityElementState.focusVisible(node)) flags |= 4;
+    }
+    if (slot.tagName === 'INPUT' || slot.tagName === 'OPTION') {
+      mask |= 1;
+      if (compatibilityElementState.selectorChecked(node)) flags |= 1;
+    }
+    // Only controls need explicit false overrides. Focus removals are handled
+    // against the previous native transaction, without wrapping the whole DOM.
+    if (flags || mask & 1) inputs.states.push({ id: slot.nodeId, mask, flags });
+  }
+  return JSON.stringify(inputs);
+};
+host.registerBlitzInputs(readBlitzInputs);
+bootstrapRestoreHooks.push(() => host.registerBlitzInputs(readBlitzInputs));

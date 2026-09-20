@@ -155,16 +155,22 @@ const cssBoxModel = (() => {
   const state = (element) => {
     const cache = styleReadCache.boxStyles || (styleReadCache.boxStyles = new WeakMap());
     if (cache.has(element)) return cache.get(element);
-    const context = styleContext(element);
+    const nativeDisplay = blitzStyleValue(element, 'display');
+    const context = nativeDisplay !== null ? null : styleContext(element);
     if (context?.value) {
       cache.set(element, context.value);
       return context.value;
     }
-    const entries = computedCSSDeclarations(element),
+    const entries = nativeDisplay !== null ? [] : computedCSSDeclarations(element),
       properties = new Map(entries.map((entry) => [entry.name, entry.value])),
       resolved = new Map();
     const get = (name) => {
       if (resolved.has(name)) return resolved.get(name);
+      if (nativeDisplay !== null) {
+        const value = blitzStyleValue(element, name);
+        resolved.set(name, value);
+        return value;
+      }
       const value = geometryValue(
         element,
         properties.get(name) ??
@@ -196,6 +202,7 @@ const cssBoxModel = (() => {
     cache.set(element, result);
     const ownInherited = new Map();
     result.inherited = (name) => {
+      if (nativeDisplay !== null) return get(name);
       if (ownInherited.has(name)) return ownInherited.get(name);
       const inherited =
         styleReadCache.inheritedValues || (styleReadCache.inheritedValues = new WeakMap());
@@ -311,7 +318,8 @@ const cssBoxModel = (() => {
     // Publish a complete recursive state before resolving font inheritance.
     // Complex author selectors can re-enter geometry while font size walks the
     // ancestor cascade; callers must never observe a half-built state object.
-    result.fontSize = cssComputedFontSize(element) ?? 16;
+    result.fontSize =
+      nativeDisplay !== null ? parseFloat(get('font-size')) : (cssComputedFontSize(element) ?? 16);
     // Only style-derived data is retained. Sizes, positions, children, text flow
     // and availability are rebuilt in the current geometry graph after mutation.
     if (context && styleReadCache.retainable) context.value = result;
@@ -1475,7 +1483,38 @@ const cssBoxModel = (() => {
     }
     return boxes.get(elementSlot(element).nodeId) || null;
   };
+  const nativeOffsets = (element) => {
+    const native = blitzLayoutRect(element);
+    if (native !== null) {
+      let parent = null;
+      if (blitzStyleValue(element, 'position') !== 'fixed') {
+        for (let node = geometryParent(element); node; node = geometryParent(node)) {
+          if (
+            blitzStyleValue(node, 'position') !== 'static' ||
+            ['BODY', 'TABLE', 'TD', 'TH'].includes(tag(node))
+          ) {
+            parent = node;
+            break;
+          }
+        }
+      }
+      const origin =
+        parent && !(tag(parent) === 'BODY' && blitzStyleValue(parent, 'position') === 'static')
+          ? blitzLayoutRect(parent)
+          : null;
+      native.offsetLeft =
+        native.x -
+        (origin ? origin.x + (parseFloat(blitzStyleValue(parent, 'border-left-width')) || 0) : 0);
+      native.offsetTop =
+        native.y -
+        (origin ? origin.y + (parseFloat(blitzStyleValue(parent, 'border-top-width')) || 0) : 0);
+      return native;
+    }
+    return null;
+  };
   const observedRect = (element) => {
+    const native = blitzLayoutRect(element);
+    if (native !== null) return native;
     const projected = taffyBox(element);
     if (projected) return projected;
     const legacy = rect(element);
@@ -1574,19 +1613,34 @@ const cssBoxModel = (() => {
   const hasBox = (element) =>
     withStyleReadCache(
       () =>
-        foreignCSSObservation(element, 'box') ??
+        (blitzPackedRecord(element) ? null : foreignCSSObservation(element, 'box')) ??
         (computedStyleDocumentAvailable(element) &&
           computedStyleAvailable(element) &&
           rendered(element)),
     );
-  const observedWidth = (element) => taffyBox(element)?.width ?? width(element);
+  const nativeBox = (element) => {
+    const box = blitzLayoutRect(element);
+    if (box === null) return null;
+    const edges = state(element).edges(box.width);
+    // Native control scroll extents include their padding; the common scroll
+    // aggregator expects content-only overflow and adds padding itself.
+    if (tag(element) === 'INPUT')
+      box.overflowWidth = Math.max(0, box.contentWidth - edges.pleft - edges.pright);
+    return { ...box, edges };
+  };
+  const observedWidth = (element) =>
+    blitzLayoutRect(element)?.width ?? taffyBox(element)?.width ?? width(element);
   const observedWidthBox = (element) => {
+    const native = nativeBox(element);
+    if (native !== null) return native;
     const box = taffyBox(element);
     return box
       ? { width: box.width, clientWidth: box.clientWidth, edges: state(element).edges(box.width) }
       : widthBox(element);
   };
   const observedHeightBox = (element) => {
+    const native = nativeBox(element);
+    if (native !== null) return native;
     const box = taffyBox(element);
     return box
       ? {
@@ -1597,10 +1651,11 @@ const cssBoxModel = (() => {
       : heightBox(element);
   };
   return {
+    nativeOffsets,
     width: observedWidth,
     rect: observedRect,
     state,
-    size,
+    size: (element) => nativeBox(element) ?? size(element),
     widthBox: observedWidthBox,
     heightBox: observedHeightBox,
     hasBox,

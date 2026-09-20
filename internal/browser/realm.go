@@ -34,6 +34,9 @@ import (
 )
 
 type Realm struct {
+	blitz                    *blitzDocument
+	blitzInputs              engine.Value
+	blitzCalls               map[string]blitzCallStat
 	files                    *opfsOwner
 	policyMetaCursor         int64
 	policyMetaCandidates     []int64
@@ -460,6 +463,16 @@ func (r *Realm) Close() error {
 		return nil
 	}
 	r.closed = true
+	r.reportBlitzCalls()
+	var nativeCloseErr error
+	if r.blitz != nil {
+		nativeCloseErr = r.runOnOwner(context.Background(), func(context.Context) error {
+			r.blitz.document.Close()
+			r.blitz = nil
+			return nil
+		})
+	}
+	r.blitzInputs = nil
 	r.closeSpeechProvider()
 	r.speech = nil
 	r.speechNotifier = nil
@@ -524,7 +537,15 @@ func (r *Realm) Close() error {
 	r.performanceNavigationResponse = nil
 	r.performanceLifecycleTimes = nil
 	r.performanceConfidence = nil
-	return r.runtime.Close()
+	runtimeCloseErr := r.runtime.Close()
+	// A failed owner dispatch must not skip the rest of Page teardown. After
+	// closing the runtime no observer can touch the native handle, so release
+	// a handle left behind by an already-closed owner as well.
+	if r.blitz != nil && runtimeCloseErr == nil {
+		r.blitz.document.Close()
+		r.blitz = nil
+	}
+	return errors.Join(nativeCloseErr, runtimeCloseErr)
 }
 func (r *Realm) Evaluate(ctx context.Context, source, name string) (engine.Value, error) {
 	p := r.agent.Page()
@@ -753,6 +774,7 @@ func (r *Realm) installBindingsOnOwner() error {
 
 	p := r.agent.Page()
 	host := map[string]any{}
+	r.installBlitzProducer(host)
 	host["layoutTaffy"] = r.transientFn(func(_ engine.Value, args []engine.Value) (engine.Value, error) {
 		output, err := r.document.FlatLayoutState().PublishJSON(r.document.Revision(), strarg(args, 0))
 		if err != nil {
@@ -1105,18 +1127,19 @@ func (r *Realm) installBindingsOnOwner() error {
 		return r.val(map[string]any{"width": w.ViewportWidth, "height": w.ViewportHeight, "outerWidth": w.OuterWidth, "outerHeight": w.OuterHeight, "screenX": w.X, "screenY": w.Y}), nil
 	})
 	host["observationVersion"] = r.transientFn(func(engine.Value, []engine.Value) (engine.Value, error) {
-		w := p.environmentView().Window
+		environment := p.environmentView()
+		w := environment.Window
 		owner := r
 		if r.mainWorld != nil {
 			owner = r.mainWorld
 		}
-		preferences := p.environmentView().Preferences
+		preferences := environment.Preferences
 		// The suffix is the environment-only epoch used by retained selector
 		// matches; unrelated DOM mutations must not discard their rule programs.
 		// Style inputs and geometry resources have different lifetimes. Return
 		// both in one crossing so JS can retain selector/cascade work across
 		// image-only completions while invalidating boxes and used values.
-		return r.val(fmt.Sprintf("%d:%d:%d|%d:%d:%s:%t:%t|%d", r.styleDocumentRevision(), owner.styleResourceRevision.Load(), r.selectorTargetID, w.ViewportWidth, w.ViewportHeight, preferences.ColorScheme, preferences.ReducedMotion, owner.styleProjections.isDynamic(), owner.resourceRevision.Load())), nil
+		return r.val(fmt.Sprintf("%d:%d:%d|%d:%d:%s:%t:%g:%t|%d", r.styleDocumentRevision(), owner.styleResourceRevision.Load(), r.selectorTargetID, w.ViewportWidth, w.ViewportHeight, preferences.ColorScheme, preferences.ReducedMotion, environment.Display.DeviceScaleFactor, owner.styleProjections.isDynamic(), owner.resourceRevision.Load())), nil
 	})
 	host["observationRevision"] = r.packedFn(func(_ engine.Value, _ []engine.Value) (engine.Value, error) {
 		return r.val(r.styleDocumentRevision()), nil

@@ -1,0 +1,9 @@
+[package]
+name = "mimic-blitz-native-poc"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+blitz-dom = { git = "https://github.com/DioxusLabs/blitz.git", rev = "e7bf7bca452bc9194ac5c9bcf2ac3c0ebcf02e09", default-features = false }
+blitz-html = { git = "https://github.com/DioxusLabs/blitz.git", rev = "e7bf7bca452bc9194ac5c9bcf2ac3c0ebcf02e09" }
+blitz-traits = { git = "https://github.com/DioxusLabs/blitz.git", rev = "e7bf7bca452bc9194ac5c9bcf2ac3c0ebcf02e09" }

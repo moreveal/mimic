@@ -5,6 +5,38 @@
     textareas = new WeakMap(),
     options = new WeakMap(),
     selects = new WeakMap();
+  const nativeStateControls = new Set();
+  compatibilityElementState.nativeStateControls = () => nativeStateControls;
+  // Native producer admission observes these same private slots, never public
+  // getters or rewritten default attributes. Empty textareas remain supported.
+  compatibilityElementState.nativeControlContentUnsupported = (element) => {
+    const slot = elementSlot(element);
+    if (slot?.tagName === 'TEXTAREA') {
+      const state = textareas.get(element);
+      return (state?.dirty ? state.value : host.textContent(slot.nodeId) || '') !== '';
+    }
+    if (slot?.tagName === 'INPUT') {
+      const state = inputs.get(element);
+      const type = (host.getAttribute(slot.nodeId, 'type') || 'text').toLowerCase();
+      return (
+        !['text', 'search', 'email', 'url', 'tel', 'password'].includes(type) &&
+        !!state?.dirty &&
+        state.value !== (host.getAttribute(slot.nodeId, 'value') || '')
+      );
+    }
+    return false;
+  };
+  compatibilityElementState.nativeControlValue = (element) => {
+    const slot = elementSlot(element);
+    if (slot?.tagName !== 'INPUT') return null;
+    const type = (host.getAttribute(slot.nodeId, 'type') || 'text').toLowerCase();
+    if (!['text', 'search', 'email', 'url', 'tel', 'password'].includes(type)) return null;
+    const state = inputs.get(element);
+    return {
+      id: slot.nodeId,
+      value: state?.dirty ? state.value : host.getAttribute(slot.nodeId, 'value') || '',
+    };
+  };
   const inputState = (e) => {
     let s = inputs.get(e);
     if (!s) {
@@ -19,6 +51,7 @@
         direction: 'none',
       };
       inputs.set(e, s);
+      nativeStateControls.add(e);
     }
     return s;
   };
@@ -36,6 +69,7 @@
     if (!s) {
       s = { dirty: false, selected: false, id: ++nextOptionID };
       options.set(e, s);
+      nativeStateControls.add(e);
     }
     return s;
   };

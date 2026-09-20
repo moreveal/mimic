@@ -1,0 +1,12 @@
+{
+ "chromeVersion":"152.0.7977.82",
+ "executable":"E:/GitHub/mimic/compatibility/.chrome-for-testing/152.0.7977.82/chrome-win64/chrome.exe",
+ "headless":true,
+ "viewport":{"width":1272,"height":653},
+ "initialHTML":"<!doctype html><body>capability fixture</body>",
+ "sourceFile":"internal/browser/geometry_read_cache_test.go",
+ "test":"TestGeometryComputationPlanDoesNotPublishCycleFallback",
+ "source":"(()=>{\n document.body.innerHTML='<div id=\"root\" style=\"display:flex;width:240px\"><div id=\"item\" style=\"display:grid;width:50%;grid-template-columns:1fr\"><div id=\"leaf\" style=\"width:100%;height:12px\"></div></div></div>';\n const root=document.querySelector('#root'),item=document.querySelector('#item'),leaf=document.querySelector('#leaf');\n const read=()=>{\n   const a=leaf.getBoundingClientRect(),b=item.getBoundingClientRect();\n   return [a.width,a.height,a.left,b.width,item.clientWidth,root.scrollWidth];\n };\n const first=read(),same=read();\n root.style.width='320px';const changed=read(),again=read();\n return JSON.stringify({first,same,changed,again,finite:[...first,...changed].every(Number.isFinite)});\n })()",
+ "result":"{\"first\":[120,12,8,120,120,240],\"same\":[120,12,8,120,120,240],\"changed\":[160,12,8,160,160,320],\"again\":[160,12,8,160,160,320],\"finite\":true}",
+ "oldExpectation":"{\"first\":[120,12,0,120,120,240],\"same\":[120,12,0,120,120,240],\"changed\":[160,12,0,160,160,320],\"again\":[160,12,0,160,160,320],\"finite\":true}"
+}

@@ -108,8 +108,11 @@ const intersectionSample = (state, target, time, eligibility) => {
     if (!element) return true;
     if (eligibility.has(element)) return eligibility.get(element);
     const parent = intersectionParent(element),
-      display = computedCSSDeclarations(element).find((e) => e.name === 'display')?.value,
+      display =
+        blitzStyleValue(element, 'display') ??
+        computedCSSDeclarations(element).find((e) => e.name === 'display')?.value,
       valid =
+        !blitzSkippedContent(element) &&
         element.isConnected &&
         element.ownerDocument === document &&
         display !== 'none' &&
@@ -151,8 +154,12 @@ const intersectionSample = (state, target, time, eligibility) => {
       ancestor && ancestor !== state.root;
       ancestor = intersectionParent(ancestor)
     ) {
-      const entries = computedCSSDeclarations(ancestor),
-        get = (name) => entries.find((e) => e.name === name)?.value || '',
+      const native = blitzStyleValue(ancestor, 'overflow-x'),
+        entries = native === null ? computedCSSDeclarations(ancestor) : null,
+        get = (name) =>
+          entries
+            ? entries.find((e) => e.name === name)?.value || ''
+            : blitzStyleValue(ancestor, name) || '',
         overflow = get('overflow');
       const clipX = /^(hidden|clip|scroll|auto)$/.test(get('overflow-x') || overflow),
         clipY = /^(hidden|clip|scroll|auto)$/.test(get('overflow-y') || overflow);

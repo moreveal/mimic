@@ -757,6 +757,14 @@
         y >= box.y &&
         y < box.y + box.height;
       const acceptsPointer = (element) => {
+        if (blitzSkippedContent(element)) return false;
+        const nativeVisibility = blitzStyleValue(element, 'visibility');
+        if (nativeVisibility !== null)
+          return (
+            nativeVisibility !== 'hidden' &&
+            nativeVisibility !== 'collapse' &&
+            blitzStyleValue(element, 'pointer-events') !== 'none'
+          );
         const entries = computedCSSDeclarations(element),
           get = (name) => entries.find((e) => e.name === name)?.value;
         return get('visibility') !== 'hidden' && get('pointer-events') !== 'none';

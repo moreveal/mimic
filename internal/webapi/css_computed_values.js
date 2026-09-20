@@ -172,6 +172,8 @@ const cssComputedShorthand = (element, name) => {
   return ordinary || values.join(' ');
 };
 const cssComputedValue = (element, name) => {
+  const native = blitzStyleValue(element, name);
+  if (native !== null) return native;
   if (styleObservationIsolated) {
     return withStyleReadCache(() => {
       const nodeID = String(elementSlot(element).nodeId),
